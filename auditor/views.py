@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-def index(request):
+def dashboard(request):
     return HttpResponse("Welcome Shopper. Complete your profile infomation to be eligible for audit")
 
 def profile(request):

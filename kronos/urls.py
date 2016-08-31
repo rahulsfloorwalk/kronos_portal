@@ -15,11 +15,11 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+import registration.urls as registration_urls
+import auditor.urls as auditor_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^auth/', include('hades.urls')),
-    url(r'^shopper/', include('poseidon.urls')),
-#    url(r'^client/', include('zeus.urls')),
-
+    url(r'^auth/', include(registration_urls.urlpatterns)),
+    url(r'^auditor/', include(auditor_urls.urlpatterns)),
 ]
