@@ -9,7 +9,11 @@ from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 
 @login_required
 def dashboard(request):
-    return render(request, "auditor/dashboard.html")
+    try:
+        profile_info = ProfileInfo.objects.get(user_id=request.user.id)
+    except ProfileInfo.DoesNotExist:
+        profile_info = None
+    return render(request, "auditor/dashboard.html", { 'profile_info': profile_info })
 
 @login_required
 def profile(request):

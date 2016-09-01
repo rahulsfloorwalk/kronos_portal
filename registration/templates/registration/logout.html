@@ -4,11 +4,7 @@
 {% block content %}
 
 <h2>Logout</h2>
-{{ form.non_field_errors }}
---
-{{ form.username.errors }}
---
-{{ form.password.errors }}
+<p>Are you sure you want to logout?</p>
 <form action="{% url 'registration:logout' %}" method="POST">
 	{% csrf_token %}
 	{{ form.as_p }}

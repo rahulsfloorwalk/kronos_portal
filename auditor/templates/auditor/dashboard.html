@@ -1,6 +1,14 @@
 {% extends 'nav/base.html' %}
 
+{% block title %}Dashboard{% endblock %}
+
 {% block content %}
 <h2>Dashboard</h2>
+
+{% if profile_info.first_name and profile_info.last_name %}
+<h3>Welcome {{ profile_info.first_name }} {{ profile_info.last_name }}</h3> 
+{% else %}
+<h3>Welcome, please begin by settting your details <a href="{% url 'auditor:profile_info_edit' %}">here<a></a></h3> 
+{% endif %}
 
 {% endblock %}

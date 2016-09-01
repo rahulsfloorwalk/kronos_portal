@@ -4,27 +4,27 @@
 
 <h2>Basic Details</h2>
 <a href="{% url 'auditor:profile_info_edit' %}">EDIT</a>
-{{ profile_info.first_name }} --
-{{ profile_info.last_name }} --
-{{ profile_info.gender }} --
-{{ profile_info.education }} --
-{{ profile_info.date_of_birth }} --
-{{ profile_info.marital_status }} --
-{{ profile_info.address }} --
-{{ profile_info.city }} --
-{{ profile_info.state }} --
-{{ profile_info.pincode }} --
+<p>First Name: {{ profile_info.first_name }}</p>
+<p>Last Name: {{ profile_info.last_name }}</p>
+<p>Gender: {{ profile_info.gender }}</p>
+<p>Education: {{ profile_info.education }}</p>
+<p>Date of Birth: {{ profile_info.date_of_birth }}</p>
+<p>Marital Status: {{ profile_info.marital_status }}</p>
+<p>Address: {{ profile_info.address }}</p>
+<p>City: {{ profile_info.city }}</p>
+<p>State: {{ profile_info.state }}</p>
+<p>Pincode: {{ profile_info.pincode }}</p>
 
 <h2>Additional Details</h2> 
 <a href="{% url 'auditor:additional_info_edit' %}">EDIT</a>
-{{ additional_info.has_car }} --
-{{ additional_info.weekend_audit }} --
+<p>Has Car?: {{ additional_info.has_car }}</p>
+<p>Weekend Audit?: {{ additional_info.weekend_audit }}</p>
 
 <h2>Bank Details</h2> 
 <a href="{% url 'auditor:bank_info_edit' %}">EDIT</a>
-{{ bank_info.bank_name }} --
-{{ bank_info.account_holder_name }} --
-{{ bank_info.account_number }} --
-{{ bank_info.ifsc_code }} --
+<p>Bank Name: {{ bank_info.bank_name }}</p>
+<p>A/C Name: {{ bank_info.account_holder_name }}</p>
+<p>A/C No.:{{ bank_info.account_number }}</p>
+<p>IFSC Code: {{ bank_info.ifsc_code }}</p>
 
 {% endblock %}

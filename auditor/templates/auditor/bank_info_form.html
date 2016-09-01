@@ -2,7 +2,7 @@
 {% extends 'nav/base.html' %}
 
 {% block content %}
-<h1>Edit Bank Details</h1>
+<h2>Edit Bank Details</h2>
 
 <form action="{% url 'auditor:bank_info_edit' %}" method="POST">
 	{% csrf_token %}
