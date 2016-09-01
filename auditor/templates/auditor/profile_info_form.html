@@ -1,0 +1,7 @@
+<h1>Edit Basic Details</h1>
+
+<form action="{% url 'auditor:profile_info_edit' %}" method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button type="submit">Save</button>
+</form>

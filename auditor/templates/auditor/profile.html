@@ -1,0 +1,25 @@
+
+<h2>Basic Details</h2>
+<a href="{% url 'auditor:profile_info_edit' %}">EDIT</a>
+{{ profile_info.first_name }} --
+{{ profile_info.last_name }} --
+{{ profile_info.gender }} --
+{{ profile_info.education }} --
+{{ profile_info.date_of_birth }} --
+{{ profile_info.marital_status }} --
+{{ profile_info.address }} --
+{{ profile_info.city }} --
+{{ profile_info.state }} --
+{{ profile_info.pincode }} --
+
+<h2>Additional Details</h2> 
+<a href="{% url 'auditor:additional_info_edit' %}">EDIT</a>
+{{ additional_info.has_car }} --
+{{ additional_info.weekend_audit }} --
+
+<h2>Bank Details</h2> 
+<a href="{% url 'auditor:bank_info_edit' %}">EDIT</a>
+{{ bank_info.bank_name }} --
+{{ bank_info.account_holder_name }} --
+{{ bank_info.account_number }} --
+{{ bank_info.ifsc_code }} --
