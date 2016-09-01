@@ -5,6 +5,8 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
+from auditor.models import ProfileInfo
+from django.contrib.auth.models import User
 from .forms import ProfileCreationForm
 
 class Login(View):
@@ -58,8 +60,9 @@ class SignUp(View):
         form = ProfileCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            print(user.email)
-            print(user.phone)
+            print(user.id)
+            profileInfo = ProfileInfo(user_id=user.id, mobile_number=user.phone)
+            profileInfo.save()
             if user is not None:
                 return redirect('registration:signup_success')
         else:
