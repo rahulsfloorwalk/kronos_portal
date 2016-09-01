@@ -1,4 +1,7 @@
 
+{% extends 'nav/base.html' %}
+
+{% block content %}
 <h1>Edit Bank Details</h1>
 
 <form action="{% url 'auditor:bank_info_edit' %}" method="POST">
@@ -6,3 +9,5 @@
 	{{ form.as_p }}
 	<button type="submit">Save</button>
 </form>
+
+{% endblock %}

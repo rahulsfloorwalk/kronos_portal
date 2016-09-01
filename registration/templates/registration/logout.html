@@ -1,7 +1,9 @@
 
+{% extends 'nav/base.html' %}
 
+{% block content %}
 
-<h1>Logout</h1>
+<h2>Logout</h2>
 {{ form.non_field_errors }}
 --
 {{ form.username.errors }}
@@ -12,3 +14,5 @@
 	{{ form.as_p }}
 	<input type="submit" value="Logout" />
 </form>
+
+{% endblock %}

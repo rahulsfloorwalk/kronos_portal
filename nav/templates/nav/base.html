@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>Vitric Business Solutions</h1>
+		<nav>
+			<a href="{% url 'auditor:dashboard' %}">Dashboard</a> | 
+			<a href="{% url 'auditor:profile' %}">Profile</a> | 
+			<a href="{% url 'registration:logout' %}">Logout</a> | 
+		</nav>
+		{% block content %}
+		{% endblock %}
+	</body>
+</html>
