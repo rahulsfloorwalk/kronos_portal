@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
+from forms import ProfileCreationForm
 
 class Login(View):
     __template = 'registration/login.html'
@@ -51,12 +52,14 @@ class Logout(View):
 class SignUp(View):
     __template = 'registration/signup.html'
     def get(self, request):
-        form = UserCreationForm()
+        form = ProfileCreationForm()
         return render(request, self.__template, {'form': form})
     def post(self, request):
-        form = UserCreationForm(request.POST)
+        form = ProfileCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
+            print user.email
+            print user.phone
             if user is not None:
                 return redirect('registration:signup_success')
         else:
