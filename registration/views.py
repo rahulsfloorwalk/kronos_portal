@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from auditor.models import ProfileInfo
 from django.contrib.auth.models import User
-from .forms import ProfileCreationForm
+from .forms import SignUpForm
 
 class Login(View):
     __template = 'registration/login.html'
@@ -54,15 +54,15 @@ class Logout(View):
 class SignUp(View):
     __template = 'registration/signup.html'
     def get(self, request):
-        form = ProfileCreationForm()
+        form = SignUpForm()
         return render(request, self.__template, {'form': form})
     def post(self, request):
-        form = ProfileCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             print(user.id)
-            profileInfo = ProfileInfo(user_id=user.id, mobile_number=user.phone)
-            profileInfo.save()
+            profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)
+            profile_info.save()
             if user is not None:
                 return redirect('registration:signup_success')
         else:

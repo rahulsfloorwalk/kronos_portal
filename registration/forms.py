@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 
-class ProfileCreationForm(UserCreationForm):
+class SignUpForm(UserCreationForm):
     email = forms.EmailField(required = True)
     phone = forms.CharField(required = True)
 
