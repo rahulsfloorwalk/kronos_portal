@@ -71,4 +71,11 @@ class SignUp(View):
 def signup_success(request):
     return render(request, 'registration/signup_success.html')
 
-
+class ForgotPassword(View):
+    __template = 'registration/forgot_password.html'
+    def get(self, request): 
+        return render(request, self.__template)
+    def post(self, request):
+        return redirect('registration:forgot_password_success')
+def forgot_password_success(request):
+    return render(request, 'registration/forgot_password_success.html')
