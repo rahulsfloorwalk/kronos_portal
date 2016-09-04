@@ -3,12 +3,11 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<h2>Dashboard</h2>
 
 {% if profile_info.first_name and profile_info.last_name %}
-<h3>Welcome {{ profile_info.first_name }} {{ profile_info.last_name }}</h3> 
+<h2 class="page-header">Welcome {{ profile_info.first_name }} {{ profile_info.last_name }}</h2>
 {% else %}
-<h3>Welcome, please begin by settting your details <a href="{% url 'auditor:profile_info_edit' %}">here<a></a></h3> 
+<h2 class="page-header">Welcome, please begin by settting your details <a href="{% url 'auditor:profile_info_edit' %}">here<a></a></h2>
 {% endif %}
 
 {% endblock %}

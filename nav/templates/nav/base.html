@@ -8,13 +8,31 @@
 		<title>{% block title %}{% endblock %} Vitric Business Solutions</title>
 	</head>
 	<body>
-		<h1>Vitric Business Solutions</h1>
-		<nav>
-			<a href="{% url 'auditor:dashboard' %}">Dashboard</a> | 
-			<a href="{% url 'auditor:profile' %}">Profile</a> | 
-			<a href="{% url 'registration:logout' %}">Logout</a> | 
-		</nav>
-		{% block content %}
-		{% endblock %}
+		<div class="container">
+			<h1 class="page-header">Vitric Business Solutions</h1>
+			<div class="row" style="min-height:600px;">
+				<div class="col-md-3">
+					<nav>
+						<ul class="nav nav-pills nav-stacked">
+							<li><a href="{% url 'auditor:dashboard' %}">Dashboard</a></li>
+							<li><a href="{% url 'auditor:profile' %}">Profile</a></li>
+							<li><a href="{% url 'registration:logout' %}">Logout</a></li>
+						</ul>
+					</nav>
+				</div>
+				<div class="col-md-9">
+					{% block content %}
+					{% endblock %}
+				</div>
+			</div>
+			<hr/>
+			<p class="text-center text-muted small">Vitric Business Solutions &copy; 2016</p>
+			<p class="text-center text-muted small">
+				<a href="http://vitric.in">Website</a> |
+				<a href="mailto:support@vitric.in">Email</a> |
+				<a href="tel:+91-123456789">Phone</a> |
+				<a href="https://twitter.com/vitricbiz">Twitter</a>
+			</p>
+		</div>
 	</body>
 </html>
