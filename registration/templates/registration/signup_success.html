@@ -1,13 +1,5 @@
+{% extends "registration/base.html" %}
 {% load widget_tweaks %}
-<!DOCTYPE html>
-<html>
-	<head>
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" 
-			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	</head>
-	<body class="container">
+{% block content %}
 <h2 class="page-header">You have registered successfully. Please check your email for the verification link to login.</h2>
-	</body>
-</html>
+{% endblock %}

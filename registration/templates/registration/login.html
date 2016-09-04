@@ -1,53 +1,51 @@
+{% extends "registration/base.html" %}
 {% load widget_tweaks %}
-<!DOCTYPE html>
-<html>
-	<head>
-		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" 
-			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
-			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-	</head>
-	<body class="container">
-		<div class="row">
-			<div class="col-md-offset-3 col-md-6">
-				<h1 class="page-header">Vitric Business Solutions</h1>
-				<div class="panel panel-primary">
-					<div class="panel-heading">
-						<h3 class="panel-title">Login</h3>
-					</div>
-					<div class="panel-body">
-						{% if form.non_field_errors %}
-						<div class="alert alert-warning">
-							{{ form.non_field_errors }}
-						</div>
-						{% endif %}
-						<form action="{% url 'registration:login' %}" method="POST">
-							{% csrf_token %}
-							<div class="form-group">
-								{{ form.username.label_tag }}
-								{{ form.username | add_class:"form-control input-lg" }}
-								<p class="help-block">
-									{{ form.username.errors }}
-								</p>
-							</div>
-							<div class="form-group">
-								{{ form.password.label_tag }}
-								{{ form.password | add_class:"form-control input-lg" }}
-								<p class="help-text">
-									{{ form.password.errors }}
-								</p>
-							</div>
-							<div class="form-group">
-								<button class="btn btn-primary btn-lg" type="submit">Login</button>
-								<a class="pull-right" href="forgot_password">Forgot Password</a>
-							</div>
-						</form>
-					</div>
+{% block content %}
+<h1 class="page-header">Vitric Business Solutions</h1>
+<div class="row">
+	<div class="col-offset-1 col-md-5">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Login</h3>
+			</div>
+			<div class="panel-body">
+				{% if form.non_field_errors %}
+				<div class="alert alert-warning">
+					{{ form.non_field_errors }}
 				</div>
-				<div>
-					<h4><a class="pull-left col-md-offset-4" href="signup">Create vitric account</a></h4>
-				</div>
+				{% endif %}
+				<form action="{% url 'registration:login' %}" method="POST">
+					{% csrf_token %}
+					<div class="form-group">
+						{{ form.username.label_tag }}
+						{{ form.username | add_class:"form-control input-lg" }}
+						<p class="help-block">
+						{{ form.username.errors }}
+						</p>
+					</div>
+					<div class="form-group">
+						{{ form.password.label_tag }}
+						{{ form.password | add_class:"form-control input-lg" }}
+						<p class="help-text">
+						{{ form.password.errors }}
+						</p>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary btn-lg" type="submit">Login</button>
+						<a class="pull-right" href="{% url 'registration:forgot_password' %}">Forgot Password</a>
+					</div>
+				</form>
 			</div>
 		</div>
-	</body>
-</html>
+	</div>
+	<div class="col-md-5">
+		<!--<div class="panel panel-default">
+		<div class="panel-body">-->
+			<h2>Don't have an account?</h2>
+			<p>It's a fast and free process. Click the button below to sign up.</p>
+			<a class="btn btn-lg btn-success" href="signup">Sign Up</a>
+			<!--</div>
+		</div>-->
+	</div>
+</div>
+{% endblock %}

@@ -17,18 +17,12 @@ class Login(View):
         return render(request, self.__template, {'form': form})
 
     def post(self, request):
-        print(request.POST)
         form = AuthenticationForm(data=request.POST)
-        print(form.is_valid())
         if form.is_valid():
             user = form.get_user()
-            print(user)
             if user is not None:
                 login(request, user)
-                print("hello")
                 return redirect('auditor:dashboard')
-        print("haffailed")
-        print(form.errors)
         return render(request, self.__template, {'form': form})
 
 class LogoutForm(Form):
@@ -60,7 +54,6 @@ class SignUp(View):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            print(user.id)
             profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)
             profile_info.save()
             if user is not None:
@@ -77,5 +70,6 @@ class ForgotPassword(View):
         return render(request, self.__template)
     def post(self, request):
         return redirect('registration:forgot_password_success')
+
 def forgot_password_success(request):
     return render(request, 'registration/forgot_password_success.html')
