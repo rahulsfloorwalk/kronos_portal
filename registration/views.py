@@ -8,6 +8,7 @@ from django.views import View
 from auditor.models import ProfileInfo
 from django.contrib.auth.models import User
 from .forms import SignUpForm
+import hashlib, random, datetime
 
 class Login(View):
     __template = 'registration/login.html'
@@ -53,7 +54,18 @@ class SignUp(View):
     def post(self, request):
         form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            auth_data = {}
+            auth_data['username'] = form.cleaned_data['username']
+            salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
+            usernamesalt = auth_data['username']
+            if isinstance(usernamesalt, unicode):
+                usernamesalt = usernamesalt.encode('utf8')
+                auth_data['activation_key'] = hashlib.sha1(salt+usernamesalt).hexdigest()
+                auth_data['expiry'] = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=2), "%Y-%m-%d %H:%M:%S")
+                auth_data['email_path'] = "/ActivationEmail.txt"
+                auth_data['email_subject'] = "Activation completion mail"
+                form.sendEmail(auth_data)
+            user = form.save(auth_data)
             profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)
             profile_info.save()
             if user is not None:
