@@ -1,4 +1,5 @@
 {% extends 'nav/base.html' %}
+{% load widget_tweaks %}
 
 {% block content %}
 
@@ -15,6 +16,7 @@
 		<p>Date of Birth: {{ profile_info.date_of_birth }}</p>
 		<p>Marital Status: {{ profile_info.marital_status }}</p>
 		<p>Address: {{ profile_info.address }}</p>
+		<p>Mobile Number: {{ profile_info.mobile_number }}</p>
 		<p>City: {{ profile_info.city }}</p>
 		<p>State: {{ profile_info.state }}</p>
 		<p>Pincode: {{ profile_info.pincode }}</p>
