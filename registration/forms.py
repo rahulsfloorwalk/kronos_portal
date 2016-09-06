@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from registration.models import Verification
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from auditor.models import ProfileInfo
+from django.core.mail import send_mail
 import hashlib, random, datetime
 
 class SignUpForm(UserCreationForm):
@@ -44,9 +45,10 @@ class SignUpForm(UserCreationForm):
         verification.save()
 
         self.sendEmail(auth_data)
-        print(auth_data['email'])
         return user
 
     def sendEmail(self, auth_data):
+        link = "http://localhost:8000/auth/activate/" + auth_data['activation_key']
+        send_mail('activation', link, 'xamit.94@gmail.com', [auth_data['email']], fail_silently=False)
         print(auth_data['activation_key'])
         print(auth_data['expiry'])

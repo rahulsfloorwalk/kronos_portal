@@ -13,7 +13,7 @@ default = {
 
 email_settings = {
     "EMAIL_HOST" : "smtp.gmail.com",
-    "EMAIL_PORT" : "465",
+    "EMAIL_PORT" : "587",
     "EMAIL_HOST_USER" : "foo@bar.com",
     "EMAIL_HOST_PASSWORD" : "password"
 }

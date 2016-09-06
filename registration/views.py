@@ -1,12 +1,13 @@
 from django.forms import Form
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
-from auditor.models import ProfileInfo
 from django.contrib.auth.models import User
+from auditor.models import ProfileInfo
+from .models import Verification
 from .forms import SignUpForm
 import datetime
 
@@ -81,3 +82,8 @@ class ForgotPassword(View):
 
 def forgot_password_success(request):
     return render(request, 'registration/forgot_password_success.html')
+
+def activate(request, key):
+    __template = 'registration/login.html'
+    verification = get_object_or_404(Verification, activation_key=key)
+    return render(request, 'registration/login.html')

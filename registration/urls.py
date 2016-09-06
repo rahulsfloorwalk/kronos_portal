@@ -8,4 +8,5 @@ urlpatterns = ([
     url(r'signup/success$', views.signup_success, name="signup_success"),
     url(r'forgot_password$', views.ForgotPassword.as_view(), name="forgot_password"),
     url(r'forgot_password/success$', views.forgot_password_success, name="forgot_password_success"),
+    url(r'activate/(?P<key>.+)$', views.activate, name="activate"),
 ], 'registration')
