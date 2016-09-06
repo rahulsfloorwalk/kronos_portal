@@ -8,7 +8,7 @@ from django.views import View
 from auditor.models import ProfileInfo
 from django.contrib.auth.models import User
 from .forms import SignUpForm
-import hashlib, random, datetime
+import datetime
 
 class Login(View):
     __template = 'registration/login.html'
@@ -71,10 +71,10 @@ class ForgotPassword(View):
         form = PasswordResetForm(request.POST)
         print(request.POST)
         if form.is_valid():
-            #form.save(
-                    #domain_override="vitric.in",
-                    #from_email="support@vitric.in"
-                    #)
+            form.save(
+                domain_override="vitric.in",
+                from_email="support@vitric.in"
+                )
             return redirect('registration:forgot_password_success')
         else:
             return render(request, self.__template, { 'form': form})

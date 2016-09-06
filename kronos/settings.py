@@ -127,3 +127,11 @@ STATIC_URL = '/static/'
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = '/auditor/dashboard'
 LOGOUT_REDIRECT_URL = '/auth/login'
+
+## email settings
+
+EMAIL_HOST = properties.email_settings["EMAIL_HOST"]
+EMAIL_PORT = properties.email_settings["EMAIL_PORT"]
+EMAIL_HOST_USER = properties.email_settings["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = properties.email_settings["EMAIL_HOST_PASSWORD"]
+EMAIL_USE_TLS = True

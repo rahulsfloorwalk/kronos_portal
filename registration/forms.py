@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from registration.models import Verification
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from auditor.models import ProfileInfo
+import hashlib, random, datetime
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required = True)
@@ -23,6 +24,7 @@ class SignUpForm(UserCreationForm):
 
         auth_data = {}
         auth_data['username'] = self.cleaned_data['username']
+        auth_data['email'] = self.cleaned_data['email']
         salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
         usernamesalt = auth_data['username']
 
@@ -42,7 +44,7 @@ class SignUpForm(UserCreationForm):
         verification.save()
 
         self.sendEmail(auth_data)
-
+        print(auth_data['email'])
         return user
 
     def sendEmail(self, auth_data):
