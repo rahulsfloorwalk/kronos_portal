@@ -2,9 +2,11 @@ from django import forms
 from django.contrib.auth.models import User
 from registration.models import Verification
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.core.exceptions import ValidationError
 from auditor.models import ProfileInfo
 from django.core.mail import send_mail
-import hashlib, random, datetime
+import hashlib, datetime
+from os import urandom
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required = True)
@@ -13,6 +15,13 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "email", "phone", "password1", "password2")
+
+    def is_valid(self):
+        valid = super(SignUpForm, self).is_valid() 
+        if User.objects.filter(email=self.cleaned_data["email"]).exists():
+            self.add_error("email", "a user with email {} already exists".format(self.cleaned_data["email"]))
+            valid = False
+        return valid
 
     def save(self, commit = True):
         user = super(SignUpForm, self).save(commit = False)
@@ -26,14 +35,12 @@ class SignUpForm(UserCreationForm):
         auth_data = {}
         auth_data['username'] = self.cleaned_data['username']
         auth_data['email'] = self.cleaned_data['email']
-        salt = hashlib.sha1(str(random.random())).hexdigest()[:5]
-        usernamesalt = auth_data['username']
-
-        if not isinstance(usernamesalt, unicode):
-            raise UnicodeError("generated usernamesalt is not unicode")
-
-        usernamesalt = usernamesalt.encode('utf8')
-        auth_data['activation_key'] = hashlib.sha1(salt+usernamesalt).hexdigest()
+        
+        salt_hash_hexstr = hashlib.sha1(urandom(16)).hexdigest()
+        username_hash_hexstr = hashlib.sha1(auth_data["username"].encode('utf-8')).hexdigest()
+        cat_str = salt_hash_hexstr + username_hash_hexstr
+        auth_data['activation_key'] = hashlib.sha1(cat_str.encode('utf-8')).hexdigest()
+        
         auth_data['expiry'] = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=2), "%Y-%m-%d %H:%M:%S")
         auth_data['email_path'] = "registration/password_reset_email.html"
         auth_data['email_subject'] = "registration/password_reset_subject.txt"
@@ -50,5 +57,6 @@ class SignUpForm(UserCreationForm):
     def sendEmail(self, auth_data):
         link = "http://localhost:8000/auth/activate/" + auth_data['activation_key']
         send_mail('activation', link, 'xamit.94@gmail.com', [auth_data['email']], fail_silently=False)
-        print(auth_data['activation_key'])
-        print(auth_data['expiry'])
+
+#class LoginForm(AuthenticationForm):
+

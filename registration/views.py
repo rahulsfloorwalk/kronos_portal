@@ -23,8 +23,13 @@ class Login(View):
         if form.is_valid():
             user = form.get_user()
             if user is not None:
-                login(request, user)
-                return redirect('auditor:dashboard')
+                try:
+                    verification = Verification.objects.get(user_id=user.id)
+                    if verification is not None and verification.is_verified is True:
+                        login(request, user)
+                        return redirect('auditor:dashboard')
+                except Verification.DoesNotExist:
+                    pass
         return render(request, self.__template, {'form': form})
 
 class LogoutForm(Form):
@@ -84,6 +89,12 @@ def forgot_password_success(request):
     return render(request, 'registration/forgot_password_success.html')
 
 def activate(request, key):
-    __template = 'registration/login.html'
     verification = get_object_or_404(Verification, activation_key=key)
-    return render(request, 'registration/login.html')
+    if verification is not None:
+        if verification.is_verified is False:
+            verification.is_verified = True
+            verification.save()
+            user = verification.user
+            login(request, user)
+            redirect('auditor:dashboard')
+    return redirect('registration:login')
