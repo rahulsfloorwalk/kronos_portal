@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib.auth.models import User
+from django.contrib import messages
 from auditor.models import ProfileInfo
 from .models import Verification
 from .forms import SignUpForm
@@ -28,6 +29,8 @@ class Login(View):
                     if verification is not None and verification.is_verified is True:
                         login(request, user)
                         return redirect('auditor:dashboard')
+                    else:
+                        messages.add_message(request, messages.WARNING, 'Your account is not verified. Please check your email for the verification link.')
                 except Verification.DoesNotExist:
                     pass
         return render(request, self.__template, {'form': form})
@@ -48,6 +51,7 @@ class Logout(View):
         form = LogoutForm(request.POST)
         if form.is_valid():
             logout(request)
+            messages.add_message(request, messages.SUCCESS, 'Logged out successfully.')
             return redirect('registration:login')
         else:
             return render(request, self.__template, {'form': form})
@@ -96,5 +100,6 @@ def activate(request, key):
             verification.save()
             user = verification.user
             login(request, user)
+            messages.add_message(request, messages.SUCCESS, 'Your email has been verified. Please login to continue.')
             redirect('auditor:dashboard')
     return redirect('registration:login')
