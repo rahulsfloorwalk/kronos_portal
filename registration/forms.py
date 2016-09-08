@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from auditor.models import ProfileInfo
 from django.core.mail import send_mail
 import hashlib, datetime
+import properties
 from os import urandom
 
 class SignUpForm(UserCreationForm):
@@ -55,8 +56,8 @@ class SignUpForm(UserCreationForm):
         return user
 
     def sendEmail(self, auth_data):
-        link = "http://localhost:8000/auth/activate/" + auth_data['activation_key']
-        send_mail('activation', link, 'xamit.94@gmail.com', [auth_data['email']], fail_silently=False)
+        link = properties.ACTIVATION_LINK_ADDRESS + auth_data['activation_key']
+        send_mail('Account activation link', link, properties.ACTIVATION_LINK_SENDER, [auth_data['email']], fail_silently=False)
 
 #class LoginForm(AuthenticationForm):
 

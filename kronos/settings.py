@@ -26,7 +26,7 @@ SECRET_KEY = properties.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = properties.DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
