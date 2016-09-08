@@ -17,15 +17,14 @@ from django import urls
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'om!5dod_j1e#*!n9g)0a!fp5d*-_h^s^82r13a7v8=yz75p8s#'
+SECRET_KEY = properties.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = properties.DEBUG
 
 ALLOWED_HOSTS = []
 
@@ -80,7 +79,7 @@ WSGI_APPLICATION = 'kronos.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default': properties.default
+    'default': properties.database
 }
 
 

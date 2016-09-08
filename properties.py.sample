@@ -1,8 +1,8 @@
 ##
-## Rename this file to properties.py and fill in your DB values below
+## Rename this file to properties.py and fill in your values below
 ##
 
-default = {
+database = {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'db_name',
         'USER': 'db_user',
@@ -17,3 +17,9 @@ email_settings = {
     "EMAIL_HOST_USER" : "foo@bar.com",
     "EMAIL_HOST_PASSWORD" : "password"
 }
+
+## change this to something long in production
+SECRET_KEY = 'super_secret'
+
+## Make sure this is False in production
+DEBUG = True
