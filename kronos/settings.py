@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'widget_tweaks',
     'registration',
     'auditor',
@@ -100,6 +101,22 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated' # only allow authenticated users
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication', # only allow session based authentication
+    ),
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ]
+}
+
+if DEBUG:
+    # add the Web Browsable API Renderer when DEBUG is enabled
+    REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"].append('rest_framework.renderers.BrowsableAPIRenderer')
 
 
 # Internationalization
