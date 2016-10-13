@@ -2,3 +2,4 @@
 *.swp
 venv/
 properties.py
+frontend/node_modules/

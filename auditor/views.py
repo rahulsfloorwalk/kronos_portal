@@ -134,7 +134,7 @@ class ProfileInfoView(APIView):
         profile_info_s = ProfileInfoSerializer(data=request.data)
         profile_info_s.is_valid(raise_exception=True)
         profile_info = profile_info_s.save(current_user=request.user)
-        return Response(profile_info)
+        return Response(ProfileInfoSerializer(profile_info).data)
 
 class AdditionalInfoView(APIView):
     def get(self, request, format=None):
