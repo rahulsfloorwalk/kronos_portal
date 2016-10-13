@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'registration',
     'auditor',
     'nav',
+    'client',
 ]
 
 MIDDLEWARE = [
