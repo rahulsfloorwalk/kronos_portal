@@ -31,7 +31,7 @@ class ProfileInfoSerializer(ModelSerializer):
         try:
             profile_info = ProfileInfo.objects.get(user_id=kwargs['current_user'].id)
         except ProfileInfo.DoesNotExist:
-            profile_info = BankInfo()
+            profile_info = ProfileInfo()
             profile_info.user_id = kwargs['current_user'].id
 
         profile_info.first_name = self.validated_data.get('first_name', profile_info.first_name)
@@ -72,7 +72,7 @@ class AdditionalInfoSerializer(ModelSerializer):
             additional_info = AdditionalInfo()
             additional_info.user_id = kwargs['current_user'].id
 
-        additional_info.has_car = self.validated_data.get('has_car', additional_info.weekend_audit)
+        additional_info.has_car = self.validated_data.get('has_car', additional_info.has_car)
         additional_info.weekend_audit = self.validated_data.get('weekend_audit', additional_info.weekend_audit)
 
         additional_info.save()

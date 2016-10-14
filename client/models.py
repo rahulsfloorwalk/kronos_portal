@@ -52,8 +52,8 @@ class Audit(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     type = IntegerField(db_column='type', choices=TYPES, blank=False)
     status = IntegerField(db_column='status', choices=STATUS, blank=False)
-    startDate = DateField(db_column='start_date')
-    endDate = DateField(db_column='end_date')
+    start_date = DateField(db_column='start_date')
+    end_date = DateField(db_column='end_date')
     description = CharField(db_column='description', max_length=200, blank=False)
     client = ForeignKey(Client, db_column='client_id', on_delete=CASCADE)
 
@@ -62,5 +62,5 @@ class AuditLocation(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     count = IntegerField(db_column='count', blank=False)
-    auditLocation = ForeignKey(Location, db_column='audit_location_id')
+    location = ForeignKey(Location, db_column='location_id')
     audit = ForeignKey(Audit, db_column='audit_id', on_delete=CASCADE)
