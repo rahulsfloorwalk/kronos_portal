@@ -13,6 +13,7 @@ class ClientView(APIView):
     def get(self, request, format=None):
         try:
             client = Client.objects.all()
+            print(client)
             return Response(ClientSerializer(client, many=True).data)
         except Client.DoesNotExist:
             raise Http404
@@ -22,6 +23,28 @@ class ClientView(APIView):
         client_s.is_valid(raise_exception=True)
         client = client_s.save()
         return Response(ClientSerializer(client).data)
+
+class ClientIdView(APIView):
+    def get(self, request, client_id, format=None):
+        try:
+            client = Client.objects.get(id=client_id)
+            return Response(ClientSerializer(client).data)
+        except Client.DoesNotExist:
+            raise Http404
+
+    def post(self, request, client_id):
+        client_s = ClientSerializer(data=request.data)
+        client_s.is_valid(raise_exception=True)
+        client = client_s.save(id=client_id)
+        return Response(ClientSerializer(client).data)
+    def delete(self, request, client_id):
+        try:
+            client = Client.objects.get(id=client_id)
+            client.delete()
+            return Response(ClientSerializer(client).data)
+        except Client.DoesNotExist:
+            raise Http404
+
 
 class LocationView(APIView):
     def get(self, request, format=None):

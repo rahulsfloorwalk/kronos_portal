@@ -15,10 +15,17 @@ class ClientSerializer(ModelSerializer):
         read_only_fields = ('id',)
 
     def save(self, **kwargs):
-        client = Client()
-        client.name = self.validated_data.get('name')
-        client.email = self.validated_data.get('email')
-        client.phone = self.validated_data.get('phone')
+        id = kwargs['id']
+        if id is None:
+            client = Client()
+            client.name = self.validated_data.get('name')
+            client.email = self.validated_data.get('email')
+            client.phone = self.validated_data.get('phone')
+        else:
+            client = Client.objects.get(id=id)
+            client.name = self.validated_data.get('name', client.name)
+            client.email = self.validated_data.get('email', client.email)
+            client.phone = self.validated_data.get('phone', client.phone)
 
         client.save()
         return client
