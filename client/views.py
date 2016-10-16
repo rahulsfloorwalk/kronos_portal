@@ -13,7 +13,6 @@ class ClientView(APIView):
     def get(self, request, format=None):
         try:
             client = Client.objects.all()
-            print(client)
             return Response(ClientSerializer(client, many=True).data)
         except Client.DoesNotExist:
             raise Http404
@@ -21,7 +20,7 @@ class ClientView(APIView):
     def post(self, request):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
-        client = client_s.save()
+        client = client_s.save(id=None)
         return Response(ClientSerializer(client).data)
 
 class ClientIdView(APIView):

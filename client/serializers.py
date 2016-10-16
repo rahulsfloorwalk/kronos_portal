@@ -30,6 +30,15 @@ class ClientSerializer(ModelSerializer):
         client.save()
         return client
 
+class CitySerializer(ModelSerializer):
+    class Meta:
+        model = City
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = ('id',)
+
 class LocationSerializer(ModelSerializer):
     class Meta:
         model = Location
@@ -41,7 +50,7 @@ class LocationSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def save(self, **kwargs):
+    def deserialize(self, **kwargs):
         location = Location()
         location.name = self.validated_data.get('name')
         location.pincode = self.validated_data.get('pincode')
