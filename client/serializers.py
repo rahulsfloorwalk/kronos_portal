@@ -50,12 +50,11 @@ class LocationSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def deserialize(self, **kwargs):
+    def save(self, **kwargs):
         location = Location()
         location.name = self.validated_data.get('name')
         location.pincode = self.validated_data.get('pincode')
         location.city_id = kwargs['city']
-
         location.save()
         return location
 
