@@ -1,7 +1,8 @@
 import React from 'react';
 import * as ReactRedux from 'react-redux';
-import { fetchProfileInfo } from '../actions.js'
 import { Link } from 'react-router';
+
+import { fetchProfileInfo } from '../actions.js'
 
 var ProfileInfo = React.createClass({
 	componentWillMount: function() {
@@ -14,7 +15,7 @@ var ProfileInfo = React.createClass({
 					<h3 className="panel-title">Profile Info</h3>
 				</div>
 				<div className="panel-body">
-					<Link to="/profile/edit" className="btn btn-default pull-right">EDIT</Link>
+					<Link to="details/profile/edit" className="btn btn-default pull-right">EDIT</Link>
 					<p>First Name: { this.props.profileInfo.first_name }</p>
 					<p>Last Name: { this.props.profileInfo.last_name }</p>
 					<p>Gender: { this.props.profileInfo.gender }</p>

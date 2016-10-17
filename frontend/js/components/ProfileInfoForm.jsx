@@ -15,7 +15,6 @@ import Modal from './Modal.jsx';
  * Following are the props for a form:
  *
  * profileInfo - the initial data to be displayed
- * values - values that have been edited in the form
  * errors - errors in the form, if any
  */
 var ProfileInfoForm = React.createClass({
@@ -23,6 +22,9 @@ var ProfileInfoForm = React.createClass({
 		return {};
 	},
 	componentWillMount: function() {
+		this.setState(this.props.profileInfo);
+	},
+	componentDidMount: function() {
 		this.props.dispatch(fetchProfileInfo());
 	},
 	componentWillReceiveProps: function(nextProps) {
@@ -38,9 +40,6 @@ var ProfileInfoForm = React.createClass({
 		this.props.dispatch(saveProfileInfo(this.state));
 	},
 	render : function(){
-		if(this.props.loading){
-			return <p>loading...</p>
-		}
 		return (
 			<Modal modalTitle="Edit Profile Info" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -121,7 +120,6 @@ var ProfileInfoForm = React.createClass({
 var mapStoreToProps = function(store){
 	return {
 		profileInfo: store.profileInfo,
-		values: store.forms.profileInfo.values,
 		errors: store.forms.profileInfo.errors,
 	};
 };

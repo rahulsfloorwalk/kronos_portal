@@ -6,7 +6,12 @@ var initialStore = {
 	additionalInfo: {},
 	forms: {
 		profileInfo: {
-			values:{},
+			errors:{}
+		},
+		additionalInfo: {
+			errors:{}
+		},
+		bankInfo: {
 			errors:{}
 		}
 	}
@@ -18,6 +23,7 @@ export function rootReducer(store, action) {
 	}
 
 	switch(action.type){
+		/*Profile Info Reducers */
 		case types.PROFILE_INFO_GET_REQ:
 			return Object.assign({}, store, {
 				loadingProfileInfo: true
@@ -27,12 +33,10 @@ export function rootReducer(store, action) {
 				loadingProfileInfo: false,
 				profileInfo: Object.assign({}, store.profileInfo, action.profileInfo)
 			});
-		/* Profile Info Form Reducers */
 		case types.PROFILE_INFO_POST_REQ:
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
 					profileInfo:{
-						values: action.profileInfo,
 						errors: {}
 					}
 				})
@@ -42,7 +46,6 @@ export function rootReducer(store, action) {
 				profileInfo: action.profileInfo,
 				forms: Object.assign({}, store.forms, {
 					profileInfo: Object.assign({}, store.forms.profileInfo, {
-						values: action.profileInfo,
 						errors: {}
 					})
 				})
@@ -51,6 +54,76 @@ export function rootReducer(store, action) {
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
 					profileInfo: Object.assign({}, store.forms.profileInfo, {
+						errors: action.errors
+					})
+				})
+			});
+		/*Bank Info Reducers */
+		case types.BANK_INFO_GET_REQ:
+			return Object.assign({}, store, {
+				loadingBankInfo: true
+			});
+		case types.BANK_INFO_GET_SUC:
+			return Object.assign({}, store, {
+				loadingBankInfo: false,
+				bankInfo: Object.assign({}, store.bankInfo, action.bankInfo)
+			});
+		case types.BANK_INFO_POST_REQ:
+			return Object.assign({}, store, {
+				forms: Object.assign({}, store.forms, {
+					bankInfo:{
+						errors: {}
+					}
+				})
+			});
+		case types.BANK_INFO_POST_SUC:
+			return Object.assign({}, store, {
+				bankInfo: action.bankInfo,
+				forms: Object.assign({}, store.forms, {
+					bankInfo: Object.assign({}, store.forms.bankInfo, {
+						errors: {}
+					})
+				})
+			});
+		case types.BANK_INFO_POST_ERR:
+			return Object.assign({}, store, {
+				forms: Object.assign({}, store.forms, {
+					bankInfo: Object.assign({}, store.forms.bankInfo, {
+						errors: action.errors
+					})
+				})
+			});
+		/*Additional Info Reducers */
+		case types.ADDITIONAL_INFO_GET_REQ:
+			return Object.assign({}, store, {
+				loadingAdditionalInfo: true
+			});
+		case types.ADDITIONAL_INFO_GET_SUC:
+			return Object.assign({}, store, {
+				loadingAdditionalInfo: false,
+				additionalInfo: Object.assign({}, store.additionalInfo, action.additionalInfo)
+			});
+		case types.ADDITIONAL_INFO_POST_REQ:
+			return Object.assign({}, store, {
+				forms: Object.assign({}, store.forms, {
+					additionalInfo:{
+						errors: {}
+					}
+				})
+			});
+		case types.ADDITIONAL_INFO_POST_SUC:
+			return Object.assign({}, store, {
+				additionalInfo: action.additionalInfo,
+				forms: Object.assign({}, store.forms, {
+					additionalInfo: Object.assign({}, store.forms.additionalInfo, {
+						errors: {}
+					})
+				})
+			});
+		case types.ADDITIONAL_INFO_POST_ERR:
+			return Object.assign({}, store, {
+				forms: Object.assign({}, store.forms, {
+					additionalInfo: Object.assign({}, store.forms.additionalInfo, {
 						errors: action.errors
 					})
 				})

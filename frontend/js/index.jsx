@@ -18,7 +18,6 @@ var store = Redux.createStore(
 );
 
 ReactDOM.render(
-	<Root store={store}>
-	</Root>,
+	<Root store={store}/>,
 	document.getElementById('root')
 );

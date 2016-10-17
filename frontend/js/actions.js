@@ -4,6 +4,7 @@ import { hashHistory } from 'react-router';
 
 
 export var types = {
+	/*Profile Info Action Types*/
 	PROFILE_INFO_GET_REQ: 'PROFILE_INFO_REQ',
 	PROFILE_INFO_GET_ERR: 'PROFILE_INFO_ERR',
 	PROFILE_INFO_GET_SUC: 'PROFILE_INFO_SUC',
@@ -12,13 +13,23 @@ export var types = {
 	PROFILE_INFO_POST_ERR: 'PROFILE_INFO_POST_ERR',
 	PROFILE_INFO_POST_SUC: 'PROFILE_INFO_POST_SUC',
 
-	BANK_INFO_REQ: 'BANK_INFO_REQ',
-	BANK_INFO_ERR: 'BANK_INFO_ERR',
-	BANK_INFO_RECV: 'BANK_INFO_RECV',
+	/*Bank Info Action Types*/
+	BANK_INFO_GET_REQ: 'BANK_INFO_GET_REQ',
+	BANK_INFO_GET_ERR: 'BANK_INFO_GET_ERR',
+	BANK_INFO_GET_SUC: 'BANK_INFO_GET_SUC',
 
-	ADDITIONAL_DETAILS_REQ: 'ADDITIONAL_DETAILS_REQ',
-	ADDITIONAL_DETAILS_ERR: 'ADDITIONAL_DETAILS_ERR',
-	ADDITIONAL_DETAILS_RECV: 'ADDITIONAL_DETAILS_RECV',
+	BANK_INFO_POST_REQ: 'BANK_INFO_POST_REQ',
+	BANK_INFO_POST_ERR: 'BANK_INFO_POST_ERR',
+	BANK_INFO_POST_SUC: 'BANK_INFO_POST_SUC',
+
+	/*Additional Info Action Types*/
+	ADDITIONAL_INFO_GET_REQ: 'ADDITIONAL_INFO_GET_REQ',
+	ADDITIONAL_INFO_GET_ERR: 'ADDITIONAL_INFO_GET_ERR',
+	ADDITIONAL_INFO_GET_SUC: 'ADDITIONAL_INFO_GET_SUC',
+
+	ADDITIONAL_INFO_POST_REQ: 'ADDITIONAL_INFO_POST_REQ',
+	ADDITIONAL_INFO_POST_ERR: 'ADDITIONAL_INFO_POST_ERR',
+	ADDITIONAL_INFO_POST_SUC: 'ADDITIONAL_INFO_POST_SUC',
 };
 
 /**
@@ -30,7 +41,7 @@ function profileInfoGetReq(){
 		type: types.PROFILE_INFO_GET_REQ,
 	};
 };
-export function profileInfoGetSuccess(profileInfo){
+function profileInfoGetSuccess(profileInfo){
 	return {
 		type: types.PROFILE_INFO_GET_SUC,
 		profileInfo: profileInfo
@@ -55,34 +66,68 @@ function profileInfoPostError(errors){
 	};
 };
 
-/*
-function requestBankInfo(){
+function bankInfoGetReq(){
 	return {
-		type: types.BANK_INFO_REQ,
+		type: types.BANK_INFO_GET_REQ
 	};
 };
-function receiveBankInfo(bankInfo){
+function bankInfoGetSuccess(bankInfo){
 	return {
-		type: types.BANK_INFO_RECV,
+		type: types.BANK_INFO_GET_SUC,
 		bankInfo: bankInfo
 	};
 };
+function bankInfoPostReq(bankInfo){
+	return {
+		type: types.BANK_INFO_POST_REQ,
+		bankInfo: bankInfo
+	};
+};
+function bankInfoPostSuccess(bankInfo){
+	return {
+		type: types.BANK_INFO_POST_SUC,
+		bankInfo: bankInfo
+	};
+};
+function bankInfoPostError(errors){
+	return {
+		type: types.BANK_INFO_POST_ERR,
+		errors: errors
+	};
+};
 
-function requestAdditionalInfo(listId){
+function additionalInfoGetReq(){
 	return {
-		type: types.ADDITIONAL_DETAILS_REQ,
+		type: types.ADDITIONAL_INFO_GET_REQ
 	};
 };
-function receiveAdditionalInfo(additionalInfo){
+function additionalInfoGetSuccess(additionalInfo){
 	return {
-		type: types.ADDITIONAL_DETAILS_RECV,
-		additionalInfo: additionalInfo,
+		type: types.ADDITIONAL_INFO_GET_SUC,
+		additionalInfo: additionalInfo
 	};
 };
-*/
+function additionalInfoPostReq(additionalInfo){
+	return {
+		type: types.ADDITIONAL_INFO_POST_REQ,
+		additionalInfo: additionalInfo
+	};
+};
+function additionalInfoPostSuccess(additionalInfo){
+	return {
+		type: types.ADDITIONAL_INFO_POST_SUC,
+		additionalInfo: additionalInfo
+	};
+};
+function additionalInfoPostError(errors){
+	return {
+		type: types.ADDITIONAL_INFO_POST_ERR,
+		errors: errors
+	};
+};
 
 /**
- * These are the action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
+ * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
  * This allows you to configure the returned function with parameters ala factories.
  */
 export function fetchProfileInfo(){
@@ -117,28 +162,66 @@ export function saveProfileInfo(profileInfo){
 	};
 };
 
-/*
 export function fetchBankInfo(){
 	return function(dispatch){
-		dispatch(requestBankInfo());
+		dispatch(bankInfoGetReq());
 
-		$.get(config.api_base_path, function(bankInfo){
-			dispatch(receiveBankInfo(bankInfo));
+		$.get( url.api_base_path + "auditor/bank-api?format=json", function(bankInfo){
+			dispatch(bankInfoGetSuccess(bankInfo));
 		});
 		//Handle error
+	};
+};
+
+export function saveBankInfo(bankInfo){
+	return function(dispatch){
+		dispatch(bankInfoPostReq(bankInfo));
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "auditor/bank-api",
+			data: JSON.stringify(bankInfo),
+			contentType: "application/json"
+		});
+		req.done(function(bankInfo){
+			console.log("success",bankInfo);
+			dispatch(bankInfoPostSuccess(bankInfo));
+			hashHistory.push("/details");
+		});
+		req.fail(function(error){
+			dispatch(bankInfoPostError(error.responseJSON));
+		});
 	};
 };
 
 export function fetchAdditionalInfo(){
 	return function(dispatch){
-		//requesting cards for a list...
-		dispatch(requestAdditionalInfo());
+		dispatch(additionalInfoGetReq());
 
-		$.get(config.api_base_path, function(additionalInfo){
-			dispatch(receiveAdditionalInfo(additionalInfo));
+		$.get( url.api_base_path + "auditor/additional-api?format=json", function(additionalInfo){
+			dispatch(additionalInfoGetSuccess(additionalInfo));
 		});
 		//Handle error
 	};
 };
-*/
 
+export function saveAdditionalInfo(additionalInfo){
+	return function(dispatch){
+		dispatch(additionalInfoPostReq(additionalInfo));
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "auditor/additional-api",
+			data: JSON.stringify(additionalInfo),
+			contentType: "application/json"
+		});
+		req.done(function(additionalInfo){
+			console.log("success",additionalInfo);
+			dispatch(additionalInfoPostSuccess(additionalInfo));
+			hashHistory.push("/details");
+		});
+		req.fail(function(error){
+			dispatch(additionalInfoPostError(error.responseJSON));
+		});
+	};
+};

@@ -15,7 +15,7 @@ var Dashboard = React.createClass({
 			);
 		}
 		return (
-			<h3>Welcome, please begin by saving your details <Link to="/profile/edit">here</Link></h3>
+			<h3>Welcome, please begin by saving your details <Link to="details/profile/edit">here</Link></h3>
 		);
 	},
 });

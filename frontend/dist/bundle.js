@@ -70,7 +70,7 @@
 
 	var _routes = __webpack_require__(190);
 
-	var _reducers = __webpack_require__(264);
+	var _reducers = __webpack_require__(260);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -22256,7 +22256,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
-			value: true
+		value: true
 	});
 	exports.Root = undefined;
 
@@ -22276,33 +22276,46 @@
 
 	var _Dashboard2 = _interopRequireDefault(_Dashboard);
 
-	var _ProfileInfo = __webpack_require__(256);
+	var _DetailsPage = __webpack_require__(259);
 
-	var _ProfileInfo2 = _interopRequireDefault(_ProfileInfo);
+	var _DetailsPage2 = _interopRequireDefault(_DetailsPage);
 
-	var _ProfileInfoForm = __webpack_require__(260);
+	var _ProfileInfoForm = __webpack_require__(262);
 
 	var _ProfileInfoForm2 = _interopRequireDefault(_ProfileInfoForm);
+
+	var _BankInfoForm = __webpack_require__(269);
+
+	var _BankInfoForm2 = _interopRequireDefault(_BankInfoForm);
+
+	var _AdditionalInfoForm = __webpack_require__(273);
+
+	var _AdditionalInfoForm2 = _interopRequireDefault(_AdditionalInfoForm);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var Root = exports.Root = function Root(_ref) {
-			var store = _ref.store;
-			return _react2.default.createElement(
-					_reactRedux.Provider,
-					{ store: store },
+		var store = _ref.store;
+		return _react2.default.createElement(
+			_reactRedux.Provider,
+			{ store: store },
+			_react2.default.createElement(
+				_reactRouter.Router,
+				{ history: _reactRouter.hashHistory },
+				_react2.default.createElement(
+					_reactRouter.Route,
+					{ path: '/', component: _App2.default },
+					_react2.default.createElement(_reactRouter.IndexRoute, { component: _Dashboard2.default }),
 					_react2.default.createElement(
-							_reactRouter.Router,
-							{ history: _reactRouter.hashHistory },
-							_react2.default.createElement(
-									_reactRouter.Route,
-									{ path: '/', component: _App2.default },
-									_react2.default.createElement(_reactRouter.IndexRoute, { component: _Dashboard2.default }),
-									_react2.default.createElement(_reactRouter.Route, { path: 'details', component: _ProfileInfo2.default }),
-									_react2.default.createElement(_reactRouter.Route, { path: 'profile/edit', component: _ProfileInfoForm2.default })
-							)
+						_reactRouter.Route,
+						{ path: 'details', component: _DetailsPage2.default },
+						_react2.default.createElement(_reactRouter.Route, { path: 'profile/edit', component: _ProfileInfoForm2.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: 'bank/edit', component: _BankInfoForm2.default }),
+						_react2.default.createElement(_reactRouter.Route, { path: 'additional/edit', component: _AdditionalInfoForm2.default })
 					)
-			);
+				)
+			)
+		);
 	};
 
 /***/ },
@@ -28024,7 +28037,7 @@
 
 	var _reactRouter = __webpack_require__(191);
 
-	var _actions = __webpack_require__(257);
+	var _actions = __webpack_require__(256);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -28053,7 +28066,7 @@
 				'Welcome, please begin by saving your details ',
 				_react2.default.createElement(
 					_reactRouter.Link,
-					{ to: '/profile/edit' },
+					{ to: 'details/profile/edit' },
 					'here'
 				)
 			);
@@ -28078,154 +28091,26 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactRedux = __webpack_require__(159);
-
-	var ReactRedux = _interopRequireWildcard(_reactRedux);
-
-	var _actions = __webpack_require__(257);
-
-	var _reactRouter = __webpack_require__(191);
-
-	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var ProfileInfo = _react2.default.createClass({
-		displayName: 'ProfileInfo',
-
-		componentWillMount: function componentWillMount() {
-			this.props.dispatch((0, _actions.fetchProfileInfo)());
-		},
-		render: function render() {
-			return _react2.default.createElement(
-				'div',
-				{ className: 'panel panel-default' },
-				_react2.default.createElement(
-					'div',
-					{ className: 'panel-heading' },
-					_react2.default.createElement(
-						'h3',
-						{ className: 'panel-title' },
-						'Profile Info'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'panel-body' },
-					_react2.default.createElement(
-						_reactRouter.Link,
-						{ to: '/profile/edit', className: 'btn btn-default pull-right' },
-						'EDIT'
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'First Name: ',
-						this.props.profileInfo.first_name
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Last Name: ',
-						this.props.profileInfo.last_name
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Gender: ',
-						this.props.profileInfo.gender
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Education: ',
-						this.props.profileInfo.education
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Date of Birth: ',
-						this.props.profileInfo.date_of_birth
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Marital Status: ',
-						this.props.profileInfo.marital_status
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Address: ',
-						this.props.profileInfo.address
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Mobile Number: ',
-						this.props.profileInfo.mobile_number
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'City: ',
-						this.props.profileInfo.city
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'State: ',
-						this.props.profileInfo.state
-					),
-					_react2.default.createElement(
-						'p',
-						null,
-						'Pincode: ',
-						this.props.profileInfo.pincode
-					)
-				)
-			);
-		}
-	});
-
-	var mapStoreToProps = function mapStoreToProps(store) {
-		return {
-			profileInfo: store.profileInfo
-		};
-	};
-
-	exports.default = ReactRedux.connect(mapStoreToProps)(ProfileInfo);
-
-/***/ },
-/* 257 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
 	exports.types = undefined;
-	exports.profileInfoGetSuccess = profileInfoGetSuccess;
 	exports.fetchProfileInfo = fetchProfileInfo;
 	exports.saveProfileInfo = saveProfileInfo;
+	exports.fetchBankInfo = fetchBankInfo;
+	exports.saveBankInfo = saveBankInfo;
+	exports.fetchAdditionalInfo = fetchAdditionalInfo;
+	exports.saveAdditionalInfo = saveAdditionalInfo;
 
-	var _jquery = __webpack_require__(258);
+	var _jquery = __webpack_require__(257);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _config = __webpack_require__(259);
+	var _config = __webpack_require__(258);
 
 	var _reactRouter = __webpack_require__(191);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var types = exports.types = {
+		/*Profile Info Action Types*/
 		PROFILE_INFO_GET_REQ: 'PROFILE_INFO_REQ',
 		PROFILE_INFO_GET_ERR: 'PROFILE_INFO_ERR',
 		PROFILE_INFO_GET_SUC: 'PROFILE_INFO_SUC',
@@ -28234,13 +28119,23 @@
 		PROFILE_INFO_POST_ERR: 'PROFILE_INFO_POST_ERR',
 		PROFILE_INFO_POST_SUC: 'PROFILE_INFO_POST_SUC',
 
-		BANK_INFO_REQ: 'BANK_INFO_REQ',
-		BANK_INFO_ERR: 'BANK_INFO_ERR',
-		BANK_INFO_RECV: 'BANK_INFO_RECV',
+		/*Bank Info Action Types*/
+		BANK_INFO_GET_REQ: 'BANK_INFO_GET_REQ',
+		BANK_INFO_GET_ERR: 'BANK_INFO_GET_ERR',
+		BANK_INFO_GET_SUC: 'BANK_INFO_GET_SUC',
 
-		ADDITIONAL_DETAILS_REQ: 'ADDITIONAL_DETAILS_REQ',
-		ADDITIONAL_DETAILS_ERR: 'ADDITIONAL_DETAILS_ERR',
-		ADDITIONAL_DETAILS_RECV: 'ADDITIONAL_DETAILS_RECV'
+		BANK_INFO_POST_REQ: 'BANK_INFO_POST_REQ',
+		BANK_INFO_POST_ERR: 'BANK_INFO_POST_ERR',
+		BANK_INFO_POST_SUC: 'BANK_INFO_POST_SUC',
+
+		/*Additional Info Action Types*/
+		ADDITIONAL_INFO_GET_REQ: 'ADDITIONAL_INFO_GET_REQ',
+		ADDITIONAL_INFO_GET_ERR: 'ADDITIONAL_INFO_GET_ERR',
+		ADDITIONAL_INFO_GET_SUC: 'ADDITIONAL_INFO_GET_SUC',
+
+		ADDITIONAL_INFO_POST_REQ: 'ADDITIONAL_INFO_POST_REQ',
+		ADDITIONAL_INFO_POST_ERR: 'ADDITIONAL_INFO_POST_ERR',
+		ADDITIONAL_INFO_POST_SUC: 'ADDITIONAL_INFO_POST_SUC'
 	};
 
 	/**
@@ -28277,34 +28172,68 @@
 		};
 	};
 
-	/*
-	function requestBankInfo(){
+	function bankInfoGetReq() {
 		return {
-			type: types.BANK_INFO_REQ,
+			type: types.BANK_INFO_GET_REQ
 		};
 	};
-	function receiveBankInfo(bankInfo){
+	function bankInfoGetSuccess(bankInfo) {
 		return {
-			type: types.BANK_INFO_RECV,
+			type: types.BANK_INFO_GET_SUC,
 			bankInfo: bankInfo
 		};
 	};
+	function bankInfoPostReq(bankInfo) {
+		return {
+			type: types.BANK_INFO_POST_REQ,
+			bankInfo: bankInfo
+		};
+	};
+	function bankInfoPostSuccess(bankInfo) {
+		return {
+			type: types.BANK_INFO_POST_SUC,
+			bankInfo: bankInfo
+		};
+	};
+	function bankInfoPostError(errors) {
+		return {
+			type: types.BANK_INFO_POST_ERR,
+			errors: errors
+		};
+	};
 
-	function requestAdditionalInfo(listId){
+	function additionalInfoGetReq() {
 		return {
-			type: types.ADDITIONAL_DETAILS_REQ,
+			type: types.ADDITIONAL_INFO_GET_REQ
 		};
 	};
-	function receiveAdditionalInfo(additionalInfo){
+	function additionalInfoGetSuccess(additionalInfo) {
 		return {
-			type: types.ADDITIONAL_DETAILS_RECV,
-			additionalInfo: additionalInfo,
+			type: types.ADDITIONAL_INFO_GET_SUC,
+			additionalInfo: additionalInfo
 		};
 	};
-	*/
+	function additionalInfoPostReq(additionalInfo) {
+		return {
+			type: types.ADDITIONAL_INFO_POST_REQ,
+			additionalInfo: additionalInfo
+		};
+	};
+	function additionalInfoPostSuccess(additionalInfo) {
+		return {
+			type: types.ADDITIONAL_INFO_POST_SUC,
+			additionalInfo: additionalInfo
+		};
+	};
+	function additionalInfoPostError(errors) {
+		return {
+			type: types.ADDITIONAL_INFO_POST_ERR,
+			errors: errors
+		};
+	};
 
 	/**
-	 * These are the action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
+	 * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
 	 * This allows you to configure the returned function with parameters ala factories.
 	 */
 	function fetchProfileInfo() {
@@ -28339,33 +28268,72 @@
 		};
 	};
 
-	/*
-	export function fetchBankInfo(){
-		return function(dispatch){
-			dispatch(requestBankInfo());
+	function fetchBankInfo() {
+		return function (dispatch) {
+			dispatch(bankInfoGetReq());
 
-			$.get(config.api_base_path, function(bankInfo){
-				dispatch(receiveBankInfo(bankInfo));
+			_jquery2.default.get(_config.url.api_base_path + "auditor/bank-api?format=json", function (bankInfo) {
+				dispatch(bankInfoGetSuccess(bankInfo));
 			});
 			//Handle error
 		};
 	};
 
-	export function fetchAdditionalInfo(){
-		return function(dispatch){
-			//requesting cards for a list...
-			dispatch(requestAdditionalInfo());
+	function saveBankInfo(bankInfo) {
+		return function (dispatch) {
+			dispatch(bankInfoPostReq(bankInfo));
 
-			$.get(config.api_base_path, function(additionalInfo){
-				dispatch(receiveAdditionalInfo(additionalInfo));
+			var req = _jquery2.default.ajax({
+				type: "POST",
+				url: _config.url.api_base_path + "auditor/bank-api",
+				data: JSON.stringify(bankInfo),
+				contentType: "application/json"
+			});
+			req.done(function (bankInfo) {
+				console.log("success", bankInfo);
+				dispatch(bankInfoPostSuccess(bankInfo));
+				_reactRouter.hashHistory.push("/details");
+			});
+			req.fail(function (error) {
+				dispatch(bankInfoPostError(error.responseJSON));
+			});
+		};
+	};
+
+	function fetchAdditionalInfo() {
+		return function (dispatch) {
+			dispatch(additionalInfoGetReq());
+
+			_jquery2.default.get(_config.url.api_base_path + "auditor/additional-api?format=json", function (additionalInfo) {
+				dispatch(additionalInfoGetSuccess(additionalInfo));
 			});
 			//Handle error
 		};
 	};
-	*/
+
+	function saveAdditionalInfo(additionalInfo) {
+		return function (dispatch) {
+			dispatch(additionalInfoPostReq(additionalInfo));
+
+			var req = _jquery2.default.ajax({
+				type: "POST",
+				url: _config.url.api_base_path + "auditor/additional-api",
+				data: JSON.stringify(additionalInfo),
+				contentType: "application/json"
+			});
+			req.done(function (additionalInfo) {
+				console.log("success", additionalInfo);
+				dispatch(additionalInfoPostSuccess(additionalInfo));
+				_reactRouter.hashHistory.push("/details");
+			});
+			req.fail(function (error) {
+				dispatch(additionalInfoPostError(error.responseJSON));
+			});
+		};
+	};
 
 /***/ },
-/* 258 */
+/* 257 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -38185,7 +38153,7 @@
 
 
 /***/ },
-/* 259 */
+/* 258 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -38207,7 +38175,7 @@
 	exports.url = url;
 
 /***/ },
-/* 260 */
+/* 259 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38220,7 +38188,212 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jquery = __webpack_require__(258);
+	var _reactRedux = __webpack_require__(159);
+
+	var ReactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _reactRouter = __webpack_require__(191);
+
+	var _ProfileInfoPanel = __webpack_require__(270);
+
+	var _ProfileInfoPanel2 = _interopRequireDefault(_ProfileInfoPanel);
+
+	var _BankInfoPanel = __webpack_require__(268);
+
+	var _BankInfoPanel2 = _interopRequireDefault(_BankInfoPanel);
+
+	var _AdditionalInfoPanel = __webpack_require__(271);
+
+	var _AdditionalInfoPanel2 = _interopRequireDefault(_AdditionalInfoPanel);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var DetailsPage = _react2.default.createClass({
+		displayName: 'DetailsPage',
+
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				null,
+				_react2.default.createElement(_ProfileInfoPanel2.default, null),
+				_react2.default.createElement(_BankInfoPanel2.default, null),
+				_react2.default.createElement(_AdditionalInfoPanel2.default, null),
+				this.props.children
+			);
+		}
+	});
+
+	var mapStoreToProps = function mapStoreToProps(store) {
+		return {};
+	};
+
+	exports.default = ReactRedux.connect(mapStoreToProps)(DetailsPage);
+
+/***/ },
+/* 260 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.rootReducer = rootReducer;
+
+	var _actions = __webpack_require__(256);
+
+	var initialStore = {
+		profileInfo: {},
+		bankInfo: {},
+		additionalInfo: {},
+		forms: {
+			profileInfo: {
+				errors: {}
+			},
+			additionalInfo: {
+				errors: {}
+			},
+			bankInfo: {
+				errors: {}
+			}
+		}
+	};
+
+	function rootReducer(store, action) {
+		if (typeof store === 'undefined') {
+			return initialStore;
+		}
+
+		switch (action.type) {
+			/*Profile Info Reducers */
+			case _actions.types.PROFILE_INFO_GET_REQ:
+				return Object.assign({}, store, {
+					loadingProfileInfo: true
+				});
+			case _actions.types.PROFILE_INFO_GET_SUC:
+				return Object.assign({}, store, {
+					loadingProfileInfo: false,
+					profileInfo: Object.assign({}, store.profileInfo, action.profileInfo)
+				});
+			case _actions.types.PROFILE_INFO_POST_REQ:
+				return Object.assign({}, store, {
+					forms: Object.assign({}, store.forms, {
+						profileInfo: {
+							errors: {}
+						}
+					})
+				});
+			case _actions.types.PROFILE_INFO_POST_SUC:
+				return Object.assign({}, store, {
+					profileInfo: action.profileInfo,
+					forms: Object.assign({}, store.forms, {
+						profileInfo: Object.assign({}, store.forms.profileInfo, {
+							errors: {}
+						})
+					})
+				});
+			case _actions.types.PROFILE_INFO_POST_ERR:
+				return Object.assign({}, store, {
+					forms: Object.assign({}, store.forms, {
+						profileInfo: Object.assign({}, store.forms.profileInfo, {
+							errors: action.errors
+						})
+					})
+				});
+			/*Bank Info Reducers */
+			case _actions.types.BANK_INFO_GET_REQ:
+				return Object.assign({}, store, {
+					loadingBankInfo: true
+				});
+			case _actions.types.BANK_INFO_GET_SUC:
+				return Object.assign({}, store, {
+					loadingBankInfo: false,
+					bankInfo: Object.assign({}, store.bankInfo, action.bankInfo)
+				});
+			case _actions.types.BANK_INFO_POST_REQ:
+				return Object.assign({}, store, {
+					forms: Object.assign({}, store.forms, {
+						bankInfo: {
+							errors: {}
+						}
+					})
+				});
+			case _actions.types.BANK_INFO_POST_SUC:
+				return Object.assign({}, store, {
+					bankInfo: action.bankInfo,
+					forms: Object.assign({}, store.forms, {
+						bankInfo: Object.assign({}, store.forms.bankInfo, {
+							errors: {}
+						})
+					})
+				});
+			case _actions.types.BANK_INFO_POST_ERR:
+				return Object.assign({}, store, {
+					forms: Object.assign({}, store.forms, {
+						bankInfo: Object.assign({}, store.forms.bankInfo, {
+							errors: action.errors
+						})
+					})
+				});
+			/*Additional Info Reducers */
+			case _actions.types.ADDITIONAL_INFO_GET_REQ:
+				return Object.assign({}, store, {
+					loadingAdditionalInfo: true
+				});
+			case _actions.types.ADDITIONAL_INFO_GET_SUC:
+				return Object.assign({}, store, {
+					loadingAdditionalInfo: false,
+					additionalInfo: Object.assign({}, store.additionalInfo, action.additionalInfo)
+				});
+			case _actions.types.ADDITIONAL_INFO_POST_REQ:
+				return Object.assign({}, store, {
+					forms: Object.assign({}, store.forms, {
+						additionalInfo: {
+							errors: {}
+						}
+					})
+				});
+			case _actions.types.ADDITIONAL_INFO_POST_SUC:
+				return Object.assign({}, store, {
+					additionalInfo: action.additionalInfo,
+					forms: Object.assign({}, store.forms, {
+						additionalInfo: Object.assign({}, store.forms.additionalInfo, {
+							errors: {}
+						})
+					})
+				});
+			case _actions.types.ADDITIONAL_INFO_POST_ERR:
+				return Object.assign({}, store, {
+					forms: Object.assign({}, store.forms, {
+						additionalInfo: Object.assign({}, store.forms.additionalInfo, {
+							errors: action.errors
+						})
+					})
+				});
+			default:
+				console.log("WARNING: default case encountered for action: %O", action);
+				return store;
+		}
+	}
+
+/***/ },
+/* 261 */,
+/* 262 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(257);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -38230,21 +38403,21 @@
 
 	var _reactRouter = __webpack_require__(191);
 
-	var _config = __webpack_require__(259);
+	var _config = __webpack_require__(258);
 
 	var _config2 = _interopRequireDefault(_config);
 
-	var _actions = __webpack_require__(257);
+	var _actions = __webpack_require__(256);
 
-	var _FormInput = __webpack_require__(261);
+	var _FormInput = __webpack_require__(263);
 
 	var _FormInput2 = _interopRequireDefault(_FormInput);
 
-	var _FormGroup = __webpack_require__(262);
+	var _FormGroup = __webpack_require__(264);
 
 	var _FormGroup2 = _interopRequireDefault(_FormGroup);
 
-	var _SaveButton = __webpack_require__(263);
+	var _SaveButton = __webpack_require__(266);
 
 	var _SaveButton2 = _interopRequireDefault(_SaveButton);
 
@@ -38260,7 +38433,6 @@
 	 * Following are the props for a form:
 	 *
 	 * profileInfo - the initial data to be displayed
-	 * values - values that have been edited in the form
 	 * errors - errors in the form, if any
 	 */
 	var ProfileInfoForm = _react2.default.createClass({
@@ -38270,6 +38442,9 @@
 			return {};
 		},
 		componentWillMount: function componentWillMount() {
+			this.setState(this.props.profileInfo);
+		},
+		componentDidMount: function componentDidMount() {
 			this.props.dispatch((0, _actions.fetchProfileInfo)());
 		},
 		componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
@@ -38285,13 +38460,6 @@
 			this.props.dispatch((0, _actions.saveProfileInfo)(this.state));
 		},
 		render: function render() {
-			if (this.props.loading) {
-				return _react2.default.createElement(
-					'p',
-					null,
-					'loading...'
-				);
-			}
 			return _react2.default.createElement(
 				_Modal2.default,
 				{ modalTitle: 'Edit Profile Info', onClose: _reactRouter.hashHistory.goBack },
@@ -38472,7 +38640,6 @@
 	var mapStoreToProps = function mapStoreToProps(store) {
 		return {
 			profileInfo: store.profileInfo,
-			values: store.forms.profileInfo.values,
 			errors: store.forms.profileInfo.errors
 		};
 	};
@@ -38480,7 +38647,7 @@
 	exports.default = ReactRedux.connect(mapStoreToProps)(ProfileInfoForm);
 
 /***/ },
-/* 261 */
+/* 263 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -38495,7 +38662,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _FormGroup = __webpack_require__(262);
+	var _FormGroup = __webpack_require__(264);
 
 	var _FormGroup2 = _interopRequireDefault(_FormGroup);
 
@@ -38526,7 +38693,7 @@
 	exports.default = FormInput;
 
 /***/ },
-/* 262 */
+/* 264 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -38554,112 +38721,6 @@
 	});
 
 	exports.default = FormGroup;
-
-/***/ },
-/* 263 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var SaveButton = _react2.default.createClass({
-		displayName: "SaveButton",
-
-		render: function render() {
-			return _react2.default.createElement(
-				"button",
-				_extends({ type: "submit", className: "btn btn-primary" }, this.props),
-				"Save"
-			);
-		}
-	});
-
-	exports.default = SaveButton;
-
-/***/ },
-/* 264 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.rootReducer = rootReducer;
-
-	var _actions = __webpack_require__(257);
-
-	var initialStore = {
-		profileInfo: {},
-		bankInfo: {},
-		additionalInfo: {},
-		forms: {
-			profileInfo: {
-				values: {},
-				errors: {}
-			}
-		}
-	};
-
-	function rootReducer(store, action) {
-		if (typeof store === 'undefined') {
-			return initialStore;
-		}
-
-		switch (action.type) {
-			case _actions.types.PROFILE_INFO_GET_REQ:
-				return Object.assign({}, store, {
-					loadingProfileInfo: true
-				});
-			case _actions.types.PROFILE_INFO_GET_SUC:
-				return Object.assign({}, store, {
-					loadingProfileInfo: false,
-					profileInfo: Object.assign({}, store.profileInfo, action.profileInfo)
-				});
-			/* Profile Info Form Reducers */
-			case _actions.types.PROFILE_INFO_POST_REQ:
-				return Object.assign({}, store, {
-					forms: Object.assign({}, store.forms, {
-						profileInfo: {
-							values: action.profileInfo,
-							errors: {}
-						}
-					})
-				});
-			case _actions.types.PROFILE_INFO_POST_SUC:
-				return Object.assign({}, store, {
-					profileInfo: action.profileInfo,
-					forms: Object.assign({}, store.forms, {
-						profileInfo: Object.assign({}, store.forms.profileInfo, {
-							values: action.profileInfo,
-							errors: {}
-						})
-					})
-				});
-			case _actions.types.PROFILE_INFO_POST_ERR:
-				return Object.assign({}, store, {
-					forms: Object.assign({}, store.forms, {
-						profileInfo: Object.assign({}, store.forms.profileInfo, {
-							errors: action.errors
-						})
-					})
-				});
-			default:
-				console.log("WARNING: default case encountered for action: %O", action);
-				return store;
-		}
-	}
 
 /***/ },
 /* 265 */
@@ -38723,7 +38784,38 @@
 	exports.default = FormInputError;
 
 /***/ },
-/* 266 */,
+/* 266 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var SaveButton = _react2.default.createClass({
+		displayName: "SaveButton",
+
+		render: function render() {
+			return _react2.default.createElement(
+				"button",
+				_extends({ type: "submit", className: "btn btn-primary" }, this.props),
+				"Save"
+			);
+		}
+	});
+
+	exports.default = SaveButton;
+
+/***/ },
 /* 267 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -38789,6 +38881,549 @@
 	});
 
 	exports.default = Modal;
+
+/***/ },
+/* 268 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(159);
+
+	var ReactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _actions = __webpack_require__(256);
+
+	var _reactRouter = __webpack_require__(191);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var BankInfoPanel = _react2.default.createClass({
+		displayName: 'BankInfoPanel',
+
+		componentWillMount: function componentWillMount() {
+			this.props.dispatch((0, _actions.fetchBankInfo)());
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'panel panel-default' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'panel-heading' },
+					_react2.default.createElement(
+						'h3',
+						{ className: 'panel-title' },
+						'Bank Info'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'panel-body' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'details/bank/edit', className: 'btn btn-default pull-right' },
+						'EDIT'
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Bank Name: ',
+						this.props.bankInfo.bank_name
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Account Holder Name: ',
+						this.props.bankInfo.account_holder_name
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Account Number: ',
+						this.props.bankInfo.account_number
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'IFSC Code: ',
+						this.props.bankInfo.ifsc_code
+					)
+				)
+			);
+		}
+	});
+
+	var mapStoreToProps = function mapStoreToProps(store) {
+		return {
+			bankInfo: store.bankInfo
+		};
+	};
+
+	exports.default = ReactRedux.connect(mapStoreToProps)(BankInfoPanel);
+
+/***/ },
+/* 269 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(257);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _reactRedux = __webpack_require__(159);
+
+	var ReactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _reactRouter = __webpack_require__(191);
+
+	var _config = __webpack_require__(258);
+
+	var _config2 = _interopRequireDefault(_config);
+
+	var _actions = __webpack_require__(256);
+
+	var _FormInput = __webpack_require__(263);
+
+	var _FormInput2 = _interopRequireDefault(_FormInput);
+
+	var _FormGroup = __webpack_require__(264);
+
+	var _FormGroup2 = _interopRequireDefault(_FormGroup);
+
+	var _SaveButton = __webpack_require__(266);
+
+	var _SaveButton2 = _interopRequireDefault(_SaveButton);
+
+	var _Modal = __webpack_require__(267);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var BankInfoForm = _react2.default.createClass({
+		displayName: 'BankInfoForm',
+
+		getInitialState: function getInitialState() {
+			return {};
+		},
+		componentWillMount: function componentWillMount() {
+			this.setState(this.props.bankInfo);
+		},
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch((0, _actions.fetchBankInfo)());
+		},
+		componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+			this.setState(nextProps.bankInfo);
+		},
+		inputChanged: function inputChanged(e) {
+			var change = {};
+			change[e.target.name] = e.target.value;
+			this.setState(change);
+		},
+		onSubmit: function onSubmit(e) {
+			e.preventDefault();
+			this.props.dispatch((0, _actions.saveBankInfo)(this.state));
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				_Modal2.default,
+				{ modalTitle: 'Edit Bank Info', onClose: _reactRouter.hashHistory.goBack },
+				_react2.default.createElement(
+					'form',
+					{ onSubmit: this.onSubmit },
+					_react2.default.createElement(_FormInput2.default, { label: 'Bank Name', maxLength: '40', type: 'text', value: this.state.bank_name, name: 'bank_name', onChange: this.inputChanged }),
+					_react2.default.createElement(_FormInput2.default, { label: 'Account Holder Name', maxLength: '40', type: 'text', value: this.state.account_holder_name, name: 'account_holder_name', onChange: this.inputChanged, errors: this.props.errors.account_holder_name }),
+					_react2.default.createElement(_FormInput2.default, { label: 'Account Number', maxLength: '20', type: 'text', value: this.state.account_number, name: 'account_number', onChange: this.inputChanged }),
+					_react2.default.createElement(_FormInput2.default, { label: 'IFSC Code', maxLength: '20', type: 'text', value: this.state.ifsc_code, name: 'ifsc_code', onChange: this.inputChanged }),
+					_react2.default.createElement(_SaveButton2.default, null)
+				)
+			);
+		}
+	});
+
+	var mapStoreToProps = function mapStoreToProps(store) {
+		return {
+			bankInfo: store.bankInfo,
+			errors: store.forms.bankInfo.errors
+		};
+	};
+
+	exports.default = ReactRedux.connect(mapStoreToProps)(BankInfoForm);
+
+/***/ },
+/* 270 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(159);
+
+	var ReactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _reactRouter = __webpack_require__(191);
+
+	var _actions = __webpack_require__(256);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ProfileInfo = _react2.default.createClass({
+		displayName: 'ProfileInfo',
+
+		componentWillMount: function componentWillMount() {
+			this.props.dispatch((0, _actions.fetchProfileInfo)());
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				'div',
+				{ className: 'panel panel-default' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'panel-heading' },
+					_react2.default.createElement(
+						'h3',
+						{ className: 'panel-title' },
+						'Profile Info'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'panel-body' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'details/profile/edit', className: 'btn btn-default pull-right' },
+						'EDIT'
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'First Name: ',
+						this.props.profileInfo.first_name
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Last Name: ',
+						this.props.profileInfo.last_name
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Gender: ',
+						this.props.profileInfo.gender
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Education: ',
+						this.props.profileInfo.education
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Date of Birth: ',
+						this.props.profileInfo.date_of_birth
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Marital Status: ',
+						this.props.profileInfo.marital_status
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Address: ',
+						this.props.profileInfo.address
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Mobile Number: ',
+						this.props.profileInfo.mobile_number
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'City: ',
+						this.props.profileInfo.city
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'State: ',
+						this.props.profileInfo.state
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Pincode: ',
+						this.props.profileInfo.pincode
+					)
+				)
+			);
+		}
+	});
+
+	var mapStoreToProps = function mapStoreToProps(store) {
+		return {
+			profileInfo: store.profileInfo
+		};
+	};
+
+	exports.default = ReactRedux.connect(mapStoreToProps)(ProfileInfo);
+
+/***/ },
+/* 271 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactRedux = __webpack_require__(159);
+
+	var ReactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _reactRouter = __webpack_require__(191);
+
+	var _actions = __webpack_require__(256);
+
+	var _Icons = __webpack_require__(272);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var AdditionalInfoPanel = _react2.default.createClass({
+		displayName: 'AdditionalInfoPanel',
+
+		componentWillMount: function componentWillMount() {
+			this.props.dispatch((0, _actions.fetchAdditionalInfo)());
+		},
+		render: function render() {
+			var has_car = this.props.additionalInfo.has_car ? _react2.default.createElement(_Icons.Check, null) : _react2.default.createElement(_Icons.Cross, null);
+			var weekend_audit = this.props.additionalInfo.weekend_audit ? _react2.default.createElement(_Icons.Check, null) : _react2.default.createElement(_Icons.Cross, null);
+
+			return _react2.default.createElement(
+				'div',
+				{ className: 'panel panel-default' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'panel-heading' },
+					_react2.default.createElement(
+						'h3',
+						{ className: 'panel-title' },
+						'Additional Info'
+					)
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'panel-body' },
+					_react2.default.createElement(
+						_reactRouter.Link,
+						{ to: 'details/additional/edit', className: 'btn btn-default pull-right' },
+						'EDIT'
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Has Car: ',
+						has_car
+					),
+					_react2.default.createElement(
+						'p',
+						null,
+						'Weekend Audit: ',
+						weekend_audit
+					)
+				)
+			);
+		}
+	});
+
+	var mapStoreToProps = function mapStoreToProps(store) {
+		return {
+			additionalInfo: store.additionalInfo
+		};
+	};
+
+	exports.default = ReactRedux.connect(mapStoreToProps)(AdditionalInfoPanel);
+
+/***/ },
+/* 272 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+	exports.Cross = exports.Check = undefined;
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var Check = _react2.default.createClass({
+		displayName: "Check",
+
+		render: function render() {
+			return _react2.default.createElement("span", { className: "glyphicon glyphicon-ok" });
+		}
+	});
+
+	var Cross = _react2.default.createClass({
+		displayName: "Cross",
+
+		render: function render() {
+			return _react2.default.createElement("span", { className: "glyphicon glyphicon-remove" });
+		}
+	});
+
+	exports.Check = Check;
+	exports.Cross = Cross;
+
+/***/ },
+/* 273 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(257);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _reactRedux = __webpack_require__(159);
+
+	var ReactRedux = _interopRequireWildcard(_reactRedux);
+
+	var _reactRouter = __webpack_require__(191);
+
+	var _config = __webpack_require__(258);
+
+	var _config2 = _interopRequireDefault(_config);
+
+	var _actions = __webpack_require__(256);
+
+	var _FormInput = __webpack_require__(263);
+
+	var _FormInput2 = _interopRequireDefault(_FormInput);
+
+	var _FormGroup = __webpack_require__(264);
+
+	var _FormGroup2 = _interopRequireDefault(_FormGroup);
+
+	var _SaveButton = __webpack_require__(266);
+
+	var _SaveButton2 = _interopRequireDefault(_SaveButton);
+
+	var _Modal = __webpack_require__(267);
+
+	var _Modal2 = _interopRequireDefault(_Modal);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var AdditionalInfoForm = _react2.default.createClass({
+		displayName: 'AdditionalInfoForm',
+
+		getInitialState: function getInitialState() {
+			return {};
+		},
+		componentWillMount: function componentWillMount() {
+			this.setState(this.props.additionalInfo);
+		},
+		componentDidMount: function componentDidMount() {
+			this.props.dispatch((0, _actions.fetchAdditionalInfo)());
+		},
+		componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+			this.setState(nextProps.additionalInfo);
+		},
+		inputChanged: function inputChanged(e) {
+			var change = {};
+			if (e.target.type !== "checkbox") {
+				change[e.target.name] = e.target.value;
+			} else if (e.target.type === "checkbox") {
+				change[e.target.name] = e.target.checked;
+			}
+			this.setState(change);
+		},
+		onSubmit: function onSubmit(e) {
+			e.preventDefault();
+			this.props.dispatch((0, _actions.saveAdditionalInfo)(this.state));
+		},
+		render: function render() {
+			return _react2.default.createElement(
+				_Modal2.default,
+				{ modalTitle: 'Edit Additional Info', onClose: _reactRouter.hashHistory.goBack },
+				_react2.default.createElement(
+					'form',
+					{ onSubmit: this.onSubmit },
+					_react2.default.createElement(_FormInput2.default, { label: 'Has Car', maxLength: '40', type: 'checkbox', checked: this.state.has_car, name: 'has_car', onChange: this.inputChanged, errors: this.props.errors.has_car }),
+					_react2.default.createElement(_FormInput2.default, { label: 'Weekend Audit', maxLength: '40', type: 'checkbox', checked: this.state.weekend_audit, name: 'weekend_audit', onChange: this.inputChanged, errors: this.props.errors.weekend_audit }),
+					_react2.default.createElement(_SaveButton2.default, null)
+				)
+			);
+		}
+	});
+
+	var mapStoreToProps = function mapStoreToProps(store) {
+		return {
+			additionalInfo: store.additionalInfo,
+			errors: store.forms.additionalInfo.errors
+		};
+	};
+
+	exports.default = ReactRedux.connect(mapStoreToProps)(AdditionalInfoForm);
 
 /***/ }
 /******/ ]);

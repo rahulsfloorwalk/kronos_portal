@@ -148,7 +148,7 @@ class AdditionalInfoView(APIView):
         additional_info_s= AdditionalInfoSerializer(data=request.data)
         additional_info_s.is_valid(raise_exception=True)
         additional_info = additional_info_s.save(current_user=request.user)
-        return Response(additional_info)
+        return Response(AdditionalInfoSerializer(additional_info).data)
 
 
 class BankInfoView(APIView):
@@ -163,4 +163,4 @@ class BankInfoView(APIView):
         bank_info_s = BankInfoSerializer(data=request.data)
         bank_info_s.is_valid(raise_exception=True)
         bank_info = bank_info_s.save(current_user=request.user)
-        return Response(bank_info)
+        return Response(BankInfoSerializer(bank_info).data)
