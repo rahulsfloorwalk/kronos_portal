@@ -22,7 +22,7 @@ class Location(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
     pincode = CharField(db_column='pincode', max_length=6, blank=False)
-    city = ForeignKey(City, db_column='city_id', blank=False, on_delete=CASCADE)
+    city = ForeignKey(City, related_name='city', db_column='city_id', blank=False, on_delete=CASCADE)
 
 class Audit(Model):
     db_table = "audit"

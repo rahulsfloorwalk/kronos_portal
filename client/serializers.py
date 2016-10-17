@@ -1,5 +1,5 @@
 from rest_framework import routers, viewsets
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField
 
 from .models import City, Location, Client, Audit, AuditLocation, City
 
@@ -40,13 +40,15 @@ class CitySerializer(ModelSerializer):
         read_only_fields = ('id',)
 
 class LocationSerializer(ModelSerializer):
+    city = SlugRelatedField(read_only=True, slug_field='id')
+#    city = CitySerializer()
     class Meta:
         model = Location
         fields = (
             'id',
             'name',
             'pincode',
-            'city_id',
+            'city',
         )
         read_only_fields = ('id',)
 
@@ -54,7 +56,8 @@ class LocationSerializer(ModelSerializer):
         location = Location()
         location.name = self.validated_data.get('name')
         location.pincode = self.validated_data.get('pincode')
-        location.city_id = kwargs['city']
+        location.city = self.validated_data.get('city')
+#        location.city_id = kwargs['city']
         location.save()
         return location
 

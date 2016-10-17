@@ -56,7 +56,8 @@ class LocationView(APIView):
     def post(self, request):
         location_s = LocationSerializer(data=request.data)
         location_s.is_valid(raise_exception=True)
-        location = location_s.save(city=request.data['city_id'])
+        location = location_s.save()
+#        location = location_s.save(city=request.data['city_id'])
         return Response(LocationSerializer(location).data)
 
 class AuditView(APIView):
