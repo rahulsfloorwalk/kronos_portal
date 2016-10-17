@@ -8,6 +8,8 @@ from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
 from .serializers import ClientSerializer, LocationSerializer, AuditSerializer, AuditLocationSerializer
+from client.service.client import ClientService
+from client.service.location import LocationService
 
 class ClientView(APIView):
     def get(self, request, format=None):
@@ -20,8 +22,9 @@ class ClientView(APIView):
     def post(self, request):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
-        client = client_s.save(id=None)
-        return Response(ClientSerializer(client).data)
+        client = client_s.create(id=None)
+        savedClient = ClientService().save(client)
+        return Response(ClientSerializer(savedClient).data)
 
 class ClientIdView(APIView):
     def get(self, request, client_id, format=None):
@@ -34,8 +37,9 @@ class ClientIdView(APIView):
     def post(self, request, client_id):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
-        client = client_s.save(id=client_id)
-        return Response(ClientSerializer(client).data)
+        client = client_s.create(id=client_id)
+        savedClient = ClientService().save(client)
+        return Response(ClientSerializer(savedClient).data)
     def delete(self, request, client_id):
         try:
             client = Client.objects.get(id=client_id)
@@ -43,7 +47,6 @@ class ClientIdView(APIView):
             return Response(ClientSerializer(client).data)
         except Client.DoesNotExist:
             raise Http404
-
 
 class LocationView(APIView):
     def get(self, request, format=None):
@@ -56,9 +59,31 @@ class LocationView(APIView):
     def post(self, request):
         location_s = LocationSerializer(data=request.data)
         location_s.is_valid(raise_exception=True)
-        location = location_s.save()
-#        location = location_s.save(city=request.data['city_id'])
+        location = location_s.create()
+        savedLocation = LocationService().save(location)
+        return Response(LocationSerializer(savedLocation).data)
+
+class LocationIdView(APIView):
+    def get(self, request, location_id, format=None):
+        try:
+            location = Location.objects.get(id=location_id)
+            return Response(LocationSerializer(location).data)
+        except Location.DoesNotExist:
+            return Http404
+
+    def post(self, request, location_id):
+        location_s = LocationSerializer(data=request.data)
+        location_s.is_valid(raise_exception=True)
+        location = location_s.save(id=location_id)
         return Response(LocationSerializer(location).data)
+
+    def delete(self, request, location_id):
+        try:
+            location = Location.objects.get(location_id)
+            location.delete()
+            return Response(LocationSerializer(location).data)
+        except Location.DoesNotExist:
+            raise Http404
 
 class AuditView(APIView):
     def get(self, request, format=None):

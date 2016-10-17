@@ -14,7 +14,7 @@ class ClientSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def save(self, **kwargs):
+    def create(self, **kwargs):
         id = kwargs['id']
         if id is None:
             client = Client()
@@ -27,7 +27,7 @@ class ClientSerializer(ModelSerializer):
             client.email = self.validated_data.get('email', client.email)
             client.phone = self.validated_data.get('phone', client.phone)
 
-        client.save()
+#        client.save()
         return client
 
 class CitySerializer(ModelSerializer):
@@ -52,13 +52,11 @@ class LocationSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def save(self, **kwargs):
+    def create(self, **kwargs):
         location = Location()
         location.name = self.validated_data.get('name')
         location.pincode = self.validated_data.get('pincode')
         location.city = self.validated_data.get('city')
-#        location.city_id = kwargs['city']
-        location.save()
         return location
 
 class AuditSerializer(ModelSerializer):
