@@ -40,7 +40,7 @@ class CitySerializer(ModelSerializer):
         read_only_fields = ('id',)
 
 class LocationSerializer(ModelSerializer):
-    city = SlugRelatedField(read_only=True, slug_field='id')
+    city = SlugRelatedField(slug_field='id', queryset=City.objects.all())
 #    city = CitySerializer()
     class Meta:
         model = Location
