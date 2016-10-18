@@ -62,5 +62,5 @@ class AuditLocation(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     count = IntegerField(db_column='count', blank=False)
-    location = ForeignKey(Location, db_column='location_id')
-    audit = ForeignKey(Audit, db_column='audit_id', on_delete=CASCADE)
+    location = ForeignKey(Location, related_name='location', db_column='location_id', on_delete=CASCADE)
+    audit = ForeignKey(Audit, related_name='audit', db_column='audit_id', on_delete=CASCADE)

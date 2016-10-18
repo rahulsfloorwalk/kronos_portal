@@ -85,21 +85,25 @@ class AuditSerializer(ModelSerializer):
         return audit
 
 class AuditLocationSerializer(ModelSerializer):
+    location = SlugRelatedField(slug_field='id', queryset=Location.objects.all())
+    audit = SlugRelatedField(slug_field='id', queryset=Audit.objects.all())
     class Meta:
         model = AuditLocation
         fields = (
             'id',
-            'audit_id',
-            'location_id',
+            'audit',
+            'location',
             'count',
         )
         read_only_fields = ('id',)
 
-    def save(self, **kwargs):
-        audit_location = AuditLocation()
-        audit_location.count = self.validated_data.get('count')
-        audit_location.audit_id = kwargs['audit']
-        audit_location.location_id = kwargs['location']
+    def create(self, **kwargs):
+        if 'id' in kwargs and kwargs['id'] is not None:
+            audit_location = AuditLocation.objects.get(id=kwargs['id'])
+        else:
+            audit_location = AuditLocation()
+        audit_location.count = self.validated_data.get('count', audit_location.count)
+        audit_location.audit = self.validated_data.get('audit', audit_location.audit_id)
+        audit_location.location = self.validated_data.get('location', audit_location.location_id)
 
-        audit_location.save()
         return audit_location
