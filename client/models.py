@@ -55,7 +55,7 @@ class Audit(Model):
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
     description = CharField(db_column='description', max_length=200, blank=False)
-    client = ForeignKey(Client, db_column='client_id', on_delete=CASCADE)
+    client = ForeignKey(Client, related_name='client', db_column='client_id', on_delete=CASCADE)
 
 class AuditLocation(Model):
     db_table = "audit_location"

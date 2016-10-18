@@ -10,6 +10,7 @@ from .models import Client, Audit, Location, AuditLocation, City
 from .serializers import ClientSerializer, LocationSerializer, AuditSerializer, AuditLocationSerializer
 from client.service.client import ClientService
 from client.service.location import LocationService
+from client.service.audit import AuditService
 
 class ClientView(APIView):
     def get(self, request, format=None):
@@ -97,8 +98,32 @@ class AuditView(APIView):
     def post(self, request):
         audit_s = AuditSerializer(data=request.data)
         audit_s.is_valid(raise_exception=True)
-        audit = audit_s.save(client=request.data['client_id'])
-        return Response(AuditSerializer(audit).data)
+        audit = audit_s.create()
+        savedAudit = AuditService().save(audit)
+        return Response(AuditSerializer(savedAudit).data)
+
+class AuditIdView(APIView):
+    def get(self, request, audit_id, format=None):
+        try:
+            audit = Audit.objects.get(id=audit_id)
+            return Response(AuditSerializer(audit).data)
+        except Audit.DoesNotExist:
+            return Http404
+
+    def post(self, request, audit_id):
+        audit_s = AuditSerializer(data=request.data)
+        audit_s.is_valid(raise_exception=True)
+        audit = audit_s.create(id=audit_id)
+        savedAudit = AuditService().save(audit)
+        return Response(AuditSerializer(savedAudit).data)
+
+    def delete(self, request, audit_id):
+        try:
+            audit = Audit.objects.get(id=audit_id)
+            audit.delete()
+            return Response(AuditSerializer(audit).data)
+        except Audit.DoesNotExist:
+            return Http404
 
 class AuditLocationView(APIView):
     def get(self, request, format=None):
