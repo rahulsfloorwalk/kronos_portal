@@ -15,19 +15,13 @@ class ClientSerializer(ModelSerializer):
         read_only_fields = ('id',)
 
     def create(self, **kwargs):
-        id = kwargs['id']
-        if id is None:
-            client = Client()
-            client.name = self.validated_data.get('name')
-            client.email = self.validated_data.get('email')
-            client.phone = self.validated_data.get('phone')
+        if 'id' in kwargs and kwargs['id'] is not None:
+            client = Client.objects.get(id=kwargs['id'])
         else:
-            client = Client.objects.get(id=id)
-            client.name = self.validated_data.get('name', client.name)
-            client.email = self.validated_data.get('email', client.email)
-            client.phone = self.validated_data.get('phone', client.phone)
-
-#        client.save()
+            client = Client()
+        client.name = self.validated_data.get('name', client.name)
+        client.email = self.validated_data.get('email', client.email)
+        client.phone = self.validated_data.get('phone', client.phone)
         return client
 
 class CitySerializer(ModelSerializer):
@@ -53,10 +47,13 @@ class LocationSerializer(ModelSerializer):
         read_only_fields = ('id',)
 
     def create(self, **kwargs):
-        location = Location()
-        location.name = self.validated_data.get('name')
-        location.pincode = self.validated_data.get('pincode')
-        location.city = self.validated_data.get('city')
+        if 'id' in kwargs and kwargs['id'] is not None:
+            location = Location.objects.get(id=kwargs['id'])
+        else:
+            location = Location()
+        location.name = self.validated_data.get('name', location.name)
+        location.pincode = self.validated_data.get('pincode', location.pincode)
+        location.city = self.validated_data.get('city', location.city_id)
         return location
 
 class AuditSerializer(ModelSerializer):

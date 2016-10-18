@@ -22,7 +22,7 @@ class ClientView(APIView):
     def post(self, request):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
-        client = client_s.create(id=None)
+        client = client_s.create()
         savedClient = ClientService().save(client)
         return Response(ClientSerializer(savedClient).data)
 
@@ -74,8 +74,9 @@ class LocationIdView(APIView):
     def post(self, request, location_id):
         location_s = LocationSerializer(data=request.data)
         location_s.is_valid(raise_exception=True)
-        location = location_s.save(id=location_id)
-        return Response(LocationSerializer(location).data)
+        location = location_s.create(id=location_id)
+        savedLocation = LocationService().save(location)
+        return Response(LocationSerializer(savedLocation).data)
 
     def delete(self, request, location_id):
         try:
