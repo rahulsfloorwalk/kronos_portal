@@ -4,6 +4,7 @@ var initialStore = {
 	profileInfo: {},
 	bankInfo: {},
 	additionalInfo: {},
+	clients: [],
 	forms: {
 		profileInfo: {
 			errors:{}
@@ -13,6 +14,10 @@ var initialStore = {
 		},
 		bankInfo: {
 			errors:{}
+		},
+		client: {
+			initialValues:{},
+			errors: {}
 		}
 	}
 };
@@ -128,8 +133,66 @@ export function rootReducer(store, action) {
 					})
 				})
 			});
+		/*Client Reducers */
+		case types.CLIENT_GET_REQ:
+			return Object.assign({}, store, {
+			});
+		case types.CLIENT_GET_SUC:
+			return Object.assign({}, store, {
+				clients: (function(clients){
+					var clientObj = {};
+					for( var c of clients){
+						clientObj[c.id] = c;
+					}
+					return clientObj;
+				}(action.clients))
+			});
+		case types.CLIENT_POST_SUC:
+			return Object.assign({}, store, {
+				clients: Object.assign({}, store.clients, {
+					[action.client.id]: action.client
+				})
+			});
+		case types.CLIENT_ID_GET_SUC:
+			return Object.assign({}, store, {
+				clients: Object.assign({}, store.clients, {
+					[action.client.id]: action.client
+				})
+			});
+		case types.CLIENT_ID_POST_SUC:
+			return Object.assign({}, store, {
+				clients: Object.assign({}, store.clients, {
+					[action.client.id]: action.client
+				})
+			});
+		case types.CLIENT_FORM_LOAD_REQ:
+			var iVal = {};
+			if( action.clientId){
+				iVal = store.clients[action.clientId];
+			}
+			return Object.assign({}, store, {
+				forms: Object.assign({}, store.forms, {
+					client: {
+						initialValues: iVal,
+						errors: {}
+					}
+				})
+			});
+		case types.CLIENT_FORM_LOAD_SUC:
+			var iVal = {};
+			if( action.clientId){
+				iVal = store.clients[action.clientId];
+			}
+			return Object.assign({}, store, {
+				forms: Object.assign({}, store.forms, {
+					client: {
+						initialValues: iVal,
+						errors: {}
+					}
+				})
+			});
 		default:
-			console.log("WARNING: default case encountered for action: %O", action);
+			console.warn("WARNING: default case encountered for action: %O", action);
 			return store;
 	}
 }

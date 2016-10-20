@@ -1,10 +1,13 @@
 var path = require('path');
 
 module.exports = {
-	entry: path.resolve(__dirname, './js/index.jsx'),
+	entry: {
+		auditor: path.resolve(__dirname, './js/auditor.jsx'),
+		manager: path.resolve(__dirname, './js/manager.jsx'),
+	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: 'bundle.js'
+		filename: '[name].bundle.js'
 	},
 	externals: {
 	},

@@ -6,7 +6,7 @@ import * as Redux from 'redux';
 import ReduxThunk from 'redux-thunk';
 import ReduxLogger from 'redux-logger';
 
-import { Root } from './routes.jsx';
+import Routes from './components/auditor/Routes.jsx';
 import { rootReducer } from './reducers.js';
 
 var store = Redux.createStore(
@@ -18,6 +18,8 @@ var store = Redux.createStore(
 );
 
 ReactDOM.render(
-	<Root store={store}/>,
+	<Provider store={store}>
+		<Routes store={store}/>
+	</Provider>,
 	document.getElementById('root')
 );
