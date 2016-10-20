@@ -21,7 +21,7 @@ var ClientRow = React.createClass({
 });
 
 var ClientList = React.createClass({
-	componentWillMount: function() {
+	componentDidMount: function() {
 		this.props.dispatch(fetchClients());
 	},
 	render: function(){

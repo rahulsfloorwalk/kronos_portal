@@ -2,24 +2,25 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAdditionalInfo } from '../actions.js'
-import { Check, Cross } from './Icons.jsx';
+import { fetchAdditionalInfoForAuditor } from '../../actions.js'
+import { Check, Cross } from '../Icons.jsx';
 
-var AdditionalInfoPanelBase = React.createClass({
+var AdditionalInfoPanel = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(fetchAdditionalInfo());
+		this.props.dispatch(fetchAdditionalInfoForAuditor(this.props.auditorId));
 	},
 	render: function(){
+		if(! this.props.additionalInfo){
+			return <div>Loading...</div>;
+		}
 		var has_car = this.props.additionalInfo.has_car ? <Check/> : <Cross/>;
 		var weekend_audit = this.props.additionalInfo.weekend_audit ? <Check/> : <Cross/>;
-		var editButton = this.props.editButton ? <Link to="details/additional/edit" className="btn btn-default pull-right">EDIT</Link> : undefined;
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
 				<div className="panel-body">
-					{editButton}
 					<p>Has Car: { has_car }</p>
 					<p>Weekend Audit: { weekend_audit }</p>
 				</div>
@@ -28,11 +29,10 @@ var AdditionalInfoPanelBase = React.createClass({
 	},
 });
 
-var mapStoreToProps = function(store){
+var mapStoreToProps = function(store, ownProps){
 	return {
-		additionalInfo: store.additionalInfo
+		additionalInfo: store.additionalInfos[ownProps.auditorId]
 	};
 };
 
-export { AdditionalInfoPanelBase };
-export default ReactRedux.connect(mapStoreToProps)(AdditionalInfoPanelBase); 
+export default ReactRedux.connect(mapStoreToProps)(AdditionalInfoPanel);

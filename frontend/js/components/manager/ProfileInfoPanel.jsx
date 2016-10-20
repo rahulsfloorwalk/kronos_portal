@@ -2,20 +2,22 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchProfileInfo } from '../actions.js'
+import { fetchProfileInfoForAuditor } from '../../actions.js'
 
-var ProfileInfoPanelBase = React.createClass({
+var ProfileInfoPanel = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(fetchProfileInfo());
+		this.props.dispatch(fetchProfileInfoForAuditor(this.props.auditorId));
 	},
 	render: function(){
+		if(! this.props.profileInfo){
+			return (<div>Loading...</div>);
+		}
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					<h3 className="panel-title">Profile Info</h3>
 				</div>
 				<div className="panel-body">
-					<Link to="details/profile/edit" className="btn btn-default pull-right">EDIT</Link>
 					<p>First Name: { this.props.profileInfo.first_name }</p>
 					<p>Last Name: { this.props.profileInfo.last_name }</p>
 					<p>Gender: { this.props.profileInfo.gender }</p>
@@ -33,11 +35,10 @@ var ProfileInfoPanelBase = React.createClass({
 	},
 });
 
-var mapStoreToProps = function(store){
+var mapStoreToProps = function(store, ownProps){
 	return {
-		profileInfo: store.profileInfo
+		profileInfo: store.profileInfos[ownProps.auditorId]
 	};
 };
 
-export { ProfileInfoPanelBase };
-export default ReactRedux.connect(mapStoreToProps)(ProfileInfoPanelBase); 
+export default ReactRedux.connect(mapStoreToProps)(ProfileInfoPanel); 

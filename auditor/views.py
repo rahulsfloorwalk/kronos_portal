@@ -142,7 +142,7 @@ class AdditionalInfoView(APIView):
             additional_info = AdditionalInfo.objects.get(user_id=request.user.id)
             return Response(AdditionalInfoSerializer(additional_info).data)
         except AdditionalInfo.DoesNotExist:
-            raise Http404
+            return Response(AdditionalInfoSerializer(AdditionalInfo()).data)
 
     def post(self, request):
         additional_info_s= AdditionalInfoSerializer(data=request.data)
@@ -157,7 +157,7 @@ class BankInfoView(APIView):
             bank_info = BankInfo.objects.get(user_id=request.user.id)
             return Response(BankInfoSerializer(bank_info).data)
         except BankInfo.DoesNotExist:
-            raise Http404
+            return Response(BankInfoSerializer(BankInfo()).data)
 
     def post(self, request):
         bank_info_s = BankInfoSerializer(data=request.data)

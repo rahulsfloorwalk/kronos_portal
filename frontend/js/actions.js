@@ -60,6 +60,18 @@ export var types = {
 	CLIENT_FORM_SUB_REQ: 'CLIENT_FORM_SUB_REQ',
 	CLIENT_FORM_SUB_ERR: 'CLIENT_FORM_SUB_ERR',
 	CLIENT_FORM_SUB_SUC: 'CLIENT_FORM_SUB_SUC',
+
+	//Auditor GET
+	AUDITOR_GET_REQ: 'AUDITOR_GET_REQ',
+	AUDITOR_GET_ERR: 'AUDITOR_GET_ERR',
+	AUDITOR_GET_SUC: 'AUDITOR_GET_SUC',
+
+	AUDITOR_ID_GET: 'AUDITOR_ID_GET',
+
+	//Auditor sub information
+	AUDITOR_GET_PROFILE_INFO: 'AUDITOR_GET_PROFILE_INFO',
+	AUDITOR_GET_BANK_INFO: 'AUDITOR_GET_BANK_INFO',
+	AUDITOR_GET_ADDITIONAL_INFO: 'AUDITOR_GET_ADDITIONAL_INFO',
 };
 
 /**
@@ -419,5 +431,97 @@ export function saveClientAddForm(client){
 				type: types.CLIENT_FORM_SUB_ERR,
 			});
 		});
+	};
+};
+
+export function fetchAuditors(){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_GET_REQ
+		});
+
+		$.get( url.api_base_path + "manager/auditor", function(auditors){
+			dispatch({
+				type: types.AUDITOR_GET_SUC,
+				auditors: auditors
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchAuditor(auditorId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_GET,
+			status: 'request',
+			auditorId: auditorId
+		});
+
+		$.get( url.api_base_path + `manager/auditor/${auditorId}`, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_GET,
+				status: 'success',
+				auditor: auditor
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchProfileInfoForAuditor(auditorId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_GET_PROFILE_INFO,
+			status: 'request',
+			auditorId: auditorId
+		});
+
+		$.get( url.api_base_path + `manager/auditor/${auditorId}/profile_info`, function(profileInfo){
+			dispatch({
+				type: types.AUDITOR_GET_PROFILE_INFO,
+				status: 'success',
+				profileInfo: profileInfo,
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchBankInfoForAuditor(auditorId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_GET_BANK_INFO,
+			status: 'request',
+			auditorId: auditorId
+		});
+
+		$.get( url.api_base_path + `manager/auditor/${auditorId}/bank_info`, function(bankInfo){
+			dispatch({
+				type: types.AUDITOR_GET_BANK_INFO,
+				status: 'success',
+				bankInfo: bankInfo,
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchAdditionalInfoForAuditor(auditorId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_GET_ADDITIONAL_INFO,
+			status: 'request',
+			auditorId: auditorId
+		});
+
+		$.get( url.api_base_path + `manager/auditor/${auditorId}/additional_info`, function(additionalInfo){
+			dispatch({
+				type: types.AUDITOR_GET_ADDITIONAL_INFO,
+				status: 'success',
+				additionalInfo: additionalInfo,
+			});
+		});
+		//TODO: Handle error
 	};
 };
