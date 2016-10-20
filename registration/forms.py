@@ -9,6 +9,8 @@ import hashlib, datetime
 import properties
 from os import urandom
 
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required = True)
     phone = forms.CharField(max_length=10, required = True)
@@ -29,7 +31,7 @@ class SignUpForm(UserCreationForm):
         user.email = self.cleaned_data["email"]
         user.phone = self.cleaned_data["phone"]
         user.save()
-        user.groups.add(Group.objects.get(name="Auditor"))
+        user.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
         user.save()
 
         profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)

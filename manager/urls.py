@@ -9,6 +9,7 @@ urlpatterns = ([
     url(r'audit-location', views.AuditLocationView.as_view(), name='audit_location_view'),
     url(r'location/(?P<location_id>[0-9]+)$', views.LocationIdView.as_view(), name='location_id_view'),
     url(r'location', views.LocationView.as_view(), name='location_view'),
+    url(r'auditor', views.AuditorView.as_view(), name='auditor_view'),
     url(r'audit/(?P<audit_id>[0-9]+)$', views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit', views.AuditView.as_view(), name='audit_view'),
 ], 'client')

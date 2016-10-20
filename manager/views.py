@@ -2,17 +2,19 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
 from django.views import View
 from django.utils.decorators import method_decorator
+from django.contrib.auth.models import User, Group
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
-from .serializers import ClientSerializer, AuditSerializer, AuditLocationSerializer, CitySerializer
+from .serializers import ClientSerializer, AuditSerializer, AuditLocationSerializer, CitySerializer, AuditorSerializer
 from .serializers import LocationSerializer, LocationDeSerializer
 from .service.client import ClientService
 from .service.location import LocationService
 from .service.audit import AuditService
 from .service.audit_location import AuditLocationService
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
 class ClientView(APIView):
     def get(self, request, format=None):
@@ -169,3 +171,11 @@ class AuditLocationIdView(APIView):
             return Response(AuditLocationSerializer(auditLocation).data)
         except AuditLocation.DoesNotExist:
             return Http404
+
+
+class AuditorView(APIView):
+    def get(self, request, format=None):
+        auditors = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.all();
+        print("auditors",auditors)
+        return Response(AuditorSerializer(auditors, many=True).data)
+

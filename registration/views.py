@@ -8,7 +8,7 @@ from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
 from auditor.models import ProfileInfo
-from .models import Verification
+from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from .forms import SignUpForm
 import datetime
 
@@ -30,10 +30,10 @@ class Login(View):
                     verification = Verification.objects.get(user_id=user.id)
                     if verification is not None and verification.is_verified is True:
                         login(request, user)
-                        if user.groups.filter(name="Auditor").exists():
+                        if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
                             print("auditor",user)
                             return redirect(self.__auditor_url)
-                        if user.groups.filter(name="Manager").exists():
+                        if user.groups.filter(name=GROUP_NAME_MANAGER).exists():
                             print("manager",user)
                             return redirect(self.__manager_url)
                         messages.add_message(request, messages.WARNING, 'Your account is not in a group. Please contact site administrator.')

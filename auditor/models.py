@@ -49,7 +49,6 @@ class ProfileInfo(Model):
 	city = CharField(db_column='city', max_length=20, blank=True)
 	state = CharField(db_column='state', max_length=20, blank=True)
 
-	#user_id = models.IntegerField(db_column='user_id')
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 
@@ -60,7 +59,6 @@ class AdditionalInfo(Model):
 	has_car = NullBooleanField(db_column='has_car', blank=True, null=True)
 	weekend_audit = NullBooleanField(db_column='weekend_audit', blank=True, null=True)
 
-	#user_id = models.IntegerField(db_column='user_id')
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 class BankInfo(Model):
@@ -72,5 +70,4 @@ class BankInfo(Model):
 	account_number = CharField(db_column='account_number', max_length=20, blank=True)
 	ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
 
-	#user_id = models.IntegerField(db_column='user_id')
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)

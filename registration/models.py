@@ -13,3 +13,7 @@ class Verification(Model):
 	key_expires = DateTimeField()
 	is_verified = BooleanField(db_column='is_verified', default=False)
 	user = OneToOneField(settings.AUTH_USER_MODEL, related_name='verification')
+
+
+GROUP_NAME_AUDITOR = "Auditor"
+GROUP_NAME_MANAGER = "Manager"
