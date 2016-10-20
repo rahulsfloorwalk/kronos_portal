@@ -2,8 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAdditionalInfo } from '../auditor_actions.js'
-import { Check, Cross } from './Icons.jsx';
+import { fetchAdditionalInfo } from '../../auditor_actions.js'
+import { Check, Cross } from '../Icons.jsx';
 
 var AdditionalInfoPanelBase = React.createClass({
 	componentDidMount: function() {

@@ -3,13 +3,12 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import url from '../../config.js';
-import { fetchBankInfo, saveBankInfo } from '../auditor_actions.js';
+import { fetchBankInfo, saveBankInfo } from '../../auditor_actions.js';
 
-import FormInput from './FormInput.jsx';
-import FormGroup from './FormGroup.jsx';
-import SaveButton from './SaveButton.jsx';
-import Modal from './Modal.jsx';
+import FormInput from '../FormInput.jsx';
+import FormGroup from '../FormGroup.jsx';
+import SaveButton from '../SaveButton.jsx';
+import Modal from '../Modal.jsx';
 
 var BankInfoForm = React.createClass({
 	getInitialState: function(){

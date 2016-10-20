@@ -3,13 +3,12 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import url from '../../config.js';
-import { fetchAdditionalInfo, saveAdditionalInfo } from '../auditor_actions.js';
+import { fetchAdditionalInfo, saveAdditionalInfo } from '../../auditor_actions.js';
 
-import FormInput from './FormInput.jsx';
-import FormGroup from './FormGroup.jsx';
-import SaveButton from './SaveButton.jsx';
-import Modal from './Modal.jsx';
+import FormInput from '../FormInput.jsx';
+import FormGroup from '../FormGroup.jsx';
+import SaveButton from '../SaveButton.jsx';
+import Modal from '../Modal.jsx';
 
 var AdditionalInfoForm = React.createClass({
 	getInitialState: function(){
