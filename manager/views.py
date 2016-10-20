@@ -7,7 +7,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
-from .serializers import ClientSerializer, LocationSerializer, AuditSerializer, AuditLocationSerializer, CitySerializer
+from .serializers import ClientSerializer, AuditSerializer, AuditLocationSerializer, CitySerializer
+from .serializers import LocationSerializer, LocationDeSerializer
 from .service.client import ClientService
 from .service.location import LocationService
 from .service.audit import AuditService
@@ -79,9 +80,9 @@ class LocationIdView(APIView):
             return Http404
 
     def post(self, request, location_id):
-        location_s = LocationSerializer(data=request.data)
+        location_s = LocationDeSerializer(data=request.data)
         location_s.is_valid(raise_exception=True)
-        location = location_s.create(id=location_id)
+        location = location_s.deserialize(id=location_id)
         savedLocation = LocationService().save(location)
         return Response(LocationSerializer(savedLocation).data)
 

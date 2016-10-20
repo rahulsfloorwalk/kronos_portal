@@ -1,5 +1,5 @@
 from rest_framework import routers, viewsets
-from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField
+from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
 
 from .models import City, Location, Client, Audit, AuditLocation, City
 
@@ -34,8 +34,19 @@ class CitySerializer(ModelSerializer):
         read_only_fields = ('id',)
 
 class LocationSerializer(ModelSerializer):
-    city = SlugRelatedField(slug_field='id', queryset=City.objects.all())
-#    city = CitySerializer()
+    city = CitySerializer()
+
+    class Meta:
+        model = Location
+        fields = (
+            'id',
+            'name',
+            'pincode',
+            'city',
+        )
+        read_only_fields = ('id','name','pincode','city')
+
+class LocationDeSerializer(ModelSerializer):
     class Meta:
         model = Location
         fields = (
@@ -46,7 +57,7 @@ class LocationSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def create(self, **kwargs):
+    def deserialize(self, **kwargs):
         if 'id' in kwargs and kwargs['id'] is not None:
             location = Location.objects.get(id=kwargs['id'])
         else:
