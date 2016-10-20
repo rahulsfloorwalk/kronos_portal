@@ -4,13 +4,15 @@ import { Link } from 'react-router';
 
 import { fetchProfileInfoForAuditor } from '../../actions.js'
 
+import Loading from '../Loading.jsx';
+
 var ProfileInfoPanel = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchProfileInfoForAuditor(this.props.auditorId));
 	},
 	render: function(){
 		if(! this.props.profileInfo){
-			return (<div>Loading...</div>);
+			return <Loading/>;
 		}
 		return (
 			<div className="panel panel-default">

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchAdditionalInfoForAuditor } from '../../actions.js'
 import { Check, Cross } from '../Icons.jsx';
+import Loading from '../Loading.jsx';
 
 var AdditionalInfoPanel = React.createClass({
 	componentDidMount: function() {
@@ -11,7 +12,7 @@ var AdditionalInfoPanel = React.createClass({
 	},
 	render: function(){
 		if(! this.props.additionalInfo){
-			return <div>Loading...</div>;
+			return <Loading/>;
 		}
 		var has_car = this.props.additionalInfo.has_car ? <Check/> : <Cross/>;
 		var weekend_audit = this.props.additionalInfo.weekend_audit ? <Check/> : <Cross/>;

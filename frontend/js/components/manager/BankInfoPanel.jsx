@@ -3,13 +3,15 @@ import * as ReactRedux from 'react-redux';
 import { fetchBankInfoForAuditor } from '../../actions.js'
 import { Link } from 'react-router';
 
+import Loading from '../Loading.jsx';
+
 var BankInfoPanel = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchBankInfoForAuditor(this.props.auditorId));
 	},
 	render: function(){
 		if(! this.props.bankInfo){
-			return (<p>loading...</p>);
+			return <Loading/>;
 		}
 		return (
 			<div className="panel panel-default">

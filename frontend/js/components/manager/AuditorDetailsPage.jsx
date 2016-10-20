@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { fetchAuditor } from '../../actions.js';
 
 import Panel from '../Panel.jsx';
+import Loading from '../Loading.jsx';
 
 import ProfileInfoPanel from './ProfileInfoPanel.jsx';
 import BankInfoPanel from './BankInfoPanel.jsx';
@@ -16,7 +17,7 @@ var AuditorDetailsPage = React.createClass({
 	},
 	render: function(){
 		if(! this.props.auditor){
-			return (<div>Loading...</div>);
+			return <Loading/>;
 		}
 		return (
 			<div>
