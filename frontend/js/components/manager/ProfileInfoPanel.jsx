@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchProfileInfoForAuditor } from '../../actions.js'
+import { fetchProfileInfoForAuditor } from '../../manager_actions.js'
 
 import Loading from '../Loading.jsx';
 

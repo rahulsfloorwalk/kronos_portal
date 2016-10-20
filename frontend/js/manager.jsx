@@ -8,7 +8,7 @@ import ReduxLogger from 'redux-logger';
 
 //import { ManagerRoot } from './routes.jsx';
 import Routes from './components/manager/Routes.jsx';
-import { rootReducer } from './reducers.js';
+import { rootReducer } from './reducers_manager.js';
 
 var store = Redux.createStore(
 	rootReducer,

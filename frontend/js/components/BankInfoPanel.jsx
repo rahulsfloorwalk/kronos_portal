@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactRedux from 'react-redux';
-import { fetchBankInfo } from '../actions.js'
+import { fetchBankInfo } from '../auditor_actions.js'
 import { Link } from 'react-router';
 
 var BankInfoPanelBase = React.createClass({

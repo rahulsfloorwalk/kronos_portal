@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAuditors } from '../../actions.js'
+import { fetchAuditors } from '../../manager_actions.js'
 
 var AuditorRow = React.createClass({
 	render: function(){

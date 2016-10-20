@@ -7,7 +7,7 @@ import ReduxThunk from 'redux-thunk';
 import ReduxLogger from 'redux-logger';
 
 import Routes from './components/auditor/Routes.jsx';
-import { rootReducer } from './reducers.js';
+import { rootReducer } from './reducers_auditor.js';
 
 var store = Redux.createStore(
 	rootReducer,

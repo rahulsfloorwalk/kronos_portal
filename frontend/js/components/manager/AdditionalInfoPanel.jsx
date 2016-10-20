@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAdditionalInfoForAuditor } from '../../actions.js'
+import { fetchAdditionalInfoForAuditor } from '../../manager_actions.js'
 import { Check, Cross } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
 

@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { loadClientAddForm, loadClientEditForm, saveClientEditForm, saveClientAddForm } from '../../actions.js';
+import { loadClientAddForm, loadClientEditForm, saveClientEditForm, saveClientAddForm } from '../../manager_actions.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormInput from '../FormInput.jsx';

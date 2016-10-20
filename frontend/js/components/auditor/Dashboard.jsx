@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchProfileInfo } from '../../actions.js';
+import { fetchProfileInfo } from '../../auditor_actions.js';
 
 var Dashboard = React.createClass({
 	componentWillMount: function(){

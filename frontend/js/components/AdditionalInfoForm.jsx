@@ -4,7 +4,7 @@ import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
 import url from '../../config.js';
-import { fetchAdditionalInfo, saveAdditionalInfo } from '../actions.js';
+import { fetchAdditionalInfo, saveAdditionalInfo } from '../auditor_actions.js';
 
 import FormInput from './FormInput.jsx';
 import FormGroup from './FormGroup.jsx';

@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchClients } from '../../actions.js'
+import { fetchClients } from '../../manager_actions.js'
 
 var ClientRow = React.createClass({
 	render: function(){
