@@ -1,4 +1,4 @@
-from client.models import Client
+from ..models import Client
 
 class ClientService:
 	def save(self, client):

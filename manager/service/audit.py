@@ -1,4 +1,4 @@
-from client.models import Audit
+from ..models import Audit
 
 class AuditService:
 	def save(self, audit):

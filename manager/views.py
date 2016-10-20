@@ -8,10 +8,10 @@ from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
 from .serializers import ClientSerializer, LocationSerializer, AuditSerializer, AuditLocationSerializer
-from client.service.client import ClientService
-from client.service.location import LocationService
-from client.service.audit import AuditService
-from client.service.audit_location import AuditLocationService
+from .service.client import ClientService
+from .service.location import LocationService
+from .service.audit import AuditService
+from .service.audit_location import AuditLocationService
 
 class ClientView(APIView):
     def get(self, request, format=None):

@@ -17,11 +17,11 @@ from django.conf.urls import include, url
 from django.contrib import admin
 import registration.urls as registration_urls
 import auditor.urls as auditor_urls
-import client.urls as client_urls
+import manager.urls as manager_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^auth/', include(registration_urls.urlpatterns)),
     url(r'^auditor/', include(auditor_urls.urlpatterns)),
-    url(r'^client/', include(client_urls.urlpatterns)),
+    url(r'^manager/', include(manager_urls.urlpatterns)),
 ]

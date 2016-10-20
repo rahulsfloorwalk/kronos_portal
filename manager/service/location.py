@@ -1,4 +1,4 @@
-from client.models import Location
+from ..models import Location
 
 class LocationService:
 	def save(self, location):

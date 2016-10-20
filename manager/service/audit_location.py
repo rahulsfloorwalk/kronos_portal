@@ -1,4 +1,4 @@
-from client.models import AuditLocation
+from ..models import AuditLocation
 
 class AuditLocationService:
 	def save(self, auditLocation):
