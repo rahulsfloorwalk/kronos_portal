@@ -14,7 +14,13 @@ var Header = React.createClass({
 						<li><Link to="/details" activeClassName="active">Details</Link></li>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
-						<li><Link >Logout</Link></li>
+						<li>
+							<form action="/auth/logout" method="POST">
+							<button className="btn btn-lg btn-link">
+							Logout
+							</button>
+							</form>
+						</li>
 					</ul>
 				</div>
 			</nav>

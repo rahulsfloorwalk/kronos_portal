@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 from registration.models import Verification
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
@@ -11,7 +11,7 @@ from os import urandom
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required = True)
-    phone = forms.CharField(required = True)
+    phone = forms.CharField(max_length=10, required = True)
 
     class Meta:
         model = User
@@ -28,6 +28,8 @@ class SignUpForm(UserCreationForm):
         user = super(SignUpForm, self).save(commit = False)
         user.email = self.cleaned_data["email"]
         user.phone = self.cleaned_data["phone"]
+        user.save()
+        user.groups.add(Group.objects.get(name="Auditor"))
         user.save()
 
         profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)

@@ -14,6 +14,8 @@ import datetime
 
 class Login(View):
     __template = 'registration/login.html'
+    __auditor_url = '/static/auditor.html'
+    __manager_url = '/static/manager.html'
 
     def get(self, request):
         form = AuthenticationForm()
@@ -28,7 +30,13 @@ class Login(View):
                     verification = Verification.objects.get(user_id=user.id)
                     if verification is not None and verification.is_verified is True:
                         login(request, user)
-                        return redirect('auditor:dashboard')
+                        if user.groups.filter(name="Auditor").exists():
+                            print("auditor",user)
+                            return redirect(self.__auditor_url)
+                        if user.groups.filter(name="Manager").exists():
+                            print("manager",user)
+                            return redirect(self.__manager_url)
+                        messages.add_message(request, messages.WARNING, 'Your account is not in a group. Please contact site administrator.')
                     else:
                         messages.add_message(request, messages.WARNING, 'Your account is not verified. Please check your email for the verification link.')
                 except Verification.DoesNotExist:
