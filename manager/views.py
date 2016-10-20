@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
-from .serializers import ClientSerializer, LocationSerializer, AuditSerializer, AuditLocationSerializer
+from .serializers import ClientSerializer, LocationSerializer, AuditSerializer, AuditLocationSerializer, CitySerializer
 from .service.client import ClientService
 from .service.location import LocationService
 from .service.audit import AuditService
@@ -49,6 +49,11 @@ class ClientIdView(APIView):
             return Response(ClientSerializer(client).data)
         except Client.DoesNotExist:
             raise Http404
+
+class CityView(APIView):
+    def get(self, request, format=None):
+        cities = City.objects.all()
+        return Response(CitySerializer(cities, many=True).data)
 
 class LocationView(APIView):
     def get(self, request, format=None):

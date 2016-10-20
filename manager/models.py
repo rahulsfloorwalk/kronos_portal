@@ -10,11 +10,17 @@ class Client(Model):
     email = EmailField(db_column='email', max_length=50, blank=False)
     phone = CharField(db_column='phone', max_length=15, blank=True)
 
+    def __str__(self):
+        return 'Client: ' + self.name
+
 class City(Model):
     db_table = "city"
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
+
+    def __str__(self):
+        return 'City: ' + self.name
 
 class Location(Model):
     db_table = "location"
@@ -23,6 +29,9 @@ class Location(Model):
     name = CharField(db_column="name", max_length=100, blank=False)
     pincode = CharField(db_column='pincode', max_length=6, blank=False)
     city = ForeignKey(City, related_name='city', db_column='city_id', blank=False, on_delete=CASCADE)
+
+    def __str__(self):
+        return 'Location: {}, {}'.format(self.name,self.city.name)
 
 class Audit(Model):
     db_table = "audit"
