@@ -1,6 +1,7 @@
 import { types } from './manager_actions.js'
 
 var initialStore = {
+	audits: {},
 	clients: {},
 	auditors: {},
 	locations: {},
@@ -245,6 +246,36 @@ export function rootReducer(store = initialStore, action) {
 							}
 							return obj;
 						}(action.cities))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						audits: (function(audits){
+							var obj = {};
+							for( var a of audits){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.audits))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						audits: Object.assign({}, store.audits, {
+							[action.audit.id]: action.audit
+						})
 					});
 					break;
 				default:

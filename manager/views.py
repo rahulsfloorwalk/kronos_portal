@@ -8,8 +8,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
-from .serializers import ClientSerializer, AuditSerializer, AuditLocationSerializer, CitySerializer, AuditorSerializer
+from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializer, AuditorSerializer
 from .serializers import LocationSerializer, LocationDeSerializer
+from .serializers import AuditSerializer, AuditDeSerializer
 from .service.client import ClientService
 from .service.location import LocationService
 from .service.audit import AuditService
@@ -100,16 +101,13 @@ class LocationIdView(APIView):
 
 class AuditView(APIView):
     def get(self, request, format=None):
-        try:
-            audit = Audit.objects.all()
-            return Response(AuditSerializer(audit, many=True).data)
-        except Audit.DoesNotExist:
-            return Http404
+        audit = Audit.objects.all()
+        return Response(AuditSerializer(audit, many=True).data)
 
     def post(self, request):
-        audit_s = AuditSerializer(data=request.data)
-        audit_s.is_valid(raise_exception=True)
-        audit = audit_s.create()
+        audit_ds = AuditDeSerializer(data=request.data)
+        audit_ds.is_valid(raise_exception=True)
+        audit = audit_ds.deserialize()
         savedAudit = AuditService().save(audit)
         return Response(AuditSerializer(savedAudit).data)
 
@@ -122,9 +120,9 @@ class AuditIdView(APIView):
             return Http404
 
     def post(self, request, audit_id):
-        audit_s = AuditSerializer(data=request.data)
-        audit_s.is_valid(raise_exception=True)
-        audit = audit_s.create(id=audit_id)
+        audit_ds = AuditDeSerializer(data=request.data)
+        audit_ds.is_valid(raise_exception=True)
+        audit = audit_ds.deserialize(id=audit_id)
         savedAudit = AuditService().save(audit)
         return Response(AuditSerializer(savedAudit).data)
 

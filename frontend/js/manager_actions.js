@@ -60,8 +60,16 @@ export var types = {
 	LOCATION_FORM_LOAD: 'LOCATION_FORM_LOAD',
 	LOCATION_FORM_SUB: 'LOCATION_FORM_SUB',
 
-	//Location get
+	//City get
 	CITY_GET: 'CITY_GET',
+
+	//Audit
+	AUDIT_GET: 'AUDIT_GET',
+	AUDIT_POST: 'AUDIT_POST',
+
+	//Audit Id
+	AUDIT_ID_GET: 'AUDIT_ID_GET',
+	AUDIT_ID_POST: 'AUDIT_ID_POST',
 };
 
 /**
@@ -593,3 +601,40 @@ export function fetchCities(){
 	};
 };
 
+
+export function fetchAudits(){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_GET,
+			status: 'request',
+		});
+
+		$.get( url.api_base_path + "manager/audit", function(audits){
+			dispatch({
+				type: types.AUDIT_GET,
+				status: 'success',
+				audits: audits
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchAudit(auditId, successCallback = ()=>{}){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_ID_GET,
+			status: 'request',
+		});
+
+		$.get( url.api_base_path + `manager/audit/${auditId}`, function(audit){
+			dispatch({
+				type: types.AUDIT_ID_GET,
+				status: 'success',
+				audit: audit
+			});
+			successCallback(audit);
+		});
+		//TODO: Handle error
+	};
+};

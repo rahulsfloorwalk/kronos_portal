@@ -10,13 +10,16 @@ var Header = React.createClass({
 						<Link className="navbar-brand" to="/">Vitric</Link>
 					</div>
 					<ul className="nav navbar-nav">
-						<li><Link to="/client" activeClassName="active">Client</Link></li>
+						<li><Link to="/audit" activeClassName="active">Audits</Link></li>
 					</ul>
 					<ul className="nav navbar-nav">
-						<li><Link to="/auditor" activeClassName="active">Auditor</Link></li>
+						<li><Link to="/client" activeClassName="active">Clients</Link></li>
 					</ul>
 					<ul className="nav navbar-nav">
-						<li><Link to="/location" activeClassName="active">Location</Link></li>
+						<li><Link to="/auditor" activeClassName="active">Auditors</Link></li>
+					</ul>
+					<ul className="nav navbar-nav">
+						<li><Link to="/location" activeClassName="active">Locations</Link></li>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

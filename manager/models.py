@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import CASCADE
 
 class Client(Model):
@@ -28,7 +28,7 @@ class Location(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
     pincode = CharField(db_column='pincode', max_length=6, blank=False)
-    city = ForeignKey(City, related_name='city', db_column='city_id', blank=False, on_delete=CASCADE)
+    city = ForeignKey(City, related_name='locations', db_column='city_id', blank=False, on_delete=CASCADE)
 
     def __str__(self):
         return 'Location: {}, {}'.format(self.name,self.city.name)
@@ -64,12 +64,19 @@ class Audit(Model):
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
     description = CharField(db_column='description', max_length=200, blank=False)
-    client = ForeignKey(Client, related_name='client', db_column='client_id', on_delete=CASCADE)
+    client = ForeignKey(Client, related_name='audits', db_column='client_id', on_delete=CASCADE)
+
+    def audit_count(self):
+        count = 0;
+        for al in self.auditlocations.all():
+            count = count + al.count
+        return count
+
 
 class AuditLocation(Model):
     db_table = "audit_location"
 
     id = AutoField(db_column = 'id', primary_key=True)
-    count = IntegerField(db_column='count', blank=False)
-    location = ForeignKey(Location, related_name='location', db_column='location_id', on_delete=CASCADE)
-    audit = ForeignKey(Audit, related_name='audit', db_column='audit_id', on_delete=CASCADE)
+    count = PositiveIntegerField(db_column='count', blank=False)
+    location = ForeignKey(Location, related_name='auditlocations', db_column='location_id', on_delete=CASCADE)
+    audit = ForeignKey(Audit, related_name='auditlocations', db_column='audit_id', on_delete=CASCADE)

@@ -14,6 +14,9 @@ import AuditorDetailsPage from './AuditorDetailsPage.jsx';
 import LocationList from './LocationList.jsx';
 import LocationForm from './LocationForm.jsx';
 
+import AuditList from './AuditList.jsx';
+import AuditDetails from './AuditDetails.jsx';
+
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
@@ -31,6 +34,9 @@ const Routes = () => (
 			<Route path="add" component={LocationForm}/>
 			<Route path=":locationId/edit" component={LocationForm}/>
 		</Route>
+
+		<Route path="audit" component={AuditList}/>
+		<Route path="audit/:auditId" component={AuditDetails}/>
 	</Route>
     </Router>
 );
