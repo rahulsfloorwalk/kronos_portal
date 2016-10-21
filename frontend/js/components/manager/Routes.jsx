@@ -3,6 +3,7 @@ import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
 import App from './App.jsx';
+import Dashboard from './Dashboard.jsx';
 
 import ClientList from './ClientList.jsx';
 import ClientForm from './ClientForm.jsx';
@@ -16,6 +17,7 @@ import LocationForm from './LocationForm.jsx';
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
+		<IndexRoute component={Dashboard} />
 
 		<Route path="client" component={ClientList}>
 			<Route path="add" component={ClientForm}/>
