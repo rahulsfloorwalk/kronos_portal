@@ -11,7 +11,7 @@ import FormGroup from '../FormGroup.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 
-var BankInfoForm = React.createClass({
+var ClientForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
@@ -58,4 +58,4 @@ var mapStoreToProps = function(store){
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(BankInfoForm);
+export default ReactRedux.connect( mapStoreToProps)(ClientForm);

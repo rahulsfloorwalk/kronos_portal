@@ -3,17 +3,17 @@ import { types } from './manager_actions.js'
 var initialStore = {
 	clients: {},
 	auditors: {},
+	locations: {},
+	cities: {},
 	profileInfos: {},
 	bankInfos: {},
 	additionalInfos: {},
 	forms: {
-		additionalInfo: {
-			errors:{}
-		},
-		bankInfo: {
-			errors:{}
-		},
 		client: {
+			initialValues:{},
+			errors: {}
+		},
+		location: {
 			initialValues:{},
 			errors: {}
 		}
@@ -134,6 +134,117 @@ export function rootReducer(store = initialStore, action) {
 						additionalInfos: Object.assign({}, store.additionalInfos, {
 							[action.additionalInfo.user_id]: action.additionalInfo
 						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.LOCATION_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						locations: (function(locations){
+							var obj = {};
+							for( var l of locations){
+								obj[l.id] = l;
+							}
+							return obj;
+						}(action.locations))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.LOCATION_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						locations: Object.assign({}, store.locations, {
+							[action.location.id]: action.location
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							location: Object.assign({}, store.forms.location, {
+								errors: action.errors
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.LOCATION_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						locations: Object.assign({}, store.locations, {
+							[action.location.id]: action.location
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.LOCATION_ID_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						locations: Object.assign({}, store.locations, {
+							[action.location.id]: action.location
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							location: Object.assign({}, store.forms.location, {
+								errors: action.errors
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.LOCATION_FORM_LOAD:
+			switch(action.status){
+				case "success":
+					var iVal = {};
+					if( action.locationId){
+						iVal = store.locations[action.locationId];
+					}
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							location: {
+								initialValues: iVal,
+								errors: {}
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CITY_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						cities: (function(cities){
+							var obj = {};
+							for( var c of cities){
+								obj[c.id] = c;
+							}
+							return obj;
+						}(action.cities))
 					});
 					break;
 				default:

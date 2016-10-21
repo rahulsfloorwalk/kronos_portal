@@ -45,6 +45,23 @@ export var types = {
 	AUDITOR_GET_PROFILE_INFO: 'AUDITOR_GET_PROFILE_INFO',
 	AUDITOR_GET_BANK_INFO: 'AUDITOR_GET_BANK_INFO',
 	AUDITOR_GET_ADDITIONAL_INFO: 'AUDITOR_GET_ADDITIONAL_INFO',
+
+	//Location get
+	LOCATION_GET: 'LOCATION_GET',
+	LOCATION_POST: 'LOCATION_POST',
+
+	//Location Id get
+	LOCATION_ID_GET: 'LOCATION_ID_GET',
+
+	//Location Id post
+	LOCATION_ID_POST: 'LOCATION_ID_POST',
+
+	//Location Form
+	LOCATION_FORM_LOAD: 'LOCATION_FORM_LOAD',
+	LOCATION_FORM_SUB: 'LOCATION_FORM_SUB',
+
+	//Location get
+	CITY_GET: 'CITY_GET',
 };
 
 /**
@@ -251,10 +268,10 @@ export function saveClientEditForm(client){
 			data: JSON.stringify(client),
 			contentType: "application/json"
 		});
-		req.done(function(client){
+		req.done(function(savedClient){
 			dispatch({
 				type: types.CLIENT_ID_POST_SUC,
-				client: client
+				client: savedClient
 			});
 			dispatch({
 				type: types.CLIENT_FORM_SUB_SUC,
@@ -278,17 +295,10 @@ export function saveClientAddForm(client){
 		dispatch({
 			type: types.CLIENT_FORM_SUB_REQ,
 		});
-		if( client.id){
-			dispatch({
-				type: types.CLIENT_POST_REQ,
-				client: client
-			});
-		} else {
-			dispatch({
-				type: types.CLIENT_POST_REQ,
-				client: client
-			});
-		}
+		dispatch({
+			type: types.CLIENT_POST_REQ,
+			client: client
+		});
 
 		var req = $.ajax({
 			type: "POST",
@@ -296,10 +306,10 @@ export function saveClientAddForm(client){
 			data: JSON.stringify(client),
 			contentType: "application/json"
 		});
-		req.done(function(client){
+		req.done(function(savedClient){
 			dispatch({
 				type: types.CLIENT_POST_SUC,
-				client: client
+				client: savedClient
 			});
 			dispatch({
 				type: types.CLIENT_FORM_SUB_SUC,
@@ -409,3 +419,177 @@ export function fetchAdditionalInfoForAuditor(auditorId){
 		//TODO: Handle error
 	};
 };
+
+export function fetchLocations(){
+	return function(dispatch){
+		dispatch({
+			type: types.LOCATION_GET,
+			status: 'request',
+		});
+
+		$.get( url.api_base_path + "manager/location", function(locations){
+			dispatch({
+				type: types.LOCATION_GET,
+				status: 'success',
+				locations: locations
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchLocation(locationId, successCallback = ()=>{}){
+	return function(dispatch){
+		dispatch({
+			type: types.LOCATION_ID_GET,
+			status: 'request',
+			locationId: locationId
+		});
+
+		$.get( url.api_base_path + `manager/location/${locationId}`, function(location){
+			dispatch({
+				type: types.LOCATION_ID_GET,
+				status: 'success',
+				location: location
+			});
+			successCallback(location);
+		});
+		//TODO: Handle error
+	};
+};
+
+
+export function loadLocationAddForm(){
+	return function(dispatch){
+		dispatch({
+			type: types.LOCATION_FORM_LOAD,
+			status: 'success'
+		});
+	};
+};
+
+export function loadLocationEditForm(locationId){
+	return function(dispatch){
+		dispatch({
+			type: types.LOCATION_FORM_LOAD,
+			status: 'request',
+			locationId: locationId
+		});
+		dispatch(fetchLocation(locationId, function(location){
+			dispatch({
+				type: types.LOCATION_FORM_LOAD,
+				status: 'success',
+				locationId: locationId
+			});
+		}));
+	};
+};
+
+export function saveLocationEditForm(location){
+	return function(dispatch){
+		dispatch({
+			type: types.LOCATION_FORM_SUB,
+			status: 'request'
+		});
+		dispatch({
+			type: types.LOCATION_ID_POST,
+			status: 'request',
+			location: location
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/location/${location.id}`,
+			data: JSON.stringify(location),
+			contentType: "application/json"
+		});
+		req.done(function(savedLocation){
+			dispatch({
+				type: types.LOCATION_ID_POST,
+				status: 'success',
+				location: savedLocation
+			});
+			dispatch({
+				type: types.LOCATION_FORM_SUB,
+				status: 'success'
+			});
+			hashHistory.push("/location");
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.LOCATION_ID_POST,
+				status: 'error',
+				errors: error.responseJSON
+			});
+			dispatch({
+				type: types.LOCATION_FORM_SUB,
+				status: 'error',
+			});
+		});
+	};
+};
+
+export function saveLocationAddForm(location){
+	return function(dispatch){
+		dispatch({
+			type: types.LOCATION_FORM_SUB,
+			status: 'request',
+			location: location
+
+		});
+		dispatch({
+			type: types.LOCATION_POST,
+			status: 'request',
+			location: location
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "manager/location",
+			data: JSON.stringify(location),
+			contentType: "application/json"
+		});
+		req.done(function(savedLocation){
+			dispatch({
+				type: types.LOCATION_POST,
+				status: 'success',
+				location: savedLocation
+			});
+			dispatch({
+				type: types.LOCATION_FORM_SUB,
+				status: 'success',
+			});
+			hashHistory.push("/location");
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.LOCATION_POST,
+				status: 'error',
+				errors: error.responseJSON
+			});
+			dispatch({
+				type: types.LOCATION_FORM_SUB,
+				status: 'error',
+			});
+		});
+	};
+};
+
+export function fetchCities(){
+	return function(dispatch){
+		dispatch({
+			type: types.CITY_GET,
+			status: 'request',
+		});
+
+		$.get( url.api_base_path + "manager/city", function(cities){
+			dispatch({
+				type: types.CITY_GET,
+				status: 'success',
+				cities: cities
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
