@@ -25,6 +25,12 @@ var LocationForm = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState(nextProps.initialValues);
+		if(nextProps.initialValues && nextProps.initialValues.city){
+			this.setState({
+				'city': nextProps.initialValues.city.id
+			});
+		}
+
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
