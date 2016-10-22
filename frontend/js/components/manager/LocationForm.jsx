@@ -24,10 +24,10 @@ var LocationForm = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		this.setState(nextProps.initialValues);
-		if(nextProps.initialValues && nextProps.initialValues.city){
+		this.setState(nextProps.location);
+		if(nextProps.location && nextProps.location.city){
 			this.setState({
-				'city': nextProps.initialValues.city.id
+				'city': nextProps.location.city.id
 			});
 		}
 
@@ -70,9 +70,9 @@ var LocationForm = React.createClass({
 	},
 });
 
-var mapStoreToProps = function(store){
+var mapStoreToProps = function(store,ownProps){
 	return {
-		initialValues: store.forms.location.initialValues,
+		location: store.locations[ownProps.params.locationId] || {},
 		errors: store.forms.location.errors,
 		cities: store.cities
 	};

@@ -55,32 +55,6 @@ export function rootReducer(store = initialStore, action) {
 					[action.client.id]: action.client
 				})
 			});
-		case types.CLIENT_FORM_LOAD_REQ:
-			var iVal = {};
-			if( action.clientId){
-				iVal = store.clients[action.clientId];
-			}
-			return Object.assign({}, store, {
-				forms: Object.assign({}, store.forms, {
-					client: {
-						initialValues: iVal,
-						errors: {}
-					}
-				})
-			});
-		case types.CLIENT_FORM_LOAD_SUC:
-			var iVal = {};
-			if( action.clientId){
-				iVal = store.clients[action.clientId];
-			}
-			return Object.assign({}, store, {
-				forms: Object.assign({}, store.forms, {
-					client: {
-						initialValues: iVal,
-						errors: {}
-					}
-				})
-			});
 		/*Auditor Get Request*/
 		case types.AUDITOR_GET_SUC:
 			return Object.assign({}, store, {
@@ -211,26 +185,6 @@ export function rootReducer(store = initialStore, action) {
 							location: Object.assign({}, store.forms.location, {
 								errors: action.errors
 							})
-						})
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-		case types.LOCATION_FORM_LOAD:
-			switch(action.status){
-				case "success":
-					var iVal = {};
-					if( action.locationId){
-						iVal = store.locations[action.locationId];
-					}
-					return Object.assign({}, store, {
-						forms: Object.assign({}, store.forms, {
-							location: {
-								initialValues: iVal,
-								errors: {}
-							}
 						})
 					});
 					break;

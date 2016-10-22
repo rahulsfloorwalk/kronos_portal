@@ -229,13 +229,12 @@ export function fetchClients(){
 	};
 };
 
-export function fetchClient(clientId, successCallback = ()=>{}){
+export function fetchClient(clientId){
 	return function(dispatch){
 		dispatch(clientIdGetRequest(clientId));
 
 		$.get( url.api_base_path + `manager/client/${clientId}`, function(client){
 			dispatch(clientIdGetSuccess(client));
-			successCallback(client);
 		});
 		//TODO: Handle error
 	};
@@ -255,12 +254,7 @@ export function loadClientEditForm(clientId){
 			type: types.CLIENT_FORM_LOAD_REQ,
 			clientId: clientId
 		});
-		dispatch(fetchClient(clientId, function(client){
-			dispatch({
-				type: types.CLIENT_FORM_LOAD_SUC,
-				clientId: clientId
-			});
-		}));
+		dispatch(fetchClient(clientId));
 	};
 };
 
@@ -450,7 +444,7 @@ export function fetchLocations(){
 	};
 };
 
-export function fetchLocation(locationId, successCallback = ()=>{}){
+export function fetchLocation(locationId){
 	return function(dispatch){
 		dispatch({
 			type: types.LOCATION_ID_GET,
@@ -464,7 +458,6 @@ export function fetchLocation(locationId, successCallback = ()=>{}){
 				status: 'success',
 				location: location
 			});
-			successCallback(location);
 		});
 		//TODO: Handle error
 	};
@@ -487,13 +480,7 @@ export function loadLocationEditForm(locationId){
 			status: 'request',
 			locationId: locationId
 		});
-		dispatch(fetchLocation(locationId, function(location){
-			dispatch({
-				type: types.LOCATION_FORM_LOAD,
-				status: 'success',
-				locationId: locationId
-			});
-		}));
+		dispatch(fetchLocation(locationId));
 	};
 };
 

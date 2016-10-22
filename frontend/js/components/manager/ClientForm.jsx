@@ -23,7 +23,7 @@ var ClientForm = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		this.setState(nextProps.initialValues);
+		this.setState(nextProps.client);
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
@@ -51,9 +51,9 @@ var ClientForm = React.createClass({
 	},
 });
 
-var mapStoreToProps = function(store){
+var mapStoreToProps = function(store, ownProps){
 	return {
-		initialValues: store.forms.client.initialValues,
+		client: store.clients[ownProps.params.clientId] || {},
 		errors: store.forms.client.errors,
 	};
 };
