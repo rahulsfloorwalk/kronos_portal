@@ -3,6 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { fetchAudits } from '../../manager_actions.js'
+import { getAuditType, getAuditStatus } from '../../utils.js';
 
 var AuditRow = React.createClass({
 	render: function(){
@@ -10,8 +11,8 @@ var AuditRow = React.createClass({
 		return (
 			<tr>
 				<td>{this.props.audit.client.name}</td>
-				<td>{this.props.audit.type}</td>
-				<td>{this.props.audit.status}</td>
+				<td>{getAuditType(this.props.audit.type)}</td>
+				<td>{getAuditStatus(this.props.audit.status)}</td>
 				<td>{this.props.audit.start_date}</td>
 				<td>{this.props.audit.end_date}</td>
 				<td>{this.props.audit.audit_count}</td>
@@ -35,6 +36,7 @@ var AuditList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
+					<Link to="/audit/add" className="btn btn-primary pull-right">Add Audit</Link>
 					Audit List
 				</h2>
 				<table className="table table-striped">

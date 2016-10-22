@@ -70,6 +70,10 @@ export var types = {
 	//Audit Id
 	AUDIT_ID_GET: 'AUDIT_ID_GET',
 	AUDIT_ID_POST: 'AUDIT_ID_POST',
+
+	//Audit Form
+	AUDIT_FORM_LOAD: 'AUDIT_FORM_LOAD',
+	AUDIT_FORM_SUB: 'AUDIT_FORM_SUB',
 };
 
 /**
@@ -620,7 +624,7 @@ export function fetchAudits(){
 	};
 };
 
-export function fetchAudit(auditId, successCallback = ()=>{}){
+export function fetchAudit(auditId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_ID_GET,
@@ -633,8 +637,117 @@ export function fetchAudit(auditId, successCallback = ()=>{}){
 				status: 'success',
 				audit: audit
 			});
-			successCallback(audit);
 		});
 		//TODO: Handle error
+	};
+};
+
+export function loadAuditAddForm(){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_LOAD,
+			status: 'success'
+		});
+	};
+};
+
+export function loadAuditEditForm(auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_LOAD,
+			status: 'request',
+			auditId: auditId
+		});
+		dispatch(fetchAudit(auditId));
+	};
+};
+
+export function saveAuditAddForm(audit){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_SUB,
+			status: 'request',
+			audit: audit
+
+		});
+		dispatch({
+			type: types.AUDIT_POST,
+			status: 'request',
+			audit: audit
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "manager/audit",
+			data: JSON.stringify(audit),
+			contentType: "application/json"
+		});
+		req.done(function(savedAudit){
+			dispatch({
+				type: types.AUDIT_POST,
+				status: 'success',
+				audit: savedAudit
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'success',
+			});
+			hashHistory.push(`/audit/${savedAudit.id}`);
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.AUDIT_POST,
+				status: 'error',
+				errors: error.responseJSON
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'error',
+			});
+		});
+	};
+};
+
+export function saveAuditEditForm(audit){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_SUB,
+			status: 'request'
+		});
+		dispatch({
+			type: types.AUDIT_ID_POST,
+			status: 'request',
+			audit: audit
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit/${audit.id}`,
+			data: JSON.stringify(audit),
+			contentType: "application/json"
+		});
+		req.done(function(savedAudit){
+			dispatch({
+				type: types.AUDIT_ID_POST,
+				status: 'success',
+				audit: savedAudit
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'success'
+			});
+			hashHistory.push(`/audit/${savedAudit.id}`);
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.AUDIT_ID_POST,
+				status: 'error',
+				errors: error.responseJSON
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'error',
+			});
+		});
 	};
 };

@@ -7,4 +7,5 @@ export function affectInputEventToComponent(e, component){
 		change[e.target.name] = e.target.checked;
 	}
 	component.setState(change);
+	console.debug(e.target.name,"changed to", change);
 };

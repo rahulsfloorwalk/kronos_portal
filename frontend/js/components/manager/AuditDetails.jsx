@@ -7,6 +7,7 @@ import { fetchAudit } from '../../manager_actions.js';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
+import { getAuditType, getAuditStatus } from '../../utils.js';
 import ProfileInfoPanel from './ProfileInfoPanel.jsx';
 import BankInfoPanel from './BankInfoPanel.jsx';
 import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
@@ -33,20 +34,26 @@ var AuditorDetailsPage = React.createClass({
 			auditLocations.push(<AuditLocation auditLocation={al} key={al.id}/>);
 		}
 
+		var linkTo = `/audit/${this.props.audit.id}/edit`;
+
 		return (
 			<div>
 				<h2 className="page-header">Audit Details</h2>
 				<Panel title={this.props.audit.client.name}>
-					<p>Type: { this.props.audit.type }</p>
-					<p>Status: { this.props.audit.status }</p>
+					<Link to={linkTo} className="btn btn-default pull-right">Edit</Link>
+					<p>Type: { getAuditType(this.props.audit.type) }</p>
+					<p>Status: { getAuditStatus(this.props.audit.status) }</p>
 					<p>Start Date: { this.props.audit.start_date }</p>
 					<p>End Date: { this.props.audit.end_date }</p>
 					<p>Total Audits: { this.props.audit.audit_count }</p>
+					<p>Description</p>
+					<p>{ this.props.audit.description }</p>
 					<p>Locations:</p>
 					<ul>
 						{auditLocations}
 					</ul>
 				</Panel>
+				{this.props.children}
 			</div>
 		);
 	},
