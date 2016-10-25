@@ -1,7 +1,11 @@
+from django.contrib.auth.models import User
 from rest_framework import routers, viewsets
-from rest_framework.serializers import ModelSerializer, ValidationError
+from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField
+from rest_framework import serializers
 
-from .models import ProfileInfo, AdditionalInfo, BankInfo
+from manager.models import Audit, Location
+from manager.serializers import AuditLocationSerializer
+from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 
 
 class ProfileInfoSerializer(ModelSerializer):
@@ -109,3 +113,65 @@ class BankInfoSerializer(ModelSerializer):
 
         bank_info.save()
         return bank_info
+
+class AuditorSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSerializer()
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'is_active',
+            'date_joined',
+            'profileinfo'
+        )
+        read_only_fields = fields
+
+class AuditApplicationSerializer(ModelSerializer):
+    auditlocation = AuditLocationSerializer()
+    class Meta:
+        model = AuditApplication
+        fields = (
+            'id', 
+            'status', 
+            'audit_date', 
+            'auditlocation',
+            'profileinfo',
+        )
+        read_only_fields = fields
+
+
+class AuditApplicationDeSerializer(ModelSerializer):
+    class Meta:
+        model = AuditApplication
+        fields = (
+            'id', 
+            'status',
+            'audit_date', 
+            'audit',
+            'location',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self, **kwargs):
+        if 'id' in kwargs and kwargs['id'] is not None:
+            auditapplication = AuditApplication.objects.get(id=kwargs['id'])
+        else:
+            auditapplication = AuditApplication()
+        auditapplication.name = self.validated_data.get('name', location.name)
+        auditapplication.pincode = self.validated_data.get('pincode', location.pincode)
+        auditapplication.city = self.validated_data.get('city', location.city_id)
+        return location
+
+
+class AuditApplicationApplyDeSerializer(Serializer):
+    audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(status__in=[Audit.ACTIVE,Audit.UPCOMING]))
+    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
+    profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())
+    audit_date = serializers.DateField()
+
+class AuditApplicationCancelDeSerializer(Serializer):
+    audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(status__in=[Audit.ACTIVE,Audit.UPCOMING]))
+    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
+    profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())

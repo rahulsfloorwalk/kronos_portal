@@ -8,9 +8,6 @@ import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
-import ProfileInfoPanel from './ProfileInfoPanel.jsx';
-import BankInfoPanel from './BankInfoPanel.jsx';
-import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
 
 var AuditLocation = React.createClass({
 	render: function(){
@@ -20,7 +17,7 @@ var AuditLocation = React.createClass({
 	}
 });
 
-var AuditorDetailsPage = React.createClass({
+var AuditDetails = React.createClass({
 	componentDidMount: function(){
 		this.props.dispatch(fetchAudit(this.props.params.auditId));
 	},
@@ -65,4 +62,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(AuditorDetailsPage);
+export default ReactRedux.connect(mapStoreToProps)(AuditDetails);

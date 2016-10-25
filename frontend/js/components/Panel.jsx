@@ -4,17 +4,29 @@ var Panel = React.createClass({
 	render : function(){
 		var type = this.props.type || "default";
 		var panelClass = "panel panel-" + type;
+		var noBody = this.props.noBody || false;
 
-		return (
-			<div className={panelClass}>
-				<div className="panel-heading">
-					<h3 className="panel-title">{this.props.title}</h3>
-				</div>
-				<div className="panel-body">
+		if(noBody){
+			return (
+				<div className={panelClass}>
+					<div className="panel-heading">
+						<h3 className="panel-title">{this.props.title}</h3>
+					</div>
 					{this.props.children}
 				</div>
-			</div>
-		);
+			);
+		} else {
+			return (
+				<div className={panelClass}>
+					<div className="panel-heading">
+						<h3 className="panel-title">{this.props.title}</h3>
+					</div>
+					<div className="panel-body">
+						{this.props.children}
+					</div>
+				</div>
+			);
+		}
 	},
 });
 

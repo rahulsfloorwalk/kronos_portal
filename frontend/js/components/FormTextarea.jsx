@@ -1,7 +1,7 @@
 import React from 'react';
 
 import FormGroup from './FormGroup.jsx';
-import FormInputError from './FormInputError.jsx';
+import FormErrorList from './FormErrorList.jsx';
 
 
 var FormTextarea = React.createClass({
@@ -10,7 +10,7 @@ var FormTextarea = React.createClass({
 			<FormGroup>
 				<label>{this.props.label}</label>
 				<textarea className="form-control" {...this.props}/>
-				<FormInputError errors={this.props.errors}/>
+				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>
 		);
 	},

@@ -4,6 +4,7 @@ var initialStore = {
 	profileInfo: {},
 	bankInfo: {},
 	additionalInfo: {},
+	audits: {},
 	forms: {
 		profileInfo: {
 			errors:{}
@@ -14,7 +15,14 @@ var initialStore = {
 		bankInfo: {
 			errors:{}
 		},
-	}
+		auditApply: {
+			errors: {}
+		},
+		auditCancel: {
+			errors: {}
+		}
+	},
+	applications:{}
 };
 
 export function rootReducer(store = initialStore, action) {
@@ -124,6 +132,127 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
+		case types.AUDIT_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						audits: (function(audits){
+							var obj = {};
+							for( var a of audits){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.audits))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						audits: Object.assign({}, store.audits, {
+							[action.audit.id]: action.audit
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_APPLY_FORM_LOAD:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditApply:{
+								errors: {}
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_APPLY_FORM_SUB:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						applications: Object.assign({}, store.applications, {
+							[action.auditApplication.id]: action.auditApplication
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditApply:{
+								errors: action.errors
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_ID_GET_APPLICATIONS:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						applications: Object.assign({}, store.applications, (function(applications){
+							var obj = {};
+							for( var a of applications){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.applications)))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_CANCEL_FORM_LOAD:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditCancel:{
+								errors: {}
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_CANCEL_FORM_SUB:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						applications: Object.assign({}, store.applications, {
+							[action.auditApplication.id]: action.auditApplication
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditCancel:{
+								errors: action.errors
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		default:
 			console.warn("WARNING: default case encountered for action: %O", action);
 			return store;

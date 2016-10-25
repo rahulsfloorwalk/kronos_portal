@@ -3,14 +3,19 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-
+from django.utils.decorators import method_decorator 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, ValidationError
 
+from kronos.exceptions import ObjectNotFound, AppLogicError
 from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer
+from .serializers import AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
+from manager.models import Audit
+from manager.serializers import AuditSerializer
+import manager.service.audit as audit_service
 
 @login_required
 def dashboard(request):
@@ -164,3 +169,76 @@ class BankInfoView(APIView):
         bank_info_s.is_valid(raise_exception=True)
         bank_info = bank_info_s.save(current_user=request.user)
         return Response(BankInfoSerializer(bank_info).data)
+
+class AvailableAuditsView(APIView):
+    def get(self, request, format=None):
+        available_audits = audit_service.get_available_audits()
+        return Response(AuditSerializer(available_audits, many=True).data)
+
+class AuditView(APIView):
+    def get(self, request, audit_id, format=None):
+        audit = Audit.objects.get(id=audit_id)
+        return Response(AuditSerializer(audit).data)
+
+class AuditApplicationsView(APIView):
+    def get(self, request, audit_id, format=None):
+        try:
+            applications = audit_service.get_applications(audit_id, ProfileInfo.objects.get(user_id=request.user.id).id)
+        except ObjectNotFound as e:
+            raise NotFound()
+        return Response(AuditApplicationSerializer(applications, many=True).data)
+
+class AuditApplicationView(APIView):
+    def get(self, request, audit_id, location_id, format=None):
+        try:
+            application = audit_service.get_application(audit_id, location_id, ProfileInfo.objects.get(user_id=request.user.id).id)
+        except ObjectNotFound as e:
+            raise NotFound()
+        return Response(AuditApplicationSerializer(application).data)
+
+
+class AuditApplicationApplyView(APIView):
+    def post(self, request, audit_id, location_id, format=None):
+        request.data["audit_id"] = audit_id
+        request.data["location_id"] = location_id
+        request.data["profileinfo_id"] = ProfileInfo.objects.get(user_id=request.user.id).id
+
+        application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
+        application_apply_ds.is_valid(raise_exception=True)
+        try:
+            application = audit_service.apply(
+                    application_apply_ds.data["audit_id"], 
+                    application_apply_ds.data["location_id"], 
+                    application_apply_ds.data["profileinfo_id"], 
+                    application_apply_ds.data["audit_date"]
+            )
+            return Response(AuditApplicationSerializer(application).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                "non_field_errors": [e.__str__()]
+                }) from e
+
+class AuditApplicationCancelView(APIView):
+    def post(self, request, audit_id, location_id, format=None):
+        data = {}
+        data["audit_id"] = audit_id
+        data["location_id"] = location_id
+        data["profileinfo_id"] = ProfileInfo.objects.get(user_id=request.user.id).id
+
+        application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
+        application_cancel_ds.is_valid(raise_exception=True)
+        try:
+            application = audit_service.cancel(
+                    application_cancel_ds.data["audit_id"], 
+                    application_cancel_ds.data["location_id"], 
+                    application_cancel_ds.data["profileinfo_id"]
+            )
+            return Response(AuditApplicationSerializer(application).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                "non_field_errors": [e.__str__()]
+                }) from e

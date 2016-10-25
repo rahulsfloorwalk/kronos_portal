@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAudits } from '../../manager_actions.js'
+import { fetchAudits } from '../../auditor_actions.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
 
 var AuditRow = React.createClass({
@@ -43,8 +43,7 @@ var AuditList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link to="/audit/add" className="btn btn-primary pull-right">Add Audit</Link>
-					Audit List
+					Available Audits
 				</h2>
 				<table className="table table-striped">
 					<thead>

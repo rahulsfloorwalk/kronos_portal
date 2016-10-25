@@ -1,6 +1,6 @@
 import React from 'react';
 
-var FormInputError = React.createClass({
+var FormErrorList = React.createClass({
 	render : function(){
 		var errors = this.props.errors || [];
 		var items = [];
@@ -15,4 +15,4 @@ var FormInputError = React.createClass({
 	},
 });
 
-export default FormInputError;
+export default FormErrorList;

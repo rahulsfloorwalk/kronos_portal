@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField
 from django.db.models import CASCADE
 
+from manager.models import AuditLocation
+
 class ProfileInfo(Model):
 	db_table = "profile_info"
 
@@ -51,6 +53,8 @@ class ProfileInfo(Model):
 
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
+	def __str__(self):
+		return "Profile: {} {}".format(self.first_name, self.last_name)
 
 class AdditionalInfo(Model):
 	db_table = "additional_info"
@@ -71,3 +75,34 @@ class BankInfo(Model):
 	ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
 
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+
+class AuditApplication(Model):
+    db_table = "audit_application"
+
+    NOT_APPLIED = 'NOT_APPLIED'
+    APPLIED = 'APPLIED'
+    REJECTED = 'REJECTED'
+    ASSIGNED = 'ASSIGNED'
+    FAILED = 'FAILED'
+    COMPLETED = 'COMPLETED'
+    STATUS = (
+            (NOT_APPLIED, "Not Applied"),
+            (APPLIED, "Applied"),
+            (REJECTED, "Rejected"),
+            (ASSIGNED, "Assigned"),
+            (FAILED, "Failed"),
+            (COMPLETED, "Completed"),
+    )
+
+    id = AutoField(db_column='id', primary_key=True)
+    status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
+    audit_date = DateField(db_column='audit_date')
+
+    auditlocation = ForeignKey(AuditLocation, db_column='audit_location_id', related_name='applications')
+    profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications')
+
+    def __str__(self):
+        return 'AuditApplication({}): {}, {}'.format(self.id, self.auditlocation, self.profileinfo)
+
+    class Meta:
+        unique_together = (("profileinfo", "auditlocation"))

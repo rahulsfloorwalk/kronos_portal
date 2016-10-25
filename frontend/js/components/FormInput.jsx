@@ -1,7 +1,7 @@
 import React from 'react';
 
 import FormGroup from './FormGroup.jsx';
-import FormInputError from './FormInputError.jsx';
+import FormErrorList from './FormErrorList.jsx';
 
 
 var FormInput = React.createClass({
@@ -10,7 +10,7 @@ var FormInput = React.createClass({
 			<FormGroup>
 				<label>{this.props.label}</label>
 				<input className="form-control" {...this.props}/>
-				<FormInputError errors={this.props.errors}/>
+				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>
 		);
 	},

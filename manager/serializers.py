@@ -2,7 +2,6 @@ from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
 from django.contrib.auth.models import User
 
-from auditor.serializers import ProfileInfoSerializer
 from .models import City, Location, Client, Audit, AuditLocation, City
 
 class ClientSerializer(ModelSerializer):
@@ -96,6 +95,7 @@ class AuditLocationSerializer(ModelSerializer):
 class AuditSerializer(ModelSerializer):
     client = ClientSerializer()
     auditlocations = AuditLocationSerializer(many=True)
+    cities = CitySerializer(many=True)
     class Meta:
         model = Audit
         fields = (
@@ -108,6 +108,7 @@ class AuditSerializer(ModelSerializer):
             'client',
             'auditlocations',
             'audit_count',
+            'cities',
         )
         read_only_fields = fields
 
@@ -137,19 +138,4 @@ class AuditDeSerializer(ModelSerializer):
         audit.description = self.validated_data.get('description', audit.description)
         audit.client = self.validated_data.get('client', audit.client_id)
         return audit
-
-
-class AuditorSerializer(ModelSerializer):
-    profileinfo = ProfileInfoSerializer()
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'is_active',
-            'date_joined',
-            'profileinfo'
-        )
-        read_only_fields = fields
 

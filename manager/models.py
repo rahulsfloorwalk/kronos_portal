@@ -11,7 +11,7 @@ class Client(Model):
     phone = CharField(db_column='phone', max_length=15, blank=True)
 
     def __str__(self):
-        return 'Client: ' + self.name
+        return 'Client({}): {}'.format(self.id, self.name)
 
 class City(Model):
     db_table = "city"
@@ -20,7 +20,7 @@ class City(Model):
     name = CharField(db_column="name", max_length=100, blank=False)
 
     def __str__(self):
-        return 'City: ' + self.name
+        return 'City({}): {}'.format(self.id, self.name)
 
 class Location(Model):
     db_table = "location"
@@ -31,7 +31,7 @@ class Location(Model):
     city = ForeignKey(City, related_name='locations', db_column='city_id', blank=False, on_delete=CASCADE)
 
     def __str__(self):
-        return 'Location: {}, {}'.format(self.name,self.city.name)
+        return 'Location({}): {}, {}'.format(self.id, self.name, self.city)
 
 class Audit(Model):
     db_table = "audit"
@@ -72,6 +72,13 @@ class Audit(Model):
             count = count + al.count
         return count
 
+    def cities(self):
+        cities = [al.location.city for al in self.auditlocations.all()]
+        return set(cities)
+
+    def __str__(self):
+        return "Audit({}): client: {}".format(self.id, self.client)
+
 
 class AuditLocation(Model):
     db_table = "audit_location"
@@ -80,3 +87,9 @@ class AuditLocation(Model):
     count = PositiveIntegerField(db_column='count', blank=False)
     location = ForeignKey(Location, related_name='auditlocations', db_column='location_id', on_delete=CASCADE)
     audit = ForeignKey(Audit, related_name='auditlocations', db_column='audit_id', on_delete=CASCADE)
+
+    def __str__(self):
+        return "AuditLocation({}): {}, {}".format(self.id, self.location, self.audit)
+
+    class Meta:
+        unique_together = (("location", "audit"))

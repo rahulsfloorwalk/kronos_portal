@@ -8,16 +8,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
-from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializer, AuditorSerializer
+from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializer
 from .serializers import LocationSerializer, LocationDeSerializer
 from .serializers import AuditSerializer, AuditDeSerializer
 from .service.client import ClientService
 from .service.location import LocationService
-from .service.audit import AuditService
+from .service import audit as audit_service
 from .service.audit_location import AuditLocationService
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
-from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer
+from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
 
 class ClientView(APIView):
     def get(self, request, format=None):
@@ -108,7 +108,7 @@ class AuditView(APIView):
         audit_ds = AuditDeSerializer(data=request.data)
         audit_ds.is_valid(raise_exception=True)
         audit = audit_ds.deserialize()
-        savedAudit = AuditService().save(audit)
+        savedAudit = audit_service.save(audit)
         return Response(AuditSerializer(savedAudit).data)
 
 class AuditIdView(APIView):
@@ -123,7 +123,7 @@ class AuditIdView(APIView):
         audit_ds = AuditDeSerializer(data=request.data)
         audit_ds.is_valid(raise_exception=True)
         audit = audit_ds.deserialize(id=audit_id)
-        savedAudit = AuditService().save(audit)
+        savedAudit = audit_service.save(audit)
         return Response(AuditSerializer(savedAudit).data)
 
     def delete(self, request, audit_id):

@@ -31,6 +31,16 @@ export var types = {
 	ADDITIONAL_INFO_POST_ERR: 'ADDITIONAL_INFO_POST_ERR',
 	ADDITIONAL_INFO_POST_SUC: 'ADDITIONAL_INFO_POST_SUC',
 
+	AUDIT_GET: 'AUDIT_GET',
+	AUDIT_ID_GET: 'AUDIT_ID_GET',
+
+	AUDIT_ID_GET_APPLICATIONS: 'AUDIT_ID_GET_APPLICATIONS',
+
+	AUDIT_APPLY_FORM_LOAD: 'AUDIT_APPLY_FORM_LOAD',
+	AUDIT_APPLY_FORM_SUB: 'AUDIT_APPLY_FORM_SUB',
+
+	AUDIT_CANCEL_FORM_LOAD: 'AUDIT_CANCEL_FORM_LOAD',
+	AUDIT_CANCEL_FORM_SUB: 'AUDIT_CANCEL_FORM_SUB',
 };
 
 /**
@@ -135,7 +145,7 @@ export function fetchProfileInfo(){
 	return function(dispatch){
 		dispatch(profileInfoGetReq());
 
-		$.get( url.api_base_path + "auditor/profile-api?format=json", function(profileInfo){
+		return $.get( url.api_base_path + "auditor/profile-api?format=json", function(profileInfo){
 			dispatch(profileInfoGetSuccess(profileInfo));
 		});
 		//TODO: Handle error
@@ -160,6 +170,8 @@ export function saveProfileInfo(profileInfo){
 		req.fail(function(error){
 			dispatch(profileInfoPostError(error.responseJSON));
 		});
+
+		return req;
 	};
 };
 
@@ -167,7 +179,7 @@ export function fetchBankInfo(){
 	return function(dispatch){
 		dispatch(bankInfoGetReq());
 
-		$.get( url.api_base_path + "auditor/bank-api?format=json", function(bankInfo){
+		return $.get( url.api_base_path + "auditor/bank-api?format=json", function(bankInfo){
 			dispatch(bankInfoGetSuccess(bankInfo));
 		});
 		//TODO: Handle error
@@ -192,6 +204,8 @@ export function saveBankInfo(bankInfo){
 		req.fail(function(error){
 			dispatch(bankInfoPostError(error.responseJSON));
 		});
+
+		return req;
 	};
 };
 
@@ -199,7 +213,7 @@ export function fetchAdditionalInfo(){
 	return function(dispatch){
 		dispatch(additionalInfoGetReq());
 
-		$.get( url.api_base_path + "auditor/additional-api?format=json", function(additionalInfo){
+		return $.get( url.api_base_path + "auditor/additional-api?format=json", function(additionalInfo){
 			dispatch(additionalInfoGetSuccess(additionalInfo));
 		});
 		//TODO: Handle error
@@ -224,6 +238,173 @@ export function saveAdditionalInfo(additionalInfo){
 		req.fail(function(error){
 			dispatch(additionalInfoPostError(error.responseJSON));
 		});
+
+		return req;
 	};
 };
 
+export function fetchAudits(){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_GET,
+			status: 'request',
+		});
+
+		return $.get( url.api_base_path + "auditor/audit", function(audits){
+			dispatch({
+				type: types.AUDIT_GET,
+				status: 'success',
+				audits: audits
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchAudit(auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_ID_GET,
+			status: 'request',
+			auditId: auditId
+		});
+
+		return $.get( url.api_base_path + `auditor/audit/${auditId}`, function(audit){
+			dispatch({
+				type: types.AUDIT_ID_GET,
+				status: 'success',
+				audit: audit
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function loadAuditApplyForm( auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_APPLY_FORM_LOAD,
+			status: 'request',
+			auditId: auditId
+		});
+
+		var auditPromise = dispatch(fetchAudit(auditId));
+
+		auditPromise.done(function(audit){
+			dispatch({
+				type: types.AUDIT_APPLY_FORM_LOAD,
+				status: 'success',
+				auditId: auditId
+			});
+		});
+	};
+};
+
+export function submitAuditApplyForm( auditApplication){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_APPLY_FORM_SUB,
+			status: 'request',
+			auditApplication: auditApplication
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit/${auditApplication.audit_id}/location/${auditApplication.location_id}/application/apply`,
+			data: JSON.stringify(auditApplication),
+			contentType: "application/json"
+		});
+		req.done(function(savedApplication){
+			console.log("success",savedApplication);
+			dispatch({
+				type: types.AUDIT_APPLY_FORM_SUB,
+				status: 'success',
+				auditApplication: savedApplication
+			});
+			hashHistory.push(`/audit/${auditApplication.audit_id}`);
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.AUDIT_APPLY_FORM_SUB,
+				status: 'error',
+				errors: error.responseJSON
+			});
+		});
+		
+		return req;
+	};
+};
+
+export function fetchApplicationsForAudit(auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_ID_GET_APPLICATIONS,
+			status: 'request',
+			auditId: auditId
+		});
+
+		$.get( url.api_base_path + `auditor/audit/${auditId}/applications`, function(applications){
+			dispatch({
+				type: types.AUDIT_ID_GET_APPLICATIONS,
+				status: 'success',
+				applications: applications,
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function loadAuditCancelForm( auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_CANCEL_FORM_LOAD,
+			status: 'request',
+			auditId: auditId,
+		});
+
+		var auditPromise = dispatch(fetchAudit(auditId));
+
+		auditPromise.done(function(audit){
+			dispatch({
+				type: types.AUDIT_CANCEL_FORM_LOAD,
+				status: 'success',
+				auditId: auditId
+			});
+		});
+	};
+};
+
+export function submitAuditCancelForm( auditId, locationId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_CANCEL_FORM_SUB,
+			status: 'request',
+			auditId: auditId,
+			locationId: locationId
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit/${auditId}/location/${locationId}/application/cancel`,
+			contentType: "application/json"
+		});
+		req.done(function(savedApplication){
+			console.log("success",savedApplication);
+			dispatch({
+				type: types.AUDIT_CANCEL_FORM_SUB,
+				status: 'success',
+				auditApplication: savedApplication
+			});
+			hashHistory.push(`/audit/${auditId}`);
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.AUDIT_CANCEL_FORM_SUB,
+				status: 'error',
+				errors: error.responseJSON || { }
+			});
+		});
+		
+		return req;
+	};
+};
