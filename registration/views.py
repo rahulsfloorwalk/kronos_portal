@@ -26,6 +26,9 @@ class Login(View):
         if form.is_valid():
             user = form.get_user()
             if user is not None:
+                if user.groups.filter(name=GROUP_NAME_MANAGER).exists():
+                    print("manager",user)
+                    return redirect(self.__manager_url)
                 try:
                     verification = Verification.objects.get(user_id=user.id)
                     if verification is not None and verification.is_verified is True:
@@ -33,13 +36,11 @@ class Login(View):
                         if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
                             print("auditor",user)
                             return redirect(self.__auditor_url)
-                        if user.groups.filter(name=GROUP_NAME_MANAGER).exists():
-                            print("manager",user)
-                            return redirect(self.__manager_url)
                         messages.add_message(request, messages.WARNING, 'Your account is not in a group. Please contact site administrator.')
                     else:
                         messages.add_message(request, messages.WARNING, 'Your account is not verified. Please check your email for the verification link.')
                 except Verification.DoesNotExist:
+                    messages.add_message(request, messages.WARNING, 'Your account is in illegal state. Please contact site administrator.')
                     pass
         return render(request, self.__template, {'form': form})
 
