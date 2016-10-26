@@ -27,6 +27,7 @@ class Login(View):
             user = form.get_user()
             if user is not None:
                 if user.groups.filter(name=GROUP_NAME_MANAGER).exists():
+                    login(request, user)
                     print("manager",user)
                     return redirect(self.__manager_url)
                 try:
