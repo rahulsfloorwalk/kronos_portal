@@ -20,6 +20,9 @@ var initialStore = {
 		},
 		audit: {
 			errors: {}
+		},
+		auditLocation: {
+			errors: {}
 		}
 	}
 };
@@ -276,6 +279,80 @@ export function rootReducer(store = initialStore, action) {
 							audit: Object.assign({}, store.forms.audit, {
 								errors: action.errors
 							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_LOCATION_FORM_LOAD:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditLocation: {
+								errors: {}
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_LOCATION_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						audits: Object.assign({}, store.audits, {
+							[action.auditLocation.audit]: Object.assign({}, store.audits[action.auditLocation.audit], {
+								auditlocations: (function(auditlocations){
+									auditlocations.push(action.auditLocation);
+									return auditlocations;
+								}(store.audits[action.auditLocation.audit].auditlocations))
+							})
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditLocation: {
+								errors: action.errors
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_LOCATION_ID_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						audits: Object.assign({}, store.audits, {
+							[action.auditLocation.audit]: Object.assign({}, store.audits[action.auditLocation.audit], {
+								auditlocations: (function(auditLocations){
+									for( var id in auditLocations){
+										if( auditLocations[id].id === action.auditLocation.id){
+											console.debug("found match");
+											auditLocations[id] = action.auditLocation;
+										}
+									}
+									return auditLocations;
+								}(store.audits[action.auditLocation.audit].auditlocations))
+							})
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditLocation: {
+								errors: action.errors
+							}
 						})
 					});
 					break;

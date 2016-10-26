@@ -17,6 +17,7 @@ import LocationForm from './LocationForm.jsx';
 import AuditList from './AuditList.jsx';
 import AuditDetails from './AuditDetails.jsx';
 import AuditForm from './AuditForm.jsx';
+import AuditLocationForm from './AuditLocationForm.jsx';
 
 const Routes = () => (
     <Router history={hashHistory}>
@@ -41,6 +42,8 @@ const Routes = () => (
 		</Route>
 		<Route path="audit/:auditId" component={AuditDetails}>
 			<Route path="edit" component={AuditForm}/>
+			<Route path="auditlocation/add" component={AuditLocationForm}/>
+			<Route path="auditlocation/:auditLocationId/edit" component={AuditLocationForm}/>
 		</Route>
 	</Route>
     </Router>

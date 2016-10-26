@@ -79,7 +79,37 @@ class AuditLocationSerializer(ModelSerializer):
             'location',
             'count',
         )
+        read_only_fields = fields
+
+
+class AuditLocationDeSerializer(ModelSerializer):
+    class Meta:
+        model = AuditLocation
+        fields = (
+            'id',
+            'audit',
+            'location',
+            'count',
+        )
         read_only_fields = ('id',)
+        validators=[]
+
+    def validate(self, attrs):
+        audit = attrs.get('audit')
+        location = attrs.get('location')
+
+        print('validator called')
+        try:
+            obj = AuditLocation.objects.get(audit=audit, location=location)
+        except AuditLocation.DoesNotExist:
+            return attrs
+        print("self.context", self.context)
+        print("obj.id",obj.id, type(obj.id))
+        print("id",self.context.get("id"), type(self.context.get("id")))
+        if self.context.get("id") and obj.id == int(self.context.get('id')):
+            return attrs
+        else:
+            raise ValidationError('Audit with Location already exists')
 
     def create(self, **kwargs):
         if 'id' in kwargs and kwargs['id'] is not None:

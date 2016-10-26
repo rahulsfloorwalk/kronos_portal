@@ -9,6 +9,7 @@ from rest_framework.response import Response
 
 from .models import Client, Audit, Location, AuditLocation, City
 from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializer
+from .serializers import AuditLocationSerializer, AuditLocationDeSerializer
 from .serializers import LocationSerializer, LocationDeSerializer
 from .serializers import AuditSerializer, AuditDeSerializer
 from .service.client import ClientService
@@ -135,38 +136,38 @@ class AuditIdView(APIView):
             return Http404
 
 class AuditLocationView(APIView):
-    def get(self, request, format=None):
+    def get(self, request, audit_id, format=None):
         try:
             auditLocation = AuditLocation.objects.all()
             return Response(AuditLocationSerializer(auditLocation, many=True).data)
         except AuditLocation.DoesNotExist:
             return Http404
 
-    def post(self, request):
-        auditLocation_s = AuditLocationSerializer(data=request.data)
-        auditLocation_s.is_valid(raise_exception=True)
-        auditLocation = auditLocation_s.create()
-        savedAuditLocation = AuditLocationService().save(auditLocation)
-        return Response(AuditLocationSerializer(savedAuditLocation).data)
+    def post(self, request, audit_id):
+        auditlocation_ds = AuditLocationDeSerializer(data=request.data)
+        auditlocation_ds.is_valid(raise_exception=True)
+        auditlocation = auditlocation_ds.create()
+        saved_auditlocation = AuditLocationService().save(auditlocation)
+        return Response(AuditLocationSerializer(saved_auditlocation).data)
 
 class AuditLocationIdView(APIView):
-    def get(self, request, audit_location_id, format=None):
+    def get(self, request, audit_id, auditlocation_id, format=None):
         try:
-            auditLocation = AuditLocation.objects.get(id=audit_location_id)
+            auditLocation = AuditLocation.objects.get(id=auditlocation_id)
             return Response(AuditLocationSerializer(auditLocation).data)
         except AuditLocation.DoesNotExist:
             return Http404
 
-    def post(self, request, audit_location_id):
-        auditLocation_s = AuditLocationSerializer(data=request.data)
-        auditLocation_s.is_valid(raise_exception=True)
-        auditLocation = auditLocation_s.create(id=audit_location_id)
-        savedAuditLocation = AuditLocationService().save(auditLocation)
-        return Response(AuditLocationSerializer(savedAuditLocation).data)
+    def post(self, request, audit_id, auditlocation_id):
+        auditlocation_ds = AuditLocationDeSerializer(data=request.data, context={'id':auditlocation_id})
+        auditlocation_ds.is_valid(raise_exception=True)
+        auditlocation = auditlocation_ds.create(id=auditlocation_id)
+        saved_auditlocation = AuditLocationService().save(auditlocation)
+        return Response(AuditLocationSerializer(saved_auditlocation).data)
 
-    def delete(self, request, audit_location_id):
+    def delete(self, request, auditlocation_id):
         try:
-            auditLocation = AuditLocation.objects.get(id=audit_location_id)
+            auditLocation = AuditLocation.objects.get(id=auditlocation_id)
             auditLocation.delete()
             return Response(AuditLocationSerializer(auditLocation).data)
         except AuditLocation.DoesNotExist:

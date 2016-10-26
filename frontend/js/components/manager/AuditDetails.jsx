@@ -27,11 +27,20 @@ var AuditDetails = React.createClass({
 		}
 
 		var auditLocations = [];
-		for( var al of this.props.audit.auditlocations){
-			auditLocations.push(<AuditLocation auditLocation={al} key={al.id}/>);
+		for( let al of this.props.audit.auditlocations){
+			let editLink = `/audit/${this.props.params.auditId}/auditlocation/${al.id}/edit`
+			auditLocations.push(
+				<tr key={al.id}>
+					<td>{al.location.name}</td>
+					<td>{al.location.city.name}</td>
+					<td>{al.count}</td>
+					<td><Link to={editLink} className="btn btn-default">Edit</Link></td>
+				</tr>
+			);
 		}
 
-		var linkTo = `/audit/${this.props.audit.id}/edit`;
+		let addAuditLocationLink = `/audit/${this.props.params.auditId}/auditlocation/add`
+		let linkTo = `/audit/${this.props.audit.id}/edit`;
 
 		return (
 			<div>
@@ -45,10 +54,23 @@ var AuditDetails = React.createClass({
 					<p>Total Audits: { this.props.audit.audit_count }</p>
 					<p>Description</p>
 					<p>{ this.props.audit.description }</p>
-					<p>Locations:</p>
-					<ul>
-						{auditLocations}
-					</ul>
+				</Panel>
+				<Panel title="Locations" noBody={true}>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>Location</th>
+								<th>City</th>
+								<th>Count</th>
+								<th>
+									<Link to={addAuditLocationLink} className="btn btn-default">Add</Link>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{auditLocations}
+						</tbody>
+					</table>
 				</Panel>
 				{this.props.children}
 			</div>
