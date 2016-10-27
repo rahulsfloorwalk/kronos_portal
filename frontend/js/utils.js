@@ -34,6 +34,49 @@ export function getAuditStatus(value){
 		case 3:
 			return "Archived";
 		default:
-			return `unknown audit type ${value} - ${typeof value}`;
+			return `unknown status type ${value} - ${typeof value}`;
+	}
+};
+
+export function getGender(value){
+	switch(value){
+		case "M":
+			return "male";
+		case "F":
+			return "female";
+		default:
+			return `unknown gender ${value} - ${typeof value}`;
+	}
+};
+
+export function getEducationStatus(value){
+	switch(value){
+		case "TE":
+			return "10th (Middle School)";
+		case "TW":
+			return "12th (High School)";
+		case "CO":
+			return "In College";
+		case "GR":
+			return "Graduate";
+		case "PG":
+			return "Post Graduate and Above";
+		default:
+			return `unknown education status ${value} - ${typeof value}`;
+	}
+};
+
+export function getMaritalStatus(value){
+	switch(value){
+		case "S":
+			return "Single";
+		case "M":
+			return "Married";
+		case "D":
+			return "Divorced";
+		case "W":
+			return "Widowed";
+		default:
+			return `unknown marital status ${value} - ${typeof value}`;
 	}
 };
