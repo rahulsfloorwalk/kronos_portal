@@ -19,7 +19,7 @@ var AdditionalInfoPanelBase = React.createClass({
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
 				<div className="panel-body">
-					{editButton}
+					<Link to="details/additional/edit" className="btn btn-default pull-right">EDIT</Link>
 					<p>Has Car: { has_car }</p>
 					<p>Weekend Audit: { weekend_audit }</p>
 				</div>
