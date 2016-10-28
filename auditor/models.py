@@ -7,7 +7,8 @@ from manager.models import AuditLocation
 
 import strings
 
-numericValidator = RegexValidator(r'^[0-9]*$', strings.NUMERIC_REGEX_VALIDATION_MESSAGE)
+numericValidator = RegexValidator(r'^[0-9]*$', strings.NUMERIC_REGEX_VALIDATION_ERROR)
+minLengthValidator = RegexValidator(r'.{10}$', strings.MIN_LENGTH_REGEX_VALIDATION_ERROR)
 
 class ProfileInfo(Model):
 	db_table = "profile_info"
@@ -49,7 +50,7 @@ class ProfileInfo(Model):
 	gender = CharField(db_column='gender', max_length=1, choices=GENDER, blank=True)
 	marital_status = CharField(db_column='marital_status', max_length=1, choices=MARITAL_STATUS, blank=True)
 	education = CharField(db_column='education', max_length=2, choices=EDUCATION, blank=True)
-	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, validators=[numericValidator])
+	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, validators=[numericValidator, minLengthValidator])
 	date_of_birth = DateField(db_column='dob', blank=True, null=True)
 	address = CharField(db_column='address', max_length=100, blank=True)
 	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
