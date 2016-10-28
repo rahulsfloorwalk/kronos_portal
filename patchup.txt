@@ -1,5 +1,0 @@
-registration/views.py line 93,94
-	get the email and domain from properties file
-	Put all messages(strings) in separate strings file
-
-
