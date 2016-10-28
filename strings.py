@@ -1,0 +1,1 @@
+NUMERIC_REGEX_VALIDATION_MESSAGE = 'Only numberic values accepted'

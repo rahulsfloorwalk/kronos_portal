@@ -1,8 +1,13 @@
 from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField
 from django.db.models import CASCADE
+from django.core.validators import RegexValidator
 
 from manager.models import AuditLocation
+
+import strings
+
+numericValidator = RegexValidator(r'^[0-9]*$', strings.NUMERIC_REGEX_VALIDATION_MESSAGE)
 
 class ProfileInfo(Model):
 	db_table = "profile_info"
@@ -44,10 +49,10 @@ class ProfileInfo(Model):
 	gender = CharField(db_column='gender', max_length=1, choices=GENDER, blank=True)
 	marital_status = CharField(db_column='marital_status', max_length=1, choices=MARITAL_STATUS, blank=True)
 	education = CharField(db_column='education', max_length=2, choices=EDUCATION, blank=True)
-	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True)
+	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, validators=[numericValidator])
 	date_of_birth = DateField(db_column='dob', blank=True, null=True)
 	address = CharField(db_column='address', max_length=100, blank=True)
-	pincode = CharField(db_column='pincode', max_length=8, blank=True)
+	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
 	city = CharField(db_column='city', max_length=20, blank=True)
 	state = CharField(db_column='state', max_length=20, blank=True)
 
@@ -71,7 +76,7 @@ class BankInfo(Model):
 	id = AutoField(db_column='id', primary_key=True)
 	bank_name = CharField(db_column='bank_name', max_length=40, blank=True)
 	account_holder_name = CharField(db_column='account_holder_name', max_length=40, blank=True)
-	account_number = CharField(db_column='account_number', max_length=20, blank=True)
+	account_number = CharField(db_column='account_number', max_length=20, blank=True, validators=[numericValidator])
 	ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
 
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
