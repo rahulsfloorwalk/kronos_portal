@@ -1,14 +1,14 @@
 from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField
 from django.db.models import CASCADE
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinLengthValidator
 
 from manager.models import AuditLocation
 
 import strings
 
 numericValidator = RegexValidator(r'^[0-9]*$', strings.NUMERIC_REGEX_VALIDATION_ERROR)
-minLengthValidator = RegexValidator(r'.{10}$', strings.MIN_LENGTH_REGEX_VALIDATION_ERROR)
+minLengthValidator = MinLengthValidator(10, strings.MIN_LENGTH_REGEX_VALIDATION_ERROR)
 
 class ProfileInfo(Model):
 	db_table = "profile_info"
