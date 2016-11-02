@@ -12,10 +12,10 @@ from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializ
 from .serializers import AuditLocationSerializer, AuditLocationDeSerializer
 from .serializers import LocationSerializer, LocationDeSerializer
 from .serializers import AuditSerializer, AuditDeSerializer
-from .service.client import ClientService
-from .service.location import LocationService
+from .service import client as client_service
+from .service import location as location_service
 from .service import audit as audit_service
-from .service.audit_location import AuditLocationService
+from .service import audit_location as audit_location_service
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
@@ -32,7 +32,7 @@ class ClientView(APIView):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
         client = client_s.create()
-        savedClient = ClientService().save(client)
+        savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
 
 class ClientIdView(APIView):
@@ -47,7 +47,7 @@ class ClientIdView(APIView):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
         client = client_s.create(id=client_id)
-        savedClient = ClientService().save(client)
+        savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
     def delete(self, request, client_id):
         try:
@@ -74,7 +74,7 @@ class LocationView(APIView):
         location_ds = LocationDeSerializer(data=request.data)
         location_ds.is_valid(raise_exception=True)
         location = location_ds.deserialize()
-        savedLocation = LocationService().save(location)
+        savedLocation = location_service.save(location)
         return Response(LocationSerializer(savedLocation).data)
 
 class LocationIdView(APIView):
@@ -89,7 +89,7 @@ class LocationIdView(APIView):
         location_ds = LocationDeSerializer(data=request.data)
         location_ds.is_valid(raise_exception=True)
         location = location_ds.deserialize(id=location_id)
-        savedLocation = LocationService().save(location)
+        savedLocation = location_service.save(location)
         return Response(LocationSerializer(savedLocation).data)
 
     def delete(self, request, location_id):
@@ -147,7 +147,7 @@ class AuditLocationView(APIView):
         auditlocation_ds = AuditLocationDeSerializer(data=request.data)
         auditlocation_ds.is_valid(raise_exception=True)
         auditlocation = auditlocation_ds.create()
-        saved_auditlocation = AuditLocationService().save(auditlocation)
+        saved_auditlocation = audit_location_service().save(auditlocation)
         return Response(AuditLocationSerializer(saved_auditlocation).data)
 
 class AuditLocationIdView(APIView):
@@ -162,7 +162,7 @@ class AuditLocationIdView(APIView):
         auditlocation_ds = AuditLocationDeSerializer(data=request.data, context={'id':auditlocation_id})
         auditlocation_ds.is_valid(raise_exception=True)
         auditlocation = auditlocation_ds.create(id=auditlocation_id)
-        saved_auditlocation = AuditLocationService().save(auditlocation)
+        saved_auditlocation = audit_location_service.save(auditlocation)
         return Response(AuditLocationSerializer(saved_auditlocation).data)
 
     def delete(self, request, auditlocation_id):

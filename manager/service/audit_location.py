@@ -1,6 +1,5 @@
 from ..models import AuditLocation
 
-class AuditLocationService:
-	def save(self, auditLocation):
-		auditLocation.save()
-		return auditLocation
+def save(auditLocation):
+    auditLocation.save()
+    return auditLocation
