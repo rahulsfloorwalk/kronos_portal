@@ -91,6 +91,10 @@ export function getAuditApplicationStatus(value){
 			return "Assigned";
 		case "REJECTED":
 			return "Rejected";
+		case "COMPLETED":
+			return "Completed";
+		case "FAILED":
+			return "Failed";
 		default:
 			return `unknown status type ${value} - ${typeof value}`;
 	}

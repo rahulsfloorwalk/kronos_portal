@@ -33,10 +33,13 @@ var AuditDetails = React.createClass({
 			for( let app of this.props.applications){
 				let auditorUrl = `/auditor/${app.profileinfo.user_id}`;
 				let auditorLink = (<Link to={auditorUrl}>{app.profileinfo.first_name} { app.profileinfo.last_name}</Link>);
-				let assignLink, rejectLink;
+				let assignLink, rejectLink, completeLink, failLink;
 				if( app.status === "APPLIED"){
 					assignLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/assign`} className="btn btn-primary">Assign</Link>);
 					rejectLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/reject`} className="btn btn-default">Reject</Link>);
+				} else if( app.status === "ASSIGNED"){
+					completeLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/complete`} className="btn btn-primary">Complete</Link>);
+					failLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/fail`} className="btn btn-default">Fail</Link>);
 				}
 				if( app.auditlocation === al.id){
 					rows.push(
@@ -45,7 +48,7 @@ var AuditDetails = React.createClass({
 							<td>{app.profileinfo.mobile_number}</td>
 							<td>{getAuditApplicationStatus(app.status)}</td>
 							<td>{app.audit_date}</td>
-							<td>{assignLink}{rejectLink}</td>
+							<td>{assignLink}{rejectLink}{completeLink}{failLink}</td>
 						</tr>
 					);
 				}

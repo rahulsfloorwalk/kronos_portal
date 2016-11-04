@@ -255,3 +255,25 @@ class AuditApplicationRejectView(APIView):
             raise NotFound
         except AppLogicError as e:
             raise ValidationError(e) from e
+
+
+class AuditApplicationCompleteView(APIView):
+    def post(self, request, application_id, format=None):
+        try:
+            application = application_service.complete(application_id)
+            return Response(AuditLocationApplicationSerializer(application).data)
+        except ObjectNotFound:
+            raise NotFound
+        except AppLogicError as e:
+            raise ValidationError(e) from e
+
+
+class AuditApplicationFailView(APIView):
+    def post(self, request, application_id, format=None):
+        try:
+            application = application_service.fail(application_id)
+            return Response(AuditLocationApplicationSerializer(application).data)
+        except ObjectNotFound:
+            raise NotFound
+        except AppLogicError as e:
+            raise ValidationError(e) from e

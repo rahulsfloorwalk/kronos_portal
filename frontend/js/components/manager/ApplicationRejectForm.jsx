@@ -45,7 +45,7 @@ var ApplicationRejectForm = React.createClass({
 var mapStoreToProps = function(store, ownProps){
 	return {
 		application: store.applications[ownProps.params.applicationId] || {},
-		errors: store.forms.applicationReject.errors,
+		errors: store.errors,
 	};
 };
 

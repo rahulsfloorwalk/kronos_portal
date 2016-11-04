@@ -87,6 +87,8 @@ export var types = {
 	AUDIT_APPLICATION_GET: 'AUDIT_LOCATION_GET',
 	AUDIT_APPLICATION_ASSIGN: 'AUDIT_APPLICATION_ASSIGN',
 	AUDIT_APPLICATION_REJECT: 'AUDIT_APPLICATION_REJECT',
+	AUDIT_APPLICATION_COMPLETE: 'AUDIT_APPLICATION_COMPLETE',
+	AUDIT_APPLICATION_FAIL: 'AUDIT_APPLICATION_FAIL',
 };
 
 /**
@@ -955,6 +957,69 @@ export function submitApplicationRejectForm(application_id){
 		promise.fail(function(error){
 			dispatch({
 				type: types.AUDIT_APPLICATION_REJECT,
+				status: 'error',
+				errors: error.responseJSON
+			});
+		});
+		return promise;
+		//TODO: Handle error
+	};
+};
+
+export function submitApplicationCompleteForm(application_id){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_APPLICATION_COMPLETE,
+			status: 'request',
+			applicationId: application_id
+		});
+
+		var promise = $.ajax({
+			url: url.api_base_path + `manager/application/${application_id}/complete`,
+			method: 'POST',
+		});
+		promise.done(function(application){
+			dispatch({
+				type: types.AUDIT_APPLICATION_COMPLETE,
+				status: 'success',
+				application: application
+			});
+		});
+		promise.fail(function(error){
+			dispatch({
+				type: types.AUDIT_APPLICATION_COMPLETE,
+				status: 'error',
+				errors: error.responseJSON
+			});
+		});
+		return promise;
+		//TODO: Handle error
+	};
+};
+
+
+export function submitApplicationFailForm(application_id){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_APPLICATION_FAIL,
+			status: 'request',
+			applicationId: application_id
+		});
+
+		var promise = $.ajax({
+			url: url.api_base_path + `manager/application/${application_id}/fail`,
+			method: 'POST',
+		});
+		promise.done(function(application){
+			dispatch({
+				type: types.AUDIT_APPLICATION_FAIL,
+				status: 'success',
+				application: application
+			});
+		});
+		promise.fail(function(error){
+			dispatch({
+				type: types.AUDIT_APPLICATION_FAIL,
 				status: 'error',
 				errors: error.responseJSON
 			});

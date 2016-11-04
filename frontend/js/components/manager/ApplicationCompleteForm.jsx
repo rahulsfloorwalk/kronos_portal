@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { submitApplicationAssignForm } from '../../manager_actions.js';
+import { submitApplicationCompleteForm } from '../../manager_actions.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -16,41 +16,26 @@ import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 import Loading from '../Loading.jsx';
 
-var ApplicationAssignForm = React.createClass({
+var ApplicationCompleteForm = React.createClass({
 	getInitialState: function(){
 		return {};
-	},
-	componentDidMount: function(){
-		this.setState({
-			'audit_date': this.props.application.audit_date
-		});
-	},
-	componentWillReceiveProps: function(nextProps) {
-		console.debug(nextProps.application);
-		this.setState({
-			'audit_date': nextProps.application.audit_date
-		});
 	},
 	fieldChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
 	onSubmit: function(e){
 		e.preventDefault();
-		var obj = {
-			application_id: this.props.application.id,
-			audit_date: this.state.audit_date
-		};
-		var promise = this.props.dispatch(submitApplicationAssignForm(obj));
+		var promise = this.props.dispatch(submitApplicationCompleteForm(this.props.application.id));
 		promise.done(() => hashHistory.push(`/audit/${this.props.params.auditId}`));
 	},
 	render : function(){
 		return (
-			<Modal modalTitle="Assign Audit" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Complete Audit Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
-					<FormInput label="Assigned Audit Date" type="date" value={this.state.audit_date} name="audit_date" onChange={this.fieldChanged} errors={this.props.errors.audit_date}/>
-					<SaveButton text="Assign"/>
+					<p>Are you sure you want to complete this application?</p>
+					<SaveButton text="Complete"/>
 				</form>
 			</Modal>
 		);
@@ -64,4 +49,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(ApplicationAssignForm);
+export default ReactRedux.connect( mapStoreToProps)(ApplicationCompleteForm);
