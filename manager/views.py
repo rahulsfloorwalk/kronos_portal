@@ -152,7 +152,7 @@ class AuditLocationView(APIView):
         auditlocation_ds = AuditLocationDeSerializer(data=request.data)
         auditlocation_ds.is_valid(raise_exception=True)
         auditlocation = auditlocation_ds.create()
-        saved_auditlocation = audit_location_service().save(auditlocation)
+        saved_auditlocation = audit_location_service.save(auditlocation)
         return Response(AuditLocationSerializer(saved_auditlocation).data)
 
 class AuditLocationIdView(APIView):
