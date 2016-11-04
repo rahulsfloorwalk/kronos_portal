@@ -9,6 +9,7 @@ import hashlib, datetime
 import properties
 from os import urandom
 
+import strings
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
 class SignUpForm(UserCreationForm):
@@ -56,12 +57,15 @@ class SignUpForm(UserCreationForm):
         verification.key_expires = auth_data['expiry']
         verification.save()
 
-        self.sendEmail(auth_data)
+        self.sendEmail(auth_data, profile_info)
         return user
 
-    def sendEmail(self, auth_data):
+    def sendEmail(self, auth_data, profileinfo):
         link = properties.ACTIVATION_LINK_ADDRESS + auth_data['activation_key']
-        send_mail('Account activation link', link, properties.ACTIVATION_LINK_SENDER, [auth_data['email']], fail_silently=False)
 
-#class LoginForm(AuthenticationForm):
+        subject = strings.SIGN_UP_SUBJECT
+        content = strings.VERIFICATION_EMAIL.format(link)
+
+        send_mail(subject, content, properties.ACTIVATION_LINK_SENDER, [auth_data['email']], fail_silently=False)
+
 
