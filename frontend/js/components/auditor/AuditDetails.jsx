@@ -7,7 +7,7 @@ import { fetchAudit, fetchApplicationsForAudit } from '../../auditor_actions.js'
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
-import { getAuditType, getAuditStatus } from '../../utils.js';
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 var AuditLocation = React.createClass({
 	render: function(){
@@ -48,6 +48,10 @@ var AuditDetails = React.createClass({
 				auditDate = application.audit_date;
 				button = cancelButton;
 			} 
+			else {
+				auditDate = application.audit_date;
+				button = <span>{getAuditApplicationStatus(application.status)}</span>;
+			}
 
 			 auditLocations.push(
 				<tr key={al.id}>
