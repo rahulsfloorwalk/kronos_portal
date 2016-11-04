@@ -8,6 +8,7 @@ import { fetchClients, loadAuditAddForm, loadAuditEditForm, saveAuditAddForm, sa
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormInput from '../FormInput.jsx';
+import { FormDateInput } from '../FormInput.jsx';
 import FormSelect from '../FormSelect.jsx';
 import FormGroup from '../FormGroup.jsx';
 import FormTextarea from '../FormTextarea.jsx';
@@ -38,6 +39,19 @@ var AuditForm = React.createClass({
 	fieldChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
+	dateChanged: function(name, date){
+		if( typeof date !== "string"){
+			this.setState({
+				[name]: date.format("YYYY-MM-DD")
+			});
+		}
+	},
+	startDateChanged: function(date){
+		this.dateChanged("start_date",date);
+	},
+	endDateChanged: function(date){
+		this.dateChanged("end_date",date);
+	},
 	onSubmit: function(e){
 		e.preventDefault();
 		if(this.props.params.auditId){
@@ -61,10 +75,10 @@ var AuditForm = React.createClass({
 					</FormSelect>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="Start Date" type="date" value={this.state.start_date} name="start_date" onChange={this.fieldChanged} errors={this.props.errors.start_date}/>
+							<FormDateInput label="Start Date" value={this.state.start_date} name="start_date" onChange={this.startDateChanged} errors={this.props.errors.start_date}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="End Date" type="date" value={this.state.end_date} name="end_date" onChange={this.fieldChanged} errors={this.props.errors.end_date}/>
+							<FormDateInput label="End Date" value={this.state.end_date} name="end_date" onChange={this.endDateChanged} errors={this.props.errors.end_date}/>
 						</div>
 					</div>
 					<div className="row">

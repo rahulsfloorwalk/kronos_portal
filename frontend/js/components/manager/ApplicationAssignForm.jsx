@@ -8,6 +8,7 @@ import { submitApplicationAssignForm } from '../../manager_actions.js';
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormErrorList from '../FormErrorList.jsx';
+import { FormDateInput } from '../FormInput.jsx';
 import FormInput from '../FormInput.jsx';
 import FormSelect from '../FormSelect.jsx';
 import FormGroup from '../FormGroup.jsx';
@@ -31,8 +32,12 @@ var ApplicationAssignForm = React.createClass({
 			'audit_date': nextProps.application.audit_date
 		});
 	},
-	fieldChanged: function(e){
-		affectInputEventToComponent(e, this);
+	dateChanged: function(date){
+		if( typeof date !== "string"){
+			this.setState({
+				audit_date: date.format("YYYY-MM-DD")
+			});
+		}
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -49,7 +54,7 @@ var ApplicationAssignForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
-					<FormInput label="Assigned Audit Date" type="date" value={this.state.audit_date} name="audit_date" onChange={this.fieldChanged} errors={this.props.errors.audit_date}/>
+					<FormDateInput label="Assigned Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
 					<SaveButton text="Assign"/>
 				</form>
 			</Modal>

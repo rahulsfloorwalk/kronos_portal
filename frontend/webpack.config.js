@@ -1,9 +1,11 @@
 var path = require('path');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
 	entry: {
 		auditor: path.resolve(__dirname, './js/auditor.jsx'),
 		manager: path.resolve(__dirname, './js/manager.jsx'),
+		'react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
@@ -13,12 +15,6 @@ module.exports = {
 	},
 	module: {
 		loaders: [
-			/*
-			{
-				test: /\.jsx$/,
-				exclude: /node_modules/,
-				loader: 'jsx-loader'
-			},*/
 			{
 				test: /\.js$|\.jsx$/,
 				exclude: /(node_modules)/,
@@ -26,7 +22,14 @@ module.exports = {
 				query: {
 					presets: ['es2015','react']
 				}
-			}
+			},
+			{
+				test: /\.css$/,
+				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+			},
 		]
-	}
+	},
+	plugins: [
+		new ExtractTextPlugin("[name].css")
+	]
 };

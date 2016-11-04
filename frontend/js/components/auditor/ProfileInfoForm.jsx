@@ -6,7 +6,9 @@ import { hashHistory } from 'react-router';
 import { fetchProfileInfo, saveProfileInfo } from '../../auditor_actions.js';
 
 import FormInput from '../FormInput.jsx';
+import { FormDateInput } from '../FormInput.jsx';
 import FormGroup from '../FormGroup.jsx';
+import FormSelect from '../FormSelect.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 
@@ -30,9 +32,17 @@ var ProfileInfoForm = React.createClass({
 		this.setState(nextProps.profileInfo);
 	},
 	inputChanged: function(e){
+		console.debug(e);
 		var change = {};
 		change[e.target.name] = e.target.value;
 		this.setState(change);
+	},
+	dateChanged: function(date){
+		if( typeof date !== "string"){
+			this.setState({
+				date_of_birth: date.format("YYYY-MM-DD")
+			});
+		}
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -52,44 +62,35 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="Date of Birth" type="date" value={this.state.date_of_birth} name="date_of_birth" onChange={this.inputChanged} errors={this.props.errors.date_of_birth}/>
+							<FormDateInput label="Date of Birth" value={this.state.date_of_birth} name="date_of_birth" onChange={this.dateChanged} errors={this.props.errors.date_of_birth}/>
 						</div>
 						<div className="col-md-6">
-							<FormGroup>
-								<label>Gender</label>
-								<select className="form-control" name="gender" value={this.state.gender} onChange={this.inputChanged}>
-									<option value=""></option>
-									<option value="M">Male</option>
-									<option value="F">Female</option>
-								</select>
-							</FormGroup>
+							<FormSelect label="Gender" name="gender" value={this.state.gender} onChange={this.inputChanged}>
+								<option value=""></option>
+								<option value="M">Male</option>
+								<option value="F">Female</option>
+							</FormSelect>
 						</div>
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormGroup>
-								<label>Marital Status</label>
-								<select className="form-control" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged}>
-									<option value=""></option>
-									<option value="S">Single</option>
-									<option value="M">Married</option>
-									<option value="D">Divorced</option>
-									<option value="W">Widowed</option>
-								</select>
-							</FormGroup>
+							<FormSelect label="Marital Status" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged}>
+								<option value=""></option>
+								<option value="S">Single</option>
+								<option value="M">Married</option>
+								<option value="D">Divorced</option>
+								<option value="W">Widowed</option>
+							</FormSelect>
 						</div>
 						<div className="col-md-6">
-							<FormGroup>
-								<label>Education</label>
-								<select className="form-control" name="education" value={this.state.education} onChange={this.inputChanged}>
-									<option value=""></option>
-									<option value="TE">10th (Middle School)</option>
-									<option value="TW">12th (High School)</option>
-									<option value="CO">In College</option>
-									<option value="GR">Graduate</option>
-									<option value="PG">Post Graduate and Above</option>
-								</select>
-							</FormGroup>
+							<FormSelect label="Education" name="education" value={this.state.education} onChange={this.inputChanged}>
+								<option value=""></option>
+								<option value="TE">10th (Middle School)</option>
+								<option value="TW">12th (High School)</option>
+								<option value="CO">In College</option>
+								<option value="GR">Graduate</option>
+								<option value="PG">Post Graduate and Above</option>
+							</FormSelect>
 						</div>
 					</div>
 					<div className="row">

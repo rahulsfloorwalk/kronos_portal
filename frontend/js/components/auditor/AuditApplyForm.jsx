@@ -8,7 +8,7 @@ import { loadAuditApplyForm, submitAuditApplyForm } from '../../auditor_actions.
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormErrorList from '../FormErrorList.jsx';
-import FormInput from '../FormInput.jsx';
+import { FormDateInput } from '../FormInput.jsx';
 import FormSelect from '../FormSelect.jsx';
 import FormGroup from '../FormGroup.jsx';
 import FormTextarea from '../FormTextarea.jsx';
@@ -23,17 +23,12 @@ var AuditApplyForm = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(loadAuditApplyForm(this.props.params.auditId));
 	},
-	componentWillReceiveProps: function(nextProps) {
-		/*
-		this.setState(nextProps.audit);
-		if(nextProps.audit && nextProps.audit.client){
+	dateChanged: function(date){
+		if( typeof date !== "string"){
 			this.setState({
-				'client': nextProps.audit.client.id
+				audit_date: date
 			});
-		}*/
-	},
-	fieldChanged: function(e){
-		affectInputEventToComponent(e, this);
+		}
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -41,7 +36,7 @@ var AuditApplyForm = React.createClass({
 			audit_id: this.props.audit.id,
 			location_id: this.getAuditLocation().location.id,
 			audit_location_id: this.props.auditLocationId,
-			audit_date: this.state.audit_date
+			audit_date: this.state.audit_date.format("YYYY-MM-DD")
 		};
 		this.props.dispatch(submitAuditApplyForm(obj));
 	},
@@ -63,7 +58,7 @@ var AuditApplyForm = React.createClass({
 					<p><label>Start Date:</label> { this.props.audit.start_date }</p>
 					<p><label>End Date:</label> { this.props.audit.end_date }</p>
 					<p><label>Location:</label> { auditLocation.location.name }, { auditLocation.location.city.name }</p>
-					<FormInput label="Preferred Audit Date" type="date" value={this.state.audit_date} name="audit_date" onChange={this.fieldChanged} errors={this.props.errors.audit_date}/>
+					<FormDateInput label="Preferred Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
 					<SaveButton text="Apply"/>
 				</form>
 			</Modal>
