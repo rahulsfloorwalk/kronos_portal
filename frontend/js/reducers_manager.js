@@ -1,6 +1,7 @@
 import { types } from './manager_actions.js'
 
 var initialStore = {
+	applications: {},
 	audits: {},
 	clients: {},
 	auditors: {},
@@ -22,6 +23,12 @@ var initialStore = {
 			errors: {}
 		},
 		auditLocation: {
+			errors: {}
+		},
+		applicationAssign: {
+			errors: {}
+		},
+		applicationReject: {
 			errors: {}
 		}
 	}
@@ -351,6 +358,67 @@ export function rootReducer(store = initialStore, action) {
 					return Object.assign({}, store, {
 						forms: Object.assign({}, store.forms, {
 							auditLocation: {
+								errors: action.errors
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_APPLICATION_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						applications: Object.assign({}, store.applications, (function(applications){
+							var obj = {};
+							for( var a of applications){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.applications)))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_APPLICATION_ASSIGN:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						applications: Object.assign({}, store.applications, {
+							[action.application.id]: action.application
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							applicationAssign: {
+								errors: action.errors
+							}
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_APPLICATION_REJECT:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						applications: Object.assign({}, store.applications, {
+							[action.application.id]: action.application
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							applicationReject: {
 								errors: action.errors
 							}
 						})

@@ -80,3 +80,18 @@ export function getMaritalStatus(value){
 			return `unknown marital status ${value} - ${typeof value}`;
 	}
 };
+
+export function getAuditApplicationStatus(value){
+	switch(value){
+		case "APPLIED":
+			return "Applied";
+		case "NOT_APPLIED":
+			return "Not Applied";
+		case "ASSIGNED":
+			return "Assigned";
+		case "REJECTED":
+			return "Rejected";
+		default:
+			return `unknown status type ${value} - ${typeof value}`;
+	}
+};

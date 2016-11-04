@@ -6,19 +6,24 @@ from django.contrib.auth.models import User, Group
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.serializers import Serializer, DateField
 
 from .models import Client, Audit, Location, AuditLocation, City
 from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializer
 from .serializers import AuditLocationSerializer, AuditLocationDeSerializer
 from .serializers import LocationSerializer, LocationDeSerializer
 from .serializers import AuditSerializer, AuditDeSerializer
+from .serializers import AuditLocationApplicationSerializer
 from .service import client as client_service
 from .service import location as location_service
 from .service import audit as audit_service
+from .service import application as application_service
 from .service import audit_location as audit_location_service
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
+from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, AuditApplication
 from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
+from kronos.exceptions import AppLogicError, ObjectNotFound
 
 class ClientView(APIView):
     def get(self, request, format=None):
@@ -208,3 +213,45 @@ class AuditorAdditionalInfoView(APIView):
         except AdditionalInfo.DoesNotExist:
             return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
 
+class AuditApplicationView(APIView):
+    def get(self, request, audit_id, format=None):
+        try:
+            applications = application_service.find_by_audit(audit_id)
+            return Response(AuditLocationApplicationSerializer(applications, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class AuditApplicationIdView(APIView):
+    def get(self, request, application_id, format=None):
+        try:
+            application = AuditApplication.objects.get(id=application_id)
+            return Response(AuditLocationApplicationSerializer(application).data)
+        except AuditApplication.DoesNotExist as e:
+            raise NotFound from e
+
+
+class AuditApplicationAssignView(APIView):
+    class DeSerializer(Serializer):
+        audit_date = DateField()
+
+    def post(self, request, application_id, format=None):
+        try:
+            ds = self.DeSerializer(data=request.data)
+            ds.is_valid(raise_exception=True)
+            application = application_service.assign(application_id, ds.data['audit_date'])
+            return Response(AuditLocationApplicationSerializer(application).data)
+        except ObjectNotFound:
+            raise NotFound
+        except AppLogicError as e:
+            raise ValidationError(e) from e
+
+
+class AuditApplicationRejectView(APIView):
+    def post(self, request, application_id, format=None):
+        try:
+            application = application_service.reject(application_id)
+            return Response(AuditLocationApplicationSerializer(application).data)
+        except ObjectNotFound:
+            raise NotFound
+        except AppLogicError as e:
+            raise ValidationError(e) from e

@@ -6,8 +6,13 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)$', views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client$', views.ClientView.as_view(), name='client_view'),
 
+    url(r'application/(?P<application_id>[0-9]+)/assign$', views.AuditApplicationAssignView.as_view(), name='audit_application_assign_view'),
+    url(r'application/(?P<application_id>[0-9]+)/reject$', views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),
+
+    url(r'application/(?P<application_id>[0-9]+)$', views.AuditApplicationIdView.as_view(), name='audit_application_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/auditlocation$', views.AuditLocationView.as_view(), name='audit_location_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/auditlocation/(?P<auditlocation_id>[0-9]+)$', views.AuditLocationIdView.as_view(), name='audit_location_id_view'),
+    url(r'audit/(?P<audit_id>[0-9]+)/application$', views.AuditApplicationView.as_view(), name='audit_application_view'),
 
     url(r'location/(?P<location_id>[0-9]+)$', views.LocationIdView.as_view(), name='location_id_view'),
     url(r'location$', views.LocationView.as_view(), name='location_view'),

@@ -2,12 +2,12 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAudit } from '../../manager_actions.js';
+import { fetchAudit, fetchApplications } from '../../manager_actions.js';
 
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
-import { getAuditType, getAuditStatus } from '../../utils.js';
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 var AuditLocation = React.createClass({
 	render: function(){
@@ -20,6 +20,7 @@ var AuditLocation = React.createClass({
 var AuditDetails = React.createClass({
 	componentDidMount: function(){
 		this.props.dispatch(fetchAudit(this.props.params.auditId));
+		this.props.dispatch(fetchApplications(this.props.params.auditId));
 	},
 	render: function(){
 		if(! this.props.audit){
@@ -28,14 +29,62 @@ var AuditDetails = React.createClass({
 
 		var auditLocations = [];
 		for( let al of this.props.audit.auditlocations){
-			let editLink = `/audit/${this.props.params.auditId}/auditlocation/${al.id}/edit`
+			let rows = [];
+			for( let app of this.props.applications){
+				let auditorUrl = `/auditor/${app.profileinfo.user_id}`;
+				let auditorLink = (<Link to={auditorUrl}>{app.profileinfo.first_name} { app.profileinfo.last_name}</Link>);
+				let assignLink, rejectLink;
+				if( app.status === "APPLIED"){
+					assignLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/assign`} className="btn btn-primary">Assign</Link>);
+					rejectLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/reject`} className="btn btn-default">Reject</Link>);
+				}
+				if( app.auditlocation === al.id){
+					rows.push(
+						<tr key={app.id}>
+							<td>{auditorLink}</td>
+							<td>{app.profileinfo.mobile_number}</td>
+							<td>{getAuditApplicationStatus(app.status)}</td>
+							<td>{app.audit_date}</td>
+							<td>{assignLink}{rejectLink}</td>
+						</tr>
+					);
+				}
+			}
+
+			let innerTable;
+
+			if(rows.length > 0){
+				innerTable = (
+					<table className="table">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Mobile</th>
+								<th>Status</th>
+								<th>Audit Date</th>
+								<th>Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							{rows}
+						</tbody>
+					</table>
+				);
+			} else {
+				innerTable = (<p className="text-center text-muted">No applications for this location.</p>);
+			}
+
+			let editLink = `/audit/${this.props.params.auditId}/auditlocation/${al.id}/edit`;
+			let panelTitle = (
+				<span>
+					<b className="">{al.count}</b> - {al.location.name}, {al.location.city.name}
+					<Link to={editLink} className="btn btn-default pull-right">Edit</Link>
+				</span>
+			);
 			auditLocations.push(
-				<tr key={al.id}>
-					<td>{al.location.name}</td>
-					<td>{al.location.city.name}</td>
-					<td>{al.count}</td>
-					<td><Link to={editLink} className="btn btn-default">Edit</Link></td>
-				</tr>
+				<Panel key={al.id} title={panelTitle}>
+					{innerTable}
+				</Panel>
 			);
 		}
 
@@ -55,23 +104,11 @@ var AuditDetails = React.createClass({
 					<p>Description</p>
 					<p>{ this.props.audit.description }</p>
 				</Panel>
-				<Panel title="Locations" noBody={true}>
-					<table className="table table-striped">
-						<thead>
-							<tr>
-								<th>Location</th>
-								<th>City</th>
-								<th>Count</th>
-								<th>
-									<Link to={addAuditLocationLink} className="btn btn-default">Add</Link>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{auditLocations}
-						</tbody>
-					</table>
-				</Panel>
+				<h2 className="page-header">
+					<Link to={addAuditLocationLink} className="btn btn-default pull-right">Add</Link>
+					Locations
+				</h2>
+				{auditLocations}
 				{this.props.children}
 			</div>
 		);
@@ -80,7 +117,24 @@ var AuditDetails = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		audit: store.audits[ownProps.params.auditId]
+		audit: store.audits[ownProps.params.auditId],
+		applications: (function(applications){
+			var audit = store.audits[ownProps.params.auditId] || {};
+			var auditlocations = audit.auditlocations || [];
+			var alids = [];
+
+			for( var al of auditlocations){
+				alids.push(al.id);
+			}
+
+			var selectedApplications = [];
+			for( var id in applications){
+				if(alids.includes(applications[id].auditlocation)){
+					selectedApplications.push(applications[id]);
+				}
+			}
+			return selectedApplications;
+		}(store.applications))
 	};
 };
 
