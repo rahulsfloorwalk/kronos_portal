@@ -6,7 +6,7 @@ var url = {
 	protocol : 'http',
 	hostname : 'localhost',
 	port : '8000',
+	api_base_path: "/"
 };
-url.api_base_path = url.protocol + "://" + url.hostname + ":" + url.port + "/"
 
 export { url };

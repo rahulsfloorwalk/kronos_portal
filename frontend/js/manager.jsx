@@ -6,7 +6,6 @@ import * as Redux from 'redux';
 import ReduxThunk from 'redux-thunk';
 import ReduxLogger from 'redux-logger';
 
-//import { ManagerRoot } from './routes.jsx';
 import Routes from './components/manager/Routes.jsx';
 import { rootReducer } from './reducers_manager.js';
 
