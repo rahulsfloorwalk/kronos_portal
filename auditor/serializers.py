@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.contrib.auth.models import User
 from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField
@@ -142,34 +143,19 @@ class AuditApplicationSerializer(ModelSerializer):
         read_only_fields = fields
 
 
-class AuditApplicationDeSerializer(ModelSerializer):
-    class Meta:
-        model = AuditApplication
-        fields = (
-            'id', 
-            'status',
-            'audit_date', 
-            'audit',
-            'location',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            auditapplication = AuditApplication.objects.get(id=kwargs['id'])
-        else:
-            auditapplication = AuditApplication()
-        auditapplication.name = self.validated_data.get('name', location.name)
-        auditapplication.pincode = self.validated_data.get('pincode', location.pincode)
-        auditapplication.city = self.validated_data.get('city', location.city_id)
-        return location
-
-
 class AuditApplicationApplyDeSerializer(Serializer):
     audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(status__in=[Audit.ACTIVE,Audit.UPCOMING]))
     location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
     profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())
     audit_date = serializers.DateField()
+
+    def validate(self, attrs):
+        audit = attrs["audit_id"]
+        audit_date = attrs["audit_date"]
+        if audit_date < audit.start_date or audit_date > audit.end_date:
+            raise ValidationError({"audit_date": "preferred audit date is not within range"})
+        return attrs
+
 
 class AuditApplicationCancelDeSerializer(Serializer):
     audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(status__in=[Audit.ACTIVE,Audit.UPCOMING]))
