@@ -116,6 +116,8 @@ REST_FRAMEWORK = {
     ]
 }
 
+AUTHENTICATION_BACKENDS = ('registration.backends.CaseInsensitiveModelBackend',)
+
 if DEBUG:
     # add the Web Browsable API Renderer when DEBUG is enabled
     REST_FRAMEWORK["DEFAULT_RENDERER_CLASSES"].append('rest_framework.renderers.BrowsableAPIRenderer')

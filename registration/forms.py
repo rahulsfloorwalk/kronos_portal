@@ -31,6 +31,7 @@ class SignUpForm(UserCreationForm):
         user = super(SignUpForm, self).save(commit = False)
         user.email = self.cleaned_data["email"]
         user.phone = self.cleaned_data["phone"]
+        user.username = self.lower_username(self.cleaned_data["username"])
         user.save()
         user.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
         user.save()
@@ -59,6 +60,9 @@ class SignUpForm(UserCreationForm):
 
         self.sendEmail(auth_data, profile_info)
         return user
+
+    def lower_username(self, username):
+        return str.lower(username)
 
     def sendEmail(self, auth_data, profileinfo):
         link = properties.ACTIVATION_LINK_ADDRESS + auth_data['activation_key']
