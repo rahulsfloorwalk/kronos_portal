@@ -93,6 +93,7 @@ class BankInfoSerializer(ModelSerializer):
             'account_holder_name', 
             'account_number',
             'ifsc_code',
+            'pan_number', 
             'user_id'
         )
         read_only_fields = ('id', 'user_id')
@@ -111,6 +112,7 @@ class BankInfoSerializer(ModelSerializer):
         bank_info.account_holder_name = self.validated_data.get('account_holder_name', bank_info.account_holder_name)
         bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
         bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
+        bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
 
         bank_info.save()
         return bank_info

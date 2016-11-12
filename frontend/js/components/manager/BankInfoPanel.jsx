@@ -23,6 +23,7 @@ var BankInfoPanel = React.createClass({
 					<p>Account Holder Name: { this.props.bankInfo.account_holder_name }</p>
 					<p>Account Number: { this.props.bankInfo.account_number }</p>
 					<p>IFSC Code: { this.props.bankInfo.ifsc_code }</p>
+					<p>Pan Number: { this.props.bankInfo.pan_number }</p>
 				</div>
 			</div>
 		);
