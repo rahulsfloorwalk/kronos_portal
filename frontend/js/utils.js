@@ -99,3 +99,58 @@ export function getAuditApplicationStatus(value){
 			return `unknown status type ${value} - ${typeof value}`;
 	}
 };
+
+export function getHairColor(value){
+	switch(value){
+		case "1":
+		case 1:
+			return "Black";
+		case "2":
+		case 2:
+			return "Blonde";
+		case "3":
+		case 3:
+			return "Brown";
+		case "4":
+		case 4:
+			return "Red";
+		case "5":
+		case 5:
+			return "Grey";
+		case "6":
+		case 6:
+			return "White";
+		case "7":
+		case 7:
+			return "Bald";
+		case "8":
+		case 8:
+			return "Other";
+		default:
+			return `unknown hair color type ${value} - ${typeof value}`;
+	}
+};
+
+export function getCameraResolution(value){
+	switch(value){
+		case "1":
+		case 1:
+			return "1 to 5 Megapixel";
+		case "2":
+		case 2:
+			return "5 to 10 Megapixel";
+		case "3":
+		case 3:
+			return "10 to 15 Megapixel";
+		case "4":
+		case 4:
+			return "15+ Megapixel";
+		case "5":
+		case 5:
+			return "Dont Know";
+		case "6":
+		case 6:
+			return "No Camera";
+	}
+}
+

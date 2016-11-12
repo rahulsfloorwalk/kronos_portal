@@ -63,6 +63,15 @@ class AdditionalInfoSerializer(ModelSerializer):
             'id', 
             'has_car', 
             'weekend_audit', 
+            'hair_color', 
+            'height', 
+            'weight', 
+            'distance', 
+            'camera_owned', 
+            'camera_resoulution', 
+            'laptop_owned', 
+            'smart_phone_owned', 
+            'weekend_audit', 
             'user_id'
         )
         read_only_fields = ('id', 'user_id')
@@ -79,6 +88,14 @@ class AdditionalInfoSerializer(ModelSerializer):
 
         additional_info.has_car = self.validated_data.get('has_car', additional_info.has_car)
         additional_info.weekend_audit = self.validated_data.get('weekend_audit', additional_info.weekend_audit)
+        additional_info.hair_color = self.validated_data.get('hair_color', additional_info.hair_color)
+        additional_info.height = self.validated_data.get('height', additional_info.height)
+        additional_info.weight = self.validated_data.get('weight', additional_info.weight)
+        additional_info.distance = self.validated_data.get('distance', additional_info.distance)
+        additional_info.camera_owned = self.validated_data.get('camera_owned', additional_info.camera_owned)
+        additional_info.camera_resoulution = self.validated_data.get('camera_resoulution', additional_info.camera_resoulution)
+        additional_info.laptop_owned = self.validated_data.get('laptop_owned', additional_info.laptop_owned)
+        additional_info.smart_phone_owned = self.validated_data.get('smart_phone_owned', additional_info.smart_phone_owned)
 
         additional_info.save()
         return additional_info
