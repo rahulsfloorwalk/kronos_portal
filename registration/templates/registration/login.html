@@ -24,7 +24,7 @@
 				<form action="{% url 'registration:login' %}" method="POST">
 					{% csrf_token %}
 					<div class="form-group">
-						{{ form.username.label_tag }}
+						<label>Email Address</label>
 						{{ form.username | add_class:"form-control input-lg" }}
 						<p class="help-block">
 						{{ form.username.errors }}

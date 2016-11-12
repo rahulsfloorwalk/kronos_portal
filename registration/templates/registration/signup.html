@@ -14,30 +14,13 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				{% if form.username.errors %}
-				<div class="alert alert-warning">
-					{{ form.username.errors }}
-				</div>
-				{% endif %}
-				{% if form.password.errors %}
-				<div class="alert alert-warning">
-					{{ form.password.errors }}
-				</div>
-				{% endif %}
 				<form action="{% url 'registration:signup' %}" method="POST">
 					{% csrf_token %}
 					<div class="form-group">
-						{{ form.username.label_tag }}
+						<label>Email Address</label>
 						{{ form.username | add_class:"form-control input-lg" }}
 						<p class="help-block">
 						{{ form.username.errors }}
-						</p>
-					</div>
-					<div class="form-group">
-						{{ form.email.label_tag }}
-						{{ form.email | add_class:"form-control input-lg" }}
-						<p class="help-block">
-						{{ form.email.errors }}
 						</p>
 					</div>
 					<div class="form-group">
