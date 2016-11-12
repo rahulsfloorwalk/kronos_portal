@@ -40,15 +40,31 @@ class ProfileInfo(Model):
 		(POST_GRADUATE, "Post Graduate and Above"),
 	)
 
+	NOT_ANSWERED = 0
+	ONE = 1
+	ONE_THREE = 2
+	THREE_EIGHT = 3
+	EIGHT_FIFTEEN = 4
+	FIFTEEN_PLUS = 5
+	INCOME = (
+		(NOT_ANSWERED, "not answered"),
+		(ONE, "less than 1		 lpa"),
+		(ONE_THREE, "1 to 3 lpa"),
+		(THREE_EIGHT, "3 to 8 lpa"),
+		(EIGHT_FIFTEEN, "8 to 15 lpa"),
+		(FIFTEEN_PLUS, "15+ lpa"),
+	)
+
 	id = AutoField(db_column='id', primary_key=True)
-	first_name = CharField(db_column='first_name', max_length=20, blank=True)
-	last_name = CharField(db_column='last_name', max_length=20, blank=True)
+	first_name = CharField(db_column='first_name', max_length=40, blank=True)
+	last_name = CharField(db_column='last_name', max_length=40, blank=True)
 	gender = CharField(db_column='gender', max_length=1, choices=GENDER, blank=True)
 	marital_status = CharField(db_column='marital_status', max_length=1, choices=MARITAL_STATUS, blank=True)
 	education = CharField(db_column='education', max_length=2, choices=EDUCATION, blank=True)
+	household_income = PositiveSmallIntegerField(db_column='household_income', choices=INCOME, blank=True, null=True)
 	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, validators=[numericValidator, minLengthValidator])
 	date_of_birth = DateField(db_column='dob', blank=True, null=True)
-	address = CharField(db_column='address', max_length=100, blank=True)
+	address = CharField(db_column='address', max_length=300, blank=True)
 	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
 	city = CharField(db_column='city', max_length=20, blank=True)
 	state = CharField(db_column='state', max_length=20, blank=True)
@@ -135,6 +151,7 @@ class BankInfo(Model):
 
 	id = AutoField(db_column='id', primary_key=True)
 	bank_name = CharField(db_column='bank_name', max_length=40, blank=True)
+	bank_address = CharField(db_column='bank_address', max_length=300, blank=True)
 	account_holder_name = CharField(db_column='account_holder_name', max_length=40, blank=True)
 	account_number = CharField(db_column='account_number', max_length=20, blank=True, validators=[numericValidator])
 	ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
