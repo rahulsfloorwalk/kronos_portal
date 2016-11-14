@@ -31,6 +31,22 @@ with open('final_data.csv') as data:
         except IntegrityError:
             print("IntegrityError at profile")
         try:
+            verification = Verification()
+            verification.user = user
+            verification.key_expires = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=30), "%Y-%m-%d %H:%M:%S")
+            cat_str = hashlib.sha1(urandom(16)).hexdigest() + hashlib.sha1(row['email'].encode('utf-8')).hexdigest()
+            verification.activation_key = hashlib.sha1(cat_str.encode('utf-8')).hexdigest()
+            verification.is_verified = True
+            verification.save()
+        except AttributeError:
+            print("attriberror at profile")
+        except ValueError:
+            print("valueerror at profile")
+        except DataError:
+            print("dataerror at profile")
+        except IntegrityError:
+            print("IntegrityError at profile")
+        try:
             bi = BankInfo(user_id=user.id, bank_name=row['bank_name'], account_holder_name=row['account_holder_name'], account_number=row['account_number'], ifsc_code=row['ifsc_code'], pan_number=row['pan'], bank_address=row['bank_address'])
             bi.save()
         except AttributeError:
