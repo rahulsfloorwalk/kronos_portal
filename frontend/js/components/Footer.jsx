@@ -6,7 +6,7 @@ var Footer = React.createClass({
 			<footer className="col-xs-12">
 				<hr/>
 				<p className="text-center text-muted">
-					Vitric Business Solutions Pvt. Ltd.
+					Floorwalk Consultants Pvt. Ltd.
 				</p>
 			</footer>
 		);

@@ -7,7 +7,7 @@ var Header = React.createClass({
 			<nav className="navbar navbar-default navbar-static-top">
 				<div className="container">
 					<div className="navbar-header">
-						<Link className="navbar-brand" to="/">Vitric</Link>
+						<Link className="navbar-brand" to="/">Floor Walk</Link>
 					</div>
 					<ul className="nav navbar-nav">
 						<li><Link to="/" activeClassName="active">Dashboard</Link></li>
