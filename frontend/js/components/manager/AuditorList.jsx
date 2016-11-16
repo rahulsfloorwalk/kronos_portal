@@ -2,7 +2,14 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAuditors } from '../../manager_actions.js'
+import { affectInputEventToComponent } from '../../react_utils.js';
+
+import { searchAuditors } from '../../manager_actions.js'
+import InputGroup from '../InputGroup.jsx';
+import { InputGroupBtn } from '../InputGroup.jsx';
+import FormInput from '../FormInput.jsx';
+import FormGroup from '../FormGroup.jsx';
+import SaveButton from '../SaveButton.jsx';
 
 var AuditorRow = React.createClass({
 	render: function(){
@@ -23,19 +30,45 @@ var AuditorRow = React.createClass({
 });
 
 var AuditorList = React.createClass({
+	getInitialState: function() {
+		return {
+			search: ""
+		};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchAuditors());
+		this.setState({
+			search: this.props.search
+		});
+		if( this.props.search && this.props.search !== ""){
+			this.props.dispatch(searchAuditors(this.props.search));
+		}
+	},
+	onSubmit: function(e) {
+		console.debug("form sub dsadasd!");
+		e.preventDefault();
+		this.props.dispatch(searchAuditors(this.state.search));
+	},
+	inputChanged: function(e){
+		affectInputEventToComponent(e, this);
 	},
 	render: function(){
-		var rows = [];
+		var rows = []; 
 		for(var id in this.props.auditors) {
 			rows.push(<AuditorRow auditor={this.props.auditors[id]} key={id}/>);
 		}
 		return (
 			<div>
 				<h2 className="page-header">
-					Auditor List
+					Auditors
 				</h2>
+				<form onSubmit={this.onSubmit}>
+					<InputGroup>
+						<input className="form-control" placeholder="name, email or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
+						<InputGroupBtn>
+							<SaveButton text="Search"/>
+						</InputGroupBtn>
+					</InputGroup>
+				</form>
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -58,7 +91,8 @@ var AuditorList = React.createClass({
 
 var mapStoreToProps = function(store){
 	return {
-		auditors: store.auditors
+		auditors: store.auditors,
+		search: store.forms.auditorSearch.search
 	};
 };
 

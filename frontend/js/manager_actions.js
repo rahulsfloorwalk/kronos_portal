@@ -35,9 +35,7 @@ export var types = {
 	CLIENT_FORM_SUB_SUC: 'CLIENT_FORM_SUB_SUC',
 
 	//Auditor GET
-	AUDITOR_GET_REQ: 'AUDITOR_GET_REQ',
-	AUDITOR_GET_ERR: 'AUDITOR_GET_ERR',
-	AUDITOR_GET_SUC: 'AUDITOR_GET_SUC',
+	AUDITOR_SEARCH: 'AUDITOR_SEARCH',
 
 	AUDITOR_ID_GET: 'AUDITOR_ID_GET',
 
@@ -349,17 +347,26 @@ export function saveClientAddForm(client){
 	};
 };
 
-export function fetchAuditors(){
+export function searchAuditors(search){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDITOR_GET_REQ
+			type: types.AUDITOR_SEARCH,
+			status: 'request',
+			search
 		});
 
-		$.get( url.api_base_path + "manager/auditor", function(auditors){
-			dispatch({
-				type: types.AUDITOR_GET_SUC,
-				auditors: auditors
-			});
+		return $.ajax( url.api_base_path + "manager/auditor",{
+			data: {
+				search
+			},
+			success: function(auditorPage){
+				dispatch({
+					type: types.AUDITOR_SEARCH,
+					status: 'success',
+					page: auditorPage,
+					search
+				});
+			}
 		});
 		//TODO: Handle error
 	};

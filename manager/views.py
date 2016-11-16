@@ -179,39 +179,6 @@ class AuditLocationIdView(APIView):
             return Http404
 
 
-class AuditorView(APIView):
-    def get(self, request, format=None):
-        auditors = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.all();
-        return Response(AuditorSerializer(auditors, many=True).data)
-
-class AuditorIdView(APIView):
-    def get(self, request, auditor_id, format=None):
-        auditor = User.objects.get(id=auditor_id);
-        return Response(AuditorSerializer(auditor).data)
-
-class AuditorProfileInfoView(APIView):
-    def get(self, request, auditor_id, format=None):
-        try:
-            profileInfo = ProfileInfo.objects.get(user_id=auditor_id)
-            return Response(ProfileInfoSerializer(profileInfo).data)
-        except ProfileInfo.DoesNotExist:
-            return Response(ProfileInfoSerializer(ProfileInfo(user_id=auditor_id)).data)
-
-class AuditorBankInfoView(APIView):
-    def get(self, request, auditor_id, format=None):
-        try:
-            bankInfo = BankInfo.objects.get(user_id=auditor_id)
-            return Response(BankInfoSerializer(bankInfo).data)
-        except BankInfo.DoesNotExist:
-            return Response(BankInfoSerializer(BankInfo(user_id=auditor_id)).data)
-
-class AuditorAdditionalInfoView(APIView):
-    def get(self, request, auditor_id, format=None):
-        try:
-            additionalInfo = AdditionalInfo.objects.get(user_id=auditor_id)
-            return Response(AdditionalInfoSerializer(additionalInfo).data)
-        except AdditionalInfo.DoesNotExist:
-            return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
 
 class AuditApplicationView(APIView):
     def get(self, request, audit_id, format=None):

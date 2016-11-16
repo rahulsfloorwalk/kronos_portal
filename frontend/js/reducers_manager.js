@@ -37,7 +37,10 @@ var initialStore = {
 		},
 		applicationFail: {
 			errors: {}
-		}
+		},
+		auditorSearch: {
+			search: "",
+		},
 	}
 };
 
@@ -72,17 +75,32 @@ export function rootReducer(store = initialStore, action) {
 					[action.client.id]: action.client
 				})
 			});
-		/*Auditor Get Request*/
-		case types.AUDITOR_GET_SUC:
-			return Object.assign({}, store, {
-				auditors: (function(auditors){
-					var obj = {};
-					for( var a of auditors){
-						obj[a.id] = a;
-					}
-					return obj;
-				}(action.auditors))
-			});
+		/*Auditor Search Request*/
+		case types.AUDITOR_SEARCH:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							auditorSearch: {
+								search: action.search
+							}
+						})
+					});
+				case "success":
+					return Object.assign({}, store, {
+						auditors: (function(auditors){
+							var obj = {};
+								for( var a of auditors){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.page.results))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.AUDITOR_ID_GET:
 			switch(action.status){
 				case "success":
