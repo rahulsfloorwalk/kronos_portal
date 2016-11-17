@@ -3,7 +3,8 @@ from django.db.models import Model, CharField, IntegerField, AutoField, DateFiel
 from django.db.models import CASCADE
 from django.core.validators import RegexValidator, MinLengthValidator
 from .validators import numericValidator, minLengthValidator
-from manager.models import AuditLocation
+from manager.models import AuditLocation, City
+from manager import states
 
 
 class ProfileInfo(Model):
@@ -67,7 +68,7 @@ class ProfileInfo(Model):
 	address = CharField(db_column='address', max_length=300, blank=True)
 	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
 	city = CharField(db_column='city', max_length=20, blank=True)
-	state = CharField(db_column='state', max_length=20, blank=True)
+	state = CharField(db_column='state', max_length=5, blank=True, choices=states.get_django_choices())
 
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 

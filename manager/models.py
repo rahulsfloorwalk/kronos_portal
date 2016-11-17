@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import CASCADE
 
+from . import states
+
 class Client(Model):
     db_table = "client"
 
@@ -18,6 +20,7 @@ class City(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
+    state = CharField(db_column="state", max_length=5, blank=False, choices=states.get_django_choices())
 
     def __str__(self):
         return 'City({}): {}'.format(self.id, self.name)
