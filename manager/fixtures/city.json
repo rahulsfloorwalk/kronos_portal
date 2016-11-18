@@ -5094,5 +5094,61 @@
             "name": "Uttar Dinajpur",
             "state": "IN-WB"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 641,
+        "fields": {
+            "name": "Bangalore",
+            "state": "IN-KA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 642,
+        "fields": {
+            "name": "Mangalore",
+            "state": "IN-KA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 643,
+        "fields": {
+            "name": "Navi Mumbai",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 644,
+        "fields": {
+            "name": "Noida",
+            "state": "IN-UP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 645,
+        "fields": {
+            "name": "Guwahati",
+            "state": "IN-AS"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 646,
+        "fields": {
+            "name": "Trivandrum",
+            "state": "IN-AS"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 650,
+        "fields": {
+            "name": "Delhi",
+            "state": "IN-DL"
+        }
     }
 ]
