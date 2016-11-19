@@ -9,6 +9,22 @@
     },
     {
         "model": "manager.city",
+        "pk": 2,
+        "fields": {
+            "name": "Pune",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 3,
+        "fields": {
+            "name": "Mumbai",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
         "pk": 4,
         "fields": {
             "name": "Adilabad",
@@ -5149,6 +5165,550 @@
         "fields": {
             "name": "Delhi",
             "state": "IN-DL"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 651,
+        "fields": {
+            "name": "Adalaj",
+            "state": "IN-GJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 652,
+        "fields": {
+            "name": "Agartala",
+            "state": "IN-TR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 653,
+        "fields": {
+            "name": "Ahmedeabad",
+            "state": "IN-GJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 654,
+        "fields": {
+            "name": "Alapuzha",
+            "state": "IN-KL"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 655,
+        "fields": {
+            "name": "Ambala Cantt",
+            "state": "IN-HR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 656,
+        "fields": {
+            "name": "Ambala City",
+            "state": "IN-HR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 657,
+        "fields": {
+            "name": "Amreli",
+            "state": "IN-GJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 658,
+        "fields": {
+            "name": "Arpora",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 659,
+        "fields": {
+            "name": "Badlapur",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 660,
+        "fields": {
+            "name": "Baroda",
+            "state": "IN-GJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 661,
+        "fields": {
+            "name": "Berhampur",
+            "state": "IN-OR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 662,
+        "fields": {
+            "name": "Bhilai",
+            "state": "IN-CT"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 663,
+        "fields": {
+            "name": "Bhiwadi",
+            "state": "IN-RJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 664,
+        "fields": {
+            "name": "Bhubaneswar",
+            "state": "IN-OR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 665,
+        "fields": {
+            "name": "Chakradharpur",
+            "state": "IN-JH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 666,
+        "fields": {
+            "name": "Chandannagar",
+            "state": "IN-WB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 667,
+        "fields": {
+            "name": "Changanacherry",
+            "state": "IN-KL"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 668,
+        "fields": {
+            "name": "Dahanu",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 669,
+        "fields": {
+            "name": "Deoban",
+            "state": "IN-UP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 670,
+        "fields": {
+            "name": "Derabassi",
+            "state": "IN-PB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 671,
+        "fields": {
+            "name": "Dindigul",
+            "state": "IN-TN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 672,
+        "fields": {
+            "name": "Gadwal",
+            "state": "IN-AP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 673,
+        "fields": {
+            "name": "Gandhidham",
+            "state": "IN-GJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 674,
+        "fields": {
+            "name": "Gkp",
+            "state": "IN-UP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 675,
+        "fields": {
+            "name": "Haldia",
+            "state": "IN-WB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 676,
+        "fields": {
+            "name": "Hansi",
+            "state": "IN-HR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 677,
+        "fields": {
+            "name": "hisar",
+            "state": "IN-HR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 678,
+        "fields": {
+            "name": "Hosur",
+            "state": "IN-TN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 679,
+        "fields": {
+            "name": "Hubli",
+            "state": "IN-KA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 680,
+        "fields": {
+            "name": "Jamshedpur",
+            "state": "IN-JH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 681,
+        "fields": {
+            "name": "JP nagar",
+            "state": "IN-UP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 682,
+        "fields": {
+            "name": "Kalyan",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 683,
+        "fields": {
+            "name": "Khanna",
+            "state": "IN-PB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 684,
+        "fields": {
+            "name": "Kochi",
+            "state": "IN-KL"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 685,
+        "fields": {
+            "name": "Mangolpuri",
+            "state": "IN-DL"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 686,
+        "fields": {
+            "name": "Margao",
+            "state": "IN-GA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 687,
+        "fields": {
+            "name": "Mohali",
+            "state": "IN-PB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 688,
+        "fields": {
+            "name": "Nabha",
+            "state": "IN-PB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 689,
+        "fields": {
+            "name": "Nallasopara",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 690,
+        "fields": {
+            "name": "Panjim",
+            "state": "IN-GA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 691,
+        "fields": {
+            "name": "Panvel",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 692,
+        "fields": {
+            "name": "Phagwara",
+            "state": "IN-PB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 693,
+        "fields": {
+            "name": "Ponda",
+            "state": "IN-GA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 694,
+        "fields": {
+            "name": "Pondiccherry",
+            "state": "IN-TN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 695,
+        "fields": {
+            "name": "Porvorim",
+            "state": "IN-GA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 696,
+        "fields": {
+            "name": "Rajahmundry",
+            "state": "IN-AP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 697,
+        "fields": {
+            "name": "Rajpura",
+            "state": "IN-PB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 698,
+        "fields": {
+            "name": "Ranebennur",
+            "state": "IN-KA"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 699,
+        "fields": {
+            "name": "Srerampore",
+            "state": "IN-WB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 700,
+        "fields": {
+            "name": "Rohini",
+            "state": "IN-DL"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 701,
+        "fields": {
+            "name": "Roorkee",
+            "state": "IN-UK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 702,
+        "fields": {
+            "name": "Rudrapur",
+            "state": "IN-UK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 703,
+        "fields": {
+            "name": "Secunderabad",
+            "state": "IN-AP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 704,
+        "fields": {
+            "name": "Siliguri",
+            "state": "IN-WB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 705,
+        "fields": {
+            "name": "Sonepat",
+            "state": "IN-HR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 706,
+        "fields": {
+            "name": "Sri Ganganagar",
+            "state": "IN-RJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 707,
+        "fields": {
+            "name": "Tambaram",
+            "state": "IN-TN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 708,
+        "fields": {
+            "name": "Tirupati",
+            "state": "IN-AP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 709,
+        "fields": {
+            "name": "Trichy",
+            "state": "IN-TN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 710,
+        "fields": {
+            "name": "Ulhasnagar",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 711,
+        "fields": {
+            "name": "Uttarpara",
+            "state": "IN-WB"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 712,
+        "fields": {
+            "name": "Vasai",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 713,
+        "fields": {
+            "name": "Vijayawada",
+            "state": "IN-AP"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 714,
+        "fields": {
+            "name": "Virar",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 715,
+        "fields": {
+            "name": "Yamunanagar",
+            "state": "IN-HR"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 716,
+        "fields": {
+            "name": "Palghar",
+            "state": "IN-MH"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 717,
+        "fields": {
+            "name": "Adipur",
+            "state": "IN-GJ"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 718,
+        "fields": {
+            "name": "Ramnagar",
+            "state": "IN-UK"
         }
     }
 ]
