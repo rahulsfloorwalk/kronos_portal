@@ -145,14 +145,6 @@
     },
     {
         "model": "manager.city",
-        "pk": 19,
-        "fields": {
-            "name": "Hyderabad",
-            "state": "IN-AP"
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 20,
         "fields": {
             "name": "Srikakulam",
@@ -1025,73 +1017,9 @@
     },
     {
         "model": "manager.city",
-        "pk": 129,
-        "fields": {
-            "name": "Delhi Central",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 130,
-        "fields": {
-            "name": "Delhi East",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 131,
         "fields": {
             "name": "New Delhi",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 132,
-        "fields": {
-            "name": "Delhi North",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 133,
-        "fields": {
-            "name": "Delhi North East",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 134,
-        "fields": {
-            "name": "Delhi North West",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 135,
-        "fields": {
-            "name": "Delhi South",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 136,
-        "fields": {
-            "name": "Delhi South West",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 137,
-        "fields": {
-            "name": "Delhi West",
             "state": "IN-DL"
         }
     },
@@ -1476,14 +1404,6 @@
         "pk": 185,
         "fields": {
             "name": "Sonipat",
-            "state": "IN-HR"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 186,
-        "fields": {
-            "name": "Yamuna Nagar",
             "state": "IN-HR"
         }
     },
@@ -1956,22 +1876,6 @@
         "pk": 245,
         "fields": {
             "name": "Bagalkot",
-            "state": "IN-KA"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 246,
-        "fields": {
-            "name": "Bangalore Rural",
-            "state": "IN-KA"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 247,
-        "fields": {
-            "name": "Bangalore Urban",
             "state": "IN-KA"
         }
     },
@@ -2833,22 +2737,6 @@
     },
     {
         "model": "manager.city",
-        "pk": 355,
-        "fields": {
-            "name": "Mumbai City",
-            "state": "IN-MH"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 356,
-        "fields": {
-            "name": "Mumbai suburban",
-            "state": "IN-MH"
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 357,
         "fields": {
             "name": "Nandurbar",
@@ -2884,14 +2772,6 @@
         "pk": 362,
         "fields": {
             "name": "Parbhani",
-            "state": "IN-MH"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 363,
-        "fields": {
-            "name": "Pune",
             "state": "IN-MH"
         }
     },
@@ -3045,14 +2925,6 @@
         "fields": {
             "name": "Imphal West",
             "state": "IN-MN"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 383,
-        "fields": {
-            "name": "Garo Hills East",
-            "state": "IN-ML"
         }
     },
     {
@@ -3644,14 +3516,6 @@
         "pk": 457,
         "fields": {
             "name": "Rupnagar",
-            "state": "IN-PB"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 458,
-        "fields": {
-            "name": "Ajitgarh (Mohali)",
             "state": "IN-PB"
         }
     },
@@ -5185,38 +5049,6 @@
     },
     {
         "model": "manager.city",
-        "pk": 653,
-        "fields": {
-            "name": "Ahmedeabad",
-            "state": "IN-GJ"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 654,
-        "fields": {
-            "name": "Alapuzha",
-            "state": "IN-KL"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 655,
-        "fields": {
-            "name": "Ambala Cantt",
-            "state": "IN-HR"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 656,
-        "fields": {
-            "name": "Ambala City",
-            "state": "IN-HR"
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 657,
         "fields": {
             "name": "Amreli",
@@ -5329,14 +5161,6 @@
     },
     {
         "model": "manager.city",
-        "pk": 671,
-        "fields": {
-            "name": "Dindigul",
-            "state": "IN-TN"
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 672,
         "fields": {
             "name": "Gadwal",
@@ -5372,14 +5196,6 @@
         "pk": 676,
         "fields": {
             "name": "Hansi",
-            "state": "IN-HR"
-        }
-    },
-    {
-        "model": "manager.city",
-        "pk": 677,
-        "fields": {
-            "name": "hisar",
             "state": "IN-HR"
         }
     },
