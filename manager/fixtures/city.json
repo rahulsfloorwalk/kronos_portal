@@ -1017,14 +1017,6 @@
     },
     {
         "model": "manager.city",
-        "pk": 131,
-        "fields": {
-            "name": "New Delhi",
-            "state": "IN-DL"
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 138,
         "fields": {
             "name": "Goa North",
