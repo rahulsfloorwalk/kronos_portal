@@ -41,6 +41,11 @@ export var types = {
 
 	AUDIT_CANCEL_FORM_LOAD: 'AUDIT_CANCEL_FORM_LOAD',
 	AUDIT_CANCEL_FORM_SUB: 'AUDIT_CANCEL_FORM_SUB',
+
+	//State get
+	STATE_GET: 'STATE_GET',
+	//City get
+	CITY_GET: 'CITY_GET',
 };
 
 /**
@@ -408,3 +413,42 @@ export function submitAuditCancelForm( auditId, locationId){
 		return req;
 	};
 };
+
+export function fetchStates(){
+	return function(dispatch){
+		dispatch({
+			type: types.STATE_GET,
+			status: 'request',
+		});
+
+		return $.get( url.api_base_path + "auditor/state", function(states){
+			dispatch({
+				type: types.STATE_GET,
+				status: 'success',
+				states: states
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchCities(stateCode){
+	return function(dispatch){
+		dispatch({
+			type: types.CITY_GET,
+			status: 'request',
+			stateCode
+		});
+
+		return $.get( url.api_base_path + `auditor/city/${stateCode}`, function(cities){
+			dispatch({
+				type: types.CITY_GET,
+				status: 'success',
+				stateCode,
+				cities: cities
+			});
+		});
+		//TODO: Handle error
+	};
+};
+

@@ -24,6 +24,7 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, AuditApplication
 from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
 from kronos.exceptions import AppLogicError, ObjectNotFound
+from . import states
 
 class ClientView(APIView):
     def get(self, request, format=None):
@@ -63,9 +64,15 @@ class ClientIdView(APIView):
             raise Http404
 
 class CityView(APIView):
+    def get(self, request, state, format=None):
+        if state in states.states:
+            cities = City.objects.filter(state=state)
+            return Response(CitySerializer(cities, many=True).data)
+        raise NotFound
+
+class StateView(APIView):
     def get(self, request, format=None):
-        cities = City.objects.all()
-        return Response(CitySerializer(cities, many=True).data)
+        return Response(states.states)
 
 class LocationView(APIView):
     def get(self, request, format=None):

@@ -3,8 +3,9 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchProfileInfo, saveProfileInfo } from '../../auditor_actions.js';
+import { fetchProfileInfo, saveProfileInfo, fetchStates, fetchCities } from '../../auditor_actions.js';
 
+import { affectInputEventToComponent } from '../../react_utils.js';
 import FormInput from '../FormInput.jsx';
 import { FormDateInput } from '../FormInput.jsx';
 import FormGroup from '../FormGroup.jsx';
@@ -12,30 +13,87 @@ import FormSelect from '../FormSelect.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 
-/**
- * Following are the props for a form:
- *
- * profileInfo - the initial data to be displayed
- * errors - errors in the form, if any
- */
+/* State Selector begins */
+
+var __StateSelector = React.createClass({
+	render : function(){
+		let stateOptions = [];
+		for( let s in this.props.states){
+			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
+		}
+		return (
+			<FormSelect label="State" name="state" {...this.props}>
+				<option value=""></option>
+				{stateOptions}
+			</FormSelect>
+		);
+	}
+});
+
+var mapStoreToPropsForStateSelector = function(store){
+	return {
+		states: store.states,
+	};
+};
+
+var StateSelector = ReactRedux.connect(mapStoreToPropsForStateSelector)(__StateSelector);
+
+/* State Selector Ends */
+
+/* City Selector Starts */
+
+var __CitySelector = React.createClass({
+	render : function(){
+		let cityOptions = [];
+		for( let c in this.props.cities){
+			cityOptions.push(<option key={c} value={this.props.cities[c].name}>{this.props.cities[c].name}</option>);
+		}
+		return (
+			<FormSelect label="City" name="city" {...this.props}>
+				<option value=""></option>
+				{cityOptions}
+			</FormSelect>
+		);
+	}
+});
+
+var mapStoreToPropsForCitySelector = function(store){
+	return {
+		cities: store.cities,
+	};
+};
+
+var CitySelector = ReactRedux.connect(mapStoreToPropsForCitySelector)(__CitySelector);
+
+/* City Selector Ends */
+
 var ProfileInfoForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
-	componentWillMount: function() {
-		this.setState(this.props.profileInfo);
-	},
 	componentDidMount: function() {
+		this.setState(this.props.profileInfo);
 		this.props.dispatch(fetchProfileInfo());
+		this.props.dispatch(fetchStates());
+		if( this.props.profileInfo.state){
+			this.props.dispatch(fetchCities(this.props.profileInfo.state));
+		}
 	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState(nextProps.profileInfo);
+		if( nextProps.state){
+			this.props.dispatch(fetchCities(nextProps.state));
+		}
 	},
 	inputChanged: function(e){
-		console.debug(e);
-		var change = {};
-		change[e.target.name] = e.target.value;
-		this.setState(change);
+		affectInputEventToComponent(e, this);
+	},
+	myStateChanged: function(e){
+		this.inputChanged(e);
+		var stateCode = e.target.value;
+		if( stateCode){
+			this.props.dispatch(fetchCities(e.target.value));
+		}
 	},
 	dateChanged: function(date){
 		if( typeof date !== "string"){
@@ -103,10 +161,10 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="City" maxLength="20" type="text" value={this.state.city} name="city" onChange={this.inputChanged}/>
+							<StateSelector value={this.state.state} onChange={this.myStateChanged}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="State" maxLength="20" type="text" value={this.state.state} name="state" onChange={this.inputChanged}/>
+							<CitySelector value={this.state.city} onChange={this.inputChanged}/>
 						</div>
 					</div>
 					<FormInput label="Mobile Number" maxLength="10" type="text" value={this.state.mobile_number} name="mobile_number" onChange={this.inputChanged}/>

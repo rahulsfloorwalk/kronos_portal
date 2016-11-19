@@ -5,6 +5,8 @@ var initialStore = {
 	bankInfo: {},
 	additionalInfo: {},
 	audits: {},
+	states: {},
+	cities: {},
 	forms: {
 		profileInfo: {
 			errors:{}
@@ -247,6 +249,38 @@ export function rootReducer(store = initialStore, action) {
 								errors: action.errors
 							}
 						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.STATE_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						states: action.states
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CITY_GET:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						cities: {}
+					});
+				case "success":
+					return Object.assign({}, store, {
+						cities: (function(cities){
+							var obj = {};
+							for( var c of cities){
+								obj[c.id] = c;
+							}
+							return obj;
+						}(action.cities))
 					});
 					break;
 				default:

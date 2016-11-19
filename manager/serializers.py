@@ -32,6 +32,7 @@ class CitySerializer(ModelSerializer):
         fields = (
             'id',
             'name',
+            'state',
         )
         read_only_fields = ('id',)
 
@@ -46,7 +47,7 @@ class LocationSerializer(ModelSerializer):
             'pincode',
             'city',
         )
-        read_only_fields = ('id','name','pincode','city')
+        read_only_fields = fields
 
 class LocationDeSerializer(ModelSerializer):
     class Meta:

@@ -2,13 +2,14 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchProfileInfoForAuditor } from '../../manager_actions.js'
+import { fetchProfileInfoForAuditor, fetchStates } from '../../manager_actions.js'
 
 import Loading from '../Loading.jsx';
 
 var ProfileInfoPanel = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchProfileInfoForAuditor(this.props.auditorId));
+		this.props.dispatch(fetchStates());
 	},
 	render: function(){
 		if(! this.props.profileInfo){
@@ -29,7 +30,7 @@ var ProfileInfoPanel = React.createClass({
 					<p>Address: { this.props.profileInfo.address }</p>
 					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
 					<p>City: { this.props.profileInfo.city }</p>
-					<p>State: { this.props.profileInfo.state }</p>
+					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
 					<p>Pincode: { this.props.profileInfo.pincode }</p>
 				</div>
 			</div>
@@ -39,7 +40,8 @@ var ProfileInfoPanel = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		profileInfo: store.profileInfos[ownProps.auditorId]
+		profileInfo: store.profileInfos[ownProps.auditorId],
+		states: store.states
 	};
 };
 

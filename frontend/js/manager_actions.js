@@ -60,6 +60,7 @@ export var types = {
 
 	//City get
 	CITY_GET: 'CITY_GET',
+	STATE_GET: 'STATE_GET',
 
 	//Audit
 	AUDIT_GET: 'AUDIT_GET',
@@ -596,24 +597,43 @@ export function saveLocationAddForm(location){
 	};
 };
 
-export function fetchCities(){
+export function fetchStates(){
 	return function(dispatch){
 		dispatch({
-			type: types.CITY_GET,
+			type: types.STATE_GET,
 			status: 'request',
 		});
 
-		$.get( url.api_base_path + "manager/city", function(cities){
+		return $.get( url.api_base_path + "manager/state", function(states){
 			dispatch({
-				type: types.CITY_GET,
+				type: types.STATE_GET,
 				status: 'success',
-				cities: cities
+				states: states
 			});
 		});
 		//TODO: Handle error
 	};
 };
 
+export function fetchCities(stateCode){
+	return function(dispatch){
+		dispatch({
+			type: types.CITY_GET,
+			status: 'request',
+			stateCode
+		});
+
+		return $.get( url.api_base_path + `manager/city/${stateCode}`, function(cities){
+			dispatch({
+				type: types.CITY_GET,
+				status: 'success',
+				stateCode,
+				cities: cities
+			});
+		});
+		//TODO: Handle error
+	};
+};
 
 export function fetchAudits(){
 	return function(dispatch){

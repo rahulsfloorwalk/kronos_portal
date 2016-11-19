@@ -3,7 +3,9 @@ from . import views
 from .viewss import auditor as auditor_views
 
 urlpatterns = ([
-    url(r'city$', views.CityView.as_view(), name='city_view'),
+    url(r'state$', views.StateView.as_view(), name='state_view'),
+    url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
+
     url(r'client/(?P<client_id>[0-9]+)$', views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client$', views.ClientView.as_view(), name='client_view'),
 

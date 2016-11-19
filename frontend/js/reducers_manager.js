@@ -6,6 +6,7 @@ var initialStore = {
 	clients: {},
 	auditors: {},
 	locations: {},
+	states: {},
 	cities: {},
 	profileInfos: {},
 	bankInfos: {},
@@ -227,8 +228,23 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+		case types.STATE_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						states: action.states
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.CITY_GET:
 			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						cities: {}
+					});
 				case "success":
 					return Object.assign({}, store, {
 						cities: (function(cities){

@@ -2,12 +2,13 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchProfileInfo } from '../../auditor_actions.js'
+import { fetchProfileInfo, fetchStates } from '../../auditor_actions.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
 
 var ProfileInfoPanelBase = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchProfileInfo());
+		this.props.dispatch(fetchStates());
 	},
 	render: function(){
 		return (
@@ -26,7 +27,7 @@ var ProfileInfoPanelBase = React.createClass({
 					<p>Address: { this.props.profileInfo.address }</p>
 					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
 					<p>City: { this.props.profileInfo.city }</p>
-					<p>State: { this.props.profileInfo.state }</p>
+					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
 					<p>Pincode: { this.props.profileInfo.pincode }</p>
 				</div>
 			</div>
@@ -36,7 +37,8 @@ var ProfileInfoPanelBase = React.createClass({
 
 var mapStoreToProps = function(store){
 	return {
-		profileInfo: store.profileInfo
+		profileInfo: store.profileInfo,
+		states: store.states
 	};
 };
 

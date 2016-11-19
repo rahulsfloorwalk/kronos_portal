@@ -2,32 +2,28 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchLocations } from '../../manager_actions.js'
-
-var LocationRow = React.createClass({
-	render: function(){
-		var linkTo = `/location/${this.props.location.id}/edit`;
-		return (
-			<tr>
-				<td>{this.props.location.name}</td>
-				<td>{this.props.location.pincode}</td>
-				<td>{this.props.location.city.name}</td>
-				<td>
-					<Link to={linkTo} className="btn btn-default">Edit</Link>
-				</td>
-			</tr>
-		);
-	},
-});
+import { fetchStates, fetchLocations } from '../../manager_actions.js'
 
 var LocationList = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchLocations());
+		this.props.dispatch(fetchStates());
 	},
 	render: function(){
 		var rows = [];
 		for(var id in this.props.locations) {
-			rows.push(<LocationRow location={this.props.locations[id]} key={id}/>);
+			var linkTo = `/location/${this.props.locations[id].id}/edit`;
+			rows.push(
+				<tr key={id}>
+					<td>{this.props.locations[id].name}</td>
+					<td>{this.props.locations[id].pincode}</td>
+					<td>{this.props.locations[id].city.name}</td>
+					<td>{this.props.states[this.props.locations[id].city.state]}</td>
+					<td>
+						<Link to={linkTo} className="btn btn-default">Edit</Link>
+					</td>
+				</tr>
+			);
 		}
 		return (
 			<div>
@@ -41,6 +37,7 @@ var LocationList = React.createClass({
 							<th>Name</th>
 							<th>Pincode</th>
 							<th>City</th>
+							<th>State</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -55,7 +52,8 @@ var LocationList = React.createClass({
 
 var mapStoreToProps = function(store){
 	return {
-		locations: store.locations
+		locations: store.locations,
+		states: store.states
 	};
 };
 

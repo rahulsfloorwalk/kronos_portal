@@ -13,9 +13,10 @@ from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer
 from .serializers import AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
-from manager.models import Audit
-from manager.serializers import AuditSerializer
+from manager.models import Audit, City
+from manager.serializers import AuditSerializer, CitySerializer
 import manager.service.audit as audit_service
+from manager import states
 
 @login_required
 def dashboard(request):
@@ -242,3 +243,15 @@ class AuditApplicationCancelView(APIView):
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
                 }) from e
+
+
+class CityView(APIView):
+    def get(self, request, state, format=None):
+        if state in states.states:
+            cities = City.objects.filter(state=state)
+            return Response(CitySerializer(cities, many=True).data)
+        raise NotFound
+
+class StateView(APIView):
+    def get(self, request, format=None):
+        return Response(states.states)
