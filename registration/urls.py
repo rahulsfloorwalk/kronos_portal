@@ -11,8 +11,6 @@ urlpatterns = ([
 
     url(r'forgot_password$', password_reset, {
         'template_name': 'registration/forgot_password.html',
-        #'domain_override': 'vitric.in',
-        'from_email': 'support@vitric.in',
         'subject_template_name': 'registration/password_reset_subject2.txt',
         'email_template_name': 'registration/password_reset_email2.txt',
         'html_email_template_name': 'registration/password_reset_email2.html',
