@@ -21,12 +21,18 @@ from .service import audit as audit_service
 from .service import application as application_service
 from .service import audit_location as audit_location_service
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.mixins import HasGroupPermission
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, AuditApplication
 from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from . import states
 
 class ClientView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, format=None):
         try:
             client = Client.objects.all()
@@ -42,6 +48,12 @@ class ClientView(APIView):
         return Response(ClientSerializer(savedClient).data)
 
 class ClientIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
+            'DELETE': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, client_id, format=None):
         try:
             client = Client.objects.get(id=client_id)
@@ -64,6 +76,11 @@ class ClientIdView(APIView):
             raise Http404
 
 class CityView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, state, format=None):
         if state in states.states:
             cities = City.objects.filter(state=state)
@@ -71,10 +88,20 @@ class CityView(APIView):
         raise NotFound
 
 class StateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, format=None):
         return Response(states.states)
 
 class LocationView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, format=None):
         try:
             location = Location.objects.all()
@@ -90,6 +117,12 @@ class LocationView(APIView):
         return Response(LocationSerializer(savedLocation).data)
 
 class LocationIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
+            'DELETE': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, location_id, format=None):
         try:
             location = Location.objects.get(id=location_id)
@@ -113,6 +146,11 @@ class LocationIdView(APIView):
             raise Http404
 
 class AuditView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, format=None):
         audit = Audit.objects.all()
         return Response(AuditSerializer(audit, many=True).data)
@@ -125,6 +163,12 @@ class AuditView(APIView):
         return Response(AuditSerializer(savedAudit).data)
 
 class AuditIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
+            'DELETE': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, audit_id, format=None):
         try:
             audit = Audit.objects.get(id=audit_id)
@@ -148,6 +192,11 @@ class AuditIdView(APIView):
             return Http404
 
 class AuditLocationView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, audit_id, format=None):
         try:
             auditLocation = AuditLocation.objects.all()
@@ -163,6 +212,12 @@ class AuditLocationView(APIView):
         return Response(AuditLocationSerializer(saved_auditlocation).data)
 
 class AuditLocationIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
+            'DELETE': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, audit_id, auditlocation_id, format=None):
         try:
             auditLocation = AuditLocation.objects.get(id=auditlocation_id)
@@ -188,6 +243,11 @@ class AuditLocationIdView(APIView):
 
 
 class AuditApplicationView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, audit_id, format=None):
         try:
             applications = application_service.find_by_audit(audit_id)
@@ -196,6 +256,11 @@ class AuditApplicationView(APIView):
             raise NotFound from e
 
 class AuditApplicationIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def get(self, request, application_id, format=None):
         try:
             application = AuditApplication.objects.get(id=application_id)
@@ -205,6 +270,11 @@ class AuditApplicationIdView(APIView):
 
 
 class AuditApplicationAssignView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     class DeSerializer(Serializer):
         audit_date = DateField()
 
@@ -221,6 +291,11 @@ class AuditApplicationAssignView(APIView):
 
 
 class AuditApplicationRejectView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def post(self, request, application_id, format=None):
         try:
             application = application_service.reject(application_id)
@@ -232,6 +307,11 @@ class AuditApplicationRejectView(APIView):
 
 
 class AuditApplicationCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def post(self, request, application_id, format=None):
         try:
             application = application_service.complete(application_id)
@@ -243,6 +323,11 @@ class AuditApplicationCompleteView(APIView):
 
 
 class AuditApplicationFailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
     def post(self, request, application_id, format=None):
         try:
             application = application_service.fail(application_id)

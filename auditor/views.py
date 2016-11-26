@@ -17,6 +17,8 @@ from manager.models import Audit, City
 from manager.serializers import AuditSerializer, CitySerializer
 import manager.service.audit as audit_service
 from manager import states
+from registration.mixins import HasGroupPermission
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
 @login_required
 def dashboard(request):
@@ -49,6 +51,11 @@ def profile(request):
 
 
 class ProfileInfoFormView(View):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     __template = 'auditor/profile_info_form.html'
 
     @method_decorator(login_required)
@@ -75,6 +82,11 @@ class ProfileInfoFormView(View):
         return render(request, self.__template, {'form': form})
 
 class AdditionalInfoFormView(View):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     __template = 'auditor/additional_info_form.html'
 
     @method_decorator(login_required)
@@ -102,6 +114,11 @@ class AdditionalInfoFormView(View):
 
 
 class BankInfoFormView(View):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     __template = 'auditor/bank_info_form.html'
 
     @method_decorator(login_required)
@@ -129,6 +146,11 @@ class BankInfoFormView(View):
 
 
 class ProfileInfoView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, format=None):
         try:
             profile_info = ProfileInfo.objects.get(user_id=request.user.id)
@@ -143,6 +165,11 @@ class ProfileInfoView(APIView):
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class AdditionalInfoView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, format=None):
         try:
             additional_info = AdditionalInfo.objects.get(user_id=request.user.id)
@@ -158,6 +185,11 @@ class AdditionalInfoView(APIView):
 
 
 class BankInfoView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, format=None):
         try:
             bank_info = BankInfo.objects.get(user_id=request.user.id)
@@ -172,16 +204,31 @@ class BankInfoView(APIView):
         return Response(BankInfoSerializer(bank_info).data)
 
 class AvailableAuditsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, format=None):
         available_audits = audit_service.get_available_audits()
         return Response(AuditSerializer(available_audits, many=True).data)
 
 class AuditView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, audit_id, format=None):
         audit = Audit.objects.get(id=audit_id)
         return Response(AuditSerializer(audit).data)
 
 class AuditApplicationsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, audit_id, format=None):
         try:
             applications = audit_service.get_applications(audit_id, ProfileInfo.objects.get(user_id=request.user.id).id)
@@ -190,6 +237,11 @@ class AuditApplicationsView(APIView):
         return Response(AuditApplicationSerializer(applications, many=True).data)
 
 class AuditApplicationView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, audit_id, location_id, format=None):
         try:
             application = audit_service.get_application(audit_id, location_id, ProfileInfo.objects.get(user_id=request.user.id).id)
@@ -199,6 +251,11 @@ class AuditApplicationView(APIView):
 
 
 class AuditApplicationApplyView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def post(self, request, audit_id, location_id, format=None):
         request.data["audit_id"] = audit_id
         request.data["location_id"] = location_id
@@ -222,6 +279,11 @@ class AuditApplicationApplyView(APIView):
                 }) from e
 
 class AuditApplicationCancelView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def post(self, request, audit_id, location_id, format=None):
         data = {}
         data["audit_id"] = audit_id
@@ -246,6 +308,11 @@ class AuditApplicationCancelView(APIView):
 
 
 class CityView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, state, format=None):
         if state in states.states:
             cities = City.objects.filter(state=state)
@@ -253,5 +320,10 @@ class CityView(APIView):
         raise NotFound
 
 class StateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
     def get(self, request, format=None):
         return Response(states.states)
