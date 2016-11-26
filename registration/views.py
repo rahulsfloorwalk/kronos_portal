@@ -18,8 +18,17 @@ class Login(View):
     __manager_url = '/static/manager.html'
 
     def get(self, request):
-        form = AuthenticationForm()
-        return render(request, self.__template, {'form': form})
+        if not request.user.is_authenticated():
+            form = AuthenticationForm()
+            return render(request, self.__template, {'form': form})
+        elif request.user.groups.filter(name=GROUP_NAME_MANAGER).exists():
+            login(request, request.user)
+            print("manager logged in:", request.user)
+            return redirect(self.__manager_url)
+        elif request.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+            login(request, request.user)
+            print("auditor logged in:", request.user)
+            return redirect(self.__auditor_url)
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
@@ -44,6 +53,7 @@ class Login(View):
                     messages.add_message(request, messages.WARNING, 'Your account is in illegal state. Please contact site administrator.')
                     pass
         return render(request, self.__template, {'form': form})
+
 
 class LogoutForm(Form):
     pass
