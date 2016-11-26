@@ -3,6 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { fetchProfileInfoForAuditor, fetchStates } from '../../manager_actions.js'
+import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
 
 import Loading from '../Loading.jsx';
 
@@ -23,10 +24,10 @@ var ProfileInfoPanel = React.createClass({
 				<div className="panel-body">
 					<p>First Name: { this.props.profileInfo.first_name }</p>
 					<p>Last Name: { this.props.profileInfo.last_name }</p>
-					<p>Gender: { this.props.profileInfo.gender }</p>
-					<p>Education: { this.props.profileInfo.education }</p>
+					<p>Gender: { getGender(this.props.profileInfo.gender) }</p>
+					<p>Education: { getEducationStatus(this.props.profileInfo.education) }</p>
 					<p>Date of Birth: { this.props.profileInfo.date_of_birth }</p>
-					<p>Marital Status: { this.props.profileInfo.marital_status }</p>
+					<p>Marital Status: { getMaritalStatus(this.props.profileInfo.marital_status) }</p>
 					<p>Address: { this.props.profileInfo.address }</p>
 					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
 					<p>City: { this.props.profileInfo.city }</p>
