@@ -1,4 +1,6 @@
 from django.conf.urls import url
+from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete
+
 from . import views
 
 urlpatterns = ([
@@ -6,8 +8,29 @@ urlpatterns = ([
     url(r'logout', views.Logout.as_view(), name="logout"),
     url(r'signup$', views.SignUp.as_view(), name="signup"),
     url(r'signup/success$', views.signup_success, name="signup_success"),
-    url(r'forgot_password$', views.ForgotPassword.as_view(), name="forgot_password"),
-    url(r'forgot_password/success$', views.forgot_password_success, name="forgot_password_success"),
-    #url(r'forgot_password/reset$', views.password_reset_confirm, name="password_reset_confirm"),
+
+    url(r'forgot_password$', password_reset, {
+        'template_name': 'registration/forgot_password.html',
+        #'domain_override': 'vitric.in',
+        'from_email': 'support@vitric.in',
+        'subject_template_name': 'registration/password_reset_subject2.txt',
+        'email_template_name': 'registration/password_reset_email2.txt',
+        'html_email_template_name': 'registration/password_reset_email2.html',
+        'post_reset_redirect': 'registration:password_reset_done'
+        }, name="password_reset"),
+
+    url(r'forgot_password/success$', password_reset_done, {
+        'template_name': 'registration/forgot_password_success.html'
+        }, name="password_reset_done"),
+
+    url(r'forgot_password/reset/(?P<uidb64>.+)/(?P<token>.+)$', password_reset_confirm, {
+        'template_name': 'registration/password_reset_confirm2.html',
+        'post_reset_redirect': 'registration:password_reset_complete'
+        }, name="password_reset_confirm"),
+
+    url(r'forgot_password/complete$', password_reset_complete, {
+        'template_name': 'registration/password_reset_complete2.html',
+        },name="password_reset_complete"),
+
     url(r'activate/(?P<key>.+)$', views.activate, name="activate"),
 ], 'registration')
