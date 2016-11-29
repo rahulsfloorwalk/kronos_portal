@@ -11,4 +11,16 @@ var LabelValue = React.createClass({
 	},
 });
 
+var LabelValue_2_10 = React.createClass({
+	render : function(){
+		return (
+			<div className="form-group">
+				<div className="col-xs-2 text-right">{this.props.label}</div>
+				<div className="col-xs-10"><b>{ this.props.value }</b></div>
+			</div>
+		);
+	},
+});
+
+export { LabelValue_2_10 };
 export default LabelValue;

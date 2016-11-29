@@ -10,13 +10,13 @@ var DetailsPage = React.createClass({
 	render: function(){
 		return (
 			<div className="row">
-				<div className="col-md-4">
+				<div className="col-md-6">
 					<ProfileInfoPanel/>
 				</div>
-				<div className="col-md-4">
+				<div className="col-md-6">
 					<BankInfoPanel/>
 				</div>
-				<div className="col-md-4">
+				<div className="col-md-6">
 					<AdditionalInfoPanel/>
 				</div>
 				{this.props.children}

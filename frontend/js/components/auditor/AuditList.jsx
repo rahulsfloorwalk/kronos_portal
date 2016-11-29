@@ -4,29 +4,35 @@ import { Link } from 'react-router';
 
 import { fetchAudits } from '../../auditor_actions.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
+import { LabelValue_2_10 } from '../LabelValue.jsx';
 
 var AuditRow = React.createClass({
 	render: function(){
 		var linkTo = `/audit/${this.props.audit.id}`;
-		var cities = [];
+		var cities = "";
 		for(var c of this.props.audit.cities){
-			cities.push(<li key={c.id}>{c.name}</li>);
+			cities += c.name + ", ";
 		}
 		return (
-			<tr>
-				<td>{this.props.audit.client.name}</td>
-				<td>{getAuditType(this.props.audit.type)}</td>
-				<td>{getAuditStatus(this.props.audit.status)}</td>
-				<td>
-					<ul>{cities}</ul>
-				</td>
-				<td>{this.props.audit.start_date}</td>
-				<td>{this.props.audit.end_date}</td>
-				<td>{this.props.audit.audit_count}</td>
-				<td>
-					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
-				</td>
-			</tr>
+			<div className="col-sm-6 col-md-4">
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h4 className="panel-title">{this.props.audit.client.name}</h4>
+					</div>
+					<div className="panel-body">
+						<div className="form-horizontal">
+							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.audit.type)}/>
+							<LabelValue_2_10 label="Status:" value={getAuditStatus(this.props.audit.status)}/>
+							<LabelValue_2_10 label="Cities:" value={cities}/>
+							<LabelValue_2_10 label="Dates:" value={this.props.audit.start_date + " to " + this.props.audit.end_date}/>
+							<LabelValue_2_10 label="No:" value={this.props.audit.audit_count}/>
+						</div>
+						<p>
+							<Link to={linkTo} className="btn btn-default pull-right">View</Link>
+						</p>
+					</div>
+				</div>
+			</div>
 		);
 	},
 });
@@ -45,22 +51,9 @@ var AuditList = React.createClass({
 				<h2 className="page-header">
 					Available Audits
 				</h2>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>Client Name</th>
-							<th>Audit Type</th>
-							<th>Audit Status</th>
-							<th>Cities</th>
-							<th>Start Date</th>
-							<th>End Date</th>
-							<th>Count</th>
-						</tr>
-					</thead>
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
+				<div className="row">
+					{rows}
+				</div>
 				{this.props.children}
 			</div>
 		);
