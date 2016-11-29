@@ -3,11 +3,16 @@ import { Link } from 'react-router';
 
 var Header = React.createClass({
 	render: function(){
+		let brandStyle = {
+			height: "25px"
+		};
 		return (
 			<nav className="navbar navbar-default navbar-static-top">
 				<div className="container">
 					<div className="navbar-header">
-						<Link className="navbar-brand" to="/">Floor Walk</Link>
+						<Link className="navbar-brand" to="/">
+							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
+						</Link>
 					</div>
 					<ul className="nav navbar-nav">
 						<li><Link to="/audit" activeClassName="active">Audits</Link></li>

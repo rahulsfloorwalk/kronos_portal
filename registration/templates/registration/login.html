@@ -1,12 +1,18 @@
 {% extends "registration/base.html" %}
 {% load widget_tweaks %}
 {% block content %}
-<h1 class="page-header">Floor Walk</h1>
+<h1 class="page-header">
+	<div class="row">
+		<div class="col-md-5">
+			<img class="img-responsive" src="/static/img/logo_3_500x100.png"/>
+		</div>
+	</div>
+</h1>
 <div class="row">
 	<div class="col-md-5">
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<h3 class="panel-title">Login</h3>
+				<h3 class="panel-title">Login to your existing FloorWalk account</h3>
 			</div>
 			<div class="panel-body">
 				{% if messages %}
@@ -45,14 +51,16 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-5">
-		<!--<div class="panel panel-default">
-		<div class="panel-body">-->
-			<h2>Don't have an account?</h2>
-			<p>It's a fast and free process. Click the button below to sign up.</p>
-			<a class="btn btn-lg btn-success" href="signup">Sign Up</a>
-			<!--</div>
-		</div>-->
+	<div class="col-md-7">
+		<h2>Don't have an account? Sign up right now!</h2>
+		<p>A FloorWalk account will:</p>
+		<ul>
+			<li>Inform you about new and upcoming audits</li>
+			<li>Help you to keep track of your applications</li>
+			<li>Help you keep track of your audits</li>
+		</ul>
+		<p>It's a fast and free process. Click the button below to sign up.</p>
+		<a class="btn btn-lg btn-success" href="signup">Sign Up</a>
 	</div>
 </div>
 {% endblock %}

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>{% block title %}{% endblock %} Floor Walk</title>
+		<title>{% block title %}{% endblock %} FloorWalk</title>
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" 
 			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" 
@@ -10,8 +10,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 	</head>
 	<body class="container">
+		<div style="min-height:700px;">
 		{% block content %}
 		{% endblock %}
+		</div>
 		{% include "nav/footer.html" %}
 	</body>
 </html>
