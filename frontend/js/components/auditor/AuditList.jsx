@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAudits } from '../../auditor_actions.js'
+import { fetchAudits, fetchProfileInfo } from '../../auditor_actions.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
 
@@ -40,8 +40,12 @@ var AuditRow = React.createClass({
 var AuditList = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchAudits());
+		this.props.dispatch(fetchProfileInfo());
 	},
 	render: function(){
+		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
+			return (<h2>Please complete your personal info to view available audits.</h2>);
+		}
 		var rows = [];
 		for(var id in this.props.audits) {
 			rows.push(<AuditRow audit={this.props.audits[id]} key={id}/>);
@@ -62,6 +66,7 @@ var AuditList = React.createClass({
 
 var mapStoreToProps = function(store){
 	return {
+		profileInfo: store.profileInfo,
 		audits: store.audits
 	};
 };

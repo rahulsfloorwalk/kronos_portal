@@ -49,7 +49,7 @@ class ProfileInfo(Model):
 	FIFTEEN_PLUS = 5
 	INCOME = (
 		(NOT_ANSWERED, "not answered"),
-		(ONE, "less than 1		 lpa"),
+		(ONE, "less than 1 lpa"),
 		(ONE_THREE, "1 to 3 lpa"),
 		(THREE_EIGHT, "3 to 8 lpa"),
 		(EIGHT_FIFTEEN, "8 to 15 lpa"),
@@ -71,6 +71,23 @@ class ProfileInfo(Model):
 	state = CharField(db_column='state', max_length=5, blank=True, choices=states.get_django_choices())
 
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+
+	def is_complete(self):
+		complete = True
+		if self.first_name in [None, ""]: complete = False
+		if self.last_name in [None, ""]: complete = False
+		if self.gender in [None, ""]: complete = False
+		if self.marital_status in [None, ""]: complete = False
+		if self.education in [None, ""]: complete = False
+		#if self.household_income in [None, ""]: complete = False
+		if self.mobile_number in [None, ""]: complete = False
+		if self.date_of_birth is None: complete = False
+		if self.address in [None, ""]: complete = False
+		if self.pincode in [None, ""]: complete = False
+		if self.city in [None, ""]: complete = False
+		if self.state in [None, ""]: complete = False
+
+		return complete
 
 	def __str__(self):
 		return "Profile: {} {}".format(self.first_name, self.last_name)

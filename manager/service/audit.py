@@ -2,13 +2,18 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication
 from rest_framework.exceptions import ValidationError
 from ..models import Audit, AuditLocation
+from django.contrib.auth.models import User
 
 def save(audit):
     audit.save()
     return audit
 
-def get_available_audits():
-    return Audit.objects.filter(status__in=[Audit.UPCOMING, Audit.ACTIVE])
+def get_available_audits(user_id):
+    user = User.objects.get(pk=user_id)
+    if user.profileinfo.is_complete():
+        return Audit.objects.filter(status__in=[Audit.UPCOMING, Audit.ACTIVE])
+    else:
+        raise AppLogicError("please complete your personal information to view audits")
 
 def get_applications( audit_id, profileinfo_id):
     try:

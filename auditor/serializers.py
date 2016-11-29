@@ -25,7 +25,8 @@ class ProfileInfoSerializer(ModelSerializer):
             'pincode', 
             'city', 
             'state',
-            'user_id'
+            'user_id',
+            'is_complete'
         )
         read_only_fields = ('id', 'user_id')
 

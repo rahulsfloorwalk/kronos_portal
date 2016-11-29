@@ -85,8 +85,13 @@ class AvailableAuditsView(APIView):
             'POST': [GROUP_NAME_AUDITOR]
         }
     def get(self, request, format=None):
-        available_audits = audit_service.get_available_audits()
-        return Response(AuditSerializer(available_audits, many=True).data)
+        try:
+            available_audits = audit_service.get_available_audits(user_id=request.user.id)
+            return Response(AuditSerializer(available_audits, many=True).data)
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
 class AuditView(APIView):
     permission_classes = [HasGroupPermission]
