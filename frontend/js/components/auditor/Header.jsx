@@ -15,9 +15,8 @@ var Header = React.createClass({
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">
-						<li><Link to="/" activeClassName="active">Dashboard</Link></li>
-						<li><Link to="/audit" activeClassName="active">Audits</Link></li>
 						<li><Link to="/details" activeClassName="active">My Profile</Link></li>
+						<li><Link to="/audit" activeClassName="active">Audits</Link></li>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

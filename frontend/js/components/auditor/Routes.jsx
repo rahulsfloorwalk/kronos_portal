@@ -19,7 +19,7 @@ const Routes = ({store}) => (
   <Provider store={store}>
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
-		<IndexRoute component={Dashboard} />
+		<IndexRoute component={DetailsPage}/>
 		<Route path="details" component={DetailsPage}>
 			<Route path="profile/edit" component={ProfileInfoForm}/>
 			<Route path="bank/edit" component={BankInfoForm}/>
