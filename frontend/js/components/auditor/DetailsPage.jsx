@@ -9,10 +9,16 @@ import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
 var DetailsPage = React.createClass({
 	render: function(){
 		return (
-			<div>
-				<ProfileInfoPanel/>
-				<BankInfoPanel/>
-				<AdditionalInfoPanel/>
+			<div className="row">
+				<div className="col-md-4">
+					<ProfileInfoPanel/>
+				</div>
+				<div className="col-md-4">
+					<BankInfoPanel/>
+				</div>
+				<div className="col-md-4">
+					<AdditionalInfoPanel/>
+				</div>
 				{this.props.children}
 			</div>
 		);

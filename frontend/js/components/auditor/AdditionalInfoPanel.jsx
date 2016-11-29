@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { getHairColor, getCameraResolution } from '../../utils.js'
 import { fetchAdditionalInfo } from '../../auditor_actions.js'
 import { Check, Cross } from '../Icons.jsx';
+import LabelValue from '../LabelValue.jsx';
 
 var AdditionalInfoPanelBase = React.createClass({
 	componentDidMount: function() {
@@ -23,18 +24,20 @@ var AdditionalInfoPanelBase = React.createClass({
 				<div className="panel-heading">
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
-				<div className="panel-body">
-					<Link to="details/additional/edit" className="btn btn-default pull-right">EDIT</Link>
-					<p>Has Car: { has_car }</p>
-					<p>Weekend Audit: { weekend_audit }</p>
-					<p>Hair Color: { getHairColor(this.props.additionalInfo.hair_color) }</p>
-					<p>Height (cm): { this.props.additionalInfo.height }</p>
-					<p>Weight (kg): { this.props.additionalInfo.weight }</p>
-					<p>Preferred Distance (km): { this.props.additionalInfo.distance }</p>
-					<p>Camera Owned: { camera_owned }</p>
-					<p>Camera Resolution: { getCameraResolution(this.props.additionalInfo.camera_resoulution) }</p>
-					<p>Laptop Owned: { laptop_owned }</p>
-					<p>Smart Phone Owned: { smart_phone_owned }</p>
+				<div className="panel-body form-horizontal">
+					<LabelValue label="Has Car:" value={ has_car }/>
+					<LabelValue label="Weekend Audit:" value={ weekend_audit }/>
+					<LabelValue label="Hair Color:" value={ getHairColor(this.props.additionalInfo.hair_color) }/>
+					<LabelValue label="Height (cm):" value={ this.props.additionalInfo.height }/>
+					<LabelValue label="Weight (kg):" value={ this.props.additionalInfo.weight }/>
+					<LabelValue label="Preferred Distance (km):" value={ this.props.additionalInfo.distance }/>
+					<LabelValue label="Camera Owned:" value={ camera_owned }/>
+					<LabelValue label="Camera Resolution:" value={ getCameraResolution(this.props.additionalInfo.camera_resoulution) }/>
+					<LabelValue label="Laptop Owned:" value={ laptop_owned }/>
+					<LabelValue label="Smart Phone Owned:" value={ smart_phone_owned }/>
+				</div>
+				<div className="panel-footer text-right">
+					<Link to="details/additional/edit" className="btn btn-default">EDIT</Link>
 				</div>
 			</div>
 		);

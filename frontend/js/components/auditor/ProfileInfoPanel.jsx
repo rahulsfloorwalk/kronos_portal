@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchProfileInfo, fetchStates } from '../../auditor_actions.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
+import LabelValue from '../LabelValue.jsx';
 
 var ProfileInfoPanelBase = React.createClass({
 	componentDidMount: function() {
@@ -14,21 +15,23 @@ var ProfileInfoPanelBase = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h3 className="panel-title">Profile Info</h3>
+					<h3 className="panel-title">Personal Info</h3>
 				</div>
-				<div className="panel-body">
-					<Link to="details/profile/edit" className="btn btn-default pull-right">EDIT</Link>
-					<p>First Name: { this.props.profileInfo.first_name }</p>
-					<p>Last Name: { this.props.profileInfo.last_name }</p>
-					<p>Gender: { getGender(this.props.profileInfo.gender) }</p>
-					<p>Education: { getEducationStatus(this.props.profileInfo.education) }</p>
-					<p>Date of Birth: { this.props.profileInfo.date_of_birth }</p>
-					<p>Marital Status: { getMaritalStatus(this.props.profileInfo.marital_status) }</p>
-					<p>Address: { this.props.profileInfo.address }</p>
-					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
-					<p>City: { this.props.profileInfo.city }</p>
-					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
-					<p>Pincode: { this.props.profileInfo.pincode }</p>
+				<div className="panel-body form-horizontal">
+					<LabelValue label="First Name:" value={this.props.profileInfo.first_name}/>
+					<LabelValue label="Last Name:" value={this.props.profileInfo.last_name}/>
+					<LabelValue label="Gender:" value={getGender(this.props.profileInfo.gender)}/>
+					<LabelValue label="Education:" value={getEducationStatus(this.props.profileInfo.education)}/>
+					<LabelValue label="Date of Birth:" value={this.props.profileInfo.date_of_birth}/>
+					<LabelValue label="Marital Status:" value={getMaritalStatus(this.props.profileInfo.marital_status)}/>
+					<LabelValue label="Address:" value={this.props.profileInfo.address}/>
+					<LabelValue label="Mobile Number:" value={this.props.profileInfo.mobile_number}/>
+					<LabelValue label="City:" value={this.props.profileInfo.city}/>
+					<LabelValue label="State:" value={this.props.profileInfo.state}/>
+					<LabelValue label="Pincode:" value={this.props.profileInfo.pincode}/>
+				</div>
+				<div className="panel-footer text-right">
+					<Link to="details/profile/edit" className="btn btn-default">EDIT</Link>
 				</div>
 			</div>
 		);
