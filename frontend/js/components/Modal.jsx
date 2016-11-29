@@ -3,7 +3,8 @@ import React from 'react';
 var Modal = React.createClass({
 	render : function(){
 		var modalStyle = {
-			display: 'block'
+			display: 'block',
+			overflow: 'scroll'
 		};
 		var modalBackdropStyle = {
 			zIndex: '1060',
