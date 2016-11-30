@@ -49,7 +49,7 @@ class ProfileInfo(Model):
 	FIFTEEN_PLUS = 5
 	INCOME = (
 		(NOT_ANSWERED, "not answered"),
-		(ONE, "less than 1 lpa"),
+		(ONE, "less than 1		 lpa"),
 		(ONE_THREE, "1 to 3 lpa"),
 		(THREE_EIGHT, "3 to 8 lpa"),
 		(EIGHT_FIFTEEN, "8 to 15 lpa"),
