@@ -1,4 +1,5 @@
 from django import forms
+from django.urls import reverse
 from django.contrib.auth.models import User,Group
 from django.core.validators import validate_email
 from registration.models import Verification
@@ -9,6 +10,9 @@ from django.core.mail import send_mail
 import hashlib, datetime
 import properties
 from os import urandom
+from django.template import Context
+from django.template.loader import render_to_string, get_template
+from django.core.mail import EmailMessage
 
 import strings
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
@@ -52,27 +56,26 @@ class SignUpForm(UserCreationForm):
         salt_hash_hexstr = hashlib.sha1(urandom(16)).hexdigest()
         email_hash_hexstr = hashlib.sha1(auth_data["email"].encode('utf-8')).hexdigest()
         cat_str = salt_hash_hexstr + email_hash_hexstr
-        auth_data['activation_key'] = hashlib.sha1(cat_str.encode('utf-8')).hexdigest()
-        
-        auth_data['expiry'] = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=2), "%Y-%m-%d %H:%M:%S")
-        auth_data['email_path'] = "registration/password_reset_email.html"
-        auth_data['email_subject'] = "registration/password_reset_subject.txt"
+        activation_key = hashlib.sha1(cat_str.encode('utf-8')).hexdigest()
 
         verification = Verification()
         verification.user = user
-        verification.activation_key = auth_data['activation_key']
-        verification.key_expires = auth_data['expiry']
+        verification.activation_key = activation_key
+        verification.key_expires = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=2), "%Y-%m-%d %H:%M:%S")
         verification.save()
 
-        self.sendEmail(auth_data, profile_info)
+        message = get_template('registration/verification_mail.html').render(Context({
+            'protocol': 'http',
+            'key': activation_key,
+            'email': user.email,
+            'mydomain': properties.MY_DOMAIN
+        }))
+
+        msg = EmailMessage( strings.SIGN_UP_SUBJECT, message, to=(user.email,))
+        msg.content_subtype = 'html'
+        msg.send()
+
         return user
 
-    def sendEmail(self, auth_data, profileinfo):
-        link = properties.ACTIVATION_LINK_ADDRESS + auth_data['activation_key']
-
-        subject = strings.SIGN_UP_SUBJECT
-        content = strings.VERIFICATION_EMAIL.format(link)
-
-        send_mail(subject, content, properties.ACTIVATION_LINK_SENDER, [auth_data['email']], fail_silently=False)
 
 

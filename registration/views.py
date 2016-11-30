@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
+from django.db.transaction import atomic
 from auditor.models import ProfileInfo
 from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from .forms import SignUpForm
@@ -78,9 +79,12 @@ class Logout(View):
 
 class SignUp(View):
     __template = 'registration/signup.html'
+
     def get(self, request):
         form = SignUpForm()
         return render(request, self.__template, {'form': form})
+
+    @atomic
     def post(self, request):
         form = SignUpForm(request.POST)
         if form.is_valid():
@@ -92,6 +96,7 @@ class SignUp(View):
 def signup_success(request):
     return render(request, 'registration/signup_success.html')
 
+@atomic
 def activate(request, key):
     verification = get_object_or_404(Verification, activation_key=key)
     if verification is not None:
@@ -99,7 +104,7 @@ def activate(request, key):
             verification.is_verified = True
             verification.save()
             user = verification.user
-            login(request, user)
+            user.is_active = True
+            user.save()
             messages.add_message(request, messages.SUCCESS, 'Your email has been verified. Please login to continue.')
-            redirect('auditor:dashboard')
     return redirect('registration:login')
