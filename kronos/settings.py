@@ -164,4 +164,6 @@ EMAIL_HOST = properties.email_settings["EMAIL_HOST"]
 EMAIL_PORT = properties.email_settings["EMAIL_PORT"]
 EMAIL_HOST_USER = properties.email_settings["EMAIL_HOST_USER"]
 EMAIL_HOST_PASSWORD = properties.email_settings["EMAIL_HOST_PASSWORD"]
+DEFAULT_FROM_EMAIL = properties.email_settings["DEFAULT_FROM_EMAIL"]
+SERVER_EMAIL = properties.email_settings["SERVER_EMAIL"]
 EMAIL_USE_TLS = True
