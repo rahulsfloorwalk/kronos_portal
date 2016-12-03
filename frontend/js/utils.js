@@ -19,6 +19,7 @@ export function getAuditType(value){
 			return "Competition";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown audit type ${value} - ${typeof value}`;
@@ -38,6 +39,7 @@ export function getAuditStatus(value){
 			return "Archived";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown status type ${value} - ${typeof value}`;
@@ -52,6 +54,7 @@ export function getGender(value){
 			return "female";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown gender ${value} - ${typeof value}`;
@@ -72,6 +75,7 @@ export function getEducationStatus(value){
 			return "Post Graduate and Above";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown education status ${value} - ${typeof value}`;
@@ -90,6 +94,7 @@ export function getMaritalStatus(value){
 			return "Widowed";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown marital status ${value} - ${typeof value}`;
@@ -112,6 +117,7 @@ export function getAuditApplicationStatus(value){
 			return "Failed";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown status type ${value} - ${typeof value}`;
@@ -146,6 +152,7 @@ export function getHairColor(value){
 			return "Other";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown hair color type ${value} - ${typeof value}`;
@@ -174,6 +181,7 @@ export function getCameraResolution(value){
 			return "No Camera";
 		case "":
 		case null:
+		case undefined:
 			return "";
 		default:
 			return `unknown camera resolution ${value} - ${typeof value}`;
