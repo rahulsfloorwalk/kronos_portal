@@ -136,6 +136,7 @@ class AuditSerializer(ModelSerializer):
             'status',
             'start_date',
             'end_date',
+            'earnings_per_audit',
             'description',
             'client',
             'auditlocations',
@@ -153,6 +154,7 @@ class AuditDeSerializer(ModelSerializer):
             'status',
             'start_date',
             'end_date',
+            'earnings_per_audit',
             'description',
             'client',
         )
@@ -167,6 +169,7 @@ class AuditDeSerializer(ModelSerializer):
         audit.status = self.validated_data.get('status', audit.status)
         audit.start_date = self.validated_data.get('start_date', audit.start_date)
         audit.end_date = self.validated_data.get('end_date', audit.end_date)
+        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
         audit.description = self.validated_data.get('description', audit.description)
         audit.client = self.validated_data.get('client', audit.client_id)
         return audit

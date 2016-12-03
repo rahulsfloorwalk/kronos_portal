@@ -101,6 +101,7 @@ var AuditForm = React.createClass({
 							</FormSelect>
 						</div>
 					</div>
+					<FormInput label="Earnings Per Audit (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.fieldChanged} errors={this.props.errors.earnings_per_audit}/>
 					<FormTextarea label="Description" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>
 					<SaveButton/>
 				</form>

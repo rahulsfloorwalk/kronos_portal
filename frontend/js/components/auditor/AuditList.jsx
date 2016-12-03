@@ -23,6 +23,7 @@ var AuditRow = React.createClass({
 						<div className="form-horizontal">
 							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.audit.type)}/>
 							<LabelValue_2_10 label="Status:" value={getAuditStatus(this.props.audit.status)}/>
+							<LabelValue_2_10 label="Earning:" value={"₹ " + this.props.audit.earnings_per_audit + " per audit"}/>
 							<LabelValue_2_10 label="Cities:" value={cities}/>
 							<LabelValue_2_10 label="Dates:" value={this.props.audit.start_date + " to " + this.props.audit.end_date}/>
 							<LabelValue_2_10 label="No:" value={this.props.audit.audit_count}/>

@@ -66,6 +66,7 @@ class Audit(Model):
     status = IntegerField(db_column='status', choices=STATUS, blank=False)
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
+    earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=False)
     description = CharField(db_column='description', max_length=200, blank=False)
     client = ForeignKey(Client, related_name='audits', db_column='client_id', on_delete=CASCADE)
 

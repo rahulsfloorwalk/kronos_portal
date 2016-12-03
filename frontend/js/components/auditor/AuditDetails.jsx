@@ -85,6 +85,10 @@ var AuditDetails = React.createClass({
 										<td>{ getAuditStatus(this.props.audit.status) }</td>
 									</tr>
 									<tr>
+										<th>Earnings: </th>
+										<td>₹ { this.props.audit.earnings_per_audit } per audit</td>
+									</tr>
+									<tr>
 										<th>Start Date:</th> 
 										<td>{ this.props.audit.start_date }</td>
 									</tr>

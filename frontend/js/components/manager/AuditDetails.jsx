@@ -101,6 +101,7 @@ var AuditDetails = React.createClass({
 					<Link to={linkTo} className="btn btn-default pull-right">Edit</Link>
 					<p>Type: { getAuditType(this.props.audit.type) }</p>
 					<p>Status: { getAuditStatus(this.props.audit.status) }</p>
+					<p>Earnings Per Audit: ₹ { this.props.audit.earnings_per_audit }</p>
 					<p>Start Date: { this.props.audit.start_date }</p>
 					<p>End Date: { this.props.audit.end_date }</p>
 					<p>Total Audits: { this.props.audit.audit_count }</p>
