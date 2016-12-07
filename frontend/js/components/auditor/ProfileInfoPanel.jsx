@@ -12,10 +12,13 @@ var ProfileInfoPanelBase = React.createClass({
 		this.props.dispatch(fetchStates());
 	},
 	render: function(){
+		if( ! this.props.profileInfo.is_complete){
+			var completeWarning = (<p className="text-danger pull-left">Please complete your personal information.</p>);
+		}
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h3 className="panel-title">Personal Info</h3>
+					<h3 className="panel-title">Personal Information</h3>
 				</div>
 				<div className="panel-body form-horizontal">
 					<LabelValue label="First Name:" value={this.props.profileInfo.first_name}/>
@@ -31,6 +34,7 @@ var ProfileInfoPanelBase = React.createClass({
 					<LabelValue label="Pincode:" value={this.props.profileInfo.pincode}/>
 				</div>
 				<div className="panel-footer text-right">
+					{completeWarning}
 					<Link to="details/profile/edit" className="btn btn-default">EDIT</Link>
 				</div>
 			</div>

@@ -47,7 +47,7 @@ var AuditList = React.createClass({
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
 			return (
 				<div className="jumbotron text-center">
-					<h2>Please complete your personal info to view available audits.</h2>
+					<h2>Please complete your personal information</h2>
 					<p>We're sorry, but we need to know more about you to assign audits to you.</p>
 				</div>
 			);

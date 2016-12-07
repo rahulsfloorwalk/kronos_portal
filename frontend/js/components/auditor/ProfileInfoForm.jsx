@@ -108,7 +108,7 @@ var ProfileInfoForm = React.createClass({
 	},
 	render : function(){
 		return (
-			<Modal modalTitle="Edit Profile Info" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Edit Personal Information" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<div className="row">
 						<div className="col-md-6">
