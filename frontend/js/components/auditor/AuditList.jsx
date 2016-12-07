@@ -71,7 +71,7 @@ var AuditList = React.createClass({
 		} else {
 			return (
 				<div className="jumbotron text-center">
-					<h2>There are no audits available right now.</h2>
+					<h2>There are no audits available in your location right now.</h2>
 					<h3>Thanks for checking in :)</h3>
 					<p>We will keep you informed when new audits are available.</p>
 				</div>
