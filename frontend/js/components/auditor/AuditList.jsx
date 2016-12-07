@@ -45,12 +45,18 @@ var AuditList = React.createClass({
 	},
 	render: function(){
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
-			return (<h2>Please complete your personal info to view available audits.</h2>);
+			return (
+				<div className="jumbotron text-center">
+					<h2>Please complete your personal info to view available audits.</h2>
+					<p>We're sorry, but we need to know more about you to assign audits to you.</p>
+				</div>
+			);
 		}
 		var rows = [];
 		for(var id in this.props.audits) {
 			rows.push(<AuditRow audit={this.props.audits[id]} key={id}/>);
 		}
+		if(rows.length > 0){
 		return (
 			<div>
 				<h2 className="page-header">
@@ -62,6 +68,15 @@ var AuditList = React.createClass({
 				{this.props.children}
 			</div>
 		);
+		} else {
+			return (
+				<div className="jumbotron text-center">
+					<h2>There are no audits available right now.</h2>
+					<h3>Thanks for checking in :)</h3>
+					<p>We will keep you informed when new audits are available.</p>
+				</div>
+			);
+		}
 	},
 });
 
