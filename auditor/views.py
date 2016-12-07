@@ -86,9 +86,9 @@ class AvailableAuditsView(APIView):
         }
     def get(self, request, format=None):
         try:
-            available_audits = audit_service.get_available_audits(user_id=request.user.id)
+            available_audits = audit_service.get_available_audits(request.user.profileinfo.id)
             return Response(AuditSerializer(available_audits, many=True).data)
-        except AppLogicError as e:
+        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
@@ -111,10 +111,14 @@ class AuditApplicationsView(APIView):
         }
     def get(self, request, audit_id, format=None):
         try:
-            applications = audit_service.get_applications(audit_id, ProfileInfo.objects.get(user_id=request.user.id).id)
+            applications = audit_service.get_applications(audit_id, request.user.profileinfo.id)
+            return Response(AuditApplicationSerializer(applications, many=True).data)
         except ObjectNotFound as e:
             raise NotFound()
-        return Response(AuditApplicationSerializer(applications, many=True).data)
+        except ProfileInfo.DoesNotExist as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
 class AuditApplicationView(APIView):
     permission_classes = [HasGroupPermission]
@@ -124,11 +128,14 @@ class AuditApplicationView(APIView):
         }
     def get(self, request, audit_id, location_id, format=None):
         try:
-            application = audit_service.get_application(audit_id, location_id, ProfileInfo.objects.get(user_id=request.user.id).id)
+            application = audit_service.get_application(audit_id, location_id, request.user.profileinfo.id)
+            return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound as e:
             raise NotFound()
-        return Response(AuditApplicationSerializer(application).data)
-
+        except ProfileInfo.DoesNotExist as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
 class AuditApplicationApplyView(APIView):
     permission_classes = [HasGroupPermission]
@@ -137,13 +144,14 @@ class AuditApplicationApplyView(APIView):
             'POST': [GROUP_NAME_AUDITOR]
         }
     def post(self, request, audit_id, location_id, format=None):
-        request.data["audit_id"] = audit_id
-        request.data["location_id"] = location_id
-        request.data["profileinfo_id"] = ProfileInfo.objects.get(user_id=request.user.id).id
-
-        application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
-        application_apply_ds.is_valid(raise_exception=True)
         try:
+            request.data["audit_id"] = audit_id
+            request.data["location_id"] = location_id
+            request.data["profileinfo_id"] = request.user.profileinfo.id
+
+            application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
+            application_apply_ds.is_valid(raise_exception=True)
+
             application = audit_service.apply(
                     application_apply_ds.data["audit_id"], 
                     application_apply_ds.data["location_id"], 
@@ -153,7 +161,7 @@ class AuditApplicationApplyView(APIView):
             return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound as e:
             raise NotFound from e
-        except AppLogicError as e:
+        except (AppLogicError, ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
                 }) from e
@@ -165,14 +173,15 @@ class AuditApplicationCancelView(APIView):
             'POST': [GROUP_NAME_AUDITOR]
         }
     def post(self, request, audit_id, location_id, format=None):
-        data = {}
-        data["audit_id"] = audit_id
-        data["location_id"] = location_id
-        data["profileinfo_id"] = ProfileInfo.objects.get(user_id=request.user.id).id
-
-        application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
-        application_cancel_ds.is_valid(raise_exception=True)
         try:
+            data = {}
+            data["audit_id"] = audit_id
+            data["location_id"] = location_id
+            data["profileinfo_id"] = request.user.profileinfo.id
+
+            application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
+            application_cancel_ds.is_valid(raise_exception=True)
+
             application = audit_service.cancel(
                     application_cancel_ds.data["audit_id"], 
                     application_cancel_ds.data["location_id"], 
@@ -181,7 +190,7 @@ class AuditApplicationCancelView(APIView):
             return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound as e:
             raise NotFound from e
-        except AppLogicError as e:
+        except (AppLogicError, ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
                 }) from e

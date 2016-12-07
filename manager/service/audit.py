@@ -8,9 +8,9 @@ def save(audit):
     audit.save()
     return audit
 
-def get_available_audits(user_id):
-    user = User.objects.get(pk=user_id)
-    if user.profileinfo.is_complete():
+def get_available_audits(profileinfo_id):
+    profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
+    if profileinfo.is_complete():
         return Audit.objects.filter(status__in=[Audit.UPCOMING, Audit.ACTIVE])
     else:
         raise AppLogicError("please complete your personal information to view audits")
