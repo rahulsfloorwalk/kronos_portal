@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { url } from '../../../config'
+import { url } from '../../../config.js'
 import types from '../action_types.js';
 
 export function searchAuditors(search){

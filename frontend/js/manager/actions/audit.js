@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import { url } from '../config'
-import types from './manager/action_types.js';
+import { url } from '../../../config.js'
+import types from '../action_types.js';
 
 export function fetchAudits(){
 	return function(dispatch){

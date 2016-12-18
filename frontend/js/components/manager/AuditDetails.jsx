@@ -2,7 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAudit, fetchApplications } from '../../manager_actions.js';
+import { fetchAudit } from '../../manager/actions/audit.js';
+import { fetchApplications } from '../../manager/actions/application.js';
 
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
