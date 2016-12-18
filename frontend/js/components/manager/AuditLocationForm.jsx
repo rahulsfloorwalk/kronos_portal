@@ -3,8 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchCities, fetchLocations } from '../../manager_actions.js';
-import { fetchLocationsByCity, loadAuditLocationAddForm, loadAuditLocationEditForm, saveAuditLocationAddForm, saveAuditLocationEditForm } from '../../manager_actions.js';
+import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js';
+import { fetchLocationsByCity, loadAuditLocationAddForm, loadAuditLocationEditForm, saveAuditLocationAddForm, saveAuditLocationEditForm } from '../../manager/actions/audit.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormInput from '../FormInput.jsx';

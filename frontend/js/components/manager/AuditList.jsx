@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAudits } from '../../manager_actions.js'
+import { fetchAudits } from '../../manager/actions/audit.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
 
 var AuditRow = React.createClass({
