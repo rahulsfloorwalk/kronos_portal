@@ -11,6 +11,9 @@ import ClientForm from './ClientForm.jsx';
 import AuditorList from './AuditorList.jsx';
 import AuditorDetailsPage from './AuditorDetailsPage.jsx';
 
+import StateList from './StateList.jsx';
+import CityList from './CityList.jsx';
+
 import LocationList from './LocationList.jsx';
 import LocationForm from './LocationForm.jsx';
 
@@ -37,7 +40,9 @@ const Routes = () => (
 		<Route path="auditor" component={AuditorList}/>
 		<Route path="auditor/:auditorId" component={AuditorDetailsPage}/>
 
-		<Route path="location" component={LocationList}>
+		<Route path="state" component={StateList}/>
+		<Route path="state/:stateId/city" component={CityList}/>
+		<Route path="state/:stateId/city/:cityId/location" component={LocationList}>
 			<Route path="add" component={LocationForm}/>
 			<Route path=":locationId/edit" component={LocationForm}/>
 		</Route>

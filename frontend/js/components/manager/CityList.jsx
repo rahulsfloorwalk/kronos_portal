@@ -1,0 +1,46 @@
+import React from 'react';
+import * as ReactRedux from 'react-redux';
+import { Link } from 'react-router';
+
+import { fetchStates, fetchCities } from '../../manager_actions.js'
+
+var CityList = React.createClass({
+	componentDidMount: function() {
+		this.props.dispatch(fetchStates());
+		this.props.dispatch(fetchCities(this.props.params.stateId));
+	},
+	render: function(){
+		var rows = [];
+		for(var cityId in this.props.cities) {
+			var linkTo = `/state/${this.props.params.stateId}/city/${cityId}/location`;
+			rows.push(
+				<div key={cityId} className="col-md-3">
+					<div className="panel panel-default">
+						<div className="panel-body">
+							<h4>{this.props.cities[cityId].name}</h4>
+							<Link to={linkTo} className="btn btn-default">View</Link>
+						</div>
+					</div>
+				</div>
+			);
+		}
+		return (
+			<div>
+				<h2 className="page-header">
+					<Link to="/state">States</Link> / <b>{ this.props.stateName }</b> / City List
+				</h2>
+				{rows}
+				{this.props.children}
+			</div>
+		);
+	},
+});
+
+var mapStoreToProps = function(store, ownProps){
+	return {
+		cities: store.cities,
+		stateName: store.states[ownProps.params.stateId]
+	};
+};
+
+export default ReactRedux.connect(mapStoreToProps)(CityList);

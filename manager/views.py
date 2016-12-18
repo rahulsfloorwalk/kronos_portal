@@ -104,10 +104,11 @@ class LocationView(APIView):
         }
     def get(self, request, format=None):
         try:
-            location = Location.objects.all()
+            city_id = request.GET['city_id']
+            location = Location.objects.filter(city_id=city_id)
             return Response(LocationSerializer(location, many=True).data)
-        except Location.DoesNotExist:
-            return Http404
+        except KeyError:
+            raise ValidationError(detail="city_id is needed")
 
     def post(self, request):
         location_ds = LocationDeSerializer(data=request.data)

@@ -1,16 +1,16 @@
 import $ from 'jquery'
 import { url } from '../config'
-import { hashHistory } from 'react-router';
 import types from './manager/action_types.js';
 
-export function fetchLocations(){
+export function fetchLocations(cityId){
 	return function(dispatch){
 		dispatch({
 			type: types.LOCATION_GET,
 			status: 'request',
+			cityId
 		});
 
-		$.get( url.api_base_path + "manager/location", function(locations){
+		$.get( url.api_base_path + "manager/location", { 'city_id': cityId}, function(locations){
 			dispatch({
 				type: types.LOCATION_GET,
 				status: 'success',
@@ -89,7 +89,6 @@ export function saveLocationEditForm(location){
 				type: types.LOCATION_FORM_SUB,
 				status: 'success'
 			});
-			hashHistory.push("/location");
 		});
 		req.fail(function(error){
 			dispatch({
@@ -102,6 +101,7 @@ export function saveLocationEditForm(location){
 				status: 'error',
 			});
 		});
+		return req;
 	};
 };
 
@@ -135,7 +135,6 @@ export function saveLocationAddForm(location){
 				type: types.LOCATION_FORM_SUB,
 				status: 'success',
 			});
-			hashHistory.push("/location");
 		});
 		req.fail(function(error){
 			dispatch({
@@ -148,6 +147,7 @@ export function saveLocationAddForm(location){
 				status: 'error',
 			});
 		});
+		return req;
 	};
 };
 

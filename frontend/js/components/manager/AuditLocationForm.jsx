@@ -14,11 +14,39 @@ import FormSelect from '../FormSelect.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 
+/* State Selector begins */
+
+var __StateSelector = React.createClass({
+	render : function(){
+		let stateOptions = [];
+		for( let s in this.props.states){
+			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
+		}
+		return (
+			<FormSelect label="State" name="state" {...this.props}>
+				<option value=""></option>
+				{stateOptions}
+			</FormSelect>
+		);
+	}
+});
+
+var mapStoreToPropsForStateSelector = function(store){
+	return {
+		states: store.states,
+	};
+};
+
+var StateSelector = ReactRedux.connect(mapStoreToPropsForStateSelector)(__StateSelector);
+
+/* State Selector Ends */
+
 var AuditLocationForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
 	componentDidMount: function() {
+		this.props.dispatch(fetchStates());
 		this.props.dispatch(fetchCities());
 		this.props.dispatch(fetchLocations());
 
@@ -34,12 +62,21 @@ var AuditLocationForm = React.createClass({
 		if(nextProps.auditLocation && nextProps.auditLocation.location){
 			this.setState({
 				'location': nextProps.auditLocation.location.id,
-				'city': nextProps.auditLocation.location.city.id
+				'city': nextProps.auditLocation.location.city.id,
+				'state': nextProps.location.city.state
 			});
+			this.props.dispatch(fetchCities(nextProps.auditLocation.location.city.state));
 		}
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
+	},
+	myStateChanged: function(e){
+		this.inputChanged(e);
+		var stateCode = e.target.value;
+		if( stateCode){
+			this.props.dispatch(fetchCities(e.target.value));
+		}
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -80,19 +117,26 @@ var AuditLocationForm = React.createClass({
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<div className="row">
 						<div className="col-sm-6">
-							<FormSelect label="City" name="city" value={this.state.city} onChange={this.inputChanged}>
+							<StateSelector value={this.state.state} onChange={this.myStateChanged}/>
+						</div>
+						<div className="col-sm-6">
+							<FormSelect label="City" name="city" value={this.state.city} onChange={this.myCityChanged}>
 								<option value=""></option>
 								{cityRows}
 							</FormSelect>
 						</div>
+					</div>
+					<div className="row">
 						<div className="col-sm-6">
 							<FormSelect label="Location" name="location" value={this.state.location} onChange={this.inputChanged} errors={this.props.errors.location}>
 								<option value=""></option>
 								{locationRows}
 							</FormSelect>
 						</div>
+						<div className="col-sm-6">
+							<FormInput label="Count" type="number" value={this.state.count} name="count" onChange={this.inputChanged} errors={this.props.errors.count}/>
+						</div>
 					</div>
-					<FormInput label="Count" type="number" value={this.state.count} name="count" onChange={this.inputChanged} errors={this.props.errors.count}/>
 					<SaveButton/>
 				</form>
 			</Modal>
