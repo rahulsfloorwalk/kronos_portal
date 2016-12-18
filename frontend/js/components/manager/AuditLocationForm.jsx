@@ -41,14 +41,69 @@ var StateSelector = ReactRedux.connect(mapStoreToPropsForStateSelector)(__StateS
 
 /* State Selector Ends */
 
+/* City Selector Starts */
+
+var __CitySelector = React.createClass({
+	render : function(){
+		let cityOptions = [];
+		for( let c in this.props.cities){
+			cityOptions.push(<option key={c} value={c}>{this.props.cities[c].name}</option>);
+		}
+		return (
+			<FormSelect label="City" name="city" {...this.props}>
+				<option value=""></option>
+				{cityOptions}
+			</FormSelect>
+		);
+	}
+});
+
+var mapStoreToPropsForCitySelector = function(store){
+	return {
+		cities: store.cities,
+	};
+};
+
+var CitySelector = ReactRedux.connect(mapStoreToPropsForCitySelector)(__CitySelector);
+
+/* City Selector Ends */
+
+/* Location Selector Starts */
+
+var __LocationSelector = React.createClass({
+	render : function(){
+		let locationOptions = [];
+		for( let l in this.props.locations){
+			locationOptions.push(<option key={l} value={l}>{this.props.locations[l].name}</option>);
+		}
+		return (
+			<FormSelect label="Location" name="location" {...this.props}>
+				<option value=""></option>
+				{locationOptions}
+			</FormSelect>
+		);
+	}
+});
+
+var mapStoreToPropsForLocationSelector = function(store){
+	return {
+		locations: store.locations,
+	};
+};
+
+var LocationSelector = ReactRedux.connect(mapStoreToPropsForLocationSelector)(__LocationSelector);
+
+/* Location Selector Ends */
+
+
 var AuditLocationForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
 	componentDidMount: function() {
 		this.props.dispatch(fetchStates());
-		this.props.dispatch(fetchCities());
-		this.props.dispatch(fetchLocations());
+		//this.props.dispatch(fetchCities());
+		//this.props.dispatch(fetchLocations());
 
 		if(this.props.params.auditLocationId){
 			this.props.dispatch(loadAuditLocationEditForm(this.props.params.auditLocationId));
@@ -63,9 +118,10 @@ var AuditLocationForm = React.createClass({
 			this.setState({
 				'location': nextProps.auditLocation.location.id,
 				'city': nextProps.auditLocation.location.city.id,
-				'state': nextProps.location.city.state
+				'state': nextProps.auditLocation.location.city.state
 			});
 			this.props.dispatch(fetchCities(nextProps.auditLocation.location.city.state));
+			this.props.dispatch(fetchLocations(nextProps.auditLocation.location.city.id));
 		}
 	},
 	inputChanged: function(e){
@@ -74,8 +130,17 @@ var AuditLocationForm = React.createClass({
 	myStateChanged: function(e){
 		this.inputChanged(e);
 		var stateCode = e.target.value;
+		console.debug("statecode",stateCode);
 		if( stateCode){
 			this.props.dispatch(fetchCities(e.target.value));
+		}
+	},
+	myCityChanged: function(e){
+		this.inputChanged(e);
+		var cityId = e.target.value;
+		console.debug("cityId",cityId);
+		if( cityId){
+			this.props.dispatch(fetchLocations(cityId));
 		}
 	},
 	onSubmit: function(e){
@@ -96,6 +161,7 @@ var AuditLocationForm = React.createClass({
 		}
 	},
 	render : function(){
+		/*
 		var cityRows = [];
 		for( var id in this.props.cities){
 			cityRows.push(<option value={id} key={id}>{this.props.cities[id].name}</option>);
@@ -109,6 +175,11 @@ var AuditLocationForm = React.createClass({
 				}
 			}
 		}
+							<FormSelect label="Location" name="location" value={this.state.location} onChange={this.inputChanged} errors={this.props.errors.location}>
+								<option value=""></option>
+								{locationRows}
+							</FormSelect>
+		*/
 
 		var modalTitle = this.props.params.auditLocationId ? "Edit Audit Location" : "Add Audit Location";
 		return (
@@ -120,18 +191,12 @@ var AuditLocationForm = React.createClass({
 							<StateSelector value={this.state.state} onChange={this.myStateChanged}/>
 						</div>
 						<div className="col-sm-6">
-							<FormSelect label="City" name="city" value={this.state.city} onChange={this.myCityChanged}>
-								<option value=""></option>
-								{cityRows}
-							</FormSelect>
+							<CitySelector value={this.state.city} onChange={this.myCityChanged}/>
 						</div>
 					</div>
 					<div className="row">
 						<div className="col-sm-6">
-							<FormSelect label="Location" name="location" value={this.state.location} onChange={this.inputChanged} errors={this.props.errors.location}>
-								<option value=""></option>
-								{locationRows}
-							</FormSelect>
+							<LocationSelector value={this.state.location} onChange={this.inputChanged}/>
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Count" type="number" value={this.state.count} name="count" onChange={this.inputChanged} errors={this.props.errors.count}/>
@@ -151,8 +216,6 @@ var mapStoreToProps = function(store, ownProps){
 	return {
 		auditLocation: auditLocation || {},
 		errors: store.forms.auditLocation.errors,
-		cities: store.cities,
-		locations: store.locations,
 	};
 };
 

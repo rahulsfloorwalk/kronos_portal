@@ -155,8 +155,6 @@ export function loadAuditLocationAddForm(){
 			type: types.AUDIT_LOCATION_FORM_LOAD,
 			status: 'request'
 		});
-		dispatch(fetchCities());
-		dispatch(fetchLocations());
 		dispatch({
 			type: types.AUDIT_LOCATION_FORM_LOAD,
 			status: 'success'
@@ -171,8 +169,6 @@ export function loadAuditLocationEditForm(auditLocationId){
 			status: 'request',
 			auditLocationId: auditLocationId
 		});
-		dispatch(fetchCities());
-		dispatch(fetchLocations());
 		dispatch({
 			type: types.AUDIT_LOCATION_FORM_LOAD,
 			status: 'success',
