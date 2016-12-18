@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
 
-import { searchAuditors } from '../../manager_actions.js'
+import { searchAuditors } from '../../manager/actions/auditor.js'
 import InputGroup from '../InputGroup.jsx';
 import { InputGroupBtn } from '../InputGroup.jsx';
 import FormInput from '../FormInput.jsx';

@@ -2,7 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchProfileInfoForAuditor, fetchStates } from '../../manager_actions.js'
+import { fetchProfileInfoForAuditor } from '../../manager/actions/auditor.js'
+import { fetchStates } from '../../manager_actions.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
 
 import Loading from '../Loading.jsx';

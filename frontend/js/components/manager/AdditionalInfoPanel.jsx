@@ -3,7 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { getHairColor, getCameraResolution } from '../../utils.js'
-import { fetchAdditionalInfoForAuditor } from '../../manager_actions.js'
+import { fetchAdditionalInfoForAuditor } from '../../manager/actions/auditor.js'
 import { Check, Cross } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
 

@@ -3,7 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchClients, loadAuditAddForm, loadAuditEditForm, saveAuditAddForm, saveAuditEditForm } from '../../manager_actions.js';
+import { fetchClients } from '../../manager/actions/client.js';
+import {  loadAuditAddForm, loadAuditEditForm, saveAuditAddForm, saveAuditEditForm } from '../../manager_actions.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';

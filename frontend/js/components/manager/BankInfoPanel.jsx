@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactRedux from 'react-redux';
-import { fetchBankInfoForAuditor } from '../../manager_actions.js'
+import { fetchBankInfoForAuditor } from '../../manager/actions/auditor.js'
 import { Link } from 'react-router';
 
 import Loading from '../Loading.jsx';
