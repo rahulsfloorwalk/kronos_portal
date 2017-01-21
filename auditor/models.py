@@ -3,7 +3,7 @@ from django.db.models import Model, CharField, IntegerField, AutoField, DateFiel
 from django.db.models import CASCADE
 from django.core.validators import RegexValidator, MinLengthValidator
 from .validators import numericValidator, minLengthValidator
-from manager.models import AuditLocation, City
+from manager.models import City
 from manager import states
 
 
@@ -200,7 +200,7 @@ class AuditApplication(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
 
-    auditlocation = ForeignKey(AuditLocation, db_column='audit_location_id', related_name='applications')
+    auditlocation = ForeignKey('audit.Audit', db_column='audit_location_id', related_name='applications')
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications')
 
     def __str__(self):

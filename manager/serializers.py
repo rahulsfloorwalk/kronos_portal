@@ -3,7 +3,9 @@ from rest_framework.serializers import ModelSerializer, ValidationError, SlugRel
 from django.contrib.auth.models import User
 
 from auditor.models import ProfileInfo, AuditApplication
-from .models import City, Location, Client, Audit, AuditLocation, City
+from audit.models import Audit
+from client.models import Client
+from .models import City, Location
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -74,7 +76,7 @@ class LocationDeSerializer(ModelSerializer):
 class AuditLocationSerializer(ModelSerializer):
     location = LocationSerializer()
     class Meta:
-        model = AuditLocation
+        model = Audit
         fields = (
             'id',
             'audit',
@@ -86,7 +88,7 @@ class AuditLocationSerializer(ModelSerializer):
 
 class AuditLocationDeSerializer(ModelSerializer):
     class Meta:
-        model = AuditLocation
+        model = Audit
         fields = (
             'id',
             'audit',

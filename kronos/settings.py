@@ -44,6 +44,9 @@ INSTALLED_APPS = [
     'auditor',
     'nav',
     'manager',
+    'client',
+    'questionnaire',
+    'audit'
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -4,8 +4,9 @@ from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField
 from rest_framework import serializers
 
-from manager.models import Audit, Location
 from manager.serializers import AuditLocationSerializer, CitySerializer
+from manager.models import Location
+from audit.models import Audit
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 
 
