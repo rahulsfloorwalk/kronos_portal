@@ -67,9 +67,10 @@ class ProfileInfo(Model):
 	date_of_birth = DateField(db_column='dob', blank=True, null=True)
 	address = CharField(db_column='address', max_length=300, blank=True)
 	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
-	city = CharField(db_column='city', max_length=20, blank=True)
+	city_name = CharField(db_column='city_name', max_length=20, blank=True, null=True)
 	state = CharField(db_column='state', max_length=5, blank=True, choices=states.get_django_choices())
 
+	city = ForeignKey(City, db_column='city', null=True, blank=True)
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 	def is_complete(self):

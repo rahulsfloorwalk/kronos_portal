@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { fetchProfileInfo, fetchStates } from '../../auditor_actions.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
 import LabelValue from '../LabelValue.jsx';
+import Loading from '../Loading.jsx'
 
 var ProfileInfoPanelBase = React.createClass({
 	componentDidMount: function() {
@@ -12,6 +13,9 @@ var ProfileInfoPanelBase = React.createClass({
 		this.props.dispatch(fetchStates());
 	},
 	render: function(){
+		if(!this.props.profileInfo.id){
+			return <Loading/>;
+		}
 		if( ! this.props.profileInfo.is_complete){
 			var completeWarning = (<p className="text-danger pull-left">Please complete your personal information.</p>);
 		}
@@ -29,7 +33,7 @@ var ProfileInfoPanelBase = React.createClass({
 					<LabelValue label="Marital Status:" value={getMaritalStatus(this.props.profileInfo.marital_status)}/>
 					<LabelValue label="Address:" value={this.props.profileInfo.address}/>
 					<LabelValue label="Mobile Number:" value={this.props.profileInfo.mobile_number}/>
-					<LabelValue label="City:" value={this.props.profileInfo.city}/>
+					<LabelValue label="City:" value={this.props.profileInfo.city.name}/>
 					<LabelValue label="State:" value={this.props.profileInfo.state}/>
 					<LabelValue label="Pincode:" value={this.props.profileInfo.pincode}/>
 				</div>
@@ -50,4 +54,4 @@ var mapStoreToProps = function(store){
 };
 
 export { ProfileInfoPanelBase };
-export default ReactRedux.connect(mapStoreToProps)(ProfileInfoPanelBase); 
+export default ReactRedux.connect(mapStoreToProps)(ProfileInfoPanelBase);

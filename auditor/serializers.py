@@ -5,25 +5,26 @@ from rest_framework.serializers import ModelSerializer, ValidationError, Seriali
 from rest_framework import serializers
 
 from manager.models import Audit, Location
-from manager.serializers import AuditLocationSerializer
+from manager.serializers import AuditLocationSerializer, CitySerializer
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 
 
 class ProfileInfoSerializer(ModelSerializer):
+    city = CitySerializer()
     class Meta:
         model = ProfileInfo
         fields = (
-            'id', 
-            'first_name', 
-            'last_name', 
-            'gender', 
-            'marital_status', 
+            'id',
+            'first_name',
+            'last_name',
+            'gender',
+            'marital_status',
             'education',
-            'mobile_number', 
-            'date_of_birth', 
-            'address', 
-            'pincode', 
-            'city', 
+            'mobile_number',
+            'date_of_birth',
+            'address',
+            'pincode',
+            'city',
             'state',
             'user_id',
             'is_complete'
@@ -61,18 +62,18 @@ class AdditionalInfoSerializer(ModelSerializer):
     class Meta:
         model = AdditionalInfo
         fields = (
-            'id', 
-            'has_car', 
-            'weekend_audit', 
-            'hair_color', 
-            'height', 
-            'weight', 
-            'distance', 
-            'camera_owned', 
-            'camera_resoulution', 
-            'laptop_owned', 
-            'smart_phone_owned', 
-            'weekend_audit', 
+            'id',
+            'has_car',
+            'weekend_audit',
+            'hair_color',
+            'height',
+            'weight',
+            'distance',
+            'camera_owned',
+            'camera_resoulution',
+            'laptop_owned',
+            'smart_phone_owned',
+            'weekend_audit',
             'user_id'
         )
         read_only_fields = ('id', 'user_id')
@@ -106,12 +107,12 @@ class BankInfoSerializer(ModelSerializer):
     class Meta:
         model = BankInfo
         fields = (
-            'id', 
-            'bank_name', 
-            'account_holder_name', 
+            'id',
+            'bank_name',
+            'account_holder_name',
             'account_number',
             'ifsc_code',
-            'pan_number', 
+            'pan_number',
             'user_id'
         )
         read_only_fields = ('id', 'user_id')
@@ -154,9 +155,9 @@ class AuditApplicationSerializer(ModelSerializer):
     class Meta:
         model = AuditApplication
         fields = (
-            'id', 
-            'status', 
-            'audit_date', 
+            'id',
+            'status',
+            'audit_date',
             'auditlocation',
             'profileinfo',
         )

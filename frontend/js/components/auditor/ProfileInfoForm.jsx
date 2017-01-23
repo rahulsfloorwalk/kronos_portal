@@ -46,7 +46,7 @@ var __CitySelector = React.createClass({
 	render : function(){
 		let cityOptions = [];
 		for( let c in this.props.cities){
-			cityOptions.push(<option key={c} value={this.props.cities[c].name}>{this.props.cities[c].name}</option>);
+			cityOptions.push(<option key={c} value={this.props.cities[c].id}>{this.props.cities[c].name}</option>);
 		}
 		return (
 			<FormSelect label="City" name="city" {...this.props}>

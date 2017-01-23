@@ -31,7 +31,7 @@ var ProfileInfoPanel = React.createClass({
 					<p>Marital Status: { getMaritalStatus(this.props.profileInfo.marital_status) }</p>
 					<p>Address: { this.props.profileInfo.address }</p>
 					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
-					<p>City: { this.props.profileInfo.city }</p>
+					<p>City: { this.props.profileInfo.city.name }</p>
 					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
 					<p>Pincode: { this.props.profileInfo.pincode }</p>
 				</div>
@@ -47,4 +47,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(ProfileInfoPanel); 
+export default ReactRedux.connect(mapStoreToProps)(ProfileInfoPanel);
