@@ -1,5 +1,6 @@
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import CASCADE
+from django.conf import settings
 
 class Client(Model):
     db_table = "client"
@@ -19,6 +20,7 @@ class ClientUser(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     full_name = CharField(db_column='name', max_length=50, blank=False)
     client = ForeignKey(Client, related_name='users', db_column='client_id', blank=False)
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
     def __str__(self):
         return 'Client({}): {}'.format(self.id, self.name)

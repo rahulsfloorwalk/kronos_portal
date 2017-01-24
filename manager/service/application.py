@@ -1,4 +1,4 @@
-from ..models import Audit, AuditLocation
+from audit.models import AuditCycle, Audit
 from auditor.models import AuditApplication, ProfileInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
 

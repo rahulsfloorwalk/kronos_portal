@@ -3,8 +3,8 @@ from rest_framework.serializers import ModelSerializer, ValidationError, SlugRel
 from django.contrib.auth.models import User
 
 from auditor.models import ProfileInfo, AuditApplication
-from audit.models import Audit
-from client.models import Client
+from audit.models import Audit, AuditCycle
+from client.models import Client, Store
 from .models import City, Location
 
 class ClientSerializer(ModelSerializer):
@@ -17,16 +17,16 @@ class ClientSerializer(ModelSerializer):
             'phone',
         )
         read_only_fields = ('id',)
-
-    def create(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            client = Client.objects.get(id=kwargs['id'])
-        else:
-            client = Client()
-        client.name = self.validated_data.get('name', client.name)
-        client.email = self.validated_data.get('email', client.email)
-        client.phone = self.validated_data.get('phone', client.phone)
-        return client
+#
+#    def create(self, **kwargs):
+#        if 'id' in kwargs and kwargs['id'] is not None:
+#            client = Client.objects.get(id=kwargs['id'])
+#        else:
+#            client = Client()
+#        client.name = self.validated_data.get('name', client.name)
+#        client.email = self.validated_data.get('email', client.email)
+#        client.phone = self.validated_data.get('phone', client.phone)
+#        return client
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -73,85 +73,79 @@ class LocationDeSerializer(ModelSerializer):
         return location
 
 
-class AuditLocationSerializer(ModelSerializer):
+class StoreSerializer(ModelSerializer):
     location = LocationSerializer()
+    client = ClientSerializer()
     class Meta:
-        model = Audit
+        model = Store
         fields = (
             'id',
-            'audit',
+            'name',
+            'address',
             'location',
-            'count',
+            'client',
         )
         read_only_fields = fields
 
-
-class AuditLocationDeSerializer(ModelSerializer):
-    class Meta:
-        model = Audit
-        fields = (
-            'id',
-            'audit',
-            'location',
-            'count',
-        )
-        read_only_fields = ('id',)
-        validators=[]
-
-    def validate(self, attrs):
-        audit = attrs.get('audit')
-        location = attrs.get('location')
-
-        print('validator called')
-        try:
-            obj = AuditLocation.objects.get(audit=audit, location=location)
-        except AuditLocation.DoesNotExist:
-            return attrs
-        print("self.context", self.context)
-        print("obj.id",obj.id, type(obj.id))
-        print("id",self.context.get("id"), type(self.context.get("id")))
-        if self.context.get("id") and obj.id == int(self.context.get('id')):
-            return attrs
-        else:
-            raise ValidationError('Audit with Location already exists')
-
-    def create(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            audit_location = AuditLocation.objects.get(id=kwargs['id'])
-        else:
-            audit_location = AuditLocation()
-        audit_location.count = self.validated_data.get('count', audit_location.count)
-        audit_location.audit = self.validated_data.get('audit', audit_location.audit_id)
-        audit_location.location = self.validated_data.get('location', audit_location.location_id)
-
-        return audit_location
 
 class AuditSerializer(ModelSerializer):
-    client = ClientSerializer()
-    auditlocations = AuditLocationSerializer(many=True)
-    cities = CitySerializer(many=True)
+    store = StoreSerializer()
+    audit_cycle = StoreSerializer()
     class Meta:
         model = Audit
         fields = (
             'id',
-            'type',
-            'status',
-            'start_date',
-            'end_date',
-            'earnings_per_audit',
-            'description',
-            'client',
-            'auditlocations',
-            'audit_count',
-            'cities',
+            'store',
+            'audit_cycle',
         )
         read_only_fields = fields
+
 
 class AuditDeSerializer(ModelSerializer):
     class Meta:
         model = Audit
         fields = (
             'id',
+            'store',
+            'audit_cycle',
+        )
+        read_only_fields = ('id',)
+        validators=[]
+
+    #def validate(self, attrs):
+    #    store = attrs.get('store')
+    #    audit_cycle = attrs.get('audit_cycle')
+
+    #    print('AuditDeSerializer#validate called')
+    #    try:
+    #        obj = AuditLocation.objects.get(audit=audit, location=location)
+    #    except AuditLocation.DoesNotExist:
+    #        return attrs
+    #    print("self.context", self.context)
+    #    print("obj.id",obj.id, type(obj.id))
+    #    print("id",self.context.get("id"), type(self.context.get("id")))
+    #    if self.context.get("id") and obj.id == int(self.context.get('id')):
+    #        return attrs
+    #    else:
+    #        raise ValidationError('Audit with Location already exists')
+
+    def create(self, **kwargs):
+        if 'id' in kwargs and kwargs['id'] is not None:
+            audit = Audit.objects.get(id=kwargs['id'])
+        else:
+            audit = Audit()
+        audit.store_id = self.validated_data.get('store', audit.store_id)
+        audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle)
+
+        return audit
+
+
+class AuditCycleSerializer(ModelSerializer):
+    client = ClientSerializer()
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
             'type',
             'status',
             'start_date',
@@ -159,22 +153,38 @@ class AuditDeSerializer(ModelSerializer):
             'earnings_per_audit',
             'description',
             'client',
+            'audit_count',
         )
-        read_only_fields = ('id',)
+        read_only_fields = fields
 
-    def deserialize(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            audit = Audit.objects.get(id=kwargs['id'])
-        else:
-            audit = Audit()
-        audit.type = self.validated_data.get('type', audit.type)
-        audit.status = self.validated_data.get('status', audit.status)
-        audit.start_date = self.validated_data.get('start_date', audit.start_date)
-        audit.end_date = self.validated_data.get('end_date', audit.end_date)
-        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
-        audit.description = self.validated_data.get('description', audit.description)
-        audit.client = self.validated_data.get('client', audit.client_id)
-        return audit
+#class AuditDeSerializer(ModelSerializer):
+#    class Meta:
+#        model = Audit
+#        fields = (
+#            'id',
+#            'type',
+#            'status',
+#            'start_date',
+#            'end_date',
+#            'earnings_per_audit',
+#            'description',
+#            'client',
+#        )
+#        read_only_fields = ('id',)
+#
+#    def deserialize(self, **kwargs):
+#        if 'id' in kwargs and kwargs['id'] is not None:
+#            audit = Audit.objects.get(id=kwargs['id'])
+#        else:
+#            audit = Audit()
+#        audit.type = self.validated_data.get('type', audit.type)
+#        audit.status = self.validated_data.get('status', audit.status)
+#        audit.start_date = self.validated_data.get('start_date', audit.start_date)
+#        audit.end_date = self.validated_data.get('end_date', audit.end_date)
+#        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
+#        audit.description = self.validated_data.get('description', audit.description)
+#        audit.client = self.validated_data.get('client', audit.client_id)
+#        return audit
 
 
 class ProfileInfoSmallSerializer(ModelSerializer):
@@ -190,7 +200,7 @@ class ProfileInfoSmallSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class AuditLocationApplicationSerializer(ModelSerializer):
+class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
     class Meta:
         model = AuditApplication
@@ -198,7 +208,7 @@ class AuditLocationApplicationSerializer(ModelSerializer):
             'id', 
             'status', 
             'audit_date', 
-            'auditlocation',
+            'audit',
             'profileinfo',
         )
         read_only_fields = fields

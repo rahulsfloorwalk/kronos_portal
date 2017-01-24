@@ -6,7 +6,8 @@ from rest_framework import serializers
 
 from manager.serializers import AuditLocationSerializer, CitySerializer
 from manager.models import Location
-from audit.models import Audit
+from manager.serializers import AuditSerializer
+from audit.models import Audit, AuditCycle
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 
 
@@ -174,21 +175,21 @@ class AuditorSerializer(ModelSerializer):
         read_only_fields = fields
 
 class AuditApplicationSerializer(ModelSerializer):
-    auditlocation = AuditLocationSerializer()
+    audit = AuditSerializer()
     class Meta:
         model = AuditApplication
         fields = (
-            'id',
-            'status',
-            'audit_date',
-            'auditlocation',
+            'id', 
+            'status', 
+            'audit_date', 
+            'audit',
             'profileinfo',
         )
         read_only_fields = fields
 
 
 class AuditApplicationApplyDeSerializer(Serializer):
-    audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(status__in=[Audit.ACTIVE,Audit.UPCOMING]))
+    audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(audit_cycle__status__in=[AuditCycle.ACTIVE,AuditCycle.UPCOMING]))
     location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
     profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())
     audit_date = serializers.DateField()
@@ -202,6 +203,6 @@ class AuditApplicationApplyDeSerializer(Serializer):
 
 
 class AuditApplicationCancelDeSerializer(Serializer):
-    audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(status__in=[Audit.ACTIVE,Audit.UPCOMING]))
+    audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(audit_cycle__status__in=[AuditCycle.ACTIVE,AuditCycle.UPCOMING]))
     location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
     profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())

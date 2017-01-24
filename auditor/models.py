@@ -200,11 +200,11 @@ class AuditApplication(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
 
-    auditlocation = ForeignKey('audit.Audit', db_column='audit_location_id', related_name='applications')
+    audit = ForeignKey('audit.Audit', db_column='audit_id', related_name='applications')
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications')
 
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.auditlocation, self.profileinfo)
 
     class Meta:
-        unique_together = (("profileinfo", "auditlocation"))
+        unique_together = (("profileinfo", "audit"))

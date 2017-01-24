@@ -9,21 +9,28 @@ from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.serializers import Serializer, DateField
 
-from .models import Client, Audit, Location, AuditLocation, City
-from .serializers import ClientSerializer, AuditLocationSerializer, CitySerializer
-from .serializers import AuditLocationSerializer, AuditLocationDeSerializer
+from audit.models import AuditCycle, Audit
+
+from client.models import Client
+
+from .models import Location, City
+
+from .serializers import ClientSerializer, CitySerializer
+from .serializers import AuditSerializer, AuditDeSerializer
 from .serializers import LocationSerializer, LocationDeSerializer
 from .serializers import AuditSerializer, AuditDeSerializer
-from .serializers import AuditLocationApplicationSerializer
+from .serializers import AuditApplicationSerializer
+
 from .service import client as client_service
 from .service import location as location_service
 from .service import audit as audit_service
 from .service import application as application_service
 from .service import audit_location as audit_location_service
+
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, AuditApplication
-from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
+
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from . import states
 

@@ -13,7 +13,8 @@ from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer
 from .serializers import ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
-from manager.models import Audit, City
+from audit.models import Audit
+from manager.models import City
 from manager.serializers import AuditSerializer, CitySerializer
 import manager.service.audit as audit_service
 from manager import states

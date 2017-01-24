@@ -1,7 +1,7 @@
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication
 from rest_framework.exceptions import ValidationError
-from ..models import Audit, AuditLocation
+from audit.models import AuditCycle, Audit
 from django.contrib.auth.models import User
 
 def save(audit):
