@@ -3,6 +3,7 @@ import types from './manager/action_types.js'
 var initialStore = {
 	applications: {},
 	audits: {},
+	auditCycles: {},
 	clients: {},
 	stores: {},
 	auditors: {},
@@ -23,6 +24,9 @@ var initialStore = {
 			errors: {}
 		},
 		audit: {
+			errors: {}
+		},
+		auditCycle: {
 			errors: {}
 		},
 		auditLocation: {
@@ -338,49 +342,36 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-		case types.AUDIT_GET:
+		case types.AUDIT_CYCLE_GET:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
-						audits: (function(audits){
+						auditCycles: (function(auditCycles){
 							var obj = {};
-							for( var a of audits){
+							for( var a of auditCycles){
 								obj[a.id] = a;
 							}
 							return obj;
-						}(action.audits))
+						}(action.auditCycles))
 					});
 					break;
 				default:
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-		case types.AUDIT_ID_GET:
+		case types.AUDIT_CYCLE_POST:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
-						audits: Object.assign({}, store.audits, {
-							[action.audit.id]: action.audit
-						})
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-		case types.AUDIT_POST:
-			switch(action.status){
-				case "success":
-					return Object.assign({}, store, {
-						audits: Object.assign({}, store.audits, {
-							[action.audit.id]: action.audit
+						auditCycles: Object.assign({}, store.auditCycles, {
+							[action.auditCycle.id]: action.auditCycle
 						})
 					});
 					break;
 				case "error":
 					return Object.assign({}, store, {
 						forms: Object.assign({}, store.forms, {
-							audit: Object.assign({}, store.forms.audit, {
+							auditCycle: Object.assign({}, store.forms.auditCycle, {
 								errors: action.errors
 							})
 						})
@@ -390,19 +381,32 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-		case types.AUDIT_ID_POST:
+		case types.AUDIT_CYCLE_ID_GET:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
-						audits: Object.assign({}, store.audits, {
-							[action.audit.id]: action.audit
+						auditCycles: Object.assign({}, store.auditCycles, {
+							[action.auditCycle.id]: action.auditCycle
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_CYCLE_ID_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						auditCycles: Object.assign({}, store.auditCycles, {
+							[action.auditCycle.id]: action.auditCycle
 						})
 					});
 					break;
 				case "error":
 					return Object.assign({}, store, {
 						forms: Object.assign({}, store.forms, {
-							audit: Object.assign({}, store.forms.audit, {
+							auditCycle: Object.assign({}, store.forms.auditCycle, {
 								errors: action.errors
 							})
 						})

@@ -86,9 +86,40 @@ class AuditCycleSerializer(ModelSerializer):
             'earnings_per_audit',
             'description',
             'client',
-            'audit_count',
+            #'audit_count',
         )
         read_only_fields = fields
+
+
+class AuditCycleDeSerializer(ModelSerializer):
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'type',
+            'status',
+            'start_date',
+            'end_date',
+            'earnings_per_audit',
+            'description',
+            'client',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        print("self.context", self.context)
+        if 'id' in self.context and self.context.get('id') is not None:
+            audit_cycle = AuditCycle.objects.get(id=self.context.get('id'))
+        else:
+            audit_cycle = AuditCycle()
+        audit_cycle.type = self.validated_data.get('type', audit_cycle.type)
+        audit_cycle.status = self.validated_data.get('status', audit_cycle.status)
+        audit_cycle.start_date = self.validated_data.get('start_date', audit_cycle.start_date)
+        audit_cycle.end_date = self.validated_data.get('end_date', audit_cycle.end_date)
+        audit_cycle.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit_cycle.earnings_per_audit)
+        audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
+        audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
+        return audit_cycle
 
 
 class StoreSerializer(ModelSerializer):
@@ -180,36 +211,6 @@ class AuditDeSerializer(ModelSerializer):
         audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle)
 
         return audit
-
-
-#class AuditDeSerializer(ModelSerializer):
-#    class Meta:
-#        model = Audit
-#        fields = (
-#            'id',
-#            'type',
-#            'status',
-#            'start_date',
-#            'end_date',
-#            'earnings_per_audit',
-#            'description',
-#            'client',
-#        )
-#        read_only_fields = ('id',)
-#
-#    def deserialize(self, **kwargs):
-#        if 'id' in kwargs and kwargs['id'] is not None:
-#            audit = Audit.objects.get(id=kwargs['id'])
-#        else:
-#            audit = Audit()
-#        audit.type = self.validated_data.get('type', audit.type)
-#        audit.status = self.validated_data.get('status', audit.status)
-#        audit.start_date = self.validated_data.get('start_date', audit.start_date)
-#        audit.end_date = self.validated_data.get('end_date', audit.end_date)
-#        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
-#        audit.description = self.validated_data.get('description', audit.description)
-#        audit.client = self.validated_data.get('client', audit.client_id)
-#        return audit
 
 
 class ProfileInfoSmallSerializer(ModelSerializer):

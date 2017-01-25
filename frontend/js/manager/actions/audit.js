@@ -3,149 +3,151 @@ import { url } from '../../../config.js'
 import types from '../action_types.js';
 import { hashHistory } from 'react-router';
 
-export function fetchAudits(){
+export function fetchAuditCycles(clientId){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_GET,
+			type: types.AUDIT_CYCLE_GET,
 			status: 'request',
+			clientId
 		});
 
-		$.get( url.api_base_path + "manager/audit", function(audits){
+		return $.get( url.api_base_path + `manager/client/${clientId}/audit_cycle`, function(auditCycles){
 			dispatch({
-				type: types.AUDIT_GET,
+				type: types.AUDIT_CYCLE_GET,
 				status: 'success',
-				audits: audits
+				auditCycles
 			});
 		});
 		//TODO: Handle error
 	};
 };
 
-export function fetchAudit(auditId){
+export function fetchAuditCycle(auditCycleId){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_ID_GET,
+			type: types.AUDIT_CYCLE_ID_GET,
 			status: 'request',
+			auditCycleId
 		});
 
-		$.get( url.api_base_path + `manager/audit/${auditId}`, function(audit){
+		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}`, function(auditCycle){
 			dispatch({
-				type: types.AUDIT_ID_GET,
+				type: types.AUDIT_CYCLE_ID_GET,
 				status: 'success',
-				audit: audit
+				auditCycle
 			});
 		});
 		//TODO: Handle error
 	};
 };
 
-export function loadAuditAddForm(){
+export function loadAuditCycleAddForm(){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_FORM_LOAD,
+			type: types.AUDIT_CYCLE_FORM_LOAD,
 			status: 'success'
 		});
 	};
 };
 
-export function loadAuditEditForm(auditId){
+export function loadAuditCycleEditForm(auditCycleId){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_FORM_LOAD,
+			type: types.AUDIT_CYCLE_FORM_LOAD,
 			status: 'request',
-			auditId: auditId
+			auditCycleId
 		});
-		dispatch(fetchAudit(auditId));
+		return dispatch(fetchAuditCycle(auditCycleId));
 	};
 };
 
-export function saveAuditAddForm(audit){
+export function saveAuditCycleAddForm(auditCycle){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_FORM_SUB,
+			type: types.AUDIT_CYCLE_FORM_SUB,
 			status: 'request',
-			audit: audit
+			auditCycle
 
 		});
 		dispatch({
-			type: types.AUDIT_POST,
+			type: types.AUDIT_CYCLE_POST,
 			status: 'request',
-			audit: audit
+			auditCycle
 		});
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + "manager/audit",
-			data: JSON.stringify(audit),
+			url: url.api_base_path + "manager/audit_cycle",
+			data: JSON.stringify(auditCycle),
 			contentType: "application/json"
 		});
-		req.done(function(savedAudit){
+		req.done(function(savedAuditCycle){
 			dispatch({
-				type: types.AUDIT_POST,
+				type: types.AUDIT_CYCLE_POST,
 				status: 'success',
-				audit: savedAudit
+				auditCycle: savedAuditCycle
 			});
 			dispatch({
-				type: types.AUDIT_FORM_SUB,
+				type: types.AUDIT_CYCLE_FORM_SUB,
 				status: 'success',
 			});
-			hashHistory.push(`/audit/${savedAudit.id}`);
 		});
 		req.fail(function(error){
 			dispatch({
-				type: types.AUDIT_POST,
+				type: types.AUDIT_CYCLE_POST,
 				status: 'error',
 				errors: error.responseJSON
 			});
 			dispatch({
-				type: types.AUDIT_FORM_SUB,
+				type: types.AUDIT_CYCLE_FORM_SUB,
 				status: 'error',
 			});
 		});
+		return req;
 	};
 };
 
-export function saveAuditEditForm(audit){
+export function saveAuditCycleEditForm(auditCycle){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_FORM_SUB,
+			type: types.AUDIT_CYCLE_FORM_SUB,
 			status: 'request'
 		});
 		dispatch({
-			type: types.AUDIT_ID_POST,
+			type: types.AUDIT_CYCLE_ID_POST,
 			status: 'request',
-			audit: audit
+			audit: auditCycle
 		});
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + `manager/audit/${audit.id}`,
-			data: JSON.stringify(audit),
+			url: url.api_base_path + `manager/audit_cycle/${auditCycle.id}`,
+			data: JSON.stringify(auditCycle),
 			contentType: "application/json"
 		});
-		req.done(function(savedAudit){
+		req.done(function(savedAuditCycle){
 			dispatch({
-				type: types.AUDIT_ID_POST,
+				type: types.AUDIT_CYCLE_ID_POST,
 				status: 'success',
-				audit: savedAudit
+				auditCycle: savedAuditCycle
 			});
 			dispatch({
-				type: types.AUDIT_FORM_SUB,
+				type: types.AUDIT_CYCLE_FORM_SUB,
 				status: 'success'
 			});
-			hashHistory.push(`/audit/${savedAudit.id}`);
 		});
 		req.fail(function(error){
 			dispatch({
-				type: types.AUDIT_ID_POST,
+				type: types.AUDIT_CYCLE_ID_POST,
 				status: 'error',
 				errors: error.responseJSON
 			});
 			dispatch({
-				type: types.AUDIT_FORM_SUB,
+				type: types.AUDIT_CYCLE_FORM_SUB,
 				status: 'error',
 			});
 		});
+		return req;
 	};
 };
 

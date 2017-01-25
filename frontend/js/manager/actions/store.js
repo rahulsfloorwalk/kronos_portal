@@ -7,6 +7,7 @@ export function fetchStores(clientId){
 		dispatch({
 			type: types.STORE_GET,
 			status: 'request',
+			clientId: clientId
 		});
 
 		return $.get( url.api_base_path + `manager/client/${clientId}/store`, function(stores){
@@ -25,6 +26,7 @@ export function fetchStore(storeId){
 		dispatch({
 			type: types.STORE_ID_GET,
 			status: 'request',
+			storeId: storeId
 		});
 
 		return $.get( url.api_base_path + `manager/store/${storeId}`, function(store){

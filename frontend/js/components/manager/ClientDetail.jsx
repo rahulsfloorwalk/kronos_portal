@@ -8,6 +8,7 @@ import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
 import StoreList from './StoreList.jsx';
+import AuditCycleList from './AuditCycleList.jsx';
 
 var ClientDetail = React.createClass({
 	componentDidMount: function(){
@@ -34,6 +35,7 @@ var ClientDetail = React.createClass({
 					</table>
 				</Panel>
 				<StoreList clientId={this.props.params.clientId}/>
+				<AuditCycleList clientId={this.props.params.clientId}/>
 				{this.props.children}
 			</div>
 		);

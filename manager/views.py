@@ -105,51 +105,6 @@ class LocationIdView(APIView):
         except Location.DoesNotExist:
             raise Http404
 
-class AuditView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
-    def get(self, request, format=None):
-        audit = Audit.objects.all()
-        return Response(AuditSerializer(audit, many=True).data)
-
-    def post(self, request):
-        audit_ds = AuditDeSerializer(data=request.data)
-        audit_ds.is_valid(raise_exception=True)
-        audit = audit_ds.deserialize()
-        savedAudit = audit_service.save(audit)
-        return Response(AuditSerializer(savedAudit).data)
-
-class AuditIdView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
-    def get(self, request, audit_id, format=None):
-        try:
-            audit = Audit.objects.get(id=audit_id)
-            return Response(AuditSerializer(audit).data)
-        except Audit.DoesNotExist:
-            return Http404
-
-    def post(self, request, audit_id):
-        audit_ds = AuditDeSerializer(data=request.data)
-        audit_ds.is_valid(raise_exception=True)
-        audit = audit_ds.deserialize(id=audit_id)
-        savedAudit = audit_service.save(audit)
-        return Response(AuditSerializer(savedAudit).data)
-
-    def delete(self, request, audit_id):
-        try:
-            audit = Audit.objects.get(id=audit_id)
-            audit.delete()
-            return Response(AuditSerializer(audit).data)
-        except Audit.DoesNotExist:
-            return Http404
 
 class AuditLocationView(APIView):
     permission_classes = [HasGroupPermission]

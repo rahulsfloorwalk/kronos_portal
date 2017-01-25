@@ -21,9 +21,11 @@ import CityList from './CityList.jsx';
 import LocationList from './LocationList.jsx';
 import LocationForm from './LocationForm.jsx';
 
-import AuditList from './AuditList.jsx';
+import AuditCycleList from './AuditCycleList.jsx';
+import AuditCycleForm from './AuditCycleForm.jsx';
+import AuditCycleDetails from './AuditCycleDetails.jsx';
+
 import AuditDetails from './AuditDetails.jsx';
-import AuditForm from './AuditForm.jsx';
 import AuditLocationForm from './AuditLocationForm.jsx';
 
 import ApplicationAssignForm from './ApplicationAssignForm.jsx';
@@ -43,10 +45,15 @@ const Routes = () => (
 		<Route path="client/:clientId" component={ClientDetail}>
 			<Route path="edit" component={ClientForm}/>
 			<Route path="store/add" component={StoreForm}/>
+			<Route path="audit_cycle/add" component={AuditCycleForm}/>
 		</Route>
 
 		<Route path="store/:storeId" component={StoreDetail}>
 			<Route path="edit" component={StoreForm}/>
+		</Route>
+
+		<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
+			<Route path="edit" component={AuditCycleForm}/>
 		</Route>
 
 		<Route path="auditor" component={AuditorList}/>
@@ -58,7 +65,11 @@ const Routes = () => (
 			<Route path="add" component={LocationForm}/>
 			<Route path=":locationId/edit" component={LocationForm}/>
 		</Route>
+	</Route>
+    </Router>
+);
 
+/*
 		<Route path="audit" component={AuditList}>
 			<Route path="add" component={AuditForm}/>
 		</Route>
@@ -74,8 +85,6 @@ const Routes = () => (
 				<Route path=":applicationId/fail" component={ApplicationFailForm}/>
 			</Route>
 		</Route>
-	</Route>
-    </Router>
-);
+*/
 
 export default Routes;

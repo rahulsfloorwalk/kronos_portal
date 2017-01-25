@@ -36,15 +36,15 @@ class AuditCycle(Model):
     description = CharField(db_column='description', max_length=200, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=CASCADE)
 
-    def audit_count(self):
-        count = 0;
-        for al in self.audits.all():
-            count = count + 1 
-        return count
-
-    def cities(self):
-        cities = [al.location.city for al in self.auditlocations.all()]
-        return set(cities)
+#    def audit_count(self):
+#        count = 0;
+#        for al in self.audits.all():
+#            count = count + 1 
+#        return count
+#
+#    def cities(self):
+#        cities = [al.location.city for al in self.auditlocations.all()]
+#        return set(cities)
 
     def __str__(self):
         return "AuditCycle({}): client: {}".format(self.id, self.client)
