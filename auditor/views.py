@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator 
+from django.utils.decorators import method_decorator
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
@@ -12,7 +12,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer
-from .serializers import AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
+from .serializers import ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
 from manager.models import Audit, City
 from manager.serializers import AuditSerializer, CitySerializer
 import manager.service.audit as audit_service
@@ -34,9 +34,9 @@ class ProfileInfoView(APIView):
             raise Http404
 
     def post(self, request):
-        profile_info_s = ProfileInfoSerializer(data=request.data)
-        profile_info_s.is_valid(raise_exception=True)
-        profile_info = profile_info_s.save(current_user=request.user)
+        profile_info_ds = ProfileInfoDeSerializer(data=request.data)
+        profile_info_ds.is_valid(raise_exception=True)
+        profile_info = profile_info_ds.save(current_user=request.user)
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class AdditionalInfoView(APIView):
@@ -153,9 +153,9 @@ class AuditApplicationApplyView(APIView):
             application_apply_ds.is_valid(raise_exception=True)
 
             application = audit_service.apply(
-                    application_apply_ds.data["audit_id"], 
-                    application_apply_ds.data["location_id"], 
-                    application_apply_ds.data["profileinfo_id"], 
+                    application_apply_ds.data["audit_id"],
+                    application_apply_ds.data["location_id"],
+                    application_apply_ds.data["profileinfo_id"],
                     application_apply_ds.data["audit_date"]
             )
             return Response(AuditApplicationSerializer(application).data)
@@ -183,8 +183,8 @@ class AuditApplicationCancelView(APIView):
             application_cancel_ds.is_valid(raise_exception=True)
 
             application = audit_service.cancel(
-                    application_cancel_ds.data["audit_id"], 
-                    application_cancel_ds.data["location_id"], 
+                    application_cancel_ds.data["audit_id"],
+                    application_cancel_ds.data["location_id"],
                     application_cancel_ds.data["profileinfo_id"]
             )
             return Response(AuditApplicationSerializer(application).data)

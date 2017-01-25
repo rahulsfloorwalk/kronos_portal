@@ -29,6 +29,28 @@ class ProfileInfoSerializer(ModelSerializer):
             'user_id',
             'is_complete'
         )
+        read_only_fields = fields
+
+
+class ProfileInfoDeSerializer(ModelSerializer):
+    class Meta:
+        model = ProfileInfo
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'gender',
+            'marital_status',
+            'education',
+            'mobile_number',
+            'date_of_birth',
+            'address',
+            'pincode',
+            'city',
+            'state',
+            'user_id',
+            'is_complete'
+        )
         read_only_fields = ('id', 'user_id')
 
     def save(self, **kwargs):

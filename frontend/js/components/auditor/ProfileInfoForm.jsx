@@ -81,6 +81,9 @@ var ProfileInfoForm = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState(nextProps.profileInfo);
+		this.setState({
+			'city':nextProps.profileInfo.city.id
+		});
 		if( nextProps.state){
 			this.props.dispatch(fetchCities(nextProps.state));
 		}
