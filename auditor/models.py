@@ -70,7 +70,7 @@ class ProfileInfo(Model):
 	city_name = CharField(db_column='city_name', max_length=20, blank=True, null=True)
 	state = CharField(db_column='state', max_length=5, blank=True, choices=states.get_django_choices())
 
-	city = ForeignKey(City, db_column='city', null=True, blank=True)
+	city = ForeignKey(City, db_column='city_id', null=True, blank=True)
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 	def is_complete(self):
