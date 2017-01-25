@@ -30,11 +30,15 @@ var ClientForm = React.createClass({
 	},
 	onSubmit: function(e){
 		e.preventDefault();
+		var submitPromise;
 		if(this.props.params.clientId){
-			this.props.dispatch(saveClientEditForm(this.state));
+			submitPromise = this.props.dispatch(saveClientEditForm(this.state));
 		} else {
-			this.props.dispatch(saveClientAddForm(this.state));
+			submitPromise = this.props.dispatch(saveClientAddForm(this.state));
 		}
+		submitPromise.then(function(savedClient){
+			hashHistory.push(`/client/${savedClient.id}`);
+		});
 	},
 	render : function(){
 		var modalTitle = this.props.params.clientId ? "Edit Client" : "Add Client";

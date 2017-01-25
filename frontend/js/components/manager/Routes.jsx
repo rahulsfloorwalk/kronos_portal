@@ -7,6 +7,10 @@ import Dashboard from './Dashboard.jsx';
 
 import ClientList from './ClientList.jsx';
 import ClientForm from './ClientForm.jsx';
+import ClientDetail from './ClientDetail.jsx';
+
+import StoreForm from './StoreForm.jsx';
+import StoreDetail from './StoreDetail.jsx';
 
 import AuditorList from './AuditorList.jsx';
 import AuditorDetailsPage from './AuditorDetailsPage.jsx';
@@ -34,7 +38,15 @@ const Routes = () => (
 
 		<Route path="client" component={ClientList}>
 			<Route path="add" component={ClientForm}/>
-			<Route path=":clientId/edit" component={ClientForm}/>
+		</Route>
+
+		<Route path="client/:clientId" component={ClientDetail}>
+			<Route path="edit" component={ClientForm}/>
+			<Route path="store/add" component={StoreForm}/>
+		</Route>
+
+		<Route path="store/:storeId" component={StoreDetail}>
+			<Route path="edit" component={StoreForm}/>
 		</Route>
 
 		<Route path="auditor" component={AuditorList}/>

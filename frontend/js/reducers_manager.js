@@ -4,6 +4,7 @@ var initialStore = {
 	applications: {},
 	audits: {},
 	clients: {},
+	stores: {},
 	auditors: {},
 	locations: {},
 	states: {},
@@ -41,6 +42,9 @@ var initialStore = {
 		},
 		auditorSearch: {
 			search: "",
+		},
+		store: {
+			errors: {},
 		},
 	}
 };
@@ -147,6 +151,80 @@ export function rootReducer(store = initialStore, action) {
 					return Object.assign({}, store, {
 						additionalInfos: Object.assign({}, store.additionalInfos, {
 							[action.additionalInfo.user_id]: action.additionalInfo
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.STORE_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						stores: (function(stores){
+							var obj = {};
+							for( var s of stores){
+								obj[s.id] = s;
+							}
+							return obj;
+						}(action.stores))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.STORE_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						stores: Object.assign({}, store.stores, {
+							[action.store.id]: action.store
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.STORE_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						stores: Object.assign({}, store.stores, {
+							[action.store.id]: action.store
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							store: Object.assign({}, store.forms.store, {
+								errors: action.errors
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.STORE_ID_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						stores: Object.assign({}, store.stores, {
+							[action.store.id]: action.store
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							store: Object.assign({}, store.forms.store, {
+								errors: action.errors
+							})
 						})
 					});
 					break;

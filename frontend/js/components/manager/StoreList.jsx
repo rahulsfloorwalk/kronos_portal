@@ -1,0 +1,64 @@
+import React from 'react';
+import * as ReactRedux from 'react-redux';
+import { Link } from 'react-router';
+
+import { fetchStores } from '../../manager/actions/store.js'
+
+var StoreRow = React.createClass({
+	render: function(){
+		var linkTo = `/store/${this.props.store.id}`;
+		return (
+			<tr>
+				<td>{this.props.store.name}</td>
+				<td>{this.props.store.address}</td>
+				<td>{this.props.store.location.name}</td>
+				<td>
+					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
+				</td>
+			</tr>
+		);
+	},
+});
+
+var StoreList = React.createClass({
+	componentDidMount: function() {
+		this.props.dispatch(fetchStores(this.props.clientId));
+	},
+	render: function(){
+		var rows = [];
+		for(var id in this.props.stores) {
+			rows.push(<StoreRow store={this.props.stores[id]} key={id}/>);
+		}
+		var addStoreLink = `/client/${this.props.clientId}/store/add`;
+		return (
+			<div>
+				<h2 className="page-header">
+					<Link to={addStoreLink} className="btn btn-primary pull-right">Add Store</Link>
+					Store List
+				</h2>
+				<table className="table table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Email</th>
+							<th>Phone</th>
+						</tr>
+					</thead>
+					<tbody>
+						{rows}
+					</tbody>
+				</table>
+				{this.props.children}
+			</div>
+		);
+	},
+});
+
+var mapStoreToProps = function(store, ownProps){
+	return {
+		stores: store.stores,
+		clientId: ownProps.clientId
+	};
+};
+
+export default ReactRedux.connect(mapStoreToProps)(StoreList); 

@@ -1,0 +1,49 @@
+import React from 'react';
+import * as ReactRedux from 'react-redux';
+import { Link } from 'react-router';
+
+import { fetchClient } from '../../manager/actions/client.js';
+
+import Panel from '../Panel.jsx';
+import Loading from '../Loading.jsx';
+
+import StoreList from './StoreList.jsx';
+
+var ClientDetail = React.createClass({
+	componentDidMount: function(){
+		this.props.dispatch(fetchClient(this.props.params.clientId));
+	},
+	render: function(){
+		if(! this.props.client){
+			return <Loading/>;
+		}
+		var editLink = `/client/${this.props.params.clientId}/edit`;
+		return (
+			<div>
+				<h2 className="page-header">
+					<Link to={editLink} className="btn btn-primary pull-right">Edit Client</Link>
+					{ this.props.client.name }
+				</h2>
+				<Panel title="Client Info" noBody={true}>
+					<table className="table table-striped">
+						<tbody>
+							<tr><td className="text-right">Name</td><td><b>{ this.props.client.name }</b></td></tr>
+							<tr><td className="text-right">Email</td><td><b>{ this.props.client.email }</b></td></tr>
+							<tr><td className="text-right">Phone</td><td><b>{ this.props.client.phone }</b></td></tr>
+						</tbody>
+					</table>
+				</Panel>
+				<StoreList clientId={this.props.params.clientId}/>
+				{this.props.children}
+			</div>
+		);
+	},
+});
+
+var mapStoreToProps = function(store, ownProps){
+	return {
+		client: store.clients[ownProps.params.clientId]
+	};
+};
+
+export default ReactRedux.connect(mapStoreToProps)(ClientDetail);

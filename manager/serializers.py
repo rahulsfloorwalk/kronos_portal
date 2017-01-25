@@ -17,16 +17,16 @@ class ClientSerializer(ModelSerializer):
             'phone',
         )
         read_only_fields = ('id',)
-#
-#    def create(self, **kwargs):
-#        if 'id' in kwargs and kwargs['id'] is not None:
-#            client = Client.objects.get(id=kwargs['id'])
-#        else:
-#            client = Client()
-#        client.name = self.validated_data.get('name', client.name)
-#        client.email = self.validated_data.get('email', client.email)
-#        client.phone = self.validated_data.get('phone', client.phone)
-#        return client
+
+    def create(self, **kwargs):
+        if 'id' in kwargs and kwargs['id'] is not None:
+            client = Client.objects.get(id=kwargs['id'])
+        else:
+            client = Client()
+        client.name = self.validated_data.get('name', client.name)
+        client.email = self.validated_data.get('email', client.email)
+        client.phone = self.validated_data.get('phone', client.phone)
+        return client
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -73,6 +73,24 @@ class LocationDeSerializer(ModelSerializer):
         return location
 
 
+class AuditCycleSerializer(ModelSerializer):
+    client = ClientSerializer()
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'type',
+            'status',
+            'start_date',
+            'end_date',
+            'earnings_per_audit',
+            'description',
+            'client',
+            'audit_count',
+        )
+        read_only_fields = fields
+
+
 class StoreSerializer(ModelSerializer):
     location = LocationSerializer()
     client = ClientSerializer()
@@ -88,9 +106,33 @@ class StoreSerializer(ModelSerializer):
         read_only_fields = fields
 
 
+class StoreDeSerializer(ModelSerializer):
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'address',
+            'location',
+            'client',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            store = Store.objects.get(id=self.context.get('id'))
+        else:
+            store = Store()
+        store.name = self.validated_data.get('name', store.name)
+        store.address = self.validated_data.get('address', store.address)
+        store.location = self.validated_data.get('location', store.location_id)
+        store.client = self.validated_data.get('client', store.client_id)
+        return store
+
+
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
-    audit_cycle = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
     class Meta:
         model = Audit
         fields = (
@@ -139,23 +181,6 @@ class AuditDeSerializer(ModelSerializer):
 
         return audit
 
-
-class AuditCycleSerializer(ModelSerializer):
-    client = ClientSerializer()
-    class Meta:
-        model = AuditCycle
-        fields = (
-            'id',
-            'type',
-            'status',
-            'start_date',
-            'end_date',
-            'earnings_per_audit',
-            'description',
-            'client',
-            'audit_count',
-        )
-        read_only_fields = fields
 
 #class AuditDeSerializer(ModelSerializer):
 #    class Meta:

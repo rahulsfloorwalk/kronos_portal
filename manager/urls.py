@@ -1,13 +1,19 @@
 from django.conf.urls import url
 from . import views
 from .viewss import auditor as auditor_views
+from .viewss import client as client_views
+from .viewss import store as store_views
 
 urlpatterns = ([
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
 
-    url(r'client/(?P<client_id>[0-9]+)$', views.ClientIdView.as_view(), name='client_id_view'),
-    url(r'client$', views.ClientView.as_view(), name='client_view'),
+    url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),
+    url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
+    url(r'client$', client_views.ClientView.as_view(), name='client_view'),
+
+    url(r'store/(?P<store_id>[0-9]+)$$', store_views.StoreIdView.as_view(), name='store_id_view'),
+    url(r'store$', store_views.StoreView.as_view(), name='store_view'),
 
     url(r'application/(?P<application_id>[0-9]+)/assign$', views.AuditApplicationAssignView.as_view(), name='audit_application_assign_view'),
     url(r'application/(?P<application_id>[0-9]+)/reject$', views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),

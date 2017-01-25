@@ -6,14 +6,14 @@ import { fetchClients } from '../../manager/actions/client.js'
 
 var ClientRow = React.createClass({
 	render: function(){
-		var linkTo = `/client/${this.props.client.id}/edit`;
+		var linkTo = `/client/${this.props.client.id}`;
 		return (
 			<tr>
 				<td>{this.props.client.name}</td>
 				<td>{this.props.client.email}</td>
 				<td>{this.props.client.phone}</td>
 				<td>
-					<Link to={linkTo} className="btn btn-default pull-right">Edit</Link>
+					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
 				</td>
 			</tr>
 		);

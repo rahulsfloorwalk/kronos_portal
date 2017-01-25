@@ -31,7 +31,7 @@ class Store(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)
-    address = CharField(db_column='address', max_length=50, blank=False)
+    address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=False)
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=CASCADE)
 

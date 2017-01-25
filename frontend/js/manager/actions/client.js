@@ -1,7 +1,6 @@
 import $ from 'jquery'
 import { url } from '../../../config.js'
 import types from '../action_types.js';
-import { hashHistory } from 'react-router';
 
 /**
  * These are the action creators as mentioned here: http://redux.js.org/docs/basics/ExampleTodoList.html#action-creators
@@ -65,7 +64,7 @@ export function fetchClient(clientId){
 	return function(dispatch){
 		dispatch(clientIdGetRequest(clientId));
 
-		$.get( url.api_base_path + `manager/client/${clientId}`, function(client){
+		return $.get( url.api_base_path + `manager/client/${clientId}`, function(client){
 			dispatch(clientIdGetSuccess(client));
 		});
 		//TODO: Handle error
@@ -114,7 +113,6 @@ export function saveClientEditForm(client){
 			dispatch({
 				type: types.CLIENT_FORM_SUB_SUC,
 			});
-			hashHistory.push("/client");
 		});
 		req.fail(function(error){
 			dispatch({
@@ -125,6 +123,7 @@ export function saveClientEditForm(client){
 				type: types.CLIENT_FORM_SUB_ERR,
 			});
 		});
+		return req;
 	};
 };
 
@@ -152,7 +151,6 @@ export function saveClientAddForm(client){
 			dispatch({
 				type: types.CLIENT_FORM_SUB_SUC,
 			});
-			hashHistory.push("/client");
 		});
 		req.fail(function(error){
 			dispatch({
@@ -163,6 +161,7 @@ export function saveClientAddForm(client){
 				type: types.CLIENT_FORM_SUB_ERR,
 			});
 		});
+		return req;
 	};
 };
 

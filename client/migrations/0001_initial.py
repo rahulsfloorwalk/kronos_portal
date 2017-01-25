@@ -40,7 +40,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(db_column='id', primary_key=True, serialize=False)),
                 ('name', models.CharField(db_column='name', max_length=50)),
-                ('address', models.CharField(db_column='address', max_length=50)),
+                ('address', models.CharField(db_column='address', max_length=1024)),
                 ('client', models.ForeignKey(db_column='client_id', on_delete=django.db.models.deletion.CASCADE, related_name='stores', to='client.Client')),
                 ('location', models.ForeignKey(db_column='location_id', on_delete=django.db.models.deletion.CASCADE, to='manager.Location')),
             ],
