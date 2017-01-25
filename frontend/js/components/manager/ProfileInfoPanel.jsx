@@ -17,6 +17,7 @@ var ProfileInfoPanel = React.createClass({
 		if(! this.props.profileInfo){
 			return <Loading/>;
 		}
+		var auditor_city = this.props.profileInfo.city || {};
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
@@ -31,7 +32,7 @@ var ProfileInfoPanel = React.createClass({
 					<p>Marital Status: { getMaritalStatus(this.props.profileInfo.marital_status) }</p>
 					<p>Address: { this.props.profileInfo.address }</p>
 					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
-					<p>City: { this.props.profileInfo.city.name }</p>
+					<p>City: { auditor_city.name }</p>
 					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
 					<p>Pincode: { this.props.profileInfo.pincode }</p>
 				</div>

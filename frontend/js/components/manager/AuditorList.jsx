@@ -15,13 +15,14 @@ var AuditorRow = React.createClass({
 	render: function(){
 		var linkTo = `/auditor/${this.props.auditor.id}`;
 		var prof = this.props.auditor.profileinfo || {};
+		prof.city = prof.city || {};
 		return (
 			<tr>
 				<td>{prof.first_name} {prof.last_name}</td>
 				<td>{this.props.auditor.email}</td>
 				<td>{prof.gender}</td>
 				<td>{prof.mobile_number}</td>
-				<td>{prof.city}</td>
+				<td>{prof.city.name}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
 				</td>
@@ -53,7 +54,7 @@ var AuditorList = React.createClass({
 		affectInputEventToComponent(e, this);
 	},
 	render: function(){
-		var rows = []; 
+		var rows = [];
 		for(var id in this.props.auditors) {
 			rows.push(<AuditorRow auditor={this.props.auditors[id]} key={id}/>);
 		}
@@ -110,4 +111,4 @@ var mapStoreToProps = function(store){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(AuditorList); 
+export default ReactRedux.connect(mapStoreToProps)(AuditorList);
