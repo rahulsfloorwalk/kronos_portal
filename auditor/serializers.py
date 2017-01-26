@@ -4,7 +4,7 @@ from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField
 from rest_framework import serializers
 
-from manager.serializers import AuditLocationSerializer, CitySerializer
+from manager.serializers import CitySerializer
 from manager.models import Location
 from manager.serializers import AuditSerializer
 from audit.models import Audit, AuditCycle
