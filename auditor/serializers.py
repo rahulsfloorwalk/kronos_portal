@@ -56,7 +56,7 @@ class ProfileInfoDeSerializer(ModelSerializer):
         read_only_fields = ('id', 'user_id')
 
     def deserialize(self):
-        if self.context['current_user'] is None:
+        if self.context.get('current_user') is None:
             raise TypeError("missing keyword argument 'current_user'")
 
         try:
