@@ -81,9 +81,11 @@ var ProfileInfoForm = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState(nextProps.profileInfo);
-		this.setState({
-			'city':nextProps.profileInfo.city.id
-		});
+		if( nextProps.profileInfo.city){
+			this.setState({
+				'city':nextProps.profileInfo.city.id
+			});
+		}
 		if( nextProps.state){
 			this.props.dispatch(fetchCities(nextProps.state));
 		}
@@ -115,10 +117,10 @@ var ProfileInfoForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="First Name" maxLength="20" type="text" value={this.state.first_name} name="first_name" onChange={this.inputChanged}/>
+							<FormInput label="First Name" maxLength="20" type="text" value={this.state.first_name} name="first_name" onChange={this.inputChanged} errors={this.props.errors.first_name}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="Last Name" maxLength="20" type="text" value={this.state.last_name} name="last_name" onChange={this.inputChanged}/>
+							<FormInput label="Last Name" maxLength="20" type="text" value={this.state.last_name} name="last_name" onChange={this.inputChanged} errors={this.props.errors.last_name}/>
 						</div>
 					</div>
 					<div className="row">
@@ -135,7 +137,7 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormSelect label="Marital Status" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged}>
+							<FormSelect label="Marital Status" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged} errors={this.props.errors.marital_status}>
 								<option value=""></option>
 								<option value="S">Single</option>
 								<option value="M">Married</option>
@@ -144,7 +146,7 @@ var ProfileInfoForm = React.createClass({
 							</FormSelect>
 						</div>
 						<div className="col-md-6">
-							<FormSelect label="Education" name="education" value={this.state.education} onChange={this.inputChanged}>
+							<FormSelect label="Education" name="education" value={this.state.education} onChange={this.inputChanged} errors={this.props.errors.education}>
 								<option value=""></option>
 								<option value="TE">10th (Middle School)</option>
 								<option value="TW">12th (High School)</option>
@@ -156,10 +158,10 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="Address" maxLength="100" type="text" value={this.state.address} name="address" onChange={this.inputChanged}/>
+							<FormInput label="Address" maxLength="100" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="Pincode" maxLength="8" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged}/>
+							<FormInput label="Pincode" maxLength="8" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode}/>
 						</div>
 					</div>
 					<div className="row">
@@ -170,7 +172,7 @@ var ProfileInfoForm = React.createClass({
 							<CitySelector value={this.state.city} onChange={this.inputChanged}/>
 						</div>
 					</div>
-					<FormInput label="Mobile Number" maxLength="10" type="text" value={this.state.mobile_number} name="mobile_number" onChange={this.inputChanged}/>
+					<FormInput label="Mobile Number" maxLength="10" type="text" value={this.state.mobile_number} name="mobile_number" onChange={this.inputChanged} errors={this.props.errors.mobile_number}/>
 					<SaveButton/>
 				</form>
 			</Modal>
