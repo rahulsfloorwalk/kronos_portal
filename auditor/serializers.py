@@ -55,15 +55,15 @@ class ProfileInfoDeSerializer(ModelSerializer):
         )
         read_only_fields = ('id', 'user_id')
 
-    def save(self, **kwargs):
-        if 'current_user' not in kwargs:
+    def deserialize(self):
+        if self.context['current_user'] is None:
             raise TypeError("missing keyword argument 'current_user'")
 
         try:
-            profile_info = ProfileInfo.objects.get(user_id=kwargs['current_user'].id)
+            profile_info = ProfileInfo.objects.get(user_id=self.context['current_user'].id)
         except ProfileInfo.DoesNotExist:
             profile_info = ProfileInfo()
-            profile_info.user_id = kwargs['current_user'].id
+            profile_info.user_id = self.context['current_user'].id
 
         profile_info.first_name = self.validated_data.get('first_name', profile_info.first_name)
         profile_info.last_name = self.validated_data.get('last_name', profile_info.last_name)
@@ -77,7 +77,7 @@ class ProfileInfoDeSerializer(ModelSerializer):
         profile_info.city = self.validated_data.get('city', profile_info.city)
         profile_info.state = self.validated_data.get('state', profile_info.state)
 
-        profile_info.save()
+        #profile_info.save()
         return profile_info
 
 
@@ -179,9 +179,9 @@ class AuditApplicationSerializer(ModelSerializer):
     class Meta:
         model = AuditApplication
         fields = (
-            'id', 
-            'status', 
-            'audit_date', 
+            'id',
+            'status',
+            'audit_date',
             'audit',
             'profileinfo',
         )

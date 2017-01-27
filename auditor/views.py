@@ -35,9 +35,10 @@ class ProfileInfoView(APIView):
             raise Http404
 
     def post(self, request):
-        profile_info_ds = ProfileInfoDeSerializer(data=request.data)
+        profile_info_ds = ProfileInfoDeSerializer(data=request.data, context={'current_user': request.user})
         profile_info_ds.is_valid(raise_exception=True)
-        profile_info = profile_info_ds.save(current_user=request.user)
+        profile_info = profile_info_ds.deserialize()
+        profile_info.save()
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class AdditionalInfoView(APIView):
