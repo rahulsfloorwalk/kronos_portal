@@ -39,7 +39,7 @@ class AuditCycle(Model):
 #    def audit_count(self):
 #        count = 0;
 #        for al in self.audits.all():
-#            count = count + 1 
+#            count = count + 1
 #        return count
 #
 #    def cities(self):
@@ -54,25 +54,12 @@ class Audit(Model):
     db_table = "audits"
 
     id = AutoField(db_column = 'id', primary_key=True)
+    count = PositiveIntegerField(db_column='count', blank=False, default=1)
     store = ForeignKey('client.Store', related_name='audits', db_column='store_id')
     audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id')
 
     def __str__(self):
-        return "Audit({}): {}, {}".format(self.id, self.store, self.audit_cycle)
+        return "Audit({}): {}, {}".format(self.id, self.store, self.audit_cycle, self.count)
 
     class Meta:
         unique_together = (("store", "audit_cycle"))
-
-
-class Answer(Model):
-    db_table = "answers"
-
-    id = AutoField(db_column = 'id', primary_key=True)
-    question = ForeignKey('questionnaire.Question', db_column='question_id', blank=False)
-    audit = ForeignKey(Audit, db_column='audit_id', blank=False)
-
-    answer_txt = CharField(db_column='answer_txt', max_length=200, blank=False)
-    marks = PositiveIntegerField(db_column='marks', blank=False)
-
-    def __str__(self):
-        return "Answer({}): {}, {}".format(self.id, self.answer_txt, self.marks)
