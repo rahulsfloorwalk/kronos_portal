@@ -3,7 +3,6 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchClients } from '../../manager/actions/client.js';
 import {  loadAuditCycleAddForm, loadAuditCycleEditForm, saveAuditCycleAddForm, saveAuditCycleEditForm } from '../../manager/actions/audit.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -22,8 +21,7 @@ var AuditCycleForm = React.createClass({
 		return {};
 	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchClients());
-		if(this.props.params.auditId){
+		if(this.props.params.auditCycleId){
 			this.props.dispatch(loadAuditCycleEditForm(this.props.params.auditCycleId));
 		} else {
 			this.props.dispatch(loadAuditCycleAddForm());
@@ -34,6 +32,10 @@ var AuditCycleForm = React.createClass({
 		if(nextProps.auditCycle && nextProps.auditCycle.client){
 			this.setState({
 				'client': nextProps.auditCycle.client.id
+			});
+		} else {
+			this.setState({
+				'client': nextProps.params.clientId
 			});
 		}
 	},
@@ -67,17 +69,10 @@ var AuditCycleForm = React.createClass({
 	},
 	render : function(){
 		var clientRows = [];
-		for( var id in this.props.clients){
-			clientRows.push(<option value={id} key={id}>{this.props.clients[id].name}</option>);
-		}
 		var modalTitle = this.props.params.auditId ? "Edit Audit Cycle" : "Add Audit Cycle";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormSelect label="Client" name="client" value={this.state.client} onChange={this.fieldChanged} errors={this.props.errors.client}>
-						<option value=""></option>
-						{clientRows}
-					</FormSelect>
 					<div className="row">
 						<div className="col-md-6">
 							<FormDateInput label="Start Date" value={this.state.start_date} name="start_date" onChange={this.startDateChanged} errors={this.props.errors.start_date}/>
@@ -118,7 +113,6 @@ var AuditCycleForm = React.createClass({
 var mapStoreToProps = function(store, ownProps){
 	return {
 		auditCycle: store.auditCycles[ownProps.params.auditCycleId] || {},
-		clients: store.clients,
 		errors: store.forms.auditCycle.errors,
 	};
 };

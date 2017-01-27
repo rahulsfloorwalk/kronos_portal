@@ -21,6 +21,10 @@ var ClientDetail = React.createClass({
 		var editLink = `/client/${this.props.params.clientId}/edit`;
 		return (
 			<div>
+				<ol className="breadcrumb">
+					<li><Link to="/client">Clients</Link></li>
+					<li className="active">{this.props.client.name}</li>
+				</ol>
 				<h2 className="page-header">
 					<Link to={editLink} className="btn btn-primary pull-right">Edit Client</Link>
 					{ this.props.client.name }

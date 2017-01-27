@@ -18,6 +18,11 @@ var StoreDetail = React.createClass({
 		var editLink = `/store/${this.props.params.storeId}/edit`;
 		return (
 			<div>
+				<ol className="breadcrumb">
+					<li><Link to="/client">Clients</Link></li>
+					<li><Link to={`/client/${this.props.store.client.id}`}>{this.props.store.client.name}</Link></li>
+					<li className="active">{this.props.store.name}</li>
+				</ol>
 				<h2 className="page-header">
 					<Link to={editLink} className="btn btn-primary pull-right">Edit Store</Link>
 					{ this.props.store.name }

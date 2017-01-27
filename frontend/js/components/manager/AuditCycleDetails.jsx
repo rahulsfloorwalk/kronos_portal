@@ -104,6 +104,11 @@ var AuditCycleDetails = React.createClass({
 
 		return (
 			<div>
+				<ol className="breadcrumb">
+					<li><Link to="/client">Clients</Link></li>
+					<li><Link to={`/client/${this.props.auditCycle.client.id}`}>{this.props.auditCycle.client.name}</Link></li>
+					<li className="active">Cycle: {this.props.auditCycle.start_date} to { this.props.auditCycle.end_date}</li>
+				</ol>
 				<h2 className="page-header">
 					<Link to={editAuditCycleLink} className="btn btn-default pull-right">Edit</Link>
 					Audit Cycle Details

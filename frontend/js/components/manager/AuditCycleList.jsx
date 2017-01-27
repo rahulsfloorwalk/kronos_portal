@@ -10,10 +10,10 @@ var AuditCycleRow = React.createClass({
 		var linkTo = `/audit_cycle/${this.props.auditCycle.id}`;
 		return (
 			<tr>
-				<td>{getAuditType(this.props.auditCycle.type)}</td>
-				<td>{getAuditStatus(this.props.auditCycle.status)}</td>
 				<td>{this.props.auditCycle.start_date}</td>
 				<td>{this.props.auditCycle.end_date}</td>
+				<td>{getAuditType(this.props.auditCycle.type)}</td>
+				<td>{getAuditStatus(this.props.auditCycle.status)}</td>
 				<td>{this.props.auditCycle.earnings_per_audit}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
@@ -42,10 +42,10 @@ var AuditCycleList = React.createClass({
 				<table className="table table-striped">
 					<thead>
 						<tr>
-							<th>Audit Type</th>
-							<th>Audit Status</th>
 							<th>Start Date</th>
 							<th>End Date</th>
+							<th>Audit Type</th>
+							<th>Audit Status</th>
 							<th>Earnings</th>
 						</tr>
 					</thead>
