@@ -168,6 +168,7 @@ class AuditSerializer(ModelSerializer):
         model = Audit
         fields = (
             'id',
+            'count',
             'store',
             'audit_cycle',
         )
@@ -179,6 +180,7 @@ class AuditDeSerializer(ModelSerializer):
         model = Audit
         fields = (
             'id',
+            'count',
             'store',
             'audit_cycle',
         )
@@ -202,14 +204,14 @@ class AuditDeSerializer(ModelSerializer):
     #    else:
     #        raise ValidationError('Audit with Location already exists')
 
-    def create(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            audit = Audit.objects.get(id=kwargs['id'])
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            audit = Audit.objects.get(id=self.context.get('id'))
         else:
             audit = Audit()
-        audit.store_id = self.validated_data.get('store', audit.store_id)
-        audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle)
-
+        audit.count = self.validated_data.get('count', audit.count)
+        audit.store = self.validated_data.get('store', audit.store_id)
+        audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
         return audit
 
 
@@ -217,11 +219,11 @@ class ProfileInfoSmallSerializer(ModelSerializer):
     class Meta:
         model = ProfileInfo
         fields = (
-            'id', 
-            'first_name', 
-            'last_name', 
-            'mobile_number', 
-            'city', 
+            'id',
+            'first_name',
+            'last_name',
+            'mobile_number',
+            'city',
             'user_id'
         )
         read_only_fields = fields
@@ -231,9 +233,9 @@ class AuditApplicationSerializer(ModelSerializer):
     class Meta:
         model = AuditApplication
         fields = (
-            'id', 
-            'status', 
-            'audit_date', 
+            'id',
+            'status',
+            'audit_date',
             'audit',
             'profileinfo',
         )

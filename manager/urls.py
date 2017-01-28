@@ -3,6 +3,7 @@ from . import views
 from .viewss import auditor as auditor_views
 from .viewss import client as client_views
 from .viewss import store as store_views
+from .viewss import audit as audit_views
 from .viewss import audit_cycle as audit_cycle_views
 
 urlpatterns = ([
@@ -26,6 +27,10 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)/auditlocation$', views.AuditLocationView.as_view(), name='audit_location_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/auditlocation/(?P<auditlocation_id>[0-9]+)$', views.AuditLocationIdView.as_view(), name='audit_location_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/application$', views.AuditApplicationView.as_view(), name='audit_application_view'),
+
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', audit_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
+    url(r'audit/(?P<audit_id>[0-9]+)$$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
+    url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 
     url(r'location/(?P<location_id>[0-9]+)$', views.LocationIdView.as_view(), name='location_id_view'),
     url(r'location$', views.LocationView.as_view(), name='location_view'),
