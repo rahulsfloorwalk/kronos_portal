@@ -4,18 +4,16 @@ from django.db.models import CASCADE
 class AuditStore(Model):
     db_table = 'audit_store'
 
-    APPLIED = 'APPLIED'
-    REJECTED = 'REJECTED'
     ASSIGNED = 'ASSIGNED'
     FAILED = 'FAILED'
+    CANCELLED = 'CANCELLED'
     COMPLETED = 'COMPLETED'
 
     STATUS = (
-            (APPLIED, "Applied"),
-            (REJECTED, "Rejected"),
             (ASSIGNED, "Assigned"),
             (FAILED, "Failed"),
             (COMPLETED, "Completed"),
+            (CANCELLED, "Cancelled"),
     )
 
     id = AutoField(db_column='id', primary_key=True)

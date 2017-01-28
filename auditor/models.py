@@ -184,16 +184,12 @@ class AuditApplication(Model):
     NOT_APPLIED = 'NOT_APPLIED'
     APPLIED = 'APPLIED'
     REJECTED = 'REJECTED'
-    ASSIGNED = 'ASSIGNED'
-    FAILED = 'FAILED'
-    COMPLETED = 'COMPLETED'
+    APPROVED = 'APPROVED'
     STATUS = (
             (NOT_APPLIED, "Not Applied"),
             (APPLIED, "Applied"),
             (REJECTED, "Rejected"),
-            (ASSIGNED, "Assigned"),
-            (FAILED, "Failed"),
-            (COMPLETED, "Completed"),
+            (APPROVED, "Approved"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
