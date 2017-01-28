@@ -2,6 +2,7 @@ from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
 from django.contrib.auth.models import User
 
+from questionnaire.models import Section
 from auditor.models import ProfileInfo, AuditApplication
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
@@ -249,6 +250,7 @@ class ProfileInfoSmallSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+
 class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
     class Meta:
@@ -261,3 +263,37 @@ class AuditApplicationSerializer(ModelSerializer):
             'profileinfo',
         )
         read_only_fields = fields
+
+
+class SectionSerializer(ModelSerializer):
+    class Meta:
+        model = Section
+        fields = (
+            'id', 
+            'name', 
+            'audit_cycle', 
+            'sequence',
+        )
+        read_only_fields = fields
+
+
+class SectionDeSerializer(ModelSerializer):
+    class Meta:
+        model = Section
+        fields = (
+            'id', 
+            'name', 
+            'audit_cycle', 
+            'sequence',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            section = Section.objects.get(id=self.context.get('id'))
+        else:
+            section = Section()
+        section.name = self.validated_data.get('name', section.name)
+        section.sequence = self.validated_data.get('sequence', section.sequence)
+        section.audit_cycle = self.validated_data.get('audit_cycle', section.audit_cycle_id)
+        return section

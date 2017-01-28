@@ -18,7 +18,7 @@ class Section(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
-    audit = ForeignKey('audit.AuditCycle', related_name='sections', db_column='audit_cycle_id', blank=False)
+    audit_cycle = ForeignKey('audit.AuditCycle', related_name='sections', db_column='audit_cycle_id', blank=False)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
 
     def __str__(self):
