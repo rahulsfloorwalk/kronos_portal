@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, OneToOneField
 from django.db.models import CASCADE
+from audit.models import Audit
 
 class AuditStore(Model):
     db_table = 'audit_store'

@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 from auditor.models import ProfileInfo, AuditApplication
 from audit.models import Audit, AuditCycle
+from audit_store.models import AuditStore
 from client.models import Client, Store
 from .models import City, Location
 
@@ -187,23 +188,6 @@ class AuditDeSerializer(ModelSerializer):
         read_only_fields = ('id',)
         validators=[]
 
-    #def validate(self, attrs):
-    #    store = attrs.get('store')
-    #    audit_cycle = attrs.get('audit_cycle')
-
-    #    print('AuditDeSerializer#validate called')
-    #    try:
-    #        obj = AuditLocation.objects.get(audit=audit, location=location)
-    #    except AuditLocation.DoesNotExist:
-    #        return attrs
-    #    print("self.context", self.context)
-    #    print("obj.id",obj.id, type(obj.id))
-    #    print("id",self.context.get("id"), type(self.context.get("id")))
-    #    if self.context.get("id") and obj.id == int(self.context.get('id')):
-    #        return attrs
-    #    else:
-    #        raise ValidationError('Audit with Location already exists')
-
     def deserialize(self):
         if 'id' in self.context and self.context.get('id') is not None:
             audit = Audit.objects.get(id=self.context.get('id'))
@@ -214,6 +198,43 @@ class AuditDeSerializer(ModelSerializer):
         audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
         return audit
 
+class AuditStoreSerializer(ModelSerializer):
+    audit = AuditSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
+        )
+        read_only_fields = fields
+
+
+class AuditStoreDeSerializer(ModelSerializer):
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
+        )
+        read_only_fields = ('id',)
+        validators=[]
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            audit_store = AuditStore.objects.get(id=self.context.get('id'))
+        else:
+            audit_store = AuditStore()
+        audit_store.status = self.validated_data.get('status', audit_store.status)
+        audit_store.audit_date = self.validated_data.get('audit_date', audit_store.audit_date)
+        audit_store.audit = self.validated_data.get('audit', audit_store.audit_id)
+        audit_store.user = self.validated_data.get('user', audit_store.user_id)
+        return audit_store
 
 class ProfileInfoSmallSerializer(ModelSerializer):
     class Meta:
