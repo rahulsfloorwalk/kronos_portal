@@ -26,6 +26,7 @@ import AuditCycleForm from './AuditCycleForm.jsx';
 import AuditCycleDetails from './AuditCycleDetails.jsx';
 
 import SectionForm from './SectionForm.jsx';
+import AuditStoreForm from './AuditStoreForm.jsx';
 
 import AuditDetails from './AuditDetails.jsx';
 import AuditLocationForm from './AuditLocationForm.jsx';
@@ -58,6 +59,8 @@ const Routes = () => (
 			<Route path="edit" component={AuditCycleForm}/>
 			<Route path="section/add" component={SectionForm}/>
 			<Route path="section/:sectionId/edit" component={SectionForm}/>
+      <Route path="audit_store/add" component={AuditStoreForm}/>
+			<Route path="audit_store/:auditStoreId/edit" component={AuditStoreForm}/>
 		</Route>
 
 		<Route path="auditor" component={AuditorList}/>

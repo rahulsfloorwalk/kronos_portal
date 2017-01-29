@@ -8,6 +8,7 @@ import { fetchAuditCycle } from '../../manager/actions/audit.js';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
+import AuditStoreList from './AuditStoreList.jsx';
 import SectionList from './SectionList.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
@@ -127,6 +128,7 @@ var AuditCycleDetails = React.createClass({
 						</tbody>
 					</table>
 				</Panel>
+				<AuditStoreList auditCycleId={this.props.params.auditCycleId}/>
 				<SectionList auditCycleId={this.props.params.auditCycleId}/>
 				{this.props.children}
 			</div>
