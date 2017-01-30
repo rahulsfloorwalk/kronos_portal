@@ -272,3 +272,153 @@ export function saveAuditLocationEditForm(auditLocation){
 		});
 	};
 };
+
+//code for audits here
+
+export function fetchAudits(auditCycleId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_GET,
+			status: 'request',
+			auditCycleId
+		});
+
+		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit`, function(audits){
+			dispatch({
+				type: types.AUDIT_GET,
+				status: 'success',
+				audits
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchAudit(auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_ID_GET,
+			status: 'request',
+			auditId
+		});
+
+		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit/`, function(auditCycle){
+			dispatch({
+				type: types.AUDIT_CYCLE_ID_GET,
+				status: 'success',
+				auditCycle
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function loadAuditAddForm(){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_LOAD,
+			status: 'success'
+		});
+	};
+};
+
+export function loadAuditEditForm(auditCycleId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_LOAD,
+			status: 'request',
+			auditId
+		});
+		return dispatch(fetchAudit(auditId));
+	};
+};
+
+export function saveAuditAddForm(audit){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_SUB,
+			status: 'request',
+			audit
+
+		});
+		dispatch({
+			type: types.AUDIT_POST,
+			status: 'request',
+			audit
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "manager/audit",
+			data: JSON.stringify(audit),
+			contentType: "application/json"
+		});
+		req.done(function(savedAudit){
+			dispatch({
+				type: types.AUDIT_POST,
+				status: 'success',
+				auditCycle: savedAudit
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'success',
+			});
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.AUDIT_POST,
+				status: 'error',
+				errors: error.responseJSON
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'error',
+			});
+		});
+		return req;
+	};
+};
+
+export function saveAuditEditForm(audit){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_FORM_SUB,
+			status: 'request'
+		});
+		dispatch({
+			type: types.AUDIT_ID_POST,
+			status: 'request',
+			audit: audit
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit/${audit.id}`,
+			data: JSON.stringify(audit),
+			contentType: "application/json"
+		});
+		req.done(function(savedAudit){
+			dispatch({
+				type: types.AUDIT_ID_POST,
+				status: 'success',
+				audit: savedAudit
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'success'
+			});
+		});
+		req.fail(function(error){
+			dispatch({
+				type: types.AUDIT_ID_POST,
+				status: 'error',
+				errors: error.responseJSON
+			});
+			dispatch({
+				type: types.AUDIT_FORM_SUB,
+				status: 'error',
+			});
+		});
+		return req;
+	};
+};

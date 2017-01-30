@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { loadAuditStoreAddForm, loadAuditStoreEditForm, saveAuditStoreEditForm, saveAuditStoreAddForm } from '../../manager/actions/audit_store.js';
+import { loadAuditAddForm, loadAuditEditForm, saveAuditEditForm, saveAuditAddForm } from '../../manager/actions/audit.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormInput from '../FormInput.jsx';
@@ -11,16 +11,16 @@ import FormGroup from '../FormGroup.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 
-var AuditStoreForm = React.createClass({
+var AuditForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
 	componentDidMount: function() {
 		console.log("componentDidMount(...) called with props.params as", this.props.params);
-		if(this.props.params.auditStoreId){
-			this.props.dispatch(loadaAuditStoreEditForm(this.props.params.auditStoreId));
+		if(this.props.params.auditId){
+			this.props.dispatch(loadAuditEditForm(this.props.params.auditId));
 		} else {
-			this.props.dispatch(loadAuditStoreAddForm());
+			this.props.dispatch(loadAuditAddForm());
 		}
 		this.setState({
 			audit_cycle: this.props.params.auditCycleId
@@ -28,8 +28,8 @@ var AuditStoreForm = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps) {
 		console.log("componentWillReceiveProps(...) called with",nextProps);
-		if( nextProps.auditStore){
-			this.setState(nextProps.auditStore);
+		if( nextProps.audit){
+			this.setState(nextProps.audit);
 		}
 		this.setState({
 			audit_cycle: nextProps.params.auditCycleId
@@ -42,15 +42,15 @@ var AuditStoreForm = React.createClass({
 		e.preventDefault();
 		var submitPromise;
 		console.log(this.state);
-		if(this.props.params.auditStoreId){
-			submitPromise = this.props.dispatch(saveAuditStoreEditForm(this.state));
+		if(this.props.params.auditId){
+			submitPromise = this.props.dispatch(saveAuditEditForm(this.state));
 		} else {
-			submitPromise = this.props.dispatch(saveAuditStoreAddForm(this.state));
+			submitPromise = this.props.dispatch(saveAuditAddForm(this.state));
 		}
 		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}`));
 	},
 	render : function(){
-		var modalTitle = this.props.params.auditCycleId ? "Edit Audit Store" : "Add Audit Store";
+		var modalTitle = this.props.params.auditCycleId ? "Edit Audit" : "Add Audit";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -64,9 +64,9 @@ var AuditStoreForm = React.createClass({
 var mapStoreToProps = function(store, ownProps){
   console.log(ownProps);
 	return {
-		auditStore: store.auditStores[ownProps.params.auditStoreId],
-		errors: store.forms.auditStore.errors,
+		audit: store.audits[ownProps.params.auditId],
+		errors: store.forms.audit.errors,
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(AuditStoreForm);
+export default ReactRedux.connect( mapStoreToProps)(AuditForm);
