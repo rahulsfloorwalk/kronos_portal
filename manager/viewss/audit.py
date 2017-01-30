@@ -47,8 +47,8 @@ class AuditIdView(APIView):
         audit_ds = AuditDeSerializer(data=request.data, context={'id':audit_id})
         audit_ds.is_valid(raise_exception=True)
         audit = audit_ds.deserialize()
-        savedAudit = audit.save()
-        return Response(AuditSerializer(savedAudit).data)
+        audit.save()
+        return Response(AuditSerializer(audit).data)
 
     def delete(self, request, audit_id):
         try:
@@ -67,5 +67,5 @@ class AuditView(APIView):
         audit_ds = AuditDeSerializer(data=request.data)
         audit_ds.is_valid(raise_exception=True)
         audit = audit_ds.deserialize()
-        savedAudit = audit.save()
-        return Response(AuditSerializer(savedAudit).data)
+        audit.save()
+        return Response(AuditSerializer(audit).data)

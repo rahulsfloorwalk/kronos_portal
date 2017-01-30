@@ -11,7 +11,7 @@ var AuditRow = React.createClass({
     var LinkTo = `/audit/${this.props.audit.id}`;
     return(
       <tr>
-        <td>{this.props.audit.store}</td>
+        <td>{this.props.audit.store.name}</td>
         <td>{this.props.audit.count}</td>
         <td>
           <Link to={LinkTo} className="btn btn-primary pull-right">View</Link>
@@ -22,12 +22,12 @@ var AuditRow = React.createClass({
 });
 var AuditList = React.createClass({
   componentDidMount: function(){
-    this.props.dispatch(fetchAudits(this.props.auditId));
+    this.props.dispatch(fetchAudits(this.props.auditCycleId));
   },
   render: function(){
     var rows = [];
     for(var id in this.props.audits){
-      rows.push(<AuditRow audit={this.props.audit[id]} key={id} />);
+      rows.push(<AuditRow audit={this.props.audits[id]} key={id} />);
     }
     var addAuditLink = `/audit_cycle/${this.props.auditCycleId}/audit/add`;
     return(
@@ -36,7 +36,7 @@ var AuditList = React.createClass({
           <Link to={addAuditLink} className="btn btn-default pull-right">Add Audit</Link>
           Audit List
         </h2>
-        <table classname="table table-striped">
+        <table className="table table-striped">
           <thead>
             <tr>
               <th>Store</th>
@@ -55,8 +55,7 @@ var AuditList = React.createClass({
 
 var mapAuditToProps = function(store, ownProps){
   return{
-    auditStores: store.auditStores,
-    auditCycleId:ownProps.auditCycleId
+    audits: store.audits,
   };
 }
 export default ReactRedux.connect(mapAuditToProps)(AuditList);

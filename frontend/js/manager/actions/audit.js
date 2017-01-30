@@ -357,7 +357,7 @@ export function saveAuditAddForm(audit){
 			dispatch({
 				type: types.AUDIT_POST,
 				status: 'success',
-				auditCycle: savedAudit
+				audit: savedAudit
 			});
 			dispatch({
 				type: types.AUDIT_FORM_SUB,

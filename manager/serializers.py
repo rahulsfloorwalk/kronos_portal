@@ -165,7 +165,6 @@ class StoreDeSerializer(ModelSerializer):
 
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
-    audit_cycle = AuditCycleSerializer()
     class Meta:
         model = Audit
         fields = (
@@ -269,9 +268,9 @@ class SectionSerializer(ModelSerializer):
     class Meta:
         model = Section
         fields = (
-            'id', 
-            'name', 
-            'audit_cycle', 
+            'id',
+            'name',
+            'audit_cycle',
             'sequence',
         )
         read_only_fields = fields
@@ -281,9 +280,9 @@ class SectionDeSerializer(ModelSerializer):
     class Meta:
         model = Section
         fields = (
-            'id', 
-            'name', 
-            'audit_cycle', 
+            'id',
+            'name',
+            'audit_cycle',
             'sequence',
         )
         read_only_fields = ('id',)

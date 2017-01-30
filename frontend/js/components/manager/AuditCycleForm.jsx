@@ -21,6 +21,9 @@ var AuditCycleForm = React.createClass({
 		return {};
 	},
 	componentDidMount: function() {
+		this.setState({
+			'client': nextProps.params.clientId
+		});
 		if(this.props.params.auditCycleId){
 			this.props.dispatch(loadAuditCycleEditForm(this.props.params.auditCycleId));
 		} else {
@@ -28,8 +31,8 @@ var AuditCycleForm = React.createClass({
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		this.setState(nextProps.auditCycle);
 		if(nextProps.auditCycle && nextProps.auditCycle.client){
+			this.setState(nextProps.auditCycle);
 			this.setState({
 				'client': nextProps.auditCycle.client.id
 			});

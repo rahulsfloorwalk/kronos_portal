@@ -236,6 +236,83 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+
+			case types.AUDIT_GET:
+				switch(action.status){
+					case "success":
+						return Object.assign({}, store, {
+							audits: (function(audits){
+								var obj = {};
+								for( var a of audits){
+									obj[a.id] = a;
+								}
+								return obj;
+							}(action.audits))
+						});
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+				}
+
+				case types.AUDIT_ID_GET:
+					switch(action.status){
+						case "success":
+							return Object.assign({}, store, {
+								stores: Object.assign({}, store.audits, {
+									[action.audit.id]: action.audit
+								})
+							});
+							break;
+						default:
+							console.warn("WARNING: default case encountered for action: %O", action);
+							return audit;
+					}
+				case types.AUDIT_POST:
+					switch(action.status){
+						case "success":
+							return Object.assign({}, store, {
+								audits: Object.assign({}, store.audits, {
+									[action.audit.id]: action.audit
+								})
+							});
+							break;
+						case "error":
+							return Object.assign({}, store, {
+								forms: Object.assign({}, store.forms, {
+									audit: Object.assign({}, store.forms.audit, {
+										errors: action.errors
+									})
+								})
+							});
+							break;
+						default:
+							console.warn("WARNING: default case encountered for action: %O", action);
+							return store;
+					}
+				case types.AUDIT_ID_POST:
+					switch(action.status){
+						case "success":
+							return Object.assign({}, store, {
+								audits: Object.assign({}, store.audits, {
+									[action.audit.id]: action.audit
+								})
+							});
+							break;
+						case "error":
+							return Object.assign({}, store, {
+								forms: Object.assign({}, store.forms, {
+									audit: Object.assign({}, store.forms.audit, {
+										errors: action.errors
+									})
+								})
+							});
+							break;
+						default:
+							console.warn("WARNING: default case encountered for action: %O", action);
+							return store;
+					}
+
 		case types.LOCATION_GET:
 			switch(action.status){
 				case "success":
@@ -533,4 +610,3 @@ export function rootReducer(store = initialStore, action) {
 			return store;
 	}
 }
-
