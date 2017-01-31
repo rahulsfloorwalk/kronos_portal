@@ -6,6 +6,7 @@ import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
 import { Plus, Cross, Pencil } from '../Icons.jsx';
 
+import { orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
 
 var QuestionRow = React.createClass({
@@ -32,7 +33,7 @@ var Section = React.createClass({
 			}
 		}
 		if(questionRows.length === 0){
-			questionRows.push(<tr><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
+			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
 		}
 		var styles = {
 			col1: { width: "5%" },
@@ -101,8 +102,11 @@ var SectionList = React.createClass({
 		console.log("SectionList#this.props.children",nextProps.children);
 	},
 	render: function(){
+		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+			return s1.sequence - s2.sequence;
+		});
 		var sectionRows = [];
-		for(var sectionId in this.props.sections) {
+		for(var sectionId of orderedKeys) {
 			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId}/>);
 		}
 		if( sectionRows.length === 0){
