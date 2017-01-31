@@ -2,7 +2,7 @@ from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
 from django.contrib.auth.models import User
 
-from questionnaire.models import Section
+from questionnaire.models import Section, Question
 from auditor.models import ProfileInfo, AuditApplication
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
@@ -263,8 +263,45 @@ class AuditApplicationSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'section',
+        )
+        read_only_fields = fields
+
+
+class QuestionDeSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'section',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            question = Question.objects.get(id=self.context.get('id'))
+        else:
+            question = Question()
+        question.sequence = self.validated_data.get('sequence', question.sequence)
+        question.question_txt = self.validated_data.get('question_txt', question.question_txt)
+        question.max_marks = self.validated_data.get('max_marks', question.max_marks)
+        question.section = self.validated_data.get('section', question.section_id)
+        return question
+
 
 class SectionSerializer(ModelSerializer):
+    questions = QuestionSerializer(many=True)
     class Meta:
         model = Section
         fields = (
@@ -272,6 +309,7 @@ class SectionSerializer(ModelSerializer):
             'name',
             'audit_cycle',
             'sequence',
+            'questions'
         )
         read_only_fields = fields
 
@@ -296,3 +334,5 @@ class SectionDeSerializer(ModelSerializer):
         section.sequence = self.validated_data.get('sequence', section.sequence)
         section.audit_cycle = self.validated_data.get('audit_cycle', section.audit_cycle_id)
         return section
+
+

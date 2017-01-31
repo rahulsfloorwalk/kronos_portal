@@ -5,11 +5,9 @@ import { Link } from 'react-router';
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 //import { fetchApplications } from '../../manager/actions/application.js';
 
+import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
-
-import AuditList from './AuditList.jsx';
-import SectionList from './SectionList.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -25,6 +23,9 @@ var AuditCycleDetails = React.createClass({
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId));
 		//this.props.dispatch(fetchApplications(this.props.params.auditId));
+	},
+	componentWillReceiveProps(nextProps){
+		console.log("AuditCycleDetails#componentWillReceiveProps#nextProps", nextProps);
 	},
 	render: function(){
 		if(! this.props.auditCycle){
@@ -128,8 +129,10 @@ var AuditCycleDetails = React.createClass({
 						</tbody>
 					</table>
 				</Panel>
-				<AuditList auditCycleId={this.props.params.auditCycleId}/>
-				<SectionList auditCycleId={this.props.params.auditCycleId}/>
+				<ul className="nav nav-tabs">
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}>Questionnaire</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}>Audits</NavLink>
+				</ul>
 				{this.props.children}
 			</div>
 		);

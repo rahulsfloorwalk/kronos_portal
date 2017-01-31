@@ -47,7 +47,7 @@ var SectionForm = React.createClass({
 		} else {
 			submitPromise = this.props.dispatch(saveSectionAddForm(this.state));
 		}
-		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}`));
+		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`));
 	},
 	render : function(){
 		var modalTitle = this.props.params.auditCycleId ? "Edit Section" : "Add Section";
@@ -64,6 +64,7 @@ var SectionForm = React.createClass({
 });
 
 var mapStoreToProps = function(store, ownProps){
+	console.debug("ownProps",ownProps);
 	return {
 		section: store.sections[ownProps.params.sectionId],
 		errors: store.forms.section.errors,

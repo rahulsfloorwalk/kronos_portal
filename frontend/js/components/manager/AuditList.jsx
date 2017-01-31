@@ -22,14 +22,14 @@ var AuditRow = React.createClass({
 });
 var AuditList = React.createClass({
   componentDidMount: function(){
-    this.props.dispatch(fetchAudits(this.props.auditCycleId));
+    this.props.dispatch(fetchAudits(this.props.params.auditCycleId));
   },
   render: function(){
     var rows = [];
     for(var id in this.props.audits){
       rows.push(<AuditRow audit={this.props.audits[id]} key={id} />);
     }
-    var addAuditLink = `/audit_cycle/${this.props.auditCycleId}/audit/add`;
+    var addAuditLink = `/audit_cycle/${this.props.params.auditCycleId}/audit/add`;
     return(
       <div>
         <h2 className="page-header">

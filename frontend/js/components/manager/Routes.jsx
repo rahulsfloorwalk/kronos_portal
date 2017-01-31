@@ -26,6 +26,11 @@ import AuditCycleForm from './AuditCycleForm.jsx';
 import AuditCycleDetails from './AuditCycleDetails.jsx';
 
 import SectionForm from './SectionForm.jsx';
+import SectionList from './SectionList.jsx';
+
+import QuestionForm from './QuestionForm.jsx';
+
+import AuditList from './AuditList.jsx';
 import AuditForm from './AuditForm.jsx';
 
 import AuditDetails from './AuditDetails.jsx';
@@ -57,10 +62,17 @@ const Routes = () => (
 
 		<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
 			<Route path="edit" component={AuditCycleForm}/>
-			<Route path="section/add" component={SectionForm}/>
-			<Route path="section/:sectionId/edit" component={SectionForm}/>
-      <Route path="audit/add" component={AuditForm}/>
-			<Route path="audit/:auditStoreId/edit" component={AuditForm}/>
+			<Route path="questionnaire" component={SectionList}>
+				<Route path="section/add" component={SectionForm}/>
+				<Route path="section/:sectionId/edit" component={SectionForm}/>
+				<Route path="section/:sectionId/question/add" component={QuestionForm}/>
+				<Route path="section/:sectionId/question/:questionId/edit" component={QuestionForm}/>
+				<Route path="section/:sectionId/question/:questionId/delete" component={QuestionForm}/>
+			</Route>
+			<Route path="audit" components={AuditList}>
+				<Route path="add" component={AuditForm}/>
+				<Route path=":auditId/edit" component={AuditForm}/>
+			</Route>
 		</Route>
 
 		<Route path="auditor" component={AuditorList}/>

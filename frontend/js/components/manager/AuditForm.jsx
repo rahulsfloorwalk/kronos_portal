@@ -52,7 +52,7 @@ var AuditForm = React.createClass({
 		} else {
 			submitPromise = this.props.dispatch(saveAuditAddForm(this.state));
 		}
-		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}`));
+		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`));
 	},
 	render : function(){
 		var modalTitle = this.props.params.auditCycleId ? "Edit Audit" : "Add Audit";

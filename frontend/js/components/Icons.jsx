@@ -1,20 +1,11 @@
 import React from 'react';
 
-var Check = React.createClass({
-	render: function(){
-		return (
-			<span className="glyphicon glyphicon-ok"></span>
-		);
-	},
-});
+const Check = () => <span className="glyphicon glyphicon-ok"></span>;
 
+const Cross = () => <span className="glyphicon glyphicon-remove"></span>;
 
-var Cross = React.createClass({
-	render: function(){
-		return (
-			<span className="glyphicon glyphicon-remove"></span>
-		);
-	},
-});
+const Plus = () => <span className="glyphicon glyphicon-plus"></span>;
 
-export { Check, Cross };
+const Pencil = () => <span className="glyphicon glyphicon-pencil"></span>;
+
+export { Check, Cross, Plus, Pencil };

@@ -6,6 +6,7 @@ var initialStore = {
 	auditCycles: {},
 	clients: {},
 	stores: {},
+	sections: {},
 	auditors: {},
 	locations: {},
 	states: {},
@@ -48,6 +49,9 @@ var initialStore = {
 			search: "",
 		},
 		store: {
+			errors: {},
+		},
+		section: {
 			errors: {},
 		},
 	}
@@ -236,7 +240,6 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-
 			case types.AUDIT_GET:
 				switch(action.status){
 					case "success":
@@ -312,7 +315,80 @@ export function rootReducer(store = initialStore, action) {
 							console.warn("WARNING: default case encountered for action: %O", action);
 							return store;
 					}
-
+		case types.SECTION_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						sections: (function(sections){
+							var obj = {};
+							for( var s of sections){
+								obj[s.id] = s;
+							}
+							return obj;
+						}(action.sections))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.SECTION_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						sections: Object.assign({}, store.sections, {
+							[action.section.id]: action.section
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.SECTION_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						sections: Object.assign({}, store.sections, {
+							[action.section.id]: action.section
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							store: Object.assign({}, store.forms.section, {
+								errors: action.errors
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.SECTION_ID_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						stores: Object.assign({}, store.stores, {
+							[action.store.id]: action.store
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							store: Object.assign({}, store.forms.store, {
+								errors: action.errors
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.LOCATION_GET:
 			switch(action.status){
 				case "success":

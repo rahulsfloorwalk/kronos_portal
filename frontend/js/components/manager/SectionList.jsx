@@ -3,6 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import Panel from '../Panel.jsx';
+import { Plus, Cross, Pencil } from '../Icons.jsx';
 
 import { fetchSections } from '../../manager/actions/section.js'
 
@@ -14,19 +15,19 @@ var QuestionRow = React.createClass({
 				<td>{this.props.q.question_txt}</td>
 				<td>{this.props.q.max_marks}</td>
 				<td>
-					<Link to={`section/${this.props.q.section_id}/question/${this.props.q.id}/edit`} className="btn btn-default">E</Link>
-					<Link to={`section/${this.props.q.section_id}/question/${this.props.q.id}/delete`} className="btn btn-default">D</Link>
+					<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/edit`} className="btn btn-default"><Pencil/></Link>
 				</td>
 			</tr>
 		);
 	},
+					//<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/delete`} className="btn btn-default"><Cross/></Link>
 });
 var Section = React.createClass({
 	render: function(){
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow q={q} key={q.id}/>);
+				questionRows.push(<QuestionRow auditCycleId={this.props.auditCycleId} q={q} key={q.id}/>);
 			}
 		}
 		var styles = {
@@ -37,14 +38,16 @@ var Section = React.createClass({
 		};
 		return (
 			<Panel title={this.props.section.name} noBody={true}>
-				<table>
+				<table className="table table-striped">
 					<thead>
 						<tr>
 							<th style={styles.col1}>#</th>
 							<th style={styles.col2}>Question</th>
 							<th style={styles.col3}>Max. Marks</th>
 							<th style={styles.col4}>
-								<Link to={`section/${this.props.section.id}/questions/add`} className="btn btn-default">New Question</Link>
+								<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
+									<Plus/>
+								</Link>
 							</th>
 						</tr>
 					</thead>
@@ -58,18 +61,47 @@ var Section = React.createClass({
 });
 
 var SectionList = React.createClass({
+	getInitialState: function(){
+		return {
+			loading: false
+		};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchSections(this.props.auditCycleId));
+		console.log("SectionList#componentDidMount");
+		this.setState({
+			loading:true
+		});
+		this.props.dispatch(fetchSections(this.props.params.auditCycleId)).always(() => {
+			this.setState({
+				loading:false
+			});
+		});
+	},
+	componentWillReceiveProps: function(nextProps){
+		console.log("SectionList#componentWillReceiveProps");
+		if( ! this.state.loading){
+			console.debug("hello world", nextProps);
+			this.setState({
+				loading:true
+			});
+			this.props.dispatch(fetchSections(this.props.params.auditCycleId)).always(() => {
+				console.debug("bye world", nextProps);
+				this.setState({
+					loading:false
+				});
+			});
+		}
+		console.log("SectionList#this.props.children",nextProps.children);
 	},
 	render: function(){
 		var sectionRows = [];
 		for(var sectionId in this.props.sections) {
-			sectionRows.push(<Section section={this.props.sections[sectionId]} key={sectionId}/>);
+			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId}/>);
 		}
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link to={`/audit_cycle/${this.props.auditCycleId}/section/add`} className="btn btn-default pull-right">
+					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default pull-right">
 						Add Section
 					</Link>
 					Questionnaire
