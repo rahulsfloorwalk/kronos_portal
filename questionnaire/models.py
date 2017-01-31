@@ -24,6 +24,9 @@ class Section(Model):
     def __str__(self):
         return 'Section({}): {}'.format(self.id, self.name)
 
+    class Meta:
+        ordering = ['sequence']
+
 class Question(Model):
     db_table = "question"
 
@@ -35,4 +38,7 @@ class Question(Model):
 
     def __str__(self):
         return 'Question({}): {}, {}'.format(self.id, self.question_txt, self.max_marks)
+
+    class Meta:
+        ordering = ['sequence']
 

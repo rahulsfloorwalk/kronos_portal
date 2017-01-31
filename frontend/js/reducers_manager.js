@@ -371,8 +371,8 @@ export function rootReducer(store = initialStore, action) {
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
-						stores: Object.assign({}, store.stores, {
-							[action.store.id]: action.store
+						sections: Object.assign({}, store.sections, {
+							[action.section.id]: action.section
 						})
 					});
 					break;

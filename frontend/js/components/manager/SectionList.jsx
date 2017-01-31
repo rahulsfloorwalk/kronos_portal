@@ -2,6 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
 import { Plus, Cross, Pencil } from '../Icons.jsx';
 
@@ -30,6 +31,9 @@ var Section = React.createClass({
 				questionRows.push(<QuestionRow auditCycleId={this.props.auditCycleId} q={q} key={q.id}/>);
 			}
 		}
+		if(questionRows.length === 0){
+			questionRows.push(<tr><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
+		}
 		var styles = {
 			col1: { width: "5%" },
 			col2: { width: "80%" },
@@ -37,7 +41,7 @@ var Section = React.createClass({
 			col4: { width: "10%" },
 		};
 		return (
-			<Panel title={this.props.section.name} noBody={true}>
+			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -55,6 +59,9 @@ var Section = React.createClass({
 						{questionRows}
 					</tbody>
 				</table>
+				<div className="panel-footer">
+					<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/edit`} className="btn btn-default"><Pencil/> Edit Section</Link>
+				</div>
 			</Panel>
 		);
 	},
@@ -97,6 +104,9 @@ var SectionList = React.createClass({
 		var sectionRows = [];
 		for(var sectionId in this.props.sections) {
 			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId}/>);
+		}
+		if( sectionRows.length === 0){
+			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="start by adding a section"/>);
 		}
 		return (
 			<div>
