@@ -35,10 +35,10 @@ var AuditCycleList = React.createClass({
 		var addAuditCycleLink = `/client/${this.props.clientId}/audit_cycle/add`;
 		return (
 			<div>
-				<h2 className="page-header">
-					<Link to={addAuditCycleLink} className="btn btn-primary pull-right">Add Audit Cycle</Link>
-					Audit List
-				</h2>
+				<h3 className="page-header">
+					<Link to={addAuditCycleLink} className="btn btn-default pull-right">Add Audit Cycle</Link>
+					Audit Cycles
+				</h3>
 				<table className="table table-striped">
 					<thead>
 						<tr>

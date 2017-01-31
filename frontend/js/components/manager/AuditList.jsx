@@ -14,7 +14,7 @@ var AuditRow = React.createClass({
         <td>{this.props.audit.store.name}</td>
         <td>{this.props.audit.count}</td>
         <td>
-          <Link to={LinkTo} className="btn btn-primary pull-right">View</Link>
+          <Link to={LinkTo} className="btn btn-default pull-right">View</Link>
         </td>
       </tr>
     );

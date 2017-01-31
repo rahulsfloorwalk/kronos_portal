@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchClient } from '../../manager/actions/client.js';
 
+import { Pencil } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
@@ -26,9 +27,10 @@ var ClientDetail = React.createClass({
 					<li className="active">{this.props.client.name}</li>
 				</ol>
 				<h2 className="page-header">
-					<Link to={editLink} className="btn btn-primary pull-right">Edit Client</Link>
 					{ this.props.client.name }
 				</h2>
+				<div className="row">
+				<div className="col-md-6">
 				<Panel title="Client Info" noBody={true}>
 					<table className="table table-striped">
 						<tbody>
@@ -37,7 +39,12 @@ var ClientDetail = React.createClass({
 							<tr><td className="text-right">Phone</td><td><b>{ this.props.client.phone }</b></td></tr>
 						</tbody>
 					</table>
+					<div className="panel-footer text-right">
+						<Link to={editLink} className="btn btn-default"><Pencil/></Link>
+					</div>
 				</Panel>
+				</div>
+				</div>
 				<StoreList clientId={this.props.params.clientId}/>
 				<AuditCycleList clientId={this.props.params.clientId}/>
 				{this.props.children}

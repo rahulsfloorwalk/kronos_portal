@@ -22,7 +22,7 @@ var AuditCycleForm = React.createClass({
 	},
 	componentDidMount: function() {
 		this.setState({
-			'client': nextProps.params.clientId
+			'client': this.props.params.clientId
 		});
 		if(this.props.params.auditCycleId){
 			this.props.dispatch(loadAuditCycleEditForm(this.props.params.auditCycleId));

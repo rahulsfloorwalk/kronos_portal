@@ -32,7 +32,7 @@ var ClientList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link to="/client/add" className="btn btn-primary pull-right">Add Client</Link>
+					<Link to="/client/add" className="btn btn-default pull-right">Add Client</Link>
 					Client List
 				</h2>
 				<table className="table table-striped">

@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchStore } from '../../manager/actions/store.js';
 
+import { Pencil } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
@@ -24,9 +25,10 @@ var StoreDetail = React.createClass({
 					<li className="active">{this.props.store.name}</li>
 				</ol>
 				<h2 className="page-header">
-					<Link to={editLink} className="btn btn-primary pull-right">Edit Store</Link>
 					{ this.props.store.name }
 				</h2>
+				<div className="row">
+				<div className="col-md-6">
 				<Panel title="Store Info" noBody={true}>
 					<table className="table table-striped">
 						<tbody>
@@ -36,7 +38,12 @@ var StoreDetail = React.createClass({
 							<tr><td className="text-right">City</td><td><b>{ this.props.store.location.city.name }</b></td></tr>
 						</tbody>
 					</table>
+					<div className="panel-footer text-right">
+						<Link to={editLink} className="btn btn-default"><Pencil/></Link>
+					</div>
 				</Panel>
+				</div>
+				</div>
 				{this.props.children}
 			</div>
 		);

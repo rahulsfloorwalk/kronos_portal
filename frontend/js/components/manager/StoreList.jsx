@@ -32,10 +32,10 @@ var StoreList = React.createClass({
 		var addStoreLink = `/client/${this.props.clientId}/store/add`;
 		return (
 			<div>
-				<h2 className="page-header">
-					<Link to={addStoreLink} className="btn btn-primary pull-right">Add Store</Link>
+				<h3 className="page-header">
+					<Link to={addStoreLink} className="btn btn-default pull-right">Add Store</Link>
 					Store List
-				</h2>
+				</h3>
 				<table className="table table-striped">
 					<thead>
 						<tr>

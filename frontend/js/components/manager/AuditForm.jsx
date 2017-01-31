@@ -55,7 +55,7 @@ var AuditForm = React.createClass({
 		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`));
 	},
 	render : function(){
-		var modalTitle = this.props.params.auditCycleId ? "Edit Audit" : "Add Audit";
+		var modalTitle = this.props.params.auditId ? "Edit Audit" : "Add Audit";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>

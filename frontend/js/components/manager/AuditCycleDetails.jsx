@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 //import { fetchApplications } from '../../manager/actions/application.js';
 
+import { Pencil } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -111,12 +112,13 @@ var AuditCycleDetails = React.createClass({
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
 					<li><Link to={`/client/${this.props.auditCycle.client.id}`}>{this.props.auditCycle.client.name}</Link></li>
-					<li className="active">Cycle: {this.props.auditCycle.start_date} to { this.props.auditCycle.end_date}</li>
+					<li className="active">Cycle: <b>{this.props.auditCycle.start_date}</b> to <b>{ this.props.auditCycle.end_date}</b></li>
 				</ol>
 				<h2 className="page-header">
-					<Link to={editAuditCycleLink} className="btn btn-default pull-right">Edit</Link>
 					Audit Cycle Details
 				</h2>
+				<div className="row">
+				<div className="col-md-6">
 				<Panel title={this.props.auditCycle.client.name} noBody={true}>
 					<table className="table table-striped">
 						<tbody>
@@ -128,7 +130,12 @@ var AuditCycleDetails = React.createClass({
 							<tr><td className="text-right">Description</td><td>{ this.props.auditCycle.description }</td></tr>
 						</tbody>
 					</table>
+					<div className="panel-footer text-right">
+						<Link to={editAuditCycleLink} className="btn btn-default"><Pencil/></Link>
+					</div>
 				</Panel>
+				</div>
+				</div>
 				<ul className="nav nav-tabs">
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}>Questionnaire</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}>Audits</NavLink>
