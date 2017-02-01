@@ -11,8 +11,6 @@ from rest_framework.exceptions import NotFound, ValidationError
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-#from client.service import store as store_service
-
 from audit.models import Audit
 from ..serializers import AuditSerializer, AuditDeSerializer
 

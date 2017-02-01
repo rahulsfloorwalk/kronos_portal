@@ -20,17 +20,23 @@ var ApplicationRejectForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
+	contextTypes: {
+		auditCycleId: React.PropTypes.number
+	},
 	fieldChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
 	onSubmit: function(e){
 		e.preventDefault();
 		var promise = this.props.dispatch(submitApplicationRejectForm(this.props.application.id));
-		promise.done(() => hashHistory.push(`/audit/${this.props.params.auditId}`));
+		promise.then(() => hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`));
 	},
 	render : function(){
+		if( ! this.props.application){
+			return <Loading/>;
+		}
 		return (
-			<Modal modalTitle="Reject Audit Application" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Reject Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
@@ -43,8 +49,16 @@ var ApplicationRejectForm = React.createClass({
 });
 
 var mapStoreToProps = function(store, ownProps){
+	var application;
+	try{
+		application = store.audits[ownProps.params.auditId].applications.filter(function(app){
+			return app.id === Number(ownProps.params.applicationId);
+		})[0];
+	}catch(e){
+		console.debug("looks like we're still loading the application...",e);
+	}
 	return {
-		application: store.applications[ownProps.params.applicationId] || {},
+		application,
 		errors: store.errors,
 	};
 };

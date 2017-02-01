@@ -660,15 +660,15 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-		case types.AUDIT_APPLICATION_ASSIGN:
+		case types.AUDIT_APPLICATION_APPROVE:
 		case types.AUDIT_APPLICATION_REJECT:
-		case types.AUDIT_APPLICATION_COMPLETE:
-		case types.AUDIT_APPLICATION_FAIL:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
-						applications: Object.assign({}, store.applications, {
-							[action.application.id]: action.application
+						audits: Object.assign({}, store.audits, {
+							[action.application.audit]: Object.assign({}, store.audits[action.application.audit], {
+								applications: store.audits[action.application.audit].applications.map((app, i, applications) => app.id === action.application.id ? action.application : app)
+							})
 						})
 					});
 					break;

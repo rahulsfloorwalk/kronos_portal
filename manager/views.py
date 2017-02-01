@@ -174,7 +174,6 @@ class AuditApplicationIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
             'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
         }
     def get(self, request, application_id, format=None):
         try:
@@ -184,10 +183,9 @@ class AuditApplicationIdView(APIView):
             raise NotFound from e
 
 
-class AuditApplicationAssignView(APIView):
+class AuditApplicationApproveView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
             'POST': [GROUP_NAME_MANAGER]
         }
     class DeSerializer(Serializer):
@@ -197,8 +195,8 @@ class AuditApplicationAssignView(APIView):
         try:
             ds = self.DeSerializer(data=request.data)
             ds.is_valid(raise_exception=True)
-            application = application_service.assign(application_id, ds.data['audit_date'])
-            return Response(AuditLocationApplicationSerializer(application).data)
+            application = application_service.approve(application_id, ds.data['audit_date'])
+            return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound:
             raise NotFound
         except AppLogicError as e:
@@ -208,46 +206,14 @@ class AuditApplicationAssignView(APIView):
 class AuditApplicationRejectView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
             'POST': [GROUP_NAME_MANAGER]
         }
     def post(self, request, application_id, format=None):
         try:
             application = application_service.reject(application_id)
-            return Response(AuditLocationApplicationSerializer(application).data)
+            return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound:
             raise NotFound
         except AppLogicError as e:
             raise ValidationError(e) from e
 
-
-class AuditApplicationCompleteView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
-    def post(self, request, application_id, format=None):
-        try:
-            application = application_service.complete(application_id)
-            return Response(AuditLocationApplicationSerializer(application).data)
-        except ObjectNotFound:
-            raise NotFound
-        except AppLogicError as e:
-            raise ValidationError(e) from e
-
-
-class AuditApplicationFailView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
-    def post(self, request, application_id, format=None):
-        try:
-            application = application_service.fail(application_id)
-            return Response(AuditLocationApplicationSerializer(application).data)
-        except ObjectNotFound:
-            raise NotFound
-        except AppLogicError as e:
-            raise ValidationError(e) from e

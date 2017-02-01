@@ -25,11 +25,8 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
 
-    url(r'application/(?P<application_id>[0-9]+)/assign$', views.AuditApplicationAssignView.as_view(), name='audit_application_assign_view'),
+    url(r'application/(?P<application_id>[0-9]+)/approve$', views.AuditApplicationApproveView.as_view(), name='audit_application_approve_view'),
     url(r'application/(?P<application_id>[0-9]+)/reject$', views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),
-    url(r'application/(?P<application_id>[0-9]+)/complete$', views.AuditApplicationCompleteView.as_view(), name='audit_application_complete_view'),
-    url(r'application/(?P<application_id>[0-9]+)/fail$', views.AuditApplicationFailView.as_view(), name='audit_application_fail_view'),
-
     url(r'application/(?P<application_id>[0-9]+)$', views.AuditApplicationIdView.as_view(), name='audit_application_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/auditlocation$', views.AuditLocationView.as_view(), name='audit_location_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/auditlocation/(?P<auditlocation_id>[0-9]+)$', views.AuditLocationIdView.as_view(), name='audit_location_id_view'),

@@ -21,6 +21,14 @@ var AuditLocation = React.createClass({
 });
 
 var AuditCycleDetails = React.createClass({
+	childContextTypes: {
+		auditCycleId: React.PropTypes.number
+	},
+	getChildContext: function() {
+		return {
+			auditCycleId: Number(this.props.params.auditCycleId)
+		};
+	},
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId));
 		//this.props.dispatch(fetchApplications(this.props.params.auditId));

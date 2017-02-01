@@ -200,7 +200,7 @@ class AuditApplication(Model):
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications')
 
     def __str__(self):
-        return 'AuditApplication({}): {}, {}'.format(self.id, self.auditlocation, self.profileinfo)
+        return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)
 
     class Meta:
         unique_together = (("profileinfo", "audit"))

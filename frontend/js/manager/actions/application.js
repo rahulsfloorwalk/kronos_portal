@@ -22,16 +22,16 @@ export function fetchApplications(auditId){
 	};
 };
 
-export function submitApplicationAssignForm(obj){
+export function submitApplicationApproveForm(obj){
 	return function(dispatch){
 		dispatch({
-			type: types.AUDIT_APPLICATION_ASSIGN,
+			type: types.AUDIT_APPLICATION_APPROVE,
 			status: 'request',
 			applicationId: obj.application_id
 		});
 
 		var promise = $.ajax({
-			url: url.api_base_path + `manager/application/${obj.application_id}/assign`, 
+			url: url.api_base_path + `manager/application/${obj.application_id}/approve`,
 			method: 'POST',
 			data: JSON.stringify({
 				'audit_date': obj.audit_date
@@ -40,14 +40,14 @@ export function submitApplicationAssignForm(obj){
 		});
 		promise.done(function(application){
 			dispatch({
-				type: types.AUDIT_APPLICATION_ASSIGN,
+				type: types.AUDIT_APPLICATION_APPROVE,
 				status: 'success',
 				application: application
 			});
 		});
 		promise.fail(function(error){
 			dispatch({
-				type: types.AUDIT_APPLICATION_ASSIGN,
+				type: types.AUDIT_APPLICATION_APPROVE,
 				status: 'error',
 				errors: error.responseJSON
 			});

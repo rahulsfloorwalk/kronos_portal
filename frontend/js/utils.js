@@ -104,11 +104,11 @@ export function getMaritalStatus(value){
 export function getAuditApplicationStatus(value){
 	switch(value){
 		case "APPLIED":
-			return "Applied";
+			return "Pending for Approval";
 		case "NOT_APPLIED":
 			return "Not Applied";
-		case "ASSIGNED":
-			return "Assigned";
+		case "APPROVED":
+			return "Approved";
 		case "REJECTED":
 			return "Rejected";
 		case "COMPLETED":

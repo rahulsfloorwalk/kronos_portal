@@ -163,8 +163,37 @@ class StoreDeSerializer(ModelSerializer):
         return store
 
 
+class ProfileInfoSmallSerializer(ModelSerializer):
+    class Meta:
+        model = ProfileInfo
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'mobile_number',
+            'city',
+            'user_id'
+        )
+        read_only_fields = fields
+
+
+class AuditApplicationSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSmallSerializer()
+    class Meta:
+        model = AuditApplication
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'profileinfo',
+        )
+        read_only_fields = fields
+
+
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
+    applications = AuditApplicationSerializer(many=True)
     class Meta:
         model = Audit
         fields = (
@@ -172,6 +201,7 @@ class AuditSerializer(ModelSerializer):
             'count',
             'store',
             'audit_cycle',
+            'applications'
         )
         read_only_fields = fields
 
@@ -236,32 +266,6 @@ class AuditStoreDeSerializer(ModelSerializer):
         audit_store.user = self.validated_data.get('user', audit_store.user_id)
         return audit_store
 
-class ProfileInfoSmallSerializer(ModelSerializer):
-    class Meta:
-        model = ProfileInfo
-        fields = (
-            'id',
-            'first_name',
-            'last_name',
-            'mobile_number',
-            'city',
-            'user_id'
-        )
-        read_only_fields = fields
-
-
-class AuditApplicationSerializer(ModelSerializer):
-    profileinfo = ProfileInfoSmallSerializer()
-    class Meta:
-        model = AuditApplication
-        fields = (
-            'id',
-            'status',
-            'audit_date',
-            'audit',
-            'profileinfo',
-        )
-        read_only_fields = fields
 
 class QuestionSerializer(ModelSerializer):
     class Meta:

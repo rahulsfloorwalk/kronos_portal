@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { submitApplicationAssignForm } from '../../manager/actions/application.js';
+import { submitApplicationApproveForm } from '../../manager/actions/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -17,20 +17,27 @@ import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 import Loading from '../Loading.jsx';
 
-var ApplicationAssignForm = React.createClass({
+var ApplicationApproveForm = React.createClass({
 	getInitialState: function(){
 		return {};
 	},
+	contextTypes: {
+		auditCycleId: React.PropTypes.number
+	},
 	componentDidMount: function(){
-		this.setState({
-			'audit_date': this.props.application.audit_date
-		});
+		if(this.props.application){
+			this.setState({
+				'audit_date': this.props.application.audit_date
+			});
+		}
 	},
 	componentWillReceiveProps: function(nextProps) {
-		console.debug(nextProps.application);
-		this.setState({
-			'audit_date': nextProps.application.audit_date
-		});
+		console.debug("nextProps.application",nextProps.application);
+		if(nextProps.application){
+			this.setState({
+				'audit_date': nextProps.application.audit_date
+			});
+		};
 	},
 	dateChanged: function(date){
 		if( typeof date !== "string"){
@@ -45,17 +52,20 @@ var ApplicationAssignForm = React.createClass({
 			application_id: this.props.application.id,
 			audit_date: this.state.audit_date
 		};
-		var promise = this.props.dispatch(submitApplicationAssignForm(obj));
-		promise.done(() => hashHistory.push(`/audit/${this.props.params.auditId}`));
+		var promise = this.props.dispatch(submitApplicationApproveForm(obj));
+		promise.then(() => hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`));
 	},
 	render : function(){
+		if( ! this.props.application){
+			return <Loading/>;
+		}
 		return (
-			<Modal modalTitle="Assign Audit" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Approve Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
-					<FormDateInput label="Assigned Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
-					<SaveButton text="Assign"/>
+					<FormDateInput label="Approved Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
+					<SaveButton text="Approve"/>
 				</form>
 			</Modal>
 		);
@@ -63,10 +73,18 @@ var ApplicationAssignForm = React.createClass({
 });
 
 var mapStoreToProps = function(store, ownProps){
+	var application;
+	try{
+		application = store.audits[ownProps.params.auditId].applications.filter(function(app){
+			return app.id === Number(ownProps.params.applicationId);
+		})[0];
+	}catch(e){
+		console.debug("looks like we're still loading the application...",e);
+	}
 	return {
-		application: store.applications[ownProps.params.applicationId] || {},
+		application,
 		errors: store.errors,
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(ApplicationAssignForm);
+export default ReactRedux.connect( mapStoreToProps)(ApplicationApproveForm);
