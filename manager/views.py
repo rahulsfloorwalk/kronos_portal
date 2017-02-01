@@ -91,9 +91,9 @@ class LocationIdView(APIView):
             return Http404
 
     def post(self, request, location_id):
-        location_ds = LocationDeSerializer(data=request.data)
+        location_ds = LocationDeSerializer(data=request.data, context={'id' : location_id})
         location_ds.is_valid(raise_exception=True)
-        location = location_ds.deserialize(id=location_id)
+        location = location_ds.deserialize()
         savedLocation = location_service.save(location)
         return Response(LocationSerializer(savedLocation).data)
 

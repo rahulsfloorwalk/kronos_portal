@@ -64,9 +64,9 @@ class LocationDeSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def deserialize(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            location = Location.objects.get(id=kwargs['id'])
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            location = Location.objects.get(id=self.context.get('id'))
         else:
             location = Location()
         location.name = self.validated_data.get('name', location.name)
