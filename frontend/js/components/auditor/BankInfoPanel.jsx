@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchBankInfo } from '../../auditor_actions.js'
+import { fetchBankInfo } from '../../auditor/actions/bank_info.js'
 import LabelValue from '../LabelValue.jsx'
 
 var BankInfoPanelBase = React.createClass({

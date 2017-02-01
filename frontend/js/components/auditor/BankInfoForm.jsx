@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchBankInfo, saveBankInfo } from '../../auditor_actions.js';
+import { fetchBankInfo, saveBankInfo } from '../../auditor/actions/bank_info.js';
 
 import FormInput from '../FormInput.jsx';
 import FormGroup from '../FormGroup.jsx';

@@ -3,7 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { getHairColor, getCameraResolution } from '../../utils.js'
-import { fetchAdditionalInfo } from '../../auditor_actions.js'
+import { fetchAdditionalInfo } from '../../auditor/actions/additional_info.js'
 import { Check, Cross } from '../Icons.jsx';
 import LabelValue from '../LabelValue.jsx';
 
@@ -51,4 +51,4 @@ var mapStoreToProps = function(store){
 };
 
 export { AdditionalInfoPanelBase };
-export default ReactRedux.connect(mapStoreToProps)(AdditionalInfoPanelBase); 
+export default ReactRedux.connect(mapStoreToProps)(AdditionalInfoPanelBase);

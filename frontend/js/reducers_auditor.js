@@ -1,4 +1,4 @@
-import { types } from './auditor_actions.js'
+import types from './auditor/action_types.js'
 
 var initialStore = {
 	profileInfo: {},
@@ -292,4 +292,3 @@ export function rootReducer(store = initialStore, action) {
 			return store;
 	}
 }
-

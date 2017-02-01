@@ -4,7 +4,7 @@ import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
 import { getCameraResolution, getHairColor } from '../../utils.js';
-import { fetchAdditionalInfo, saveAdditionalInfo } from '../../auditor_actions.js';
+import { fetchAdditionalInfo, saveAdditionalInfo } from '../../auditor/actions/additional_info.js';
 
 import FormInput from '../FormInput.jsx';
 import FormSelect from '../FormSelect.jsx';
