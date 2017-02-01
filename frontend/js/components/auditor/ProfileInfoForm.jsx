@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchStates, fetchCities } from '../../auditor_actions.js';
+import { fetchStates, fetchCities } from '../../auditor/actions/location_info.js';
 import { fetchProfileInfo, saveProfileInfo } from '../../auditor/actions/profile_info.js'
 
 import { affectInputEventToComponent } from '../../react_utils.js';
