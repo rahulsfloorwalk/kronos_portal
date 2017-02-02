@@ -15,8 +15,8 @@ var LabelValue_2_10 = React.createClass({
 	render : function(){
 		return (
 			<div className="form-group">
-				<div className="col-xs-2 text-right">{this.props.label}</div>
-				<div className="col-xs-10"><b>{ this.props.value }</b></div>
+				<div className="col-xs-3 text-right">{this.props.label}</div>
+				<div className="col-xs-9"><b>{ this.props.value }</b></div>
 			</div>
 		);
 	},

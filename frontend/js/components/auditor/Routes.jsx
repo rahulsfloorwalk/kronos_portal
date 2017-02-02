@@ -25,10 +25,11 @@ const Routes = ({store}) => (
 			<Route path="bank/edit" component={BankInfoForm}/>
 			<Route path="additional/edit" component={AdditionalInfoForm}/>
 		</Route>
-		<Route path="audit" component={AuditList}/>
-		<Route path="audit/:auditId" component={AuditDetails}>
-			<Route path="location/:auditLocationId/apply" component={AuditApplyForm}/>
-			<Route path="location/:auditLocationId/cancel" component={AuditCancelForm}/>
+		<Route path="audit" component={AuditList}>
+			<Route path=":auditId">
+				<Route path="apply" component={AuditApplyForm}/>
+				<Route path="cancel" component={AuditCancelForm}/>
+			</Route>
 		</Route>
 	</Route>
     </Router>

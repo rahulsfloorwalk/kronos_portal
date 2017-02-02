@@ -33,9 +33,10 @@ var ApplicationApproveForm = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps) {
 		console.debug("nextProps.application",nextProps.application);
-		if(nextProps.application){
+		if(nextProps.application && ! this.state.date_set ){
 			this.setState({
-				'audit_date': nextProps.application.audit_date
+				'audit_date': nextProps.application.audit_date,
+				'date_set': true
 			});
 		};
 	},

@@ -12,6 +12,8 @@ def approve(application_id, audit_date):
 
     if application.status != AuditApplication.APPLIED:
         raise AppLogicError("application cannot be approved right now")
+    if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
+        raise AppLogicError("audit date is out of range")
     if audit_cycle.status == AuditCycle.ARCHIVED:
         raise AppLogicError("audit_cycle is archived")
 

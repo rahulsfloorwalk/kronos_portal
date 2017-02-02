@@ -11,11 +11,11 @@ from rest_framework.exceptions import NotFound, ValidationError
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
-from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer
+from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
 from .serializers import ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
 from audit.models import Audit
 from manager.models import City
-from manager.serializers import AuditSerializer, CitySerializer
+from manager.serializers import CitySerializer
 import manager.service.audit as audit_service
 from manager import states
 from registration.mixins import HasGroupPermission
@@ -111,9 +111,9 @@ class AuditApplicationsView(APIView):
             'GET' : [GROUP_NAME_AUDITOR],
             'POST': [GROUP_NAME_AUDITOR]
         }
-    def get(self, request, audit_id, format=None):
+    def get(self, request, format=None):
         try:
-            applications = audit_service.get_applications(audit_id, request.user.profileinfo.id)
+            applications = audit_service.get_applications( request.user.profileinfo.id)
             return Response(AuditApplicationSerializer(applications, many=True).data)
         except ObjectNotFound as e:
             raise NotFound()
@@ -142,13 +142,11 @@ class AuditApplicationView(APIView):
 class AuditApplicationApplyView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
             'POST': [GROUP_NAME_AUDITOR]
         }
-    def post(self, request, audit_id, location_id, format=None):
+    def post(self, request, audit_id, format=None):
         try:
             request.data["audit_id"] = audit_id
-            request.data["location_id"] = location_id
             request.data["profileinfo_id"] = request.user.profileinfo.id
 
             application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
@@ -156,7 +154,6 @@ class AuditApplicationApplyView(APIView):
 
             application = audit_service.apply(
                     application_apply_ds.data["audit_id"],
-                    application_apply_ds.data["location_id"],
                     application_apply_ds.data["profileinfo_id"],
                     application_apply_ds.data["audit_date"]
             )
@@ -171,14 +168,12 @@ class AuditApplicationApplyView(APIView):
 class AuditApplicationCancelView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
             'POST': [GROUP_NAME_AUDITOR]
         }
-    def post(self, request, audit_id, location_id, format=None):
+    def post(self, request, audit_id, format=None):
         try:
             data = {}
             data["audit_id"] = audit_id
-            data["location_id"] = location_id
             data["profileinfo_id"] = request.user.profileinfo.id
 
             application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
@@ -186,7 +181,6 @@ class AuditApplicationCancelView(APIView):
 
             application = audit_service.cancel(
                     application_cancel_ds.data["audit_id"],
-                    application_cancel_ds.data["location_id"],
                     application_cancel_ds.data["profileinfo_id"]
             )
             return Response(AuditApplicationSerializer(application).data)

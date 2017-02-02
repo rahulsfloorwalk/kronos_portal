@@ -201,17 +201,17 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-		case types.AUDIT_ID_GET_APPLICATIONS:
+		case types.APPLICATION_GET:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
-						applications: Object.assign({}, store.applications, (function(applications){
+						applications: (function(applications){
 							var obj = {};
 							for( var a of applications){
 								obj[a.id] = a;
 							}
 							return obj;
-						}(action.applications)))
+						}(action.applications))
 					});
 					break;
 				default:

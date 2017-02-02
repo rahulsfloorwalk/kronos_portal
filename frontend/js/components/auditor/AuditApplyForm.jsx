@@ -3,10 +3,11 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { loadAuditApplyForm, submitAuditApplyForm } from '../../auditor_actions.js';
+import { loadAuditApplyForm, submitAuditApplyForm } from '../../auditor/actions/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
+
 import FormErrorList from '../FormErrorList.jsx';
 import { FormDateInput } from '../FormInput.jsx';
 import FormSelect from '../FormSelect.jsx';
@@ -34,30 +35,21 @@ var AuditApplyForm = React.createClass({
 		e.preventDefault();
 		var obj = {
 			audit_id: this.props.audit.id,
-			location_id: this.getAuditLocation().location.id,
 			audit_location_id: this.props.auditLocationId,
 			audit_date: this.state.audit_date.format("YYYY-MM-DD")
 		};
-		this.props.dispatch(submitAuditApplyForm(obj));
-	},
-	getAuditLocation: function(){
-		var auditLocationId = parseInt(this.props.params.auditLocationId);
-		for( var al of this.props.audit.auditlocations){
-			if(al.id === auditLocationId){
-				return al;
-			}
-		}
+		var promise = this.props.dispatch(submitAuditApplyForm(obj));
+		promise.then(() => hashHistory.push(`/audit`));
 	},
 	render : function(){
-		var auditLocation = this.getAuditLocation();
 		return (
 			<Modal modalTitle="Apply for Audit" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					<p><label>Audit Type:</label> { getAuditType(this.props.audit.type) }</p>
-					<p><label>Start Date:</label> { this.props.audit.start_date }</p>
-					<p><label>End Date:</label> { this.props.audit.end_date }</p>
-					<p><label>Location:</label> { auditLocation.location.name }, { auditLocation.location.city.name }</p>
+					<p><label>Audit Type:</label> { getAuditType(this.props.audit.audit_cycle.type) }</p>
+					<p><label>Start Date:</label> { this.props.audit.audit_cycle.start_date }</p>
+					<p><label>End Date:</label> { this.props.audit.audit_cycle.end_date }</p>
+					<p><label>Location:</label> { this.props.audit.store.location.name }, { this.props.audit.store.location.city.name }</p>
 					<FormDateInput label="Preferred Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
 					<SaveButton text="Apply"/>
 				</form>
@@ -68,7 +60,7 @@ var AuditApplyForm = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		audit: store.audits[ownProps.params.auditId] || {},
+		audit: store.audits[ownProps.params.auditId],
 		errors: store.forms.auditApply.errors,
 	};
 };

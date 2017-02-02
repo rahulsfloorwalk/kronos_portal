@@ -1,9 +1,9 @@
 import React from 'react';
 import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 
-import { loadAuditCancelForm, submitAuditCancelForm } from '../../auditor_actions.js';
+import { loadAuditCancelForm, submitAuditCancelForm } from '../../auditor/actions/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -28,27 +28,24 @@ var AuditCancelForm = React.createClass({
 	},
 	onSubmit: function(e){
 		e.preventDefault();
-		this.props.dispatch(submitAuditCancelForm( this.props.audit.id, this.getAuditLocation().location.id));
-	},
-	getAuditLocation: function(){
-		var auditLocationId = parseInt(this.props.params.auditLocationId);
-		for( var al of this.props.audit.auditlocations){
-			if(al.id === auditLocationId){
-				return al;
-			}
-		}
+		var promise = this.props.dispatch(submitAuditCancelForm( this.props.audit.id));
+		promise.then(() => hashHistory.push(`/audit`));
 	},
 	render : function(){
-		var auditLocation = this.getAuditLocation();
 		return (
 			<Modal modalTitle="Cancel Audit" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					<p><label>Audit Type:</label> { getAuditType(this.props.audit.type) }</p>
-					<p><label>Start Date:</label> { this.props.audit.start_date }</p>
-					<p><label>End Date:</label> { this.props.audit.end_date }</p>
-					<p><label>Location:</label> { auditLocation.location.name }, { auditLocation.location.city.name }</p>
-					<SaveButton text="Cancel"/>
+					<p><label>Audit Type:</label> { getAuditType(this.props.audit.audit_cycle.type) }</p>
+					<p><label>Start Date:</label> { this.props.audit.audit_cycle.start_date }</p>
+					<p><label>End Date:</label> { this.props.audit.audit_cycle.end_date }</p>
+					<p><label>Audit Date:</label> { this.props.audit.audit_cycle.end_date }</p>
+					<p><label>Location:</label> { this.props.audit.store.location.name }, { this.props.audit.store.location.city.name }</p>
+					<p>Are you sure you want to cancel your application for this audit?</p>
+					<div className="form-group">
+						<SaveButton text="Yes"/>&nbsp;&nbsp;
+						<Link to="/audit" className="btn btn-default">No</Link>
+					</div>
 				</form>
 			</Modal>
 		);
@@ -57,7 +54,7 @@ var AuditCancelForm = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		audit: store.audits[ownProps.params.auditId] || {},
+		audit: store.audits[ownProps.params.auditId],
 		errors: store.forms.auditCancel.errors,
 	};
 };

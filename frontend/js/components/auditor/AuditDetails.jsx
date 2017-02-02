@@ -2,28 +2,25 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAudit, fetchApplicationsForAudit } from '../../auditor_actions.js';
+import { fetchApplicationsForAudit } from '../../auditor_actions.js';
+import { fetchAudit } from '../../auditor/actions/audit.js';
 
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-var AuditLocation = React.createClass({
-	render: function(){
-	}
-});
-
 var AuditDetails = React.createClass({
 	componentDidMount: function(){
 		this.props.dispatch(fetchAudit(this.props.params.auditId));
-		this.props.dispatch(fetchApplicationsForAudit(this.props.params.auditId));
+		//this.props.dispatch(fetchApplicationsForAudit(this.props.params.auditId));
 	},
 	render: function(){
 		if(! this.props.audit){
 			return <Loading/>;
 		}
 
+		/*
 		var auditLocations = [];
 		for( let al of this.props.audit.auditlocations){
 
@@ -65,6 +62,7 @@ var AuditDetails = React.createClass({
 				</tr>
 			);
 		}
+		*/
 
 		var linkTo = `/audit/${this.props.audit.id}/edit`;
 
@@ -73,56 +71,31 @@ var AuditDetails = React.createClass({
 				<h3 className="page-header">Audit Details</h3>
 				<div className="row">
 					<div className="col-md-4">
-						<Panel title={this.props.audit.client.name} noBody={true}>
+						<Panel title={this.props.audit.audit_cycle.client.name} noBody={true}>
 							<table className="table table-border table-striped">
 								<tbody>
 									<tr>
-										<th>Type:</th>
-										<td>{ getAuditType(this.props.audit.type) }</td>
+										<td className="text-right">Type:</td>
+										<th>{ getAuditType(this.props.audit.audit_cycle.type) }</th>
 									</tr>
 									<tr>
-										<th>Status: </th>
-										<td>{ getAuditStatus(this.props.audit.status) }</td>
+										<td className="text-right">Audit Fees: </td>
+										<th>₹ { this.props.audit.audit_cycle.earnings_per_audit } per audit</th>
 									</tr>
 									<tr>
-										<th>Earnings: </th>
-										<td>₹ { this.props.audit.earnings_per_audit } per audit</td>
+										<td className="text-right">Start Date:</td>
+										<th>{ this.props.audit.audit_cycle.start_date }</th>
 									</tr>
 									<tr>
-										<th>Start Date:</th> 
-										<td>{ this.props.audit.start_date }</td>
-									</tr>
-									<tr>
-										<th>End Date:</th> 
-										<td>{ this.props.audit.end_date }</td>
-									</tr>
-									<tr>
-										<th>Total Audits:</th> 
-										<td>{ this.props.audit.audit_count }</td>
+										<td className="text-right">End Date:</td> 
+										<th>{ this.props.audit.audit_cycle.end_date }</th>
 									</tr>
 									<tr>
 										<td colSpan="2">
 											<p><strong>Description:</strong></p>
-											<p>{ this.props.audit.description }</p>
+											<p>{ this.props.audit.audit_cycle.description }</p>
 										</td>
 									</tr>
-								</tbody>
-							</table>
-						</Panel>
-					</div>
-					<div className="col-md-8">
-						<Panel title="Locations" noBody={true}>
-							<table className="table table-striped">
-								<thead>
-									<tr>
-										<th>City</th>
-										<th>Location</th>
-										<th>Audit Count</th>
-										<th>Audit Date</th>
-									</tr>
-								</thead>
-								<tbody>
-									{auditLocations}
 								</tbody>
 							</table>
 						</Panel>

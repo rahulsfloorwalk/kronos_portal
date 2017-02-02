@@ -44,7 +44,7 @@ export function fetchProfileInfo(){
 	return function(dispatch){
 		dispatch(profileInfoGetReq());
 
-		return $.get( url.api_base_path + "auditor/profile-api?format=json", function(profileInfo){
+		return $.get( url.api_base_path + "auditor/profile_info", function(profileInfo){
 			dispatch(profileInfoGetSuccess(profileInfo));
 		});
 		//TODO: Handle error
@@ -57,7 +57,7 @@ export function saveProfileInfo(profileInfo){
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + "auditor/profile-api",
+			url: url.api_base_path + "auditor/profile_info",
 			data: JSON.stringify(profileInfo),
 			contentType: "application/json"
 		});

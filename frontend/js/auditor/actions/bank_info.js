@@ -47,7 +47,7 @@ export function fetchBankInfo(){
 	return function(dispatch){
 		dispatch(bankInfoGetReq());
 
-		return $.get( url.api_base_path + "auditor/bank-api?format=json", function(bankInfo){
+		return $.get( url.api_base_path + "auditor/bank_info", function(bankInfo){
 			dispatch(bankInfoGetSuccess(bankInfo));
 		});
 		//TODO: Handle error
@@ -60,7 +60,7 @@ export function saveBankInfo(bankInfo){
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + "auditor/bank-api",
+			url: url.api_base_path + "auditor/bank_info",
 			data: JSON.stringify(bankInfo),
 			contentType: "application/json"
 		});

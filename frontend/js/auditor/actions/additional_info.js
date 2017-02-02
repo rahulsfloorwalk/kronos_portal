@@ -47,7 +47,7 @@ export function fetchAdditionalInfo(){
 	return function(dispatch){
 		dispatch(additionalInfoGetReq());
 
-		return $.get( url.api_base_path + "auditor/additional-api?format=json", function(additionalInfo){
+		return $.get( url.api_base_path + "auditor/additional_info", function(additionalInfo){
 			dispatch(additionalInfoGetSuccess(additionalInfo));
 		});
 		//TODO: Handle error
@@ -60,7 +60,7 @@ export function saveAdditionalInfo(additionalInfo){
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + "auditor/additional-api",
+			url: url.api_base_path + "auditor/additional_info",
 			data: JSON.stringify(additionalInfo),
 			contentType: "application/json"
 		});

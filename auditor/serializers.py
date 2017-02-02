@@ -6,8 +6,8 @@ from rest_framework import serializers
 
 from manager.serializers import CitySerializer
 from manager.models import Location
-from manager.serializers import AuditSerializer
 from audit.models import Audit, AuditCycle
+from client.models import Client, Store
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 
 
@@ -160,6 +160,68 @@ class BankInfoSerializer(ModelSerializer):
         bank_info.save()
         return bank_info
 
+
+class ClientSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields = (
+            'name',
+        )
+        read_only_fields = fields
+
+class LocationSerializer(ModelSerializer):
+    city = CitySerializer()
+
+    class Meta:
+        model = Location
+        fields = (
+            'id',
+            'name',
+            'pincode',
+            'city',
+        )
+        read_only_fields = fields
+
+class AuditCycleSerializer(ModelSerializer):
+    client = ClientSerializer()
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'type',
+            'status',
+            'start_date',
+            'end_date',
+            'earnings_per_audit',
+            'description',
+            'client',
+        )
+        read_only_fields = fields
+
+
+class StoreSerializer(ModelSerializer):
+    location = LocationSerializer()
+    class Meta:
+        model = Store
+        fields = (
+            'location',
+        )
+        read_only_fields = fields
+
+
+class AuditSerializer(ModelSerializer):
+    store = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
+    class Meta:
+        model = Audit
+        fields = (
+            'id',
+            'store',
+            'audit_cycle',
+        )
+        read_only_fields = fields
+
+
 class AuditorSerializer(ModelSerializer):
     profileinfo = ProfileInfoSerializer()
     class Meta:
@@ -175,7 +237,6 @@ class AuditorSerializer(ModelSerializer):
         read_only_fields = fields
 
 class AuditApplicationSerializer(ModelSerializer):
-    audit = AuditSerializer()
     class Meta:
         model = AuditApplication
         fields = (
@@ -190,19 +251,17 @@ class AuditApplicationSerializer(ModelSerializer):
 
 class AuditApplicationApplyDeSerializer(Serializer):
     audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(audit_cycle__status__in=[AuditCycle.ACTIVE,AuditCycle.UPCOMING]))
-    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
     profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())
     audit_date = serializers.DateField()
 
     def validate(self, attrs):
         audit = attrs["audit_id"]
         audit_date = attrs["audit_date"]
-        if audit_date < audit.start_date or audit_date > audit.end_date:
+        if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
             raise ValidationError({"audit_date": "preferred audit date is not within range"})
         return attrs
 
 
 class AuditApplicationCancelDeSerializer(Serializer):
     audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(audit_cycle__status__in=[AuditCycle.ACTIVE,AuditCycle.UPCOMING]))
-    location_id = serializers.PrimaryKeyRelatedField(queryset=Location.objects.all())
     profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())

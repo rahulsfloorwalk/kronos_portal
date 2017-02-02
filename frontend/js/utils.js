@@ -111,10 +111,6 @@ export function getAuditApplicationStatus(value){
 			return "Approved";
 		case "REJECTED":
 			return "Rejected";
-		case "COMPLETED":
-			return "Completed";
-		case "FAILED":
-			return "Failed";
 		case "":
 		case null:
 		case undefined:

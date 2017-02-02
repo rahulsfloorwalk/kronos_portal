@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Check, Cross, User, Earphone, Calendar, ChevronDown, ChevronRight, MenuRight, MenuDown } from '../Icons.jsx';
+import { ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight, MenuRight, MenuDown } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
@@ -20,8 +20,8 @@ var AuditApplicationList = React.createClass({
 			let auditorLink = (<Link to={auditorUrl}>{app.profileinfo.first_name} { app.profileinfo.last_name}</Link>);
 			let approveLink, rejectLink, statusLabel;
 			if( app.status === "APPLIED"){
-				approveLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/approve`} className="btn btn-primary"><Check/> Approve</Link>);
-				rejectLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/reject`} className="btn btn-default"><Cross/> Reject</Link>);
+				approveLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/approve`} className="btn btn-primary"><ThumbsUp/> Approve</Link>);
+				rejectLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/reject`} className="btn btn-default"><ThumbsDown/> Reject</Link>);
 			} else {
 				statusLabel = <ApplicationStatusLabel status={app.status}/>;
 			}
@@ -83,7 +83,7 @@ var AuditRow = React.createClass({
       <tr>
         <td>{this.props.audit.store.name}</td>
         <td>{this.props.audit.count}</td>
-        <td>{this.props.audit.applications.length}</td>
+        <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
         <td>
           <button className="btn btn-default pull-right" onClick={this.viewButtonClicked}>{buttonText}</button>
         </td>
@@ -114,7 +114,7 @@ var AuditList = React.createClass({
           <thead>
             <tr>
               <th>Store</th>
-              <th>Application Count</th>
+              <th>Audit Count</th>
               <th>Applications Received</th>
               <th>&nbsp;</th>
             </tr>

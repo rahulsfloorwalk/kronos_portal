@@ -14,6 +14,13 @@ export const Earphone = () => <span className="glyphicon glyphicon-earphone"></s
 
 export const Calendar = () => <span className="glyphicon glyphicon-calendar"></span>;
 
+export const ShareAlt = () => <span className="glyphicon glyphicon-share-alt"></span>;
+
+export const Inbox = () => <span className="glyphicon glyphicon-inbox"></span>;
+
+export const ThumbsUp = () => <span className="glyphicon glyphicon-thumbs-up"></span>;
+export const ThumbsDown = () => <span className="glyphicon glyphicon-thumbs-down"></span>;
+
 export const ChevronRight = () => <span className="glyphicon glyphicon-chevron-right"></span>;
 export const ChevronDown = () => <span className="glyphicon glyphicon-chevron-down"></span>;
 
