@@ -8,30 +8,35 @@ import types from '../action_types.js';
  */
 function profileInfoGetReq(){
 	return {
-		type: types.PROFILE_INFO_GET_REQ,
+		type: types.PROFILE_INFO_GET,
+		status: 'request',
 	};
 };
 function profileInfoGetSuccess(profileInfo){
 	return {
-		type: types.PROFILE_INFO_GET_SUC,
+		type: types.PROFILE_INFO_GET,
+		status: 'success',
 		profileInfo: profileInfo
 	};
 };
 function profileInfoPostReq(profileInfo){
 	return {
-		type: types.PROFILE_INFO_POST_REQ,
+		type: types.PROFILE_INFO_POST,
+		status: 'request',
 		profileInfo: profileInfo
 	};
 };
 function profileInfoPostSuccess(profileInfo){
 	return {
-		type: types.PROFILE_INFO_POST_SUC,
+		type: types.PROFILE_INFO_POST,
+		status: 'success',
 		profileInfo: profileInfo
 	};
 };
 function profileInfoPostError(errors){
 	return {
-		type: types.PROFILE_INFO_POST_ERR,
+		type: types.PROFILE_INFO_POST,
+		status: 'error',
 		errors: errors
 	};
 };

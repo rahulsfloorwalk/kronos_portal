@@ -10,30 +10,35 @@ import types from '../action_types.js';
 
 function additionalInfoGetReq(){
 	return {
-		type: types.ADDITIONAL_INFO_GET_REQ
+		type: types.ADDITIONAL_INFO_GET,
+		status: 'request',
 	};
 };
 function additionalInfoGetSuccess(additionalInfo){
 	return {
-		type: types.ADDITIONAL_INFO_GET_SUC,
+		type: types.ADDITIONAL_INFO_GET,
+		status: 'success',
 		additionalInfo: additionalInfo
 	};
 };
 function additionalInfoPostReq(additionalInfo){
 	return {
-		type: types.ADDITIONAL_INFO_POST_REQ,
+		type: types.ADDITIONAL_INFO_POST,
+		status: 'request',
 		additionalInfo: additionalInfo
 	};
 };
 function additionalInfoPostSuccess(additionalInfo){
 	return {
-		type: types.ADDITIONAL_INFO_POST_SUC,
+		type: types.ADDITIONAL_INFO_POST,
+		status: 'success',
 		additionalInfo: additionalInfo
 	};
 };
 function additionalInfoPostError(errors){
 	return {
-		type: types.ADDITIONAL_INFO_POST_ERR,
+		type: types.ADDITIONAL_INFO_POST,
+		status: 'error',
 		errors: errors
 	};
 };

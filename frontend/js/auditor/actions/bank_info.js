@@ -10,30 +10,35 @@ import types from '../action_types.js';
 
 function bankInfoGetReq(){
 	return {
-		type: types.BANK_INFO_GET_REQ
+		type: types.BANK_INFO_GET,
+		status: 'request',
 	};
 };
 function bankInfoGetSuccess(bankInfo){
 	return {
-		type: types.BANK_INFO_GET_SUC,
+		type: types.BANK_INFO_GET,
+		status: 'success',
 		bankInfo: bankInfo
 	};
 };
 function bankInfoPostReq(bankInfo){
 	return {
-		type: types.BANK_INFO_POST_REQ,
+		type: types.BANK_INFO_POST,
+		status: 'request',
 		bankInfo: bankInfo
 	};
 };
 function bankInfoPostSuccess(bankInfo){
 	return {
-		type: types.BANK_INFO_POST_SUC,
+		type: types.BANK_INFO_POST,
+		status: 'success',
 		bankInfo: bankInfo
 	};
 };
 function bankInfoPostError(errors){
 	return {
-		type: types.BANK_INFO_POST_ERR,
+		type: types.BANK_INFO_POST,
+		status: 'error',
 		errors: errors
 	};
 };
