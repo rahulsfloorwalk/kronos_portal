@@ -60,34 +60,81 @@ var initialStore = {
 export function rootReducer(store = initialStore, action) {
 	switch(action.type){
 		/*Client Reducers */
-		case types.CLIENT_GET_SUC:
-			return Object.assign({}, store, {
-				clients: (function(clients){
-					var clientObj = {};
-					for( var c of clients){
-						clientObj[c.id] = c;
-					}
-					return clientObj;
-				}(action.clients))
-			});
-		case types.CLIENT_POST_SUC:
-			return Object.assign({}, store, {
-				clients: Object.assign({}, store.clients, {
-					[action.client.id]: action.client
-				})
-			});
-		case types.CLIENT_ID_GET_SUC:
-			return Object.assign({}, store, {
-				clients: Object.assign({}, store.clients, {
-					[action.client.id]: action.client
-				})
-			});
-		case types.CLIENT_ID_POST_SUC:
-			return Object.assign({}, store, {
-				clients: Object.assign({}, store.clients, {
-					[action.client.id]: action.client
-				})
-			});
+		case types.CLIENT_GET:
+			switch (action.status) {
+				case 'request':
+					break;
+				case 'success':
+					return Object.assign({}, store, {
+						clients: (function(clients){
+							var clientObj = {};
+							for( var c of clients){
+								clientObj[c.id] = c;
+							}
+							return clientObj;
+						}(action.clients))
+					});
+					break;
+				case 'error':
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+
+		case types.CLIENT_POST:
+			switch (action.status) {
+				case 'request':
+					break;
+				case 'success':
+					return Object.assign({}, store, {
+						clients: Object.assign({}, store.clients, {
+							[action.client.id]: action.client
+						})
+					});
+					break;
+				case 'error':
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+
+		case types.CLIENT_ID_GET:
+			switch (action.status) {
+				case 'request':
+					break;
+				case 'success':
+					return Object.assign({}, store, {
+						clients: Object.assign({}, store.clients, {
+							[action.client.id]: action.client
+						})
+					});
+					break;
+				case 'error':
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+
+		case types.CLIENT_ID_POST:
+			switch (action.status) {
+				case 'request':
+					break;
+				case 'success':
+					return Object.assign({}, store, {
+						clients: Object.assign({}, store.clients, {
+							[action.client.id]: action.client
+						})
+					});
+					break;
+				case 'error':
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		/*Auditor Search Request*/
 		case types.AUDITOR_SEARCH:
 			switch(action.status){

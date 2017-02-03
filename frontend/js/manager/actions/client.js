@@ -9,37 +9,43 @@ import types from '../action_types.js';
 
 function clientGetReq(){
 	return {
-		type: types.CLIENT_GET_REQ
+		type: types.CLIENT_GET,
+		status: 'request',
 	};
 }
 function clientGetSuccess(clients){
 	return {
-		type: types.CLIENT_GET_SUC,
+		type: types.CLIENT_GET,
+		status: 'success',
 		clients: clients
 	};
 }
 function clientGetError(errors){
 	return {
-		type: types.CLIENT_GET_SUC,
+		type: types.CLIENT_GET,
+		status: 'error',
 		errors: errors
 	};
 }
 
 function clientIdGetRequest(id){
 	return {
-		type: types.CLIENT_ID_GET_REQ,
+		type: types.CLIENT_ID_GET,
+		status: 'request',
 		id: id
 	};
 }
 function clientIdGetSuccess(client){
 	return {
-		type: types.CLIENT_ID_GET_SUC,
+		type: types.CLIENT_ID_GET,
+		status: 'success',
 		client: client
 	};
 }
 function clientIdGetError(){
 	return {
-		type: types.CLIENT_ID_GET_ERR,
+		type: types.CLIENT_ID_GET,
+		status: 'error',
 		errors: errors
 	};
 }
@@ -74,7 +80,8 @@ export function fetchClient(clientId){
 export function loadClientAddForm(){
 	return function(dispatch){
 		dispatch({
-			type: types.CLIENT_FORM_LOAD_SUC,
+			type: types.CLIENT_FORM_LOAD,
+			status: 'success',
 		});
 	};
 };
@@ -82,7 +89,8 @@ export function loadClientAddForm(){
 export function loadClientEditForm(clientId){
 	return function(dispatch){
 		dispatch({
-			type: types.CLIENT_FORM_LOAD_REQ,
+			type: types.CLIENT_FORM_LOAD,
+			status: 'request',
 			clientId: clientId
 		});
 		dispatch(fetchClient(clientId));
@@ -92,10 +100,12 @@ export function loadClientEditForm(clientId){
 export function saveClientEditForm(client){
 	return function(dispatch){
 		dispatch({
-			type: types.CLIENT_FORM_SUB_REQ,
+			type: types.CLIENT_FORM_SUB,
+			status: 'request',
 		});
 		dispatch({
-			type: types.CLIENT_ID_POST_REQ,
+			type: types.CLIENT_ID_POST,
+			status: 'request',
 			client: client
 		});
 
@@ -107,20 +117,24 @@ export function saveClientEditForm(client){
 		});
 		req.done(function(savedClient){
 			dispatch({
-				type: types.CLIENT_ID_POST_SUC,
+				type: types.CLIENT_ID_POST,
+				status: 'success',
 				client: savedClient
 			});
 			dispatch({
-				type: types.CLIENT_FORM_SUB_SUC,
+				type: types.CLIENT_FORM_SUB,
+				status: 'success',
 			});
 		});
 		req.fail(function(error){
 			dispatch({
-				type: types.CLIENT_ID_POST_ERR,
+				type: types.CLIENT_ID_POST,
+				status: 'error',
 				errors: error.responseJSON
 			});
 			dispatch({
-				type: types.CLIENT_FORM_SUB_ERR,
+				type: types.CLIENT_FORM_SUB,
+				status: 'error',
 			});
 		});
 		return req;
@@ -130,10 +144,12 @@ export function saveClientEditForm(client){
 export function saveClientAddForm(client){
 	return function(dispatch){
 		dispatch({
-			type: types.CLIENT_FORM_SUB_REQ,
+			type: types.CLIENT_FORM_SUB,
+			status: 'request',
 		});
 		dispatch({
-			type: types.CLIENT_POST_REQ,
+			type: types.CLIENT_POST,
+			status: 'request',
 			client: client
 		});
 
@@ -145,23 +161,26 @@ export function saveClientAddForm(client){
 		});
 		req.done(function(savedClient){
 			dispatch({
-				type: types.CLIENT_POST_SUC,
+				type: types.CLIENT_POST,
+				status: 'success',
 				client: savedClient
 			});
 			dispatch({
-				type: types.CLIENT_FORM_SUB_SUC,
+				type: types.CLIENT_FORM_SUB,
+				status: 'success',
 			});
 		});
 		req.fail(function(error){
 			dispatch({
-				type: types.CLIENT_POST_ERR,
+				type: types.CLIENT_POST,
+				status: 'error',
 				errors: error.responseJSON
 			});
 			dispatch({
-				type: types.CLIENT_FORM_SUB_ERR,
+				type: types.CLIENT_FORM_SUB,
+				status: 'error',
 			});
 		});
 		return req;
 	};
 };
-
