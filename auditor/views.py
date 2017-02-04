@@ -12,9 +12,10 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
-from .serializers import ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
+from .serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
 from .serializers import AuditStoreSerializer
 from .serializers import SectionSerializer
+from .serializers import AnswerSerializer
 from audit.models import Audit
 from manager.models import City
 from manager.serializers import CitySerializer
@@ -24,6 +25,7 @@ from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from audit_store import service as audit_store_service
 from questionnaire.service import section as section_service
+from answer.service import answer as answer_service
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -269,3 +271,18 @@ class StateView(APIView):
         }
     def get(self, request, format=None):
         return Response(states.states)
+
+class AnswerView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def post(self, request, question_id, format=None):
+        request.data['question_id'] = question_id
+        ds = AnswerDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = ds.validated_data['audit_store']
+        answer_text = ds.validated_data['answer_text']
+        question = ds.validated_data['question_id']
+        answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
+        return Response(AnswerSerializer(answer).data)

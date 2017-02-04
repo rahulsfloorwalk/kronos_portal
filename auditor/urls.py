@@ -20,4 +20,6 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section$', views.SectionView.as_view(), name="section_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreView.as_view(), name="audit_store_view"),
     url(r'audit_store$', views.AuditStoresView.as_view(), name="audit_stores_view"),
+
+    url(r'question/(?P<question_id>[0-9]+)/answer$', views.AnswerView.as_view(), name="answer_view"),
 ], 'auditor')

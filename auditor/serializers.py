@@ -1,7 +1,6 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from rest_framework import routers, viewsets
-from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField
 from rest_framework import serializers
 
 from manager.serializers import CitySerializer
@@ -11,6 +10,7 @@ from client.models import Client, Store
 from audit_store.models import AuditStore
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 from questionnaire.models import Section, Question
+from answer.models import Answer
 
 
 class ProfileInfoSerializer(ModelSerializer):
@@ -306,3 +306,18 @@ class SectionSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AnswerDeSerializer(Serializer):
+    audit_store = serializers.PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
+    question_id = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
+    answer_text = CharField()
+
+class AnswerSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'id',
+            'question_id',
+            'audit_store_id',
+            'answer_text'
+        )
+        read_only_fields = fields
