@@ -1,0 +1,41 @@
+import $ from 'jquery'
+import { url } from '../../../config'
+import types from '../action_types.js'
+
+export function fetchAuditStores(){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_GET,
+			status: 'request',
+		});
+
+		return $.get( url.api_base_path + "auditor/audit_store", function(auditStores){
+			dispatch({
+				type: types.AUDIT_STORE_GET,
+				status: 'success',
+				auditStores
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function fetchAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_GET,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_GET,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+

@@ -120,6 +120,25 @@ export function getAuditApplicationStatus(value){
 	}
 };
 
+export function getAuditStoreStatus(value){
+	switch(value){
+		case "ASSIGNED":
+			return "Assigned";
+		case "FAILED":
+			return "Failed";
+		case "CANCELLED":
+			return "Cancelled";
+		case "COMPLETED":
+			return "Completed";
+		case "":
+		case null:
+		case undefined:
+			return "";
+		default:
+			return `unknown status type ${value} - ${typeof value}`;
+	}
+};
+
 export function getHairColor(value){
 	switch(value){
 		case "1":

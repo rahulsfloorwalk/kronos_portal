@@ -1,7 +1,11 @@
+from django.db.transaction import atomic
+
+from audit_store.models import AuditStore
 from audit.models import AuditCycle, Audit
 from auditor.models import AuditApplication, ProfileInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
+@atomic
 def approve(application_id, audit_date):
     try:
         application = AuditApplication.objects.get(id=application_id)
@@ -20,6 +24,14 @@ def approve(application_id, audit_date):
     application.status = AuditApplication.APPROVED
     application.audit_date = audit_date
     application.save()
+
+    audit_store = AuditStore()
+    audit_store.audit_id = audit.id
+    audit_store.audit_date = application.audit_date
+    audit_store.status = AuditStore.ASSIGNED
+    audit_store.user_id = application.profileinfo.user_id
+
+    audit_store.save()
     return application
 
 

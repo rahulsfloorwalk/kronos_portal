@@ -13,6 +13,8 @@ from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
 from .serializers import ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
+from .serializers import AuditStoreSerializer
+from .serializers import SectionSerializer
 from audit.models import Audit
 from manager.models import City
 from manager.serializers import CitySerializer
@@ -20,6 +22,8 @@ import manager.service.audit as audit_service
 from manager import states
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from audit_store import service as audit_store_service
+from questionnaire.service import section as section_service
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -115,6 +119,59 @@ class AuditApplicationsView(APIView):
         try:
             applications = audit_service.get_applications( request.user.profileinfo.id)
             return Response(AuditApplicationSerializer(applications, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound()
+        except ProfileInfo.DoesNotExist as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AuditStoresView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def get(self, request, format=None):
+        try:
+            audit_stores = audit_store_service.get_audit_stores( request.user.profileinfo.id)
+            return Response(AuditStoreSerializer(audit_stores, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound()
+        except ProfileInfo.DoesNotExist as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AuditStoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            audit_store = audit_store_service.get_audit_store( audit_store_id, request.user.profileinfo.id)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except ObjectNotFound as e:
+            raise NotFound()
+        except ProfileInfo.DoesNotExist as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+class SectionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            sections = section_service.get_for_auditor(audit_store_id, request.user.profileinfo.id)
+            return Response(SectionSerializer(sections, many=True).data)
         except ObjectNotFound as e:
             raise NotFound()
         except ProfileInfo.DoesNotExist as e:

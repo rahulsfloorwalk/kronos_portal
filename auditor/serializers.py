@@ -8,7 +8,9 @@ from manager.serializers import CitySerializer
 from manager.models import Location
 from audit.models import Audit, AuditCycle
 from client.models import Client, Store
+from audit_store.models import AuditStore
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
+from questionnaire.models import Section, Question
 
 
 class ProfileInfoSerializer(ModelSerializer):
@@ -265,3 +267,42 @@ class AuditApplicationApplyDeSerializer(Serializer):
 class AuditApplicationCancelDeSerializer(Serializer):
     audit_id = serializers.PrimaryKeyRelatedField(queryset=Audit.objects.filter(audit_cycle__status__in=[AuditCycle.ACTIVE,AuditCycle.UPCOMING]))
     profileinfo_id = serializers.PrimaryKeyRelatedField(queryset=ProfileInfo.objects.all())
+
+
+class AuditStoreSerializer(ModelSerializer):
+    audit = AuditSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
+        )
+        read_only_fields = fields
+
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'section',
+        )
+        read_only_fields = fields
+
+class SectionSerializer(ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'audit_cycle',
+            'sequence',
+            'questions'
+        )
+        read_only_fields = fields
+

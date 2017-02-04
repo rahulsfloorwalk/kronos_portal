@@ -1,0 +1,80 @@
+import React from 'react';
+import * as ReactRedux from 'react-redux';
+import { Link } from 'react-router';
+
+import { fetchAuditStores } from '../../auditor/actions/audit_store.js';
+import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
+
+import { Cross, ShareAlt } from '../Icons.jsx';
+import { getAuditType, getAuditStatus } from '../../utils.js';
+import { LabelValue_2_10 } from '../LabelValue.jsx';
+import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
+import Jumbotron from '../Jumbotron.jsx';
+
+var AuditStoreRow = React.createClass({
+	render: function(){
+		return (
+			<div className="col-sm-6">
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.name}</b></h4>
+					</div>
+					<div className="panel-body">
+						<div className="form-horizontal">
+							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.auditStore.audit.audit_cycle.type)}/>
+							<LabelValue_2_10 label="Location:" value={`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}/>
+							<LabelValue_2_10 label="Fees:" value={"₹ " + this.props.auditStore.audit.audit_cycle.earnings_per_audit + " per audit"}/>
+							<LabelValue_2_10 label="Audit Date:" value={this.props.auditStore.audit_date}/>
+							<LabelValue_2_10 label="Details:" value={this.props.auditStore.audit.audit_cycle.description}/>
+							<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
+						</div>
+						<p className="text-right"><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></p>
+					</div>
+				</div>
+			</div>
+		);
+	},
+});
+
+var AuditStoreList = React.createClass({
+	componentDidMount: function() {
+		this.props.dispatch(fetchAuditStores());
+		this.props.dispatch(fetchProfileInfo());
+	},
+	render: function(){
+		var rows = [];
+		for(var id in this.props.auditStores) {
+			rows.push(<AuditStoreRow auditStore={this.props.auditStores[id]} key={id}/>);
+		}
+		if(rows.length > 0){
+			return (
+				<div>
+					<h2 className="page-header">
+						Your Audits
+					</h2>
+					<div className="row">
+						{rows}
+					</div>
+					{this.props.children}
+				</div>
+			);
+		} else {
+			return (
+				<div className="jumbotron text-center">
+					<h2>There are no audits approved for you.</h2>
+					<h3>Apply for some audits from the audits section!</h3>
+					<p>We will keep you informed when audits are approved for you</p>
+				</div>
+			);
+		}
+	},
+});
+
+var mapStoreToProps = function(store){
+	return {
+		profileInfo: store.profileInfo,
+		auditStores: store.auditStores,
+	};
+};
+
+export default ReactRedux.connect(mapStoreToProps)(AuditStoreList); 

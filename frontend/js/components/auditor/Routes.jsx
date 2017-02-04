@@ -11,6 +11,11 @@ import AuditDetails from './AuditDetails.jsx';
 import AuditApplyForm from './AuditApplyForm.jsx';
 import AuditCancelForm from './AuditCancelForm.jsx';
 
+import AuditStoreList from './AuditStoreList.jsx';
+import AuditStoreDetails from './AuditStoreDetails.jsx';
+
+import SectionList from './SectionList.jsx';
+
 import ProfileInfoForm from './ProfileInfoForm.jsx';
 import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';
@@ -30,6 +35,10 @@ const Routes = ({store}) => (
 				<Route path="apply" component={AuditApplyForm}/>
 				<Route path="cancel" component={AuditCancelForm}/>
 			</Route>
+		</Route>
+		<Route path="audit_store" component={AuditStoreList}/>
+		<Route path="audit_store/:auditStoreId" component={AuditStoreDetails}>
+			<Route path="section" component={SectionList}/>
 		</Route>
 	</Route>
     </Router>

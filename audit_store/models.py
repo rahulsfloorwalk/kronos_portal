@@ -23,4 +23,4 @@ class AuditStore(Model):
     audit_date = DateField(db_column='audit_date')
 
     audit = ForeignKey(Audit, db_column='audit_id')
-    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id')
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id')

@@ -5,6 +5,7 @@ var initialStore = {
 	bankInfo: {},
 	additionalInfo: {},
 	audits: {},
+	auditStores: {},
 	states: {},
 	cities: {},
 	forms: {
@@ -319,11 +320,62 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+		case types.AUDIT_STORE_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						auditStores: (function(auditStores){
+							var obj = {};
+							for( var as of auditStores){
+								obj[as.id] = as;
+							}
+							return obj;
+						}(action.auditStores))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.AUDIT_STORE_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						auditStores: Object.assign({}, store.auditStores, {
+							[action.auditStore.id]: action.auditStore
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.STATE_GET:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
 						states: action.states
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.SECTION_GET:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						sections: {}
+					});
+				case "success":
+					return Object.assign({}, store, {
+						sections: (function(sections){
+							var obj = {};
+							for( var s of sections){
+								obj[s.id] = s;
+							}
+							return obj;
+						}(action.sections))
 					});
 					break;
 				default:

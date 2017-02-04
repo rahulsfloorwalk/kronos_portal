@@ -19,6 +19,7 @@ var Header = React.createClass({
 					<ul className="nav navbar-nav">
 						<NavLink to="/details">My Profile</NavLink>
 						<NavLink to="/audit">Audits</NavLink>
+						<NavLink to="/audit_store">Reports</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

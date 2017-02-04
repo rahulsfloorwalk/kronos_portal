@@ -13,7 +13,7 @@ export function fetchAudits(){
 			dispatch({
 				type: types.AUDIT_GET,
 				status: 'success',
-				audits: audits
+				audits
 			});
 		});
 		//TODO: Handle error
