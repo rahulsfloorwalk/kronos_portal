@@ -284,7 +284,10 @@ class AnswerSubmitView(APIView):
         audit_store = ds.validated_data['audit_store']
         answer_text = ds.validated_data['answer_text']
         question = ds.validated_data['question']
-        answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
+        try:
+            answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
+        except ObjectNotFound:
+            raise NotFound()
         return Response(AnswerSerializer(answer).data)
 
 class AnswerListView(APIView):
@@ -293,5 +296,8 @@ class AnswerListView(APIView):
             'GET' : [GROUP_NAME_AUDITOR]
         }
     def get(self, request, audit_store_id, format=None):
-        answers = answer_service.get_answers(audit_store_id, request.user.id)
+        try:
+            answers = answer_service.get_answers(audit_store_id, request.user.id)
+        except ObjectNotFound:
+            raise NotFound()
         return Response(AnswerSerializer(answers, many=True).data)
