@@ -3,18 +3,20 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import Panel from '../Panel.jsx';
+import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 
 import {fetchAuditStores} from '../../manager/actions/audit_store.js';
+import { getAuditStoreStatus } from '../../utils.js';
 
 var AuditStoreRow = React.createClass({
   render: function(){
-    var LinkTo = `/auditStore/${this.props.auditStore.id}`;
     return(
       <tr>
-        <td>{this.props.auditStore.store}</td>
-        <td>{this.props.auditStore.count}</td>
+        <td>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</td>
+        <td>{this.props.auditStore.audit_date}</td>
+        <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
         <td>
-          <Link to={LinkTo} className="btn btn-primary pull-right">View</Link>
+          <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
         </td>
       </tr>
     );
@@ -22,25 +24,24 @@ var AuditStoreRow = React.createClass({
 });
 var AuditStoreList = React.createClass({
   componentDidMount: function(){
-    this.props.dispatch(fetchAuditStores(this.props.auditCycleId));
+    this.props.dispatch(fetchAuditStores(this.props.params.auditCycleId));
   },
   render: function(){
     var rows = [];
     for(var id in this.props.auditStores){
       rows.push(<AuditStoreRow auditStore={this.props.auditStores[id]} key={id} />);
     }
-    var addAuditStoreLink = `/audit_cycle/${this.props.auditCycleId}/audit_store/add`;
     return(
       <div>
         <h2 className="page-header">
-          <Link to={addAuditStoreLink} className="btn btn-default pull-right">Add Audit Store</Link>
           Audit Store List
         </h2>
-        <table classname="table table-striped">
+        <table className="table table-striped">
           <thead>
             <tr>
-              <th>Store</th>
-              <th>Count</th>
+              <th>Auditor Name</th>
+              <th>Audit Date</th>
+              <th>Report Status</th>
             </tr>
           </thead>
           <tbody>
@@ -53,10 +54,9 @@ var AuditStoreList = React.createClass({
   },
 });
 
-var mapAuditStoreToProps = function(store, ownProps){
+var mapStoreToProps = function(store, ownProps){
   return{
-    auditStores: store.auditStores,
-    auditCycleId:ownProps.auditCycleId
+    auditStores: store.auditStores
   };
 }
-export default ReactRedux.connect(mapAuditStoreToProps)(AuditStoreList);
+export default ReactRedux.connect(mapStoreToProps)(AuditStoreList);

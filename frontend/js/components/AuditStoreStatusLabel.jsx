@@ -7,13 +7,15 @@ export default React.createClass({
 	getLabelType : function(status){
 		switch(this.props.status){
 			case "ASSIGNED":
+				return "warning";
+			case "SUBMITTED":
 				return "primary";
 			case "COMPLETED":
 				return "success";
 			case "FAILED":
-				return "warning";
-			case "CANCELLED":
 				return "danger";
+			case "WITHDRAWN":
+				return "default";
 			case "":
 			case null:
 			case undefined:

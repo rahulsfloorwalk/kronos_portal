@@ -13,7 +13,7 @@ export default React.createClass({
 			case "APPROVED":
 				return "success";
 			case "REJECTED":
-				return "default";
+				return "danger";
 			case "":
 			case null:
 			case undefined:

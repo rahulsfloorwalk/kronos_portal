@@ -3,6 +3,7 @@ import types from './manager/action_types.js'
 var initialStore = {
 	applications: {},
 	audits: {},
+	auditStores: {},
 	auditCycles: {},
 	clients: {},
 	stores: {},
@@ -14,6 +15,7 @@ var initialStore = {
 	profileInfos: {},
 	bankInfos: {},
 	additionalInfos: {},
+	answers: {},
 	errors: {},
 	forms: {
 		client: {
@@ -362,6 +364,36 @@ export function rootReducer(store = initialStore, action) {
 							console.warn("WARNING: default case encountered for action: %O", action);
 							return store;
 					}
+			case types.AUDIT_STORE_GET:
+				switch(action.status){
+					case "success":
+						return Object.assign({}, store, {
+							auditStores: (function(auditStores){
+								var obj = {};
+								for( var a of auditStores){
+									obj[a.id] = a;
+								}
+								return obj;
+							}(action.auditStores))
+						});
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+				}
+		case types.AUDIT_STORE_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						auditStores: Object.assign({}, store.auditStores, {
+							[action.auditStore.id]: action.auditStore
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.SECTION_GET:
 			switch(action.status){
 				case "success":
@@ -430,6 +462,23 @@ export function rootReducer(store = initialStore, action) {
 								errors: action.errors
 							})
 						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.ANSWER_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						answers: (function(answers){
+							var obj = {};
+							for( var a of answers){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.answers))
 					});
 					break;
 				default:

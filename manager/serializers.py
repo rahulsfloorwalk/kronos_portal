@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from rest_framework import routers, viewsets
 from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
 from django.contrib.auth.models import User
@@ -8,6 +10,7 @@ from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from client.models import Client, Store
 from .models import City, Location
+from answer.models import Answer
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -205,6 +208,18 @@ class AuditSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AuditSerializerWithoutApplications(ModelSerializer):
+    store = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
+    class Meta:
+        model = Audit
+        fields = (
+            'id',
+            'count',
+            'store',
+            'audit_cycle',
+        )
+        read_only_fields = fields
 
 class AuditDeSerializer(ModelSerializer):
     class Meta:
@@ -228,8 +243,21 @@ class AuditDeSerializer(ModelSerializer):
         audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
         return audit
 
+class UserSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSmallSerializer()
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'profileinfo',
+        )
+        read_only_fields = fields
+
+
 class AuditStoreSerializer(ModelSerializer):
-    audit = AuditSerializer()
+    audit = AuditSerializerWithoutApplications()
+    user = UserSerializer()
     class Meta:
         model = AuditStore
         fields = (
@@ -340,3 +368,14 @@ class SectionDeSerializer(ModelSerializer):
         return section
 
 
+class AnswerSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'id',
+            'question',
+            'audit_store',
+            'answer_text',
+            'marks_obtained'
+        )
+        read_only_fields = fields

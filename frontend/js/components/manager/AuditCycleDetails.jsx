@@ -31,7 +31,6 @@ var AuditCycleDetails = React.createClass({
 	},
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId));
-		//this.props.dispatch(fetchApplications(this.props.params.auditId));
 	},
 	componentWillReceiveProps(nextProps){
 		console.log("AuditCycleDetails#componentWillReceiveProps#nextProps", nextProps);
@@ -41,78 +40,6 @@ var AuditCycleDetails = React.createClass({
 			return <Loading/>;
 		}
 
-		/*
-		var auditLocations = [];
-		for( let al of this.props.audit.auditlocations){
-			let rows = [];
-			for( let app of this.props.applications){
-				let auditorUrl = `/auditor/${app.profileinfo.user_id}`;
-				let auditorLink = (<Link to={auditorUrl}>{app.profileinfo.first_name} { app.profileinfo.last_name}</Link>);
-				let assignLink, rejectLink, completeLink, failLink;
-				if( app.status === "APPLIED"){
-					assignLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/assign`} className="btn btn-primary">Assign</Link>);
-					rejectLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/reject`} className="btn btn-default">Reject</Link>);
-				} else if( app.status === "ASSIGNED"){
-					completeLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/complete`} className="btn btn-primary">Complete</Link>);
-					failLink = (<Link to={`/audit/${this.props.params.auditId}/application/${app.id}/fail`} className="btn btn-default">Fail</Link>);
-				}
-				if( app.auditlocation === al.id){
-					rows.push(
-						<tr key={app.id}>
-							<td>{auditorLink}</td>
-							<td>{app.profileinfo.mobile_number}</td>
-							<td>{getAuditApplicationStatus(app.status)}</td>
-							<td>{app.audit_date}</td>
-							<td>{assignLink}{rejectLink}{completeLink}{failLink}</td>
-						</tr>
-					);
-				}
-			}
-
-			let innerTable;
-
-			if(rows.length > 0){
-				innerTable = (
-					<table className="table">
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Mobile</th>
-								<th>Status</th>
-								<th>Audit Date</th>
-								<th>Action</th>
-							</tr>
-						</thead>
-						<tbody>
-							{rows}
-						</tbody>
-					</table>
-				);
-			} else {
-				innerTable = (<p className="text-center text-muted">No applications for this location.</p>);
-			}
-
-			let editLink = `/audit/${this.props.params.auditId}/auditlocation/${al.id}/edit`;
-			let panelTitle = (
-				<span>
-					<b className="">{al.count}</b> - {al.location.name}, {al.location.city.name}
-					<Link to={editLink} className="btn btn-default pull-right">Edit</Link>
-				</span>
-			);
-			auditLocations.push(
-				<Panel key={al.id} title={panelTitle}>
-					{innerTable}
-				</Panel>
-			);
-		}
-				<h2 className="page-header">
-					<Link to={addAuditLocationLink} className="btn btn-default pull-right">Add</Link>
-					Locations
-				</h2>
-				{auditLocations}
-		*/
-
-		//let addAuditLocationLink = `/audit/${this.props.params.auditId}/auditlocation/add`
 		let editAuditCycleLink = `/audit_cycle/${this.props.auditCycle.id}/edit`;
 
 		return (
@@ -147,6 +74,7 @@ var AuditCycleDetails = React.createClass({
 				<ul className="nav nav-tabs">
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}>Questionnaire</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}>Audits</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}>Reports</NavLink>
 				</ul>
 				{this.props.children}
 			</div>
@@ -157,23 +85,6 @@ var AuditCycleDetails = React.createClass({
 var mapStoreToProps = function(store, ownProps){
 	return {
 		auditCycle: store.auditCycles[ownProps.params.auditCycleId],
-		//applications: (function(applications){
-		//	var audit = store.audits[ownProps.params.auditId] || {};
-		//	var auditlocations = audit.auditlocations || [];
-		//	var alids = [];
-
-		//	for( var al of auditlocations){
-		//		alids.push(al.id);
-		//	}
-
-		//	var selectedApplications = [];
-		//	for( var id in applications){
-		//		if(alids.includes(applications[id].auditlocation)){
-		//			selectedApplications.push(applications[id]);
-		//		}
-		//	}
-		//	return selectedApplications;
-		//}(store.applications))
 	};
 };
 

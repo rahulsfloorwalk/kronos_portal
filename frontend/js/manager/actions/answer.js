@@ -1,0 +1,23 @@
+import $ from 'jquery'
+import { url } from '../../../config'
+import types from '../action_types.js'
+
+export function fetchAnswers(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.ANSWER_GET,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.get( url.api_base_path + `manager/audit_store/${auditStoreId}/answer`, function(answers){
+			dispatch({
+				type: types.ANSWER_GET,
+				status: 'success',
+				answers
+			});
+		});
+		//TODO: Handle error
+	};
+};
+

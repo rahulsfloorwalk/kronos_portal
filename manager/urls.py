@@ -8,6 +8,7 @@ from .viewss import audit_store as audit_store_views
 from .viewss import audit_cycle as audit_cycle_views
 from .viewss import section as section_views
 from .viewss import question as question_views
+from .viewss import answer as answer_views
 
 urlpatterns = ([
     url(r'state$', views.StateView.as_view(), name='state_view'),
@@ -19,6 +20,7 @@ urlpatterns = ([
     url(r'client$', client_views.ClientView.as_view(), name='client_view'),
 
     #url(r'audit/(?P<audit_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAudit.as_view(), name='audit_store_by_audit_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', answer_views.AnswerByAuditStore.as_view(), name='answers_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', audit_store_views.AuditStoreIdView.as_view(), name='audit_store_id_view'),
     #url(r'audit_store$', audit_store_views.AuditStoreView.as_view(), name='audit_store_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle_view'),

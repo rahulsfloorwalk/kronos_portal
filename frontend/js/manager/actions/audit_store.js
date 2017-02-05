@@ -7,14 +7,14 @@ export function fetchAuditStores(auditCycleId){
 		dispatch({
 			type: types.AUDIT_STORE_GET,
 			status: 'request',
-			auditCycleId: auditCycleId
+			auditCycleId
 		});
 
 		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit_store`, function(auditStores){
 			dispatch({
 				type: types.AUDIT_STORE_GET,
 				status: 'success',
-				audit_stores: auditStores
+				auditStores
 			});
 		});
 		//TODO: Handle error
