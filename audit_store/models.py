@@ -4,7 +4,6 @@ from django.db.models import CASCADE
 from audit.models import Audit
 
 class AuditStore(Model):
-    db_table = 'audit_store'
 
     ASSIGNED = 'ASSIGNED'
     FAILED = 'FAILED'

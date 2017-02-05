@@ -5,7 +5,6 @@ from questionnaire.models import Question
 from audit_store.models import AuditStore
 
 class Answer(Model):
-    db_table = 'answer'
 
     id = AutoField(db_column = 'id', primary_key=True)
 

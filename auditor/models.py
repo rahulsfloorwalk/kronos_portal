@@ -8,7 +8,6 @@ from manager import states
 
 
 class ProfileInfo(Model):
-	db_table = "profile_info"
 
 	MALE = 'M'
 	FEMALE = 'F'
@@ -94,7 +93,6 @@ class ProfileInfo(Model):
 		return "Profile: {} {}".format(self.first_name, self.last_name)
 
 class AdditionalInfo(Model):
-	db_table = "additional_info"
 
 	AFRICAN_AMERICAN = 1
 	ASIAN = 2
@@ -166,7 +164,6 @@ class AdditionalInfo(Model):
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 class BankInfo(Model):
-	db_table = "bank_info"
 
 	id = AutoField(db_column='id', primary_key=True)
 	bank_name = CharField(db_column='bank_name', max_length=40, blank=True)
@@ -179,7 +176,6 @@ class BankInfo(Model):
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 class AuditApplication(Model):
-    db_table = "audit_application"
 
     NOT_APPLIED = 'NOT_APPLIED'
     APPLIED = 'APPLIED'

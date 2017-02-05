@@ -14,7 +14,6 @@ from manager.models import Client
 #        return 'Questionnaire({}): {}'.format(self.id, self.name)
 
 class Section(Model):
-    db_table = "section"
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
@@ -28,7 +27,6 @@ class Section(Model):
         ordering = ['sequence']
 
 class Question(Model):
-    db_table = "question"
 
     id = AutoField(db_column = 'id', primary_key=True)
     question_txt = CharField(db_column="question_txt", max_length=1024, blank=False)
@@ -41,4 +39,3 @@ class Question(Model):
 
     class Meta:
         ordering = ['sequence']
-

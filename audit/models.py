@@ -3,7 +3,6 @@ from django.db.models import Model, CharField, IntegerField, AutoField, DateFiel
 from django.db.models import CASCADE
 
 class AuditCycle(Model):
-    db_table = "audit_cycle"
 
     WALKIN = 'WALKIN'
     PHONE = 'PHONE'
@@ -55,7 +54,6 @@ class AuditCycle(Model):
 
 
 class Audit(Model):
-    db_table = "audits"
 
     id = AutoField(db_column = 'id', primary_key=True)
     count = PositiveIntegerField(db_column='count', blank=False, default=1)

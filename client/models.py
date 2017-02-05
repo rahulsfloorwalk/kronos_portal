@@ -3,7 +3,6 @@ from django.db.models import CASCADE
 from django.conf import settings
 
 class Client(Model):
-    db_table = "client"
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)
@@ -15,7 +14,6 @@ class Client(Model):
 
 
 class ClientUser(Model):
-    db_table = "client_user"
 
     id = AutoField(db_column = 'id', primary_key=True)
     full_name = CharField(db_column='name', max_length=50, blank=False)
@@ -27,7 +25,6 @@ class ClientUser(Model):
 
 
 class Store(Model):
-    db_table = "store"
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)
