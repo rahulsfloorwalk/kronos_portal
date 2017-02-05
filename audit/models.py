@@ -5,31 +5,35 @@ from django.db.models import CASCADE
 class AuditCycle(Model):
     db_table = "audit_cycle"
 
-    WALKIN = 1
-    PHONE = 2
-    WEB = 3
-    VISIBILITY = 4
-    COMPETITION = 5
+    WALKIN = 'WALKIN'
+    PHONE = 'PHONE'
+    WEB = 'WEB'
+    VISIBILITY = 'VISIBILITY'
+    COMPETITION = 'COMPETITION'
     TYPES = (
-        (WALKIN, 'walkin'),
-        (PHONE, 'phone'),
-        (WEB, 'web'),
-        (VISIBILITY, 'visibility'),
-        (COMPETITION, 'competition'),
+        (WALKIN, 'Walkin'),
+        (PHONE, 'Phone'),
+        (WEB, 'Web'),
+        (VISIBILITY, 'Visibility'),
+        (COMPETITION, 'Competition'),
     )
 
-    UPCOMING = 1
-    ACTIVE = 2
-    ARCHIVED = 3
+    PREPARATION = 'PREPARATION'
+    UPCOMING = 'UPCOMING'
+    ACTIVE = 'ACTIVE'
+    REPORT = 'REPORT'
+    ARCHIVED = 'ARCHIVED'
     STATUS = (
-        (UPCOMING, 'upcoming'),
-        (ACTIVE, 'active'),
-        (ARCHIVED, 'archived'),
+        (PREPARATION, 'Preparation'),
+        (UPCOMING, 'Upcoming'),
+        (ACTIVE, 'Active'),
+        (REPORT, 'Report'),
+        (ARCHIVED, 'Archived'),
     )
 
     id = AutoField(db_column = 'id', primary_key=True)
-    type = IntegerField(db_column='type', choices=TYPES, blank=False)
-    status = IntegerField(db_column='status', choices=STATUS, blank=False)
+    type = CharField(db_column='type', max_length=20, choices=TYPES, blank=False)
+    status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=False)

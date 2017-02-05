@@ -88,19 +88,21 @@ var AuditCycleForm = React.createClass({
 						<div className="col-md-6">
 							<FormSelect label="Audit Type" name="type" value={this.state.type} onChange={this.fieldChanged} errors={this.props.errors.type}>
 								<option value=""></option>
-								<option value="1">{getAuditType("1")}</option>
-								<option value="2">{getAuditType("2")}</option>
-								<option value="3">{getAuditType("3")}</option>
-								<option value="4">{getAuditType("4")}</option>
-								<option value="5">{getAuditType("5")}</option>
+								<option value="WALKIN">{getAuditType("WALKIN")}</option>
+								<option value="PHONE">{getAuditType("PHONE")}</option>
+								<option value="WEB">{getAuditType("WEB")}</option>
+								<option value="VISIBILITY">{getAuditType("VISIBILITY")}</option>
+								<option value="COMPETITION">{getAuditType("COMPETITION")}</option>
 							</FormSelect>
 						</div>
 						<div className="col-md-6">
 							<FormSelect label="Audit Status" name="status" value={this.state.status} onChange={this.fieldChanged} errors={this.props.errors.status}>
 								<option value=""></option>
-								<option value="1">{getAuditStatus("1")}</option>
-								<option value="2">{getAuditStatus("2")}</option>
-								<option value="3">{getAuditStatus("3")}</option>
+								<option value="PREPARATION">{getAuditStatus("PREPARATION")}</option>
+								<option value="UPCOMING">{getAuditStatus("UPCOMING")}</option>
+								<option value="ACTIVE">{getAuditStatus("ACTIVE")}</option>
+								<option value="REPORT">{getAuditStatus("REPORT")}</option>
+								<option value="ARCHIVED">{getAuditStatus("ARCHIVED")}</option>
 							</FormSelect>
 						</div>
 					</div>

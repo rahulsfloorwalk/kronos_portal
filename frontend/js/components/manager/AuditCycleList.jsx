@@ -66,4 +66,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(AuditCycleList); 
+export default ReactRedux.connect(mapStoreToProps)(AuditCycleList);

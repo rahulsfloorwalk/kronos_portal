@@ -2,20 +2,15 @@
 
 export function getAuditType(value){
 	switch(value){
-		case "1":
-		case 1:
+		case "WALKIN":
 			return "Walk In";
-		case "2":
-		case 2:
+		case "PHONE":
 			return "Phone";
-		case "3":
-		case 3:
+		case "WEB":
 			return "Web";
-		case "4":
-		case 4:
+		case "VISIBILITY":
 			return "Visibility";
-		case "5":
-		case 5:
+		case "COMPETITION":
 			return "Competition";
 		case "":
 		case null:
@@ -28,14 +23,15 @@ export function getAuditType(value){
 
 export function getAuditStatus(value){
 	switch(value){
-		case "1":
-		case 1:
+		case "PREPARATION":
+			return "Preparation";
+		case "UPCOMING":
 			return "Upcoming";
-		case "2":
-		case 2:
+		case "ACTIVE":
 			return "Active";
-		case "3":
-		case 3:
+		case "REPORT":
+			return "Report";
+		case "ARCHIVED":
 			return "Archived";
 		case "":
 		case null:
@@ -126,8 +122,10 @@ export function getAuditStoreStatus(value){
 			return "Assigned";
 		case "FAILED":
 			return "Failed";
-		case "CANCELLED":
-			return "Cancelled";
+		case "WITHDRAWN":
+			return "Withdrawn";
+		case "SUBMITTED":
+			return "Submitted";
 		case "COMPLETED":
 			return "Completed";
 		case "":
@@ -202,4 +200,3 @@ export function getCameraResolution(value){
 			return `unknown camera resolution ${value} - ${typeof value}`;
 	}
 }
-

@@ -8,14 +8,16 @@ class AuditStore(Model):
 
     ASSIGNED = 'ASSIGNED'
     FAILED = 'FAILED'
-    CANCELLED = 'CANCELLED'
+    SUBMITTED = 'SUBMITTED'
+    WITHDRAWN = 'WITHDRAWN'
     COMPLETED = 'COMPLETED'
 
     STATUS = (
             (ASSIGNED, "Assigned"),
             (FAILED, "Failed"),
+            (SUBMITTED, "Submitted"),
             (COMPLETED, "Completed"),
-            (CANCELLED, "Cancelled"),
+            (WITHDRAWN, "Withdrawn"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
