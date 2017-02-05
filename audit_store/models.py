@@ -23,5 +23,5 @@ class AuditStore(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
 
-    audit = ForeignKey(Audit, db_column='audit_id')
+    audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores')
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id')
