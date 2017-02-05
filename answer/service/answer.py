@@ -16,10 +16,15 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
     except (AuditStore.DoesNotExist, Question.DoesNotExist) as e:
         raise ObjectNotFound() from e
     if user_id == audit_store.user_id:
-        answer = Answer()
+        try:
+            answer = Answer.objects.get(audit_store_id=audit_store_id, question_id=question_id)
+        except Answer.DoesNotExist:
+            answer = Answer()
+            answer.question = question
+            answer.audit_store = audit_store
         answer.answer_text = answer_text
-        answer.question = question
-        answer.audit_store = audit_store
         return save(answer)
     else:
         raise ObjectNotFound()
+
+#def get_answers(audit_store_id, user_id):
