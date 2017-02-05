@@ -272,17 +272,26 @@ class StateView(APIView):
     def get(self, request, format=None):
         return Response(states.states)
 
-class AnswerView(APIView):
+class AnswerSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
             'POST': [GROUP_NAME_AUDITOR]
         }
     def post(self, request, question_id, format=None):
-        request.data['question_id'] = question_id
+        request.data['question'] = question_id
         ds = AnswerDeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_store = ds.validated_data['audit_store']
         answer_text = ds.validated_data['answer_text']
-        question = ds.validated_data['question_id']
+        question = ds.validated_data['question']
         answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
         return Response(AnswerSerializer(answer).data)
+
+class AnswerListView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR]
+        }
+    def get(self, request, audit_store_id, format=None):
+        answers = answer_service.get_answers(audit_store_id, request.user.id)
+        return Response(AnswerSerializer(answers, many=True).data)

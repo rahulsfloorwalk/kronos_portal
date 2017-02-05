@@ -306,10 +306,14 @@ class SectionSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class AnswerDeSerializer(Serializer):
-    audit_store = serializers.PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
-    question_id = serializers.PrimaryKeyRelatedField(queryset=Question.objects.all())
-    answer_text = CharField()
+class AnswerDeSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'question',
+            'audit_store',
+            'answer_text'
+        )
 
 class AnswerSerializer(ModelSerializer):
     class Meta:

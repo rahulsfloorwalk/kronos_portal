@@ -27,4 +27,13 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
     else:
         raise ObjectNotFound()
 
-#def get_answers(audit_store_id, user_id):
+def get_answers(audit_store_id, user_id):
+    try:
+        audit_store = AuditStore.objects.get(pk=audit_store_id)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound() from e
+    if user_id == audit_store.user_id:
+        answers = Answer.objects.filter(audit_store_id=audit_store_id)
+        return answers
+    else:
+        raise ObjectNotFound()
