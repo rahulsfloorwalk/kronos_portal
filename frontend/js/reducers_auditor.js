@@ -8,6 +8,8 @@ var initialStore = {
 	auditStores: {},
 	states: {},
 	cities: {},
+	sections: {},
+	answers: {},
 	forms: {
 		profileInfo: {
 			errors:{}
@@ -376,6 +378,40 @@ export function rootReducer(store = initialStore, action) {
 							}
 							return obj;
 						}(action.sections))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.ANSWER_GET:
+			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						answers: {}
+					});
+				case "success":
+					return Object.assign({}, store, {
+						answers: (function(answers){
+							var obj = {};
+							for( var a of answers){
+								obj[a.id] = a;
+							}
+							return obj;
+						}(action.answers))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.ANSWER_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						answers: Object.assign({}, store.answers, {
+							[action.answer.id]: action.answer
+						})
 					});
 					break;
 				default:

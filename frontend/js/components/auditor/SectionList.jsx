@@ -2,28 +2,16 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import QuestionRow from './QuestionRow.jsx';
+
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
 import { Plus, Cross, Pencil } from '../Icons.jsx';
 
-import { orderKeys } from '../../react_utils.js'
+import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 
 import { fetchSections } from '../../auditor/actions/section.js';
-
-var QuestionRow = React.createClass({
-	render: function(){
-		return (
-			<tr>
-				<td>{this.props.q.sequence}</td>
-				<td>{this.props.q.question_txt}</td>
-				<td>{this.props.q.max_marks}</td>
-				<td>
-					<Link to={`/audit_store/${this.props.auditStoreId}/section/question/${this.props.q.id}/answer`} className="btn btn-default"><Pencil/></Link>
-				</td>
-			</tr>
-		);
-	},
-});
+import { fetchAnswers } from '../../auditor/actions/answer.js';
 
 var Section = React.createClass({
 	render: function(){
@@ -38,8 +26,7 @@ var Section = React.createClass({
 		}
 		var styles = {
 			col1: { width: "5%" },
-			col2: { width: "80%" },
-			col3: { width: "20%" },
+			col2: { width: "95%" },
 		};
 		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
@@ -48,7 +35,6 @@ var Section = React.createClass({
 						<tr>
 							<th style={styles.col1}>#</th>
 							<th style={styles.col2}>Question</th>
-							<th style={styles.col3}>Answer</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -67,6 +53,7 @@ var SectionList = React.createClass({
 	componentDidMount: function() {
 		console.log("SectionList#componentDidMount");
 		this.props.dispatch(fetchSections(this.props.params.auditStoreId));
+		this.props.dispatch(fetchAnswers(this.props.params.auditStoreId));
 	},
 	/*componentWillReceiveProps: function(nextProps){
 		console.log("SectionList#componentWillReceiveProps");

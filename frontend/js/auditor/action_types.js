@@ -27,6 +27,9 @@ var types = {
 
 	SECTION_GET: 'SECTION_GET',
 
+	ANSWER_GET: 'ANSWER_GET',
+	ANSWER_POST: 'ANSWER_POST',
+
 	//State get
 	STATE_GET: 'STATE_GET',
 	//City get
