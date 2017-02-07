@@ -2,12 +2,13 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { Plus, Retweet } from '../Icons.jsx';
 import { fetchAuditCycles } from '../../manager/actions/audit.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
 
 var AuditCycleRow = React.createClass({
 	render: function(){
-		var linkTo = `/audit_cycle/${this.props.auditCycle.id}`;
+		var linkTo = `/audit_cycle/${this.props.auditCycle.id}/questionnaire`;
 		return (
 			<tr>
 				<td>{this.props.auditCycle.start_date}</td>
@@ -36,8 +37,8 @@ var AuditCycleList = React.createClass({
 		return (
 			<div>
 				<h3 className="page-header">
-					<Link to={addAuditCycleLink} className="btn btn-default pull-right">Add Audit Cycle</Link>
-					Audit Cycles
+					<Link to={addAuditCycleLink} className="btn btn-default pull-right"><Plus/> Add Audit Cycle</Link>
+					<Retweet/> Audit Cycles
 				</h3>
 				<table className="table table-striped">
 					<thead>

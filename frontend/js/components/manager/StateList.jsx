@@ -2,7 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchStates } from '../../manager_actions.js'
+import { fetchStates } from '../../manager_actions.js';
+
+import { MapMarker } from '../Icons.jsx';
 
 var StateList = React.createClass({
 	componentDidMount: function() {
@@ -27,7 +29,7 @@ var StateList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					States
+					<MapMarker/> States
 				</h2>
 				<div className="row">
 					{rows}

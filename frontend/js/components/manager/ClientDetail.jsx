@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchClient } from '../../manager/actions/client.js';
 
-import { Pencil } from '../Icons.jsx';
+import { King, Plus, Pencil, Retweet, User, Home } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import NavLink from '../NavLink.jsx';
@@ -27,12 +27,9 @@ var ClientDetail = React.createClass({
 					<li><Link to="/client">Clients</Link></li>
 					<li className="active">{this.props.client.name}</li>
 				</ol>
-				<h2 className="page-header">
-					{ this.props.client.name }
-				</h2>
 				<div className="row">
-				<div className="col-md-6">
-				<Panel title="Client Info" noBody={true}>
+				<div className="col-md-4">
+				<Panel title={<span><King/> Client Info</span>} type="primary" noBody={true}>
 					<table className="table table-striped">
 						<tbody>
 							<tr><td className="text-right">Name</td><td><b>{ this.props.client.name }</b></td></tr>
@@ -45,13 +42,15 @@ var ClientDetail = React.createClass({
 					</div>
 				</Panel>
 				</div>
-				</div>
+				<div className="col-md-8">
 				<ul className="nav nav-tabs">
-					<NavLink to={`/client/${this.props.params.clientId}/audit_cycle`}>Audit Cycles</NavLink>
-					<NavLink to={`/client/${this.props.params.clientId}/store`}>Stores</NavLink>
-					<NavLink to={`/client/${this.props.params.clientId}/client_user`}>Users</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/audit_cycle`}><Retweet/> Audit Cycles</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/store`}><Home/> Stores</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/client_user`}><User/> Users</NavLink>
 				</ul>
 				{this.props.children}
+				</div>
+				</div>
 			</div>
 		);
 	},

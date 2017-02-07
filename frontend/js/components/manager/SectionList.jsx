@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Plus, Cross, Pencil } from '../Icons.jsx';
+import { Tasks, Plus, Cross, Pencil } from '../Icons.jsx';
 
 import { orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
@@ -116,9 +116,9 @@ var SectionList = React.createClass({
 			<div>
 				<h2 className="page-header">
 					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default pull-right">
-						Add Section
+						<Plus/> Add Section
 					</Link>
-					Questionnaire
+					<Tasks/> Questionnaire
 				</h2>
 				{sectionRows}
 				{this.props.children}

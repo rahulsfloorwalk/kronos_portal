@@ -2,11 +2,12 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { Plus, King } from '../Icons.jsx'
 import { fetchClients } from '../../manager/actions/client.js'
 
 var ClientRow = React.createClass({
 	render: function(){
-		var linkTo = `/client/${this.props.client.id}`;
+		var linkTo = `/client/${this.props.client.id}/audit_cycle`;
 		return (
 			<tr>
 				<td>{this.props.client.name}</td>
@@ -32,8 +33,8 @@ var ClientList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link to="/client/add" className="btn btn-default pull-right">Add Client</Link>
-					Client List
+					<Link to="/client/add" className="btn btn-default pull-right"><Plus/> Add Client</Link>
+					<King/> Client List
 				</h2>
 				<table className="table table-striped">
 					<thead>

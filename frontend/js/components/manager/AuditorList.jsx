@@ -5,6 +5,8 @@ import { Link } from 'react-router';
 import { affectInputEventToComponent } from '../../react_utils.js';
 
 import { searchAuditors } from '../../manager/actions/auditor.js'
+
+import { User, Search } from '../Icons.jsx';
 import InputGroup from '../InputGroup.jsx';
 import { InputGroupBtn } from '../InputGroup.jsx';
 import FormInput from '../FormInput.jsx';
@@ -87,13 +89,13 @@ var AuditorList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					Auditors
+					<User/> Auditors
 				</h2>
 				<form className="form-group" onSubmit={this.onSubmit}>
 					<InputGroup>
 						<input className="form-control" placeholder="name, email or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
 						<InputGroupBtn>
-							<SaveButton text="Search"/>
+							<SaveButton text={<span><Search/> Search</span>}/>
 						</InputGroupBtn>
 					</InputGroup>
 				</form>

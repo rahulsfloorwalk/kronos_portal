@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import NavLink from '../NavLink.jsx';
+import { User, MapMarker, King, LogOut } from '../Icons.jsx';
+
 var Header = React.createClass({
 	render: function(){
 		let brandStyle = {
@@ -15,19 +18,15 @@ var Header = React.createClass({
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">
-						<li><Link to="/client" activeClassName="active">Clients</Link></li>
-					</ul>
-					<ul className="nav navbar-nav">
-						<li><Link to="/auditor" activeClassName="active">Auditors</Link></li>
-					</ul>
-					<ul className="nav navbar-nav">
-						<li><Link to="/state" activeClassName="active">Locations</Link></li>
+						<NavLink to="/client"><King/> Clients</NavLink>
+						<NavLink to="/auditor"><User/> Auditors</NavLink>
+						<NavLink to="/state"><MapMarker/> Locations</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
 							<form action="/auth/logout" method="POST">
 							<button className="btn btn-lg btn-link">
-							Logout
+							<LogOut/> Logout
 							</button>
 							</form>
 						</li>

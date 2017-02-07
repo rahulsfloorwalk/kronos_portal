@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Check, Cross, Pencil } from '../../Icons.jsx'
+import { Check, Cross, Pencil, Plus, User } from '../../Icons.jsx'
 
 import { fetchClientUsers } from '../../../manager/actions/client_user.js'
 
@@ -35,8 +35,8 @@ var ClientUserList = React.createClass({
 		return (
 			<div>
 				<h3 className="page-header">
-					<Link to={addClientUserLink} className="btn btn-default pull-right">Add User</Link>
-					Client Users
+					<Link to={addClientUserLink} className="btn btn-default pull-right"><Plus/> Add User</Link>
+					<User/> Client Users
 				</h3>
 				<table className="table table-striped">
 					<thead>

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 //import { fetchApplications } from '../../manager/actions/application.js';
 
-import { Pencil } from '../Icons.jsx';
+import { Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -46,17 +46,18 @@ var AuditCycleDetails = React.createClass({
 			<div>
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
-					<li><Link to={`/client/${this.props.auditCycle.client.id}`}>{this.props.auditCycle.client.name}</Link></li>
+					<li><Link to={`/client/${this.props.auditCycle.client.id}/audit_cycle`}>{this.props.auditCycle.client.name}</Link></li>
 					<li className="active">Cycle: <b>{this.props.auditCycle.start_date}</b> to <b>{ this.props.auditCycle.end_date}</b></li>
 				</ol>
 				<h2 className="page-header">
-					Audit Cycle Details
+					<Retweet/> Audit Cycle Details
 				</h2>
 				<div className="row">
-				<div className="col-md-6">
-				<Panel title={this.props.auditCycle.client.name} noBody={true}>
+				<div className="col-md-4">
+				<Panel title={<span><Retweet/> Audit Cycle Details</span>} noBody={true}>
 					<table className="table table-striped">
 						<tbody>
+							<tr><td className="text-right">Client:</td><td><b>{ this.props.auditCycle.client.name }</b></td></tr>
 							<tr><td className="text-right">Type:</td><td><b>{ getAuditType(this.props.auditCycle.type) }</b></td></tr>
 							<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.props.auditCycle.status) }</b></td></tr>
 							<tr><td className="text-right">Earnings Per Audit:</td><td><b>₹ { this.props.auditCycle.earnings_per_audit }</b></td></tr>
@@ -70,13 +71,15 @@ var AuditCycleDetails = React.createClass({
 					</div>
 				</Panel>
 				</div>
-				</div>
+				<div className="col-md-8">
 				<ul className="nav nav-tabs">
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}>Questionnaire</NavLink>
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}>Audits</NavLink>
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}>Reports</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}><Tasks/> Questionnaire</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
 				</ul>
 				{this.props.children}
+				</div>
+				</div>
 			</div>
 		);
 	},

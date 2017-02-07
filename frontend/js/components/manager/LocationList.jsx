@@ -2,7 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js'
+import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js';
+
+import { Plus, Pencil } from '../Icons.jsx';
 
 var LocationList = React.createClass({
 	componentDidMount: function() {
@@ -19,7 +21,7 @@ var LocationList = React.createClass({
 					<td>{this.props.locations[id].name}</td>
 					<td>{this.props.locations[id].pincode}</td>
 					<td>
-						<Link to={linkTo} className="btn btn-default">Edit</Link>
+						<Link to={linkTo} className="btn btn-default"><Pencil/> Edit</Link>
 					</td>
 				</tr>
 			);
@@ -43,7 +45,7 @@ var LocationList = React.createClass({
 			var table = (
 				<div className="jumbotron text-center">
 					<h2>no locations found</h2>
-					<p>you can add a new one by clicking the button on the top left..</p>
+					<p>you can add a new one by clicking the button on the top right..</p>
 				</div>
 			);
 		}
@@ -52,7 +54,7 @@ var LocationList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link to={addLocationLink} className="btn btn-primary pull-right">Add Location</Link>
+					<Link to={addLocationLink} className="btn btn-default pull-right"><Plus/> Add Location</Link>
 
 					<Link to="/state">States</Link> / <Link to={cityLink}>{this.props.stateName }</Link> / <b>{this.props.city.name }</b> / Location List
 				</h2>

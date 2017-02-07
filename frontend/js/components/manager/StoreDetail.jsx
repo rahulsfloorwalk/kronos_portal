@@ -21,7 +21,7 @@ var StoreDetail = React.createClass({
 			<div>
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
-					<li><Link to={`/client/${this.props.store.client.id}`}>{this.props.store.client.name}</Link></li>
+					<li><Link to={`/client/${this.props.store.client.id}/store`}>{this.props.store.client.name}</Link></li>
 					<li className="active">{this.props.store.name}</li>
 				</ol>
 				<h2 className="page-header">

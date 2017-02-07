@@ -1,29 +1,48 @@
 import React from 'react';
 
-export const Check = () => <span className="glyphicon glyphicon-ok"></span>;
-
-export const Cross = () => <span className="glyphicon glyphicon-remove"></span>;
-
-export const Plus = () => <span className="glyphicon glyphicon-plus"></span>;
-
-export const Pencil = () => <span className="glyphicon glyphicon-pencil"></span>;
-
-export const User = () => <span className="glyphicon glyphicon-user"></span>;
-
-export const Earphone = () => <span className="glyphicon glyphicon-earphone"></span>;
-
-export const Calendar = () => <span className="glyphicon glyphicon-calendar"></span>;
-
-export const ShareAlt = () => <span className="glyphicon glyphicon-share-alt"></span>;
-
-export const Inbox = () => <span className="glyphicon glyphicon-inbox"></span>;
-
-export const ThumbsUp = () => <span className="glyphicon glyphicon-thumbs-up"></span>;
+export const Check	= () => <span className="glyphicon glyphicon-ok"></span>;
+export const Cross	= () => <span className="glyphicon glyphicon-remove"></span>;
+export const Plus	= () => <span className="glyphicon glyphicon-plus"></span>;
+export const Pencil	= () => <span className="glyphicon glyphicon-pencil"></span>;
+export const User	= () => <span className="glyphicon glyphicon-user"></span>;
+export const Earphone	= () => <span className="glyphicon glyphicon-earphone"></span>;
+export const Calendar	= () => <span className="glyphicon glyphicon-calendar"></span>;
+export const ShareAlt	= () => <span className="glyphicon glyphicon-share-alt"></span>;
+export const Inbox	= () => <span className="glyphicon glyphicon-inbox"></span>;
+export const Search	= () => <span className="glyphicon glyphicon-search"></span>;
+export const Star	= () => <span className="glyphicon glyphicon-star"></span>;
+export const Alert	= () => <span className="glyphicon glyphicon-alert"></span>;
+export const Paperclip	= () => <span className="glyphicon glyphicon-paperclip"></span>;
+export const Wrench	= () => <span className="glyphicon glyphicon-wrench"></span>;
+export const Cog	= () => <span className="glyphicon glyphicon-cog"></span>;
+export const Flash	= () => <span className="glyphicon glyphicon-flash"></span>;
+export const Globe	= () => <span className="glyphicon glyphicon-globe"></span>;
+export const Bell	= () => <span className="glyphicon glyphicon-bell"></span>;
+export const Comment	= () => <span className="glyphicon glyphicon-comment"></span>;
+export const Retweet	= () => <span className="glyphicon glyphicon-retweet"></span>;
+export const Warning	= () => <span className="glyphicon glyphicon-warning"></span>;
+export const Leaf	= () => <span className="glyphicon glyphicon-leaf"></span>;
+export const Fire	= () => <span className="glyphicon glyphicon-fire"></span>;
+export const Tasks	= () => <span className="glyphicon glyphicon-tasks"></span>;
+export const King	= () => <span className="glyphicon glyphicon-king"></span>;
+export const Heart	= () => <span className="glyphicon glyphicon-heart"></span>;
+export const Print	= () => <span className="glyphicon glyphicon-print"></span>;
+export const Music	= () => <span className="glyphicon glyphicon-music"></span>;
+export const Trash	= () => <span className="glyphicon glyphicon-trash"></span>;
+export const Home	= () => <span className="glyphicon glyphicon-home"></span>;
+export const LogIn	= () => <span className="glyphicon glyphicon-log-in"></span>;
+export const LogOut	= () => <span className="glyphicon glyphicon-log-out"></span>;
+export const File	= () => <span className="glyphicon glyphicon-file"></span>;
+export const Envelope	= () => <span className="glyphicon glyphicon-envelope"></span>;
+export const Flag	= () => <span className="glyphicon glyphicon-flag"></span>;
+export const ThumbsUp	= () => <span className="glyphicon glyphicon-thumbs-up"></span>;
 export const ThumbsDown = () => <span className="glyphicon glyphicon-thumbs-down"></span>;
-
+export const MenuRight	= () => <span className="glyphicon glyphicon-menu-right"></span>;
+export const MenuDown	= () => <span className="glyphicon glyphicon-menu-down"></span>;
+export const Tag	= () => <span className="glyphicon glyphicon-menu-tag"></span>;
+export const Book	= () => <span className="glyphicon glyphicon-menu-book"></span>;
+export const Bookmark	= () => <span className="glyphicon glyphicon-menu-bookmark"></span>;
+export const MapMarker	= () => <span className="glyphicon glyphicon-map-marker"></span>;
 export const ChevronRight = () => <span className="glyphicon glyphicon-chevron-right"></span>;
 export const ChevronDown = () => <span className="glyphicon glyphicon-chevron-down"></span>;
-
-export const MenuRight = () => <span className="glyphicon glyphicon-menu-right"></span>;
-export const MenuDown = () => <span className="glyphicon glyphicon-menu-down"></span>;
 

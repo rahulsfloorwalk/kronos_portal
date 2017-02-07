@@ -2,6 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { Plus, Home } from '../Icons.jsx';
 import { fetchStores } from '../../manager/actions/store.js'
 
 var StoreRow = React.createClass({
@@ -33,8 +34,8 @@ var StoreList = React.createClass({
 		return (
 			<div>
 				<h3 className="page-header">
-					<Link to={addStoreLink} className="btn btn-default pull-right">Add Store</Link>
-					Store List
+					<Link to={addStoreLink} className="btn btn-default pull-right"><Plus/> Add Store</Link>
+					<Home/> Store List
 				</h3>
 				<table className="table table-striped">
 					<thead>

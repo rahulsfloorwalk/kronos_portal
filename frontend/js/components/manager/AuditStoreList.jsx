@@ -2,6 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { File } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 
@@ -34,7 +35,7 @@ var AuditStoreList = React.createClass({
     return(
       <div>
         <h2 className="page-header">
-          Audit Store List
+          <File/> Reports
         </h2>
         <table className="table table-striped">
           <thead>

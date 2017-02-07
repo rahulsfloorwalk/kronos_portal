@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight, MenuRight, MenuDown } from '../Icons.jsx';
+import { Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
@@ -27,7 +27,7 @@ var AuditApplicationList = React.createClass({
 			}
 			if( app.status !== "NOT_APPLIED"){
 				rows.push(
-					<div key={app.id} className="col-md-3">
+					<div key={app.id} className="col-md-4">
 						<div className="panel panel-default">
 						<div className="panel-body">
 						<p><User/>{auditorLink}</p>
@@ -107,8 +107,8 @@ var AuditList = React.createClass({
     return(
       <div>
         <h2 className="page-header">
-          <Link to={addAuditLink} className="btn btn-default pull-right">Add Audit</Link>
-          Audit List
+          <Link to={addAuditLink} className="btn btn-default pull-right"><Plus/> Add Audit</Link>
+          <Inbox/> Audits
         </h2>
         <table className="table table-striped">
           <thead>
