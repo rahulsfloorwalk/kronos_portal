@@ -16,7 +16,7 @@ class Client(Model):
 class ClientUser(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
-    full_name = CharField(db_column='name', max_length=50, blank=False)
+    full_name = CharField(db_column='full_name', max_length=50, blank=False)
     client = ForeignKey(Client, related_name='users', db_column='client_id', blank=False)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 

@@ -1,19 +1,28 @@
 [
 	{
-		"model": "auth.group", 
-		"pk": 1, 
-		"fields": 
+		"model": "auth.group",
+		"pk": 1,
+		"fields":
 		{
-			"name": "Auditor", 
+			"name": "Auditor",
 			"permissions": []
 		}
-	}, 
+	},
 	{
-		"model": "auth.group", 
-		"pk": 2, 
-		"fields": 
+		"model": "auth.group",
+		"pk": 2,
+		"fields":
 		{
-			"name": "Manager", 
+			"name": "Manager",
+			"permissions": []
+		}
+	},
+	{
+		"model": "auth.group",
+		"pk": 3,
+		"fields":
+		{
+			"name": "Client",
 			"permissions": []
 		}
 	}

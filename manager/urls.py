@@ -9,11 +9,13 @@ from .viewss import audit_cycle as audit_cycle_views
 from .viewss import section as section_views
 from .viewss import question as question_views
 from .viewss import answer as answer_views
+from .viewss import client_user as client_user_views
 
 urlpatterns = ([
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
 
+    url(r'client/(?P<client_id>[0-9]+)/client_user$', client_user_views.ClientUserByClientView.as_view(), name='client_user_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/audit_cycle$', audit_cycle_views.AuditCycleViewByClient.as_view(), name='audit_cycle_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
@@ -58,5 +60,8 @@ urlpatterns = ([
 
     url(r'question/(?P<question_id>[0-9]+)$', question_views.QuestionIdView.as_view(), name='question_id_view'),
     url(r'question$', question_views.QuestionView.as_view(), name='question_view'),
+
+    url(r'client_user/(?P<client_user_id>[0-9]+)$', client_user_views.ClientUserIdView.as_view(), name='client_user_id_view'),
+    url(r'client_user$', client_user_views.ClientUserView.as_view(), name='client_user_view'),
 
 ], 'manager')

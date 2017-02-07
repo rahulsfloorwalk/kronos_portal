@@ -17,3 +17,4 @@ class Verification(Model):
 
 GROUP_NAME_AUDITOR = "Auditor"
 GROUP_NAME_MANAGER = "Manager"
+GROUP_NAME_CLIENT = "Client"

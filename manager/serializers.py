@@ -1,14 +1,15 @@
 from django.conf import settings
 
 from rest_framework import routers, viewsets
-from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
 
 from questionnaire.models import Section, Question
 from auditor.models import ProfileInfo, AuditApplication
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
-from client.models import Client, Store
+from client.models import Client, Store, ClientUser
 from .models import City, Location
 from answer.models import Answer
 
@@ -379,3 +380,32 @@ class AnswerSerializer(ModelSerializer):
             'marks_obtained'
         )
         read_only_fields = fields
+
+
+class PlainUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+        )
+        read_only_fields = fields
+
+class ClientUserSerializer(ModelSerializer):
+    user = PlainUserSerializer()
+    class Meta:
+        model = ClientUser
+        fields = (
+            'id',
+            'full_name',
+            'user',
+        )
+        read_only_fields = fields
+
+class ClientUserDeSerializer(Serializer):
+    client = PrimaryKeyRelatedField(queryset=Client.objects.all())
+    full_name = CharField(max_length=50)
+    email = EmailField()
+    password = CharField(min_length=8, max_length=128)
+    is_active = BooleanField()
