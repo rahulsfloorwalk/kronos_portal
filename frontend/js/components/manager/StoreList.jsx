@@ -22,14 +22,14 @@ var StoreRow = React.createClass({
 
 var StoreList = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(fetchStores(this.props.clientId));
+		this.props.dispatch(fetchStores(this.props.params.clientId));
 	},
 	render: function(){
 		var rows = [];
 		for(var id in this.props.stores) {
 			rows.push(<StoreRow store={this.props.stores[id]} key={id}/>);
 		}
-		var addStoreLink = `/client/${this.props.clientId}/store/add`;
+		var addStoreLink = `/client/${this.props.params.clientId}/store/add`;
 		return (
 			<div>
 				<h3 className="page-header">
@@ -56,8 +56,7 @@ var StoreList = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		stores: store.stores,
-		clientId: ownProps.clientId
+		stores: store.stores
 	};
 };
 

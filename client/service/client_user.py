@@ -8,6 +8,9 @@ from ..models import ClientUser
 
 @atomic
 def insert(client, full_name, email, password, is_active=True):
+    if password == "":
+        raise AppLogicError("password cannot be blank")
+
     user = User()
     user.email = email
     user.username = email
@@ -27,7 +30,7 @@ def insert(client, full_name, email, password, is_active=True):
 
 
 @atomic
-def update(client_user_id, client, full_name, email, password, is_active=True):
+def update(client_user_id, client, full_name, email, password="", is_active=True):
     try:
         client_user = ClientUser.objects.get(pk=client_user_id)
 
@@ -35,10 +38,12 @@ def update(client_user_id, client, full_name, email, password, is_active=True):
         client_user.full_name = full_name
         client_user.user.email = email
         client_user.user.username = email
-        client_user.user.set_password( password)
         client_user.user.is_active = is_active
         client_user.user.save()
         client_user.save()
+
+        if password != "":
+            client_user.user.set_password( password)
 
         return client_user
     except ClientUser.DoesNotExist as e:

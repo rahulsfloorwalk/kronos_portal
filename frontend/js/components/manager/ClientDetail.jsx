@@ -7,6 +7,7 @@ import { fetchClient } from '../../manager/actions/client.js';
 import { Pencil } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
+import NavLink from '../NavLink.jsx';
 
 import StoreList from './StoreList.jsx';
 import AuditCycleList from './AuditCycleList.jsx';
@@ -45,8 +46,11 @@ var ClientDetail = React.createClass({
 				</Panel>
 				</div>
 				</div>
-				<StoreList clientId={this.props.params.clientId}/>
-				<AuditCycleList clientId={this.props.params.clientId}/>
+				<ul className="nav nav-tabs">
+					<NavLink to={`/client/${this.props.params.clientId}/audit_cycle`}>Audit Cycles</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/store`}>Stores</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/client_user`}>Users</NavLink>
+				</ul>
 				{this.props.children}
 			</div>
 		);

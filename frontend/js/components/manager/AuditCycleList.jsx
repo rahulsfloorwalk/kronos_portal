@@ -25,14 +25,14 @@ var AuditCycleRow = React.createClass({
 
 var AuditCycleList = React.createClass({
 	componentDidMount: function() {
-		this.props.dispatch(fetchAuditCycles(this.props.clientId));
+		this.props.dispatch(fetchAuditCycles(this.props.params.clientId));
 	},
 	render: function(){
 		var rows = [];
 		for(var id in this.props.auditCycles) {
 			rows.push(<AuditCycleRow auditCycle={this.props.auditCycles[id]} key={id}/>);
 		}
-		var addAuditCycleLink = `/client/${this.props.clientId}/audit_cycle/add`;
+		var addAuditCycleLink = `/client/${this.props.params.clientId}/audit_cycle/add`;
 		return (
 			<div>
 				<h3 className="page-header">
@@ -61,7 +61,6 @@ var AuditCycleList = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		clientId: ownProps.clientId,
 		auditCycles: store.auditCycles,
 	};
 };

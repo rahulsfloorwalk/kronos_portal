@@ -399,6 +399,7 @@ class ClientUserSerializer(ModelSerializer):
         fields = (
             'id',
             'full_name',
+            'client',
             'user',
         )
         read_only_fields = fields
@@ -407,5 +408,5 @@ class ClientUserDeSerializer(Serializer):
     client = PrimaryKeyRelatedField(queryset=Client.objects.all())
     full_name = CharField(max_length=50)
     email = EmailField()
-    password = CharField(min_length=8, max_length=128)
+    password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()

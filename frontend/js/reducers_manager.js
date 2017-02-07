@@ -16,6 +16,7 @@ var initialStore = {
 	bankInfos: {},
 	additionalInfos: {},
 	answers: {},
+	clientUsers: {},
 	errors: {},
 	forms: {
 		client: {
@@ -54,6 +55,9 @@ var initialStore = {
 			errors: {},
 		},
 		section: {
+			errors: {},
+		},
+		clientUser: {
 			errors: {},
 		},
 	}
@@ -585,6 +589,96 @@ export function rootReducer(store = initialStore, action) {
 							}
 							return obj;
 						}(action.cities))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CLIENT_USER_FORM_LOAD:
+			switch(action.status){
+				case "request":
+				case "success":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							clientUser: Object.assign({}, store.forms.clientUser, {
+								errors: {}
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CLIENT_USER_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						clientUsers: (function(clientUsers){
+							var obj = {};
+							for( var c of clientUsers){
+								obj[c.id] = c;
+							}
+							return obj;
+						}(action.clientUsers))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CLIENT_USER_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						clientUsers: Object.assign({}, store.clientUsers, {
+							[action.clientUser.id]: action.clientUser
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							clientUser: Object.assign({}, store.forms.clientUser, {
+								errors: action.errors
+							})
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CLIENT_USER_ID_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						clientUsers: Object.assign({}, store.clientUsers, {
+							[action.clientUser.id]: action.clientUser
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CLIENT_USER_ID_POST:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						clientUsers: Object.assign({}, store.clientUsers, {
+							[action.clientUser.id]: action.clientUser
+						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							clientUser: Object.assign({}, store.forms.clientUser, {
+								errors: action.errors
+							})
+						})
 					});
 					break;
 				default:

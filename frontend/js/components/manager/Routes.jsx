@@ -9,6 +9,10 @@ import ClientList from './ClientList.jsx';
 import ClientForm from './ClientForm.jsx';
 import ClientDetail from './ClientDetail.jsx';
 
+import ClientUserList from './client_user/ClientUserList.jsx';
+import ClientUserForm from './client_user/ClientUserForm.jsx';
+
+import StoreList from './StoreList.jsx';
 import StoreForm from './StoreForm.jsx';
 import StoreDetail from './StoreDetail.jsx';
 
@@ -56,13 +60,22 @@ const Routes = () => (
 
 		<Route path="client/:clientId" component={ClientDetail}>
 			<Route path="edit" component={ClientForm}/>
-			<Route path="store/add" component={StoreForm}/>
-			<Route path="audit_cycle/add" component={AuditCycleForm}/>
+			<Route path="store" component={StoreList}>
+				<Route path="add" component={StoreForm}/>
+			</Route>
+			<Route path="audit_cycle" component={AuditCycleList}>
+				<Route path="add" component={AuditCycleForm}/>
+			</Route>
+			<Route path="client_user" component={ClientUserList}>
+				<Route path="add" component={ClientUserForm}/>
+				<Route path=":clientUserId/edit" component={ClientUserForm}/>
+			</Route>
 		</Route>
 
 		<Route path="store/:storeId" component={StoreDetail}>
 			<Route path="edit" component={StoreForm}/>
 		</Route>
+
 
 		<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
 			<Route path="edit" component={AuditCycleForm}/>

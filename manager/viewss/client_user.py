@@ -8,6 +8,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 
+from kronos.exceptions import AppLogicError, ObjectNotFound
+
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
@@ -35,16 +37,23 @@ class ClientUserView(APIView):
             'POST': [GROUP_NAME_MANAGER]
         }
     def post(self, request):
-        client_user_ds = ClientUserDeSerializer(data=request.data)
-        client_user_ds.is_valid(raise_exception=True)
-        saved_client_user = client_user_service.insert(
-                client_user_ds.validated_data["client"],
-                client_user_ds.validated_data["full_name"],
-                client_user_ds.validated_data["email"],
-                client_user_ds.validated_data["password"],
-                client_user_ds.validated_data["is_active"]
-            )
-        return Response(ClientUserSerializer(saved_client_user).data)
+        try:
+            client_user_ds = ClientUserDeSerializer(data=request.data)
+            client_user_ds.is_valid(raise_exception=True)
+            saved_client_user = client_user_service.insert(
+                    client_user_ds.validated_data["client"],
+                    client_user_ds.validated_data["full_name"],
+                    client_user_ds.validated_data["email"],
+                    client_user_ds.validated_data["password"],
+                    client_user_ds.validated_data["is_active"]
+                )
+            return Response(ClientUserSerializer(saved_client_user).data)
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+        except ObjectNotFound as e :
+            raise NotFound from e
 
 class ClientUserIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -73,8 +82,8 @@ class ClientUserIdView(APIView):
                     client_user_ds.validated_data["is_active"]
                 )
             return Response(ClientUserSerializer(saved_client_user).data)
-        except ClientUser.DoesNotExist:
-            raise NotFound
+        except ObjectNotFound as e :
+            raise NotFound from e
 
     def delete(self, request, client_user_id):
         try:
