@@ -4,6 +4,7 @@ from ..models import Answer
 from audit_store.models import AuditStore
 from questionnaire.models import Question
 from auditor.models import ProfileInfo
+from audit_store import service as audit_store_service
 
 def save(answer):
     Answer.save(answer)
@@ -37,3 +38,8 @@ def get_answers(audit_store_id, user_id):
         return answers
     else:
         raise ObjectNotFound()
+
+
+def find_by_audit_store_for_client(audit_store_id, client_id):
+    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
+    return Answer.objects.filter(audit_store_id=audit_store_id)

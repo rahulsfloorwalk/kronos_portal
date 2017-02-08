@@ -114,12 +114,12 @@ var SectionList = React.createClass({
 		}
 		return (
 			<div>
-				<h2 className="page-header">
+				<h3 className="page-header">
 					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default pull-right">
 						<Plus/> Add Section
 					</Link>
 					<Tasks/> Questionnaire
-				</h2>
+				</h3>
 				{sectionRows}
 				{this.props.children}
 			</div>

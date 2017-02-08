@@ -1,0 +1,31 @@
+import React from 'react';
+import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+
+import App from './App.jsx';
+
+import Dashboard from './Dashboard.jsx';
+
+import StoreList from './StoreList.jsx';
+import StoreDetail from './StoreDetail.jsx';
+
+import AuditStoreList from './AuditStoreList.jsx';
+import AuditStoreDetail from './AuditStoreDetail.jsx';
+
+import SectionList from './SectionList.jsx';
+
+const Routes = () => (
+    <Router history={hashHistory}>
+	<Route path="/" component={App}>
+		<IndexRoute component={Dashboard} />
+		<Route path="/store" component={StoreList}/>
+		<Route path="/store/:storeId" component={StoreDetail}>
+			<Route path="audit_store" component={AuditStoreList}/>
+		</Route>
+		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}>
+			<Route path="section" component={SectionList}/>
+		</Route>
+	</Route>
+    </Router>
+);
+
+export default Routes;

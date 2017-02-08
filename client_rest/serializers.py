@@ -1,0 +1,133 @@
+from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import CharField, EmailField, BooleanField
+from django.contrib.auth.models import User
+
+from audit.models import Audit, AuditCycle
+from audit_store.models import AuditStore
+from client.models import Client, Store, ClientUser
+from manager.models import City, Location
+
+from questionnaire.models import Section, Question
+from answer.models import Answer
+
+class CitySerializer(ModelSerializer):
+    class Meta:
+        model = City
+        fields = (
+            'id',
+            'name',
+            'state',
+        )
+        read_only_fields = ('id',)
+
+class LocationSerializer(ModelSerializer):
+    city = CitySerializer()
+
+    class Meta:
+        model = Location
+        fields = (
+            'id',
+            'name',
+            'pincode',
+            'city',
+        )
+        read_only_fields = fields
+
+class ClientSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields = (
+            'id',
+            'name',
+            'email',
+            'phone',
+        )
+        read_only_fields = ('id',)
+
+class AuditCycleSerializer(ModelSerializer):
+    client = ClientSerializer()
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'type',
+            'start_date',
+            'end_date',
+            'client',
+        )
+        read_only_fields = fields
+
+class StoreSerializer(ModelSerializer):
+    location = LocationSerializer()
+    client = ClientSerializer()
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'address',
+            'location',
+            'client',
+        )
+        read_only_fields = fields
+
+class AuditSerializer(ModelSerializer):
+    store = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
+    class Meta:
+        model = Audit
+        fields = (
+            'id',
+            'store',
+            'audit_cycle',
+        )
+        read_only_fields = fields
+
+class AuditStoreSerializer(ModelSerializer):
+    audit = AuditSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'audit_date',
+            'audit',
+        )
+        read_only_fields = fields
+
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'section',
+        )
+        read_only_fields = fields
+
+class SectionSerializer(ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'audit_cycle',
+            'sequence',
+            'questions'
+        )
+        read_only_fields = fields
+
+class AnswerSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'id',
+            'question',
+            'audit_store',
+            'answer_text',
+            'marks_obtained'
+        )
+        read_only_fields = fields
+

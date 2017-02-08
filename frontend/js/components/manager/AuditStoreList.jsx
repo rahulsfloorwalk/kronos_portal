@@ -34,9 +34,9 @@ var AuditStoreList = React.createClass({
     }
     return(
       <div>
-        <h2 className="page-header">
+        <h3 className="page-header">
           <File/> Reports
-        </h2>
+        </h3>
         <table className="table table-striped">
           <thead>
             <tr>

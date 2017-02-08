@@ -49,12 +49,9 @@ var AuditCycleDetails = React.createClass({
 					<li><Link to={`/client/${this.props.auditCycle.client.id}/audit_cycle`}>{this.props.auditCycle.client.name}</Link></li>
 					<li className="active">Cycle: <b>{this.props.auditCycle.start_date}</b> to <b>{ this.props.auditCycle.end_date}</b></li>
 				</ol>
-				<h2 className="page-header">
-					<Retweet/> Audit Cycle Details
-				</h2>
 				<div className="row">
 				<div className="col-md-4">
-				<Panel title={<span><Retweet/> Audit Cycle Details</span>} noBody={true}>
+				<Panel title={<span><Retweet/> Audit Cycle Details</span>} type="primary" noBody={true}>
 					<table className="table table-striped">
 						<tbody>
 							<tr><td className="text-right">Client:</td><td><b>{ this.props.auditCycle.client.name }</b></td></tr>

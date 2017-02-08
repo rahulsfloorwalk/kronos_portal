@@ -39,11 +39,12 @@ def update(client_user_id, client, full_name, email, password="", is_active=True
         client_user.user.email = email
         client_user.user.username = email
         client_user.user.is_active = is_active
-        client_user.user.save()
-        client_user.save()
 
         if password != "":
             client_user.user.set_password( password)
+
+        client_user.user.save()
+        client_user.save()
 
         return client_user
     except ClientUser.DoesNotExist as e:

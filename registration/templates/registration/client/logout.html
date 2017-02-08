@@ -1,0 +1,14 @@
+
+{% extends 'nav/base.html' %}
+
+{% block content %}
+
+<h2>Logout</h2>
+<p>Are you sure you want to logout?</p>
+<form action="{% url 'registration:client_logout' %}" method="POST">
+	{% csrf_token %}
+	{{ form.as_p }}
+	<button class="btn btn-primary" type="submit">Logout</button>
+</form>
+
+{% endblock %}

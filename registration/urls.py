@@ -4,10 +4,15 @@ from django.contrib.auth.views import password_change, password_change_done
 
 import properties
 from . import views
+from . import client_views
 
 urlpatterns = ([
-    url(r'login', views.Login.as_view(), name="login"),
-    url(r'logout', views.Logout.as_view(), name="logout"),
+    ## Client Portal Login Logout Views
+    url(r'client/login$', client_views.Login.as_view(), name="client_login"),
+    url(r'client/logout$', client_views.Logout.as_view(), name="client_logout"),
+
+    url(r'login$', views.Login.as_view(), name="login"),
+    url(r'logout$', views.Logout.as_view(), name="logout"),
     url(r'signup$', views.SignUp.as_view(), name="signup"),
     url(r'signup/success$', views.signup_success, name="signup_success"),
 
@@ -45,4 +50,5 @@ urlpatterns = ([
         },name="password_reset_complete"),
 
     url(r'activate/(?P<key>.+)$', views.activate, name="activate"),
+
 ], 'registration')

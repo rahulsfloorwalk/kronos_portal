@@ -5,6 +5,7 @@ module.exports = {
 	entry: {
 		auditor: path.resolve(__dirname, './js/auditor.jsx'),
 		manager: path.resolve(__dirname, './js/manager.jsx'),
+		client: path.resolve(__dirname, './client/client.jsx'),
 		'react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
 	},
 	output: {
