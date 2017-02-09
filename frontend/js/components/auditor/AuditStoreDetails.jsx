@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAuditStore } from '../../auditor/actions/audit_store.js';
+import { fetchAuditStore, submitAuditStore } from '../../auditor/actions/audit_store.js';
 
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -15,9 +15,17 @@ var AuditStoreDetails = React.createClass({
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 	},
+	submitButtonClicked: function(e){
+		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
+	},
 	render: function(){
 		if(! this.props.auditStore){
 			return <Loading/>;
+		}
+
+		let submitAuditButton;
+		if(this.props.auditStore.status === 'ASSIGNED'){
+			submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit Report</button>);
 		}
 
 		return (
@@ -37,6 +45,9 @@ var AuditStoreDetails = React.createClass({
 								<LabelValue_2_10 label="Details:" value={this.props.auditStore.audit.audit_cycle.description}/>
 								<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
 							</div>
+						</div>
+						<div className="panel-footer text-right">
+							{submitAuditButton}
 						</div>
 					</div>
 				</div>

@@ -39,3 +39,21 @@ export function fetchAuditStore(auditStoreId){
 	};
 };
 
+export function submitAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_SUBMIT,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/submit`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_SUBMIT,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};

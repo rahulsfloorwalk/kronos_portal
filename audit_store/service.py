@@ -55,3 +55,72 @@ def find_by_id_for_client(audit_store_id, client_id):
 def save(audit_store):
     AuditStore.save(audit_store)
     return audit_store
+
+
+def withdraw(audit_store_id):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+        if audit_store.status not in (AuditStore.COMPLETED, AuditStore.FAILED):
+            audit_store.status = AuditStore.WITHDRAWN
+            audit_store.save()
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be withdrawn now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def submit(audit_store_id, user_id):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
+
+        if audit_store.status == AuditStore.ASSIGNED:
+            audit_store.status = AuditStore.SUBMITTED
+            audit_store.save()
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be submitted now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def complete(audit_store_id):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            audit_store.status = AuditStore.COMPLETED
+            audit_store.save()
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be completed now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def fail(audit_store_id):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            audit_store.status = AuditStore.FAILED
+            audit_store.save()
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be failed now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def unsubmit(audit_store_id):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            audit_store.status = AuditStore.ASSIGNED
+            audit_store.save()
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be unsubmitted now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e

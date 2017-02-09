@@ -149,3 +149,80 @@ export function saveAuditStoreEditForm(auditStore){
 		return req;
 	};
 };
+
+
+export function withdrawAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_WITHDRAW,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/withdraw`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_WITHDRAW,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function completeAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_COMPLETE,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/complete`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_COMPLETE,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function failAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_FAIL,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/fail`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_FAIL,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function unSubmitAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_UN_SUBMIT,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/unsubmit`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_UN_SUBMIT,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};

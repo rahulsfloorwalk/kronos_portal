@@ -64,3 +64,62 @@ class AuditStoreIdView(APIView):
         except Audit.DoesNotExist:
             raise Http404
 
+
+class AuditStoreIdWithdrawView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.withdraw(audit_store_id)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AuditStoreIdCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.complete(audit_store_id)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AuditStoreIdFailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.fail(audit_store_id)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AuditStoreIdUnSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.unsubmit(audit_store_id)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })

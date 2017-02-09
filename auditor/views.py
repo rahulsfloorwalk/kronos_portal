@@ -22,7 +22,7 @@ from manager.serializers import CitySerializer
 import manager.service.audit as audit_service
 from manager import states
 from registration.mixins import HasGroupPermission
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_AUDITOR
 from audit_store import service as audit_store_service
 from questionnaire.service import section as section_service
 from answer.service import answer as answer_service
@@ -301,3 +301,18 @@ class AnswerListView(APIView):
         except ObjectNotFound:
             raise NotFound()
         return Response(AnswerSerializer(answers, many=True).data)
+
+
+class AuditStoreIdSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_AUDITOR],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.submit(audit_store_id, request.user.profileinfo.user_id)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })

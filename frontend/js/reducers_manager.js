@@ -400,6 +400,10 @@ export function rootReducer(store = initialStore, action) {
 						return store;
 				}
 		case types.AUDIT_STORE_ID_GET:
+		case types.AUDIT_STORE_ID_UN_SUBMIT:
+		case types.AUDIT_STORE_ID_COMPLETE:
+		case types.AUDIT_STORE_ID_FAIL:
+		case types.AUDIT_STORE_ID_WITHDRAW:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {
