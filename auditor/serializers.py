@@ -106,19 +106,20 @@ class AdditionalInfoSerializer(ModelSerializer):
             'laptop_owned',
             'smart_phone_owned',
             'weekend_audit',
-            'user_id'
+            'user_id',
+            'occupation'
         )
         read_only_fields = ('id', 'user_id')
 
-    def save(self, **kwargs):
-        if 'current_user' not in kwargs:
+    def deserialize(self):
+        if self.context.get('current_user') is None:
             raise TypeError("missing keyword argument 'current_user'")
 
         try:
-            additional_info = AdditionalInfo.objects.get(user_id=kwargs['current_user'].id)
+            additional_info = AdditionalInfo.objects.get(user_id=self.context.get('current_user').id)
         except AdditionalInfo.DoesNotExist:
             additional_info = AdditionalInfo()
-            additional_info.user_id = kwargs['current_user'].id
+            additional_info.user_id = self.context.get('current_user').id
 
         additional_info.has_car = self.validated_data.get('has_car', additional_info.has_car)
         additional_info.weekend_audit = self.validated_data.get('weekend_audit', additional_info.weekend_audit)
@@ -130,8 +131,8 @@ class AdditionalInfoSerializer(ModelSerializer):
         additional_info.camera_resoulution = self.validated_data.get('camera_resoulution', additional_info.camera_resoulution)
         additional_info.laptop_owned = self.validated_data.get('laptop_owned', additional_info.laptop_owned)
         additional_info.smart_phone_owned = self.validated_data.get('smart_phone_owned', additional_info.smart_phone_owned)
+        additional_info.occupation = self.validated_data.get('occupation', additional_info.occupation)
 
-        additional_info.save()
         return additional_info
 
 
@@ -149,15 +150,15 @@ class BankInfoSerializer(ModelSerializer):
         )
         read_only_fields = ('id', 'user_id')
 
-    def save(self, **kwargs):
-        if 'current_user' not in kwargs:
+    def deserialize(self):
+        if self.context.get('current_user') is None:
             raise TypeError("missing keyword argument 'current_user'")
 
         try:
-            bank_info = BankInfo.objects.get(user_id=kwargs['current_user'].id)
+            bank_info = BankInfo.objects.get(user_id=self.context.get('current_user').id)
         except BankInfo.DoesNotExist:
             bank_info = BankInfo()
-            bank_info.user_id = kwargs['current_user'].id
+            bank_info.user_id = self.context.get('current_user').id
 
         bank_info.bank_name = self.validated_data.get('bank_name', bank_info.bank_name)
         bank_info.account_holder_name = self.validated_data.get('account_holder_name', bank_info.account_holder_name)
@@ -165,7 +166,6 @@ class BankInfoSerializer(ModelSerializer):
         bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
         bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
 
-        bank_info.save()
         return bank_info
 
 

@@ -67,9 +67,10 @@ class AdditionalInfoView(APIView):
             return Response(AdditionalInfoSerializer(AdditionalInfo()).data)
 
     def post(self, request):
-        additional_info_s= AdditionalInfoSerializer(data=request.data)
+        additional_info_s= AdditionalInfoSerializer(data=request.data, context={'current_user' : request.user})
         additional_info_s.is_valid(raise_exception=True)
-        additional_info = additional_info_s.save(current_user=request.user)
+        additional_info = additional_info_s.deserialize()
+        additional_info.save()
         return Response(AdditionalInfoSerializer(additional_info).data)
 
 
@@ -87,9 +88,10 @@ class BankInfoView(APIView):
             return Response(BankInfoSerializer(BankInfo()).data)
 
     def post(self, request):
-        bank_info_s = BankInfoSerializer(data=request.data)
+        bank_info_s = BankInfoSerializer(data=request.data, context={'current_user' : request.user})
         bank_info_s.is_valid(raise_exception=True)
-        bank_info = bank_info_s.save(current_user=request.user)
+        bank_info = bank_info_s.deserialize()
+        bank_info.save()
         return Response(BankInfoSerializer(bank_info).data)
 
 class AvailableAuditsView(APIView):

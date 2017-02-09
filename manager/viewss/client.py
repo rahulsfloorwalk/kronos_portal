@@ -33,7 +33,7 @@ class ClientView(APIView):
     def post(self, request):
         client_s = ClientSerializer(data=request.data)
         client_s.is_valid(raise_exception=True)
-        client = client_s.create()
+        client = client_s.deserialize()
         savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
 
@@ -52,9 +52,9 @@ class ClientIdView(APIView):
             raise Http404
 
     def post(self, request, client_id):
-        client_s = ClientSerializer(data=request.data)
+        client_s = ClientSerializer(data=request.data, context={'id' : client_id})
         client_s.is_valid(raise_exception=True)
-        client = client_s.create(id=client_id)
+        client = client_s.deserialize()
         savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
     def delete(self, request, client_id):

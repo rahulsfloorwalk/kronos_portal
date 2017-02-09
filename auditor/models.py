@@ -144,7 +144,22 @@ class AdditionalInfo(Model):
 		(DONT_KNOW, "dont know"),
 		(NO_CAMERA, "no camera"),
 	)
-
+	
+	STUDENT = "STUDENT"
+	SERVICE = "SERVICE"
+	SELF_EMPLOYED = "SELF_EMPLOYED"
+	BUSINESS = "BUSINESS"
+	UNEMPLOYED = "UNEMPLOYED"
+	RETIRED = "RETIRED"
+	OCCUPATION = (
+		(STUDENT,'student'),
+		(SERVICE,'service'),
+		(SELF_EMPLOYED,'self employed'),
+		(BUSINESS,'business'),
+		(UNEMPLOYED,'unemployed'),
+		(RETIRED,'retired'),
+	)
+	
 	id = AutoField(db_column='id', primary_key=True)
 	ethnicity = PositiveSmallIntegerField(db_column='ethnicity', choices=ETHNICITY, blank=True, null=True)
 	hair_color = PositiveSmallIntegerField(db_column='hair_color', choices=HAIR_COLOR, blank=True, null=True)
@@ -160,7 +175,7 @@ class AdditionalInfo(Model):
 	fax_access = NullBooleanField(db_column='fax_access', blank=True, null=True)
 	scanner_access = NullBooleanField(db_column='scanner_access', blank=True, null=True)
 	weekend_audit = NullBooleanField(db_column='weekend_audit', blank=True, null=True)
-
+	occupation = CharField(db_column='occupation', choices=OCCUPATION, max_length=20, blank=True, null=True)
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
 class BankInfo(Model):

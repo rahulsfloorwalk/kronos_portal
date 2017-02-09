@@ -32,9 +32,9 @@ class ClientSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-    def create(self, **kwargs):
-        if 'id' in kwargs and kwargs['id'] is not None:
-            client = Client.objects.get(id=kwargs['id'])
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            client = Client.objects.get(id=self.context('id'))
         else:
             client = Client()
         client.name = self.validated_data.get('name', client.name)
