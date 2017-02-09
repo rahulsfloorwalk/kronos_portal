@@ -67,7 +67,7 @@ var AuditCycleForm = React.createClass({
 			promise = this.props.dispatch(saveAuditCycleAddForm(this.state));
 		}
 		promise.then(function(savedAuditCycle){
-			hashHistory.push(`/audit_cycle/${savedAuditCycle.id}`);
+			hashHistory.push(`/audit_cycle/${savedAuditCycle.id}/questionnaire`);
 		});
 	},
 	render : function(){
