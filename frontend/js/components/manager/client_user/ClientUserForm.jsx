@@ -72,7 +72,7 @@ var ClientUserForm = React.createClass({
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					<FormInput label="Full Name (₹)" type="text" value={this.state.full_name} name="full_name" onChange={this.fieldChanged} errors={this.props.errors.full_name}/>
+					<FormInput label="Full Name" type="text" value={this.state.full_name} name="full_name" onChange={this.fieldChanged} errors={this.props.errors.full_name}/>
 					<FormInput label="Email Address" type="email" value={this.state.email} name="email" onChange={this.fieldChanged} errors={this.props.errors.email}/>
 					<FormInput label="Password" type="text" value={this.state.password} name="password" onChange={this.fieldChanged} errors={this.props.errors.password} placeholder="leave blank to keep password unchanged"/>
 					<FormInput label="Active?" type="checkbox" checked={this.state.is_active} name="is_active" onChange={this.fieldChanged} errors={this.props.errors.is_active}/>
