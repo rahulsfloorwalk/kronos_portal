@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import Jumbotron from '../../js/components/Jumbotron.jsx';
 import { Plus, Home } from '../../js/components/Icons.jsx';
 import { fetchStores } from '../service/store.js';
 
@@ -37,26 +38,30 @@ export default React.createClass({
 		for(var id in this.state.stores) {
 			rows.push(<StoreRow store={this.state.stores[id]} key={id}/>);
 		}
-		return (
-			<div>
-				<h3 className="page-header">
-					<Home/> Store List
-				</h3>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Email</th>
-							<th>Phone</th>
-						</tr>
-					</thead>
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
-				{this.props.children}
-			</div>
-		);
+		if( rows.length > 0) {
+			return (
+				<div>
+					<h3 className="page-header">
+						<Home/> Store List
+					</h3>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Phone</th>
+							</tr>
+						</thead>
+						<tbody>
+							{rows}
+						</tbody>
+					</table>
+					{this.props.children}
+				</div>
+			);
+		} else {
+			return (<Jumbotron heading="there are no stores here" para="contact site administrator"/>);
+		}
 	},
 });
 
