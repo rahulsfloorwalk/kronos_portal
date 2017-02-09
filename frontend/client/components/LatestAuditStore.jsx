@@ -8,7 +8,7 @@ import { File } from '../../js/components/Icons.jsx';
 import { getAuditType, getAuditStatus } from '../../js/utils.js';
 import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
-//jimport Jumbotron from '../Jumbotron.jsx';
+import Jumbotron from '../../js/components/Jumbotron.jsx';
 
 var AuditStoreRow = React.createClass({
 	render: function(){
@@ -66,7 +66,7 @@ export default React.createClass({
 				</div>
 			);
 		} else {
-			return null;
+			return (<Jumbotron heading="no audits yet" para="latest audits will show up here"/>);
 		}
 	},
 });
