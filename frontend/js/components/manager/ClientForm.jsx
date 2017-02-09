@@ -37,7 +37,7 @@ var ClientForm = React.createClass({
 			submitPromise = this.props.dispatch(saveClientAddForm(this.state));
 		}
 		submitPromise.then(function(savedClient){
-			hashHistory.push(`/client/${savedClient.id}`);
+			hashHistory.push(`/client/${savedClient.id}/audit_cycle`);
 		});
 	},
 	render : function(){
@@ -46,7 +46,7 @@ var ClientForm = React.createClass({
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormInput label="Client Name" maxLength="50" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
-					<FormInput label="Email Address" maxLength="50" type="text" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.props.errors.email}/>
+					<FormInput label="Email Address" maxLength="50" type="email" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.props.errors.email}/>
 					<FormInput label="Phone Number" maxLength="15" type="text" value={this.state.phone} name="phone" onChange={this.inputChanged} errors={this.props.errors.phone}/>
 					<SaveButton/>
 				</form>

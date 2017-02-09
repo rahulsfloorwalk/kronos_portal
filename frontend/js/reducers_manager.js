@@ -100,6 +100,13 @@ export function rootReducer(store = initialStore, action) {
 					});
 					break;
 				case 'error':
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							client: Object.assign({}, store.forms.client, {
+								errors: action.errors
+							})
+						})
+					});
 					break;
 				default:
 					console.warn("WARNING: default case encountered for action: %O", action);
@@ -136,6 +143,13 @@ export function rootReducer(store = initialStore, action) {
 					});
 					break;
 				case 'error':
+					return Object.assign({}, store, {
+						forms: Object.assign({}, store.forms, {
+							client: Object.assign({}, store.forms.client, {
+								errors: action.errors
+							})
+						})
+					});
 					break;
 				default:
 					console.warn("WARNING: default case encountered for action: %O", action);
