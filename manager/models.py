@@ -7,7 +7,6 @@ from client.models import Client
 from . import states
 
 class City(Model):
-    db_table = "city"
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
@@ -16,8 +15,10 @@ class City(Model):
     def __str__(self):
         return 'City({}): {}'.format(self.id, self.name)
 
+    class Meta:
+        ordering = ['name']
+
 class Location(Model):
-    db_table = "location"
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
