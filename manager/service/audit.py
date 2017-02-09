@@ -1,13 +1,19 @@
+from django.db.utils import IntegrityError
+from django.contrib.auth.models import User
+
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication
 from rest_framework.exceptions import ValidationError
 from audit.models import AuditCycle, Audit
 from auditor.models import AuditApplication
-from django.contrib.auth.models import User
 
 def save(audit):
-    audit.save()
-    return audit
+    try:
+        audit.save()
+        return audit
+    except IntegrityError as e:
+        raise AppLogicError("store is already added to this audit cycle") from e
+
 
 def get_available_audits(profileinfo_id):
     profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)

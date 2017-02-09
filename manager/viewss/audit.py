@@ -8,10 +8,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 
+from kronos.exceptions import AppLogicError, ObjectNotFound
+
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from audit.models import Audit
+from ..service import audit as audit_service
 from ..serializers import AuditSerializer, AuditDeSerializer
 
 class AuditByAuditCycle(APIView):
@@ -62,8 +65,13 @@ class AuditView(APIView):
             'POST': [GROUP_NAME_MANAGER]
         }
     def post(self, request):
-        audit_ds = AuditDeSerializer(data=request.data)
-        audit_ds.is_valid(raise_exception=True)
-        audit = audit_ds.deserialize()
-        audit.save()
-        return Response(AuditSerializer(audit).data)
+        try:
+            audit_ds = AuditDeSerializer(data=request.data)
+            audit_ds.is_valid(raise_exception=True)
+            audit = audit_ds.deserialize()
+            audit_service.save(audit)
+            return Response(AuditSerializer(audit).data)
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })

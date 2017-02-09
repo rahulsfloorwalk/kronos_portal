@@ -13,26 +13,11 @@ from kronos.exceptions import ObjectNotFound
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-#from client.service import store as store_service
-
 from audit_store.models import AuditStore
+from audit_store import service as audit_store_service
+
 from audit.models import Audit, AuditCycle
 from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer
-from ..service import audit_store as audit_store_service
-
-
-class AuditStoreByAudit(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, audit_id, format=None):
-        try:
-            audit_stores = AuditStore.objects.filter(audit_id=audit_id).all()
-            serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
-            return Response(serial_audit_stores)
-        except AuditStore.DoesNotExist:
-            raise Http404
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -41,7 +26,7 @@ class AuditStoreByAuditCycle(APIView):
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
-            audit_stores = audit_store_service.get_audit_stores(audit_cycle_id)
+            audit_stores = audit_store_service.find_by_audit_cycle(audit_cycle_id)
             serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
             return Response(serial_audit_stores)
         except ObjectNotFound:
@@ -79,15 +64,3 @@ class AuditStoreIdView(APIView):
         except Audit.DoesNotExist:
             raise Http404
 
-class AuditStoreView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
-    def post(self, request):
-        audit_store_ds = AuditStoreDeSerializer(data=request.data)
-        audit_store_ds.is_valid(raise_exception=True)
-        audit_store = audit_store_ds.deserialize()
-        savedAuditStore = audit_store.save()
-        audit_store_serial = AuditStoreSerializer(savedAuditStore).data
-        return Response(audit_store_serial)

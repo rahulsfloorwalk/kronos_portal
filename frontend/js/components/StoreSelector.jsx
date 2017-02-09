@@ -9,7 +9,7 @@ var StoreSelector = React.createClass({
 	render : function(){
 		let storeOptions = [];
 		for( let s in this.props.stores){
-			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].name}</option>);
+			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].location.city.name} -- {this.props.stores[s].location.name} -- {this.props.stores[s].name}</option>);
 		}
 		return (
 			<FormSelect label="Store" name="store" {...this.props}>

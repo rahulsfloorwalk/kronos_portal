@@ -82,6 +82,7 @@ var AuditRow = React.createClass({
       <tbody>
       <tr>
         <td>{this.props.audit.store.name}</td>
+        <td>{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</td>
         <td>{this.props.audit.count}</td>
         <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
         <td>
@@ -114,8 +115,9 @@ var AuditList = React.createClass({
           <thead>
             <tr>
               <th>Store</th>
+              <th>Location</th>
               <th>Audit Count</th>
-              <th>Applications Received</th>
+              <th>Applications</th>
               <th>&nbsp;</th>
             </tr>
           </thead>

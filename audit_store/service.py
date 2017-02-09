@@ -1,6 +1,9 @@
+from django.db import IntegrityError
+
 from client.models import Client
 from .models import AuditStore
 from auditor.models import ProfileInfo
+from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 def get_audit_stores(profileinfo_id):
@@ -9,6 +12,16 @@ def get_audit_stores(profileinfo_id):
         return AuditStore.objects.filter(user_id=profile_info.user_id)
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def find_by_audit_cycle(audit_cycle_id):
+    try:
+        audit_stores = []
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+        for audit in audit_cycle.audits.all():
+            audit_stores.extend(audit.audit_stores.all())
+    except AuditCycle.DoesNotExist as e:
+        raise ObjectNotFound from e
+    return audit_stores
 
 def get_audit_store(audit_store_id, profileinfo_id):
     try:
@@ -38,3 +51,7 @@ def find_by_id_for_client(audit_store_id, client_id):
             )
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def save(audit_store):
+    AuditStore.save(audit_store)
+    return audit_store

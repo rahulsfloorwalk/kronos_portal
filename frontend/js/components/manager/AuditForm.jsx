@@ -12,6 +12,7 @@ import FormGroup from '../FormGroup.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 import StoreSelector from '../StoreSelector.jsx';
+import FormErrorList from '../FormErrorList.jsx';
 
 var AuditForm = React.createClass({
 	getInitialState: function(){
@@ -59,6 +60,7 @@ var AuditForm = React.createClass({
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
+					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<StoreSelector value={this.state.store} onChange={this.inputChanged} errors={this.props.errors.store}/>
 					<FormInput label="Number of Audits" type="number" value={this.state.count} name="count" onChange={this.inputChanged} errors={this.props.errors.count}/>
 					<SaveButton/>
