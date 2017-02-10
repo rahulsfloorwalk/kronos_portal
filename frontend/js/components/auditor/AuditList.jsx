@@ -34,6 +34,8 @@ var AuditRow = React.createClass({
 			button = <br/>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
+		let fees = this.props.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.audit.earnings_per_audit}, </b> : "";
+		let reimb = this.props.audit.reimbursement ? <span>Reimbursement: <b>₹ {this.props.audit.reimbursement}</b></span> : "";
 		return (
 			<div className="col-sm-6">
 				<div className="panel panel-default">
@@ -44,7 +46,7 @@ var AuditRow = React.createClass({
 						<div className="form-horizontal">
 							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.audit.audit_cycle.type)}/>
 							<LabelValue_2_10 label="Location:" value={`${this.props.audit.store.location.name}, ${this.props.audit.store.location.city.name}`}/>
-							<LabelValue_2_10 label="Fees:" value={"₹ " + this.props.audit.audit_cycle.earnings_per_audit + " per audit"}/>
+							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Dates:" value={`${this.props.audit.audit_cycle.start_date} to ${this.props.audit.audit_cycle.end_date}`}/>
 							<LabelValue_2_10 label="Details:" value={this.props.audit.audit_cycle.description}/>
 							<LabelValue_2_10 label="Status:" value={textLabel}/>

@@ -194,7 +194,6 @@ class AuditCycleSerializer(ModelSerializer):
             'status',
             'start_date',
             'end_date',
-            'earnings_per_audit',
             'description',
             'client',
         )
@@ -219,6 +218,8 @@ class AuditSerializer(ModelSerializer):
         fields = (
             'id',
             'store',
+            'earnings_per_audit',
+            'reimbursement',
             'audit_cycle',
         )
         read_only_fields = fields

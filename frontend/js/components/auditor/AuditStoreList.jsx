@@ -13,6 +13,8 @@ import Jumbotron from '../Jumbotron.jsx';
 
 var AuditStoreRow = React.createClass({
 	render: function(){
+		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
+		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
 		return (
 			<div className="col-sm-6">
 				<div className="panel panel-default">
@@ -23,7 +25,7 @@ var AuditStoreRow = React.createClass({
 						<div className="form-horizontal">
 							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.auditStore.audit.audit_cycle.type)}/>
 							<LabelValue_2_10 label="Location:" value={`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}/>
-							<LabelValue_2_10 label="Fees:" value={"₹ " + this.props.auditStore.audit.audit_cycle.earnings_per_audit + " per audit"}/>
+							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Audit Date:" value={this.props.auditStore.audit_date}/>
 							<LabelValue_2_10 label="Details:" value={this.props.auditStore.audit.audit_cycle.description}/>
 							<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>

@@ -225,6 +225,8 @@ class AuditSerializerWithoutApplications(ModelSerializer):
         fields = (
             'id',
             'count',
+            'earnings_per_audit',
+            'reimbursement',
             'store',
             'audit_cycle',
         )
