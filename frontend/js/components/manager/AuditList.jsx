@@ -44,7 +44,7 @@ var AuditApplicationList = React.createClass({
 			}
 		}
 		if(rows.length === 0){
-			rows = <div className="well well-sm col-md-8 col-md-offset-2 text-center text-muted">no applications for this audit</div>;
+			rows = <div className="well well-sm col-md-offset-2 col-md-8 text-center text-muted">no applications for this audit</div>;
 		}
 		return (
 			<div className="row">
@@ -71,7 +71,7 @@ var AuditRow = React.createClass({
 	  if(this.state.expanded){
 		  row2 = (
 			<tr>
-				<td colSpan="4">
+				<td colSpan="7">
 					<AuditApplicationList applications={this.props.audit.applications}/>
 				</td>
 			</tr>
@@ -83,6 +83,8 @@ var AuditRow = React.createClass({
       <tr>
         <td>{this.props.audit.store.name}</td>
         <td>{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</td>
+        <td>{this.props.audit.earnings_per_audit}</td>
+        <td>{this.props.audit.reimbursement}</td>
         <td>{this.props.audit.count}</td>
         <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
         <td>
@@ -116,6 +118,8 @@ var AuditList = React.createClass({
             <tr>
               <th>Store</th>
               <th>Location</th>
+              <th>Fees</th>
+              <th>Reimbursement</th>
               <th>Audit Count</th>
               <th>Applications</th>
               <th>&nbsp;</th>

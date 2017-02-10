@@ -40,6 +40,12 @@ var AuditForm = React.createClass({
 		this.setState({
 			audit_cycle: nextProps.params.auditCycleId
 		});
+		if(nextProps.auditCycle){
+			this.setState({
+				earnings_per_audit: nextProps.auditCycle.earnings_per_audit,
+				reimbursement: nextProps.auditCycle.reimbursement,
+			});
+		}
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
@@ -62,6 +68,14 @@ var AuditForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<StoreSelector value={this.state.store} onChange={this.inputChanged} errors={this.props.errors.store}/>
+					<div className="row">
+						<div className="col-sm-6">
+							<FormInput label="Audit Fees (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.inputChanged} errors={this.props.errors.earnings_per_audit}/>
+						</div>
+						<div className="col-sm-6">
+							<FormInput label="Reimbursement (₹)" type="number" value={this.state.reimbursement} name="reimbursement" onChange={this.inputChanged} errors={this.props.errors.reimbursement}/>
+						</div>
+					</div>
 					<FormInput label="Number of Audits" type="number" value={this.state.count} name="count" onChange={this.inputChanged} errors={this.props.errors.count}/>
 					<SaveButton/>
 				</form>

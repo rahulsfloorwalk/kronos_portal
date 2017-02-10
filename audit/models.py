@@ -31,11 +31,13 @@ class AuditCycle(Model):
     )
 
     id = AutoField(db_column = 'id', primary_key=True)
+    name = CharField(db_column='name', max_length=50, blank=False)
     type = CharField(db_column='type', max_length=20, choices=TYPES, blank=False)
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
-    earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=False)
+    earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
+    reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     description = CharField(db_column='description', max_length=200, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=CASCADE)
 
@@ -57,6 +59,8 @@ class Audit(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     count = PositiveIntegerField(db_column='count', blank=False, default=1)
+    earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
+    reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     store = ForeignKey('client.Store', related_name='audits', db_column='store_id')
     audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id')
 

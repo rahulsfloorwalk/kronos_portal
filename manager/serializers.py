@@ -85,11 +85,13 @@ class AuditCycleSerializer(ModelSerializer):
         model = AuditCycle
         fields = (
             'id',
+            'name',
             'type',
             'status',
             'start_date',
             'end_date',
             'earnings_per_audit',
+            'reimbursement',
             'description',
             'client',
             #'audit_count',
@@ -102,11 +104,13 @@ class AuditCycleDeSerializer(ModelSerializer):
         model = AuditCycle
         fields = (
             'id',
+            'name',
             'type',
             'status',
             'start_date',
             'end_date',
             'earnings_per_audit',
+            'reimbursement',
             'description',
             'client',
         )
@@ -118,11 +122,13 @@ class AuditCycleDeSerializer(ModelSerializer):
             audit_cycle = AuditCycle.objects.get(id=self.context.get('id'))
         else:
             audit_cycle = AuditCycle()
+        audit_cycle.name = self.validated_data.get('name', audit_cycle.name)
         audit_cycle.type = self.validated_data.get('type', audit_cycle.type)
         audit_cycle.status = self.validated_data.get('status', audit_cycle.status)
         audit_cycle.start_date = self.validated_data.get('start_date', audit_cycle.start_date)
         audit_cycle.end_date = self.validated_data.get('end_date', audit_cycle.end_date)
         audit_cycle.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit_cycle.earnings_per_audit)
+        audit_cycle.reimbursement = self.validated_data.get('reimbursement', audit_cycle.reimbursement)
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
         return audit_cycle
@@ -203,6 +209,8 @@ class AuditSerializer(ModelSerializer):
         fields = (
             'id',
             'count',
+            'earnings_per_audit',
+            'reimbursement',
             'store',
             'audit_cycle',
             'applications'
@@ -228,6 +236,8 @@ class AuditDeSerializer(ModelSerializer):
         fields = (
             'id',
             'count',
+            'earnings_per_audit',
+            'reimbursement',
             'store',
             'audit_cycle',
         )
@@ -240,6 +250,8 @@ class AuditDeSerializer(ModelSerializer):
         else:
             audit = Audit()
         audit.count = self.validated_data.get('count', audit.count)
+        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
+        audit.reimbursement = self.validated_data.get('reimbursement', audit.reimbursement)
         audit.store = self.validated_data.get('store', audit.store_id)
         audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
         return audit

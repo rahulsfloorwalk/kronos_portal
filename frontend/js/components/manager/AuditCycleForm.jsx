@@ -76,6 +76,7 @@ var AuditCycleForm = React.createClass({
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
+					<FormInput label="Cycle Name" type="text" value={this.state.name} name="name" onChange={this.fieldChanged} errors={this.props.errors.name}/>
 					<div className="row">
 						<div className="col-md-6">
 							<FormDateInput label="Start Date" value={this.state.start_date} name="start_date" onChange={this.startDateChanged} errors={this.props.errors.start_date}/>
@@ -106,7 +107,14 @@ var AuditCycleForm = React.createClass({
 							</FormSelect>
 						</div>
 					</div>
-					<FormInput label="Earnings Per Audit (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.fieldChanged} errors={this.props.errors.earnings_per_audit}/>
+					<div className="row">
+						<div className="col-md-6">
+							<FormInput label="Earnings Per Audit (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.fieldChanged} errors={this.props.errors.earnings_per_audit}/>
+						</div>
+						<div className="col-md-6">
+							<FormInput label="Reimbursement (₹)" type="number" value={this.state.reimbursement} name="reimbursement" onChange={this.fieldChanged} errors={this.props.errors.reimbursement}/>
+						</div>
+					</div>
 					<FormTextarea label="Description" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>
 					<SaveButton/>
 				</form>

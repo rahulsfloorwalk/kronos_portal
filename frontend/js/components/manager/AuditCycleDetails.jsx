@@ -3,7 +3,6 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
-//import { fetchApplications } from '../../manager/actions/application.js';
 
 import { Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
@@ -47,17 +46,19 @@ var AuditCycleDetails = React.createClass({
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
 					<li><Link to={`/client/${this.props.auditCycle.client.id}/audit_cycle`}>{this.props.auditCycle.client.name}</Link></li>
-					<li className="active">Cycle: <b>{this.props.auditCycle.start_date}</b> to <b>{ this.props.auditCycle.end_date}</b></li>
+					<li className="active">Cycle: <b>{this.props.auditCycle.name}</b></li>
 				</ol>
 				<div className="row">
 				<div className="col-md-4">
 				<Panel title={<span><Retweet/> Audit Cycle Details</span>} type="primary" noBody={true}>
 					<table className="table table-striped">
 						<tbody>
+							<tr><td className="text-right">Name:</td><td><b>{ this.props.auditCycle.name }</b></td></tr>
 							<tr><td className="text-right">Client:</td><td><b>{ this.props.auditCycle.client.name }</b></td></tr>
 							<tr><td className="text-right">Type:</td><td><b>{ getAuditType(this.props.auditCycle.type) }</b></td></tr>
 							<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.props.auditCycle.status) }</b></td></tr>
 							<tr><td className="text-right">Earnings Per Audit:</td><td><b>₹ { this.props.auditCycle.earnings_per_audit }</b></td></tr>
+							<tr><td className="text-right">Reimbursement:</td><td><b>₹ { this.props.auditCycle.reimbursement }</b></td></tr>
 							<tr><td className="text-right">Start Date:</td><td><b>{ this.props.auditCycle.start_date }</b></td></tr>
 							<tr><td className="text-right">End Date:</td><td><b>{ this.props.auditCycle.end_date }</b></td></tr>
 							<tr><td className="text-right">Description</td><td>{ this.props.auditCycle.description }</td></tr>
