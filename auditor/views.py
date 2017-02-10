@@ -288,8 +288,12 @@ class AnswerSubmitView(APIView):
         question = ds.validated_data['question']
         try:
             answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
-        except ObjectNotFound:
-            raise NotFound()
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e
         return Response(AnswerSerializer(answer).data)
 
 class AnswerListView(APIView):
@@ -347,5 +351,9 @@ class CommentSubmitView(APIView):
         try:
             report_section = report_section_service.submit_auditor_comment(audit_store.id, section.id, request.user.id, auditor_comment)
             return Response(ReportSectionSerializer(report_section).data)
-        except ObjectNotFound:
-            raise NotFound
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e

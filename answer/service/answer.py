@@ -13,6 +13,8 @@ def save(answer):
 def submit_answer(audit_store_id, question_id, user_id, answer_text):
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
+        if(audit_store.status != AuditStore.ASSIGNED):
+            raise AppLogicError("Cannot submit answer to current audit store")
         question = Question.objects.get(pk=question_id)
     except (AuditStore.DoesNotExist, Question.DoesNotExist) as e:
         raise ObjectNotFound() from e

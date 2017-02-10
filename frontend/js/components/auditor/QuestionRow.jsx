@@ -19,7 +19,7 @@ var QuestionRow = React.createClass({
 	},
 	startEdit: function(e){
 		e.preventDefault();
-		if( ! this.state.editing){
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED' && !this.state.editing){
 			this.setState({
 				editing: true
 			});
@@ -65,16 +65,18 @@ var QuestionRow = React.createClass({
 	},
 	render: function(){
 		let pointerStyle = {cursor: 'pointer'};
-		let answer = this.state.answer_text || (<span className="text-muted">click to enter answer</span>);
-
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+			var defaultAnswer = "click to enter answer";
+		}
+		let answer = this.state.answer_text || (<span className="text-muted">{defaultAnswer}</span>);
 		if(this.state.editing){
 			var answerElement = (
 					<form className="input-group" onSubmit={this.submitAnswer}>
-						<input 
-							className="form-control" 
-							name="answer_text" 
-							value={this.state.answer_text} 
-							onBlur={this.submitAnswer} 
+						<input
+							className="form-control"
+							name="answer_text"
+							value={this.state.answer_text}
+							onBlur={this.submitAnswer}
 							onChange={this.inputChanged}
 							ref={(input) => this.answerInput = input}
 						/>
@@ -112,7 +114,8 @@ var mapStoreToProps = function(store, ownProps){
 					return answers[id];
 				}
 			}
-		})(store.answers)
+		})(store.answers),
+		auditStore : store.auditStores[ownProps.auditStoreId]
 	};
 };
 

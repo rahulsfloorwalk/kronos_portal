@@ -26,6 +26,8 @@ def find_by_audit_store(audit_store_id):
 def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment):
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
+        if(audit_store.status != AuditStore.ASSIGNED):
+            raise AppLogicError("Cannot submit auditor comment to current audit store")
         section = Section.objects.get(pk=section_id)
     except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
         raise ObjectNotFound() from e

@@ -37,7 +37,7 @@ var __Section = React.createClass({
 	},
 	startEdit: function(e){
 		e.preventDefault();
-		if( ! this.state.commenting){
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED' && !this.state.commenting){
 			this.setState({
 				commenting: true
 			});
@@ -79,15 +79,18 @@ var __Section = React.createClass({
 		}
 
 		let pointerStyle = {cursor: 'pointer'};
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+			var defaultAnswer = "click to add comment";
+		}
 		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">click to enter comment</span>);
 		if(this.state.commenting){
 			var commentElement = (
 					<form className="input-group" onSubmit={this.submitComment}>
-						<input 
-							className="form-control" 
-							name="auditor_comment" 
-							value={this.state.auditor_comment} 
-							onBlur={this.submitComment} 
+						<input
+							className="form-control"
+							name="auditor_comment"
+							value={this.state.auditor_comment}
+							onBlur={this.submitComment}
 							onChange={this.inputChanged}
 							ref={(input) => this.commentInput = input}
 						/>
@@ -139,7 +142,8 @@ var mapStoreToSectionProps = function(store, ownProps){
 					return reportSections[id];
 				}
 			}
-		})(store.reportSections)
+		})(store.reportSections),
+		auditStore: store.auditStores[ownProps.auditStoreId]
 	};
 };
 
