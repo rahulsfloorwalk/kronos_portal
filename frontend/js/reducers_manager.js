@@ -16,6 +16,7 @@ var initialStore = {
 	bankInfos: {},
 	additionalInfos: {},
 	answers: {},
+	reportSections: {},
 	clientUsers: {},
 	errors: {},
 	forms: {
@@ -501,6 +502,23 @@ export function rootReducer(store = initialStore, action) {
 							}
 							return obj;
 						}(action.answers))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.REPORT_SECTION_GET:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						reportSections: (function(reportSections){
+							var obj = {};
+							for( var r of reportSections){
+								obj[r.id] = r;
+							}
+							return obj;
+						}(action.reportSections))
 					});
 					break;
 				default:

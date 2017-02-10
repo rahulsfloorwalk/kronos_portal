@@ -10,7 +10,7 @@ from client.models import Client, Store
 from audit_store.models import AuditStore
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 from questionnaire.models import Section, Question
-from answer.models import Answer
+from answer.models import Answer, ReportSection
 
 
 class ProfileInfoSerializer(ModelSerializer):
@@ -326,3 +326,19 @@ class AnswerSerializer(ModelSerializer):
             'answer_text'
         )
         read_only_fields = fields
+
+class ReportSectionSerializer(ModelSerializer):
+    class Meta:
+        model = ReportSection
+        fields = (
+            'id',
+            'audit_store',
+            'section',
+            'auditor_comment'
+        )
+        read_only_fields = fields
+
+class ReportSectionDeSerializer(Serializer):
+    audit_store = serializers.PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
+    section = serializers.PrimaryKeyRelatedField(queryset=Section.objects.all())
+    auditor_comment = CharField(max_length=2048, allow_blank=True)

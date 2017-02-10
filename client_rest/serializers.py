@@ -8,7 +8,7 @@ from client.models import Client, Store, ClientUser
 from manager.models import City, Location
 
 from questionnaire.models import Section, Question
-from answer.models import Answer
+from answer.models import Answer, ReportSection
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -130,4 +130,17 @@ class AnswerSerializer(ModelSerializer):
             'marks_obtained'
         )
         read_only_fields = fields
+
+class ReportSectionSerializer(ModelSerializer):
+    class Meta:
+        model = ReportSection
+        fields = (
+            'id',
+            'audit_store',
+            'section',
+            'auditor_comment',
+            'pm_comment'
+        )
+        read_only_fields = fields
+
 

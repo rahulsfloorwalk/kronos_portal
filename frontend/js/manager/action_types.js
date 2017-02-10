@@ -103,6 +103,10 @@ var types = {
 
 	//Answer
 	ANSWER_GET: 'ANSWER_GET',
+
+	//Report Sections
+	REPORT_SECTION_GET: 'REPORT_SECTION_GET',
+	REPORT_SECTION_PM_COMMENT: 'REPORT_SECTION_PM_COMMENT',
 };
 
 export default types;

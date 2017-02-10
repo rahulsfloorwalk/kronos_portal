@@ -11,7 +11,7 @@ from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from client.models import Client, Store, ClientUser
 from .models import City, Location
-from answer.models import Answer
+from answer.models import Answer, ReportSection
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -424,3 +424,20 @@ class ClientUserDeSerializer(Serializer):
     email = EmailField()
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
+
+class ReportSectionSerializer(ModelSerializer):
+    class Meta:
+        model = ReportSection
+        fields = (
+            'id',
+            'audit_store',
+            'section',
+            'auditor_comment',
+            'pm_comment'
+        )
+        read_only_fields = fields
+
+class ReportSectionDeSerializer(Serializer):
+    audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
+    section = PrimaryKeyRelatedField(queryset=Section.objects.all())
+    pm_comment = CharField(max_length=2048, allow_blank=True)

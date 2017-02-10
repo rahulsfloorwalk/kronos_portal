@@ -9,6 +9,7 @@ import { Plus, Cross, Pencil } from '../Icons.jsx';
 import { orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
 import { fetchAnswers } from '../../manager/actions/answer.js'
+import { fetchReportSections } from '../../manager/actions/report_section.js'
 
 var __QuestionRow = React.createClass({
 	render: function(){
@@ -31,7 +32,7 @@ var __QuestionRow = React.createClass({
 	},
 });
 
-var mapStoreToProps = function(store, ownProps){
+var mapStoreToQuestionRowProps = function(store, ownProps){
 	return {
 		answer: (function(answers){
 			for(let id in answers){
@@ -44,10 +45,10 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-var QuestionRow = ReactRedux.connect(mapStoreToProps)(__QuestionRow);
+var QuestionRow = ReactRedux.connect(mapStoreToQuestionRowProps)(__QuestionRow);
 
 
-var Section = React.createClass({
+var __Section = React.createClass({
 	render: function(){
 		let questionRows = [];
 		if( this.props.section.questions){
@@ -57,6 +58,10 @@ var Section = React.createClass({
 		}
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
+		}
+		if(this.props.reportSection){
+			var auditor_comment = this.props.reportSection.auditor_comment;
+			var pm_comment = this.props.reportSection.pm_comment;
 		}
 		var styles = {
 			col1: { width: "5%" },
@@ -87,10 +92,29 @@ var Section = React.createClass({
 						{questionRows}
 					</tbody>
 				</table>
+				<div className="panel-footer">
+					<p><b>Auditor Comment:</b> {auditor_comment}</p>
+					<p><b>PM Comment:</b> {pm_comment}</p>
+				</div>
 			</Panel>
 		);
 	},
 });
+
+var mapStoreToSectionProps = function(store, ownProps){
+	return {
+		reportSection: (function(reportSections){
+			for(let id in reportSections){
+				if(reportSections[id].section === ownProps.section.id){
+					console.log("found REPORT SECTION",reportSections[id]);
+					return reportSections[id];
+				}
+			}
+		})(store.reportSections)
+	};
+};
+
+var Section = ReactRedux.connect(mapStoreToSectionProps)(__Section);
 
 var AuditStoreReport = React.createClass({
 	getInitialState: function(){
@@ -99,7 +123,8 @@ var AuditStoreReport = React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchAnswers(this.props.auditStore.id));
+		this.props.dispatch(fetchAnswers(this.props.params.auditStoreId));
+		this.props.dispatch(fetchReportSections(this.props.params.auditStoreId));
 		if( this.props.auditStore && ! this.state.loading){
 			this.setState({
 				loading: true

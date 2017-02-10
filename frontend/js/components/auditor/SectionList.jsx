@@ -12,8 +12,61 @@ import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 
 import { fetchSections } from '../../auditor/actions/section.js';
 import { fetchAnswers } from '../../auditor/actions/answer.js';
+import { submitAuditorComment, fetchReportSections } from '../../auditor/actions/report_section.js';
 
-var Section = React.createClass({
+var __Section = React.createClass({
+	getInitialState: function(){
+		return {
+			commenting: false,
+			auditor_comment: "",
+		};
+	},
+	componentDidMount: function(){
+		if(this.props.reportSection){
+			this.setState({
+				auditor_comment: this.props.reportSection.auditor_comment
+			});
+		}
+	},
+	componentWillReceiveProps: function(nextProps){
+		if(nextProps.reportSection){
+			this.setState({
+				auditor_comment: nextProps.reportSection.auditor_comment
+			});
+		}
+	},
+	startEdit: function(e){
+		e.preventDefault();
+		if( ! this.state.commenting){
+			this.setState({
+				commenting: true
+			});
+		}
+	},
+	inputChanged: function(e){
+		affectInputEventToComponent(e, this);
+	},
+	componentDidUpdate: function(){
+		if(this.commentInput){
+			this.commentInput.focus();
+			this.commentInput.value = this.commentInput.value;
+		}
+	},
+	submitComment: function(e){
+		e.preventDefault();
+		this.setState({
+			commenting: false,
+			saving: true,
+		});
+		var payload = {
+			sectionId: this.props.section.id,
+			auditor_comment: this.state.auditor_comment,
+			audit_store: this.props.auditStoreId,
+		};
+		console.log("this.props",this.props);
+		console.log("payload",payload);
+		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
+	},
 	render: function(){
 		let questionRows = [];
 		if( this.props.section.questions){
@@ -24,6 +77,33 @@ var Section = React.createClass({
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
 		}
+
+		let pointerStyle = {cursor: 'pointer'};
+		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">click to enter comment</span>);
+		if(this.state.commenting){
+			var commentElement = (
+					<form className="input-group" onSubmit={this.submitComment}>
+						<input 
+							className="form-control" 
+							name="auditor_comment" 
+							value={this.state.auditor_comment} 
+							onBlur={this.submitComment} 
+							onChange={this.inputChanged}
+							ref={(input) => this.commentInput = input}
+						/>
+						<span className="input-group-btn">
+							<button className="btn btn-primary">Save</button>
+						</span>
+					</form>
+			);
+		} else {
+			var commentElement = (<p style={pointerStyle} onClick={this.startEdit}>{auditor_comment}</p>);
+		}
+
+		if(this.state.saving){
+			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
+		}
+
 		var styles = {
 			col1: { width: "5%" },
 			col2: { width: "95%" },
@@ -41,10 +121,29 @@ var Section = React.createClass({
 						{questionRows}
 					</tbody>
 				</table>
+				<div className="panel-footer">
+					<p><b>Comment:</b>{savingMessage}</p>
+					{commentElement}
+				</div>
 			</Panel>
 		);
 	},
 });
+
+var mapStoreToSectionProps = function(store, ownProps){
+	return {
+		reportSection: (function(reportSections){
+			for(let id in reportSections){
+				if(reportSections[id].section === ownProps.section.id){
+					console.log("found REPORT SECTION",reportSections[id]);
+					return reportSections[id];
+				}
+			}
+		})(store.reportSections)
+	};
+};
+
+var Section = ReactRedux.connect(mapStoreToSectionProps)(__Section);
 
 var SectionList = React.createClass({
 	getInitialState: function(){
@@ -54,6 +153,7 @@ var SectionList = React.createClass({
 		console.log("SectionList#componentDidMount");
 		this.props.dispatch(fetchSections(this.props.params.auditStoreId));
 		this.props.dispatch(fetchAnswers(this.props.params.auditStoreId));
+		this.props.dispatch(fetchReportSections(this.props.params.auditStoreId));
 	},
 	/*componentWillReceiveProps: function(nextProps){
 		console.log("SectionList#componentWillReceiveProps");

@@ -16,8 +16,9 @@ from audit_store import service as audit_store_service
 from questionnaire.service import section as section_service
 
 from answer.service import answer as answer_service
+from answer.service import report_section as report_section_service
 
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer
 
 class AuditStoreLatest(APIView):
     permission_classes = [HasGroupPermission]
@@ -94,5 +95,18 @@ class AnswerByAuditStore(APIView):
         try:
             answers = answer_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
             return Response(AnswerSerializer(answers, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+
+class ReportSectionByAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            report_sections = report_section_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            return Response(ReportSectionSerializer(report_sections, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e

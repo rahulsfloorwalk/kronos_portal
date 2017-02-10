@@ -16,6 +16,7 @@ from .serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditAppli
 from .serializers import AuditStoreSerializer
 from .serializers import SectionSerializer
 from .serializers import AnswerSerializer
+from .serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from audit.models import Audit
 from manager.models import City
 from manager.serializers import CitySerializer
@@ -26,6 +27,7 @@ from registration.models import GROUP_NAME_AUDITOR
 from audit_store import service as audit_store_service
 from questionnaire.service import section as section_service
 from answer.service import answer as answer_service
+from answer.service import report_section as report_section_service
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -316,3 +318,34 @@ class AuditStoreIdSubmitView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
+
+
+class ReportSectionListView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR]
+        }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, request.user.id)
+            return Response(ReportSectionSerializer(report_sections, many=True).data)
+        except ObjectNotFound:
+            raise NotFound
+
+class CommentSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def post(self, request, section_id, format=None):
+        request.data['section'] = section_id
+        ds = ReportSectionDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = ds.validated_data['audit_store']
+        auditor_comment = ds.validated_data['auditor_comment']
+        section = ds.validated_data['section']
+        try:
+            report_section = report_section_service.submit_auditor_comment(audit_store.id, section.id, request.user.id, auditor_comment)
+            return Response(ReportSectionSerializer(report_section).data)
+        except ObjectNotFound:
+            raise NotFound

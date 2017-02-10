@@ -9,6 +9,7 @@ import { orderKeys } from '../../js/react_utils.js';
 
 import { fetchSections } from '../service/section.js';
 import { fetchAnswers } from '../service/answer.js';
+import { fetchReportSections } from '../service/report_section.js';
 
 var QuestionRow = React.createClass({
 	render: function(){
@@ -42,6 +43,10 @@ var Section = React.createClass({
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
 		}
+		if(this.props.reportSection){
+			var auditor_comment = this.props.reportSection.auditor_comment;
+			var pm_comment = this.props.reportSection.pm_comment;
+		}
 		var styles = {
 			col1: { width: "5%" },
 			col2: { width: "40%" },
@@ -67,6 +72,10 @@ var Section = React.createClass({
 						{questionRows}
 					</tbody>
 				</table>
+				<div className="panel-footer">
+					<p><b>Auditor Comment:</b> {auditor_comment}</p>
+					<p><b>PM Comment:</b> {pm_comment}</p>
+				</div>
 			</Panel>
 		);
 	},
@@ -90,11 +99,17 @@ export default React.createClass({
 				answers
 			});
 		});
+		fetchReportSections(this.props.params.auditStoreId).then((reportSections) => {
+			this.setState({
+				reportSections
+			});
+		});
 	},
 	render: function(){
 		var sectionRows = [];
-		for(var sectionId in this.state.sections) {
-			sectionRows.push(<Section section={this.state.sections[sectionId]} answers={this.state.answers} key={sectionId}/>);
+		for(var s of this.state.sections) {
+			let reportSection = this.state.reportSections.filter((rs) => rs.section === s.id)[0];
+			sectionRows.push(<Section section={s} answers={this.state.answers} reportSection={reportSection} key={s.id}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="contact site administrator"/>);
