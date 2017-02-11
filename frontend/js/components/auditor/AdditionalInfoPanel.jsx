@@ -25,7 +25,7 @@ var AdditionalInfoPanelBase = React.createClass({
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
 				<div className="panel-body form-horizontal">
-					<LabelValue label="Has Car:" value={ has_car }/>
+					<LabelValue label="Car Owned:" value={ has_car }/>
 					<LabelValue label="Weekend Audit:" value={ weekend_audit }/>
 					<LabelValue label="Hair Color:" value={ getHairColor(this.props.additionalInfo.hair_color) }/>
 					<LabelValue label="Height (cm):" value={ this.props.additionalInfo.height }/>

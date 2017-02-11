@@ -35,7 +35,7 @@ var AuditRow = React.createClass({
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
 		let fees = this.props.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.audit.earnings_per_audit}, </b> : "";
-		let reimb = this.props.audit.reimbursement ? <span>Reimbursement: <b>₹ {this.props.audit.reimbursement}</b></span> : "";
+		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.audit.reimbursement}</b></span> : "";
 		return (
 			<div className="col-sm-6">
 				<div className="panel panel-default">

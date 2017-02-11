@@ -29,7 +29,7 @@ var AuditStoreDetails = React.createClass({
 		}
 
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
-		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
+		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
 
 		return (
 			<div>

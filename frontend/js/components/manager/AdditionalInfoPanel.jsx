@@ -27,7 +27,7 @@ var AdditionalInfoPanel = React.createClass({
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
 				<div className="panel-body">
-					<p>Has Car: { has_car }</p>
+					<p>Car Owned: { has_car }</p>
 					<p>Weekend Audit: { weekend_audit }</p>
 					<p>Hair Color: { getHairColor(this.props.additionalInfo.hair_color) }</p>
 					<p>Height (cm): { this.props.additionalInfo.height }</p>

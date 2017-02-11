@@ -80,9 +80,9 @@ var __Section = React.createClass({
 
 		let pointerStyle = {cursor: 'pointer'};
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
-			var defaultAnswer = "click to add comment";
+			var defaultComment = "click to add comment";
 		}
-		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">click to enter comment</span>);
+		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">{defaultComment}</span>);
 		if(this.state.commenting){
 			var commentElement = (
 					<form className="input-group" onSubmit={this.submitComment}>
@@ -125,7 +125,7 @@ var __Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-footer">
-					<p><b>Comment:</b>{savingMessage}</p>
+					<p><b>Section Summary:</b>{savingMessage}</p>
 					{commentElement}
 				</div>
 			</Panel>

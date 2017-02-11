@@ -112,7 +112,7 @@ var AuditCycleForm = React.createClass({
 							<FormInput label="Earnings Per Audit (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.fieldChanged} errors={this.props.errors.earnings_per_audit}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="Reimbursement (₹)" type="number" value={this.state.reimbursement} name="reimbursement" onChange={this.fieldChanged} errors={this.props.errors.reimbursement}/>
+							<FormInput label="Reimbursement upto (₹)" type="number" value={this.state.reimbursement} name="reimbursement" onChange={this.fieldChanged} errors={this.props.errors.reimbursement}/>
 						</div>
 					</div>
 					<FormTextarea label="Description" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>

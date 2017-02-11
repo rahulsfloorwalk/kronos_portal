@@ -119,7 +119,7 @@ var AuditList = React.createClass({
               <th>Store</th>
               <th>Location</th>
               <th>Fees</th>
-              <th>Reimbursement</th>
+              <th>Reimbursement upto</th>
               <th>Audit Count</th>
               <th>Applications</th>
               <th>&nbsp;</th>

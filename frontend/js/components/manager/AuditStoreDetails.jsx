@@ -54,27 +54,57 @@ var AuditStoreDetails = React.createClass({
 				<h2 className="page-header">
 					<File/> Audit Report
 				</h2>
-				<div className="row">
-				<div className="col-md-6">
-					<div className="panel panel-default">
-						<div className="panel-heading">
-							<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.name}</b></h4>
-						</div>
-						<div className="panel-body">
-								<LabelValue_2_10 label="Auditor:" value={`${this.props.auditStore.user.profileinfo.first_name} ${this.props.auditStore.user.profileinfo.last_name}`}/>
-								<LabelValue_2_10 label="Type:" value={getAuditType(this.props.auditStore.audit.audit_cycle.type)}/>
-								<LabelValue_2_10 label="Location:" value={`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}/>
-								<LabelValue_2_10 label="Fees:" value={"₹ " + this.props.auditStore.audit.earnings_per_audit + " per audit"}/>
-								<LabelValue_2_10 label="Reimbursement:" value={"₹ " + this.props.auditStore.audit.reimbursement + " per audit"}/>
-								<LabelValue_2_10 label="Audit Date:" value={this.props.auditStore.audit_date}/>
-								<LabelValue_2_10 label="Details:" value={this.props.auditStore.audit.audit_cycle.description}/>
-								<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
-						</div>
-						<div className="panel-footer text-right">
-							{withdrawButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
-						</div>
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h4 className="panel-title">Audit Details</h4>
 					</div>
-				</div>
+					<table className="table table-striped">
+						<tbody>
+							<tr>
+								<td className="text-right">Client:</td>
+								<th>{this.props.auditStore.audit.audit_cycle.client.name}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Store:</td>
+								<th>{this.props.auditStore.audit.store.name}</th>
+							</tr>
+							<tr>
+
+								<td className="text-right">Location:</td>
+								<th>{`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Type:</td>
+								<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Fees:</td>
+								<th>₹ {this.props.auditStore.audit.earnings_per_audit}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Reimbursement upto:</td>
+								<th>₹ {this.props.auditStore.audit.reimbursement}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Auditor:</td>
+								<th>{`${this.props.auditStore.user.profileinfo.first_name} ${this.props.auditStore.user.profileinfo.last_name}`}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Audit Date:</td>
+								<th>{this.props.auditStore.audit_date}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Status:</td>
+								<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
+							</tr>
+						</tbody>
+					</table>
+					<div className="panel-body">
+						<b>Details</b>: {this.props.auditStore.audit.audit_cycle.description}
+					</div>
+					<div className="panel-footer text-right">
+						{withdrawButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
+					</div>
 				</div>
 				{this.props.children}
 			</div>

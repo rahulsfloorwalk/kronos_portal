@@ -14,7 +14,7 @@ import Jumbotron from '../Jumbotron.jsx';
 var AuditStoreRow = React.createClass({
 	render: function(){
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
-		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
+		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
 		return (
 			<div className="col-sm-6">
 				<div className="panel panel-default">
