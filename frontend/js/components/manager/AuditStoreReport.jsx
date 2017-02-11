@@ -6,10 +6,10 @@ import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
 import { Plus, Cross, Pencil } from '../Icons.jsx';
 
-import { orderKeys } from '../../react_utils.js'
+import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
 import { fetchAnswers } from '../../manager/actions/answer.js'
-import { fetchReportSections } from '../../manager/actions/report_section.js'
+import { submitPMComment, fetchReportSections } from '../../manager/actions/report_section.js'
 
 var __QuestionRow = React.createClass({
 	render: function(){
@@ -49,7 +49,60 @@ var QuestionRow = ReactRedux.connect(mapStoreToQuestionRowProps)(__QuestionRow);
 
 
 var __Section = React.createClass({
+	getInitialState: function(){
+		return {
+			commenting: false,
+			pm_comment: "",
+		};
+	},
+	componentDidMount: function(){
+		if(this.props.reportSection){
+			this.setState({
+				pm_comment: this.props.reportSection.pm_comment
+			});
+		}
+	},
+	componentWillReceiveProps: function(nextProps){
+		if(nextProps.reportSection){
+			this.setState({
+				pm_comment: nextProps.reportSection.pm_comment
+			});
+		}
+	},
+	startEdit: function(e){
+		e.preventDefault();
+		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED' && !this.state.commenting){
+			this.setState({
+				commenting: true
+			});
+		}
+	},
+	inputChanged: function(e){
+		affectInputEventToComponent(e, this);
+	},
+	componentDidUpdate: function(){
+		if(this.commentInput){
+			this.commentInput.focus();
+			this.commentInput.value = this.commentInput.value;
+		}
+	},
+	submitComment: function(e){
+		e.preventDefault();
+		this.setState({
+			commenting: false,
+			saving: true,
+		});
+		var payload = {
+			sectionId: this.props.section.id,
+			pm_comment: this.state.pm_comment,
+			audit_store: this.props.auditStoreId,
+		};
+		console.log("this.props",this.props);
+		console.log("payload",payload);
+		this.props.dispatch(submitPMComment(payload)).then(() => this.setState({saving: false}));
+	},
 	render: function(){
+		let pointerStyle = {cursor: 'pointer'};
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
@@ -61,7 +114,33 @@ var __Section = React.createClass({
 		}
 		if(this.props.reportSection){
 			var auditor_comment = this.props.reportSection.auditor_comment;
-			var pm_comment = this.props.reportSection.pm_comment;
+			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
+				var defaultAnswer = "click to add comment";
+			}
+			if(this.state.commenting){
+				var commentElement = (
+						<form className="input-group" onSubmit={this.submitComment}>
+							<input
+								className="form-control"
+								name="pm_comment"
+								value={this.state.pm_comment}
+								onBlur={this.submitComment}
+								onChange={this.inputChanged}
+								ref={(input) => this.commentInput = input}
+							/>
+							<span className="input-group-btn">
+								<button className="btn btn-primary">Save</button>
+							</span>
+						</form>
+				);
+			} else {
+				let pm_comment = this.state.pm_comment || (<span className="text-muted">click to enter comment</span>);
+				var commentElement = (<span style={pointerStyle} onClick={this.startEdit}>{pm_comment}</span>);
+			}
+
+			if(this.state.saving){
+				var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
+			}
 		}
 		var styles = {
 			col1: { width: "5%" },
@@ -93,8 +172,8 @@ var __Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-footer">
-					<p><b>Auditor Comment:</b> {auditor_comment}</p>
-					<p><b>PM Comment:</b> {pm_comment}</p>
+					<div><b>Auditor Comment:</b> {auditor_comment}</div>
+					<div><b>PM Comment:</b> {commentElement}</div>
 				</div>
 			</Panel>
 		);
@@ -110,7 +189,8 @@ var mapStoreToSectionProps = function(store, ownProps){
 					return reportSections[id];
 				}
 			}
-		})(store.reportSections)
+		})(store.reportSections),
+		auditStore: store.auditStores[ownProps.auditStoreId]
 	};
 };
 
@@ -146,7 +226,7 @@ var AuditStoreReport = React.createClass({
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section section={this.props.sections[sectionId]} key={sectionId}/>);
+			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire"/>);

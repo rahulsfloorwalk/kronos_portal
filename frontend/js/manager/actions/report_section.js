@@ -34,7 +34,7 @@ export function submitPMComment(reportSection){
 		};
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + `auditor/audit_store/${reportSection.audit_store}/section/${reportSection.sectionId}/comment`,
+			url: url.api_base_path + `manager/audit_store/${reportSection.audit_store}/section/${reportSection.sectionId}/comment`,
 			data: JSON.stringify(payload),
 			contentType: "application/json"
 		});
@@ -49,4 +49,3 @@ export function submitPMComment(reportSection){
 		return req;
 	};
 };
-
