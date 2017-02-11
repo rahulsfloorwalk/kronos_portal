@@ -5550,5 +5550,77 @@
             "name": "Suryapet",
             "state": "IN-TG"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 723,
+        "fields": {
+            "name": "Gangtok",
+            "state": "IN-SK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 724,
+        "fields": {
+            "name": "Jorethang",
+            "state": "IN-SK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 725,
+        "fields": {
+            "name": "Namchi",
+            "state": "IN-SK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 726,
+        "fields": {
+            "name": "Rangpo",
+            "state": "IN-SK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 727,
+        "fields": {
+            "name": "Bakultala",
+            "state": "IN-AN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 728,
+        "fields": {
+            "name": "Bombooflat",
+            "state": "IN-AN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 729,
+        "fields": {
+            "name": "Garacharma",
+            "state": "IN-AN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 730,
+        "fields": {
+            "name": "Port Blair",
+            "state": "IN-AN"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 731,
+        "fields": {
+            "name": "Prothrapur",
+            "state": "IN-AN"
+        }
     }
 ]
