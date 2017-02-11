@@ -13,11 +13,26 @@ import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 var AuditStoreDetails = React.createClass({
+	getInitialState: function(){
+		return {
+			submitMessage : ""
+		};
+	},
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 	},
 	submitButtonClicked: function(e){
-		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
+		var promise = this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
+		promise.then(() => {
+			this.setState({
+				submitMessage : "submitted successfully"
+			});
+		},(err) => {
+			console.debug("ERRRRR:", err);
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0]
+			});
+		});
 	},
 	render: function(){
 		if(! this.props.auditStore){
@@ -52,7 +67,7 @@ var AuditStoreDetails = React.createClass({
 							</div>
 						</div>
 						<div className="panel-footer text-right">
-							{submitAuditButton}
+							{this.state.submitMessage}&nbsp;&nbsp;{submitAuditButton}
 						</div>
 					</div>
 				</div>

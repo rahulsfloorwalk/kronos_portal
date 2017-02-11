@@ -5,7 +5,8 @@ from .models import AuditStore
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
-import answer.service.report_section as answer_service
+import answer.service.report_section as report_section_service
+import answer.service.answer as answer_service
 
 def get_audit_stores(profileinfo_id):
     try:
@@ -74,10 +75,17 @@ def withdraw(audit_store_id):
 def submit(audit_store_id, user_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
-        report_sections = answer_service.find_by_audit_store_for_user(audit_store_id, user_id)
+        report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, user_id)
+        answers = answer_service.get_answers(audit_store_id, user_id)
+
         for report_section in report_sections:
-            if report_section.auditor_comment is None or report_section.auditor_comment == '':
-                raise AppLogicError
+            if report_section.auditor_comment in ( None ,''):
+                raise AppLogicError("please fill all the section summaries")
+ 
+        for answer in answers:
+            if answer.answer_text in ( None ,''):
+                raise AppLogicError("please fill all the answers")
+
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
