@@ -5654,5 +5654,61 @@
             "name": "Pakhanjore",
             "state": "IN-CT"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 736,
+        "fields": {
+            "name": "Lakshadweep",
+            "state": "IN-LD"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 737,
+        "fields": {
+            "name": "Amini",
+            "state": "IN-LD"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 738,
+        "fields": {
+            "name": "Andrott",
+            "state": "IN-LD"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 739,
+        "fields": {
+            "name": "Kadmat",
+            "state": "IN-LD"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 740,
+        "fields": {
+            "name": "Kalpeni",
+            "state": "IN-LD"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 741,
+        "fields": {
+            "name": "Kavaratti",
+            "state": "IN-LD"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 742,
+        "fields": {
+            "name": "Minicoy",
+            "state": "IN-LD"
+        }
     }
 ]
