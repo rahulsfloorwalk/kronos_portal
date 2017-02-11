@@ -28,7 +28,7 @@
         "pk": 4,
         "fields": {
             "name": "Adilabad",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -68,7 +68,7 @@
         "pk": 9,
         "fields": {
             "name": "Hyderabad",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -76,7 +76,7 @@
         "pk": 10,
         "fields": {
             "name": "Karimnagar",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -84,7 +84,7 @@
         "pk": 11,
         "fields": {
             "name": "Khammam",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -108,7 +108,7 @@
         "pk": 14,
         "fields": {
             "name": "Mahbubnagar",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -124,7 +124,7 @@
         "pk": 16,
         "fields": {
             "name": "Nalgonda",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -180,7 +180,7 @@
         "pk": 24,
         "fields": {
             "name": "Warangal",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -5396,7 +5396,7 @@
         "pk": 703,
         "fields": {
             "name": "Secunderabad",
-            "state": "IN-AP"
+            "state": "IN-TG"
         }
     },
     {
@@ -5517,6 +5517,38 @@
         "fields": {
             "name": "Ramnagar",
             "state": "IN-UK"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 719,
+        "fields": {
+            "name": "Ramagundam",
+            "state": "IN-TG"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 720,
+        "fields": {
+            "name": "Siddipet",
+            "state": "IN-TG"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 721,
+        "fields": {
+            "name": "Miryalguda",
+            "state": "IN-TG"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 722,
+        "fields": {
+            "name": "Suryapet",
+            "state": "IN-TG"
         }
     }
 ]
