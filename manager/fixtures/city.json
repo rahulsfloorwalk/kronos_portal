@@ -5622,5 +5622,37 @@
             "name": "Prothrapur",
             "state": "IN-AN"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 732,
+        "fields": {
+            "name": "Jagdalpur",
+            "state": "IN-CT"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 733,
+        "fields": {
+            "name": "Ambikapur",
+            "state": "IN-CT"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 734,
+        "fields": {
+            "name": "Chirmiri",
+            "state": "IN-CT"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 735,
+        "fields": {
+            "name": "Pakhanjore",
+            "state": "IN-CT"
+        }
     }
 ]
