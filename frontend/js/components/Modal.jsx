@@ -1,6 +1,11 @@
 import React from 'react';
 
 var Modal = React.createClass({
+	getDefaultProps: function(){
+		return {
+			size: ""
+		};
+	},
 	render : function(){
 		var modalStyle = {
 			display: 'block',
@@ -16,7 +21,7 @@ var Modal = React.createClass({
 		return (
 			<div className="modal" tabIndex="-1" style={modalStyle}>
 				<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.props.onClose}/>
-				<div className="modal-dialog" style={modalDialogStyle}>
+				<div className={`modal-dialog ${this.props.size}`} style={modalDialogStyle}>
 					<div className="modal-content">
 						<div className="modal-header">
 							<button type="button" className="close" onClick={this.props.onClose}>&times;</button>

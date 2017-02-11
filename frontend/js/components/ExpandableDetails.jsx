@@ -17,8 +17,8 @@ export default React.createClass({
 		let pointerStyle = {cursor: 'pointer'};
 		var buttonText = this.state.expanded ? "Hide Details" : "View Details";
 		var details = this.state.expanded ? 
-			(<Modal modalTitle="Details" onClose={this.buttonClicked}>
-				<div>{this.props.details}</div> 
+			(<Modal size="modal-lg" modalTitle="Details" onClose={this.buttonClicked}>
+				<pre>{this.props.details}</pre>
 			</Modal>)
 			: null;
 		return (
