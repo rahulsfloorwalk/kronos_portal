@@ -5,6 +5,7 @@ from .models import AuditStore
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
+import answer.service.report_section as answer_service
 
 def get_audit_stores(profileinfo_id):
     try:
@@ -37,7 +38,7 @@ def find_latest_for_client(client_id):
 
 def find_by_store_for_client(store_id, client_id):
     return AuditStore.objects.filter(
-            audit__audit_cycle__client_id=client_id, 
+            audit__audit_cycle__client_id=client_id,
             audit__store_id=store_id,
             status=AuditStore.COMPLETED,
         )
@@ -45,7 +46,7 @@ def find_by_store_for_client(store_id, client_id):
 def find_by_id_for_client(audit_store_id, client_id):
     try:
         return AuditStore.objects.get(
-                audit__audit_cycle__client_id=client_id, 
+                audit__audit_cycle__client_id=client_id,
                 id=audit_store_id,
                 status=AuditStore.COMPLETED,
             )
@@ -73,7 +74,10 @@ def withdraw(audit_store_id):
 def submit(audit_store_id, user_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
-
+        report_sections = answer_service.find_by_audit_store_for_user(audit_store_id, user_id)
+        for report_section in report_sections:
+            if report_section.auditor_comment is None or report_section.auditor_comment == '':
+                raise AppLogicError
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
