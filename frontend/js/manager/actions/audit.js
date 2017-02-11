@@ -180,11 +180,11 @@ export function fetchAudit(auditId){
 			auditId
 		});
 
-		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit/`, function(auditCycle){
+		return $.get( url.api_base_path + `manager/audit/${auditId}`, function(audit){
 			dispatch({
-				type: types.AUDIT_CYCLE_ID_GET,
+				type: types.AUDIT_ID_GET,
 				status: 'success',
-				auditCycle
+				audit
 			});
 		});
 		//TODO: Handle error
@@ -200,7 +200,7 @@ export function loadAuditAddForm(){
 	};
 };
 
-export function loadAuditEditForm(auditCycleId){
+export function loadAuditEditForm(auditId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_FORM_LOAD,

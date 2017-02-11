@@ -330,17 +330,25 @@ export function rootReducer(store = initialStore, action) {
 					switch(action.status){
 						case "success":
 							return Object.assign({}, store, {
-								stores: Object.assign({}, store.audits, {
+								audits: Object.assign({}, store.audits, {
 									[action.audit.id]: action.audit
 								})
 							});
 							break;
 						default:
 							console.warn("WARNING: default case encountered for action: %O", action);
-							return audit;
 					}
 				case types.AUDIT_POST:
 					switch(action.status){
+						case "request":
+							return Object.assign({}, store, {
+								forms: Object.assign({}, store.forms, {
+									audit: Object.assign({}, store.forms.audit, {
+										errors: {}
+									})
+								})
+							});
+							break;
 						case "success":
 							return Object.assign({}, store, {
 								audits: Object.assign({}, store.audits, {
@@ -363,6 +371,15 @@ export function rootReducer(store = initialStore, action) {
 					}
 				case types.AUDIT_ID_POST:
 					switch(action.status){
+						case "request":
+							return Object.assign({}, store, {
+								forms: Object.assign({}, store.forms, {
+									audit: Object.assign({}, store.forms.audit, {
+										errors: {}
+									})
+								})
+							});
+							break;
 						case "success":
 							return Object.assign({}, store, {
 								audits: Object.assign({}, store.audits, {

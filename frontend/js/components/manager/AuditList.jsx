@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
+import { Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
@@ -87,8 +87,9 @@ var AuditRow = React.createClass({
         <td>{this.props.audit.reimbursement}</td>
         <td>{this.props.audit.count}</td>
         <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
-        <td>
-          <button className="btn btn-default pull-right" onClick={this.viewButtonClicked}>{buttonText}</button>
+        <td className="text-right">
+          <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`}><Pencil/></Link>
+          <button className="btn btn-default" onClick={this.viewButtonClicked}>{buttonText}</button>
         </td>
       </tr>
 	{row2}
@@ -104,7 +105,7 @@ var AuditList = React.createClass({
   render: function(){
     var rows = [];
     for(var id in this.props.audits){
-      rows.push(<AuditRow audit={this.props.audits[id]} key={id} />);
+      rows.push(<AuditRow auditCycleId={this.props.params.auditCycleId} audit={this.props.audits[id]} key={id} />);
     }
     var addAuditLink = `/audit_cycle/${this.props.params.auditCycleId}/audit/add`;
     return(

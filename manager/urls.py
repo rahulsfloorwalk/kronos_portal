@@ -43,7 +43,7 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)/application$', views.AuditApplicationView.as_view(), name='audit_application_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', audit_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
-    url(r'audit/(?P<audit_id>[0-9]+)$$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
+    url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 
     url(r'location/(?P<location_id>[0-9]+)$', views.LocationIdView.as_view(), name='location_id_view'),

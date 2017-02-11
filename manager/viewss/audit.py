@@ -45,11 +45,16 @@ class AuditIdView(APIView):
             return Http404
 
     def post(self, request, audit_id):
-        audit_ds = AuditDeSerializer(data=request.data, context={'id':audit_id})
-        audit_ds.is_valid(raise_exception=True)
-        audit = audit_ds.deserialize()
-        audit.save()
-        return Response(AuditSerializer(audit).data)
+        try:
+            audit_ds = AuditDeSerializer(data=request.data, context={'id':audit_id})
+            audit_ds.is_valid(raise_exception=True)
+            audit = audit_ds.deserialize()
+            audit = audit_service.save(audit)
+            return Response(AuditSerializer(audit).data)
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
     def delete(self, request, audit_id):
         try:

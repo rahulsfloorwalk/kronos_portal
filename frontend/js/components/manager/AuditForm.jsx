@@ -36,11 +36,14 @@ var AuditForm = React.createClass({
 		console.log("componentWillReceiveProps(...) called with",nextProps);
 		if( nextProps.audit){
 			this.setState(nextProps.audit);
+			this.setState({
+				store: nextProps.audit.store.id
+			});
 		}
 		this.setState({
 			audit_cycle: nextProps.params.auditCycleId
 		});
-		if(nextProps.auditCycle){
+		if(nextProps.auditCycle && ! nextProps.audit){
 			this.setState({
 				earnings_per_audit: nextProps.auditCycle.earnings_per_audit,
 				reimbursement: nextProps.auditCycle.reimbursement,
