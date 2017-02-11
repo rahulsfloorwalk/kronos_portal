@@ -7,6 +7,8 @@ from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
 import answer.service.report_section as report_section_service
 import answer.service.answer as answer_service
+import questionnaire.service.question as question_service
+import questionnaire.service.section as section_service
 
 def get_audit_stores(profileinfo_id):
     try:
@@ -77,14 +79,21 @@ def submit(audit_store_id, user_id):
         audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
         report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, user_id)
         answers = answer_service.get_answers(audit_store_id, user_id)
+        questions = question_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
+        sections = section_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
 
+        if len(sections) != len(report_sections):
+            raise AppLogicError("Please answer all the section summaries")
+        if len(questions) != len(answers):
+            raise AppLogicError("Please answer all the questions")
+            
         for report_section in report_sections:
             if report_section.auditor_comment in ( None ,''):
-                raise AppLogicError("please fill all the section summaries")
- 
+                raise AppLogicError("Please fill all the section summaries")
+
         for answer in answers:
             if answer.answer_text in ( None ,''):
-                raise AppLogicError("please fill all the answers")
+                raise AppLogicError("Please fill all the answers")
 
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED

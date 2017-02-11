@@ -24,3 +24,7 @@ def get_for_auditor( audit_store_id, profile_info_id):
 def find_by_audit_store_for_client( audit_store_id, client_id):
     audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
+
+def find_by_audit_cycle(audit_cycle_id):
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id)
+    return sections
