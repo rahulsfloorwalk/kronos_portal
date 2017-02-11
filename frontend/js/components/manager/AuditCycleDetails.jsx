@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 
+import ExpandableDetails from '../ExpandableDetails.jsx';
 import { Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
@@ -40,6 +41,7 @@ var AuditCycleDetails = React.createClass({
 		}
 
 		let editAuditCycleLink = `/audit_cycle/${this.props.auditCycle.id}/edit`;
+		let detailsElement = <ExpandableDetails details={this.props.auditCycle.description}/>;
 
 		return (
 			<div>
@@ -61,7 +63,7 @@ var AuditCycleDetails = React.createClass({
 							<tr><td className="text-right">Reimbursement upto:</td><td><b>₹ { this.props.auditCycle.reimbursement }</b></td></tr>
 							<tr><td className="text-right">Start Date:</td><td><b>{ this.props.auditCycle.start_date }</b></td></tr>
 							<tr><td className="text-right">End Date:</td><td><b>{ this.props.auditCycle.end_date }</b></td></tr>
-							<tr><td className="text-right">Description</td><td>{ this.props.auditCycle.description }</td></tr>
+							<tr><td className="text-right">Description</td><td>{ detailsElement }</td></tr>
 						</tbody>
 					</table>
 					<div className="panel-footer text-right">

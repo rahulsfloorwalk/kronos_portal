@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { fetchAuditStores } from '../../auditor/actions/audit_store.js';
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
+import ExpandableDetails from '../ExpandableDetails.jsx';
 import { Cross, ShareAlt } from '../Icons.jsx';
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
@@ -15,8 +16,8 @@ var AuditStoreRow = React.createClass({
 	render: function(){
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
 		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
+		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
 		return (
-			<div className="col-sm-6">
 				<div className="panel panel-default">
 					<div className="panel-heading">
 						<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.name}</b></h4>
@@ -27,13 +28,12 @@ var AuditStoreRow = React.createClass({
 							<LabelValue_2_10 label="Location:" value={`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}/>
 							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Audit Date:" value={this.props.auditStore.audit_date}/>
-							<LabelValue_2_10 label="Details:" value={this.props.auditStore.audit.audit_cycle.description}/>
+							<LabelValue_2_10 label="Details:" value={detailsElement}/>
 							<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
 						</div>
 						<p className="text-right"><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></p>
 					</div>
 				</div>
-			</div>
 		);
 	},
 });
@@ -54,9 +54,7 @@ var AuditStoreList = React.createClass({
 					<h2 className="page-header">
 						Your Audits
 					</h2>
-					<div className="row">
 						{rows}
-					</div>
 					{this.props.children}
 				</div>
 			);

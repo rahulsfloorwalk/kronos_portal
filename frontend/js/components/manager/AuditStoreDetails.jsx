@@ -4,6 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, unSubmitAuditStore } from '../../manager/actions/audit_store.js';
 
+import ExpandableDetails from '../ExpandableDetails.jsx';
 import { File } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -42,6 +43,7 @@ var AuditStoreDetails = React.createClass({
 			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
 		}
+		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
 
 		return (
 			<div>
@@ -100,7 +102,7 @@ var AuditStoreDetails = React.createClass({
 						</tbody>
 					</table>
 					<div className="panel-body">
-						<b>Details</b>: {this.props.auditStore.audit.audit_cycle.description}
+						<b>Details</b>: {detailsElement}
 					</div>
 					<div className="panel-footer text-right">
 						{withdrawButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}

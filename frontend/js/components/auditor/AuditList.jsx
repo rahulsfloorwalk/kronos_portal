@@ -6,10 +6,12 @@ import { fetchApplications } from '../../auditor/actions/application.js';
 import { fetchAudits } from '../../auditor/actions/audit.js';
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
+import ExpandableDetails from '../ExpandableDetails.jsx';
 import { Cross, ShareAlt } from '../Icons.jsx';
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
+
 
 var AuditRow = React.createClass({
 	render: function(){
@@ -36,8 +38,9 @@ var AuditRow = React.createClass({
 		}
 		let fees = this.props.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.audit.earnings_per_audit}, </b> : "";
 		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.audit.reimbursement}</b></span> : "";
+
+		let detailsElement = <ExpandableDetails details={this.props.audit.audit_cycle.description}/>;
 		return (
-			<div className="col-sm-6">
 				<div className="panel panel-default">
 					<div className="panel-heading">
 						<h4 className="panel-title"><b>{this.props.audit.audit_cycle.client.name}</b></h4>
@@ -48,7 +51,7 @@ var AuditRow = React.createClass({
 							<LabelValue_2_10 label="Location:" value={`${this.props.audit.store.location.name}, ${this.props.audit.store.location.city.name}`}/>
 							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Dates:" value={`${this.props.audit.audit_cycle.start_date} to ${this.props.audit.audit_cycle.end_date}`}/>
-							<LabelValue_2_10 label="Details:" value={this.props.audit.audit_cycle.description}/>
+							<LabelValue_2_10 label="Details:" value={detailsElement}/>
 							<LabelValue_2_10 label="Status:" value={textLabel}/>
 						</div>
 						<p className="text-right">
@@ -56,7 +59,6 @@ var AuditRow = React.createClass({
 						</p>
 					</div>
 				</div>
-			</div>
 		);
 	},
 });
@@ -93,9 +95,7 @@ var AuditList = React.createClass({
 				<h2 className="page-header">
 					Available Audits
 				</h2>
-				<div className="row">
 					{rows}
-				</div>
 				{this.props.children}
 			</div>
 		);
