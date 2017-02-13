@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'questionnaire',
     'audit',
     'audit_store',
-    'answer'
+    'answer',
+    'attachment'
 ]
 
 MIDDLEWARE_CLASSES = [
