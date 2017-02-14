@@ -1,3 +1,4 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, OneToOneField
 from django.db.models import CASCADE
@@ -25,3 +26,5 @@ class AuditStore(Model):
 
     audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores')
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id')
+
+    attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')

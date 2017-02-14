@@ -1,17 +1,22 @@
-from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField
+from django.conf import settings
+from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField, IntegerField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+
 class Attachment(Model):
 
     PHOTO = 'PHOTO'
     AUDIO = 'AUDIO'
     VIDEO = 'VIDEO'
+    OTHER = 'OTHER'
     PROOF_TYPE = (
         (PHOTO, "Photo"),
         (AUDIO, "Audio"),
         (AUDIO, "Video"),
     )
 
+    UPLOADING = 'UPLOADING'
+    CANCELED = 'CANCELED'
     ATTACHED = 'ATTACHED'
     DELETED = 'DELETED'
     STATUS = (
@@ -21,11 +26,16 @@ class Attachment(Model):
 
     id = AutoField(db_column='id', primary_key=True)
     file_slug = CharField(db_column='file_slug', max_length=200, blank=False)
-    proof_type = CharField(db_column='proof_type', max_length=20, blank=False)
-    mime_type = CharField(db_column='mime_type', max_length=20, blank=False)
-    file_name = CharField(db_column='file_name', max_length=40, blank=False)
+    proof_type = CharField(db_column='proof_type', max_length=20, choices=PROOF_TYPE, blank=False)
+    mime_type = CharField(db_column='mime_type', max_length=50, blank=False)
+    file_name = CharField(db_column='file_name', max_length=256, blank=False)
+    file_size = IntegerField(db_column='file_size')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
 
     content_type = ForeignKey(ContentType)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    def direct_url(self):
+        s3 = settings.AWS["S3_ATTACHMENTS"]
+        return "https://s3-{}.amazonaws.com/{}/{}".format(s3["REGION"],s3["BUCKET"],self.file_slug)

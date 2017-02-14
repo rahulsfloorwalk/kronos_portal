@@ -11,6 +11,7 @@ from audit_store.models import AuditStore
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
+from attachment.models import Attachment
 
 
 class ProfileInfoSerializer(ModelSerializer):
@@ -342,3 +343,20 @@ class ReportSectionDeSerializer(Serializer):
     audit_store = serializers.PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
     section = serializers.PrimaryKeyRelatedField(queryset=Section.objects.all())
     auditor_comment = CharField(max_length=2048, allow_blank=True)
+
+
+class AttachmentSerializer(ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = (
+            'id',
+            'file_slug',
+            'proof_type',
+            'mime_type',
+            'file_name',
+            'status',
+            'content_type',
+            'object_id',
+            'direct_url',
+        )
+        read_only_fields = fields

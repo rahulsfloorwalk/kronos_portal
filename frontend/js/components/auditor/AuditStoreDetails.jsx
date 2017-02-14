@@ -10,6 +10,8 @@ import Loading from '../Loading.jsx';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 
+import AttachmentUploadBox from './AttachmentUploadBox.jsx';
+
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 var AuditStoreDetails = React.createClass({
@@ -51,7 +53,7 @@ var AuditStoreDetails = React.createClass({
 		return (
 			<div>
 				<div className="row">
-				<div className="col-sm-12">
+				<div className="col-md-6">
 					<div className="panel panel-default">
 						<div className="panel-heading">
 							<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.name}</b></h4>
@@ -70,6 +72,9 @@ var AuditStoreDetails = React.createClass({
 							{this.state.submitMessage}&nbsp;&nbsp;{submitAuditButton}
 						</div>
 					</div>
+				</div>
+				<div className="col-md-6">
+					<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId}/>
 				</div>
 				</div>
 				{this.props.children}

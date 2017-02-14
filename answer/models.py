@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import CASCADE
 from questionnaire.models import Question
@@ -14,6 +15,7 @@ class Answer(Model):
 
     answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
     marks_obtained = IntegerField(db_column='marks_obtained', blank=True, null=True)
+    attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
     
 class ReportSection(Model):
     
@@ -22,6 +24,8 @@ class ReportSection(Model):
     section = ForeignKey('questionnaire.Section', db_column='section_id', blank=False)
     pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
     auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)
+
+    attachments = GenericRelation('attachment.Attachment', related_query_name='report_sections')
     
     def __str__(self):
         return "ReportSection({}): {}, {}".format(self.id, self.pm_comment, self.auditor_comment)

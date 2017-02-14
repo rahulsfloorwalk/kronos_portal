@@ -16,6 +16,7 @@ from .serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditAppli
 from .serializers import AuditStoreSerializer
 from .serializers import SectionSerializer
 from .serializers import AnswerSerializer
+from .serializers import AttachmentSerializer
 from .serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from audit.models import Audit
 from manager.models import City
@@ -28,6 +29,7 @@ from audit_store import service as audit_store_service
 from questionnaire.service import section as section_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
+import attachment.service as attachment_service
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -357,3 +359,74 @@ class CommentSubmitView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             }) from e
+
+
+class AuditStoreAttachmentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET': [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+
+    def get(self, request, audit_store_id, format=None):
+        try:
+            attachments = attachment_service.find_by_audit_store_for_auditor(audit_store_id, request.user.profileinfo.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
+        except ObjectNotFound:
+            raise NotFound
+
+    def post(self, request, audit_store_id):
+        try:
+            post_data, attachment = attachment_service.upload_for_audit_store(
+                    audit_store_id, 
+                    request.user.profileinfo.id, 
+                    request.data["file_name"], 
+                    request.data["file_size"], 
+                    request.data["file_type"])
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AttachmentIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'DELETE': [GROUP_NAME_AUDITOR],
+        }
+
+    def delete(self, request, attachment_id):
+        try:
+            attachment_service.delete_for_user(attachment_id, request.user.id)
+            return Response()
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+class AttachmentCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_AUDITOR],
+        }
+
+    def post(self, request, attachment_id):
+        try:
+            attachment = attachment_service.complete_for_user(attachment_id, request.user.id)
+            return Response(AttachmentSerializer(attachment).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
