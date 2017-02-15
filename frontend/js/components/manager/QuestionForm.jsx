@@ -53,7 +53,7 @@ var QuestionForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<FormInput label="Sequence" min="1" type="number" value={this.state.form.sequence} name="sequence" onChange={this.inputChanged} errors={this.state.errors.sequence}/>
 					<FormInput label="Question" maxLength="1024" type="text" value={this.state.form.question_txt} name="question_txt" onChange={this.inputChanged} errors={this.state.errors.question_txt}/>
-					<FormInput label="Max. Marks" min="1" type="number" value={this.state.form.max_marks} name="max_marks" onChange={this.inputChanged} errors={this.state.errors.max_marks}/>
+					<FormInput label="Max. Marks" min="0" type="number" value={this.state.form.max_marks} name="max_marks" onChange={this.inputChanged} errors={this.state.errors.max_marks}/>
 					<SaveButton/>
 				</form>
 			</Modal>
