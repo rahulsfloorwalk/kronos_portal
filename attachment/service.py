@@ -104,6 +104,14 @@ def find_by_audit_store_for_auditor(audit_store_id, profileinfo_id):
     audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
 
+def find_by_audit_store_for_client(audit_store_id, client_id):
+    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
+    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
+
+
+def find_by_audit_store(audit_store_id):
+    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
+
 
 def complete_for_user(attachment_id, user_id):
     try:

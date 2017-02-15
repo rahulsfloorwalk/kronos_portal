@@ -13,6 +13,8 @@ import { LabelValue_2_10 } from '../LabelValue.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
+import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
+
 var AuditStoreDetails = React.createClass({
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
@@ -108,6 +110,7 @@ var AuditStoreDetails = React.createClass({
 						{withdrawButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
 					</div>
 				</div>
+				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				{this.props.children}
 			</div>
 		);

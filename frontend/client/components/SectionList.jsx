@@ -3,7 +3,9 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 import Panel from '../../js/components/Panel.jsx';
-import { Tasks, Plus, Cross, Pencil } from '../../js/components/Icons.jsx';
+import { Paperclip, Tasks, Plus, Cross, Pencil } from '../../js/components/Icons.jsx';
+
+import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
 
 import { orderKeys } from '../../js/react_utils.js';
 
@@ -116,6 +118,10 @@ export default React.createClass({
 		}
 		return (
 			<div>
+				<h3 className="page-header">
+					<Paperclip/> Attachments
+				</h3>
+				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				<h3 className="page-header">
 					<Tasks/> Questionnaire
 				</h3>

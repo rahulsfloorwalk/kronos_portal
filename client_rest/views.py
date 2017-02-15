@@ -17,8 +17,9 @@ from questionnaire.service import section as section_service
 
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
+import attachment.service as attachment_service
 
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer
 
 class AuditStoreLatest(APIView):
     permission_classes = [HasGroupPermission]
@@ -108,5 +109,18 @@ class ReportSectionByAuditStore(APIView):
         try:
             report_sections = report_section_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
             return Response(ReportSectionSerializer(report_sections, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+
+class AttachmentByAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            attachments = attachment_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e

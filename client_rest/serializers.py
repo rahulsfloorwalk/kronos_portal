@@ -9,6 +9,7 @@ from manager.models import City, Location
 
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
+from attachment.models import Attachment
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -143,4 +144,18 @@ class ReportSectionSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
+class AttachmentSerializer(ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = (
+            'id',
+            'file_slug',
+            'proof_type',
+            'mime_type',
+            'file_name',
+            'status',
+            'content_type',
+            'object_id',
+            'direct_url',
+        )
+        read_only_fields = fields

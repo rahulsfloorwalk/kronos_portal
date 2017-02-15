@@ -11,6 +11,7 @@ from .viewss import question as question_views
 from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
 from .viewss import report_section as report_section_views
+from .viewss import attachment as attachment_views
 
 urlpatterns = ([
     url(r'state$', views.StateView.as_view(), name='state_view'),
@@ -22,6 +23,7 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client$', client_views.ClientView.as_view(), name='client_view'),
 
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', attachment_views.AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/unsubmit$', audit_store_views.AuditStoreIdUnSubmitView.as_view(), name='audit_store_id_unsubmit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/withdraw$', audit_store_views.AuditStoreIdWithdrawView.as_view(), name='audit_store_id_withdraw_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/fail$', audit_store_views.AuditStoreIdFailView.as_view(), name='audit_store_id_fail_view'),
