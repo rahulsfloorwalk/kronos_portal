@@ -42,7 +42,7 @@ export default React.createClass({
 			return (
 				<div>
 					<h3 className="page-header">
-						<Home/> Store List
+						<Home/> Store Browser
 					</h3>
 					<table className="table table-striped">
 						<thead>

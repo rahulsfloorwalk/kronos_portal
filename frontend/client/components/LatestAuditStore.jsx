@@ -44,10 +44,12 @@ export default React.createClass({
 		}
 		if(rows.length > 0){
 			return (
-				<div>
-					<h2 className="page-header">
-						<File/> Latest Audit Reports
-					</h2>
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<h4 className="panel-title">
+							<File/> Latest Audit Reports
+						</h4>
+					</div>
 					<table className="table table-striped">
 						<thead>
 							<tr>

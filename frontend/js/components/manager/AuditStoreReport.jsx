@@ -218,6 +218,7 @@ var __Section = React.createClass({
 				</table>
 				<div className="panel-footer">
 					<p><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}</p>
+					<hr/>
 					<div><b>Auditor Comment:</b> {auditor_comment}</div>
 					<hr/>
 					<div><b>PM Comment:</b> {commentElement}</div>

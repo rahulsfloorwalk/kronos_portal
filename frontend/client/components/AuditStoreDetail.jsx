@@ -43,11 +43,22 @@ export default React.createClass({
 						<div className="panel-heading">
 							<h4 className="panel-title"><b>{this.state.auditStore.audit.audit_cycle.client.name}</b></h4>
 						</div>
-						<div className="panel-body">
-								<LabelValue_2_10 label="Type:" value={getAuditType(this.state.auditStore.audit.audit_cycle.type)}/>
-								<LabelValue_2_10 label="Location:" value={`${this.state.auditStore.audit.store.location.name}, ${this.state.auditStore.audit.store.location.city.name}`}/>
-								<LabelValue_2_10 label="Audit Date:" value={this.state.auditStore.audit_date}/>
-						</div>
+						<table className="table table-striped">
+							<tbody>
+								<tr>
+									<td className="text-right">Type:</td>
+									<th>{getAuditType(this.state.auditStore.audit.audit_cycle.type)}</th>
+								</tr>
+								<tr>
+									<td className="text-right">Location:</td>
+									<th>{`${this.state.auditStore.audit.store.location.name}, ${this.state.auditStore.audit.store.location.city.name}`}</th>
+								</tr>
+								<tr>
+									<td className="text-right">Audit Date:</td>
+									<th>{this.state.auditStore.audit_date}</th>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 				</div>

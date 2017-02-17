@@ -87,7 +87,6 @@ export default React.createClass({
 					let imageStyle = {"maxWidth": "100%"}
 					attachmentElement = (
 						<div className="text-center">
-							<br/>
 							<p><big>{this.state.selectedAttachment.file_name}</big></p>
 							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
 						</div>
@@ -114,12 +113,6 @@ export default React.createClass({
 		} else {
 
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					<h4 className="panel-title">
-						<Paperclip/> Attachments
-					</h4>
-				</div>
 				<div className="row">
 					<div className="col-md-4">
 						{attachmentRows}
@@ -128,7 +121,6 @@ export default React.createClass({
 						{attachmentElement}
 					</div>
 				</div>
-			</div>
 		);
 		}
 	},

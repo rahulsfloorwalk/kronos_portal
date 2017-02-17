@@ -51,4 +51,5 @@ export const Video	= () => <span className="glyphicon glyphicon-video"></span>;
 export const DownloadAlt= () => <span className="glyphicon glyphicon-download-alt"></span>;
 export const Download	= () => <span className="glyphicon glyphicon-download"></span>;
 export const Upload	= () => <span className="glyphicon glyphicon-upload"></span>;
+export const Dashboard	= () => <span className="glyphicon glyphicon-dashboard"></span>;
 

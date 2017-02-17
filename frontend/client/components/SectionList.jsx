@@ -43,7 +43,7 @@ var Section = React.createClass({
 			}
 		}
 		if(questionRows.length === 0){
-			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
+			questionRows.push(<tr key="empty"><td colSpan="5" className="text-center text-muted">no questions here</td></tr>);
 		}
 		if(this.props.reportSection){
 			var auditor_comment = this.props.reportSection.auditor_comment;
@@ -54,9 +54,8 @@ var Section = React.createClass({
 			col1: { width: "5%" },
 			col2: { width: "40%" },
 			col3: { width: "40%" },
-			col4: { width: "5%" },
-			col5: { width: "5%" },
-			col6: { width: "5%" },
+			col4: { width: "7.5%" },
+			col5: { width: "7.5%" },
 		};
 		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
@@ -68,7 +67,6 @@ var Section = React.createClass({
 							<th style={styles.col3}>Answer</th>
 							<th style={styles.col4}>Marks</th>
 							<th style={styles.col5}>Max. Marks</th>
-							<th style={styles.col6}></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -77,7 +75,9 @@ var Section = React.createClass({
 				</table>
 				<div className="panel-footer">
 					<p><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}</p>
+					<hr/>
 					<p><b>Auditor Comment:</b> {auditor_comment}</p>
+					<hr/>
 					<p><b>PM Comment:</b> {pm_comment}</p>
 				</div>
 			</Panel>

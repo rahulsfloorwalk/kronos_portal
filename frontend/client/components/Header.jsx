@@ -2,24 +2,30 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import NavLink from '../../js/components/NavLink.jsx';
-import { Home, MapMarker, King, LogOut } from '../../js/components/Icons.jsx';
+import { Dashboard, Home, MapMarker, King, LogOut } from '../../js/components/Icons.jsx';
 
 var Header = React.createClass({
 	render: function(){
 		let brandStyle = {
-			height: "25px"
+			height: "30px",
+			marginLeft: "auto",
+			marginRight: "auto",
+			marginTop: "20px",
+			marginBottom: "20px",
 		};
 		return (
-			<nav className="navbar navbar-default navbar-static-top">
-				<div className="container">
+			<div className="container">
+				<div className="text-center">
+					<Link to="/">
+						<img className="" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
+					</Link>
+				</div>
+				<nav className="navbar navbar-default">
 					<div className="navbar-header">
-						<Link className="navbar-brand" to="/">
-							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
-						</Link>
 					</div>
 					<ul className="nav navbar-nav">
-						<NavLink to="/"><King/> Home</NavLink>
-						<NavLink to="/store"><Home/> Stores</NavLink>
+						<NavLink to="/"><Dashboard/> Dashboard</NavLink>
+						<NavLink to="/store"><Home/> Store Browser</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
@@ -30,8 +36,8 @@ var Header = React.createClass({
 							</form>
 						</li>
 					</ul>
-				</div>
-			</nav>
+				</nav>
+			</div>
 		);
 	},
 });
