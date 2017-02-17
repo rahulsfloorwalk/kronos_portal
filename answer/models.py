@@ -8,9 +8,6 @@ from questionnaire.models import Section
 
 class Answer(Model):
 
-    class Meta:
-        unique_together = ('question', 'audit_store',)
-
     id = AutoField(db_column = 'id', primary_key=True)
 
     question = ForeignKey('questionnaire.Question',  db_column='question_id', on_delete=CASCADE)
@@ -19,6 +16,9 @@ class Answer(Model):
     answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
     marks_obtained = IntegerField(db_column='marks_obtained', blank=True, null=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
+
+    class Meta:
+        unique_together = (('question', 'audit_store',))
 
 class ReportSection(Model):
 
