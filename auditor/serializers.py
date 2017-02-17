@@ -316,6 +316,7 @@ class AnswerDeSerializer(ModelSerializer):
             'audit_store',
             'answer_text'
         )
+        validators=[]
 
 class AnswerSerializer(ModelSerializer):
     class Meta:
