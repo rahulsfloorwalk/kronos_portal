@@ -103,6 +103,7 @@ var types = {
 
 	//Answer
 	ANSWER_GET: 'ANSWER_GET',
+	ANSWER_MARK: 'ANSWER_MARK',
 
 	//Report Sections
 	REPORT_SECTION_GET: 'REPORT_SECTION_GET',

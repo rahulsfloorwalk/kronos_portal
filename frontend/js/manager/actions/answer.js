@@ -21,3 +21,30 @@ export function fetchAnswers(auditStoreId){
 	};
 };
 
+
+export function setMarks(answer){
+	return function(dispatch){
+		dispatch({
+			type: types.ANSWER_MARK,
+			status: 'request',
+			answer
+		});
+
+		var payload = { marks: answer.marks };
+
+		return $.ajax({
+			url: url.api_base_path + `manager/audit_store/${answer.auditStoreId}/question/${answer.questionId}/mark`,
+			type: "POST",
+			data: JSON.stringify(payload),
+			contentType: "application/json"
+
+		}).then(function(answer){
+			dispatch({
+				type: types.ANSWER_MARK,
+				status: 'success',
+				answer
+			});
+		});
+		//TODO: Handle error
+	};
+};

@@ -525,6 +525,19 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+		case types.ANSWER_MARK:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						answers: Object.assign({}, store.answers, {
+							[action.answer.id]: action.answer
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.REPORT_SECTION_GET:
 			switch(action.status){
 				case "success":

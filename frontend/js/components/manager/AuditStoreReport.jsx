@@ -8,25 +8,72 @@ import { Plus, Cross, Pencil } from '../Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
-import { fetchAnswers } from '../../manager/actions/answer.js'
+import { fetchAnswers, setMarks } from '../../manager/actions/answer.js'
 import { submitPMComment, fetchReportSections } from '../../manager/actions/report_section.js'
 
 var __QuestionRow = React.createClass({
-	render: function(){
+	getDefaultProps: function(){
+		return {
+			marking: false
+		};
+	},
+	getInitialState: function(){
+		return {
+			answer: {},
+			error: false
+		};
+	},
+	componentDidMount: function(){
 		if(this.props.answer){
-			var answer = this.props.answer.answer_text;
-			var answerMarks = this.props.answer.marks_obtained;
+			this.setState({
+				answer: this.props.answer
+			});
+		}
+	},
+	componentWillReceiveProps: function(nextProps){
+		if(nextProps.answer){
+			this.setState({
+				answer: nextProps.answer
+			});
+		}
+	},
+	marksChanged: function(e){
+		this.setState({
+			answer: Object.assign({}, this.state.answer, {
+				marks_obtained: e.target.value
+			})
+		});
+	},
+	saveMarks: function(e){
+		this.marksChanged(e);
+		this.props.dispatch(setMarks({
+			auditStoreId: this.state.answer.audit_store,
+			questionId: this.state.answer.question,
+			marks: this.state.answer.marks_obtained,
+		})).then(()=> this.setState({error: false}), ()=> this.setState({error: true}));
+	},
+	render: function(){
+		var hasError = this.state.error ? "has-error" : "";
+		var markElement;
+		if( this.props.marking){
+			markElement = (
+				<div className={"input-group " + hasError } title={this.state.message}>
+					<input className="form-control input-sm text-right" 
+						onChange={this.marksChanged}
+						onBlur={this.saveMarks}
+						value={this.state.answer.marks_obtained}/>
+					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
+				</div>
+			);
+		} else {
+			markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		}
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				<td>{this.props.q.question_txt}</td>
-				<td>{answer}</td>
-				<td>{answerMarks}</td>
-				<td>{this.props.q.max_marks}</td>
-				<td>
-					<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/edit`} className="btn btn-default"><Pencil/></Link>
-				</td>
+				<td><big>{this.state.answer.answer_text}</big></td>
+				<td className="text-right">{markElement}</td>
 			</tr>
 		);
 	},
@@ -105,9 +152,13 @@ var __Section = React.createClass({
 	render: function(){
 		let pointerStyle = {cursor: 'pointer'};
 		let questionRows = [];
+		let marking = false;
+		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
+			marking = true;
+		}
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow q={q} key={q.id}/>);
+				questionRows.push(<QuestionRow q={q} key={q.id} marking={marking}/>);
 			}
 		}
 		if(questionRows.length === 0){
@@ -116,7 +167,7 @@ var __Section = React.createClass({
 		if(this.props.reportSection){
 			var auditor_comment = this.props.reportSection.auditor_comment;
 			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
-				var defaultAnswer = "click to add comment";
+				var defaultComment = "click to enter comment";
 			}
 			if(this.state.commenting){
 				var commentElement = (
@@ -135,7 +186,7 @@ var __Section = React.createClass({
 						</form>
 				);
 			} else {
-				let pm_comment = this.state.pm_comment || (<span className="text-muted">click to enter comment</span>);
+				let pm_comment = this.state.pm_comment || (<span className="text-muted">{defaultComment}</span>);
 				var commentElement = (<span style={pointerStyle} onClick={this.startEdit}>{pm_comment}</span>);
 			}
 
@@ -147,9 +198,7 @@ var __Section = React.createClass({
 			col1: { width: "5%" },
 			col2: { width: "40%" },
 			col3: { width: "40%" },
-			col4: { width: "5%" },
-			col5: { width: "5%" },
-			col6: { width: "5%" },
+			col4: { width: "15%" },
 		};
 		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
@@ -160,12 +209,6 @@ var __Section = React.createClass({
 							<th style={styles.col2}>Question</th>
 							<th style={styles.col3}>Answer</th>
 							<th style={styles.col4}>Marks</th>
-							<th style={styles.col5}>Max. Marks</th>
-							<th style={styles.col6}>
-								<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
-									<Plus/>
-								</Link>
-							</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -174,6 +217,7 @@ var __Section = React.createClass({
 				</table>
 				<div className="panel-footer">
 					<div><b>Auditor Comment:</b> {auditor_comment}</div>
+					<hr/>
 					<div><b>PM Comment:</b> {commentElement}</div>
 				</div>
 			</Panel>
