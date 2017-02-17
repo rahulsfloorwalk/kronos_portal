@@ -39,10 +39,11 @@ var QuestionRow = React.createClass({
 			});
 		}
 	},
-	componentDidUpdate: function(){
-		if(this.answerInput){
+	componentDidUpdate: function(prevProps,prevState){
+		if(this.answerInput && prevState.editing === false){
 			this.answerInput.focus();
-			this.answerInput.value = this.answerInput.value;
+			let l = this.answerInput.value.length;
+			this.answerInput.setSelectionRange(l,l);
 		}
 	},
 	submitAnswer: function(e){

@@ -46,10 +46,11 @@ var __Section = React.createClass({
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
-	componentDidUpdate: function(){
-		if(this.commentInput){
+	componentDidUpdate: function(prevProps, prevState){
+		if(this.commentInput && prevState.commenting === false){
 			this.commentInput.focus();
-			this.commentInput.value = this.commentInput.value;
+			let l = this.commentInput.value.length;
+			this.commentInput.setSelectionRange(l,l);
 		}
 	},
 	submitComment: function(e){
