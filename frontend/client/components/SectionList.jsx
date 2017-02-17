@@ -48,6 +48,7 @@ var Section = React.createClass({
 		if(this.props.reportSection){
 			var auditor_comment = this.props.reportSection.auditor_comment;
 			var pm_comment = this.props.reportSection.pm_comment;
+			var section_marks = this.props.reportSection.marks_obtained;
 		}
 		var styles = {
 			col1: { width: "5%" },
@@ -75,6 +76,7 @@ var Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-footer">
+					<p><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}</p>
 					<p><b>Auditor Comment:</b> {auditor_comment}</p>
 					<p><b>PM Comment:</b> {pm_comment}</p>
 				</div>

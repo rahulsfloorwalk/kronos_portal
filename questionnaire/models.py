@@ -23,6 +23,10 @@ class Section(Model):
     def __str__(self):
         return 'Section({}): {}'.format(self.id, self.name)
 
+    def max_marks(self):
+        questions = Question.objects.filter(section_id=self.id)
+        return sum(q.max_marks for q in questions if type(q.max_marks) is int)
+
     class Meta:
         ordering = ['sequence']
 

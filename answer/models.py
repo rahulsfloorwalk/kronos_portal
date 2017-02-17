@@ -33,5 +33,9 @@ class ReportSection(Model):
     def __str__(self):
         return "ReportSection({}): {}, {}".format(self.id, self.pm_comment, self.auditor_comment)
 
+    def marks_obtained(self):
+        answers = Answer.objects.filter(audit_store_id=self.audit_store_id, question__section_id=self.section_id)
+        return sum(a.marks_obtained for a in answers if type(a.marks_obtained) is int)
+
     class Meta:
         unique_together = (("audit_store","section"))

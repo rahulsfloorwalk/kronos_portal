@@ -166,6 +166,7 @@ var __Section = React.createClass({
 		}
 		if(this.props.reportSection){
 			var auditor_comment = this.props.reportSection.auditor_comment;
+			var section_marks = this.props.reportSection.marks_obtained;
 			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
 				var defaultComment = "click to enter comment";
 			}
@@ -216,6 +217,7 @@ var __Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-footer">
+					<p><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}</p>
 					<div><b>Auditor Comment:</b> {auditor_comment}</div>
 					<hr/>
 					<div><b>PM Comment:</b> {commentElement}</div>

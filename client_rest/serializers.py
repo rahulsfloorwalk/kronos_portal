@@ -116,7 +116,8 @@ class SectionSerializer(ModelSerializer):
             'name',
             'audit_cycle',
             'sequence',
-            'questions'
+            'questions',
+            'max_marks'
         )
         read_only_fields = fields
 
@@ -140,7 +141,8 @@ class ReportSectionSerializer(ModelSerializer):
             'audit_store',
             'section',
             'auditor_comment',
-            'pm_comment'
+            'pm_comment',
+            'marks_obtained'
         )
         read_only_fields = fields
 
