@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { fetchApplications } from '../../auditor/actions/application.js';
 import { fetchAudits } from '../../auditor/actions/audit.js';
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
@@ -25,12 +28,12 @@ var AuditRow = React.createClass({
 		else if( this.props.application.status === "APPLIED"){
 			let cancelLink = `/audit/${this.props.audit.id}/cancel`;
 			let cancelButton = <Link to={cancelLink} className="btn btn-default"><Cross/> Cancel</Link>;
-			auditDate =  <span>Audit Date: <b>{this.props.application.audit_date}</b></span>;
+			auditDate =  <span>Audit Date: <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b></span>;
 			button = cancelButton;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} 
 		else if( this.props.application.status === "APPROVED"){
-			auditDate =  <span>Audit Date: <b>{this.props.application.audit_date}</b></span>;
+			auditDate =  <span>Audit Date: <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b></span>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} else {
 			button = <br/>;
@@ -50,7 +53,7 @@ var AuditRow = React.createClass({
 							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.audit.audit_cycle.type)}/>
 							<LabelValue_2_10 label="Location:" value={`${this.props.audit.store.location.name}, ${this.props.audit.store.location.city.name}`}/>
 							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
-							<LabelValue_2_10 label="Dates:" value={`${this.props.audit.audit_cycle.start_date} to ${this.props.audit.audit_cycle.end_date}`}/>
+							<LabelValue_2_10 label="Dates:" value={<span><b>{moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat)}</b> to <b>{moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat)}</b></span>}/>
 							<LabelValue_2_10 label="Details:" value={detailsElement}/>
 							<LabelValue_2_10 label="Status:" value={textLabel}/>
 						</div>

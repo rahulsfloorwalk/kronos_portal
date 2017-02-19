@@ -2,6 +2,10 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+
+import { momentDateFormat }  from '../../../config.js';
+
 import { fetchStates } from '../../auditor/actions/location_info.js'
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
@@ -31,7 +35,7 @@ var ProfileInfoPanelBase = React.createClass({
 					<LabelValue label="Last Name:" value={this.props.profileInfo.last_name}/>
 					<LabelValue label="Gender:" value={getGender(this.props.profileInfo.gender)}/>
 					<LabelValue label="Education:" value={getEducationStatus(this.props.profileInfo.education)}/>
-					<LabelValue label="Date of Birth:" value={this.props.profileInfo.date_of_birth}/>
+					<LabelValue label="Date of Birth:" value={moment(this.props.profileInfo.date_of_birth).format(momentDateFormat )}/>
 					<LabelValue label="Marital Status:" value={getMaritalStatus(this.props.profileInfo.marital_status)}/>
 					<LabelValue label="Address:" value={this.props.profileInfo.address}/>
 					<LabelValue label="Mobile Number:" value={this.props.profileInfo.mobile_number}/>

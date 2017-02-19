@@ -3,6 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
+import { getGender } from '../../utils.js';
 
 import { searchAuditors } from '../../manager/actions/auditor.js'
 
@@ -22,7 +23,7 @@ var AuditorRow = React.createClass({
 			<tr>
 				<td>{prof.first_name} {prof.last_name}</td>
 				<td>{this.props.auditor.email}</td>
-				<td>{prof.gender}</td>
+				<td>{getGender(prof.gender)}</td>
 				<td>{prof.mobile_number}</td>
 				<td>{prof.city.name}</td>
 				<td>

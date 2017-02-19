@@ -9,4 +9,6 @@ var url = {
 	api_base_path: "/"
 };
 
-export { url };
+var momentDateFormat = "Do MMM YYYY";
+
+export { url, momentDateFormat };

@@ -3,6 +3,10 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import moment from 'moment';
+
+import { momentDateFormat }  from '../../../config.js';
+
 import { loadAuditApplyForm, submitAuditApplyForm } from '../../auditor/actions/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -47,8 +51,8 @@ var AuditApplyForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Audit Type:</label> { getAuditType(this.props.audit.audit_cycle.type) }</p>
-					<p><label>Start Date:</label> { this.props.audit.audit_cycle.start_date }</p>
-					<p><label>End Date:</label> { this.props.audit.audit_cycle.end_date }</p>
+					<p><label>Start Date:</label> { moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat) }</p>
+					<p><label>End Date:</label> { moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat) }</p>
 					<p><label>Location:</label> { this.props.audit.store.location.name }, { this.props.audit.store.location.city.name }</p>
 					<FormDateInput label="Preferred Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
 					<SaveButton text="Apply"/>

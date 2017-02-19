@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../config.js';
+
 import { fetchAuditStore } from '../service/audit_store.js';
 
 import { File } from '../../js/components/Icons.jsx';
@@ -32,7 +35,7 @@ export default React.createClass({
 				<ol className="breadcrumb">
 					<li><Link to="/store">Stores</Link></li>
 					<li><Link to={`/store/${this.state.auditStore.audit.store.id}/audit_store`}>{this.state.auditStore.audit.store.name}</Link></li>
-					<li className="active">Audit: <b>{this.state.auditStore.audit_date}</b></li>
+					<li className="active">Audit: <b>{moment(this.state.auditStore.audit_date).format(momentDateFormat)}</b></li>
 				</ol>
 				<h2 className="page-header">
 					<File/> Audit Report
@@ -55,7 +58,7 @@ export default React.createClass({
 								</tr>
 								<tr>
 									<td className="text-right">Audit Date:</td>
-									<th>{this.state.auditStore.audit_date}</th>
+									<th>{moment(this.state.auditStore.audit_date).format(momentDateFormat)}</th>
 								</tr>
 							</tbody>
 						</table>

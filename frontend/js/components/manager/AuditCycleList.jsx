@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { Plus, Retweet } from '../Icons.jsx';
 import { fetchAuditCycles } from '../../manager/actions/audit.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -12,8 +15,8 @@ var AuditCycleRow = React.createClass({
 		return (
 			<tr>
 				<td>{this.props.auditCycle.name}</td>
-				<td>{this.props.auditCycle.start_date}</td>
-				<td>{this.props.auditCycle.end_date}</td>
+				<td>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</td>
+				<td>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</td>
 				<td>{getAuditType(this.props.auditCycle.type)}</td>
 				<td>{getAuditStatus(this.props.auditCycle.status)}</td>
 				<td>

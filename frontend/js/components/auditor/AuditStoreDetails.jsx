@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { fetchAuditStore, submitAuditStore } from '../../auditor/actions/audit_store.js';
 
 import ExpandableDetails from '../ExpandableDetails.jsx';
@@ -63,7 +66,7 @@ var AuditStoreDetails = React.createClass({
 								<LabelValue_2_10 label="Type:" value={getAuditType(this.props.auditStore.audit.audit_cycle.type)}/>
 								<LabelValue_2_10 label="Location:" value={`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}/>
 								<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
-								<LabelValue_2_10 label="Audit Date:" value={this.props.auditStore.audit_date}/>
+								<LabelValue_2_10 label="Audit Date:" value={moment(this.props.auditStore.audit_date).format(momentDateFormat)}/>
 								<LabelValue_2_10 label="Details:" value={detailsElement}/>
 								<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
 							</div>

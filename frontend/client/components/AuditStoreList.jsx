@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../config.js';
+
 import { fetchAuditStores } from '../service/audit_store.js';
 
 import { File } from '../../js/components/Icons.jsx';
@@ -16,7 +19,7 @@ var AuditStoreRow = React.createClass({
 			<tr>
 				<td>{this.props.auditStore.audit.store.name}</td>
 				<td>{`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}</td>
-				<td>{this.props.auditStore.audit_date}</td>
+				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				<td>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</td>
 				<td><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></td>
 			</tr>

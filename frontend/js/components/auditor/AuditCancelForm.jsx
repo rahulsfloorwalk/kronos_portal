@@ -3,7 +3,11 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { Link, hashHistory } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { loadAuditCancelForm, submitAuditCancelForm } from '../../auditor/actions/application.js';
+
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -37,9 +41,9 @@ var AuditCancelForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Audit Type:</label> { getAuditType(this.props.audit.audit_cycle.type) }</p>
-					<p><label>Start Date:</label> { this.props.audit.audit_cycle.start_date }</p>
-					<p><label>End Date:</label> { this.props.audit.audit_cycle.end_date }</p>
-					<p><label>Audit Date:</label> { this.props.audit.audit_cycle.end_date }</p>
+					<p><label>Start Date:</label> { moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat) }</p>
+					<p><label>End Date:</label> { moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat) }</p>
+					<p><label>Audit Date:</label> { moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat) }</p>
 					<p><label>Location:</label> { this.props.audit.store.location.name }, { this.props.audit.store.location.city.name }</p>
 					<p>Are you sure you want to cancel your application for this audit?</p>
 					<div className="form-group">

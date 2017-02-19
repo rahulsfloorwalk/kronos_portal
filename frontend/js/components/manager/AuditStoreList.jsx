@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { File } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
@@ -14,7 +17,7 @@ var AuditStoreRow = React.createClass({
     return(
       <tr>
         <td>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</td>
-        <td>{this.props.auditStore.audit_date}</td>
+        <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
         <td>
           <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>

@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
@@ -32,7 +35,7 @@ var AuditApplicationList = React.createClass({
 						<div className="panel-body">
 						<p><User/>{auditorLink}</p>
 						<p><Earphone/>{app.profileinfo.mobile_number}</p>
-						<p><Calendar/>{app.audit_date}</p>
+						<p><Calendar/>{moment(app.audit_date).format(momentDateFormat)}</p>
 						<p>
 							{approveLink}{rejectLink}
 							{statusLabel}

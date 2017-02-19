@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 
 import ExpandableDetails from '../ExpandableDetails.jsx';
@@ -61,8 +64,8 @@ var AuditCycleDetails = React.createClass({
 							<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.props.auditCycle.status) }</b></td></tr>
 							<tr><td className="text-right">Earnings Per Audit:</td><td><b>₹ { this.props.auditCycle.earnings_per_audit }</b></td></tr>
 							<tr><td className="text-right">Reimbursement upto:</td><td><b>₹ { this.props.auditCycle.reimbursement }</b></td></tr>
-							<tr><td className="text-right">Start Date:</td><td><b>{ this.props.auditCycle.start_date }</b></td></tr>
-							<tr><td className="text-right">End Date:</td><td><b>{ this.props.auditCycle.end_date }</b></td></tr>
+							<tr><td className="text-right">Start Date:</td><td><b>{ moment(this.props.auditCycle.start_date).format(momentDateFormat) }</b></td></tr>
+							<tr><td className="text-right">End Date:</td><td><b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b></td></tr>
 							<tr><td className="text-right">Description</td><td>{ detailsElement }</td></tr>
 						</tbody>
 					</table>
