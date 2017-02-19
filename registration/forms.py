@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
 from auditor.models import ProfileInfo
 from django.core.mail import send_mail
+from django.utils import timezone
 import hashlib, datetime
 import properties
 from os import urandom
@@ -61,7 +62,7 @@ class SignUpForm(UserCreationForm):
         verification = Verification()
         verification.user = user
         verification.activation_key = activation_key
-        verification.key_expires = datetime.datetime.strftime(datetime.datetime.now() + datetime.timedelta(days=2), "%Y-%m-%d %H:%M:%S")
+        verification.key_expires = timezone.now() + datetime.timedelta(days=2)
         verification.save()
 
         message = get_template('registration/verification_mail.html').render(Context({
