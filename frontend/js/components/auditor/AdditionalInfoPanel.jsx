@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { Pencil } from '../Icons.jsx';
+
 import { getHairColor, getCameraResolution } from '../../utils.js'
 import { fetchAdditionalInfo } from '../../auditor/actions/additional_info.js'
 import { Check, Cross } from '../Icons.jsx';
@@ -22,23 +24,23 @@ var AdditionalInfoPanelBase = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h3 className="panel-title">Additional Info</h3>
+					<Link to="details/additional/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link>
+					<h4 className="">Additional Info</h4>
 				</div>
-				<div className="panel-body form-horizontal">
-					<LabelValue label="Car Owned:" value={ has_car }/>
-					<LabelValue label="Weekend Audit:" value={ weekend_audit }/>
-					<LabelValue label="Hair Color:" value={ getHairColor(this.props.additionalInfo.hair_color) }/>
-					<LabelValue label="Height (cm):" value={ this.props.additionalInfo.height }/>
-					<LabelValue label="Weight (kg):" value={ this.props.additionalInfo.weight }/>
-					<LabelValue label="Preferred Distance (km):" value={ this.props.additionalInfo.distance }/>
-					<LabelValue label="Camera Owned:" value={ camera_owned }/>
-					<LabelValue label="Camera Resolution:" value={ getCameraResolution(this.props.additionalInfo.camera_resoulution) }/>
-					<LabelValue label="Laptop Owned:" value={ laptop_owned }/>
-					<LabelValue label="Smart Phone Owned:" value={ smart_phone_owned }/>
-				</div>
-				<div className="panel-footer text-right">
-					<Link to="details/additional/edit" className="btn btn-default">EDIT</Link>
-				</div>
+				<table className="table table-striped">
+					<tbody>
+					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Car Owned:</td><th>{ has_car }</th></tr>
+					<tr><td className="text-right text-muted">Weekend Audit:</td><th>{ weekend_audit }</th></tr>
+					<tr><td className="text-right text-muted">Hair Color:</td><th>{ getHairColor(this.props.additionalInfo.hair_color) }</th></tr>
+					<tr><td className="text-right text-muted">Height (cm):</td><th>{ this.props.additionalInfo.height }</th></tr>
+					<tr><td className="text-right text-muted">Weight (kg):</td><th>{ this.props.additionalInfo.weight }</th></tr>
+					<tr><td className="text-right text-muted">Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
+					<tr><td className="text-right text-muted">Camera Owned:</td><th>{ camera_owned }</th></tr>
+					<tr><td className="text-right text-muted">Camera Resolution:</td><th>{ getCameraResolution(this.props.additionalInfo.camera_resoulution) }</th></tr>
+					<tr><td className="text-right text-muted">Laptop Owned:</td><th>{ laptop_owned }</th></tr>
+					<tr><td className="text-right text-muted">Smart Phone Owned:</td><th>{ smart_phone_owned }</th></tr>
+					</tbody>
+				</table>
 			</div>
 		);
 	},

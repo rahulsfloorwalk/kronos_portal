@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { Pencil } from '../Icons.jsx';
+
 import { fetchBankInfo } from '../../auditor/actions/bank_info.js'
 import LabelValue from '../LabelValue.jsx'
 
@@ -13,18 +15,16 @@ var BankInfoPanelBase = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h3 className="panel-title">Bank Info</h3>
+					<Link to="details/bank/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link>
+					<h4 className="">Bank Info</h4>
 				</div>
-				<div className="panel-body form-horizontal">
-					<LabelValue label="Bank Name:" value={ this.props.bankInfo.bank_name }/>
-					<LabelValue label="Account Holder Name:" value={ this.props.bankInfo.account_holder_name }/>
-					<LabelValue label="Account Number:" value={ this.props.bankInfo.account_number }/>
-					<LabelValue label="IFSC Code:" value={ this.props.bankInfo.ifsc_code }/>
-					<LabelValue label="Pan Number:" value={ this.props.bankInfo.pan_number }/>
-				</div>
-				<div className="panel-footer text-right">
-					<Link to="details/bank/edit" className="btn btn-default">EDIT</Link>
-				</div>
+				<table className="table table-striped">
+					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name }</th></tr>
+					<tr><td className="text-right text-muted">Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
+					<tr><td className="text-right text-muted">Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
+					<tr><td className="text-right text-muted">IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
+					<tr><td className="text-right text-muted">Pan Number:</td><th>{ this.props.bankInfo.pan_number }</th></tr>
+				</table>
 			</div>
 		);
 	},
