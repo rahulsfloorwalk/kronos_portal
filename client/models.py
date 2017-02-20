@@ -8,6 +8,7 @@ class Client(Model):
     name = CharField(db_column='name', max_length=50, blank=False)
     email = EmailField(db_column='email', max_length=50, blank=False)
     phone = CharField(db_column='phone', max_length=15, blank=True)
+    logo_url = CharField(db_column='logo_url', max_length=512, blank=True)
 
     def __str__(self):
         return 'Client({}): {}'.format(self.id, self.name)

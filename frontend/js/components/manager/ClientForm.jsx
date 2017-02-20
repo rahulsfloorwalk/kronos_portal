@@ -48,6 +48,7 @@ var ClientForm = React.createClass({
 					<FormInput label="Client Name" maxLength="50" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
 					<FormInput label="Email Address" maxLength="50" type="email" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.props.errors.email}/>
 					<FormInput label="Phone Number" maxLength="15" type="text" value={this.state.phone} name="phone" onChange={this.inputChanged} errors={this.props.errors.phone}/>
+					<FormInput label="Logo URL" maxLength="512" type="text" value={this.state.logo_url} name="logo_url" onChange={this.inputChanged} errors={this.props.errors.logo_url}/>
 					<SaveButton/>
 				</form>
 			</Modal>

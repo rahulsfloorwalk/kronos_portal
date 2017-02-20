@@ -11,5 +11,6 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)/audit_store$', views.AuditStoreByStore.as_view(), name='audit_store_by_store'),
     url(r'store/(?P<store_id>[0-9]+)$', views.StoreById.as_view(), name='store_by_id'),
     url(r'store$', views.StoreByClient.as_view(), name='store_by_client'),
+    url(r'user$', views.ClientUserView.as_view(), name='client_user_view'),
 ], 'client_rest')
 

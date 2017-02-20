@@ -42,8 +42,31 @@ class ClientSerializer(ModelSerializer):
             'name',
             'email',
             'phone',
+            'logo_url'
         )
-        read_only_fields = ('id',)
+        read_only_fields = fields
+
+class PlainUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+        )
+        read_only_fields = fields
+
+class ClientUserSerializer(ModelSerializer):
+    user = PlainUserSerializer()
+    client = ClientSerializer()
+    class Meta:
+        model = ClientUser
+        fields = (
+            'id',
+            'full_name',
+            'client',
+            'user',
+        )
+        read_only_fields = fields
 
 class AuditCycleSerializer(ModelSerializer):
     client = ClientSerializer()

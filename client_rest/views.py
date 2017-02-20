@@ -19,7 +19,15 @@ from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 import attachment.service as attachment_service
 
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer
+
+class ClientUserView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, format=None):
+        return Response(ClientUserSerializer(request.user.clientuser).data)
 
 class AuditStoreLatest(APIView):
     permission_classes = [HasGroupPermission]

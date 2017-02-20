@@ -21,6 +21,7 @@ var ClientDetail = React.createClass({
 			return <Loading/>;
 		}
 		var editLink = `/client/${this.props.params.clientId}/edit`;
+		var clientLogo = this.props.client.logo_url ? <img style={{"padding":"10px"}} className="img-responsive" src={this.props.client.logo_url}/> : "";
 		return (
 			<div>
 				<ol className="breadcrumb">
@@ -30,6 +31,7 @@ var ClientDetail = React.createClass({
 				<div className="row">
 				<div className="col-md-4">
 				<Panel title={<span><King/> Client Info</span>} type="primary" noBody={true}>
+					{clientLogo}
 					<table className="table table-striped">
 						<tbody>
 							<tr><td className="text-right">Name</td><td><b>{ this.props.client.name }</b></td></tr>

@@ -4,20 +4,36 @@ import { Link } from 'react-router';
 import NavLink from '../../js/components/NavLink.jsx';
 import { Dashboard, Home, MapMarker, King, LogOut } from '../../js/components/Icons.jsx';
 
-var Header = React.createClass({
+import { fetchUser } from '../service/user.js';
+
+export default React.createClass({
+	getInitialState: function(){
+		return {
+			clientUser: null
+		};
+	},
+	componentDidMount: function(){
+		fetchUser().then((clientUser)=>{
+			this.setState({
+				clientUser
+			});
+		});
+	},
 	render: function(){
 		let brandStyle = {
-			height: "30px",
+			maxHeight: "80px",
 			marginLeft: "auto",
 			marginRight: "auto",
-			marginTop: "20px",
-			marginBottom: "20px",
+			marginTop: "2px",
+			marginBottom: "2px",
 		};
+		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : "/static/img/logo_3_transparent_bg_400x51.png";
+		let clientName = this.state.clientUser ? this.state.clientUser.client.name : "FloorWalk";
 		return (
 			<div className="container">
 				<div className="text-center">
 					<Link to="/">
-						<img className="" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
+						<img style={brandStyle} alt={clientName} title={clientName} src={imgUrl}/>
 					</Link>
 				</div>
 				<nav className="navbar navbar-default">
@@ -42,6 +58,5 @@ var Header = React.createClass({
 	},
 });
 
-export default Header;
 
 
