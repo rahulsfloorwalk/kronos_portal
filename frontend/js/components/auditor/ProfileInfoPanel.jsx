@@ -23,6 +23,12 @@ var ProfileInfoPanelBase = React.createClass({
 		if(!this.props.profileInfo.id){
 			return <Loading/>;
 		}
+
+		var dateOfBirth;
+		var date =  moment(this.props.profileInfo.date_of_birth);
+		if (date.isValid()){
+			dateOfBirth = date.format(momentDateFormat)
+		}
 		var auditorCity = this.props.profileInfo.city || {};
 		if( ! this.props.profileInfo.is_complete){
 			var completeWarning = (
@@ -43,7 +49,7 @@ var ProfileInfoPanelBase = React.createClass({
 					<tr><td className="text-muted text-right">Last Name:</td><th>{this.props.profileInfo.last_name}</th></tr>
 					<tr><td className="text-muted text-right">Gender:</td><th>{getGender(this.props.profileInfo.gender)}</th></tr>
 					<tr><td className="text-muted text-right">Education:</td><th>{getEducationStatus(this.props.profileInfo.education)}</th></tr>
-					<tr><td className="text-muted text-right">Date of Birth:</td><th>{moment(this.props.profileInfo.date_of_birth).format(momentDateFormat )}</th></tr>
+					<tr><td className="text-muted text-right">Date of Birth:</td><th>{dateOfBirth}</th></tr>
 					<tr><td className="text-muted text-right">Marital Status:</td><th>{getMaritalStatus(this.props.profileInfo.marital_status)}</th></tr>
 					<tr><td className="text-muted text-right">Address:</td><th>{this.props.profileInfo.address}</th></tr>
 					<tr><td className="text-muted text-right">Mobile Number:</td><th>{this.props.profileInfo.mobile_number}</th></tr>
