@@ -5,6 +5,14 @@ export function findAttachmentsByAuditStore(auditStoreId){
 	return $.get( url.api_base_path + `manager/audit_store/${auditStoreId}/attachment`);
 };
 
+export function deleteAttachment(attachmentId){
+	return $.ajax({
+		url: url.api_base_path + `manager/attachment/${attachmentId}`,
+		type: "DELETE"
+	});
+};
+
+
 export function uploadFileForAuditStore(auditStoreId, file){
 	var mainPromise = $.Deferred();
 	var req_url = url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`;

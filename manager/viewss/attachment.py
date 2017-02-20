@@ -20,7 +20,6 @@ class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
             'GET': [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
         }
 
     def get(self, request, audit_store_id, format=None):
@@ -29,3 +28,20 @@ class AuditStoreAttachmentView(APIView):
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound
+
+class AttachmentIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'DELETE': [GROUP_NAME_MANAGER],
+        }
+
+    def delete(self, request, attachment_id):
+        try:
+            attachment_service.delete(attachment_id)
+            return Response()
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })

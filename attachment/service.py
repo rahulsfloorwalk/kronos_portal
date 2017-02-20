@@ -144,5 +144,19 @@ def delete_for_user(attachment_id, user_id):
             attachment.save()
         else:
             raise AppLogicError("cannot delete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+def delete(attachment_id):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            attachment.status = Attachment.DELETED
+            attachment.save()
+        else:
+            raise AppLogicError("cannot delete attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
         raise ObjectNotFound from e

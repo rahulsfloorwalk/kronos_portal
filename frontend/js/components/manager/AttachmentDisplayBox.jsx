@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { findAttachmentsByAuditStore } from '../../manager/service/attachment.js';
+import { findAttachmentsByAuditStore, deleteAttachment } from '../../manager/service/attachment.js';
 
 import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
@@ -61,53 +61,75 @@ var AttachmentDisplayBox = React.createClass({
 			selectedAttachment: attachment
 		});
 	},
+	deleteButtonClicked: function(){
+		if( this.state.selectedAttachment){
+			deleteAttachment(this.state.selectedAttachment.id).then(() => {
+				this.setState({
+					selectedAttachment: null,
+					attachments: this.state.attachments.filter((a) => a.id !== this.state.selectedAttachment.id)
+				});
+			});
+		}
+	},
 	render: function(){
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
 
-		var uploadButton;
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
 			attachmentRows.push(<AttachmentItem attachment={a} key={a.id} onSelect={this.attachmentSelected}/>);
 		}
 
 		let attachmentElement;
+		if( this.props.auditStore.status === "SUBMITTED"){
+			var deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.deleteButtonClicked}><Cross/> Delete</button>);
+		}
 		if(this.state.selectedAttachment){
 			switch(this.state.selectedAttachment.proof_type){
 				case "AUDIO":
 					attachmentElement = (
-						<div className="text-center">
-							<br/>
-							<br/>
-							<p><big>{this.state.selectedAttachment.file_name}</big></p>
-							<audio controls>
-								<source src={this.state.selectedAttachment.direct_url} 
-									type={this.state.selectedAttachment.mime_type}/>
-							</audio>
+						<div>
+							<h4 className="page-header">
+								{deleteButton}
+								<Record/> {this.state.selectedAttachment.file_name}
+							</h4>
+							<div className="text-center">
+								<audio controls>
+									<source src={this.state.selectedAttachment.direct_url} 
+										type={this.state.selectedAttachment.mime_type}/>
+								</audio>
+							</div>
 						</div>
 					);
 					break;
 				case "PHOTO":
 					let imageStyle = {"maxWidth": "100%"}
 					attachmentElement = (
-						<div className="text-center">
-							<br/>
-							<p><big>{this.state.selectedAttachment.file_name}</big></p>
+						<div className="">
+							<h4 className="page-header">
+								{deleteButton}
+								<Picture/> {this.state.selectedAttachment.file_name}
+							</h4>
+							<div className="text-center">
 							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
+							</div>
 						</div>
 					);
 					break;
 				case "VIDEO":
 				case "OTHER":
 					attachmentElement = (
-						<div className="text-center">
-							<br/>
-							<br/>
-							<p><big>{this.state.selectedAttachment.file_name}</big></p>
-							<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
-								<DownloadAlt/> Download File
-							</a>
+						<div>
+							<h4 className="page-header">
+								{deleteButton}
+								<File/> {this.state.selectedAttachment.file_name}
+							</h4>
+							<div className="text-center">
+								<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
+									<DownloadAlt/> Download File
+								</a>
+							</div>
 						</div>
 					);
 					break;
@@ -119,12 +141,10 @@ var AttachmentDisplayBox = React.createClass({
 		} else {
 
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					<h4 className="panel-title">
-						<Paperclip/> Attachments
-					</h4>
-				</div>
+			<div>
+				<h3 className="page-header">
+					<Paperclip/> Attachments
+				</h3>
 				<div className="row">
 					<div className="col-md-4">
 						{attachmentRows}
@@ -132,14 +152,6 @@ var AttachmentDisplayBox = React.createClass({
 					<div className="col-md-8">
 						{attachmentElement}
 					</div>
-				</div>
-				<div className="panel-footer text-right">
-					<input type="file" 
-						onChange={this.uploadFile} 
-						disabled={this.state.uploading}
-						ref={(input)=>this.uploadInput = input}
-						style={{"display":"none"}}/>
-						{this.state.uploadMessage}&nbsp;{this.state.progress}&nbsp;{uploadButton}
 				</div>
 			</div>
 		);

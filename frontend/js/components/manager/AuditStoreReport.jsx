@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Plus, Cross, Pencil } from '../Icons.jsx';
+import { Plus, Cross, Pencil, Tasks } from '../Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
@@ -281,6 +281,7 @@ var AuditStoreReport = React.createClass({
 		}
 		return (
 			<div>
+				<h3 className="page-header"><Tasks/> Questionnaire</h3>
 				{sectionRows}
 				{this.props.children}
 			</div>
