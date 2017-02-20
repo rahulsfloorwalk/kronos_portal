@@ -8,6 +8,7 @@ from django.core.exceptions import ValidationError
 from auditor.models import ProfileInfo
 from django.core.mail import send_mail
 from django.utils import timezone
+from django.db.models import Q
 import hashlib, datetime
 import properties
 from os import urandom
@@ -27,7 +28,7 @@ class SignUpForm(UserCreationForm):
 
     def is_valid(self):
         valid = super(SignUpForm, self).is_valid() 
-        if User.objects.filter(email=self.data["username"]).exists():
+        if User.objects.filter(Q(email__iexact=self.data["username"]) | Q(username__iexact=self.data["username"])).exists():
             self.add_error("username", "a user with email {} already exists".format(self.data["username"]))
             valid = False
 
