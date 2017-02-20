@@ -175,4 +175,32 @@ SERVER_EMAIL = properties.email_settings["SERVER_EMAIL"]
 EMAIL_USE_TLS = True
 
 
+LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+                'console':{
+                        'level': properties.log_level,
+                        'class': 'logging.StreamHandler',
+                },
+                'logfile':{
+                        'level': properties.log_level,
+                        'class': 'logging.FileHandler',
+                        'filename': properties.django_log_filename
+                },
+        },
+        'loggers': {
+            #'django': {
+            #    'level': properties.log_level,
+            #    'filters': [],
+            #    'handlers': properties.log_handlers,
+            #    'propagate': True
+            #},
+            '': {
+                'level': properties.log_level,
+                'handlers': properties.log_handlers,
+            },
+         },
+}
+
 AWS = properties.AWS

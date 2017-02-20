@@ -120,7 +120,6 @@ class AuditCycleDeSerializer(ModelSerializer):
         read_only_fields = ('id',)
 
     def deserialize(self):
-        print("self.context", self.context)
         if 'id' in self.context and self.context.get('id') is not None:
             audit_cycle = AuditCycle.objects.get(id=self.context.get('id'))
         else:

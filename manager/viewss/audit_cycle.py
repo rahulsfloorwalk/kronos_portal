@@ -58,7 +58,6 @@ class AuditCycleIdView(APIView):
             return Http404
 
     def post(self, request, audit_cycle_id):
-        print("found ",audit_cycle_id)
         audit_cycle_ds = AuditCycleDeSerializer(data=request.data, context={'id': audit_cycle_id})
         audit_cycle_ds.is_valid(raise_exception=True)
         audit_cycle = audit_cycle_ds.deserialize()
