@@ -107,3 +107,15 @@ def fiat_assign(audit_id, email, audit_date):
 
     audit_store.save()
     return audit_store
+
+def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):
+    if audit_cycle_type is None:
+        try:
+            return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')[0]
+        except IndexError as e:
+            raise ObjectNotFound('Audit cycle not available')
+    else:
+        try:
+            return AuditCycle.objects.filter(client_id=client_id, type=audit_cycle_type).order_by('-end_date')[0]
+        except IndexError as e:
+            raise ObjectNotFound('Audit cycle not available')

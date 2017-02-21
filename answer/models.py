@@ -23,7 +23,7 @@ class Answer(Model):
 class ReportSection(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
-    audit_store = ForeignKey('audit_store.AuditStore', db_column='audit_store_id', blank=False)
+    audit_store = ForeignKey('audit_store.AuditStore', related_name='report_sections', db_column='audit_store_id', blank=False)
     section = ForeignKey('questionnaire.Section', db_column='section_id', blank=False)
     pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
     auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)

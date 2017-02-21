@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
 
@@ -184,3 +184,11 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
         )
         read_only_fields = fields
+
+class ReportAggregationSerializer(Serializer):
+    fields = (
+        'headings',
+        'type',
+        'rows',
+    )
+    read_only_fields = fields
