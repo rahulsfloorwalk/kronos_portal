@@ -26,11 +26,17 @@ var ClientDetail = React.createClass({
 			<div>
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
-					<li className="active">{this.props.client.name}</li>
+					<li className="active"><King/> {this.props.client.name}</li>
 				</ol>
 				<div className="row">
 				<div className="col-md-4">
-				<Panel title={<span><King/> Client Info</span>} type="primary" noBody={true}>
+				<div className="panel panel-primary">
+					<div className="panel-heading">
+						<Link to={editLink} className="btn btn-default btn-sm pull-right"><Pencil/></Link>
+						<h4>
+							<King/> Client Info
+						</h4>
+					</div>
 					{clientLogo}
 					<table className="table table-striped">
 						<tbody>
@@ -39,10 +45,7 @@ var ClientDetail = React.createClass({
 							<tr><td className="text-right">Phone</td><td><b>{ this.props.client.phone }</b></td></tr>
 						</tbody>
 					</table>
-					<div className="panel-footer text-right">
-						<Link to={editLink} className="btn btn-default"><Pencil/></Link>
-					</div>
-				</Panel>
+				</div>
 				</div>
 				<div className="col-md-8">
 				<ul className="nav nav-tabs">

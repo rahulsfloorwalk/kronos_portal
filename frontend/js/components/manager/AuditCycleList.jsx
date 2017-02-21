@@ -51,6 +51,7 @@ var AuditCycleList = React.createClass({
 							<th>End Date</th>
 							<th>Audit Type</th>
 							<th>Audit Status</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>

@@ -46,6 +46,7 @@ var AuditStoreList = React.createClass({
               <th>Auditor Name</th>
               <th>Audit Date</th>
               <th>Report Status</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

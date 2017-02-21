@@ -71,6 +71,7 @@ var AuditorList = React.createClass({
 							<th>Gender</th>
 							<th>Mobile Number</th>
 							<th>City</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>

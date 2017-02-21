@@ -8,7 +8,7 @@ import { momentDateFormat }  from '../../../config.js';
 import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, unSubmitAuditStore } from '../../manager/actions/audit_store.js';
 
 import ExpandableDetails from '../ExpandableDetails.jsx';
-import { File } from '../Icons.jsx';
+import { Retweet, King, File } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
@@ -54,9 +54,9 @@ var AuditStoreDetails = React.createClass({
 			<div>
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
-					<li><Link to={`/client/${this.props.auditStore.audit.audit_cycle.client.id}`}>{this.props.auditStore.audit.audit_cycle.client.name}</Link></li>
-					<li><Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`}>Cycle: <b>{this.props.auditStore.audit.audit_cycle.name}</b></Link></li>
-					<li className="active">Report: <b>{this.props.auditStore.audit.store.name}</b></li>
+					<li><Link to={`/client/${this.props.auditStore.audit.audit_cycle.client.id}`}><King/> {this.props.auditStore.audit.audit_cycle.client.name}</Link></li>
+					<li><Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.props.auditStore.audit.audit_cycle.name}</Link></li>
+					<li className="active"><File/> {this.props.auditStore.audit.store.name}</li>
 				</ol>
 				<h2 className="page-header">
 					<File/> Audit Report

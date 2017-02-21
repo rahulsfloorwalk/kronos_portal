@@ -44,6 +44,7 @@ var ClientUserList = React.createClass({
 							<th>Full Name</th>
 							<th>Email Address</th>
 							<th>Active</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>

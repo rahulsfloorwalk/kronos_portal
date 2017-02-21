@@ -34,6 +34,7 @@ var LocationList = React.createClass({
 						<tr>
 							<th>Name</th>
 							<th>Pincode</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>

@@ -8,7 +8,7 @@ import { momentDateFormat }  from '../../../config.js';
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 
 import ExpandableDetails from '../ExpandableDetails.jsx';
-import { Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
+import { King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -50,12 +50,18 @@ var AuditCycleDetails = React.createClass({
 			<div>
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
-					<li><Link to={`/client/${this.props.auditCycle.client.id}/audit_cycle`}>{this.props.auditCycle.client.name}</Link></li>
-					<li className="active">Cycle: <b>{this.props.auditCycle.name}</b></li>
+					<li><Link to={`/client/${this.props.auditCycle.client.id}/audit_cycle`}><King/> {this.props.auditCycle.client.name}</Link></li>
+					<li className="active"><Retweet/> {this.props.auditCycle.name}</li>
 				</ol>
 				<div className="row">
 				<div className="col-md-4">
-				<Panel title={<span><Retweet/> Audit Cycle Details</span>} type="primary" noBody={true}>
+				<div className="panel panel-primary">
+					<div className="panel-heading">
+						<Link to={editAuditCycleLink} className="btn btn-default btn-sm pull-right">
+							<Pencil/>
+						</Link>
+						<h4><Retweet/> Audit Cycle Details</h4>
+					</div>
 					<table className="table table-striped">
 						<tbody>
 							<tr><td className="text-right">Name:</td><td><b>{ this.props.auditCycle.name }</b></td></tr>
@@ -69,10 +75,7 @@ var AuditCycleDetails = React.createClass({
 							<tr><td className="text-right">Description</td><td>{ detailsElement }</td></tr>
 						</tbody>
 					</table>
-					<div className="panel-footer text-right">
-						<Link to={editAuditCycleLink} className="btn btn-default"><Pencil/></Link>
-					</div>
-				</Panel>
+				</div>
 				</div>
 				<div className="col-md-8">
 				<ul className="nav nav-tabs">
