@@ -11,7 +11,7 @@ var StoreRow = React.createClass({
 			<tr>
 				<td>{this.props.store.name}</td>
 				<td>{this.props.store.address}</td>
-				<td>{this.props.store.location.name}</td>
+				<td>{this.props.store.location.name}, {this.props.store.location.city.name}</td>
 				<td>
 					<Link to={`/store/${this.props.store.id}/audit_store`} className="btn btn-default pull-right">View</Link>
 				</td>
@@ -48,8 +48,8 @@ export default React.createClass({
 						<thead>
 							<tr>
 								<th>Name</th>
-								<th>Email</th>
-								<th>Phone</th>
+								<th>Address</th>
+								<th>Location</th>
 							</tr>
 						</thead>
 						<tbody>

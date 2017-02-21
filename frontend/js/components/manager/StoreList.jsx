@@ -12,7 +12,7 @@ var StoreRow = React.createClass({
 			<tr>
 				<td>{this.props.store.name}</td>
 				<td>{this.props.store.address}</td>
-				<td>{this.props.store.location.name}</td>
+				<td>{this.props.store.location.name}, {this.props.store.location.city.name}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
 				</td>
@@ -41,8 +41,8 @@ var StoreList = React.createClass({
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>Email</th>
-							<th>Phone</th>
+							<th>Address</th>
+							<th>Location</th>
 							<th></th>
 						</tr>
 					</thead>
