@@ -1,7 +1,7 @@
 from django.conf import settings
 
 from rest_framework import routers, viewsets
-from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
+from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField, DateField
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
 
@@ -462,3 +462,9 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
         )
         read_only_fields = fields
+
+
+class AuditFiatAssignDeSerializer(Serializer):
+    audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
+    email = EmailField()
+    audit_date = DateField()

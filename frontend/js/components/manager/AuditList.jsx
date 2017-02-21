@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
-import { Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
+import { HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
@@ -91,8 +91,9 @@ var AuditRow = React.createClass({
         <td>{this.props.audit.count}</td>
         <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
         <td className="text-right">
-          <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`}><Pencil/></Link>
-          <button className="btn btn-default" onClick={this.viewButtonClicked}>{buttonText}</button>
+          <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign"><HandRight/></Link>
+          <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`} title="Edit Audit"><Pencil/></Link>
+          <button className="btn btn-default" onClick={this.viewButtonClicked} title="Expand Applications">{buttonText}</button>
         </td>
       </tr>
 	{row2}

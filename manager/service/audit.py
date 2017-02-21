@@ -1,3 +1,4 @@
+from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User
 
@@ -5,6 +6,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication
 from rest_framework.exceptions import ValidationError
 from audit.models import AuditCycle, Audit
+from audit_store.models import AuditStore
 from auditor.models import AuditApplication
 
 def save(audit):
@@ -79,3 +81,29 @@ def cancel( audit_id, profileinfo_id):
         return application
     else:
         raise AppLogicError("you cannot cancel this application now")
+
+
+@atomic
+def fiat_assign(audit_id, email, audit_date):
+    try:
+        user = User.objects.get(email__iexact=email)
+        audit = Audit.objects.get(pk=audit_id)
+        audit_cycle = audit.audit_cycle
+    except (Audit.DoesNotExist, AuditCycle.DoesNotExist) as e:
+        raise ObjectNotFound from e
+    except (User.DoesNotExist) as e:
+        raise AppLogicError("email is not valid") from e
+
+    if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
+        raise AppLogicError("audit date is out of range")
+    if audit_cycle.status == AuditCycle.ARCHIVED:
+        raise AppLogicError("audit_cycle is archived")
+
+    audit_store = AuditStore()
+    audit_store.audit_id = audit.id
+    audit_store.audit_date = audit_date
+    audit_store.status = AuditStore.ASSIGNED
+    audit_store.user_id = user.id
+
+    audit_store.save()
+    return audit_store

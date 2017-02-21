@@ -46,6 +46,10 @@ export const Bookmark	= () => <span className="glyphicon glyphicon-menu-bookmark
 export const MapMarker	= () => <span className="glyphicon glyphicon-map-marker"></span>;
 export const ChevronRight = () => <span className="glyphicon glyphicon-chevron-right"></span>;
 export const ChevronDown = () => <span className="glyphicon glyphicon-chevron-down"></span>;
+export const HandRight = () => <span className="glyphicon glyphicon-hand-right"></span>;
+export const HandLeft = () => <span className="glyphicon glyphicon-hand-left"></span>;
+export const HandUp = () => <span className="glyphicon glyphicon-hand-up"></span>;
+export const HandDown = () => <span className="glyphicon glyphicon-hand-down"></span>;
 export const Record	= () => <span className="glyphicon glyphicon-record"></span>;
 export const Picture	= () => <span className="glyphicon glyphicon-picture"></span>;
 export const Video	= () => <span className="glyphicon glyphicon-video"></span>;

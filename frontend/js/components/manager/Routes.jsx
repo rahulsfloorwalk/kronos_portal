@@ -44,6 +44,8 @@ import AuditStoreReport from './AuditStoreReport.jsx';
 import AuditDetails from './AuditDetails.jsx';
 import AuditLocationForm from './AuditLocationForm.jsx';
 
+import AuditFiatAssignForm from './AuditFiatAssignForm.jsx';
+
 import ApplicationApproveForm from './ApplicationApproveForm.jsx';
 import ApplicationRejectForm from './ApplicationRejectForm.jsx';
 import ApplicationCompleteForm from './ApplicationCompleteForm.jsx';
@@ -89,6 +91,7 @@ const Routes = () => (
 			<Route path="audit" components={AuditList}>
 				<Route path="add" component={AuditForm}/>
 				<Route path=":auditId/edit" component={AuditForm}/>
+				<Route path=":auditId/application/fiat" component={AuditFiatAssignForm}/>
 				<Route path=":auditId/application/:applicationId/approve" component={ApplicationApproveForm}/>
 				<Route path=":auditId/application/:applicationId/reject" component={ApplicationRejectForm}/>
 			</Route>

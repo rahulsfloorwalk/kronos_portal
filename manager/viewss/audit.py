@@ -15,7 +15,7 @@ from registration.mixins import HasGroupPermission
 
 from audit.models import Audit
 from ..service import audit as audit_service
-from ..serializers import AuditSerializer, AuditDeSerializer
+from ..serializers import AuditSerializer, AuditDeSerializer, AuditFiatAssignDeSerializer, AuditStoreSerializer
 
 class AuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -76,6 +76,30 @@ class AuditView(APIView):
             audit = audit_ds.deserialize()
             audit_service.save(audit)
             return Response(AuditSerializer(audit).data)
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AuditFiatAssignView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, audit_id):
+        try:
+            request.data["audit"] = audit_id
+            audit_f_assign_ds = AuditFiatAssignDeSerializer(data=request.data)
+            audit_f_assign_ds.is_valid(raise_exception=True)
+            audit_store = audit_service.fiat_assign(
+                    audit_f_assign_ds.validated_data["audit"].id,
+                    audit_f_assign_ds.validated_data["email"],
+                    audit_f_assign_ds.validated_data["audit_date"],
+                )
+            return Response(AuditStoreSerializer(audit_store).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
