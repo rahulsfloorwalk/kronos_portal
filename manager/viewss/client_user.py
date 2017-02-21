@@ -84,6 +84,10 @@ class ClientUserIdView(APIView):
             return Response(ClientUserSerializer(saved_client_user).data)
         except ObjectNotFound as e :
             raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
     def delete(self, request, client_user_id):
         try:
