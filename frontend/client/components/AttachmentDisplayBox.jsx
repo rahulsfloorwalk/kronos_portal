@@ -106,6 +106,8 @@ export default React.createClass({
 					);
 					break;
 			}
+		} else {
+			attachmentElement = (<Jumbotron heading={<div><br/><br/><br/><Paperclip/></div>} para={<span>select an attachment from the list<br/><br/><br/><br/></span>}/>);
 		}
 
 		if( attachmentRows.length === 0){
