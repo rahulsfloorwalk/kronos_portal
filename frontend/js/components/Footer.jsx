@@ -6,7 +6,7 @@ var Footer = React.createClass({
 			height:"30px"
 		};
 		return (
-			<footer className="col-xs-12">
+			<div className="col-xs-12">
 				<hr/>
 				<p className="text-center">
 					<img style={brandStyle} src="/static/img/logo_3_500x100.png"/>
@@ -20,7 +20,7 @@ var Footer = React.createClass({
 					<a href="tel:+91-8496003316">+91-8496003316</a> |
 					<a href="https://twitter.com/FloorWalkIndia">@FloorWalkIndia</a>
 				</p>
-			</footer>
+			</div>
 		);
 	},
 });

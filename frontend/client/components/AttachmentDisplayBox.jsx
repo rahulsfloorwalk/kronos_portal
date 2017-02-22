@@ -115,11 +115,11 @@ export default React.createClass({
 		} else {
 
 		return (
-				<div className="row">
+				<div className="row hidden-print">
 					<div className="col-md-4">
 						{attachmentRows}
 					</div>
-					<div className="col-md-8">
+					<div className="col-md-8 hidden-print">
 						{attachmentElement}
 					</div>
 				</div>

@@ -105,7 +105,7 @@ export default React.createClass({
 		}
 		return (
 			<div>
-				<h3 className="page-header">
+				<h3 className="page-header hidden-print">
 					<Paperclip/> Attachments
 				</h3>
 				<AttachmentDisplayBox auditStoreId={this.props.auditStoreId}/>

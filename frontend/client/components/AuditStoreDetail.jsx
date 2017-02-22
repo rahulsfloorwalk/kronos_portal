@@ -8,7 +8,7 @@ import { fetchAuditStore } from '../service/audit_store.js';
 import { fetchSections } from '../service/section.js';
 import { fetchReportSections } from '../service/report_section.js';
 
-import { File } from '../../js/components/Icons.jsx';
+import { File, Print } from '../../js/components/Icons.jsx';
 import Loading from '../../js/components/Loading.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
 
@@ -49,12 +49,15 @@ export default React.createClass({
 
 		return (
 			<div>
-				<ol className="breadcrumb">
+				<ol className="breadcrumb hidden-print">
 					<li><Link to="/store">Stores</Link></li>
 					<li><Link to={`/store/${this.state.auditStore.audit.store.id}/audit_store`}>{this.state.auditStore.audit.store.name}</Link></li>
 					<li className="active">Audit: <b>{moment(this.state.auditStore.audit_date).format(momentDateFormat)}</b></li>
 				</ol>
 				<h2 className="page-header">
+					<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
+						<Print/> Print Report
+					</button> 
 					<File/> Audit Report
 				</h2>
 				<div className="row">
