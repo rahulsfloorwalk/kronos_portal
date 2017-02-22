@@ -12,20 +12,6 @@ import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 
-var AuditStoreRow = React.createClass({
-	render: function(){
-		return (
-			<tr>
-				<td>{this.props.auditStore.audit.store.name}</td>
-				<td>{`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}</td>
-				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
-				<td>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</td>
-				<td><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></td>
-			</tr>
-		);
-	},
-});
-
 export default React.createClass({
 	getInitialState: function(){
 		return {
@@ -73,7 +59,7 @@ export default React.createClass({
 			trs.push(<tr key={"row-"+row[0]} 
 					title="Click to view report"
 					style={{"cursor":"pointer"}}
-					onClick={()=>hashHistory.push(`audit_store/${row[0]}/section`)}
+					onClick={()=>hashHistory.push(`audit_store/${row[0]}`)}
 				>{tds}</tr>);
 		}
 		var headings = [];

@@ -5,23 +5,40 @@ import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
 
 import { fetchAuditStore } from '../service/audit_store.js';
+import { fetchSections } from '../service/section.js';
+import { fetchReportSections } from '../service/report_section.js';
 
 import { File } from '../../js/components/Icons.jsx';
-import Panel from '../../js/components/Panel.jsx';
 import Loading from '../../js/components/Loading.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
-import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
+
+import SectionList from './SectionList.jsx';
+import SectionTotalsBox from './SectionTotalsBox.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../js/utils.js';
 
 export default React.createClass({
 	getInitialState: function(){
-		return {};
+		return {
+			auditStore: null,
+			sections: [],
+			reportSections: [],
+		};
 	},
 	componentDidMount: function(){
 		fetchAuditStore(this.props.params.auditStoreId).then((auditStore) => {
 			this.setState({
 				auditStore
+			});
+		});
+		fetchSections(this.props.params.auditStoreId).then((sections) => {
+			this.setState({
+				sections
+			});
+		});
+		fetchReportSections(this.props.params.auditStoreId).then((reportSections) => {
+			this.setState({
+				reportSections
 			});
 		});
 	},
@@ -42,12 +59,16 @@ export default React.createClass({
 				</h2>
 				<div className="row">
 				<div className="col-md-6">
-					<div className="panel panel-default">
+					<div className="panel panel-primary">
 						<div className="panel-heading">
-							<h4 className="panel-title"><b>{this.state.auditStore.audit.audit_cycle.client.name}</b></h4>
+							<h4 className="panel-title"><File/> Audit Report</h4>
 						</div>
 						<table className="table table-striped">
 							<tbody>
+								<tr>
+									<td className="text-right">Name:</td>
+									<th>{this.state.auditStore.audit.store.name}</th>
+								</tr>
 								<tr>
 									<td className="text-right">Type:</td>
 									<th>{getAuditType(this.state.auditStore.audit.audit_cycle.type)}</th>
@@ -68,8 +89,11 @@ export default React.createClass({
 						</table>
 					</div>
 				</div>
+				<div className="col-md-6">
+					<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 				</div>
-				{this.props.children}
+				</div>
+				<SectionList auditStoreId={this.props.params.auditStoreId} sections={this.state.sections} reportSections={this.state.reportSections}/>
 			</div>
 		);
 	},

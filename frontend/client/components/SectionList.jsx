@@ -7,11 +7,7 @@ import { Paperclip, Tasks, Plus, Cross, Pencil } from '../../js/components/Icons
 
 import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
 
-import { orderKeys } from '../../js/react_utils.js';
-
-import { fetchSections } from '../service/section.js';
 import { fetchAnswers } from '../service/answer.js';
-import { fetchReportSections } from '../service/report_section.js';
 
 var QuestionRow = React.createClass({
 	render: function(){
@@ -88,31 +84,20 @@ var Section = React.createClass({
 export default React.createClass({
 	getInitialState: function(){
 		return {
-			sections: [],
 			answers: []
 		};
 	},
 	componentDidMount: function() {
-		fetchSections(this.props.params.auditStoreId).then((sections) => {
-			this.setState({
-				sections
-			});
-		});
-		fetchAnswers(this.props.params.auditStoreId).then((answers) => {
+		fetchAnswers(this.props.auditStoreId).then((answers) => {
 			this.setState({
 				answers
-			});
-		});
-		fetchReportSections(this.props.params.auditStoreId).then((reportSections) => {
-			this.setState({
-				reportSections
 			});
 		});
 	},
 	render: function(){
 		var sectionRows = [];
-		for(var s of this.state.sections) {
-			let reportSection = this.state.reportSections.filter((rs) => rs.section === s.id)[0];
+		for(var s of this.props.sections) {
+			let reportSection = this.props.reportSections.filter((rs) => rs.section === s.id)[0];
 			sectionRows.push(<Section section={s} answers={this.state.answers} reportSection={reportSection} key={s.id}/>);
 		}
 		if( sectionRows.length === 0){
@@ -123,7 +108,7 @@ export default React.createClass({
 				<h3 className="page-header">
 					<Paperclip/> Attachments
 				</h3>
-				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
+				<AttachmentDisplayBox auditStoreId={this.props.auditStoreId}/>
 				<h3 className="page-header">
 					<Tasks/> Questionnaire
 				</h3>

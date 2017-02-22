@@ -21,9 +21,7 @@ const Routes = () => (
 		<Route path="/store/:storeId" component={StoreDetail}>
 			<Route path="audit_store" component={AuditStoreList}/>
 		</Route>
-		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}>
-			<Route path="section" component={SectionList}/>
-		</Route>
+		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
 	</Route>
     </Router>
 );

@@ -21,7 +21,7 @@ var AuditStoreRow = React.createClass({
 				<td>{`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}</td>
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				<td>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</td>
-				<td><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></td>
+				<td><Link to={`/audit_store/${this.props.auditStore.id}`} className="btn btn-default">View</Link></td>
 			</tr>
 		);
 	},
