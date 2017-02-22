@@ -21,7 +21,6 @@ from answer.service import report_section as report_section_service
 import attachment.service as attachment_service
 
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer
-from .serializers import ReportAggregationSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -46,10 +45,12 @@ class AuditCycleAggregate(APIView):
         'GET' : [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
-        audit_cycle_type = request.GET.get('type', None)
-        aggregations = audit_cycle_aggregation_service.get_audit_cycle_comparison(request.user.clientuser.client.id, audit_cycle_type)
-        return Response(aggregations)
-
+        try:
+            audit_cycle_type = request.GET.get('type', None)
+            aggregations = audit_cycle_aggregation_service.get_audit_cycle_comparison(request.user.clientuser.client.id, audit_cycle_type)
+            return Response(aggregations)
+        except ObjectNotFound as e:
+            raise NotFound from e
 
 
 class StoreByClient(APIView):

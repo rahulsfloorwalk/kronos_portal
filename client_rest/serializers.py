@@ -185,10 +185,3 @@ class AttachmentSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class ReportAggregationSerializer(Serializer):
-    fields = (
-        'headings',
-        'type',
-        'rows',
-    )
-    read_only_fields = fields

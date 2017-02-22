@@ -11,6 +11,7 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
     data = {}
     store_names = []
     section_names = []
+    section_max_marks = []
     rows = []
 
     audit_cycle = audit_service.get_latest_audit_cycle_for_client(client_id, audit_cycle_type)
@@ -18,18 +19,30 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
     sections = audit_cycle.sections.all()
     for audit in audits:
         store = audit.store
-        audit_stores = audit.audit_stores.all()
+        audit_stores = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by("-audit_date")
         for audit_store in audit_stores:
             row = []
-            if audit_store.status == AuditStore.COMPLETED:
-                row.append(store.location.name)
-                report_sections = audit_store.report_sections.all()
-                for report_section in report_sections:
+            row.append(audit_store.id)
+            row.append(store.location.name)
+            row.append(store.location.city.name)
+            row.append(audit_store.audit_date)
+            report_sections = audit_store.report_sections.all()
+            for report_section in report_sections:
+                if report_section.section.max_marks() != 0:
                     row.append(report_section.marks_obtained())
-                rows.append(row)
+            rows.append(row)
+    section_names.append("Store")
+    section_names.append("City")
+    section_names.append("Audit Date")
+    section_max_marks.append("")
+    section_max_marks.append("")
+    section_max_marks.append("Max Marks:")
     for section in sections:
-        section_names.append(section.name)
+        if section.max_marks() != 0:
+            section_names.append(section.name)
+            section_max_marks.append(section.max_marks())
     data['headings'] = section_names
-    data['type'] = audit_cycle_type
+    data['section_max_marks'] = section_max_marks
+    data['type'] = audit_cycle.type
     data['rows'] = rows
     return data
