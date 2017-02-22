@@ -62,7 +62,12 @@ export default React.createClass({
 					} else if( parseFloat(row[i]) <= parseFloat(this.state.report.section_max_marks[i-1])){
 						classes = "success";
 					}
-					tds.push(<td className={"text-right " + classes} key={ row[0] + "-" + i }>{row[i]}</td>);
+
+					let cell = row[i];
+					if( parseInt(i) === row.length - 1){
+						cell += "%";
+					}
+					tds.push(<td className={"text-right " + classes} key={ row[0] + "-" + i }>{cell}</td>);
 				} 
 			}
 			trs.push(<tr key={"row-"+row[0]} 

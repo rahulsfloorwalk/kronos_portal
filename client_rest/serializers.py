@@ -115,6 +115,7 @@ class AuditStoreSerializer(ModelSerializer):
             'id',
             'audit_date',
             'audit',
+            'percentage'
         )
         read_only_fields = fields
 

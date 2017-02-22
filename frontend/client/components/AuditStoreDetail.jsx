@@ -60,6 +60,10 @@ export default React.createClass({
 									<td className="text-right">Audit Date:</td>
 									<th>{moment(this.state.auditStore.audit_date).format(momentDateFormat)}</th>
 								</tr>
+								<tr>
+									<td className="text-right">Total Score:</td>
+									<th>{this.state.auditStore.percentage} %</th>
+								</tr>
 							</tbody>
 						</table>
 					</div>

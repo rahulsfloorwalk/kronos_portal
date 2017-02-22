@@ -28,3 +28,9 @@ class AuditStore(Model):
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id')
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
+
+    def marks_obtained(self):
+        return sum(rs.marks_obtained() for rs in self.report_sections.all())
+
+    def percentage(self):
+        return int(self.marks_obtained() * 100 / self.audit.audit_cycle.max_marks())

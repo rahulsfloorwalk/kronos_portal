@@ -30,7 +30,9 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
             for report_section in report_sections:
                 if report_section.section.max_marks() != 0:
                     row.append(report_section.marks_obtained())
+            row.append(audit_store.percentage())
             rows.append(row)
+
     section_names.append("Store")
     section_names.append("City")
     section_names.append("Audit Date")
@@ -41,6 +43,9 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
         if section.max_marks() != 0:
             section_names.append(section.name)
             section_max_marks.append(section.max_marks())
+    section_names.append("Percentage")
+    section_max_marks.append("100%")
+
     data['headings'] = section_names
     data['section_max_marks'] = section_max_marks
     data['type'] = audit_cycle.type

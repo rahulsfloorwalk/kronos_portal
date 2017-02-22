@@ -41,6 +41,9 @@ class AuditCycle(Model):
     description = CharField(db_column='description', max_length=4096, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=CASCADE)
 
+    def max_marks(self):
+        return sum(s.max_marks() for s in self.sections.all())
+
 #    def audit_count(self):
 #        count = 0;
 #        for al in self.audits.all():
