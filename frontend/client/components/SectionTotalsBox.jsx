@@ -13,20 +13,24 @@ export default React.createClass({
 			var reportSection = this.props.reportSections.filter((rs)=>rs.section === s.id)[0];
 
 			var classes = "";
-			if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 4){
-				classes = "danger";
-			} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 2){
-				classes = "warning";
-			} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) * 3/4){
-				classes = "info";
-			} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks)){
-				classes = "success";
+			var marks_obtained = "";
+			if( reportSection){
+				marks_obtained = reportSection.marks_obtained;
+				if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 4){
+					classes = "danger";
+				} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 2){
+					classes = "warning";
+				} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) * 3/4){
+					classes = "info";
+				} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks)){
+					classes = "success";
+				}
 			}
 
 			rows.push(
 				<tr key={s.id} className={classes}>
 					<td><b>{s.name}</b></td>
-					<td className="text-right">{reportSection.marks_obtained}</td>
+					<td className="text-right">{marks_obtained}</td>
 					<td className="text-right">{s.max_marks}</td>
 				</tr>
 			);
