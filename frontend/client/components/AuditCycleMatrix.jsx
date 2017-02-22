@@ -83,13 +83,15 @@ export default React.createClass({
 							<tr>
 								{headings}
 							</tr>
-							<tr>
-								{headings2}
-							</tr>
 						</thead>
 						<tbody>
 							{trs}
 						</tbody>
+						<tfoot>
+							<tr>
+								{headings2}
+							</tr>
+						</tfoot>
 					</table>
 					{this.props.children}
 				</div>
