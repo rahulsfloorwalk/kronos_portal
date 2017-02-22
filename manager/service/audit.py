@@ -1,5 +1,6 @@
 from django.db.transaction import atomic
 from django.db.utils import IntegrityError
+from django.db.models import Q
 from django.contrib.auth.models import User
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
@@ -20,11 +21,13 @@ def save(audit):
 def get_available_audits(profileinfo_id):
     profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
     if profileinfo.is_complete():
-        return Audit.objects.filter(
-            audit_cycle__status__in=[AuditCycle.UPCOMING, AuditCycle.ACTIVE],
-            store__location__city_id=profileinfo.city.id
+        active_audits = Audit.objects.filter(
+            audit_cycle__status__in=[AuditCycle.UPCOMING, AuditCycle.ACTIVE])
+        available_audits = active_audits.filter(
+            Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
+            Q(store__location__city_id=profileinfo.city.id)
         )
-        #return [audit for audit in audits if not audit.applications.filter(profileinfo_id=profileinfo_id).exists()]
+        return available_audits
     else:
         raise AppLogicError("please complete your personal information to view audits")
 
