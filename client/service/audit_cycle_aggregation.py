@@ -16,7 +16,7 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
 
     audit_cycle = audit_service.get_latest_audit_cycle_for_client(client_id, audit_cycle_type)
     audits = audit_cycle.audits.all()
-    sections = audit_cycle.sections.all()
+    sections = audit_cycle.sections.order_by("sequence").all()
     for audit in audits:
         store = audit.store
         audit_stores = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by("-audit_date")
@@ -26,7 +26,7 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
             row.append(store.location.name)
             row.append(store.location.city.name)
             row.append(audit_store.audit_date)
-            report_sections = audit_store.report_sections.all()
+            report_sections = audit_store.report_sections.order_by("section__sequence").all()
             for report_section in report_sections:
                 if report_section.section.max_marks() != 0:
                     row.append(report_section.marks_obtained())
