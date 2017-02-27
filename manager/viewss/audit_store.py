@@ -8,13 +8,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
 
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from audit_store.models import AuditStore
 from audit_store import service as audit_store_service
+
+from client_report.service import xlsx_report as xlsx_report_service
 
 from audit.models import Audit, AuditCycle
 from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer
@@ -123,3 +125,17 @@ class AuditStoreIdUnSubmitView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
+
+class AuditStoreXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, client_id, audit_store_id, format=None):
+        try:
+            report = xlsx_report_service.get_xlsx_report(audit_store_id, client_id)
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=report.xlsx'
+            return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404

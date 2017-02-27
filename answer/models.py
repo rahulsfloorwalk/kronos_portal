@@ -11,7 +11,7 @@ class Answer(Model):
     id = AutoField(db_column = 'id', primary_key=True)
 
     question = ForeignKey('questionnaire.Question',  db_column='question_id', on_delete=CASCADE)
-    audit_store = ForeignKey('audit_store.AuditStore', db_column='audit_store_id', on_delete=CASCADE)
+    audit_store = ForeignKey('audit_store.AuditStore', related_name='answers', db_column='audit_store_id', on_delete=CASCADE)
 
     answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
     marks_obtained = IntegerField(db_column='marks_obtained', blank=True, null=True)

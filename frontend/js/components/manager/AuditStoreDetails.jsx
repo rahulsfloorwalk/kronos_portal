@@ -3,12 +3,12 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import { momentDateFormat, url }  from '../../../config.js';
 
 import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, unSubmitAuditStore } from '../../manager/actions/audit_store.js';
 
 import ExpandableDetails from '../ExpandableDetails.jsx';
-import { Retweet, King, File } from '../Icons.jsx';
+import { Retweet, King, File, Download } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
@@ -60,6 +60,9 @@ var AuditStoreDetails = React.createClass({
 				</ol>
 				<h2 className="page-header">
 					<File/> Audit Report
+					<a className="btn btn-default pull-right" href={url.api_base_path + 'manager/client/' + this.props.auditStore.audit.store.client.id + '/audit_store/' + this.props.auditStore.id + '/xlsx_report'}>
+						<Download/> Excel Report
+					</a>
 				</h2>
 				<div className="panel panel-default">
 					<div className="panel-heading">

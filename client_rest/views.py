@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse, Http404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -19,6 +20,8 @@ from questionnaire.service import section as section_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 import attachment.service as attachment_service
+
+from client_report.service import xlsx_report as xlsx_report_service
 
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer
 
@@ -146,3 +149,17 @@ class AttachmentByAuditStore(APIView):
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
+
+class AuditStoreXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            report = xlsx_report_service.get_xlsx_report(audit_store_id, request.user.clientuser.client.id)
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=report.xlsx'
+            return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404

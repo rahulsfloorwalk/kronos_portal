@@ -52,7 +52,8 @@ PROJECT_APPS = [
     'audit',
     'audit_store',
     'answer',
-    'attachment'
+    'attachment',
+    'client_report'
 ]
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS

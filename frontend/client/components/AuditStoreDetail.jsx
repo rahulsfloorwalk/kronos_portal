@@ -2,13 +2,13 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import moment from 'moment';
-import { momentDateFormat }  from '../../config.js';
+import { momentDateFormat, url}  from '../../config.js';
 
 import { fetchAuditStore } from '../service/audit_store.js';
 import { fetchSections } from '../service/section.js';
 import { fetchReportSections } from '../service/report_section.js';
 
-import { File, Print } from '../../js/components/Icons.jsx';
+import { File, Print, Download } from '../../js/components/Icons.jsx';
 import Loading from '../../js/components/Loading.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
 
@@ -57,7 +57,10 @@ export default React.createClass({
 				<h2 className="page-header">
 					<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
 						<Print/> Print Report
-					</button> 
+					</button>
+					<a className="btn btn-default pull-right" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/xlsx_report'}>
+					<Download/> Download as xlsx
+					</a>
 					<File/> Audit Report
 				</h2>
 				<div className="row">
