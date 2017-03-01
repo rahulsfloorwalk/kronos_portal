@@ -223,3 +223,26 @@ export function getColor(value){
 			return "";
 	}
 }
+
+export function getOccupation(value){
+	switch(value){
+		case "STUDENT":
+			return "Student";
+		case "SERVICE":
+			return "Service";
+		case "SELF_EMPLOYED":
+			return "Self Employed";
+		case "BUSINESS":
+			return "Business";
+		case "UNEMPLOYED":
+			return "Unemployed";
+		case "RETIRED":
+			return "Retired";
+		case "":
+		case null:
+		case undefined:
+			return "";
+		default:
+			return `unknown occupation ${value} - ${typeof value}`;
+	}
+};

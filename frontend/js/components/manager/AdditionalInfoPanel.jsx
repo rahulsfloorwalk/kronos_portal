@@ -2,7 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { getHairColor, getCameraResolution } from '../../utils.js'
+import { getHairColor, getCameraResolution, getOccupation } from '../../utils.js'
 import { fetchAdditionalInfoForAuditor } from '../../manager/actions/auditor.js'
 import { Check, Cross } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
@@ -27,6 +27,7 @@ var AdditionalInfoPanel = React.createClass({
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
 				<div className="panel-body">
+					<p>Occupation: { getOccupation(this.props.additionalInfo.occupation) }</p>
 					<p>Car Owned: { has_car }</p>
 					<p>Weekend Audit: { weekend_audit }</p>
 					<p>Hair Color: { getHairColor(this.props.additionalInfo.hair_color) }</p>

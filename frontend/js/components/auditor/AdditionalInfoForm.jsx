@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { getCameraResolution, getHairColor } from '../../utils.js';
+import { getCameraResolution, getHairColor, getOccupation } from '../../utils.js';
 import { fetchAdditionalInfo, saveAdditionalInfo } from '../../auditor/actions/additional_info.js';
 
 import FormInput from '../FormInput.jsx';
@@ -42,6 +42,19 @@ var AdditionalInfoForm = React.createClass({
 		return (
 			<Modal modalTitle="Edit Additional Info" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
+					<div className="row">
+						<div className="col-sm-12">
+							<FormSelect label="Occupation" value={this.state.occupation} name="occupation" onChange={this.inputChanged} errors={this.props.errors.occupation}>
+								<option value=""></option>
+								<option value="STUDENT">{getOccupation("STUDENT")}</option>
+								<option value="SERVICE">{getOccupation("SERVICE")}</option>
+								<option value="SELF_EMPLOYED">{getOccupation("SELF_EMPLOYED")}</option>
+								<option value="BUSINESS">{getOccupation("BUSINESS")}</option>
+								<option value="UNEMPLOYED">{getOccupation("UNEMPLOYED")}</option>
+								<option value="RETIRED">{getOccupation("RETIRED")}</option>
+							</FormSelect>
+						</div>
+					</div>
 					<div className="row">
 						<div className="col-sm-6">
 							<FormInput label="Height (cm)" min="0" max="300" step="1" type="number" value={this.state.height} name="height" onChange={this.inputChanged} errors={this.props.errors.height}/>

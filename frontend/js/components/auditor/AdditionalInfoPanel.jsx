@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { Pencil } from '../Icons.jsx';
 
-import { getHairColor, getCameraResolution } from '../../utils.js'
+import { getHairColor, getCameraResolution, getOccupation } from '../../utils.js'
 import { fetchAdditionalInfo } from '../../auditor/actions/additional_info.js'
 import { Check, Cross } from '../Icons.jsx';
 import LabelValue from '../LabelValue.jsx';
@@ -29,6 +29,7 @@ var AdditionalInfoPanelBase = React.createClass({
 				</div>
 				<table className="table table-striped">
 					<tbody>
+					<tr><td className="text-right text-muted">Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
 					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Car Owned:</td><th>{ has_car }</th></tr>
 					<tr><td className="text-right text-muted">Weekend Audit:</td><th>{ weekend_audit }</th></tr>
 					<tr><td className="text-right text-muted">Hair Color:</td><th>{ getHairColor(this.props.additionalInfo.hair_color) }</th></tr>
