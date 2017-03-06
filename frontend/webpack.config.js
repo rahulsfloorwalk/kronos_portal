@@ -20,14 +20,17 @@ module.exports = {
 			{
 				test: /\.js$|\.jsx$/,
 				exclude: /(node_modules)/,
-				loader: 'babel', // 'babel-loader' is also a valid name to reference
+				loader: 'babel-loader',
 				query: {
-					presets: ['es2015','react']
+					presets: [
+						['env', {modules: false}],
+						'react'
+					]
 				}
 			},
 			{
 				test: /\.css$/,
-				loader: ExtractTextPlugin.extract("style-loader", "css-loader")
+				loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader"})
 			},
 		]
 	},
