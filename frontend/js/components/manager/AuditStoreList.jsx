@@ -16,6 +16,8 @@ var AuditStoreRow = React.createClass({
   render: function(){
     return(
       <tr>
+        <td>{this.props.auditStore.audit.store.name}</td>
+        <td>{this.props.auditStore.audit.store.location.name}</td>
         <td>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
@@ -43,6 +45,8 @@ var AuditStoreList = React.createClass({
         <table className="table table-striped">
           <thead>
             <tr>
+              <th>Store</th>
+              <th>Location</th>
               <th>Auditor Name</th>
               <th>Audit Date</th>
               <th>Report Status</th>
