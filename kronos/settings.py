@@ -183,15 +183,22 @@ EMAIL_USE_TLS = True
 LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
+        'formatters': {
+            'simple': {
+                'format': '[%(asctime)s][%(levelname)s] %(message)s'
+                },
+            },
         'handlers': {
                 'console':{
                         'level': properties.log_level,
                         'class': 'logging.StreamHandler',
+                        'formatter': 'simple'
                 },
                 'logfile':{
                         'level': properties.log_level,
                         'class': 'logging.FileHandler',
-                        'filename': properties.django_log_filename
+                        'filename': properties.django_log_filename,
+                        'formatter': 'simple'
                 },
         },
         'loggers': {

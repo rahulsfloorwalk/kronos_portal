@@ -23,8 +23,10 @@ class Login(View):
     __manager_url = '/static/manager.html'
 
     def get(self, request):
+        _logger.info("login page requested")
         if not request.user.is_authenticated():
             form = AuthenticationForm()
+            _logger.info("login page served")
             return render(request, self.__template, {'form': form})
         elif request.user.groups.filter(name=GROUP_NAME_MANAGER).exists():
             login(request, request.user)
@@ -37,7 +39,7 @@ class Login(View):
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
-        _logger.info("login attempt")
+        _logger.info("login attempt with username: %s", request.POST.get('username','<blank>'))
         if form.is_valid():
             user = form.get_user()
             if user is not None:
@@ -61,6 +63,8 @@ class Login(View):
                     _logger.warn("User without verification found! : %s",user)
                     messages.add_message(request, messages.WARNING, 'Your account is in illegal state. Please contact site administrator.')
                     pass
+        else:
+            _logger.info("login failed with invalid form")
         return render(request, self.__template, {'form': form})
 
 
@@ -89,16 +93,20 @@ class SignUp(View):
     __template = 'registration/signup.html'
 
     def get(self, request):
+        _logger.info("signup form requested")
         form = SignUpForm()
         return render(request, self.__template, {'form': form})
 
     @atomic
     def post(self, request):
+        _logger.info("signup form submitted with username: %s", request.POST.get('username','<blank>'))
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
             if user is not None:
+                _logger.info("user %s signed up successfully", user)
                 return redirect('registration:signup_success')
+        _logger.info("signup form invalid")
         return render(request, self.__template, {'form': form})
 
 def signup_success(request):
@@ -108,11 +116,17 @@ def signup_success(request):
 def activate(request, key):
     verification = get_object_or_404(Verification, activation_key=key)
     if verification is not None:
+        _logger.info("found verification for key: %s", key)
         if verification.is_verified is False:
             verification.is_verified = True
             verification.save()
             user = verification.user
             user.is_active = True
             user.save()
+            _logger.info("verified user %s successfully", user)
             messages.add_message(request, messages.SUCCESS, 'Your email has been verified. Please login to continue.')
+        else:
+            _logger.info("verification is already done for key: %s", key)
+    else:
+        _logger.info("verification not found for key: %s", key)
     return redirect('registration:login')
