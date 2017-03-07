@@ -2,6 +2,10 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
+import ReactGA from 'react-ga';
+
+import { auditorGAId } from '../../../config.js';
+
 import App from './App.jsx';
 import Dashboard from './Dashboard.jsx';
 import DetailsPage from './DetailsPage.jsx';
@@ -20,9 +24,19 @@ import ProfileInfoForm from './ProfileInfoForm.jsx';
 import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';
 
+
+ReactGA.initialize(auditorGAId);
+
+function logPageView() {
+	console.log(window.location.pathname, window.location.hash);
+	ReactGA.set({ page: window.location.pathname });
+	ReactGA.pageview(window.location.pathname + window.location.hash);
+}
+
+
 const Routes = ({store}) => (
   <Provider store={store}>
-    <Router history={hashHistory}>
+    <Router history={hashHistory} onUpdate={logPageView}>
 	<Route path="/" component={App}>
 		<IndexRoute component={DetailsPage}/>
 		<Route path="details" component={DetailsPage}>

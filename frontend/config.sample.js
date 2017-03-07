@@ -11,4 +11,6 @@ var url = {
 
 var momentDateFormat = "Do MMM YYYY";
 
-export { url, momentDateFormat };
+const auditorGAId = "UA-XXXXXXX-X";
+
+export { url, momentDateFormat, auditorGAId };
