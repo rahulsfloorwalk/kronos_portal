@@ -160,3 +160,21 @@ def delete(attachment_id):
             raise AppLogicError("cannot delete attachment now")
     except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
         raise ObjectNotFound from e
+
+
+def rename(attachment_id, new_name):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if new_name in ["", None]:
+            raise AppLogicError("new file name is invalid")
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            attachment.file_name = new_name
+            attachment.save()
+            return attachment
+        else:
+            raise AppLogicError("cannot rename attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        raise ObjectNotFound from e

@@ -68,6 +68,7 @@ urlpatterns = ([
 
     url(r'client_user/(?P<client_user_id>[0-9]+)$', client_user_views.ClientUserIdView.as_view(), name='client_user_id_view'),
     url(r'client_user$', client_user_views.ClientUserView.as_view(), name='client_user_view'),
+    url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', attachment_views.AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', attachment_views.AttachmentIdView.as_view(), name='attachment_id_view'),
 
 ], 'manager')

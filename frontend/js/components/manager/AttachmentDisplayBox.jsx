@@ -2,11 +2,12 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { findAttachmentsByAuditStore, deleteAttachment } from '../../manager/service/attachment.js';
+import { findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from '../../manager/service/attachment.js';
 
 import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
 import Jumbotron from '../Jumbotron.jsx';
+import InPlaceEditable from '../InPlaceEditable.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -71,6 +72,22 @@ var AttachmentDisplayBox = React.createClass({
 			});
 		}
 	},
+	attachmentRenamed: function(file_name){
+		renameAttachment(this.state.selectedAttachment.id, file_name).done((a)=>{
+			this.setState({
+				selectedAttachment: a
+			});
+			for( let i in this.state.attachments){
+				if(this.state.attachments[i].id === a.id){
+					let arr = this.state.attachments;
+					arr[i] = a;
+					this.setState({
+						attachments: arr
+					});
+				}
+			}
+		});
+	},
 	render: function(){
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -105,11 +122,21 @@ var AttachmentDisplayBox = React.createClass({
 					break;
 				case "PHOTO":
 					let imageStyle = {"maxWidth": "100%"}
+					let headingText;
+					if( this.props.auditStore.status === "SUBMITTED"){
+						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
+									<Picture/> {this.state.selectedAttachment.file_name}
+								</InPlaceEditable>);
+					} else {
+						headingText = (<span>
+							<Picture/> {this.state.selectedAttachment.file_name}
+						</span>);
+					}
 					attachmentElement = (
 						<div className="">
 							<h4 className="page-header">
 								{deleteButton}
-								<Picture/> {this.state.selectedAttachment.file_name}
+								{headingText}
 							</h4>
 							<div className="text-center">
 							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>

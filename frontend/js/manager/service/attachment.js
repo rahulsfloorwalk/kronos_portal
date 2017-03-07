@@ -12,6 +12,15 @@ export function deleteAttachment(attachmentId){
 	});
 };
 
+export function renameAttachment(attachmentId, fileName){
+	return $.ajax({
+		url: url.api_base_path + `manager/attachment/${attachmentId}/rename`,
+		type: "POST",
+		data: JSON.stringify({file_name: fileName}),
+		contentType: "application/json"
+	});
+};
+
 
 export function uploadFileForAuditStore(auditStoreId, file){
 	var mainPromise = $.Deferred();

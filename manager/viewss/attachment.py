@@ -45,3 +45,25 @@ class AttachmentIdView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
+
+
+class AttachmentIdRenameView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+
+    def post(self, request, attachment_id):
+        try:
+            attachment = attachment_service.rename(attachment_id, request.data["file_name"])
+            return Response(AttachmentSerializer(attachment).data)
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
