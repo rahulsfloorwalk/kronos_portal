@@ -4,7 +4,9 @@
 <div class="row">
 	<div class="col-md-4 col-md-offset-4">
 		<h1 class="page-header">
+			<a href="http://floorwalk.in">
 			<img class="img-responsive" src="/static/img/logo_3_500x100.png"/>
+			</a>
 		</h1>
 		<div class="panel panel-primary">
 			<div class="panel-heading">
@@ -27,14 +29,14 @@
 					{% csrf_token %}
 					<div class="form-group">
 						<label>Email Address</label>
-						{{ form.username | add_class:"form-control input-lg" }}
+						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:admin@company.com" }}
 						<p class="help-block">
 						{{ form.username.errors }}
 						</p>
 					</div>
 					<div class="form-group">
 						{{ form.password.label_tag }}
-						{{ form.password | add_class:"form-control input-lg" }}
+						{{ form.password | add_class:"form-control input-lg" | attr:"placeholder:•••••••"}}
 						<p class="help-text">
 						{{ form.password.errors }}
 						</p>
@@ -43,6 +45,9 @@
 						<button class="btn btn-primary btn-lg" type="submit">Login</button>
 					</div>
 				</form>
+			</div>
+			<div class="panel-footer">
+				<p>For auditor login, <a href="{% url 'registration:login' %} ">click here</a></p>
 			</div>
 		</div>
 	</div>
