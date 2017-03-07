@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const Briefcase	= () => <span className="glyphicon glyphicon-briefcase"></span>;
+export const NewWindow	= () => <span className="glyphicon glyphicon-new-window"></span>;
 export const Check	= () => <span className="glyphicon glyphicon-ok"></span>;
 export const Cross	= () => <span className="glyphicon glyphicon-remove"></span>;
 export const Plus	= () => <span className="glyphicon glyphicon-plus"></span>;

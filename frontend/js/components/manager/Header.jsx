@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import NavLink from '../NavLink.jsx';
-import { User, MapMarker, King, LogOut } from '../Icons.jsx';
+import { NewWindow, User, MapMarker, King, LogOut } from '../Icons.jsx';
 
 var Header = React.createClass({
 	render: function(){
@@ -23,6 +23,11 @@ var Header = React.createClass({
 						<NavLink to="/state"><MapMarker/> Locations</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
+						<li>
+							<a href="http://mbase.floorwalk.in:3000" target="_blank">
+								<NewWindow/> Metabase
+							</a>
+						</li>
 						<li>
 							<form action="/auth/logout" method="POST">
 							<button className="btn btn-lg btn-link">
