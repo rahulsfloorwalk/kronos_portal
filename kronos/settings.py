@@ -81,6 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'registration.context.auth_ga_id',
             ],
         },
     },
@@ -216,3 +217,6 @@ LOGGING = {
 }
 
 AWS = properties.AWS
+
+AUTH_GA_ID = properties.AUTH_GA_ID
+

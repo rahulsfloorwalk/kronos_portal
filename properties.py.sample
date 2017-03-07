@@ -49,3 +49,8 @@ django_log_filename = "/home/foobar/kronos/logs/django.log"
 ### add log handlers, can contain 'logfile' which logs to above file or 'console' or both
 ### should use only 'logfile' in production and only 'console' in development
 log_handlers = ['console', 'logfile']
+
+
+### Google Analytics Tracking ID for Authentication/Registration views only
+### The actual app should use different tracking IDs for manager,auditor and client UIs
+AUTH_GA_ID = "UA-XXXXXXX-X"
