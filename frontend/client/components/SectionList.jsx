@@ -11,9 +11,14 @@ import { fetchAnswers } from '../service/answer.js';
 
 var QuestionRow = React.createClass({
 	render: function(){
+		if(this.props.showMarks){
+			var maxMarks = this.props.q.max_marks;
+		}
 		if(this.props.answer){
 			var answer = this.props.answer.answer_text;
-			var answerMarks = this.props.answer.marks_obtained;
+			if( this.props.showMarks){
+				var answerMarks = this.props.answer.marks_obtained;
+			}
 		}
 		return (
 			<tr>
@@ -21,7 +26,7 @@ var QuestionRow = React.createClass({
 				<td>{this.props.q.question_txt}</td>
 				<td>{answer}</td>
 				<td>{answerMarks}</td>
-				<td>{this.props.q.max_marks}</td>
+				<td>{maxMarks}</td>
 				<td>
 				</td>
 			</tr>
@@ -35,7 +40,7 @@ var Section = React.createClass({
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
 				let answer = this.props.answers.filter((a) => a.question === q.id)[0];
-				questionRows.push(<QuestionRow q={q} key={q.id} answer={answer}/>);
+				questionRows.push(<QuestionRow q={q} key={q.id} answer={answer} showMarks={this.props.section.max_marks > 0}/>);
 			}
 		}
 		if(questionRows.length === 0){
@@ -53,6 +58,13 @@ var Section = React.createClass({
 			col4: { width: "7.5%" },
 			col5: { width: "7.5%" },
 		};
+
+		if( this.props.section.max_marks > 0){
+			var totalMarks = (<div><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}<hr/></div>);
+			var marksHeading = "Marks";
+			var maxMarksHeading = "Max. Marks";
+		}
+
 		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
 				<table className="table table-striped">
@@ -61,8 +73,8 @@ var Section = React.createClass({
 							<th style={styles.col1}>#</th>
 							<th style={styles.col2}>Question</th>
 							<th style={styles.col3}>Answer</th>
-							<th style={styles.col4}>Marks</th>
-							<th style={styles.col5}>Max. Marks</th>
+							<th style={styles.col4}>{marksHeading}</th>
+							<th style={styles.col5}>{maxMarksHeading}</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -70,8 +82,7 @@ var Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-footer">
-					<p><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}</p>
-					<hr/>
+					{totalMarks}
 					<p><b>Auditor Comment:</b> {auditor_comment}</p>
 					<hr/>
 					<p><b>PM Comment:</b> {pm_comment}</p>
