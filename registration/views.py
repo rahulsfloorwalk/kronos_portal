@@ -68,26 +68,14 @@ class Login(View):
         return render(request, self.__template, {'form': form})
 
 
-class LogoutForm(Form):
-    pass
-
 class Logout(View):
-    __template = 'registration/logout.html'
-
-    @method_decorator(login_required)
-    def get(self, request):
-        form = LogoutForm()
-        return render(request, self.__template, {'form': form})
 
     @method_decorator(login_required)
     def post(self, request):
-        form = LogoutForm(request.POST)
-        if form.is_valid():
-            logout(request)
-            messages.add_message(request, messages.SUCCESS, 'Logged out successfully.')
-            return redirect('registration:login')
-        else:
-            return render(request, self.__template, {'form': form})
+        _logger.info("logging out: %s", request.user)
+        logout(request)
+        messages.add_message(request, messages.SUCCESS, 'Logged out successfully.')
+        return redirect('registration:login')
 
 class SignUp(View):
     __template = 'registration/signup.html'
