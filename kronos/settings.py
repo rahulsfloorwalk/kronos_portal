@@ -40,6 +40,7 @@ DEPENDENCY_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'widget_tweaks',
+    'notifications',
 ]
 
 PROJECT_APPS = [

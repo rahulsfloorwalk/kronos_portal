@@ -1,6 +1,7 @@
 NUMERIC_REGEX_VALIDATION_ERROR = 'Only numberic values accepted'
 MIN_LENGTH_REGEX_VALIDATION_ERROR = 'Field requires 10 characters'
-SIGN_UP_SUBJECT = "Welcome to FloorWalk! Please verify your email address to continue."
+SIGN_UP_SUBJECT = "FloorWalk: Please verify your email address to continue."
+WELCOME_SUBJECT = "Welcome to FloorWalk! We're excited to have you onboard!"
 VERIFICATION_EMAIL = '''
 Hello,
 
