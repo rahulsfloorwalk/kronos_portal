@@ -21,17 +21,37 @@ def get_xlsx_report(audit_store_id, client_id):
             )
         report_sections = audit_store.report_sections.all()
         sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
-        data = create_text_structure(sections, sorted_answers, sorted_report_sections)
-        return write_data(data)
+        data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
+        return write_data(data), name
     else:
         raise AppLogicError("Invalid Client")
 
-def create_text_structure(sections, answers, report_sections):
+def create_text_structure(sections, answers, report_sections, audit_store):
+    audit_date = audit_store.audit_date
+    store_location = audit_store.audit.store.location.name
+    audit_cycle_name = audit_store.audit.audit_cycle.name
+    audit_cycle_type = audit_store.audit.audit_cycle.type
     section_key = 0
     answer_key = 0
+    name = (str(store_location) + "-" + str(audit_date) + ".xlsx").replace(" ", "")
     rows = []
-    content = ["", "Question", "Auditor Response", "Marks", "Max Marks"]
+    content = ["", store_location, audit_cycle_name, audit_cycle_type, str(audit_date)]
     row = {'type': 'title', 'content': content}
+    rows.append(row)
+
+    content = ["", "Audit Summary", "", "", ""]
+    row = {'type': 'header', 'content': content}
+    rows.append(row)
+    content = ["", "", "Section Name", "Marks Obtained", "Max Marks"]
+    row = {'type': 'header', 'content': content}
+    rows.append(row)
+    for section in sections:
+        content = ["", "", section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
+        row = {'type': 'line', 'content': content}
+        rows.append(row)
+
+    content = ["", "Question", "Auditor Response", "Marks", "Max Marks"]
+    row = {'type': 'header', 'content': content}
     rows.append(row)
     for section in sections:
         content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), section.max_marks()]
@@ -46,30 +66,35 @@ def create_text_structure(sections, answers, report_sections):
             else:
                 answer_key = key
                 break
-        content = ["Auditor Comment", report_sections[section_key].auditor_comment, "", "", ""]
+        content = ["", "Auditor Comment", report_sections[section_key].auditor_comment, "", ""]
         row = {'type': 'comment', 'content': content}
         rows.append(row)
-        content = ["PM Comment", report_sections[section_key].pm_comment, "", "", ""]
+        content = ["", "PM Comment", report_sections[section_key].pm_comment, "", ""]
         row = {'type': 'comment', 'content': content}
         rows.append(row)
         section_key += 1
-    return rows
+    return rows, name
 
 def write_data(data):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20})
+    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1})
+    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1})
     line_format = workbook.add_format({'text_wrap':True, 'font_size':14})
     comment_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':14})
-    worksheet.set_column(0, 0, 20)
+    worksheet.set_column(0, 0, 10)
     worksheet.set_column(1, 2, 60)
     worksheet.set_column(3, 4, 20)
     row = 0
     col = 0
     for line in data:
-        if line.get('type') in ('header', 'title'):
-            row += 2
+        if line.get('type') == 'title':
+            for point in line.get('content'):
+                worksheet.write(row, col, point, title_format)
+                col += 1
+        elif line.get('type') == 'header':
+            row += 1
             for point in line.get('content'):
                 worksheet.write(row, col, point, header_format)
                 col += 1

@@ -157,9 +157,9 @@ class AuditStoreXlsxReport(APIView):
     }
     def get(self, request, audit_store_id, format=None):
         try:
-            report = xlsx_report_service.get_xlsx_report(audit_store_id, request.user.clientuser.client.id)
+            report, name = xlsx_report_service.get_xlsx_report(audit_store_id, request.user.clientuser.client.id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=report.xlsx'
+            response['Content-Disposition'] = 'attachment; filename=' + name
             return response
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
