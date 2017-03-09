@@ -27,31 +27,70 @@ def get_xlsx_report(audit_store_id, client_id):
         raise AppLogicError("Invalid Client")
 
 def create_text_structure(sections, answers, report_sections, audit_store):
+    details_section = get_details_section(audit_store, report_sections, sections)
+    summary_section = get_summary_section(audit_store, sections, report_sections)
+    answers_section = get_answers_section(sections, answers, report_sections)
+
+    audit_date = audit_store.audit_date
+    client_name = audit_store.audit.audit_cycle.client.name
+    name = (str(client_name) + "-" + str(audit_date) + ".xlsx").replace(" ", "")
+    data = [details_section, summary_section, answers_section]
+    return data, name
+
+def get_details_section(audit_store, report_sections, sections):
     audit_date = audit_store.audit_date
     store_location = audit_store.audit.store.location.name
-    audit_cycle_name = audit_store.audit.audit_cycle.name
+    client_name = audit_store.audit.audit_cycle.client.name
     audit_cycle_type = audit_store.audit.audit_cycle.type
-    section_key = 0
-    answer_key = 0
-    name = (str(store_location) + "-" + str(audit_date) + ".xlsx").replace(" ", "")
+    marks = 0
+    max_marks = 0
+    for s in sections:
+        max_marks += s.max_marks()
+    for rs in report_sections:
+        marks += rs.marks_obtained()
     rows = []
-    content = ["", store_location, audit_cycle_name, audit_cycle_type, str(audit_date)]
+    content = ["", "Audit Report"]
     row = {'type': 'title', 'content': content}
     rows.append(row)
-
-    content = ["", "Audit Summary", "", "", ""]
-    row = {'type': 'header', 'content': content}
+    content = ["Name", client_name]
+    row = {'type': 'line', 'content': content}
     rows.append(row)
-    content = ["", "", "Section Name", "Marks Obtained", "Max Marks"]
+    content = ["Type", audit_cycle_type]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    content = ["Location", store_location]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    content = ["Audit Date", str(audit_date)]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    content = ["Total Score", str(round((marks*100)/max_marks)) + "%"]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    return rows
+
+def get_summary_section(audit_store, sections, report_sections):
+    section_key = 0
+    rows = []
+    content = ["Audit Summary", "", ""]
+    row = {'type': 'title', 'content': content}
+    rows.append(row)
+    content = ["Section Name", "Marks Obtained", "Max Marks"]
     row = {'type': 'header', 'content': content}
     rows.append(row)
     for section in sections:
-        content = ["", "", section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
+        content = [section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
         row = {'type': 'line', 'content': content}
         rows.append(row)
+        section_key += 1
+    return rows
 
+def get_answers_section(sections, answers, report_sections):
+    answer_key = 0
+    section_key = 0
+    rows = []
     content = ["", "Question", "Auditor Response", "Marks", "Max Marks"]
-    row = {'type': 'header', 'content': content}
+    row = {'type': 'title', 'content': content}
     rows.append(row)
     for section in sections:
         content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), section.max_marks()]
@@ -73,42 +112,63 @@ def create_text_structure(sections, answers, report_sections, audit_store):
         row = {'type': 'comment', 'content': content}
         rows.append(row)
         section_key += 1
-    return rows, name
+    return rows
 
-def write_data(data):
+def write_data(sections):
+    odd_color = '#DFF0D8'
+    even_color = '#FFFFFF'
+    title_color = '#D9EDF7'
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1})
+    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1, 'bg_color': title_color})
     header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1})
-    line_format = workbook.add_format({'text_wrap':True, 'font_size':14})
+    odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color})
+    even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color})
     comment_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':14})
-    worksheet.set_column(0, 0, 10)
-    worksheet.set_column(1, 2, 60)
-    worksheet.set_column(3, 4, 20)
-    row = 0
-    col = 0
-    for line in data:
-        if line.get('type') == 'title':
-            for point in line.get('content'):
-                worksheet.write(row, col, point, title_format)
-                col += 1
-        elif line.get('type') == 'header':
+    start_row = 0
+    start_col = 0
+    worksheet.set_column(start_col, start_col, 15)
+    worksheet.set_column(start_col+1, start_col+2, 60)
+    worksheet.set_column(start_col+3, start_col+4, 20)
+    row = start_row
+    col = start_col
+
+    sec_num = 0
+    for section in sections:
+        for line in section:
+            col = start_col
+            if line.get('type') == 'title':
+                row += 1
+                for point in line.get('content'):
+                    worksheet.write(row, col, point, title_format)
+                    col += 1
+            elif line.get('type') == 'header':
+                for point in line.get('content'):
+                    worksheet.write(row, col, point, header_format)
+                    col += 1
+            elif line.get('type') == 'comment':
+                row += 1
+                for point in line.get('content'):
+                    worksheet.write(row, col, point, comment_format)
+                    col += 1
+            else:
+                for point in line.get('content'):
+                    if row%2 == 0:
+                        worksheet.write(row, col, point, even_line_format)
+                    else:
+                        worksheet.write(row, col, point, odd_line_format)
+                    col += 1
             row += 1
-            for point in line.get('content'):
-                worksheet.write(row, col, point, header_format)
-                col += 1
-        elif line.get('type') == 'comment':
-            row += 1
-            for point in line.get('content'):
-                worksheet.write(row, col, point, comment_format)
-                col += 1
-        else:
-            for point in line.get('content'):
-                worksheet.write(row, col, point, line_format)
-                col += 1
-        col = 0
-        row += 1
+            col = start_col
+        sec_num += 1
+        if(sec_num == 1):
+            start_col += 2
+            row = start_row
+        elif(sec_num == 2):
+            start_col -= 2
+            if(row < 7):
+                row = 7
     workbook.close()
     output.seek(0)
     return output
