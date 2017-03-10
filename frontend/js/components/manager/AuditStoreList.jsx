@@ -16,8 +16,6 @@ var AuditStoreRow = React.createClass({
   render: function(){
     return(
       <tr>
-        <td>{this.props.auditStore.audit.store.name}</td>
-        <td>{this.props.auditStore.audit.store.location.name}</td>
         <td>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
@@ -28,35 +26,64 @@ var AuditStoreRow = React.createClass({
     );
   },
 });
+
+var AuditStoreTable = React.createClass({
+  render: function(){
+    let reps = [];
+    for(let n in this.props.auditStores){
+      reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} />);
+    }
+    return(
+	<table className="table table-striped">
+	  <thead>
+	    <tr>
+	      <th>Auditor Name</th>
+	      <th>Audit Date</th>
+	      <th>Report Status</th>
+	      <th></th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    {reps}
+	  </tbody>
+	</table>
+    );
+  },
+});
+
 var AuditStoreList = React.createClass({
   componentDidMount: function(){
     this.props.dispatch(fetchAuditStores(this.props.params.auditCycleId));
   },
   render: function(){
+		var audits = [];
+		for(var id in this.props.auditStores) {
+			let audit = audits.filter((a)=> a.id === this.props.auditStores[id].audit.id)[0];
+			if(! audit){
+				audits.push(this.props.auditStores[id].audit);
+				audit = audits.filter((a)=> a.id === this.props.auditStores[id].audit.id)[0];
+				audit.reports = [];
+			}
+			audit.reports.push(this.props.auditStores[id]);
+		}
+		console.log("unique audits:",audits);
     var rows = [];
-    for(var id in this.props.auditStores){
-      rows.push(<AuditStoreRow auditStore={this.props.auditStores[id]} key={id} />);
+    for( var i in audits){
+	    rows.push(
+		    <div className="panel panel-default" key={audits[i].id}>
+			<div className="panel-heading">
+				{audits[i].store.location.name}, {audits[i].store.location.city.name}
+			</div>
+			<AuditStoreTable auditStores={audits[i].reports}/>
+		    </div>
+	    );
     }
     return(
       <div>
         <h3 className="page-header">
           <File/> Reports
         </h3>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Store</th>
-              <th>Location</th>
-              <th>Auditor Name</th>
-              <th>Audit Date</th>
-              <th>Report Status</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows}
-          </tbody>
-        </table>
+	    {rows}
         {this.props.children}
       </div>
     );
@@ -69,3 +96,5 @@ var mapStoreToProps = function(store, ownProps){
   };
 }
 export default ReactRedux.connect(mapStoreToProps)(AuditStoreList);
+
+export { AuditStoreTable };

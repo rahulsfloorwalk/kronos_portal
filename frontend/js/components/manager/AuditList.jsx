@@ -8,7 +8,10 @@ import { momentDateFormat }  from '../../../config.js';
 import { HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
+
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
+
+import { AuditStoreTable } from './AuditStoreList.jsx';
 
 import {fetchAudits} from '../../manager/actions/audit.js';
 
@@ -70,12 +73,19 @@ var AuditRow = React.createClass({
 		});
 	},
   render: function(){
-	  var row2;
+	  var row2, row3;
 	  if(this.state.expanded){
 		  row2 = (
 			<tr>
 				<td colSpan="7">
 					<AuditApplicationList applications={this.props.audit.applications}/>
+				</td>
+			</tr>
+		  );
+		  row3 = (
+			<tr>
+				<td colSpan="7">
+					<AuditStoreTable auditStores={this.props.audit.audit_stores}/>
 				</td>
 			</tr>
 		  );
@@ -90,6 +100,7 @@ var AuditRow = React.createClass({
         <td>{this.props.audit.reimbursement}</td>
         <td>{this.props.audit.count}</td>
         <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
+        <td>{this.props.audit.audit_stores.length}</td>
         <td className="text-right">
           <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign"><HandRight/></Link>
           <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`} title="Edit Audit"><Pencil/></Link>
@@ -97,6 +108,7 @@ var AuditRow = React.createClass({
         </td>
       </tr>
 	{row2}
+	{row3}
       </tbody>
     );
   },
@@ -127,6 +139,7 @@ var AuditList = React.createClass({
               <th>Reimbursement upto</th>
               <th>Audit Count</th>
               <th>Applications</th>
+              <th>Reports</th>
               <th>&nbsp;</th>
             </tr>
           </thead>
