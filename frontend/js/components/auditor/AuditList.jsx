@@ -5,14 +5,18 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
+import { affectInputEventToComponent } from '../../react_utils.js';
+
 import { fetchApplications } from '../../auditor/actions/application.js';
 import { fetchAudits } from '../../auditor/actions/audit.js';
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
+import FormSelect from '../FormSelect.jsx';
 import ExpandableDetails from '../ExpandableDetails.jsx';
 import { Cross, ShareAlt } from '../Icons.jsx';
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
+import Loading from '../Loading.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
 
 
@@ -67,10 +71,28 @@ var AuditRow = React.createClass({
 });
 
 var AuditList = React.createClass({
+	getInitialState: function(){
+		return {
+			kms: 20,
+			loading: false
+		};
+	},
+	reloadAudits: function(kms){
+		this.setState({loading:true})
+		this.props.dispatch(fetchAudits({
+			kms
+		})).always(()=>{
+			this.setState({loading:false})
+		});
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchAudits());
+		this.reloadAudits(this.state.kms)
 		this.props.dispatch(fetchProfileInfo());
 		this.props.dispatch(fetchApplications());
+	},
+	inputChanged: function(e){
+		affectInputEventToComponent(e, this);
+		this.reloadAudits(e.target.value)
 	},
 	render: function(){
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
@@ -92,25 +114,36 @@ var AuditList = React.createClass({
 			}
 			rows.push(<AuditRow audit={this.props.audits[id]} application={application} key={id}/>);
 		}
-		if(rows.length > 0){
-		return (
-			<div>
-				<h2 className="page-header">
-					Available Audits
-				</h2>
-					{rows}
-				{this.props.children}
-			</div>
-		);
-		} else {
-			return (
+		if(rows.length === 0){
+			rows = (
 				<div className="jumbotron text-center">
-					<h2>There are no audits available in your location right now.</h2>
-					<h3>Thanks for checking in :)</h3>
+					<h2>There are no audits available in this location right now.</h2>
 					<p>We will keep you informed when new audits are available.</p>
 				</div>
 			);
 		}
+		if(this.state.loading){
+			rows = <Loading/>;
+		}
+		return (
+			<div>
+				<h2 className="page-header">
+					Available Audits within &nbsp;
+					<div style={{width: "100px", display: "inline-block"}}>
+					<FormSelect label="" value={this.state.kms} name="kms" onChange={this.inputChanged}>
+						<option value="1"> 1 km</option>
+						<option value="5"> 5 km</option>
+						<option value="10"> 10 km</option>
+						<option value="20"> 20 km</option>
+						<option value="50"> 50 km</option>
+						<option value="100"> 100 km</option>
+					</FormSelect>
+					</div>
+				</h2>
+				{rows}
+				{this.props.children}
+			</div>
+		);
 	},
 });
 

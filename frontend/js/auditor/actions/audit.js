@@ -2,14 +2,14 @@ import $ from 'jquery'
 import { url } from '../../../config'
 import types from '../action_types.js'
 
-export function fetchAudits(){
+export function fetchAudits(data){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_GET,
 			status: 'request',
 		});
 
-		return $.get( url.api_base_path + "auditor/audit", function(audits){
+		return $.get( url.api_base_path + "auditor/audit", data, function(audits){
 			dispatch({
 				type: types.AUDIT_GET,
 				status: 'success',
