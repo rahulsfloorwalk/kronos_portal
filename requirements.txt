@@ -5,6 +5,7 @@ django-filter==0.15.3
 django-widget-tweaks==1.4.1
 djangorestframework==3.4.7
 docutils==0.13.1
+googlemaps==2.4.6
 gunicorn==19.6.0
 jmespath==0.9.1
 psycopg2==2.6.2
