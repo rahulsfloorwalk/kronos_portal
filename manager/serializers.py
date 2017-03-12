@@ -44,6 +44,9 @@ class CitySerializer(ModelSerializer):
             'id',
             'name',
             'state',
+            'lat',
+            'lon',
+            'gmaps_url',
         )
         read_only_fields = ('id',)
 

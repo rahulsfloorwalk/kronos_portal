@@ -2,6 +2,7 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { ShareAlt, MapMarker } from '../Icons.jsx';
 import { fetchStates, fetchCities } from '../../manager_actions.js'
 
 var CityList = React.createClass({
@@ -17,8 +18,14 @@ var CityList = React.createClass({
 				<div key={cityId} className="col-md-3">
 					<div className="panel panel-default">
 						<div className="panel-body">
+							<a href={this.props.cities[cityId].gmaps_url} className="btn btn-link pull-right" target="_blank">
+								<MapMarker/>
+							</a>
 							<h4>{this.props.cities[cityId].name}</h4>
-							<Link to={linkTo} className="btn btn-default">View</Link>
+							<Link to={linkTo} className="btn btn-default">
+								<ShareAlt/>
+								View
+							</Link>
 						</div>
 					</div>
 				</div>

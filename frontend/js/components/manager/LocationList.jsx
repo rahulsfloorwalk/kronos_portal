@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js';
 
-import { Plus, Pencil } from '../Icons.jsx';
+import { Plus, Pencil, MapMarker } from '../Icons.jsx';
 
 var LocationList = React.createClass({
 	componentDidMount: function() {
@@ -58,6 +58,9 @@ var LocationList = React.createClass({
 					<Link to={addLocationLink} className="btn btn-default pull-right"><Plus/> Add Location</Link>
 
 					<Link to="/state">States</Link> / <Link to={cityLink}>{this.props.stateName }</Link> / <b>{this.props.city.name }</b> / Location List
+					<a href={this.props.city.gmaps_url} className="btn btn-link" target="_blank">
+						<MapMarker/>
+					</a>
 				</h2>
 				{table}
 				{this.props.children}

@@ -17,6 +17,9 @@ class City(Model):
     def __str__(self):
         return 'City({}): {}'.format(self.id, self.name)
 
+    def gmaps_url(self):
+        return 'http://maps.google.com/maps/place/{}/@{},{},12z'.format(self.name, self.lat, self.lon)
+
     class Meta:
         ordering = ['name']
 
