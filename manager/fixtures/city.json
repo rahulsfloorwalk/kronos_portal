@@ -5894,7 +5894,7 @@
         "pk": 609,
         "fields": {
             "name": "Almora",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.589241",
             "lon": "79.646666"
         }
@@ -5904,7 +5904,7 @@
         "pk": 610,
         "fields": {
             "name": "Bageshwar",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.840361",
             "lon": "79.769426"
         }
@@ -5914,7 +5914,7 @@
         "pk": 611,
         "fields": {
             "name": "Chamoli",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "30.293744",
             "lon": "79.560344"
         }
@@ -5924,7 +5924,7 @@
         "pk": 612,
         "fields": {
             "name": "Champawat",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.336097",
             "lon": "80.091027"
         }
@@ -5934,7 +5934,7 @@
         "pk": 613,
         "fields": {
             "name": "Dehradun",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "30.316495",
             "lon": "78.032192"
         }
@@ -5944,7 +5944,7 @@
         "pk": 614,
         "fields": {
             "name": "Haridwar",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.945691",
             "lon": "78.164248"
         }
@@ -5954,7 +5954,7 @@
         "pk": 615,
         "fields": {
             "name": "Nainital",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.380304",
             "lon": "79.463566"
         }
@@ -5964,7 +5964,7 @@
         "pk": 616,
         "fields": {
             "name": "Pauri Garhwal",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.868768",
             "lon": "78.838264"
         }
@@ -5974,7 +5974,7 @@
         "pk": 617,
         "fields": {
             "name": "Pithoragarh",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.582860",
             "lon": "80.218188"
         }
@@ -5984,7 +5984,7 @@
         "pk": 618,
         "fields": {
             "name": "Rudraprayag",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "30.284414",
             "lon": "78.981141"
         }
@@ -5994,7 +5994,7 @@
         "pk": 619,
         "fields": {
             "name": "Tehri Garhwal",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "30.301186",
             "lon": "78.566085"
         }
@@ -6004,7 +6004,7 @@
         "pk": 620,
         "fields": {
             "name": "Udham Singh Nagar",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "28.960965",
             "lon": "79.515377"
         }
@@ -6014,7 +6014,7 @@
         "pk": 621,
         "fields": {
             "name": "Uttarkashi",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "30.726831",
             "lon": "78.435404"
         }
@@ -6724,7 +6724,7 @@
         "pk": 701,
         "fields": {
             "name": "Roorkee",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.854263",
             "lon": "77.888000"
         }
@@ -6734,7 +6734,7 @@
         "pk": 702,
         "fields": {
             "name": "Rudrapur",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "28.987508",
             "lon": "79.414121"
         }
@@ -6894,7 +6894,7 @@
         "pk": 718,
         "fields": {
             "name": "Ramnagar",
-            "state": "IN-UK",
+            "state": "IN-UT",
             "lat": "29.394764",
             "lon": "79.126500"
         }
