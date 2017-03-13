@@ -5,7 +5,7 @@ class ProfileInfoForm(ModelForm):
     class Meta:
         model = ProfileInfo
         fields = ['first_name', 'last_name', 'gender', 'marital_status', 'education',
-                'mobile_number', 'date_of_birth', 'address', 'pincode', 'city', 'state']
+                'mobile_number', 'date_of_birth', 'address', 'pincode', 'city']
 
 class AdditionalInfoForm(ModelForm):
     class Meta:

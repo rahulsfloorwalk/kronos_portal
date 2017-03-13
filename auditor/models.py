@@ -66,8 +66,6 @@ class ProfileInfo(Model):
 	date_of_birth = DateField(db_column='dob', blank=True, null=True)
 	address = CharField(db_column='address', max_length=300, blank=True)
 	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
-	city_name = CharField(db_column='city_name', max_length=20, blank=True, null=True)
-	state = CharField(db_column='state', max_length=5, blank=True, choices=states.get_django_choices())
 
 	city = ForeignKey(City, db_column='city_id', null=True, blank=True)
 	user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
@@ -144,7 +142,7 @@ class AdditionalInfo(Model):
 		(DONT_KNOW, "dont know"),
 		(NO_CAMERA, "no camera"),
 	)
-	
+
 	STUDENT = "STUDENT"
 	SERVICE = "SERVICE"
 	SELF_EMPLOYED = "SELF_EMPLOYED"
@@ -159,7 +157,7 @@ class AdditionalInfo(Model):
 		(UNEMPLOYED,'unemployed'),
 		(RETIRED,'retired'),
 	)
-	
+
 	id = AutoField(db_column='id', primary_key=True)
 	ethnicity = PositiveSmallIntegerField(db_column='ethnicity', choices=ETHNICITY, blank=True, null=True)
 	hair_color = PositiveSmallIntegerField(db_column='hair_color', choices=HAIR_COLOR, blank=True, null=True)
