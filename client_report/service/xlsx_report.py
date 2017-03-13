@@ -109,7 +109,7 @@ def get_answers_section(sections, answers, report_sections):
         row = {'type': 'comment', 'content': content}
         rows.append(row)
         content = ["", "PM Comment", report_sections[section_key].pm_comment, "", ""]
-        row = {'type': 'comment', 'content': content}
+        row = {'type': 'pm_comment', 'content': content}
         rows.append(row)
         section_key += 1
     return rows
@@ -117,15 +117,17 @@ def get_answers_section(sections, answers, report_sections):
 def write_data(sections):
     odd_color = '#DFF0D8'
     even_color = '#FFFFFF'
-    title_color = '#D9EDF7'
+    title_color = '#FCF8E3'
+    header_color = '#BEBEBE'
+    auditor_comment_color = '#E3B9B8'
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
     title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1, 'bg_color': title_color})
-    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1})
+    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1, 'bg_color': header_color})
     odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color})
     even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color})
-    comment_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':14})
+    auditor_comment_format = workbook.add_format({'text_wrap':True, 'bg_color': auditor_comment_color})
     start_row = 0
     start_col = 0
     worksheet.set_column(start_col, start_col, 15)
@@ -135,6 +137,7 @@ def write_data(sections):
     col = start_col
 
     sec_num = 0
+    line_counter = 0
     for section in sections:
         for line in section:
             col = start_col
@@ -150,15 +153,16 @@ def write_data(sections):
             elif line.get('type') == 'comment':
                 row += 1
                 for point in line.get('content'):
-                    worksheet.write(row, col, point, comment_format)
+                    worksheet.write(row, col, point, auditor_comment_format)
                     col += 1
             else:
                 for point in line.get('content'):
-                    if row%2 == 0:
+                    if line_counter == 0:
                         worksheet.write(row, col, point, even_line_format)
                     else:
                         worksheet.write(row, col, point, odd_line_format)
                     col += 1
+            line_counter = ~line_counter
             row += 1
             col = start_col
         sec_num += 1
