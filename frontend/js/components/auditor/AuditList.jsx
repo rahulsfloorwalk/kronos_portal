@@ -73,7 +73,7 @@ var AuditRow = React.createClass({
 var AuditList = React.createClass({
 	getInitialState: function(){
 		return {
-			kms: 20,
+			kms: 50,
 			loading: false
 		};
 	},
