@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User, Group
-
+from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, DateField
@@ -10,9 +10,13 @@ from rest_framework.filters import SearchFilter
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from kronos.exceptions import ObjectNotFound, AppLogicError
+
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
+
+from client_report.service import audit_cycle_xlsx_report as xlsx_report_service
 
 class AuditCycleViewByClient(APIView):
     permission_classes = [HasGroupPermission]
@@ -71,3 +75,17 @@ class AuditCycleIdView(APIView):
             return Response(AuditCycleSerializer(audit).data)
         except AuditCycle.DoesNotExist:
             return Http404
+
+class AuditCycleXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, client_id, audit_cycle_id, format=None):
+        try:
+            report, name = xlsx_report_service.get_aggregate_report(audit_cycle_id, client_id)
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename=' + name
+            return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404

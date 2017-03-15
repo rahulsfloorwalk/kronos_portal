@@ -22,6 +22,7 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client/(?P<client_id>[0-9]+)/audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', audit_store_views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
+    url(r'client/(?P<client_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_xlsx_report$', audit_cycle_views.AuditCycleXlsxReport.as_view(), name='audit_store_xlsx_report'),
     url(r'client$', client_views.ClientView.as_view(), name='client_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', attachment_views.AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
