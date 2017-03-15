@@ -7148,5 +7148,45 @@
             "lat": "22.068542",
             "lon": "81.685681"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 744,
+        "fields": {
+            "name": "Bahadurgarh",
+            "state": "IN-HR",
+            "lat": "28.692400",
+            "lon": "76.924000"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 745,
+        "fields": {
+            "name": "Haldwani",
+            "state": "IN-UT",
+            "lat": "29.218300",
+            "lon": "79.513000"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 746,
+        "fields": {
+            "name": "Barasat",
+            "state": "IN-WB",
+            "lat": "22.722800",
+            "lon": "88.480600"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 747,
+        "fields": {
+            "name": "Kayamkulam",
+            "state": "IN-KL",
+            "lat": "9.184400",
+            "lon": "76.515200"
+        }
     }
 ]
