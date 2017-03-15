@@ -55,17 +55,17 @@ def create_text_structure(audit_stores_answers_list):
     return rows
 
 def write_data(data):
-    odd_color = '#DFF0D8'
-    even_color = '#FFFFFF'
+    even_color = '#BEBEBE'
+    odd_color = '#FFFFFF'
     title_color = '#FCF8E3'
-    question_color = '#BEBEBE'
+    question_color = '#FCF7B6'
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    question_format = workbook.add_format({'text_wrap':True, 'top':1, 'bg_color': question_color})
+    question_format = workbook.add_format({'text_wrap':True, 'bold':True, 'top':1, 'right':1, 'bg_color': question_color})
     #header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1, 'bg_color': header_color})
-    odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color})
-    even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color})
+    odd_line_format = workbook.add_format({'text_wrap':True, 'top':1, 'right':1, 'bg_color': odd_color})
+    even_line_format = workbook.add_format({'text_wrap':True, 'top':1, 'right':1, 'bg_color': even_color})
     start_row = 0
     start_col = 0
     worksheet.set_column(0, 100, 30)
