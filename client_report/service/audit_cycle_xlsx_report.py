@@ -6,7 +6,15 @@ from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from questionnaire.models import Question
 
-def get_aggregate_report(audit_cycle_id, client_id):
+def get_aggregate_report_for_manager(audit_cycle_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+    except AuditCycle.DoesNotExist as e:
+        raise ObjectNotFound from e
+    client_id = audit_cycle.client.id
+    return get_aggregate_report_for_client(audit_cycle_id, client_id)
+
+def get_aggregate_report_for_client(audit_cycle_id, client_id):
     try:
         audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     except AuditCycle.DoesNotExist as e:

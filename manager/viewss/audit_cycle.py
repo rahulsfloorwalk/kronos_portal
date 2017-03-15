@@ -81,9 +81,9 @@ class AuditCycleXlsxReport(APIView):
     required_groups = {
         'GET' : [GROUP_NAME_MANAGER],
     }
-    def get(self, request, client_id, audit_cycle_id, format=None):
+    def get(self, request, audit_cycle_id, format=None):
         try:
-            report, name = xlsx_report_service.get_aggregate_report(audit_cycle_id, client_id)
+            report, name = xlsx_report_service.get_aggregate_report_for_manager(audit_cycle_id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename=' + name
             return response

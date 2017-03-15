@@ -3,9 +3,9 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import { momentDateFormat, url}  from '../../../config.js';
 
-import { File } from '../Icons.jsx';
+import { File, Download } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 
@@ -82,6 +82,9 @@ var AuditStoreList = React.createClass({
       <div>
         <h3 className="page-header">
           <File/> Reports
+          <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
+              <Download/> Excel Report
+          </a>
         </h3>
 	    {rows}
         {this.props.children}
