@@ -45,6 +45,10 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
 
 def create_text_structure(audit_stores_answers_list):
     rows = []
+    audit = audit_stores_answers_list[0][0].audit_store.audit
+    content = [audit.store.name + " - " + audit.audit_cycle.type]
+    row = {'type': 'title', 'content': content}
+    rows.append(row)
     answers = audit_stores_answers_list[0]
     questions = []
     for answer in answers:
@@ -63,17 +67,17 @@ def create_text_structure(audit_stores_answers_list):
     return rows
 
 def write_data(data):
-    even_color = '#BEBEBE'
-    odd_color = '#FFFFFF'
-    title_color = '#FCF8E3'
-    question_color = '#FCF7B6'
+    even_color = '#FFFFFF'
+    odd_color = '#D6D6D6'
+    title_color = '#FFFFFF'
+    question_color = '#BEBEBE'
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    question_format = workbook.add_format({'text_wrap':True, 'bold':True, 'top':1, 'right':1, 'bg_color': question_color})
-    #header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1, 'bg_color': header_color})
-    odd_line_format = workbook.add_format({'text_wrap':True, 'top':1, 'right':1, 'bg_color': odd_color})
-    even_line_format = workbook.add_format({'text_wrap':True, 'top':1, 'right':1, 'bg_color': even_color})
+    question_format = workbook.add_format({'text_wrap':True, 'bold':True, 'top':1, 'bottom':1, 'right':1, 'bg_color': question_color, 'font_color':'red'})
+    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'bottom':1, 'bg_color': title_color, 'font_color':'red'})
+    odd_line_format = workbook.add_format({'text_wrap':True, 'bottom':1, 'right':1, 'bg_color': odd_color})
+    even_line_format = workbook.add_format({'text_wrap':True, 'bottom':1, 'right':1, 'bg_color': even_color})
     start_row = 0
     start_col = 0
     worksheet.set_column(0, 100, 30)
@@ -82,7 +86,11 @@ def write_data(data):
 
     line_counter = 0
     for line in data:
-        if line.get('type') == 'question':
+        if line.get('type') == 'title':
+            for point in line.get('content'):
+                worksheet.write(row, col, point, title_format)
+                col += 1
+        elif line.get('type') == 'question':
             for point in line.get('content'):
                 worksheet.write(row, col, point, question_format)
                 col += 1
@@ -93,7 +101,7 @@ def write_data(data):
                 else:
                     worksheet.write(row, col, point, odd_line_format)
                 col += 1
-        line_counter = ~line_counter
+            line_counter = ~line_counter
         col = start_col
         row += 1
 
