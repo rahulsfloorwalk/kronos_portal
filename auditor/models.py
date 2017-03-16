@@ -62,7 +62,7 @@ class ProfileInfo(Model):
 	marital_status = CharField(db_column='marital_status', max_length=1, choices=MARITAL_STATUS, blank=True)
 	education = CharField(db_column='education', max_length=2, choices=EDUCATION, blank=True)
 	household_income = PositiveSmallIntegerField(db_column='household_income', choices=INCOME, blank=True, null=True)
-	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, validators=[numericValidator, minLengthValidator])
+	mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, null=True, validators=[numericValidator, minLengthValidator], unique=True)
 	date_of_birth = DateField(db_column='dob', blank=True, null=True)
 	address = CharField(db_column='address', max_length=300, blank=True)
 	pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
