@@ -72,6 +72,7 @@ def withdraw(audit_store_id):
         if audit_store.status not in (AuditStore.COMPLETED, AuditStore.FAILED):
             audit_store.status = AuditStore.WITHDRAWN
             audit_store.save()
+            #TODO:VERB should be encapsulated
             notify.send(
                 audit_store.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -79,7 +80,13 @@ def withdraw(audit_store_id):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            #TODO: notify auditor
+            notify.send(
+                    audit_store.user,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_WITHDRAWN',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
             return audit_store
         else:
             raise AppLogicError("audit store cannot be withdrawn now")
@@ -111,6 +118,7 @@ def submit(audit_store_id, user_id):
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
+            #TODO:VERB should be encapsulated
             notify.send(
                     audit_store.user,
                     recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -118,7 +126,13 @@ def submit(audit_store_id, user_id):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            #TODO: notify auditor
+            notify.send(
+                    audit_store.user,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_SUBMITTED',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
             return audit_store
         else:
             raise AppLogicError("audit store cannot be submitted now")
@@ -133,6 +147,7 @@ def complete(audit_store_id):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.COMPLETED
             audit_store.save()
+            #TODO:VERB should be encapsulated
             notify.send(
                 audit_store.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -140,7 +155,13 @@ def complete(audit_store_id):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            #TODO: notify auditor
+            notify.send(
+                    audit_store.user,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_COMPLETED',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
             return audit_store
         else:
             raise AppLogicError("audit store cannot be completed now")
@@ -155,6 +176,7 @@ def fail(audit_store_id):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.FAILED
             audit_store.save()
+            #TODO:VERB should be encapsulated
             notify.send(
                 audit_store.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -162,7 +184,13 @@ def fail(audit_store_id):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            #TODO: notify auditor
+            notify.send(
+                    audit_store.user,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_FAILED',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
             return audit_store
         else:
             raise AppLogicError("audit store cannot be failed now")
@@ -177,6 +205,7 @@ def unsubmit(audit_store_id):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.ASSIGNED
             audit_store.save()
+            #TODO:VERB should be encapsulated
             notify.send(
                 audit_store.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -184,7 +213,13 @@ def unsubmit(audit_store_id):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            #TODO: notify auditor
+            notify.send(
+                    audit_store.user,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_UNSUBMITTED',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
             return audit_store
         else:
             raise AppLogicError("audit store cannot be unsubmitted now")

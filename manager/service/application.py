@@ -26,6 +26,7 @@ def approve(application_id, audit_date):
     application.status = AuditApplication.APPROVED
     application.audit_date = audit_date
     application.save()
+    #TODO:VERB should be encapsulated
     notify.send(
         application.profileinfo.user,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -33,7 +34,13 @@ def approve(application_id, audit_date):
         action_object=application,
         target=application.audit
     )
-    #TODO: notify auditor
+    notify.send(
+            application.profileinfo.user,
+            recipient=application.profileinfo.user,
+            verb='AUDIT_APPLICATION_APPROVED',
+            action_object=application,
+            target=application.audit
+    )
 
     audit_store = AuditStore()
     audit_store.audit_id = audit.id
@@ -42,6 +49,7 @@ def approve(application_id, audit_date):
     audit_store.user_id = application.profileinfo.user_id
 
     audit_store.save()
+    #TODO:VERB should be encapsulated
     notify.send(
         audit_store.user,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -49,7 +57,13 @@ def approve(application_id, audit_date):
         action_object=audit_store,
         target=audit_store.audit
     )
-    #TODO: notify auditor
+    notify.send(
+            audit_store.user,
+            recipient=audit_store.user,
+            verb='AUDIT_STORE_APPROVED',
+            action_object=audit_store,
+            target=audit_store.audit
+    )
     return application
 
 @atomic
@@ -66,6 +80,7 @@ def reject(application_id):
 
     application.status = AuditApplication.REJECTED
     application.save()
+    #TODO:VERB should be encapsulated
     notify.send(
         application.profileinfo.user,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -73,7 +88,13 @@ def reject(application_id):
         action_object=application,
         target=application.audit
     )
-    #TODO: notify auditor
+    notify.send(
+            application.profileinfo.user,
+            recipient=application.profileinfo.user,
+            verb='AUDIT_APPLICATION_REJECTED',
+            action_object=application,
+            target=application.audit
+    )
     return application
 
 def find_by_audit(audit_id):

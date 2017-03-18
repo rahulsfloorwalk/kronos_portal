@@ -1,7 +1,10 @@
 from datetime import datetime
 from django.contrib.auth.models import User
-from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField
+from django.contrib.contenttypes.models import ContentType
+from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField, RelatedField
 from rest_framework import serializers
+
+from notifications.models import Notification
 
 from manager.serializers import CitySerializer
 from manager.models import Location
@@ -359,5 +362,73 @@ class AttachmentSerializer(ModelSerializer):
             'content_type',
             'object_id',
             'direct_url',
+        )
+        read_only_fields = fields
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+        )
+        read_only_fields = fields
+
+class ContentTypeSerializer(ModelSerializer):
+    class Meta:
+        model = ContentType
+        fields = ('app_label',)
+        read_only_fields = fields
+
+
+class NotificationSerializer(ModelSerializer):
+    class NotificationTargetField(RelatedField):
+        def to_representation(self, value):
+            if isinstance(value, Audit):
+                serializer = AuditSerializer(value)
+            elif isinstance(value, AuditStore):
+                serializer = AuditStoreSerializer(value)
+            elif isinstance(value, AuditApplication):
+                serializer = serializers.AuditApplicationSerializer(value)
+            else:
+                raise ValueError('Unexpected type of target object in notification: ', type(value))
+            return serializer.data
+
+    class NotificationActionObjectField(RelatedField):
+        def to_representation(self, value):
+            if isinstance(value, AuditApplication):
+                serializer = AuditApplicationSerializer(value)
+            elif isinstance(value, AuditStore):
+                serializer = AuditStoreSerializer(value)
+            else:
+                raise ValueError('Unexpected type of action object in notification: ', type(value))
+            return serializer.data
+
+    actor = UserSerializer()
+
+    target = NotificationTargetField(read_only=True)
+    target_content_type = ContentTypeSerializer()
+
+    action_object = NotificationActionObjectField(read_only=True)
+    action_object_content_type = ContentTypeSerializer()
+
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'unread',
+            'timestamp',
+            'level',
+            'verb',
+            'description',
+
+            'actor',
+            'recipient',
+
+            'target',
+            'target_content_type',
+
+            'action_object',
+            'action_object_content_type',
         )
         read_only_fields = fields

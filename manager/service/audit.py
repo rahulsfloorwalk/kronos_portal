@@ -130,6 +130,7 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.status = AuditApplication.APPLIED
         application.audit_date = audit_date
         application.save()
+        #TODO:VERB should be encapsulated
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -137,7 +138,13 @@ def apply( audit_id, profileinfo_id, audit_date):
                 action_object=application,
                 target=audit
         )
-        #TODO: notify auditor
+        notify.send(
+            profileinfo.user,
+            recipient=profileinfo.user,
+            verb='APPLICATION_APPLIED',
+            action_object=application,
+            target=audit
+        )
         return application
     else:
         raise AppLogicError("you cannot apply to this audit")
@@ -155,6 +162,7 @@ def cancel( audit_id, profileinfo_id):
     if audit.audit_cycle.status != AuditCycle.ARCHIVED and application.status == AuditApplication.APPLIED:
         application.status = AuditApplication.NOT_APPLIED
         application.save()
+        #TODO:VERB should be encapsulated
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
@@ -162,7 +170,13 @@ def cancel( audit_id, profileinfo_id):
                 action_object=application,
                 target=audit
         )
-        #TODO: notify auditor
+        notify.send(
+            profileinfo.user,
+            recipient=profileinfo.user,
+            verb='APPLICATION_CANCELED',
+            action_object=application,
+            target=audit
+        )
         return application
     else:
         raise AppLogicError("you cannot cancel this application now")
@@ -191,14 +205,21 @@ def fiat_assign(audit_id, email, audit_date):
     audit_store.user_id = user.id
 
     audit_store.save()
+    #TODO:VERB should be encapsulated
     notify.send(
         user,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb='FIAT ASSIGNED',
+        verb='FIAT_ASSIGNED',
         action_object=audit_store,
         target=audit
     )
-    #TODO: notify auditor
+    notify.send(
+        user,
+        recipient=audit_store.user,
+        verb='AUDIT_STORE_ASSIGNED',
+        action_object=audit_store,
+        target=audit
+    )
     return audit_store
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):

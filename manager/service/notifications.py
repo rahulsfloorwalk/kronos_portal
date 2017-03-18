@@ -5,7 +5,7 @@ from notifications.models import Notification
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 
-def find_by_user(user_id):
+def find_by_recipient_user(user_id):
     try:
         user = User.objects.get(pk=user_id)
         return user.notifications.all()[:20]

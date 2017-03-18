@@ -17,11 +17,13 @@ from .serializers import AuditStoreSerializer
 from .serializers import SectionSerializer
 from .serializers import AnswerSerializer
 from .serializers import AttachmentSerializer
+from .serializers import NotificationSerializer
 from .serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from audit.models import Audit
 from manager.models import City
 from manager.serializers import CitySerializer
 import manager.service.audit as audit_service
+from manager.service import notifications as notification_service
 from manager import states
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR
@@ -382,10 +384,10 @@ class AuditStoreAttachmentView(APIView):
     def post(self, request, audit_store_id):
         try:
             post_data, attachment = attachment_service.upload_for_audit_store(
-                    audit_store_id, 
-                    request.user.profileinfo.id, 
-                    request.data["file_name"], 
-                    request.data["file_size"], 
+                    audit_store_id,
+                    request.user.profileinfo.id,
+                    request.data["file_name"],
+                    request.data["file_size"],
                     request.data["file_type"])
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
@@ -434,3 +436,15 @@ class AttachmentCompleteView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
+
+class NotificationsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        try:
+            notifications = notification_service.find_by_recipient_user(request.user.id)
+            return Response(NotificationSerializer(notifications, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
