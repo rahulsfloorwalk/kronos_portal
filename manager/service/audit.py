@@ -137,6 +137,7 @@ def apply( audit_id, profileinfo_id, audit_date):
                 action_object=application,
                 target=audit
         )
+        #TODO: notify auditor
         return application
     else:
         raise AppLogicError("you cannot apply to this audit")
@@ -161,6 +162,7 @@ def cancel( audit_id, profileinfo_id):
                 action_object=application,
                 target=audit
         )
+        #TODO: notify auditor
         return application
     else:
         raise AppLogicError("you cannot cancel this application now")
@@ -189,6 +191,14 @@ def fiat_assign(audit_id, email, audit_date):
     audit_store.user_id = user.id
 
     audit_store.save()
+    notify.send(
+        user,
+        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+        verb='FIAT ASSIGNED',
+        action_object=audit_store,
+        target=audit
+    )
+    #TODO: notify auditor
     return audit_store
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):

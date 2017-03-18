@@ -1,9 +1,11 @@
 from django.db.transaction import atomic
-
+from django.contrib.auth.models import Group
+from notifications.signals import notify
 from audit_store.models import AuditStore
 from audit.models import AuditCycle, Audit
 from auditor.models import AuditApplication, ProfileInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
 @atomic
 def approve(application_id, audit_date):
@@ -24,6 +26,14 @@ def approve(application_id, audit_date):
     application.status = AuditApplication.APPROVED
     application.audit_date = audit_date
     application.save()
+    notify.send(
+        application.profileinfo.user,
+        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+        verb='AUDIT_APPLICATION_APPROVED',
+        action_object=application,
+        target=application.audit
+    )
+    #TODO: notify auditor
 
     audit_store = AuditStore()
     audit_store.audit_id = audit.id
@@ -32,9 +42,17 @@ def approve(application_id, audit_date):
     audit_store.user_id = application.profileinfo.user_id
 
     audit_store.save()
+    notify.send(
+        audit_store.user,
+        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+        verb='AUDIT_STORE_ASSIGNED',
+        action_object=audit_store,
+        target=audit_store.audit
+    )
+    #TODO: notify auditor
     return application
 
-
+@atomic
 def reject(application_id):
     try:
         application = AuditApplication.objects.get(id=application_id)
@@ -48,6 +66,14 @@ def reject(application_id):
 
     application.status = AuditApplication.REJECTED
     application.save()
+    notify.send(
+        application.profileinfo.user,
+        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+        verb='AUDIT_APPLICATION_REJECTED',
+        action_object=application,
+        target=application.audit
+    )
+    #TODO: notify auditor
     return application
 
 def find_by_audit(audit_id):

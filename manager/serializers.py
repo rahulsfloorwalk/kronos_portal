@@ -11,6 +11,7 @@ from notifications.models import Notification
 
 from questionnaire.models import Section, Question
 from auditor.models import ProfileInfo, AuditApplication
+import auditor.serializers
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from client.models import Client, Store, ClientUser
@@ -505,6 +506,8 @@ class NotificationSerializer(ModelSerializer):
                 serializer = AuditSerializerWithoutApplications(value)
             elif isinstance(value, AuditStore):
                 serializer = AuditStoreSerializer(value)
+            elif isinstance(value, AuditApplication):
+                serializer = serializers.AuditApplicationSerializer(value)
             else:
                 raise ValueError('Unexpected type of target object in notification: ', type(value))
             return serializer.data
@@ -513,6 +516,8 @@ class NotificationSerializer(ModelSerializer):
         def to_representation(self, value):
             if isinstance(value, AuditApplication):
                 serializer = AuditApplicationSerializer(value)
+            elif isinstance(value, AuditStore):
+                serializer = AuditStoreSerializer(value)
             else:
                 raise ValueError('Unexpected type of action object in notification: ', type(value))
             return serializer.data
@@ -545,4 +550,3 @@ class NotificationSerializer(ModelSerializer):
             'action_object_content_type',
         )
         read_only_fields = fields
-

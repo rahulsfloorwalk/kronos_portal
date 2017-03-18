@@ -1,5 +1,6 @@
+from django.db.transaction import atomic
 from django.db import IntegrityError
-
+from django.contrib.auth.models import Group
 from notifications.signals import notify
 
 from client.models import Client
@@ -12,7 +13,7 @@ import answer.service.answer as answer_service
 import questionnaire.service.question as question_service
 import questionnaire.service.section as section_service
 
-from registration.models import GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
 def get_audit_stores(profileinfo_id):
     try:
@@ -64,20 +65,28 @@ def save(audit_store):
     AuditStore.save(audit_store)
     return audit_store
 
-
+@atomic
 def withdraw(audit_store_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
         if audit_store.status not in (AuditStore.COMPLETED, AuditStore.FAILED):
             audit_store.status = AuditStore.WITHDRAWN
             audit_store.save()
+            notify.send(
+                audit_store.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_STORE_WITHDRAWN',
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            #TODO: notify auditor
             return audit_store
         else:
             raise AppLogicError("audit store cannot be withdrawn now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+@atomic
 def submit(audit_store_id, user_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
@@ -90,7 +99,7 @@ def submit(audit_store_id, user_id):
             raise AppLogicError("Please answer all the section summaries")
         if len(questions) != len(answers):
             raise AppLogicError("Please answer all the questions")
-            
+
         for report_section in report_sections:
             if report_section.auditor_comment in ( None ,''):
                 raise AppLogicError("Please fill all the section summaries")
@@ -103,19 +112,20 @@ def submit(audit_store_id, user_id):
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
             notify.send(
-                    User.objects.get(pk=user_id),
+                    audit_store.user,
                     recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
                     verb='AUDIT_STORE_SUBMITTED',
                     action_object=audit_store,
-                    target=comment.content_object
+                    target=audit_store.audit
             )
+            #TODO: notify auditor
             return audit_store
         else:
             raise AppLogicError("audit store cannot be submitted now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+@atomic
 def complete(audit_store_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
@@ -123,13 +133,21 @@ def complete(audit_store_id):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.COMPLETED
             audit_store.save()
+            notify.send(
+                audit_store.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_STORE_COMPLETED',
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            #TODO: notify auditor
             return audit_store
         else:
             raise AppLogicError("audit store cannot be completed now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+@atomic
 def fail(audit_store_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
@@ -137,13 +155,21 @@ def fail(audit_store_id):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.FAILED
             audit_store.save()
+            notify.send(
+                audit_store.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_STORE_FAILED',
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            #TODO: notify auditor
             return audit_store
         else:
             raise AppLogicError("audit store cannot be failed now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+@atomic
 def unsubmit(audit_store_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
@@ -151,6 +177,14 @@ def unsubmit(audit_store_id):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.ASSIGNED
             audit_store.save()
+            notify.send(
+                audit_store.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_STORE_UNSUBMITTED',
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            #TODO: notify auditor
             return audit_store
         else:
             raise AppLogicError("audit store cannot be unsubmitted now")
