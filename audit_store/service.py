@@ -1,5 +1,7 @@
 from django.db import IntegrityError
 
+from notifications.signals import notify
+
 from client.models import Client
 from .models import AuditStore
 from auditor.models import ProfileInfo
@@ -9,6 +11,8 @@ import answer.service.report_section as report_section_service
 import answer.service.answer as answer_service
 import questionnaire.service.question as question_service
 import questionnaire.service.section as section_service
+
+from registration.models import GROUP_NAME_MANAGER
 
 def get_audit_stores(profileinfo_id):
     try:
@@ -98,6 +102,13 @@ def submit(audit_store_id, user_id):
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
+            notify.send(
+                    User.objects.get(pk=user_id),
+                    recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                    verb='AUDIT_STORE_SUBMITTED',
+                    action_object=audit_store,
+                    target=comment.content_object
+            )
             return audit_store
         else:
             raise AppLogicError("audit store cannot be submitted now")

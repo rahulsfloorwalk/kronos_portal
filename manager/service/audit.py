@@ -1,8 +1,11 @@
 from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.db.models import Q
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
+from notifications.signals import notify
+
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication, AdditionalInfo
 from rest_framework.exceptions import ValidationError
@@ -109,11 +112,13 @@ def get_application( audit_id, location_id, profileinfo_id):
     except (Audit.DoesNotExist, AuditLocation.DoesNotExist, AuditApplication.DoesNotExist) as e:
         raise ObjectNotFound from e
 
+@atomic
 def apply( audit_id, profileinfo_id, audit_date):
     try:
         audit = Audit.objects.get(id=audit_id)
+        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
         application = audit.applications.get(profileinfo_id=profileinfo_id)
-    except (Audit.DoesNotExist, ) as e:
+    except (Audit.DoesNotExist, ProfileInfo.DoesNotExist) as e:
         raise ObjectNotFound from e
     except AuditApplication.DoesNotExist:
         application = AuditApplication()
@@ -125,21 +130,37 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.status = AuditApplication.APPLIED
         application.audit_date = audit_date
         application.save()
+        notify.send(
+                profileinfo.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='APPLICATION_APPLIED',
+                action_object=application,
+                target=audit
+        )
         return application
     else:
         raise AppLogicError("you cannot apply to this audit")
 
 
+@atomic
 def cancel( audit_id, profileinfo_id):
     try:
         audit = Audit.objects.get(id=audit_id)
+        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
         application = audit.applications.get(profileinfo_id=profileinfo_id)
-    except (Audit.DoesNotExist, AuditApplication.DoesNotExist ) as e:
+    except (Audit.DoesNotExist, AuditApplication.DoesNotExist, ProfileInfo.DoesNotExist ) as e:
         raise ObjectNotFound from e
 
     if audit.audit_cycle.status != AuditCycle.ARCHIVED and application.status == AuditApplication.APPLIED:
         application.status = AuditApplication.NOT_APPLIED
         application.save()
+        notify.send(
+                profileinfo.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='APPLICATION_CANCELED',
+                action_object=application,
+                target=audit
+        )
         return application
     else:
         raise AppLogicError("you cannot cancel this application now")

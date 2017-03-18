@@ -1,9 +1,13 @@
 from django.conf import settings
 
+from django.contrib.contenttypes.models import ContentType
+
 from rest_framework import routers, viewsets
-from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField, DateField
+from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField, DateField, RelatedField
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
+
+from notifications.models import Notification
 
 from questionnaire.models import Section, Question
 from auditor.models import ProfileInfo, AuditApplication
@@ -486,3 +490,59 @@ class AuditFiatAssignDeSerializer(Serializer):
     audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
     email = EmailField()
     audit_date = DateField()
+
+class ContentTypeSerializer(ModelSerializer):
+    class Meta:
+        model = ContentType
+        fields = ('app_label',)
+        read_only_fields = fields
+
+
+class NotificationSerializer(ModelSerializer):
+    class NotificationTargetField(RelatedField):
+        def to_representation(self, value):
+            if isinstance(value, Audit):
+                serializer = AuditSerializerWithoutApplications(value)
+            elif isinstance(value, AuditStore):
+                serializer = AuditStoreSerializer(value)
+            else:
+                raise ValueError('Unexpected type of target object in notification: ', type(value))
+            return serializer.data
+
+    class NotificationActionObjectField(RelatedField):
+        def to_representation(self, value):
+            if isinstance(value, AuditApplication):
+                serializer = AuditApplicationSerializer(value)
+            else:
+                raise ValueError('Unexpected type of action object in notification: ', type(value))
+            return serializer.data
+
+    actor = UserSerializer()
+
+    target = NotificationTargetField(read_only=True)
+    target_content_type = ContentTypeSerializer()
+
+    action_object = NotificationActionObjectField(read_only=True)
+    action_object_content_type = ContentTypeSerializer()
+
+    class Meta:
+        model = Notification
+        fields = (
+            'id',
+            'unread',
+            'timestamp',
+            'level',
+            'verb',
+            'description',
+
+            'actor',
+            'recipient',
+
+            'target',
+            'target_content_type',
+
+            'action_object',
+            'action_object_content_type',
+        )
+        read_only_fields = fields
+

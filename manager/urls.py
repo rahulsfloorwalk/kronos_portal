@@ -12,8 +12,11 @@ from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
 from .viewss import report_section as report_section_views
 from .viewss import attachment as attachment_views
+from .viewss import notifications as notification_views
 
 urlpatterns = ([
+    url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
+
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
 
