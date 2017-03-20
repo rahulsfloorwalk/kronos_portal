@@ -11,7 +11,7 @@ var Dashboard = React.createClass({
 			<div>
 				<h1 className="page-header">Dashboard</h1>
 				<div className="row">
-					<div className="col-md-offset-7 col-md-5">
+					<div className="col-md-12">
 						<NotificationBox/>
 					</div>
 				</div>

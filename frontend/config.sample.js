@@ -10,7 +10,8 @@ var url = {
 };
 
 var momentDateFormat = "Do MMM YYYY";
+var momentDateTimeFormat = "HH:mm Do MMM YYYY";
 
 const auditorGAId = "UA-XXXXXXX-X";
 
-export { url, momentDateFormat, auditorGAId };
+export { url, momentDateFormat, auditorGAId, momentDateTimeFormat };

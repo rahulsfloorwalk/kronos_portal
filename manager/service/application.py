@@ -67,7 +67,7 @@ def approve(application_id, audit_date, user_actor):
     return application
 
 @atomic
-def reject(application_id):
+def reject(application_id, user_actor):
     try:
         application = AuditApplication.objects.get(id=application_id)
         audit = application.audit
