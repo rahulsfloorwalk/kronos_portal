@@ -66,7 +66,7 @@ def save(audit_store):
     return audit_store
 
 @atomic
-def withdraw(audit_store_id):
+def withdraw(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
         if audit_store.status not in (AuditStore.COMPLETED, AuditStore.FAILED):
@@ -74,14 +74,14 @@ def withdraw(audit_store_id):
             audit_store.save()
             #TODO:VERB should be encapsulated
             notify.send(
-                audit_store.user,
+                user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
                 verb='AUDIT_STORE_WITHDRAWN',
                 action_object=audit_store,
                 target=audit_store.audit
             )
             notify.send(
-                    audit_store.user,
+                    user_actor,
                     recipient=audit_store.user,
                     verb='AUDIT_STORE_WITHDRAWN',
                     action_object=audit_store,
@@ -140,7 +140,7 @@ def submit(audit_store_id, user_id):
         raise ObjectNotFound from e
 
 @atomic
-def complete(audit_store_id):
+def complete(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
@@ -149,14 +149,14 @@ def complete(audit_store_id):
             audit_store.save()
             #TODO:VERB should be encapsulated
             notify.send(
-                audit_store.user,
+                user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
                 verb='AUDIT_STORE_COMPLETED',
                 action_object=audit_store,
                 target=audit_store.audit
             )
             notify.send(
-                    audit_store.user,
+                    user_actor,
                     recipient=audit_store.user,
                     verb='AUDIT_STORE_COMPLETED',
                     action_object=audit_store,
@@ -169,7 +169,7 @@ def complete(audit_store_id):
         raise ObjectNotFound from e
 
 @atomic
-def fail(audit_store_id):
+def fail(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
@@ -178,14 +178,14 @@ def fail(audit_store_id):
             audit_store.save()
             #TODO:VERB should be encapsulated
             notify.send(
-                audit_store.user,
+                user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
                 verb='AUDIT_STORE_FAILED',
                 action_object=audit_store,
                 target=audit_store.audit
             )
             notify.send(
-                    audit_store.user,
+                    user_actor,
                     recipient=audit_store.user,
                     verb='AUDIT_STORE_FAILED',
                     action_object=audit_store,
@@ -198,7 +198,7 @@ def fail(audit_store_id):
         raise ObjectNotFound from e
 
 @atomic
-def unsubmit(audit_store_id):
+def unsubmit(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
@@ -207,14 +207,14 @@ def unsubmit(audit_store_id):
             audit_store.save()
             #TODO:VERB should be encapsulated
             notify.send(
-                audit_store.user,
+                user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
                 verb='AUDIT_STORE_UNSUBMITTED',
                 action_object=audit_store,
                 target=audit_store.audit
             )
             notify.send(
-                    audit_store.user,
+                    user_actor,
                     recipient=audit_store.user,
                     verb='AUDIT_STORE_UNSUBMITTED',
                     action_object=audit_store,

@@ -6,6 +6,8 @@ from rest_framework import serializers
 
 from notifications.models import Notification
 
+from registration.models import GROUP_NAME_AUDITOR
+
 from manager.serializers import CitySerializer
 from manager.models import Location
 from audit.models import Audit, AuditCycle
@@ -366,11 +368,13 @@ class AttachmentSerializer(ModelSerializer):
         read_only_fields = fields
 
 class UserSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSerializer()
     class Meta:
         model = User
         fields = (
             'id',
             'email',
+            'profileinfo'
         )
         read_only_fields = fields
 
@@ -404,7 +408,16 @@ class NotificationSerializer(ModelSerializer):
                 raise ValueError('Unexpected type of action object in notification: ', type(value))
             return serializer.data
 
-    actor = UserSerializer()
+    class NotificationActorField(RelatedField):
+        def to_representation(self, value):
+            if value.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+                serializer = UserSerializer(value)
+                return serializer.data
+            else:
+                return None
+
+    actor = NotificationActorField(read_only=True)
+    actor_content_type = ContentTypeSerializer()
 
     target = NotificationTargetField(read_only=True)
     target_content_type = ContentTypeSerializer()
@@ -421,9 +434,10 @@ class NotificationSerializer(ModelSerializer):
             'level',
             'verb',
             'description',
+            'recipient',
 
             'actor',
-            'recipient',
+            'actor_content_type',
 
             'target',
             'target_content_type',

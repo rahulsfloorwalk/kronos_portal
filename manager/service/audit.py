@@ -134,14 +134,14 @@ def apply( audit_id, profileinfo_id, audit_date):
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='APPLICATION_APPLIED',
+                verb='AUDIT_APPLICATION_APPLIED',
                 action_object=application,
                 target=audit
         )
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
-            verb='APPLICATION_APPLIED',
+            verb='AUDIT_APPLICATION_APPLIED',
             action_object=application,
             target=audit
         )
@@ -166,14 +166,14 @@ def cancel( audit_id, profileinfo_id):
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='APPLICATION_CANCELED',
+                verb='AUDIT_APPLICATION_CANCELED',
                 action_object=application,
                 target=audit
         )
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
-            verb='APPLICATION_CANCELED',
+            verb='AUDIT_APPLICATION_CANCELED',
             action_object=application,
             target=audit
         )
@@ -183,7 +183,7 @@ def cancel( audit_id, profileinfo_id):
 
 
 @atomic
-def fiat_assign(audit_id, email, audit_date):
+def fiat_assign(audit_id, email, audit_date, user_actor):
     try:
         user = User.objects.get(email__iexact=email)
         audit = Audit.objects.get(pk=audit_id)
@@ -207,16 +207,16 @@ def fiat_assign(audit_id, email, audit_date):
     audit_store.save()
     #TODO:VERB should be encapsulated
     notify.send(
-        user,
+        user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb='FIAT_ASSIGNED',
+        verb='AUDIT_STORE_FIAT_ASSIGNED',
         action_object=audit_store,
         target=audit
     )
     notify.send(
-        user,
+        user_actor,
         recipient=audit_store.user,
-        verb='AUDIT_STORE_ASSIGNED',
+        verb='AUDIT_STORE_FIAT_ASSIGNED',
         action_object=audit_store,
         target=audit
     )

@@ -8,7 +8,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
 @atomic
-def approve(application_id, audit_date):
+def approve(application_id, audit_date, user_actor):
     try:
         application = AuditApplication.objects.get(id=application_id)
         audit = application.audit
@@ -28,14 +28,14 @@ def approve(application_id, audit_date):
     application.save()
     #TODO:VERB should be encapsulated
     notify.send(
-        application.profileinfo.user,
+        user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
         verb='AUDIT_APPLICATION_APPROVED',
         action_object=application,
         target=application.audit
     )
     notify.send(
-            application.profileinfo.user,
+            user_actor,
             recipient=application.profileinfo.user,
             verb='AUDIT_APPLICATION_APPROVED',
             action_object=application,
@@ -51,16 +51,16 @@ def approve(application_id, audit_date):
     audit_store.save()
     #TODO:VERB should be encapsulated
     notify.send(
-        audit_store.user,
+        user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
         verb='AUDIT_STORE_ASSIGNED',
         action_object=audit_store,
         target=audit_store.audit
     )
     notify.send(
-            audit_store.user,
+            user_actor,
             recipient=audit_store.user,
-            verb='AUDIT_STORE_APPROVED',
+            verb='AUDIT_STORE_ASSIGNED',
             action_object=audit_store,
             target=audit_store.audit
     )
@@ -82,14 +82,14 @@ def reject(application_id):
     application.save()
     #TODO:VERB should be encapsulated
     notify.send(
-        application.profileinfo.user,
+        user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
         verb='AUDIT_APPLICATION_REJECTED',
         action_object=application,
         target=application.audit
     )
     notify.send(
-            application.profileinfo.user,
+            user_actor,
             recipient=application.profileinfo.user,
             verb='AUDIT_APPLICATION_REJECTED',
             action_object=application,

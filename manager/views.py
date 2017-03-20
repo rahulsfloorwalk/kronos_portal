@@ -118,7 +118,7 @@ class AuditApplicationApproveView(APIView):
         try:
             ds = self.DeSerializer(data=request.data)
             ds.is_valid(raise_exception=True)
-            application = application_service.approve(application_id, ds.validated_data['audit_date'])
+            application = application_service.approve(application_id, ds.validated_data['audit_date'], request.user)
             return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound:
             raise NotFound
@@ -135,10 +135,9 @@ class AuditApplicationRejectView(APIView):
         }
     def post(self, request, application_id, format=None):
         try:
-            application = application_service.reject(application_id)
+            application = application_service.reject(application_id, request.user)
             return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound:
             raise NotFound
         except AppLogicError as e:
             raise ValidationError(e) from e
-

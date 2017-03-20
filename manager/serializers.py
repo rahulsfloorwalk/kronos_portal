@@ -7,6 +7,7 @@ from rest_framework.serializers import Serializer, ModelSerializer, ValidationEr
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
 
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from notifications.models import Notification
 
 from questionnaire.models import Section, Question
@@ -522,7 +523,18 @@ class NotificationSerializer(ModelSerializer):
                 raise ValueError('Unexpected type of action object in notification: ', type(value))
             return serializer.data
 
-    actor = UserSerializer()
+    class NotificationActorField(RelatedField):
+        def to_representation(self, value):
+            if value.groups.filter(name=GROUP_NAME_MANAGER).exists():
+                serializer = PlainUserSerializer(value)
+            elif value.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+                serializer = UserSerializer(value)
+            else:
+                raise ValueError("Cannot serialize user with unknown user groups:{}".format(value.groups.all()))
+            return serializer.data
+
+    actor = NotificationActorField(read_only=True)
+    actor_content_type = ContentTypeSerializer()
 
     target = NotificationTargetField(read_only=True)
     target_content_type = ContentTypeSerializer()
@@ -539,9 +551,10 @@ class NotificationSerializer(ModelSerializer):
             'level',
             'verb',
             'description',
+            'recipient',
 
             'actor',
-            'recipient',
+            'actor_content_type',
 
             'target',
             'target_content_type',

@@ -74,7 +74,7 @@ class AuditStoreIdWithdrawView(APIView):
         }
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.withdraw(audit_store_id)
+            audit_store = audit_store_service.withdraw(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
         except (AppLogicError,ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
@@ -89,7 +89,7 @@ class AuditStoreIdCompleteView(APIView):
         }
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.complete(audit_store_id)
+            audit_store = audit_store_service.complete(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
         except (AppLogicError,ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
@@ -104,7 +104,7 @@ class AuditStoreIdFailView(APIView):
         }
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.fail(audit_store_id)
+            audit_store = audit_store_service.fail(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
         except (AppLogicError,ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
@@ -119,7 +119,7 @@ class AuditStoreIdUnSubmitView(APIView):
         }
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.unsubmit(audit_store_id)
+            audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
         except (AppLogicError,ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
