@@ -19,19 +19,21 @@ var NotificationItem = React.createClass({
 		}
 	},
 	getActionObjectText: function(actionObject, type){
-		switch(type.app_label){
-			case "application":
+		var txt = type.app_label + "." + type.model;
+		switch(txt){
+			case "auditor.auditapplication":
 				return "application";
 			default:
-				return type.app_label;
+				return txt;
 		}
 	},
 	getTargetText: function(target, type){
-		switch(type.app_label){
-			case "audit":
+		var txt = type.app_label + "." + type.model;
+		switch(txt){
+			case "audit.audit":
 				return "audit";
 			default:
-				return type;
+				return txt;
 		}
 	},
 	render: function(){
