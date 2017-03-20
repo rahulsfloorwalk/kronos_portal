@@ -35,7 +35,14 @@ var NotificationItem = React.createClass({
 		}
 	},
 	render: function(){
-		let userName = <b>{this.props.n.actor.profileinfo.first_name} {this.props.n.actor.profileinfo.last_name}</b>;
+		let userName;
+		if (this.props.n.actor.profileinfo){
+			userName = <b>{this.props.n.actor.profileinfo.first_name} {this.props.n.actor.profileinfo.last_name}</b>;
+		}
+		else if(!this.props.n.actor.profileinfo){
+			userName = <b>Manager</b>;
+		}
+
 		let verbText = this.getVerb(this.props.n.verb);
 		let targetText = this.getTargetText(this.props.n.target, this.props.n.target_content_type);
 		let actionObjectText = this.getActionObjectText(this.props.n.action_object, this.props.n.action_object_content_type);
@@ -92,4 +99,3 @@ export default React.createClass({
 		);
 	},
 });
-
