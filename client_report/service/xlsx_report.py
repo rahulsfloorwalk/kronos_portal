@@ -123,11 +123,11 @@ def write_data(sections):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1, 'bg_color': title_color})
-    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1, 'bg_color': header_color})
-    odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color})
-    even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color})
-    auditor_comment_format = workbook.add_format({'text_wrap':True, 'bg_color': auditor_comment_color})
+    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1, 'bottom':1, 'left':1, 'right':1, 'bg_color': title_color})
+    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1, 'bottom':1, 'left':1, 'right':1, 'bg_color': header_color})
+    odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
+    even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
+    auditor_comment_format = workbook.add_format({'text_wrap':True, 'bg_color': auditor_comment_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
     start_row = 0
     start_col = 0
     worksheet.set_column(start_col, start_col, 15)
