@@ -83,7 +83,6 @@ class ProfileInfo(Model):
 		if self.address in [None, ""]: complete = False
 		if self.pincode in [None, ""]: complete = False
 		if self.city in [None, ""]: complete = False
-		if self.state in [None, ""]: complete = False
 
 		return complete
 

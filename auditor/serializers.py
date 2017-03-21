@@ -35,7 +35,6 @@ class ProfileInfoSerializer(ModelSerializer):
             'address',
             'pincode',
             'city',
-            'state',
             'user_id',
             'is_complete'
         )
@@ -57,7 +56,6 @@ class ProfileInfoDeSerializer(ModelSerializer):
             'address',
             'pincode',
             'city',
-            'state',
             'user_id',
             'is_complete'
         )
@@ -83,7 +81,6 @@ class ProfileInfoDeSerializer(ModelSerializer):
         profile_info.address = self.validated_data.get('address', profile_info.address)
         profile_info.pincode = self.validated_data.get('pincode', profile_info.pincode)
         profile_info.city = self.validated_data.get('city', profile_info.city)
-        profile_info.state = self.validated_data.get('state', profile_info.state)
 
         #profile_info.save()
         return profile_info
