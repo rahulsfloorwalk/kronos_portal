@@ -47,9 +47,23 @@ var Section = React.createClass({
 			questionRows.push(<tr key="empty"><td colSpan="5" className="text-center text-muted">no questions here</td></tr>);
 		}
 		if(this.props.reportSection){
+			var classes = "default";
+			let s = this.props.section;
 			var auditor_comment = this.props.reportSection.auditor_comment;
 			var pm_comment = this.props.reportSection.pm_comment;
 			var section_marks = this.props.reportSection.marks_obtained;
+
+			if(parseFloat(s.max_marks) === 0 ){
+				classes = "default";
+			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks) / 4){
+				classes = "danger";
+			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks) / 2){
+				classes = "warning";
+			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks) * 3/4){
+				classes = "info";
+			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks)){
+				classes = "success";
+			}
 		}
 		var styles = {
 			col1: { width: "5%" },
@@ -66,7 +80,7 @@ var Section = React.createClass({
 		}
 
 		return (
-			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
+			<Panel type={classes} title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
 				<table className="table table-striped">
 					<thead>
 						<tr>

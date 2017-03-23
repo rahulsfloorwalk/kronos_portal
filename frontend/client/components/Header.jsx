@@ -36,7 +36,7 @@ export default React.createClass({
 						<img style={brandStyle} alt={clientName} title={clientName} src={imgUrl}/>
 					</Link>
 				</div>
-				<nav className="navbar navbar-default">
+				<nav className="navbar navbar-default hidden-print">
 					<div className="navbar-header">
 					</div>
 					<ul className="nav navbar-nav">

@@ -67,16 +67,20 @@ export default React.createClass({
 				<div className="col-md-6">
 					<div className="panel panel-primary">
 						<div className="panel-heading">
-							<h4 className="panel-title"><File/> Audit Report</h4>
+							<h4 className="panel-title"><File/> Audit Details</h4>
 						</div>
 						<table className="table table-striped">
 							<tbody>
 								<tr>
-									<td className="text-right">Name:</td>
+									<td className="text-right">Client:</td>
+									<th>{this.state.auditStore.audit.store.client.name}</th>
+								</tr>
+								<tr>
+									<td className="text-right">Store:</td>
 									<th>{this.state.auditStore.audit.store.name}</th>
 								</tr>
 								<tr>
-									<td className="text-right">Type:</td>
+									<td className="text-right">Audit Type:</td>
 									<th>{getAuditType(this.state.auditStore.audit.audit_cycle.type)}</th>
 								</tr>
 								<tr>
@@ -89,7 +93,13 @@ export default React.createClass({
 								</tr>
 								<tr>
 									<td className="text-right">Total Score:</td>
-									<th>{this.state.auditStore.percentage} %</th>
+									<th>
+						<div className="progress">
+							<div className={"progress-bar"} role="progressbar" aria-valuenow={this.state.auditStore.percentage} aria-valuemin="0" aria-valuemax="100" style={{width: this.state.auditStore.percentage + "%"}}>
+							{this.state.auditStore.percentage}%
+							</div>
+						</div>
+									</th>
 								</tr>
 							</tbody>
 						</table>
