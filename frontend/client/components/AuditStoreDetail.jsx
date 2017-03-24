@@ -59,7 +59,7 @@ export default React.createClass({
 						<Print/> Print Report
 					</button>
 					<a className="btn btn-default pull-right" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/xlsx_report'}>
-					<Download/> Download as xlsx
+					<Download/> Excel Report
 					</a>
 					<File/> Audit Report
 				</h2>
