@@ -24,6 +24,10 @@ class Login(View):
             login(request, request.user)
             _logger.info("client auto redirected: %s", request.user)
             return redirect(self.__client_url)
+        else:
+            ## user IS logged in, but is not a client
+            ## let the other login view handle this shit
+            return redirect('registration:login')
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)

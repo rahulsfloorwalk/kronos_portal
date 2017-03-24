@@ -36,6 +36,10 @@ class Login(View):
             login(request, request.user)
             _logger.info("auto redirecting auditor logged in: %s", request.user)
             return redirect(self.__auditor_url)
+        else:
+            ## user IS logged in, but is not an auditor or manager
+            ## let the client login view handle this shit
+            return redirect('registration:client_login')
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
