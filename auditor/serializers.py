@@ -381,7 +381,7 @@ class UserSerializer(ModelSerializer):
 class ContentTypeSerializer(ModelSerializer):
     class Meta:
         model = ContentType
-        fields = ('app_label',)
+        fields = ('app_label','model')
         read_only_fields = fields
 
 

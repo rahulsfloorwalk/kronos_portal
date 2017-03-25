@@ -99,6 +99,7 @@ var AuditList = React.createClass({
 			return (
 				<div className="jumbotron text-center">
 					<h2>Please complete your personal information</h2>
+					<h3>Please <Link className="btn btn-success" to="details/profile/edit"> Click Here</Link> to begin by saving your details</h3>
 					<p>We're sorry, but we need to know more about you to assign audits to you.</p>
 				</div>
 			);

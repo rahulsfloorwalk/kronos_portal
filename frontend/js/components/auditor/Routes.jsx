@@ -38,7 +38,7 @@ const Routes = ({store}) => (
   <Provider store={store}>
     <Router history={hashHistory} onUpdate={logPageView}>
 	<Route path="/" component={App}>
-		<IndexRoute component={DetailsPage}/>
+		<IndexRoute component={Dashboard}/>
 		<Route path="details" component={DetailsPage}>
 			<Route path="profile/edit" component={ProfileInfoForm}/>
 			<Route path="bank/edit" component={BankInfoForm}/>
