@@ -21,6 +21,31 @@ def get_store_section_aggregation_for_client(audit_cycle_id, store_id, client_id
 
     audit_stores = audit.audit_stores.all()
     sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    mean = __get_mean_for_sections(sections, audit_stores)
+    return mean
+
+def get_city_section_aggregation_for_manager(audit_cycle_id, city_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+    except AuditCycle.DoesNotExist as e:
+        raise ObjectNotFound from e
+    client_id = audit_cycle.client_id
+    return get_city_section_aggregation_for_client(audit_cycle_id, city_id, client_id)
+
+def get_city_section_aggregation_for_client(audit_cycle_id, city_id, client_id):
+    try:
+        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__location__city_id=city_id)
+    except Audit.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    audit_stores = []
+    for audit in audits:
+        audit_stores.extend(audit.audit_stores.all())
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    mean = __get_mean_for_sections(sections, audit_stores)
+    return mean
+
+def __get_mean_for_sections(sections, audit_stores):
     mean = []
     for section in sections:
         marks = 0
@@ -37,5 +62,4 @@ def get_store_section_aggregation_for_client(audit_cycle_id, store_id, client_id
             'marks':marks_obtained,
             'max':max_marks
         })
-
     return mean

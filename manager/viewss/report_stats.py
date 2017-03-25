@@ -10,7 +10,7 @@ from client_report.service import audit_section
 
 import json
 
-class AuditCycleSectionAverageReport(APIView):
+class AuditCycleStoreSectionAverageReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET' : [GROUP_NAME_MANAGER],
@@ -18,6 +18,18 @@ class AuditCycleSectionAverageReport(APIView):
     def get(self, request, audit_cycle_id, store_id, format=None):
         try:
             mean_marks = audit_section.get_store_section_aggregation_for_manager(audit_cycle_id, store_id)
+            return Response(mean_marks)
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
+class AuditCycleCitySectionAverageReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, city_id, format=None):
+        try:
+            mean_marks = audit_section.get_city_section_aggregation_for_manager(audit_cycle_id, city_id)
             return Response(mean_marks)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
