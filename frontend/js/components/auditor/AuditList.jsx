@@ -25,47 +25,129 @@ var AuditRow = React.createClass({
 		let button, auditDate, textLabel;
 		if( typeof this.props.application === "undefined" || this.props.application.status === "NOT_APPLIED"){
 			let applyLink = `/audit/${this.props.audit.id}/apply`;
-			let applyButton = <Link to={applyLink} className="btn btn-default"><ShareAlt/> Apply</Link>;
+			let applyButton = <Link to={applyLink} className="btn btn-primary"><ShareAlt/> Apply</Link>;
 			button = applyButton;
 			textLabel = <ApplicationStatusLabel status="NOT_APPLIED"/>;
 		}
 		else if( this.props.application.status === "APPLIED"){
 			let cancelLink = `/audit/${this.props.audit.id}/cancel`;
-			let cancelButton = <Link to={cancelLink} className="btn btn-default"><Cross/> Cancel</Link>;
-			auditDate =  <span>Audit Date: <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b></span>;
+			let cancelButton = <Link to={cancelLink}>&nbsp;cancel application</Link>;
+			auditDate =  <span>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}.</b></span>;
 			button = cancelButton;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} 
 		else if( this.props.application.status === "APPROVED"){
-			auditDate =  <span>Audit Date: <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b></span>;
+			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don't forget to conduct the audit!</span>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} else {
 			button = <br/>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
-		let fees = this.props.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.audit.earnings_per_audit}, </b> : "";
-		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.audit.reimbursement}</b></span> : "";
+		let fees = this.props.audit.earnings_per_audit ? <span>Flat: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big>, </span> : "";
+		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : "";
 
 		let detailsElement = <ExpandableDetails details={this.props.audit.audit_cycle.description}/>;
-		return (
+		let mediaImgStyle = {
+			width: "128px",
+			margin:"10px"
+		};
+		let mediaImgStyle2 = {
+			width: "64px"
+		};
+		/*
+				<div>
+					<img style={mediaImgStyle2} className="pull-right" src={this.props.audit.audit_cycle.client.logo_url} alt="client logo"/>
+					<h4 className="">{this.props.audit.audit_cycle.client.name}</h4>
+					<table>
+						<tbody>
+							<tr>
+								<td>Type</td>
+								<td>Location</td>
+								<td>Fees</td>
+								<td>Dates</td>
+								<td>Details</td>
+								<td>Status</td>
+							</tr>
+						</tbody>
+					</table>
+							<p>Type:<b>{getAuditType(this.props.audit.audit_cycle.type)}</b>,
+							Location:<b>{getAuditType(this.props.audit.audit_cycle.type)}</b>, 
+							Fees:<b>{getAuditType(this.props.audit.audit_cycle.type)}</b>, 
+							Dates:<b>{getAuditType(this.props.audit.audit_cycle.type)}</b>, 
+							Details:<b>{getAuditType(this.props.audit.audit_cycle.type)}</b>, 
+							Status:<b>{getAuditType(this.props.audit.audit_cycle.type)}</b></p>
+					<hr/>
+				</div>
 				<div className="panel panel-default">
-					<div className="panel-heading">
-						<h4 className="panel-title"><b>{this.props.audit.audit_cycle.client.name}</b></h4>
-					</div>
 					<div className="panel-body">
-						<div className="form-horizontal">
+							<div className="row">
+						<div className="col-md-3">
+							<img className="img-responsive" src={this.props.audit.audit_cycle.client.logo_url}/>
+						</div>
+						<div className="col-md-9">
+							<div className="row">
+							<LabelValue_2_10 label="Company:" value={this.props.audit.audit_cycle.client.name}/>
 							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.audit.audit_cycle.type)}/>
 							<LabelValue_2_10 label="Location:" value={`${this.props.audit.store.location.name}, ${this.props.audit.store.location.city.name}`}/>
 							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Dates:" value={<span><b>{moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat)}</b> to <b>{moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat)}</b></span>}/>
 							<LabelValue_2_10 label="Details:" value={detailsElement}/>
 							<LabelValue_2_10 label="Status:" value={textLabel}/>
-						</div>
+							</div>
 						<p className="text-right">
 							{auditDate}&nbsp;&nbsp;{button}
 						</p>
+						</div>
+							</div>
 					</div>
 				</div>
+				*/
+		return (
+			<div>
+					<div className="media">
+						<div className="media-left">
+							<a href="#">
+								<img style={mediaImgStyle} className="media-object" src={this.props.audit.audit_cycle.client.logo_url} alt="client logo"/>
+							</a>
+						</div>
+						<div className="media-body">
+						<h3 className="media-heading">
+							{this.props.audit.audit_cycle.client.name}&nbsp;
+							<small>
+								{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}
+							</small>
+						</h3>
+						<table className="" style={{width:"100%",margin:"10px 0px"}}>
+							<tbody>
+								<tr className="text-muted">
+									<td style={{width:"10%", border: "none"}}>Type</td>
+									<td style={{width:"20%", border: "none"}}>Start Date</td>
+									<td style={{width:"20%", border: "none"}}>End Date</td>
+									<td style={{width:"30%", border: "none"}}>Earnings</td>
+									<td style={{width:"20%", border: "none"}}>Status</td>
+								</tr>
+								<tr>
+									<th style={{border:"none"}}>{getAuditType(this.props.audit.audit_cycle.type)}</th>
+									<th style={{border:"none"}}>
+										{moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat)}
+									</th>
+									<th style={{border:"none"}}>
+										{moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat)}
+									</th>
+									<th style={{border:"none"}}>{<span>{fees}{reimb}</span>}</th>
+									<th style={{border:"none"}}>{textLabel}</th>
+								</tr>
+							</tbody>
+						</table>
+						<p>{this.props.audit.audit_cycle.description}</p>
+						<p className="">
+							{auditDate}
+							{button}
+						</p>
+						</div>
+						<hr/>
+					</div>
+			</div>
 		);
 	},
 });

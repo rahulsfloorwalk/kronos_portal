@@ -174,6 +174,7 @@ class ClientSerializer(ModelSerializer):
         model = Client
         fields = (
             'name',
+            'logo_url',
         )
         read_only_fields = fields
 
