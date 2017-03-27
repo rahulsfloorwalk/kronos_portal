@@ -54,7 +54,7 @@ var ProfileInfoPanelBase = React.createClass({
 					<tr><td className="text-muted text-right">Address:</td><th>{this.props.profileInfo.address}</th></tr>
 					<tr><td className="text-muted text-right">Mobile Number:</td><th>{this.props.profileInfo.mobile_number}</th></tr>
 					<tr><td className="text-muted text-right">City:</td><th>{auditorCity.name}</th></tr>
-					<tr><td className="text-muted text-right">State:</td><th>{this.props.profileInfo.state}</th></tr>
+					<tr><td className="text-muted text-right">State:</td><th>{auditorCity.state}</th></tr>
 					<tr><td className="text-muted text-right">Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>
 					</tbody>
 				</table>
