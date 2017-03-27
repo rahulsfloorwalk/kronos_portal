@@ -74,6 +74,7 @@ class AuditCycleSerializer(ModelSerializer):
         model = AuditCycle
         fields = (
             'id',
+            'name',
             'type',
             'start_date',
             'end_date',

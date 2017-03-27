@@ -40,13 +40,17 @@ def get_city_section_aggregation_for_client(audit_cycle_id, city_id, client_id):
 
     audit_stores = []
     for audit in audits:
-        audit_stores.extend(audit.audit_stores.all())
+        audit_stores.extend(audit.audit_stores.filter(status=AuditStore.COMPLETED))
     sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
     mean = __get_mean_for_sections(sections, audit_stores)
     return mean
 
 def __get_mean_for_sections(sections, audit_stores):
     mean = []
+
+    if len(audit_stores) is 0:
+        return mean
+
     for section in sections:
         marks = 0
         count = 0
@@ -55,11 +59,29 @@ def __get_mean_for_sections(sections, audit_stores):
             marks += report_section.marks_obtained()
             count += 1
         max_marks = section.max_marks()
+
         marks_obtained = "{:.2f}".format(marks/count)
+
+        if max_marks is not 0:
+            percentage = int((marks * 100) / (count * max_marks))
+        else:
+            percentage = 0
+
+        if percentage > 80:
+            color = 4
+        elif percentage > 60:
+            color = 3
+        elif percentage > 40:
+            color = 2
+        else:
+            color = 1
+
         mean.append({
-            'sequence':section.sequence,
-            'section':section.name,
-            'marks':marks_obtained,
-            'max':max_marks
+            'sequence': section.sequence,
+            'section': section.name,
+            'marks': marks_obtained,
+            'percentage': percentage,
+            'max_marks': max_marks,
+            'color': color
         })
     return mean

@@ -12,6 +12,7 @@ from registration.models import GROUP_NAME_CLIENT
 
 from client.models import Store
 from client.service import audit_cycle_aggregation as audit_cycle_aggregation_service
+from client.service import store as store_service
 
 from audit_store import service as audit_store_service
 
@@ -21,9 +22,12 @@ from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 import attachment.service as attachment_service
 
-from client_report.service import xlsx_report as xlsx_report_service
+import audit.service.audit_cycle as audit_cycle_service
 
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer
+from client_report.service import xlsx_report as xlsx_report_service
+from client_report.service import audit_section
+
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -161,5 +165,44 @@ class AuditStoreXlsxReport(APIView):
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename=' + name
             return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
+
+class AuditCycleView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, format=None):
+        try:
+            audit_cycles = audit_cycle_service.find_for_clientuser(request.user.id)
+            return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class CityView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, format=None):
+        try:
+            cities = store_service.find_cities_for_clientuser(request.user.id)
+            print(cities)
+            return Response(cities)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+
+class AuditCycleCitySectionAverageReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, city_id, format=None):
+        try:
+            mean_marks = audit_section.get_city_section_aggregation_for_client(audit_cycle_id, city_id, request.user.clientuser.client_id)
+            return Response(mean_marks)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
