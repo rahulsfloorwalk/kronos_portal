@@ -65,8 +65,8 @@ class StoreByClient(APIView):
     required_groups = {
             'GET' : [GROUP_NAME_CLIENT],
         }
-    def get(self, request, format=None):
-        stores = Store.objects.filter(client_id=request.user.clientuser.client.id)
+    def get(self, request, city_id=None, format=None):
+        stores = Store.objects.filter(client_id=request.user.clientuser.client.id, location__city_id=request.GET.get('city_id'))
         return Response(StoreSerializer(stores, many=True).data)
 
 class StoreById(APIView):
@@ -189,7 +189,6 @@ class CityView(APIView):
     def get(self, request, format=None):
         try:
             cities = store_service.find_cities_for_clientuser(request.user.id)
-            print(cities)
             return Response(cities)
         except ObjectNotFound as e:
             raise NotFound from e

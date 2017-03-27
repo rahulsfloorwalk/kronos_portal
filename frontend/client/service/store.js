@@ -1,8 +1,8 @@
 import $ from 'jquery'
 import { url } from '../../config.js'
 
-export function fetchStores(){
-	return $.get( url.api_base_path + `client/store`);
+export function fetchStores(cityId){
+	return $.get( url.api_base_path + `client/store`, {city_id: cityId});
 };
 
 export function fetchStore(storeId){

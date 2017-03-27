@@ -53,6 +53,11 @@ export default React.createClass({
 				});
 				console.log("got data", chartData);
 			});
+			fetchStores(cityId).then((stores) => {
+				this.setState({
+					stores
+				});
+			});
 		}
 	},
 	componentDidMount: function() {
@@ -67,11 +72,6 @@ export default React.createClass({
 				cities,
 			});
 			this.selectAuditCycleOrCity(this.state.selectedAuditCycleId, cities[0].location__city__id,);
-		});
-		fetchStores().then((stores) => {
-			this.setState({
-				stores
-			});
 		});
 	},
 	auditCycleChanged: function(e){
@@ -93,7 +93,7 @@ export default React.createClass({
 
 		var auditCycleRows = [];
 		for(let id in this.state.auditCycles) {
-			auditCycleRows.push(<option value={this.state.auditCycles[id]} key={id}>{this.state.auditCycles[id].name}</option>);
+			auditCycleRows.push(<option value={this.state.auditCycles[id]} key={id}>{this.state.auditCycles[id].name}, {getAuditType(this.state.auditCycles[id].type)}</option>);
 		}
 
 		var storeTable;
@@ -155,7 +155,7 @@ export default React.createClass({
 				<h3 className="page-header">
 				<div className="">
 					<label className="control-label">Audit Cycle:</label>&nbsp;
-					<select className="form-control" style={{width:"250px", display:"inline-block"}} name="audit_cycle" value={this.state.selectedAuditCycleId} onChange={this.auditCycleChanged}>
+					<select className="form-control" style={{width:"350px", display:"inline-block"}} name="audit_cycle" value={this.state.selectedAuditCycleId} onChange={this.auditCycleChanged}>
 						{auditCycleRows}
 					</select>
 					&nbsp;
