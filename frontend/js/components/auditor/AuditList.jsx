@@ -11,6 +11,7 @@ import { fetchApplications } from '../../auditor/actions/application.js';
 import { fetchAudits } from '../../auditor/actions/audit.js';
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
+import AuditTypeLabel from '../AuditTypeLabel.jsx';
 import FormSelect from '../FormSelect.jsx';
 import ExpandableDetails from '../ExpandableDetails.jsx';
 import { Cross, ShareAlt } from '../Icons.jsx';
@@ -127,7 +128,7 @@ var AuditRow = React.createClass({
 									<td style={{width:"20%", border: "none"}}>Status</td>
 								</tr>
 								<tr>
-									<th style={{border:"none"}}>{getAuditType(this.props.audit.audit_cycle.type)}</th>
+									<th style={{border:"none"}}><AuditTypeLabel auditType={this.props.audit.audit_cycle.type}/></th>
 									<th style={{border:"none"}}>
 										{moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat)}
 									</th>
