@@ -25,7 +25,7 @@ var Row = React.createClass({
 			<tr title="Click to view report" style={{"cursor":"pointer"}}
 					onClick={()=>hashHistory.push(`browser/auditCycle/${this.props.auditCycleId}/city/${this.props.row.city_id}`)}>
 				<td>{this.props.row.city_name}</td>
-				<td>{this.props.row.audit_store_count}</td>
+				<td className="text-right">{this.props.row.audit_store_count}</td>
 				{sections}
 			</tr>
 		);

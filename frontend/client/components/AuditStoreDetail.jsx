@@ -49,11 +49,6 @@ export default React.createClass({
 
 		return (
 			<div>
-				<ol className="breadcrumb hidden-print">
-					<li><Link to="/store">Stores</Link></li>
-					<li><Link to={`/store/${this.state.auditStore.audit.store.id}/audit_store`}>{this.state.auditStore.audit.store.name}</Link></li>
-					<li className="active">Audit: <b>{moment(this.state.auditStore.audit_date).format(momentDateFormat)}</b></li>
-				</ol>
 				<h2 className="page-header">
 					<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
 						<Print/> Print Report

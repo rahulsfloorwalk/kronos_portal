@@ -12,3 +12,7 @@ export function fetchAuditStores(storeId){
 export function fetchAuditStore(auditStoreId){
 	return $.get( url.api_base_path + `client/audit_store/${auditStoreId}`);
 };
+
+export function fetchAuditStoreByAuditCycleAndStore(auditCycleId, storeId){
+	return $.get( url.api_base_path + `client/report/audit_cycle/${auditCycleId}/store/${storeId}/audit_store`);
+};

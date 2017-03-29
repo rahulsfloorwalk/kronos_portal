@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
 
-import { fetchAuditStores } from '../service/audit_store.js';
+import { fetchAuditStoreByAuditCycleAndStore } from '../service/audit_store.js';
 
 import { File } from '../../js/components/Icons.jsx';
 import { getAuditType, getAuditStatus } from '../../js/utils.js';
@@ -34,7 +34,7 @@ export default React.createClass({
 		};
 	},
 	componentDidMount: function() {
-		fetchAuditStores(this.props.params.storeId).then((auditStores) => {
+		fetchAuditStoreByAuditCycleAndStore(this.props.auditCycleId, this.props.storeId).then((auditStores) => {
 			this.setState({
 				auditStores: auditStores
 			});
