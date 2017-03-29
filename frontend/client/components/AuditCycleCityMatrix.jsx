@@ -85,16 +85,19 @@ export default React.createClass({
 					sections.push(<th key={s.sequence}>{s.section}</th>);
 				}
 			}
-
+			let selectedAuditCycle = this.state.auditCycles.filter((ac) => ac.id === parseInt(this.props.auditCycleId))[0] || {};
 			return (
 				<div className="panel panel-default">
 					<div className="panel-heading">
 						<h4 className="panel-title">
-							<File/> 
+							<File/>
 							<label className="control-label">Audit Cycle:</label>&nbsp;
 							<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
 								{auditCycleRows}
 							</select>
+							<span className="pull-right">
+								<big><b>{selectedAuditCycle.completed_audit_count}</b></big> audits completed out of <big><b>{selectedAuditCycle.audit_count}</b></big> (<b>{parseInt(selectedAuditCycle.completed_percentage)} %</b>)
+							</span>
 						</h4>
 					</div>
 					<table className="table table-bordered table-hover">
