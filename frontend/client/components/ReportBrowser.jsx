@@ -185,7 +185,7 @@ export default React.createClass({
 						</div>
 					</div>
 				</div>
-				<StoreList auditCycleId={this.state.selectedAuditCycleId} cityId={this.state.selectedCityId}/>
+				<StoreList auditCycleId={this.state.selectedAuditCycleId} cityId={this.state.selectedCityId} cityName={city.location__city__name}/>
 				{this.props.children}
 			</div>
 		);

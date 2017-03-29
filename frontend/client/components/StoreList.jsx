@@ -74,7 +74,7 @@ export default React.createClass({
 				<table className="table table-striped">
 					<thead>
 						<tr>
-							<th>Store</th>
+							<th>Stores in {this.props.cityName}</th>
 							<th>No. of Reports</th>
 							{sections}
 							<th></th>
