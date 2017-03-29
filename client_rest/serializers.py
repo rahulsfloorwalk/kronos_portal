@@ -80,6 +80,8 @@ class AuditCycleSerializer(ModelSerializer):
             'end_date',
             'client',
             'audit_count',
+            'completed_audit_count',
+            'completed_percentage',
         )
         read_only_fields = fields
 

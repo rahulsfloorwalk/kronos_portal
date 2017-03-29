@@ -139,8 +139,14 @@ export default React.createClass({
 										<th>{getAuditType(auditCycle.type)}</th>
 									</tr>
 									<tr>
-										<td className="text-right">Total Audits</td>
-										<th>{auditCycle.audit_count}</th>
+										<td className="text-right">Audits</td>
+										<td>
+											<b>{auditCycle.completed_audit_count}</b> completed out of <b>{auditCycle.audit_count}</b>
+										</td>
+									</tr>
+									<tr>
+										<td className="text-right">Completion Percentage</td>
+										<th>{parseFloat(auditCycle.completed_percentage).toFixed(2)}%</th>
 									</tr>
 								</tbody>
 							</table>

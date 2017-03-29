@@ -2,6 +2,8 @@ from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import CASCADE
 
+import audit_store
+
 class AuditCycle(Model):
 
     WALKIN = 'WALKIN'
@@ -46,6 +48,15 @@ class AuditCycle(Model):
 
     def audit_count(self):
         return sum(a.count for a in self.audits.all())
+
+    def completed_audit_count(self):
+        return audit_store.models.AuditStore.objects.filter(
+            audit__audit_cycle_id=self.id,
+            status=audit_store.models.AuditStore.COMPLETED
+        ).count()
+
+    def completed_percentage(self):
+        return self.completed_audit_count() * 100 / self.audit_count()
 #
 #    def cities(self):
 #        cities = [al.location.city for al in self.auditlocations.all()]
