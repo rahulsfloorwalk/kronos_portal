@@ -16,8 +16,13 @@ import SectionList from './SectionList.jsx';
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
+
 		<IndexRoute component={Dashboard} />
-		<Route path="/store" component={ReportBrowser}/>
+		<Route path="/dashboard/:auditCycleId" component={Dashboard}/>
+
+		<Route path="/browser" component={ReportBrowser}/>
+		<Route path="/browser/auditCycle/:auditCycleId/city/:cityId" component={ReportBrowser}/>
+
 		<Route path="/store/:storeId" component={StoreDetail}>
 			<Route path="audit_store" component={AuditStoreList}/>
 		</Route>

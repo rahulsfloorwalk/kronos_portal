@@ -1,12 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 import { Plus, File } from '../../js/components/Icons.jsx';
 
 import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
-import { getAuditType } from '../../js/utils.js';
+import { getAuditType, getColor } from '../../js/utils.js';
 
 import StoreList from './StoreList.jsx';
 
@@ -19,54 +19,56 @@ export default React.createClass({
 		return {
 			auditCycles: [],
 			cities: [],
-			stores: [],
 			selectedAuditCycleId: null,
 			selectedCityId: null,
 			chartData: []
 		};
 	},
 	selectAuditCycleOrCity: function(auditCycleId, cityId){
-		this.setState({
-			stores: [],
-			chartData: [],
-			selectedAuditCycleId: auditCycleId,
-			selectedCityId: cityId
-		});
 		if(auditCycleId && cityId){
+			this.setState({
+				chartData: [],
+				selectedAuditCycleId: auditCycleId,
+				selectedCityId: cityId
+			});
 			fetchCitySectionAverageByAuditCycle(auditCycleId, cityId).then((chartData)=>{
 				this.setState({
 					chartData
 				});
-				console.log("got data", chartData);
 			});
+		}
+	},
+	reloadFromParams: function(){
+		if(this.props.params.auditCycleId && this.props.params.cityId){
+			this.selectAuditCycleOrCity(this.props.params.auditCycleId, this.props.params.cityId);
+		} else {
+			if(this.state.auditCycles.length > 0 && this.state.cities.length > 0){
+				hashHistory.push(`/browser/auditCycle/${this.state.auditCycles[0].id}/city/${this.state.cities[0].location__city__id}`);
+			}
 		}
 	},
 	componentDidMount: function() {
 		fetchAuditCycles().then((auditCycles)=>{
 			this.setState({
 				auditCycles,
-			});
-			this.selectAuditCycleOrCity(auditCycles[0].id, this.state.selectedCityId);
+			}, this.reloadFromParams);
 		});
 		fetchCities().then((cities)=>{
 			this.setState({
 				cities,
-			});
-			this.selectAuditCycleOrCity(this.state.selectedAuditCycleId, cities[0].location__city__id,);
+			}, this.reloadFromParams);
 		});
 	},
+	componentWillReceiveProps: function(nextProps){
+		this.selectAuditCycleOrCity(nextProps.params.auditCycleId, nextProps.params.cityId);
+	},
 	auditCycleChanged: function(e){
-		this.selectAuditCycleOrCity(e.target.value, this.state.selectedCityId);
+		hashHistory.push(`/browser/auditCycle/${e.target.value}/city/${this.state.selectedCityId}`);
 	},
 	cityChanged: function(e){
-		this.selectAuditCycleOrCity(this.state.selectedAuditCycleId, e.target.value);
+		hashHistory.push(`/browser/auditCycle/${this.state.selectedAuditCycleId}/city/${e.target.value}`);
 	},
 	render: function(){
-		var storeRows = [];
-		for(let id in this.state.stores) {
-			storeRows.push(<StoreRow store={this.state.stores[id]} key={id}/>);
-		}
-
 		var cityRows = [];
 		for(let id in this.state.cities) {
 			cityRows.push(<option value={this.state.cities[id].location__city__id} key={id}>{this.state.cities[id].location__city__name}</option>);
@@ -77,44 +79,10 @@ export default React.createClass({
 			auditCycleRows.push(<option value={this.state.auditCycles[id]} key={id}>{this.state.auditCycles[id].name}, {getAuditType(this.state.auditCycles[id].type)}</option>);
 		}
 
-		var storeTable;
-		if( storeRows.length > 0) {
-			storeTable = (<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Address</th>
-							<th>Location</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{storeRows}
-					</tbody>
-				</table>);
-		} else {
-			storeTable = (<Jumbotron heading="there are no stores here" para="contact site administrator"/>);
-		}
-
 		var chartRows = [];
 		for(let i in this.state.chartData){
-			var progressClass = "";
-			switch(this.state.chartData[i].color){
-				case 1:
-					progressClass = "danger";
-					break;
-				case 2:
-					progressClass = "warning";
-					break;
-				case 3:
-					progressClass = "info";
-					break;
-				case 4:
-					progressClass = "success";
-					break;
-			}
-
 			if( this.state.chartData[i].max_marks !== 0){
+				let progressClass = getColor(this.state.chartData[i].color);
 				chartRows.push(<div className="list-group-item" key={this.state.chartData[i].sequence}>
 						<b>{this.state.chartData[i].section}</b>
 						<div className="progress">
@@ -129,7 +97,7 @@ export default React.createClass({
 			chartRows.push(<div key="empty" className="list-group-item text-muted text-center">no data here yet</div>);
 		}
 
-		let auditCycle = this.state.auditCycles.filter( ac => ac.id === this.state.selectedAuditCycleId)[0] || {};
+		let auditCycle = this.state.auditCycles.filter( ac => ac.id === parseInt(this.state.selectedAuditCycleId))[0] || {};
 		let city = this.state.cities.filter( c => c.location__city__id === parseInt(this.state.selectedCityId))[0] || {};
 		return (
 			<div>

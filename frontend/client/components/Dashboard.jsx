@@ -12,7 +12,7 @@ export default React.createClass({
 				<h2 className="page-header"><Dashboard/> Dashboard</h2>
 				<div className="row">
 					<div className="col-md-12">
-						<AuditCycleCityMatrix/>
+						<AuditCycleCityMatrix auditCycleId={this.props.params.auditCycleId}/>
 					</div>
 				</div>
 				<div className="row">

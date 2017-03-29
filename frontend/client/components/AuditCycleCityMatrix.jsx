@@ -4,6 +4,7 @@ import { Link, hashHistory } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
 
+import { fetchAuditCycles } from '../service/audit_cycle.js';
 import { fetchAuditCycleCityMatrix } from '../service/dashboard.js';
 
 import { File } from '../../js/components/Icons.jsx';
@@ -22,7 +23,7 @@ var Row = React.createClass({
 		}
 		return (
 			<tr title="Click to view report" style={{"cursor":"pointer"}}
-					onClick={()=>hashHistory.push(`audit_store/${row[0]}`)}>
+					onClick={()=>hashHistory.push(`browser/auditCycle/${this.props.auditCycleId}/city/${this.props.row.city_id}`)}>
 				<td>{this.props.row.city_name}</td>
 				<td>{this.props.row.audit_store_count}</td>
 				{sections}
@@ -34,20 +35,47 @@ var Row = React.createClass({
 export default React.createClass({
 	getInitialState: function(){
 		return {
-			report: []
+			auditCycles: [],
+			report: [],
 		};
 	},
-	componentDidMount: function() {
-		fetchAuditCycleCityMatrix(3).then((report) => {
+	reloadMatrix: function(auditCycleId){
+		fetchAuditCycleCityMatrix(auditCycleId).then((report) => {
 			this.setState({
 				report
 			});
 		});
 	},
+	componentDidMount: function() {
+		fetchAuditCycles().then((auditCycles)=>{
+			this.setState({
+				auditCycles,
+			});
+			if(this.props.auditCycleId){
+				this.reloadMatrix(this.props.auditCycleId);
+			} else {
+				hashHistory.push(`/dashboard/${auditCycles[0].id}`);
+			}
+		});
+	},
+	componentWillReceiveProps: function(nextProps){
+		if( nextProps.auditCycleId){
+			this.reloadMatrix(nextProps.auditCycleId);
+		}
+	},
+	auditCycleChanged: function(e){
+		hashHistory.push(`/dashboard/${e.target.value}`);
+	},
 	render: function(){
+
+		var auditCycleRows = [];
+		for(let id in this.state.auditCycles) {
+			auditCycleRows.push(<option value={this.state.auditCycles[id]} key={id}>{this.state.auditCycles[id].name}, {getAuditType(this.state.auditCycles[id].type)}</option>);
+		}
+
 		let trs = [];
 		for(let row of this.state.report) {
-			trs.push(<Row key={row.city_id} row={row}/>);
+			trs.push(<Row key={row.city_id} auditCycleId={3} row={row}/>);
 		}
 
 		if(trs.length > 0){
@@ -62,7 +90,11 @@ export default React.createClass({
 				<div className="panel panel-default">
 					<div className="panel-heading">
 						<h4 className="panel-title">
-							<File/> Latest Audit Cycle: ( {getAuditType(this.state.report.type)})
+							<File/> 
+							<label className="control-label">Audit Cycle:</label>&nbsp;
+							<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
+								{auditCycleRows}
+							</select>
 						</h4>
 					</div>
 					<table className="table table-bordered table-hover">
