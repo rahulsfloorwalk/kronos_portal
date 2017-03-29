@@ -15,11 +15,6 @@ export default React.createClass({
 						<AuditCycleCityMatrix auditCycleId={this.props.params.auditCycleId}/>
 					</div>
 				</div>
-				<div className="row">
-					<div className="col-md-12">
-						<LatestAuditStore/>
-					</div>
-				</div>
 			</div>
 		);
 	},
