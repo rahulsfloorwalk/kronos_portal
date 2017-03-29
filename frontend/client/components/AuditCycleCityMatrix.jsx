@@ -87,19 +87,35 @@ export default React.createClass({
 			}
 			let selectedAuditCycle = this.state.auditCycles.filter((ac) => ac.id === parseInt(this.props.auditCycleId))[0] || {};
 			return (
-				<div className="panel panel-default">
-					<div className="panel-heading">
-						<h4 className="panel-title">
-							<File/>
-							<label className="control-label">Audit Cycle:</label>&nbsp;
-							<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
-								{auditCycleRows}
-							</select>
-							<span className="pull-right">
-								<big><b>{selectedAuditCycle.completed_audit_count}</b></big> audits completed out of <big><b>{selectedAuditCycle.audit_count}</b></big> (<b>{parseInt(selectedAuditCycle.completed_percentage)} %</b>)
-							</span>
-						</h4>
-					</div>
+				<div>
+				<h4>
+					<File/>
+					<label className="control-label">Audit Cycle:</label>&nbsp;
+					<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
+						{auditCycleRows}
+					</select>
+				</h4>
+						<div className="row">
+							<div className="col-md-4">
+									<div className="jumbotron text-center">
+										<h1><b>{parseInt(selectedAuditCycle.completed_percentage) + "%"}</b></h1>
+										<p className="text-muted">completed</p>
+									</div>
+							</div>
+							<div className="col-md-4">
+									<div className="jumbotron text-center">
+										<h1><b>{selectedAuditCycle.completed_audit_count}</b></h1>
+										<p className="text-muted">audits completed</p>
+									</div>
+							</div>
+							<div className="col-md-4">
+									<div className="jumbotron text-center">
+										<h1><b>{selectedAuditCycle.audit_count}</b></h1>
+										<p className="text-muted">total audits</p>
+									</div>
+							</div>
+						</div>
+
 					<table className="table table-bordered table-hover">
 						<thead>
 							<tr>
