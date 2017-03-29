@@ -75,7 +75,7 @@ export default React.createClass({
 
 		let trs = [];
 		for(let row of this.state.report) {
-			trs.push(<Row key={row.city_id} auditCycleId={3} row={row}/>);
+			trs.push(<Row key={row.city_id} auditCycleId={this.props.auditCycleId} row={row}/>);
 		}
 
 		if(trs.length > 0){
