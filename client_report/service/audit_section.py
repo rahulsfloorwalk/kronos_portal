@@ -17,7 +17,7 @@ def get_store_section_aggregation_for_client(audit_cycle_id, store_id, client_id
 
     audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     if (audit_cycle.client.id != int(client_id)):
-        raise AppLogicError("Invalid Client")
+        raise ObjectNotFound("Invalid Client")
     try:
         audit = Audit.objects.get(audit_cycle_id=audit_cycle_id, store_id=store_id)
     except Audit.DoesNotExist as e:
@@ -40,8 +40,8 @@ def get_city_section_aggregation_for_client(audit_cycle_id, city_id, client_id):
 
     audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     if (audit_cycle.client.id != int(client_id)):
-        raise AppLogicError("Invalid Client")
-        
+        raise ObjectNotFound("Invalid Client")
+
     try:
         audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__location__city_id=city_id)
     except Audit.DoesNotExist as e:
@@ -66,7 +66,7 @@ def get_store_aggregation_list_for_client(audit_cycle_id, city_id, client_id):
 
     audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     if (audit_cycle.client.id != int(client_id)):
-        raise AppLogicError("Invalid Client")
+        raise ObjectNotFound("Invalid Client")
 
     try:
         audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__location__city_id=city_id)
@@ -101,7 +101,7 @@ def get_city_aggregation_for_client(audit_cycle_id, client_id):
 
     audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     if (audit_cycle.client.id != int(client_id)):
-        raise AppLogicError("Invalid Client")
+        raise ObjectNotFound("Invalid Client")
 
     try:
         audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id)
@@ -132,7 +132,7 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
 
     audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     if (audit_cycle.client.id != int(client_id)):
-        raise AppLogicError("Invalid Client")
+        raise ObjectNotFound("Invalid Client")
 
     try:
         audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store_id=store_id)

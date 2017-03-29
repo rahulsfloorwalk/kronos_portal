@@ -203,8 +203,8 @@ class AuditCycleCitySectionAverageReport(APIView):
         try:
             mean_marks = audit_section.get_city_section_aggregation_for_client(audit_cycle_id, city_id, request.user.clientuser.client_id)
             return Response(mean_marks)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        except ObjectNotFound as e:
+            raise NotFound from e
 
 class AuditCycleStoreSectionAverageReport(APIView):
     permission_classes = [HasGroupPermission]
@@ -215,8 +215,8 @@ class AuditCycleStoreSectionAverageReport(APIView):
         try:
             mean_marks = audit_section.get_store_section_aggregation_for_client(audit_cycle_id, store_id, request.user.clientuser.client_id)
             return Response(mean_marks)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        except ObjectNotFound as e:
+            raise NotFound from e
 
 class AuditCycleCityStoreAverageReport(APIView):
     permission_classes = [HasGroupPermission]
@@ -227,8 +227,8 @@ class AuditCycleCityStoreAverageReport(APIView):
         try:
             mean_marks = audit_section.get_store_aggregation_list_for_client(audit_cycle_id, city_id, request.user.clientuser.client_id)
             return Response(mean_marks)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        except ObjectNotFound as e:
+            raise NotFound from e
 
 class AuditCycleCityAverageReport(APIView):
     permission_classes = [HasGroupPermission]
@@ -239,8 +239,8 @@ class AuditCycleCityAverageReport(APIView):
         try:
             mean_marks = audit_section.get_city_aggregation_for_client(audit_cycle_id, request.user.clientuser.client_id)
             return Response(mean_marks)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        except ObjectNotFound as e:
+            raise NotFound from e
 
 class AuditCycleAuditStoreSectionReport(APIView):
     permission_classes = [HasGroupPermission]
@@ -251,5 +251,5 @@ class AuditCycleAuditStoreSectionReport(APIView):
         try:
             mean_marks = audit_section.get_audit_store_section_list_for_client(audit_cycle_id, store_id, request.user.clientuser.client_id)
             return Response(mean_marks)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        except ObjectNotFound as e:
+            raise NotFound from e
