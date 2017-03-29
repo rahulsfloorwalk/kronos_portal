@@ -170,6 +170,10 @@ export default React.createClass({
 										<td className="text-right">Audit Type</td>
 										<th>{getAuditType(auditCycle.type)}</th>
 									</tr>
+									<tr>
+										<td className="text-right">Total Audits</td>
+										<th>{auditCycle.audit_count}</th>
+									</tr>
 								</tbody>
 							</table>
 						</div>
