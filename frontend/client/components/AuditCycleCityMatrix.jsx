@@ -70,7 +70,7 @@ export default React.createClass({
 
 		var auditCycleRows = [];
 		for(let id in this.state.auditCycles) {
-			auditCycleRows.push(<option value={this.state.auditCycles[id]} key={id}>{this.state.auditCycles[id].name}, {getAuditType(this.state.auditCycles[id].type)}</option>);
+			auditCycleRows.push(<option value={this.state.auditCycles[id].id} key={id}>{this.state.auditCycles[id].name}, {getAuditType(this.state.auditCycles[id].type)}</option>);
 		}
 
 		let trs = [];
