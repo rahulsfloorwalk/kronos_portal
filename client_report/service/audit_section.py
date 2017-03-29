@@ -125,7 +125,7 @@ def get_city_aggregation_for_client(audit_cycle_id, client_id):
             'sections': store_sections
         }
         mean_values.append(mean_object)
-
+        mean_values = sorted(mean_values, key = lambda name: name.get('city_name'))
     return mean_values
 
 def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id):
