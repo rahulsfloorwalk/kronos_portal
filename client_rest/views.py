@@ -229,3 +229,15 @@ class AuditCycleCityStoreAverageReport(APIView):
             return Response(mean_marks)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
+
+class AuditCycleCityAverageReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        try:
+            mean_marks = audit_section.get_city_aggregation_for_client(audit_cycle_id, request.user.clientuser.client_id)
+            return Response(mean_marks)
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404

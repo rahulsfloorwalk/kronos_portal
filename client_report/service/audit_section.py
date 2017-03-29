@@ -69,18 +69,46 @@ def get_store_aggregation_list_for_client(audit_cycle_id, city_id, client_id):
 
     mean_values = []
     for k,v in buckets.items():
-        sections = __get_mean_for_sections(sections, v)
+        store_sections = __get_mean_for_sections(sections, v)
         mean_object = {
             'store_name': v[0].audit.store.name,
             'store_id': v[0].audit.store.id,
             'client_id': v[0].audit.store.client.id,
             'location': v[0].audit.store.location.name,
             'count': len(v),
-            'sections': sections
+            'sections': store_sections
         }
         mean_values.append(mean_object)
 
     return mean_values
+
+def get_city_aggregation_for_client(audit_cycle_id, client_id):
+    try:
+        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id)
+    except Audit.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    audit_stores = []
+    for audit in audits:
+        audit_stores.extend(audit.audit_stores.filter(status=AuditStore.COMPLETED))
+    buckets = {}
+    for a in audit_stores: buckets.setdefault(a.audit.store.location.city.id, []).append(a)
+    mean_values = []
+    for k,v in buckets.items():
+        store_sections = __get_mean_for_sections(sections, v)
+        mean_object = {
+            'city_name': v[0].audit.store.location.city.name,
+            'city_id': v[0].audit.store.location.city.id,
+            'client_id': v[0].audit.store.client.id,
+            'audit_store_count': len(v),
+            'sections': store_sections
+        }
+        mean_values.append(mean_object)
+
+    return mean_values
+
+
 
 def __get_mean_for_sections(sections, audit_stores):
     mean = []
