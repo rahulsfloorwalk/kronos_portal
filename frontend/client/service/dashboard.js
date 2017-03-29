@@ -4,3 +4,7 @@ import { url } from '../../config.js'
 export function fetchLatestAuditCycleMatrix(){
 	return $.get( url.api_base_path + `client/audit_cycle/aggregation`);
 };
+
+export function fetchAuditCycleCityMatrix(auditCycleId){
+	return $.get( url.api_base_path + `client/report/audit_cycle/${auditCycleId}`);
+};
