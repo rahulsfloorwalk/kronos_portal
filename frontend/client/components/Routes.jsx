@@ -5,7 +5,7 @@ import App from './App.jsx';
 
 import Dashboard from './Dashboard.jsx';
 
-import StoreList from './StoreList.jsx';
+import ReportBrowser from './ReportBrowser.jsx';
 import StoreDetail from './StoreDetail.jsx';
 
 import AuditStoreList from './AuditStoreList.jsx';
@@ -17,7 +17,7 @@ const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
 		<IndexRoute component={Dashboard} />
-		<Route path="/store" component={StoreList}/>
+		<Route path="/store" component={ReportBrowser}/>
 		<Route path="/store/:storeId" component={StoreDetail}>
 			<Route path="audit_store" component={AuditStoreList}/>
 		</Route>

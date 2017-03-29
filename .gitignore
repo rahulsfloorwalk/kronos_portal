@@ -1,3 +1,4 @@
+.vimrc
 *.pyc
 *.swp
 venv/

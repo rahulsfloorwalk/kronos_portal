@@ -72,10 +72,11 @@ def get_store_aggregation_list_for_client(audit_cycle_id, city_id, client_id):
         store_sections = __get_mean_for_sections(sections, v)
         mean_object = {
             'store_name': v[0].audit.store.name,
+            'address': v[0].audit.store.address,
             'store_id': v[0].audit.store.id,
             'client_id': v[0].audit.store.client.id,
             'location': v[0].audit.store.location.name,
-            'count': len(v),
+            'audit_store_count': len(v),
             'sections': store_sections
         }
         mean_values.append(mean_object)

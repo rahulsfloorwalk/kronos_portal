@@ -200,3 +200,26 @@ export function getCameraResolution(value){
 			return `unknown camera resolution ${value} - ${typeof value}`;
 	}
 }
+
+export function getColor(value){
+	switch(value){
+		case "1":
+		case 1:
+			return "danger";
+		case "2":
+		case 2:
+			return "warning";
+		case "3":
+		case 3:
+			return "info";
+		case "4":
+		case 4:
+			return "success";
+		case "":
+		case null:
+		case undefined:
+			return "";
+		default:
+			return "";
+	}
+}

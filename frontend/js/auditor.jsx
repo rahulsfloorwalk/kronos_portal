@@ -9,11 +9,12 @@ import ReduxLogger from 'redux-logger';
 import Routes from './components/auditor/Routes.jsx';
 import { rootReducer } from './reducers_auditor.js';
 
+
 var store = Redux.createStore(
 	rootReducer,
 	Redux.applyMiddleware(
 		ReduxThunk,
-		ReduxLogger()
+		//ReduxLogger()
 	)
 );
 

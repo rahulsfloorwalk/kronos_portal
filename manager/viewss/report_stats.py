@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_CLIENT
 from registration.mixins import HasGroupPermission
 
 from client_report.service import audit_section
@@ -13,7 +13,7 @@ import json
 class AuditCycleStoreSectionAverageReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET' : [GROUP_NAME_MANAGER, GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, store_id, format=None):
         try:
