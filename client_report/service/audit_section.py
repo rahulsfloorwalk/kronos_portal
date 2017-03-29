@@ -109,6 +109,27 @@ def get_city_aggregation_for_client(audit_cycle_id, client_id):
 
     return mean_values
 
+def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id):
+    try:
+        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store_id=store_id)
+    except Audit.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    audit_stores = []
+    for audit in audits:
+        audit_stores.extend(audit.audit_stores.filter(status=AuditStore.COMPLETED))
+    mean_values = []
+    for audit_store in audit_stores:
+        store_sections = __get_mean_for_sections(sections, [audit_store,])
+        mean_object = {
+            'audit_store_id': audit_store.id,
+            'sections': store_sections
+        }
+        mean_values.append(mean_object)
+
+    return mean_values
+
 
 
 def __get_mean_for_sections(sections, audit_stores):
