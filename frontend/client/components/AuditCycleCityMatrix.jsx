@@ -78,6 +78,8 @@ export default React.createClass({
 			trs.push(<Row key={row.city_id} auditCycleId={this.props.auditCycleId} row={row}/>);
 		}
 
+		let displayTable;
+
 		if(trs.length > 0){
 			let sections = [];
 			for(let s of this.state.report[0].sections){
@@ -85,37 +87,7 @@ export default React.createClass({
 					sections.push(<th key={s.sequence}>{s.section}</th>);
 				}
 			}
-			let selectedAuditCycle = this.state.auditCycles.filter((ac) => ac.id === parseInt(this.props.auditCycleId))[0] || {};
-			return (
-				<div>
-				<h4>
-					<File/>
-					<label className="control-label">Audit Cycle:</label>&nbsp;
-					<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
-						{auditCycleRows}
-					</select>
-				</h4>
-						<div className="row">
-							<div className="col-md-4">
-									<div className="jumbotron text-center">
-										<h1><b>{parseInt(selectedAuditCycle.completed_percentage) + "%"}</b></h1>
-										<p className="text-muted">completed</p>
-									</div>
-							</div>
-							<div className="col-md-4">
-									<div className="jumbotron text-center">
-										<h1><b>{selectedAuditCycle.completed_audit_count}</b></h1>
-										<p className="text-muted">audits completed</p>
-									</div>
-							</div>
-							<div className="col-md-4">
-									<div className="jumbotron text-center">
-										<h1><b>{selectedAuditCycle.audit_count}</b></h1>
-										<p className="text-muted">total audits</p>
-									</div>
-							</div>
-						</div>
-
+			displayTable = (
 					<table className="table table-bordered table-hover">
 						<thead>
 							<tr>
@@ -128,12 +100,44 @@ export default React.createClass({
 							{trs}
 						</tbody>
 					</table>
-					{this.props.children}
-				</div>
 			);
 		} else {
-			return (<Jumbotron heading="no audits yet" para="latest audits will show up here"/>);
+			displayTable = (<Jumbotron heading="no audits yet" para="latest audits will show up here"/>);
 		}
+		let selectedAuditCycle = this.state.auditCycles.filter((ac) => ac.id === parseInt(this.props.auditCycleId))[0] || {};
+		return (
+			<div>
+			<h4>
+				<File/>
+				<label className="control-label">Audit Cycle:</label>&nbsp;
+				<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
+					{auditCycleRows}
+				</select>
+			</h4>
+					<div className="row">
+						<div className="col-md-4">
+								<div className="jumbotron text-center">
+									<h1><b>{parseInt(selectedAuditCycle.completed_percentage) + "%"}</b></h1>
+									<p className="text-muted">completed</p>
+								</div>
+						</div>
+						<div className="col-md-4">
+								<div className="jumbotron text-center">
+									<h1><b>{selectedAuditCycle.completed_audit_count}</b></h1>
+									<p className="text-muted">audits completed</p>
+								</div>
+						</div>
+						<div className="col-md-4">
+								<div className="jumbotron text-center">
+									<h1><b>{selectedAuditCycle.audit_count}</b></h1>
+									<p className="text-muted">total audits</p>
+								</div>
+						</div>
+					</div>
+				{displayTable}
+				{this.props.children}
+			</div>
+		);
 	},
 });
 

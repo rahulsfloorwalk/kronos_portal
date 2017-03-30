@@ -11,7 +11,7 @@ def save(audit):
 def find_for_clientuser(user_id):
     try:
         user = User.objects.get(pk=user_id)
-        return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status=AuditCycle.REPORT)
+        return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE))
     except (User.DoesNotExist, ) as e:
         raise ObjectNotFound from e
 
