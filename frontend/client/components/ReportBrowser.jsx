@@ -2,10 +2,10 @@ import React from 'react';
 import { Link, hashHistory } from 'react-router';
 
 import Jumbotron from '../../js/components/Jumbotron.jsx';
-import { Plus, File } from '../../js/components/Icons.jsx';
+import { Plus, File, Download } from '../../js/components/Icons.jsx';
 
 import moment from 'moment';
-import { momentDateFormat }  from '../../config.js';
+import { momentDateFormat , url}  from '../../config.js';
 import { getAuditType, getColor } from '../../js/utils.js';
 
 import StoreList from './StoreList.jsx';
@@ -148,6 +148,14 @@ export default React.createClass({
 										<td className="text-right">Completion Percentage</td>
 										<th>{parseFloat(auditCycle.completed_percentage).toFixed(2)}%</th>
 									</tr>
+									<tr>
+										<td className="text-right">Report Summary</td>
+										<td>
+											<a className="btn btn-default" href={url.api_base_path + 'client/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
+												<Download/> Download Excel
+											</a>
+										</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -169,4 +177,3 @@ export default React.createClass({
 		);
 	},
 });
-
