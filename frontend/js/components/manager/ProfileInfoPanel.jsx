@@ -36,7 +36,7 @@ var ProfileInfoPanel = React.createClass({
 					<p>Address: { this.props.profileInfo.address }</p>
 					<p>Mobile Number: <a href={`tel:${this.props.profileInfo.mobile_number}`}>{ this.props.profileInfo.mobile_number }</a></p>
 					<p>City: { auditor_city.name }</p>
-					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
+					<p>State: { auditor_city.state }</p>
 					<p>Pincode: { this.props.profileInfo.pincode }</p>
 				</div>
 			</div>
