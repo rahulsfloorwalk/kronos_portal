@@ -43,7 +43,7 @@ class Login(View):
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
-        _logger.info("login attempt with username: %s", request.POST.get('username','<blank>'))
+        _logger.info("login attempt with username: >%s<", request.POST.get('username','<blank>'))
         if form.is_valid():
             user = form.get_user()
             if user is not None:
@@ -91,7 +91,7 @@ class SignUp(View):
 
     @atomic
     def post(self, request):
-        _logger.info("signup form submitted with username: %s", request.POST.get('username','<blank>'))
+        _logger.info("signup form submitted with username: >%s<", request.POST.get('username','<blank>'))
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
