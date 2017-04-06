@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 import django.core.validators
 from django.db import migrations, models
+from scripts import mobile
 
 
 class Migration(migrations.Migration):
@@ -18,4 +19,7 @@ class Migration(migrations.Migration):
             name='mobile_number',
             field=models.CharField(blank=True, db_column='mobile_number', max_length=10, null=True, validators=[django.core.validators.RegexValidator('^[0-9]*$', 'Only numberic values accepted'), django.core.validators.MinLengthValidator(10, 'Field requires 10 characters')]),
         ),
+        migrations.RunSQL(mobile.REPLACE_BLANK_WITH_NULL),
+        migrations.RunSQL(mobile.DELETE_DUPLICATE_ENTRIES),
+        migrations.RunSQL(mobile.REPLACE_MOBILE_WITH_NULL),
     ]
