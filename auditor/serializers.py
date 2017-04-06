@@ -61,7 +61,6 @@ class ProfileInfoDeSerializer(ModelSerializer):
             'gender',
             'marital_status',
             'education',
-            'mobile_number',
             'date_of_birth',
             'address',
             'pincode',
@@ -86,7 +85,6 @@ class ProfileInfoDeSerializer(ModelSerializer):
         profile_info.gender = self.validated_data.get('gender', profile_info.gender)
         profile_info.marital_status = self.validated_data.get('marital_status', profile_info.marital_status)
         profile_info.education = self.validated_data.get('education', profile_info.education)
-        profile_info.mobile_number = self.validated_data.get('mobile_number', profile_info.mobile_number)
         profile_info.date_of_birth = self.validated_data.get('date_of_birth', profile_info.date_of_birth)
         profile_info.address = self.validated_data.get('address', profile_info.address)
         profile_info.pincode = self.validated_data.get('pincode', profile_info.pincode)
