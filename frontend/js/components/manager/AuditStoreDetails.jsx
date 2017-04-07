@@ -12,7 +12,7 @@ import { setAuditDate } from '../../manager/service/audit_store.js';
 
 import { FormDateInput } from '../FormInput.jsx';
 import ExpandableDetails from '../ExpandableDetails.jsx';
-import { Retweet, King, File, Download } from '../Icons.jsx';
+import { Calendar, Retweet, King, File, Download } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
@@ -47,6 +47,9 @@ var AuditStoreDetails = React.createClass({
 		this.setState({auditDateLoading: true});
 		setAuditDate(this.props.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
 			this.props.dispatch(updateAuditStore(auditStore));
+			this.setState({auditDateSuccess: true, auditDateError: false});
+		}, () => {
+			this.setState({auditDateSuccess: false, auditDateError: true});
 		}).always(() => {
 			this.setState({auditDateLoading: false});
 		});
@@ -67,14 +70,20 @@ var AuditStoreDetails = React.createClass({
 			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
 
-			auditDateElement = (<Datetime
+			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
+			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
+			auditDateElement = (<div className={"input-group " + hasAuditDateError + hasAuditDateSuccess}>
+				<span className="input-group-addon"><Calendar/></span>
+				<Datetime
+					inputProps={{className:"form-control"}}
 					disabled={this.state.auditDateLoading}
 					timeFormat={false}
 					dateFormat={momentDateFormat}
 					closeOnSelect={true}
 					onChange={this.auditDateChanged}
 					value={this.props.auditStore.audit_date}
-				/>)
+				/>
+			</div>)
 		}
 		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
 
