@@ -4,9 +4,11 @@ from django.views import View
 from django.utils.decorators import method_decorator
 from django.contrib.auth.models import User, Group
 
+from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.serializers import Serializer
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -66,6 +68,27 @@ class AuditStoreIdView(APIView):
         except Audit.DoesNotExist:
             raise Http404
 
+class AuditStoreIdAuditDateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+
+    class DeSerializer(Serializer):
+        audit_date = serializers.DateField()
+
+    def post(self, request, audit_store_id):
+        try:
+            ds = AuditStoreIdAuditDateView.DeSerializer(data=request.data)
+            ds.is_valid(raise_exception=True)
+            audit_store = audit_store_service.set_audit_date(audit_store_id, ds.validated_data['audit_date'])
+            return Response(AuditStoreSerializer(audit_store).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e
 
 class AuditStoreIdWithdrawView(APIView):
     permission_classes = [HasGroupPermission]

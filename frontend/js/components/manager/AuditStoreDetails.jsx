@@ -2,11 +2,15 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Datetime from 'react-datetime';
+
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
-import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, unSubmitAuditStore } from '../../manager/actions/audit_store.js';
+import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, unSubmitAuditStore, updateAuditStore } from '../../manager/actions/audit_store.js';
+import { setAuditDate } from '../../manager/service/audit_store.js';
 
+import { FormDateInput } from '../FormInput.jsx';
 import ExpandableDetails from '../ExpandableDetails.jsx';
 import { Retweet, King, File, Download } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
@@ -19,6 +23,11 @@ import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../u
 import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
 
 var AuditStoreDetails = React.createClass({
+	getInitialState: function(){
+		return {
+			auditDateLoading: false
+		};
+	},
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 	},
@@ -34,10 +43,20 @@ var AuditStoreDetails = React.createClass({
 	unSubmitButtonClicked: function(e){
 		this.props.dispatch(unSubmitAuditStore(this.props.params.auditStoreId));
 	},
+	auditDateChanged: function(momentDate){
+		this.setState({auditDateLoading: true});
+		setAuditDate(this.props.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
+			this.props.dispatch(updateAuditStore(auditStore));
+		}).always(() => {
+			this.setState({auditDateLoading: false});
+		});
+	},
 	render: function(){
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
+
+		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
 		let withdrawButton, failButton, completeButton, unSubmitButton;
 		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === 'SUBMITTED'){
@@ -47,6 +66,15 @@ var AuditStoreDetails = React.createClass({
 			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
 			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
+
+			auditDateElement = (<Datetime
+					disabled={this.state.auditDateLoading}
+					timeFormat={false}
+					dateFormat={momentDateFormat}
+					closeOnSelect={true}
+					onChange={this.auditDateChanged}
+					value={this.props.auditStore.audit_date}
+				/>)
 		}
 		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
 
@@ -101,7 +129,7 @@ var AuditStoreDetails = React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">Audit Date:</td>
-								<th>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</th>
+								<th>{auditDateElement}</th>
 							</tr>
 							<tr>
 								<td className="text-right">Status:</td>
