@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 
 import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
@@ -64,15 +64,12 @@ var StoreRow = React.createClass({
 						</td>);
 					}
 				}
-				auditStoreTrs.push(<tr key={as.audit_store_id}>
+				auditStoreTrs.push(<tr key={as.audit_store_id} onClick={()=> hashHistory.push(`/audit_store/${as.audit_store_id}`)} style={{cursor:'pointer'}} title="Click to view report">
 					<td className="text-right">
 						<b>{moment(as.audit_date).format(momentDateFormat)}</b>
 					</td>
 					<td></td>
 					{innerSections}
-					<td>
-						<Link className="btn btn-default" to={`/audit_store/${as.audit_store_id}`}>Go</Link>
-					</td>
 				</tr>);
 			}
 		}
@@ -86,7 +83,7 @@ var StoreRow = React.createClass({
 
 		return (
 			<tbody style={tbodyStyle}>
-			<tr>
+			<tr onClick={this.toggleExpandClicked} style={{cursor:'pointer'}} title="Click to Expand view">
 				<td>
 					<b>{this.props.store.store_name}</b><br/>
 					<small>{this.props.store.address}</small><br/>
@@ -94,9 +91,6 @@ var StoreRow = React.createClass({
 				</td>
 				<td className="text-right">{this.props.store.audit_store_count}</td>
 				{sections}
-				<td>
-					<button className="btn btn-default" onClick={this.toggleExpandClicked}>{buttonText}</button>
-				</td>
 			</tr>
 			{auditStoreTrs}
 			</tbody>
@@ -144,13 +138,12 @@ export default React.createClass({
 				}
 			}
 			storeTable = (
-				<table className="table table-striped table-bordered">
+				<table className="table table-striped table-bordered table-hover">
 					<thead>
 						<tr>
 							<th>Stores in {this.props.cityName}</th>
 							<th>No. of Reports</th>
 							{sections}
-							<th></th>
 						</tr>
 					</thead>
 					{storeRows}
