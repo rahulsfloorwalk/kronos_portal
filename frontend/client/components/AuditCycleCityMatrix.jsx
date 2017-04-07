@@ -61,6 +61,10 @@ export default React.createClass({
 	componentWillReceiveProps: function(nextProps){
 		if( nextProps.auditCycleId){
 			this.reloadMatrix(nextProps.auditCycleId);
+		} else if(this.state.auditCycles.length > 0){
+			hashHistory.push(`/dashboard/${this.state.auditCycles[0].id}`);
+		} else {
+			this.componentDidMount();
 		}
 	},
 	auditCycleChanged: function(e){
@@ -117,7 +121,7 @@ export default React.createClass({
 					<div className="row">
 						<div className="col-md-4">
 								<div className="jumbotron text-center">
-									<h1><b>{parseInt(selectedAuditCycle.completed_percentage) + "%"}</b></h1>
+									<h1><b>{parseInt(selectedAuditCycle.completed_percentage)}<small>%</small></b></h1>
 									<p className="text-muted">completed</p>
 								</div>
 						</div>
