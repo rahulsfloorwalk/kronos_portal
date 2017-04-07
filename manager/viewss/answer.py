@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.serializers import Serializer, IntegerField
+from rest_framework.serializers import Serializer, IntegerField, CharField
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -44,6 +44,29 @@ class MarkByQuestionAndStore(APIView):
             return Response(AnswerSerializer(answer).data)
         except ObjectNotFound:
             raise NotFound
+        except AppLogicError as e:
+            raise ValidationError({
+                "non_field_errors": [e.__str__()]
+                }) from e
+
+
+class AnswerByQuestionAndStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST' : [GROUP_NAME_MANAGER],
+    }
+    class AnswerDeserializer(Serializer):
+        answer_text = CharField()
+
+    def post(self, request, audit_store_id, question_id):
+        ds = AnswerByQuestionAndStore.AnswerDeserializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        answer_text = ds.validated_data.get('answer_text')
+        try:
+            answer = answer_service.set_answer_text(audit_store_id, question_id, answer_text)
+            return Response(AnswerSerializer(answer).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
         except AppLogicError as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]

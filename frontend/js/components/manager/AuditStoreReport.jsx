@@ -9,6 +9,7 @@ import { Plus, Cross, Pencil, Tasks } from '../Icons.jsx';
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
 import { fetchAnswers, setMarks } from '../../manager/actions/answer.js'
+import { setAnswerText } from '../../manager/service/answer.js'
 import { submitPMComment, fetchReportSections } from '../../manager/actions/report_section.js'
 
 var __QuestionRow = React.createClass({
@@ -20,7 +21,9 @@ var __QuestionRow = React.createClass({
 	getInitialState: function(){
 		return {
 			answer: {},
-			error: false
+			error: false,
+			answerError: false,
+			answerSuccess: false
 		};
 	},
 	componentDidMount: function(){
@@ -36,6 +39,21 @@ var __QuestionRow = React.createClass({
 				answer: nextProps.answer
 			});
 		}
+	},
+	answerChanged: function(e){
+		this.setState({
+			answer: Object.assign({}, this.state.answer, {
+				answer_text: e.target.value
+			})
+		});
+	},
+	saveAnswer: function(e){
+		this.answerChanged(e);
+		setAnswerText(
+			this.state.answer.audit_store,
+			this.state.answer.question,
+			this.state.answer.answer_text,
+		).then(()=> this.setState({answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
 	},
 	marksChanged: function(e){
 		this.setState({
@@ -53,11 +71,12 @@ var __QuestionRow = React.createClass({
 		})).then(()=> this.setState({error: false}), ()=> this.setState({error: true}));
 	},
 	render: function(){
-		var hasError = this.state.error ? "has-error" : "";
-		var markElement;
+		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
+		let answerElement = (<big>{this.state.answer.answer_text}</big>);
 		if( this.props.marking){
+			let hasError = this.state.error ? "has-error" : "";
 			markElement = (
-				<div className={"input-group " + hasError } title={this.state.message}>
+				<div className={"input-group " + hasError }>
 					<input className="form-control input-sm text-right" 
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
@@ -65,14 +84,23 @@ var __QuestionRow = React.createClass({
 					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
 				</div>
 			);
-		} else {
-			markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
-		}
+
+			let hasAnswerError = this.state.answerError ? "has-error" : "";
+			let hasAnswerSuccess = this.state.answerSuccess ? "has-success" : "";
+			answerElement = (
+				<div className={hasAnswerError + hasAnswerSuccess}>
+					<input className="form-control"
+						onChange={this.answerChanged}
+						onBlur={this.saveAnswer}
+						value={this.state.answer.answer_text}/>
+				</div>
+			);
+		} 
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				<td>{this.props.q.question_txt}</td>
-				<td><big>{this.state.answer.answer_text}</big></td>
+				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
 			</tr>
 		);
@@ -84,7 +112,6 @@ var mapStoreToQuestionRowProps = function(store, ownProps){
 		answer: (function(answers){
 			for(let id in answers){
 				if(answers[id].question === ownProps.q.id){
-					console.log("found",answers[id]);
 					return answers[id];
 				}
 			}
@@ -233,7 +260,6 @@ var mapStoreToSectionProps = function(store, ownProps){
 		reportSection: (function(reportSections){
 			for(let id in reportSections){
 				if(reportSections[id].section === ownProps.section.id){
-					console.log("found REPORT SECTION",reportSections[id]);
 					return reportSections[id];
 				}
 			}

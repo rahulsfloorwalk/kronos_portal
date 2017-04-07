@@ -72,3 +72,30 @@ def set_marks(audit_store_id, question_id, marks):
     answer.marks_obtained = marks
     answer.save()
     return answer
+
+def set_answer_text(audit_store_id, question_id, answer_text):
+    try:
+        audit_store = AuditStore.objects.get(pk=audit_store_id)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    if audit_store.status != AuditStore.SUBMITTED:
+        raise AppLogicError("Cannot set answer for unsubmitted report")
+
+    try:
+        question = Question.objects.get(pk=question_id)
+    except Question.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    if answer_text in (None, ""):
+        raise AppLogicError("answer cannot be empty")
+    try:
+        answer = Answer.objects.get(audit_store_id=audit_store_id, question_id=question_id)
+    except Answer.DoesNotExist as e:
+        answer = Answer()
+        answer.question_id=question_id
+        answer.audit_store_id=audit_store_id
+
+    answer.answer_text = answer_text
+    answer.save()
+    return answer
