@@ -33,7 +33,8 @@ def create_text_structure(sections, answers, report_sections, audit_store):
 
     audit_date = audit_store.audit_date
     client_name = audit_store.audit.audit_cycle.client.name
-    name = (str(client_name) + "-" + str(audit_date) + ".xlsx").replace(" ", "")
+    store_name = audit_store.audit.store.name
+    name = (store_name + " " + str(audit_date) + ".xlsx")
     data = [details_section, summary_section, answers_section]
     return data, name
 

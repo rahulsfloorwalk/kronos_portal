@@ -25,7 +25,7 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
         audits = audit_cycle.audits.all()
         audit_stores = []
         for audit in audits:
-            audit_store = audit.audit_stores.filter(status=AuditStore.COMPLETED)
+            audit_store = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by('audit_date')
             audit_stores.extend(audit_store)
 
         audit_store_answer_list = []
@@ -37,23 +37,25 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
                 )
             audit_store_answer_list.append(sorted_answers)
         data = create_text_structure(audit_store_answer_list)
-        name = (str(audit_cycle.name) + ".xlsx").replace(" ", "")
+        name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
         return write_data(data), name
 
     else:
         raise AppLogicError("Invalid Client")
 
 def create_text_structure(audit_stores_answers_list):
+    if audit_stores_answers_list is None or len(audit_stores_answers_list) == 0:
+        raise ObjectNotFound
     rows = []
     audit = audit_stores_answers_list[0][0].audit_store.audit
-    content = [audit.store.name + " - " + audit.audit_cycle.type]
+    content = [audit.audit_cycle.name]
     row = {'type': 'title', 'content': content}
     rows.append(row)
     answers = audit_stores_answers_list[0]
     questions = []
     for answer in answers:
         questions.append(answer.question.question_txt)
-    content = [""] + questions
+    content = ["Store"] + questions
     row = {'type': 'question', 'content': content}
     rows.append(row)
     for answers in audit_stores_answers_list:
@@ -81,6 +83,7 @@ def write_data(data):
     start_row = 0
     start_col = 0
     worksheet.set_column(0, 100, 30)
+    worksheet.set_default_row(40)
     row = start_row
     col = start_col
 

@@ -164,7 +164,7 @@ class AuditStoreXlsxReport(APIView):
         try:
             report, name = xlsx_report_service.get_xlsx_report(audit_store_id, request.user.clientuser.client.id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=' + name
+            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
@@ -178,7 +178,7 @@ class AuditCycleXlsxReport(APIView):
         try:
             report, name = cycle_xlsx_report_service.get_aggregate_report_for_client(audit_cycle_id, request.user.clientuser.client.id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename=' + name
+            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
