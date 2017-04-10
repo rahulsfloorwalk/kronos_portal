@@ -12,6 +12,13 @@ export function deleteAttachment(attachmentId){
 	});
 };
 
+export function completeAttachment(attachmentId){
+	return $.ajax({
+		url: url.api_base_path + `manager/attachment/${attachmentId}/complete`,
+		type: "POST"
+	});
+};
+
 export function renameAttachment(attachmentId, fileName){
 	return $.ajax({
 		url: url.api_base_path + `manager/attachment/${attachmentId}/rename`,
@@ -24,7 +31,7 @@ export function renameAttachment(attachmentId, fileName){
 
 export function uploadFileForAuditStore(auditStoreId, file){
 	var mainPromise = $.Deferred();
-	var req_url = url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`;
+	var req_url = url.api_base_path + `manager/audit_store/${auditStoreId}/attachment`;
 
 	var payload = {
 		"file_name": file.name,
@@ -49,6 +56,7 @@ export function uploadFileForAuditStore(auditStoreId, file){
 		formData.append("Policy", post_data.fields.policy);
 		formData.append("signature", post_data.fields.signature);
 		formData.append("key", post_data.fields.key);
+		formData.append("success_action_status", "201");
 		formData.append("file", file);
 
 		$.ajax({
@@ -84,7 +92,11 @@ export function uploadFileForAuditStore(auditStoreId, file){
 	});
 
 	req.fail(function(err){
-		mainPromise.reject(err.responseJSON.non_field_errors[0]);
+		if( err.responseJSON && err.responseJSON.non_field_errors){
+			mainPromise.reject(err.responseJSON.non_field_errors[0]);
+		} else {
+			mainPromise.reject();
+		}
 	});
 
 	return mainPromise;

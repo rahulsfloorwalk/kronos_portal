@@ -383,7 +383,7 @@ class AuditStoreAttachmentView(APIView):
 
     def post(self, request, audit_store_id):
         try:
-            post_data, attachment = attachment_service.upload_for_audit_store(
+            post_data, attachment = attachment_service.upload_for_audit_store_by_auditor(
                     audit_store_id,
                     request.user.profileinfo.id,
                     request.data["file_name"],

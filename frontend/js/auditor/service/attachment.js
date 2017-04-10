@@ -46,6 +46,7 @@ export function uploadFileForAuditStore(auditStoreId, file){
 		formData.append("Policy", post_data.fields.policy);
 		formData.append("signature", post_data.fields.signature);
 		formData.append("key", post_data.fields.key);
+		formData.append("success_action_status", "201");
 		formData.append("file", file);
 
 		$.ajax({

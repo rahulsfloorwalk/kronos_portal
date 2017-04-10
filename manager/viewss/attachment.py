@@ -20,6 +20,7 @@ class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
             'GET': [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
         }
 
     def get(self, request, audit_store_id, format=None):
@@ -28,6 +29,26 @@ class AuditStoreAttachmentView(APIView):
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound
+
+    def post(self, request, audit_store_id):
+        try:
+            post_data, attachment = attachment_service.upload_for_audit_store(
+                    audit_store_id,
+                    request.data["file_name"],
+                    request.data["file_size"],
+                    request.data["file_type"])
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
 class AttachmentIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -63,6 +84,24 @@ class AttachmentIdRenameView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+
+class AttachmentCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+
+    def post(self, request, attachment_id):
+        try:
+            attachment = attachment_service.complete(attachment_id)
+            return Response(AttachmentSerializer(attachment).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]

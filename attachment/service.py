@@ -37,7 +37,7 @@ def get_signed_post(file_extension):
         {"acl": "public-read"},
         ["content-length-range", AWS["S3_ATTACHMENTS"]["MIN_SIZE"], AWS["S3_ATTACHMENTS"]["MAX_SIZE"]],
         {"bucket": AWS["S3_ATTACHMENTS"]["BUCKET"]},
-        #{"success_action_status": "201"},
+        {"success_action_status": "201"},
     ]
 
     # Generate the POST attributes
@@ -50,43 +50,156 @@ def get_signed_post(file_extension):
     return post
 
 
-def upload_for_audit_store(audit_store_id, profileinfo_id, file_name, file_size, mime_type):
+def upload_for_audit_store_by_auditor(audit_store_id, profileinfo_id, file_name, file_size, mime_type):
     audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
+    return upload_for_audit_store_by_manager(audit_store.id, file_name, file_size, mime_type)
 
-    if int(file_size) < int(AWS["S3_ATTACHMENTS"]["MIN_SIZE"]):
-        raise AppLogicError("file is too small")
 
-    if int(file_size) > int(AWS["S3_ATTACHMENTS"]["MAX_SIZE"]):
-        raise AppLogicError("file is too large")
+def get_audit_store_for_attachment(attachment_id):
+    attachment = Attachment.objects.get(pk=attachment_id)
+    if attachment.content_type.model_class() is AuditStore:
+        return AuditStore.objects.get(pk=attachment.object_id)
 
-    basename, file_extension = os.path.splitext(file_name)
-    if mime_type is None or file_extension == '':
-        raise AppLogicError("could not detect file type, please ensure you upload a known file type")
+    if attachment.content_type.model_class() is Answer:
+        return Answer.objects.get(pk=attachment.object_id).audit_store
 
-    if mime_type.startswith("image/"):
-        proof_type = Attachment.PHOTO
-    elif mime_type.startswith("audio/"):
-        proof_type = Attachment.AUDIO
-    elif mime_type.startswith("video/"):
-        proof_type = Attachment.VIDEO
-    else:
-        proof_type = Attachment.OTHER
+    if attachment.content_type.model_class() is ReportSection:
+        return ReportSection.objects.get(pk=attachment.object_id).audit_store
 
-    post_data = get_signed_post(file_extension)
 
-    attachment = Attachment()
-    attachment.status = Attachment.UPLOADING
-    attachment.proof_type = proof_type
-    attachment.mime_type = mime_type
-    attachment.file_name = file_name
-    attachment.file_size = file_size
-    attachment.file_slug = post_data["fields"]["key"]
-    attachment.content_object = audit_store
+def find_by_audit_store_for_auditor(audit_store_id, profileinfo_id):
+    audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
+    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
 
-    attachment.save()
+def find_by_audit_store_for_client(audit_store_id, client_id):
+    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
+    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
 
-    return (post_data, attachment)
 
+def find_by_audit_store(audit_store_id):
+    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
+
+
+def complete(attachment_id):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            attachment.status = Attachment.ATTACHED
+            attachment.save()
+            return attachment
+        else:
+            raise AppLogicError("cannot complete attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+def complete_for_user(attachment_id, user_id):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if audit_store.user.id != user_id:
+            raise ObjectNotFound
+
+        if audit_store.status == AuditStore.ASSIGNED:
+            attachment.status = Attachment.ATTACHED
+            attachment.save()
+            return attachment
+        else:
+            raise AppLogicError("cannot attach attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+def delete_for_user(attachment_id, user_id):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if audit_store.user.id != user_id:
+            raise ObjectNotFound
+
+        if audit_store.status == AuditStore.ASSIGNED:
+            attachment.status = Attachment.DELETED
+            attachment.save()
+        else:
+            raise AppLogicError("cannot delete attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+def delete(attachment_id):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            attachment.status = Attachment.DELETED
+            attachment.save()
+        else:
+            raise AppLogicError("cannot delete attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+def rename(attachment_id, new_name):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        audit_store = get_audit_store_for_attachment(attachment_id)
+
+        if new_name in ["", None]:
+            raise AppLogicError("new file name is invalid")
+
+        if audit_store.status == AuditStore.SUBMITTED:
+            attachment.file_name = new_name
+            attachment.save()
+            return attachment
+        else:
+            raise AppLogicError("cannot rename attachment now")
+    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
+    try:
+        audit_store = AuditStore.objects.get(pk=audit_store_id)
+
+        if int(file_size) < int(AWS["S3_ATTACHMENTS"]["MIN_SIZE"]):
+            raise AppLogicError("file is too small")
+
+        if int(file_size) > int(AWS["S3_ATTACHMENTS"]["MAX_SIZE"]):
+            raise AppLogicError("file is too large")
+
+        basename, file_extension = os.path.splitext(file_name)
+        if mime_type is None or file_extension == '':
+            raise AppLogicError("could not detect file type, please ensure you upload a known file type")
+
+        if mime_type.startswith("image/"):
+            proof_type = Attachment.PHOTO
+        elif mime_type.startswith("audio/"):
+            proof_type = Attachment.AUDIO
+        elif mime_type.startswith("video/"):
+            proof_type = Attachment.VIDEO
+        else:
+            proof_type = Attachment.OTHER
+
+        post_data = get_signed_post(file_extension)
+
+        attachment = Attachment()
+        attachment.status = Attachment.UPLOADING
+        attachment.proof_type = proof_type
+        attachment.mime_type = mime_type
+        attachment.file_name = file_name
+        attachment.file_size = file_size
+        attachment.file_slug = post_data["fields"]["key"]
+        attachment.content_object = audit_store
+
+        attachment.save()
+
+        return (post_data, attachment)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 def get_audit_store_for_attachment(attachment_id):
     attachment = Attachment.objects.get(pk=attachment_id)
