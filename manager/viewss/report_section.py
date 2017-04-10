@@ -7,8 +7,9 @@ from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.serializers import Serializer, CharField
 
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -47,3 +48,29 @@ class PMCommentSubmitView(APIView):
             return Response(ReportSectionSerializer(report_section).data)
         except ObjectNotFound:
             raise NotFound
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e
+
+class AuditorCommentSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+
+    class DeSerializer(Serializer):
+        auditor_comment = CharField()
+
+    def post(self, request, audit_store_id, section_id, format=None):
+        ds = AuditorCommentSubmitView.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        try:
+            report_section = report_section_service.set_auditor_comment_by_manager(audit_store_id, section_id, ds.validated_data["auditor_comment"])
+            return Response(ReportSectionSerializer(report_section).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e

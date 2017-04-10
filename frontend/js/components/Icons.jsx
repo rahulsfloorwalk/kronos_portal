@@ -3,6 +3,7 @@ import React from 'react';
 export const Road	= () => <span className="glyphicon glyphicon-road"></span>;
 export const EyeOpen	= () => <span className="glyphicon glyphicon-eye-open"></span>;
 export const PhoneAlt	= () => <span className="glyphicon glyphicon-phone-alt"></span>;
+export const OptionHorizontal	= () => <span className="glyphicon glyphicon-option-horizontal"></span>;
 export const Briefcase	= () => <span className="glyphicon glyphicon-briefcase"></span>;
 export const Refresh	= () => <span className="glyphicon glyphicon-refresh"></span>;
 export const Repeat	= () => <span className="glyphicon glyphicon-repeat"></span>;
@@ -31,6 +32,7 @@ export const Warning	= () => <span className="glyphicon glyphicon-warning"></spa
 export const Leaf	= () => <span className="glyphicon glyphicon-leaf"></span>;
 export const Fire	= () => <span className="glyphicon glyphicon-fire"></span>;
 export const Tasks	= () => <span className="glyphicon glyphicon-tasks"></span>;
+export const Save	= () => <span className="glyphicon glyphicon-save"></span>;
 export const King	= () => <span className="glyphicon glyphicon-king"></span>;
 export const Heart	= () => <span className="glyphicon glyphicon-heart"></span>;
 export const Print	= () => <span className="glyphicon glyphicon-print"></span>;

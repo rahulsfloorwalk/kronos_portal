@@ -4,13 +4,13 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Plus, Cross, Pencil, Tasks } from '../Icons.jsx';
+import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal } from '../Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
 import { fetchAnswers, setMarks } from '../../manager/actions/answer.js'
 import { setAnswerText } from '../../manager/service/answer.js'
-import { submitPMComment, fetchReportSections } from '../../manager/actions/report_section.js'
+import { submitAuditorComment, submitPMComment, fetchReportSections } from '../../manager/actions/report_section.js'
 
 var __QuestionRow = React.createClass({
 	getDefaultProps: function(){
@@ -125,13 +125,20 @@ var QuestionRow = ReactRedux.connect(mapStoreToQuestionRowProps)(__QuestionRow);
 var __Section = React.createClass({
 	getInitialState: function(){
 		return {
-			commenting: false,
+			pmCommentError: false,
+			auditorCommentError: false,
+
+			savingPMComment: false,
+			savingAuditorComment: false,
+
+			auditor_comment: "",
 			pm_comment: "",
 		};
 	},
 	componentDidMount: function(){
 		if(this.props.reportSection){
 			this.setState({
+				auditor_comment: this.props.reportSection.auditor_comment,
 				pm_comment: this.props.reportSection.pm_comment
 			});
 		}
@@ -139,89 +146,121 @@ var __Section = React.createClass({
 	componentWillReceiveProps: function(nextProps){
 		if(nextProps.reportSection){
 			this.setState({
+				auditor_comment: nextProps.reportSection.auditor_comment,
 				pm_comment: nextProps.reportSection.pm_comment
-			});
-		}
-	},
-	startEdit: function(e){
-		e.preventDefault();
-		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED' && !this.state.commenting){
-			this.setState({
-				commenting: true
 			});
 		}
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
-	componentDidUpdate: function(prevProps, prevState){
-		if(this.commentInput && prevState.commenting === false){
-			this.commentInput.focus();
-			let l = this.commentInput.value.length;
-			this.commentInput.setSelectionRange(l,l);
-		}
-	},
-	submitComment: function(e){
+	saveAuditorComment: function(e){
 		e.preventDefault();
 		this.setState({
-			commenting: false,
-			saving: true,
+			savingAuditorComment: true,
+			auditorCommentError: false
+		});
+		this.props.dispatch(submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment)).then(()=> this.setState({auditorCommentError: false}), () => this.setState({auditorCommentError: true})).always(() => this.setState({savingAuditorComment: false}));
+	},
+	savePMComment: function(e){
+		e.preventDefault();
+		this.setState({
+			savingPMComment: true,
 		});
 		var payload = {
 			sectionId: this.props.section.id,
 			pm_comment: this.state.pm_comment,
 			audit_store: this.props.auditStoreId,
 		};
-		console.log("this.props",this.props);
-		console.log("payload",payload);
-		this.props.dispatch(submitPMComment(payload)).then(() => this.setState({saving: false}));
+		this.props.dispatch(submitPMComment(payload)).then(()=> this.setState({pmCommentError: false}), () => this.setState({pmCommentError: true})).always(() => this.setState({savingPMComment: false}));
 	},
 	render: function(){
-		let pointerStyle = {cursor: 'pointer'};
+
+		let editable = this.props.auditStore && this.props.auditStore.status === 'SUBMITTED';
+
+		/* QUESTION ROWS */
 		let questionRows = [];
-		let marking = false;
-		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
-			marking = true;
-		}
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow q={q} key={q.id} marking={marking}/>);
+				questionRows.push(<QuestionRow q={q} key={q.id} marking={editable}/>);
 			}
 		}
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
 		}
-		if(this.props.reportSection){
-			var auditor_comment = this.props.reportSection.auditor_comment;
-			var section_marks = this.props.reportSection.marks_obtained;
-			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
-				var defaultComment = "click to enter comment";
-			}
-			if(this.state.commenting){
-				var commentElement = (
-						<form className="input-group" onSubmit={this.submitComment}>
-							<input
-								className="form-control"
-								name="pm_comment"
-								value={this.state.pm_comment}
-								onBlur={this.submitComment}
-								onChange={this.inputChanged}
-								ref={(input) => this.commentInput = input}
-							/>
-							<span className="input-group-btn">
-								<button className="btn btn-primary">Save</button>
-							</span>
-						</form>
-				);
-			} else {
-				let pm_comment = this.state.pm_comment || (<span className="text-muted">{defaultComment}</span>);
-				var commentElement = (<span style={pointerStyle} onClick={this.startEdit}>{pm_comment}</span>);
-			}
 
-			if(this.state.saving){
-				var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
-			}
+		let auditorCommentElement = (<span className="text-muted">auditor comment is empty</span>);
+		let pmCommentElement = (<span className="text-muted">PM comment is empty</span>);
+		let marksObtained = 0;
+
+		/* AUDITOR COMMENT, PM COMMENT */
+		if(this.props.reportSection){
+			marksObtained = this.props.reportSection.marks_obtained;
+
+			pmCommentElement = this.state.pm_comment ? (<span>{this.state.pm_comment}</span>) : pmCommentElement;
+			auditorCommentElement = this.state.auditor_comment ? (<span>{this.state.auditor_comment}</span>) : auditorCommentElement;
 		}
+
+		if(editable){
+			let savePmCommentIcon = <Save/>;
+			if(this.state.savingPMComment){
+				savePmCommentIcon = <OptionHorizontal/>;
+			}
+			let pmClass = "";
+			if(this.state.pmCommentError){
+				pmClass = "has-error";
+			}
+			pmCommentElement = (
+					<form className={"input-group " + pmClass} onSubmit={this.savePMComment}>
+						<input
+							disabled={this.state.savingPMComment}
+							placeholder="enter PM comment here"
+							required="true"
+							className="form-control"
+							name="pm_comment"
+							value={this.state.pm_comment}
+							onBlur={this.savePMComment}
+							onChange={this.inputChanged}
+						/>
+						<span className="input-group-btn">
+							<button className="btn btn-primary"
+								disabled={this.state.savingPMComment}>
+								{savePmCommentIcon} Save
+							</button>
+						</span>
+					</form>
+			);
+
+			let saveAuditorCommentIcon = <Save/>;
+			if(this.state.savingAuditorComment){
+				saveAuditorCommentIcon = <OptionHorizontal/>;
+			}
+			let auditorClass = "";
+			if(this.state.auditorCommentError){
+				auditorClass = "has-error";
+			}
+			auditorCommentElement = (
+					<form className={"input-group " + auditorClass} onSubmit={this.saveAuditorComment}>
+						<input
+							disabled={this.state.savingAuditorComment}
+							placeholder="enter auditor comment here"
+							required="true"
+							className="form-control"
+							name="auditor_comment"
+							value={this.state.auditor_comment}
+							onBlur={this.saveAuditorComment}
+							onChange={this.inputChanged}
+						/>
+						<span className="input-group-btn">
+							<button className="btn btn-primary"
+								disabled={this.state.savingAuditorComment}>
+								{saveAuditorCommentIcon} Save
+							</button>
+						</span>
+					</form>
+			);
+		}
+
 		var styles = {
 			col1: { width: "5%" },
 			col2: { width: "40%" },
@@ -244,11 +283,11 @@ var __Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-footer">
-					<p><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}</p>
+					<p><b>Total Marks:</b> {marksObtained} out of {this.props.section.max_marks}</p>
 					<hr/>
-					<div><b>Auditor Comment:</b> {auditor_comment}</div>
+					<div><b>Auditor Comment:</b> {auditorCommentElement}</div>
 					<hr/>
-					<div><b>PM Comment:</b> {commentElement}</div>
+					<div><b>PM Comment:</b> {pmCommentElement}</div>
 				</div>
 			</Panel>
 		);

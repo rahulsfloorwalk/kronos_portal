@@ -49,3 +49,33 @@ export function submitPMComment(reportSection){
 		return req;
 	};
 };
+
+export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
+	return function(dispatch){
+		dispatch({
+			type: types.REPORT_SECTION_AUDITOR_COMMENT,
+			status: 'request',
+			auditStoreId,
+			sectionId,
+			auditorComment,
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_store/${auditStoreId}/section/${sectionId}/auditor_comment`,
+			data: JSON.stringify({
+				auditor_comment: auditorComment
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(reportSection){
+			dispatch({
+				type: types.REPORT_SECTION_AUDITOR_COMMENT,
+				status: 'success',
+				reportSection
+			});
+		});
+		//TODO: Handle error
+		return req;
+	};
+};

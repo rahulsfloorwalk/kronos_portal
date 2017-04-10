@@ -46,6 +46,8 @@ def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment)
 
 def submit_pm_comment(audit_store_id, section_id, pm_comment):
     try:
+        if pm_comment in (None, ""):
+            raise AppLogicError("auditor comment cannot be blank")
         audit_store = AuditStore.objects.get(pk=audit_store_id)
         section = Section.objects.get(pk=section_id)
     except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
@@ -58,6 +60,27 @@ def submit_pm_comment(audit_store_id, section_id, pm_comment):
         report_section.section = section
         report_section.audit_store = audit_store
     report_section.pm_comment = pm_comment
+    report_section.save()
+    return report_section
+
+
+def set_auditor_comment_by_manager(audit_store_id, section_id, auditor_comment):
+    try:
+        if auditor_comment in (None, ""):
+            raise AppLogicError("auditor comment cannot be blank")
+        audit_store = AuditStore.objects.get(pk=audit_store_id)
+        if audit_store.status != AuditStore.SUBMITTED :
+            raise AppLogicError("Cannot submit auditor comment to current audit store")
+        section = Section.objects.get(pk=section_id)
+    except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
+        raise ObjectNotFound from e
+    try:
+        report_section = ReportSection.objects.get(audit_store_id=audit_store.id, section_id=section.id)
+    except ReportSection.DoesNotExist:
+        report_section = ReportSection()
+        report_section.section = section
+        report_section.audit_store = audit_store
+    report_section.auditor_comment = auditor_comment
     report_section.save()
     return report_section
 

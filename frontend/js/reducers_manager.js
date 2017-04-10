@@ -556,6 +556,20 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+		case types.REPORT_SECTION_PM_COMMENT:
+		case types.REPORT_SECTION_AUDITOR_COMMENT:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						reportSections: Object.assign({}, store.reportSections, {
+							[action.reportSection.id]: action.reportSection
+						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.LOCATION_GET:
 			switch(action.status){
 				case "success":
