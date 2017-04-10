@@ -52,7 +52,7 @@ def get_signed_post(file_extension):
 
 def upload_for_audit_store_by_auditor(audit_store_id, profileinfo_id, file_name, file_size, mime_type):
     audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
-    return upload_for_audit_store_by_manager(audit_store.id, file_name, file_size, mime_type)
+    return upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
 
 
 def get_audit_store_for_attachment(attachment_id):
