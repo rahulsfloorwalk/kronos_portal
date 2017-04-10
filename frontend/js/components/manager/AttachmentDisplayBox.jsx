@@ -9,6 +9,8 @@ import Loading from '../Loading.jsx';
 import Jumbotron from '../Jumbotron.jsx';
 import InPlaceEditable from '../InPlaceEditable.jsx';
 
+import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
+
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 var AttachmentItem = React.createClass({
@@ -18,20 +20,7 @@ var AttachmentItem = React.createClass({
 		};
 	},
 	render: function(){
-		switch(this.props.attachment.proof_type){
-			case "AUDIO":
-				var icon = <Record/>;
-				break;
-			case "PHOTO":
-				var icon = <Picture/>;
-				break;
-			case "VIDEO":
-				var icon = <Video/>;
-				break;
-			case "OTHER":
-				var icon = <File/>;
-				break;
-		}
+		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
 		return (
 			<button type="button" className="list-group-item" onClick={()=>this.props.onSelect(this.props.attachment)}>
 				{icon} {this.props.attachment.file_name}
@@ -103,16 +92,17 @@ var AttachmentDisplayBox = React.createClass({
 			var deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.deleteButtonClicked}><Cross/> Delete</button>);
 		}
 		if(this.state.selectedAttachment){
+			let icon = <AttachmentProofIcon proofType={this.state.selectedAttachment.proof_type}/>;
 			switch(this.state.selectedAttachment.proof_type){
 				case "AUDIO": {
 					let headingText;
 					if( this.props.auditStore.status === "SUBMITTED"){
 						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
-									<Record/> {this.state.selectedAttachment.file_name}
+								{icon} {this.state.selectedAttachment.file_name}
 								</InPlaceEditable>);
 					} else {
 						headingText = (<span>
-							<Record/> {this.state.selectedAttachment.file_name}
+							{icon} {this.state.selectedAttachment.file_name}
 						</span>);
 					}
 					attachmentElement = (
@@ -136,11 +126,11 @@ var AttachmentDisplayBox = React.createClass({
 					let headingText;
 					if( this.props.auditStore.status === "SUBMITTED"){
 						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
-									<Picture/> {this.state.selectedAttachment.file_name}
+								{icon} {this.state.selectedAttachment.file_name}
 								</InPlaceEditable>);
 					} else {
 						headingText = (<span>
-							<Picture/> {this.state.selectedAttachment.file_name}
+							{icon} {this.state.selectedAttachment.file_name}
 						</span>);
 					}
 					attachmentElement = (
@@ -161,11 +151,11 @@ var AttachmentDisplayBox = React.createClass({
 					let headingText;
 					if( this.props.auditStore.status === "SUBMITTED"){
 						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
-									<File/> {this.state.selectedAttachment.file_name}
+								{icon} {this.state.selectedAttachment.file_name}
 								</InPlaceEditable>);
 					} else {
 						headingText = (<span>
-							<File/> {this.state.selectedAttachment.file_name}
+							{icon} {this.state.selectedAttachment.file_name}
 						</span>);
 					}
 					attachmentElement = (

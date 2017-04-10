@@ -60,7 +60,7 @@ export const HandUp = () => <span className="glyphicon glyphicon-hand-up"></span
 export const HandDown = () => <span className="glyphicon glyphicon-hand-down"></span>;
 export const Record	= () => <span className="glyphicon glyphicon-record"></span>;
 export const Picture	= () => <span className="glyphicon glyphicon-picture"></span>;
-export const Video	= () => <span className="glyphicon glyphicon-video"></span>;
+export const Video	= () => <span className="glyphicon glyphicon-facetime-video"></span>;
 export const DownloadAlt= () => <span className="glyphicon glyphicon-download-alt"></span>;
 export const Download	= () => <span className="glyphicon glyphicon-download"></span>;
 export const Upload	= () => <span className="glyphicon glyphicon-upload"></span>;

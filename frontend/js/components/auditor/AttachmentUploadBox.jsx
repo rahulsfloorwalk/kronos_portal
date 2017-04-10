@@ -7,6 +7,7 @@ import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment 
 import { Paperclip, Cross, Record, Picture, Video, File } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
 import Jumbotron from '../Jumbotron.jsx';
+import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -19,20 +20,7 @@ var AttachmentItem = React.createClass({
 		};
 	},
 	render: function(){
-		switch(this.props.attachment.proof_type){
-			case "AUDIO":
-				var icon = <Record/>;
-				break;
-			case "PHOTO":
-				var icon = <Picture/>;
-				break;
-			case "VIDEO":
-				var icon = <Video/>;
-				break;
-			case "OTHER":
-				var icon = <File/>;
-				break;
-		}
+		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
 		if(this.props.deletable){
 			var deleteButton = <button onClick={()=>this.props.onDelete(this.props.attachment)}
 					className="btn btn-default btn-sm pull-right" 

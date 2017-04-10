@@ -6,6 +6,8 @@ import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from '../
 import Loading from '../../js/components/Loading.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 
+import AttachmentProofIcon from '../../js/components/AttachmentProofIcon.jsx';
+
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../js/utils.js';
 
 var AttachmentItem = React.createClass({
@@ -15,20 +17,7 @@ var AttachmentItem = React.createClass({
 		};
 	},
 	render: function(){
-		switch(this.props.attachment.proof_type){
-			case "AUDIO":
-				var icon = <Record/>;
-				break;
-			case "PHOTO":
-				var icon = <Picture/>;
-				break;
-			case "VIDEO":
-				var icon = <Video/>;
-				break;
-			case "OTHER":
-				var icon = <File/>;
-				break;
-		}
+		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
 		return (
 			<button type="button" className="list-group-item" onClick={()=>this.props.onSelect(this.props.attachment)}>
 				{icon} {this.props.attachment.file_name}
