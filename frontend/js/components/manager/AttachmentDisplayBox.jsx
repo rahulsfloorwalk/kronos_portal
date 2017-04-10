@@ -104,12 +104,22 @@ var AttachmentDisplayBox = React.createClass({
 		}
 		if(this.state.selectedAttachment){
 			switch(this.state.selectedAttachment.proof_type){
-				case "AUDIO":
+				case "AUDIO": {
+					let headingText;
+					if( this.props.auditStore.status === "SUBMITTED"){
+						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
+									<Record/> {this.state.selectedAttachment.file_name}
+								</InPlaceEditable>);
+					} else {
+						headingText = (<span>
+							<Record/> {this.state.selectedAttachment.file_name}
+						</span>);
+					}
 					attachmentElement = (
 						<div>
 							<h4 className="page-header">
 								{deleteButton}
-								<Record/> {this.state.selectedAttachment.file_name}
+								{headingText}
 							</h4>
 							<div className="text-center">
 								<audio controls>
@@ -119,8 +129,9 @@ var AttachmentDisplayBox = React.createClass({
 							</div>
 						</div>
 					);
+				}
 					break;
-				case "PHOTO":
+				case "PHOTO": {
 					let imageStyle = {"maxWidth": "100%"}
 					let headingText;
 					if( this.props.auditStore.status === "SUBMITTED"){
@@ -143,14 +154,25 @@ var AttachmentDisplayBox = React.createClass({
 							</div>
 						</div>
 					);
+				}
 					break;
 				case "VIDEO":
-				case "OTHER":
+				case "OTHER": {
+					let headingText;
+					if( this.props.auditStore.status === "SUBMITTED"){
+						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
+									<File/> {this.state.selectedAttachment.file_name}
+								</InPlaceEditable>);
+					} else {
+						headingText = (<span>
+							<File/> {this.state.selectedAttachment.file_name}
+						</span>);
+					}
 					attachmentElement = (
 						<div>
 							<h4 className="page-header">
 								{deleteButton}
-								<File/> {this.state.selectedAttachment.file_name}
+								{headingText}
 							</h4>
 							<div className="text-center">
 								<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
@@ -159,6 +181,7 @@ var AttachmentDisplayBox = React.createClass({
 							</div>
 						</div>
 					);
+				}
 					break;
 			}
 		}
