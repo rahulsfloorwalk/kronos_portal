@@ -83,5 +83,7 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', attachment_views.AttachmentCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', attachment_views.AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', attachment_views.AttachmentIdView.as_view(), name='attachment_id_view'),
+    url(r'deactivate/(?P<user_id>[0-9]+)$', views.DeactivateAuditor.as_view(), name="deactivate_auditor"),
+    url(r'activate/(?P<user_id>[0-9]+)$', views.ActivateAuditor.as_view(), name="activate_auditor"),
 
 ], 'manager')

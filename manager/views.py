@@ -28,7 +28,9 @@ from .service import audit_location as audit_location_service
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
+from registration.service.auditor import deactivate_auditor, activate_auditor
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, AuditApplication
+from auditor.serializers import ProfileInfoSerializer
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from . import states
@@ -141,3 +143,21 @@ class AuditApplicationRejectView(APIView):
             raise NotFound
         except AppLogicError as e:
             raise ValidationError(e) from e
+
+class DeactivateAuditor(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id):
+        profile_info = deactivate_auditor(user_id)
+        return Response(ProfileInfoSerializer(profile_info).data)
+
+class ActivateAuditor(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id):
+        profile_info = activate_auditor(user_id)
+        return Response(ProfileInfoSerializer(profile_info).data)
