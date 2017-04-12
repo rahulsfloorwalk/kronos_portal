@@ -36,9 +36,9 @@ var AuditApplicationList = React.createClass({
 					<div key={app.id} className="col-md-4">
 						<div className="panel panel-default">
 						<div className="panel-body">
-						<p><User/>{auditorLink}</p>
-						<p><Earphone/>{app.profileinfo.mobile_number}</p>
-						<p><Calendar/>{moment(app.audit_date).format(momentDateFormat)}</p>
+						<p><User/>&nbsp;{auditorLink}</p>
+						<p><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></p>
+						<p><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</p>
 						<p>
 							{approveLink}{rejectLink}
 							{statusLabel}

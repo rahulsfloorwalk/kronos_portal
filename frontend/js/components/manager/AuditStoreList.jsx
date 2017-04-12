@@ -14,9 +14,12 @@ import { getAuditStoreStatus } from '../../utils.js';
 
 var AuditStoreRow = React.createClass({
   render: function(){
+    let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
+    let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
+    let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
     return(
       <tr>
-        <td>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</td>
+        <td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
         <td>

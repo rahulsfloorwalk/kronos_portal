@@ -34,7 +34,7 @@ var ProfileInfoPanel = React.createClass({
 					<p>Date of Birth: { moment(this.props.profileInfo.date_of_birth).format(momentDateFormat) }</p>
 					<p>Marital Status: { getMaritalStatus(this.props.profileInfo.marital_status) }</p>
 					<p>Address: { this.props.profileInfo.address }</p>
-					<p>Mobile Number: { this.props.profileInfo.mobile_number }</p>
+					<p>Mobile Number: <a href={`tel:${this.props.profileInfo.mobile_number}`}>{ this.props.profileInfo.mobile_number }</a></p>
 					<p>City: { auditor_city.name }</p>
 					<p>State: { this.props.states[this.props.profileInfo.state] }</p>
 					<p>Pincode: { this.props.profileInfo.pincode }</p>

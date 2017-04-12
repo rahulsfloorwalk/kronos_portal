@@ -86,6 +86,9 @@ var AuditStoreDetails = React.createClass({
 			</div>)
 		}
 		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
+		let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
+		let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
+		let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
 
 		return (
 			<div>
@@ -134,7 +137,7 @@ var AuditStoreDetails = React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">Auditor:</td>
-								<th>{`${this.props.auditStore.user.profileinfo.first_name} ${this.props.auditStore.user.profileinfo.last_name}`}</th>
+								<td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
 							</tr>
 							<tr>
 								<td className="text-right">Audit Date:</td>
