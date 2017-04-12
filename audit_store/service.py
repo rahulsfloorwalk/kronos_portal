@@ -173,7 +173,7 @@ def fail(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
-        if audit_store.status == AuditStore.SUBMITTED:
+        if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED):
             audit_store.status = AuditStore.FAILED
             audit_store.save()
             #TODO:VERB should be encapsulated
