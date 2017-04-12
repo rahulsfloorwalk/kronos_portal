@@ -143,21 +143,3 @@ class AuditApplicationRejectView(APIView):
             raise NotFound
         except AppLogicError as e:
             raise ValidationError(e) from e
-
-class DeactivateAuditor(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
-    def post(self, request, user_id):
-        profile_info = deactivate_auditor(user_id)
-        return Response(ProfileInfoSerializer(profile_info).data)
-
-class ActivateAuditor(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
-    def post(self, request, user_id):
-        profile_info = activate_auditor(user_id)
-        return Response(ProfileInfoSerializer(profile_info).data)

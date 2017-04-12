@@ -2,8 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAuditor } from '../../manager/actions/auditor.js';
+import { fetchAuditor, activateAuditor, deactivateAuditor } from '../../manager/actions/auditor.js';
 
+import { Lock } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
@@ -19,9 +20,23 @@ var AuditorDetailsPage = React.createClass({
 		if(! this.props.auditor){
 			return <Loading/>;
 		}
+		let statusButton;
+		if(this.props.auditor.is_active){
+			statusButton = (<button onClick={() => this.props.dispatch(deactivateAuditor(this.props.params.auditorId))}
+				className="btn btn-default">
+				<Lock/> Deactivate
+			</button>);
+		} else {
+			statusButton = (<button onClick={() => this.props.dispatch(activateAuditor(this.props.params.auditorId))}
+				className="btn btn-default">
+				<Lock/> Activate
+			</button>);
+		}
+
 		return (
 			<div>
 				<Panel title="Email">
+					<p className="pull-right">{statusButton}</p>
 					<p>Email Address: { this.props.auditor.email }</p>
 				</Panel>
 				<ProfileInfoPanel auditorId={this.props.params.auditorId}/>

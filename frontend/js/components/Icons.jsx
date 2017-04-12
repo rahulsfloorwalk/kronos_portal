@@ -1,5 +1,6 @@
 import React from 'react';
 
+export const Lock	= () => <span className="glyphicon glyphicon-lock"></span>;
 export const Road	= () => <span className="glyphicon glyphicon-road"></span>;
 export const EyeOpen	= () => <span className="glyphicon glyphicon-eye-open"></span>;
 export const PhoneAlt	= () => <span className="glyphicon glyphicon-phone-alt"></span>;

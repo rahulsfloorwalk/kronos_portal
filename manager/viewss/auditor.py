@@ -9,6 +9,8 @@ from rest_framework.filters import SearchFilter
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
+import registration.service.auditor as auditor_service
+
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
 
@@ -72,3 +74,21 @@ class AuditorAdditionalInfoView(APIView):
             return Response(AdditionalInfoSerializer(additionalInfo).data)
         except AdditionalInfo.DoesNotExist:
             return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
+
+class AuditorDeactivateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id):
+        user = auditor_service.deactivate_auditor(user_id)
+        return Response(AuditorSerializer(user).data)
+
+class AuditorActivateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id):
+        user = auditor_service.activate_auditor(user_id)
+        return Response(AuditorSerializer(user).data)

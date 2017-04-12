@@ -102,3 +102,42 @@ export function fetchAdditionalInfoForAuditor(auditorId){
 		//TODO: Handle error
 	};
 };
+
+
+export function activateAuditor(userId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_ACTIVATE,
+			status: 'request',
+			userId
+		});
+
+		$.post( url.api_base_path + `manager/auditor/${userId}/activate`, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_ACTIVATE,
+				status: 'success',
+				auditor
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function deactivateAuditor(userId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_DEACTIVATE,
+			status: 'request',
+			userId
+		});
+
+		$.post( url.api_base_path + `manager/auditor/${userId}/deactivate`, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_DEACTIVATE,
+				status: 'success',
+				auditor
+			});
+		});
+		//TODO: Handle error
+	};
+};
