@@ -99,7 +99,7 @@ class AuditStoreIdWithdrawView(APIView):
         try:
             audit_store = audit_store_service.withdraw(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+        except (AppLogicError) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
@@ -114,7 +114,7 @@ class AuditStoreIdCompleteView(APIView):
         try:
             audit_store = audit_store_service.complete(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+        except (AppLogicError) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
@@ -129,7 +129,7 @@ class AuditStoreIdFailView(APIView):
         try:
             audit_store = audit_store_service.fail(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+        except (AppLogicError) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
@@ -157,7 +157,7 @@ class AuditStoreIdUnSubmitView(APIView):
         try:
             audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
+        except (AppLogicError) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
