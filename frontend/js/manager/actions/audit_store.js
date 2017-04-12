@@ -97,6 +97,25 @@ export function failAuditStore(auditStoreId){
 	};
 };
 
+export function submitAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_SUBMIT,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/submit`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_SUBMIT,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
 export function unSubmitAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({

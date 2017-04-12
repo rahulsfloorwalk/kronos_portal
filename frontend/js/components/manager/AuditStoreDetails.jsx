@@ -7,7 +7,7 @@ import Datetime from 'react-datetime';
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
-import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, unSubmitAuditStore, updateAuditStore } from '../../manager/actions/audit_store.js';
+import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, submitAuditStore, unSubmitAuditStore, updateAuditStore } from '../../manager/actions/audit_store.js';
 import { setAuditDate } from '../../manager/service/audit_store.js';
 
 import { FormDateInput } from '../FormInput.jsx';
@@ -40,6 +40,9 @@ var AuditStoreDetails = React.createClass({
 	failButtonClicked: function(e){
 		this.props.dispatch(failAuditStore(this.props.params.auditStoreId));
 	},
+	submitButtonClicked: function(e){
+		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
+	},
 	unSubmitButtonClicked: function(e){
 		this.props.dispatch(unSubmitAuditStore(this.props.params.auditStoreId));
 	},
@@ -61,7 +64,10 @@ var AuditStoreDetails = React.createClass({
 
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
-		let withdrawButton, failButton, completeButton, unSubmitButton;
+		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton;
+		if (this.props.auditStore.status === 'ASSIGNED'){
+			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
+		}
 		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === 'SUBMITTED'){
 			withdrawButton = (<button onClick={this.withdrawButtonClicked} type="button" className="btn btn-default">Withdraw</button>);
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
@@ -153,7 +159,7 @@ var AuditStoreDetails = React.createClass({
 						<b>Details</b>: {detailsElement}
 					</div>
 					<div className="panel-footer text-right">
-						{withdrawButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
+						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{completeButton}&nbsp;{failButton}
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>

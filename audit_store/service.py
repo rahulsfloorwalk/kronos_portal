@@ -198,25 +198,25 @@ def fail(audit_store_id, user_actor):
         raise ObjectNotFound from e
 
 @atomic
-def unsubmit(audit_store_id, user_actor):
+def submit_by_manager(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
-        if audit_store.status == AuditStore.SUBMITTED:
-            audit_store.status = AuditStore.ASSIGNED
+        if audit_store.status == AuditStore.ASSIGNED:
+            audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
             #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_UNSUBMITTED',
+                verb='AUDIT_STORE_SUBMITTED',
                 action_object=audit_store,
                 target=audit_store.audit
             )
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_UNSUBMITTED',
+                    verb='AUDIT_STORE_SUBMITTED',
                     action_object=audit_store,
                     target=audit_store.audit
             )
