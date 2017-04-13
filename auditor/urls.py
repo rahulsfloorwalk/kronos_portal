@@ -2,6 +2,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = ([
+    url(r'user$', views.UserView.as_view(), name='user_view'),
     url(r'notifications$', views.NotificationsView.as_view(), name='notifications_view'),
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),

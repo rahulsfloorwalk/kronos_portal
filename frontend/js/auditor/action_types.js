@@ -1,4 +1,6 @@
 var types = {
+	USER_GET: 'USER_GET',
+
 	/*Profile Info Action Types*/
 	PROFILE_INFO_GET: 'PROFILE_INFO_GET',
 	PROFILE_INFO_POST: 'PROFILE_INFO_POST',

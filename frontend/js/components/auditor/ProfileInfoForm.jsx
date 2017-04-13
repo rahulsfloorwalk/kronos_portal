@@ -174,7 +174,6 @@ var ProfileInfoForm = React.createClass({
 							<CitySelector value={this.state.city} onChange={this.inputChanged}/>
 						</div>
 					</div>
-					<FormInput label="Mobile Number" maxLength="10" type="text" value={this.state.mobile_number} name="mobile_number" onChange={this.inputChanged} errors={this.props.errors.mobile_number}/>
 					<SaveButton/>
 				</form>
 			</Modal>

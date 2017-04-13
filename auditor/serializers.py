@@ -247,6 +247,7 @@ class AuditorSerializer(ModelSerializer):
             'email',
             'is_active',
             'date_joined',
+            'last_login',
             'profileinfo'
         )
         read_only_fields = fields
@@ -381,6 +382,17 @@ class UserSerializer(ModelSerializer):
             'id',
             'email',
             'profileinfo'
+        )
+        read_only_fields = fields
+
+class PlainUserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'date_joined',
+            'last_login',
         )
         read_only_fields = fields
 

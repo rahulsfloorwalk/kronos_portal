@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat, url }  from '../../../config.js';
+
 import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor } from '../../manager/actions/auditor.js';
 
 import { Lock, Check } from '../Icons.jsx';
@@ -43,13 +46,23 @@ var AuditorDetailsPage = React.createClass({
 
 		return (
 			<div>
-				<Panel title="Email">
+				<Panel title="Account Details">
 					<p className="pull-right">{verifyButton}&nbsp;{statusButton}</p>
-					<p>Email Address: { this.props.auditor.email }</p>
+					<p>Email Address: <b>{ this.props.auditor.email }</b></p>
+					<p>Date Joined: <b>{ moment(this.props.auditor.date_joined).format(momentDateFormat) }</b></p>
+					<p>Last Login: <b>{ moment(this.props.auditor.last_login).format(momentDateFormat) }</b></p>
 				</Panel>
-				<ProfileInfoPanel auditorId={this.props.params.auditorId}/>
-				<BankInfoPanel auditorId={this.props.params.auditorId}/>
-				<AdditionalInfoPanel auditorId={this.props.params.auditorId}/>
+				<div className="row">
+					<div className="col-md-4">
+						<ProfileInfoPanel auditorId={this.props.params.auditorId}/>
+					</div>
+					<div className="col-md-4">
+						<BankInfoPanel auditorId={this.props.params.auditorId}/>
+					</div>
+					<div className="col-md-4">
+						<AdditionalInfoPanel auditorId={this.props.params.auditorId}/>
+					</div>
+				</div>
 			</div>
 		);
 	},

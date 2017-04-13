@@ -1,6 +1,7 @@
 import types from './auditor/action_types.js'
 
 var initialStore = {
+	user: {},
 	profileInfo: {},
 	bankInfo: {},
 	additionalInfo: {},
@@ -33,6 +34,19 @@ var initialStore = {
 
 export function rootReducer(store = initialStore, action) {
 	switch(action.type){
+		/*User Reducers */
+		case types.USER_GET:
+			switch (action.status) {
+				case 'success':
+					return Object.assign({}, store, {
+						user: action.user
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+
+			}
 		/*Profile Info Reducers */
 		case types.PROFILE_INFO_GET:
 			switch (action.status) {

@@ -52,7 +52,6 @@ var ProfileInfoPanelBase = React.createClass({
 					<tr><td className="text-muted text-right">Date of Birth:</td><th>{dateOfBirth}</th></tr>
 					<tr><td className="text-muted text-right">Marital Status:</td><th>{getMaritalStatus(this.props.profileInfo.marital_status)}</th></tr>
 					<tr><td className="text-muted text-right">Address:</td><th>{this.props.profileInfo.address}</th></tr>
-					<tr><td className="text-muted text-right">Mobile Number:</td><th>{this.props.profileInfo.mobile_number}</th></tr>
 					<tr><td className="text-muted text-right">City:</td><th>{auditorCity.name}</th></tr>
 					<tr><td className="text-muted text-right">State:</td><th>{auditorCity.state}</th></tr>
 					<tr><td className="text-muted text-right">Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>

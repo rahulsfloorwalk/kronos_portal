@@ -12,7 +12,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from .models import ProfileInfo, BankInfo, AdditionalInfo
 from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
 from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
-from .serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer
+from .serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from .serializers import AuditStoreSerializer
 from .serializers import SectionSerializer
 from .serializers import AnswerSerializer
@@ -450,3 +450,11 @@ class NotificationsView(APIView):
             return Response(NotificationSerializer(notifications, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
+
+class UserView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        return Response(PlainUserSerializer(request.user).data)
