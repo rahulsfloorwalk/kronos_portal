@@ -14,6 +14,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
+
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
 
 from client_report.service import audit_cycle_xlsx_report as xlsx_report_service
@@ -87,5 +88,17 @@ class AuditCycleXlsxReport(APIView):
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
+class AuditCycleStats(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        try:
+            audit_cycle_stats = audit_cycle_service.get_audit_cycle_stats(audit_cycle_id)
+            return Response(audit_cycle_stats)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
