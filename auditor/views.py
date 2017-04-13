@@ -444,7 +444,7 @@ class NotificationsView(APIView):
     }
     def get(self, request, format=None):
         try:
-            notifications = notification_service.find_by_recipient_user(request.user.id)
+            notifications = notification_service.find_by_recipient_user_and_verb(request.user.id)
             return Response(NotificationSerializer(notifications, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e

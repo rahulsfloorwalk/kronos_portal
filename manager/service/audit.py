@@ -5,6 +5,8 @@ from django.contrib.auth.models import User, Group
 
 from notifications.signals import notify
 
+from manager.notification import verbs
+
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication, AdditionalInfo
@@ -134,14 +136,14 @@ def apply( audit_id, profileinfo_id, audit_date):
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_APPLICATION_APPLIED',
+                verb=verbs.AUDIT_APPLICATION_APPLIED,
                 action_object=application,
                 target=audit
         )
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
-            verb='AUDIT_APPLICATION_APPLIED',
+            verb=verbs.AUDIT_APPLICATION_APPLIED,
             action_object=application,
             target=audit
         )

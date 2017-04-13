@@ -98,17 +98,18 @@ export default React.createClass({
 		return {
 			notifications: [],
 			loading: false,
+			verb: ""
 		};
 	},
 	reloadNotifications: function(){
-		findNotifications({}).then((notifications)=> this.setState({
+		findNotifications({verb: this.state.verb}).then((notifications)=> this.setState({
 			notifications
 		}));
 	},
 	loadMoreNotifications: function(){
 		if(this.state.notifications !== []){
 			let beforeTime = this.state.notifications[this.state.notifications.length-1].timestamp;
-			findNotifications({before: beforeTime}).then((notifications)=> {
+			findNotifications({verb: this.state.verb, before: beforeTime}).then((notifications)=> {
 				let newNotifications = this.state.notifications;
 				for(let n of notifications){
 					newNotifications.push(n);
@@ -118,6 +119,11 @@ export default React.createClass({
 				});
 			});
 		}
+	},
+	verbChanged: function(e){
+		this.setState({
+			verb: e.target.value
+		}, this.reloadNotifications);
 	},
 	componentDidMount: function() {
 		this.reloadNotifications();
@@ -139,9 +145,22 @@ export default React.createClass({
 		return (
 			<div className="panel panel-primary">
 				<div className="panel-heading">
-					<button className="btn btn-default btn-sm pull-right" onClick={this.reloadNotifications}>
-						<Refresh/>
-					</button>
+					<div className="pull-right">
+						<select className="form-control" onChange={this.verbChanged}>
+							<option value="">All Types</option>
+							<option value="AUDIT_APPLICATION_APPLIED">Application Applied</option>
+							<option value="AUDIT_APPLICATION_CANCELED">Application Canceled</option>
+							<option value="AUDIT_APPLICATION_APPROVED">Application Approved</option>
+							<option value="AUDIT_APPLICATION_REJECTED">Application Rejected</option>
+							<option value="AUDIT_STORE_SUBMITTED">Report Submitted</option>
+							<option value="AUDIT_STORE_UNSUBMITTED">Report Un Submitted</option>
+							<option value="AUDIT_STORE_ASSIGNED">Report Assigned</option>
+							<option value="AUDIT_STORE_FIAT_ASSIGNED">Report Fiat Assigned</option>
+							<option value="AUDIT_STORE_WITHDRAWN">Report Withdrawn</option>
+							<option value="AUDIT_STORE_FAILED">Report Failed</option>
+							<option value="AUDIT_STORE_COMPLETED">Report Completed</option>
+						</select>
+					</div>
 					<h4>
 						<Bell/> Notifications
 					</h4>

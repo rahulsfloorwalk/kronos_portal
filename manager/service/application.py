@@ -7,6 +7,8 @@ from auditor.models import AuditApplication, ProfileInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
+from manager.notification import verbs
+
 @atomic
 def approve(application_id, audit_date, user_actor):
     try:

@@ -4,13 +4,24 @@ from notifications.models import Notification
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
+from manager.notification import verbs
 
-def find_by_recipient_user(user_id, before=None):
+
+def find_by_recipient_user_and_verb(user_id, verb=None, before=None):
     try:
         user = User.objects.get(pk=user_id)
-        if before is None:
-            return user.notifications.all()[:10]
-        else:
-            return user.notifications.filter(timestamp__lt=before)[:10]
+
+        qs = user.notifications
+
+        if verb not in (None, ""):
+            if verb not in verbs:
+                raise AppLogicError("invalid verb")
+            else:
+                qs = qs.filter(verb=verb)
+
+        if before not in (None, ""):
+            qs = qs.filter(timestamp__lt=before)
+
+        return qs.all()[:10]
     except User.DoesNotExist as e:
         raise ObjectNotFound from e

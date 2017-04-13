@@ -1,0 +1,22 @@
+
+verbs = (
+        'AUDIT_APPLICATION_APPLIED',
+        'AUDIT_APPLICATION_CANCELED',
+        'AUDIT_APPLICATION_APPROVED',
+        'AUDIT_APPLICATION_REJECTED',
+
+        'AUDIT_STORE_ASSIGNED',
+        'AUDIT_STORE_FIAT_ASSIGNED',
+
+        'AUDIT_STORE_SUBMITTED',
+        'AUDIT_STORE_UNSUBMITTED',
+
+        'AUDIT_STORE_FAILED',
+        'AUDIT_STORE_WITHDRAWN',
+        'AUDIT_STORE_COMPLETED',
+    )
+
+for v in verbs:
+    globals()[v] = v
+del v
+
