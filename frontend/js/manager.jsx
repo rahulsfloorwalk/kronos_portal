@@ -6,8 +6,19 @@ import * as Redux from 'redux';
 import ReduxThunk from 'redux-thunk';
 import ReduxLogger from 'redux-logger';
 
+import $ from 'jquery';
+
 import Routes from './components/manager/Routes.jsx';
 import { rootReducer } from './reducers_manager.js';
+
+let forbiddenEncountered = false;
+$(document).ajaxError(function(event, jqXHR, settings){
+	if(jqXHR.status === 403 && !forbiddenEncountered){
+		forbiddenEncountered = true;
+		alert("It looks like your session has expired, please click 'OK' to login again.");
+		window.location.replace("/auth/login");
+	}
+});
 
 var store = Redux.createStore(
 	rootReducer,
