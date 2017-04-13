@@ -6,10 +6,15 @@ from rest_framework.serializers import Serializer, DateField
 from rest_framework import generics
 
 from rest_framework.filters import SearchFilter
+from rest_framework.exceptions import NotFound
+
+from kronos.exceptions import ObjectNotFound
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 import registration.service.auditor as auditor_service
+
+import auditor.service.stats as auditor_stats_service
 
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
@@ -74,6 +79,19 @@ class AuditorAdditionalInfoView(APIView):
             return Response(AdditionalInfoSerializer(additionalInfo).data)
         except AdditionalInfo.DoesNotExist:
             return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
+
+class AuditorStatsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def get(self, request, auditor_id, format=None):
+        try:
+            auditor_stats = auditor_stats_service.getAuditorHistoryStats(auditor_id)
+            return Response(auditor_stats)
+        except ObjectNotFound:
+            raise NotFound
 
 class AuditorDeactivateView(APIView):
     permission_classes = [HasGroupPermission]
