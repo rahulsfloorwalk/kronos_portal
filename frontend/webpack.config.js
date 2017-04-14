@@ -22,14 +22,14 @@ module.exports = {
 	externals: {
 	},
 	module: {
-		loaders: [
+		rules: [
 			{
 				test: /\.js$|\.jsx$/,
 				exclude: /(node_modules)/,
 				loader: 'babel-loader',
 				query: {
 					presets: [
-						['env', {modules: false}],
+						['es2015', {modules: false}],
 						'react'
 					]
 				}
