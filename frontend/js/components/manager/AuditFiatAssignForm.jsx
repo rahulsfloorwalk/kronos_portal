@@ -2,6 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { fiatAssignAudit } from '../../manager/service/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -54,7 +57,7 @@ var AuditFiatAssignForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<p>Store: <b>{this.props.audit.store.name}, {this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</b></p>
-					<p>Audit Cycle Dates: <b>{this.props.auditCycle.start_date}</b> to <b>{this.props.auditCycle.end_date}</b></p>
+					<p>Audit Cycle Dates: <b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b> to <b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></p>
 					<FormInput label="User Email" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.state.errors.email}/>
 					<FormDateInput label="Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
 					<SaveButton text="Approve"/>
