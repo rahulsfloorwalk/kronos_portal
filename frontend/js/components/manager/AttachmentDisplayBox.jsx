@@ -6,6 +6,7 @@ import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment,
 
 import { Paperclip, Plus, Cross, Record, Picture, Video, File, DownloadAlt } from '../Icons.jsx';
 import Loading from '../Loading.jsx';
+import ProgressBar from '../ProgressBar.jsx';
 import Jumbotron from '../Jumbotron.jsx';
 import InPlaceEditable from '../InPlaceEditable.jsx';
 
@@ -81,72 +82,66 @@ var AttachmentDisplayBox = React.createClass({
 	uploadButtonClicked: function(e){
 		this.uploadInput.click();
 	},
+	setProgressState: function(tempId, progressState){
+		this.setState((prevState)=>{
+			return Object.assign({}, prevState, {
+				inProgress: Object.assign({}, prevState.inProgress, {
+					[tempId]: Object.assign({}, prevState.inProgress[tempId], progressState)
+				})
+			});
+		});
+	},
 	uploadFile: function(e){
+		if( this.uploadInput.files.length > 10){
+			alert("You can only upload 10 attachments at once");
+			return;
+		}
 		for( let toUploadFile of this.uploadInput.files){
 			let tempId = Math.random().toString(36).substring(7);
+			this.setProgressState(tempId, {
+				uploading: true,
+				file: toUploadFile
+			});
 
 			let promise = uploadFileForAuditStore(this.props.auditStoreId, toUploadFile);
 			promise.progress((type, percent)=>{
 				switch(type){
 					case "INIT":
-						this.setState({
-							inProgress: Object.assign({}, this.state.inProgress, {
-								[tempId]: Object.assign({}, this.state.inProgress[tempId], {
-									uploading: true,
-									uploadMessage :"initializing upload",
-									file: toUploadFile
-								})
-							})
+						this.setProgressState(tempId, {
+							uploadMessage :"initializing upload",
+							active: false,
 						});
 						break;
 					case "STARTING_UPLOAD":
-						this.setState({
-							inProgress: Object.assign({}, this.state.inProgress, {
-								[tempId]: Object.assign({}, this.state.inProgress[tempId], {
-									uploadMessage :"starting upload",
-								})
-							})
+						this.setProgressState(tempId, {
+							uploadMessage :"starting upload",
+							active: true,
 						});
 						break;
 					case "UPLOAD_PROGRESS":
-						this.setState({
-							inProgress: Object.assign({}, this.state.inProgress, {
-								[tempId]: Object.assign({}, this.state.inProgress[tempId], {
-									uploadMessage :"",
-									progress: Math.floor(percent) + "%"
-								})
-							})
+						this.setProgressState(tempId, {
+							uploadMessage :"",
+							progress: Math.floor(percent)
 						});
 						break;
 				}
 			});
 			promise.always(()=>{
-				this.setState({
-					inProgress: Object.assign({}, this.state.inProgress, {
-						[tempId]: Object.assign({}, this.state.inProgress[tempId], {
-							progress :"",
-							uploading:false
-						})
-					})
+				this.setProgressState(tempId, {
+					progress :"",
+					uploading:false,
+					active: false
 				});
 			});
 			promise.then(()=>{
-				this.setState({
-					inProgress: Object.assign({}, this.state.inProgress, {
-						[tempId]: Object.assign({}, this.state.inProgress[tempId], {
-							uploadMessage :"upload successful",
-						})
-					})
+				this.setProgressState(tempId, {
+					uploadMessage :"upload successful",
 				});
 				this.reloadState();
 			}, (errorMessage) => {
-				this.setState({
-					inProgress: Object.assign({}, this.state.inProgress, {
-						[tempId]: Object.assign({}, this.state.inProgress[tempId], {
-							uploadMessage :"upload failed: " + errorMessage,
-							progress: ""
-						})
-					})
+				this.setProgressState(tempId, {
+					uploadMessage :"upload failed: " + errorMessage,
+					progress: ""
 				});
 			});
 		}
@@ -166,10 +161,11 @@ var AttachmentDisplayBox = React.createClass({
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
 				attachmentRows.push(<div key={id} className="list-group-item">
-					{fileName}<br/>
-					<div className="text-right">
-					{this.state.inProgress[id].uploadMessage}&nbsp;{this.state.inProgress[id].progress}
+					<div className="pull-right">
+					{this.state.inProgress[id].uploadMessage}
 					</div>
+					{fileName}<br/>
+					<ProgressBar percentage={this.state.inProgress[id].progress} striped={this.state.inProgress[id].active} active={this.state.inProgress[id].active}/>
 				</div>);
 			}
 		}
@@ -265,7 +261,7 @@ var AttachmentDisplayBox = React.createClass({
 
 		if(this.props.auditStore.status === 'SUBMITTED'){
 			attachmentRows.push(<div key="upload_input" className="hidden">
-				<input type="file" onChange={this.uploadFile}
+				<input type="file" onChange={this.uploadFile} multiple
 					ref={(input)=>this.uploadInput = input}/>
 			</div>);
 			attachmentRows.push(<button key="new" onClick={this.uploadButtonClicked} type="button" className="list-group-item"><Plus/> Upload Attachment</button>);
@@ -281,7 +277,7 @@ var AttachmentDisplayBox = React.createClass({
 					<Paperclip/> Attachments
 				</h3>
 				<div className="row">
-					<div className="col-md-4">
+					<div className="col-md-4" style={{maxHeight:"500px", overflowY: "auto"}}>
 						{attachmentRows}
 					</div>
 					<div className="col-md-8">
