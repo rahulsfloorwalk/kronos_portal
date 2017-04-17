@@ -7,10 +7,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kronos.settings")
 
 broker_url = 'sqs://-----:-------------@'
 broker_url = 'amqp://guest@localhost'
-imports = ('registration.service.mail',)
+imports = ('registration.service.mail', 'notify.service.mail_notify')
 
 queue_prefix = 'fw-testing'
- 
+
 app = Celery(__name__, broker=broker_url, include=imports)
 
 #app.config_from_object({

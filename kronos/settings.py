@@ -54,7 +54,8 @@ PROJECT_APPS = [
     'audit_store',
     'answer',
     'attachment',
-    'client_report'
+    'client_report',
+    'notify'
 ]
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS
@@ -221,4 +222,3 @@ LOGGING = {
 AWS = properties.AWS
 
 AUTH_GA_ID = properties.AUTH_GA_ID
-

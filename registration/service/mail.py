@@ -25,4 +25,3 @@ def send_welcome_email(email_address):
         _logger.info("sending welcome email to : %s", email_address)
         msg.send()
         _logger.info("welcome email sent successfully to : %s", email_address)
-

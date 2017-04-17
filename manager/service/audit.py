@@ -4,11 +4,14 @@ from django.db.models import Q
 from django.contrib.auth.models import User, Group
 
 from notifications.signals import notify
+from notifications.models import Notification
 
 from manager.notification import verbs
 from manager import notification
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
+from notify.service import mail_notify
+
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo, AuditApplication, AdditionalInfo
 from rest_framework.exceptions import ValidationError
@@ -141,6 +144,8 @@ def apply( audit_id, profileinfo_id, audit_date):
                 action_object=application,
                 target=audit
         )
+        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        mail_notify.send_notification_mail.delay(notif_id)
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
@@ -148,6 +153,8 @@ def apply( audit_id, profileinfo_id, audit_date):
             action_object=application,
             target=audit
         )
+        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        mail_notify.send_notification_mail.delay(notif_id)
         return application
     else:
         raise AppLogicError("you cannot apply to this audit")
@@ -173,6 +180,8 @@ def cancel( audit_id, profileinfo_id):
                 action_object=application,
                 target=audit
         )
+        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        mail_notify.send_notification_mail.delay(notif_id)
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
@@ -180,6 +189,8 @@ def cancel( audit_id, profileinfo_id):
             action_object=application,
             target=audit
         )
+        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        mail_notify.send_notification_mail.delay(notif_id)
         return application
     else:
         raise AppLogicError("you cannot cancel this application now")

@@ -1,0 +1,5 @@
+Hello{{ name }},
+We recieved an application to cancel your audit with FloorWalk.
+We are sorry if this audit was not relevant to you. We will get back to you with more audits soon.
+--
+FloorWalk Team
