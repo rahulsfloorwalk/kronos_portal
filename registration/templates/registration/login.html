@@ -32,8 +32,8 @@
 				<form action="{% url 'registration:login' %}" method="POST">
 					{% csrf_token %}
 					<div class="form-group">
-						<label>Email Address</label>
-						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com" }}
+						<label>Email Address or 10-digit Mobile Number</label>
+						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com or 9876543210" }}
 						<p class="help-block">
 						{{ form.username.errors }}
 						</p>

@@ -18,9 +18,10 @@ from django.core.mail import EmailMessage
 
 import strings
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from auditor.validators import numericValidator
 
 class SignUpForm(UserCreationForm):
-    phone = forms.CharField(max_length=10, required = True)
+    phone = forms.CharField(min_length=10, max_length=10, required = True, validators=[numericValidator])
 
     class Meta:
         model = User
