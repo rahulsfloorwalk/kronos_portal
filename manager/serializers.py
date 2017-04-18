@@ -34,7 +34,7 @@ class ClientSerializer(ModelSerializer):
 
     def deserialize(self):
         if self.context.get('id') is not None:
-            client = Client.objects.get(id=self.context('id'))
+            client = Client.objects.get(id=self.context.get('id'))
         else:
             client = Client()
         client.name = self.validated_data.get('name', client.name)
