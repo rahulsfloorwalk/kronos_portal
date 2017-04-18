@@ -9,15 +9,13 @@ class CaseInsensitiveModelBackend(ModelBackend):
         p = password.strip()
         try:
             if u.isnumeric() and len(u) is 10:
-                profile = ProfileInfo.objects.get(mobile_number__iexact=u)
-                return profile.user
-        except ProfileInfo.DoesNotExist:
-            pass
-        try:
-            user = User.objects.get(email__iexact = u)
-            if user.check_password(p):
-                return user
+                user = ProfileInfo.objects.get(mobile_number__iexact=u).user
             else:
-                return None
-        except User.DoesNotExist:
+                user = User.objects.get(email__iexact = u)
+        except (ProfileInfo.DoesNotExist, User.DoesNotExist) as e:
+            return None
+
+        if user.check_password(p):
+            return user
+        else:
             return None
