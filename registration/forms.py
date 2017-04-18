@@ -33,6 +33,10 @@ class SignUpForm(UserCreationForm):
             self.add_error("username", "a user with email {} already exists".format(self.data["username"]))
             valid = False
 
+        if ProfileInfo.objects.filter(mobile_number=self.data["phone"]).exists():
+            self.add_error("phone", "a user with phone {} already exists".format(self.data["phone"]))
+            valid = False
+
         try:
             validate_email(self.data["username"])
         except forms.ValidationError as e:
