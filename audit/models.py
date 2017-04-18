@@ -56,7 +56,11 @@ class AuditCycle(Model):
         ).count()
 
     def completed_percentage(self):
-        return self.completed_audit_count() * 100 / self.audit_count()
+        audit_count = self.audit_count()
+        if audit_count is 0:
+            return audit_count
+        else:
+            return self.completed_audit_count() * 100 / audit_count
 #
 #    def cities(self):
 #        cities = [al.location.city for al in self.auditlocations.all()]
