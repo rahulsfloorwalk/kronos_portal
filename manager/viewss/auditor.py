@@ -12,7 +12,7 @@ from registration.mixins import HasGroupPermission
 import registration.service.auditor as auditor_service
 
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
-from auditor.serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
+from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
 
 class AuditorView(generics.ListAPIView):
     permission_classes = [HasGroupPermission]

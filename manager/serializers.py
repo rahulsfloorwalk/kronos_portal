@@ -7,11 +7,11 @@ from rest_framework.serializers import Serializer, ModelSerializer, ValidationEr
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
 
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
+from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from notifications.models import Notification
 
 from questionnaire.models import Section, Question
-from auditor.models import ProfileInfo, AuditApplication
+from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalInfo
 import auditor.serializers
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
@@ -54,7 +54,7 @@ class CitySerializer(ModelSerializer):
             'lon',
             'gmaps_url',
         )
-        read_only_fields = ('id',)
+        read_only_fields = fields
 
 class LocationSerializer(ModelSerializer):
     city = CitySerializer()
@@ -561,5 +561,92 @@ class NotificationSerializer(ModelSerializer):
 
             'action_object',
             'action_object_content_type',
+        )
+        read_only_fields = fields
+
+
+class ProfileInfoSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = ProfileInfo
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'gender',
+            'marital_status',
+            'education',
+            'mobile_number',
+            'date_of_birth',
+            'address',
+            'pincode',
+            'city',
+            'user_id',
+            'is_complete'
+        )
+        read_only_fields = fields
+
+
+class BankInfoSerializer(ModelSerializer):
+    class Meta:
+        model = BankInfo
+        fields = (
+            'id',
+            'bank_name',
+            'account_holder_name',
+            'account_number',
+            'ifsc_code',
+            'pan_number',
+            'user_id'
+        )
+        read_only_fields = fields
+
+
+class AdditionalInfoSerializer(ModelSerializer):
+    class Meta:
+        model = AdditionalInfo
+        fields = (
+            'id',
+            'has_car',
+            'weekend_audit',
+            'hair_color',
+            'height',
+            'weight',
+            'distance',
+            'camera_owned',
+            'camera_resoulution',
+            'laptop_owned',
+            'smart_phone_owned',
+            'weekend_audit',
+            'user_id',
+            'occupation'
+        )
+        read_only_fields = fields
+
+class VerificationSerializer(ModelSerializer):
+    class Meta:
+        model = Verification
+        fields = (
+            'id',
+            'key_expires',
+            'is_verified',
+            'user_id'
+        )
+        read_only_fields = fields
+
+
+class AuditorSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSerializer()
+    verification = VerificationSerializer()
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'is_active',
+            'date_joined',
+            'profileinfo',
+            'verification',
         )
         read_only_fields = fields

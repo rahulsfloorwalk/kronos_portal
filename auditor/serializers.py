@@ -8,8 +8,7 @@ from notifications.models import Notification
 
 from registration.models import GROUP_NAME_AUDITOR
 
-from manager.serializers import CitySerializer
-from manager.models import Location
+from manager.models import Location, City
 from audit.models import Audit, AuditCycle
 from client.models import Client, Store
 from audit_store.models import AuditStore
@@ -18,6 +17,17 @@ from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 
+class CitySerializer(ModelSerializer):
+    class Meta:
+        model = City
+        fields = (
+            'id',
+            'name',
+            'state',
+            'lat',
+            'lon',
+        )
+        read_only_fields = fields
 
 class ProfileInfoSerializer(ModelSerializer):
     city = CitySerializer()

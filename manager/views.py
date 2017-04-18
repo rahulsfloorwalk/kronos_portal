@@ -30,7 +30,6 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from registration.service.auditor import deactivate_auditor, activate_auditor
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, AuditApplication
-from auditor.serializers import ProfileInfoSerializer
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from . import states

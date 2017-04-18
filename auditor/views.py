@@ -21,7 +21,7 @@ from .serializers import NotificationSerializer
 from .serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from audit.models import Audit
 from manager.models import City
-from manager.serializers import CitySerializer
+from .serializers import CitySerializer
 import manager.service.audit as audit_service
 from manager.service import notifications as notification_service
 from manager import states
