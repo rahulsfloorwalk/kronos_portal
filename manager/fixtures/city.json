@@ -7188,5 +7188,25 @@
             "lat": "9.184400",
             "lon": "76.515200"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 748,
+        "fields": {
+            "name": "Batala",
+            "state": "IN-PB",
+            "lat": "31.818300",
+            "lon": "75.207100"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 749,
+        "fields": {
+            "name": "Baijnath",
+            "state": "IN-HP",
+            "lat": "32.052100",
+            "lon": "76.649300"
+        }
     }
 ]
