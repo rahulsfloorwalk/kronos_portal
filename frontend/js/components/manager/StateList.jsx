@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { truncateStyle } from '../../styles.js';
+
 import { fetchStates } from '../../manager_actions.js';
 
 import { MapMarker } from '../Icons.jsx';
@@ -19,7 +21,7 @@ var StateList = React.createClass({
 				<div key={stateId} className="col-md-3">
 					<div className="panel panel-default">
 						<div className="panel-body">
-							<h4>{this.props.states[stateId]}</h4>
+							<h4 style={truncateStyle}>{this.props.states[stateId]}</h4>
 							<Link to={linkTo} className="btn btn-default">View</Link>
 						</div>
 					</div>
