@@ -141,3 +141,22 @@ export function deactivateAuditor(userId){
 		//TODO: Handle error
 	};
 };
+
+export function verifyAuditor(userId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_VERIFY,
+			status: 'request',
+			userId
+		});
+
+		$.post( url.api_base_path + `manager/auditor/${userId}/verify`, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_VERIFY,
+				status: 'success',
+				auditor
+			});
+		});
+		//TODO: Handle error
+	};
+};

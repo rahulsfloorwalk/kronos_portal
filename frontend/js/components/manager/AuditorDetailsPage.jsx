@@ -2,9 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchAuditor, activateAuditor, deactivateAuditor } from '../../manager/actions/auditor.js';
+import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor } from '../../manager/actions/auditor.js';
 
-import { Lock } from '../Icons.jsx';
+import { Lock, Check } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
@@ -33,10 +33,18 @@ var AuditorDetailsPage = React.createClass({
 			</button>);
 		}
 
+		let verifyButton;
+		if( ! this.props.auditor.verification.is_verified){
+			verifyButton = (<button onClick={() => this.props.dispatch(verifyAuditor(this.props.params.auditorId))}
+				className="btn btn-success">
+				<Check/> Verify
+			</button>);
+		}
+
 		return (
 			<div>
 				<Panel title="Email">
-					<p className="pull-right">{statusButton}</p>
+					<p className="pull-right">{verifyButton}&nbsp;{statusButton}</p>
 					<p>Email Address: { this.props.auditor.email }</p>
 				</Panel>
 				<ProfileInfoPanel auditorId={this.props.params.auditorId}/>

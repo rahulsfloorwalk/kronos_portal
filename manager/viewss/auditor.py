@@ -92,3 +92,12 @@ class AuditorActivateView(APIView):
     def post(self, request, user_id):
         user = auditor_service.activate_auditor(user_id)
         return Response(AuditorSerializer(user).data)
+
+class AuditorVerifyView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id):
+        user = auditor_service.verify_auditor(user_id)
+        return Response(AuditorSerializer(user).data)
