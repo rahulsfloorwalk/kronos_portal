@@ -75,7 +75,7 @@ var mapStoreToProps = function(store,ownProps){
 		location: store.locations[ownProps.params.locationId] || {},
 		errors: store.forms.location.errors,
 		stateName: store.states[ownProps.params.stateId],
-		city: store.cities[ownProps.params.cityId] || {},
+		city: store.cities.filter( c => c.id === parseInt(ownProps.params.cityId))[0] || {},
 	};
 };
 

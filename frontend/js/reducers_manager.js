@@ -11,7 +11,7 @@ var initialStore = {
 	auditors: {},
 	locations: {},
 	states: {},
-	cities: {},
+	cities: [],
 	profileInfos: {},
 	bankInfos: {},
 	additionalInfos: {},
@@ -662,17 +662,11 @@ export function rootReducer(store = initialStore, action) {
 			switch(action.status){
 				case "request":
 					return Object.assign({}, store, {
-						cities: {}
+						cities: []
 					});
 				case "success":
 					return Object.assign({}, store, {
-						cities: (function(cities){
-							var obj = {};
-							for( var c of cities){
-								obj[c.id] = c;
-							}
-							return obj;
-						}(action.cities))
+						cities: action.cities
 					});
 					break;
 				default:

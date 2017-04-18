@@ -12,16 +12,16 @@ var CityList = React.createClass({
 	},
 	render: function(){
 		var rows = [];
-		for(var cityId in this.props.cities) {
-			var linkTo = `/state/${this.props.params.stateId}/city/${cityId}/location`;
+		for(var c of this.props.cities) {
+			var linkTo = `/state/${this.props.params.stateId}/city/${c.id}/location`;
 			rows.push(
-				<div key={cityId} className="col-md-3">
+				<div key={c.id} className="col-md-3">
 					<div className="panel panel-default">
 						<div className="panel-body">
-							<a href={this.props.cities[cityId].gmaps_url} className="btn btn-link pull-right" target="_blank">
+							<a href={c.gmaps_url} className="btn btn-link pull-right" target="_blank">
 								<MapMarker/>
 							</a>
-							<h4>{this.props.cities[cityId].name}</h4>
+							<h4>{c.name}</h4>
 							<Link to={linkTo} className="btn btn-default">
 								<ShareAlt/>
 								View

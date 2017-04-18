@@ -73,7 +73,7 @@ var mapStoreToProps = function(store, ownProps){
 	return {
 		locations: store.locations,
 		stateName: store.states[ownProps.params.stateId],
-		city: store.cities[ownProps.params.cityId] || {},
+		city: store.cities.filter( c => c.id === parseInt(ownProps.params.cityId))[0] || {},
 	};
 };
 

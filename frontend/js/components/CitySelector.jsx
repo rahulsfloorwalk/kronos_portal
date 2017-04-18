@@ -8,8 +8,8 @@ import FormSelect from './FormSelect.jsx';
 var __CitySelector = React.createClass({
 	render : function(){
 		let cityOptions = [];
-		for( let c in this.props.cities){
-			cityOptions.push(<option key={c} value={c}>{this.props.cities[c].name}</option>);
+		for( let c of this.props.cities){
+			cityOptions.push(<option key={c.id} value={c.id}>{c.name}</option>);
 		}
 		return (
 			<FormSelect label="City" name="city" {...this.props}>
