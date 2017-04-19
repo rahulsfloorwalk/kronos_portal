@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "dev-server-hot": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot",
     "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.js --watch --colors --progress",
     "build-prod": "./node_modules/webpack/bin/webpack.js --config webpack.config.js -p --progress --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -40,6 +41,7 @@
     "jsx-loader": "^0.13.2",
     "style-loader": "^0.13.1",
     "webpack": "^2.3.3",
-    "webpack-bundle-size-analyzer": "^2.5.0"
+    "webpack-bundle-size-analyzer": "^2.5.0",
+    "webpack-dev-server": "^2.4.2"
   }
 }
