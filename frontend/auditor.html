@@ -12,6 +12,7 @@
 		<title>Floorwalk Auditor Portal</title>
 	</head>
 <style>
+/* disable navbar collapse */
 .navbar-collapse.collapse{
   display: block !important;
 }
@@ -27,6 +28,14 @@
 .navbar-right{
   float: right !important;
 }
+
+/* container-fluid sm override */
+@media (max-width: 992px) {
+   .container {
+      width: 100%;
+   }
+}
+
 </style>
 	<body>
 		<div id="root">
