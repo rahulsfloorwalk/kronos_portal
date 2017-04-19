@@ -53,7 +53,7 @@ var AuditRow = React.createClass({
 			margin:"10px"
 		};
 		let mediaImgStyle2 = {
-			width: "64px"
+			width: "96px"
 		};
 		/*
 				<div>
@@ -106,40 +106,43 @@ var AuditRow = React.createClass({
 		return (
 			<div>
 					<div className="media">
-						<div className="media-left">
-							<a href="#">
-								<img style={mediaImgStyle} className="media-object" src={this.props.audit.audit_cycle.client.logo_url} alt="client logo"/>
-							</a>
+						<div className="media-left hidden-xs">
+							<img style={mediaImgStyle} className="media-object" src={this.props.audit.audit_cycle.client.logo_url} alt="client logo"/>
 						</div>
 						<div className="media-body">
+						<div className="pull-right hidden-sm hidden-md hidden-lg">
+							<img style={mediaImgStyle2} className="media-object" src={this.props.audit.audit_cycle.client.logo_url} alt="client logo"/>
+						</div>
 						<h3 className="media-heading">
 							{this.props.audit.audit_cycle.client.name}&nbsp;
 							<small>
 								{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}
 							</small>
 						</h3>
-						<table className="" style={{width:"100%",margin:"10px 0px"}}>
-							<tbody>
-								<tr className="text-muted">
-									<td style={{width:"10%", border: "none"}}>Type</td>
-									<td style={{width:"20%", border: "none"}}>Start Date</td>
-									<td style={{width:"20%", border: "none"}}>End Date</td>
-									<td style={{width:"30%", border: "none"}}>Earnings</td>
-									<td style={{width:"20%", border: "none"}}>Status</td>
-								</tr>
-								<tr>
-									<th style={{border:"none"}}><AuditTypeLabel auditType={this.props.audit.audit_cycle.type}/></th>
-									<th style={{border:"none"}}>
-										{moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat)}
-									</th>
-									<th style={{border:"none"}}>
-										{moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat)}
-									</th>
-									<th style={{border:"none"}}>{<span>{fees}{reimb}</span>}</th>
-									<th style={{border:"none"}}>{textLabel}</th>
-								</tr>
-							</tbody>
-						</table>
+						<div className="" style={{width:"100%",margin:"10px 0px"}}>
+							<div className="row">
+								<div className="col-sm-2">
+									<h5>Type</h5>
+									<b><AuditTypeLabel auditType={this.props.audit.audit_cycle.type}/></b>
+								</div>
+								<div className="col-sm-2">
+									<h5>Start Date</h5>
+									<b>{moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat)}</b>
+								</div>
+								<div className="col-sm-2">
+									<h5>End Date</h5>
+									<b>{moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat)}</b>
+								</div>
+								<div className="col-sm-4">
+									<h5>Earnings</h5>
+									{<span>{fees}{reimb}</span>}
+								</div>
+								<div className="col-sm-2">
+									<h5>Status</h5>
+									<b>{textLabel}</b>
+								</div>
+							</div>
+						</div>
 						<p>{this.props.audit.audit_cycle.description}</p>
 						<p className="">
 							{auditDate}
