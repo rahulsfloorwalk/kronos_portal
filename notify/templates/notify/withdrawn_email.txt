@@ -1,0 +1,8 @@
+Hello {{ name }},
+Due to unavoidable circumstances, your audit at {{ client }} on {{ audit_date }} has been withdrawn.
+Inconvenience caused is deeply regretted. We would take care that such incidents do not occur in future.
+Please stay tuned with FloorWalk for more audits.
+Note: Please do not conduct the audit as there is no requirement for the same from the client.
+--
+Thanks and regards,
+FloorWalk Team

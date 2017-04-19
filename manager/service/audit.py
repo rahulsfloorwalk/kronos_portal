@@ -227,6 +227,8 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
         action_object=audit_store,
         target=audit
     )
+    notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
+    mail_notify.send_notification_mail.delay(notif_id)
     notify.send(
         user_actor,
         recipient=audit_store.user,
@@ -234,6 +236,8 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
         action_object=audit_store,
         target=audit
     )
+    notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
+    mail_notify.send_notification_mail.delay(notif_id)
     return audit_store
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):

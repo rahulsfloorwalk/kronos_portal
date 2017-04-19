@@ -2,6 +2,12 @@ from django.db.transaction import atomic
 from django.db import IntegrityError
 from django.contrib.auth.models import Group
 from notifications.signals import notify
+from notifications.models import Notification
+
+from manager.notification import verbs
+from manager import notification
+
+from notify.service import mail_notify
 
 from client.models import Client
 from .models import AuditStore
@@ -80,6 +86,8 @@ def withdraw(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -87,6 +95,8 @@ def withdraw(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             return audit_store
         else:
             raise AppLogicError("audit store cannot be withdrawn now")
@@ -126,6 +136,8 @@ def submit(audit_store_id, user_id):
                     action_object=audit_store,
                     target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             notify.send(
                     audit_store.user,
                     recipient=audit_store.user,
@@ -133,6 +145,8 @@ def submit(audit_store_id, user_id):
                     action_object=audit_store,
                     target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             return audit_store
         else:
             raise AppLogicError("audit store cannot be submitted now")
@@ -155,6 +169,8 @@ def complete(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -162,6 +178,8 @@ def complete(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             return audit_store
         else:
             raise AppLogicError("audit store cannot be completed now")
@@ -184,6 +202,8 @@ def fail(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -191,6 +211,8 @@ def fail(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             return audit_store
         else:
             raise AppLogicError("audit store cannot be failed now")
@@ -260,6 +282,8 @@ def unsubmit(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -267,6 +291,8 @@ def unsubmit(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
+            mail_notify.send_notification_mail.delay(notif_id)
             return audit_store
         else:
             raise AppLogicError("audit store cannot be unsubmitted now")

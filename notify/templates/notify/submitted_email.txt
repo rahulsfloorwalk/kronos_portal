@@ -1,0 +1,7 @@
+Hello {{ name }},
+Thank you for submitting the report for audit that you performed for {{ client }} on {{ audit_date }}.
+The report will be reviewed by our project managers and you will be notified about it shortly.
+The audit will be marked as complete once the report has been verified and accepted by our client
+--
+Thanks and regards,
+FloorWalk Team

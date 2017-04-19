@@ -1,0 +1,8 @@
+Hello {{ name }},
+Thank you for showing interest in FloorWalk. We are sorry to inform that your audit application at {{ client }} on {{ audit_date }} cannot be processed further.
+This is due to a limited requirement from our client this time.
+We are sorry it didn't work out well this time, however stay tuned for more audit opportunities
+Note: Please do not conduct the audit as there is no requirement for the same from the client.
+--
+Thanks and regards,
+FloorWalk Team

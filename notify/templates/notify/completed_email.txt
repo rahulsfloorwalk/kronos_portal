@@ -1,0 +1,8 @@
+Congratulations {{ name }},
+Your audit at {{ client }} on {{ audit_date }} is complete.
+Your audit fees and reimbursements will be processed within 30 days.
+Thank You for showing interest and promptness in audits and reporting.
+We look forward to working with you again when we have good audits near you.
+--
+Thanks and regards,
+FloorWalk Team

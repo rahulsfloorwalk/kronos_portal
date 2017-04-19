@@ -1,0 +1,7 @@
+Hello {{ name }},
+We are sorry to inform you that your audit report for {{ client }} on {{ audit_date }} has some inconsistencies.
+We have unsubmitted your report so that you can make the necessary modifications and submit again.
+Don't worry, our project manager will contact you shortly and help you with reporting.
+--
+Thanks and regards,
+FloorWalk Team
