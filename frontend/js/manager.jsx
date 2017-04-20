@@ -28,9 +28,19 @@ var store = Redux.createStore(
 	)
 );
 
-ReactDOM.render(
-	<Provider store={store}>
-		<Routes store={store}/>
-	</Provider>,
-	document.getElementById('root')
-);
+let render = store => {
+	ReactDOM.render(
+		<Provider store={store}>
+			<Routes store={store}/>
+		</Provider>,
+		document.getElementById('root')
+	);
+}
+render(store);
+if(module.hot){
+	console.log("module is HOT HOT HOT!", module);
+	module.hot.dispose(function(){
+		render(store);
+	});
+	module.hot.accept();
+}

@@ -21,7 +21,7 @@ export default React.createClass({
 			case undefined:
 				return "";
 			default:
-				return `unknown status type ${value} - ${typeof value}`;
+				return `unknown status type ${this.props.status} - ${typeof this.props.status}`;
 		}
 	},
 	render : function(){

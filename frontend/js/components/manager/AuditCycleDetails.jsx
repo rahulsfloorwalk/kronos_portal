@@ -12,6 +12,7 @@ import { King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
+import AuditCycleSummary from './AuditCycleSummary.jsx'
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -76,6 +77,7 @@ var AuditCycleDetails = React.createClass({
 						</tbody>
 					</table>
 				</div>
+				<AuditCycleSummary auditCycleId = {this.props.auditCycle.id}/>
 				</div>
 				<div className="col-md-8">
 				<ul className="nav nav-tabs">
