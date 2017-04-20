@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 
 import NavLink from '../NavLink.jsx';
 
+import { File, User, Inbox } from '../Icons.jsx';
+
 var Header = React.createClass({
 	render: function(){
 		let brandStyle = {
@@ -17,9 +19,9 @@ var Header = React.createClass({
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">
-						<NavLink to="/details">My Profile</NavLink>
-						<NavLink to="/audit">Audits</NavLink>
-						<NavLink to="/audit_store">Reports</NavLink>
+						<NavLink to="/details"><User/> My Profile</NavLink>
+						<NavLink to="/audit"><Inbox/> Audits</NavLink>
+						<NavLink to="/audit_store"><File/> Reports</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
