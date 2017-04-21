@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import Heartbeat from '../Heartbeat.jsx';
 import NavLink from '../NavLink.jsx';
 import { NewWindow, User, MapMarker, King, LogOut } from '../Icons.jsx';
 
@@ -23,6 +24,11 @@ var Header = React.createClass({
 						<NavLink to="/state"><MapMarker/> Locations</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
+						<li>
+							<a>
+							<Heartbeat/>
+							</a>
+						</li>
 						<li>
 							<a href="http://mbase.floorwalk.in:3000" target="_blank">
 								<NewWindow/> Metabase
