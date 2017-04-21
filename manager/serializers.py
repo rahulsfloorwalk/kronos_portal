@@ -646,6 +646,7 @@ class AuditorSerializer(ModelSerializer):
             'email',
             'is_active',
             'date_joined',
+            'last_login',
             'profileinfo',
             'verification',
         )
