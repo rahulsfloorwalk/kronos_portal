@@ -1,3 +1,4 @@
+import logging
 from time import sleep
 
 from django.template import Context
@@ -11,16 +12,17 @@ from manager import notification
 
 from celery import shared_task
 
+_logger = logging.getLogger(__name__)
+
 #notif action object has AuditApplication
 #notif recipient has User
 #notif target has Audit
 @shared_task(ignore_result=True)
 def send_notification_mail(notif_id):
     sleep(2)
-    print(notif_id)
     notif = Notification.objects.get(pk=notif_id)
     if notif.recipient.groups.filter(name=GROUP_NAME_MANAGER).all():
-        print("send notification to manager")
+        _logger.info("send notification with id %s to manager", notif_id)
     elif notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
         to_email = notif.recipient.email
         params = {}
