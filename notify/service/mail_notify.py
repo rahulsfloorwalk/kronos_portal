@@ -19,8 +19,13 @@ _logger = logging.getLogger(__name__)
 @shared_task(ignore_result=True, countdown=2)
 def send_notification_mail(notif_id):
     notif = Notification.objects.get(pk=notif_id)
+    if notif.emailed:
+        _logger.info("notification email already sent for id id %s", notif_id)
+        return notif.emailed
+
     if notif.recipient.groups.filter(name=GROUP_NAME_MANAGER).all():
-        _logger.info("send notification with id %s to manager", notif_id)
+        _logger.info("skipping notification email with id %s to manager", notif_id)
+        return notif.emailed
     elif notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
         to_email = notif.recipient.email
         params = {}
@@ -82,6 +87,9 @@ def send_notification_mail(notif_id):
 
         html_message, txt_message = _prepare_mail(params)
         _send_mail(to_email, subject, html_message, txt_message)
+        notif.emailed = True
+        notif.save()
+        return notif.emailed
 
 def _prepare_mail(params):
     html_message = get_template(params.get('html_template')).render(Context({
