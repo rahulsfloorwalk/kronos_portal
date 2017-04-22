@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
@@ -46,3 +47,9 @@ def get_audit_cycle_stats(audit_cycle_id):
         if not result.get('audit_store').get(key[0]):
             result.get('audit_store')[key[0]] = 0
     return result
+
+def get_audit_cycle_dashboard():
+    auditCycles = AuditCycle.objects.filter(
+            Q(status = AuditCycle.UPCOMING) | Q(status = AuditCycle.ACTIVE) | Q(status = AuditCycle.REPORT)
+        ).all().order_by('end_date')
+    return auditCycles

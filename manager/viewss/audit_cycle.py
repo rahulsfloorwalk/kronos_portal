@@ -102,3 +102,15 @@ class AuditCycleStats(APIView):
             return Response(audit_cycle_stats)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
+
+class AuditCycleDashboard(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        try:
+            audit_cycles = audit_cycle_service.get_audit_cycle_dashboard()
+            return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
