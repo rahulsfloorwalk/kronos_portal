@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
@@ -34,21 +34,20 @@ var AuditCycleDashBoard = React.createClass({
 			return <Loading/>;
 		}
     let audit_cycle_blocks = this.state.active_cycles.map((value) => {
-      let linkTo = `/client/${value.id}/audit_cycle`
+      let linkTo = `/audit_cycle/${value.id}/questionnaire`
       return (
-        <Link to={linkTo}>
-          <div className="col-md-4">
+          <div className="col-md-4" onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
             <div className="well well-sm">
               <h4 className="heading">{value.name}
               </h4>
               <hr/>
+              <p>Client: <b>{value.client.name}</b></p>
               <p>Current Status: {value.status}</p>
               <p>Start Date: {value.start_date}</p>
               <p>End Date: {value.end_date}</p>
               <AuditCycleSummary auditCycleId={value.id} />
             </div>
           </div>
-        </Link>
       );
     });
 		return (
