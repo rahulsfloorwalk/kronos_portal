@@ -36,8 +36,8 @@ var AuditCycleDashBoard = React.createClass({
     let audit_cycle_blocks = this.state.active_cycles.map((value) => {
       let linkTo = `/audit_cycle/${value.id}/questionnaire`
       return (
-          <div className="col-md-4" onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
-            <div className="well well-sm">
+          <div className="col-md-4">
+            <div className="well well-sm" onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
               <h4 className="heading">{value.name}
               </h4>
               <hr/>
