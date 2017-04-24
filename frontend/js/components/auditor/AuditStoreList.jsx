@@ -28,7 +28,8 @@ var AuditStoreRow = React.createClass({
 					<div className="panel-body">
 						<div className="form-horizontal">
 							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.auditStore.audit.audit_cycle.type)}/>
-							<LabelValue_2_10 label="Location:" value={`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}/>
+							<LabelValue_2_10 label="Store:" value={this.props.auditStore.audit.store.name}/>
+							<LabelValue_2_10 label="Address:" value={this.props.auditStore.audit.store.address}/>
 							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Audit Date:" value={moment(this.props.auditStore.audit_date).format(momentDateFormat)}/>
 							<LabelValue_2_10 label="Details:" value={detailsElement}/>

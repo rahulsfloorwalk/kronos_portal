@@ -217,6 +217,8 @@ class StoreSerializer(ModelSerializer):
     class Meta:
         model = Store
         fields = (
+            'name',
+            'address',
             'location',
         )
         read_only_fields = fields
