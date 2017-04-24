@@ -36,52 +36,52 @@ def send_notification_mail(notif_id):
         params['store_address'] = notif.action_object.audit.store.address
 
         if notif.verb == notification.AUDIT_APPLICATION_APPLIED:
-            subject = "[FloorWalk] Audit Application for " + params['client']
+            subject = "[FloorWalk] Audit Application for {}".format(params['client'])
             params['html_template'] = 'notify/application_email.html'
             params['txt_template'] = 'notify/application_email.txt'
 
         elif notif.verb == notification.AUDIT_APPLICATION_CANCELED:
-            subject = "[FloorWalk] Audit Cancelled for " + params['client']
+            subject = "[FloorWalk] Audit Cancelled for {}".format(params['client'])
             params['html_template'] = 'notify/cancel_email.html'
             params['txt_template'] = 'notify/cancel_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_FIAT_ASSIGNED:
-            subject = "[FloorWalk] Audit Assigned for " + params['client']
+            subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/fiat_assign_email.html'
             params['txt_template'] = 'notify/fiat_assign_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_ASSIGNED:
-            subject = "[FloorWalk] Audit Assigned for " + params['client']
+            subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email.html'
             params['txt_template'] = 'notify/assign_email.txt'
 
         elif notif.verb == notification.AUDIT_APPLICATION_REJECTED:
-            subject = "[FloorWalk] Audit Application Rejected for " + params['client']
+            subject = "[FloorWalk] Audit Application Rejected {}".format(params['client'])
             params['html_template'] = 'notify/reject_email.html'
             params['txt_template'] = 'notify/reject_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_WITHDRAWN:
-            subject = "[FloorWalk] Audit Withdrawn for " + params['client']
+            subject = "[FloorWalk] Audit Withdrawn for {}".format(params['client'])
             params['html_template'] = 'notify/withdrawn_email.html'
             params['txt_template'] = 'notify/withdrawn_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_SUBMITTED:
-            subject = "[FloorWalk] Audit Report Submitted for " + params['client']
+            subject = "[FloorWalk] Audit Report Submitted for {}".format(params['client'])
             params['html_template'] = 'notify/submitted_email.html'
             params['txt_template'] = 'notify/submitted_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_UNSUBMITTED:
-            subject = "[FloorWalk] Audit Report Unsubmitted for " + params['client']
+            subject = "[FloorWalk] Audit Report Unsubmitted for {}".format(params['client'])
             params['html_template'] = 'notify/unsubmitted_email.html'
             params['txt_template'] = 'notify/unsubmitted_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_COMPLETED:
-            subject = "[FloorWalk] Audit Report Completed for " + params['client']
+            subject = "[FloorWalk] Audit Report Completed for {}".format(params['client'])
             params['html_template'] = 'notify/completed_email.html'
             params['txt_template'] = 'notify/completed_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_FAILED:
-            subject = "[FloorWalk] Audit Failed for " + params['client']
+            subject = "[FloorWalk] Audit Failed for {}".format(params['client'])
             params['html_template'] = 'notify/failed_email.html'
             params['txt_template'] = 'notify/failed_email.txt'
 
