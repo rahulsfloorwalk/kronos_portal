@@ -1,6 +1,8 @@
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 
 module.exports = {
 	entry: {
@@ -12,6 +14,9 @@ module.exports = {
 
 		client: path.resolve(__dirname, './client/client.jsx'),
 		client_vendor: ['jquery','react','react-dom','react-router'],
+
+		moderator: path.resolve(__dirname, './js/moderator/moderator.jsx'),
+		moderator_vendor: ['jquery','react','react-dom','react-router'],
 
 		'react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
 	},
@@ -49,7 +54,14 @@ module.exports = {
 		new webpack.optimize.CommonsChunkPlugin({ name: "auditor_vendor", chunks: ['auditor']}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "client_vendor", chunks: ['client']}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "manager_vendor", chunks: ['manager']}),
-		new ExtractTextPlugin("[name].css")
+		new webpack.optimize.CommonsChunkPlugin({ name: "moderator_vendor", chunks: ['moderator']}),
+		new ExtractTextPlugin("[name].css"),
+		new HtmlWebpackPlugin({
+			title: 'FloorWalk Moderator Portal',
+			filename: 'moderator/index.html',
+			chunks: ['moderator_vendor', 'moderator'],
+			template: path.resolve(__dirname, './js/moderator/moderator.ejs'),
+		})
 	],
 	devServer: {
 		inline: true,

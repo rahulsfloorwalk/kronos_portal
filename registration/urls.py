@@ -5,8 +5,13 @@ from django.contrib.auth.views import password_change, password_change_done
 import properties
 from . import views
 from . import client_views
+from . import moderator_views
 
 urlpatterns = ([
+    ## Moderator Portal Login Logout Views
+    url(r'moderator/login$', moderator_views.Login.as_view(), name="moderator_login"),
+    url(r'moderator/logout$', moderator_views.Logout.as_view(), name="moderator_logout"),
+
     ## Client Portal Login Logout Views
     url(r'client/login$', client_views.Login.as_view(), name="client_login"),
     url(r'client/logout$', client_views.Logout.as_view(), name="client_logout"),

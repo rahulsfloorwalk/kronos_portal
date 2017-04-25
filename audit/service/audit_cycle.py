@@ -3,6 +3,8 @@ from django.db.models import Q
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
+from registration.models import GROUP_NAME_CLIENT, GROUP_NAME_MODERATOR
+
 from ..models import AuditCycle
 from auditor.models import AuditApplication as application_model
 from audit_store.models import AuditStore  as store_model
@@ -53,3 +55,27 @@ def get_audit_cycle_dashboard():
             Q(status = AuditCycle.UPCOMING) | Q(status = AuditCycle.ACTIVE) | Q(status = AuditCycle.REPORT)
         ).all().order_by('end_date')
     return auditCycles
+
+def find_for_moderator(user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+
+        if user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
+            return AuditCycle.objects.filter(status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE)).order_by('-end_date')
+        else:
+            raise ObjectNotFound
+    except (User.DoesNotExist, ) as e:
+        raise ObjectNotFound from e
+
+
+def find_by_id_for_moderator(audit_cycle_id, user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+
+        if user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
+            return AuditCycle.objects.get(pk=audit_cycle_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE))
+        else:
+            raise ObjectNotFound
+    except (User.DoesNotExist, AuditCycle.DoesNotExist) as e:
+        raise ObjectNotFound from e
+

@@ -21,6 +21,7 @@ import registration.urls as registration_urls
 import auditor.urls as auditor_urls
 import manager.urls as manager_urls
 import client_rest.urls as client_urls
+import moderator_rest.urls as moderator_urls
 
 urlpatterns = [
     url(r'^$', lambda r: HttpResponseRedirect(reverse('registration:login'))),
@@ -29,4 +30,5 @@ urlpatterns = [
     url(r'^auditor/', include(auditor_urls.urlpatterns)),
     url(r'^manager/', include(manager_urls.urlpatterns)),
     url(r'^client/', include(client_urls.urlpatterns)),
+    url(r'^moderator/', include(moderator_urls.urlpatterns)),
 ]
