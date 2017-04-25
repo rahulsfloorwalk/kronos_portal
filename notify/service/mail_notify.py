@@ -56,7 +56,7 @@ def send_notification_mail(notif_id):
             params['txt_template'] = 'notify/assign_email.txt'
 
         elif notif.verb == notification.AUDIT_APPLICATION_REJECTED:
-            subject = "[FloorWalk] Audit Application Rejected {}".format(params['client'])
+            subject = "[FloorWalk] Audit Application Not Accepted {}".format(params['client'])
             params['html_template'] = 'notify/reject_email.html'
             params['txt_template'] = 'notify/reject_email.txt'
 
