@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.template import Context
 from django.template.loader import render_to_string, get_template
 from django.core.mail import EmailMultiAlternatives
@@ -13,11 +14,17 @@ from celery import shared_task
 
 _logger = logging.getLogger(__name__)
 
+def send_notification_mail(notif_id):
+    if settings.EMAIL_SWITCH['NOTIFICATION_EMAIL']:
+        notification_email_task.delay(notif_id)
+    else:
+        _logger.info("notification email disabled. skipping email for notification id : %s", notif_id)
+
 #notif action object has AuditApplication
 #notif recipient has User
 #notif target has Audit
-@shared_task(ignore_result=True, countdown=2)
-def send_notification_mail(notif_id):
+@shared_task(ignore_result=True)
+def notification_email_task(notif_id):
     notif = Notification.objects.get(pk=notif_id)
     if notif.emailed:
         _logger.info("notification email already sent for id id %s", notif_id)

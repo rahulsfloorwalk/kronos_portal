@@ -50,6 +50,13 @@ django_log_filename = "/home/foobar/kronos/logs/django.log"
 ### should use only 'logfile' in production and only 'console' in development
 log_handlers = ['console', 'logfile']
 
+### add a switch for email sending email notifications
+### when set to true, emails will be sent when the action is triggered
+MAIL_SWITCH = {
+  "NOTIFICATION_EMAIL": False,
+  "VERIFICATION_EMAIL": False,
+  "WELCOME_EMAIL": False
+}
 
 ### Google Analytics Tracking ID for Authentication/Registration views only
 ### The actual app should use different tracking IDs for manager,auditor and client UIs

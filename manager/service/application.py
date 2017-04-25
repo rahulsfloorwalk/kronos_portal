@@ -1,3 +1,4 @@
+from django.db import connection
 from django.db.transaction import atomic
 from django.contrib.auth.models import Group
 from notifications.signals import notify
@@ -66,7 +67,7 @@ def approve(application_id, audit_date, user_actor):
         target=audit_store.audit
     )
     notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
-    mail_notify.send_notification_mail.delay(notif_id)
+    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
     notify.send(
             user_actor,
             recipient=audit_store.user,
@@ -75,7 +76,7 @@ def approve(application_id, audit_date, user_actor):
             target=audit_store.audit
     )
     notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
-    mail_notify.send_notification_mail.delay(notif_id)
+    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
     return application
 
 @atomic
@@ -101,7 +102,7 @@ def reject(application_id, user_actor):
         target=application.audit
     )
     notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
-    mail_notify.send_notification_mail.delay(notif_id)
+    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
     notify.send(
             user_actor,
             recipient=application.profileinfo.user,
@@ -110,7 +111,7 @@ def reject(application_id, user_actor):
             target=application.audit
     )
     notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
-    mail_notify.send_notification_mail.delay(notif_id)
+    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
     return application
 
 def find_by_audit(audit_id):
