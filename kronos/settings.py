@@ -70,6 +70,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'registration.DisableCSRF',
+    'kronos.exceptions.KronosExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'kronos.urls'
