@@ -8,6 +8,7 @@ import { momentDateFormat, url }  from '../../../config.js';
 import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor } from '../../manager/actions/auditor.js';
 
 import { Lock, Check } from '../Icons.jsx';
+import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
@@ -61,6 +62,16 @@ var AuditorDetailsPage = React.createClass({
 					</div>
 					<div className="col-md-4">
 						<AdditionalInfoPanel auditorId={this.props.params.auditorId}/>
+					</div>
+				</div>
+				<div className="row">
+					<div className="col-md-12">
+						<ul className="nav nav-tabs">
+							<NavLink to={`/auditor/${this.props.params.auditorId}/applications`}>Applications</NavLink>
+							<NavLink to={`/auditor/${this.props.params.auditorId}/reports`}>Reports</NavLink>
+						</ul>
+						<br/>
+						{this.props.children}
 					</div>
 				</div>
 			</div>
