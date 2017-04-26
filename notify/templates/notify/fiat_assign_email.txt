@@ -4,7 +4,7 @@ The audit details are as follows:
 Store Name: {{ store_name }}
 Store Address: {{ store_address }}
 Audit Date: {{ audit_date }}
-Note: You can view the questionnaire on the portal. It is recommended that you go through the questionnaire before conducting the audit.
+Note: You can view the questionnaire on the portal. It is required that you go through the questionnaire before conducting the audit. It is also mandatory to submit report with valid audit proofs within 24 hours of audit completion.
 --
 Thanks and regards,
 FloorWalk Team
