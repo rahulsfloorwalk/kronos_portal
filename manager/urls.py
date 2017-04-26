@@ -45,6 +45,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/comment$', report_section_views.PMCommentSubmitView.as_view(), name='report_section_pm_comment_submit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', audit_store_views.AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', audit_store_views.AuditStoreIdView.as_view(), name='audit_store_id_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/moderator$', moderator_views.ModeratorByAuditCycle.as_view(), name='moderator_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_xlsx_report$', audit_cycle_views.AuditCycleXlsxReport.as_view(), name='audit_cycle_xlsx_report'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/stats$', audit_cycle_views.AuditCycleStats.as_view(), name='audit_cycle_stats'),

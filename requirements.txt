@@ -6,6 +6,7 @@ botocore==1.5.11
 celery==4.0.2
 Django==1.10
 django-filter==0.15.3
+django-guardian==1.4.8
 django-model-utils==2.6.1
 django-notifications-hq==1.2
 django-widget-tweaks==1.4.1
@@ -13,6 +14,7 @@ djangorestframework==3.4.7
 docutils==0.13.1
 googlemaps==2.4.6
 gunicorn==19.6.0
+honcho==1.0.1
 jmespath==0.9.1
 jsonfield==1.0.3
 kombu==4.0.2
@@ -21,7 +23,8 @@ psycopg2==2.6.2
 pycurl==7.43.0
 python-dateutil==2.6.0
 pytz==2016.10
+requests==2.11.1
 s3transfer==0.1.10
 six==1.10.0
-xlsxwriter==0.9.6
 vine==1.1.3
+XlsxWriter==0.9.6

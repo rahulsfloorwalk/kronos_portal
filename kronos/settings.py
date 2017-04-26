@@ -41,6 +41,7 @@ DEPENDENCY_APPS = [
     'rest_framework',
     'widget_tweaks',
     'notifications',
+    'guardian',
 ]
 
 PROJECT_APPS = [
@@ -136,7 +137,10 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 50
 }
 
-AUTHENTICATION_BACKENDS = ('registration.backends.CaseInsensitiveModelBackend',)
+AUTHENTICATION_BACKENDS = (
+        'registration.backends.CaseInsensitiveModelBackend',
+        'guardian.backends.ObjectPermissionBackend',
+    )
 
 if DEBUG:
     # add the Web Browsable API Renderer when DEBUG is enabled

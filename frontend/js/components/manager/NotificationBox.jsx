@@ -76,7 +76,7 @@ var NotificationItem = React.createClass({
 			userName = <b>{this.props.n.actor.profileinfo.first_name} {this.props.n.actor.profileinfo.last_name}</b>;
 		}
 		else if(!this.props.n.actor.profileinfo){
-			userName = <b>Manager</b>;
+			userName = <b>{this.props.n.actor.email}</b>;
 		}
 
 		let linkUrl = this.getUrl(this.props.n);

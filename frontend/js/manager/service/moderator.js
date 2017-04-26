@@ -10,6 +10,33 @@ export function findById(moderatorId){
 	return $.get( url.api_base_path + `manager/moderator/${moderatorId}`);
 };
 
+
+export function findByAuditCycle(auditCycleId){
+	return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator`);
+};
+
+export function assign(auditCycleId, userId){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator`,
+		method: 'POST',
+		data: JSON.stringify({
+			user_id: userId
+		}),
+		contentType: 'application/json'
+	});
+};
+
+export function revoke(auditCycleId, userId){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator`,
+		type: "DELETE",
+		data: JSON.stringify({
+			user_id: userId
+		}),
+		contentType: 'application/json'
+	});
+};
+
 export function insert( email, password, is_active){
 	return $.ajax({
 		url: url.api_base_path + `manager/moderator`,

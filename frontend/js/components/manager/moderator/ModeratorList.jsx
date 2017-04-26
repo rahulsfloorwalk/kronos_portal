@@ -1,5 +1,4 @@
 import React from 'react';
-import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { Check, Cross, Pencil, Plus, Knight } from '../../Icons.jsx'

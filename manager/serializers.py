@@ -7,7 +7,7 @@ from rest_framework.serializers import Serializer, ModelSerializer, ValidationEr
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
 
-from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
+from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
 from notifications.models import Notification
 
 from questionnaire.models import Section, Question
@@ -529,6 +529,8 @@ class NotificationSerializer(ModelSerializer):
                 serializer = PlainUserSerializer(value)
             elif value.groups.filter(name=GROUP_NAME_AUDITOR).exists():
                 serializer = UserSerializer(value)
+            elif value.groups.filter(name=GROUP_NAME_MODERATOR).exists():
+                serializer = PlainUserSerializer(value)
             else:
                 raise ValueError("Cannot serialize user with unknown user groups:{}".format(value.groups.all()))
             return serializer.data

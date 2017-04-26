@@ -43,6 +43,11 @@ class AuditCycle(Model):
     description = CharField(db_column='description', max_length=4096, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=CASCADE)
 
+    class Meta:
+        permissions = (
+                ('moderator_manage', 'Moderator can manage this Audit Cycle'),
+            )
+
     def max_marks(self):
         return sum(s.max_marks() for s in self.sections.all())
 

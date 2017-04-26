@@ -2,7 +2,10 @@ from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
 
+from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
+
 from kronos.exceptions import ObjectNotFound, AppLogicError
+from audit.models import AuditCycle
 from registration.models import GROUP_NAME_MODERATOR
 
 def find_all():
@@ -53,3 +56,36 @@ def update(user_id, email, password="", is_active=True):
         raise ObjectNotFound from e
     except IntegrityError as e:
         raise AppLogicError("a user with this email already exists in the system") from e
+
+
+def find_by_audit_cycle(audit_cycle_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+        return get_users_with_perms(audit_cycle)
+    except (Group.DoesNotExist, User.DoesNotExist, AuditCycle.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+@atomic
+def assign_audit_cycle(user_id, audit_cycle_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+        user = Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
+
+        assign_perm('moderator_manage', user, audit_cycle)
+
+        return user
+    except (Group.DoesNotExist, User.DoesNotExist, AuditCycle.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+@atomic
+def revoke_audit_cycle(user_id, audit_cycle_id):
+    try:
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+        user = Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
+
+        remove_perm('moderator_manage', user, audit_cycle)
+
+        return user
+    except (Group.DoesNotExist, User.DoesNotExist, AuditCycle.DoesNotExist) as e:
+        raise ObjectNotFound from e

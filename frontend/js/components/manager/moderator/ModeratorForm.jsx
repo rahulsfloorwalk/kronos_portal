@@ -1,6 +1,5 @@
 import React from 'react';
 import $ from 'jquery';
-import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
 import { findById, insert, update } from '../../../manager/service/moderator.js';

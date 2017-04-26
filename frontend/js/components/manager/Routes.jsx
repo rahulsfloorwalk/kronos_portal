@@ -50,6 +50,8 @@ import ApplicationFailForm from './ApplicationFailForm.jsx';
 
 import ModeratorList from './moderator/ModeratorList.jsx';
 import ModeratorForm from './moderator/ModeratorForm.jsx';
+import AuditCycleModeratorList from './AuditCycleModeratorList.jsx';
+import AuditCycleModeratorAssignForm from './AuditCycleModeratorAssignForm.jsx';
 
 const Routes = () => (
     <Router history={hashHistory}>
@@ -96,6 +98,9 @@ const Routes = () => (
 				<Route path=":auditId/application/:applicationId/reject" component={ApplicationRejectForm}/>
 			</Route>
 			<Route path="audit_store" components={AuditStoreList}/>
+			<Route path="moderator" components={AuditCycleModeratorList}>
+				<Route path="assign" component={AuditCycleModeratorAssignForm}/>
+			</Route>
 		</Route>
 
 		<Route path="audit_store/:auditStoreId" components={AuditStoreDetails}>
