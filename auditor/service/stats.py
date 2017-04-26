@@ -48,3 +48,27 @@ def getAuditorHistoryStats(user_id):
             raise ObjectNotFound
     except User.DoesNotExist:
         raise ObjectNotFound
+
+def getAuditApplications(user_id):
+    try:
+        auditor = User.objects.get(pk=user_id)
+        if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+            profileInfo = ProfileInfo.objects.get(user=auditor)
+            audit_applications = AuditApplication.objects.filter(profileinfo=profileInfo).order_by('-audit_date')  \
+            .values('id', 'audit__store__name', 'audit__audit_cycle__id', 'audit__audit_cycle__name',  \
+            'audit__audit_cycle__client__name', 'audit_date', 'status').all()
+            return audit_applications
+    except User.DoesNotExist:
+        raise ObjectNotFound
+
+
+def getAuditStores(user_id):
+    try:
+        auditor = User.objects.get(pk=user_id)
+        if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+            audit_stores = AuditStore.objects.filter(user=auditor).order_by('-audit_date')  \
+            .values('id', 'audit__store__name', 'audit__audit_cycle__id', 'audit__audit_cycle__name',  \
+            'audit__audit_cycle__client__name', 'audit_date', 'status').all()
+            return audit_stores
+    except User.DoesNotExist:
+        raise ObjectNotFound

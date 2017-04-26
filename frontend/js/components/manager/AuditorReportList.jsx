@@ -5,7 +5,7 @@ import { hashHistory, Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
-import { getAuditorStats } from '../../manager/service/auditor_stats.js';
+import { getAuditorReports } from '../../manager/service/auditor_stats.js';
 
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
@@ -16,13 +16,13 @@ import Loading from '../Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-var AuditorApplicationStats = React.createClass({
+var AuditReportStats = React.createClass({
 
   getInitialState: function(){
     return {};
   },
 	componentDidMount: function(){
-    getAuditorStats(this.props.params.auditorId).then((stats)=> this.setState({
+    getAuditorReports(this.props.params.auditorId).then((stats)=> this.setState({
 			stats
 		}));
 	},
@@ -33,15 +33,15 @@ var AuditorApplicationStats = React.createClass({
 		if(! this.state.stats){
 			return <Loading/>;
 		}
-    let appl_arr = this.state.stats.application.map((row) => {
-      let linkTo = `audit_cycle/${row.audit_cycle_id}/audit`
+    let audit_store_arr = this.state.stats.map((row) => {
+      let linkTo = `audit_store/${row.id}/report`
       return (
         <tr key={row.id} onClick={() => hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
-          <td>{row.client}</td>
-          <td>{row.store}</td>
-          <td>{row.audit_cycle}</td>
-          <td>{row.date}</td>
-          <td><ApplicationStatusLabel status={row.status} /></td>
+          <td>{row.audit__audit_cycle__client__name}</td>
+          <td>{row.audit__store__name}</td>
+          <td>{row.audit__audit_cycle__name}</td>
+          <td>{row.audit_date}</td>
+          <td><AuditStoreStatusLabel status={row.status} /></td>
         </tr>
       );
     });
@@ -50,7 +50,7 @@ var AuditorApplicationStats = React.createClass({
 			<div className="row">
         <div className="panel panel-default">
           <div className="panel-heading">
-            <h4 className="panel-title">Application Summary</h4>
+            <h4 className="panel-title">Audit Report Summary</h4>
           </div>
           <table className="table table-striped table-hover">
             <tbody>
@@ -61,7 +61,7 @@ var AuditorApplicationStats = React.createClass({
                 <th>Audit Date</th>
                 <th>Status</th>
               </tr>
-              {appl_arr}
+              {audit_store_arr}
             </tbody>
           </table>
         </div>
@@ -70,4 +70,4 @@ var AuditorApplicationStats = React.createClass({
 	},
 });
 
-export default AuditorApplicationStats;
+export default AuditReportStats;

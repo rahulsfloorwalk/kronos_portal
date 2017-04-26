@@ -80,16 +80,27 @@ class AuditorAdditionalInfoView(APIView):
         except AdditionalInfo.DoesNotExist:
             return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
 
-class AuditorStatsView(APIView):
+class AuditorApplicationView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
+            'GET' : [GROUP_NAME_MANAGER]
         }
     def get(self, request, auditor_id, format=None):
         try:
-            auditor_stats = auditor_stats_service.getAuditorHistoryStats(auditor_id)
-            return Response(auditor_stats)
+            auditor_applications = auditor_stats_service.getAuditApplications(auditor_id)
+            return Response(auditor_applications)
+        except ObjectNotFound:
+            raise NotFound
+
+class AuditorAuditStoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER]
+        }
+    def get(self, request, auditor_id, format=None):
+        try:
+            auditor_audit_stores = auditor_stats_service.getAuditStores(auditor_id)
+            return Response(auditor_audit_stores)
         except ObjectNotFound:
             raise NotFound
 
