@@ -40,6 +40,10 @@ class ModeratorView(APIView):
             return Response(PlainUserSerializer(saved_client_user).data)
         except ObjectNotFound as e :
             raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
 
 class ModeratorIdView(APIView):
     permission_classes = [HasGroupPermission]
