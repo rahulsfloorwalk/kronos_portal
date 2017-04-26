@@ -1,5 +1,6 @@
 import React from 'react';
 
+export const Education	= () => <span className="glyphicon glyphicon-education"></span>;
 export const Lock	= () => <span className="glyphicon glyphicon-lock"></span>;
 export const Road	= () => <span className="glyphicon glyphicon-road"></span>;
 export const EyeOpen	= () => <span className="glyphicon glyphicon-eye-open"></span>;
@@ -35,6 +36,10 @@ export const Fire	= () => <span className="glyphicon glyphicon-fire"></span>;
 export const Tasks	= () => <span className="glyphicon glyphicon-tasks"></span>;
 export const Save	= () => <span className="glyphicon glyphicon-save"></span>;
 export const King	= () => <span className="glyphicon glyphicon-king"></span>;
+export const Queen	= () => <span className="glyphicon glyphicon-queen"></span>;
+export const Knight	= () => <span className="glyphicon glyphicon-knight"></span>;
+export const Bishop	= () => <span className="glyphicon glyphicon-bishop"></span>;
+export const Pawn	= () => <span className="glyphicon glyphicon-pawn"></span>;
 export const Heart	= () => <span className="glyphicon glyphicon-heart"></span>;
 export const Print	= () => <span className="glyphicon glyphicon-print"></span>;
 export const Music	= () => <span className="glyphicon glyphicon-music"></span>;

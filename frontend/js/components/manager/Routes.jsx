@@ -48,6 +48,9 @@ import ApplicationRejectForm from './ApplicationRejectForm.jsx';
 import ApplicationCompleteForm from './ApplicationCompleteForm.jsx';
 import ApplicationFailForm from './ApplicationFailForm.jsx';
 
+import ModeratorList from './moderator/ModeratorList.jsx';
+import ModeratorForm from './moderator/ModeratorForm.jsx';
+
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
@@ -107,6 +110,11 @@ const Routes = () => (
 		<Route path="state/:stateId/city/:cityId/location" component={LocationList}>
 			<Route path="add" component={LocationForm}/>
 			<Route path=":locationId/edit" component={LocationForm}/>
+		</Route>
+
+		<Route path="moderator" component={ModeratorList}>
+			<Route path="add" component={ModeratorForm}/>
+			<Route path=":userId/edit" component={ModeratorForm}/>
 		</Route>
 	</Route>
     </Router>

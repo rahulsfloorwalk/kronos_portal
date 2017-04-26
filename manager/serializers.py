@@ -651,3 +651,10 @@ class AuditorSerializer(ModelSerializer):
             'verification',
         )
         read_only_fields = fields
+
+
+class ModeratorDeSerializer(Serializer):
+    email = EmailField()
+    password = CharField(min_length=8, max_length=128, allow_blank=True)
+    is_active = BooleanField()
+
