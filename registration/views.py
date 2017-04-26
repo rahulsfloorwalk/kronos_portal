@@ -30,11 +30,9 @@ class Login(View):
             _logger.info("login page served")
             return render(request, self.__template, {'form': form})
         elif request.user.groups.filter(name=GROUP_NAME_MANAGER).exists():
-            login(request, request.user)
             _logger.info("auto redirecting manager logged in: %s", request.user)
             return redirect(self.__manager_url)
         elif request.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
-            login(request, request.user)
             _logger.info("auto redirecting auditor logged in: %s", request.user)
             return redirect(self.__auditor_url)
         elif request.user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
