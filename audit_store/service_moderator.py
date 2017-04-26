@@ -7,40 +7,34 @@ from notifications.signals import notify
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
+from registration.service.moderator import find_moderator_by_user_id
 
 from .models import AuditStore
-from audit.models import AuditCycle
+import audit.service.audit_cycle as audit_cycle_service
 
-
-def get_moderator(user_id):
-    try:
-        return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
-    except (Group.DoesNotExist, User.DoesNotExist) as e:
-        raise ObjectNotFound from e
 
 def find_by_audit_cycle_for_moderator(audit_cycle_id, user_id):
-    try:
-        u = get_moderator(user_id)
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id, status__in=[AuditCycle.ACTIVE, AuditCycle.REPORT])
-        return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id, status__in=[AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED]).order_by('-audit_date')
-    except AuditCycle.DoesNotExist as e:
-        raise ObjectNotFound from e
+    audit_cycle = audit_cycle_service.find_by_id_for_moderator(audit_cycle_id, user_id)
+    return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle.id, status__in=[AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED]).order_by('-audit_date')
 
 
 def find_by_id_for_moderator(audit_store_id, user_id):
     try:
-        user = get_moderator(user_id)
-        return AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED])
-    except AuditCycle.DoesNotExist as e:
+        user = find_moderator_by_user_id(user_id)
+        audit_store = AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED])
+        if user.has_perm('moderator_manage', audit_store.audit.audit_cycle):
+            return audit_store
+        else:
+            raise ObjectNotFound
+    except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
 
 @atomic
 def complete_for_moderator(audit_store_id, user_id):
     try:
-        user = get_moderator(user_id)
-
-        audit_store = AuditStore.objects.get(id=audit_store_id)
+        user = find_moderator_by_user_id(user_id)
+        audit_store = find_by_id_for_moderator(audit_store_id, user_id)
 
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.COMPLETED
@@ -70,8 +64,8 @@ def complete_for_moderator(audit_store_id, user_id):
 @atomic
 def fail_for_moderator(audit_store_id, user_id):
     try:
-        user = get_moderator(user_id)
-        audit_store = AuditStore.objects.get(id=audit_store_id)
+        user = find_moderator_by_user_id(user_id)
+        audit_store = find_by_id_for_moderator(audit_store_id, user_id)
 
         if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED):
             audit_store.status = AuditStore.FAILED
@@ -100,8 +94,8 @@ def fail_for_moderator(audit_store_id, user_id):
 @atomic
 def submit_for_moderator(audit_store_id, user_id):
     try:
-        user = get_moderator(user_id)
-        audit_store = AuditStore.objects.get(id=audit_store_id)
+        user = find_moderator_by_user_id(user_id)
+        audit_store = find_by_id_for_moderator(audit_store_id, user_id)
 
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
@@ -131,9 +125,9 @@ def submit_for_moderator(audit_store_id, user_id):
 @atomic
 def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
     try:
-        user = get_moderator(user_id)
+        user = find_moderator_by_user_id(user_id)
+        audit_store = find_by_id_for_moderator(audit_store_id, user_id)
 
-        audit_store = AuditStore.objects.get(id=audit_store_id)
         audit = audit_store.audit
 
         if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
@@ -151,9 +145,9 @@ def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
 @atomic
 def unsubmit_for_moderator(audit_store_id, user_id):
     try:
-        user = get_moderator(user_id)
+        user = find_moderator_by_user_id(user_id)
+        audit_store = find_by_id_for_moderator(audit_store_id, user_id)
 
-        audit_store = AuditStore.objects.get(id=audit_store_id)
 
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.ASSIGNED

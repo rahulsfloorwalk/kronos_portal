@@ -1,9 +1,13 @@
 from django.contrib.auth.models import User
 from django.db.models import Q
 
+from guardian.shortcuts import get_objects_for_user
+
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from registration.models import GROUP_NAME_CLIENT, GROUP_NAME_MODERATOR
+
+from registration.service.moderator import find_moderator_by_user_id
 
 from ..models import AuditCycle
 from auditor.models import AuditApplication as application_model
@@ -58,24 +62,22 @@ def get_audit_cycle_dashboard():
 
 def find_for_moderator(user_id):
     try:
-        user = User.objects.get(pk=user_id)
-
-        if user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
-            return AuditCycle.objects.filter(status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE)).order_by('-end_date')
-        else:
-            raise ObjectNotFound
+        user = find_moderator_by_user_id(user_id)
+        query_set = AuditCycle.objects.filter(status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.UPCOMING)).order_by('-end_date')
+        return get_objects_for_user(user, 'moderator_manage', klass=query_set)
     except (User.DoesNotExist, ) as e:
         raise ObjectNotFound from e
 
 
 def find_by_id_for_moderator(audit_cycle_id, user_id):
     try:
-        user = User.objects.get(pk=user_id)
+        user = find_moderator_by_user_id(user_id)
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.UPCOMING))
 
-        if user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
-            return AuditCycle.objects.get(pk=audit_cycle_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE))
+        if user.has_perm('moderator_manage', audit_cycle):
+            return audit_cycle
         else:
             raise ObjectNotFound
-    except (User.DoesNotExist, AuditCycle.DoesNotExist) as e:
+    except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
