@@ -11,7 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.transaction import atomic
 from auditor.models import ProfileInfo
-from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from .forms import SignUpForm
 import datetime
 
@@ -21,6 +21,7 @@ class Login(View):
     __template = 'registration/login.html'
     __auditor_url = '/static/auditor.html'
     __manager_url = '/static/manager.html'
+    __moderator_url = '/static/dist/moderator/index.html'
 
     def get(self, request):
         _logger.info("login page requested")
@@ -36,8 +37,11 @@ class Login(View):
             login(request, request.user)
             _logger.info("auto redirecting auditor logged in: %s", request.user)
             return redirect(self.__auditor_url)
+        elif request.user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
+            _logger.info("auto redirecting moderator logged in: %s", request.user)
+            return redirect(self.__moderator_url)
         else:
-            ## user IS logged in, but is not an auditor or manager
+            ## user IS logged in, but is not an auditor or manager or moderator
             ## let the client login view handle this shit
             return redirect('registration:client_login')
 
