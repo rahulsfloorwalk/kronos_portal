@@ -11,7 +11,7 @@ import { logout } from '../service/auth.js';
 export default React.createClass({
 	performLogout: function(){
 		logout().then(() => {
-			hashHistory.push("/login");
+			hashHistory.push("/login?logout=true");
 		});
 	},
 	render: function(){

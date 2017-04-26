@@ -22,7 +22,6 @@ export default React.createClass({
 	},
 	loginFormSubmit: function(e){
 		e.preventDefault();
-		console.log(this.state.username, this.state.password);
 		login(this.state.username, this.state.password).then(() => {
 			hashHistory.push('/');
 		}, (err) => {
@@ -33,6 +32,10 @@ export default React.createClass({
 		let failedBox;
 		if( this.state.failed){
 			failedBox = (<div className="alert alert-warning">Login Failed</div>);
+		}
+		let logoutMessage;
+		if( this.props.location.query.logout){
+			logoutMessage = (<div className="alert alert-success">Logged Out Successfully</div>);
 		}
 		return (
 			<div className="container">
@@ -52,6 +55,7 @@ export default React.createClass({
 				<h3 className="panel-title">FloorWalk Moderator Login</h3>
 			</div>
 			<div className="panel-body">
+				{logoutMessage}
 				{failedBox}
 				<form onSubmit={this.loginFormSubmit}>
 					<div className="form-group">
