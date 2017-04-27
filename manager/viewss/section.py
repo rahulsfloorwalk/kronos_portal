@@ -29,6 +29,16 @@ class SectionViewByAuditCycle(APIView):
         except Section.DoesNotExist:
             raise Http404
 
+class SectionCopyByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST' : [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, to_audit_cycle_id, format=None):
+        sections = section_service.copy_sections_from_to(request.data.get('from_audit_cycle_id'), to_audit_cycle_id)
+        return Response(SectionSerializer(sections, many=True).data)
+
+
 class SectionIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

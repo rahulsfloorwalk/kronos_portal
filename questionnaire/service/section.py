@@ -1,9 +1,15 @@
+from django.db.transaction import atomic
+
 from kronos.exceptions import AppLogicError, ObjectNotFound
+
 from ..models import Section
+from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
 from audit_store import service as audit_store_service
 from audit_store.service_moderator import find_by_id_for_moderator
+
+from . import question as question_service
 
 def save(section):
     Section.save(section)
@@ -40,3 +46,23 @@ def find_by_audit_store_for_moderator( audit_store_id, user_id):
 def find_by_audit_cycle(audit_cycle_id):
     sections = Section.objects.filter(audit_cycle_id=audit_cycle_id)
     return sections
+
+@atomic
+def copy_sections_from_to(from_audit_cycle_id, to_audit_cycle_id):
+    try:
+        from_audit_cycle = AuditCycle.objects.get(pk=from_audit_cycle_id)
+        to_audit_cycle = AuditCycle.objects.get(pk=to_audit_cycle_id)
+
+        for section in from_audit_cycle.sections.all():
+            new_section = Section()
+            new_section.name = section.name
+            new_section.sequence = section.sequence
+            new_section.audit_cycle = to_audit_cycle
+            new_section.save()
+            question_service.copy_questions_from_to(section.id, new_section.id)
+
+        return to_audit_cycle.sections.all()
+
+    except (AuditCycle.DoesNotExist) as e:
+        raise ObjectNotFound from e
+

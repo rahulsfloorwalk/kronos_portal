@@ -33,6 +33,7 @@ import AuditCycleDetails from './AuditCycleDetails.jsx';
 
 import SectionForm from './SectionForm.jsx';
 import SectionList from './SectionList.jsx';
+import SectionCopyForm from './SectionCopyForm.jsx';
 
 import QuestionForm from './QuestionForm.jsx';
 
@@ -86,6 +87,7 @@ const Routes = () => (
 		<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
 			<Route path="edit" component={AuditCycleForm}/>
 			<Route path="questionnaire" component={SectionList}>
+				<Route path="section/copy" component={SectionCopyForm}/>
 				<Route path="section/add" component={SectionForm}/>
 				<Route path="section/:sectionId/edit" component={SectionForm}/>
 				<Route path="section/:sectionId/question/add" component={QuestionForm}/>

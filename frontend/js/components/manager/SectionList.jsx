@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Tasks, Plus, Cross, Pencil } from '../Icons.jsx';
+import { Duplicate, Tasks, Plus, Cross, Pencil } from '../Icons.jsx';
 
 import { orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
@@ -115,9 +115,14 @@ var SectionList = React.createClass({
 		return (
 			<div>
 				<h3 className="page-header">
-					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default pull-right">
+					<span className="pull-right">
+					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/add`} className="btn btn-default">
 						<Plus/> Add Section
+					</Link>&nbsp;
+					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/copy`} className="btn btn-default" title="Copy Sections">
+						<Duplicate/>
 					</Link>
+					</span>
 					<Tasks/> Questionnaire
 				</h3>
 				{sectionRows}
