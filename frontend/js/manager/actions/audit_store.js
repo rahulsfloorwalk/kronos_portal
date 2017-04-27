@@ -67,11 +67,17 @@ export function completeAuditStore(auditStoreId){
 			auditStoreId
 		});
 
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/complete`, function(auditStore){
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/complete`).then(function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_COMPLETE,
 				status: 'success',
 				auditStore
+			});
+		}, function(err){
+			dispatch({
+				type: types.AUDIT_STORE_ID_COMPLETE,
+				status: 'error',
+				errors: err.responseJSON || {}
 			});
 		});
 		//TODO: Handle error

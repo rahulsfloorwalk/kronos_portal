@@ -96,6 +96,11 @@ var AuditStoreDetails = React.createClass({
 		let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
 		let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
 
+		let errorFirst;
+		if(this.props.errors && this.props.errors.non_field_errors){
+			errorFirst = (<span>{this.props.errors.non_field_errors[0]}</span>);
+		}
+
 		return (
 			<div>
 				<ol className="breadcrumb">
@@ -159,6 +164,7 @@ var AuditStoreDetails = React.createClass({
 						<b>Details</b>: {detailsElement}
 					</div>
 					<div className="panel-footer text-right">
+						{errorFirst}
 						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{completeButton}&nbsp;{failButton}
 					</div>
 				</div>
@@ -171,7 +177,8 @@ var AuditStoreDetails = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		auditStore: store.auditStores[ownProps.params.auditStoreId]
+		auditStore: store.auditStores[ownProps.params.auditStoreId],
+		errors: store.errors
 	};
 };
 

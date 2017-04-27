@@ -28,6 +28,7 @@ export default React.createClass({
 			auditDateLoading: false,
 			auditDateSuccess: false,
 			auditDateError: false,
+			errorMessage: "",
 		};
 	},
 	setAuditStore: function(auditStore){
@@ -39,7 +40,13 @@ export default React.createClass({
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
 	},
 	completeButtonClicked: function(e){
-		complete(this.props.params.auditStoreId).then(this.setAuditStore);
+		complete(this.props.params.auditStoreId).then(this.setAuditStore, (err) => {
+			if(err.responseJSON && err.responseJSON.non_field_errors){
+				this.setState({
+					errorMessage: err.responseJSON.non_field_errors[0]
+				});
+			}
+		});
 	},
 	failButtonClicked: function(e){
 		fail(this.props.params.auditStoreId).then(this.setAuditStore);
@@ -96,6 +103,8 @@ export default React.createClass({
 		}
 		let auditorPhoneLink = (<a href={`tel:${this.state.auditStore.user.profileinfo.mobile_number}`}>{this.state.auditStore.user.profileinfo.mobile_number}</a>);
 
+		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
+
 		return (
 			<div>
 				<ol className="breadcrumb">
@@ -144,6 +153,7 @@ export default React.createClass({
 						</tbody>
 					</table>
 					<div className="panel-footer text-right">
+						{errorMessageElement}
 						{submitButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
 					</div>
 				</div>

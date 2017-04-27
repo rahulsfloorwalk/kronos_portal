@@ -62,7 +62,6 @@ let QuestionRow = React.createClass({
 		setMarks( this.props.auditStoreId, this.props.q.id, this.state.answer.marks_obtained).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
 	},
 	render: function(){
-		console.debug("answer", this.props.answer);
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (<big>{this.state.answer.answer_text}</big>);
 		if( this.props.marking){

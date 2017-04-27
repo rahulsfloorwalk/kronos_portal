@@ -428,11 +428,21 @@ export function rootReducer(store = initialStore, action) {
 		case types.AUDIT_STORE_ID_WITHDRAW:
 		case types.AUDIT_STORE_UPDATED:
 			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						errors: {}
+					});
+					break;
 				case "success":
 					return Object.assign({}, store, {
 						auditStores: Object.assign({}, store.auditStores, {
 							[action.auditStore.id]: action.auditStore
 						})
+					});
+					break;
+				case "error":
+					return Object.assign({}, store, {
+						errors: action.errors
 					});
 					break;
 				default:

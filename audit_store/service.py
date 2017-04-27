@@ -167,6 +167,25 @@ def submit(audit_store_id, user_id):
 def complete(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
+        report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, audit_store.user.id)
+        answers = answer_service.get_answers(audit_store_id, audit_store.user.id)
+        questions = question_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
+        sections = section_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
+
+        if len(questions) != len(answers):
+            raise AppLogicError("Please answer all the questions")
+        if len(sections) != len(report_sections):
+            raise AppLogicError("Please answer all the section summaries")
+
+        for report_section in report_sections:
+            if report_section.auditor_comment in ( None ,''):
+                raise AppLogicError("Please fill all the auditor comments")
+            if report_section.pm_comment in ( None ,''):
+                raise AppLogicError("Please fill all the PM comments")
+
+        for answer in answers:
+            if answer.answer_text in ( None ,''):
+                raise AppLogicError("Please fill all the answers")
 
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.COMPLETED
