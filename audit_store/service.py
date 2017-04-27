@@ -25,7 +25,11 @@ from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 def get_audit_stores(profileinfo_id):
     try:
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
-        return AuditStore.objects.filter(user_id=profile_info.user_id)
+        return AuditStore.objects.filter(
+                user_id=profile_info.user_id,
+                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
+                audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+                )
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -42,7 +46,12 @@ def find_by_audit_cycle(audit_cycle_id):
 def get_audit_store(audit_store_id, profileinfo_id):
     try:
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
-        return AuditStore.objects.get(id=audit_store_id, user_id=profile_info.user_id)
+        return AuditStore.objects.get(
+                id=audit_store_id,
+                user_id=profile_info.user_id,
+                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
+                audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+                )
     except (ProfileInfo.DoesNotExist, AuditStore.DoesNotExist) as e:
         raise ObjectNotFound from e
 
