@@ -14,4 +14,6 @@ var momentDateTimeFormat = "HH:mm Do MMM YYYY";
 
 const auditorGAId = "UA-XXXXXXX-X";
 
-export { url, momentDateFormat, auditorGAId, momentDateTimeFormat };
+const demo = true;
+
+export { url, momentDateFormat, auditorGAId, momentDateTimeFormat, demo };
