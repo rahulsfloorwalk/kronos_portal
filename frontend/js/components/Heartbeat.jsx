@@ -7,7 +7,8 @@ import { lubdub } from '../manager/service/heartbeat.js';
 export default React.createClass({
 	getInitialState: function(){
 		return {
-			alive: true
+			alive: true,
+			intervalId: null
 		};
 	},
 	check: function(){
@@ -22,7 +23,12 @@ export default React.createClass({
 		});
 	},
 	componentDidMount: function(){
-		setInterval( this.check, 5000);
+		this.setState({
+			intervalId: setInterval( this.check, 5000)
+		});
+	},
+	componentWillUnmount: function(){
+		clearInterval(this.state.intervalId);
 	},
 	render : function(){
 		if( ! this.state.alive){
