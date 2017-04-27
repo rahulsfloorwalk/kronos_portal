@@ -75,7 +75,7 @@ var AuditStoreList = React.createClass({
 	    rows.push(
 		    <div className="panel panel-default" key={audits[i].id}>
 			<div className="panel-heading">
-				{audits[i].store.location.name}, {audits[i].store.location.city.name}
+				<b>{audits[i].store.name}</b>, {audits[i].store.location.name}, {audits[i].store.location.city.name}
 			</div>
 			<AuditStoreTable auditStores={audits[i].reports}/>
 		    </div>
