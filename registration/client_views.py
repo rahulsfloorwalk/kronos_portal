@@ -21,7 +21,6 @@ class Login(View):
             form = AuthenticationForm()
             return render(request, self.__template, {'form': form})
         elif request.user.groups.filter(name=GROUP_NAME_CLIENT).exists():
-            login(request, request.user)
             _logger.info("client auto redirected: %s", request.user)
             return redirect(self.__client_url)
         else:
