@@ -515,6 +515,11 @@ export function rootReducer(store = initialStore, action) {
 			}
 		case types.ANSWER_GET:
 			switch(action.status){
+				case "request":
+					return Object.assign({}, store, {
+						answers: {}
+					});
+					break;
 				case "success":
 					return Object.assign({}, store, {
 						answers: (function(answers){

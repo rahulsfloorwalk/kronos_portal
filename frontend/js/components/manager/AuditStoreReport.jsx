@@ -111,7 +111,7 @@ var mapStoreToQuestionRowProps = function(store, ownProps){
 	return {
 		answer: (function(answers){
 			for(let id in answers){
-				if(answers[id].question === ownProps.q.id){
+				if(answers[id].question === ownProps.q.id && answers[id].audit_store === parseInt(ownProps.auditStoreId)){
 					return answers[id];
 				}
 			}
@@ -182,7 +182,7 @@ var __Section = React.createClass({
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow q={q} key={q.id} marking={editable}/>);
+				questionRows.push(<QuestionRow q={q} key={q.id} marking={editable} auditStoreId={this.props.auditStoreId}/>);
 			}
 		}
 		if(questionRows.length === 0){
