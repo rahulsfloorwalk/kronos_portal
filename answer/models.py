@@ -14,6 +14,7 @@ class Answer(Model):
     audit_store = ForeignKey('audit_store.AuditStore', related_name='answers', db_column='audit_store_id', on_delete=CASCADE)
 
     answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
+    answer_text_original = CharField(db_column='answer_text_original', max_length=2048, blank=True)
     marks_obtained = IntegerField(db_column='marks_obtained', blank=True, null=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
 
@@ -27,6 +28,7 @@ class ReportSection(Model):
     section = ForeignKey('questionnaire.Section', db_column='section_id', blank=False)
     pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
     auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)
+    auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=2048, blank=True)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='report_sections')
 

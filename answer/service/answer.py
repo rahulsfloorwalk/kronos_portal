@@ -26,6 +26,7 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
             answer.question = question
             answer.audit_store = audit_store
         answer.answer_text = answer_text
+        answer.answer_text_original = answer_text
         return save(answer)
     else:
         raise ObjectNotFound()
