@@ -1,6 +1,9 @@
 import xlsxwriter
 import io
+
+from kronos.utils import get_color_code, get_color_hex_from_code
 from kronos.exceptions import ObjectNotFound, AppLogicError
+
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
@@ -71,17 +74,33 @@ def create_text_structure(title, sections, questions, audit_stores):
 
     ## generate answer rows
     for audit_store in audit_stores:
-        store_name = audit_store.audit.store.name + " - "+ audit_store.audit.store.location.city.name
+        store_name_cell = {
+            'value': audit_store.audit.store.name + " - "+ audit_store.audit.store.location.city.name,
+            'color_code': get_color_code(0,0)
+        }
+        audit_date_cell = {
+            'value': audit_store.audit_date.strftime('%d-%m-%Y'),
+            'color_code': get_color_code(0,0)
+        }
 
         answer_cells = []
         for question in questions:
             try:
                 answer = audit_store.answers.get(question_id=question.id)
-                answer_cells.append(answer.answer_text)
+                answer_cells.append({
+                    'value': answer.answer_text,
+                    'color_code': get_color_code(answer.marks_obtained, answer.question.max_marks)
+                })
             except (Answer.DoesNotExist) as e:
-                answer_cells.append("")
-        content = [store_name, audit_store.audit_date.strftime('%d-%m-%Y')] + answer_cells
-        row = {'type': 'answer', 'content': content}
+                answer_cells.append({
+                    'value': "",
+                    'color_code': get_color_code(0,0)
+                })
+        content = [store_name_cell, audit_date_cell] + answer_cells
+        row = {
+            'type': 'answer',
+            'content': content
+        }
         rows.append(row)
     return rows
 
@@ -102,6 +121,7 @@ def write_data(data):
         'bg_color': question_color,
         'font_color':'red',
         'valign': 'vcenter',
+        'font_size':14,
     })
     question_format = workbook.add_format({
         'text_wrap':True,
@@ -124,23 +144,29 @@ def write_data(data):
         'valign': 'vcenter',
     })
 
-    odd_line_format = workbook.add_format({
+    base_answer_style = {
         'text_wrap':True,
         'bottom':1,
         'right':1,
-        'bg_color': odd_color,
         'valign': 'vcenter',
-    })
-    even_line_format = workbook.add_format({
-        'text_wrap':True,
-        'bottom':1,
-        'right':1,
-        'bg_color': even_color,
-        'valign': 'vcenter',
-    })
+    }
+
+    odd_line_style = base_answer_style.copy()
+    odd_line_style['bg_color'] = odd_color
+    odd_line_format = workbook.add_format(odd_line_style)
+
+    even_line_style = base_answer_style.copy()
+    even_line_style['bg_color'] = even_color
+    even_line_format = workbook.add_format(even_line_style)
+
+    def get_format_for_color_code(wb, base_style_dict, color_code):
+        colored_style = base_style_dict.copy()
+        colored_style['bg_color'] = get_color_hex_from_code(color_code)
+        return wb.add_format(colored_style)
+
     start_row = 0
     start_col = 0
-    worksheet.set_column(0, 100, 30)
+    worksheet.set_column(0, 512, 30)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col
@@ -167,12 +193,14 @@ def write_data(data):
             for point in line.get('content'):
                 worksheet.write(row, col, point, question_format)
                 col += 1
-        else:
-            for point in line.get('content'):
-                if line_counter == 0:
-                    worksheet.write(row, col, point, even_line_format)
+        elif line.get('type') == 'answer':
+            for cell in line.get('content'):
+                if cell.get('color_code') is not 0:
+                    worksheet.write(row, col, cell.get('value'), get_format_for_color_code(workbook, base_answer_style, cell.get('color_code', 0)))
+                elif line_counter == 0:
+                    worksheet.write(row, col, cell.get('value'), even_line_format)
                 else:
-                    worksheet.write(row, col, point, odd_line_format)
+                    worksheet.write(row, col, cell.get('value'), odd_line_format)
                 col += 1
             line_counter = ~line_counter
         col = start_col
