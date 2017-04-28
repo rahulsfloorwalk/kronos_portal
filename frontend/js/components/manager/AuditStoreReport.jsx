@@ -22,6 +22,7 @@ var __QuestionRow = React.createClass({
 		return {
 			answer: {},
 			error: false,
+			marksObtainedSuccess: false,
 			answerError: false,
 			answerSuccess: false
 		};
@@ -50,8 +51,8 @@ var __QuestionRow = React.createClass({
 	saveAnswer: function(e){
 		this.answerChanged(e);
 		setAnswerText(
-			this.state.answer.audit_store,
-			this.state.answer.question,
+			this.props.auditStoreId,
+			this.props.q.id,
 			this.state.answer.answer_text,
 		).then(()=> this.setState({answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
 	},
@@ -65,18 +66,19 @@ var __QuestionRow = React.createClass({
 	saveMarks: function(e){
 		this.marksChanged(e);
 		this.props.dispatch(setMarks({
-			auditStoreId: this.state.answer.audit_store,
-			questionId: this.state.answer.question,
+			auditStoreId: this.props.auditStoreId,
+			questionId: this.props.q.id,
 			marks: this.state.answer.marks_obtained,
-		})).then(()=> this.setState({error: false}), ()=> this.setState({error: true}));
+		})).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
 	},
 	render: function(){
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (<big>{this.state.answer.answer_text}</big>);
 		if( this.props.marking){
 			let hasError = this.state.error ? "has-error" : "";
+			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
 			markElement = (
-				<div className={"input-group " + hasError }>
+				<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
 					<input className="form-control input-sm text-right" 
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
