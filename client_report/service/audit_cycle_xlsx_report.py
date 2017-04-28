@@ -22,9 +22,12 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
 
     valid_client = audit_cycle.client
     if(valid_client.id == int(client_id)):
-        audits = audit_cycle.audits.all()
+        questions = []
+        for section in audit_cycle.sections.order_by('sequence'):
+            questions.extend(section.questions.order_by('sequence'))
+
         audit_stores = []
-        for audit in audits:
+        for audit in audit_cycle.audits.all():
             audit_store = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by('audit_date')
             audit_stores.extend(audit_store)
 
@@ -36,34 +39,43 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
                     key=lambda answer:answer.question.section.sequence
                 )
             audit_store_answer_list.append(sorted_answers)
-        data = create_text_structure(audit_store_answer_list)
+        data = create_text_structure(audit_cycle.name, questions, audit_stores)
         name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
         return write_data(data), name
 
     else:
         raise AppLogicError("Invalid Client")
 
-def create_text_structure(audit_stores_answers_list):
-    if audit_stores_answers_list is None or len(audit_stores_answers_list) == 0:
-        raise ObjectNotFound
+def create_text_structure(title, questions, audit_stores):
     rows = []
-    audit = audit_stores_answers_list[0][0].audit_store.audit
-    content = [audit.audit_cycle.name]
-    row = {'type': 'title', 'content': content}
+
+    ## generate title row
+    row = {'type': 'title', 'content': [title]}
     rows.append(row)
-    answers = audit_stores_answers_list[0]
-    questions = []
-    for answer in answers:
-        questions.append(answer.question.question_txt)
-    content = ["Store"] + questions
+
+    if len(audit_stores) == 0:
+        return rows
+
+    ## generate questions row
+    question_cells = []
+    for question in questions:
+        question_cells.append(question.question_txt)
+    content = ["Store", "Audit Date"] + question_cells
     row = {'type': 'question', 'content': content}
     rows.append(row)
-    for answers in audit_stores_answers_list:
-        store_name = answers[0].audit_store.audit.store.name + " - "+ answers[0].audit_store.audit.store.location.name
-        ans_txt = []
-        for answer in answers:
-            ans_txt.append(answer.answer_text)
-        content = [store_name] + ans_txt
+
+    ## generate answer rows
+    for audit_store in audit_stores:
+        store_name = audit_store.audit.store.name + " - "+ audit_store.audit.store.location.city.name
+
+        answer_cells = []
+        for question in questions:
+            try:
+                answer = audit_store.answers.get(question_id=question.id)
+                answer_cells.append(answer.answer_text)
+            except (Answer.DoesNotExist) as e:
+                answer_cells.append("")
+        content = [store_name, audit_store.audit_date.strftime('%d-%m-%Y')] + answer_cells
         row = {'type': 'answer', 'content': content}
         rows.append(row)
     return rows
