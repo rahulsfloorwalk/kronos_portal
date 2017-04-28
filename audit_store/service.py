@@ -327,3 +327,17 @@ def unsubmit(audit_store_id, user_actor):
             raise AppLogicError("audit store cannot be unsubmitted now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+@atomic
+def uncomplete(audit_store_id, user_actor):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+
+        if audit_store.status == AuditStore.COMPLETED:
+            audit_store.status = AuditStore.SUBMITTED
+            audit_store.save()
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be uncompleted now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e

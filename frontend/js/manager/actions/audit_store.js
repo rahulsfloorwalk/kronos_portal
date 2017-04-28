@@ -84,6 +84,31 @@ export function completeAuditStore(auditStoreId){
 	};
 };
 
+export function uncompleteAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_UNCOMPLETE,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/uncomplete`).then(function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_UNCOMPLETE,
+				status: 'success',
+				auditStore
+			});
+		}, function(err){
+			dispatch({
+				type: types.AUDIT_STORE_ID_UNCOMPLETE,
+				status: 'error',
+				errors: err.responseJSON || {}
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
 export function failAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
