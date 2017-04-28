@@ -22,8 +22,10 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
 
     valid_client = audit_cycle.client
     if(valid_client.id == int(client_id)):
+        sections = audit_cycle.sections.order_by('sequence')
+
         questions = []
-        for section in audit_cycle.sections.order_by('sequence'):
+        for section in sections:
             questions.extend(section.questions.order_by('sequence'))
 
         audit_stores = []
@@ -31,22 +33,14 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
             audit_store = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by('audit_date')
             audit_stores.extend(audit_store)
 
-        audit_store_answer_list = []
-        for audit_store in audit_stores:
-            answers = audit_store.answers.all()
-            sorted_answers = sorted(
-                    sorted(answers, key=lambda answer:answer.question.sequence),
-                    key=lambda answer:answer.question.section.sequence
-                )
-            audit_store_answer_list.append(sorted_answers)
-        data = create_text_structure(audit_cycle.name, questions, audit_stores)
+        data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)
         name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
         return write_data(data), name
 
     else:
         raise AppLogicError("Invalid Client")
 
-def create_text_structure(title, questions, audit_stores):
+def create_text_structure(title, sections, questions, audit_stores):
     rows = []
 
     ## generate title row
@@ -55,6 +49,17 @@ def create_text_structure(title, questions, audit_stores):
 
     if len(audit_stores) == 0:
         return rows
+
+    ## generate sections row
+    section_cells = []
+    for section in sections:
+        section_cells.append({
+            'value': section.name,
+            'colspan': section.questions.count()
+        })
+    cells = [{'value':"SECTIONS",'colspan':2}] + section_cells
+    row = {'type': 'sections', 'content': cells}
+    rows.append(row)
 
     ## generate questions row
     question_cells = []
@@ -88,10 +93,51 @@ def write_data(data):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    question_format = workbook.add_format({'text_wrap':True, 'bold':True, 'top':1, 'bottom':1, 'right':1, 'bg_color': question_color, 'font_color':'red'})
-    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'bottom':1, 'bg_color': title_color, 'font_color':'red'})
-    odd_line_format = workbook.add_format({'text_wrap':True, 'bottom':1, 'right':1, 'bg_color': odd_color})
-    even_line_format = workbook.add_format({'text_wrap':True, 'bottom':1, 'right':1, 'bg_color': even_color})
+    section_format = workbook.add_format({
+        'text_wrap':True,
+        'bold':True,
+        'top':1,
+        'bottom':1,
+        'right':1,
+        'bg_color': question_color,
+        'font_color':'red',
+        'valign': 'vcenter',
+    })
+    question_format = workbook.add_format({
+        'text_wrap':True,
+        'bold':True,
+        'top':1,
+        'bottom':1,
+        'right':1,
+        'bg_color': question_color,
+        'font_color':'red',
+        'valign': 'vcenter',
+    })
+
+    title_format = workbook.add_format({
+        'text_wrap':True,
+        'bold':True,
+        'font_size':16,
+        'bottom':1,
+        'bg_color': title_color,
+        'font_color':'red',
+        'valign': 'vcenter',
+    })
+
+    odd_line_format = workbook.add_format({
+        'text_wrap':True,
+        'bottom':1,
+        'right':1,
+        'bg_color': odd_color,
+        'valign': 'vcenter',
+    })
+    even_line_format = workbook.add_format({
+        'text_wrap':True,
+        'bottom':1,
+        'right':1,
+        'bg_color': even_color,
+        'valign': 'vcenter',
+    })
     start_row = 0
     start_col = 0
     worksheet.set_column(0, 100, 30)
@@ -103,8 +149,20 @@ def write_data(data):
     for line in data:
         if line.get('type') == 'title':
             for point in line.get('content'):
-                worksheet.write(row, col, point, title_format)
+                worksheet.merge_range(row, col, row, col+3, point, title_format)
                 col += 1
+        elif line.get('type') == 'sections':
+            for cell in line.get('content'):
+                if isinstance(cell, dict):
+                    if cell.get('colspan',1) > 1:
+                        worksheet.merge_range(row, col, row, col+cell.get('colspan')-1, cell.get('value'), section_format)
+                        col += cell.get('colspan',1)
+                    else:
+                        worksheet.write(row, col, cell.get('value',""), section_format)
+                        col += 1
+                else:
+                    worksheet.write(row, col, cell, section_format)
+                    col += 1
         elif line.get('type') == 'question':
             for point in line.get('content'):
                 worksheet.write(row, col, point, question_format)
