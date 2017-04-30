@@ -39,9 +39,18 @@
 	</head>
 	<body>
 		<div id="root">
+			<div id="loadmsg">
 			<h1 style="text-align:center;">a few seconds please</h1>
 			<h1 style="text-align:center;">:)</h1>
+			</div>
+			<div id="unsup" style="text-align:center;"></div>
 		</div>
+		<script>
+		if(/Opera/.test(navigator.userAgent) || /UCBrowser/.test(navigator.userAgent)){
+			document.querySelector("#loadmsg").style.display = "none";
+			document.querySelector("#unsup").innerHTML = "<h2>Your browser is not supported.</h2><h2>Please use a supported browser such as Chrome or Firefox.</h2>";
+		}
+		</script>
 		<script src="dist/auditor_vendor.bundle.js"></script>
 		<script src="dist/auditor.bundle.js"></script>
 	</body>
