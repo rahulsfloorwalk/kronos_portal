@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev-server-hot": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot",
+    "dev-server-hot": "./node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot --host 0.0.0.0",
     "build": "./node_modules/webpack/bin/webpack.js --config webpack.config.js --watch --colors --progress",
     "build-prod": "./node_modules/webpack/bin/webpack.js --config webpack.config.js -p --progress --colors",
     "test": "echo \"Error: no test specified\" && exit 1"
