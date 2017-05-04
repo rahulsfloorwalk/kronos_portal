@@ -7,6 +7,12 @@ from registration.models import GROUP_NAME_CLIENT
 
 from ..models import ClientUser
 
+def find_clientuser_by_user_id(user_id):
+    try:
+        return Group.objects.get(name=GROUP_NAME_CLIENT).user_set.get(pk=user_id)
+    except (Group.DoesNotExist, User.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
 @atomic
 def insert(client, full_name, email, password, is_active=True):
     try:
@@ -55,3 +61,5 @@ def update(client_user_id, client, full_name, email, password="", is_active=True
         raise ObjectNotFound from e
     except IntegrityError as e:
         raise AppLogicError("a user with this email already exists in the system") from e
+
+

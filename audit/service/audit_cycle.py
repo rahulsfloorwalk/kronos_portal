@@ -8,6 +8,7 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 from registration.models import GROUP_NAME_CLIENT, GROUP_NAME_MODERATOR
 
 from registration.service.moderator import find_moderator_by_user_id
+from client.service.client_user import find_clientuser_by_user_id
 
 from ..models import AuditCycle
 from auditor.models import AuditApplication as application_model
@@ -22,6 +23,13 @@ def find_for_clientuser(user_id):
         user = User.objects.get(pk=user_id)
         return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)).order_by('-end_date')
     except (User.DoesNotExist, ) as e:
+        raise ObjectNotFound from e
+
+def find_by_id_for_clientuser(audit_cycle_id, user_id):
+    try:
+        user = find_clientuser_by_user_id(user_id)
+        return AuditCycle.objects.get(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED), pk=audit_cycle_id)
+    except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
 def get_audit_cycle_stats(audit_cycle_id):
