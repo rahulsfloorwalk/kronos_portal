@@ -30,20 +30,6 @@ def save(audit):
         raise AppLogicError("store is already added to this audit cycle") from e
 
 
-def get_available_audits(profileinfo_id):
-    profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
-    if profileinfo.is_complete():
-        active_audits = Audit.objects.filter(
-            audit_cycle__status__in=[AuditCycle.UPCOMING, AuditCycle.ACTIVE])
-        available_audits = active_audits.filter(
-            Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
-            Q(store__location__city_id=profileinfo.city.id)
-        )
-        return available_audits
-    else:
-        raise AppLogicError("please complete your personal information to view audits")
-
-
 def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
     try:
         if kms is not None: kms = int(kms)
