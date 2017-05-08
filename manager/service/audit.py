@@ -85,7 +85,7 @@ def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
             lon_max, lon_min, lat_max, lat_min = geo.bounding_box(city.lat, city.lon, kms)
 
             available_audits = active_audits.filter(
-                Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
+                #Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
                 Q(
                     store__location__city__lat__lte=lat_max,
                     store__location__city__lat__gte=lat_min,
