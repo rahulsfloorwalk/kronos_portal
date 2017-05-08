@@ -32,8 +32,8 @@ var AuditRow = React.createClass({
 		}
 		else if( this.props.application.status === "APPLIED"){
 			let cancelLink = `/audit/${this.props.audit.id}/cancel`;
-			let cancelButton = <Link to={cancelLink}>&nbsp;cancel application</Link>;
-			auditDate =  <span>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}.</b></span>;
+			let cancelButton = <Link to={cancelLink} className="btn btn-default"><Cross/> Cancel Application</Link>;
+			auditDate = <div>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}.</b> <small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></div>;
 			button = cancelButton;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} 
@@ -144,10 +144,10 @@ var AuditRow = React.createClass({
 							</div>
 						</div>
 						<p>{this.props.audit.audit_cycle.description}</p>
-						<p className="">
-							{auditDate}
+						<p>{auditDate}</p>
+						<div className="">
 							{button}
-						</p>
+						</div>
 						</div>
 						<hr/>
 					</div>
