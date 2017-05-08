@@ -15,6 +15,7 @@ from client.service import audit_cycle_aggregation as audit_cycle_aggregation_se
 from client.service import store as store_service
 
 from audit_store import service as audit_store_service
+from audit_store import service_client as audit_store_client_service
 
 from questionnaire.service import section as section_service
 
@@ -279,3 +280,13 @@ class AuditCycleCityPerformance(APIView):
     def get(self, request, audit_cycle_id, format=None):
         data = city_trends.get_performing_cities(audit_cycle_id, request.user.id)
         return Response(data)
+
+
+class AuditStoreUpcoming(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.id)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data)

@@ -1,6 +1,7 @@
 import React from 'react';
 
 export const Education	= () => <span className="glyphicon glyphicon-education"></span>;
+export const Time	= () => <span className="glyphicon glyphicon-time"></span>;
 export const Duplicate	= () => <span className="glyphicon glyphicon-duplicate"></span>;
 export const Lock	= () => <span className="glyphicon glyphicon-lock"></span>;
 export const Road	= () => <span className="glyphicon glyphicon-road"></span>;

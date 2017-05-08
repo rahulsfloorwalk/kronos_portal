@@ -13,6 +13,8 @@ import AuditStoreDetail from './AuditStoreDetail.jsx';
 
 import SectionList from './SectionList.jsx';
 
+import UpcomingAuditStores from './UpcomingAuditStores.jsx';
+
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
@@ -27,6 +29,7 @@ const Routes = () => (
 			<Route path="audit_store" component={AuditStoreList}/>
 		</Route>
 		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
+		<Route path="/upcoming" component={UpcomingAuditStores}/>
 	</Route>
     </Router>
 );

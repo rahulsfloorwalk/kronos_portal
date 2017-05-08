@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import NavLink from '../../js/components/NavLink.jsx';
-import { Dashboard, File, MapMarker, King, LogOut } from '../../js/components/Icons.jsx';
+import { Dashboard, File, LogOut, Time } from '../../js/components/Icons.jsx';
 
 import { fetchUser } from '../service/user.js';
 
@@ -42,6 +42,7 @@ export default React.createClass({
 					<ul className="nav navbar-nav">
 						<NavLink to="/"><Dashboard/> Dashboard</NavLink>
 						<NavLink to="/browser"><File/> Report Browser</NavLink>
+						<NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
