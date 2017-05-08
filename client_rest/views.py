@@ -288,5 +288,5 @@ class AuditStoreUpcoming(APIView):
         'GET' : [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
-        audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.id)
+        audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.client_id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
