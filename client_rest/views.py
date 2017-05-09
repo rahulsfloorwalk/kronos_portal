@@ -29,6 +29,7 @@ from client_report.service import xlsx_report as xlsx_report_service
 from client_report.service import audit_cycle_xlsx_report as cycle_xlsx_report_service
 from client_report.service import audit_section
 from client_report.service import city_trends
+from client_report.service import store_trends
 
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 
@@ -281,6 +282,15 @@ class AuditCycleCityPerformance(APIView):
         data = city_trends.get_performing_cities(audit_cycle_id, request.user.id)
         return Response(data)
 
+
+class AuditCycleStorePerformance(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        data = store_trends.get_performing_stores(audit_cycle_id, request.user.id)
+        return Response(data)
 
 class AuditStoreUpcoming(APIView):
     permission_classes = [HasGroupPermission]
