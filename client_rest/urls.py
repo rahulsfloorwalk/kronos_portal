@@ -10,6 +10,8 @@ urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/store$', views.AuditCycleStorePerformance.as_view(), name='audit_cycle_store_performance'),
     url(r'report/performance/store$', views.DashboardStoreTrends.as_view(), name='dashboard_store_trends'),
+    url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
+    url(r'report/audit_cycle/time_series$', views.AuditCycleTimeSeriesReport.as_view(), name='audit_cycle_time_series'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_xlsx_report$', views.AuditCycleXlsxReport.as_view(), name='audit_cycle_xlsx_report'),
 
     url(r'audit_store/latest$', views.AuditStoreLatest.as_view(), name='audit_store_latest'),

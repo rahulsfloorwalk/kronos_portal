@@ -32,6 +32,7 @@ from client_report.service import audit_cycle_xlsx_report as cycle_xlsx_report_s
 from client_report.service import audit_section
 from client_report.service import city_trends
 from client_report.service import store_trends
+from client_report.service import audit_cycle
 
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 
@@ -312,3 +313,15 @@ class AuditStoreUpcoming(APIView):
     def get(self, request, format=None):
         audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.client_id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
+
+class AuditCycleTimeSeriesReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        try:
+            audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id)
+            return Response(audit_cycle_time_series)
+        except ObjectNotFound as e:
+            raise NotFound from e

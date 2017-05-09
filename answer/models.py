@@ -39,5 +39,12 @@ class ReportSection(Model):
         answers = Answer.objects.filter(audit_store_id=self.audit_store_id, question__section_id=self.section_id)
         return sum(a.marks_obtained for a in answers if type(a.marks_obtained) is int)
 
+    def marks_percentage(self):
+        ref_section = Section.objects.get(pk=self.section_id)
+        max_marks = ref_section.max_marks()
+        if max_marks == 0:
+            return 0
+        return (self.marks_obtained()*100.0)/max_marks
+
     class Meta:
         unique_together = (("audit_store","section"))
