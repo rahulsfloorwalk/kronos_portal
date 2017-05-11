@@ -24,7 +24,7 @@ var AuditCycleTimeSeries = React.createClass({
 		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		let bar_arr = []
 		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar dataKey={this.state.labels[i]} fill={colors[i]} label/>);
+			bar_arr.push(<Bar dataKey={this.state.labels[i]} barSize={30} fill={colors[i]} label/>);
 		}
 		this.setState({
 			'bars': bar_arr,
@@ -90,9 +90,9 @@ var AuditCycleTimeSeries = React.createClass({
   					<div className="col-md-12">
             <h1>{this.state.title}</h1>
             <br/>
-  					<BarChart width={1000} height={300} data={this.state.data} margin={{top: 25, right: 30, left: 20, bottom: 5}}>
-  						<XAxis dataKey="name"/>
-  						<YAxis/>
+  					<BarChart layout="vertical" width={1000} height={600} data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
+  						<XAxis type="number"/>
+  						<YAxis dataKey="name" type="category"/>
   						<Tooltip/>
   						<Legend />
 							{this.state.bars}
