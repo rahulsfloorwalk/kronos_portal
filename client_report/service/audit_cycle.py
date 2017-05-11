@@ -22,7 +22,8 @@ def get_section_averages_for_audit_cycle(audit_cycle_id):
         sec = {}
         sec['section'] = section
         sec['average'] = get_average_for_section(section.id)
-        section_averages.append(sec)
+        if section.max_marks() > 0:
+            section_averages.append(sec)
 
     section_averages = sorted(section_averages, key=lambda sec: sec['section'].sequence)
     return section_averages
