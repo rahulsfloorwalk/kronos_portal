@@ -1,19 +1,25 @@
 import React from 'react';
 import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {demo} from '../../config.js';
-import {fetchAuditCyclesTimeSeries} from '../service/audit_cycle.js';
+import {fetchAuditCycleStorePerformance} from '../service/audit_cycle.js';
 
-var AuditCycleTimeSeries = React.createClass({
+var AuditCycleStorePerformance = React.createClass({
 	getInitialState: function(){
 		return null;
 	},
-	create_structure: function(ts){
+	create_structure: function(input_data){
+    let data_arr = input_data.data;
+    let label_arr = input_data.columns
+    if(this.props.type === "worst"){
+      data_arr.reverse();
+    }
 		let data = [];
-		for(let i=0; i < ts.section_master.length; i++){
+    let size = Math.min(5, data_arr.length);
+		for(let i=0; i < size; i++){
 			let obj = {};
-			obj['name'] = ts.section_master[i];
-			for(let j=0; j < ts.audit_cycle_master.length; j++){
-				obj[ts.audit_cycle_master[j]] = ts.values[j][i];
+			obj['name'] = data_arr[i][0].name;
+			for(let j=0; j < label_arr.length; j++){
+				obj[label_arr[j]] = data_arr[i][1][j];
 			}
 			data.push(obj);
 		}
@@ -21,10 +27,16 @@ var AuditCycleTimeSeries = React.createClass({
 	},
 	create_bars: function(){
 
-		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
+    let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
+    if (this.state.type === "best"){
+      colors = ["#99B864", "#81AA40", "#688833"];
+    }
+    else if (this.state.type === "worst"){
+      colors = ["#D94E47", "#D0231A", "#A61C14"];
+    }
 		let bar_arr = []
 		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar dataKey={this.state.labels[i]} barSize={30} fill={colors[i]} label/>);
+			bar_arr.push(<Bar dataKey={this.state.labels[i]} barSize={20} fill={colors[i]} label/>);
 		}
 		this.setState({
 			'bars': bar_arr,
@@ -33,12 +45,14 @@ var AuditCycleTimeSeries = React.createClass({
 
 	componentDidMount: function(){
 		if(!demo){
-			let ts = fetchAuditCyclesTimeSeries().then((reportData) => {
+			let ts = fetchAuditCycleStorePerformance().then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
+        // let data_labels = reportData.data.map((tuple) => tuple[0].name);
 				this.setState({
 					'data': ts_structure,
-					'labels': reportData.audit_cycle_master,
-					'title': reportData.title
+					'labels': reportData.columns.reverse(),
+					'title': this.props.title,
+          'type': this.props.type
 				});
 				this.create_bars();
 			});
@@ -80,7 +94,7 @@ var AuditCycleTimeSeries = React.createClass({
   		);
     }
     else if (this.state != null){
-      console.log('Rendering real time series data');
+      console.log('Rendering real store performance data');
 			return(
   			<div className="container">
   				<div className="row">
@@ -89,9 +103,9 @@ var AuditCycleTimeSeries = React.createClass({
   					<div className="col-md-12">
             <h1>{this.state.title}</h1>
             <br/>
-  					<BarChart layout="vertical" width={1000} height={600} data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
-  						<XAxis type="number"/>
-  						<YAxis dataKey="name" type="category"/>
+  					<BarChart width={600} height={300} data={this.state.data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
+  						<XAxis dataKey="name"/>
+  						<YAxis />
   						<Tooltip/>
   						<Legend />
 							{this.state.bars}
@@ -109,4 +123,4 @@ var AuditCycleTimeSeries = React.createClass({
 	},
 });
 
-export default AuditCycleTimeSeries;
+export default AuditCycleStorePerformance;
