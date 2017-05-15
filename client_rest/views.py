@@ -14,6 +14,8 @@ from client.models import Store
 from client.service import audit_cycle_aggregation as audit_cycle_aggregation_service
 from client.service import store as store_service
 
+from audit.models import AuditCycle
+
 from audit_store import service as audit_store_service
 from audit_store import service_client as audit_store_client_service
 
@@ -290,6 +292,16 @@ class AuditCycleStorePerformance(APIView):
     }
     def get(self, request, audit_cycle_id, format=None):
         data = store_trends.get_performing_stores(audit_cycle_id, request.user.id)
+        return Response(data)
+
+
+class DashboardStoreTrends(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
         return Response(data)
 
 class AuditStoreUpcoming(APIView):

@@ -32,6 +32,15 @@ def find_by_id_for_clientuser(audit_cycle_id, user_id):
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_by_audit_type_for_clientuser(audit_type, user_id):
+    if audit_type not in [t[0] for t in AuditCycle.TYPES]:
+        raise AppLogicError("Invalid Audit Type")
+    try:
+        user = find_clientuser_by_user_id(user_id)
+        return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED), type=audit_type).order_by('-end_date')
+    except AuditCycle.DoesNotExist as e:
+        raise ObjectNotFound from e
+
 def get_audit_cycle_stats(audit_cycle_id):
 
     audits = AuditCycle.objects.get(pk=audit_cycle_id).audits.all()
