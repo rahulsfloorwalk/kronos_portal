@@ -1,5 +1,5 @@
 import React from 'react';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {demo} from '../../config.js';
 import {fetchAuditCycleStorePerformance} from '../service/audit_cycle.js';
 
@@ -36,7 +36,7 @@ var AuditCycleStorePerformance = React.createClass({
     }
 		let bar_arr = []
 		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar dataKey={this.state.labels[i]} barSize={20} fill={colors[i]} label/>);
+			bar_arr.push(<Bar key={i} dataKey={this.state.labels[i]} barSize={20} fill={colors[i]} label/>);
 		}
 		this.setState({
 			'bars': bar_arr,
@@ -94,28 +94,22 @@ var AuditCycleStorePerformance = React.createClass({
   		);
     }
     else if (this.state != null){
-      console.log('Rendering real store performance data');
-			return(
-  			<div className="container">
-  				<div className="row">
-  					<br/>
-  					<br/>
-  					<div className="col-md-12">
-            <h1>{this.state.title}</h1>
-            <br/>
-  					<BarChart width={600} height={300} data={this.state.data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
-  						<XAxis dataKey="name"/>
-  						<YAxis />
-  						<Tooltip/>
-  						<Legend />
-							{this.state.bars}
-
-  					</BarChart>
-  					</div>
-  				</div>
-  			</div>
-  		);
-    }
+	console.log('Rendering real store performance data');
+	return(
+	<div>
+		<h3 className="text-center">{this.state.title}</h3>
+		<ResponsiveContainer width="100%" aspect={3 / 1}>
+		<BarChart width={600} height={300} data={this.state.data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
+			<XAxis dataKey="name"/>
+			<YAxis label="Score" domain={[0,100]}/>
+			<Tooltip/>
+			<Legend />
+			{this.state.bars}
+		</BarChart>
+		</ResponsiveContainer>
+	</div>
+	);
+	}
 		else{
 			console.debug('demo is false and no data available. hence chart not rendering')
       return null;

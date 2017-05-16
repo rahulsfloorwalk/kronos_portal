@@ -17,6 +17,7 @@ export default React.createClass({
 						<AuditCycleTimeSeries />
 					</div>
 				</div>
+				<hr/>
 				<div className="row">
 					<div className="col-md-6">
 						<AuditCycleStorePerformance title="Best Performing Stores" type="best"/>
@@ -25,6 +26,7 @@ export default React.createClass({
 						<AuditCycleStorePerformance title="Worst Performing Stores" type="worst"/>
 					</div>
 				</div>
+				<hr/>
 				<div className="row">
 					<div className="col-md-12">
 						<AuditCycleCityMatrix auditCycleId={this.props.params.auditCycleId}/>

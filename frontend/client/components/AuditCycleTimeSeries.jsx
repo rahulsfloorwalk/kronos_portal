@@ -1,5 +1,5 @@
 import React from 'react';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {demo} from '../../config.js';
 import {fetchAuditCyclesTimeSeries} from '../service/audit_cycle.js';
 
@@ -24,7 +24,7 @@ var AuditCycleTimeSeries = React.createClass({
 		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		let bar_arr = []
 		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar dataKey={this.state.labels[i]} barSize={30} fill={colors[i]} label/>);
+			bar_arr.push(<Bar key={i} dataKey={this.state.labels[i]} barSize={30} fill={colors[i]} label/>);
 		}
 		this.setState({
 			'bars': bar_arr,
@@ -82,24 +82,19 @@ var AuditCycleTimeSeries = React.createClass({
     else if (this.state != null){
       console.log('Rendering real time series data');
 			return(
-  			<div className="container">
-  				<div className="row">
-  					<br/>
-  					<br/>
-  					<div className="col-md-12">
-            <h1>{this.state.title}</h1>
-            <br/>
-  					<BarChart layout="vertical" width={1000} height={600} data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
-  						<XAxis type="number"/>
-  						<YAxis dataKey="name" type="category"/>
-  						<Tooltip/>
-  						<Legend />
-							{this.state.bars}
+			<div>
+			<h3 className="text-center">{this.state.title}</h3>
+			<ResponsiveContainer width="100%" aspect={3 / 1}>
+			<BarChart width={1000} height={300} data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
+				<YAxis label="Score" type="number" dommain={[0,100]}/>
+				<XAxis dataKey="name" type="category"/>
+				<Tooltip/>
+				<Legend />
+					{this.state.bars}
 
-  					</BarChart>
-  					</div>
-  				</div>
-  			</div>
+			</BarChart>
+			</ResponsiveContainer>
+			</div>
   		);
     }
 		else{
