@@ -79,8 +79,8 @@ def notification_email_task(notif_id):
 
         elif notif.verb == notification.AUDIT_STORE_UNSUBMITTED:
             subject = "[FloorWalk] Audit Report Unsubmitted for {}".format(params['client'])
-            params['html_template'] = 'notify/unsubmitted_email.html'
-            params['txt_template'] = 'notify/unsubmitted_email.txt'
+            params['html_template'] = 'notify/unsubmitted.html'
+            params['txt_template'] = 'notify/unsubmitted.txt'
 
         elif notif.verb == notification.AUDIT_STORE_COMPLETED:
             subject = "[FloorWalk] Audit Report Completed for {}".format(params['client'])
