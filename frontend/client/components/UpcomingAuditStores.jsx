@@ -12,61 +12,78 @@ import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 
-var AuditStoreRow = React.createClass({
-	render: function(){
-		return (
-			<tr>
-				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
-				<td>{this.props.auditStore.audit.audit_cycle.name}</td>
-				<td>{this.props.auditStore.audit.store.location.city.name}</td>
-				<td>
-					{this.props.auditStore.audit.store.name}<br/>
-					<small className="text-muted">{this.props.auditStore.audit.store.address}</small>
-				</td>
-				<td>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</td>
-			</tr>
-		);
-	},
-});
-
 export default React.createClass({
 	getInitialState: function(){
 		return {
-			auditStores: []
+			groupedAuditStores: {}
 		};
 	},
 	componentDidMount: function() {
 		fetchUpcomingAuditStores().then((auditStores) => {
+			let groupedAuditStores = {};
+			auditStores.forEach( as => {
+				if( ! groupedAuditStores[as.audit_date]){
+					groupedAuditStores[as.audit_date] = [];
+				}
+				groupedAuditStores[as.audit_date].push(as);
+			});
 			this.setState({
-				auditStores
+				groupedAuditStores
 			});
 		});
 	},
 	render: function(){
-		var rows = [];
-		for(var id in this.state.auditStores) {
-			rows.push(<AuditStoreRow auditStore={this.state.auditStores[id]} key={id}/>);
+		let rows = [];
+		for(let key in this.state.groupedAuditStores) {
+			let innerRows = [];
+
+			for( let as of this.state.groupedAuditStores[key]){
+				innerRows.push(
+				<div className="row" key={as.id}>
+					<div className="col-md-12"><br/></div>
+					<div className="col-md-3">{as.audit.audit_cycle.name}</div>
+					<div className="col-md-1">{as.audit.store.location.city.name}</div>
+					<div className="col-md-6">
+						{as.audit.store.name}<br/>
+						<small className="text-muted">{as.audit.store.address}</small>
+					</div>
+					<div className="col-md-2">{getAuditType(as.audit.audit_cycle.type)}</div>
+				</div>
+				);
+			}
+
+			rows.push(
+				<div className="row" key={key}>
+					<div className="col-md-12"><hr/></div>
+					<div className="col-md-3">
+					<h3>
+						{moment(key).format(momentDateFormat)}
+					</h3>
+					</div>
+					<div className="col-md-9">
+						{innerRows}
+						<div className="col-md-12"><br/></div>
+					</div>
+				</div>
+			);
 		}
 		if(rows.length > 0){
 			return (
 				<div>
-					<h2 className="page-header">
-						<Time/> Upcoming Audits
-					</h2>
-					<table className="table table-striped">
-						<thead>
-							<tr>
-								<th>Audit Date</th>
-								<th>Audit Cycle</th>
-								<th>City</th>
-								<th>Store</th>
-								<th>Type</th>
-							</tr>
-						</thead>
-						<tbody>
-							{rows}
-						</tbody>
-					</table>
+					<div className="row">
+						<div className="col-md-3">
+						<h3><Time/> Upcoming Audits</h3>
+						</div>
+						<div className="col-md-9">
+							<div className="row">
+								<div className="col-md-3"><h3>Audit Cycle</h3></div>
+								<div className="col-md-1"><h3>City</h3></div>
+								<div className="col-md-6"><h3>Store</h3></div>
+								<div className="col-md-2"><h3>Audit Type</h3></div>
+							</div>
+						</div>
+					</div>
+					{rows}
 					{this.props.children}
 				</div>
 			);
