@@ -31,9 +31,9 @@ var AuditCycleTimeSeries = React.createClass({
 		});
 	},
 
-	componentDidMount: function(){
+	reloadData: function(auditType){
 		if(!demo){
-			let ts = fetchAuditCyclesTimeSeries().then((reportData) => {
+			let ts = fetchAuditCyclesTimeSeries(auditType).then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
 				this.setState({
 					'data': ts_structure,
@@ -43,6 +43,13 @@ var AuditCycleTimeSeries = React.createClass({
 				this.create_bars();
 			});
 		}
+	},
+
+	componentDidMount: function(){
+		this.reloadData(this.props.auditType);
+	},
+	componentWillReceiveProps: function(nextProps){
+		this.reloadData(nextProps.auditType);
 	},
 
 	render : function(){

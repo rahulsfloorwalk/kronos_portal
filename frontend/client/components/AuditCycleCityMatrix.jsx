@@ -4,7 +4,7 @@ import { Link, hashHistory } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
 
-import { fetchAuditCycles } from '../service/audit_cycle.js';
+import { findAuditCyclesByType } from '../service/audit_cycle.js';
 import { fetchAuditCycleCityMatrix } from '../service/dashboard.js';
 
 import { File } from '../../js/components/Icons.jsx';
@@ -40,35 +40,31 @@ export default React.createClass({
 		};
 	},
 	reloadMatrix: function(auditCycleId){
+		this.setState({
+			selectedAuditCycleId: auditCycleId
+		});
 		fetchAuditCycleCityMatrix(auditCycleId).then((report) => {
 			this.setState({
 				report
 			});
 		});
 	},
-	componentDidMount: function() {
-		fetchAuditCycles().then((auditCycles)=>{
+	reloadData: function(auditType){
+		findAuditCyclesByType(auditType).then((auditCycles)=>{
 			this.setState({
 				auditCycles,
 			});
-			if(this.props.auditCycleId){
-				this.reloadMatrix(this.props.auditCycleId);
-			} else {
-				hashHistory.push(`/dashboard/${auditCycles[0].id}`);
-			}
+			this.reloadMatrix(auditCycles[0].id);
 		});
 	},
+	componentDidMount: function() {
+		this.reloadData(this.props.auditType);
+	},
 	componentWillReceiveProps: function(nextProps){
-		if( nextProps.auditCycleId){
-			this.reloadMatrix(nextProps.auditCycleId);
-		} else if(this.state.auditCycles.length > 0){
-			hashHistory.push(`/dashboard/${this.state.auditCycles[0].id}`);
-		} else {
-			this.componentDidMount();
-		}
+		this.reloadData(nextProps.auditType);
 	},
 	auditCycleChanged: function(e){
-		hashHistory.push(`/dashboard/${e.target.value}`);
+		this.reloadMatrix(e.target.value);
 	},
 	render: function(){
 
@@ -79,7 +75,7 @@ export default React.createClass({
 
 		let trs = [];
 		for(let row of this.state.report) {
-			trs.push(<Row key={row.city_id} auditCycleId={this.props.auditCycleId} row={row}/>);
+			trs.push(<Row key={row.city_id} auditCycleId={this.state.selectedAuditCycleId} row={row}/>);
 		}
 
 		let displayTable;
@@ -108,36 +104,42 @@ export default React.createClass({
 		} else {
 			displayTable = (<Jumbotron heading="no audits yet" para="latest audits will show up here"/>);
 		}
-		let selectedAuditCycle = this.state.auditCycles.filter((ac) => ac.id === parseInt(this.props.auditCycleId))[0] || {};
+		let selectedAuditCycle = this.state.auditCycles.filter((ac) => ac.id === parseInt(this.state.selectedAuditCycleId))[0];
+		let totalsBox;
+		if(selectedAuditCycle){
+			totalsBox = (
+			<div className="row">
+				<div className="col-md-4">
+						<div className="jumbotron text-center">
+							<h1><b>{parseInt(selectedAuditCycle.completed_percentage)}<small>%</small></b></h1>
+							<p className="text-muted">completed</p>
+						</div>
+				</div>
+				<div className="col-md-4">
+						<div className="jumbotron text-center">
+							<h1><b>{selectedAuditCycle.completed_audit_count}</b></h1>
+							<p className="text-muted">audits completed</p>
+						</div>
+				</div>
+				<div className="col-md-4">
+						<div className="jumbotron text-center">
+							<h1><b>{selectedAuditCycle.audit_count}</b></h1>
+							<p className="text-muted">total audits</p>
+						</div>
+				</div>
+			</div>
+			);
+		}
 		return (
 			<div>
 			<h4>
 				<File/>
 				<label className="control-label">Audit Cycle:</label>&nbsp;
-				<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.props.auditCycleId} onChange={this.auditCycleChanged}>
+				<select className="form-control" style={{width:"350px", display:"inline-block"}} value={this.state.selectedAuditCycleId} onChange={this.auditCycleChanged}>
 					{auditCycleRows}
 				</select>
 			</h4>
-					<div className="row">
-						<div className="col-md-4">
-								<div className="jumbotron text-center">
-									<h1><b>{parseInt(selectedAuditCycle.completed_percentage)}<small>%</small></b></h1>
-									<p className="text-muted">completed</p>
-								</div>
-						</div>
-						<div className="col-md-4">
-								<div className="jumbotron text-center">
-									<h1><b>{selectedAuditCycle.completed_audit_count}</b></h1>
-									<p className="text-muted">audits completed</p>
-								</div>
-						</div>
-						<div className="col-md-4">
-								<div className="jumbotron text-center">
-									<h1><b>{selectedAuditCycle.audit_count}</b></h1>
-									<p className="text-muted">total audits</p>
-								</div>
-						</div>
-					</div>
+				{totalsBox}
 				{displayTable}
 				{this.props.children}
 			</div>

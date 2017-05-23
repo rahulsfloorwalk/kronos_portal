@@ -67,6 +67,16 @@ class AuditCycleAggregate(APIView):
             raise NotFound from e
 
 
+class AuditTypesByClient(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request):
+        types = audit_cycle_service.find_distinct_types_for_clientuser(request.user.id)
+        return Response(types)
+
+
 class StoreByClient(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -202,6 +212,18 @@ class AuditCycleView(APIView):
         except ObjectNotFound as e:
             raise NotFound from e
 
+class AuditCycleByTypeView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, audit_type, format=None):
+        try:
+            audit_cycles = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, request.user.id)
+            return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
 class CityView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -321,7 +343,7 @@ class AuditCycleTimeSeriesReport(APIView):
     }
     def get(self, request, format=None):
         try:
-            audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id)
+            audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, request.GET.get('audit_type',AuditCycle.WALKIN))
             return Response(audit_cycle_time_series)
         except ObjectNotFound as e:
             raise NotFound from e

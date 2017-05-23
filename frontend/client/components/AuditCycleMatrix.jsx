@@ -21,12 +21,18 @@ export default React.createClass({
 			}
 		};
 	},
-	componentDidMount: function() {
-		fetchLatestAuditCycleMatrix().then((report) => {
+	reloadData: function(auditType){
+		fetchLatestAuditCycleMatrix(auditType).then((report) => {
 			this.setState({
 				report
 			});
 		});
+	},
+	componentDidMount: function() {
+		this.reloadData(this.props.auditType);
+	},
+	componentWillReceiveProps: function(nextProps) {
+		this.reloadData(nextProps.auditType);
 	},
 	render: function(){
 		let trs = [];

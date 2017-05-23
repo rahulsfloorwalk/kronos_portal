@@ -28,8 +28,8 @@ def get_section_averages_for_audit_cycle(audit_cycle_id):
     section_averages = sorted(section_averages, key=lambda sec: sec['section'].sequence)
     return section_averages
 
-def get_audit_cycle_section_averages_for_client(client_id):
-    audit_cycles = AuditCycle.objects.filter(client__id=client_id).filter(type=AuditCycle.WALKIN).order_by('-end_date')
+def get_audit_cycle_section_averages_for_client(client_id, audit_type):
+    audit_cycles = AuditCycle.objects.filter(client__id=client_id).filter(type=audit_type).order_by('-end_date')
     section_series = {}
     section_master = []
     audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles[:4]]

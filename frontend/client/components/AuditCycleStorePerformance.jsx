@@ -43,20 +43,26 @@ var AuditCycleStorePerformance = React.createClass({
 		});
 	},
 
-	componentDidMount: function(){
+	reloadData: function(auditType){
 		if(!demo){
-			let ts = fetchAuditCycleStorePerformance().then((reportData) => {
+			let ts = fetchAuditCycleStorePerformance(this.props.auditType).then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
-        // let data_labels = reportData.data.map((tuple) => tuple[0].name);
 				this.setState({
 					'data': ts_structure,
 					'labels': reportData.columns.reverse(),
 					'title': this.props.title,
-          'type': this.props.type
+					'type': this.props.type
 				});
 				this.create_bars();
 			});
 		}
+	},
+
+	componentDidMount: function(){
+		this.reloadData(this.props.auditType);
+	},
+	componentWillReceiveProps: function(nextProps){
+		this.reloadData(nextProps.auditType);
 	},
 
 	render : function(){

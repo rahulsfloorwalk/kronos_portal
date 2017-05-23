@@ -27,6 +27,8 @@ urlpatterns = ([
     url(r'store$', views.StoreByClient.as_view(), name='store_by_client'),
     url(r'user$', views.ClientUserView.as_view(), name='client_user_view'),
     url(r'audit_cycle$', views.AuditCycleView.as_view(), name='audit_cycle_view'),
+    url(r'audit_cycle/(?P<audit_type>[A-Z]+)$', views.AuditCycleByTypeView.as_view(), name='audit_cycle_by_type_view'),
     url(r'audit_cycle/aggregation$', views.AuditCycleAggregate.as_view(), name='audit_cycle_aggregation'),
+    url(r'types$', views.AuditTypesByClient.as_view(), name='audit_types_by_client'),
     url(r'city$', views.CityView.as_view(), name='city_view'),
 ], 'client_rest')
