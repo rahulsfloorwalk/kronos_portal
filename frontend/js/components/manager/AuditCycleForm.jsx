@@ -94,6 +94,8 @@ var AuditCycleForm = React.createClass({
 								<option value="WEB">{getAuditType("WEB")}</option>
 								<option value="VISIBILITY">{getAuditType("VISIBILITY")}</option>
 								<option value="COMPETITION">{getAuditType("COMPETITION")}</option>
+								<option value="SERVICE">{getAuditType("SERVICE")}</option>
+								<option value="SALES">{getAuditType("SALES")}</option>
 							</FormSelect>
 						</div>
 						<div className="col-md-6">

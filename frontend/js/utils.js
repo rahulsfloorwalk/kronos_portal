@@ -12,12 +12,15 @@ export function getAuditType(value){
 			return "Visibility";
 		case "COMPETITION":
 			return "Competition";
+		case "SERVICE":
+			return "Service";
+		case "SALES":
+			return "Sales";
 		case "":
 		case null:
 		case undefined:
-			return "";
 		default:
-			return `unknown audit type ${value} - ${typeof value}`;
+			return value;
 	}
 };
 

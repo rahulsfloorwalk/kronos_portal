@@ -8,6 +8,8 @@ export default React.createClass({
 	getIcon : function(type){
 		switch(type){
 			case "WALKIN":
+			case "SALES":
+			case "SERVICE":
 				return (<Road/>);
 			case "PHONE":
 				return (<PhoneAlt/>);

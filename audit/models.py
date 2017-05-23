@@ -11,12 +11,16 @@ class AuditCycle(Model):
     WEB = 'WEB'
     VISIBILITY = 'VISIBILITY'
     COMPETITION = 'COMPETITION'
+    SERVICE = 'SERVICE'
+    SALES = 'SALES'
     TYPES = (
         (WALKIN, 'Walkin'),
         (PHONE, 'Phone'),
         (WEB, 'Web'),
         (VISIBILITY, 'Visibility'),
         (COMPETITION, 'Competition'),
+        (SERVICE, 'Service'),
+        (SALES, 'Sales'),
     )
 
     PREPARATION = 'PREPARATION'
