@@ -4,6 +4,7 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './App.jsx';
 
 import Dashboard from './Dashboard.jsx';
+import { TypedDashboard } from './Dashboard.jsx';
 
 import ReportBrowser from './ReportBrowser.jsx';
 import StoreDetail from './StoreDetail.jsx';
@@ -15,12 +16,24 @@ import SectionList from './SectionList.jsx';
 
 import UpcomingAuditStores from './UpcomingAuditStores.jsx';
 
+const IndexComponent = React.createClass({
+	componentDidMount: function(){
+		//console.debug("IndexComponent", "componentDidMount");
+		hashHistory.push("/dashboard");
+	},
+	render: function(){
+		return null;
+	}
+});
+
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
+		<IndexRoute component={IndexComponent}/>
 
-		<IndexRoute component={Dashboard} />
-		<Route path="/dashboard/:auditType" component={Dashboard}/>
+		<Route path="/dashboard" component={Dashboard}>
+			<Route path=":auditType" component={TypedDashboard}/>
+		</Route>
 
 		<Route path="/browser" component={ReportBrowser}/>
 		<Route path="/browser/auditCycle/:auditCycleId/city/:cityId" component={ReportBrowser}/>

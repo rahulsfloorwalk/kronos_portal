@@ -9,6 +9,7 @@ import { fetchUpcomingAuditStores } from '../service/audit_store.js';
 import { Time } from '../../js/components/Icons.jsx';
 import { getAuditType, getAuditStatus } from '../../js/utils.js';
 import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
+import AuditTypeLabel from '../../js/components/AuditTypeLabel.jsx';
 import AuditStoreStatusLabel from '../../js/components/AuditStoreStatusLabel.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 
@@ -47,7 +48,7 @@ export default React.createClass({
 						{as.audit.store.name}<br/>
 						<small className="text-muted">{as.audit.store.address}</small>
 					</div>
-					<div className="col-md-2">{getAuditType(as.audit.audit_cycle.type)}</div>
+					<div className="col-md-2"><AuditTypeLabel auditType={as.audit.audit_cycle.type}/></div>
 				</div>
 				);
 			}

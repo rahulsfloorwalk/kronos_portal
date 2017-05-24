@@ -60,9 +60,11 @@ var AuditCycleTimeSeries = React.createClass({
 	},
 
 	componentDidMount: function(){
+		//console.debug("AuditCycleTimeSeries","componentDidMount");
 		this.reloadData(this.props.auditType);
 	},
 	componentWillReceiveProps: function(nextProps){
+		//console.debug("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
 		this.reloadData(nextProps.auditType);
 	},
 
@@ -84,7 +86,6 @@ var AuditCycleTimeSeries = React.createClass({
 			</ResponsiveContainer>
 			);
 		}
-		console.debug('Rendering real time series data');
 		return(
 			<div>
 				<h3 className="text-center">{this.state.title}</h3>

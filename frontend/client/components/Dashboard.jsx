@@ -14,19 +14,62 @@ import AuditTypeLabel from '../../js/components/AuditTypeLabel.jsx';
 
 import { fetchAuditTypes } from '../service/dashboard.js';
 
+let TypedDashboard = React.createClass({
+	componentDidMount: function(){
+		//console.debug("TypedDashboard","componentDidMount", this.props.params.auditType);
+	},
+	componentWillReceiveProps: function(nextProps){
+		//console.debug("TypedDashboard","componentWillReceiveProps", nextProps.params.auditType);
+	},
+	render: function(){
+		return (
+			<div>
+			<div className="row">
+				<div className="col-md-12">
+					<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
+				</div>
+			</div>
+			<hr/>
+			<div className="row">
+				<div className="col-md-6">
+					<AuditCycleStorePerformance title="Best Performing Stores" auditType={this.props.params.auditType} type="best"/>
+				</div>
+				<div className="col-md-6">
+					<AuditCycleStorePerformance title="Worst Performing Stores" auditType={this.props.params.auditType} type="worst"/>
+				</div>
+			</div>
+			<hr/>
+			<div className="row">
+				<div className="col-md-12">
+					<AuditCycleCityMatrix auditType={this.props.params.auditType}/>
+				</div>
+			</div>
+			</div>
+		);
+	}
+});
+
 export default React.createClass({
 	getInitialState: function(){
 		return {
 			types: []
 		};
 	},
+	componentWillReceiveProps: function(nextProps){
+		//console.debug("Dashboard","componentWillReceiveProps", nextProps.params.auditType);
+	},
 	componentDidMount: function(){
+		//console.debug("Dashboard","componentDidMount", this.props.params.auditType);
 		fetchAuditTypes().then(types => {
 			this.setState({
 				types
 			});
 			if( ! this.props.params.auditType){
-				hashHistory.push(`/dashboard/${types[0]}`);
+				if( types.indexOf("WALKIN") > -1){
+					hashHistory.push("/dashboard/WALKIN");
+				} else {
+					hashHistory.push(`/dashboard/${types[0]}`);
+				}
 			}
 		});
 	},
@@ -52,27 +95,10 @@ export default React.createClass({
 			<div>
 				<h2 className="page-header"><Dashboard/> Dashboard</h2>
 				{tabStrip}
-				<div className="row">
-					<div className="col-md-12">
-						<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
-					</div>
-				</div>
-				<hr/>
-				<div className="row">
-					<div className="col-md-6">
-						<AuditCycleStorePerformance title="Best Performing Stores" auditType={this.props.params.auditType} type="best"/>
-					</div>
-					<div className="col-md-6">
-						<AuditCycleStorePerformance title="Worst Performing Stores" auditType={this.props.params.auditType} type="worst"/>
-					</div>
-				</div>
-				<hr/>
-				<div className="row">
-					<div className="col-md-12">
-						<AuditCycleCityMatrix auditType={this.props.params.auditType}/>
-					</div>
-				</div>
+				{this.props.children}
 			</div>
 		);
 	},
 });
+
+export { TypedDashboard };

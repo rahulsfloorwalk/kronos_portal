@@ -73,9 +73,11 @@ var AuditCycleStorePerformance = React.createClass({
 	},
 
 	componentDidMount: function(){
+		//console.debug("AuditCycleStorePerformance","componentDidMount");
 		this.reloadData(this.props.auditType);
 	},
 	componentWillReceiveProps: function(nextProps){
+		//console.debug("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
 		this.reloadData(nextProps.auditType);
 	},
 
