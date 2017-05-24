@@ -77,7 +77,7 @@ var AuditCycleTimeSeries = React.createClass({
 			<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
 			<XAxis dataKey="name" type="category"/>
 			<Tooltip formatter={v => v + "%"}/>
-			<Legend verticalAlign="top"/>
+			<Legend />
 			{this.state.bars}
 
 			</BarChart>
