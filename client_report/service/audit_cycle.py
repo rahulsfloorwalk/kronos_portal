@@ -43,9 +43,9 @@ def get_audit_cycle_section_averages_for_client(client_id, audit_type):
             except ValueError:
                 section_master.append(sec_name)
     values_table = [[0 for i in range(0, len(section_master))] for i in range(0, len(audit_cycle_master))]
-    print(values_table)
-    print(audit_cycle_master)
-    print(section_master)
+    #print("values_table", values_table)
+    #print("audit_cycle_master", audit_cycle_master)
+    #print("section_master", section_master)
     for audit_cycle in audit_cycles[:4]:
         yval = audit_cycle_master.index(audit_cycle.name)
         section_averages = get_section_averages_for_audit_cycle(audit_cycle.id)

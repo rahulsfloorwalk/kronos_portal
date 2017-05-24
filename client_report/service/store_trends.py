@@ -36,13 +36,13 @@ def get_performing_stores(audit_cycle_id, user_id):
 
 
 def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
-    print("got audit_type",audit_type)
+    #print("got audit_type",audit_type)
 
     audit_cycles = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, user_id)
     audit_cycle_names = []
 
     if len(audit_cycles) is 0:
-        print("audit_cycles are len = 0", audit_cycles)
+        #print("audit_cycles are len = 0", audit_cycles)
         return []
 
     data = []
@@ -51,19 +51,19 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
 
         data.append((audit_cycle, get_performing_stores(audit_cycle.id, user_id)))
 
-    print("data", data)
+    #print("data", data)
 
     first_cycle_performing_stores = data[0][1]
 
-    print("first_cycle_performing_stores", first_cycle_performing_stores)
-    print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
+    #print("first_cycle_performing_stores", first_cycle_performing_stores)
+    #print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
 
     data_1 = []
     for item in first_cycle_performing_stores:
         data_1.append((item[0],[item[1]]))
 
     for audit_cycle, best_performing_stores in data[1:]:
-        print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
+        #print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
         for item in first_cycle_performing_stores:
             found_item = None
             for s in best_performing_stores:
@@ -77,7 +77,7 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
                     else:
                         d[1].append(found_item[1])
 
-    print("data_1",data_1)
+    #print("data_1",data_1)
     return {
             'type': audit_type,
             'columns': audit_cycle_names,
