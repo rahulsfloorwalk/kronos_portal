@@ -30,7 +30,7 @@ let TypedDashboard = React.createClass({
 				</div>
 			</div>
 			<hr/>
-			<div className="row">
+			{/*<div className="row">
 				<div className="col-md-6">
 					<AuditCycleStorePerformance title="Best Performing Stores" auditType={this.props.params.auditType} type="best"/>
 				</div>
@@ -38,7 +38,7 @@ let TypedDashboard = React.createClass({
 					<AuditCycleStorePerformance title="Worst Performing Stores" auditType={this.props.params.auditType} type="worst"/>
 				</div>
 			</div>
-			<hr/>
+			<hr/>*/}
 			<div className="row">
 				<div className="col-md-12">
 					<AuditCycleCityMatrix auditType={this.props.params.auditType}/>
