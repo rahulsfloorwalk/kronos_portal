@@ -58,6 +58,11 @@ export default React.createClass({
 
 		let attachmentElement;
 		if(this.state.selectedAttachment){
+			let downloadButton = (
+			<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
+				<DownloadAlt/> Download File
+			</a>
+			);
 			switch(this.state.selectedAttachment.proof_type){
 				case "AUDIO":
 					attachmentElement = (
@@ -69,6 +74,8 @@ export default React.createClass({
 								<source src={this.state.selectedAttachment.direct_url} 
 									type={this.state.selectedAttachment.mime_type}/>
 							</audio>
+							<br/>
+							{downloadButton}
 						</div>
 					);
 					break;
@@ -78,6 +85,8 @@ export default React.createClass({
 						<div className="text-center">
 							<p><big>{this.state.selectedAttachment.file_name}</big></p>
 							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
+							<br/>
+							{downloadButton}
 						</div>
 					);
 					break;
@@ -88,9 +97,8 @@ export default React.createClass({
 							<br/>
 							<br/>
 							<p><big>{this.state.selectedAttachment.file_name}</big></p>
-							<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
-								<DownloadAlt/> Download File
-							</a>
+							<br/>
+							{downloadButton}
 						</div>
 					);
 					break;

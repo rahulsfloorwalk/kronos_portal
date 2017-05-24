@@ -176,6 +176,11 @@ var AttachmentDisplayBox = React.createClass({
 		}
 		if(this.state.selectedAttachment){
 			let icon = <AttachmentProofIcon proofType={this.state.selectedAttachment.proof_type}/>;
+			let downloadButton = (
+				<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
+					<DownloadAlt/> Download File
+				</a>
+			);
 			switch(this.state.selectedAttachment.proof_type){
 				case "AUDIO": {
 					let headingText;
@@ -199,6 +204,8 @@ var AttachmentDisplayBox = React.createClass({
 									<source src={this.state.selectedAttachment.direct_url} 
 										type={this.state.selectedAttachment.mime_type}/>
 								</audio>
+								<br/>
+								{downloadButton}
 							</div>
 						</div>
 					);
@@ -224,6 +231,8 @@ var AttachmentDisplayBox = React.createClass({
 							</h4>
 							<div className="text-center">
 							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
+								<br/>
+								{downloadButton}
 							</div>
 						</div>
 					);
@@ -248,9 +257,8 @@ var AttachmentDisplayBox = React.createClass({
 								{headingText}
 							</h4>
 							<div className="text-center">
-								<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
-									<DownloadAlt/> Download File
-								</a>
+								<br/>
+								{downloadButton}
 							</div>
 						</div>
 					);

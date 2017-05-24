@@ -174,6 +174,11 @@ export default React.createClass({
 			var deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.deleteButtonClicked}><Cross/> Delete</button>);
 		}
 		if(this.state.selectedAttachment){
+			let downloadButton = (
+				<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
+					<DownloadAlt/> Download File
+				</a>
+			);
 			let icon = <AttachmentProofIcon proofType={this.state.selectedAttachment.proof_type}/>;
 			switch(this.state.selectedAttachment.proof_type){
 				case "AUDIO": {
@@ -198,6 +203,8 @@ export default React.createClass({
 									<source src={this.state.selectedAttachment.direct_url} 
 										type={this.state.selectedAttachment.mime_type}/>
 								</audio>
+								<br/>
+								{downloadButton}
 							</div>
 						</div>
 					);
@@ -223,6 +230,8 @@ export default React.createClass({
 							</h4>
 							<div className="text-center">
 							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
+								<br/>
+								{downloadButton}
 							</div>
 						</div>
 					);
@@ -247,9 +256,8 @@ export default React.createClass({
 								{headingText}
 							</h4>
 							<div className="text-center">
-								<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
-									<DownloadAlt/> Download File
-								</a>
+								<br/>
+								{downloadButton}
 							</div>
 						</div>
 					);
