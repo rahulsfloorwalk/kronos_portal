@@ -1,5 +1,5 @@
 import React from 'react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Text} from 'recharts';
 
 import {demo} from '../../config.js';
 
@@ -37,7 +37,7 @@ var AuditCycleTimeSeries = React.createClass({
 		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		let bar_arr = []
 		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar key={i} dataKey={this.state.labels[i]} barSize={30} fill={colors[i]} label/>);
+			bar_arr.push(<Bar key={i} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value+"%"}/>}/>);
 		}
 		this.setState({
 			'bars': bar_arr,
@@ -68,6 +68,12 @@ var AuditCycleTimeSeries = React.createClass({
 		this.reloadData(nextProps.auditType);
 	},
 
+	tickFunction: function( values){
+		// lol hack
+		let count = this.state.data && this.state.data.length > 0 ? this.state.data.length : 1;
+		return (<Text {...values} width={values.width / count}>{values.payload.value}</Text>);
+	},
+
 	render : function(){
 		let chart;
 		if(this.state.loading){
@@ -75,13 +81,12 @@ var AuditCycleTimeSeries = React.createClass({
 		} else {
 			chart = (
 			<ResponsiveContainer width="100%" aspect={3 / 1}>
-			<BarChart width={1000} height={300} data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
+			<BarChart data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
 			<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
-			<XAxis dataKey="name" type="category"/>
+			<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
 			<Tooltip formatter={v => v + "%"}/>
-			<Legend />
+			<Legend verticalAlign="top"/>
 			{this.state.bars}
-
 			</BarChart>
 			</ResponsiveContainer>
 			);
