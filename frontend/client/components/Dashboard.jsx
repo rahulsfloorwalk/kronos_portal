@@ -5,6 +5,7 @@ import LatestAuditStore from './LatestAuditStore.jsx';
 import AuditCycleCityMatrix from './AuditCycleCityMatrix.jsx';
 import AuditCycleTimeSeries from './AuditCycleTimeSeries.jsx';
 import AuditCycleStorePerformance from './AuditCycleStorePerformance.jsx';
+import DashboardCityPerformanceChart from './DashboardCityPerformanceChart.jsx';
 
 import { Dashboard } from '../../js/components/Icons.jsx';
 
@@ -27,6 +28,8 @@ let TypedDashboard = React.createClass({
 				<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
 				<hr/>
 				<AuditCycleStorePerformance auditType={this.props.params.auditType}/>
+				<hr/>
+				<DashboardCityPerformanceChart auditType={this.props.params.auditType}/>
 				<hr/>
 			<div className="row">
 				<div className="col-md-12">

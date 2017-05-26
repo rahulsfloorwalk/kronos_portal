@@ -26,7 +26,7 @@ def get_performing_stores(audit_cycle_id, user_id):
                 "id": audit.store.location.city.id,
                 "name": audit.store.location.city.name,
             }
-        }, obtained / count))
+        }, int(obtained / count)))
 
 
     if len(stores) is 0:

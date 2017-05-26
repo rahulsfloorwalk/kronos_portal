@@ -327,6 +327,15 @@ class DashboardStoreTrends(APIView):
         data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
         return Response(data)
 
+class DashboardCityWiseTrends(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+        return Response(data)
+
 class AuditStoreUpcoming(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
