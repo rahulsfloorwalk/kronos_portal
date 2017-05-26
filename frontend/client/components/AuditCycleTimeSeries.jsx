@@ -10,7 +10,10 @@ import {fetchAuditCyclesTimeSeries} from '../service/audit_cycle.js';
 var AuditCycleTimeSeries = React.createClass({
 	getInitialState: function(){
 		return {
-			loading: false
+			loading: false,
+			labels: [],
+			data: [],
+			title: ""
 		};
 	},
 	setLoading: function(loading){
@@ -32,18 +35,6 @@ var AuditCycleTimeSeries = React.createClass({
 		}
 		return data;
 	},
-	create_bars: function(){
-
-		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
-		let bar_arr = []
-		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar key={i} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value+"%"}/>}/>);
-		}
-		this.setState({
-			'bars': bar_arr,
-		});
-	},
-
 	reloadData: function(auditType){
 		if(!demo){
 			this.setLoading(true);
@@ -54,7 +45,6 @@ var AuditCycleTimeSeries = React.createClass({
 					'labels': reportData.audit_cycle_master,
 					'title': reportData.title
 				});
-				this.create_bars();
 			}).always( () => this.setLoading(false));
 		}
 	},
@@ -79,6 +69,12 @@ var AuditCycleTimeSeries = React.createClass({
 		if(this.state.loading){
 			chart = <Loading/>;
 		} else {
+			let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
+			let bars = [];
+			for(let i=0; i < this.state.labels.length; i++){
+				bars.push(<Bar key={i} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value+"%"}/>}/>);
+			}
+
 			chart = (
 			<ResponsiveContainer width="100%" aspect={3 / 1}>
 			<BarChart data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
@@ -86,7 +82,7 @@ var AuditCycleTimeSeries = React.createClass({
 			<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
 			<Tooltip formatter={v => v + "%"}/>
 			<Legend verticalAlign="top"/>
-			{this.state.bars}
+			{bars}
 			</BarChart>
 			</ResponsiveContainer>
 			);

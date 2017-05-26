@@ -24,21 +24,10 @@ let TypedDashboard = React.createClass({
 	render: function(){
 		return (
 			<div>
-			<div className="row">
-				<div className="col-md-12">
-					<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
-				</div>
-			</div>
-			<hr/>
-			{/*<div className="row">
-				<div className="col-md-6">
-					<AuditCycleStorePerformance title="Best Performing Stores" auditType={this.props.params.auditType} type="best"/>
-				</div>
-				<div className="col-md-6">
-					<AuditCycleStorePerformance title="Worst Performing Stores" auditType={this.props.params.auditType} type="worst"/>
-				</div>
-			</div>
-			<hr/>*/}
+				<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
+				<hr/>
+				<AuditCycleStorePerformance auditType={this.props.params.auditType}/>
+				<hr/>
 			<div className="row">
 				<div className="col-md-12">
 					<AuditCycleCityMatrix auditType={this.props.params.auditType}/>

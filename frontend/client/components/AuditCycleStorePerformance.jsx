@@ -8,18 +8,6 @@ import {fetchAuditCycleStorePerformance} from '../service/audit_cycle.js';
 import Loading from '../../js/components/Loading.jsx';
 
 var AuditCycleStorePerformance = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false
-		};
-	},
-	setLoading: function(loading){
-		this.setState( prevState => {
-			return Object.assign({}, prevState, {
-				loading
-			});
-		});
-	},
 	create_structure: function(input_data){
     let data_arr = input_data.data;
     let label_arr = input_data.columns
@@ -38,40 +26,68 @@ var AuditCycleStorePerformance = React.createClass({
 		}
 		return data;
 	},
-	create_bars: function(){
 
-    let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
-    if (this.state.type === "best"){
-      colors = ["#99B864", "#81AA40", "#688833"];
-    }
-    else if (this.state.type === "worst"){
-      colors = ["#D94E47", "#D0231A", "#A61C14"];
-    }
-		let bar_arr = []
-		for(let i=0; i < this.state.labels.length; i++){
-			bar_arr.push(<Bar key={i} dataKey={this.state.labels[i]} barSize={20} fill={colors[i]} label/>);
+	render : function(){
+		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
+		if (this.props.type === "best"){
+			colors = ["#11772D", "#30AD23", "#688833"];
 		}
-		this.setState({
-			'bars': bar_arr,
+		else if (this.props.type === "worst"){
+			colors = ["#D94E47", "#D0231A", "#A61C14"];
+		}
+		let bars = [];
+
+		let labels = this.props.reportData.columns;
+		for(let i=0; i < labels.length; i++){
+			bars.push(<Bar key={i} dataKey={labels[i]} barSize={20} fill={colors[i]} label/>);
+		}
+
+		let data = this.create_structure(this.props.reportData);
+
+		let chart = (
+		<ResponsiveContainer width="100%" aspect={3 / 1}>
+		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
+		<XAxis dataKey="name"/>
+		<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
+		<Tooltip formatter={v => v+"%"}/>
+		<Legend />
+		{bars}
+		</BarChart>
+		</ResponsiveContainer>
+		);
+		return(
+			<div>
+			<h3 className="text-center">{this.props.title}</h3>
+			{chart}
+			</div>
+		);
+	}
+});
+
+let AuditCycleStorePerformanceWrapper = React.createClass({
+	getInitialState: function(){
+		return {
+			loading: false,
+			reportData: null,
+		};
+	},
+	setLoading: function(loading){
+		this.setState( prevState => {
+			return Object.assign({}, prevState, {
+				loading
+			});
 		});
 	},
-
 	reloadData: function(auditType){
 		if(!demo){
 			this.setLoading(true);
 			let ts = fetchAuditCycleStorePerformance(this.props.auditType).then((reportData) => {
-				let ts_structure = this.create_structure(reportData);
 				this.setState({
-					'data': ts_structure,
-					'labels': reportData.columns.reverse(),
-					'title': this.props.title,
-					'type': this.props.type
+					'reportData': reportData
 				});
-				this.create_bars();
 			}).always(() => this.setLoading(false));
 		}
 	},
-
 	componentDidMount: function(){
 		//console.debug("AuditCycleStorePerformance","componentDidMount");
 		this.reloadData(this.props.auditType);
@@ -80,31 +96,26 @@ var AuditCycleStorePerformance = React.createClass({
 		//console.debug("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
 		this.reloadData(nextProps.auditType);
 	},
-
-	render : function(){
-		let chart;
-		if(this.state.loading){
-			chart = <Loading/>;
+	render: function(){
+		if(this.state.loading || ! this.state.reportData ){
+			return <Loading/>;
+		} else if(this.state.reportData.data.length > 10) { 
+			return (
+			<div className="row">
+				<div className="col-md-6">
+					<AuditCycleStorePerformance title="Best" type="best" reportData={this.state.reportData}/>
+				</div>
+				<div className="col-md-6">
+					<AuditCycleStorePerformance title="Worst" type="worst" reportData={this.state.reportData}/>
+				</div>
+			</div>
+			);
 		} else {
-			chart = (
-			<ResponsiveContainer width="100%" aspect={3 / 1}>
-			<BarChart width={600} height={300} data={this.state.data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
-			<XAxis dataKey="name"/>
-			<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
-			<Tooltip formatter={v => v+"%"}/>
-			<Legend />
-			{this.state.bars}
-			</BarChart>
-			</ResponsiveContainer>
+			return (
+			<AuditCycleStorePerformance title="Store Wise Performance" type="best" reportData={this.state.reportData}/>
 			);
 		}
-		return(
-			<div>
-			<h3 className="text-center">{this.state.title}</h3>
-			{chart}
-			</div>
-		);
 	}
 });
 
-export default AuditCycleStorePerformance;
+export default AuditCycleStorePerformanceWrapper;
