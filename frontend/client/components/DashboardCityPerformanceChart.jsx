@@ -30,7 +30,7 @@ var CityWisePerformanceChart = React.createClass({
 	render : function(){
 		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		if (this.props.type === "best"){
-			colors = ["#11772D", "#30AD23", "#688833"];
+			colors = ["#688833", "#30AD23", "#11772D"];
 		}
 		else if (this.props.type === "worst"){
 			colors = ["#D94E47", "#D0231A", "#A61C14"];
@@ -99,14 +99,14 @@ let CityWisePerformanceChartWrapper = React.createClass({
 	render: function(){
 		if(this.state.loading || ! this.state.reportData ){
 			return <Loading/>;
-		} else if(this.state.reportData.data.length > 10) { 
+		} else if(this.state.reportData.data.length > 10) {
 			return (
 			<div className="row">
 				<div className="col-md-6">
-					<CityWisePerformanceChart title="Best" type="best" reportData={this.state.reportData}/>
+					<CityWisePerformanceChart title="Best Performing Cities" type="best" reportData={this.state.reportData}/>
 				</div>
 				<div className="col-md-6">
-					<CityWisePerformanceChart title="Worst" type="worst" reportData={this.state.reportData}/>
+					<CityWisePerformanceChart title="Worst Performing Cities" type="worst" reportData={this.state.reportData}/>
 				</div>
 			</div>
 			);
