@@ -4,13 +4,14 @@ from .views import AuditCycleView, AuditCycleIdView, AuditStoreByAuditCycle, Aud
 from .views import AuditStoreIdAuditDateView, AuditStoreIdCompleteView, AuditStoreIdFailView, AuditStoreIdSubmitView, AuditStoreIdUnSubmitView
 from .views import AuditStoreAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView
 from .views import SectionView, ReportSectionView, AnswerView
-from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView
+from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView
 
 urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', AttachmentIdCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', AttachmentIdView.as_view(), name='attachment_id_view'),
 
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/not_applicable$', NotApplicableView.as_view(), name='not_applicable_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/auditor_comment$', AuditorCommentView.as_view(), name='auditor_comment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/pm_comment$', PMCommentView.as_view(), name='pm_comment_view'),
 

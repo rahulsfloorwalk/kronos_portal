@@ -31,3 +31,14 @@ export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 	});
 };
 
+export function setNotApplicable(auditStoreId, sectionId, notApplicable){
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/not_applicable`,
+		data: JSON.stringify({
+			not_applicable: notApplicable
+		}),
+		contentType: "application/json"
+	});
+};
+

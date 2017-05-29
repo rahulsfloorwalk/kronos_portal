@@ -79,3 +79,33 @@ export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 		return req;
 	};
 };
+
+export function setNotApplicable(auditStoreId, sectionId, notApplicable){
+	return function(dispatch){
+		dispatch({
+			type: types.REPORT_SECTION_NOT_APPLICABLE,
+			status: 'request',
+			auditStoreId,
+			sectionId,
+			notApplicable,
+		});
+
+		var req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_store/${auditStoreId}/section/${sectionId}/not_applicable`,
+			data: JSON.stringify({
+				not_applicable: notApplicable
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(reportSection){
+			dispatch({
+				type: types.REPORT_SECTION_NOT_APPLICABLE,
+				status: 'success',
+				reportSection
+			});
+		});
+		//TODO: Handle error
+		return req;
+	};
+};

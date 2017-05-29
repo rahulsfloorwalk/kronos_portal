@@ -461,6 +461,7 @@ class ReportSectionSerializer(ModelSerializer):
             'section',
             'auditor_comment',
             'pm_comment',
+            'not_applicable',
             'marks_obtained'
         )
         read_only_fields = fields

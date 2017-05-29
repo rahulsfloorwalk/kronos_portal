@@ -4,11 +4,11 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../../components/Jumbotron.jsx';
 import Panel from '../../components/Panel.jsx';
-import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal } from '../../components/Icons.jsx';
+import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal, Checked, Unchecked } from '../../components/Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchAnswers, setAnswerText, setMarks } from '../service/answer.js'
-import { fetchSections, fetchReportSections, submitAuditorComment, submitPMComment } from '../service/section.js'
+import { fetchSections, fetchReportSections, submitAuditorComment, submitPMComment, setNotApplicable } from '../service/section.js'
 
 let QuestionRow = React.createClass({
 	getDefaultProps: function(){
@@ -110,13 +110,16 @@ let Section = React.createClass({
 
 			auditor_comment: "",
 			pm_comment: "",
+
+			not_applicable: false,
 		};
 	},
 	componentDidMount: function(){
 		if(this.props.reportSection){
 			this.setState({
 				auditor_comment: this.props.reportSection.auditor_comment,
-				pm_comment: this.props.reportSection.pm_comment
+				pm_comment: this.props.reportSection.pm_comment,
+				not_applicable: this.props.reportSection.not_applicable,
 			});
 		}
 	},
@@ -124,7 +127,8 @@ let Section = React.createClass({
 		if(nextProps.reportSection){
 			this.setState({
 				auditor_comment: nextProps.reportSection.auditor_comment,
-				pm_comment: nextProps.reportSection.pm_comment
+				pm_comment: nextProps.reportSection.pm_comment,
+				not_applicable: nextProps.reportSection.not_applicable
 			});
 		}
 	},
@@ -146,6 +150,12 @@ let Section = React.createClass({
 		});
 		submitPMComment(this.props.auditStoreId, this.props.section.id, this.state.pm_comment).then(()=> this.setState({pmCommentError: false}), () => this.setState({pmCommentError: true})).always(() => this.setState({savingPMComment: false}));
 	},
+	notApplicableButtonClicked: function(e){
+		this.setState({
+			not_applicable: !this.state.not_applicable,
+		});
+		setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable);
+	},
 	render: function(){
 
 		let editable = this.props.auditStore && this.props.auditStore.status === 'SUBMITTED';
@@ -165,6 +175,8 @@ let Section = React.createClass({
 		let auditorCommentElement = (<span className="text-muted">auditor comment is empty</span>);
 		let pmCommentElement = (<span className="text-muted">PM comment is empty</span>);
 		let marksObtained = 0;
+		let notApplicableCheckboxIcon = <Unchecked/>;
+		let notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 
 		/* AUDITOR COMMENT, PM COMMENT */
 		if(this.props.reportSection){
@@ -172,6 +184,8 @@ let Section = React.createClass({
 
 			pmCommentElement = this.state.pm_comment ? (<span>{this.state.pm_comment}</span>) : pmCommentElement;
 			auditorCommentElement = this.state.auditor_comment ? (<span>{this.state.auditor_comment}</span>) : auditorCommentElement;
+			notApplicableCheckboxIcon = this.state.not_applicable ? <Checked/> : <Unchecked/>;
+			notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 		}
 
 		if(editable){
@@ -232,6 +246,8 @@ let Section = React.createClass({
 						</span>
 					</form>
 			);
+
+			notApplicableElement = (<button className="btn btn-default btn-sm" onClick={this.notApplicableButtonClicked}>{notApplicableCheckboxIcon}</button>);
 		}
 
 		var styles = {
@@ -240,8 +256,12 @@ let Section = React.createClass({
 			col3: { width: "40%" },
 			col4: { width: "15%" },
 		};
-		return (
-			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
+
+		let panelBody;
+		if(this.state.not_applicable){
+			panelBody = (<div className="panel-footer text-center text-muted">section not applicable</div>);
+		} else {
+			panelBody = (<div>
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -262,7 +282,18 @@ let Section = React.createClass({
 					<hr/>
 					<div><b>PM Comment:</b> {pmCommentElement}</div>
 				</div>
-			</Panel>
+			</div>);
+		}
+		return (
+			<div className="panel panel-default">
+				<span className="pull-right"><b>N/A:</b> {notApplicableElement}</span>
+				<div className="panel-heading">
+					<h4 className="panel-title">
+					{this.props.section.sequence} - {this.props.section.name}
+					</h4>
+				</div>
+				{panelBody}
+			</div>
 		);
 	},
 });

@@ -13,6 +13,8 @@ export const Refresh	= () => <span className="glyphicon glyphicon-refresh"></spa
 export const Repeat	= () => <span className="glyphicon glyphicon-repeat"></span>;
 export const NewWindow	= () => <span className="glyphicon glyphicon-new-window"></span>;
 export const Check	= () => <span className="glyphicon glyphicon-ok"></span>;
+export const Checked	= () => <span className="glyphicon glyphicon-check"></span>;
+export const Unchecked	= () => <span className="glyphicon glyphicon-unchecked"></span>;
 export const Cross	= () => <span className="glyphicon glyphicon-remove"></span>;
 export const Plus	= () => <span className="glyphicon glyphicon-plus"></span>;
 export const Pencil	= () => <span className="glyphicon glyphicon-pencil"></span>;

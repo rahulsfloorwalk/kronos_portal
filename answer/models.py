@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, BooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import CASCADE
 from questionnaire.models import Question
 from audit_store.models import AuditStore
@@ -29,19 +29,29 @@ class ReportSection(Model):
     pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
     auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)
     auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=2048, blank=True)
+    not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='report_sections')
 
     def __str__(self):
         return "ReportSection({}): {}, {}".format(self.id, self.pm_comment, self.auditor_comment)
 
+    def max_marks(self):
+        '''may return zero so make sure you check for DivideByZero before using this blindly in the denominator'''
+        if self.not_applicable:
+            return 0
+        else:
+            return self.section.max_marks()
+
     def marks_obtained(self):
-        answers = Answer.objects.filter(audit_store_id=self.audit_store_id, question__section_id=self.section_id)
-        return sum(a.marks_obtained for a in answers if type(a.marks_obtained) is int)
+        if self.not_applicable:
+            return 0
+        else:
+            answers = Answer.objects.filter(audit_store_id=self.audit_store_id, question__section_id=self.section_id)
+            return sum(a.marks_obtained for a in answers if type(a.marks_obtained) is int)
 
     def marks_percentage(self):
-        ref_section = Section.objects.get(pk=self.section_id)
-        max_marks = ref_section.max_marks()
+        max_marks = self.max_marks()
         if max_marks == 0:
             return 0
         return (self.marks_obtained()*100.0)/max_marks

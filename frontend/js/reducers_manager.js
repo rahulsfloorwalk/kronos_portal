@@ -578,6 +578,7 @@ export function rootReducer(store = initialStore, action) {
 			}
 		case types.REPORT_SECTION_PM_COMMENT:
 		case types.REPORT_SECTION_AUDITOR_COMMENT:
+		case types.REPORT_SECTION_NOT_APPLICABLE:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {

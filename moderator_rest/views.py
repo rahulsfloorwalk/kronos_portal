@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.serializers import Serializer, DateField, CharField, IntegerField
+from rest_framework.serializers import Serializer, DateField, CharField, IntegerField, BooleanField
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
@@ -305,6 +305,27 @@ class AuditorCommentView(APIView):
         ds.is_valid(raise_exception=True)
         try:
             report_section = report_section_moderator_service.submit_auditor_comment_for_moderator(audit_store_id, section_id, ds.validated_data["auditor_comment"], request.user.id)
+            return Response(ReportSectionSerializer(report_section).data)
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e
+
+
+class NotApplicableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MODERATOR]
+        }
+
+    class DeSerializer(Serializer):
+        not_applicable = BooleanField()
+
+    def post(self, request, audit_store_id, section_id, format=None):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        try:
+            report_section = report_section_moderator_service.set_not_applicable_for_moderator(audit_store_id, section_id, ds.validated_data["not_applicable"], request.user.id)
             return Response(ReportSectionSerializer(report_section).data)
         except AppLogicError as e:
             raise ValidationError({

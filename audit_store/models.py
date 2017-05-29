@@ -32,9 +32,38 @@ class AuditStore(Model):
     def marks_obtained(self):
         return sum(rs.marks_obtained() for rs in self.report_sections.all())
 
+    def max_marks(self):
+        '''may return zero so make sure you check for DivideByZero before using this blindly in the denominator'''
+        return sum(rs.max_marks() for rs in self.report_sections.all())
+
     def percentage(self):
-        max_marks = self.audit.audit_cycle.max_marks()
+        max_marks = self.max_marks()
         if max_marks is 0:
             return max_marks
         else:
             return int(self.marks_obtained() * 100 / max_marks )
+
+    def is_completable(self):
+        sections = self.audit.audit_cycle.sections.all()
+        report_sections = self.report_sections.all()
+
+        if len(sections) != len(report_sections):
+            return False
+
+        for report_section in report_sections:
+            if not report_section.not_applicable:
+                if report_section.auditor_comment in ( None ,''):
+                    return False
+                if report_section.pm_comment in ( None ,''):
+                    return False
+
+                questions = Question.objests.filter(section_id=report_section.section_id).all()
+                answers = Answer.objests.filter(question__section_id=report_section.section_id).all()
+
+                if len(questions) != len(answers):
+                    return False
+
+                if answer.answer_text in ( None ,''):
+                    return False
+
+        return True

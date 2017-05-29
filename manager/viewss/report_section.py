@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.serializers import Serializer, CharField, BooleanField
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -67,6 +67,28 @@ class AuditorCommentSubmitView(APIView):
         ds.is_valid(raise_exception=True)
         try:
             report_section = report_section_service.set_auditor_comment_by_manager(audit_store_id, section_id, ds.validated_data["auditor_comment"])
+            return Response(ReportSectionSerializer(report_section).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            }) from e
+
+class NotApplicableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+
+    class DeSerializer(Serializer):
+        not_applicable = BooleanField()
+
+    def post(self, request, audit_store_id, section_id, format=None):
+        ds = NotApplicableView.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        try:
+            report_section = report_section_service.set_not_applicable(audit_store_id, section_id, ds.validated_data["not_applicable"])
             return Response(ReportSectionSerializer(report_section).data)
         except ObjectNotFound as e:
             raise NotFound from e

@@ -31,3 +31,7 @@ def submit_auditor_comment_for_moderator(audit_store_id, section_id, auditor_com
 def submit_pm_comment_for_moderator(audit_store_id, section_id, pm_comment, user_id):
     report_section = find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
     return report_section_service.submit_pm_comment(audit_store_id, section_id, pm_comment)
+
+def set_not_applicable_for_moderator(audit_store_id, section_id, not_applicable, user_id):
+    report_section = find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
+    return report_section_service.set_not_applicable(audit_store_id, section_id, not_applicable)
