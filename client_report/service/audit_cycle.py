@@ -1,11 +1,12 @@
 from kronos.exceptions import AppLogicError
 from audit.models import AuditCycle
+from audit_store.models import AuditStore
 from questionnaire.models import Section
 from answer.models import ReportSection
 
 def get_average_for_section(section_id):
     section = Section.objects.get(pk=section_id)
-    report_sections = ReportSection.objects.filter(section=section).all()
+    report_sections = ReportSection.objects.filter(section=section).filter(audit_store__status=AuditStore.COMPLETED)
     if len(report_sections) > 0:
         counter = 0
         total = 0
