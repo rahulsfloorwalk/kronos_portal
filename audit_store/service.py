@@ -22,6 +22,12 @@ import questionnaire.service.section as section_service
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
+def find_by_id(audit_store_id):
+    try:
+        return AuditStore.objects.get(pk=audit_store_id)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
 def get_audit_stores(profileinfo_id):
     try:
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)

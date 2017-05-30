@@ -13,7 +13,7 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-import attachment.service as attachment_service
+import attachment.service_manager as attachment_manager_service
 from ..serializers import AttachmentSerializer
 
 class AuditStoreAttachmentView(APIView):
@@ -25,14 +25,14 @@ class AuditStoreAttachmentView(APIView):
 
     def get(self, request, audit_store_id, format=None):
         try:
-            attachments = attachment_service.find_by_audit_store(audit_store_id)
+            attachments = attachment_manager_service.find_by_audit_store_for_manager(audit_store_id)
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound
 
     def post(self, request, audit_store_id):
         try:
-            post_data, attachment = attachment_service.upload_for_audit_store(
+            post_data, attachment = attachment_manager_service.upload_for_audit_store_for_manager(
                     audit_store_id,
                     request.data["file_name"],
                     request.data["file_size"],
@@ -58,7 +58,7 @@ class AttachmentIdView(APIView):
 
     def delete(self, request, attachment_id):
         try:
-            attachment_service.delete(attachment_id)
+            attachment_manager_service.delete_for_manager(attachment_id)
             return Response()
         except ObjectNotFound as e:
             raise NotFound() from e
@@ -76,7 +76,7 @@ class AttachmentIdRenameView(APIView):
 
     def post(self, request, attachment_id):
         try:
-            attachment = attachment_service.rename(attachment_id, request.data["file_name"])
+            attachment = attachment_manager_service.rename_for_manager(attachment_id, request.data["file_name"])
             return Response(AttachmentSerializer(attachment).data)
         except ObjectNotFound as e:
             raise NotFound() from e
@@ -98,7 +98,7 @@ class AttachmentCompleteView(APIView):
 
     def post(self, request, attachment_id):
         try:
-            attachment = attachment_service.complete(attachment_id)
+            attachment = attachment_manager_service.complete_for_manager(attachment_id)
             return Response(AttachmentSerializer(attachment).data)
         except ObjectNotFound as e:
             raise NotFound from e

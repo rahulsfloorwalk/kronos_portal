@@ -32,6 +32,7 @@ from questionnaire.service import section as section_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 import attachment.service as attachment_service
+import attachment.service_auditor as attachment_auditor_service
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -378,14 +379,14 @@ class AuditStoreAttachmentView(APIView):
 
     def get(self, request, audit_store_id, format=None):
         try:
-            attachments = attachment_service.find_by_audit_store_for_auditor(audit_store_id, request.user.profileinfo.id)
+            attachments = attachment_auditor_service.find_by_audit_store_for_auditor(audit_store_id, request.user.profileinfo.id)
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound
 
     def post(self, request, audit_store_id):
         try:
-            post_data, attachment = attachment_service.upload_for_audit_store_by_auditor(
+            post_data, attachment = attachment_auditor_service.upload_for_audit_store_by_auditor(
                     audit_store_id,
                     request.user.profileinfo.id,
                     request.data["file_name"],
@@ -413,7 +414,7 @@ class AttachmentIdView(APIView):
 
     def delete(self, request, attachment_id):
         try:
-            attachment_service.delete_for_user(attachment_id, request.user.id)
+            attachment_auditor_service.delete_for_auditor(attachment_id, request.user.id)
             return Response()
         except ObjectNotFound as e:
             raise NotFound() from e
@@ -430,7 +431,7 @@ class AttachmentCompleteView(APIView):
 
     def post(self, request, attachment_id):
         try:
-            attachment = attachment_service.complete_for_user(attachment_id, request.user.id)
+            attachment = attachment_auditor_service.complete_for_auditor(attachment_id, request.user.id)
             return Response(AttachmentSerializer(attachment).data)
         except ObjectNotFound as e:
             raise NotFound from e

@@ -1,3 +1,4 @@
+import logging
 import random
 import string
 from datetime import date
@@ -14,6 +15,8 @@ from answer.models import Answer, ReportSection
 from .models import Attachment
 
 AWS = settings.AWS
+
+_logger = logging.getLogger(__name__)
 
 def generate_attachment_slug(file_extension):
     file_name = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(AWS["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]))
@@ -50,23 +53,13 @@ def get_signed_post(file_extension):
     return post
 
 
-def upload_for_audit_store_by_auditor(audit_store_id, profileinfo_id, file_name, file_size, mime_type):
-    audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
-    return upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
-
-
 def complete(attachment_id):
     try:
         attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.status == AuditStore.SUBMITTED:
-            attachment.status = Attachment.ATTACHED
-            attachment.save()
-            return attachment
-        else:
-            raise AppLogicError("cannot complete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        attachment.status = Attachment.ATTACHED
+        attachment.save()
+        return attachment
+    except (Attachment.DoesNotExist) as e:
         raise ObjectNotFound from e
 
 
@@ -110,21 +103,26 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
+
 def get_audit_store_for_attachment(attachment_id):
-    attachment = Attachment.objects.get(pk=attachment_id)
-    if attachment.content_type.model_class() is AuditStore:
-        return AuditStore.objects.get(pk=attachment.object_id)
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        if attachment.content_type.model_class() is AuditStore:
+            return AuditStore.objects.get(pk=attachment.object_id)
 
-    if attachment.content_type.model_class() is Answer:
-        return Answer.objects.get(pk=attachment.object_id).audit_store
+        if attachment.content_type.model_class() is Answer:
+            return Answer.objects.get(pk=attachment.object_id).audit_store
 
-    if attachment.content_type.model_class() is ReportSection:
-        return ReportSection.objects.get(pk=attachment.object_id).audit_store
+        if attachment.content_type.model_class() is ReportSection:
+            return ReportSection.objects.get(pk=attachment.object_id).audit_store
 
+        raise AppLogicError("Invalid Attachment Content Type")
+    except Attachment.DoesNotExist as e:
+        raise ObjectNotFound from e
+    except (AuditStore.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
+        _logger.warn("found orphan attachment with ID: %s", attachment_id)
+        raise ObjectNotFound from e
 
-def find_by_audit_store_for_auditor(audit_store_id, profileinfo_id):
-    audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
 
 def find_by_audit_store_for_client(audit_store_id, client_id):
     audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
@@ -135,52 +133,12 @@ def find_by_audit_store(audit_store_id):
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
 
 
-def complete_for_user(attachment_id, user_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.user.id != user_id:
-            raise ObjectNotFound
-
-        if audit_store.status == AuditStore.ASSIGNED:
-            attachment.status = Attachment.ATTACHED
-            attachment.save()
-            return attachment
-        else:
-            raise AppLogicError("cannot attach attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-
-def delete_for_user(attachment_id, user_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.user.id != user_id:
-            raise ObjectNotFound
-
-        if audit_store.status == AuditStore.ASSIGNED:
-            attachment.status = Attachment.DELETED
-            attachment.save()
-        else:
-            raise AppLogicError("cannot delete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-
 def delete(attachment_id):
     try:
         attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.status == AuditStore.SUBMITTED:
-            attachment.status = Attachment.DELETED
-            attachment.save()
-        else:
-            raise AppLogicError("cannot delete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
+        attachment.status = Attachment.DELETED
+        attachment.save()
+    except (Attachment.DoesNotExist) as e:
         raise ObjectNotFound from e
 
 
