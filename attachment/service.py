@@ -55,31 +55,6 @@ def upload_for_audit_store_by_auditor(audit_store_id, profileinfo_id, file_name,
     return upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
 
 
-def get_audit_store_for_attachment(attachment_id):
-    attachment = Attachment.objects.get(pk=attachment_id)
-    if attachment.content_type.model_class() is AuditStore:
-        return AuditStore.objects.get(pk=attachment.object_id)
-
-    if attachment.content_type.model_class() is Answer:
-        return Answer.objects.get(pk=attachment.object_id).audit_store
-
-    if attachment.content_type.model_class() is ReportSection:
-        return ReportSection.objects.get(pk=attachment.object_id).audit_store
-
-
-def find_by_audit_store_for_auditor(audit_store_id, profileinfo_id):
-    audit_store = audit_store_service.get_audit_store(audit_store_id, profileinfo_id)
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
-
-def find_by_audit_store_for_client(audit_store_id, client_id):
-    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
-
-
-def find_by_audit_store(audit_store_id):
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
-
-
 def complete(attachment_id):
     try:
         attachment = Attachment.objects.get(pk=attachment_id)
@@ -91,72 +66,6 @@ def complete(attachment_id):
             return attachment
         else:
             raise AppLogicError("cannot complete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-def complete_for_user(attachment_id, user_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.user.id != user_id:
-            raise ObjectNotFound
-
-        if audit_store.status == AuditStore.ASSIGNED:
-            attachment.status = Attachment.ATTACHED
-            attachment.save()
-            return attachment
-        else:
-            raise AppLogicError("cannot attach attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-
-def delete_for_user(attachment_id, user_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.user.id != user_id:
-            raise ObjectNotFound
-
-        if audit_store.status == AuditStore.ASSIGNED:
-            attachment.status = Attachment.DELETED
-            attachment.save()
-        else:
-            raise AppLogicError("cannot delete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-
-def delete(attachment_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if audit_store.status == AuditStore.SUBMITTED:
-            attachment.status = Attachment.DELETED
-            attachment.save()
-        else:
-            raise AppLogicError("cannot delete attachment now")
-    except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-
-def rename(attachment_id, new_name):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        audit_store = get_audit_store_for_attachment(attachment_id)
-
-        if new_name in ["", None]:
-            raise AppLogicError("new file name is invalid")
-
-        if audit_store.status == AuditStore.SUBMITTED:
-            attachment.file_name = new_name
-            attachment.save()
-            return attachment
-        else:
-            raise AppLogicError("cannot rename attachment now")
     except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
         raise ObjectNotFound from e
 
