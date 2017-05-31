@@ -1,8 +1,15 @@
+import logging
+
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, OneToOneField
 from django.db.models import CASCADE
+
 from audit.models import Audit
+from answer.models import Answer
+from questionnaire.models import Question
+
+_logger = logging.getLogger(__name__)
 
 class AuditStore(Model):
 
@@ -48,22 +55,31 @@ class AuditStore(Model):
         report_sections = self.report_sections.all()
 
         if len(sections) != len(report_sections):
+            _logger.debug("report not completable, section length does not match report section length")
             return False
 
         for report_section in report_sections:
             if not report_section.not_applicable:
                 if report_section.auditor_comment in ( None ,''):
+                    _logger.debug("report not completable, some auditor comment is incomplete")
                     return False
                 if report_section.pm_comment in ( None ,''):
+                    _logger.debug("report not completable, some PM comment is incomplete")
                     return False
 
-                questions = Question.objests.filter(section_id=report_section.section_id).all()
-                answers = Answer.objests.filter(question__section_id=report_section.section_id).all()
+                questions = Question.objects.filter(section_id=report_section.section_id).all()
+                answers = Answer.objects.filter(
+                        audit_store__id=self.id,
+                        question__section_id=report_section.section_id
+                    ).all()
 
                 if len(questions) != len(answers):
+                    _logger.debug("report not completable, question length does not match answer length")
                     return False
 
-                if answer.answer_text in ( None ,''):
-                    return False
+                for answer in answers:
+                    if answer.answer_text in ( None ,''):
+                        _logger.debug("report not completable, some answer is incomplete")
+                        return False
 
         return True
