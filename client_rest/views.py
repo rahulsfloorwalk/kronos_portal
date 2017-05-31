@@ -23,7 +23,7 @@ from questionnaire.service import section as section_service
 
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
-import attachment.service as attachment_service
+import attachment.service_client as attachment_client_service
 
 import audit.service.audit_cycle as audit_cycle_service
 
@@ -115,7 +115,7 @@ class AuditStoreIdView(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            audit_store = audit_store_service.find_by_id_for_client(audit_store_id, request.user.clientuser.client.id)
+            audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, request.user.clientuser.client.id)
             return Response(AuditStoreSerializer(audit_store).data)
         except ObjectNotFound as e:
             raise NotFound from e
@@ -166,7 +166,19 @@ class AttachmentByAuditStore(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            attachments = attachment_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            attachments = attachment_client_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class AttachmentByReportSection(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, audit_store_id, section_id, format=None):
+        try:
+            attachments = attachment_client_service.find_by_audit_store_and_section_for_client(audit_store_id, section_id, request.user.clientuser.client.id)
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e

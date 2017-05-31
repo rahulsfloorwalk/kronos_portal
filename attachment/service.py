@@ -169,10 +169,6 @@ def get_audit_store_for_attachment(attachment_id):
         raise ObjectNotFound from e
 
 
-def find_by_audit_store_for_client(audit_store_id, client_id):
-    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
-
 
 def find_by_audit_store(audit_store_id):
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)

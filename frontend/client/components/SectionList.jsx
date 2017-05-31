@@ -1,13 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { truncateStyle } from '../../js/styles.js';
+
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 import Panel from '../../js/components/Panel.jsx';
 import { Paperclip, Tasks, Plus, Cross, Pencil } from '../../js/components/Icons.jsx';
 
 import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
 
+import AttachmentProofIcon from '../../js/components/AttachmentProofIcon.jsx';
+import AttachmentPreview from '../../js/components/manager/AttachmentPreview.jsx';
+
 import { fetchAnswers } from '../service/answer.js';
+import { findAttachmentsByAuditStoreAndSection } from '../service/attachment.js';
 
 var QuestionRow = React.createClass({
 	render: function(){
@@ -33,6 +39,83 @@ var QuestionRow = React.createClass({
 		);
 	},
 });
+
+class SectionAttachmentBox extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			attachments : [],
+			selectedAttachmentId: null,
+		}
+	}
+
+	reloadAttachments = (auditStoreId, sectionId) =>  {
+		findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId).then((attachments) => {
+			this.setState({
+				attachments
+			});
+		});
+	}
+
+	componentDidMount(){
+		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+	}
+
+	componentWillReceiveProps(nextProps){
+		this.reloadAttachments(nextProps.auditStoreId, nextProps.sectionId);
+	}
+
+	selectAttachment = (attachmentId) => {
+		if( this.state.selectedAttachmentId === attachmentId){
+			this.setState({
+				selectedAttachmentId : null
+			});
+		} else {
+			this.setState({
+				selectedAttachmentId : attachmentId
+			});
+		}
+	}
+
+	render(){
+		let editable = false;
+
+		let itemStyle = Object.assign({}, truncateStyle, { maxWidth: "200px", });
+
+		let attachmentRows = [];
+		for(let a of this.state.attachments){
+			let activeClass = a.id === this.state.selectedAttachmentId ? "active" : "";
+			attachmentRows.push(
+				<span key={a.id} className="btn-group btn-group-sm">
+					<button className={"btn btn-default btn-sm " + activeClass} title={a.file_name + " - Click to preview file"} style={itemStyle} onClick={() => this.selectAttachment(a.id)}>
+					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
+					{a.file_name}
+					</button>
+				</span>
+			);
+			attachmentRows.push(" ");
+		}
+
+		if( attachmentRows.length === 0){
+			return null;
+		}
+
+		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
+
+		return (
+			<div className="panel-body">
+				<div>
+					<b>Attachments:</b> {attachmentRows}
+					<input type="file" multiple
+						onChange={this.uploadFile}
+						ref={(input)=>this.uploadInput = input}
+						style={{"display":"none"}}/>
+				</div>
+				<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
+			</div>
+		);
+	}
+}
 
 var Section = React.createClass({
 	render: function(){
@@ -101,6 +184,7 @@ var Section = React.createClass({
 					<hr/>
 					<p><b>PM Comment:</b> {pm_comment}</p>
 				</div>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
 			</Panel>
 		);
 	},
@@ -123,7 +207,7 @@ export default React.createClass({
 		var sectionRows = [];
 		for(var s of this.props.sections) {
 			let reportSection = this.props.reportSections.filter((rs) => rs.section === s.id)[0];
-			sectionRows.push(<Section section={s} answers={this.state.answers} reportSection={reportSection} key={s.id}/>);
+			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={s} answers={this.state.answers} reportSection={reportSection} key={s.id}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="contact site administrator"/>);

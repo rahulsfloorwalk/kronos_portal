@@ -5,6 +5,7 @@ from audit_store.models import AuditStore
 from questionnaire.models import Question
 from auditor.models import ProfileInfo
 from audit_store import service as audit_store_service
+from audit_store import service_client as audit_store_client_service
 
 def save(answer):
     Answer.save(answer)
@@ -44,7 +45,7 @@ def get_answers(audit_store_id, user_id):
 
 
 def find_by_audit_store_for_client(audit_store_id, client_id):
-    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
+    audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, client_id)
     return Answer.objects.filter(audit_store_id=audit_store_id)
 
 def set_marks(audit_store_id, question_id, marks):

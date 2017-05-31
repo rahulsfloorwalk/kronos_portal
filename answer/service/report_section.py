@@ -7,6 +7,7 @@ import questionnaire.service.section as section_service
 from audit_store.models import AuditStore
 from ..models import ReportSection
 from audit_store import service as audit_store_service
+from audit_store import service_client as audit_store_client_service
 
 def find_by_audit_store_for_user(audit_store_id, user_id):
     try:
@@ -124,5 +125,12 @@ def set_not_applicable(audit_store_id, section_id, not_applicable):
 
 
 def find_by_audit_store_for_client(audit_store_id, client_id):
-    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
+    audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, client_id)
     return ReportSection.objects.filter(audit_store_id=audit_store.id)
+
+def find_by_audit_store_and_section_for_client(audit_store_id, section_id, client_id):
+    report_section = find_by_audit_store_and_section(audit_store_id, section_id)
+    if report_section.audit_store.audit.audit_cycle.client.id == client_id:
+        return report_section
+    else:
+        raise ObjectNotFound

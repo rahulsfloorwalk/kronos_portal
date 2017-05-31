@@ -19,6 +19,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', views.AttachmentByAuditStore.as_view(), name='attachment_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', views.AnswerByAuditStore.as_view(), name='answer_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section$', views.SectionByAuditStore.as_view(), name='section_by_audit_store'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', views.AttachmentByReportSection.as_view(), name='attachment_by_report_section'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', views.ReportSectionByAuditStore.as_view(), name='report_section_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
     url(r'audit_store/upcoming$', views.AuditStoreUpcoming.as_view(), name='audit_store_upcoming'),

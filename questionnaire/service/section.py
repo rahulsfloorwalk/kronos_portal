@@ -7,6 +7,7 @@ from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
 from audit_store import service as audit_store_service
+import audit_store.service_client as audit_store_client_service
 from audit_store.service_moderator import find_by_id_for_moderator
 
 from . import question as question_service
@@ -36,7 +37,7 @@ def get_for_auditor( audit_store_id, profile_info_id):
 
 
 def find_by_audit_store_for_client( audit_store_id, client_id):
-    audit_store = audit_store_service.find_by_id_for_client(audit_store_id, client_id)
+    audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, client_id)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
 def find_by_audit_store_for_moderator( audit_store_id, user_id):
