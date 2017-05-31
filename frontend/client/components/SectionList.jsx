@@ -129,12 +129,18 @@ var Section = React.createClass({
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td colSpan="5" className="text-center text-muted">no questions here</td></tr>);
 		}
+
+		let notApplicable = false;
+
 		if(this.props.reportSection){
 			var classes = "default";
 			let s = this.props.section;
 			var auditor_comment = this.props.reportSection.auditor_comment;
 			var pm_comment = this.props.reportSection.pm_comment;
 			var section_marks = this.props.reportSection.marks_obtained;
+			notApplicable = this.props.reportSection.not_applicable;
+
+			if( ! notApplicable) {
 
 			if(parseFloat(s.max_marks) === 0 ){
 				classes = "default";
@@ -146,6 +152,8 @@ var Section = React.createClass({
 				classes = "info";
 			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks)){
 				classes = "success";
+			}
+
 			}
 		}
 		var styles = {
@@ -162,8 +170,12 @@ var Section = React.createClass({
 			var maxMarksHeading = "Max. Marks";
 		}
 
-		return (
-			<Panel type={classes} title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
+		let panelBody;
+		if(notApplicable){
+			panelBody = (<div className="panel-footer text-center text-muted">section not applicable</div>);
+		} else {
+			panelBody = (
+				<div>
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -185,6 +197,13 @@ var Section = React.createClass({
 					<p><b>PM Comment:</b> {pm_comment}</p>
 				</div>
 				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
+				</div>
+			);
+		}
+
+		return (
+			<Panel type={classes} title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
+				{panelBody}
 			</Panel>
 		);
 	},

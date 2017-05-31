@@ -15,7 +15,10 @@ export default React.createClass({
 			var classes = "";
 			var marks_obtained = "";
 			var percent_marks;
+			let notApplicable = false;
+
 			if( reportSection){
+				notApplicable = reportSection.not_applicable;
 				marks_obtained = reportSection.marks_obtained;
 				if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 4){
 					classes = "danger";
@@ -30,20 +33,29 @@ export default React.createClass({
 				percent_marks = parseInt(marks_obtained * 100 / s.max_marks);
 			}
 
+			let markingElement;
+			let progressBarElement;
+			if(notApplicable){
+				markingElement = "";
+				progressBarElement = (<span className="text-muted">not applicable</span>);
+			} else {
+				markingElement = `${marks_obtained}/${s.max_marks}`;
+				progressBarElement = (
+						<div className="progress">
+							<div className={"progress-bar " + "progress-bar-" + classes } role="progressbar" aria-valuenow={percent_marks} aria-valuemin="0" aria-valuemax="100" style={{width: percent_marks + "%"}}>
+							{percent_marks}%
+							</div>
+						</div>
+				);
+			}
 
 
 			rows.push(
 				<tr key={s.id} className={""}>
 					<td>{s.sequence}</td>
 					<td><b>{s.name}</b></td>
-					<td className="text-right">{marks_obtained}/{s.max_marks}</td>
-					<td className="">
-						<div className="progress">
-							<div className={"progress-bar " + "progress-bar-" + classes } role="progressbar" aria-valuenow={percent_marks} aria-valuemin="0" aria-valuemax="100" style={{width: percent_marks + "%"}}>
-							{percent_marks}%
-							</div>
-						</div>
-					</td>
+					<td className="text-right">{markingElement}</td>
+					<td className="">{progressBarElement}</td>
 				</tr>
 			);
 		}
