@@ -5,6 +5,10 @@ export function findAttachmentsByAuditStore(auditStoreId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/attachment`);
 };
 
+export function findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId){
+	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment`);
+};
+
 export function deleteAttachment(attachmentId){
 	return $.ajax({
 		url: url.api_base_path + `moderator/attachment/${attachmentId}`,
@@ -28,10 +32,18 @@ export function renameAttachment(attachmentId, fileName){
 	});
 };
 
+export function uploadFileForReportSection(auditStoreId, sectionId, file){
+	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment`;
+	return doAttachmentUpload(req_url, file);
+}
 
 export function uploadFileForAuditStore(auditStoreId, file){
-	var mainPromise = $.Deferred();
 	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/attachment`;
+	return doAttachmentUpload(req_url, file);
+};
+
+export function doAttachmentUpload(req_url, file){
+	var mainPromise = $.Deferred();
 
 	var payload = {
 		"file_name": file.name,

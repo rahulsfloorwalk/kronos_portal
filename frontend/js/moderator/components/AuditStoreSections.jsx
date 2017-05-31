@@ -2,13 +2,19 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { truncateStyle } from '../../styles.js';
+
+import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 import Panel from '../../components/Panel.jsx';
-import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal, Checked, Unchecked } from '../../components/Icons.jsx';
+import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal, Checked, Unchecked, Paperclip } from '../../components/Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchAnswers, setAnswerText, setMarks } from '../service/answer.js'
 import { fetchSections, fetchReportSections, submitAuditorComment, submitPMComment, setNotApplicable } from '../service/section.js'
+import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection } from '../service/attachment.js'
+
+import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
 
 let QuestionRow = React.createClass({
 	getDefaultProps: function(){
@@ -99,6 +105,194 @@ let QuestionRow = React.createClass({
 	},
 });
 
+
+class SectionAttachmentBox extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			attachments : [],
+			inProgress: {},
+			selectedAttachmentId: null,
+		}
+	}
+
+	reloadAttachments = (auditStoreId, sectionId) =>  {
+		findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId).then((attachments) => {
+			this.setState({
+				attachments
+			});
+		});
+	}
+
+	componentDidMount(){
+		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+	}
+
+	componentWillReceiveProps(nextProps){
+		this.reloadAttachments(nextProps.auditStoreId, nextProps.sectionId);
+	}
+
+	uploadButtonClicked = (e) => {
+		this.uploadInput.click();
+	}
+
+	setProgressState = (tempId, progressState) => {
+		this.setState((prevState)=>{
+			return Object.assign({}, prevState, {
+				inProgress: Object.assign({}, prevState.inProgress, {
+					[tempId]: Object.assign({}, prevState.inProgress[tempId], progressState)
+				})
+			});
+		});
+	}
+
+	uploadFile = (e) => {
+		if( this.uploadInput.files.length > 10){
+			alert("You can only upload 10 attachments at once");
+			return;
+		}
+		for( let toUploadFile of this.uploadInput.files){
+			let tempId = Math.random().toString(36).substring(7);
+			this.setProgressState(tempId, {
+				uploading: true,
+				file: toUploadFile
+			});
+			var promise = uploadFileForReportSection(this.props.auditStoreId, this.props.sectionId, toUploadFile);
+			promise.progress((type, percent)=>{
+				if(type === "INIT"){
+					this.setProgressState(tempId, {
+						uploadMessage :"initializing upload",
+						active: false,
+					});
+				}
+				if(type === "STARTING_UPLOAD"){
+					this.setProgressState(tempId, {
+						uploadMessage :"starting upload",
+						active: true,
+					});
+				}
+				if(type === "UPLOAD_PROGRESS"){
+					this.setProgressState(tempId, {
+						uploadMessage :"",
+						progress: Math.floor(percent)
+					});
+				}
+			});
+			promise.always(()=>{
+				this.setProgressState(tempId, {
+					progress :"",
+					uploading:false,
+					active: false
+				});
+			});
+			promise.then(()=>{
+				this.setProgressState(tempId, {
+					uploadMessage :"upload successful",
+				});
+				this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+			}, (errorMessage) => {
+				this.setProgressState(tempId, {
+					uploadMessage :"upload failed: " + errorMessage,
+				});
+			});
+		}
+	}
+
+	attachmentDeleteClicked = (attachment) => {
+		deleteAttachment(attachment.id).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+		});
+	}
+
+	selectedAttachmentRenamed = (newName) => {
+		renameAttachment(this.state.selectedAttachmentId, newName).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+		});
+	}
+
+	selectAttachment = (attachmentId) => {
+		if( this.state.selectedAttachmentId === attachmentId){
+			this.setState({
+				selectedAttachmentId : null
+			});
+		} else {
+			this.setState({
+				selectedAttachmentId : attachmentId
+			});
+		}
+	}
+
+	render(){
+		let uploadButton;
+		let editable = false;
+
+		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
+			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip/> Upload</button>);
+			editable = true;
+		}
+
+		let itemStyle = Object.assign({}, truncateStyle, { maxWidth: "200px", });
+
+		let attachmentRows = [];
+		for(let a of this.state.attachments){
+			let deleteButton;
+			let activeClass = a.id === this.state.selectedAttachmentId ? "active" : "";
+			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
+				deleteButton = (<button className="btn btn-default btn-sm" title="Delete Attachment" onClick={() => this.attachmentDeleteClicked(a)}><Cross/></button>);
+			}
+			attachmentRows.push(
+				<span key={a.id} className="btn-group btn-group-sm">
+					<button className={"btn btn-default btn-sm " + activeClass} title={a.file_name + " - Click to preview file"} style={itemStyle} onClick={() => this.selectAttachment(a.id)}>
+					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
+					{a.file_name}
+					</button>
+					{deleteButton}
+				</span>
+			);
+			attachmentRows.push(" ");
+		}
+		for(let id in this.state.inProgress){
+			if(this.state.inProgress[id].uploading){
+				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
+				attachmentRows.push(<div key={id} className="btn-group">
+					<button className="btn btn-default btn-sm">
+						{fileName}&nbsp;
+						<span className="badge">
+							{this.state.inProgress[id].progress}
+							{this.state.inProgress[id].uploadMessage}%
+						</span>
+					</button>
+				</div>);
+			}
+			attachmentRows.push(" ");
+		}
+
+		if( attachmentRows.length === 0){
+			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
+		}
+
+		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
+
+		return (
+			<div className="panel-body">
+				<div>
+					<b>Attachments:</b> {attachmentRows}
+					<input type="file" multiple
+						onChange={this.uploadFile}
+						ref={(input)=>this.uploadInput = input}
+						style={{"display":"none"}}/>
+						{uploadButton}
+				</div>
+				<AttachmentPreview attachment={selectedAttachment} editable={editable}
+					onRename={this.selectedAttachmentRenamed}
+					onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
+			</div>
+		);
+	}
+}
+
+
+
 let Section = React.createClass({
 	getInitialState: function(){
 		return {
@@ -111,7 +305,9 @@ let Section = React.createClass({
 			auditor_comment: "",
 			pm_comment: "",
 
-			not_applicable: false,
+			//set initial state to true so that you don't get setState() calls
+			// on an unmounted component
+			not_applicable: true,
 		};
 	},
 	componentDidMount: function(){
@@ -282,6 +478,7 @@ let Section = React.createClass({
 					<hr/>
 					<div><b>PM Comment:</b> {pmCommentElement}</div>
 				</div>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
 			</div>);
 		}
 		return (
