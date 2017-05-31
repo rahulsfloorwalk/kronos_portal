@@ -111,7 +111,6 @@ var mapStoreToProps = function(store, ownProps){
 		answer: (function(answers){
 			for(let id in answers){
 				if(answers[id].question_id === ownProps.q.id){
-					console.log("found ANSWER",answers[id]);
 					return answers[id];
 				}
 			}

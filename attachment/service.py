@@ -5,6 +5,7 @@ from datetime import date
 import os
 
 from django.conf import settings
+from django.db.models import Q
 
 import boto3
 
@@ -12,11 +13,21 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 import audit_store.service as audit_store_service
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
+from answer.service import report_section as report_section_service
 from .models import Attachment
 
 AWS = settings.AWS
 
 _logger = logging.getLogger(__name__)
+
+
+def check_file_size(file_size):
+    if int(file_size) < int(AWS["S3_ATTACHMENTS"]["MIN_SIZE"]):
+        raise AppLogicError("file is too small")
+
+    if int(file_size) > int(AWS["S3_ATTACHMENTS"]["MAX_SIZE"]):
+        raise AppLogicError("file is too large")
+
 
 def generate_attachment_slug(file_extension):
     file_name = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(AWS["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]))
@@ -65,13 +76,9 @@ def complete(attachment_id):
 
 def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
     try:
-        audit_store = AuditStore.objects.get(pk=audit_store_id)
+        audit_store = audit_store_service.find_by_id(audit_store_id)
 
-        if int(file_size) < int(AWS["S3_ATTACHMENTS"]["MIN_SIZE"]):
-            raise AppLogicError("file is too small")
-
-        if int(file_size) > int(AWS["S3_ATTACHMENTS"]["MAX_SIZE"]):
-            raise AppLogicError("file is too large")
+        check_file_size(file_size)
 
         basename, file_extension = os.path.splitext(file_name)
         if mime_type is None or file_extension == '':
@@ -96,6 +103,44 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
         attachment.file_size = file_size
         attachment.file_slug = post_data["fields"]["key"]
         attachment.content_object = audit_store
+
+        attachment.save()
+
+        return (post_data, attachment)
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type):
+    try:
+        audit_store = audit_store_service.find_by_id(audit_store_id)
+        report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
+
+        check_file_size(file_size)
+
+        basename, file_extension = os.path.splitext(file_name)
+        if mime_type is None or file_extension == '':
+            raise AppLogicError("could not detect file type, please ensure you upload a known file type")
+
+        if mime_type.startswith("image/"):
+            proof_type = Attachment.PHOTO
+        elif mime_type.startswith("audio/"):
+            proof_type = Attachment.AUDIO
+        elif mime_type.startswith("video/"):
+            proof_type = Attachment.VIDEO
+        else:
+            proof_type = Attachment.OTHER
+
+        post_data = get_signed_post(file_extension)
+
+        attachment = Attachment()
+        attachment.status = Attachment.UPLOADING
+        attachment.proof_type = proof_type
+        attachment.mime_type = mime_type
+        attachment.file_name = file_name
+        attachment.file_size = file_size
+        attachment.file_slug = post_data["fields"]["key"]
+        attachment.content_object = report_section
 
         attachment.save()
 
@@ -131,6 +176,10 @@ def find_by_audit_store_for_client(audit_store_id, client_id):
 
 def find_by_audit_store(audit_store_id):
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
+
+def find_by_audit_store_and_section(audit_store_id, section_id):
+    report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
+    return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED)
 
 
 def delete(attachment_id):

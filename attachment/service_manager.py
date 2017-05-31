@@ -1,7 +1,9 @@
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit_store.models import AuditStore
 import audit_store.service as audit_store_service
+
+import answer.service.report_section as report_section_service
 
 from .models import Attachment
 from . import service as attachment_service
@@ -16,8 +18,21 @@ def upload_for_audit_store_for_manager(audit_store_id, file_name, file_size, mim
     return attachment_service.upload_for_audit_store(audit_store_id, file_name, file_size, mime_type)
 
 
+def upload_for_report_section_for_manager(audit_store_id, section_id, file_name, file_size, mime_type, user_id):
+    report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
+
+    if report_section.audit_store.status != AuditStore.SUBMITTED:
+        raise AppLogicError("cannot upload attachment now")
+
+    return attachment_service.upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type)
+
+
 def find_by_audit_store_for_manager(audit_store_id):
     return attachment_service.find_by_audit_store(audit_store_id)
+
+
+def find_by_audit_store_and_section_for_manager(audit_store_id, section_id, user_id):
+    return attachment_service.find_by_audit_store_and_section(audit_store_id, section_id)
 
 
 def complete_for_manager(attachment_id):

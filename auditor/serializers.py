@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField, RelatedField
+from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField, RelatedField, IntegerField
 from rest_framework import serializers
 
 from notifications.models import Notification
@@ -375,6 +375,13 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
         )
         read_only_fields = fields
+
+
+class AttachmentDeSerializer(Serializer):
+    file_name = CharField()
+    file_size = IntegerField()
+    file_type = CharField()
+
 
 class UserSerializer(ModelSerializer):
     profileinfo = ProfileInfoSerializer()

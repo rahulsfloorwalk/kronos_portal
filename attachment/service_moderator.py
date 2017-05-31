@@ -1,5 +1,5 @@
 
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit_store.models import AuditStore
 import audit_store.service_moderator as audit_store_service

@@ -50,6 +50,42 @@ class AuditStoreAttachmentView(APIView):
                 'non_field_errors': [e.__str__()]
             })
 
+class ReportSectionAttachmentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET': [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
+        }
+
+    def get(self, request, audit_store_id, section_id, format=None):
+        try:
+            attachments = attachment_manager_service.find_by_audit_store_and_section_for_manager(audit_store_id, section_id, request.user.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
+        except ObjectNotFound:
+            raise NotFound
+
+    def post(self, request, audit_store_id, section_id):
+        try:
+            post_data, attachment = attachment_manager_service.upload_for_report_section_for_manager(
+                    audit_store_id,
+                    section_id,
+                    request.data["file_name"],
+                    request.data["file_size"],
+                    request.data["file_type"],
+                    request.user.id)
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
 class AttachmentIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

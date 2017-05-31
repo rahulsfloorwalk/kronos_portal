@@ -1,6 +1,9 @@
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from questionnaire.models import Section
+
+import questionnaire.service.section as section_service
+
 from audit_store.models import AuditStore
 from ..models import ReportSection
 from audit_store import service as audit_store_service
@@ -22,6 +25,20 @@ def find_by_audit_store(audit_store_id):
         return ReportSection.objects.filter(audit_store_id=audit_store_id)
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+
+def find_by_audit_store_and_section(audit_store_id, section_id):
+    try:
+        audit_store = audit_store_service.find_by_id(audit_store_id)
+        section = section_service.find_by_audit_cycle_and_id(audit_store.audit.audit_cycle_id, section_id)
+        return ReportSection.objects.get(audit_store_id=audit_store.id, section_id=section.id)
+    except ReportSection.DoesNotExist as e:
+        report_section = ReportSection()
+        report_section.section = section
+        report_section.audit_store = audit_store
+        report_section.save()
+        return report_section
+
 
 def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment):
     try:
