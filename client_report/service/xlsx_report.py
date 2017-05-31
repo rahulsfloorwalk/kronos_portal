@@ -13,7 +13,7 @@ def get_xlsx_report(audit_store_id, client_id):
 
     valid_client = audit_store.audit.store.client
     if (valid_client.id == int(client_id)):
-        sections = audit_store.audit.audit_cycle.sections.all().order_by('sequence')
+        sections = list(audit_store.audit.audit_cycle.sections.all().order_by('sequence'))
         answers = audit_store.answers.all()
         sorted_answers = sorted(
                 sorted(answers, key=lambda answer:answer.question.sequence),
@@ -21,6 +21,13 @@ def get_xlsx_report(audit_store_id, client_id):
             )
         report_sections = audit_store.report_sections.all()
         sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
+        not_applicable_secs = []
+        for index, report_sec in enumerate(sorted_report_sections):
+            if report_sec.not_applicable:
+                not_applicable_secs.append(index)
+        for i in not_applicable_secs:
+            del sections[i]
+            del sorted_report_sections[i]
         data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
         return write_data(data), name
     else:
@@ -80,7 +87,10 @@ def get_summary_section(audit_store, sections, report_sections):
     row = {'type': 'header', 'content': content}
     rows.append(row)
     for section in sections:
-        content = [section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
+        if report_sections[section_key].not_applicable:
+            content = [section.name, "NA", "NA"]
+        else:
+            content = [section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
         row = {'type': 'line', 'content': content}
         rows.append(row)
         section_key += 1
@@ -103,6 +113,8 @@ def get_answers_section(sections, answers, report_sections):
                         answers[key].marks_obtained, answers[key].question.max_marks]
                 row = {'type': 'line', 'content': content}
                 rows.append(row)
+            elif (answers[key].question.section.sequence < section.sequence):
+                continue
             else:
                 answer_key = key
                 break
