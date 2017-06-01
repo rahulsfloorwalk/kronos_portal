@@ -87,6 +87,15 @@ def create_text_structure(title, sections, questions, audit_stores):
         for question in questions:
             try:
                 answer = audit_store.answers.get(question_id=question.id)
+                store = answer.audit_store
+                section = question.section
+                report_section = ReportSection.objects.get(audit_store=store, section=section)
+                if report_section.not_applicable:
+                    answer_cells.append({
+                        'value': "Not Applicable",
+                        'color_code': get_color_code(0,0)
+                    })
+                    continue
                 answer_cells.append({
                     'value': answer.answer_text,
                     'color_code': get_color_code(answer.marks_obtained, answer.question.max_marks)

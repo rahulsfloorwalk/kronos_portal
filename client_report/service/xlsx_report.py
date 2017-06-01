@@ -21,13 +21,6 @@ def get_xlsx_report(audit_store_id, client_id):
             )
         report_sections = audit_store.report_sections.all()
         sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
-        not_applicable_secs = []
-        for index, report_sec in enumerate(sorted_report_sections):
-            if report_sec.not_applicable:
-                not_applicable_secs.append(index)
-        for i in not_applicable_secs:
-            del sections[i]
-            del sorted_report_sections[i]
         data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
         return write_data(data), name
     else:
@@ -104,6 +97,14 @@ def get_answers_section(sections, answers, report_sections):
     row = {'type': 'title', 'content': content}
     rows.append(row)
     for section in sections:
+        if report_sections[section_key].not_applicable:
+            content = [section.sequence, section.name, "NA", "NA", "NA"]
+            row = {'type': 'header', 'content': content}
+            rows.append(row)
+            row = {'type': 'line', 'content': ["", "", "", "", ""]}
+            rows.append(row)
+            section_key += 1
+            continue
         content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), section.max_marks()]
         row = {'type': 'header', 'content': content}
         rows.append(row)
