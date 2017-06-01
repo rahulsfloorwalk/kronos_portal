@@ -7,7 +7,7 @@ import { getGender } from '../../utils.js';
 
 import { searchAuditors } from '../../manager/actions/auditor.js'
 
-import { User, Search } from '../Icons.jsx';
+import { User, Search, Check, Cross } from '../Icons.jsx';
 import InputGroup from '../InputGroup.jsx';
 import { InputGroupBtn } from '../InputGroup.jsx';
 import FormInput from '../FormInput.jsx';
@@ -19,6 +19,8 @@ var AuditorRow = React.createClass({
 		var linkTo = `/auditor/${this.props.auditor.id}`;
 		var prof = this.props.auditor.profileinfo || {};
 		prof.city = prof.city || {};
+
+		let activeIcon = this.props.auditor.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
 				<td>{prof.first_name} {prof.last_name}</td>
@@ -26,6 +28,7 @@ var AuditorRow = React.createClass({
 				<td>{getGender(prof.gender)}</td>
 				<td>{prof.mobile_number}</td>
 				<td>{prof.city.name}</td>
+				<td>{activeIcon}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
 				</td>
@@ -71,6 +74,7 @@ var AuditorList = React.createClass({
 							<th>Gender</th>
 							<th>Mobile Number</th>
 							<th>City</th>
+							<th>Active</th>
 							<th></th>
 						</tr>
 					</thead>
