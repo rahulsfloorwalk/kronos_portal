@@ -41,17 +41,17 @@ var AuditCycleDashBoard = React.createClass({
     let audit_cycle_blocks = this.state.active_cycles.map((value) => {
       let linkTo = `/audit_cycle/${value.id}/questionnaire`
       return (
-          <div className="col-md-4">
+          <div className="col-md-4" key={value.id}>
           <div className="panel panel-default" onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
             <div className="panel-heading">
-              <h4 className="panel-title"><b>{value.name}</b></h4>
+              <h4 className="panel-title"><b>{value.client} - {value.name}</b></h4>
             </div>
             <table className="table">
               <tbody>
-                <tr key="status"><td style={{width:"50%"}} className="text-right"><b>STATUS</b></td><td><b>{getAuditStatus(value.status)}</b></td></tr>
-                <tr key={"ASSIGNED"}><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"ASSIGNED"}/></td><td><b>{value.stats.audit_store.ASSIGNED}</b></td></tr>
-                <tr key={"SUBMITTED"}><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"SUBMITTED"}/></td><td><b>{value.stats.audit_store.SUBMITTED}</b></td></tr>
-                <tr key={"COMPLETED"}><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"COMPLETED"}/></td><td><b>{value.stats.audit_store.COMPLETED}</b></td></tr>
+                <tr><td style={{width:"50%"}} className="text-right"><b>Status</b></td><td><b>{getAuditStatus(value.status)}</b></td></tr>
+                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"ASSIGNED"}/></td><td><b>{value.stats.audit_store.ASSIGNED}</b></td></tr>
+                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"SUBMITTED"}/></td><td><b>{value.stats.audit_store.SUBMITTED}</b></td></tr>
+                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"COMPLETED"}/></td><td><b>{value.stats.audit_store.COMPLETED}</b></td></tr>
               </tbody>
             </table>
           </div>
