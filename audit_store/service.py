@@ -114,7 +114,7 @@ def submit(audit_store_id, user_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
         report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, user_id)
-        answers = answer_service.get_answers(audit_store_id, user_id)
+        answers = answer_service.find_by_audit_store_for_auditor(audit_store_id, user_id)
         questions = question_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
         sections = section_service.find_by_audit_cycle(audit_store.audit.audit_cycle.id)
 

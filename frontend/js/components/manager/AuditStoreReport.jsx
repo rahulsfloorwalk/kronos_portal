@@ -12,7 +12,7 @@ import { Save, Plus, Cross, Trash, Pencil, Tasks, OptionHorizontal, Checked, Unc
 import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, completeAttachment, renameAttachment } from '../../manager/service/attachment.js';
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
-import { fetchAnswers, setMarks } from '../../manager/actions/answer.js'
+import { fetchAnswers, setMarks, setAnswerNotApplicable } from '../../manager/actions/answer.js'
 import { setAnswerText } from '../../manager/service/answer.js'
 import { submitAuditorComment, submitPMComment, fetchReportSections, setNotApplicable } from '../../manager/actions/report_section.js'
 import AttachmentPreview from './AttachmentPreview.jsx';
@@ -76,15 +76,23 @@ var __QuestionRow = React.createClass({
 			marks: this.state.answer.marks_obtained,
 		})).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
 	},
+	notApplicableClicked: function(e){
+		this.props.dispatch(setAnswerNotApplicable(this.props.auditStoreId, this.props.q.id, !this.state.answer.not_applicable));
+	},
 	render: function(){
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (<big>{this.state.answer.answer_text}</big>);
+
+		let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
+
+		let notApplicableElement = (notApplicableIcon);
+
 		if( this.props.marking){
 			let hasError = this.state.error ? "has-error" : "";
 			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
 			markElement = (
 				<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
-					<input className="form-control input-sm text-right" 
+					<input className="form-control text-right"
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
 						value={this.state.answer.marks_obtained}/>
@@ -102,13 +110,26 @@ var __QuestionRow = React.createClass({
 						value={this.state.answer.answer_text}/>
 				</div>
 			);
+
+			notApplicableElement = (
+				<button className="btn btn-default" onClick={this.notApplicableClicked}>
+					{notApplicableIcon}
+				</button>
+			);
 		} 
+
+		if( this.state.answer.not_applicable){
+			markElement = (<span className="text-muted">&nbsp;</span>);
+			answerElement = (<span className="text-muted">not applicable</span>);
+		}
+
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				<td>{this.props.q.question_txt}</td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
+				<td className="">{notApplicableElement}</td>
 			</tr>
 		);
 	},
@@ -392,12 +413,14 @@ var __Section = React.createClass({
 		let auditorCommentElement = (<span className="text-muted">auditor comment is empty</span>);
 		let pmCommentElement = (<span className="text-muted">PM comment is empty</span>);
 		let marksObtained = 0;
+		let maxMarks = this.props.section.max_marks;
 		let notApplicableCheckboxIcon = <Unchecked/>;
 		let notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 
 		/* AUDITOR COMMENT, PM COMMENT */
 		if(this.props.reportSection){
 			marksObtained = this.props.reportSection.marks_obtained;
+			maxMarks = this.props.reportSection.max_marks;
 
 			pmCommentElement = this.state.pm_comment ? (<span>{this.state.pm_comment}</span>) : pmCommentElement;
 			auditorCommentElement = this.state.auditor_comment ? (<span>{this.state.auditor_comment}</span>) : auditorCommentElement;
@@ -468,10 +491,11 @@ var __Section = React.createClass({
 		}
 
 		var styles = {
-			col1: { width: "5%" },
+			col1: { width: "2.5%" },
 			col2: { width: "40%" },
 			col3: { width: "40%" },
 			col4: { width: "15%" },
+			col5: { width: "2.5%" },
 		};
 		let panelBody;
 
@@ -486,6 +510,7 @@ var __Section = React.createClass({
 							<th style={styles.col2}>Question</th>
 							<th style={styles.col3}>Answer</th>
 							<th style={styles.col4}>Marks</th>
+							<th style={styles.col5}>N/A</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -494,7 +519,7 @@ var __Section = React.createClass({
 				</table>
 				<div className="panel-footer">
 					<div>
-					<b>Total Marks:</b> {marksObtained} out of {this.props.section.max_marks}
+					<b>Total Marks:</b> {marksObtained} out of {maxMarks}
 					</div>
 					<hr/>
 					<div><b>Auditor Comment:</b> {auditorCommentElement}</div>

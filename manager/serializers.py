@@ -418,7 +418,8 @@ class AnswerSerializer(ModelSerializer):
             'question',
             'audit_store',
             'answer_text',
-            'marks_obtained'
+            'marks_obtained',
+            'not_applicable',
         )
         read_only_fields = fields
 
@@ -462,7 +463,8 @@ class ReportSectionSerializer(ModelSerializer):
             'auditor_comment',
             'pm_comment',
             'not_applicable',
-            'marks_obtained'
+            'marks_obtained',
+            'max_marks',
         )
         read_only_fields = fields
 

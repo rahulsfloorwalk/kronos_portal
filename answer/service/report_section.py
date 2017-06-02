@@ -112,13 +112,8 @@ def set_not_applicable(audit_store_id, section_id, not_applicable):
         section = Section.objects.get(pk=section_id)
     except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
         raise ObjectNotFound from e
-    try:
-        report_section = ReportSection.objects.get(audit_store_id=audit_store.id, section_id=section.id)
-    except ReportSection.DoesNotExist:
-        report_section = ReportSection()
-        report_section.section = section
-        report_section.audit_store = audit_store
 
+    report_section = find_by_audit_store_and_section(audit_store_id, section_id)
     report_section.not_applicable = not_applicable
     report_section.save()
     return report_section

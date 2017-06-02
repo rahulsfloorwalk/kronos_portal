@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router';
 
 import { truncateStyle } from '../../js/styles.js';
+import { getColor } from '../../js/utils.js';
 
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 import Panel from '../../js/components/Panel.jsx';
@@ -17,20 +18,27 @@ import { findAttachmentsByAuditStoreAndSection } from '../service/attachment.js'
 
 var QuestionRow = React.createClass({
 	render: function(){
+		let maxMarks, answerMarks, answerText;
 		if(this.props.showMarks){
-			var maxMarks = this.props.q.max_marks;
+			maxMarks = this.props.q.max_marks;
 		}
 		if(this.props.answer){
-			var answer = this.props.answer.answer_text;
-			if( this.props.showMarks){
-				var answerMarks = this.props.answer.marks_obtained;
+			if( this.props.answer.not_applicable){
+				answerMarks = "";
+				maxMarks = "";
+				answerText = (<span className="text-muted">not applicable</span>);
+			} else {
+				answerText = this.props.answer.answer_text;
+				if( this.props.showMarks){
+					answerMarks = this.props.answer.marks_obtained;
+				}
 			}
 		}
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				<td>{this.props.q.question_txt}</td>
-				<td>{answer}</td>
+				<td>{answerText}</td>
 				<td>{answerMarks}</td>
 				<td>{maxMarks}</td>
 				<td>
@@ -131,29 +139,19 @@ var Section = React.createClass({
 		}
 
 		let notApplicable = false;
+		let maxMarks = this.props.section.max_marks;
+		let marksObtained = 0;
 
 		if(this.props.reportSection){
 			var classes = "default";
-			let s = this.props.section;
 			var auditor_comment = this.props.reportSection.auditor_comment;
 			var pm_comment = this.props.reportSection.pm_comment;
-			var section_marks = this.props.reportSection.marks_obtained;
+			marksObtained = this.props.reportSection.marks_obtained;
+			maxMarks = this.props.reportSection.max_marks;
 			notApplicable = this.props.reportSection.not_applicable;
 
 			if( ! notApplicable) {
-
-			if(parseFloat(s.max_marks) === 0 ){
-				classes = "default";
-			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks) / 4){
-				classes = "danger";
-			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks) / 2){
-				classes = "warning";
-			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks) * 3/4){
-				classes = "info";
-			} else if( parseFloat(section_marks) <= parseFloat(s.max_marks)){
-				classes = "success";
-			}
-
+				classes = getColor(this.props.reportSection.color_code);
 			}
 		}
 		var styles = {
@@ -165,7 +163,7 @@ var Section = React.createClass({
 		};
 
 		if( this.props.section.max_marks > 0){
-			var totalMarks = (<div><b>Total Marks:</b> {section_marks} out of {this.props.section.max_marks}<hr/></div>);
+			var totalMarks = (<div><b>Total Marks:</b> {marksObtained} out of {maxMarks}<hr/></div>);
 			var marksHeading = "Marks";
 			var maxMarksHeading = "Max. Marks";
 		}

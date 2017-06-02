@@ -547,6 +547,7 @@ export function rootReducer(store = initialStore, action) {
 					return store;
 			}
 		case types.ANSWER_MARK:
+		case types.ANSWER_NOT_APPLICABLE:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {

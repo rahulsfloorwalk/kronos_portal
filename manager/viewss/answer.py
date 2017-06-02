@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.serializers import Serializer, IntegerField, CharField
+from rest_framework.serializers import Serializer, IntegerField, CharField, BooleanField
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -44,6 +44,29 @@ class MarkByQuestionAndStore(APIView):
             return Response(AnswerSerializer(answer).data)
         except ObjectNotFound:
             raise NotFound
+        except AppLogicError as e:
+            raise ValidationError({
+                "non_field_errors": [e.__str__()]
+                }) from e
+
+
+class AnswerNotApplicableView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST' : [GROUP_NAME_MANAGER],
+    }
+    class DeSerializer(Serializer):
+        not_applicable = BooleanField()
+
+    def post(self, request, audit_store_id, question_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        not_applicable = ds.validated_data.get('not_applicable')
+        try:
+            answer = answer_service.set_not_applicable(audit_store_id, question_id, not_applicable)
+            return Response(AnswerSerializer(answer).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
         except AppLogicError as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]

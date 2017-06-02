@@ -1,5 +1,7 @@
 import React from 'react';
 
+import { getColor } from '../../js/utils.js';
+
 import { Paperclip } from '../../js/components/Icons.jsx';
 
 export default React.createClass({
@@ -14,23 +16,14 @@ export default React.createClass({
 
 			var classes = "";
 			var marks_obtained = "";
-			var percent_marks;
+			let percent_marks;
 			let notApplicable = false;
 
 			if( reportSection){
 				notApplicable = reportSection.not_applicable;
 				marks_obtained = reportSection.marks_obtained;
-				if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 4){
-					classes = "danger";
-				} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) / 2){
-					classes = "warning";
-				} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks) * 3/4){
-					classes = "info";
-				} else if( parseFloat(reportSection.marks_obtained) <= parseFloat(s.max_marks)){
-					classes = "success";
-				}
-
-				percent_marks = parseInt(marks_obtained * 100 / s.max_marks);
+				percent_marks = parseInt(reportSection.marks_percentage);
+				classes = getColor(reportSection.color_code);
 			}
 
 			let markingElement;
@@ -39,7 +32,7 @@ export default React.createClass({
 				markingElement = "";
 				progressBarElement = (<span className="text-muted">not applicable</span>);
 			} else {
-				markingElement = `${marks_obtained}/${s.max_marks}`;
+				markingElement = `${percent_marks}%`;
 				progressBarElement = (
 						<div className="progress">
 							<div className={"progress-bar " + "progress-bar-" + classes } role="progressbar" aria-valuenow={percent_marks} aria-valuemin="0" aria-valuemax="100" style={{width: percent_marks + "%"}}>
@@ -70,7 +63,7 @@ export default React.createClass({
 						<tr>
 							<th style={{width:"5%"}}>#</th>
 							<th style={{width:"35%"}}>Section</th>
-							<th className="text-right" style={{width:"10%"}}>Marks</th>
+							<th className="text-right" style={{width:"10%"}}>Score</th>
 							<th className="text-right" style={{width:"50%"}}></th>
 						</tr>
 					</thead>

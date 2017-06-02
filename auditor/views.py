@@ -314,7 +314,7 @@ class AnswerListView(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            answers = answer_service.get_answers(audit_store_id, request.user.id)
+            answers = answer_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
         except ObjectNotFound:
             raise NotFound()
         return Response(AnswerSerializer(answers, many=True).data)

@@ -27,3 +27,14 @@ export function setMarks(auditStoreId, questionId, marks_obtained){
 		contentType: "application/json"
 	});
 };
+
+export function setAnswerNotApplicable(auditStoreId, questionId, not_applicable){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/question/${questionId}/not_applicable`,
+		type: "POST",
+		data: JSON.stringify({
+			not_applicable
+		}),
+		contentType: "application/json"
+	});
+};

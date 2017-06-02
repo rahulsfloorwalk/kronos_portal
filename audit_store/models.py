@@ -78,8 +78,8 @@ class AuditStore(Model):
                     return False
 
                 for answer in answers:
-                    if answer.answer_text in ( None ,''):
-                        _logger.debug("report not completable, some answer is incomplete")
-                        return False
+                    if not answer.not_applicable and (answer.answer_text in ( None ,'') or answer.marks_obtained is None):
+                            _logger.debug("report not completable, some answer is incomplete")
+                            return False
 
         return True

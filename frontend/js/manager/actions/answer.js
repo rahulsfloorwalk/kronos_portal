@@ -48,3 +48,32 @@ export function setMarks(answer){
 		//TODO: Handle error
 	};
 };
+
+export function setAnswerNotApplicable(auditStoreId, questionId, notApplicable){
+	return function(dispatch){
+		dispatch({
+			type: types.ANSWER_NOT_APPLICABLE,
+			status: 'request',
+			auditStoreId,
+			questionId,
+			notApplicable,
+		});
+
+		return $.ajax({
+			url: url.api_base_path + `manager/audit_store/${auditStoreId}/question/${questionId}/not_applicable`,
+			type: "POST",
+			data: JSON.stringify({
+				not_applicable: notApplicable
+			}),
+			contentType: "application/json"
+
+		}).then(function(answer){
+			dispatch({
+				type: types.ANSWER_NOT_APPLICABLE,
+				status: 'success',
+				answer
+			});
+		});
+		//TODO: Handle error
+	};
+};
