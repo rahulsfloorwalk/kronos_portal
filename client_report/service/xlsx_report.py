@@ -134,6 +134,7 @@ def write_data(sections):
     title_color = '#FCF8E3'
     header_color = '#BEBEBE'
     auditor_comment_color = '#E3B9B8'
+    pm_comment_color = '#FFFFBF'
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
@@ -142,6 +143,7 @@ def write_data(sections):
     odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
     even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
     auditor_comment_format = workbook.add_format({'text_wrap':True, 'bg_color': auditor_comment_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
+    pm_comment_format = workbook.add_format({'text_wrap': True, 'bg_color': pm_comment_color, 'top': 1, 'bottom': 1, 'left': 1, 'right': 1, })
     start_row = 0
     start_col = 0
     worksheet.set_column(start_col, start_col, 15)
@@ -168,6 +170,10 @@ def write_data(sections):
                 row += 1
                 for point in line.get('content'):
                     worksheet.write(row, col, point, auditor_comment_format)
+                    col += 1
+            elif line.get('type') == 'pm_comment':
+                for point in line.get('content'):
+                    worksheet.write(row, col, point, pm_comment_format)
                     col += 1
             else:
                 for point in line.get('content'):
