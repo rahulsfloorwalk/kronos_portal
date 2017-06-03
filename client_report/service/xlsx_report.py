@@ -109,12 +109,17 @@ def get_answers_section(sections, answers, report_sections):
         row = {'type': 'header', 'content': content}
         rows.append(row)
         for key in range(answer_key, len(answers)):
-            if (answers[key].question.section.sequence == section.sequence):
+            answer = answers[key]
+            if (answer.not_applicable):
+                content = ["", answers[key].question.question_txt, "NA", "NA", "NA"]
+                row = {'type': 'line', 'content': content}
+                rows.append(row)
+            elif (answer.question.section.sequence == section.sequence):
                 content = ["", answers[key].question.question_txt, answers[key].answer_text,
                         answers[key].marks_obtained, answers[key].question.max_marks]
                 row = {'type': 'line', 'content': content}
                 rows.append(row)
-            elif (answers[key].question.section.sequence < section.sequence):
+            elif (answer.question.section.sequence < section.sequence):
                 continue
             else:
                 answer_key = key

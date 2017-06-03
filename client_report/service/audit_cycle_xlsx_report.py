@@ -95,11 +95,16 @@ def create_text_structure(title, sections, questions, audit_stores):
                         'value': "Not Applicable",
                         'color_code': get_color_code(0,0)
                     })
-                    continue
-                answer_cells.append({
-                    'value': answer.answer_text,
-                    'color_code': get_color_code(answer.marks_obtained, answer.question.max_marks)
-                })
+                elif answer.not_applicable:
+                    answer_cells.append({
+                        'value': "Not Applicable",
+                        'color_code': get_color_code(0, 0)
+                    })
+                else:
+                    answer_cells.append({
+                        'value': answer.answer_text,
+                        'color_code': get_color_code(answer.marks_obtained, answer.question.max_marks)
+                    })
             except (Answer.DoesNotExist) as e:
                 answer_cells.append({
                     'value': "",
