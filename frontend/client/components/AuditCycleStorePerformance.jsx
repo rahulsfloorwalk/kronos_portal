@@ -1,5 +1,6 @@
 import React from 'react';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import { Text } from 'recharts';
 
 import {demo} from '../../config.js';
 
@@ -27,6 +28,12 @@ var AuditCycleStorePerformance = React.createClass({
 		return data;
 	},
 
+	tickFunction: function( values){
+		// lol hack
+		let count = this.props.reportData && this.props.reportData.data.length > 0 ? this.props.reportData.data.length : 1;
+		return (<Text {...values} width={values.width / count}>{values.payload.value}</Text>);
+	},
+
 	render : function(){
 		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		if (this.props.type === "best"){
@@ -47,7 +54,7 @@ var AuditCycleStorePerformance = React.createClass({
 		let chart = (
 		<ResponsiveContainer width="100%" aspect={3 / 1}>
 		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
-		<XAxis dataKey="name"/>
+		<XAxis dataKey="name" tick={this.tickFunction} interval={0}/>
 		<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
 		<Tooltip formatter={v => v+"%"}/>
 		<Legend />
