@@ -80,7 +80,7 @@ def get_summary_section(audit_store, sections, report_sections):
         if report_sections[section_key].not_applicable:
             content = [section.name, not_applicable_text, not_applicable_text]
         else:
-            content = [section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
+            content = [section.name, report_sections[section_key].marks_obtained(), report_sections[section_key].max_marks()]
         row = {'type': 'line', 'content': content}
         rows.append(row)
         section_key += 1
@@ -102,7 +102,7 @@ def get_answers_section(sections, answers, report_sections):
             rows.append(row)
             section_key += 1
             continue
-        content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), section.max_marks()]
+        content = [section.sequence, section.name, "", report_sections[section_key].marks_obtained(), report_sections[section_key].max_marks()]
         row = {'type': 'header', 'content': content}
         rows.append(row)
         for key in range(answer_key, len(answers)):
