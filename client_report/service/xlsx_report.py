@@ -142,17 +142,67 @@ def write_data(sections):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
     worksheet = workbook.add_worksheet()
-    title_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':20, 'top':1, 'bottom':1, 'left':1, 'right':1, 'bg_color': title_color})
-    header_format = workbook.add_format({'text_wrap':True, 'bold':True, 'font_size':16, 'top':1, 'bottom':1, 'left':1, 'right':1, 'bg_color': header_color})
-    odd_line_format = workbook.add_format({'text_wrap':True, 'bg_color': odd_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
-    even_line_format = workbook.add_format({'text_wrap':True, 'bg_color': even_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
-    auditor_comment_format = workbook.add_format({'text_wrap':True, 'bg_color': auditor_comment_color, 'top':1, 'bottom':1, 'left':1, 'right':1,})
-    pm_comment_format = workbook.add_format({'text_wrap': True, 'bg_color': pm_comment_color, 'top': 1, 'bottom': 1, 'left': 1, 'right': 1, })
+    title_format = workbook.add_format({
+        'text_wrap':True,
+        'bold':True,
+        'font_size':20,
+        'top':1,
+        'bottom':1,
+        'left':1,
+        'right':1,
+        'bg_color': title_color,
+        'valign': 'vcenter',
+    })
+    header_format = workbook.add_format({
+        'text_wrap':True,
+        'bold':True,
+        'font_size':16,
+        'top':1,
+        'bottom':1,
+        'left':1,
+        'right':1,
+        'bg_color': header_color,
+        'valign': 'vcenter',
+    })
+    odd_line_format = workbook.add_format({'text_wrap':True,
+        'bg_color': odd_color,
+        'top':1,
+        'bottom':1,
+        'left':1,
+        'right':1,
+        'valign': 'vcenter',
+    })
+    even_line_format = workbook.add_format({'text_wrap':True,
+        'bg_color': even_color,
+        'top':1,
+        'bottom':1,
+        'left':1,
+        'right':1,
+        'valign': 'vcenter',
+    })
+    auditor_comment_format = workbook.add_format({'text_wrap':True,
+        'bg_color': auditor_comment_color,
+        'top':1,
+        'bottom':1,
+        'left':1,
+        'right':1,
+        'valign': 'vcenter',
+    })
+    pm_comment_format = workbook.add_format({
+        'text_wrap': True,
+        'bg_color': pm_comment_color,
+        'top': 1,
+        'bottom': 1,
+        'left': 1,
+        'right': 1,
+        'valign': 'vcenter',
+    })
     start_row = 0
     start_col = 0
     worksheet.set_column(start_col, start_col, 15)
     worksheet.set_column(start_col+1, start_col+2, 60)
     worksheet.set_column(start_col+3, start_col+4, 20)
+    worksheet.set_default_row(20)
     row = start_row
     col = start_col
 
