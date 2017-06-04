@@ -86,7 +86,6 @@ var StoreRow = React.createClass({
 			<tr onClick={this.toggleExpandClicked} style={{cursor:'pointer'}} title="Click to Expand view">
 				<td>
 					<b>{this.props.store.store_name}</b><br/>
-					<small>{this.props.store.address}</small><br/>
 					<small>{this.props.store.location}</small>
 				</td>
 				<td className="text-right">{this.props.store.audit_store_count}</td>
