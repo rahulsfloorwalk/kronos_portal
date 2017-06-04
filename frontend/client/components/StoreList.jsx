@@ -60,7 +60,7 @@ var StoreRow = React.createClass({
 				for(let s of as.sections){
 					if(s.max_marks !== 0){
 						innerSections.push(<td key={s.sequence} className={getColor(s.color) + " text-right"}>
-							{s.percentage}%
+							{s.percentage === null ? "N/A" : s.percentage + "%" }
 						</td>);
 					}
 				}
@@ -77,7 +77,7 @@ var StoreRow = React.createClass({
 		let sections = [];
 		for(let s of this.props.store.sections){
 			if(s.max_marks !== 0){
-				sections.push(<td key={s.sequence} className={getColor(s.color) + " text-right"} style={percentStyle}>{s.percentage}%</td>);
+				sections.push(<td key={s.sequence} className={getColor(s.color) + " text-right"} style={percentStyle}>{s.percentage === null ? "N/A" : s.percentage+"%" }</td>);
 			}
 		}
 

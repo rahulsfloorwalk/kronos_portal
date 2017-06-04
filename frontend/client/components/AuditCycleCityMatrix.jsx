@@ -18,7 +18,9 @@ var Row = React.createClass({
 		let sections = [];
 		for(let s of this.props.row.sections){
 			if(s.max_marks !== 0){
-				sections.push(<td key={s.sequence} className={getColor(s.color) + " text-right"}>{s.percentage}%</td>);
+				sections.push(<td key={s.sequence} className={getColor(s.color) + " text-right"}>
+					{s.percentage === null ? "N/A" : s.percentage+"%"}
+				</td>);
 			}
 		}
 		return (

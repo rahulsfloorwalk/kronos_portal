@@ -83,6 +83,7 @@ export default React.createClass({
 		for(let i in this.state.chartData){
 			if( this.state.chartData[i].max_marks !== 0){
 				let progressClass = getColor(this.state.chartData[i].color);
+				if(this.state.chartData[i].percentage !== null){
 				chartRows.push(<div className="list-group-item" key={this.state.chartData[i].sequence}>
 						<b>{this.state.chartData[i].section}</b>
 						<div className="progress">
@@ -91,6 +92,12 @@ export default React.createClass({
 							</div>
 						</div>
 					</div>);
+				} else {
+				chartRows.push(<div className="list-group-item" key={this.state.chartData[i].sequence}>
+						<b>{this.state.chartData[i].section}</b>
+						<span className="pull-right text-muted">not applicable</span>
+					</div>);
+				}
 			}
 		}
 		if( chartRows.length === 0){

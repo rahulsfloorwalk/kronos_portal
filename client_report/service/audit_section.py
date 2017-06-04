@@ -1,4 +1,5 @@
 from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.utils import get_color_code_by_percentage
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
@@ -135,14 +136,13 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
         raise ObjectNotFound("Invalid Client")
 
     try:
-        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store_id=store_id)
+        audit = Audit.objects.get(audit_cycle_id=audit_cycle_id, store_id=store_id)
     except Audit.DoesNotExist as e:
         raise ObjectNotFound from e
 
     sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
     audit_stores = []
-    for audit in audits:
-        audit_stores.extend(audit.audit_stores.filter(status=AuditStore.COMPLETED))
+    audit_stores.extend(audit.audit_stores.filter(status=AuditStore.COMPLETED))
     mean_values = []
     for audit_store in audit_stores:
         store_sections = __get_mean_for_sections(sections, [audit_store,])
@@ -164,36 +164,26 @@ def __get_mean_for_sections(sections, audit_stores):
         return mean
 
     for section in sections:
-        marks = 0
+        total_percentage = 0
         count = 0
+
         for audit_store in audit_stores:
             report_section = ReportSection.objects.get(section=section, audit_store=audit_store)
-            marks += report_section.marks_obtained()
-            count += 1
-        max_marks = section.max_marks()
+            if not report_section.not_applicable:
+                total_percentage += report_section.marks_percentage()
+                count += 1
 
-        marks_obtained = "{:.2f}".format(marks/count)
-
-        if max_marks is not 0:
-            percentage = int((marks * 100) / (count * max_marks))
+        if count > 0:
+            avg_percentage = int(total_percentage / count)
         else:
-            percentage = 0
+            avg_percentage = None
 
-        if percentage > 80:
-            color = 4
-        elif percentage > 60:
-            color = 3
-        elif percentage > 40:
-            color = 2
-        else:
-            color = 1
+        color = get_color_code_by_percentage(avg_percentage)
 
         mean.append({
             'sequence': section.sequence,
             'section': section.name,
-            'marks': marks_obtained,
-            'percentage': percentage,
-            'max_marks': max_marks,
+            'percentage': avg_percentage,
             'color': color
         })
     return mean

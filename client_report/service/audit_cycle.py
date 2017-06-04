@@ -11,10 +11,12 @@ def get_average_for_section(section_id):
         counter = 0
         total = 0
         for report_section in report_sections:
-            counter += 1
-            total += report_section.marks_percentage()
-        return total/counter
-    return 0
+            if not report_section.not_applicable:
+                counter += 1
+                total += report_section.marks_percentage()
+        if counter > 0:
+            return int(total/counter)
+    return None
 
 def get_section_averages_for_audit_cycle(audit_cycle_id):
     sections = Section.objects.filter(audit_cycle__id=audit_cycle_id).all()
@@ -54,9 +56,9 @@ def get_audit_cycle_section_averages_for_client(client_id, audit_type):
             sec_name = section_average['section'].name
             try:
                 xval = section_master.index(sec_name)
-                values_table[yval][xval] = int(section_average['average'])
-            except ValueError:
-                raise AppLogicError
+                values_table[yval][xval] = section_average['average']
+            except ValueError as e:
+                raise AppLogicError from e
 
     response_obj = {}
     response_obj['title'] = "Audit Cycle Summary"

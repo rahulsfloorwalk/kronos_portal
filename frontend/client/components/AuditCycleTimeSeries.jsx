@@ -72,15 +72,15 @@ var AuditCycleTimeSeries = React.createClass({
 			let colors = ["#4ca9d7", "#0085c6", "#005d8a"];
 			let bars = [];
 			for(let i=0; i < this.state.labels.length; i++){
-				bars.push(<Bar key={i} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value+"%"}/>}/>);
+				bars.push(<Bar key={i} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>);
 			}
 
 			chart = (
 			<ResponsiveContainer width="100%" aspect={3 / 1}>
-			<BarChart data={this.state.data} margin={{top: 25, right: 30, left: 50, bottom: 5}}>
+			<BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}}>
 			<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
 			<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
-			<Tooltip formatter={v => v + "%"}/>
+			<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 			<Legend verticalAlign="top"/>
 			{bars}
 			</BarChart>
