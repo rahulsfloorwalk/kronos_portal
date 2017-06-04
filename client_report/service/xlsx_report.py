@@ -5,6 +5,8 @@ from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from questionnaire.models import Question
 
+not_applicable_text = "N/A"
+
 def get_xlsx_report(audit_store_id, client_id):
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
@@ -81,7 +83,7 @@ def get_summary_section(audit_store, sections, report_sections):
     rows.append(row)
     for section in sections:
         if report_sections[section_key].not_applicable:
-            content = [section.name, "NA", "NA"]
+            content = [section.name, not_applicable_text, not_applicable_text]
         else:
             content = [section.name, report_sections[section_key].marks_obtained(), section.max_marks()]
         row = {'type': 'line', 'content': content}
@@ -98,7 +100,7 @@ def get_answers_section(sections, answers, report_sections):
     rows.append(row)
     for section in sections:
         if report_sections[section_key].not_applicable:
-            content = [section.sequence, section.name, "NA", "NA", "NA"]
+            content = [section.sequence, section.name, not_applicable_text, not_applicable_text, not_applicable_text]
             row = {'type': 'header', 'content': content}
             rows.append(row)
             row = {'type': 'line', 'content': ["", "", "", "", ""]}
@@ -110,17 +112,14 @@ def get_answers_section(sections, answers, report_sections):
         rows.append(row)
         for key in range(answer_key, len(answers)):
             answer = answers[key]
-            if (answer.not_applicable):
-                content = ["", answers[key].question.question_txt, "NA", "NA", "NA"]
+            if (answer.question.section.sequence == section.sequence):
+                if (answer.not_applicable):
+                    content = ["", answers[key].question.question_txt, not_applicable_text, not_applicable_text, not_applicable_text]
+                else:
+                    content = ["", answers[key].question.question_txt, answers[key].answer_text,
+                            answers[key].marks_obtained, answers[key].question.max_marks]
                 row = {'type': 'line', 'content': content}
                 rows.append(row)
-            elif (answer.question.section.sequence == section.sequence):
-                content = ["", answers[key].question.question_txt, answers[key].answer_text,
-                        answers[key].marks_obtained, answers[key].question.max_marks]
-                row = {'type': 'line', 'content': content}
-                rows.append(row)
-            elif (answer.question.section.sequence < section.sequence):
-                continue
             else:
                 answer_key = key
                 break
