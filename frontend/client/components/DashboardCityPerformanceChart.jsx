@@ -57,7 +57,7 @@ var CityWisePerformanceChart = React.createClass({
 		<XAxis dataKey="name" tick={this.tickFunction} interval={0}/>
 		<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
 		<Tooltip formatter={v => v+"%"}/>
-		<Legend />
+		<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
 		{bars}
 		</BarChart>
 		</ResponsiveContainer>
