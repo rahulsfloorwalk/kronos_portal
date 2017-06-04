@@ -41,16 +41,11 @@ def create_text_structure(sections, answers, report_sections, audit_store):
     return data, name
 
 def get_details_section(audit_store, report_sections, sections):
-    audit_date = audit_store.audit_date
+    audit_date = audit_store.audit_date.strftime('%d-%m-%Y')
+    percentage = audit_store.percentage()
     store_location = audit_store.audit.store.location.name
     client_name = audit_store.audit.audit_cycle.client.name
     audit_cycle_type = audit_store.audit.audit_cycle.type
-    marks = 0
-    max_marks = 0
-    for s in sections:
-        max_marks += s.max_marks()
-    for rs in report_sections:
-        marks += rs.marks_obtained()
     rows = []
     content = ["", "Audit Report"]
     row = {'type': 'title', 'content': content}
@@ -67,7 +62,7 @@ def get_details_section(audit_store, report_sections, sections):
     content = ["Audit Date", str(audit_date)]
     row = {'type': 'line', 'content': content}
     rows.append(row)
-    content = ["Total Score", str(round((marks*100)/max_marks)) + "%"]
+    content = ["Total Score", str(round(percentage)) + "%"]
     row = {'type': 'line', 'content': content}
     rows.append(row)
     return rows
