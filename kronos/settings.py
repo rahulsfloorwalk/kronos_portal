@@ -245,3 +245,13 @@ EMAIL_SWITCH = {
     "POST_REMINDER_EMAIL": properties.MAIL_SWITCH['POST_REMINDER_EMAIL'],
     "WELCOME_EMAIL": properties.MAIL_SWITCH['WELCOME_EMAIL'],
 }
+
+class DisableMigrations(object):
+
+    def __contains__(self, item):
+        return True
+
+    def __getitem__(self, item):
+        return "notmigrations"
+
+MIGRATION_MODULES = DisableMigrations()
