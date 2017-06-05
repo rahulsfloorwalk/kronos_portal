@@ -35,7 +35,7 @@ class ProfileInfoTestCase(TestCase):
 
     def setUp(self):
         email = fake.email()
-        self.u = User.objects.create(username=email, email=email, password=fake.password())
+        self.u = User.objects.create_user(username=email, email=email, password=fake.password())
         self.u.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
         self.u.save()
 
