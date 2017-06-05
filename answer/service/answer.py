@@ -41,7 +41,7 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
     if audit_store.status != AuditStore.ASSIGNED:
         raise AppLogicError("Cannot submit answer to current audit store")
 
-    answer = find_by_audit_store_and_question(audit_cycle_id, question_id)
+    answer = find_by_audit_store_and_question(audit_store_id, question_id)
     answer.answer_text = answer_text
     answer.answer_text_original = answer_text
     return save(answer)
