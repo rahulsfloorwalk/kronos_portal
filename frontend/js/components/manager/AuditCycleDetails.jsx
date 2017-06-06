@@ -8,6 +8,7 @@ import { momentDateFormat }  from '../../../config.js';
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 
 import ExpandableDetails from '../ExpandableDetails.jsx';
+import MarkdownViewer from '../MarkdownViewer.jsx';
 import { Knight, King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
@@ -45,7 +46,7 @@ var AuditCycleDetails = React.createClass({
 		}
 
 		let editAuditCycleLink = `/audit_cycle/${this.props.auditCycle.id}/edit`;
-		let detailsElement = <ExpandableDetails details={this.props.auditCycle.description}/>;
+		let detailsElement = <ExpandableDetails details={<MarkdownViewer markdown={this.props.auditCycle.description}/>}/>;
 
 		return (
 			<div>

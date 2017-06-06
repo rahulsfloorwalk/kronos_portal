@@ -15,6 +15,7 @@ import FormTextarea from '../FormTextarea.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 import Loading from '../Loading.jsx';
+import MarkdownViewer from '../MarkdownViewer.jsx';
 
 var AuditCycleForm = React.createClass({
 	getInitialState: function(){
@@ -117,7 +118,11 @@ var AuditCycleForm = React.createClass({
 							<FormInput label="Reimbursement upto (₹)" type="number" value={this.state.reimbursement} name="reimbursement" onChange={this.fieldChanged} errors={this.props.errors.reimbursement}/>
 						</div>
 					</div>
-					<FormTextarea label="Description" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>
+					<FormTextarea label="Description (markdown)" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>
+					<div>
+						<label>Preview:</label>
+						<MarkdownViewer markdown={this.state.description}/>
+					</div>
 					<SaveButton/>
 				</form>
 			</Modal>

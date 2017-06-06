@@ -41,6 +41,7 @@ module.exports = {
 					],
 					plugins: [
 						['transform-class-properties'],
+						['syntax-dynamic-import'],
 					]
 				}
 			},

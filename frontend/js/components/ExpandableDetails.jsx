@@ -18,7 +18,9 @@ export default React.createClass({
 		var buttonText = this.state.expanded ? "Hide Details" : "View Details";
 		var details = this.state.expanded ? 
 			(<Modal size="modal-lg" modalTitle="Details" onClose={this.buttonClicked}>
-				<pre>{this.props.details}</pre>
+				<div>
+				{this.props.details}
+				</div>
 			</Modal>)
 			: null;
 		return (
