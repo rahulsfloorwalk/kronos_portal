@@ -76,6 +76,12 @@ module.exports = {
 			filename: 'auditor/index.html',
 			chunks: ['auditor_vendor', 'auditor'],
 			template: path.resolve(__dirname, './js/auditor/auditor.ejs'),
+		}),
+		new HtmlWebpackPlugin({
+			title: 'FloorWalk Client Portal',
+			filename: 'client/index.html',
+			chunks: ['client_vendor', 'client'],
+			template: path.resolve(__dirname, './client/client.ejs'),
 		})
 	],
 	devServer: {
