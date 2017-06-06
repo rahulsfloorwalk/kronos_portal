@@ -1,6 +1,7 @@
 var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var CopyWebpackPlugin = require("copy-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 
@@ -77,7 +78,10 @@ module.exports = {
 			filename: 'client/index.html',
 			chunks: ['client_vendor', 'client'],
 			template: path.resolve(__dirname, './client/client.ejs'),
-		})
+		}),
+		new CopyWebpackPlugin([
+			{ from: path.resolve(__dirname, './bsvendor'), to: 'bsvendor/' }
+		])
 	],
 	devServer: {
 		inline: true,
