@@ -23,7 +23,8 @@ module.exports = {
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
-		filename: '[name].bundle.js'
+		filename: '[name].bundle.js',
+		publicPath: '/static/dist/'
 	},
 	externals: {
 	},
@@ -86,24 +87,9 @@ module.exports = {
 	devServer: {
 		inline: true,
 		publicPath: "/static/dist/",
-		//contentBase: "/static/",
 		proxy: {
 			'/': {
 				target: "http://localhost:8000/",
-				bypass: function(req, res, proxyOptions) {
-					if (req.originalUrl.startsWith('/static')) {
-						if (req.originalUrl.indexOf('hot-update') !== -1 ) {
-							var repr = req.originalUrl.replace('/static','/static/dist');
-							console.log('Skipping proxy for ',req.originalUrl,' WEBPACK request to ', repr);
-							return repr;
-						} else {
-							var repr = req.originalUrl.replace('/static','.');
-							console.log('Skipping proxy for ',req.originalUrl,' NON-WEBPACK request to ', repr);
-							return repr;
-						}
-
-					}
-				}
 			}
 		}
 	}
