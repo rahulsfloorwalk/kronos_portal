@@ -20,7 +20,7 @@ _logger = logging.getLogger(__name__)
 class Login(View):
     __template = 'registration/login.html'
     __auditor_url = '/static/auditor.html'
-    __manager_url = '/static/manager.html'
+    __manager_url = '/static/dist/manager/index.html'
     __moderator_url = '/static/dist/moderator/index.html'
 
     def get(self, request):
