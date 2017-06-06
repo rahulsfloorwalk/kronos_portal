@@ -49,11 +49,6 @@ module.exports = {
 		]
 	},
 	plugins: [
-		//new webpack.DefinePlugin({
-		//	"process.env": {
-		//		NODE_ENV: JSON.stringify("production")
-		//	}
-		//}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "auditor_vendor", chunks: ['auditor']}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "client_vendor", chunks: ['client']}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "manager_vendor", chunks: ['manager']}),
