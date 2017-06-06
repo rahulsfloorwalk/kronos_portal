@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+		<link rel="stylesheet" href="../react-datetime.css" />
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="/static/img/favicon_64x64.png" type="image/png" />
+		<title>Floorwalk Auditor Portal</title>
+<style>
+/* disable navbar collapse */
+.navbar-collapse.collapse{
+  display: block !important;
+}
+
+.navbar-nav>li, .navbar-nav{
+  float: left !important;
+}
+
+.navbar-nav.navbar-right:last-child{
+  margin-right: -15px !important;
+}
+
+.navbar-right{
+  float: right !important;
+}
+
+/* container-fluid sm override */
+@media (max-width: 992px) {
+   .container {
+      width: 100%;
+   }
+}
+
+</style>
+	</head>
+	<body>
+		<div id="root">
+			<div id="loadmsg">
+			<h1 style="text-align:center;">a few seconds please</h1>
+			<h1 style="text-align:center;">:)</h1>
+			<div style="text-align:center;">
+			<img src="/static/img/ripple.svg" title="Please Wait" alt="loading..."/>
+			</div>
+			</div>
+			<div id="unsup" style="text-align:center;"></div>
+		</div>
+		<script>
+		if(/Opera/.test(navigator.userAgent) || /UCBrowser/.test(navigator.userAgent)){
+			document.querySelector("#loadmsg").style.display = "none";
+			document.querySelector("#unsup").innerHTML = "<h2>Your browser is not supported.</h2><h2>Please use a supported browser such as Chrome or Firefox.</h2>";
+		}
+		</script>
+	</body>
+</html>
+
