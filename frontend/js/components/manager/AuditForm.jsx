@@ -7,12 +7,14 @@ import { loadAuditAddForm, loadAuditEditForm, saveAuditEditForm, saveAuditAddFor
 import {fetchStores} from '../../manager/actions/store.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
+import FormTextarea from '../FormTextarea.jsx';
 import FormInput from '../FormInput.jsx';
 import FormGroup from '../FormGroup.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 import StoreSelector from '../StoreSelector.jsx';
 import FormErrorList from '../FormErrorList.jsx';
+import MarkdownViewer from '../MarkdownViewer.jsx';
 
 var AuditForm = React.createClass({
 	getInitialState: function(){
@@ -80,6 +82,11 @@ var AuditForm = React.createClass({
 						</div>
 					</div>
 					<FormInput label="Number of Audits" type="number" value={this.state.count} name="count" onChange={this.inputChanged} errors={this.props.errors.count}/>
+					<FormTextarea label="Description (markdown)" name="post_approval_description" value={this.state.post_approval_description} onChange={this.inputChanged} errors={this.props.errors.post_approval_description}/>
+					<div>
+						<label>Preview:</label>
+						<MarkdownViewer markdown={this.state.post_approval_description}/>
+					</div>
 					<SaveButton/>
 				</form>
 			</Modal>

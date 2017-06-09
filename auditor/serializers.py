@@ -236,6 +236,7 @@ class AuditSerializer(ModelSerializer):
             'earnings_per_audit',
             'reimbursement',
             'audit_cycle',
+            'post_approval_description',
         )
         read_only_fields = fields
 

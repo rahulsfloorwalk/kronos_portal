@@ -8,7 +8,9 @@ Note: You can view the questionnaire on the portal. It is required that you go t
 
 ## Audit Instructions
 
-{{post_approval_description}}
+{{audit_post_approval_description}}
+
+{{audit_cycle_post_approval_description}}
 
 --
 Thanks and regards,

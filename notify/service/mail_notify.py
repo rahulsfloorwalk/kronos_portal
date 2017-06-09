@@ -56,13 +56,15 @@ def notification_email_task(notif_id):
             subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/fiat_assign_email.html'
             params['txt_template'] = 'notify/fiat_assign_email.txt'
-            params['post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_post_approval_description'] = notif.target.post_approval_description
 
         elif notif.verb == notification.AUDIT_STORE_ASSIGNED:
             subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email.html'
             params['txt_template'] = 'notify/assign_email.txt'
-            params['post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_post_approval_description'] = notif.target.post_approval_description
 
         elif notif.verb == notification.AUDIT_APPLICATION_REJECTED:
             subject = "[FloorWalk] Audit Application Not Accepted {}".format(params['client'])

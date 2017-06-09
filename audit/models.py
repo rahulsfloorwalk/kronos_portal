@@ -88,6 +88,7 @@ class Audit(Model):
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     store = ForeignKey('client.Store', related_name='audits', db_column='store_id')
     audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id')
+    post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
 
     def __str__(self):
         return "Audit({}): {}, {}".format(self.id, self.store, self.audit_cycle, self.count)

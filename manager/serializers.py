@@ -252,6 +252,7 @@ class AuditSerializer(ModelSerializer):
             'audit_cycle',
             'applications',
             'audit_stores',
+            'post_approval_description',
         )
         read_only_fields = fields
 
@@ -267,6 +268,7 @@ class AuditSerializerWithoutApplications(ModelSerializer):
             'reimbursement',
             'store',
             'audit_cycle',
+            'post_approval_description',
         )
         read_only_fields = fields
 
@@ -280,6 +282,7 @@ class AuditDeSerializer(ModelSerializer):
             'reimbursement',
             'store',
             'audit_cycle',
+            'post_approval_description',
         )
         read_only_fields = ('id',)
         validators=[]
@@ -294,6 +297,7 @@ class AuditDeSerializer(ModelSerializer):
         audit.reimbursement = self.validated_data.get('reimbursement', audit.reimbursement)
         audit.store = self.validated_data.get('store', audit.store_id)
         audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
+        audit.post_approval_description = self.validated_data.get('post_approval_description', audit.post_approval_description)
         return audit
 
 
