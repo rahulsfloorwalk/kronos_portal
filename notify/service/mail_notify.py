@@ -56,11 +56,13 @@ def notification_email_task(notif_id):
             subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/fiat_assign_email.html'
             params['txt_template'] = 'notify/fiat_assign_email.txt'
+            params['post_approval_description'] = notif.target.audit_cycle.post_approval_description
 
         elif notif.verb == notification.AUDIT_STORE_ASSIGNED:
             subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email.html'
             params['txt_template'] = 'notify/assign_email.txt'
+            params['post_approval_description'] = notif.target.audit_cycle.post_approval_description
 
         elif notif.verb == notification.AUDIT_APPLICATION_REJECTED:
             subject = "[FloorWalk] Audit Application Not Accepted {}".format(params['client'])
@@ -99,20 +101,8 @@ def notification_email_task(notif_id):
         return notif.emailed
 
 def _prepare_mail(params):
-    html_message = get_template(params.get('html_template')).render(Context({
-        'name': params.get('to_name'),
-        'audit_date': params.get('audit_date'),
-        'client': params.get('client'),
-        'store_name': params.get('store_name'),
-        'store_address': params.get('store_address')
-    }))
-    txt_message = get_template(params.get('txt_template')).render(Context({
-        'name': params.get('to_name'),
-        'audit_date': params.get('audit_date'),
-        'client': params.get('client'),
-        'store_name': params.get('store_name'),
-        'store_address': params.get('store_address')
-    }))
+    html_message = get_template(params.get('html_template')).render(Context(params))
+    txt_message = get_template(params.get('txt_template')).render(Context(params))
 
     return html_message, txt_message
 

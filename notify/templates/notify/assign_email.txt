@@ -5,6 +5,11 @@ Store Name: {{ store_name }}
 Store Address: {{ store_address }}
 Audit Date: {{ audit_date }}
 Note: You can view the questionnaire on the portal. It is required that you go through the questionnaire before conducting the audit.
+
+## Audit Instructions
+
+{{post_approval_description}}
+
 --
 Thanks and regards,
 FloorWalk Team

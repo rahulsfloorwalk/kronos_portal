@@ -151,6 +151,27 @@ export function saveAuditCycleEditForm(auditCycle){
 	};
 };
 
+export function setPostApprovalDescription(auditCycleId, postApprovalDescription){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/post_approval_description`,
+			data: JSON.stringify({
+				post_approval_description: postApprovalDescription
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(savedAuditCycle){
+			dispatch({
+				type: types.AUDIT_CYCLE_ID_POST,
+				status: 'success',
+				auditCycle: savedAuditCycle
+			});
+		});
+		return req;
+	};
+}
+
 //code for audits here
 
 export function fetchAudits(auditCycleId){

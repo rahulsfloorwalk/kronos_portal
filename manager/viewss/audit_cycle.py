@@ -2,7 +2,7 @@ from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, DateField
+from rest_framework.serializers import Serializer, Serializer, DateField, CharField
 from rest_framework import generics
 
 from rest_framework.filters import SearchFilter
@@ -76,6 +76,24 @@ class AuditCycleIdView(APIView):
             return Response(AuditCycleSerializer(audit).data)
         except AuditCycle.DoesNotExist:
             return Http404
+
+
+class AuditCycleIdPostApprovalDescriptionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER],
+            'DELETE': [GROUP_NAME_MANAGER]
+        }
+    class DeSerializer(Serializer):
+        post_approval_description = CharField(allow_blank=True, max_length=4096)
+
+    def post(self, request, audit_cycle_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_audit_cycle = audit_cycle_service.set_post_approval_description(audit_cycle_id, ds.validated_data["post_approval_description"])
+        return Response(AuditCycleSerializer(saved_audit_cycle).data)
+
 
 class AuditCycleXlsxReport(APIView):
     permission_classes = [HasGroupPermission]

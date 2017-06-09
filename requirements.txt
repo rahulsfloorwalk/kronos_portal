@@ -7,6 +7,7 @@ celery==4.0.2
 Django==1.10
 django-filter==0.15.3
 django-guardian==1.4.8
+django-markdown-deux==1.0.5
 django-model-utils==2.6.1
 django-notifications-hq==1.2
 django-widget-tweaks==1.4.1
@@ -19,6 +20,7 @@ jmespath==0.9.1
 jsonfield==1.0.3
 kombu==4.0.2
 logging-tree==1.7
+markdown2==2.3.4
 psycopg2==2.6.2
 pycurl==7.43.0
 python-dateutil==2.6.0

@@ -46,6 +46,7 @@ class AuditCycle(Model):
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     description = CharField(db_column='description', max_length=4096, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=CASCADE)
+    post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
 
     class Meta:
         permissions = (

@@ -42,6 +42,7 @@ DEPENDENCY_APPS = [
     'widget_tweaks',
     'notifications',
     'guardian',
+    'markdown_deux',
 ]
 
 PROJECT_APPS = [

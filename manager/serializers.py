@@ -105,6 +105,7 @@ class AuditCycleSerializer(ModelSerializer):
             'earnings_per_audit',
             'reimbursement',
             'description',
+            'post_approval_description',
             'client',
             #'audit_count',
         )

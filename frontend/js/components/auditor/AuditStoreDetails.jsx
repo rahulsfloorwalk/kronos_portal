@@ -14,6 +14,7 @@ import { LabelValue_2_10 } from '../LabelValue.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 
 import AttachmentUploadBox from './AttachmentUploadBox.jsx';
+import MarkdownViewer from '../MarkdownViewer.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -68,7 +69,7 @@ var AuditStoreDetails = React.createClass({
 								<LabelValue_2_10 label="Address:" value={this.props.auditStore.audit.store.address}/>
 								<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 								<LabelValue_2_10 label="Audit Date:" value={moment(this.props.auditStore.audit_date).format(momentDateFormat)}/>
-								<LabelValue_2_10 label="Details:" value={detailsElement}/>
+								<LabelValue_2_10 label="Instructions:" value={<ExpandableDetails details={<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description}/>}/>}/>
 								<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
 							</div>
 						</div>

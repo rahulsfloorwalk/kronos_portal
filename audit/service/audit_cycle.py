@@ -102,3 +102,16 @@ def find_by_id_for_moderator(audit_cycle_id, user_id):
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
+
+def find_by_id(audit_cycle_id):
+    try:
+        return AuditCycle.objects.get(pk=audit_cycle_id)
+    except AuditCycle.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def set_post_approval_description(audit_cycle_id, post_approval_description):
+    audit_cycle = find_by_id(audit_cycle_id)
+
+    audit_cycle.post_approval_description = post_approval_description
+    return save(audit_cycle)

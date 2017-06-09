@@ -1,4 +1,4 @@
-Hello{{ name }},
+Hello {{ name }},
 Thank you for showing interest in FloorWalk.
 Your Application for audit at {{ client }} on {{ audit_date }} has been recieved.
 We would process your application and get back to you with confirmation soon.

@@ -30,6 +30,7 @@ import LocationForm from './LocationForm.jsx';
 import AuditCycleList from './AuditCycleList.jsx';
 import AuditCycleForm from './AuditCycleForm.jsx';
 import AuditCycleDetails from './AuditCycleDetails.jsx';
+import PostApprovalDescriptionForm from './PostApprovalDescriptionForm.jsx';
 
 import SectionForm from './SectionForm.jsx';
 import SectionList from './SectionList.jsx';
@@ -86,6 +87,7 @@ const Routes = () => (
 
 		<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
 			<Route path="edit" component={AuditCycleForm}/>
+			<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
 			<Route path="questionnaire" component={SectionList}>
 				<Route path="section/copy" component={SectionCopyForm}/>
 				<Route path="section/add" component={SectionForm}/>

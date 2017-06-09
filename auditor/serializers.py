@@ -207,6 +207,7 @@ class AuditCycleSerializer(ModelSerializer):
             'start_date',
             'end_date',
             'description',
+            'post_approval_description',
             'client',
         )
         read_only_fields = fields

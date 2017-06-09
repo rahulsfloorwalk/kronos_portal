@@ -75,6 +75,7 @@ var AuditCycleDetails = React.createClass({
 							<tr><td className="text-right">Start Date:</td><td><b>{ moment(this.props.auditCycle.start_date).format(momentDateFormat) }</b></td></tr>
 							<tr><td className="text-right">End Date:</td><td><b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b></td></tr>
 							<tr><td className="text-right">Description</td><td>{ detailsElement }</td></tr>
+							<tr><td className="text-right">Post Approval Description</td><td><Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>View</Link></td></tr>
 						</tbody>
 					</table>
 				</div>
