@@ -184,6 +184,7 @@ def __get_mean_for_sections(sections, audit_stores):
             'sequence': section.sequence,
             'section': section.name,
             'percentage': avg_percentage,
+            'max_marks': section.max_marks(),
             'color': color
         })
     return mean
