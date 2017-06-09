@@ -10,6 +10,7 @@ import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
+import MarkdownViewer from '../MarkdownViewer.jsx';
 
 import { AuditStoreTable } from './AuditStoreList.jsx';
 
@@ -73,8 +74,15 @@ var AuditRow = React.createClass({
 		});
 	},
   render: function(){
-	  var row2, row3;
+	  var row1, row2, row3;
 	  if(this.state.expanded){
+		  row1 = (
+			<tr>
+				<td colSpan="7">
+					<MarkdownViewer markdown={this.props.audit.post_approval_description}/>
+				</td>
+			</tr>
+		  );
 		  row2 = (
 			<tr>
 				<td colSpan="7">
@@ -107,6 +115,7 @@ var AuditRow = React.createClass({
           <button className="btn btn-default" onClick={this.viewButtonClicked} title="Expand Applications">{buttonText}</button>
         </td>
       </tr>
+	{row1}
 	{row2}
 	{row3}
       </tbody>
