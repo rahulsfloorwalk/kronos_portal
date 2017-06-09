@@ -14,6 +14,7 @@ import { getAuditType, getAuditStatus } from '../../utils.js';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import Jumbotron from '../Jumbotron.jsx';
+import MarkdownViewer from '../MarkdownViewer.jsx';
 
 var AuditStoreRow = React.createClass({
 	render: function(){
@@ -32,7 +33,7 @@ var AuditStoreRow = React.createClass({
 							<LabelValue_2_10 label="Address:" value={this.props.auditStore.audit.store.address}/>
 							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
 							<LabelValue_2_10 label="Audit Date:" value={moment(this.props.auditStore.audit_date).format(momentDateFormat)}/>
-							<LabelValue_2_10 label="Details:" value={detailsElement}/>
+							<LabelValue_2_10 label="Instructions:" value={<ExpandableDetails details={<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description + "\n\n" + this.props.auditStore.audit.audit_cycle.post_approval_description}/>}/>}/>
 							<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
 						</div>
 						<p className="text-right"><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></p>
