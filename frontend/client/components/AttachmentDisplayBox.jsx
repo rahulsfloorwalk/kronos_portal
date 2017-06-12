@@ -6,6 +6,8 @@ import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from '../
 import Loading from '../../js/components/Loading.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 
+import AttachmentPreview from '../../js/components/manager/AttachmentPreview.jsx';
+
 import AttachmentProofIcon from '../../js/components/AttachmentProofIcon.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../js/utils.js';
@@ -18,8 +20,9 @@ var AttachmentItem = React.createClass({
 	},
 	render: function(){
 		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
+		let activeClass = this.props.selected ? "active" : "";
 		return (
-			<button type="button" className="list-group-item" onClick={()=>this.props.onSelect(this.props.attachment)}>
+			<button type="button" className={`list-group-item ${activeClass}`} onClick={()=>this.props.onSelect(this.props.attachment)}>
 				{icon} {this.props.attachment.file_name}
 			</button>
 		);
@@ -30,7 +33,8 @@ export default React.createClass({
 	getInitialState: function(){
 		return {
 			attachments: [],
-			selectedAttachment: undefined
+			selectedAttachment: undefined,
+			selectedAttachmentId: null,
 		};
 	},
 	reloadState: function(){
@@ -45,7 +49,8 @@ export default React.createClass({
 	},
 	attachmentSelected: function(attachment){
 		this.setState({
-			selectedAttachment: attachment
+			selectedAttachment: attachment,
+			selectedAttachmentId: attachment.id,
 		});
 	},
 	render: function(){
@@ -53,7 +58,7 @@ export default React.createClass({
 		var uploadButton;
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentItem attachment={a} key={a.id} onSelect={this.attachmentSelected}/>);
+			attachmentRows.push(<AttachmentItem attachment={a} key={a.id} onSelect={this.attachmentSelected} selected={this.state.selectedAttachmentId === a.id}/>);
 		}
 
 		let attachmentElement;
@@ -63,6 +68,8 @@ export default React.createClass({
 				<DownloadAlt/> Download File
 			</a>
 			);
+			attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={false}/>;
+			/*
 			switch(this.state.selectedAttachment.proof_type){
 				case "AUDIO":
 					attachmentElement = (
@@ -103,6 +110,7 @@ export default React.createClass({
 					);
 					break;
 			}
+			*/
 		} else {
 			attachmentElement = (<Jumbotron heading={<div><br/><br/><br/><Paperclip/></div>} para={<span>select an attachment from the list<br/><br/><br/><br/></span>}/>);
 		}
@@ -112,12 +120,15 @@ export default React.createClass({
 		} else {
 
 		return (
-				<div className="row hidden-print">
-					<div className="col-md-4">
+				<div className="row">
+					<div className="col-md-4 hidden-print">
 						{attachmentRows}
 					</div>
 					<div className="col-md-8 hidden-print">
 						{attachmentElement}
+					</div>
+					<div className="col-xs-offset-1 col-xs-10 visible-print-block">
+						{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
 					</div>
 				</div>
 		);

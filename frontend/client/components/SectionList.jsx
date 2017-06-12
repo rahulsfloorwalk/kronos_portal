@@ -112,14 +112,19 @@ class SectionAttachmentBox extends React.Component{
 
 		return (
 			<div className="panel-body">
-				<div>
+				<div className="hidden-print">
 					<b>Attachments:</b> {attachmentRows}
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
 				</div>
-				<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
+				<div className="hidden-print">
+					<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
+				</div>
+				<div className="col-xs-offset-1 col-xs-10 visible-print-block">
+					{this.state.attachments.filter(a=>a.proof_type === "PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
+				</div>
 			</div>
 		);
 	}
@@ -231,7 +236,7 @@ export default React.createClass({
 		}
 		return (
 			<div>
-				<h3 className="page-header hidden-print">
+				<h3 className="page-header">
 					<Paperclip/> Attachments
 				</h3>
 				<AttachmentDisplayBox auditStoreId={this.props.auditStoreId}/>
