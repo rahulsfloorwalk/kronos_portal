@@ -23,7 +23,7 @@ class AttachmentRenderer extends React.Component {
 			}
 				break;
 			case "PHOTO": {
-				let imageStyle = {"maxWidth": "100%"}
+				let imageStyle = {"maxWidth": "100%", "maxHeight": "500px"}
 				return (<img src={this.props.attachment.direct_url} style={imageStyle}/>);
 			}
 			case "VIDEO":
@@ -58,7 +58,7 @@ export default class AttachmentPreview extends React.Component {
 		}
 
 		let downloadButton = (
-			<a className="btn btn-default" href={this.props.attachment.direct_url}>
+			<a className="btn btn-default hidden-print" href={this.props.attachment.direct_url}>
 				<DownloadAlt/> Download File
 			</a>
 		);
