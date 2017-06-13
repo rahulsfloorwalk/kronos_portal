@@ -7208,5 +7208,15 @@
             "lat": "32.052100",
             "lon": "76.649300"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 750,
+        "fields": {
+            "name": "Palampur",
+            "state": "IN-HP",
+            "lat": "32.110900",
+            "lon": "76.536300"
+        }
     }
 ]
