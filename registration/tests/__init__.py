@@ -1,2 +1,2 @@
 
-from .test_login import CaseInsensitiveModelBackendTestCase
+from .test_auth_backend import CaseInsensitiveModelBackendTestCase

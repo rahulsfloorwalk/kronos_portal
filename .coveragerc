@@ -1,0 +1,16 @@
+[run]
+# turn on branch coverage
+branch = True
+
+# omit some files which we wont be testing
+omit =
+    # omit the venv files
+    venv/*
+    # omit the actual test code
+    **/tests/*
+    # omit the django migrations
+    **/migrations/*
+
+[report]
+# exclude __str__ functions because reasons
+exclude_lines = def __str__

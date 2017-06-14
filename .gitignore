@@ -8,3 +8,5 @@ frontend/dist/
 kronos.egg-info/
 dist/
 celerybeat-schedule
+htmlcov/
+.coverage
