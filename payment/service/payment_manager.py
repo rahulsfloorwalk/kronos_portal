@@ -22,3 +22,9 @@ def clear_payment_for_audit_cycle(audit_cycle_id):
 def get_pending_payments():
     payments = Payment.objects.filter(status=Payment.PENDING)
     return payments
+
+def find_by_audit_cycle(audit_cycle_id):
+    return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id)
+
+def find_by_user(user_id):
+    return Payment.objects.filter(user_id=user_id)

@@ -15,9 +15,11 @@ from registration.mixins import HasGroupPermission
 import registration.service.auditor as auditor_service
 
 import auditor.service.stats as auditor_stats_service
+from payment.service import payment_manager as payment_service
 
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
+from manager.serializers import PaymentSerializer
 
 class AuditorView(generics.ListAPIView):
     permission_classes = [HasGroupPermission]
@@ -130,3 +132,15 @@ class AuditorVerifyView(APIView):
     def post(self, request, user_id):
         user = auditor_service.verify_auditor(user_id)
         return Response(AuditorSerializer(user).data)
+
+class PaymentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER]
+        }
+    def get(self, request, user_id, format=None):
+        try:
+            payments = payment_service.find_by_user(user_id)
+            return Response(PaymentSerializer(payments, many=True).data)
+        except ObjectNotFound:
+            raise NotFound

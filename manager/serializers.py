@@ -19,6 +19,7 @@ from client.models import Client, Store, ClientUser
 from .models import City, Location
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
+from payment.models import Payment
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -668,3 +669,15 @@ class ModeratorDeSerializer(Serializer):
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
 
+class PaymentSerializer(ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = (
+            'id',
+            'comment',
+            'amount',
+            'status',
+            'user_id',
+            'audit_store_id',
+        )
+        read_only_fields = fields

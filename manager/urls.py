@@ -54,6 +54,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_xlsx_report$', audit_cycle_views.AuditCycleXlsxReport.as_view(), name='audit_cycle_xlsx_report'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/stats$', audit_cycle_views.AuditCycleStats.as_view(), name='audit_cycle_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/post_approval_description$', audit_cycle_views.AuditCycleIdPostApprovalDescriptionView.as_view(), name='audit_cycle_id_post_approval_description_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment$', audit_cycle_views.PaymentView.as_view(), name='audit_cycle_payment_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
 
@@ -79,6 +80,7 @@ urlpatterns = ([
     url(r'auditor/(?P<auditor_id>[0-9]+)/reports$', auditor_views.AuditorAuditStoreView.as_view(), name='auditor_audit_store_view'),
     url(r'auditor/(?P<user_id>[0-9]+)/deactivate$', auditor_views.AuditorDeactivateView.as_view(), name="auditor_id_deactivate_view"),
     url(r'auditor/(?P<user_id>[0-9]+)/activate$', auditor_views.AuditorActivateView.as_view(), name="auditor_id_activate_view"),
+    url(r'auditor/(?P<user_id>[0-9]+)/payment$', auditor_views.PaymentView.as_view(), name="auditor_payment_view"),
     url(r'auditor/(?P<auditor_id>[0-9]+)$', auditor_views.AuditorIdView.as_view(), name='auditor_id_view'),
     url(r'auditor$', auditor_views.AuditorView.as_view(), name='auditor_view'),
 
