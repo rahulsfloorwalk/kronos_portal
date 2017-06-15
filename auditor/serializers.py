@@ -16,6 +16,7 @@ from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
+from payment.models import Payment
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -473,5 +474,18 @@ class NotificationSerializer(ModelSerializer):
 
             'action_object',
             'action_object_content_type',
+        )
+        read_only_fields = fields
+
+class PaymentSerializer(ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = (
+            'id',
+            'comment',
+            'amount',
+            'status',
+            'user_id',
+            'audit_store_id',
         )
         read_only_fields = fields

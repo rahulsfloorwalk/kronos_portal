@@ -19,6 +19,7 @@ from .serializers import AnswerSerializer
 from .serializers import AttachmentSerializer
 from .serializers import NotificationSerializer
 from .serializers import ReportSectionSerializer, ReportSectionDeSerializer
+from .serializers import PaymentSerializer
 from audit.models import Audit
 from manager.models import City
 from .serializers import CitySerializer
@@ -31,6 +32,7 @@ from audit_store import service as audit_store_service
 from questionnaire.service import section as section_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
+from payment.service import payment_auditor as payment_service
 import attachment.service as attachment_service
 import attachment.service_auditor as attachment_auditor_service
 
@@ -495,3 +497,16 @@ class UserView(APIView):
     }
     def get(self, request, format=None):
         return Response(PlainUserSerializer(request.user).data)
+
+
+class PaymentsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        try:
+            payments = payment_service.find_by_user(request.user.id)
+            return Response(PaymentSerializer(payments, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e

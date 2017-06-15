@@ -1,4 +1,4 @@
 from payment.models import Payment
 
-def get_payments_by_user_id(user_id):
+def find_by_user(user_id):
     return Payment.objects.filter(user_id=user_id)
