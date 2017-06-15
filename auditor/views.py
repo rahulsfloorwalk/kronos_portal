@@ -499,7 +499,7 @@ class UserView(APIView):
         return Response(PlainUserSerializer(request.user).data)
 
 
-class PaymentsView(APIView):
+class PaymentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],

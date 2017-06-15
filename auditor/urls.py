@@ -33,5 +33,5 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),
 
-    url(r'payment/', views.PaymentsView.as_view(), name="payments_view"),
+    url(r'payment/', views.PaymentView.as_view(), name="payments_view"),
 ], 'auditor')
