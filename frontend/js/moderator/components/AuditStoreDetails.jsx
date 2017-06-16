@@ -11,7 +11,7 @@ import { findById, complete, fail, unsubmit, submit, setAuditDate } from '../ser
 
 import { FormDateInput } from '../../components/FormInput.jsx';
 import ExpandableDetails from '../../components/ExpandableDetails.jsx';
-import { Calendar, Retweet, King, File, Download } from '../../components/Icons.jsx';
+import { Calendar, Retweet, King, File, Download, Envelope, Earphone } from '../../components/Icons.jsx';
 import Panel from '../../components/Panel.jsx';
 import Loading from '../../components/Loading.jsx';
 import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
@@ -103,6 +103,7 @@ export default React.createClass({
 			</div>)
 		}
 		let auditorPhoneLink = (<a href={`tel:${this.state.auditStore.user.profileinfo.mobile_number}`}>{this.state.auditStore.user.profileinfo.mobile_number}</a>);
+		let auditorEmailLink = (<a href={`mailto:${this.state.auditStore.user.email}`}>{this.state.auditStore.user.email}</a>);
 
 		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
 
@@ -130,7 +131,10 @@ export default React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">Store:</td>
-								<th>{this.state.auditStore.audit.store.name}</th>
+								<td>
+									<b>{this.state.auditStore.audit.store.name}</b><br/>
+									<small>{this.state.auditStore.audit.store.address}</small>
+								</td>
 							</tr>
 							<tr>
 
@@ -143,7 +147,11 @@ export default React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">Auditor:</td>
-								<td><b>{this.state.auditStore.user.profileinfo.first_name} {this.state.auditStore.user.profileinfo.last_name}</b> ( {auditorPhoneLink})</td>
+								<td>
+									<b>{this.state.auditStore.user.profileinfo.first_name} {this.state.auditStore.user.profileinfo.last_name}</b><br/>
+									( <Earphone/> {auditorPhoneLink})
+									( <Envelope/> {auditorEmailLink})
+								</td>
 							</tr>
 							<tr>
 								<td className="text-right">Audit Date:</td>
