@@ -1,9 +1,9 @@
-from audit_store.models import AuditStore
+from audit_store import service as audit_store_service
 from payment.models import Payment
 
 
-def add_payment_on_auit_store_accepted(audit_store_id):
-    audit_store = AuditStore.objects.get(pk=audit_store_id)
+def add_payment_on_audit_store_accepted(audit_store_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
     payment = Payment()
     payment.audit_store = audit_store
     payment.user = audit_store.user

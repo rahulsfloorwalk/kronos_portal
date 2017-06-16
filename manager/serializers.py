@@ -681,3 +681,17 @@ class PaymentSerializer(ModelSerializer):
             'audit_store_id',
         )
         read_only_fields = fields
+
+class PaymentUserSerializer(ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Payment
+        fields = (
+            'id',
+            'comment',
+            'amount',
+            'status',
+            'user',
+            'audit_store_id',
+        )
+        read_only_fields = fields

@@ -1,5 +1,5 @@
 from payment.models import Payment
-from payment.service.payment_manager import add_payment_on_auit_store_accepted as insert_payment
+from payment.service.payment_manager import add_payment_on_audit_store_accepted as insert_payment
 from audit_store.models import AuditStore
 
 def insert_payments_for_complete_reports():

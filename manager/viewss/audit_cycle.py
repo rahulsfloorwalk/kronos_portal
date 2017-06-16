@@ -17,7 +17,7 @@ from audit.service import audit_cycle as audit_cycle_service
 from payment.service import payment_manager as payment_service
 
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
-from manager.serializers import PaymentSerializer
+from manager.serializers import PaymentUserSerializer
 
 from client_report.service import audit_cycle_xlsx_report as xlsx_report_service
 
@@ -154,6 +154,6 @@ class PaymentView(APIView):
     def get(self, request, audit_cycle_id, format=None):
         try:
             payments = payment_service.find_by_audit_cycle(audit_cycle_id)
-            return Response(PaymentSerializer(payments, many=True).data)
+            return Response(PaymentUserSerializer(payments, many=True).data)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
