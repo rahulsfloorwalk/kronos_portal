@@ -16,6 +16,7 @@ import Panel from '../../components/Panel.jsx';
 import Loading from '../../components/Loading.jsx';
 import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
 import MarkdownViewer from '../../components/MarkdownViewer.jsx';
+import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -143,7 +144,7 @@ export default React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">Type:</td>
-								<th>{getAuditType(this.state.auditStore.audit.audit_cycle.type)}</th>
+								<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type}/></th>
 							</tr>
 							<tr>
 								<td className="text-right">Auditor:</td>

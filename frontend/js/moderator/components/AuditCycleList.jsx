@@ -12,6 +12,7 @@ import { getAuditType, getAuditStatus } from '../../utils.js';
 
 import { File } from '../../components/Icons.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
+import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
 
 export default React.createClass({
 	getInitialState: function(){
@@ -34,9 +35,11 @@ export default React.createClass({
 					style={pointerStyle}
 					onClick={()=>hashHistory.push(`audit_cycle/${ac.id}/audit_store`)}
 				>
+				<td className="text-right">{ac.client.name}</td>
 				<td>{ac.name}</td>
-				<td>{ac.client.name}</td>
-				<td>{getAuditType(ac.type)}</td>
+				<td><AuditTypeLabel auditType={ac.type}/></td>
+				<td className="text-right">{ moment(ac.start_date).format(momentDateFormat) }</td>
+				<td className="text-right">{ moment(ac.end_date).format(momentDateFormat)}</td>
 			</tr>);
 		}
 		if(trs.length > 0){
@@ -47,12 +50,14 @@ export default React.createClass({
 							<File/> Audit Cycles
 						</h4>
 					</div>
-					<table className="table table-bordered table-hover">
+					<table className="table table-bordered table-hover table-striped">
 						<thead>
 							<tr>
+								<th className="text-right">Client</th>
 								<th>Cycle</th>
-								<th>Client</th>
 								<th>Type</th>
+								<th className="text-right">Start Date</th>
+								<th className="text-right">End Date</th>
 							</tr>
 						</thead>
 						<tbody>

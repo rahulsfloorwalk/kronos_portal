@@ -12,6 +12,7 @@ import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../components/Icon
 import NavLink from '../../components/NavLink.jsx';
 import Panel from '../../components/Panel.jsx';
 import Loading from '../../components/Loading.jsx';
+import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -49,7 +50,7 @@ export default React.createClass({
 						<tbody>
 							<tr><td className="text-right">Name:</td><td><b>{ this.state.auditCycle.name }</b></td></tr>
 							<tr><td className="text-right">Client:</td><td><b>{ this.state.auditCycle.client.name }</b></td></tr>
-							<tr><td className="text-right">Type:</td><td><b>{ getAuditType(this.state.auditCycle.type) }</b></td></tr>
+							<tr><td className="text-right">Type:</td><td><b><AuditTypeLabel auditType={this.state.auditCycle.type}/></b></td></tr>
 							<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.state.auditCycle.status) }</b></td></tr>
 							<tr><td className="text-right">Start Date:</td><td><b>{ moment(this.state.auditCycle.start_date).format(momentDateFormat) }</b></td></tr>
 							<tr><td className="text-right">End Date:</td><td><b>{ moment(this.state.auditCycle.end_date).format(momentDateFormat) }</b></td></tr>
