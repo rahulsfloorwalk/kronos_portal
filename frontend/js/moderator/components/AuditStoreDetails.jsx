@@ -15,6 +15,7 @@ import { Calendar, Retweet, King, File, Download } from '../../components/Icons.
 import Panel from '../../components/Panel.jsx';
 import Loading from '../../components/Loading.jsx';
 import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
+import MarkdownViewer from '../../components/MarkdownViewer.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -115,6 +116,8 @@ export default React.createClass({
 				<h2 className="page-header">
 					<File/> Audit Report
 				</h2>
+				<div className="row">
+				<div className="col-md-6">
 				<div className="panel panel-default">
 					<div className="panel-heading">
 						<h4 className="panel-title">Audit Details</h4>
@@ -156,6 +159,15 @@ export default React.createClass({
 						{errorMessageElement}
 						{submitButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
 					</div>
+				</div>
+				</div>
+				<div className="col-md-6">
+					<div className="panel panel-default">
+						<div className="panel-body">
+							<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""  + '\n\n' + this.state.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+						</div>
+					</div>
+				</div>
 				</div>
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore}/>
 				<AuditStoreSections auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore}/>
