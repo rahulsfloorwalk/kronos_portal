@@ -33,7 +33,7 @@ def get_audit_stores(profileinfo_id):
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
         return AuditStore.objects.filter(
                 user_id=profile_info.user_id,
-                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
+                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
                 audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
                 )
     except ProfileInfo.DoesNotExist as e:
@@ -54,7 +54,7 @@ def find_by_id_for_auditor(audit_store_id, user_id):
         return AuditStore.objects.get(
                 pk=audit_store_id,
                 user_id=user_id,
-                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
+                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
                 audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
                 )
     except (AuditStore.DoesNotExist) as e:
@@ -62,14 +62,13 @@ def find_by_id_for_auditor(audit_store_id, user_id):
 
 
 def find_latest_for_client(client_id):
-    return AuditStore.objects.filter(audit__audit_cycle__client_id=client_id, status=AuditStore.COMPLETED)[:5]
+    return AuditStore.objects.presentable().filter(audit__audit_cycle__client_id=client_id)[:5]
 
 
 def find_by_store_for_client(store_id, client_id):
-    return AuditStore.objects.filter(
+    return AuditStore.objects.presentable().filter(
             audit__audit_cycle__client_id=client_id,
             audit__store_id=store_id,
-            status=AuditStore.COMPLETED,
         )
 
 
@@ -320,5 +319,79 @@ def uncomplete(audit_store_id, user_actor):
             return audit_store
         else:
             raise AppLogicError("audit store cannot be uncompleted now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+@atomic
+def accept(audit_store_id, user_actor):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+        report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, audit_store.user.id)
+
+        if not audit_store.is_presentable():
+            raise AppLogicError("Report cannot be accepted.")
+
+        if audit_store.status == AuditStore.COMPLETED:
+            audit_store.status = AuditStore.ACCEPTED
+            audit_store.save()
+            #TODO:VERB should be encapsulated
+            notify.send(
+                user_actor,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_STORE_ACCEPTED',
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            notify.send(
+                    user_actor,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_ACCEPTED',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be accepted now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+@atomic
+def reject(audit_store_id, user_actor):
+    try:
+        audit_store = AuditStore.objects.get(id=audit_store_id)
+        report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, audit_store.user.id)
+
+        if not audit_store.is_presentable():
+            raise AppLogicError("Report cannot be rejected.")
+
+        if audit_store.status == AuditStore.COMPLETED:
+            audit_store.status = AuditStore.REJECTED
+            audit_store.save()
+            #TODO:VERB should be encapsulated
+            notify.send(
+                user_actor,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_STORE_REJECTED',
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            notify.send(
+                    user_actor,
+                    recipient=audit_store.user,
+                    verb='AUDIT_STORE_REJECTED',
+                    action_object=audit_store,
+                    target=audit_store.audit
+            )
+            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be rejected now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e

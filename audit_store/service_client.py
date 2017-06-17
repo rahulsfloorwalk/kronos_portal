@@ -14,11 +14,14 @@ def find_upcoming_for_client(client_id):
 
 def find_by_id_for_client(audit_store_id, client_id):
     try:
-        return AuditStore.objects.get(
+        return AuditStore.objects.presentable().get(
                 audit__audit_cycle__client_id=client_id,
                 id=audit_store_id,
-                status=AuditStore.COMPLETED,
             )
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_presentable_for_client(client_id):
+    return AuditStore.objects.presentable().filter(
+            audit__audit_cycle__client_id=client_id,
+        ).order_by('-audit_date')

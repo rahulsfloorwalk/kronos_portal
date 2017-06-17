@@ -2,7 +2,7 @@ import logging
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
-from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, OneToOneField
+from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField
 from django.db.models import CASCADE
 
 from audit.models import Audit
@@ -11,6 +11,12 @@ from questionnaire.models import Question
 
 _logger = logging.getLogger(__name__)
 
+class PresentationManager(Manager):
+    def presentable(self):
+        presentable_status = [AuditStore.COMPLETED, AuditStore.ACCEPTED]
+        return self.get_queryset().filter(status__in=presentable_status)
+
+
 class AuditStore(Model):
 
     ASSIGNED = 'ASSIGNED'
@@ -18,6 +24,8 @@ class AuditStore(Model):
     SUBMITTED = 'SUBMITTED'
     WITHDRAWN = 'WITHDRAWN'
     COMPLETED = 'COMPLETED'
+    ACCEPTED = 'ACCEPTED'
+    REJECTED = 'REJECTED'
 
     STATUS = (
             (ASSIGNED, "Assigned"),
@@ -25,6 +33,8 @@ class AuditStore(Model):
             (SUBMITTED, "Submitted"),
             (COMPLETED, "Completed"),
             (WITHDRAWN, "Withdrawn"),
+            (ACCEPTED, "Accepted"),
+            (REJECTED, "Rejected"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
@@ -35,6 +45,8 @@ class AuditStore(Model):
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id')
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
+
+    objects = PresentationManager()
 
     def marks_obtained(self):
         return sum(rs.marks_obtained() for rs in self.report_sections.all())
@@ -83,3 +95,10 @@ class AuditStore(Model):
                             return False
 
         return True
+
+    def is_presentable(self):
+        if self.status in (self.COMPLETED, self.ACCEPTED):
+            return True
+        else:
+            _logger.debug("report is neither in completed not in accepted state")
+            return False

@@ -15,7 +15,7 @@ def get_performing_stores(audit_cycle_id, user_id):
     for audit in audit_cycle.audits.all():
         obtained = 0
         count = 0
-        for audit_store in audit.audit_stores.filter(status=AuditStore.COMPLETED):
+        for audit_store in audit.audit_stores.presentable():
             obtained += audit_store.percentage()
             count += 1
         if count > 0: stores.append(({

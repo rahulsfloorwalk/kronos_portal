@@ -6,7 +6,7 @@ from answer.models import ReportSection
 
 def get_average_for_section(section_id):
     section = Section.objects.get(pk=section_id)
-    report_sections = ReportSection.objects.filter(section=section).filter(audit_store__status=AuditStore.COMPLETED)
+    report_sections = ReportSection.objects.filter(section=section).filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])
     if len(report_sections) > 0:
         counter = 0
         total = 0

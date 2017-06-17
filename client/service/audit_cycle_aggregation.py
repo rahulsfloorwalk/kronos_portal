@@ -19,7 +19,7 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
     sections = audit_cycle.sections.order_by("sequence").all()
     for audit in audits:
         store = audit.store
-        audit_stores = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by("-audit_date")
+        audit_stores = audit.audit_stores.presentable().order_by("-audit_date")
         for audit_store in audit_stores:
             row = []
             row.append(audit_store.id)

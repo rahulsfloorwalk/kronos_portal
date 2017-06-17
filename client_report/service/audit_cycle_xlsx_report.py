@@ -33,7 +33,7 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
 
         audit_stores = []
         for audit in audit_cycle.audits.all():
-            audit_store = audit.audit_stores.filter(status=AuditStore.COMPLETED).order_by('audit_date')
+            audit_store = audit.audit_stores.presentable().order_by('audit_date')
             audit_stores.extend(audit_store)
 
         data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)
