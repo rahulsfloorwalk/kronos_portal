@@ -38,7 +38,7 @@ var AuditCycleSummary = React.createClass({
     let appl_arr = ["APPLIED", "REJECTED", "APPROVED"].map((status) => {
       return (<tr key={status}><td style={{width:"50%"}} className="text-right"><ApplicationStatusLabel status={status} /></td><td><b>{this.state.stats.application[status]}</b></td></tr>);
     });
-    let audit_store_arr = ["ASSIGNED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED"].map((status) => {
+    let audit_store_arr = ["ASSIGNED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
       return (<tr key={status}><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {status}/></td><td><b>{this.state.stats.audit_store[status]}</b></td></tr>);
     });
 		return (

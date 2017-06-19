@@ -301,6 +301,32 @@ class AuditDeSerializer(ModelSerializer):
         audit.post_approval_description = self.validated_data.get('post_approval_description', audit.post_approval_description)
         return audit
 
+class PaymentSerializer(ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = (
+            'id',
+            'comment',
+            'amount',
+            'status',
+            'user_id',
+            'audit_store_id',
+        )
+        read_only_fields = fields
+
+class PaymentUserSerializer(ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Payment
+        fields = (
+            'id',
+            'comment',
+            'amount',
+            'status',
+            'user',
+            'audit_store_id',
+        )
+        read_only_fields = fields
 
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializerWithoutApplications()
@@ -316,6 +342,21 @@ class AuditStoreSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AuditStoreSerializerWithPayment(ModelSerializer):
+    audit = AuditSerializerWithoutApplications()
+    user = UserSerializer()
+    payment = PaymentSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
+            'payment'
+        )
+        read_only_fields = fields
 
 class AuditStoreDeSerializer(ModelSerializer):
     class Meta:
@@ -669,29 +710,3 @@ class ModeratorDeSerializer(Serializer):
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
 
-class PaymentSerializer(ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = (
-            'id',
-            'comment',
-            'amount',
-            'status',
-            'user_id',
-            'audit_store_id',
-        )
-        read_only_fields = fields
-
-class PaymentUserSerializer(ModelSerializer):
-    user = UserSerializer()
-    class Meta:
-        model = Payment
-        fields = (
-            'id',
-            'comment',
-            'amount',
-            'status',
-            'user',
-            'audit_store_id',
-        )
-        read_only_fields = fields

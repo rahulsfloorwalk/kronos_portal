@@ -52,6 +52,8 @@ var AuditCycleDashBoard = React.createClass({
                 <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"ASSIGNED"}/></td><td><b>{value.stats.audit_store.ASSIGNED}</b></td></tr>
                 <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"SUBMITTED"}/></td><td><b>{value.stats.audit_store.SUBMITTED}</b></td></tr>
                 <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"COMPLETED"}/></td><td><b>{value.stats.audit_store.COMPLETED}</b></td></tr>
+                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"ACCEPTED"}/></td><td><b>{value.stats.audit_store.ACCEPTED}</b></td></tr>
+                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"REJECTED"}/></td><td><b>{value.stats.audit_store.REJECTED}</b></td></tr>
               </tbody>
             </table>
           </div>

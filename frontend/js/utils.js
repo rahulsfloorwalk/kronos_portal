@@ -131,6 +131,25 @@ export function getAuditStoreStatus(value){
 			return "Submitted";
 		case "COMPLETED":
 			return "Completed";
+		case "ACCEPTED":
+			return "Accepted";
+		case "REJECTED":
+			return "Rejected";
+		case "":
+		case null:
+		case undefined:
+			return "";
+		default:
+			return `unknown status type ${value} - ${typeof value}`;
+	}
+};
+
+export function getPaymentStatus(value){
+	switch(value){
+		case "PENDING":
+			return "Pending";
+		case "PAID":
+			return "Paid";
 		case "":
 		case null:
 		case undefined:

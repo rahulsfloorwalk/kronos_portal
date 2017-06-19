@@ -8,20 +8,27 @@ import { momentDateFormat, url}  from '../../../config.js';
 import { File, Download } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
+import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
 
 import {fetchAuditStores} from '../../manager/actions/audit_store.js';
 import { getAuditStoreStatus } from '../../utils.js';
+import { getPaymentStatus } from '../../utils.js';
 
 var AuditStoreRow = React.createClass({
   render: function(){
     let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
     let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
     let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
+    let paymentStatus = null;
+    if(this.props.auditStore.payment){
+      paymentStatus = this.props.auditStore.payment.status;
+    }
     return(
       <tr>
         <td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
+        <td><PaymentStatusLabel status={paymentStatus}/></td>
         <td>
           <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
         </td>
@@ -43,6 +50,7 @@ var AuditStoreTable = React.createClass({
 	      <th>Auditor Name</th>
 	      <th>Audit Date</th>
 	      <th>Report Status</th>
+        <th>Payment Status</th>
 	      <th></th>
 	    </tr>
 	  </thead>

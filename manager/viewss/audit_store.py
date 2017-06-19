@@ -21,7 +21,7 @@ from audit_store import service as audit_store_service
 from client_report.service import xlsx_report as xlsx_report_service
 
 from audit.models import Audit, AuditCycle
-from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer
+from ..serializers import AuditStoreSerializerWithPayment, AuditStoreDeSerializer
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -31,7 +31,7 @@ class AuditStoreByAuditCycle(APIView):
     def get(self, request, audit_cycle_id, format=None):
         try:
             audit_stores = audit_store_service.find_by_audit_cycle(audit_cycle_id)
-            serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
+            serial_audit_stores = AuditStoreSerializerWithPayment(audit_stores, many=True).data
             return Response(serial_audit_stores)
         except ObjectNotFound:
             raise Http404
