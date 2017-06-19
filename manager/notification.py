@@ -14,6 +14,12 @@ verbs = (
         'AUDIT_STORE_FAILED',
         'AUDIT_STORE_WITHDRAWN',
         'AUDIT_STORE_COMPLETED',
+
+        'AUDIT_STORE_ACCEPTED',
+        'AUDIT_STORE_REJECTED',
+
+        'AUDIT_STORE_PAID',
+        'AUDIT_STORE_UNPAID',
     )
 
 for v in verbs:

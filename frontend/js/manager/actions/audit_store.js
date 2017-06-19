@@ -204,6 +204,25 @@ export function unpayAuditStore(auditStoreId){
 	};
 };
 
+export function acceptAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_ACCEPT,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/accept`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_ACCEPT,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
 export function updateAuditStore(auditStore){
 	return function(dispatch){
 		dispatch({

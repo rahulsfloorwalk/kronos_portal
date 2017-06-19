@@ -10,7 +10,7 @@ import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
 
-import {fetchAuditStores, payAuditStore, unpayAuditStore} from '../../manager/actions/audit_store.js';
+import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore} from '../../manager/actions/audit_store.js';
 import { getAuditStoreStatus } from '../../utils.js';
 import { getPaymentStatus } from '../../utils.js';
 
@@ -21,12 +21,16 @@ var __AuditStoreRow = React.createClass({
   unpayButtonClicked: function(e){
 		this.props.dispatch(unpayAuditStore(this.props.auditStore.id));
 	},
+  acceptButtonClicked: function(e){
+		this.props.dispatch(acceptAuditStore(this.props.auditStore.id));
+	},
   render: function(){
     let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
     let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
     let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
     let paymentStatus = null;
     let paymentButton = null;
+    let acceptButton = null;
     if(this.props.auditStore.payment){
       paymentStatus = this.props.auditStore.payment.status;
       if(paymentStatus == 'PENDING'){
@@ -36,6 +40,9 @@ var __AuditStoreRow = React.createClass({
         paymentButton = (<button onClick={this.unpayButtonClicked} type="button" className="btn btn-default">Unpay</button>);
       }
     }
+    if(this.props.auditStore.status == 'COMPLETED'){
+      acceptButton = (<button onClick={this.acceptButtonClicked} type="button" className="btn btn-default">Accept</button>);
+    }
     return(
       <tr>
         <td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
@@ -44,6 +51,7 @@ var __AuditStoreRow = React.createClass({
         <td>
           <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
         </td>
+        <td>{acceptButton}</td>
         <td><PaymentStatusLabel status={paymentStatus}/></td>
         <td>{paymentButton}</td>
       </tr>
@@ -64,6 +72,7 @@ var AuditStoreTable = React.createClass({
 	      <th>Auditor Name</th>
 	      <th>Audit Date</th>
 	      <th>Report Status</th>
+        <th></th>
         <th></th>
         <th>Payment Status</th>
 	      <th></th>

@@ -178,6 +178,21 @@ class AuditStoreIdUnSubmitView(APIView):
                 'non_field_errors': [e.__str__()]
             })
 
+class AuditStoreIdAcceptView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.accept(audit_store_id, request.user)
+            payment = payment_service.add_payment_on_audit_store_accepted(audit_store.id)
+            return Response(AuditStoreSerializerWithPayment(audit_store).data)
+        except (AppLogicError) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
 class AuditStoreIdPayView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

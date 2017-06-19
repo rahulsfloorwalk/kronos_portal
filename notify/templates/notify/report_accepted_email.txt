@@ -1,0 +1,8 @@
+Congratulations {{ name }},
+Your audit report for {{ client }} on {{ audit_date }} has been accepted by the client.
+Your payments will be processed shortly and you will be notified after you payment is processed.
+Thank You for showing interest and promptness in audits and reporting.
+We look forward to working with you again when we have good audits near you.
+--
+Thanks and regards,
+FloorWalk Team
