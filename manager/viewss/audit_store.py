@@ -18,10 +18,12 @@ from registration.mixins import HasGroupPermission
 from audit_store.models import AuditStore
 from audit_store import service as audit_store_service
 
+from payment.service import payment_manager as payment_service
+
 from client_report.service import xlsx_report as xlsx_report_service
 
 from audit.models import Audit, AuditCycle
-from ..serializers import AuditStoreSerializerWithPayment, AuditStoreDeSerializer
+from ..serializers import AuditStoreSerializer, AuditStoreSerializerWithPayment, AuditStoreDeSerializer
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -171,6 +173,38 @@ class AuditStoreIdUnSubmitView(APIView):
         try:
             audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+class AuditStoreIdPayView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.find_by_id(audit_store_id)
+            payment_service.pay_for_audit_store(audit_store_id)
+            return Response(AuditStoreSerializerWithPayment(audit_store).data)
+        except (AppLogicError) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
+class AuditStoreIdUnpayView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.find_by_id(audit_store_id)
+            payment_service.unpay_for_audit_store(audit_store_id)
+            return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]

@@ -42,29 +42,32 @@ var AuditCycleSummary = React.createClass({
       return (<tr key={status}><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {status}/></td><td><b>{this.state.stats.audit_store[status]}</b></td></tr>);
     });
 		return (
-			<div>
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <h4 className="panel-title">Application Summary</h4>
+      <div>
+  			<div className="col-md-6">
+          <div className="panel panel-default">
+            <div className="panel-heading">
+              <h4 className="panel-title">Application Summary</h4>
+            </div>
+            <table className="table table-striped">
+              <tbody>
+                {appl_arr}
+              </tbody>
+            </table>
+          </div>
         </div>
-        <table className="table table-striped">
-          <tbody>
-            {appl_arr}
-          </tbody>
-        </table>
+        <div className="col-md-6">
+          <div className="panel panel-default">
+            <div className="panel-heading">
+              <h4 className="panel-title">Audit Report Summary</h4>
+            </div>
+            <table className="table table-striped">
+              <tbody>
+                {audit_store_arr}
+              </tbody>
+            </table>
+          </div>
+  			</div>
       </div>
-
-      <div className="panel panel-default">
-        <div className="panel-heading">
-          <h4 className="panel-title">Audit Report Summary</h4>
-        </div>
-        <table className="table table-striped">
-          <tbody>
-            {audit_store_arr}
-          </tbody>
-        </table>
-      </div>
-			</div>
 		);
 	},
 });

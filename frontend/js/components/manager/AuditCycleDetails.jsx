@@ -56,40 +56,45 @@ var AuditCycleDetails = React.createClass({
 					<li className="active"><Retweet/> {this.props.auditCycle.name}</li>
 				</ol>
 				<div className="row">
-				<div className="col-md-4">
-				<div className="panel panel-primary">
-					<div className="panel-heading">
-						<Link to={editAuditCycleLink} className="btn btn-default btn-sm pull-right">
-							<Pencil/>
-						</Link>
-						<h4><Retweet/> Audit Cycle Details</h4>
+					<div className="col-md-4">
+					<div className="panel panel-primary">
+						<div className="panel-heading">
+							<Link to={editAuditCycleLink} className="btn btn-default btn-sm pull-right">
+								<Pencil/>
+							</Link>
+							<h4><Retweet/> Audit Cycle Details</h4>
+						</div>
+						<table className="table table-striped">
+							<tbody>
+								<tr><td className="text-right">Name:</td><td><b>{ this.props.auditCycle.name }</b></td></tr>
+								<tr><td className="text-right">Client:</td><td><b>{ this.props.auditCycle.client.name }</b></td></tr>
+								<tr><td className="text-right">Type:</td><td><b>{ getAuditType(this.props.auditCycle.type) }</b></td></tr>
+								<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.props.auditCycle.status) }</b></td></tr>
+								<tr><td className="text-right">Earnings Per Audit:</td><td><b>₹ { this.props.auditCycle.earnings_per_audit }</b></td></tr>
+								<tr><td className="text-right">Reimbursement upto:</td><td><b>₹ { this.props.auditCycle.reimbursement }</b></td></tr>
+								<tr><td className="text-right">Start Date:</td><td><b>{ moment(this.props.auditCycle.start_date).format(momentDateFormat) }</b></td></tr>
+								<tr><td className="text-right">End Date:</td><td><b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b></td></tr>
+								<tr><td className="text-right">Description</td><td>{ detailsElement }</td></tr>
+								<tr><td className="text-right">Post Approval Description</td><td><Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>View</Link></td></tr>
+							</tbody>
+						</table>
 					</div>
-					<table className="table table-striped">
-						<tbody>
-							<tr><td className="text-right">Name:</td><td><b>{ this.props.auditCycle.name }</b></td></tr>
-							<tr><td className="text-right">Client:</td><td><b>{ this.props.auditCycle.client.name }</b></td></tr>
-							<tr><td className="text-right">Type:</td><td><b>{ getAuditType(this.props.auditCycle.type) }</b></td></tr>
-							<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.props.auditCycle.status) }</b></td></tr>
-							<tr><td className="text-right">Earnings Per Audit:</td><td><b>₹ { this.props.auditCycle.earnings_per_audit }</b></td></tr>
-							<tr><td className="text-right">Reimbursement upto:</td><td><b>₹ { this.props.auditCycle.reimbursement }</b></td></tr>
-							<tr><td className="text-right">Start Date:</td><td><b>{ moment(this.props.auditCycle.start_date).format(momentDateFormat) }</b></td></tr>
-							<tr><td className="text-right">End Date:</td><td><b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b></td></tr>
-							<tr><td className="text-right">Description</td><td>{ detailsElement }</td></tr>
-							<tr><td className="text-right">Post Approval Description</td><td><Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>View</Link></td></tr>
-						</tbody>
-					</table>
+
+					</div>
+					<div className="col-md-8">
+						<AuditCycleSummary auditCycleId = {this.props.auditCycle.id}/>
+					</div>
 				</div>
-				<AuditCycleSummary auditCycleId = {this.props.auditCycle.id}/>
-				</div>
-				<div className="col-md-8">
-				<ul className="nav nav-tabs">
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}><Tasks/> Questionnaire</NavLink>
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator`}><Knight/> Moderators</NavLink>
-				</ul>
-				{this.props.children}
-				</div>
+				<div className="row">
+					<div className="col-md-12">
+					<ul className="nav nav-tabs">
+						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}><Tasks/> Questionnaire</NavLink>
+						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>
+						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
+						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator`}><Knight/> Moderators</NavLink>
+					</ul>
+					{this.props.children}
+					</div>
 				</div>
 			</div>
 		);

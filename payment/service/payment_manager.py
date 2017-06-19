@@ -16,6 +16,17 @@ def clear_payment_for_audit_store(audit_store_id):
     payment.status = Payment.PAID
     payment.save()
 
+def pay_for_audit_store(audit_store_id):
+    payment = Payment.objects.get(audit_store_id=audit_store_id)
+    payment.status = Payment.PAID
+    payment.save()
+
+def unpay_for_audit_store(audit_store_id):
+    payment = Payment.objects.get(audit_store_id=audit_store_id)
+    payment.status = Payment.PENDING
+    payment.save()
+
+
 def clear_payment_for_audit_cycle(audit_cycle_id):
     payments = Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).update(status=Payment.PAID)
 
