@@ -193,6 +193,20 @@ class AuditStoreIdAcceptView(APIView):
                 'non_field_errors': [e.__str__()]
             })
 
+class AuditStoreIdRejectView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER],
+        }
+    def post(self, request, audit_store_id):
+        try:
+            audit_store = audit_store_service.reject(audit_store_id, request.user)
+            return Response(AuditStoreSerializer(audit_store).data)
+        except (AppLogicError) as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+
 class AuditStoreIdPayView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -166,6 +166,44 @@ export function unSubmitAuditStore(auditStoreId){
 	};
 };
 
+export function acceptAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_ACCEPT,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/accept`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_ACCEPT,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function rejectAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_REJECT,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/reject`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_REJECT,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
 export function payAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
@@ -196,25 +234,6 @@ export function unpayAuditStore(auditStoreId){
 		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/unpay`, function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_UNPAY,
-				status: 'success',
-				auditStore
-			});
-		});
-		//TODO: Handle error
-	};
-};
-
-export function acceptAuditStore(auditStoreId){
-	return function(dispatch){
-		dispatch({
-			type: types.AUDIT_STORE_ID_ACCEPT,
-			status: 'request',
-			auditStoreId
-		});
-
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/accept`, function(auditStore){
-			dispatch({
-				type: types.AUDIT_STORE_ID_ACCEPT,
 				status: 'success',
 				auditStore
 			});

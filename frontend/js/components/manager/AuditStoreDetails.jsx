@@ -7,7 +7,7 @@ import Datetime from 'react-datetime';
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
-import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, submitAuditStore, unSubmitAuditStore, updateAuditStore, uncompleteAuditStore } from '../../manager/actions/audit_store.js';
+import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, submitAuditStore, unSubmitAuditStore, updateAuditStore, uncompleteAuditStore, acceptAuditStore, rejectAuditStore } from '../../manager/actions/audit_store.js';
 import { setAuditDate } from '../../manager/service/audit_store.js';
 
 import { FormDateInput } from '../FormInput.jsx';
@@ -50,6 +50,12 @@ var AuditStoreDetails = React.createClass({
 	uncompleteButtonClicked: function(e){
 		this.props.dispatch(uncompleteAuditStore(this.props.params.auditStoreId));
 	},
+	acceptButtonClicked: function(e){
+		this.props.dispatch(acceptAuditStore(this.props.params.auditStoreId));
+	},
+	rejectButtonClicked: function(e){
+		this.props.dispatch(rejectAuditStore(this.props.params.auditStoreId));
+	},
 	auditDateChanged: function(momentDate){
 		this.setState({auditDateLoading: true});
 		setAuditDate(this.props.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
@@ -68,12 +74,14 @@ var AuditStoreDetails = React.createClass({
 
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
-		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton;
+		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton;
 		if (this.props.auditStore.status === 'ASSIGNED'){
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
 		}
 		if (this.props.auditStore.status === 'COMPLETED'){
 			uncompleteButton = (<button onClick={this.uncompleteButtonClicked} type="button" className="btn btn-default">Un Complete</button>);
+			acceptButton = (<button onClick={this.acceptButtonClicked} type="button" className="btn btn-success">Accept</button>);
+			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
 		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === 'SUBMITTED'){
 			withdrawButton = (<button onClick={this.withdrawButtonClicked} type="button" className="btn btn-default">Withdraw</button>);
@@ -170,7 +178,7 @@ var AuditStoreDetails = React.createClass({
 					{detailsElement}
 					<div className="panel-footer text-right">
 						{errorFirst}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}
+						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
