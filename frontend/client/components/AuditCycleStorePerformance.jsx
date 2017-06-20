@@ -88,7 +88,7 @@ let AuditCycleStorePerformanceWrapper = React.createClass({
 	reloadData: function(auditType){
 		if(!demo){
 			this.setLoading(true);
-			let ts = fetchAuditCycleStorePerformance(this.props.auditType).then((reportData) => {
+			let ts = fetchAuditCycleStorePerformance(auditType).then((reportData) => {
 				this.setState({
 					'reportData': reportData
 				});
@@ -101,7 +101,9 @@ let AuditCycleStorePerformanceWrapper = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.debug("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
-		this.reloadData(nextProps.auditType);
+		if( this.props.auditType !== nextProps.auditType) {
+			this.reloadData(nextProps.auditType);
+		}
 	},
 	render: function(){
 		if(this.state.loading || ! this.state.reportData ){

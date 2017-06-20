@@ -55,7 +55,9 @@ var AuditCycleTimeSeries = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.debug("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
-		this.reloadData(nextProps.auditType);
+		if( this.props.auditType !== nextProps.auditType) {
+			this.reloadData(nextProps.auditType);
+		}
 	},
 
 	tickFunction: function( values){

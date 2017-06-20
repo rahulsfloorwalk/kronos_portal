@@ -65,7 +65,9 @@ export default React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.debug("AuditCycleCityMatrix","componentWillReceiveProps", nextProps.auditType);
-		this.reloadData(nextProps.auditType);
+		if( this.props.auditType !== nextProps.auditType) {
+			this.reloadData(nextProps.auditType);
+		}
 	},
 	auditCycleChanged: function(e){
 		this.reloadMatrix(e.target.value);
