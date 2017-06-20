@@ -10,14 +10,20 @@ import Loading from '../../js/components/Loading.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
 
 var CityWisePerformanceChart = React.createClass({
+	getDefaultProps: function(){
+		return {
+			type: "best",
+		};
+	},
 	create_structure: function(input_data){
-    let data_arr = input_data.data;
-    let label_arr = input_data.columns
-    if(this.props.type === "worst"){
-      data_arr.reverse();
-    }
+		let data_arr = input_data.data;
+		let label_arr = input_data.columns
+		let size = this.props.type === "all" ? data_arr.length : 5;
+
+		if(this.props.type === "worst"){
+			data_arr.reverse();
+		}
 		let data = [];
-    let size = Math.min(5, data_arr.length);
 		for(let i=0; i < size; i++){
 			let obj = {};
 			obj['name'] = data_arr[i][0].name;
@@ -37,7 +43,7 @@ var CityWisePerformanceChart = React.createClass({
 
 	render : function(){
 		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
-		if (this.props.type === "best"){
+		if (this.props.type === "best" || this.props.type === "all"){
 			colors = ["#688833", "#30AD23", "#11772D"];
 		}
 		else if (this.props.type === "worst"){
@@ -129,7 +135,7 @@ let CityWisePerformanceChartWrapper = React.createClass({
 			);
 		} else {
 			return (
-			<CityWisePerformanceChart title="City Wise Performance" type="best" reportData={this.state.reportData}/>
+			<CityWisePerformanceChart title="City Wise Performance" type="all" reportData={this.state.reportData}/>
 			);
 		}
 	}
