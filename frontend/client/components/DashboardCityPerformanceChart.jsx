@@ -7,6 +7,7 @@ import {demo} from '../../config.js';
 import {fetchCityWisePerformance} from '../service/dashboard.js';
 
 import Loading from '../../js/components/Loading.jsx';
+import Jumbotron from '../../js/components/Jumbotron.jsx';
 
 var CityWisePerformanceChart = React.createClass({
 	create_structure: function(input_data){
@@ -108,6 +109,13 @@ let CityWisePerformanceChartWrapper = React.createClass({
 	render: function(){
 		if(this.state.loading || ! this.state.reportData ){
 			return <Loading/>;
+		} else if(this.state.reportData.data.length === 0 ){
+			return (
+				<div>
+					<h3 className="text-center">City Wise Performance</h3>
+					<Jumbotron heading="" para="chart will be visible once reports are completed"/>
+				</div>
+			);
 		} else if(this.state.reportData.data.length > 10) {
 			return (
 			<div className="row">
