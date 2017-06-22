@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import connection
 from django.db.transaction import atomic
 from django.contrib.auth.models import Group
@@ -63,6 +64,7 @@ def pay_for_audit_store(audit_store_id, user_actor):
             if not(bi.bank_name and bi.account_number and bi.ifsc_code):
                 raise AppLogicError("Bank Details Incomplete")
             payment.status = Payment.PAID
+            payment.paid_on = datetime.now()
             payment.comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
                 first = payment.audit_store.user.profileinfo.first_name,
                 last = payment.audit_store.user.profileinfo.last_name,
@@ -101,6 +103,7 @@ def unpay_for_audit_store(audit_store_id, user_actor):
         payment = Payment.objects.get(audit_store_id=audit_store_id)
         if payment.status == Payment.PAID:
             payment.status = Payment.PENDING
+            payment.paid_on = None
             payment.comment = "pending payment for auditor - {first} {last} for audit cycle - {audit_cycle} for client - {client}".format(
                 first=payment.audit_store.user.profileinfo.first_name,
                 last=payment.audit_store.user.profileinfo.last_name,

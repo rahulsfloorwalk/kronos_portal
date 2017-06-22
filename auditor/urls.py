@@ -10,6 +10,7 @@ urlpatterns = ([
     url(r'profile_info$', views.ProfileInfoView.as_view(), name="profile_info_view"),
     url(r'additional_info$', views.AdditionalInfoView.as_view(), name="additional_info_view"),
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
+    url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
 
     url(r'application$', views.AuditApplicationsView.as_view(), name="audit_applications_view"),
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
@@ -33,5 +34,4 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),
 
-    url(r'payment/', views.PaymentView.as_view(), name="payments_view"),
 ], 'auditor')
