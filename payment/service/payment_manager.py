@@ -59,6 +59,9 @@ def pay_for_audit_store(audit_store_id, user_actor):
     try:
         payment = Payment.objects.get(audit_store_id=audit_store_id)
         if payment.status == Payment.PENDING:
+            bi = payment.audit_store.user.bankinfo
+            if not(bi.bank_name and bi.account_number and bi.ifsc_code):
+                raise AppLogicError("Bank Details Incomplete")
             payment.status = Payment.PAID
             payment.comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
                 first = payment.audit_store.user.profileinfo.first_name,
