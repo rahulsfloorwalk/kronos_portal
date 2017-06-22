@@ -19,7 +19,7 @@ verbs = (
         'AUDIT_STORE_REJECTED',
 
         'AUDIT_STORE_PAID',
-        'AUDIT_STORE_UNPAID',
+        'AUDIT_STORE_PENDING',
     )
 
 for v in verbs:

@@ -186,7 +186,7 @@ class AuditStoreIdAcceptView(APIView):
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.accept(audit_store_id, request.user)
-            payment = payment_service.add_payment_on_audit_store_accepted(audit_store.id)
+            payment = payment_service.add_payment_on_audit_store_accepted(audit_store.id, request.user)
             return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
@@ -216,7 +216,7 @@ class AuditStoreIdPayView(APIView):
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.find_by_id(audit_store_id)
-            payment_service.pay_for_audit_store(audit_store_id)
+            payment_service.pay_for_audit_store(audit_store_id, request.user)
             return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
@@ -232,7 +232,7 @@ class AuditStoreIdUnpayView(APIView):
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.find_by_id(audit_store_id)
-            payment_service.unpay_for_audit_store(audit_store_id)
+            payment_service.unpay_for_audit_store(audit_store_id, request.user)
             return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({

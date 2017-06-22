@@ -1,0 +1,7 @@
+Congratulations {{ name }},
+Your audit payment for {{ client }} conducted on {{ audit_date }} has been processed. A payment amount of INR {{amount}} has been transferred to your account.
+Hope you had a good experience performing audits with us.
+We look forward to working with you again.
+--
+Thanks and regards,
+FloorWalk Team

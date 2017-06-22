@@ -36,11 +36,13 @@ def notification_email_task(notif_id):
     elif notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
         to_email = notif.recipient.email
         params = {}
-        params['to_name'] = notif.recipient.profileinfo.first_name
+        params['name'] = notif.recipient.profileinfo.first_name
         params['audit_date'] = notif.action_object.audit_date
         params['client'] = notif.action_object.audit.audit_cycle.client.name
         params['store_name'] = notif.action_object.audit.store.name
         params['store_address'] = notif.action_object.audit.store.address
+        params['amount'] = notif.action_object.payment.amount
+        params['account'] = notif.action_object.payment.user.bankinfo.account_number
 
         if notif.verb == notification.AUDIT_APPLICATION_APPLIED:
             subject = "[FloorWalk] Audit Application for {}".format(params['client'])
@@ -95,6 +97,24 @@ def notification_email_task(notif_id):
             subject = "[FloorWalk] Audit Failed for {}".format(params['client'])
             params['html_template'] = 'notify/failed_email.html'
             params['txt_template'] = 'notify/failed_email.txt'
+
+        elif notif.verb == notification.AUDIT_STORE_ACCEPTED:
+            subject = "[FloorWalk] Audit Report Accepted for {}".format(params['client'])
+            params['html_template'] = 'notify/report_accepted_email.html'
+            params['txt_template'] = 'notify/report_accepted_email.txt'
+
+        # elif notif.verb == notification.AUDIT_STORE_REJECTED:
+        #     subject = "[FloorWalk] Audit Failed for {}".format(params['client'])
+        #     params['html_template'] = 'notify/report_reject_email.html'
+        #     params['txt_template'] = 'notify/report_reject_email.txt'
+
+        elif notif.verb == notification.AUDIT_STORE_PAID:
+            subject = "[FloorWalk] Payment cleared for {}".format(params['client'])
+            params['html_template'] = 'notify/report_paid_email.html'
+            params['txt_template'] = 'notify/report_paid_email.txt'
+
+        else:
+            return False
 
         html_message, txt_message = _prepare_mail(params)
         _send_mail(to_email, subject, html_message, txt_message)
