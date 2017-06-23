@@ -11,13 +11,13 @@ export default React.createClass({
 			case "SUBMITTED":
 				return "primary";
 			case "COMPLETED":
-				return "primary";
-			case "ACCEPTED":
 				return "success";
+			case "ACCEPTED":
+				return "success2";
 			case "FAILED":
 				return "danger";
 			case "REJECTED":
-				return "danger";
+				return "danger2";
 			case "WITHDRAWN":
 				return "default";
 			case "":

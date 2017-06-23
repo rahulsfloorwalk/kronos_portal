@@ -1,0 +1,9 @@
+
+$label_primary_base : #337ab7;
+$label_success_base : #5cb85c;
+$label_danger_base : #d9534f;
+
+.label-primary2 { background-color: darken($label_primary_base, 20%); }
+.label-success2 { background-color: darken($label_success_base, 20%); }
+.label-danger2 { background-color: darken($label_danger_base, 20%); }
+

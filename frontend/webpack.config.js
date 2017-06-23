@@ -20,6 +20,7 @@ module.exports = {
 		moderator_vendor: ['jquery','react','react-dom','react-router'],
 
 		'react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
+		'bs_overrides': path.resolve(__dirname, './css/bs_overrides.scss'),
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
@@ -48,6 +49,10 @@ module.exports = {
 			{
 				test: /\.css$/,
 				loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader"})
+			},
+			{
+				test: /\.scss$/,
+				loader: ExtractTextPlugin.extract({ fallback: "style-loader", use: "css-loader!sass-loader"}),
 			},
 		]
 	},
