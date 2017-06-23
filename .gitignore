@@ -6,3 +6,4 @@ properties.py
 frontend/node_modules/
 frontend/dist/
 kronos.egg-info/
+dist/
