@@ -1,3 +1,4 @@
+from django.conf import settings
 from django import forms
 from django.urls import reverse
 from django.contrib.auth.models import User,Group
@@ -80,7 +81,12 @@ class SignUpForm(UserCreationForm):
 
         msg = EmailMessage( strings.SIGN_UP_SUBJECT, message, to=(user.email,))
         msg.content_subtype = 'html'
-        msg.send()
+
+        if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+            msg.send()
+        else:
+            _logger.info("verification email disabled. skipping email for user : %s", user.email)
+            _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
 
         return user
 
