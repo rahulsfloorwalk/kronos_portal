@@ -24,6 +24,7 @@ import ProfileInfoForm from './ProfileInfoForm.jsx';
 import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';
 
+import PaymentList from './PaymentList.jsx';
 
 ReactGA.initialize(auditorGAId);
 
@@ -54,6 +55,7 @@ const Routes = ({store}) => (
 		<Route path="audit_store/:auditStoreId" component={AuditStoreDetails}>
 			<Route path="section" component={SectionList}/>
 		</Route>
+		<Route path="payment" component={PaymentList}/>
 	</Route>
     </Router>
   </Provider>
