@@ -28,7 +28,7 @@ var AuditApplicationList = React.createClass({
 			let approveLink, rejectLink, statusLabel;
 			if( app.status === "APPLIED"){
 				approveLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/approve`} className="btn btn-primary"><ThumbsUp/> Approve</Link>);
-				rejectLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/reject`} className="btn btn-default"><ThumbsDown/> Reject</Link>);
+				rejectLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/reject`} className="btn btn-default"><ThumbsDown/> Deny</Link>);
 			} else {
 				statusLabel = <ApplicationStatusLabel status={app.status}/>;
 			}
