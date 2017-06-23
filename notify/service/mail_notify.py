@@ -41,8 +41,6 @@ def notification_email_task(notif_id):
         params['client'] = notif.action_object.audit.audit_cycle.client.name
         params['store_name'] = notif.action_object.audit.store.name
         params['store_address'] = notif.action_object.audit.store.address
-        params['amount'] = notif.action_object.payment.amount
-        params['account'] = notif.action_object.payment.user.bankinfo.account_number
 
         if notif.verb == notification.AUDIT_APPLICATION_APPLIED:
             subject = "[FloorWalk] Audit Application for {}".format(params['client'])
@@ -112,6 +110,8 @@ def notification_email_task(notif_id):
             subject = "[FloorWalk] Payment cleared for {}".format(params['client'])
             params['html_template'] = 'notify/report_paid_email.html'
             params['txt_template'] = 'notify/report_paid_email.txt'
+            params['amount'] = notif.action_object.payment.amount
+            params['account'] = notif.action_object.payment.user.bankinfo.account_number
 
         else:
             return False
