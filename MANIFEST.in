@@ -1,0 +1,6 @@
+include manage.py properties.py.sample requirements.txt strings.py
+include *.sh
+recursive-include **/fixtures *.json
+recursive-include frontend/img *
+recursive-include frontend/dist *
+recursive-exclude frontend/node_modules *
