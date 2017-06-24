@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Globe, PhoneAlt, EyeOpen, Briefcase, Road } from './Icons.jsx';
+import { Globe, PhoneAlt, EyeOpen, Briefcase, Road, Flag } from './Icons.jsx';
 
 import { getAuditType } from '../utils.js';
 
@@ -23,7 +23,7 @@ export default React.createClass({
 			case null:
 			case undefined:
 			default:
-				return "";
+				return (<Flag/>);
 		}
 	},
 	render : function(){

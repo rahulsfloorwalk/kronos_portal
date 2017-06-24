@@ -16,6 +16,12 @@ export function getAuditType(value){
 			return "Service";
 		case "SALES":
 			return "Sales";
+		case "FINE_DINE":
+			return "Fine Dine";
+		case "SKY_KARTING":
+			return "Sky Karting";
+		case "Arena":
+			return "Arena";
 		case "":
 		case null:
 		case undefined:

@@ -13,6 +13,9 @@ class AuditCycle(Model):
     COMPETITION = 'COMPETITION'
     SERVICE = 'SERVICE'
     SALES = 'SALES'
+    FINE_DINE = 'FINE_DINE'
+    SKY_KARTING = 'SKY_KARTING'
+    ARENA = 'ARENA'
     TYPES = (
         (WALKIN, 'Walkin'),
         (PHONE, 'Phone'),
@@ -21,6 +24,9 @@ class AuditCycle(Model):
         (COMPETITION, 'Competition'),
         (SERVICE, 'Service'),
         (SALES, 'Sales'),
+        (FINE_DINE, 'Fine Dine'),
+        (SKY_KARTING, 'Sky Karting'),
+        (ARENA, 'Arena'),
     )
 
     PREPARATION = 'PREPARATION'
