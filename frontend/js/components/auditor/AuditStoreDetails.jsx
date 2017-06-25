@@ -21,7 +21,8 @@ import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../u
 var AuditStoreDetails = React.createClass({
 	getInitialState: function(){
 		return {
-			submitMessage : ""
+			submitMessage : "",
+			submitStatus: "",
 		};
 	},
 	componentDidMount: function(){
@@ -31,12 +32,14 @@ var AuditStoreDetails = React.createClass({
 		var promise = this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
 		promise.then(() => {
 			this.setState({
-				submitMessage : "submitted successfully"
+				submitMessage : "submitted successfully",
+				submitStatus: "success",
 			});
 		},(err) => {
 			console.debug("ERRRRR:", err);
 			this.setState({
-				submitMessage : err.responseJSON.non_field_errors[0]
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
 			});
 		});
 	},
@@ -53,6 +56,8 @@ var AuditStoreDetails = React.createClass({
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
 		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
 		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
+
+		let submitMessageElement = <b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b>;
 
 		return (
 			<div>
@@ -74,7 +79,7 @@ var AuditStoreDetails = React.createClass({
 							</div>
 						</div>
 						<div className="panel-footer text-right">
-							{this.state.submitMessage}&nbsp;&nbsp;{submitAuditButton}
+							{submitMessageElement}&nbsp;&nbsp;{submitAuditButton}
 						</div>
 					</div>
 				</div>
