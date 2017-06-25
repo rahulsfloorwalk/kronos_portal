@@ -21,6 +21,8 @@ import strings
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.validators import numericValidator
 
+_logger = logging.getLogger(__name__)
+
 class SignUpForm(UserCreationForm):
     phone = forms.CharField(min_length=10, max_length=10, required = True, validators=[numericValidator])
 
