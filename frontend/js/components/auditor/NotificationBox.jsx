@@ -34,6 +34,14 @@ var NotificationItem = React.createClass({
 				return <span className="text-success"> completed </span>;
 			case "AUDIT_STORE_FAILED":
 				return <span className="text-danger"> failed </span>;
+			case "AUDIT_STORE_ACCEPTED":
+				return <span className="text-success"> accepted </span>;
+			case "AUDIT_STORE_REJECTED":
+				return <span className="text-danger"> rejected </span>;
+			case "AUDIT_STORE_PENDING":
+				return <span className="text-danger"> pending </span>;
+			case "AUDIT_STORE_PAID":
+				return <span className="text-success"> paid </span>;
 			default:
 				return verb;
 		}
@@ -80,7 +88,7 @@ var NotificationItem = React.createClass({
 		}
 	},
 	render: function(){
-		let userName = "Your"; 
+		let userName = "Your";
 		let linkUrl = this.getUrl(this.props.n);
 		let verbText = this.getVerb(this.props.n.verb);
 		let targetText = this.getTargetText(this.props.n.target, this.props.n.target_content_type);

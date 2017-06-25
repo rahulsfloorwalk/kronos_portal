@@ -33,6 +33,15 @@ var NotificationItem = React.createClass({
 				return <span className="text-success"> completed </span>;
 			case "AUDIT_STORE_FAILED":
 				return <span className="text-danger"> failed </span>;
+			case "AUDIT_STORE_ACCEPTED":
+				return <span className="text-success"> accepted </span>;
+			case "AUDIT_STORE_REJECTED":
+				return <span className="text-danger"> rejected </span>;
+			case "AUDIT_STORE_PENDING":
+				return <span className="text-danger"> payment pending </span>;
+			case "AUDIT_STORE_PAID":
+				return <span className="text-success"> paid </span>;
+
 			default:
 				return verb;
 		}
@@ -159,6 +168,10 @@ export default React.createClass({
 							<option value="AUDIT_STORE_WITHDRAWN">Report Withdrawn</option>
 							<option value="AUDIT_STORE_FAILED">Report Failed</option>
 							<option value="AUDIT_STORE_COMPLETED">Report Completed</option>
+							<option value="AUDIT_STORE_ACCEPTED">Report Accepted</option>
+							<option value="AUDIT_STORE_REJECTED">Report Rejected</option>
+							<option value="AUDIT_STORE_PENDING">Payment Pending</option>
+							<option value="AUDIT_STORE_PAID">Paid</option>
 						</select>
 					</div>
 					<h4>
