@@ -3,6 +3,7 @@ from datetime import datetime
 from django.db import connection
 from django.db.transaction import atomic
 from django.contrib.auth.models import Group
+from auditor.models import BankInfo
 from notifications.signals import notify
 from notifications.models import Notification
 from audit_store import service as audit_store_service
@@ -10,6 +11,7 @@ from payment.models import Payment
 from manager import notification
 
 from notify.service import mail_notify
+from audit.service import audit_cycle as audit_cycle_service
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_MANAGER
 
@@ -152,16 +154,29 @@ def find_pending_by_audit_cycle(audit_cycle_id):
 
 def find_pending_csv_for_audit_cycle(audit_cycle_id, writer):
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
-    audit = pending_payments[0].audit_store.audit.audit_cycle.name
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    client = audit_cycle.client.name
+    name = audit_cycle.name
+    audit = client + "_" + name
+
+
     fieldnames = ['first name', 'last name', 'bank name', 'ifsc', 'account number', 'amount', 'status']
     writer.writerow(fieldnames)
     for payment in pending_payments:
+        try:
+            bank_name = payment.user.bankinfo.bank_name
+            ifsc_code = payment.user.bankinfo.ifsc_code
+            account_number = payment.user.bankinfo.account_number
+        except BankInfo.DoesNotExist:
+            bank_name = ""
+            ifsc_code = ""
+            account_number = ""
         writer.writerow([
             payment.user.profileinfo.first_name,
             payment.user.profileinfo.last_name,
-            payment.user.bankinfo.bank_name,
-            payment.user.bankinfo.ifsc_code,
-            payment.user.bankinfo.account_number,
+            bank_name,
+            ifsc_code,
+            account_number,
             payment.amount,
             payment.status
         ])
