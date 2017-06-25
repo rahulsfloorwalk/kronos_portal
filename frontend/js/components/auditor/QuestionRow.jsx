@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Plus, Cross, Pencil } from '../Icons.jsx';
+import { Plus, Cross, Pencil, Check } from '../Icons.jsx';
 
 import { affectInputEventToComponent } from '../../react_utils.js'
 
@@ -66,10 +66,20 @@ var QuestionRow = React.createClass({
 	},
 	render: function(){
 		let pointerStyle = {cursor: 'pointer'};
+		let goodClass = "";
+
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
 			var defaultAnswer = "click to enter answer";
 		}
-		let answer = this.state.answer_text || (<span className="text-muted">{defaultAnswer}</span>);
+
+		let answer;
+		if(this.state.answer_text){
+			answer = this.state.answer_text;
+			goodClass = "success";
+		} else {
+			answer = (<span className="text-muted">{defaultAnswer}</span>);
+		}
+
 		if(this.state.editing){
 			var answerElement = (
 					<form className="input-group" onSubmit={this.submitAnswer}>
@@ -86,17 +96,22 @@ var QuestionRow = React.createClass({
 						</span>
 					</form>
 			);
+			goodClass = "";
 		} else {
 			var answerElement = (<p style={pointerStyle} onClick={this.startEdit}>{answer}</p>);
 		}
 
+
 		if(this.state.saving){
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
+			goodClass = "";
 		}
 
 		return (
-			<tr>
-				<td>{this.props.q.sequence}</td>
+			<tr className={goodClass}>
+				<td>
+					<p>{this.props.q.sequence}</p>
+				</td>
 				<td>
 					<p onClick={this.startEdit} style={pointerStyle}><b>{this.props.q.question_txt}</b>{savingMessage}</p>
 					{answerElement}

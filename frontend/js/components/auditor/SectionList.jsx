@@ -79,8 +79,8 @@ var __Section = React.createClass({
 			auditor_comment: this.state.auditor_comment,
 			audit_store: this.props.auditStoreId,
 		};
-		console.log("this.props",this.props);
-		console.log("payload",payload);
+		//console.log("this.props",this.props);
+		//console.log("payload",payload);
 		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
 	},
 	uploadButtonClicked: function(e){
@@ -233,7 +233,7 @@ var __Section = React.createClass({
 			attachmentRows.push(" ");
 		}
 		if( attachmentRows.length === 0){
-			attachmentRows.push(<span className="text-muted">no attachments here&nbsp;</span>);
+			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
 		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
