@@ -1,3 +1,4 @@
+import csv
 from datetime import datetime
 from django.db import connection
 from django.db.transaction import atomic
@@ -145,6 +146,30 @@ def get_pending_payments():
 
 def find_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id)
+
+def find_pending_by_audit_cycle(audit_cycle_id):
+    return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)
+
+def find_pending_csv_for_audit_cycle(audit_cycle_id, writer):
+    pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+    audit = pending_payments[0].audit_store.audit.audit_cycle.name
+    fieldnames = ['first name', 'last name', 'bank name', 'ifsc', 'account number', 'amount', 'status']
+    writer.writerow(fieldnames)
+    for payment in pending_payments:
+        writer.writerow([
+            payment.user.profileinfo.first_name,
+            payment.user.profileinfo.last_name,
+            payment.user.bankinfo.bank_name,
+            payment.user.bankinfo.ifsc_code,
+            payment.user.bankinfo.account_number,
+            payment.amount,
+            payment.status
+        ])
+
+    return audit.replace(" ", "-") + "_payments.csv"
+
+
+
 
 def find_by_user(user_id):
     return Payment.objects.filter(user_id=user_id)

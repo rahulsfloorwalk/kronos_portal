@@ -1,3 +1,4 @@
+import csv
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
@@ -157,3 +158,27 @@ class PaymentView(APIView):
             return Response(PaymentUserSerializer(payments, many=True).data)
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
+
+class PendingPaymentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        try:
+            payments = payment_service.find_pending_by_audit_cycle(audit_cycle_id)
+            return Response(PaymentUserSerializer(payments, many=True).data)
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
+class PendingPaymentCsvView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        response = HttpResponse(content_type='text/csv')
+        writer = csv.writer(response)
+        filename = payment_service.find_pending_csv_for_audit_cycle(audit_cycle_id, writer)
+        response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
+        return response

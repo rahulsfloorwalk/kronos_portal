@@ -117,6 +117,9 @@ var AuditStoreList = React.createClass({
       <div>
         <h3 className="page-header">
           <File/> Reports
+          <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/csv'}>
+              <Download/> Payment List
+          </a>
           <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
               <Download/> Excel Report
           </a>
