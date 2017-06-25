@@ -60,7 +60,9 @@ export default React.createClass({
 		});
 	},
 	componentWillReceiveProps: function(nextProps){
-		this.selectAuditCycleOrCity(nextProps.params.auditCycleId, nextProps.params.cityId);
+		if( this.props.params.auditCycleId !== nextProps.params.auditCycleId || this.props.params.cityId !== nextProps.params.cityId) {
+			this.selectAuditCycleOrCity(nextProps.params.auditCycleId, nextProps.params.cityId);
+		}
 	},
 	auditCycleChanged: function(e){
 		hashHistory.push(`/browser/auditCycle/${e.target.value}/city/${this.state.selectedCityId}`);

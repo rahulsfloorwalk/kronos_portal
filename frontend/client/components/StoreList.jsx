@@ -115,11 +115,13 @@ export default React.createClass({
 			stores: [],
 		});
 		if(nextProps.auditCycleId && nextProps.cityId){
-			fetchStoresByAuditCycleAndCity(nextProps.auditCycleId, nextProps.cityId).then((stores)=>{
-				this.setState({
-					stores
+			if( this.props.auditCycleId !== nextProps.auditCycleId || this.props.cityId !== nextProps.cityId) {
+				fetchStoresByAuditCycleAndCity(nextProps.auditCycleId, nextProps.cityId).then((stores)=>{
+					this.setState({
+						stores
+					});
 				});
-			});
+			}
 		}
 	},
 	render: function(){
