@@ -66,17 +66,18 @@ def generate_xlsx_from_structure(report_data):
 
     section_format = workbook.add_format({
         **base_style,
+        'font_size':18,
         'bg_color': '#D99594',
         'bold':True,
+        'align': 'center',
     })
 
     worksheet = workbook.add_worksheet()
 
     start_row = 0
     start_col = 0
-    worksheet.set_column(0, 0, 30)
-    worksheet.set_column(1, 1, 20)
-    worksheet.set_column(2, 100, 30)
+    worksheet.set_column(0, 0, 20)
+    worksheet.set_column(1, 100, 30)
     worksheet.set_default_row(30)
     row = start_row
 
@@ -85,12 +86,12 @@ def generate_xlsx_from_structure(report_data):
 
     if report_data.get("logo_url"):
         image_data = BytesIO(urlopen(report_data["logo_url"]).read())
-        worksheet.merge_range(row, col+5, row+2, col+6, "", title_format)
+        worksheet.merge_range(row, col+5, row+2, col+5, "", title_format)
         worksheet.insert_image(row, col+5, report_data["logo_url"], {'image_data': image_data})
 
     row += 1
 
-    worksheet.merge_range(row, col, row, col+4, "External Audit", title_format)
+    worksheet.merge_range(row, col, row, col+4, report_data["subtitle"], title_format)
     row += 1
     worksheet.merge_range(row, col, row, col+4, report_data["title"], title_format)
     row += 1
@@ -103,8 +104,6 @@ def generate_xlsx_from_structure(report_data):
     worksheet.write(row, col, "", summary_value_format)
     col += 1
     worksheet.write(row, col, "Staff Names", summary_header_format)
-    col += 1
-    worksheet.write(row, col, "", summary_value_format)
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
@@ -125,8 +124,6 @@ def generate_xlsx_from_structure(report_data):
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
-    worksheet.write(row, col, "", summary_value_format)
-    col += 1
     row += 1
 
     col = start_col
@@ -137,8 +134,6 @@ def generate_xlsx_from_structure(report_data):
     worksheet.write(row, col, "", summary_value_format)
     col += 1
     worksheet.write(row, col, "Tele Operator", summary_header_format)
-    col += 1
-    worksheet.write(row, col, "", summary_value_format)
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
@@ -159,12 +154,10 @@ def generate_xlsx_from_structure(report_data):
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
-    worksheet.write(row, col, "", summary_value_format)
-    col += 1
     row += 1
 
     col = start_col
-    for cell in ["Section", "Points Lost", "Explore", "Analyze", "Respond", "Make it Stick", "Date Committed"]:
+    for cell in ["Points Lost", "Explore", "Analyze", "Respond", "Make it Stick", "Date Committed"]:
         worksheet.write(row, col, cell, header_format)
         col += 1
     row += 1
@@ -172,22 +165,14 @@ def generate_xlsx_from_structure(report_data):
     for section in report_data["sections"]:
         col = start_col
 
-        worksheet.write(row, col, section["name"], section_format)
-        col += 1
-
         worksheet.write(row, col, section["points_lost"], points_format)
         col += 1
 
-        for cell in [ "", "", "", "", ""]:
-            worksheet.write(row, col, cell, section_format)
-            col += 1
+        worksheet.merge_range(row, col, row, col+4, section["name"], section_format)
         row += 1
 
         for q in section["questions"]:
             col = start_col
-
-            worksheet.write(row, col, "", base_format)
-            col += 1
 
             worksheet.write(row, col, q["points_lost"], points_format)
             col += 1
@@ -211,6 +196,7 @@ def generate_ears_report_for_client(audit_store_id, client_id):
 
     report_data = {
             "title": "Action Plan using E.A.R.S Model",
+            "subtitle": "External Audit - " + audit_store.audit.audit_cycle.name,
             "client_name": audit_store.audit.audit_cycle.client.name,
             "audit_date": audit_store.audit_date.strftime('%d-%m-%Y'),
             "marks_percentage": str(audit_store.percentage()) + "%",
@@ -252,5 +238,6 @@ def generate_ears_report_for_client(audit_store_id, client_id):
         if len(report_section["questions"]) is not 0:
             report_data["sections"].append(report_section)
 
-    return generate_xlsx_from_structure(report_data), "FOOBAR.xlsx"
+    file_name = report_data["store_name"] + " " + report_data["audit_date"] + ".xlsx"
+    return generate_xlsx_from_structure(report_data), file_name
 
