@@ -27,6 +27,7 @@ import attachment.service_client as attachment_client_service
 
 import audit.service.audit_cycle as audit_cycle_service
 
+from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
 from client_report.service import audit_cycle_xlsx_report as cycle_xlsx_report_service
 from client_report.service import audit_section
@@ -205,6 +206,21 @@ class AuditCycleXlsxReport(APIView):
     def get(self, request, audit_cycle_id, format=None):
         try:
             report, name = cycle_xlsx_report_service.get_aggregate_report_for_client(audit_cycle_id, request.user.clientuser.client.id)
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+            return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
+
+class AuditStoreEARSReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_store_id, format=None):
+        try:
+            report, name = ears_xlsx_report_service.generate_ears_report_for_client(audit_store_id, request.user.clientuser.client.id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response
