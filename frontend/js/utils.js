@@ -20,8 +20,8 @@ export function getAuditType(value){
 			return "Fine Dine";
 		case "SKY_KARTING":
 			return "Sky Karting";
-		case "Arena":
-			return "Arena";
+		case "SMAAASH_ARENA":
+			return "Smaaash Arena";
 		case "":
 		case null:
 		case undefined:
