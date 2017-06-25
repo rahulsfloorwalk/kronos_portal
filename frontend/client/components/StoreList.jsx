@@ -111,11 +111,11 @@ export default React.createClass({
 		});
 	},
 	componentWillReceiveProps: function(nextProps){
-		this.setState({
-			stores: [],
-		});
 		if(nextProps.auditCycleId && nextProps.cityId){
 			if( this.props.auditCycleId !== nextProps.auditCycleId || this.props.cityId !== nextProps.cityId) {
+				this.setState({
+					stores: [],
+				});
 				fetchStoresByAuditCycleAndCity(nextProps.auditCycleId, nextProps.cityId).then((stores)=>{
 					this.setState({
 						stores
