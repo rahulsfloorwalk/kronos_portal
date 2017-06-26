@@ -92,8 +92,8 @@ def withdraw(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -101,8 +101,8 @@ def withdraw(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be withdrawn now")
@@ -142,8 +142,8 @@ def submit(audit_store_id, user_id):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     audit_store.user,
                     recipient=audit_store.user,
@@ -151,8 +151,8 @@ def submit(audit_store_id, user_id):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be submitted now")
@@ -179,8 +179,8 @@ def complete(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -188,8 +188,8 @@ def complete(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be completed now")
@@ -212,8 +212,8 @@ def fail(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -221,8 +221,8 @@ def fail(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be failed now")
@@ -292,8 +292,8 @@ def unsubmit(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -301,8 +301,8 @@ def unsubmit(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be unsubmitted now")
@@ -332,9 +332,6 @@ def accept(audit_store_id, user_actor):
             audit_store.status = AuditStore.ACCEPTED
             audit_store.save()
 
-            ## add the entry to the payment row
-            payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, user_actor)
-
             #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
@@ -343,8 +340,9 @@ def accept(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
+            connection.on_commit(lambda: print("TRANSACTION COMMITTED 1"))
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -352,8 +350,13 @@ def accept(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
+            connection.on_commit(lambda: print("TRANSACTION COMMITTED 2"))
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+
+            ## add the entry to the payment row
+            payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, user_actor)
+
             return audit_store
         else:
             raise AppLogicError("audit store cannot be accepted now")
@@ -376,8 +379,8 @@ def reject(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
@@ -385,8 +388,8 @@ def reject(audit_store_id, user_actor):
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be rejected now")

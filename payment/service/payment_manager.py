@@ -39,8 +39,8 @@ def add_payment_on_audit_store_accepted(audit_store_id, user_actor):
             action_object=payment.audit_store,
             target=payment.audit_store.audit
         )
-        notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             user_actor,
             recipient=payment.user,
@@ -48,8 +48,8 @@ def add_payment_on_audit_store_accepted(audit_store_id, user_actor):
             action_object=payment.audit_store,
             target=payment.audit_store.audit
         )
-        notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
 
     except Payment.DoesNotExist as e:
         raise ObjectNotFound from e
@@ -86,8 +86,8 @@ def pay_for_audit_store(audit_store_id, user_actor):
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PAID).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PAID).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=payment.user,
@@ -95,8 +95,8 @@ def pay_for_audit_store(audit_store_id, user_actor):
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PAID).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PAID).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("payment cannot be pending now")
@@ -126,8 +126,8 @@ def unpay_for_audit_store(audit_store_id, user_actor):
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=payment.user,
@@ -135,8 +135,8 @@ def unpay_for_audit_store(audit_store_id, user_actor):
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("payment cannot be done now")

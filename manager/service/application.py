@@ -66,8 +66,8 @@ def approve(application_id, audit_date, user_actor):
         action_object=audit_store,
         target=audit_store.audit
     )
-    notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
             user_actor,
             recipient=audit_store.user,
@@ -75,8 +75,8 @@ def approve(application_id, audit_date, user_actor):
             action_object=audit_store,
             target=audit_store.audit
     )
-    notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return application
 
 @atomic
@@ -101,8 +101,8 @@ def reject(application_id, user_actor):
         action_object=application,
         target=application.audit
     )
-    notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
             user_actor,
             recipient=application.profileinfo.user,
@@ -110,8 +110,8 @@ def reject(application_id, user_actor):
             action_object=application,
             target=application.audit
     )
-    notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return application
 
 def find_by_audit(audit_id):

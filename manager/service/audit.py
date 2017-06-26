@@ -131,8 +131,8 @@ def apply( audit_id, profileinfo_id, audit_date):
                 action_object=application,
                 target=audit
         )
-        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
@@ -140,8 +140,8 @@ def apply( audit_id, profileinfo_id, audit_date):
             action_object=application,
             target=audit
         )
-        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
         return application
     else:
         raise AppLogicError("you cannot apply to this audit")
@@ -167,8 +167,8 @@ def cancel( audit_id, profileinfo_id):
                 action_object=application,
                 target=audit
         )
-        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
@@ -176,8 +176,8 @@ def cancel( audit_id, profileinfo_id):
             action_object=application,
             target=audit
         )
-        notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
         return application
     else:
         raise AppLogicError("you cannot cancel this application now")
@@ -214,8 +214,8 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
         action_object=audit_store,
         target=audit
     )
-    notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
         user_actor,
         recipient=audit_store.user,
@@ -223,8 +223,8 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
         action_object=audit_store,
         target=audit
     )
-    notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return audit_store
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):
