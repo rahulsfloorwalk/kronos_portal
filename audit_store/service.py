@@ -19,6 +19,7 @@ import answer.service.report_section as report_section_service
 import answer.service.answer as answer_service
 import questionnaire.service.question as question_service
 import questionnaire.service.section as section_service
+import payment.service.payment_manager as payment_manager_service
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
@@ -330,6 +331,10 @@ def accept(audit_store_id, user_actor):
         if audit_store.status == AuditStore.COMPLETED:
             audit_store.status = AuditStore.ACCEPTED
             audit_store.save()
+
+            ## add the entry to the payment row
+            payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, user_actor)
+
             #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,

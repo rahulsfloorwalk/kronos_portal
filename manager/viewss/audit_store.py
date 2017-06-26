@@ -186,7 +186,6 @@ class AuditStoreIdAcceptView(APIView):
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.accept(audit_store_id, request.user)
-            payment = payment_service.add_payment_on_audit_store_accepted(audit_store.id, request.user)
             return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
