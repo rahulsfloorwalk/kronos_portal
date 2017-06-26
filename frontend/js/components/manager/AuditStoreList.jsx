@@ -15,11 +15,34 @@ import { getAuditStoreStatus } from '../../utils.js';
 import { getPaymentStatus } from '../../utils.js';
 
 var __AuditStoreRow = React.createClass({
+	getInitialState: function(){
+		return {
+			payButtonMessage: "",
+		};
+	},
   payButtonClicked: function(e){
-		this.props.dispatch(payAuditStore(this.props.auditStore.id));
+		this.props.dispatch(payAuditStore(this.props.auditStore.id)).then(() => {
+			this.setState({
+				payButtonMessage: "Marked as paid",
+			});
+		}, (err) => {
+			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
+			this.setState({
+				payButtonMessage: errInfo[0],
+			});
+		});
 	},
   unpayButtonClicked: function(e){
-		this.props.dispatch(unpayAuditStore(this.props.auditStore.id));
+		this.props.dispatch(unpayAuditStore(this.props.auditStore.id)).then(() => {
+			this.setState({
+				payButtonMessage: "Marked as unpaid",
+			});
+		}, (err) => {
+			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
+			this.setState({
+				payButtonMessage: errInfo[0],
+			});
+		});
 	},
   acceptButtonClicked: function(e){
 		this.props.dispatch(acceptAuditStore(this.props.auditStore.id));
@@ -53,7 +76,7 @@ var __AuditStoreRow = React.createClass({
         </td>
         <td>{acceptButton}</td>
         <td><PaymentStatusLabel status={paymentStatus}/></td>
-        <td>{paymentButton}</td>
+        <td>{paymentButton}&nbsp;{this.state.payButtonMessage}</td>
       </tr>
     );
   },

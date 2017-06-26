@@ -72,9 +72,9 @@ def pay_for_audit_store(audit_store_id, user_actor):
             payment.comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
                 first = payment.audit_store.user.profileinfo.first_name,
                 last = payment.audit_store.user.profileinfo.last_name,
-                bank = payment.audit_store.user.bankinfo.bank_name,
-                ifsc = payment.audit_store.user.bankinfo.ifsc_code,
-                account = payment.audit_store.user.bankinfo.account_number
+                bank = bi.bank_name,
+                ifsc = bi.ifsc_code,
+                account = bi.account_number
             )
             payment.save()
             # TODO:VERB should be encapsulated
@@ -99,8 +99,8 @@ def pay_for_audit_store(audit_store_id, user_actor):
             return audit_store
         else:
             raise AppLogicError("payment cannot be pending now")
-    except Payment.DoesNotExist as e:
-        raise ObjectNotFound from e
+    except BankInfo.DoesNotExist as e:
+        raise AppLogicError("Bank details are not given") from e
 
 @atomic
 def unpay_for_audit_store(audit_store_id, user_actor):
