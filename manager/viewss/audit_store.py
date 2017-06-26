@@ -214,8 +214,7 @@ class AuditStoreIdPayView(APIView):
 
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.find_by_id(audit_store_id)
-            payment_service.pay_for_audit_store(audit_store_id, request.user)
+            audit_store = payment_service.pay_for_audit_store(audit_store_id, request.user)
             return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
@@ -230,8 +229,7 @@ class AuditStoreIdUnpayView(APIView):
 
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.find_by_id(audit_store_id)
-            payment_service.unpay_for_audit_store(audit_store_id, request.user)
+            audit_store = payment_service.unpay_for_audit_store(audit_store_id, request.user)
             return Response(AuditStoreSerializerWithPayment(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
