@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+from django.utils import timezone
 from django.db import connection
 from django.db.transaction import atomic
 from django.contrib.auth.models import Group
@@ -68,7 +69,7 @@ def pay_for_audit_store(audit_store_id, user_actor):
             if not(bi.bank_name and bi.account_number and bi.ifsc_code):
                 raise AppLogicError("Bank Details Incomplete")
             payment.status = Payment.PAID
-            payment.paid_on = datetime.now()
+            payment.paid_on = timezone.now()
             payment.comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
                 first = payment.audit_store.user.profileinfo.first_name,
                 last = payment.audit_store.user.profileinfo.last_name,
