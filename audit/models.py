@@ -68,7 +68,7 @@ class AuditCycle(Model):
     def completed_audit_count(self):
         return audit_store.models.AuditStore.objects.filter(
             audit__audit_cycle_id=self.id,
-            status=audit_store.models.AuditStore.COMPLETED
+            status__in=[audit_store.models.AuditStore.COMPLETED, audit_store.models.AuditStore.ACCEPTED]
         ).count()
 
     def completed_percentage(self):
