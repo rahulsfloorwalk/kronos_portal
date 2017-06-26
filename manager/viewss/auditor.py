@@ -27,7 +27,7 @@ class AuditorView(generics.ListAPIView):
             'GET' : [GROUP_NAME_MANAGER],
             'POST': [GROUP_NAME_MANAGER]
         }
-    queryset = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.all();
+    queryset = User.objects.filter(groups__name=GROUP_NAME_AUDITOR)
     serializer_class = AuditorSerializer
     filter_backends = (SearchFilter,)
     search_fields = ('email','profileinfo__first_name','profileinfo__last_name','profileinfo__mobile_number','profileinfo__city__name')
