@@ -101,7 +101,14 @@ WSGI_APPLICATION = 'kronos.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 DATABASES = {
-    'default': properties.database
+    'default': {
+        'ENGINE': properties.database["ENGINE"],
+        'NAME': properties.database["NAME"],
+        'USER': properties.database["USER"],
+        'PASSWORD': properties.database["PASSWORD"],
+        'HOST': properties.database["HOST"],
+        'PORT': properties.database["PORT"],
+    }
 }
 
 
