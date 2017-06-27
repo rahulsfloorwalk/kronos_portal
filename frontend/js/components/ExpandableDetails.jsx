@@ -24,10 +24,10 @@ export default React.createClass({
 			</Modal>)
 			: null;
 		return (
-			<div>
+			<span>
 				<a style={pointerStyle} onClick={this.buttonClicked}>{buttonText}</a>
 				{details}
-			</div>
+			</span>
 		);
 	}
 });

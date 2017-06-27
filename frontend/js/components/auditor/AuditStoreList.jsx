@@ -14,6 +14,7 @@ import { getAuditType, getAuditStatus } from '../../utils.js';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import Jumbotron from '../Jumbotron.jsx';
+import AuditTypeLabel from '../AuditTypeLabel.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
 
 var AuditStoreRow = React.createClass({
@@ -21,22 +22,39 @@ var AuditStoreRow = React.createClass({
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
 		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
 		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
+
+		let inlineBlockStyle = {
+			display: 'inline-block',
+			marginBottom: '10px',
+		};
+
 		return (
 				<div className="panel panel-default">
-					<div className="panel-heading">
-						<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.name}</b></h4>
-					</div>
 					<div className="panel-body">
-						<div className="form-horizontal">
-							<LabelValue_2_10 label="Type:" value={getAuditType(this.props.auditStore.audit.audit_cycle.type)}/>
-							<LabelValue_2_10 label="Store:" value={this.props.auditStore.audit.store.name}/>
-							<LabelValue_2_10 label="Address:" value={this.props.auditStore.audit.store.address}/>
-							<LabelValue_2_10 label="Fees:" value={<span>{fees}{reimb}</span>}/>
-							<LabelValue_2_10 label="Audit Date:" value={moment(this.props.auditStore.audit_date).format(momentDateFormat)}/>
-							<LabelValue_2_10 label="Instructions:" value={<ExpandableDetails details={<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description + "\n\n" + this.props.auditStore.audit.audit_cycle.post_approval_description}/>}/>}/>
-							<LabelValue_2_10 label="Status:" value={<AuditStoreStatusLabel status={this.props.auditStore.status}/>}/>
+						<h3 className="">
+							<b>{this.props.auditStore.audit.audit_cycle.client.name}</b> - {this.props.auditStore.audit.store.name}
+						</h3>
+						<div>
+						<AuditStoreStatusLabel status={this.props.auditStore.status}/>
+						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+						<div style={inlineBlockStyle}>
+						<b>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</b>
+						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
-						<p className="text-right"><Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link></p>
+						<div style={inlineBlockStyle}>
+						{<span>{fees}{reimb}</span>}
+						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+						</div>
+						<div style={inlineBlockStyle}>
+						<AuditTypeLabel auditType={this.props.auditStore.audit.audit_cycle.type}/>
+						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
+						</div>
+						<div style={inlineBlockStyle}>
+						<ExpandableDetails details={<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description + "\n\n" + this.props.auditStore.audit.audit_cycle.post_approval_description}/>}/>
+						</div>
+						</div>
+						<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
+						<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link>
 					</div>
 				</div>
 		);
@@ -44,22 +62,26 @@ var AuditStoreRow = React.createClass({
 });
 
 var AuditStoreList = React.createClass({
+	getInitialState: function(){
+		return {
+			auditStores: [],
+		};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchAuditStores());
+		//FIXME we're using BOTH internal component state and the redux store to contain the list of audit stores.
+		//ideally only one should exist.
+		this.props.dispatch(fetchAuditStores()).then( auditStores => this.setState({auditStores}));
 		this.props.dispatch(fetchProfileInfo());
 	},
 	render: function(){
-		var rows = [];
-		for(var id in this.props.auditStores) {
-			rows.push(<AuditStoreRow auditStore={this.props.auditStores[id]} key={id}/>);
-		}
+		let rows = this.state.auditStores.map(as => <AuditStoreRow auditStore={as} key={as.id}/>);
 		if(rows.length > 0){
 			return (
 				<div>
 					<h2 className="page-header">
 						Your Audits
 					</h2>
-						{rows}
+					{rows}
 					{this.props.children}
 				</div>
 			);
