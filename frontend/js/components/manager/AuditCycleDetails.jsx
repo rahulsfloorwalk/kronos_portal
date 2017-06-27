@@ -7,6 +7,7 @@ import { momentDateFormat }  from '../../../config.js';
 
 import { fetchAuditCycle } from '../../manager/actions/audit.js';
 
+import AuditTypeLabel from '../AuditTypeLabel.jsx';
 import ExpandableDetails from '../ExpandableDetails.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
 import { Knight, King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
@@ -68,7 +69,7 @@ var AuditCycleDetails = React.createClass({
 							<tbody>
 								<tr><td className="text-right">Name:</td><td><b>{ this.props.auditCycle.name }</b></td></tr>
 								<tr><td className="text-right">Client:</td><td><b>{ this.props.auditCycle.client.name }</b></td></tr>
-								<tr><td className="text-right">Type:</td><td><b>{ getAuditType(this.props.auditCycle.type) }</b></td></tr>
+								<tr><td className="text-right">Type:</td><td><b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b></td></tr>
 								<tr><td className="text-right">Status:</td><td><b>{ getAuditStatus(this.props.auditCycle.status) }</b></td></tr>
 								<tr><td className="text-right">Earnings Per Audit:</td><td><b>₹ { this.props.auditCycle.earnings_per_audit }</b></td></tr>
 								<tr><td className="text-right">Reimbursement upto:</td><td><b>₹ { this.props.auditCycle.reimbursement }</b></td></tr>
@@ -80,17 +81,14 @@ var AuditCycleDetails = React.createClass({
 						</table>
 					</div>
 
-					</div>
-					<div className="col-md-8">
 						<AuditCycleSummary auditCycleId = {this.props.auditCycle.id}/>
 					</div>
-				</div>
-				<div className="row">
-					<div className="col-md-12">
+					<div className="col-md-8">
 					<ul className="nav nav-tabs">
 						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}><Tasks/> Questionnaire</NavLink>
 						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>
 						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
+						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/payment`}><b>₹</b> Payments</NavLink>
 						<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator`}><Knight/> Moderators</NavLink>
 					</ul>
 					{this.props.children}

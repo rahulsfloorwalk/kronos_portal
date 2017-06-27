@@ -43,7 +43,6 @@ var AuditCycleSummary = React.createClass({
     });
 		return (
       <div>
-  			<div className="col-md-6">
           <div className="panel panel-default">
             <div className="panel-heading">
               <h4 className="panel-title">Application Summary</h4>
@@ -54,8 +53,6 @@ var AuditCycleSummary = React.createClass({
               </tbody>
             </table>
           </div>
-        </div>
-        <div className="col-md-6">
           <div className="panel panel-default">
             <div className="panel-heading">
               <h4 className="panel-title">Audit Report Summary</h4>
@@ -66,7 +63,6 @@ var AuditCycleSummary = React.createClass({
               </tbody>
             </table>
           </div>
-  			</div>
       </div>
 		);
 	},

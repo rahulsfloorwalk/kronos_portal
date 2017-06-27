@@ -6,6 +6,7 @@ import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
 import { Plus, Retweet } from '../Icons.jsx';
+import AuditTypeLabel from '../AuditTypeLabel.jsx';
 import { fetchAuditCycles } from '../../manager/actions/audit.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
 
@@ -17,7 +18,7 @@ var AuditCycleRow = React.createClass({
 				<td>{this.props.auditCycle.name}</td>
 				<td>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</td>
 				<td>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</td>
-				<td>{getAuditType(this.props.auditCycle.type)}</td>
+				<td><AuditTypeLabel auditType={this.props.auditCycle.type}/></td>
 				<td>{getAuditStatus(this.props.auditCycle.status)}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>

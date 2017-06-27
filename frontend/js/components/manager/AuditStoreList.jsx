@@ -20,30 +20,6 @@ var __AuditStoreRow = React.createClass({
 			payButtonMessage: "",
 		};
 	},
-  payButtonClicked: function(e){
-		this.props.dispatch(payAuditStore(this.props.auditStore.id)).then(() => {
-			this.setState({
-				payButtonMessage: "Marked as paid",
-			});
-		}, (err) => {
-			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
-			this.setState({
-				payButtonMessage: errInfo[0],
-			});
-		});
-	},
-  unpayButtonClicked: function(e){
-		this.props.dispatch(unpayAuditStore(this.props.auditStore.id)).then(() => {
-			this.setState({
-				payButtonMessage: "Marked as unpaid",
-			});
-		}, (err) => {
-			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
-			this.setState({
-				payButtonMessage: errInfo[0],
-			});
-		});
-	},
   acceptButtonClicked: function(e){
 		this.props.dispatch(acceptAuditStore(this.props.auditStore.id));
 	},
@@ -51,18 +27,7 @@ var __AuditStoreRow = React.createClass({
     let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
     let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
     let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
-    let paymentStatus = null;
-    let paymentButton = null;
     let acceptButton = null;
-    if(this.props.auditStore.payment){
-      paymentStatus = this.props.auditStore.payment.status;
-      if(paymentStatus == 'PENDING'){
-        paymentButton = (<button onClick={this.payButtonClicked} type="button" className="btn btn-default">Pay</button>);
-      }
-      else if(paymentStatus == 'PAID'){
-        paymentButton = (<button onClick={this.unpayButtonClicked} type="button" className="btn btn-default">Unpay</button>);
-      }
-    }
     if(this.props.auditStore.status == 'COMPLETED'){
       acceptButton = (<button onClick={this.acceptButtonClicked} type="button" className="btn btn-default">Accept</button>);
     }
@@ -71,12 +36,10 @@ var __AuditStoreRow = React.createClass({
         <td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
+        <td>{acceptButton}</td>
         <td>
           <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
         </td>
-        <td>{acceptButton}</td>
-        <td><PaymentStatusLabel status={paymentStatus}/></td>
-        <td>{paymentButton}&nbsp;{this.state.payButtonMessage}</td>
       </tr>
     );
   },
@@ -97,8 +60,6 @@ var AuditStoreTable = React.createClass({
 	      <th>Report Status</th>
         <th></th>
         <th></th>
-        <th>Payment Status</th>
-	      <th></th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -140,9 +101,6 @@ var AuditStoreList = React.createClass({
       <div>
         <h3 className="page-header">
           <File/> Reports
-          <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/csv'}>
-              <Download/> Payment List
-          </a>
           <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
               <Download/> Excel Report
           </a>
