@@ -29,14 +29,14 @@ def find_by_id(audit_store_id):
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
-def get_audit_stores(profileinfo_id):
+def find_audit_stores_for_auditor(profileinfo_id):
     try:
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
         return AuditStore.objects.filter(
                 user_id=profile_info.user_id,
-                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
                 audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
-                )
+                ).order_by('-audit_date')
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 

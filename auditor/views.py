@@ -152,7 +152,7 @@ class AuditStoresView(APIView):
         }
     def get(self, request, format=None):
         try:
-            audit_stores = audit_store_service.get_audit_stores( request.user.profileinfo.id)
+            audit_stores = audit_store_service.find_audit_stores_for_auditor( request.user.profileinfo.id)
             return Response(AuditStoreSerializer(audit_stores, many=True).data)
         except ObjectNotFound as e:
             raise NotFound()
