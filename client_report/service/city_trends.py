@@ -53,7 +53,7 @@ def get_performing_cities(audit_cycle_id, client_id):
 def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
     #print("got audit_type",audit_type)
 
-    audit_cycles = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, user_id)
+    audit_cycles = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, user_id).order_by('end_date')
     audit_cycle_names = []
 
     if len(audit_cycles) is 0:
