@@ -311,6 +311,8 @@ class PaymentSerializer(ModelSerializer):
             'status',
             'user_id',
             'audit_store_id',
+            'added_on',
+            'paid_on',
         )
         read_only_fields = fields
 
