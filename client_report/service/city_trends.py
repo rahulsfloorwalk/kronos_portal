@@ -68,29 +68,37 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
 
     #print("data", data)
 
-    first_cycle_performing_cities = data[0][1]
+    last_cycle_performing_cities = data[-1][1]
 
     #print("first_cycle_performing_stores", first_cycle_performing_stores)
     #print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
 
     data_1 = []
-    for item in first_cycle_performing_cities:
+    for item in last_cycle_performing_cities:
         data_1.append((item[0],[item[1]]))
 
-    for audit_cycle, best_performing_cities in data[1:]:
+    for audit_cycle, best_performing_cities in data[:-1]:
         #print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
-        for item in first_cycle_performing_cities:
+        for item in last_cycle_performing_cities:
             found_item = None
-            for s in best_performing_cities:
-                if s[0]['id'] == item[0]['id']:
-                    found_item = s
 
-            for d in data_1:
-                if d[0]['id'] == item[0]['id']:
+            # look for the city in best cities for the current audit cycle
+            for city, score in best_performing_cities:
+                if city['id'] == item[0]['id']:
+                    # store in variable if found
+                    found_item = (city, score)
+
+            for city, score_series in data_1:
+                if city['id'] == item[0]['id']:
                     if found_item is None:
-                        d[1].append(0)
+                        score_series.append(0)
                     else:
-                        d[1].append(found_item[1])
+                        score_series.append(found_item[1])
+
+    # move the first element to the end of the series
+    # to maintain ordering as per the audit cycles
+    for city, score_series in data_1:
+        score_series.append(score_series.pop(0))
 
     #print("data_1",data_1)
     return {

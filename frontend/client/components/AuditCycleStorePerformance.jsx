@@ -53,7 +53,7 @@ var AuditCycleStorePerformance = React.createClass({
 
 		let labels = this.props.reportData.columns;
 		for(let i=0; i < labels.length; i++){
-			bars.push(<Bar key={i} dataKey={labels[i]} barSize={20} fill={colors[i]} label/>);
+			bars.push(<Bar key={i} dataKey={labels[i]} barSize={20} fill={colors[i]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>);
 		}
 
 		let data = this.create_structure(this.props.reportData);
