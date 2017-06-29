@@ -1,3 +1,4 @@
+import io
 import csv
 from datetime import datetime
 from django.utils import timezone
@@ -157,7 +158,10 @@ def find_by_audit_cycle(audit_cycle_id):
 def find_pending_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)
 
-def find_pending_csv_for_audit_cycle(audit_cycle_id, writer):
+def find_pending_csv_for_audit_cycle(audit_cycle_id):
+    output = io.StringIO()
+    writer = csv.writer(output)
+
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     client = audit_cycle.client.name
@@ -171,7 +175,7 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id, writer):
         try:
             bank_name = payment.user.bankinfo.bank_name
             ifsc_code = payment.user.bankinfo.ifsc_code
-            account_number = payment.user.bankinfo.account_number
+            account_number = "'"+ payment.user.bankinfo.account_number + "'"
         except BankInfo.DoesNotExist:
             bank_name = ""
             ifsc_code = ""
@@ -186,7 +190,9 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id, writer):
             payment.status
         ])
 
-    return audit.replace(" ", "-") + "_payments.csv"
+    output.seek(0)
+
+    return output, audit.replace(" ", "-") + "_payments.csv"
 
 
 

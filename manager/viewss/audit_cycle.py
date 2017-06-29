@@ -1,4 +1,3 @@
-import csv
 from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
@@ -177,8 +176,7 @@ class PendingPaymentCsvView(APIView):
         'GET' : [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        response = HttpResponse(content_type='text/csv')
-        writer = csv.writer(response)
-        filename = payment_service.find_pending_csv_for_audit_cycle(audit_cycle_id, writer)
+        data, filename = payment_service.find_pending_csv_for_audit_cycle(audit_cycle_id)
+        response = HttpResponse(data.read(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
         return response
