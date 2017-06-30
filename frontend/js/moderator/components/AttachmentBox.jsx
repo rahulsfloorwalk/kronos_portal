@@ -10,6 +10,8 @@ import ProgressBar from '../../components/ProgressBar.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 import InPlaceEditable from '../../components/InPlaceEditable.jsx';
 
+import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
+
 import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
@@ -169,102 +171,10 @@ export default React.createClass({
 			}
 		}
 
-		let attachmentElement;
-		if( this.props.auditStore.status === "SUBMITTED"){
-			var deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.deleteButtonClicked}><Cross/> Delete</button>);
-		}
-		if(this.state.selectedAttachment){
-			let downloadButton = (
-				<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
-					<DownloadAlt/> Download File
-				</a>
-			);
-			let icon = <AttachmentProofIcon proofType={this.state.selectedAttachment.proof_type}/>;
-			switch(this.state.selectedAttachment.proof_type){
-				case "AUDIO": {
-					let headingText;
-					if( this.props.auditStore.status === "SUBMITTED"){
-						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
-								{icon} {this.state.selectedAttachment.file_name}
-								</InPlaceEditable>);
-					} else {
-						headingText = (<span>
-							{icon} {this.state.selectedAttachment.file_name}
-						</span>);
-					}
-					attachmentElement = (
-						<div>
-							<h4 className="page-header">
-								{deleteButton}
-								{headingText}
-							</h4>
-							<div className="text-center">
-								<audio controls>
-									<source src={this.state.selectedAttachment.direct_url} 
-										type={this.state.selectedAttachment.mime_type}/>
-								</audio>
-								<br/>
-								{downloadButton}
-							</div>
-						</div>
-					);
-				}
-					break;
-				case "PHOTO": {
-					let imageStyle = {"maxWidth": "100%"}
-					let headingText;
-					if( this.props.auditStore.status === "SUBMITTED"){
-						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
-								{icon} {this.state.selectedAttachment.file_name}
-								</InPlaceEditable>);
-					} else {
-						headingText = (<span>
-							{icon} {this.state.selectedAttachment.file_name}
-						</span>);
-					}
-					attachmentElement = (
-						<div className="">
-							<h4 className="page-header">
-								{deleteButton}
-								{headingText}
-							</h4>
-							<div className="text-center">
-							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
-								<br/>
-								{downloadButton}
-							</div>
-						</div>
-					);
-				}
-					break;
-				case "VIDEO":
-				case "OTHER": {
-					let headingText;
-					if( this.props.auditStore.status === "SUBMITTED"){
-						headingText = (<InPlaceEditable inputText={this.state.selectedAttachment.file_name} onSave={this.attachmentRenamed}>
-								{icon} {this.state.selectedAttachment.file_name}
-								</InPlaceEditable>);
-					} else {
-						headingText = (<span>
-							{icon} {this.state.selectedAttachment.file_name}
-						</span>);
-					}
-					attachmentElement = (
-						<div>
-							<h4 className="page-header">
-								{deleteButton}
-								{headingText}
-							</h4>
-							<div className="text-center">
-								<br/>
-								{downloadButton}
-							</div>
-						</div>
-					);
-				}
-					break;
-			}
-		}
+		let editable = this.props.auditStore.status === "SUBMITTED";
+		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
+					onRename={this.attachmentRenamed}
+					onDelete={this.deleteButtonClicked}/>
 
 		if(this.props.auditStore.status === 'SUBMITTED'){
 			attachmentRows.push(<div key="upload_input" className="hidden">

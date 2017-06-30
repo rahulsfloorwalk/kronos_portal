@@ -69,48 +69,6 @@ export default React.createClass({
 			</a>
 			);
 			attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={false}/>;
-			/*
-			switch(this.state.selectedAttachment.proof_type){
-				case "AUDIO":
-					attachmentElement = (
-						<div className="text-center">
-							<br/>
-							<br/>
-							<p><big>{this.state.selectedAttachment.file_name}</big></p>
-							<audio controls>
-								<source src={this.state.selectedAttachment.direct_url} 
-									type={this.state.selectedAttachment.mime_type}/>
-							</audio>
-							<br/>
-							{downloadButton}
-						</div>
-					);
-					break;
-				case "PHOTO":
-					let imageStyle = {"maxWidth": "100%"}
-					attachmentElement = (
-						<div className="text-center">
-							<p><big>{this.state.selectedAttachment.file_name}</big></p>
-							<img src={this.state.selectedAttachment.direct_url} style={imageStyle}/>
-							<br/>
-							{downloadButton}
-						</div>
-					);
-					break;
-				case "VIDEO":
-				case "OTHER":
-					attachmentElement = (
-						<div className="text-center">
-							<br/>
-							<br/>
-							<p><big>{this.state.selectedAttachment.file_name}</big></p>
-							<br/>
-							{downloadButton}
-						</div>
-					);
-					break;
-			}
-			*/
 		} else {
 			attachmentElement = (<Jumbotron heading={<div><br/><br/><br/><Paperclip/></div>} para={<span>select an attachment from the list<br/><br/><br/><br/></span>}/>);
 		}
