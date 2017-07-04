@@ -80,20 +80,18 @@ var ProfileInfoForm = React.createClass({
 		this.setState(this.props.profileInfo);
 		this.props.dispatch(fetchProfileInfo());
 		this.props.dispatch(fetchStates());
-		if( this.props.profileInfo.city.state){
+		if( this.props.profileInfo.city){
 			this.props.dispatch(fetchCities(this.props.profileInfo.city.state));
 		}
 	},
 	componentWillReceiveProps: function(nextProps) {
 		this.setState(nextProps.profileInfo);
 		if( nextProps.profileInfo.city){
+			this.props.dispatch(fetchCities(nextProps.profileInfo.city.state));
 			this.setState({
 				'city':nextProps.profileInfo.city.id,
 				'state':nextProps.profileInfo.city.state
 			});
-		}
-		if( nextProps.state){
-			this.props.dispatch(fetchCities(nextProps.state));
 		}
 	},
 	inputChanged: function(e){
