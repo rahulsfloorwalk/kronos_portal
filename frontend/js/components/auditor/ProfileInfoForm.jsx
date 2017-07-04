@@ -3,6 +3,9 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
 import { fetchStates, fetchCities } from '../../auditor/actions/location_info.js';
 import { fetchProfileInfo, saveProfileInfo } from '../../auditor/actions/profile_info.js'
 
@@ -13,6 +16,7 @@ import FormGroup from '../FormGroup.jsx';
 import FormSelect from '../FormSelect.jsx';
 import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
+import DOBPicker from '../DOBPicker.jsx';
 
 /* State Selector begins */
 
@@ -103,9 +107,13 @@ var ProfileInfoForm = React.createClass({
 		}
 	},
 	dateChanged: function(date){
-		if( typeof date !== "string"){
+		if( date && typeof date !== "string"){
 			this.setState({
 				date_of_birth: date.format("YYYY-MM-DD")
+			});
+		} else {
+			this.setState({
+				date_of_birth: null,
 			});
 		}
 	},
@@ -127,7 +135,8 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormDateInput label="Date of Birth" value={this.state.date_of_birth} name="date_of_birth" onChange={this.dateChanged} errors={this.props.errors.date_of_birth}/>
+							<label className="control-label">Date of Birth</label>
+							<DOBPicker initialDate={moment(this.state.date_of_birth).toDate()} onChange={this.dateChanged}/>
 						</div>
 						<div className="col-md-6">
 							<FormSelect label="Gender" name="gender" value={this.state.gender} onChange={this.inputChanged}>
