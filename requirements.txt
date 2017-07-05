@@ -21,6 +21,7 @@ jsonfield==1.0.3
 kombu==4.0.2
 logging-tree==1.7
 markdown2==2.3.4
+Pillow==4.2.0
 psycopg2==2.6.2
 pycurl==7.43.0
 python-dateutil==2.6.0

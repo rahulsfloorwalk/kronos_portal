@@ -1,5 +1,8 @@
 import xlsxwriter
 import io
+from PIL import Image
+
+
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
@@ -72,13 +75,19 @@ def generate_xlsx_from_structure(report_data):
         'align': 'center',
     })
 
-    worksheet = workbook.add_worksheet()
+    worksheet = workbook.add_worksheet("EARS")
+
+    # assuming Calibri as the default font and 7px as widest single char width
+    cell_char_width = 30
+
+    cell_width = 171 #6.02cm to px with 72 dpi
+    cell_height = 30
 
     start_row = 0
     start_col = 0
     worksheet.set_column(0, 0, 20)
-    worksheet.set_column(1, 100, 30)
-    worksheet.set_default_row(30)
+    worksheet.set_column(1, 100, cell_char_width)
+    worksheet.set_default_row(cell_height)
     row = start_row
 
     col = start_col
@@ -86,8 +95,24 @@ def generate_xlsx_from_structure(report_data):
 
     if report_data.get("logo_url"):
         image_data = BytesIO(urlopen(report_data["logo_url"]).read())
+        img = Image.open(image_data)
+        print("DPI", img.info.get('dpi'),img.info.get('jfif_density'))
+        image_width, image_height = img.size
+
+        if image_width > image_height:
+            scale_factor = cell_width / image_width
+        else:
+            scale_factor = cell_height * 3 / image_height
+
+        #x_scale = cell_height * 3 / image_height#
+        #y_scale = cell_height * 3 / image_height
+
         worksheet.merge_range(row, col+5, row+2, col+5, "", title_format)
-        worksheet.insert_image(row, col+5, report_data["logo_url"], {'image_data': image_data})
+        worksheet.insert_image(row, col+5, report_data["logo_url"], {
+            'image_data': image_data,
+            'x_scale': scale_factor,
+            'y_scale': scale_factor,
+        })
 
     row += 1
 
