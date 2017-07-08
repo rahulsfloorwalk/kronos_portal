@@ -1,41 +1,38 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-from django.contrib.auth.decorators import login_required
-from django.views import View
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from rest_framework.views import APIView
-from rest_framework.response import Response
+from django.http import Http404
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
-from .models import ProfileInfo, BankInfo, AdditionalInfo
-from .forms import ProfileInfoForm, AdditionalInfoForm, BankInfoForm
-from .serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
-from .serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
-from .serializers import AuditStoreSerializer
-from .serializers import SectionSerializer
-from .serializers import AnswerSerializer
-from .serializers import AttachmentSerializer
-from .serializers import NotificationSerializer
-from .serializers import ReportSectionSerializer, ReportSectionDeSerializer
-from .serializers import PaymentSerializer
+import attachment.service_auditor as attachment_auditor_service
+import manager.service.audit as audit_service
+from answer.service import answer as answer_service
+from answer.service import report_section as report_section_service
 from audit.models import Audit
+from audit_store import service as audit_store_service
+from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
+from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
+from auditor.serializers import AnswerSerializer
+from auditor.serializers import AttachmentSerializer
+from auditor.serializers import AuditStoreSerializer
+from auditor.serializers import CitySerializer
+from auditor.serializers import NotificationSerializer
+from auditor.serializers import PaymentSerializer
+from auditor.serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
+from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
+from auditor.serializers import SectionSerializer
+from auditor.service import stats as auditor_dashboard_service
+from kronos.exceptions import ObjectNotFound, AppLogicError
+from manager import states
 from manager.models import City
 from .serializers import CitySerializer
 import manager.service.audit as audit_service
 import auditor.service.application_service
 from manager.service import notifications as notification_service
-from manager import states
+from payment.service import payment_auditor as payment_service
+from questionnaire.service import section as section_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR
-from audit_store import service as audit_store_service
-from questionnaire.service import section as section_service
-from answer.service import answer as answer_service
-from answer.service import report_section as report_section_service
-from payment.service import payment_auditor as payment_service
-import attachment.service as attachment_service
-import attachment.service_auditor as attachment_auditor_service
+
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -509,5 +506,29 @@ class PaymentView(APIView):
         try:
             payments = payment_service.find_by_user(request.user.id)
             return Response(PaymentSerializer(payments, many=True).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class StatsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        try:
+            auditor_history = auditor_dashboard_service.getAuditorStats(request.user.id)
+            return Response(auditor_history)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class ScoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        try:
+            auditor_score = auditor_dashboard_service.getAuditorScore(request.user.id)
+            return Response(auditor_score)
         except ObjectNotFound as e:
             raise NotFound from e

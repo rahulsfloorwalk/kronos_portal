@@ -47,6 +47,48 @@ export function rootReducer(store = initialStore, action) {
 					return store;
 
 			}
+			/*Dashboard Reducers */
+			case types.AUDITOR_STATS_GET:
+				switch (action.status) {
+					case 'request':
+						return Object.assign({}, store, {
+							loadingAuditorStats: true
+						});
+						break;
+					case 'success':
+						return Object.assign({}, store, {
+							loadingAuditorStats: false,
+							auditorStats: Object.assign({}, store.auditorStats, action.auditorStats)
+						});
+						break;
+					case 'error':
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+
+					}
+			case types.AUDITOR_SCORE_GET:
+				switch (action.status) {
+					case 'request':
+						return Object.assign({}, store, {
+							loadingAuditorScore: true
+						});
+						break;
+					case 'success':
+						return Object.assign({}, store, {
+							loadingAuditorScore: false,
+							auditorScore: Object.assign({}, store.auditorScore, action.auditorScore)
+						});
+						break;
+					case 'error':
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+
+				}
+
 		/*Profile Info Reducers */
 		case types.PROFILE_INFO_GET:
 			switch (action.status) {

@@ -1,9 +1,11 @@
-from django.contrib.auth.models import User, Group
-from registration.models import GROUP_NAME_AUDITOR
+from django.contrib.auth.models import User
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
 from auditor.models import AuditApplication, ProfileInfo
+from kronos.exceptions import ObjectNotFound
+from payment.models import Payment
+from registration.models import GROUP_NAME_AUDITOR
+
 
 def getAuditorHistoryStats(user_id):
 
@@ -72,3 +74,42 @@ def getAuditStores(user_id):
             return audit_stores
     except User.DoesNotExist:
         raise ObjectNotFound
+
+
+def getAuditorStats(user_id):
+    try:
+        auditor = User.objects.get(pk=user_id)
+        if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+            profileInfo = ProfileInfo.objects.get(user=auditor)
+            audit_applications = AuditApplication.objects.filter(profileinfo=profileInfo).order_by('-audit_date')
+            audit_stores = AuditStore.objects.filter(user=auditor).order_by('-audit_date')
+            payments = Payment.objects.filter(user=auditor)
+            result = {
+                'applied': 0,
+                'assigned': 0,
+                'completed': 0,
+                'pending_payment': 0
+            }
+            result['applied'] = len(audit_applications)
+
+            for audit_store in audit_stores:
+                if audit_store.status == AuditStore.ACCEPTED:
+                    result['completed'] += 1
+                    result['assigned'] += 1
+                    continue
+                elif audit_store.status == AuditStore.WITHDRAWN:
+                    continue
+                else:
+                    result['assigned'] += 1
+
+            for payment in payments:
+                if payment.status == Payment.PENDING:
+                    result['pending_payment'] += 1
+            return result
+        else:
+            raise ObjectNotFound
+    except User.DoesNotExist:
+        raise ObjectNotFound
+
+def getAuditorScore(user_id):
+    return {}
