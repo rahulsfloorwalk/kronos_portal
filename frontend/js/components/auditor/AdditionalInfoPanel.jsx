@@ -30,16 +30,15 @@ var AdditionalInfoPanelBase = React.createClass({
 				<table className="table table-striped">
 					<tbody>
 					<tr><td className="text-right text-muted">Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
-					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Car Owned:</td><th>{ has_car }</th></tr>
-					<tr><td className="text-right text-muted">Weekend Audit:</td><th>{ weekend_audit }</th></tr>
-					<tr><td className="text-right text-muted">Hair Color:</td><th>{ getHairColor(this.props.additionalInfo.hair_color) }</th></tr>
-					<tr><td className="text-right text-muted">Height (cm):</td><th>{ this.props.additionalInfo.height }</th></tr>
-					<tr><td className="text-right text-muted">Weight (kg):</td><th>{ this.props.additionalInfo.weight }</th></tr>
 					<tr><td className="text-right text-muted">Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
-					<tr><td className="text-right text-muted">Camera Owned:</td><th>{ camera_owned }</th></tr>
+					<tr><td className="text-right text-muted">Industry:</td><th>{ this.props.additionalInfo.industry }</th></tr>
+					<tr><td className="text-right text-muted">Company:</td><th>{ this.props.additionalInfo.company }</th></tr>
+					<tr><td className="text-right text-muted">Car Model:</td><th>{ this.props.additionalInfo.car_model }</th></tr>
+					<tr><td className="text-right text-muted">Cost of Car:</td><th>{ this.props.additionalInfo.car_cost }</th></tr>
+					<tr><td className="text-right text-muted">Laptop Model:</td><th>{ this.props.additionalInfo.laptop_model }</th></tr>
+					<tr><td className="text-right text-muted">Mobile Model:</td><th>{ this.props.additionalInfo.mobile_model }</th></tr>
 					<tr><td className="text-right text-muted">Camera Resolution:</td><th>{ getCameraResolution(this.props.additionalInfo.camera_resoulution) }</th></tr>
-					<tr><td className="text-right text-muted">Laptop Owned:</td><th>{ laptop_owned }</th></tr>
-					<tr><td className="text-right text-muted">Smart Phone Owned:</td><th>{ smart_phone_owned }</th></tr>
+					<tr><td className="text-right text-muted">MSPA Certification code:</td><th>{ this.props.additionalInfo.mspa_code }</th></tr>
 					</tbody>
 				</table>
 			</div>

@@ -113,7 +113,16 @@ class AdditionalInfoSerializer(ModelSerializer):
             'smart_phone_owned',
             'weekend_audit',
             'user_id',
-            'occupation'
+            'occupation',
+            'mspa_code',
+            'company',
+            'industry',
+            'car_cost',
+            'car_model',
+            'laptop_model',
+            'mobile_model',
+            'referral_code',
+            'referred_by',
         )
         read_only_fields = ('id', 'user_id')
 
@@ -138,6 +147,15 @@ class AdditionalInfoSerializer(ModelSerializer):
         additional_info.laptop_owned = self.validated_data.get('laptop_owned', additional_info.laptop_owned)
         additional_info.smart_phone_owned = self.validated_data.get('smart_phone_owned', additional_info.smart_phone_owned)
         additional_info.occupation = self.validated_data.get('occupation', additional_info.occupation)
+        additional_info.mspa_code = self.validated_data.get('mspa_code', additional_info.mspa_code)
+        additional_info.company = self.validated_data.get('company', additional_info.company)
+        additional_info.industry = self.validated_data.get('industry', additional_info.industry)
+        additional_info.car_cost = self.validated_data.get('car_cost', additional_info.car_cost)
+        additional_info.car_model = self.validated_data.get('car_model', additional_info.car_model)
+        additional_info.laptop_model = self.validated_data.get('laptop_model', additional_info.laptop_model)
+        additional_info.mobile_model = self.validated_data.get('mobile_model', additional_info.mobile_model)
+        additional_info.referral_code = self.validated_data.get('referral_code', additional_info.referral_code)
+        additional_info.referred_by = self.validated_data.get('referred_by', additional_info.referred_by)
 
         return additional_info
 
