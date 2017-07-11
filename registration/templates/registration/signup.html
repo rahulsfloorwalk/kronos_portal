@@ -1,43 +1,17 @@
 {% extends "registration/base.html" %}
 {% load widget_tweaks %}
 {% block content %}
-<div class="row">
-	<div class="col-md-offset-3 col-md-6">
-			<a href="http://floorwalk.in">
-				<img class="img-responsive" style="margin-left:auto;margin-right:auto;" src="/static/img/logo_3_500x100.png"/>
-			</a>
-	</div>
-</div>
-<div class="row">
-	<div class="col-md-8">
-		<h2 class="text-center">Here's How it Works!</h2>
-		<h4 class="text-center">Go shopping as a Mystery Shopper. Give us your feedback and get paid. Simple!!</h4>
-		<br/><br/>
-		<div class="row">
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/grab_the_deal.png" alt=""/>
-				<h4 class="text-center">Grab the Deal</h4>
-				<p class="text-center">Tell us your interests and we give you a shop</p>
-			</div>
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/go_shopping.png" alt=""/>
-				<h4 class="text-center">Go Shopping</h4>
-				<p class="text-center">Keenly observe a few things while shopping</p>
-			</div>
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/tell_us_your_experience.png" alt=""/>
-				<h4 class="text-center">Tell us your experience</h4>
-				<p class="text-center">Report your observations and experience</p>
-			</div>
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/get_paid.jpeg" alt=""/>
-				<h4 class="text-center">Get Paid</h4>
-				<p class="text-center">Get reimbursed for your shopping and make some extra money</p>
-			</div>
+	<div class="row">
+		<div class="col-md-5">
 		</div>
 	</div>
-	<div class="col-md-4">
-		<br/><br/>
+<div class="row">
+	<div class="col-md-5">
+<h1 class="page-header">
+			<a href="http://floorwalk.in">
+			<img class="img-responsive" src="/static/img/logo_3_500x100.png"/>
+			</a>
+</h1>
 		<div class="panel panel-primary">
 			<div class="panel-heading">
 				<h3 class="panel-title">Sign Up</h3>
@@ -85,6 +59,36 @@
 			</div>
 			<div class="panel-footer">
 				<p>Already have an account? <a href="{% url 'registration:login' %} ">Login here</a></p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-7">
+		<br/>
+		<br/>
+		<br/>
+		<h1 class="page-header">Here's How it Works!</h1>
+		<h4 class="">Go shopping as a Mystery Shopper. Give us your feedback and get paid. Simple!!</h4>
+		<br/>
+		<div class="row">
+			<div class="col-md-6">
+				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/grab_the_deal.png" alt=""/>
+				<h3 class="text-center">1. Grab the Deal</h3>
+				<p class="text-center">Tell us your interests and we give you a shop</p>
+			</div>
+			<div class="col-md-6">
+				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/go_shopping.png" alt=""/>
+				<h3 class="text-center">2. Go Shopping</h3>
+				<p class="text-center">Keenly observe a few things while shopping</p>
+			</div>
+			<div class="col-md-6">
+				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/tell_us_your_experience.png" alt=""/>
+				<h3 class="text-center">3. Tell us your experience</h3>
+				<p class="text-center">Report your observations and experience</p>
+			</div>
+			<div class="col-md-6">
+				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/get_paid.jpeg" alt=""/>
+				<h3 class="text-center">4. Get Paid</h3>
+				<p class="text-center">Get reimbursed for your shopping and make some extra money</p>
 			</div>
 		</div>
 	</div>
