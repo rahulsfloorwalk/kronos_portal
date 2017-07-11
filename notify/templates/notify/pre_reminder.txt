@@ -1,0 +1,25 @@
+Audit Reminder
+
+Hello {{ first_name }},
+
+We are just checking in to remind you about your {{client}} audit tomorrow ({{ audit_date }}).
+If for any reason you are not able to perform tomorrow's audit, please inform your project manager on call as soon as possible.
+
+Just to refresh you, the audit details are as follows:
+
+Store Name: {{ store_name }}
+Store Address: {{ store_address }}
+Audit Date: {{ audit_date }}
+Note: You _must_ view the questionnaire on the portal. It is mandatory to go through the questionnaire before conducting the audit.
+
+The audit instructions are also enclosed for your reference:
+
+Audit Instructions:
+
+{{audit_post_approval_description}}
+
+{{audit_cycle_post_approval_description}}
+
+--
+Thanks and regards,
+FloorWalk Team

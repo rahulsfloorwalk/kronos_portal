@@ -1,0 +1,13 @@
+
+Hello {{ first_name }},
+
+Let's get this report filled.
+
+We noticed that you still haven't submitted the report for your {{client}} audit that took place yesterday ({{ audit_date }}).
+Please fill out and submit the report as soon as possible to *prevent failure of your audit*.
+
+Please also make sure you have filled all your *Bank Details correctly* in your profile so that the audit fees can be processed smoothly once your report has been verified and accepted by the client.
+
+--
+Thanks and regards,
+FloorWalk Team

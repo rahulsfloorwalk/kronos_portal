@@ -18,4 +18,12 @@ else
 	RC=1
 fi
 
+if [[ -f ./logs/celery_beat.pid ]];
+then
+	kill `cat ./logs/celery_beat.pid`;
+else
+	echo "Could not kill: ./logs/celery_beat.pid file not found";
+	RC=1
+fi
+
 exit $RC

@@ -55,6 +55,9 @@ log_handlers = ['console', 'logfile']
 MAIL_SWITCH = {
   "NOTIFICATION_EMAIL": False,
   "VERIFICATION_EMAIL": False,
+  "PRE_REMINDER_EMAIL": False,
+  "ON_REMINDER_EMAIL": False,
+  "POST_REMINDER_EMAIL": False,
   "WELCOME_EMAIL": False
 }
 

@@ -1,3 +1,4 @@
+from django.utils import timezone
 
 def get_color_code_by_percentage(percentage):
     if percentage is None:
@@ -29,3 +30,12 @@ def get_color_code(marks_obtained, max_marks):
 def get_color_hex_from_code(color_code):
     colors = ("#FFFFFF", "#F2DEDE", "#FCF8E3", "#D9EDF7", "#DFF0D8")
     return colors[color_code]
+
+
+IST = timezone.pytz.timezone("Asia/Kolkata")
+
+def now_ist():
+    return timezone.localtime(timezone.now(), IST)
+
+def today_ist():
+    return timezone.localtime(timezone.now(), IST).date()

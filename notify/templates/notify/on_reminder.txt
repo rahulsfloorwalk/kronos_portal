@@ -1,0 +1,16 @@
+
+Hello {{ first_name }},
+
+We hope your audit went or is going well.
+
+This email is just to check in on your {{client}} audit that was scheduled today ({{ audit_date }}).
+
+If for any reason you were not able to perform today's audit, please inform your project manager on call as soon as possible.
+
+Please make sure you fill out and submit the audit report by the end of next day along with all the audit proofs duly attached.
+
+Please also make sure you have filled all your Bank Details correctly in your profile so that the audit fees can be processed smoothly once your report has been verified and accepted by the client.
+
+--
+Thanks and regards,
+FloorWalk Team

@@ -1,7 +1,11 @@
+from datetime import timedelta, date
+
 from django.db import connection
 from django.db.transaction import atomic
 from django.db import IntegrityError
 from django.contrib.auth.models import Group
+from django.utils.timezone import localtime, now
+
 from notifications.signals import notify
 from notifications.models import Notification
 
@@ -9,6 +13,8 @@ from manager.notification import verbs
 from manager import notification
 
 from notify.service import mail_notify
+
+from kronos.utils import now_ist, today_ist
 
 from client.models import Client
 from .models import AuditStore
@@ -72,6 +78,24 @@ def find_by_store_for_client(store_id, client_id):
             audit__store_id=store_id,
         )
 
+
+def find_for_pre_reminder():
+    return AuditStore.objects.filter(
+            audit_date=today_ist() + timedelta(days=1),
+            status=AuditStore.ASSIGNED,
+        )
+
+def find_for_on_reminder():
+    return AuditStore.objects.filter(
+            audit_date=today_ist(),
+            status=AuditStore.ASSIGNED,
+        )
+
+def find_for_post_reminder():
+    return AuditStore.objects.filter(
+            audit_date=today_ist() - timedelta(days=1),
+            status=AuditStore.ASSIGNED,
+        )
 
 def save(audit_store):
     AuditStore.save(audit_store)

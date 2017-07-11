@@ -12,6 +12,8 @@ from manager import notification
 
 from celery import shared_task
 
+from .mail import send_email
+
 _logger = logging.getLogger(__name__)
 
 def send_notification_mail(notif_id):
@@ -43,71 +45,71 @@ def notification_email_task(notif_id):
         params['store_address'] = notif.action_object.audit.store.address
 
         if notif.verb == notification.AUDIT_APPLICATION_APPLIED:
-            subject = "[FloorWalk] Audit Application for {}".format(params['client'])
+            subject = "Audit Application for {}".format(params['client'])
             params['html_template'] = 'notify/application_email.html'
             params['txt_template'] = 'notify/application_email.txt'
 
         elif notif.verb == notification.AUDIT_APPLICATION_CANCELED:
-            subject = "[FloorWalk] Audit Cancelled for {}".format(params['client'])
+            subject = "Audit Cancelled for {}".format(params['client'])
             params['html_template'] = 'notify/cancel_email.html'
             params['txt_template'] = 'notify/cancel_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_FIAT_ASSIGNED:
-            subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
+            subject = "Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/fiat_assign_email.html'
             params['txt_template'] = 'notify/fiat_assign_email.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
 
         elif notif.verb == notification.AUDIT_STORE_ASSIGNED:
-            subject = "[FloorWalk] Audit Assigned for {}".format(params['client'])
+            subject = "Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email.html'
             params['txt_template'] = 'notify/assign_email.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
 
         elif notif.verb == notification.AUDIT_APPLICATION_REJECTED:
-            subject = "[FloorWalk] Audit Application Not Accepted {}".format(params['client'])
+            subject = "Audit Application Not Accepted {}".format(params['client'])
             params['html_template'] = 'notify/reject_email.html'
             params['txt_template'] = 'notify/reject_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_WITHDRAWN:
-            subject = "[FloorWalk] Audit Withdrawn for {}".format(params['client'])
+            subject = "Audit Withdrawn for {}".format(params['client'])
             params['html_template'] = 'notify/withdrawn_email.html'
             params['txt_template'] = 'notify/withdrawn_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_SUBMITTED:
-            subject = "[FloorWalk] Audit Report Submitted for {}".format(params['client'])
+            subject = "Audit Report Submitted for {}".format(params['client'])
             params['html_template'] = 'notify/submitted_email.html'
             params['txt_template'] = 'notify/submitted_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_UNSUBMITTED:
-            subject = "[FloorWalk] Audit Report Unsubmitted for {}".format(params['client'])
+            subject = "Audit Report Unsubmitted for {}".format(params['client'])
             params['html_template'] = 'notify/unsubmitted.html'
             params['txt_template'] = 'notify/unsubmitted.txt'
 
         elif notif.verb == notification.AUDIT_STORE_COMPLETED:
-            subject = "[FloorWalk] Audit Report Completed for {}".format(params['client'])
+            subject = "Audit Report Completed for {}".format(params['client'])
             params['html_template'] = 'notify/completed_email.html'
             params['txt_template'] = 'notify/completed_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_FAILED:
-            subject = "[FloorWalk] Audit Failed for {}".format(params['client'])
+            subject = "Audit Failed for {}".format(params['client'])
             params['html_template'] = 'notify/failed_email.html'
             params['txt_template'] = 'notify/failed_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_ACCEPTED:
-            subject = "[FloorWalk] Audit Report Accepted for {}".format(params['client'])
+            subject = "Audit Report Accepted for {}".format(params['client'])
             params['html_template'] = 'notify/report_accepted_email.html'
             params['txt_template'] = 'notify/report_accepted_email.txt'
 
         # elif notif.verb == notification.AUDIT_STORE_REJECTED:
-        #     subject = "[FloorWalk] Audit Failed for {}".format(params['client'])
+        #     subject = "Audit Failed for {}".format(params['client'])
         #     params['html_template'] = 'notify/report_reject_email.html'
         #     params['txt_template'] = 'notify/report_reject_email.txt'
 
         elif notif.verb == notification.AUDIT_STORE_PAID:
-            subject = "[FloorWalk] Payment cleared for {}".format(params['client'])
+            subject = "Payment cleared for {}".format(params['client'])
             params['html_template'] = 'notify/report_paid_email.html'
             params['txt_template'] = 'notify/report_paid_email.txt'
             params['amount'] = notif.action_object.payment.amount
@@ -117,7 +119,7 @@ def notification_email_task(notif_id):
             return False
 
         html_message, txt_message = _prepare_mail(params)
-        _send_mail(to_email, subject, html_message, txt_message)
+        send_email(to_email, subject, html_message, txt_message)
         notif.emailed = True
         notif.save()
         return notif.emailed
@@ -128,8 +130,3 @@ def _prepare_mail(params):
 
     return html_message, txt_message
 
-def _send_mail(email, subject, html_message, txt_message):
-
-    msg = EmailMultiAlternatives( subject, txt_message, to=(email,))
-    msg.attach_alternative(html_message, "text/html")
-    msg.send()

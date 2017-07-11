@@ -1,0 +1,27 @@
+{% load markdown_deux_tags %}
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		<h1>Audit Reminder</h1>
+		<p>Hello <b>{{ first_name }},</b></p>
+		<p>We are just checking in to remind you about your {{client}} audit tomorrow (<b>{{ audit_date }}</b>).</p>
+		<p>If for any reason you are not able to perform tomorrow's audit, please inform your project manager on call as soon as possible.</p>
+		<p>Just to refresh you, the audit details are as follows:</p>
+		<p><b>Store Name:</b> {{ store_name }}</p>
+		<p><b>Store Address:</b> {{ store_address }}</p>
+		<p><b>Audit Date:</b> {{ audit_date }}</p>
+		<p><b>Note: You <i>must</i> view the questionnaire on the portal. It is mandatory to go through the questionnaire before conducting the audit.</b></p>
+
+		<p>The audit instructions are also enclosed for your reference:</p>
+
+		<h2>Audit Instructions<h2>
+		{{ audit_post_approval_description | markdown }}
+
+		{{ audit_cycle_post_approval_description | markdown }}
+		<p>--</p>
+		<p>Thanks and regards,</p>
+		<p>FloorWalk Team</p>
+	</body>
+</html>
