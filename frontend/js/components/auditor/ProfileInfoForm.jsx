@@ -134,7 +134,7 @@ var ProfileInfoForm = React.createClass({
 					<div className="row">
 						<div className="col-md-6">
 							<label className="control-label">Date of Birth</label>
-							<DOBPicker initialDate={moment(this.state.date_of_birth).toDate()} onChange={this.dateChanged}/>
+							<DOBPicker initialDate={moment(this.state.date_of_birth).isValid() ? moment(this.state.date_of_birth).toDate() : null} onChange={this.dateChanged}/>
 						</div>
 						<div className="col-md-6">
 							<FormSelect label="Gender" name="gender" value={this.state.gender} onChange={this.inputChanged}>
