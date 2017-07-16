@@ -42,8 +42,11 @@ def insert_referral_code(user_id):
     user = User.objects.get(pk=user_id)
     profile_info = ProfileInfo.objects.get(user_id=user_id)
     ref_code = generate_ref_code(user.email, profile_info.mobile_number)
-    additional_info = AdditionalInfo(user_id=user.id)
-    additional_info.save()
+    try:
+        additional_info = AdditionalInfo.objects.get(user_id=user.id)
+    except AdditionalInfo.DoesNotExist:
+        additional_info = AdditionalInfo(user_id=user_id)
+        additional_info.save()
     additional_info.referral_code = ref_code
     try:
         with transaction.atomic():

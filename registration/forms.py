@@ -8,7 +8,7 @@ from django.core.validators import validate_email
 from registration.models import Verification
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.core.exceptions import ValidationError
-from auditor.models import ProfileInfo
+from auditor.models import ProfileInfo, AdditionalInfo
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.db.models import Q
@@ -27,6 +27,7 @@ _logger = logging.getLogger(__name__)
 
 class SignUpForm(UserCreationForm):
     phone = forms.CharField(min_length=10, max_length=10, required = True, validators=[numericValidator])
+    referred_by = forms.CharField(required=False, label='Referral Code (optional)')
 
     class Meta:
         model = User
@@ -61,6 +62,10 @@ class SignUpForm(UserCreationForm):
 
         profile_info = ProfileInfo(user_id=user.id, mobile_number=user.phone)
         profile_info.save()
+
+        additional_info = AdditionalInfo(user_id=user.id)
+        additional_info.referred_by = self.cleaned_data["referred_by"]
+        additional_info.save()
 
         auth_data = {}
         auth_data['email'] = self.cleaned_data['username']
