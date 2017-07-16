@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.transaction import atomic
 from auditor.models import ProfileInfo
+from registration.service import auditor as auditor_service
 from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from .forms import SignUpForm
 import datetime
@@ -98,6 +99,7 @@ class SignUp(View):
         if form.is_valid():
             user = form.save()
             if user is not None:
+                auditor_service.insert_referral_code(user.id)
                 _logger.info("user %s signed up successfully", user)
                 return redirect('registration:signup_success')
         _logger.info("signup form invalid")
