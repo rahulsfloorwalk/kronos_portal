@@ -58,6 +58,9 @@ import ModeratorForm from './moderator/ModeratorForm.jsx';
 import AuditCycleModeratorList from './AuditCycleModeratorList.jsx';
 import AuditCycleModeratorAssignForm from './AuditCycleModeratorAssignForm.jsx';
 
+import ManagerForm from './manager/ManagerForm.jsx';
+import ManagerList from './manager/ManagerList.jsx';
+
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/" component={App}>
@@ -131,6 +134,10 @@ const Routes = () => (
 		<Route path="moderator" component={ModeratorList}>
 			<Route path="add" component={ModeratorForm}/>
 			<Route path=":userId/edit" component={ModeratorForm}/>
+		</Route>
+		<Route path="manager" component={ManagerList}>
+			<Route path="add" component={ManagerForm}/>
+			<Route path=":userId/edit" component={ManagerForm}/>
 		</Route>
 	</Route>
     </Router>

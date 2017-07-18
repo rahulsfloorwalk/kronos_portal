@@ -15,6 +15,7 @@ from .viewss import attachment as attachment_views
 from .viewss import notifications as notification_views
 from .viewss import report_stats as report_stats_views
 from .viewss import moderator as moderator_views
+from .viewss import manager as manager_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -109,5 +110,7 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)$', attachment_views.AttachmentIdView.as_view(), name='attachment_id_view'),
     url(r'moderator/(?P<user_id>[0-9]+)$', moderator_views.ModeratorIdView.as_view(), name='moderator_id_view'),
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
+    url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),
+    url(r'manager$', manager_views.ManagerView.as_view(), name='manager_view'),
 
 ], 'manager')
