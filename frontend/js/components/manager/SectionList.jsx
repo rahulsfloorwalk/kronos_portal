@@ -2,9 +2,11 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { pointerStyle } from '../../styles.js';
+
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Duplicate, Tasks, Plus, Cross, Pencil } from '../Icons.jsx';
+import { Duplicate, Tasks, Plus, Cross, Pencil, ChevronRight, ChevronDown } from '../Icons.jsx';
 
 import { orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
@@ -25,6 +27,16 @@ var QuestionRow = React.createClass({
 					//<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/delete`} className="btn btn-default"><Cross/></Link>
 });
 var Section = React.createClass({
+	getInitialState: function(){
+		return {
+			expanded: false,
+		};
+	},
+	toggleExpanded: function(){
+		this.setState({
+			expanded: !this.state.expanded,
+		});
+	},
 	render: function(){
 		let questionRows = [];
 		if( this.props.section.questions){
@@ -35,14 +47,28 @@ var Section = React.createClass({
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
 		}
+		questionRows.push(
+			<tr key="new">
+			<td colSpan={4} className="text-center">
+				<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
+					<Plus/> Add Question
+				</Link>
+			</td>
+			</tr>
+		);
 		var styles = {
 			col1: { width: "5%" },
 			col2: { width: "80%" },
 			col3: { width: "5%" },
 			col4: { width: "10%" },
 		};
-		return (
-			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
+
+		let expandIcon = (<ChevronRight/>);
+		let panelBody = null;//(<div className="panel-footer text-center text-muted"><button onClick={this.toggleExpanded} className="btn btn-link">expand</button></div>);
+
+		if(this.state.expanded){
+			expandIcon = (<ChevronDown/>);
+			panelBody = (
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -60,10 +86,28 @@ var Section = React.createClass({
 						{questionRows}
 					</tbody>
 				</table>
-				<div className="panel-footer">
-					<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/edit`} className="btn btn-default"><Pencil/> Edit Section</Link>
+			);
+		}
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					<span className="pull-right">
+						<b>{this.props.section.questions.length}</b> questions, <b>{this.props.section.max_marks}</b> marks
+						&nbsp;
+						<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/edit`} className="btn btn-default">
+							<Pencil/>
+						</Link>
+					</span>
+					<h4 className="panel-title">
+						<a onClick={this.toggleExpanded} style={pointerStyle} className="btn btn-sm btn-default">
+							{expandIcon}
+						</a>
+						&nbsp;
+						{this.props.section.sequence} - <b>{this.props.section.name}</b>
+					</h4>
 				</div>
-			</Panel>
+				{panelBody}
+			</div>
 		);
 	},
 });
