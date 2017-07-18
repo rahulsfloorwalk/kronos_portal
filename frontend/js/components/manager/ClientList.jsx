@@ -8,15 +8,21 @@ import { fetchClients } from '../../manager/actions/client.js'
 var ClientRow = React.createClass({
 	render: function(){
 		var linkTo = `/client/${this.props.client.id}/audit_cycle`;
+		let style = {
+			height: "250px",
+		};
+		let logoUrl = this.props.client.logo_url ? this.props.client.logo_url : `https://dummyimage.com/250x250/efefef/000000.png&text=${this.props.client.name}`;
 		return (
-			<tr>
-				<td>{this.props.client.name}</td>
-				<td>{this.props.client.email}</td>
-				<td>{this.props.client.phone}</td>
-				<td>
-					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
-				</td>
-			</tr>
+			<div className="col-md-3">
+				<div className="panel panel-default" style={style}>
+				<div className="panel-body text-center">
+				<h4>{this.props.client.name}</h4>
+				<Link to={linkTo} className="">
+				<img style={{"padding":"10px", "maxHeight":"200px", "maxWidth":"100%"}} className="" src={logoUrl}/>
+				</Link>
+				</div>
+				</div>
+			</div>
 		);
 	},
 });
@@ -36,19 +42,9 @@ var ClientList = React.createClass({
 					<Link to="/client/add" className="btn btn-default pull-right"><Plus/> Add Client</Link>
 					<King/> Client List
 				</h2>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Email</th>
-							<th>Phone</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
+				<div className="row">
+				{rows}
+				</div>
 				{this.props.children}
 			</div>
 		);
