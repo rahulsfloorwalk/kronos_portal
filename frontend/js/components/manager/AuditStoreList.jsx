@@ -35,8 +35,8 @@ var __AuditStoreRow = React.createClass({
       <tr>
         <td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
+        <td className="text-right">{acceptButton}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
-        <td>{acceptButton}</td>
         <td>
           <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
         </td>
@@ -57,8 +57,8 @@ var AuditStoreTable = React.createClass({
 	    <tr>
 	      <th>Auditor Name</th>
 	      <th>Audit Date</th>
-	      <th>Report Status</th>
         <th></th>
+	      <th>Report Status</th>
         <th></th>
 	    </tr>
 	  </thead>
