@@ -29,6 +29,7 @@ var AdditionalInfoPanelBase = React.createClass({
 				</div>
 				<table className="table table-striped">
 					<tbody>
+					<tr><td className="text-right text-muted">Referral Code:</td><th>{ this.props.additionalInfo.referral_code }</th></tr>
 					<tr><td className="text-right text-muted">Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
 					<tr><td className="text-right text-muted">Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
 					<tr><td className="text-right text-muted">Industry:</td><th>{ this.props.additionalInfo.industry }</th></tr>
