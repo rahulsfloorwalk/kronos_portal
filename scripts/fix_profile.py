@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.db.utils import DataError, IntegrityError
 
 import hashlib, datetime
-import properties
 
 import csv
 

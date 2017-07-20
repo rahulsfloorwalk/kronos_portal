@@ -13,7 +13,6 @@ from django.core.mail import send_mail
 from django.utils import timezone
 from django.db.models import Q
 import hashlib, datetime
-import properties
 from os import urandom
 from django.template import Context
 from django.template.loader import render_to_string, get_template
@@ -102,7 +101,7 @@ class SignUpForm(UserCreationForm):
             'protocol': 'http',
             'key': activation_key,
             'email': user.email,
-            'mydomain': properties.MY_DOMAIN
+            'mydomain': settings.BASE_DOMAIN_NAME
         }))
 
         msg = EmailMessage( strings.SIGN_UP_SUBJECT, message, to=(user.email,))

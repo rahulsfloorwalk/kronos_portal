@@ -1,5 +1,5 @@
 import logging
-import properties
+from django.conf import settings
 from django.db import IntegrityError, transaction
 from django.contrib.auth.models import User
 from django.forms import ValidationError
@@ -75,9 +75,9 @@ def send_password_reset_email(user_id):
             subject_template_name='registration/password_reset_subject2.txt',
             email_template_name='registration/password_reset_email2.txt',
             html_email_template_name='registration/password_reset_email2.html',
-            domain_override=properties.MY_DOMAIN,
+            domain_override=settings.BASE_DOMAIN_NAME,
             extra_email_context = {
-                'mydomain': properties.MY_DOMAIN
+                'mydomain': settings.BASE_DOMAIN_NAME
             }
         )
         return user

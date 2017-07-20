@@ -3,7 +3,6 @@ from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from django.db.utils import DataError, IntegrityError
 from registration.models import Verification
 import hashlib, datetime
-import properties
 from os import urandom
 import csv
 with open('final_data.csv') as data:

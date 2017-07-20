@@ -1,10 +1,10 @@
+from django.conf import settings
 from django.conf.urls import url
 from django.contrib.auth.views import password_reset, password_reset_done, password_reset_confirm, password_reset_complete
 from django.contrib.auth.views import password_change, password_change_done
 
 from kronos.utils import view_log
 
-import properties
 from . import views
 from . import client_views
 from . import moderator_views
@@ -39,7 +39,7 @@ urlpatterns = ([
         'html_email_template_name': 'registration/password_reset_email2.html',
         'post_reset_redirect': 'registration:password_reset_done',
         'extra_email_context': {
-            'mydomain': properties.MY_DOMAIN
+            'mydomain': settings.BASE_DOMAIN_NAME
         }
         }, name="password_reset"),
 

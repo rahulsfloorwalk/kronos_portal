@@ -11,8 +11,18 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
-import properties
+import sys
+import logging
+from configparser import ConfigParser
+
 from django import urls
+
+_logger = logging.getLogger(__name__)
+
+properties = ConfigParser()
+if "properties.ini" not in properties.read("properties.ini"):
+     _logger.error("properties.ini not found")
+     sys.exit(1)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -21,10 +31,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = properties.SECRET_KEY
+SECRET_KEY = properties["GENERAL"]["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = properties.DEBUG
+DEBUG = properties["GENERAL"]["DEBUG"]
 
 ALLOWED_HOSTS = ['*']
 
@@ -106,12 +116,12 @@ WSGI_APPLICATION = 'kronos.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': properties.database["ENGINE"],
-        'NAME': properties.database["NAME"],
-        'USER': properties.database["USER"],
-        'PASSWORD': properties.database["PASSWORD"],
-        'HOST': properties.database["HOST"],
-        'PORT': properties.database["PORT"],
+        'ENGINE': properties["DATABASE"]["ENGINE"],
+        'NAME': properties["DATABASE"]["NAME"],
+        'USER': properties["DATABASE"]["USER"],
+        'PASSWORD': properties["DATABASE"]["PASSWORD"],
+        'HOST': properties["DATABASE"]["HOST"],
+        'PORT': int(properties["DATABASE"]["PORT"]),
     }
 }
 
@@ -193,22 +203,22 @@ LOGOUT_REDIRECT_URL = '/auth/login'
 
 ## email settings
 
-EMAIL_HOST = properties.email_settings["EMAIL_HOST"]
-EMAIL_PORT = properties.email_settings["EMAIL_PORT"]
-EMAIL_HOST_USER = properties.email_settings["EMAIL_HOST_USER"]
-EMAIL_HOST_PASSWORD = properties.email_settings["EMAIL_HOST_PASSWORD"]
-DEFAULT_FROM_EMAIL = properties.email_settings["DEFAULT_FROM_EMAIL"]
-SERVER_EMAIL = properties.email_settings["SERVER_EMAIL"]
+EMAIL_HOST = properties["EMAIL_SETTINGS"]["HOST"]
+EMAIL_PORT = int(properties["EMAIL_SETTINGS"]["PORT"])
+EMAIL_HOST_USER = properties["EMAIL_SETTINGS"]["HOST_USER"]
+EMAIL_HOST_PASSWORD = properties["EMAIL_SETTINGS"]["HOST_PASSWORD"]
+DEFAULT_FROM_EMAIL = properties["EMAIL_SETTINGS"]["DEFAULT_FROM_EMAIL"]
+SERVER_EMAIL = properties["EMAIL_SETTINGS"]["SERVER_EMAIL"]
 EMAIL_USE_TLS = True
 
 # payment csv file settings
 
 PAYMENT_CSV_SETTINGS = {
-    "ORDERINGACCNO": properties.payment_settings['ORDERINGACCNO'],
-    "REMITTER_NAME": properties.payment_settings['ORDERINGACCNO'],
-    "SENTTORECVINFO": properties.payment_settings['SENTTORECVINFO'],
-    "INDICATOR": properties.payment_settings['INDICATOR'],
-    "ORIGINAL_REMITTER": properties.payment_settings['ORIGINAL_REMITTER'],
+    "ORDERINGACCNO": properties["PAYMENT_CSV_SETTINGS"]["ORDERINGACCNO"],
+    "REMITTER_NAME": properties["PAYMENT_CSV_SETTINGS"]["ORDERINGACCNO"],
+    "SENTTORECVINFO": properties["PAYMENT_CSV_SETTINGS"]["SENTTORECVINFO"],
+    "INDICATOR": properties["PAYMENT_CSV_SETTINGS"]["INDICATOR"],
+    "ORIGINAL_REMITTER": properties["PAYMENT_CSV_SETTINGS"]["ORIGINAL_REMITTER"],
 }
 # payment_settings = properties.payment_settings
 
@@ -223,14 +233,14 @@ LOGGING = {
             },
         'handlers': {
                 'console':{
-                        'level': properties.log_level,
+                        'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
                         'class': 'logging.StreamHandler',
                         'formatter': 'simple'
                 },
                 'logfile':{
-                        'level': properties.log_level,
+                        'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
                         'class': 'logging.FileHandler',
-                        'filename': properties.django_log_filename,
+                        'filename': properties["LOGGER_SETTINGS"]["DJANGO_LOG_FILENAME"],
                         'formatter': 'simple'
                 },
         },
@@ -242,24 +252,36 @@ LOGGING = {
             #    'propagate': True
             #},
             '': {
-                'level': properties.log_level,
-                'handlers': properties.log_handlers,
+                'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
+                'handlers': properties["LOGGER_SETTINGS"]["LOG_HANDLERS"].split(','),
             },
          },
 }
 
-AWS = properties.AWS
+BASE_DOMAIN_NAME = properties["GENERAL"]["BASE_DOMAIN_NAME"]
 
-AUTH_GA_ID = properties.AUTH_GA_ID
+AWS = {
+    "S3_ATTACHMENTS": {
+        "AWS_ACCESS_KEY_ID": properties["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
+        "AWS_SECRET_ACCESS_KEY": properties["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
+        "BUCKET": properties["S3_ATTACHMENTS"]["BUCKET"],
+        "REGION": properties["S3_ATTACHMENTS"]["REGION"],
+        "MIN_SIZE": int(properties["S3_ATTACHMENTS"]["MIN_SIZE"]),
+        "MAX_SIZE": int(properties["S3_ATTACHMENTS"]["MAX_SIZE"]),
+        "FILE_SLUG_SIZE": int(properties["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]),
+    }
+}
 
-IMGIX_SUBDOMAIN = properties.IMGIX_SUBDOMAIN
+AUTH_GA_ID = properties["GENERAL"]["AUTH_GA_ID"]
+
+IMGIX_SUBDOMAIN = properties["GENERAL"]["IMGIX_SUBDOMAIN"]
 
 EMAIL_SWITCH = {
-    "NOTIFICATION_EMAIL": properties.MAIL_SWITCH['NOTIFICATION_EMAIL'],
-    "VERIFICATION_EMAIL": properties.MAIL_SWITCH['VERIFICATION_EMAIL'],
-    "PRE_REMINDER_EMAIL": properties.MAIL_SWITCH['PRE_REMINDER_EMAIL'],
-    "ON_REMINDER_EMAIL": properties.MAIL_SWITCH['ON_REMINDER_EMAIL'],
-    "POST_REMINDER_EMAIL": properties.MAIL_SWITCH['POST_REMINDER_EMAIL'],
-    "WELCOME_EMAIL": properties.MAIL_SWITCH['WELCOME_EMAIL'],
+    "NOTIFICATION_EMAIL": properties["EMAIL_SWITCH"]["NOTIFICATION"] == "True",
+    "VERIFICATION_EMAIL": properties["EMAIL_SWITCH"]["VERIFICATION"] == "True",
+    "PRE_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["PRE_REMINDER"] == "True",
+    "ON_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["ON_REMINDER"] == "True",
+    "POST_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["POST_REMINDER"] == "True",
+    "WELCOME_EMAIL": properties["EMAIL_SWITCH"]["WELCOME"] == "True",
 }
 

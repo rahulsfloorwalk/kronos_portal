@@ -3,6 +3,7 @@
 *.swp
 venv/
 properties.py
+properties.ini
 frontend/node_modules/
 frontend/dist/
 kronos.egg-info/
