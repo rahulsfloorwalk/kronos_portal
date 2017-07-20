@@ -11,6 +11,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('auditor', '0024_auto_20170313_1955'),
+        ('registration', '0004_auth_user_email_unique'),
     ]
 
     operations = [
