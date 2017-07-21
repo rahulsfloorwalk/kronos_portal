@@ -6,6 +6,8 @@ branch = True
 omit =
     # omit the venv files
     venv/*
+    # omit one-off scripts
+    scripts/*
     # omit the actual test code
     **/tests/*
     # omit the django migrations

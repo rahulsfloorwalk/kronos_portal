@@ -24,6 +24,7 @@ from audit.models import Audit
 from manager.models import City
 from .serializers import CitySerializer
 import manager.service.audit as audit_service
+import auditor.service.application_service
 from manager.service import notifications as notification_service
 from manager import states
 from registration.mixins import HasGroupPermission
@@ -134,7 +135,7 @@ class AuditApplicationsView(APIView):
         }
     def get(self, request, format=None):
         try:
-            applications = audit_service.get_applications( request.user.profileinfo.id)
+            applications = application_service.get_applications( request.user.profileinfo.id)
             return Response(AuditApplicationSerializer(applications, many=True).data)
         except ObjectNotFound as e:
             raise NotFound()
@@ -204,7 +205,7 @@ class AuditApplicationView(APIView):
         }
     def get(self, request, audit_id, location_id, format=None):
         try:
-            application = audit_service.get_application(audit_id, location_id, request.user.profileinfo.id)
+            application = application_service.get_application(audit_id, location_id, request.user.profileinfo.id)
             return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound as e:
             raise NotFound()
@@ -226,7 +227,7 @@ class AuditApplicationApplyView(APIView):
             application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
             application_apply_ds.is_valid(raise_exception=True)
 
-            application = audit_service.apply(
+            application = application_service.apply(
                     application_apply_ds.data["audit_id"],
                     application_apply_ds.data["profileinfo_id"],
                     application_apply_ds.data["audit_date"]
@@ -253,7 +254,7 @@ class AuditApplicationCancelView(APIView):
             application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
             application_cancel_ds.is_valid(raise_exception=True)
 
-            application = audit_service.cancel(
+            application = application_service.cancel(
                     application_cancel_ds.data["audit_id"],
                     application_cancel_ds.data["profileinfo_id"]
             )

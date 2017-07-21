@@ -5,6 +5,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
 from model_mommy import mommy
+from model_mommy.recipe import Recipe, foreign_key
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
@@ -13,8 +14,9 @@ from ..models import ProfileInfo
 
 from audit.models import AuditCycle, Audit
 from auditor.models import AuditApplication
+from audit_store.models import AuditStore
 
-from manager.service import audit as audit_service
+from auditor.service import application_service
 
 class AuditApplicationTestCase(TestCase):
     fixtures = ['groups', 'city']
@@ -23,159 +25,253 @@ class AuditApplicationTestCase(TestCase):
         self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
         self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
 
-        self.auditor_user = User.objects.create(username="auditor@foobar.com", email="auditor@foobar.com", password="top_secret")
-        self.auditor_user.groups.add()
-        self.auditor_user.save()
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com", groups=[self.auditor_group])
         self.profile = mommy.make(ProfileInfo, user=self.auditor_user)
 
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com", groups=[self.manager_group])
 
-    def test_apply_already_applied(self):
-        audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
+        self.audit_recipe = Recipe(
+                Audit,
                 audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
+                audit_cycle__end_date=date(2017, 6, 20),
             )
-        audit_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
-        self.assertRaises(AppLogicError, audit_service.apply, audit.id, self.profile.id, date(2017, 6, 18))
+        self.application_recipe = Recipe(
+                AuditApplication,
+                audit_date=date(2017,6,5),
+                profileinfo=self.profile,
+            )
+
+    def test_apply_already_applied(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 18))
 
     def test_apply_date_in_range(self):
-        audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        application = audit_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = application_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
         self.assertEqual(application.audit_date, date(2017, 6, 5))
         self.assertEqual(application.status, AuditApplication.APPLIED)
 
     def test_apply_date_out_of_range(self):
-        audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        self.assertRaises(AppLogicError, audit_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
 
-    def test_apply_audit_cycle_status_active_and_upcoming(self):
-        upcoming_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.UPCOMING,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-
-        application = audit_service.apply( upcoming_audit.id, self.profile.id, date(2017, 6, 5))
+    def test_apply_audit_cycle_status_upcoming(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.UPCOMING)
+        application = application_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
         self.assertEqual(application.audit_date, date(2017, 6, 5))
         self.assertEqual(application.status, AuditApplication.APPLIED)
 
-        active_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-
-        application = audit_service.apply( active_audit.id, self.profile.id, date(2017, 6, 5))
+    def test_apply_audit_cycle_status_active(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = application_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
         self.assertEqual(application.audit_date, date(2017, 6, 5))
         self.assertEqual(application.status, AuditApplication.APPLIED)
 
-    def test_apply_audit_cycle_status_preparation_or_report_or_archive(self):
-        preparation_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.PREPARATION,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        self.assertRaises(AppLogicError, audit_service.apply, preparation_audit.id, self.profile.id, date(2017, 6, 21))
+    def test_apply_audit_cycle_status_preparation(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.PREPARATION)
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
 
-        report_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.REPORT,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        self.assertRaises(AppLogicError, audit_service.apply, report_audit.id, self.profile.id, date(2017, 6, 21))
+    def test_apply_audit_cycle_status_report(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.REPORT)
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
 
-        archived_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ARCHIVED,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        self.assertRaises(AppLogicError, audit_service.apply, archived_audit.id, self.profile.id, date(2017, 6, 21))
+    def test_apply_audit_cycle_status_archived(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ARCHIVED)
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
 
-
-    def test_cancel_audit_cycle_active_or_upcoming(self):
-        upcoming_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.UPCOMING,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
+    def test_cancel_audit_cycle_status_upcoming(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.UPCOMING)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
             )
-        audit_service.apply( upcoming_audit.id, self.profile.id, date(2017, 6, 5))
-        application = audit_service.cancel( upcoming_audit.id, self.profile.id)
+        application = application_service.cancel( audit.id, self.profile.id)
         self.assertEqual(application.status, AuditApplication.NOT_APPLIED)
 
-        active_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
+    def test_cancel_audit_cycle_status_active(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
             )
-        audit_service.apply( active_audit.id, self.profile.id, date(2017, 6, 5))
-        application = audit_service.cancel( active_audit.id, self.profile.id)
+        application = application_service.cancel( audit.id, self.profile.id)
         self.assertEqual(application.status, AuditApplication.NOT_APPLIED)
 
 
     def test_already_cancelled(self):
-        audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.NOT_APPLIED,
             )
-        audit_service.apply( audit.id, self.profile.id, date(2017, 6, 5))
-        audit_service.cancel( audit.id, self.profile.id)
-        self.assertRaises(AppLogicError, audit_service.cancel, audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
 
     def test_cancel_without_application(self):
-        audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ACTIVE,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        self.assertRaises(ObjectNotFound, audit_service.cancel, audit.id, self.profile.id)
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        self.assertRaises(ObjectNotFound, application_service.cancel, audit.id, self.profile.id)
 
-
-    def test_cancel_audit_cycle_status_preparation_or_report_or_archive(self):
-        preparation_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.PREPARATION,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        application = mommy.make( AuditApplication,
-                audit=preparation_audit,
-                audit_date=date(2017,6,5),
+    def test_cancel_audit_cycle_status_preparation(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.PREPARATION)
+        application = self.application_recipe.make(
+                audit=audit,
                 status=AuditApplication.APPLIED,
-                profileinfo=self.profile,
             )
-        self.assertRaises(AppLogicError, audit_service.cancel, preparation_audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
 
-        report_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.REPORT,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        application = mommy.make( AuditApplication,
-                audit=report_audit,
-                audit_date=date(2017,6,5),
+    def test_cancel_audit_cycle_status_report(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.REPORT)
+        application = self.application_recipe.make(
+                audit=audit,
                 status=AuditApplication.APPLIED,
-                profileinfo=self.profile,
             )
-        self.assertRaises(AppLogicError, audit_service.cancel, report_audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
 
-        archived_audit = mommy.make( Audit,
-                audit_cycle__status=AuditCycle.ARCHIVED,
-                audit_cycle__start_date=date(2017, 6, 1),
-                audit_cycle__end_date=date(2017,6,20),
-            )
-        application = mommy.make( AuditApplication,
-                audit=archived_audit,
-                audit_date=date(2017,6,5),
+    def test_cancel_audit_cycle_status_archive(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ARCHIVED)
+        application = self.application_recipe.make(
+                audit=audit,
                 status=AuditApplication.APPLIED,
-                profileinfo=self.profile,
             )
-        self.assertRaises(AppLogicError, audit_service.cancel, archived_audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
+
+    def test_reject_audit_cycle_status_preparation(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.PREPARATION)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+        application = application_service.reject( application.id, self.manager_user)
+        self.assertEqual(application.status, AuditApplication.REJECTED)
+
+    def test_reject_audit_cycle_status_upcoming(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.PREPARATION)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+        application = application_service.reject( application.id, self.manager_user)
+        self.assertEqual(application.status, AuditApplication.REJECTED)
+
+    def test_reject_audit_cycle_status_active(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+        application = application_service.reject( application.id, self.manager_user)
+        self.assertEqual(application.status, AuditApplication.REJECTED)
+
+    def test_reject_audit_cycle_status_report(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.REPORT)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+        application = application_service.reject( application.id, self.manager_user)
+        self.assertEqual(application.status, AuditApplication.REJECTED)
+
+    def test_reject_audit_cycle_status_archived(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ARCHIVED)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+        application = application_service.reject( application.id, self.manager_user)
+        self.assertEqual(application.status, AuditApplication.REJECTED)
+
+    def test_reject_status_rejected(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.REJECTED,
+            )
+        self.assertRaises(AppLogicError, application_service.reject, application.id, self.manager_user)
+
+    def test_approve_same_audit_date(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+        application = application_service.approve( application.id, application.audit_date ,self.manager_user)
+        self.assertEqual(application.status, AuditApplication.APPROVED)
+        self.assertEqual(self.auditor_user.auditstore_set.count(), 1)
+
+        audit_store = self.auditor_user.auditstore_set.first()
+        self.assertEqual(audit_store.audit_date, application.audit_date)
+        self.assertEqual(audit_store.user, self.auditor_user)
+        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
+        self.assertEqual(audit_store.audit, audit)
+
+    def test_approve_different_audit_date(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+
+        my_audit_date = date(2017,6,17)
+        application = application_service.approve( application.id, my_audit_date ,self.manager_user)
+        self.assertEqual(application.status, AuditApplication.APPROVED)
+        self.assertEqual(self.auditor_user.auditstore_set.count(), 1)
+
+        audit_store = self.auditor_user.auditstore_set.first()
+        self.assertEqual(audit_store.audit_date, my_audit_date)
+        self.assertEqual(audit_store.user, self.auditor_user)
+        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
+        self.assertEqual(audit_store.audit, audit)
+
+    def test_approve_audit_date_out_of_range(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+
+        self.assertRaises(AppLogicError, application_service.approve, application.id, date(2017,6,22) ,self.manager_user)
+
+    def test_approve_audit_cycle_status_preparation(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.PREPARATION)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+
+        self.assertRaises(AppLogicError, application_service.approve, application.id, application.audit_date, self.manager_user)
+
+    def test_approve_audit_cycle_status_report(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.REPORT)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+
+        application = application_service.approve( application.id, application.audit_date ,self.manager_user)
+        self.assertEqual(application.status, AuditApplication.APPROVED)
+        self.assertEqual(self.auditor_user.auditstore_set.count(), 1)
+
+        audit_store = self.auditor_user.auditstore_set.first()
+        self.assertEqual(audit_store.audit_date, application.audit_date)
+        self.assertEqual(audit_store.user, self.auditor_user)
+        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
+        self.assertEqual(audit_store.audit, audit)
+
+    def test_approve_audit_cycle_status_archived(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ARCHIVED)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+
+        self.assertRaises(AppLogicError, application_service.approve, application.id, application.audit_date, self.manager_user)
+
+    def test_approve_already_approved(self):
+        audit = self.audit_recipe.make( audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+                audit=audit,
+                status=AuditApplication.APPLIED,
+            )
+
+        application_service.approve( application.id, application.audit_date, self.manager_user)
+        self.assertRaises(AppLogicError, application_service.approve, application.id, application.audit_date, self.manager_user)

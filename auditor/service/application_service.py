@@ -16,6 +16,98 @@ from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
 from manager.notification import verbs
 
+def get_applications( profileinfo_id):
+    return AuditApplication.objects.filter(profileinfo_id=profileinfo_id)
+
+def get_application( audit_id, location_id, profileinfo_id):
+    try:
+        audit = Audit.objects.get(id=audit_id)
+        audit_location = audit.auditlocations.get(location_id=location_id)
+        return audit_location.applications.get(profileinfo_id=profileinfo_id);
+    except (Audit.DoesNotExist, AuditLocation.DoesNotExist, AuditApplication.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+@atomic
+def apply( audit_id, profileinfo_id, audit_date):
+    try:
+        audit = Audit.objects.get(id=audit_id)
+        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
+        application = audit.applications.get(profileinfo_id=profileinfo_id)
+    except (Audit.DoesNotExist, ProfileInfo.DoesNotExist) as e:
+        raise ObjectNotFound from e
+    except AuditApplication.DoesNotExist:
+        application = AuditApplication()
+        application.status = AuditApplication.NOT_APPLIED
+        application.profileinfo_id = profileinfo_id
+        application.audit_id = audit.id
+
+    if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
+        raise AppLogicError("preferred audit date is not within range")
+
+    if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status is None:
+        application.status = AuditApplication.APPLIED
+        application.audit_date = audit_date
+        application.save()
+        #TODO:VERB should be encapsulated
+        notify.send(
+                profileinfo.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb=notification.AUDIT_APPLICATION_APPLIED,
+                action_object=application,
+                target=audit
+        )
+        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+        notify.send(
+            profileinfo.user,
+            recipient=profileinfo.user,
+            verb=notification.AUDIT_APPLICATION_APPLIED,
+            action_object=application,
+            target=audit
+        )
+        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+        return application
+    else:
+        raise AppLogicError("you cannot apply to this audit")
+
+
+@atomic
+def cancel( audit_id, profileinfo_id):
+    try:
+        audit = Audit.objects.get(id=audit_id)
+        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
+        application = audit.applications.get(profileinfo_id=profileinfo_id)
+    except (Audit.DoesNotExist, AuditApplication.DoesNotExist, ProfileInfo.DoesNotExist ) as e:
+        raise ObjectNotFound from e
+
+    if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.REPORT, AuditCycle.ARCHIVED) and application.status == AuditApplication.APPLIED:
+        application.status = AuditApplication.NOT_APPLIED
+        application.save()
+        #TODO:VERB should be encapsulated
+        notify.send(
+                profileinfo.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb='AUDIT_APPLICATION_CANCELED',
+                action_object=application,
+                target=audit
+        )
+        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+        notify.send(
+            profileinfo.user,
+            recipient=profileinfo.user,
+            verb='AUDIT_APPLICATION_CANCELED',
+            action_object=application,
+            target=audit
+        )
+        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+        return application
+    else:
+        raise AppLogicError("you cannot cancel this application now")
+
+
 @atomic
 def approve(application_id, audit_date, user_actor):
     try:
@@ -29,8 +121,8 @@ def approve(application_id, audit_date, user_actor):
         raise AppLogicError("application cannot be approved right now")
     if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
         raise AppLogicError("audit date is out of range")
-    if audit_cycle.status == AuditCycle.ARCHIVED:
-        raise AppLogicError("audit_cycle is archived")
+    if audit_cycle.status in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED):
+        raise AppLogicError("application cannot be approved right now")
 
     application.status = AuditApplication.APPROVED
     application.audit_date = audit_date
