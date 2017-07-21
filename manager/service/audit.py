@@ -119,7 +119,10 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.profileinfo_id = profileinfo_id
         application.audit_id = audit.id
 
-    if audit.audit_cycle.status != AuditCycle.ARCHIVED and application.status == AuditApplication.NOT_APPLIED or application.status is None:
+    if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
+        raise AppLogicError("preferred audit date is not within range")
+
+    if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status is None:
         application.status = AuditApplication.APPLIED
         application.audit_date = audit_date
         application.save()
@@ -156,7 +159,7 @@ def cancel( audit_id, profileinfo_id):
     except (Audit.DoesNotExist, AuditApplication.DoesNotExist, ProfileInfo.DoesNotExist ) as e:
         raise ObjectNotFound from e
 
-    if audit.audit_cycle.status != AuditCycle.ARCHIVED and application.status == AuditApplication.APPLIED:
+    if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.REPORT, AuditCycle.ARCHIVED) and application.status == AuditApplication.APPLIED:
         application.status = AuditApplication.NOT_APPLIED
         application.save()
         #TODO:VERB should be encapsulated
