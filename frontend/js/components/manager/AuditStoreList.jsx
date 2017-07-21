@@ -5,12 +5,14 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat, url}  from '../../../config.js';
 
-import { File, Download } from '../Icons.jsx';
+import { File, Download, Checked, Unchecked } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
 
-import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore} from '../../manager/actions/audit_store.js';
+import { fetchClientUsers } from '../../manager/actions/client_user.js';
+import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore, updateAuditStore} from '../../manager/actions/audit_store.js';
+import { assignAuditStoreToClientUser, revokeAuditStoreFromClientUser } from '../../manager/service/audit_store.js';
 import { getAuditStoreStatus } from '../../utils.js';
 import { getPaymentStatus } from '../../utils.js';
 
@@ -23,7 +25,25 @@ var __AuditStoreRow = React.createClass({
   acceptButtonClicked: function(e){
 		this.props.dispatch(acceptAuditStore(this.props.auditStore.id));
 	},
+	assignAuditStore: function(e){
+		assignAuditStoreToClientUser(this.props.auditStore.id, this.props.selectedClientUserId).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
+	},
+	revokeAuditStore: function(e){
+		revokeAuditStoreFromClientUser(this.props.auditStore.id, this.props.selectedClientUserId).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
+	},
   render: function(){
+	  let visibleCheckbox;
+	  if( this.props.selectedClientUserId){
+		  let button;
+		  if(this.props.auditStore.status === "COMPLETED" || this.props.auditStore.status === "ACCEPTED"){
+			  if(this.props.auditStore.visible_to.indexOf(parseInt(this.props.selectedClientUserId)) > -1){
+				  button = <button onClick={this.revokeAuditStore} className="btn btn-primary"><Checked/></button>;
+			  } else {
+				  button = <button onClick={this.assignAuditStore} className="btn btn-default"><Unchecked/></button>;
+			  }
+		  }
+		  visibleCheckbox = <td>{button}</td>;
+	  }
     let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
     let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
     let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
@@ -33,6 +53,7 @@ var __AuditStoreRow = React.createClass({
     }
     return(
       <tr>
+	    {visibleCheckbox}
         <td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td className="text-right">{acceptButton}</td>
@@ -49,12 +70,28 @@ var AuditStoreTable = React.createClass({
   render: function(){
     let reps = [];
     for(let n in this.props.auditStores){
-      reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} />);
+	    if( this.props.selectedStatus){
+		    if( this.props.auditStores[n].status === this.props.selectedStatus){
+			    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUserId={this.props.selectedClientUserId}/>);
+		    }
+	    } else {
+	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUserId={this.props.selectedClientUserId}/>);
+	    }
+    }
+    let checkBoxHeader = null;
+    let colCount = 5;
+    if( this.props.selectedClientUserId){
+            checkBoxHeader = <th>Visible?</th>;
+	    colCount++;
+    }
+    if( reps.length === 0){
+	    reps.push(<tr key="empty"><td colSpan={colCount} className="text-center text-muted">no reports here.. check your filters?</td></tr>);
     }
     return(
 	<table className="table table-striped">
 	  <thead>
 	    <tr>
+	      {checkBoxHeader}
 	      <th>Auditor Name</th>
 	      <th>Audit Date</th>
         <th></th>
@@ -71,10 +108,39 @@ var AuditStoreTable = React.createClass({
 });
 
 var AuditStoreList = React.createClass({
+	getInitialState: function(){
+		return {
+			selectedClientUserId: null,
+			selectedStatus: null,
+		};
+	},
   componentDidMount: function(){
     this.props.dispatch(fetchAuditStores(this.props.params.auditCycleId));
+    if(this.props.auditCycle){
+	    this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
+    }
   },
+  componentWillReceiveProps: function(nextProps){
+    if(nextProps.auditCycle && ! this.props.auditCycle){
+	    this.props.dispatch(fetchClientUsers(nextProps.auditCycle.client.id));
+    }
+  },
+	clientUserChanged: function(e){
+		this.setState({
+			selectedClientUserId: e.target.value
+		});
+	},
+	statusChanged: function(e){
+		this.setState({
+			selectedStatus: e.target.value
+		});
+	},
   render: function(){
+	  let clientUserRows = [];
+	  for( let clientUserId in this.props.clientUsers){
+		  clientUserRows.push(<option key={this.props.clientUsers[clientUserId].user.id} value={this.props.clientUsers[clientUserId].user.id}>{this.props.clientUsers[clientUserId].full_name}</option>);
+	  }
+	  let checkBoxHeader = null;
 		var audits = [];
 		for(var id in this.props.auditStores) {
 			let audit = audits.filter((a)=> a.id === this.props.auditStores[id].audit.id)[0];
@@ -85,7 +151,6 @@ var AuditStoreList = React.createClass({
 			}
 			audit.reports.push(this.props.auditStores[id]);
 		}
-		console.log("unique audits:",audits);
     var rows = [];
     for( var i in audits){
 	    rows.push(
@@ -93,7 +158,7 @@ var AuditStoreList = React.createClass({
 			<div className="panel-heading">
 				<b>{audits[i].store.name}</b>, {audits[i].store.location.name}, {audits[i].store.location.city.name}
 			</div>
-			<AuditStoreTable auditStores={audits[i].reports}/>
+			<AuditStoreTable auditStores={audits[i].reports} selectedClientUserId={this.state.selectedClientUserId} selectedStatus={this.state.selectedStatus}/>
 		    </div>
 	    );
     }
@@ -105,6 +170,23 @@ var AuditStoreList = React.createClass({
               <Download/> Excel Report
           </a>
         </h3>
+	    <div className="form-group">
+	  <select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.clientUserChanged} value={this.state.selectedClientUserId}>
+	    <option value="">Select Client User</option>
+	    {clientUserRows}
+	   </select>
+	    &nbsp;
+	  <select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.statusChanged} value={this.state.selectedClientUserId}>
+	    <option value="">Select Status</option>
+	    <option value="ASSIGNED">{getAuditStoreStatus("ASSIGNED")}</option>
+	    <option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
+	    <option value="WITHDRAWN">{getAuditStoreStatus("WITHDRAWN")}</option>
+	    <option value="COMPLETED">{getAuditStoreStatus("COMPLETED")}</option>
+	    <option value="FAILED">{getAuditStoreStatus("FAILED")}</option>
+	    <option value="ACCEPTED">{getAuditStoreStatus("ACCEPTED")}</option>
+	    <option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
+	   </select>
+	    </div>
 	    {rows}
         {this.props.children}
       </div>
@@ -114,7 +196,9 @@ var AuditStoreList = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
   return{
-    auditStores: store.auditStores
+    auditStores: store.auditStores,
+    auditCycle: store.auditCycles[ownProps.params.auditCycleId],
+    clientUsers: store.clientUsers,
   };
 }
 export default ReactRedux.connect(mapStoreToProps)(AuditStoreList);

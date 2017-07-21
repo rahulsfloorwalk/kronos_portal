@@ -6,6 +6,8 @@ from django.db import IntegrityError
 from django.contrib.auth.models import Group
 from django.utils.timezone import localtime, now
 
+from guardian.shortcuts import assign_perm, remove_perm
+
 from notifications.signals import notify
 from notifications.models import Notification
 
@@ -26,6 +28,7 @@ import answer.service.answer as answer_service
 import questionnaire.service.question as question_service
 import questionnaire.service.section as section_service
 import payment.service.payment_manager as payment_manager_service
+import client.service.client_user as client_user_service
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
@@ -419,3 +422,25 @@ def reject(audit_store_id, user_actor):
             raise AppLogicError("audit store cannot be rejected now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+@atomic
+def assign_audit_store_to_client_user(audit_store_id, user_id):
+    audit_store = find_by_id(audit_store_id)
+    user = client_user_service.find_clientuser_by_user_id(user_id)
+
+    if not user.clientuser.client.id == audit_store.audit.audit_cycle.client.id:
+        raise AppLogicError("cannot assign AuditStore across client boundries")
+
+    assign_perm('clientuser_visible', user, audit_store)
+    return audit_store
+
+@atomic
+def revoke_audit_store_from_client_user(audit_store_id, user_id):
+    audit_store = find_by_id(audit_store_id)
+    user = client_user_service.find_clientuser_by_user_id(user_id)
+
+    if not user.clientuser.client.id == audit_store.audit.audit_cycle.client.id:
+        raise AppLogicError("cannot revoke AuditStore across client boundries")
+
+    remove_perm('clientuser_visible', user, audit_store)
+    return audit_store

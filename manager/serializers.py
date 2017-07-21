@@ -335,6 +335,7 @@ class PaymentUserSerializer(ModelSerializer):
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializerWithoutApplications()
     user = UserSerializer()
+    visible_to = PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = AuditStore
         fields = (
@@ -343,6 +344,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'user',
+            'visible_to',
         )
         read_only_fields = fields
 

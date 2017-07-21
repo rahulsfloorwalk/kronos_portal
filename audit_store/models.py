@@ -5,6 +5,8 @@ from django.conf import settings
 from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField
 from django.db.models import CASCADE
 
+from guardian.shortcuts import get_users_with_perms
+
 from audit.models import Audit
 from answer.models import Answer
 from questionnaire.models import Question
@@ -47,6 +49,11 @@ class AuditStore(Model):
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 
     objects = PresentationManager()
+
+    class Meta:
+        permissions = (
+                ('clientuser_visible', 'ClientUser can view this AuditStore instance'),
+            )
 
     def marks_obtained(self):
         return sum(rs.marks_obtained() for rs in self.report_sections.all())
@@ -102,3 +109,6 @@ class AuditStore(Model):
         else:
             _logger.debug("report is neither in completed not in accepted state")
             return False
+
+    def visible_to(self):
+        return get_users_with_perms(self)

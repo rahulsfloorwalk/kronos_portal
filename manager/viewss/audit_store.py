@@ -8,7 +8,7 @@ from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import Serializer, IntegerField
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -20,6 +20,7 @@ from audit_store import service as audit_store_service
 
 from payment.service import payment_manager as payment_service
 
+from client.service import client_user as client_user_service
 from client_report.service import xlsx_report as xlsx_report_service
 
 from audit.models import Audit, AuditCycle
@@ -33,7 +34,7 @@ class AuditStoreByAuditCycle(APIView):
     def get(self, request, audit_cycle_id, format=None):
         try:
             audit_stores = audit_store_service.find_by_audit_cycle(audit_cycle_id)
-            serial_audit_stores = AuditStoreSerializerWithPayment(audit_stores, many=True).data
+            serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
             return Response(serial_audit_stores)
         except ObjectNotFound:
             raise Http404
@@ -186,7 +187,7 @@ class AuditStoreIdAcceptView(APIView):
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.accept(audit_store_id, request.user)
-            return Response(AuditStoreSerializerWithPayment(audit_store).data)
+            return Response(AuditStoreSerializer(audit_store).data)
         except (AppLogicError) as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -249,3 +250,31 @@ class AuditStoreXlsxReport(APIView):
             return response
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
+
+
+class AuditStoreIdClientUserView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        client_user_id = IntegerField()
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_audit_store = audit_store_service.assign_audit_store_to_client_user(
+                audit_store_id,
+                ds.validated_data["client_user_id"],
+            )
+        return Response(AuditStoreSerializer(saved_audit_store).data)
+
+    def delete(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_audit_store = audit_store_service.revoke_audit_store_from_client_user(
+                audit_store_id,
+                ds.validated_data["client_user_id"],
+            )
+        return Response(AuditStoreSerializer(saved_audit_store).data)
