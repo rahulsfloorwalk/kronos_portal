@@ -1,7 +1,7 @@
 import $ from 'jquery'
 import { url } from '../../../config.js'
 
-export function findAttachmentsByUser(userId){
+export function findAttachmentsByUser(){
 	return $.get(url.api_base_path + `auditor/id_proof/attachment`);
 }
 
@@ -27,7 +27,7 @@ export function completeAttachment(attachmentId){
 	});
 };
 
-export function uploadFileForUser(userId, file){
+export function uploadFileForUser(file){
 	var req_url = url.api_base_path + `auditor/id_proof/attachment`;
 	return doAttachmentUpload(req_url, file);
 };

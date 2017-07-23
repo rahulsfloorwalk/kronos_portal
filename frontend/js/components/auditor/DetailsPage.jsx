@@ -7,6 +7,7 @@ import { fetchUser } from '../../auditor/actions/user.js';
 import ProfileInfoPanel from './ProfileInfoPanel.jsx';
 import BankInfoPanel from './BankInfoPanel.jsx';
 import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
+import IdProofPanel from './IdProofPanel.jsx'
 
 import Panel from '../Panel.jsx';
 
@@ -16,6 +17,7 @@ var DetailsPage = React.createClass({
 	},
 	render: function(){
 		return (
+			<div>
 			<div className="row">
 				<div className="col-md-6">
 					<ProfileInfoPanel/>
@@ -31,6 +33,12 @@ var DetailsPage = React.createClass({
 					<AdditionalInfoPanel/>
 				</div>
 				{this.props.children}
+			</div>
+			<div className="row">
+				<div className="col-md-6">
+					<IdProofPanel/>
+				</div>
+			</div>
 			</div>
 		);
 	},
