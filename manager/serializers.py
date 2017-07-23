@@ -679,7 +679,8 @@ class AdditionalInfoSerializer(ModelSerializer):
             'smart_phone_owned',
             'weekend_audit',
             'user_id',
-            'occupation'
+            'occupation',
+            'referral_code',
         )
         read_only_fields = fields
 

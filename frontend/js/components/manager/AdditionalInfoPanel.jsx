@@ -27,6 +27,7 @@ var AdditionalInfoPanel = React.createClass({
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
 				<div className="panel-body">
+					<p>Referral Code: { this.props.additionalInfo.referral_code }</p>
 					<p>Occupation: { getOccupation(this.props.additionalInfo.occupation) }</p>
 					<p>Car Owned: { has_car }</p>
 					<p>Weekend Audit: { weekend_audit }</p>
