@@ -43,7 +43,7 @@ class SignUpForm(UserCreationForm):
             self.add_error("phone", "a user with phone {} already exists".format(self.data["phone"]))
             valid = False
 
-        if not AdditionalInfo.objects.filter(referral_code=self.data["referred_by"]).exists():
+        if not AdditionalInfo.objects.filter(referral_code=self.data["referred_by"].lower()).exists():
             self.add_error("referred_by", "a user with referral code {} does not exists. Please enter valid referral code or leave blank.".format(self.data["referred_by"]))
             valid = False
 
