@@ -1,3 +1,5 @@
+from random import choice
+from string import digits
 from django.db import IntegrityError
 from auditor.models import ProfileInfo, AdditionalInfo
 
@@ -7,14 +9,18 @@ def insert_referral_codes():
         user = pi.user
         mobile = pi.mobile_number
         email = (''.join(e for e in user.email if e.isalnum())).lower()
-        if mobile is None or email is None:
+        if email is None:
             continue
-        ref_code = generate_ref_code(email, mobile)
+        if mobile is None or len(mobile) < 4:
+            random_mobile = ''.join(choice(digits) for i in range(10))
+            ref_code = generate_ref_code(email, random_mobile)
+        else:
+            ref_code = generate_ref_code(email, mobile)
         try:
             ai = AdditionalInfo.objects.get(user=user)
         except AdditionalInfo.DoesNotExist:
-            newai = AdditionalInfo()
-            newai.user = user
+            ai = AdditionalInfo()
+            ai.user = user
             ai.save()
 
         ai.referral_code = ref_code
