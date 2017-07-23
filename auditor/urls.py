@@ -7,6 +7,7 @@ urlpatterns = ([
     url(r'notifications$', views.NotificationsView.as_view(), name='notifications_view'),
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
+    url(r'id_proof/attachment$', views.UserIdProofAttachmentView.as_view(), name="id_proof_upload_view"),
 
     url(r'dashboard/stats$', views.StatsView.as_view(), name="payment_view"),
     url(r'dashboard/score$', views.ScoreView.as_view(), name="payment_view"),

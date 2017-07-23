@@ -5,6 +5,7 @@ from datetime import date
 import os
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db.models import Q
 
 import boto3
@@ -148,6 +149,36 @@ def upload_for_report_section(audit_store_id, section_id, file_name, file_size, 
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def upload_for_id_proof(user_id, file_name, file_size, mime_type):
+    try:
+        user = audit_store_service.find_by_id(user_id)
+        check_file_size(file_size)
+
+        basename, file_extension = os.path.splitext(file_name)
+        if mime_type is None or file_extension == '':
+            raise AppLogicError("could not detect file type, please ensure you upload a known file type")
+
+        if mime_type.startswith("image/"):
+            proof_type = Attachment.ID_PROOF
+        else:
+            raise AppLogicError("selected file is not an image file, please upload image file of known type")
+
+        post_data = get_signed_post(file_extension)
+
+        attachment = Attachment()
+        attachment.status = Attachment.UPLOADING
+        attachment.proof_type = proof_type
+        attachment.mime_type = mime_type
+        attachment.file_name = file_name
+        attachment.file_size = file_size
+        attachment.file_slug = post_data["fields"]["key"]
+        attachment.content_object = user
+
+        attachment.save()
+
+        return (post_data, attachment)
+    except User.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 def get_audit_store_for_attachment(attachment_id):
     try:
@@ -176,6 +207,9 @@ def find_by_audit_store(audit_store_id):
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
     return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED)
+
+def find_by_profile_info(profile_info_id):
+    return Attachment.objects.filter(profile_infos__id=profile_info_id, status=Attachment.ATTACHED)
 
 
 def delete(attachment_id):

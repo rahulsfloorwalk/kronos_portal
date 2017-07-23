@@ -1,6 +1,10 @@
 import $ from 'jquery'
 import { url } from '../../../config.js'
 
+export function findAttachmentsByUser(userId){
+	return $.get(url.api_base_path + `auditor/id_proof/attachment`);
+}
+
 export function findAttachmentsByAuditStore(auditStoreId){
 	return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`);
 };
@@ -21,6 +25,11 @@ export function completeAttachment(attachmentId){
 		url: url.api_base_path + `auditor/attachment/${attachmentId}/complete`,
 		type: "POST"
 	});
+};
+
+export function uploadFileForUser(userId, file){
+	var req_url = url.api_base_path + `auditor/id_proof/attachment`;
+	return doAttachmentUpload(req_url, file);
 };
 
 export function uploadFileForAuditStore(auditStoreId, file){
@@ -100,4 +109,3 @@ export function doAttachmentUpload(url, file){
 
 	return mainPromise;
 };
-

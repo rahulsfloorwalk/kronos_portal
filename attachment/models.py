@@ -8,11 +8,13 @@ class Attachment(Model):
     PHOTO = 'PHOTO'
     AUDIO = 'AUDIO'
     VIDEO = 'VIDEO'
+    ID_PROOF = 'ID_PROOF'
     OTHER = 'OTHER'
     PROOF_TYPE = (
         (PHOTO, "Photo"),
         (AUDIO, "Audio"),
-        (AUDIO, "Video"),
+        (VIDEO, "Video"),
+        (ID_PROOF, "ID Proof")
     )
 
     UPLOADING = 'UPLOADING'

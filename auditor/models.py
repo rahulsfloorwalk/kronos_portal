@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import CASCADE
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
     PositiveSmallIntegerField, PositiveIntegerField
@@ -69,6 +70,8 @@ class ProfileInfo(Model):
 
     city = ForeignKey(City, db_column='city_id', null=True, blank=True)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+
+    attachments = GenericRelation('attachment.Attachment', related_query_name='profile_infos')
 
     def is_complete(self):
         complete = True

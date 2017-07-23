@@ -399,6 +399,44 @@ class ReportSectionAttachmentView(APIView):
                 'non_field_errors': [e.__str__()]
             })
 
+class UserIdProofAttachmentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET': [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+
+    def get(self, request, format=None):
+        try:
+            profile_info = ProfileInfo.objects.get(user_id=request.user.id)
+            attachments = attachment_auditor_service.find_by_profile_info_for_auditor(profile_info.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
+        except ObjectNotFound:
+            raise NotFound
+
+    def post(self, request):
+        try:
+            profile_info = ProfileInfo.objects.get(user_id=request.user.id)
+            post_data, attachment = attachment_auditor_service.upload_for_id_proof_by_auditor(
+                    profile_info.id,
+                    request.data["file_name"],
+                    request.data["file_size"],
+                    request.data["file_type"])
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+        except ObjectNotFound as e:
+            raise NotFound() from e
+        except AppLogicError as e:
+            raise ValidationError({
+                'non_field_errors': [e.__str__()]
+            })
+        except ObjectNotFound:
+            raise NotFound
+
 
 class AttachmentIdView(APIView):
     permission_classes = [HasGroupPermission]
