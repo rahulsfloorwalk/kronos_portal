@@ -13,12 +13,12 @@ var FakeImpactFactor = React.createClass({
 			clientUser: null,
 			labels: [],
 			data: [
-				{name: 'Business Visibility', "June": 88},
-				{name: 'WOW factor', "June": 46},
-				{name: 'Brand Image', "June": 82},
-				{name: 'Customer retention', "June": 60},
-				{name: 'Operational smoothness', "June": 71},
-				{name: 'Staff Loyalty', "June": 82}
+				{name: 'Business Visibility', "April 2017": 50.4, "May 2017": 53.27},
+				{name: 'WOW Factor', "April 2017": 50, "May 2017": 71.53},
+				{name: 'Brand Image', "April 2017": 73.67, "May 2017": 86.41},
+				{name: 'Customer Retention', "April 2017": 56.54, "May 2017": 60.64},
+				{name: 'Operational Smoothness', "April 2017": 68.62, "May 2017": 75},
+				{name: 'Staff Loyalty', "April 2017": 52.33, "May 2017": 90.49},
 			],
 		};
 	},
@@ -49,9 +49,10 @@ var FakeImpactFactor = React.createClass({
 		let chart;
 		if(this.state.loading){
 			chart = <Loading/>;
-		} else if(this.state.clientUser && this.state.clientUser.client.id === 9 && this.props.auditType === "WALKIN") {
-			let colors = ["#4ca9d7", "#0085c6", "#005d8a"];
-
+		} else if(this.state.clientUser && this.state.clientUser.client.id === 5 && this.props.auditType === "WALKIN") {
+			let colors = ["#fcf2cf", "#f6d96f", "#f0bf0f", "#907309"];
+			let colors1 = ["#ffad33", "#ff9900", "#cc7a00"];
+			let colors2 = ["#dc4c46", "#eb9794"];
 			chart = (
 			<ResponsiveContainer width="100%" aspect={3 / 1}>
 			<BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}}>
@@ -59,7 +60,8 @@ var FakeImpactFactor = React.createClass({
 			<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
 			<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 			<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
-			<Bar barSize={40} dataKey="June" fill="#4ca9d7" label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>
+			<Bar barSize={40} dataKey="April 2017" fill={colors1[1]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>
+			<Bar barSize={40} dataKey="May 2017" fill={colors1[2]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>
 			</BarChart>
 			</ResponsiveContainer>
 			);
