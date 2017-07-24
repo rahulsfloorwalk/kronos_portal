@@ -6,6 +6,7 @@ import AuditCycleCityMatrix from './AuditCycleCityMatrix.jsx';
 import AuditCycleTimeSeries from './AuditCycleTimeSeries.jsx';
 import AuditCycleStorePerformance from './AuditCycleStorePerformance.jsx';
 import DashboardCityPerformanceChart from './DashboardCityPerformanceChart.jsx';
+import FakeImpactFactor from './FakeImpactFactor.jsx';
 
 import { Dashboard } from '../../js/components/Icons.jsx';
 
@@ -25,6 +26,7 @@ let TypedDashboard = React.createClass({
 	render: function(){
 		return (
 			<div>
+				<FakeImpactFactor auditType={this.props.params.auditType}/>
 				<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
 				<hr/>
 				<AuditCycleStorePerformance auditType={this.props.params.auditType}/>
