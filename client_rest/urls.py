@@ -6,6 +6,7 @@ urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)$', views.AuditCycleStoreSectionAverageReport.as_view(), name='audit_cycle_store_section_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)/audit_store$', views.AuditCycleAuditStoreSectionReport.as_view(), name='audit_cycle_audit_store_section'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city/(?P<city_id>[0-9]+)$', views.AuditCycleCitySectionAverageReport.as_view(), name='audit_cycle_city_section_average'),
+    url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', views.AuditStoreView.as_view(), name='audit_store_view'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)$', views.AuditCycleCityAverageReport.as_view(), name='audit_cycle_city_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/store$', views.AuditCycleStorePerformance.as_view(), name='audit_cycle_store_performance'),

@@ -36,8 +36,8 @@ def get_for_auditor( audit_store_id, profile_info_id):
         raise ObjectNotFound()
 
 
-def find_by_audit_store_for_client( audit_store_id, client_id):
-    audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, client_id)
+def find_by_audit_store_for_clientuser( audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
 def find_by_audit_store_for_moderator( audit_store_id, user_id):

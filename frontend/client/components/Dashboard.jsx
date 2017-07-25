@@ -33,11 +33,11 @@ let TypedDashboard = React.createClass({
 				<hr/>
 				<DashboardCityPerformanceChart auditType={this.props.params.auditType}/>
 				<hr/>
-			<div className="row">
+			{/*<div className="row">
 				<div className="col-md-12">
 					<AuditCycleCityMatrix auditType={this.props.params.auditType}/>
 				</div>
-			</div>
+			</div>*/}
 			</div>
 		);
 	}

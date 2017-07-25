@@ -5,8 +5,8 @@ import audit_store.service_client as audit_store_client_service
 import attachment.service as attachment_service
 
 
-def find_by_audit_store_for_client(audit_store_id, client_id):
-    audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, client_id)
+def find_by_audit_store_for_clientuser(audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return attachment_service.find_by_audit_store(audit_store_id)
 
 

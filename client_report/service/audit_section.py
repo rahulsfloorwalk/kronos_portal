@@ -1,10 +1,14 @@
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from kronos.utils import get_color_code_by_percentage
 
+from client.service.client_user import find_clientuser_by_user_id
+
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from questionnaire.models import Section
+
+from audit.service import audit_cycle as audit_cycle_service
 
 def get_store_section_aggregation_for_manager(audit_cycle_id, store_id):
     try:
@@ -155,6 +159,28 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
     mean_values = sorted(mean_values, key = lambda date: date.get('audit_date'))
     return mean_values
 
+def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
+
+    user = find_clientuser_by_user_id(user_id)
+    audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
+
+    audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id)
+
+    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
+    audit_stores = []
+    for audit in audits:
+        for audit_store in audit.audit_stores.presentable().visible_to(user).order_by('-audit_date'):
+            audit_stores.append({
+                'audit_store_id': audit_store.id,
+                'audit_date': audit_store.audit_date,
+                'city_name': audit_store.audit.store.location.city.name,
+                'city_id': audit_store.audit.store.location.city.id,
+                'store_name': audit_store.audit.store.name,
+                'store_id': audit_store.audit.store.id,
+                'sections': __get_mean_for_sections(sections, (audit_store,))
+            })
+
+    return audit_stores
 
 
 def __get_mean_for_sections(sections, audit_stores):

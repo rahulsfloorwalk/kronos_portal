@@ -1,22 +1,34 @@
 import logging
 
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
+from django.db.models import QuerySet
 from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField
 from django.db.models import CASCADE
 
-from guardian.shortcuts import get_users_with_perms
+from guardian.shortcuts import get_users_with_perms, get_objects_for_user
 
-from audit.models import Audit
+from audit.models import Audit, AuditCycle
 from answer.models import Answer
 from questionnaire.models import Question
 
 _logger = logging.getLogger(__name__)
 
-class PresentationManager(Manager):
+class AuditStoreQuerySet(QuerySet):
     def presentable(self):
-        presentable_status = [AuditStore.COMPLETED, AuditStore.ACCEPTED]
-        return self.get_queryset().filter(status__in=presentable_status)
+        presentable_status = (AuditStore.COMPLETED, AuditStore.ACCEPTED)
+        presentable_audit_cycle_status = (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.ARCHIVED)
+        return self.filter(
+                audit__audit_cycle__status__in=presentable_audit_cycle_status,
+                status__in=presentable_status,
+                )
+
+    def visible_to(self, user):
+        if isinstance(user, User):
+            return get_objects_for_user(user, 'clientuser_visible', klass=self)
+        else:
+            raise TypeError("user needs to be a django User type")
 
 
 class AuditStore(Model):
@@ -48,7 +60,7 @@ class AuditStore(Model):
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 
-    objects = PresentationManager()
+    objects = AuditStoreQuerySet.as_manager()
 
     class Meta:
         permissions = (

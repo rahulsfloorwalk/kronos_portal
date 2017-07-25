@@ -214,8 +214,8 @@ def generate_xlsx_from_structure(report_data):
     output.seek(0)
     return output
 
-def generate_ears_report_for_client(audit_store_id, client_id):
-    audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, client_id)
+def generate_ears_report_for_clientuser(audit_store_id, user):
+    audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     if not audit_store.is_presentable():
         raise AppLogicError("report is not presentable")
 

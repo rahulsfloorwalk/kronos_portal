@@ -7,10 +7,10 @@ import Dashboard from './Dashboard.jsx';
 import { TypedDashboard } from './Dashboard.jsx';
 
 import ReportBrowser from './ReportBrowser.jsx';
+import ReportBrowser3 from './ReportBrowser3.jsx';
 import StoreDetail from './StoreDetail.jsx';
 
-import AuditStoreList from './AuditStoreList.jsx';
-import AuditStoreDetail from './AuditStoreDetail.jsx';
+import AuditStoreList from './AuditStoreList.jsx'; import AuditStoreDetail from './AuditStoreDetail.jsx';
 
 import SectionList from './SectionList.jsx';
 
@@ -37,6 +37,8 @@ const Routes = () => (
 
 		<Route path="/browser" component={ReportBrowser}/>
 		<Route path="/browser/auditCycle/:auditCycleId/city/:cityId" component={ReportBrowser}/>
+
+		<Route path="/browser3" component={ReportBrowser3}/>
 
 		<Route path="/store/:storeId" component={StoreDetail}>
 			<Route path="audit_store" component={AuditStoreList}/>

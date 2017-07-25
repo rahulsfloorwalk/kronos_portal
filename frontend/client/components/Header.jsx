@@ -41,7 +41,8 @@ export default React.createClass({
 					</div>
 					<ul className="nav navbar-nav">
 						<NavLink to="/"><Dashboard/> Dashboard</NavLink>
-						<NavLink to="/browser"><File/> Report Browser</NavLink>
+			{/*<NavLink to="/browser"><File/> Report Browser</NavLink>*/}
+						<NavLink to="/browser3"><File/> Report Browser</NavLink>
 						<NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">

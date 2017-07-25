@@ -116,8 +116,20 @@ class AuditStoreIdView(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            audit_store = audit_store_client_service.find_by_id_for_client(audit_store_id, request.user.clientuser.client.id)
+            audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, request.user)
             return Response(AuditStoreSerializer(audit_store).data)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class AuditStoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, audit_cycle_id, format=None):
+        try:
+            audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
+            return Response(audit_stores)
         except ObjectNotFound as e:
             raise NotFound from e
 
@@ -128,7 +140,7 @@ class SectionByAuditStore(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            sections = section_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            sections = section_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
             return Response(SectionSerializer(sections, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
@@ -141,7 +153,7 @@ class AnswerByAuditStore(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            answers = answer_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            answers = answer_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
             return Response(AnswerSerializer(answers, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
@@ -154,7 +166,7 @@ class ReportSectionByAuditStore(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            report_sections = report_section_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            report_sections = report_section_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
             return Response(ReportSectionSerializer(report_sections, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
@@ -167,7 +179,7 @@ class AttachmentByAuditStore(APIView):
         }
     def get(self, request, audit_store_id, format=None):
         try:
-            attachments = attachment_client_service.find_by_audit_store_for_client(audit_store_id, request.user.clientuser.client.id)
+            attachments = attachment_client_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
@@ -220,7 +232,7 @@ class AuditStoreEARSReport(APIView):
     }
     def get(self, request, audit_store_id, format=None):
         try:
-            report, name = ears_xlsx_report_service.generate_ears_report_for_client(audit_store_id, request.user.clientuser.client.id)
+            report, name = ears_xlsx_report_service.generate_ears_report_for_clientuser(audit_store_id, request.user)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response

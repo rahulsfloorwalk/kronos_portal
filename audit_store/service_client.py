@@ -12,10 +12,10 @@ def find_upcoming_for_client(client_id):
         ).order_by('audit_date')
 
 
-def find_by_id_for_client(audit_store_id, client_id):
+def find_by_id_for_clientuser(audit_store_id, user):
     try:
-        return AuditStore.objects.presentable().get(
-                audit__audit_cycle__client_id=client_id,
+        return AuditStore.objects.presentable().visible_to(user).get(
+                audit__audit_cycle__client_id=user.clientuser.client.id,
                 id=audit_store_id,
             )
     except AuditStore.DoesNotExist as e:

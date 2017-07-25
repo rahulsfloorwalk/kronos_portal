@@ -24,7 +24,7 @@ def find_distinct_types_for_clientuser(user_id):
 
 def find_for_clientuser(user_id):
     try:
-        user = User.objects.get(pk=user_id)
+        user = find_clientuser_by_user_id(user_id)
         return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)).order_by('-end_date')
     except (User.DoesNotExist, ) as e:
         raise ObjectNotFound from e

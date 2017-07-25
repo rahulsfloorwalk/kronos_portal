@@ -20,3 +20,7 @@ export function fetchAuditStore(auditStoreId){
 export function fetchAuditStoreByAuditCycleAndStore(auditCycleId, storeId){
 	return $.get( url.api_base_path + `client/report/audit_cycle/${auditCycleId}/store/${storeId}/audit_store`);
 };
+
+export function findAuditStoresByAuditCycle(auditCycleId){
+	return $.get( url.api_base_path + `client/report/audit_cycle/${auditCycleId}/audit_store`);
+};
