@@ -66,28 +66,37 @@ class AuditStoreTable extends Component {
 		let previousStore;
 		for(let r of this.state.reports){
 			let tds = [];
-			for(let s of r.sections){
-				if(s.max_marks > 0){
-					tds.push(<td key={s.sequence} className={getColor(s.color) + " text-right"} style={{}}>{s.percentage === null ? "N/A" : s.percentage+"%" }</td>);
-				}
-			}
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
 			let cityName = previousStore === r.store_id ? "" : r.city_name;
-			previousStore = r.store_id;
+			let tdStyle = {};
+			if(previousStore === r.store_id){
+				//trs.push(<td colSpan={2 + tds.length}>&nbsp;</td>);
+				tdStyle.borderTop = "solid White 0px";
+			}
+			if(previousStore !== r.store_id){
+				//trs.push(<td colSpan={2 + tds.length}>&nbsp;</td>);
+				tdStyle.borderTop = "solid lightgray 2px";
+			}
+			for(let s of r.sections){
+				if(s.max_marks > 0){
+					tds.push(<td key={s.sequence} className={getColor(s.color) + " text-right"} style={tdStyle}>{s.percentage === null ? "N/A" : s.percentage+"%" }</td>);
+				}
+			}
 			trs.push(
 				<tr key={r.audit_store_id} style={pointerStyle} onClick={()=> hashHistory.push(`/audit_store/${r.audit_store_id}`)}>
-				<td>
+				<td style={tdStyle}>
 					<b>{storeName}</b><br/>
 					<small>{cityName}</small>
 				</td>
-				<td className="text-right">{moment(r.audit_date).format(momentDateFormat)}</td>
+				<td className="text-right" style={tdStyle}>{moment(r.audit_date).format(momentDateFormat)}</td>
 				{tds}
 				</tr>
 			);
+			previousStore = r.store_id;
 		}
 
 		return (
-			<table className="table table-hover">
+			<table className="table table-bordered table-hover">
 			<thead>
 				<tr>{headers}</tr>
 			</thead>
