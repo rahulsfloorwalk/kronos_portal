@@ -17,10 +17,12 @@ export default React.createClass({
 			this.setState({
 				clientUser
 			});
-			if(this.state.clientUser.is_client_admin){
-				hashHistory.push("/dashboard");
-			} else {
-				hashHistory.push("/browser3");
+			if( this.props.location.pathname === "/"){
+				if(this.state.clientUser.is_client_admin){
+					hashHistory.push("/dashboard");
+				} else {
+					hashHistory.push("/browser3");
+				}
 			}
 		});
 	},

@@ -10,7 +10,7 @@ var App = React.createClass({
 		};
 		return (
 			<div>
-				<Header/>
+				<Header location={this.props.location}/>
 				<div className="container" style={contentStyle}>
 					{this.props.children}
 				</div>
