@@ -50,7 +50,7 @@ export default React.createClass({
 					<ul className="nav navbar-nav">
 						{
 							this.state.clientUser.is_client_admin
-							? <NavLink to="/"><Dashboard/> Dashboard</NavLink>
+							? <NavLink to="/dashboard"><Dashboard/> Dashboard</NavLink>
 							: ""
 						}
 						{/*<NavLink to="/browser"><File/> Report Browser</NavLink>*/}
