@@ -119,7 +119,7 @@ export default class ReportBrowser3 extends Component{
 			this.setState({
 				auditCycles,
 			})
-			this.auditCycleChanged(auditCycles[0].id);
+			this.auditCycleChanged(auditCycles[0].audit__audit_cycle__id);
 		});
 	}
 	auditCycleChanged = (auditCycleId) => {
@@ -132,22 +132,22 @@ export default class ReportBrowser3 extends Component{
 
 	render(){
 		var auditCycleRows = [];
-		for(let id in this.state.auditCycles) {
-			auditCycleRows.push(<option value={this.state.auditCycles[id].id} key={id}>{this.state.auditCycles[id].name}, {getAuditType(this.state.auditCycles[id].type)}</option>);
+		for(let ac of this.state.auditCycles) {
+			auditCycleRows.push(<option value={ac.audit__audit_cycle__id} key={ac.audit__audit_cycle__id}>{ac.audit__audit_cycle__name}, {getAuditType(ac.audit__audit_cycle__type)}</option>);
 		}
 
-		let auditCycle = this.state.auditCycles.filter( ac => ac.id === parseInt(this.state.selectedAuditCycleId))[0] || {};
+		let auditCycle = this.state.auditCycles.filter( ac => ac.audit__audit_cycle__id === parseInt(this.state.selectedAuditCycleId))[0] || {};
 		return (
 			<div>
 				<h2 className="page-header">
-					<a className="btn btn-default pull-right" href={url.api_base_path + 'client/audit_cycle/' + auditCycle.id + '/audit_cycle_xlsx_report'}>
+					<a className="btn btn-default pull-right" href={url.api_base_path + 'client/audit_cycle/' + auditCycle.audit__audit_cycle__id + '/audit_cycle_xlsx_report'}>
 						<Download/> Download Excel
 					</a>
-					<AuditTypeIcon type={auditCycle.type}/> &nbsp;
+					<AuditTypeIcon type={auditCycle.audit__audit_cycle__type}/> &nbsp;
 					<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="audit_cycle" value={this.state.selectedAuditCycleId} onChange={(e) => this.auditCycleChanged(parseInt(e.target.value))}>
 						{auditCycleRows}
 					</select>
-					<small> {moment(auditCycle.start_date).format("do MMM")} to {moment(auditCycle.end_date).format("Do MMM")}</small>
+					<small> {moment(auditCycle.audit__audit_cycle__start_date).format("do MMM")} to {moment(auditCycle.audit__audit_cycle__end_date).format("Do MMM")}</small>
 				</h2>
 				<AuditStoreTable auditCycleId={this.state.selectedAuditCycleId}/>
 				{this.props.children}

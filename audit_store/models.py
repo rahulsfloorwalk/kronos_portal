@@ -26,9 +26,13 @@ class AuditStoreQuerySet(QuerySet):
 
     def visible_to(self, user):
         if isinstance(user, User):
-            return get_objects_for_user(user, 'clientuser_visible', klass=self)
+            if user.has_perm('client.clientuser_admin'):
+                return self
+            else:
+                return get_objects_for_user(user, 'clientuser_visible', klass=self)
         else:
-            raise TypeError("user needs to be a django User type")
+            raise TypeError("user needs to be of type: django.contrib.auth.models.User")
+
 
 
 class AuditStore(Model):

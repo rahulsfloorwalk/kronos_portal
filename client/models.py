@@ -24,6 +24,14 @@ class ClientUser(Model):
     def __str__(self):
         return 'Client({}): {}'.format(self.id, self.name)
 
+    def is_client_admin(self):
+        return self.user.has_perm('client.clientuser_admin')
+
+    class Meta:
+        permissions = (
+                ('clientuser_admin', 'ClientUser can view all reports, the dashboard and access related reporting APIs'),
+            )
+
 
 class Store(Model):
 

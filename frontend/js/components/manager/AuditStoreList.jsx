@@ -26,17 +26,17 @@ var __AuditStoreRow = React.createClass({
 		this.props.dispatch(acceptAuditStore(this.props.auditStore.id));
 	},
 	assignAuditStore: function(e){
-		assignAuditStoreToClientUser(this.props.auditStore.id, this.props.selectedClientUserId).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
+		assignAuditStoreToClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
 	},
 	revokeAuditStore: function(e){
-		revokeAuditStoreFromClientUser(this.props.auditStore.id, this.props.selectedClientUserId).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
+		revokeAuditStoreFromClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
 	},
   render: function(){
 	  let visibleCheckbox;
-	  if( this.props.selectedClientUserId){
+	  if( this.props.selectedClientUser){
 		  let button;
 		  if(this.props.auditStore.status === "COMPLETED" || this.props.auditStore.status === "ACCEPTED"){
-			  if(this.props.auditStore.visible_to.indexOf(parseInt(this.props.selectedClientUserId)) > -1){
+			  if(this.props.auditStore.visible_to.indexOf(this.props.selectedClientUser.user.id) > -1){
 				  button = <button onClick={this.revokeAuditStore} className="btn btn-primary"><Checked/></button>;
 			  } else {
 				  button = <button onClick={this.assignAuditStore} className="btn btn-default"><Unchecked/></button>;
@@ -72,16 +72,16 @@ var AuditStoreTable = React.createClass({
     for(let n in this.props.auditStores){
 	    if( this.props.selectedStatus){
 		    if( this.props.auditStores[n].status === this.props.selectedStatus){
-			    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUserId={this.props.selectedClientUserId}/>);
+			    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser}/>);
 		    }
 	    } else {
-	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUserId={this.props.selectedClientUserId}/>);
+	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser}/>);
 	    }
     }
     let checkBoxHeader = null;
     let colCount = 5;
-    if( this.props.selectedClientUserId){
-            checkBoxHeader = <th>Visible?</th>;
+    if( this.props.selectedClientUser){
+            checkBoxHeader = <th>{this.props.selectedClientUser.full_name.split(" ")[0]}</th>;
 	    colCount++;
     }
     if( reps.length === 0){
@@ -138,7 +138,7 @@ var AuditStoreList = React.createClass({
   render: function(){
 	  let clientUserRows = [];
 	  for( let clientUserId in this.props.clientUsers){
-		  clientUserRows.push(<option key={this.props.clientUsers[clientUserId].user.id} value={this.props.clientUsers[clientUserId].user.id}>{this.props.clientUsers[clientUserId].full_name}</option>);
+		  clientUserRows.push(<option key={this.props.clientUsers[clientUserId].id} value={this.props.clientUsers[clientUserId].id}>{this.props.clientUsers[clientUserId].full_name}</option>);
 	  }
 	  let checkBoxHeader = null;
 		var audits = [];
@@ -158,7 +158,7 @@ var AuditStoreList = React.createClass({
 			<div className="panel-heading">
 				<b>{audits[i].store.name}</b>, {audits[i].store.location.name}, {audits[i].store.location.city.name}
 			</div>
-			<AuditStoreTable auditStores={audits[i].reports} selectedClientUserId={this.state.selectedClientUserId} selectedStatus={this.state.selectedStatus}/>
+			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus}/>
 		    </div>
 	    );
     }

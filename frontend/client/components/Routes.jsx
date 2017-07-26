@@ -19,7 +19,7 @@ import UpcomingAuditStores from './UpcomingAuditStores.jsx';
 const IndexComponent = React.createClass({
 	componentDidMount: function(){
 		//console.debug("IndexComponent", "componentDidMount");
-		hashHistory.push("/dashboard");
+		//hashHistory.push("/dashboard");
 	},
 	render: function(){
 		return null;

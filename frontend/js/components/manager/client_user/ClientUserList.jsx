@@ -8,11 +8,13 @@ import { fetchClientUsers } from '../../../manager/actions/client_user.js'
 
 var ClientUserRow = React.createClass({
 	render: function(){
-		var is_active = this.props.clientUser.user.is_active ? <Check/> : <Cross/>;
+		let is_active = this.props.clientUser.user.is_active ? <Check/> : <Cross/>;
+		let isClientAdmin = this.props.clientUser.is_client_admin ? <Check/> : <Cross/>;
 		return (
 			<tr>
 				<td>{this.props.clientUser.full_name}</td>
 				<td>{this.props.clientUser.user.email}</td>
+				<td>{isClientAdmin}</td>
 				<td>{is_active}</td>
 				<td>
 					<Link to={`/client/${this.props.clientUser.client}/client_user/${this.props.clientUser.id}/edit`} className="btn btn-default"><Pencil/></Link>
@@ -43,6 +45,7 @@ var ClientUserList = React.createClass({
 						<tr>
 							<th>Full Name</th>
 							<th>Email Address</th>
+							<th>Client Admin</th>
 							<th>Active</th>
 							<th></th>
 						</tr>

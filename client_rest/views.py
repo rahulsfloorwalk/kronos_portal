@@ -217,7 +217,7 @@ class AuditCycleXlsxReport(APIView):
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
-            report, name = cycle_xlsx_report_service.get_aggregate_report_for_client(audit_cycle_id, request.user.clientuser.client.id)
+            report, name = cycle_xlsx_report_service.get_aggregate_report_for_clientuser(audit_cycle_id, request.user.id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response
@@ -248,7 +248,8 @@ class AuditCycleView(APIView):
     def get(self, request, format=None):
         try:
             audit_cycles = audit_cycle_service.find_for_clientuser(request.user.id)
-            return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+            return Response(audit_cycles)
+            #return Response(AuditCycleSerializer(audit_cycles, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
 

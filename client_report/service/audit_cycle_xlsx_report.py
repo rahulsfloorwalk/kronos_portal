@@ -4,6 +4,8 @@ import io
 from kronos.utils import get_color_code, get_color_hex_from_code
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
+from client.service.client_user import find_clientuser_by_user_id
+
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
@@ -17,14 +19,16 @@ def get_aggregate_report_for_manager(audit_cycle_id):
     client_id = audit_cycle.client.id
     return get_aggregate_report_for_client(audit_cycle_id, client_id)
 
-def get_aggregate_report_for_client(audit_cycle_id, client_id):
+def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
     try:
         audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
+    user = find_clientuser_by_user_id(user_id)
+
     valid_client = audit_cycle.client
-    if(valid_client.id == int(client_id)):
+    if(valid_client.id == user.clientuser.client.id):
         sections = audit_cycle.sections.order_by('sequence')
 
         questions = []
@@ -33,7 +37,7 @@ def get_aggregate_report_for_client(audit_cycle_id, client_id):
 
         audit_stores = []
         for audit in audit_cycle.audits.all():
-            audit_store = audit.audit_stores.presentable().order_by('audit_date')
+            audit_store = audit.audit_stores.presentable().visible_to(user).order_by('audit_date')
             audit_stores.extend(audit_store)
 
         data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)

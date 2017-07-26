@@ -44,6 +44,7 @@ class ClientUserView(APIView):
                     client_user_ds.validated_data["client"],
                     client_user_ds.validated_data["full_name"],
                     client_user_ds.validated_data["email"],
+                    client_user_ds.validated_data["is_client_admin"],
                     client_user_ds.validated_data["password"],
                     client_user_ds.validated_data["is_active"]
                 )
@@ -78,6 +79,7 @@ class ClientUserIdView(APIView):
                     client_user_ds.validated_data["client"],
                     client_user_ds.validated_data["full_name"],
                     client_user_ds.validated_data["email"],
+                    client_user_ds.validated_data["is_client_admin"],
                     client_user_ds.validated_data["password"],
                     client_user_ds.validated_data["is_active"]
                 )

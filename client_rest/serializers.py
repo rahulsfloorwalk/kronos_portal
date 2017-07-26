@@ -65,6 +65,7 @@ class ClientUserSerializer(ModelSerializer):
             'full_name',
             'client',
             'user',
+            'is_client_admin',
         )
         read_only_fields = fields
 

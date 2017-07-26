@@ -11,8 +11,8 @@ from registration.service.moderator import find_moderator_by_user_id
 from client.service.client_user import find_clientuser_by_user_id
 
 from ..models import AuditCycle
-from auditor.models import AuditApplication as application_model
-from audit_store.models import AuditStore  as store_model
+from auditor.models import AuditApplication
+from audit_store.models import AuditStore
 
 def save(audit):
     AuditCycle.save(audit)
@@ -20,14 +20,23 @@ def save(audit):
 
 def find_distinct_types_for_clientuser(user_id):
     user = find_clientuser_by_user_id(user_id)
-    return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)).distinct('type').values_list('type', flat=True)
+    return AuditCycle.objects.filter(
+            client_id=user.clientuser.client_id,
+            status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)
+    ).distinct('type').values_list('type', flat=True)
 
 def find_for_clientuser(user_id):
-    try:
-        user = find_clientuser_by_user_id(user_id)
-        return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)).order_by('-end_date')
-    except (User.DoesNotExist, ) as e:
-        raise ObjectNotFound from e
+    user = find_clientuser_by_user_id(user_id)
+    return AuditStore.objects.presentable().visible_to(user).filter(
+            audit__audit_cycle__client__id=user.clientuser.client_id,
+    ).distinct('audit__audit_cycle_id').order_by('-audit__audit_cycle_id').values(
+            'audit__audit_cycle__id',
+            'audit__audit_cycle__name',
+            'audit__audit_cycle__start_date',
+            'audit__audit_cycle__end_date',
+            'audit__audit_cycle__type',
+    )
+
 
 def find_by_id_for_clientuser(audit_cycle_id, user_id):
     try:
@@ -67,10 +76,10 @@ def get_audit_cycle_stats(audit_cycle_id):
             result.get('audit_store')[store.status] += 1
         else:
             result.get('audit_store')[store.status] = 1
-    for key in application_model.STATUS:
+    for key in AuditApplication.STATUS:
         if not result.get('application').get(key[0]):
             result.get('application')[key[0]] = 0
-    for key in store_model.STATUS:
+    for key in AuditStore.STATUS:
         if not result.get('audit_store').get(key[0]):
             result.get('audit_store')[key[0]] = 0
     return result

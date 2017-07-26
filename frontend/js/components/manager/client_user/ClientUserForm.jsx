@@ -39,7 +39,8 @@ var ClientUserForm = React.createClass({
 				full_name : nextProps.clientUser.full_name,
 				email : nextProps.clientUser.user.email,
 				is_active : nextProps.clientUser.user.is_active,
-				password : ""
+				is_client_admin : nextProps.clientUser.is_client_admin,
+				password : "",
 			});
 		} else {
 			this.setState({
@@ -47,7 +48,8 @@ var ClientUserForm = React.createClass({
 				full_name: "",
 				email: "",
 				password: "",
-				is_active: true
+				is_active: true,
+				is_client_admin: false,
 			});
 		}
 	},
@@ -75,6 +77,7 @@ var ClientUserForm = React.createClass({
 					<FormInput label="Full Name" type="text" value={this.state.full_name} name="full_name" onChange={this.fieldChanged} errors={this.props.errors.full_name}/>
 					<FormInput label="Email Address" type="email" value={this.state.email} name="email" onChange={this.fieldChanged} errors={this.props.errors.email}/>
 					<FormInput label="Password" type="text" value={this.state.password} name="password" onChange={this.fieldChanged} errors={this.props.errors.password} placeholder="leave blank to keep password unchanged"/>
+					<FormInput label="Admin?" type="checkbox" checked={this.state.is_client_admin} name="is_client_admin" onChange={this.fieldChanged} errors={this.props.errors.is_client_admin}/>
 					<FormInput label="Active?" type="checkbox" checked={this.state.is_active} name="is_active" onChange={this.fieldChanged} errors={this.props.errors.is_active}/>
 					<SaveButton/>
 				</form>

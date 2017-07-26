@@ -2,6 +2,8 @@ from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
 
+from guardian.shortcuts import assign_perm, remove_perm
+
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_CLIENT
 
@@ -14,7 +16,7 @@ def find_clientuser_by_user_id(user_id):
         raise ObjectNotFound from e
 
 @atomic
-def insert(client, full_name, email, password, is_active=True):
+def insert(client, full_name, email, is_client_admin, password, is_active=True):
     try:
         if password == "":
             raise AppLogicError("password cannot be blank")
@@ -28,6 +30,9 @@ def insert(client, full_name, email, password, is_active=True):
         user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
         user.save()
 
+        if is_client_admin:
+            assign_perm('client.clientuser_admin', user)
+
         client_user = ClientUser()
         client_user.client = client
         client_user.full_name = full_name
@@ -40,7 +45,7 @@ def insert(client, full_name, email, password, is_active=True):
 
 
 @atomic
-def update(client_user_id, client, full_name, email, password="", is_active=True):
+def update(client_user_id, client, full_name, email, is_client_admin, password="", is_active=True):
     try:
         client_user = ClientUser.objects.get(pk=client_user_id)
 
@@ -52,6 +57,11 @@ def update(client_user_id, client, full_name, email, password="", is_active=True
 
         if password != "":
             client_user.user.set_password( password)
+
+        if is_client_admin:
+            assign_perm('client.clientuser_admin', client_user.user)
+        else:
+            remove_perm('client.clientuser_admin', client_user.user)
 
         client_user.user.save()
         client_user.save()

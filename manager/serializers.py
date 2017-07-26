@@ -496,6 +496,7 @@ class ClientUserSerializer(ModelSerializer):
             'full_name',
             'client',
             'user',
+            'is_client_admin',
         )
         read_only_fields = fields
 
@@ -505,6 +506,7 @@ class ClientUserDeSerializer(Serializer):
     email = EmailField()
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
+    is_client_admin = BooleanField()
 
 class ReportSectionSerializer(ModelSerializer):
     class Meta:
