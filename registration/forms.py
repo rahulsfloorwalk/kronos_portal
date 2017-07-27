@@ -21,6 +21,7 @@ from django.core.mail import EmailMessage
 
 import strings
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.service.auditor import generate_ref_code
 from auditor.validators import numericValidator
 
 _logger = logging.getLogger(__name__)
@@ -70,6 +71,12 @@ class SignUpForm(UserCreationForm):
         additional_info = AdditionalInfo(user_id=user.id)
         additional_info.referred_by = self.cleaned_data["referred_by"]
         additional_info.save()
+        try:
+            additional_info.referral_code = generate_ref_code(user.email, profile_info.mobile_number)
+            additional_info.save()
+        except IntegrityError:
+            _logger.error("Collision for referral code unresolved for user %s. Skipping generation of referral code", user.email)
+            pass
 
         auth_data = {}
         auth_data['email'] = self.cleaned_data['username']

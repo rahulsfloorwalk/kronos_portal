@@ -38,22 +38,6 @@ def verify_auditor(user_id):
     except User.DoesNotExist as e:
         raise ObjectNotFound from e
 
-def insert_referral_code(user_id):
-    user = User.objects.get(pk=user_id)
-    profile_info = ProfileInfo.objects.get(user_id=user_id)
-    ref_code = generate_ref_code(user.email, profile_info.mobile_number)
-    try:
-        additional_info = AdditionalInfo.objects.get(user_id=user.id)
-    except AdditionalInfo.DoesNotExist:
-        additional_info = AdditionalInfo(user_id=user_id)
-        additional_info.save()
-    additional_info.referral_code = ref_code
-    try:
-        with transaction.atomic():
-            additional_info.save()
-    except IntegrityError:
-        _logger.error("Collision for referral code unresolved for user %s. Skipping generation of referral code", user.email)
-        pass
 
 # Assumption is that same combination of email[:4] and phone[-4:] will not collide more than 26 times
 # Data set while generating codes indicated 1 collision for every 1500 entries.

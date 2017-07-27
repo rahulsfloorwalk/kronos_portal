@@ -99,7 +99,6 @@ class SignUp(View):
         if form.is_valid():
             user = form.save()
             if user is not None:
-                auditor_service.insert_referral_code(user.id)
                 _logger.info("user %s signed up successfully", user)
                 return redirect('registration:signup_success')
         _logger.info("signup form invalid")
