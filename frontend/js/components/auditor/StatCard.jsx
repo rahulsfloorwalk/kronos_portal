@@ -10,14 +10,11 @@ var StatCard = React.createClass({
 	},
 	render: function(){
 		return (
-      <div className="col-md-6">
-  			<div className="panel text-center">
-          <h4>{this.props.title}</h4>
-          <img src={this.props.image} className="pull-left" width="70" height="70" />
-          <h2 className="pull-left">&emsp;{this.props.count}</h2>
-          <br/><br/><br/><br/>
-  			</div>
-      </div>
+	<div className="text-center">
+          <h3 className="page-header">{this.props.title}</h3>
+          <img src={this.props.image} style={{display:"inline-block", width:"70px",height:"70px", marginRight:"20px"}} />
+          <h2 style={{display:"inline-block"}}>{this.props.count}</h2>
+	</div>
 		);
 	},
 });

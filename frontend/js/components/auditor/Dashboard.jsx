@@ -22,37 +22,46 @@ var Dashboard = React.createClass({
 		if( this.props.firstName && this.props.lastName){
 			return (
 			<div>
-				<h3 className="page-header">Welcome {this.props.firstName} {this.props.lastName}</h3>
+				{/*<h3 className="page-header">Welcome {this.props.firstName} {this.props.lastName}</h3>*/}
 				<div className="row">
 					<div className="col-md-8">
-						<RatingCard
-							score={score}
-						/>
-					</div>
-					<div className="col-md-4">
+						<br/>
+						<br/>
 						<ProfileCard
 							firstName={this.props.firstName}
 							lastName={this.props.lastName}
 							city={this.props.city.name}
 							phone={this.props.phone}
 						/>
-					</div>
-				</div>
-				<div className="row">
-					<div className="col-md-8">
-						<StatCard title="Audits Applied" image="/static/img/apply.png" count={stats.applied}/>
-						<StatCard title="Audits Assigned"  image="/static/img/assign.png" count={stats.assigned}/>
-						<StatCard title="Reports Completed"  image="/static/img/report.png" count={stats.completed}/>
-						<StatCard title="Payments Pending "  image="/static/img/money.png" count={stats.pending_payment}/>
+						<br/>
+						<div className="row">
+							<div className="col-md-6">
+							<StatCard 
+								title="Audits Applied" 
+								image="/static/img/application_100.png" count={stats.applied}/>
+							</div>
+							<div className="col-md-6">
+							<StatCard 
+								title="Audits Assigned"  
+								image="/static/img/thumbsup_100.png" count={stats.assigned}/>
+							</div>
+							<div className="col-md-6">
+							<StatCard 
+								title="Reports Completed"  
+								image="/static/img/checkmark_100.png" count={stats.completed}/>
+							</div>
+							<div className="col-md-6">
+							<StatCard 
+								title="Payments Pending "  
+								image="/static/img/money_100.png" count={stats.pending_payment}/>
+							</div>
+						</div>
 					</div>
 					<div className="col-md-4">
-						<NotificationBox/>
+					<NotificationBox/>
+					</div>
 					</div>
 				</div>
-				<div className="row">
-
-				</div>
-			</div>
 			);
 		}
 		return (
