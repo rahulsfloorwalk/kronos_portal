@@ -26,7 +26,7 @@ class ProfileInfoTestCase(TestCase):
                 gender = random.choice(ProfileInfo.GENDER)[0],
                 marital_status = random.choice(ProfileInfo.MARITAL_STATUS)[0],
                 education = random.choice(ProfileInfo.EDUCATION)[0],
-                mobile_number = ''.join(random.choices(string.digits, k=10)),
+                mobile_number = ''.join(random.choice(string.digits) for i in range(10)),
                 date_of_birth = date.today(),
                 address = fake.address(),
                 pincode = fake.zipcode(),

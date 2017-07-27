@@ -20,7 +20,7 @@ class CaseInsensitiveModelBackendTestCase(TestCase):
 
     def setUp(self):
         self.email = fake.email()
-        self.mobile = ''.join(random.choices(string.digits, k=10))
+        self.mobile = ''.join(random.choice(string.digits) for i in range(10))
         self.password = fake.password()
 
         self.u = User.objects.create_user(username=self.email, email=self.email, password=self.password)
