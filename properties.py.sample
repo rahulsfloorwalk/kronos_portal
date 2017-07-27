@@ -18,6 +18,14 @@ email_settings = {
     "EMAIL_HOST_PASSWORD" : "password"
 }
 
+payment_settings = {
+    "ORDERINGACCNO": "2541109900110007",
+    "REMITTER_NAME": "FLOORWALK CONSULTANTS PVT LTD",
+    "SENTTORECVINFO": "Floorwalk Audit fees",
+    "INDICATOR": "EML",
+    "ORIGINAL_REMITTER": "FLOORWALK CONSULTANTS PVT LTD"
+}
+
 ## change this to something long in production
 SECRET_KEY = 'super_secret'
 

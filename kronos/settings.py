@@ -197,6 +197,17 @@ DEFAULT_FROM_EMAIL = properties.email_settings["DEFAULT_FROM_EMAIL"]
 SERVER_EMAIL = properties.email_settings["SERVER_EMAIL"]
 EMAIL_USE_TLS = True
 
+# payment csv file settings
+
+PAYMENT_CSV_SETTINGS = {
+    "ORDERINGACCNO": properties.payment_settings['ORDERINGACCNO'],
+    "REMITTER_NAME": properties.payment_settings['ORDERINGACCNO'],
+    "SENTTORECVINFO": properties.payment_settings['SENTTORECVINFO'],
+    "INDICATOR": properties.payment_settings['INDICATOR'],
+    "ORIGINAL_REMITTER": properties.payment_settings['ORIGINAL_REMITTER'],
+}
+# payment_settings = properties.payment_settings
+
 
 LOGGING = {
         'version': 1,

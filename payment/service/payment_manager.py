@@ -1,6 +1,6 @@
 import io
 import csv
-from datetime import datetime
+from kronos import utils
 from django.utils import timezone
 from django.db import connection
 from django.db.transaction import atomic
@@ -11,6 +11,8 @@ from notifications.models import Notification
 from audit_store import service as audit_store_service
 from payment.models import Payment
 from manager import notification
+
+from django.conf import settings
 
 from notify.service import mail_notify
 from audit.service import audit_cycle as audit_cycle_service
@@ -169,25 +171,39 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
     audit = client + "_" + name
 
 
-    fieldnames = ['first name', 'last name', 'bank name', 'ifsc', 'account number', 'amount', 'status']
+    fieldnames = ['ORDERINGACCNO', 'REMITTER_NAME', 'IFSCCODE', 'BENEACCNO', 'BENENAME',
+                  'BENEADD1', 'TXNREFNO', 'DATE', 'AMOUNT', 'SENTTORECVINFO', 'INDICATOR',
+                  'DETAIL', 'ORIGINAL_REMITTER']
     writer.writerow(fieldnames)
     for payment in pending_payments:
         try:
             bank_name = payment.user.bankinfo.bank_name
             ifsc_code = payment.user.bankinfo.ifsc_code
-            account_number = "'"+ payment.user.bankinfo.account_number + "'"
+            account_number = payment.user.bankinfo.account_number
         except BankInfo.DoesNotExist:
             bank_name = ""
             ifsc_code = ""
             account_number = ""
+
+        if payment.user.profileinfo.city:
+            city_name = payment.user.profileinfo.city.name
+        else:
+            city_name = "India"
+
         writer.writerow([
-            payment.user.profileinfo.first_name,
-            payment.user.profileinfo.last_name,
-            bank_name,
+            settings.PAYMENT_CSV_SETTINGS['ORDERINGACCNO'],
+            settings.PAYMENT_CSV_SETTINGS['REMITTER_NAME'],
             ifsc_code,
             account_number,
+            (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or ""),
+            city_name,
+            "",
+            utils.today_ist().strftime("%d/%m/%Y"),
             payment.amount,
-            payment.status
+            settings.PAYMENT_CSV_SETTINGS['SENTTORECVINFO'],
+            settings.PAYMENT_CSV_SETTINGS['INDICATOR'],
+            payment.user.email,
+            settings.PAYMENT_CSV_SETTINGS['ORIGINAL_REMITTER'],
         ])
 
     output.seek(0)
