@@ -122,9 +122,36 @@ class AdditionalInfoSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'referral_code',
-            'referred_by',
         )
-        read_only_fields = ('id', 'user_id')
+        read_only_fields = fields
+
+class AdditionalInfoDeSerializer(ModelSerializer):
+    class Meta:
+        model = AdditionalInfo
+        fields = (
+            'id',
+            'has_car',
+            'weekend_audit',
+            'hair_color',
+            'height',
+            'weight',
+            'distance',
+            'camera_owned',
+            'camera_resoulution',
+            'laptop_owned',
+            'smart_phone_owned',
+            'weekend_audit',
+            'user_id',
+            'occupation',
+            'mspa_code',
+            'company',
+            'industry',
+            'car_cost',
+            'car_model',
+            'laptop_model',
+            'mobile_model',
+        )
+        read_only_fields = ('id', 'user_id', )
 
     def deserialize(self):
         if self.context.get('current_user') is None:
@@ -154,8 +181,6 @@ class AdditionalInfoSerializer(ModelSerializer):
         additional_info.car_model = self.validated_data.get('car_model', additional_info.car_model)
         additional_info.laptop_model = self.validated_data.get('laptop_model', additional_info.laptop_model)
         additional_info.mobile_model = self.validated_data.get('mobile_model', additional_info.mobile_model)
-        additional_info.referral_code = self.validated_data.get('referral_code', additional_info.referral_code)
-        additional_info.referred_by = self.validated_data.get('referred_by', additional_info.referred_by)
 
         return additional_info
 

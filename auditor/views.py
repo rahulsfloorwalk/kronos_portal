@@ -17,7 +17,7 @@ from auditor.serializers import AuditStoreSerializer
 from auditor.serializers import CitySerializer
 from auditor.serializers import NotificationSerializer
 from auditor.serializers import PaymentSerializer
-from auditor.serializers import ProfileInfoSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
+from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
 from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from auditor.serializers import SectionSerializer
 from auditor.service import stats as auditor_dashboard_service
@@ -68,9 +68,9 @@ class AdditionalInfoView(APIView):
             return Response(AdditionalInfoSerializer(AdditionalInfo()).data)
 
     def post(self, request):
-        additional_info_s= AdditionalInfoSerializer(data=request.data, context={'current_user' : request.user})
-        additional_info_s.is_valid(raise_exception=True)
-        additional_info = additional_info_s.deserialize()
+        additional_info_ds= AdditionalInfoDeSerializer(data=request.data, context={'current_user' : request.user})
+        additional_info_ds.is_valid(raise_exception=True)
+        additional_info = additional_info_ds.deserialize()
         additional_info.save()
         return Response(AdditionalInfoSerializer(additional_info).data)
 
