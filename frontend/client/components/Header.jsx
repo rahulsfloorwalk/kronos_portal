@@ -18,13 +18,22 @@ export default React.createClass({
 				clientUser
 			});
 			if( this.props.location.pathname === "/"){
-				if(this.state.clientUser.is_client_admin){
+				if(clientUser.is_client_admin){
 					hashHistory.push("/dashboard");
 				} else {
 					hashHistory.push("/browser3");
 				}
 			}
 		});
+	},
+	componentWillReceiveProps: function(nextProps){
+		if( this.state.clientUser && nextProps.location.pathname === "/"){
+			if(this.state.clientUser.is_client_admin){
+				hashHistory.push("/dashboard");
+			} else {
+				hashHistory.push("/browser3");
+			}
+		}
 	},
 	render: function(){
 		if(! this.state.clientUser){
