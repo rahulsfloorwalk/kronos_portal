@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 import attachment.service_auditor as attachment_auditor_service
-import manager.service.audit as audit_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 from audit.models import Audit
@@ -25,7 +24,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from manager import states
 from manager.models import City
 from .serializers import CitySerializer
-import manager.service.audit as audit_service
+from audit.service import audit_service
 from auditor.service import application_service
 from manager.service import notifications as notification_service
 from payment.service import payment_auditor as payment_service
@@ -119,7 +118,7 @@ class AuditView(APIView):
             'POST': [GROUP_NAME_AUDITOR]
         }
     def get(self, request, audit_id, format=None):
-        audit = Audit.objects.get(id=audit_id)
+        audit = audit_service.find_audit_by_id(audit_id)
         return Response(AuditSerializer(audit).data)
 
 class AuditApplicationsView(APIView):
