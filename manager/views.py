@@ -22,7 +22,7 @@ from .serializers import AuditSerializer, AuditDeSerializer
 from .serializers import AuditApplicationSerializer
 
 from .service import location as location_service
-import auditor.service.application_service
+from auditor.service import application_service
 from .service import audit_location as audit_location_service
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
