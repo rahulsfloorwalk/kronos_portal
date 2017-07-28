@@ -22,7 +22,7 @@ class ClientUser(Model):
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
     def __str__(self):
-        return 'Client({}): {}'.format(self.id, self.name)
+        return 'Client({}): {}'.format(self.id, self.full_name)
 
     def is_client_admin(self):
         return self.user.has_perm('client.clientuser_admin')
