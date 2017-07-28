@@ -1,4 +1,1 @@
 
-from .test_profileinfo import ProfileInfoTestCase
-from .test_application import AuditApplicationTestCase
-from .test_view_apply_cancel_flow import AuditApplyAPITestCase
