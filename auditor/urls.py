@@ -16,13 +16,12 @@ urlpatterns = ([
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
 
-    url(r'application$', views.AuditApplicationsView.as_view(), name="audit_applications_view"),
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/cancel$', views.AuditApplicationCancelView.as_view(), name="audit_application_cancel_view"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/apply$', views.AuditApplicationApplyView.as_view(), name="audit_application_apply_view"),
     url(r'audit/(?P<audit_id>[0-9]+)/application$', views.AuditApplicationView.as_view(), name="audit_application_view"),
-    url(r'audit/(?P<audit_id>[0-9]+)/applications$', views.AuditApplicationsView.as_view(), name="audit_applications_view"),
     url(r'audit/(?P<audit_id>[0-9]+)$', views.AuditView.as_view(), name="audit_view"),
+    url(r'application$', views.AuditApplicationsView.as_view(), name="audit_applications_view"),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section$', views.SectionView.as_view(), name="section_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreView.as_view(), name="audit_store_view"),

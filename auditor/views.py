@@ -200,16 +200,9 @@ class AuditApplicationView(APIView):
             'GET' : [GROUP_NAME_AUDITOR],
             'POST': [GROUP_NAME_AUDITOR]
         }
-    def get(self, request, audit_id, location_id, format=None):
-        try:
-            application = application_service.get_application(audit_id, location_id, request.user.profileinfo.id)
-            return Response(AuditApplicationSerializer(application).data)
-        except ObjectNotFound as e:
-            raise NotFound()
-        except ProfileInfo.DoesNotExist as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+    def get(self, request, audit_id, format=None):
+        application = application_service.get_application(audit_id, request.user.profileinfo.id)
+        return Response(AuditApplicationSerializer(application).data)
 
 class AuditApplicationApplyView(APIView):
     permission_classes = [HasGroupPermission]

@@ -19,12 +19,11 @@ from manager.notification import verbs
 def get_applications( profileinfo_id):
     return AuditApplication.objects.filter(profileinfo_id=profileinfo_id)
 
-def get_application( audit_id, location_id, profileinfo_id):
+def get_application( audit_id, profileinfo_id):
     try:
         audit = Audit.objects.get(id=audit_id)
-        audit_location = audit.auditlocations.get(location_id=location_id)
-        return audit_location.applications.get(profileinfo_id=profileinfo_id);
-    except (Audit.DoesNotExist, AuditLocation.DoesNotExist, AuditApplication.DoesNotExist) as e:
+        return audit.applications.get(profileinfo_id=profileinfo_id)
+    except (Audit.DoesNotExist, AuditApplication.DoesNotExist) as e:
         raise ObjectNotFound from e
 
 @atomic
