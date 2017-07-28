@@ -24,18 +24,19 @@ class AuditApplyAPITestCase(APITestCase):
     fixtures = ['groups', 'city']
 
     def setUp(self):
+        self.password = "secret"
         self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
         self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
 
         self.city = City.objects.get(pk=473)
 
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com", groups=[self.auditor_group])
-        self.auditor_user.set_password("secret")
+        self.auditor_user.set_password(self.password)
         self.auditor_user.save()
         self.profile = mommy.make(ProfileInfo, city=self.city, user=self.auditor_user, _fill_optional=True)
 
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com", groups=[self.manager_group])
-        self.manager_user.set_password("secret")
+        self.manager_user.set_password(self.password)
         self.manager_user.save()
 
         self.audit_recipe = Recipe(
@@ -49,7 +50,7 @@ class AuditApplyAPITestCase(APITestCase):
         self.audit_recipe.make(_quantity=5)
 
     def test_apply_cancel_flow(self):
-        self.client.login(username="auditor@foobar.com", password="secret")
+        self.client.login(username="auditor@foobar.com", password=self.password)
         response = self.client.get('/auditor/audit')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
