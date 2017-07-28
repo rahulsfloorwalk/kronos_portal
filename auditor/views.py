@@ -111,8 +111,6 @@ class AvailableAuditsView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             }) from e
-        except ObjectNotFound as e:
-            raise NotFound from e
 
 class AuditView(APIView):
     permission_classes = [HasGroupPermission]
@@ -134,8 +132,6 @@ class AuditApplicationsView(APIView):
         try:
             applications = application_service.get_applications( request.user.profileinfo.id)
             return Response(AuditApplicationSerializer(applications, many=True).data)
-        except ObjectNotFound as e:
-            raise NotFound()
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -152,8 +148,6 @@ class AuditStoresView(APIView):
         try:
             audit_stores = audit_store_service.find_audit_stores_for_auditor( request.user.profileinfo.id)
             return Response(AuditStoreSerializer(audit_stores, many=True).data)
-        except ObjectNotFound as e:
-            raise NotFound()
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -170,8 +164,6 @@ class AuditStoreView(APIView):
         try:
             audit_store = audit_store_service.find_by_id_for_auditor( audit_store_id, request.user.id)
             return Response(AuditStoreSerializer(audit_store).data)
-        except ObjectNotFound as e:
-            raise NotFound()
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -187,8 +179,6 @@ class SectionView(APIView):
         try:
             sections = section_service.get_for_auditor(audit_store_id, request.user.profileinfo.id)
             return Response(SectionSerializer(sections, many=True).data)
-        except ObjectNotFound as e:
-            raise NotFound()
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -223,8 +213,6 @@ class AuditApplicationApplyView(APIView):
                     application_apply_ds.validated_data["audit_date"]
             )
             return Response(AuditApplicationSerializer(application).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
         except (AppLogicError, ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
@@ -249,8 +237,6 @@ class AuditApplicationCancelView(APIView):
                     application_cancel_ds.data["profileinfo_id"]
             )
             return Response(AuditApplicationSerializer(application).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
         except (AppLogicError, ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
@@ -292,8 +278,6 @@ class AnswerSubmitView(APIView):
         question = ds.validated_data['question']
         try:
             answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
-        except ObjectNotFound as e:
-            raise NotFound() from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -306,10 +290,7 @@ class AnswerListView(APIView):
             'GET' : [GROUP_NAME_AUDITOR]
         }
     def get(self, request, audit_store_id, format=None):
-        try:
-            answers = answer_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
-        except ObjectNotFound:
-            raise NotFound()
+        answers = answer_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
         return Response(AnswerSerializer(answers, many=True).data)
 
 
@@ -334,11 +315,8 @@ class ReportSectionListView(APIView):
             'GET' : [GROUP_NAME_AUDITOR]
         }
     def get(self, request, audit_store_id, format=None):
-        try:
-            report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, request.user.id)
-            return Response(ReportSectionSerializer(report_sections, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
+        report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, request.user.id)
+        return Response(ReportSectionSerializer(report_sections, many=True).data)
 
 class CommentSubmitView(APIView):
     permission_classes = [HasGroupPermission]
@@ -355,8 +333,6 @@ class CommentSubmitView(APIView):
         try:
             report_section = report_section_service.submit_auditor_comment(audit_store.id, section.id, request.user.id, auditor_comment)
             return Response(ReportSectionSerializer(report_section).data)
-        except ObjectNotFound as e:
-            raise NotFound() from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -371,11 +347,8 @@ class AuditStoreAttachmentView(APIView):
         }
 
     def get(self, request, audit_store_id, format=None):
-        try:
             attachments = attachment_auditor_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
             return Response(AttachmentSerializer(attachments, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
 
     def post(self, request, audit_store_id):
         try:
@@ -391,8 +364,6 @@ class AuditStoreAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
-        except ObjectNotFound as e:
-            raise NotFound() from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -406,11 +377,8 @@ class ReportSectionAttachmentView(APIView):
         }
 
     def get(self, request, audit_store_id, section_id, format=None):
-        try:
-            attachments = attachment_auditor_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, request.user.id)
-            return Response(AttachmentSerializer(attachments, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
+        attachments = attachment_auditor_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, request.user.id)
+        return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id, section_id):
         try:
@@ -427,8 +395,6 @@ class ReportSectionAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
-        except ObjectNotFound as e:
-            raise NotFound() from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -445,8 +411,6 @@ class AttachmentIdView(APIView):
         try:
             attachment_auditor_service.delete_for_auditor(attachment_id, request.user.id)
             return Response()
-        except ObjectNotFound as e:
-            raise NotFound() from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -462,8 +426,6 @@ class AttachmentCompleteView(APIView):
         try:
             attachment = attachment_auditor_service.complete_for_auditor(attachment_id, request.user.id)
             return Response(AttachmentSerializer(attachment).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
         except AppLogicError as e:
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
@@ -475,11 +437,8 @@ class NotificationsView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        try:
-            notifications = notification_service.find_by_recipient_user_and_verb(request.user.id)
-            return Response(NotificationSerializer(notifications, many=True).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
+        notifications = notification_service.find_by_recipient_user_and_verb(request.user.id)
+        return Response(NotificationSerializer(notifications, many=True).data)
 
 class UserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -496,11 +455,8 @@ class PaymentView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        try:
-            payments = payment_service.find_by_user(request.user.id)
-            return Response(PaymentSerializer(payments, many=True).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
+        payments = payment_service.find_by_user(request.user.id)
+        return Response(PaymentSerializer(payments, many=True).data)
 
 class StatsView(APIView):
     permission_classes = [HasGroupPermission]
@@ -508,11 +464,8 @@ class StatsView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        try:
-            auditor_history = auditor_dashboard_service.getAuditorStats(request.user.id)
-            return Response(auditor_history)
-        except ObjectNotFound as e:
-            raise NotFound from e
+        auditor_history = auditor_dashboard_service.getAuditorStats(request.user.id)
+        return Response(auditor_history)
 
 class ScoreView(APIView):
     permission_classes = [HasGroupPermission]
@@ -520,8 +473,5 @@ class ScoreView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        try:
-            auditor_score = auditor_dashboard_service.getAuditorScore(request.user.id)
-            return Response(auditor_score)
-        except ObjectNotFound as e:
-            raise NotFound from e
+        auditor_score = auditor_dashboard_service.getAuditorScore(request.user.id)
+        return Response(auditor_score)
