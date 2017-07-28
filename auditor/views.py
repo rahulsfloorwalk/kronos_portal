@@ -26,7 +26,7 @@ from manager import states
 from manager.models import City
 from .serializers import CitySerializer
 import manager.service.audit as audit_service
-import auditor.service.application_service
+from auditor.service import application_service
 from manager.service import notifications as notification_service
 from payment.service import payment_auditor as payment_service
 from questionnaire.service import section as section_service
@@ -225,9 +225,9 @@ class AuditApplicationApplyView(APIView):
             application_apply_ds.is_valid(raise_exception=True)
 
             application = application_service.apply(
-                    application_apply_ds.data["audit_id"],
-                    application_apply_ds.data["profileinfo_id"],
-                    application_apply_ds.data["audit_date"]
+                    application_apply_ds.validated_data["audit_id"].id,
+                    application_apply_ds.validated_data["profileinfo_id"].id,
+                    application_apply_ds.validated_data["audit_date"]
             )
             return Response(AuditApplicationSerializer(application).data)
         except ObjectNotFound as e:
