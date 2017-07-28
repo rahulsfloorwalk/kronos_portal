@@ -86,15 +86,6 @@ def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
         raise ObjectNotFound from e
 
 
-def get_applied_audits(profileinfo_id):
-    profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
-    if profileinfo.is_complete():
-        audits = Audit.objects.filter(audit_cycle__status__in=[AuditCycle.UPCOMING, AuditCycle.ACTIVE])
-        return [audit for audit in audits if not audit.applications.filter(profileinfo_id=profileinfo_id).exists()]
-    else:
-        raise AppLogicError("please complete your personal information to view audits")
-
-
 @atomic
 def fiat_assign(audit_id, email, audit_date, user_actor):
     try:
