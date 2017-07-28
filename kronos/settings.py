@@ -59,6 +59,7 @@ PROJECT_APPS = [
     'client_report',
     'notify',
     'payment',
+    'monitoring',
 ]
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS

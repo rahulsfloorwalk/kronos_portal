@@ -16,6 +16,7 @@ from .viewss import notifications as notification_views
 from .viewss import report_stats as report_stats_views
 from .viewss import moderator as moderator_views
 from .viewss import manager as manager_views
+from .viewss import email_log as email_log_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -113,5 +114,10 @@ urlpatterns = ([
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),
     url(r'manager$', manager_views.ManagerView.as_view(), name='manager_view'),
+
+    url(r'email_log/view/(?P<email_log_id>[0-9]+)/text$', email_log_views.EmailLogTextViewById.as_view(), name='email_log_view_by_id'),
+    url(r'email_log/view/(?P<email_log_id>[0-9]+)/html$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),
+    url(r'email_log/view/(?P<email_log_id>[0-9]+)$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),
+    url(r'email_log/(?P<to_email>[0-9a-zA-Z_@\.]+)$', email_log_views.EmailLogByEmail.as_view(), name='email_log_by_email'),
 
 ], 'manager')

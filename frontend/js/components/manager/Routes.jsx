@@ -20,6 +20,7 @@ import AuditorList from './AuditorList.jsx';
 import AuditorDetailsPage from './AuditorDetailsPage.jsx';
 import AuditorReportList from './AuditorReportList.jsx';
 import AuditorApplicationList from './AuditorApplicationList.jsx';
+import AuditorEmailLog from './auditor/AuditorEmailLog.jsx';
 
 import StateList from './StateList.jsx';
 import CityList from './CityList.jsx';
@@ -122,6 +123,7 @@ const Routes = () => (
 		<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
       <Route path="applications" component={AuditorApplicationList}/>
       <Route path="reports" component={AuditorReportList}/>
+		      <Route path="email_log" component={AuditorEmailLog}/>
     </Route>
 
 		<Route path="state" component={StateList}/>

@@ -69,6 +69,7 @@ var AuditorDetailsPage = React.createClass({
 						<ul className="nav nav-tabs">
 							<NavLink to={`/auditor/${this.props.params.auditorId}/applications`}>Applications</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/reports`}>Reports</NavLink>
+							<NavLink to={`/auditor/${this.props.params.auditorId}/email_log`}>Email Log</NavLink>
 						</ul>
 						<br/>
 						{this.props.children}
