@@ -11,41 +11,29 @@ from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from questionnaire.models import Question
 
+import audit.service.audit_cycle as audit_cycle_service
+
 def get_aggregate_report_for_manager(audit_cycle_id):
-    try:
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
-    except AuditCycle.DoesNotExist as e:
-        raise ObjectNotFound from e
-    client_id = audit_cycle.client.id
-    return get_aggregate_report_for_client(audit_cycle_id, client_id)
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+
+    sections = audit_cycle.sections.order_by('sequence')
+
+    questions = []
+    for section in sections:
+        questions.extend(section.questions.order_by('sequence'))
+
+    audit_stores = []
+    for audit in audit_cycle.audits.all():
+        audit_store = audit.audit_stores.presentable().visible_to(user).order_by('audit_date')
+        audit_stores.extend(audit_store)
+
+    data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)
+    name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
+    return write_data(data), name
 
 def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
-    try:
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
-    except AuditCycle.DoesNotExist as e:
-        raise ObjectNotFound from e
-
-    user = find_clientuser_by_user_id(user_id)
-
-    valid_client = audit_cycle.client
-    if(valid_client.id == user.clientuser.client.id):
-        sections = audit_cycle.sections.order_by('sequence')
-
-        questions = []
-        for section in sections:
-            questions.extend(section.questions.order_by('sequence'))
-
-        audit_stores = []
-        for audit in audit_cycle.audits.all():
-            audit_store = audit.audit_stores.presentable().visible_to(user).order_by('audit_date')
-            audit_stores.extend(audit_store)
-
-        data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)
-        name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
-        return write_data(data), name
-
-    else:
-        raise AppLogicError("Invalid Client")
+    audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
+    return get_aggregate_report_for_manager(audit_cycle.id)
 
 def create_text_structure(title, sections, questions, audit_stores):
     rows = []
