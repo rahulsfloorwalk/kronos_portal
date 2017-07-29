@@ -681,6 +681,7 @@ class AdditionalInfoSerializer(ModelSerializer):
             'user_id',
             'occupation',
             'referral_code',
+            'referred_by',
         )
         read_only_fields = fields
 
