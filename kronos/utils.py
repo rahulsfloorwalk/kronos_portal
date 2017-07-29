@@ -1,3 +1,5 @@
+import logging
+
 from django.utils import timezone
 
 def get_color_code_by_percentage(percentage):
@@ -39,3 +41,29 @@ def now_ist():
 
 def today_ist():
     return timezone.localtime(timezone.now(), IST).date()
+
+
+def view_log(func):
+    _logger = logging.getLogger("function:view_log")
+    def wrapper(*args, **kwargs):
+        user="unknown"
+        post_data="unknown"
+        get_data="unknown"
+        json_data="unknown"
+        try:
+            user = args[0].user
+            post_data = args[0].POST
+            get_data = args[0].GET
+            json_data = args[0].data
+        except AttributeError:
+            pass
+        _logger.info("view: \033[1m%s\033[0m called", func.__name__)
+        _logger.info(" ├╌\033[1muser  \033[0m: %s", user)
+        _logger.info(" ├╌\033[1margs  \033[0m: %s", args)
+        _logger.info(" ├╌\033[1mkwargs\033[0m: %s", kwargs)
+        _logger.info(" ├╌\033[1mGET   \033[0m: %s", get_data)
+        _logger.info(" ├╌\033[1mPOST  \033[0m: %s", post_data)
+        _logger.info(" ╰╌\033[1mJSON  \033[0m: %s", json_data)
+        return func(*args, **kwargs)
+
+    return wrapper
