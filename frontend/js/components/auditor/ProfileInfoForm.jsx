@@ -27,7 +27,7 @@ var __StateSelector = React.createClass({
 			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
 		}
 		return (
-			<FormSelect label="State" name="state" {...this.props}>
+			<FormSelect label="*State" name="state" {...this.props}>
 				<option value=""></option>
 				{stateOptions}
 			</FormSelect>
@@ -54,7 +54,7 @@ var __CitySelector = React.createClass({
 			cityOptions.push(<option key={c.id} value={c.id}>{c.name}</option>);
 		}
 		return (
-			<FormSelect label="City" name="city" {...this.props}>
+			<FormSelect label="*City" name="city" {...this.props}>
 				<option value=""></option>
 				{cityOptions}
 			</FormSelect>
@@ -125,19 +125,19 @@ var ProfileInfoForm = React.createClass({
 				<form onSubmit={this.onSubmit}>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="First Name" maxLength="20" type="text" value={this.state.first_name} name="first_name" onChange={this.inputChanged} errors={this.props.errors.first_name}/>
+							<FormInput label="*First Name" maxLength="20" type="text" value={this.state.first_name} name="first_name" onChange={this.inputChanged} errors={this.props.errors.first_name}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="Last Name" maxLength="20" type="text" value={this.state.last_name} name="last_name" onChange={this.inputChanged} errors={this.props.errors.last_name}/>
+							<FormInput label="*Last Name" maxLength="20" type="text" value={this.state.last_name} name="last_name" onChange={this.inputChanged} errors={this.props.errors.last_name}/>
 						</div>
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<label className="control-label">Date of Birth</label>
+							<label className="control-label">*Date of Birth</label>
 							<DOBPicker initialDate={moment(this.state.date_of_birth).isValid() ? moment(this.state.date_of_birth).toDate() : null} onChange={this.dateChanged}/>
 						</div>
 						<div className="col-md-6">
-							<FormSelect label="Gender" name="gender" value={this.state.gender} onChange={this.inputChanged}>
+							<FormSelect label="*Gender" name="gender" value={this.state.gender} onChange={this.inputChanged}>
 								<option value=""></option>
 								<option value="M">Male</option>
 								<option value="F">Female</option>
@@ -146,7 +146,7 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormSelect label="Marital Status" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged} errors={this.props.errors.marital_status}>
+							<FormSelect label="*Marital Status" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged} errors={this.props.errors.marital_status}>
 								<option value=""></option>
 								<option value="S">Single</option>
 								<option value="M">Married</option>
@@ -155,7 +155,7 @@ var ProfileInfoForm = React.createClass({
 							</FormSelect>
 						</div>
 						<div className="col-md-6">
-							<FormSelect label="Education" name="education" value={this.state.education} onChange={this.inputChanged} errors={this.props.errors.education}>
+							<FormSelect label="*Education" name="education" value={this.state.education} onChange={this.inputChanged} errors={this.props.errors.education}>
 								<option value=""></option>
 								<option value="TE">10th (Middle School)</option>
 								<option value="TW">12th (High School)</option>
@@ -167,10 +167,10 @@ var ProfileInfoForm = React.createClass({
 					</div>
 					<div className="row">
 						<div className="col-md-6">
-							<FormInput label="Address" maxLength="100" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address}/>
+							<FormInput label="*Address" maxLength="100" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address}/>
 						</div>
 						<div className="col-md-6">
-							<FormInput label="Pincode" maxLength="8" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode}/>
+							<FormInput label="*Pincode" maxLength="8" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode}/>
 						</div>
 					</div>
 					<div className="row">

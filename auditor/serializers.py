@@ -122,6 +122,7 @@ class AdditionalInfoSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'referral_code',
+            'is_complete'
         )
         read_only_fields = fields
 
@@ -195,7 +196,8 @@ class BankInfoSerializer(ModelSerializer):
             'account_number',
             'ifsc_code',
             'pan_number',
-            'user_id'
+            'user_id',
+            'is_complete'
         )
         read_only_fields = ('id', 'user_id')
 
@@ -322,7 +324,7 @@ class AuditApplicationApplyDeSerializer(Serializer):
         audit = attrs["audit_id"]
         audit_date = attrs["audit_date"]
         if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
-            raise ValidationError({"audit_date": "preferred audit date is not within range"})
+            raise ValidationError({"non_field_errors": ["preferred audit date is not within range"]})
         return attrs
 
 

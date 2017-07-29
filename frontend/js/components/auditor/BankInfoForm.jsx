@@ -36,11 +36,11 @@ var BankInfoForm = React.createClass({
 		return (
 			<Modal modalTitle="Edit Bank Info" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormInput label="Bank Name" maxLength="40" type="text" value={this.state.bank_name} name="bank_name" onChange={this.inputChanged} errors={this.props.errors.bank_name}/>
-					<FormInput label="Account Holder Name" maxLength="40" type="text" value={this.state.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.props.errors.account_holder_name}/>
-					<FormInput label="Account Number" maxLength="20" type="text" value={this.state.account_number} name="account_number" onChange={this.inputChanged} errors={this.props.errors.account_number}/>
-					<FormInput label="IFSC Code" maxLength="20" type="text" value={this.state.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.props.errors.ifsc_code}/>
-					<FormInput label="Pan Number" maxLength="10" type="text" value={this.state.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.props.errors.pan_number}/>
+					<FormInput label="*Bank Name" maxLength="40" type="text" value={this.state.bank_name} name="bank_name" onChange={this.inputChanged} errors={this.props.errors.bank_name}/>
+					<FormInput label="*Account Holder Name" maxLength="40" type="text" value={this.state.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.props.errors.account_holder_name}/>
+					<FormInput label="*Account Number" maxLength="20" type="text" value={this.state.account_number} name="account_number" onChange={this.inputChanged} errors={this.props.errors.account_number}/>
+					<FormInput label="*IFSC Code" maxLength="20" type="text" value={this.state.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.props.errors.ifsc_code}/>
+					<FormInput label="*Pan Number" maxLength="10" type="text" value={this.state.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.props.errors.pan_number}/>
 					<SaveButton/>
 				</form>
 			</Modal>

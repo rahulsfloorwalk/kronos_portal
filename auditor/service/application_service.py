@@ -10,7 +10,7 @@ from manager import notification
 from notify.service import mail_notify
 from audit_store.models import AuditStore
 from audit.models import AuditCycle, Audit
-from auditor.models import AuditApplication, ProfileInfo
+from auditor.models import AuditApplication, ProfileInfo, BankInfo, AdditionalInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
@@ -39,6 +39,9 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.status = AuditApplication.NOT_APPLIED
         application.profileinfo_id = profileinfo_id
         application.audit_id = audit.id
+
+    if not can_auditor_apply(profileinfo.user.id):
+        raise AppLogicError("You need to complete all * marked fields in your profile page")
 
     if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
         raise AppLogicError("preferred audit date is not within range")
@@ -214,3 +217,21 @@ def find_by_audit(audit_id):
         return applications
     except Audit.DoesNotExist:
         raise ObjectNotFound
+
+def can_auditor_apply(user_id):
+    try:
+        profileInfo = ProfileInfo.objects.get(user_id=user_id)
+        bankInfo = BankInfo.objects.get(user_id=user_id)
+        additionalInfo = AdditionalInfo.objects.get(user_id=user_id)
+
+        print(profileInfo.is_complete())
+        print(additionalInfo.is_complete())
+        print(bankInfo.is_complete())
+
+        if profileInfo.is_complete() and additionalInfo.is_complete() and bankInfo.is_complete():
+            return True
+        else:
+            return False
+
+    except (ProfileInfo.DoesNotExist, BankInfo.DoesNotExist, AdditionalInfo.DoesNotExist) as e:
+        raise AppLogicError("You need to complete all * marked fields in your profile page")

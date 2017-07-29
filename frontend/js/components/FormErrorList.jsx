@@ -5,7 +5,7 @@ var FormErrorList = React.createClass({
 		var errors = this.props.errors || [];
 		var items = [];
 		for( var error of errors){
-			items.push(<li key={error}>{error}</li>);
+			items.push(<li key={error} style={{"color": "red"}}>{error}</li>);
 		}
 		return (
 			<ul>

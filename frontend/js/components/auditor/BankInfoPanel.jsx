@@ -20,11 +20,11 @@ var BankInfoPanelBase = React.createClass({
 				</div>
 				<table className="table table-striped">
 					<tbody>
-					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name }</th></tr>
-					<tr><td className="text-right text-muted">Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
-					<tr><td className="text-right text-muted">Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
-					<tr><td className="text-right text-muted">IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
-					<tr><td className="text-right text-muted">Pan Number:</td><th>{ this.props.bankInfo.pan_number }</th></tr>
+					<tr><td className="text-right text-muted" style={{"width":"40%"}}>*Bank Name:</td><th>{ this.props.bankInfo.bank_name }</th></tr>
+					<tr><td className="text-right text-muted">*Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
+					<tr><td className="text-right text-muted">*Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
+					<tr><td className="text-right text-muted">*IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
+					<tr><td className="text-right text-muted">*Pan Number:</td><th>{ this.props.bankInfo.pan_number }</th></tr>
 					</tbody>
 				</table>
 			</div>

@@ -186,6 +186,18 @@ class AdditionalInfo(Model):
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
 
+    def is_complete(self):
+        complete = True
+        if self.occupation in [None, ""]: complete = False
+        if self.distance in [None, ""]: complete = False
+        if self.industry in [None, ""]: complete = False
+        if self.company in [None, ""]: complete = False
+        if self.mobile_model in [None, ""]: complete = False
+        if self.camera_resoulution in [None, ""]: complete = False
+        if self.has_car and (self.car_model in [None, ""] or self.car_cost in [None, ""]): complete = False
+        if self.laptop_owned and self.laptop_model in [None, ""]: complete = False
+        return complete
+
 
 class BankInfo(Model):
     id = AutoField(db_column='id', primary_key=True)
@@ -197,6 +209,15 @@ class BankInfo(Model):
     pan_number = CharField(db_column='pan_number', max_length=10, blank=True)
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+
+    def is_complete(self):
+        complete = True
+        if self.bank_name in [None, ""]: complete = False
+        if self.account_holder_name in [None, ""]: complete = False
+        if self.account_number in [None, ""]: complete = False
+        if self.ifsc_code in [None, ""]: complete = False
+        if self.pan_number in [None, ""]: complete = False
+        return complete
 
 
 class AuditApplication(Model):

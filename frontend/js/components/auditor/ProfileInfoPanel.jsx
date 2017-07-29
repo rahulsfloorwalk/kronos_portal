@@ -45,16 +45,16 @@ var ProfileInfoPanelBase = React.createClass({
 				</div>
 				<table className="table table-striped">
 					<tbody>
-					<tr><td className="text-muted text-right" style={{"width":"40%"}}>First Name:</td><th>{this.props.profileInfo.first_name}</th></tr>
-					<tr><td className="text-muted text-right">Last Name:</td><th>{this.props.profileInfo.last_name}</th></tr>
-					<tr><td className="text-muted text-right">Gender:</td><th>{getGender(this.props.profileInfo.gender)}</th></tr>
-					<tr><td className="text-muted text-right">Education:</td><th>{getEducationStatus(this.props.profileInfo.education)}</th></tr>
-					<tr><td className="text-muted text-right">Date of Birth:</td><th>{dateOfBirth}</th></tr>
-					<tr><td className="text-muted text-right">Marital Status:</td><th>{getMaritalStatus(this.props.profileInfo.marital_status)}</th></tr>
-					<tr><td className="text-muted text-right">Address:</td><th>{this.props.profileInfo.address}</th></tr>
-					<tr><td className="text-muted text-right">City:</td><th>{auditorCity.name}</th></tr>
-					<tr><td className="text-muted text-right">State:</td><th>{auditorCity.state}</th></tr>
-					<tr><td className="text-muted text-right">Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>
+					<tr><td className="text-muted text-right" style={{"width":"40%"}}>*First Name:</td><th>{this.props.profileInfo.first_name}</th></tr>
+					<tr><td className="text-muted text-right">*Last Name:</td><th>{this.props.profileInfo.last_name}</th></tr>
+					<tr><td className="text-muted text-right">*Gender:</td><th>{getGender(this.props.profileInfo.gender)}</th></tr>
+					<tr><td className="text-muted text-right">*Education:</td><th>{getEducationStatus(this.props.profileInfo.education)}</th></tr>
+					<tr><td className="text-muted text-right">*Date of Birth:</td><th>{dateOfBirth}</th></tr>
+					<tr><td className="text-muted text-right">*Marital Status:</td><th>{getMaritalStatus(this.props.profileInfo.marital_status)}</th></tr>
+					<tr><td className="text-muted text-right">*Address:</td><th>{this.props.profileInfo.address}</th></tr>
+					<tr><td className="text-muted text-right">*City:</td><th>{auditorCity.name}</th></tr>
+					<tr><td className="text-muted text-right">*State:</td><th>{auditorCity.state}</th></tr>
+					<tr><td className="text-muted text-right">*Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>
 					</tbody>
 				</table>
 				{completeWarning}
