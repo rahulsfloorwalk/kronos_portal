@@ -168,18 +168,20 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
 
     sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
     audit_stores = []
-    for audit in audits:
-        for audit_store in audit.audit_stores.presentable().visible_to(user).order_by('-audit_date'):
-            audit_stores.append({
-                'audit_store_id': audit_store.id,
-                'audit_date': audit_store.audit_date,
-                'city_name': audit_store.audit.store.location.city.name,
-                'city_id': audit_store.audit.store.location.city.id,
-                'store_name': audit_store.audit.store.name,
-                'store_id': audit_store.audit.store.id,
-                'sections': __get_mean_for_sections(sections, (audit_store,))
-            })
+    qs = AuditStore.objects.filter(audit__in=audits).presentable().visible_to(user).order_by('audit__store__location__city__name','audit__store__name','-audit_date')
 
+    for audit_store in qs:
+        audit_stores.append({
+            'audit_store_id': audit_store.id,
+            'audit_date': audit_store.audit_date,
+            'city_name': audit_store.audit.store.location.city.name,
+            'city_id': audit_store.audit.store.location.city.id,
+            'store_name': audit_store.audit.store.name,
+            'store_id': audit_store.audit.store.id,
+            'sections': __get_mean_for_sections(sections, (audit_store,))
+        })
+
+    audit_stores.sort(key=lambda a_s: (a_s['city_name'], a_s['store_id'], a_s['audit_date']))
     return audit_stores
 
 

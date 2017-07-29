@@ -24,6 +24,8 @@ class AuditStoreTable extends Component {
 		this.state = {
 			loading: false,
 			reports: [],
+			cities: [],
+			selectedCityId: null,
 		};
 	}
 	setLoading = (loading) => {
@@ -36,8 +38,18 @@ class AuditStoreTable extends Component {
 	reloadData = (auditCycleId) => {
 		this.setLoading(true);
 		findAuditStoresByAuditCycle(auditCycleId).then(reports => {
+			let cities = [];
+			reports.forEach( r => {
+				if(cities.filter(c => c.id === r.city_id).length === 0){
+					cities.push({
+						id: r.city_id,
+						name: r.city_name,
+					});
+				}
+			});
 			this.setState({
 				reports,
+				cities,
 			});
 		}).always(() => this.setLoading(false));
 	}
@@ -50,6 +62,12 @@ class AuditStoreTable extends Component {
 		}
 	}
 
+	selectCity = (e) => {
+		this.setState({
+			selectedCityId: e.target.value,
+		});
+	}
+
 	render(){
 		if(this.state.loading){
 			return (<Loading/>);
@@ -57,6 +75,11 @@ class AuditStoreTable extends Component {
 		if(this.state.reports.length === 0) {
 			return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
 		}
+		let citySelect = (<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px"}}>
+			<option value="">All Cities</option>
+			{this.state.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+		</select>);
+
 		let headers = [];
 		headers.push(<th key="store_name">Store</th>);
 		headers.push(<th key="date" className="text-right">Date</th>);
@@ -64,7 +87,7 @@ class AuditStoreTable extends Component {
 
 		let trs = [];
 		let previousStore;
-		for(let r of this.state.reports){
+		this.state.reports.filter(r => !this.state.selectedCityId || (this.state.selectedCityId && r.city_id === parseInt(this.state.selectedCityId))).forEach( r => {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
 			let cityName = previousStore === r.store_id ? "" : r.city_name;
@@ -93,9 +116,13 @@ class AuditStoreTable extends Component {
 				</tr>
 			);
 			previousStore = r.store_id;
-		}
+		});
 
 		return (
+			<div>
+			<div className="form-group">
+				<b>Filter:</b> {citySelect}
+			</div>
 			<table className="table table-bordered table-hover">
 			<thead>
 				<tr>{headers}</tr>
@@ -104,6 +131,7 @@ class AuditStoreTable extends Component {
 			{trs}
 			</tbody>
 			</table>
+			</div>
 		);
 	}
 }
@@ -140,6 +168,9 @@ export default class ReportBrowser3 extends Component{
 	}
 
 	render(){
+		if(! this.state.selectedAuditCycleId){
+			return <Loading/>
+		}
 		var auditCycleRows = [];
 		for(let ac of this.state.auditCycles) {
 			auditCycleRows.push(<option value={ac.audit__audit_cycle__id} key={ac.audit__audit_cycle__id}>{ac.audit__audit_cycle__name}, {getAuditType(ac.audit__audit_cycle__type)}</option>);

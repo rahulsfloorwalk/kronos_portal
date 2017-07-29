@@ -6,6 +6,7 @@ import { momentDateFormat }  from '../../config.js';
 
 import { fetchUpcomingAuditStores } from '../service/audit_store.js';
 
+import Loading from '../../js/components/Loading.jsx';
 import { Time } from '../../js/components/Icons.jsx';
 import { getAuditType, getAuditStatus } from '../../js/utils.js';
 import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
@@ -16,10 +17,19 @@ import Jumbotron from '../../js/components/Jumbotron.jsx';
 export default React.createClass({
 	getInitialState: function(){
 		return {
+			loading: false,
 			groupedAuditStores: {}
 		};
 	},
+	setLoading: function(loading){
+		this.setState( prevState => {
+			return Object.assign({}, prevState, {
+				loading
+			});
+		});
+	},
 	componentDidMount: function() {
+		this.setLoading(true);
 		fetchUpcomingAuditStores().then((auditStores) => {
 			let groupedAuditStores = {};
 			auditStores.forEach( as => {
@@ -31,9 +41,12 @@ export default React.createClass({
 			this.setState({
 				groupedAuditStores
 			});
-		});
+		}).always(() => this.setLoading(false));
 	},
 	render: function(){
+		if(this.state.loading){
+			return <Loading/>;
+		}
 		let rows = [];
 		for(let key in this.state.groupedAuditStores) {
 			let innerRows = [];
