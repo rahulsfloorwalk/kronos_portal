@@ -1,24 +1,18 @@
-from datetime import date
 import random
-
-from django.test import TestCase
+from datetime import date
 
 from django.contrib.auth.models import User, Group
-
-from rest_framework.test import APITestCase, APIClient
-
 from model_mommy import mommy
-from model_mommy.recipe import Recipe, foreign_key
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-
-from ..models import ProfileInfo
+from model_mommy.recipe import Recipe
+from rest_framework.test import APITestCase
 
 from audit.models import AuditCycle, Audit
 from auditor.models import AuditApplication
-from audit_store.models import AuditStore
+from auditor.tests.utils import additional_info_recipe
 from manager.models import City
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from ..models import ProfileInfo, BankInfo
+
 
 class AuditApplyAPITestCase(APITestCase):
     fixtures = ['groups', 'city']
@@ -34,6 +28,8 @@ class AuditApplyAPITestCase(APITestCase):
         self.auditor_user.set_password(self.password)
         self.auditor_user.save()
         self.profile = mommy.make(ProfileInfo, city=self.city, user=self.auditor_user, _fill_optional=True)
+        self.bank_info = mommy.make(BankInfo, user=self.auditor_user, _fill_optional=True)
+        self.additional_info = additional_info_recipe.make(user=self.auditor_user)
 
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com", groups=[self.manager_group])
         self.manager_user.set_password(self.password)
@@ -64,6 +60,7 @@ class AuditApplyAPITestCase(APITestCase):
                 }, 
                 format="json"
         )
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["audit_date"], apply_date)
         self.assertEqual(response.data["status"], AuditApplication.APPLIED)
 

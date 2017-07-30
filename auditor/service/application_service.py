@@ -1,20 +1,17 @@
+from django.contrib.auth.models import Group
 from django.db import connection
 from django.db.transaction import atomic
-from django.contrib.auth.models import Group
-from notifications.signals import notify
 from notifications.models import Notification
+from notifications.signals import notify
 
-from manager.notification import verbs
-from manager import notification
-
-from notify.service import mail_notify
-from audit_store.models import AuditStore
 from audit.models import AuditCycle, Audit
+from audit_store.models import AuditStore
 from auditor.models import AuditApplication, ProfileInfo, BankInfo, AdditionalInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
+from manager import notification
+from notify.service import mail_notify
+from registration.models import GROUP_NAME_MANAGER
 
-from manager.notification import verbs
 
 def get_applications( profileinfo_id):
     return AuditApplication.objects.filter(profileinfo_id=profileinfo_id)
@@ -223,10 +220,6 @@ def can_auditor_apply(user_id):
         profileInfo = ProfileInfo.objects.get(user_id=user_id)
         bankInfo = BankInfo.objects.get(user_id=user_id)
         additionalInfo = AdditionalInfo.objects.get(user_id=user_id)
-
-        print(profileInfo.is_complete())
-        print(additionalInfo.is_complete())
-        print(bankInfo.is_complete())
 
         if profileInfo.is_complete() and additionalInfo.is_complete() and bankInfo.is_complete():
             return True

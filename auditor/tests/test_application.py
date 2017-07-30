@@ -1,22 +1,18 @@
 from datetime import date
 
-from django.test import TestCase
-
 from django.contrib.auth.models import User, Group
-
+from django.test import TestCase
 from model_mommy import mommy
-from model_mommy.recipe import Recipe, foreign_key
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-
-from ..models import ProfileInfo
+from model_mommy.recipe import Recipe
 
 from audit.models import AuditCycle, Audit
-from auditor.models import AuditApplication
 from audit_store.models import AuditStore
-
+from auditor.models import AuditApplication
 from auditor.service import application_service
+from auditor.tests.utils import additional_info_recipe
+from kronos.exceptions import AppLogicError, ObjectNotFound
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from ..models import ProfileInfo, BankInfo
 
 class AuditApplicationTestCase(TestCase):
     fixtures = ['groups', 'city']
@@ -26,7 +22,10 @@ class AuditApplicationTestCase(TestCase):
         self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
 
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com", groups=[self.auditor_group])
-        self.profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.profile = mommy.make(ProfileInfo, user=self.auditor_user, _fill_optional=True)
+        self.bank_info = mommy.make(BankInfo, user=self.auditor_user, _fill_optional=True)
+        self.additional_info = additional_info_recipe.make(user=self.auditor_user)
+
 
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com", groups=[self.manager_group])
 
