@@ -70,6 +70,7 @@ var AuditorDetailsPage = React.createClass({
 							<NavLink to={`/auditor/${this.props.params.auditorId}/applications`}>Applications</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/reports`}>Reports</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/email_log`}>Email Log</NavLink>
+							<NavLink to={`/auditor/${this.props.params.auditorId}/id_proof`}>ID Proofs</NavLink>
 						</ul>
 						<br/>
 						{this.props.children}

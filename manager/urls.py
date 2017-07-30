@@ -91,6 +91,7 @@ urlpatterns = ([
     url(r'auditor/(?P<user_id>[0-9]+)/activate$', auditor_views.AuditorActivateView.as_view(), name="auditor_id_activate_view"),
     url(r'auditor/(?P<user_id>[0-9]+)/payment$', auditor_views.PaymentView.as_view(), name="auditor_payment_view"),
     url(r'auditor/(?P<auditor_id>[0-9]+)$', auditor_views.AuditorIdView.as_view(), name='auditor_id_view'),
+    url(r'auditor/(?P<auditor_id>[0-9]+)/attachment$', auditor_views.IdProofAttachmentView.as_view(), name='id_proof_attachment_view'),
     url(r'auditor$', auditor_views.AuditorView.as_view(), name='auditor_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', section_views.SectionViewByAuditCycle.as_view(), name='section_by_audit_cycle'),

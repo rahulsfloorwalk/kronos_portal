@@ -1,25 +1,20 @@
-from django.contrib.auth.models import User, Group
-
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.serializers import Serializer, DateField
+from django.contrib.auth.models import User
 from rest_framework import generics
-
-from rest_framework.filters import SearchFilter
 from rest_framework.exceptions import NotFound
+from rest_framework.filters import SearchFilter
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from kronos.exceptions import ObjectNotFound
-
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from registration.mixins import HasGroupPermission
-import registration.service.auditor as auditor_service
-
+import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
-from payment.service import payment_manager as payment_service
-
+import registration.service.auditor as auditor_service
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
-from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer
+from kronos.exceptions import ObjectNotFound
 from manager.serializers import PaymentSerializer
+from payment.service import payment_manager as payment_service
+from registration.mixins import HasGroupPermission
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
 
 class AuditorView(generics.ListAPIView):
     permission_classes = [HasGroupPermission]
@@ -142,5 +137,18 @@ class PaymentView(APIView):
         try:
             payments = payment_service.find_by_user(user_id)
             return Response(PaymentSerializer(payments, many=True).data)
+        except ObjectNotFound:
+            raise NotFound
+
+class IdProofAttachmentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET': [GROUP_NAME_MANAGER]
+        }
+
+    def get(self, request, auditor_id, format=None):
+        try:
+            attachments = attachment_auditor_service.find_id_proof_for_auditor(auditor_id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound

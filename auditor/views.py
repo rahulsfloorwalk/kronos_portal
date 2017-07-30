@@ -408,17 +408,15 @@ class UserIdProofAttachmentView(APIView):
 
     def get(self, request, format=None):
         try:
-            profile_info = ProfileInfo.objects.get(user_id=request.user.id)
-            attachments = attachment_auditor_service.find_by_profile_info_for_auditor(profile_info.id)
+            attachments = attachment_auditor_service.find_id_proof_for_auditor(request.user.id)
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound
 
     def post(self, request):
         try:
-            profile_info = ProfileInfo.objects.get(user_id=request.user.id)
             post_data, attachment = attachment_auditor_service.upload_for_id_proof_by_auditor(
-                    profile_info.id,
+                    request.user.id,
                     request.data["file_name"],
                     request.data["file_size"],
                     request.data["file_type"])
@@ -446,7 +444,7 @@ class AttachmentIdView(APIView):
 
     def delete(self, request, attachment_id):
         try:
-            attachment_auditor_service.delete_for_auditor(attachment_id, request.user.id)
+            attachment_auditor_service.delete_id_proof_for_auditor(attachment_id, request.user.id)
             return Response()
         except AppLogicError as e:
             raise ValidationError({

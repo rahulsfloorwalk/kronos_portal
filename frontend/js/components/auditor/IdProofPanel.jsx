@@ -20,7 +20,7 @@ var AttachmentItem = React.createClass({
 		};
 	},
 	render: function(){
-		// let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
+		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
 		if(this.props.deletable){
 			var deleteButton = <button onClick={()=>this.props.onDelete(this.props.attachment)}
 					className="btn btn-default btn-sm pull-right"
@@ -155,7 +155,7 @@ var IdProofAttachmentUploadBox = React.createClass({
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
 				<div key="empty" className="list-group-item text-center text-muted">
-					<h4>no attachments here</h4>
+					<h4>No ID Proofs Uploaded. Audits will not be assigned unless you upload at least one ID Proof</h4>
 				</div>
 			);
 		}
@@ -164,10 +164,10 @@ var IdProofAttachmentUploadBox = React.createClass({
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					<h4 className="panel-title">
-						<Paperclip/> Attachments
+						<Paperclip/> ID Proofs
 					</h4>
 				</div>
-				<div className="list-group" style={{"minHeight":"239px", "maxHeight":"250px", "overflowY":"auto"}}>
+				<div className="list-group" style={{"height":"150px", "overflowY":"auto"}}>
 					{attachmentRows}
 				</div>
 				<div className="panel-footer text-right">

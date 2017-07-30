@@ -29,15 +29,11 @@ var DetailsPage = React.createClass({
 					</Panel>
 				</div>
 				<div className="col-md-6">
+					<IdProofPanel/>
 					<BankInfoPanel/>
 					<AdditionalInfoPanel/>
 				</div>
 				{this.props.children}
-			</div>
-			<div className="row">
-				<div className="col-md-6">
-					<IdProofPanel/>
-				</div>
 			</div>
 			</div>
 		);

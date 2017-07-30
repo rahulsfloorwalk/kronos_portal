@@ -30,31 +30,30 @@ def find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user
     report_section = report_section_auditor_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user_id)
     return attachment_service.find_by_audit_store_and_section(audit_store_id, section_id)
 
-def find_by_profile_info_for_auditor(profile_info_id):
-    profile_info = ProfileInfo.objects.get(pk=profile_info_id)
-    return attachment_service.find_by_profile_info(profile_info.id)
+def find_id_proof_for_auditor(user_id):
+    try:
+        profile_info = ProfileInfo.objects.get(user_id=user_id)
+        return attachment_service.find_by_profile_info(profile_info.id)
+    except ProfileInfo.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 
 def complete_for_auditor(attachment_id, user_id):
-    audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)
-
-    if audit_store.user.id != user_id:
+    print("ONE")
+    profile_info = attachment_service.get_auditor_for_attachment(attachment_id)
+    print("TWO")
+    if profile_info.user.id != user_id:
+        print("Raised from service", profile_info.user.id, user_id)
         raise ObjectNotFound
-
-    if audit_store.status != AuditStore.ASSIGNED:
-        raise AppLogicError("cannot complete attachment now")
 
     return attachment_service.complete(attachment_id)
 
 
-def delete_for_auditor(attachment_id, user_id):
-    audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)
+def delete_id_proof_for_auditor(attachment_id, user_id):
+    profile_info = attachment_service.get_auditor_for_attachment(attachment_id)
 
-    if audit_store.user.id != user_id:
+    if profile_info.user.id != user_id:
         raise ObjectNotFound
-
-    if audit_store.status != AuditStore.ASSIGNED:
-        raise AppLogicError("cannot delete attachment now")
 
     return attachment_service.delete(attachment_id)
 

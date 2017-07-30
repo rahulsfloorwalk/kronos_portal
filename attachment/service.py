@@ -15,6 +15,7 @@ import audit_store.service as audit_store_service
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from answer.service import report_section as report_section_service
+from auditor.models import ProfileInfo
 from .models import Attachment
 
 AWS = settings.AWS
@@ -151,7 +152,7 @@ def upload_for_report_section(audit_store_id, section_id, file_name, file_size, 
 
 def upload_for_id_proof(user_id, file_name, file_size, mime_type):
     try:
-        user = audit_store_service.find_by_id(user_id)
+        profile_info = ProfileInfo.objects.get(user_id=user_id)
         check_file_size(file_size)
 
         basename, file_extension = os.path.splitext(file_name)
@@ -172,7 +173,7 @@ def upload_for_id_proof(user_id, file_name, file_size, mime_type):
         attachment.file_name = file_name
         attachment.file_size = file_size
         attachment.file_slug = post_data["fields"]["key"]
-        attachment.content_object = user
+        attachment.content_object = profile_info
 
         attachment.save()
 
@@ -197,6 +198,17 @@ def get_audit_store_for_attachment(attachment_id):
         raise ObjectNotFound from e
     except (AuditStore.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
         _logger.warn("found orphan attachment with ID: %s", attachment_id)
+        raise ObjectNotFound from e
+
+def get_auditor_for_attachment(attachment_id):
+    try:
+        attachment = Attachment.objects.get(pk=attachment_id)
+        if attachment.content_type.model_class() is ProfileInfo:
+            return ProfileInfo.objects.get(pk=attachment.object_id)
+
+        raise AppLogicError("Invalid Attachment Content Type")
+
+    except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 
 
