@@ -187,7 +187,7 @@ export default class ReportBrowser3 extends Component{
 					<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="audit_cycle" value={this.state.selectedAuditCycleId} onChange={(e) => this.auditCycleChanged(parseInt(e.target.value))}>
 						{auditCycleRows}
 					</select>
-					<small> {moment(auditCycle.audit__audit_cycle__start_date).format("do MMM")} to {moment(auditCycle.audit__audit_cycle__end_date).format("Do MMM")}</small>
+					<small> {moment(auditCycle.audit__audit_cycle__start_date).format("Do MMM")} to {moment(auditCycle.audit__audit_cycle__end_date).format("Do MMM")}</small>
 				</h2>
 				<AuditStoreTable auditCycleId={this.state.selectedAuditCycleId}/>
 				{this.props.children}
