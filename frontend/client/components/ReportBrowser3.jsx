@@ -121,7 +121,7 @@ class AuditStoreTable extends Component {
 		return (
 			<div>
 			<div className="form-group">
-				<b>Filter:</b> {citySelect}
+				<big>Filter:</big> {citySelect} <span className="pull-right" style={{fontSize:"130%"}}><big><b>{trs.length}</b> Reports</big></span>
 			</div>
 			<table className="table table-bordered table-hover">
 			<thead>
