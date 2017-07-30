@@ -13,7 +13,7 @@ from questionnaire.models import Question
 
 import audit.service.audit_cycle as audit_cycle_service
 
-def get_aggregate_report_for_manager(audit_cycle_id):
+def get_aggregate_report_for_manager(audit_cycle_id, filter_user=None):
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
 
     sections = audit_cycle.sections.order_by('sequence')
@@ -24,8 +24,11 @@ def get_aggregate_report_for_manager(audit_cycle_id):
 
     audit_stores = []
     for audit in audit_cycle.audits.all():
-        audit_store = audit.audit_stores.presentable().visible_to(user).order_by('audit_date')
-        audit_stores.extend(audit_store)
+        qs = audit.audit_stores.presentable()
+        if filter_user:
+            qs.visible_to(filter_user)
+        qs.order_by('audit_date')
+        audit_stores.extend(qs)
 
     data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)
     name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
@@ -33,7 +36,8 @@ def get_aggregate_report_for_manager(audit_cycle_id):
 
 def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
-    return get_aggregate_report_for_manager(audit_cycle.id)
+    clientuser = find_clientuser_by_user_id(user_id)
+    return get_aggregate_report_for_manager(audit_cycle.id, clientuser)
 
 def create_text_structure(title, sections, questions, audit_stores):
     rows = []
