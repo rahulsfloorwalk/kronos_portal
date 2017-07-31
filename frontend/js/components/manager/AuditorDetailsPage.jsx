@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
@@ -12,13 +12,20 @@ import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 
-import ProfileInfoPanel from './ProfileInfoPanel.jsx';
-import BankInfoPanel from './BankInfoPanel.jsx';
-import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
-
 var AuditorDetailsPage = React.createClass({
+	goToFirstTab: function(props){
+		if(props.route && props.route.path === "auditor/:auditorId"){
+			hashHistory.push(`/auditor/${props.params.auditorId}/details`);
+		}
+	},
 	componentDidMount: function(){
 		this.props.dispatch(fetchAuditor(this.props.params.auditorId));
+		this.goToFirstTab(this.props);
+	},
+	componentWillReceiveProps: function(nextProps){
+		if( this.props.params.auditorId !== nextProps.params.auditorId){
+			this.goToFirstTab(nextProps);
+		}
 	},
 	render: function(){
 		if(! this.props.auditor){
@@ -54,24 +61,14 @@ var AuditorDetailsPage = React.createClass({
 					<p>Last Login: <b>{ moment(this.props.auditor.last_login).format(momentDateFormat) }</b></p>
 				</Panel>
 				<div className="row">
-					<div className="col-md-4">
-						<ProfileInfoPanel auditorId={this.props.params.auditorId}/>
-					</div>
-					<div className="col-md-4">
-						<BankInfoPanel auditorId={this.props.params.auditorId}/>
-					</div>
-					<div className="col-md-4">
-						<AdditionalInfoPanel auditorId={this.props.params.auditorId}/>
-					</div>
-				</div>
-				<div className="row">
 					<div className="col-md-12">
 						<ul className="nav nav-tabs">
+							<NavLink to={`/auditor/${this.props.params.auditorId}/details`}>Details</NavLink>
+							<NavLink to={`/auditor/${this.props.params.auditorId}/id_proof`}>ID Proofs</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/applications`}>Applications</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/reports`}>Reports</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/payment`}>Payments</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/email_log`}>Email Log</NavLink>
-							<NavLink to={`/auditor/${this.props.params.auditorId}/id_proof`}>ID Proofs</NavLink>
 						</ul>
 						<br/>
 						{this.props.children}
