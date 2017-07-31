@@ -120,7 +120,7 @@ var AuditStoreDetails = React.createClass({
 			<div>
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
-					<li><Link to={`/client/${this.props.auditStore.audit.audit_cycle.client.id}`}><King/> {this.props.auditStore.audit.audit_cycle.client.name}</Link></li>
+					<li><Link to={`/client/${this.props.auditStore.audit.audit_cycle.client.id}/audit_cycle`}><King/> {this.props.auditStore.audit.audit_cycle.client.name}</Link></li>
 					<li><Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.props.auditStore.audit.audit_cycle.name}</Link></li>
 					<li className="active"><File/> {this.props.auditStore.audit.store.name}</li>
 				</ol>
