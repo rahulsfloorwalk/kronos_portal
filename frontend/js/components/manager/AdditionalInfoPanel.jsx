@@ -15,6 +15,7 @@ var AdditionalInfoPanel = React.createClass({
 		if(! this.props.additionalInfo){
 			return <Loading/>;
 		}
+		var is_complete = this.props.additionalInfo.is_complete ? "panel-success" : "panel-default";
 		var has_car = this.props.additionalInfo.has_car ? <Check/> : <Cross/>;
 		var weekend_audit = this.props.additionalInfo.weekend_audit ? <Check/> : <Cross/>;
 		var camera_owned = this.props.additionalInfo.camera_owned ? <Check/> : <Cross/>;
@@ -22,7 +23,7 @@ var AdditionalInfoPanel = React.createClass({
 		var laptop_owned = this.props.additionalInfo.laptop_owned ? <Check/> : <Cross/>;
 
 		return (
-			<div className="panel panel-default">
+			<div className={`panel ${is_complete}`}>
 				<div className="panel-heading">
 					<h3 className="panel-title">Additional Info</h3>
 				</div>
@@ -30,16 +31,16 @@ var AdditionalInfoPanel = React.createClass({
 					<p>Referral Code: { this.props.additionalInfo.referral_code }</p>
 					<p>Referred By: { this.props.additionalInfo.referred_by }</p>
 					<p>Occupation: { getOccupation(this.props.additionalInfo.occupation) }</p>
-					<p>Car Owned: { has_car }</p>
-					<p>Weekend Audit: { weekend_audit }</p>
-					<p>Hair Color: { getHairColor(this.props.additionalInfo.hair_color) }</p>
-					<p>Height (cm): { this.props.additionalInfo.height }</p>
-					<p>Weight (kg): { this.props.additionalInfo.weight }</p>
 					<p>Preferred Distance (km): { this.props.additionalInfo.distance }</p>
-					<p>Camera Owned: { camera_owned }</p>
-					<p>Camera Resolution: { getCameraResolution(this.props.additionalInfo.camera_resoulution) }</p>
+					<p>Industry: { this.props.additionalInfo.industry }</p>
+					<p>Company: { this.props.additionalInfo.company }</p>
+					<p>Car Owned: { has_car }</p>
+					<p>Car Model: { this.props.additionalInfo.car_model }</p>
+					<p>Car Cost: { this.props.additionalInfo.car_cost }</p>
 					<p>Laptop Owned: { laptop_owned }</p>
-					<p>Smart Phone Owned: { smart_phone_owned }</p>
+					<p>Laptop Model: { this.props.additionalInfo.laptop_model }</p>
+					<p>Mobile Model: { this.props.additionalInfo.mobile_model }</p>
+					<p>Camera Resolution: { getCameraResolution(this.props.additionalInfo.camera_resoulution) }</p>
 				</div>
 			</div>
 		);

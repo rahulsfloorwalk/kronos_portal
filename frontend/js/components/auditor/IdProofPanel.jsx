@@ -128,10 +128,8 @@ var IdProofAttachmentUploadBox = React.createClass({
 	},
 	render: function(){
 
-		let uploadButton;
-		let deletable = false;
-    uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default"><Paperclip/> Upload</button>);
-    deletable = true;
+		let uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default pull-right"><Paperclip/> Upload</button>);
+		let deletable = true;
 
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
@@ -155,7 +153,10 @@ var IdProofAttachmentUploadBox = React.createClass({
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
 				<div key="empty" className="list-group-item text-center text-muted">
-					<h4>No ID Proofs Uploaded. Audits will not be assigned unless you upload at least one ID Proof</h4>
+					<h4>
+						No ID Proofs Uploaded.<br/>
+						Audits will not be assigned unless you upload at least one ID Proof.
+					</h4>
 				</div>
 			);
 		}
@@ -163,20 +164,18 @@ var IdProofAttachmentUploadBox = React.createClass({
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h4 className="panel-title">
-						<Paperclip/> ID Proofs
-					</h4>
-				</div>
-				<div className="list-group" style={{"height":"150px", "overflowY":"auto"}}>
-					{attachmentRows}
-				</div>
-				<div className="panel-footer text-right">
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						disabled={this.state.uploading}
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
 						{uploadButton}
+					<h4 className="">
+						<Paperclip/> ID Proofs
+					</h4>
+				</div>
+				<div className="list-group" style={{"height":"150px", "overflowY":"auto"}}>
+					{attachmentRows}
 				</div>
 			</div>
 		);

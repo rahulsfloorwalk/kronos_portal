@@ -19,6 +19,9 @@ var BankInfoPanelBase = React.createClass({
 					<h4 className="">Bank Info</h4>
 				</div>
 				<table className="table table-striped">
+					<colgroup>
+						<col style={{width:"40%"}}/>
+					</colgroup>
 					<tbody>
 					<tr><td className="text-right text-muted" style={{"width":"40%"}}>*Bank Name:</td><th>{ this.props.bankInfo.bank_name }</th></tr>
 					<tr><td className="text-right text-muted">*Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>

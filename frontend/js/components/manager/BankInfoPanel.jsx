@@ -13,8 +13,9 @@ var BankInfoPanel = React.createClass({
 		if(! this.props.bankInfo){
 			return <Loading/>;
 		}
+		var is_complete = this.props.bankInfo.is_complete ? "panel-success" : "panel-default";
 		return (
-			<div className="panel panel-default">
+			<div className={`panel ${is_complete}`}>
 				<div className="panel-heading">
 					<h3 className="panel-title">Bank Info</h3>
 				</div>

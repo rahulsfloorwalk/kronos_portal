@@ -9,6 +9,8 @@ import { fetchProfileInfoForAuditor } from '../../manager/actions/auditor.js'
 import { fetchStates } from '../../manager_actions.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
 
+import { Check, Cross } from '../Icons.jsx';
+
 import Loading from '../Loading.jsx';
 
 var ProfileInfoPanel = React.createClass({
@@ -21,8 +23,9 @@ var ProfileInfoPanel = React.createClass({
 			return <Loading/>;
 		}
 		var auditor_city = this.props.profileInfo.city || {};
+		var is_complete = this.props.profileInfo.is_complete ? "panel-success" : "panel-default";
 		return (
-			<div className="panel panel-default">
+			<div className={`panel ${is_complete}`}>
 				<div className="panel-heading">
 					<h3 className="panel-title">Profile Info</h3>
 				</div>

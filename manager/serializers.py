@@ -642,7 +642,7 @@ class ProfileInfoSerializer(ModelSerializer):
             'pincode',
             'city',
             'user_id',
-            'is_complete'
+            'is_complete',
         )
         read_only_fields = fields
 
@@ -657,7 +657,8 @@ class BankInfoSerializer(ModelSerializer):
             'account_number',
             'ifsc_code',
             'pan_number',
-            'user_id'
+            'user_id',
+            'is_complete',
         )
         read_only_fields = fields
 
@@ -668,8 +669,13 @@ class AdditionalInfoSerializer(ModelSerializer):
         fields = (
             'id',
             'has_car',
+            'car_cost',
+            'car_model',
+            'has_car',
             'weekend_audit',
             'hair_color',
+            'industry',
+            'company',
             'height',
             'weight',
             'distance',
@@ -682,6 +688,9 @@ class AdditionalInfoSerializer(ModelSerializer):
             'occupation',
             'referral_code',
             'referred_by',
+            'laptop_model',
+            'mobile_model',
+            'is_complete',
         )
         read_only_fields = fields
 

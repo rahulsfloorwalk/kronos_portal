@@ -44,6 +44,9 @@ var ProfileInfoPanelBase = React.createClass({
 					<h4 className="">Personal Information</h4>
 				</div>
 				<table className="table table-striped">
+					<colgroup>
+						<col style={{width:"40%"}}/>
+					</colgroup>
 					<tbody>
 					<tr><td className="text-muted text-right" style={{"width":"40%"}}>*First Name:</td><th>{this.props.profileInfo.first_name}</th></tr>
 					<tr><td className="text-muted text-right">*Last Name:</td><th>{this.props.profileInfo.last_name}</th></tr>
