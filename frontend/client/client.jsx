@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import 'babel-polyfill';
 
 import Routes from './components/Routes.jsx';
 
