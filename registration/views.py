@@ -119,7 +119,8 @@ def activate(request, key):
             user.is_active = True
             user.save()
             _logger.info("verified user %s successfully", user)
-            messages.add_message(request, messages.SUCCESS, 'Your email has been verified. Please login to continue.')
+            login(request, user, backend='registration.backends.CaseInsensitiveModelBackend')
+            #messages.add_message(request, messages.SUCCESS, 'Your email has been verified. Please login to continue.')
         else:
             _logger.info("verification is already done for key: %s", key)
     else:
