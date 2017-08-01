@@ -16,6 +16,9 @@ module.exports = {
 		client: path.resolve(__dirname, './client/client.jsx'),
 		client_vendor: ['jquery','react','react-dom','react-router'],
 
+		report_print: path.resolve(__dirname, './client/report_print.jsx'),
+		report_print_vendor: ['jquery','react','react-dom','react-router'],
+
 		moderator: path.resolve(__dirname, './js/moderator/moderator.jsx'),
 		moderator_vendor: ['jquery','react','react-dom','react-router'],
 
@@ -84,6 +87,12 @@ module.exports = {
 			title: 'FloorWalk Client Portal',
 			filename: 'client/index.html',
 			chunks: ['client_vendor', 'client'],
+			template: path.resolve(__dirname, './client/client.ejs'),
+		}),
+		new HtmlWebpackPlugin({
+			title: 'Report Print',
+			filename: 'client/report_print.html',
+			chunks: ['report_print_vendor', 'report_print'],
 			template: path.resolve(__dirname, './client/client.ejs'),
 		}),
 		new CopyWebpackPlugin([

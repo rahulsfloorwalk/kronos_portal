@@ -110,27 +110,39 @@ class SectionAttachmentBox extends React.Component{
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
 
-		return (
-			<div className="panel-body">
-				<div className="hidden-print">
-					<b>Attachments:</b> {attachmentRows}
-					<input type="file" multiple
-						onChange={this.uploadFile}
-						ref={(input)=>this.uploadInput = input}
-						style={{"display":"none"}}/>
+		if(this.props.printMode){
+			return (
+				<div className="panel-body">
+					<div className="col-xs-offset-1 col-xs-10">
+						{this.state.attachments.filter(a=>a.proof_type === "PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
+					</div>
 				</div>
-				<div className="hidden-print">
-					<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
+			);
+		} else {
+			return (
+				<div className="panel-body">
+					<div className="hidden-print">
+						<b>Attachments:</b> {attachmentRows}
+						<input type="file" multiple
+							onChange={this.uploadFile}
+							ref={(input)=>this.uploadInput = input}
+							style={{"display":"none"}}/>
+					</div>
+					<div className="hidden-print">
+						<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
+					</div>
 				</div>
-				<div className="col-xs-offset-1 col-xs-10 visible-print-block">
-					{this.state.attachments.filter(a=>a.proof_type === "PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
-				</div>
-			</div>
-		);
+			);
+		}
 	}
 }
 
 var Section = React.createClass({
+	getDefaultProps: function(){
+		return {
+			printMode:false,
+		};
+	},
 	render: function(){
 		let questionRows = [];
 		if( this.props.section.questions){
@@ -199,7 +211,7 @@ var Section = React.createClass({
 					<hr/>
 					<p><b>PM Comment:</b> {pm_comment}</p>
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} printMode={this.props.printMode}/>
 				</div>
 			);
 		}
@@ -218,6 +230,11 @@ export default React.createClass({
 			answers: []
 		};
 	},
+	getDefaultProps: function(){
+		return {
+			printMode: false,
+		};
+	},
 	componentDidMount: function() {
 		fetchAnswers(this.props.auditStoreId).then((answers) => {
 			this.setState({
@@ -229,7 +246,7 @@ export default React.createClass({
 		var sectionRows = [];
 		for(var s of this.props.sections) {
 			let reportSection = this.props.reportSections.filter((rs) => rs.section === s.id)[0];
-			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={s} answers={this.state.answers} reportSection={reportSection} key={s.id}/>);
+			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={s} answers={this.state.answers} reportSection={reportSection} key={s.id} printMode={this.props.printMode}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="contact site administrator"/>);
@@ -239,7 +256,7 @@ export default React.createClass({
 				<h3 className="page-header">
 					<Paperclip/> Attachments
 				</h3>
-				<AttachmentDisplayBox auditStoreId={this.props.auditStoreId}/>
+				<AttachmentDisplayBox auditStoreId={this.props.auditStoreId} printMode={this.props.printMode}/>
 				<h3 className="page-header">
 					<Tasks/> Questionnaire
 				</h3>

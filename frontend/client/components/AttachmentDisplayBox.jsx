@@ -15,7 +15,7 @@ import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../j
 var AttachmentItem = React.createClass({
 	getDefaultProps: function(){
 		return {
-			attachment: {}
+			attachment: {},
 		};
 	},
 	render: function(){
@@ -35,6 +35,11 @@ export default React.createClass({
 			attachments: [],
 			selectedAttachment: undefined,
 			selectedAttachmentId: null,
+		};
+	},
+	getDefaultProps: function(){
+		return {
+			printMode: false,
 		};
 	},
 	reloadState: function(){
@@ -77,7 +82,14 @@ export default React.createClass({
 			return null;
 		} else {
 
-		return (
+
+		if(this.props.printMode){
+			return (<div className="row"><div className="col-xs-offset-1 col-xs-10">
+				{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
+			</div>
+			</div>);
+		} else {
+			return (
 				<div className="row">
 					<div className="col-md-4 hidden-print">
 						{attachmentRows}
@@ -85,11 +97,9 @@ export default React.createClass({
 					<div className="col-md-8 hidden-print">
 						{attachmentElement}
 					</div>
-					<div className="col-xs-offset-1 col-xs-10 visible-print-block">
-						{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
-					</div>
 				</div>
-		);
+			);
+		}
 		}
 	},
 });

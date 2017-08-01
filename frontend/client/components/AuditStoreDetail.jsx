@@ -25,6 +25,11 @@ export default React.createClass({
 			reportSections: [],
 		};
 	},
+	getDefaultProps: function(){
+		return {
+			printMode: false,
+		};
+	},
 	componentDidMount: function(){
 		fetchAuditStore(this.props.params.auditStoreId).then((auditStore) => {
 			this.setState({
@@ -46,19 +51,26 @@ export default React.createClass({
 		if(! this.state.auditStore){
 			return <Loading/>;
 		}
+		let printMode = this.props.printMode || this.props.route.printMode || false;
 
 		return (
 			<div>
 				<h2 className="page-header">
-					<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
-						<Print/> Print Report
-					</button>
-					<a className="btn btn-default pull-right hidden-print" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/ears_report'}>
+					{ printMode ? 
+						<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
+							<Print/> Print Report
+						</button>
+					 : 
+						<a className="btn btn-default pull-right hidden-print" href={`report_print.html#/${this.props.params.auditStoreId}`} target="_blank">
+							<Print/> Print Report
+						</a>
+					}
+					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/ears_report'}>
 					<Download/> E.A.R.S Report
-					</a>
-					<a className="btn btn-default pull-right hidden-print" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/xlsx_report'}>
+					</a> : ""}
+					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/xlsx_report'}>
 					<Download/> Excel Report
-					</a>
+					</a> : ""}
 					<File/> Audit Report
 				</h2>
 				<div className="row">
@@ -107,7 +119,7 @@ export default React.createClass({
 					<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 				</div>
 				</div>
-				<SectionList auditStoreId={this.props.params.auditStoreId} sections={this.state.sections} reportSections={this.state.reportSections}/>
+				<SectionList auditStoreId={this.props.params.auditStoreId} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
 			</div>
 		);
 	},
