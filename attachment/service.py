@@ -249,3 +249,9 @@ def rename(attachment_id, new_name):
             raise AppLogicError("cannot rename attachment now")
     except (AuditStore.DoesNotExist, Attachment.DoesNotExist) as e:
         raise ObjectNotFound from e
+
+def find_by_id(attachment_id):
+    try:
+        return Attachment.objects.get(pk=attachment_id)
+    except Attachment.DoesNotExist as e:
+        raise ObjectNotFound from e
