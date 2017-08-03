@@ -22,6 +22,8 @@ export function getAuditType(value){
 			return "Sky Karting";
 		case "SMAAASH_ARENA":
 			return "Smaaash Arena";
+		case "GENERAL":
+			return "General";
 		case "":
 		case null:
 		case undefined:

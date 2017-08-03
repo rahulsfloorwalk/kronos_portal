@@ -100,6 +100,7 @@ var AuditCycleForm = React.createClass({
 								<option value="SMAAASH_ARENA">{getAuditType("SMAAASH_ARENA")}</option>
 								<option value="FINE_DINE">{getAuditType("FINE_DINE")}</option>
 								<option value="SKY_KARTING">{getAuditType("SKY_KARTING")}</option>
+								<option value="GENERAL">{getAuditType("GENERAL")}</option>
 							</FormSelect>
 						</div>
 						<div className="col-md-6">

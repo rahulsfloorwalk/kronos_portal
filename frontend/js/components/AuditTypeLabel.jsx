@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Globe, PhoneAlt, EyeOpen, Briefcase, Road, Flag } from './Icons.jsx';
+import { Globe, PhoneAlt, EyeOpen, Briefcase, Road, Flag, Asterisk } from './Icons.jsx';
 
 import { getAuditType } from '../utils.js';
 
@@ -18,6 +18,8 @@ let AuditTypeIcon = (props) => {
 			return (<EyeOpen/>);
 		case "COMPETITION":
 			return (<Briefcase/>);
+		case "GENERAL":
+			return (<Asterisk/>);
 		case "":
 		case null:
 		case undefined:

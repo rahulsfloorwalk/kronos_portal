@@ -1,5 +1,6 @@
 import React from 'react';
 
+export const Asterisk	= () => <span className="glyphicon glyphicon-asterisk"></span>;
 export const Education	= () => <span className="glyphicon glyphicon-education"></span>;
 export const Time	= () => <span className="glyphicon glyphicon-time"></span>;
 export const Duplicate	= () => <span className="glyphicon glyphicon-duplicate"></span>;

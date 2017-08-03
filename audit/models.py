@@ -16,6 +16,7 @@ class AuditCycle(Model):
     FINE_DINE = 'FINE_DINE'
     SKY_KARTING = 'SKY_KARTING'
     SMAAASH_ARENA = 'SMAAASH_ARENA'
+    GENERAL = 'GENERAL'
     TYPES = (
         (WALKIN, 'Walkin'),
         (PHONE, 'Phone'),
@@ -27,6 +28,7 @@ class AuditCycle(Model):
         (FINE_DINE, 'Fine Dine'),
         (SKY_KARTING, 'Sky Karting'),
         (SMAAASH_ARENA, 'Smaaash Arena'),
+        (GENERAL, 'General'),
     )
 
     PREPARATION = 'PREPARATION'
