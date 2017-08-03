@@ -444,7 +444,7 @@ class AttachmentIdView(APIView):
 
     def delete(self, request, attachment_id):
         try:
-            attachment_auditor_service.delete_id_proof_for_auditor(attachment_id, request.user.id)
+            attachment_auditor_service.delete_for_auditor(attachment_id, request.user.id)
             return Response()
         except AppLogicError as e:
             raise ValidationError({
