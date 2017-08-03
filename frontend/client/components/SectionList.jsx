@@ -10,6 +10,7 @@ import { Paperclip, Tasks, Plus, Cross, Pencil } from '../../js/components/Icons
 
 import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
 
+import AttachmentThumbnail from '../../js/components/AttachmentThumbnail.jsx';
 import AttachmentProofIcon from '../../js/components/AttachmentProofIcon.jsx';
 import AttachmentPreview from '../../js/components/manager/AttachmentPreview.jsx';
 
@@ -88,20 +89,14 @@ class SectionAttachmentBox extends React.Component{
 	render(){
 		let editable = false;
 
-		let itemStyle = Object.assign({}, truncateStyle, { maxWidth: "200px", });
-
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let activeClass = a.id === this.state.selectedAttachmentId ? "active" : "";
-			attachmentRows.push(
-				<span key={a.id} className="btn-group btn-group-sm">
-					<button className={"btn btn-default btn-sm " + activeClass} title={a.file_name + " - Click to preview file"} style={itemStyle} onClick={() => this.selectAttachment(a.id)}>
-					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
-					{a.file_name}
-					</button>
-				</span>
-			);
-			attachmentRows.push(" ");
+			attachmentRows.push(<AttachmentThumbnail
+				attachment={a}
+				key={a.id}
+				onSelect={() => this.selectAttachment(a.id)}
+				selected={this.state.selectedAttachmentId === a.id}
+			/>);
 		}
 
 		if( attachmentRows.length === 0){
@@ -114,7 +109,7 @@ class SectionAttachmentBox extends React.Component{
 			return (
 				<div className="panel-body">
 					<div className="col-xs-offset-1 col-xs-10">
-						{this.state.attachments.filter(a=>a.proof_type === "PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
+						{this.state.attachments.filter(a=>a.proof_type === "PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
 					</div>
 				</div>
 			);
@@ -122,11 +117,8 @@ class SectionAttachmentBox extends React.Component{
 			return (
 				<div className="panel-body">
 					<div className="hidden-print">
-						<b>Attachments:</b> {attachmentRows}
-						<input type="file" multiple
-							onChange={this.uploadFile}
-							ref={(input)=>this.uploadInput = input}
-							style={{"display":"none"}}/>
+						<h4>Attachments:</h4>
+						{attachmentRows}
 					</div>
 					<div className="hidden-print">
 						<AttachmentPreview attachment={selectedAttachment} editable={editable}/>

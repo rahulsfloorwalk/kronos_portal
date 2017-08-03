@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { truncateStyle } from '../../styles.js';
 
 import QuestionRow from './QuestionRow.jsx';
+import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
 
 import Jumbotron from '../Jumbotron.jsx';
 import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
@@ -166,7 +167,8 @@ var __Section = React.createClass({
 		let pointerStyle = {cursor: 'pointer'};
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
 			var defaultComment = "click to add comment";
-			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip/> Upload</button>);
+			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm" style={{
+			}}><Paperclip/> Upload</button>);
 		}
 		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">{defaultComment}</span>);
 		if(this.state.commenting){
@@ -198,24 +200,15 @@ var __Section = React.createClass({
 			col2: { width: "95%" },
 		};
 
-		let itemStyle = Object.assign({}, truncateStyle, { maxWidth: "200px", });
-
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let deleteButton;
-			if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
-				deleteButton = (<button className="btn btn-default btn-sm" title="Delete Attachment" onClick={() => this.attachmentDeleteClicked(a)}><Cross/></button>);
-			}
-			attachmentRows.push(
-				<span key={a.id} className="btn-group btn-group-sm">
-					<a className="btn btn-default btn-sm" href={a.direct_url} title="Click to Download File" style={itemStyle}>
-					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
-					{a.file_name}
-					</a>
-					{deleteButton}
-				</span>
-			);
-			attachmentRows.push(" ");
+			let deletable = this.props.auditStore && this.props.auditStore.status === 'ASSIGNED';
+			attachmentRows.push(<AttachmentThumbnail
+				key={a.id}
+				attachment={a}
+				deletable={deletable}
+				onDelete={() => this.attachmentDeleteClicked(a)}
+			/>);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
@@ -249,13 +242,13 @@ var __Section = React.createClass({
 					</tbody>
 				</table>
 				<div className="panel-body">
-					Attachments: {attachmentRows}
+				<h4>Attachments {uploadButton}</h4>
+				{attachmentRows}
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						disabled={this.state.uploading}
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
-						{uploadButton}
 				</div>
 				<div className="panel-footer">
 					<p><b>Section Summary:</b>{savingMessage}</p>

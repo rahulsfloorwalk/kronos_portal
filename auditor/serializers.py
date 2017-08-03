@@ -421,6 +421,7 @@ class AttachmentSerializer(ModelSerializer):
             'content_type',
             'object_id',
             'direct_url',
+            'extra',
         )
         read_only_fields = fields
 

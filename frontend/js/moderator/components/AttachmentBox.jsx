@@ -13,24 +13,9 @@ import InPlaceEditable from '../../components/InPlaceEditable.jsx';
 import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
 
 import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
+import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
-
-var AttachmentItem = React.createClass({
-	getDefaultProps: function(){
-		return {
-			attachment: {}
-		};
-	},
-	render: function(){
-		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
-		return (
-			<button type="button" className="list-group-item" onClick={()=>this.props.onSelect(this.props.attachment)}>
-				{icon} {this.props.attachment.file_name}
-			</button>
-		);
-	}
-});
 
 export default React.createClass({
 	getInitialState: function(){
@@ -155,7 +140,7 @@ export default React.createClass({
 
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentItem attachment={a} key={a.id} onSelect={this.attachmentSelected}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -176,12 +161,13 @@ export default React.createClass({
 					onRename={this.attachmentRenamed}
 					onDelete={this.deleteButtonClicked}/>
 
+		let uploadButton;
 		if(this.props.auditStore.status === 'SUBMITTED'){
 			attachmentRows.push(<div key="upload_input" className="hidden">
 				<input type="file" onChange={this.uploadFile} multiple
 					ref={(input)=>this.uploadInput = input}/>
 			</div>);
-			attachmentRows.push(<button key="new" onClick={this.uploadButtonClicked} type="button" className="list-group-item"><Plus/> Upload Attachment</button>);
+			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
 		}
 
 		if( attachmentRows.length === 0){
@@ -191,7 +177,7 @@ export default React.createClass({
 		return (
 			<div>
 				<h3 className="page-header">
-					<Paperclip/> Attachments
+					<Paperclip/> Attachments {uploadButton}
 				</h3>
 				<div className="row">
 					<div className="col-md-4" style={{maxHeight:"500px", overflowY: "auto"}}>

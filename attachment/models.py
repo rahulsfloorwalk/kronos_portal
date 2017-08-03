@@ -41,3 +41,17 @@ class Attachment(Model):
     def direct_url(self):
         s3 = settings.AWS["S3_ATTACHMENTS"]
         return "https://s3-{}.amazonaws.com/{}/{}".format(s3["REGION"],s3["BUCKET"],self.file_slug)
+
+    def extra(self):
+        if self.proof_type == self.PHOTO:
+            subdomain = settings.IMGIX_SUBDOMAIN
+            thumbnail_width = 150
+            thumbnail_height = 100
+            preview_width = 750
+            preview_height = 500
+            return {
+                    "thumbnail_url": "https://{}/{}?fit=crop&auto=enhance,compress&crop=entropy&w={}&h={}".format(subdomain,self.file_slug,thumbnail_width,thumbnail_height),
+                    "preview_url": "https://{}/{}?auto=enhance,compress&h={}".format(subdomain,self.file_slug,preview_height)
+            }
+        else:
+            return {}

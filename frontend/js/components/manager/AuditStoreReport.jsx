@@ -17,6 +17,8 @@ import { setAnswerText } from '../../manager/service/answer.js'
 import { submitAuditorComment, submitPMComment, fetchReportSections, setNotApplicable } from '../../manager/actions/report_section.js'
 import AttachmentPreview from './AttachmentPreview.jsx';
 
+import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
+
 var __QuestionRow = React.createClass({
 	getDefaultProps: function(){
 		return {
@@ -274,25 +276,12 @@ class SectionAttachmentBox extends React.Component{
 			editable = true;
 		}
 
-		let itemStyle = Object.assign({}, truncateStyle, { maxWidth: "200px", });
-
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let deleteButton;
-			let activeClass = a.id === this.state.selectedAttachmentId ? "active" : "";
-			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
-				deleteButton = (<button className="btn btn-default btn-sm" title="Delete Attachment" onClick={() => this.attachmentDeleteClicked(a)}><Cross/></button>);
-			}
+			let deletable= this.props.auditStore && this.props.auditStore.status === 'SUBMITTED';
 			attachmentRows.push(
-				<span key={a.id} className="btn-group btn-group-sm">
-					<button className={"btn btn-default btn-sm " + activeClass} title={a.file_name + " - Click to preview file"} style={itemStyle} onClick={() => this.selectAttachment(a.id)}>
-					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
-					{a.file_name}
-					</button>
-					{deleteButton}
-				</span>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={deletable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId}/>
 			);
-			attachmentRows.push(" ");
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
@@ -319,12 +308,12 @@ class SectionAttachmentBox extends React.Component{
 		return (
 			<div className="panel-body">
 				<div>
-					Attachments: {attachmentRows}
+					<h4>Attachments {uploadButton}</h4>
+					{attachmentRows}
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
-						{uploadButton}
 				</div>
 				<AttachmentPreview attachment={selectedAttachment} editable={editable}
 					onRename={this.selectedAttachmentRenamed}

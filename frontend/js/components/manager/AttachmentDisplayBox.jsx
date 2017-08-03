@@ -13,24 +13,9 @@ import InPlaceEditable from '../InPlaceEditable.jsx';
 import AttachmentPreview from './AttachmentPreview.jsx';
 
 import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
+import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
-
-var AttachmentItem = React.createClass({
-	getDefaultProps: function(){
-		return {
-			attachment: {}
-		};
-	},
-	render: function(){
-		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
-		return (
-			<button type="button" className="list-group-item" onClick={()=>this.props.onSelect(this.props.attachment)}>
-				{icon} {this.props.attachment.file_name}
-			</button>
-		);
-	}
-});
 
 var AttachmentDisplayBox = React.createClass({
 	getInitialState: function(){
@@ -154,11 +139,7 @@ var AttachmentDisplayBox = React.createClass({
 		}
 
 		var attachmentRows = [];
-		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentItem attachment={a} key={a.id} onSelect={this.attachmentSelected}/>);
-		}
 
-		console.log(this.state.inProgress);
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
@@ -171,18 +152,26 @@ var AttachmentDisplayBox = React.createClass({
 				</div>);
 			}
 		}
+		for(let a of this.state.attachments){
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)}/>);
+		}
 
 		let editable = this.props.auditStore.status === "SUBMITTED";
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
 					onRename={this.attachmentRenamed}
 					onDelete={this.deleteButtonClicked}/>
 
+		let uploadButton;
 		if(this.props.auditStore.status === 'SUBMITTED'){
-			attachmentRows.push(<div key="upload_input" className="hidden">
-				<input type="file" onChange={this.uploadFile} multiple
-					ref={(input)=>this.uploadInput = input}/>
-			</div>);
-			attachmentRows.push(<button key="new" onClick={this.uploadButtonClicked} type="button" className="list-group-item"><Plus/> Upload Attachment</button>);
+			uploadButton = (
+				<span>
+					<input className="hidden" type="file" onChange={this.uploadFile} multiple
+						ref={(input)=>this.uploadInput = input}/>
+					<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default">
+						<Plus/> Upload Attachment
+					</button>
+				</span>
+			);
 		}
 
 		if( attachmentRows.length === 0){
@@ -192,7 +181,7 @@ var AttachmentDisplayBox = React.createClass({
 		return (
 			<div>
 				<h3 className="page-header">
-					<Paperclip/> Attachments
+					<Paperclip/> Attachments {uploadButton}
 				</h3>
 				<div className="row">
 					<div className="col-md-4" style={{maxHeight:"500px", overflowY: "auto"}}>

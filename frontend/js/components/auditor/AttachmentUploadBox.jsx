@@ -8,36 +8,10 @@ import { Paperclip, Cross, Record, Picture, Video, File } from '../Icons.jsx';
 import ProgressBar from '../ProgressBar.jsx';
 import Loading from '../Loading.jsx';
 import Jumbotron from '../Jumbotron.jsx';
-import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
+
+import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
-
-var AttachmentItem = React.createClass({
-	getDefaultProps: function(){
-		return {
-			deletable: false,
-			onDelete: () => {},
-			attachment: {}
-		};
-	},
-	render: function(){
-		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
-		if(this.props.deletable){
-			var deleteButton = <button onClick={()=>this.props.onDelete(this.props.attachment)}
-					className="btn btn-default btn-sm pull-right" 
-					title="Delete Attachment"><Cross/>
-				</button>;
-		}
-		return (
-			<div className="list-group-item">
-				{deleteButton}
-				<big>{icon} <a href={this.props.attachment.direct_url} target="_blank" title="Click to download file">
-					{this.props.attachment.file_name}
-				</a></big>
-			</div>
-		);
-	}
-});
 
 var AttachmentUploadBox = React.createClass({
 	getInitialState: function(){
@@ -140,9 +114,6 @@ var AttachmentUploadBox = React.createClass({
 		}
 
 		var attachmentRows = [];
-		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentItem attachment={a} deletable={deletable} onDelete={this.attachmentDeleteClicked} key={a.id}/>);
-		}
 
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
@@ -155,6 +126,10 @@ var AttachmentUploadBox = React.createClass({
 					<ProgressBar percentage={this.state.inProgress[id].progress} striped={this.state.inProgress[id].active} active={this.state.inProgress[id].active}/>
 				</div>);
 			}
+		}
+
+		for(let a of this.state.attachments){
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id}/>);
 		}
 
 

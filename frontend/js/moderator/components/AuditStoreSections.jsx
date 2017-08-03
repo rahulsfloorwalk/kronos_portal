@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { truncateStyle } from '../../styles.js';
 
 import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
+import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 import Panel from '../../components/Panel.jsx';
 import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal, Checked, Unchecked, Paperclip } from '../../components/Icons.jsx';
@@ -254,25 +255,16 @@ class SectionAttachmentBox extends React.Component{
 			editable = true;
 		}
 
-		let itemStyle = Object.assign({}, truncateStyle, { maxWidth: "200px", });
-
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let deleteButton;
-			let activeClass = a.id === this.state.selectedAttachmentId ? "active" : "";
-			if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
-				deleteButton = (<button className="btn btn-default btn-sm" title="Delete Attachment" onClick={() => this.attachmentDeleteClicked(a)}><Cross/></button>);
-			}
-			attachmentRows.push(
-				<span key={a.id} className="btn-group btn-group-sm">
-					<button className={"btn btn-default btn-sm " + activeClass} title={a.file_name + " - Click to preview file"} style={itemStyle} onClick={() => this.selectAttachment(a.id)}>
-					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
-					{a.file_name}
-					</button>
-					{deleteButton}
-				</span>
-			);
-			attachmentRows.push(" ");
+			attachmentRows.push(<AttachmentThumbnail
+				key={a.id}
+				attachment={a}
+				onSelect={() => this.selectAttachment(a.id)}
+				onDelete={() => this.attachmentDeleteClicked(a)}
+				deletable={this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'}
+				selected={a.id === this.state.selectedAttachmentId}
+			/>);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
@@ -299,12 +291,12 @@ class SectionAttachmentBox extends React.Component{
 		return (
 			<div className="panel-body">
 				<div>
-					<b>Attachments:</b> {attachmentRows}
+					<h4>Attachments {uploadButton}</h4>
+					{attachmentRows}
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
-						{uploadButton}
 				</div>
 				<AttachmentPreview attachment={selectedAttachment} editable={editable}
 					onRename={this.selectedAttachmentRenamed}

@@ -9,25 +9,9 @@ import Jumbotron from '../../js/components/Jumbotron.jsx';
 import AttachmentPreview from '../../js/components/manager/AttachmentPreview.jsx';
 
 import AttachmentProofIcon from '../../js/components/AttachmentProofIcon.jsx';
+import AttachmentThumbnail from '../../js/components/AttachmentThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../js/utils.js';
-
-var AttachmentItem = React.createClass({
-	getDefaultProps: function(){
-		return {
-			attachment: {},
-		};
-	},
-	render: function(){
-		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
-		let activeClass = this.props.selected ? "active" : "";
-		return (
-			<button type="button" className={`list-group-item ${activeClass}`} onClick={()=>this.props.onSelect(this.props.attachment)}>
-				{icon} {this.props.attachment.file_name}
-			</button>
-		);
-	}
-});
 
 export default React.createClass({
 	getInitialState: function(){
@@ -63,7 +47,12 @@ export default React.createClass({
 		var uploadButton;
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentItem attachment={a} key={a.id} onSelect={this.attachmentSelected} selected={this.state.selectedAttachmentId === a.id}/>);
+			attachmentRows.push(<AttachmentThumbnail
+				attachment={a}
+				key={a.id}
+				onSelect={() => this.attachmentSelected(a)}
+				selected={this.state.selectedAttachmentId === a.id}
+			/>);
 		}
 
 		let attachmentElement;
@@ -85,7 +74,7 @@ export default React.createClass({
 
 		if(this.props.printMode){
 			return (<div className="row"><div className="col-xs-offset-1 col-xs-10">
-				{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview attachment={a} editable={false}/>)}
+				{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
 			</div>
 			</div>);
 		} else {

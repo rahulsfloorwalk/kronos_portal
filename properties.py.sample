@@ -72,3 +72,6 @@ MAIL_SWITCH = {
 ### Google Analytics Tracking ID for Authentication/Registration views only
 ### The actual app should use different tracking IDs for manager,auditor and client UIs
 AUTH_GA_ID = "UA-XXXXXXX-X"
+
+### IMGIX subdomain source configured to serve attachments
+IMGIX_SUBDOMAIN = "fw-att-test.imgix.net"

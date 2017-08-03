@@ -62,7 +62,7 @@ class AttachmentRenderer extends React.Component {
 				};
 				return (<div style={{"textAlign": "center"}}>
 					{loading}
-					<img src={this.props.attachment.direct_url} style={imageStyle} onLoad={this.onLoad}/>
+					<img src={this.props.attachment.extra.preview_url} style={imageStyle} onLoad={this.onLoad}/>
 					</div>
 				);
 			}
