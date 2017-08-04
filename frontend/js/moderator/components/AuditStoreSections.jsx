@@ -216,7 +216,8 @@ class SectionAttachmentBox extends React.Component{
 				this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 			}, (errorMessage) => {
 				this.setProgressState(tempId, {
-					uploadMessage :"upload failed: " + errorMessage,
+					uploadMessage: errorMessage,
+					error: true,
 				});
 			});
 		}
@@ -267,13 +268,14 @@ class SectionAttachmentBox extends React.Component{
 			/>);
 		}
 		for(let id in this.state.inProgress){
-			if(this.state.inProgress[id].uploading){
+			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
 				attachmentRows.push(<AttachmentInProgressThumbnail
 					key={id}
 					fileName={fileName}
 					progress={this.state.inProgress[id].progress}
 					uploadMessage={this.state.inProgress[id].uploadMessage}
+					error={this.state.inProgress[id].error}
 				/>);
 			}
 			attachmentRows.push(" ");

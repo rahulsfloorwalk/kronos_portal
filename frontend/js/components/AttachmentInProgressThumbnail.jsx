@@ -13,6 +13,7 @@ export default class AttachmentInProgressThumbnail extends Component{
 		super(props);
 	}
 	render(){
+		let error = !!this.props.error;
 		let fileName = this.props.fileName || "uploading...";
 		let myProgress = this.props.progress ? this.props.progress + "%" : this.props.progress;
 		let displayMessage = this.props.uploadMessage || myProgress || "in progress";
@@ -22,15 +23,15 @@ export default class AttachmentInProgressThumbnail extends Component{
 			position: "relative",
 			width: "150px",
 			height: "100px",
-			border: "solid LightGray 1px",
+			border: error ? "solid #EBCCD1 1px" : "solid LightGray 1px",
 			borderRadius: "3px",
 			backgroundColor: "LightGray",
 			margin: "5px",
 		});
 
 		let fileNameStyle=Object.assign({}, truncateStyle, {
-			color: "Black",
-			backgroundColor: "rgba(255,255,255,0.8)",
+			color: error ? "#A94442" : "Black",
+			backgroundColor: error ? "rgb(242,222,222)" : "rgb(255,255,255)",
 			width: "100%",
 			position: "absolute",
 			bottom: "0px",
