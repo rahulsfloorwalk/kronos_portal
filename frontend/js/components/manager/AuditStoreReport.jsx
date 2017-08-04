@@ -5,7 +5,6 @@ import { Link } from 'react-router';
 import { truncateStyle } from '../../styles.js';
 
 import Jumbotron from '../Jumbotron.jsx';
-import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
 import Panel from '../Panel.jsx';
 import { Save, Plus, Cross, Trash, Pencil, Tasks, OptionHorizontal, Checked, Unchecked, Paperclip } from '../Icons.jsx';
 
@@ -18,6 +17,7 @@ import { submitAuditorComment, submitPMComment, fetchReportSections, setNotAppli
 import AttachmentPreview from './AttachmentPreview.jsx';
 
 import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
+import AttachmentInProgressThumbnail from '../AttachmentInProgressThumbnail.jsx';
 
 var __QuestionRow = React.createClass({
 	getDefaultProps: function(){
@@ -286,17 +286,13 @@ class SectionAttachmentBox extends React.Component{
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
-				attachmentRows.push(<div key={id} className="btn-group">
-					<button className="btn btn-default btn-sm">
-						{fileName}&nbsp;
-						<span className="badge">
-							{this.state.inProgress[id].progress}
-							{this.state.inProgress[id].uploadMessage}%
-						</span>
-					</button>
-				</div>);
+				attachmentRows.push(<AttachmentInProgressThumbnail
+					key={id}
+					fileName={fileName}
+					progress={this.state.inProgress[id].progress}
+					uploadMessage={this.state.inProgress[id].uploadMessage}
+				/>);
 			}
-			attachmentRows.push(" ");
 		}
 
 		if( attachmentRows.length === 0){

@@ -10,6 +10,7 @@ import Loading from '../Loading.jsx';
 import Jumbotron from '../Jumbotron.jsx';
 
 import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
+import AttachmentInProgressThumbnail from '../AttachmentInProgressThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -115,23 +116,21 @@ var AttachmentUploadBox = React.createClass({
 
 		var attachmentRows = [];
 
-		for(let id in this.state.inProgress){
-			if(this.state.inProgress[id].uploading){
-				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
-				attachmentRows.push(<div key={id} className="list-group-item">
-					<div className="pull-right">
-					{this.state.inProgress[id].uploadMessage}
-					</div>
-					{fileName}<br/>
-					<ProgressBar percentage={this.state.inProgress[id].progress} striped={this.state.inProgress[id].active} active={this.state.inProgress[id].active}/>
-				</div>);
-			}
-		}
-
 		for(let a of this.state.attachments){
 			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id}/>);
 		}
 
+		for(let id in this.state.inProgress){
+			if(this.state.inProgress[id].uploading){
+				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
+				attachmentRows.push(<AttachmentInProgressThumbnail
+					key={id}
+					fileName={fileName}
+					progress={this.state.inProgress[id].progress}
+					uploadMessage={this.state.inProgress[id].uploadMessage}
+				/>);
+			}
+		}
 
 		if( attachmentRows.length === 0){
 			attachmentRows.push(

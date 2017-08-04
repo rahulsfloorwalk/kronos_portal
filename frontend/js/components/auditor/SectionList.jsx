@@ -6,9 +6,9 @@ import { truncateStyle } from '../../styles.js';
 
 import QuestionRow from './QuestionRow.jsx';
 import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
+import AttachmentInProgressThumbnail from '../AttachmentInProgressThumbnail.jsx';
 
 import Jumbotron from '../Jumbotron.jsx';
-import AttachmentProofIcon from '../AttachmentProofIcon.jsx';
 import Panel from '../Panel.jsx';
 import { Plus, Cross, Pencil, Paperclip } from '../Icons.jsx';
 
@@ -213,15 +213,12 @@ var __Section = React.createClass({
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
-				attachmentRows.push(<div key={id} className="btn-group">
-					<button className="btn btn-default btn-sm">
-						{fileName}&nbsp;
-						<span className="badge">
-							{this.state.inProgress[id].progress}
-							{this.state.inProgress[id].uploadMessage}%
-						</span>
-					</button>
-				</div>);
+				attachmentRows.push(<AttachmentInProgressThumbnail
+					key={id}
+					fileName={fileName}
+					progress={this.state.inProgress[id].progress}
+					uploadMessage={this.state.inProgress[id].uploadMessage}
+				/>);
 			}
 			attachmentRows.push(" ");
 		}

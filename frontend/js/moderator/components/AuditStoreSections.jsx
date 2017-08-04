@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { truncateStyle } from '../../styles.js';
 
-import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
+import AttachmentInProgressThumbnail from '../../components/AttachmentInProgressThumbnail.jsx';
 import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 import Panel from '../../components/Panel.jsx';
@@ -269,15 +269,12 @@ class SectionAttachmentBox extends React.Component{
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
-				attachmentRows.push(<div key={id} className="btn-group">
-					<button className="btn btn-default btn-sm">
-						{fileName}&nbsp;
-						<span className="badge">
-							{this.state.inProgress[id].progress}
-							{this.state.inProgress[id].uploadMessage}%
-						</span>
-					</button>
-				</div>);
+				attachmentRows.push(<AttachmentInProgressThumbnail
+					key={id}
+					fileName={fileName}
+					progress={this.state.inProgress[id].progress}
+					uploadMessage={this.state.inProgress[id].uploadMessage}
+				/>);
 			}
 			attachmentRows.push(" ");
 		}

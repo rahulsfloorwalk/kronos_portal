@@ -12,8 +12,8 @@ import InPlaceEditable from '../../components/InPlaceEditable.jsx';
 
 import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
 
-import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
 import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
+import AttachmentInProgressThumbnail from '../../components/AttachmentInProgressThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -146,13 +146,12 @@ export default React.createClass({
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
-				attachmentRows.push(<div key={id} className="list-group-item">
-					<div className="pull-right">
-					{this.state.inProgress[id].uploadMessage}
-					</div>
-					{fileName}<br/>
-					<ProgressBar percentage={this.state.inProgress[id].progress} striped={this.state.inProgress[id].active} active={this.state.inProgress[id].active}/>
-				</div>);
+				attachmentRows.push(<AttachmentInProgressThumbnail
+					key={id}
+					fileName={fileName}
+					progress={this.state.inProgress[id].progress}
+					uploadMessage={this.state.inProgress[id].uploadMessage}
+				/>);
 			}
 		}
 
