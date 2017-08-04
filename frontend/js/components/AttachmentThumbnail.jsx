@@ -7,26 +7,50 @@ import { truncateStyle, pointerStyle } from '../styles.js';
 import { Plus, Cross, Pencil, Paperclip } from './Icons.jsx';
 
 import AttachmentProofIcon from './AttachmentProofIcon.jsx';
+import { loadingImageUrl } from './Loading.jsx';
 
 export default class AttachmentThumbnail extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			hover: false,
+			loading: false,
+			error: false,
 		};
 	}
 	setHover = (hover) => {
-		this.setState( (prevState) => {
-			return Object.assign({}, prevState, {
-				hover
-			});
-		});
+		this.setState((prevState) => Object.assign({}, prevState, { hover }));
 	}
 	onMouseEnter = (e) => {
 		this.setHover(true);
 	}
 	onMouseLeave = (e) => {
 		this.setHover(false);
+	}
+	setLoading = (loading) => {
+		this.setState((prevState) => Object.assign({}, prevState, { loading }));
+	}
+	setError = (error) => {
+		this.setState((prevState) => Object.assign({}, prevState, { error }));
+	}
+	onImageLoad = (e) => {
+		this.setLoading(false);
+	}
+	onImageError = (e) => {
+		this.setLoading(false);
+		this.setError(true);
+	}
+	componentDidMount(){
+		if(this.props.attachment && this.props.attachment.proof_type === "PHOTO"){
+			this.setLoading(true);
+		}
+	}
+	componentWillReceiveProps(nextProps){
+		if(nextProps.attachment && nextProps.attachment.id !== this.props.attachment.id){
+			if(nextProps.attachment && nextProps.attachment.proof_type === "PHOTO"){
+				this.setLoading(true);
+			}
+		}
 	}
 	render(){
 		let selected = this.props.selected || false;
@@ -85,7 +109,15 @@ export default class AttachmentThumbnail extends Component{
 		let imageSrc;
 		switch(a.proof_type){
 			case "PHOTO":
-				imageSrc = a.extra.thumbnail_url;
+				if( this.state.loading){
+					imageSrc = loadingImageUrl;
+					divStyle.backgroundSize = "30px 30px";
+				} else if( this.state.error) {
+					imageSrc = "/static/img/error_100.png";
+					divStyle.backgroundSize = "30px 30px";
+				} else {
+					imageSrc = a.extra.thumbnail_url;
+				}
 				break;
 			case "AUDIO":
 				imageSrc = "/static/img/microphone_100.png";
@@ -108,6 +140,7 @@ export default class AttachmentThumbnail extends Component{
 					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
 					<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a>
 				</div>
+				<img className="hidden" src={imageSrc} onLoad={this.onImageLoad} onError={this.onImageError}/>
 			</div>
 		);
 	}
