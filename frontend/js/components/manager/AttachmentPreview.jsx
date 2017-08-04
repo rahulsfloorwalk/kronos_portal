@@ -12,27 +12,38 @@ class AttachmentRenderer extends React.Component {
 		super(props);
 		this.state = {
 			loading: true,
+			error: false,
 		};
 	}
 
 	setLoading = (loading) => {
 		this.setState((oldState) => Object.assign({}, oldState, { loading }));
 	}
+	setError = (error) => {
+		this.setState((oldState) => Object.assign({}, oldState, { error }));
+	}
 
 	onLoad = (e) => {
+		this.setLoading(false);
+	}
+
+	onError = (e) => {
+		this.setError(true);
 		this.setLoading(false);
 	}
 
 	componentDidMount(){
 		if(this.props.attachment.proof_type === "PHOTO"){
 			this.setLoading(true);
+			this.setError(false);
 		}
 	}
 
 	componentWillReceiveProps(nextProps){
 		if(nextProps.attachment.proof_type === "PHOTO"){
-			if(nextProps.attachment.direct_url !== this.props.attachment.direct_url){
+			if(nextProps.attachment.id !== this.props.attachment.id){
 				this.setLoading(true);
+				this.setError(false);
 			}
 		}
 	}
@@ -49,9 +60,15 @@ class AttachmentRenderer extends React.Component {
 			}
 				break;
 			case "PHOTO": {
-				let loading;
+				let loading, error;
 				if( this.state.loading){
 					loading = <Loading/>;
+				}
+				if( this.state.error){
+					error = (<div className="text-center">
+						<img src="/static/img/error_100.png"/>
+						<p>cannot load image</p>
+					</div>);
 				}
 
 				let imageStyle = {
@@ -62,7 +79,8 @@ class AttachmentRenderer extends React.Component {
 				};
 				return (<div style={{"textAlign": "center"}}>
 					{loading}
-					<img src={this.props.attachment.extra.preview_url} style={imageStyle} onLoad={this.onLoad}/>
+					{error}
+					<img src={this.props.attachment.extra.preview_url} style={imageStyle} onLoad={this.onLoad} onError={this.onError}/>
 					</div>
 				);
 			}
