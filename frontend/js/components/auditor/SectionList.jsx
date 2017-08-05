@@ -70,7 +70,7 @@ class SectionAttachmentBox extends Component{
 				uploading: true,
 				file: toUploadFile
 			});
-			var promise = uploadFileForReportSection(this.props.auditStoreId, this.props.section.id, toUploadFile);
+			var promise = uploadFileForReportSection(this.props.auditStoreId, this.props.sectionId, toUploadFile);
 			promise.progress((type, percent)=>{
 				if(type === "INIT"){
 					this.setProgressState(tempId, {
