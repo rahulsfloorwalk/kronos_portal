@@ -13,17 +13,10 @@ import { submitAnswer } from '../../auditor/actions/answer.js';
 var QuestionRow = React.createClass({
 	getInitialState: function(){
 		return {
-			editing: false,
 			answer_text: "",
+			touched: false,
+			focused: false,
 		};
-	},
-	startEdit: function(e){
-		e.preventDefault();
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED' && !this.state.editing){
-			this.setState({
-				editing: true
-			});
-		}
 	},
 	componentDidMount: function(){
 		if(this.props.answer){
@@ -39,66 +32,58 @@ var QuestionRow = React.createClass({
 			});
 		}
 	},
-	componentDidUpdate: function(prevProps,prevState){
-		if(this.answerInput && prevState.editing === false){
-			this.answerInput.focus();
-			let l = this.answerInput.value.length;
-			this.answerInput.setSelectionRange(l,l);
-		}
+	onFocus: function(){
+		this.setState({
+			touched: true,
+			focused: true,
+		});
 	},
 	submitAnswer: function(e){
 		e.preventDefault();
 		this.setState({
-			editing: false,
 			saving: true,
+			focused: false,
 		});
-		var payload = {
+		let payload = {
 			question: this.props.q.id,
 			answer_text: this.state.answer_text,
 			audit_store: this.props.auditStoreId,
 		};
-		console.log("this.props",this.props);
-		console.log("payload",payload);
 		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
 	render: function(){
-		let pointerStyle = {cursor: 'pointer'};
 		let goodClass = "";
-
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
-			var defaultAnswer = "click to enter answer";
-		}
-
+		let noAnswerText = "-";
 		let answer;
+
 		if(this.state.answer_text){
 			answer = this.state.answer_text;
 			goodClass = "success";
 		} else {
-			answer = (<span className="text-muted">{defaultAnswer}</span>);
+			answer = (<span className="text-muted">{noAnswerText}</span>);
 		}
 
-		if(this.state.editing){
-			var answerElement = (
-					<form className="input-group" onSubmit={this.submitAnswer}>
+
+		let answerElement = (<p>{answer}</p>);
+
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+			answerElement = (
+					<form className="" onSubmit={this.submitAnswer}>
 						<input
 							className="form-control"
+							placeholder="type your answer here"
 							name="answer_text"
 							value={this.state.answer_text}
+							onFocus={this.onFocus}
 							onBlur={this.submitAnswer}
 							onChange={this.inputChanged}
 							ref={(input) => this.answerInput = input}
 						/>
-						<span className="input-group-btn">
-							<button className="btn btn-primary">Save</button>
-						</span>
 					</form>
 			);
-			goodClass = "";
-		} else {
-			var answerElement = (<p style={pointerStyle} onClick={this.startEdit}>{answer}</p>);
 		}
 
 
@@ -107,14 +92,24 @@ var QuestionRow = React.createClass({
 			goodClass = "";
 		}
 
+		if(this.state.focused){
+			goodClass = "";
+		}
+
 		return (
 			<tr className={goodClass}>
 				<td>
-					<p>{this.props.q.sequence}</p>
-				</td>
-				<td>
-					<p onClick={this.startEdit} style={pointerStyle}><b>{this.props.q.question_txt}</b>{savingMessage}</p>
+					<div className="row">
+					<div className="col-xs-1 text-right">
+					{this.props.q.sequence}
+					</div>
+					<div className="col-xs-11 col-md-5">
+					<p><b>{this.props.q.question_txt}</b>{savingMessage}</p>
+					</div>
+					<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
 					{answerElement}
+					</div>
+					</div>
 				</td>
 			</tr>
 		);

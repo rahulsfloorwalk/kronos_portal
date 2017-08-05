@@ -196,11 +196,6 @@ var __Section = React.createClass({
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
-		var styles = {
-			col1: { width: "5%" },
-			col2: { width: "95%" },
-		};
-
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
 			let deletable = this.props.auditStore && this.props.auditStore.status === 'ASSIGNED';
@@ -230,10 +225,20 @@ var __Section = React.createClass({
 		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
 				<table className="table table-striped">
+			{/*<colgroup>
+						<col style={{width: "5%"}}/>
+						<col style={{width: "50%"}}/>
+						<col style={{width: "45%"}}/>
+					</colgroup>*/}
 					<thead>
 						<tr>
-							<th style={styles.col1}>#</th>
-							<th style={styles.col2}>Question</th>
+							<th>
+							<div className="row">
+								<div className="col-xs-1 text-right">#</div>
+								<div className="col-xs-11 col-md-5">Question</div>
+								<div className="col-xs-12 col-md-6 hidden-xs hidden-sm">Answer</div>
+							</div>
+							</th>
 						</tr>
 					</thead>
 					<tbody>
