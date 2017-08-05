@@ -268,10 +268,8 @@ var __Section = React.createClass({
 						<tr className={goodClass || badClass}>
 							<td>
 								<div className="row">
-									<div className="col-xs-offset-1 col-md-5">
-										<p><big><b>Section Summary:</b></big> {savingMessage}</p>
-									</div>
-									<div className="col-xs-offset-1 col-sm-offset-1 col-md-offset-0 col-md-6">
+									<div className="col-xs-offset-1 col-md-11">
+										<p><b>Section Summary:</b> {savingMessage}</p>
 										{commentElement}
 									</div>
 								</div>
