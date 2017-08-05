@@ -162,6 +162,7 @@ var __Section = React.createClass({
 	getInitialState: function(){
 		return {
 			auditor_comment: "",
+			focused: false,
 		};
 	},
 	componentDidMount: function(){
@@ -178,37 +179,31 @@ var __Section = React.createClass({
 			});
 		}
 	},
-	startEdit: function(e){
-		e.preventDefault();
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED' && !this.state.commenting){
-			this.setState({
-				commenting: true
-			});
-		}
-	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
-	componentDidUpdate: function(prevProps, prevState){
-		if(this.commentInput && prevState.commenting === false){
-			this.commentInput.focus();
-			let l = this.commentInput.value.length;
-			this.commentInput.setSelectionRange(l,l);
-		}
+	onFocus: function(e){
+		this.setState({
+			focused: true,
+		});
 	},
 	submitComment: function(e){
 		e.preventDefault();
+		if(this.props.reportSection.auditor_comment === this.state.auditor_comment){
+			this.setState({
+				focused: false,
+			});
+			return;
+		}
 		this.setState({
-			commenting: false,
 			saving: true,
+			focused: false,
 		});
 		var payload = {
 			sectionId: this.props.section.id,
 			auditor_comment: this.state.auditor_comment,
 			audit_store: this.props.auditStoreId,
 		};
-		//console.log("this.props",this.props);
-		//console.log("payload",payload);
 		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
 	},
 	render: function(){
@@ -222,35 +217,38 @@ var __Section = React.createClass({
 			questionRows.push(<tr key="empty"><td className="text-center text-muted">no questions here</td></tr>);
 		}
 
+		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">-</span>);
+
+		let commentElement = (<p>{auditor_comment}</p>);
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
-			var defaultComment = "click to add comment";
-		}
-		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">{defaultComment}</span>);
-		if(this.state.commenting){
-			var commentElement = (
-					<form className="input-group" onSubmit={this.submitComment}>
-						<input
-							className="form-control"
-							name="auditor_comment"
-							value={this.state.auditor_comment}
-							onBlur={this.submitComment}
-							onChange={this.inputChanged}
-							ref={(input) => this.commentInput = input}
-						/>
-						<span className="input-group-btn">
-							<button className="btn btn-primary">Save</button>
-						</span>
-					</form>
+			commentElement = (
+				<form onSubmit={this.submitComment}>
+					<input
+						className="form-control"
+						name="auditor_comment"
+						value={this.state.auditor_comment}
+						onFocus={this.onFocus}
+						onBlur={this.submitComment}
+						onChange={this.inputChanged}
+						ref={(input) => this.commentInput = input}
+						placeholder="type out your relevant experience here in a few sentences"
+					/>
+				</form>
 			);
-		} else {
-			var commentElement = (<p onClick={this.startEdit}>{auditor_comment}</p>);
 		}
 
 		if(this.state.saving){
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
+
+		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment ? "" : "success";
 		return (
-			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					<h4 className="panel-title">
+						{this.props.section.sequence} - <b>{this.props.section.name}</b>
+					</h4>
+				</div>
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -265,14 +263,22 @@ var __Section = React.createClass({
 					</thead>
 					<tbody>
 						{questionRows}
+						<tr className={goodClass}>
+							<td>
+								<div className="row">
+									<div className="col-xs-offset-1 col-md-5">
+										<p><big><b>Section Summary:</b></big> {savingMessage}</p>
+									</div>
+									<div className="col-xs-offset-1 col-sm-offset-1 col-md-offset-0 col-md-6">
+										{commentElement}
+									</div>
+								</div>
+							</td>
+						</tr>
 					</tbody>
 				</table>
 				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} auditStore={this.props.auditStore} sectionId={this.props.section.id}/>
-				<div className="panel-footer">
-					<p><b>Section Summary:</b>{savingMessage}</p>
-					{commentElement}
-				</div>
-			</Panel>
+			</div>
 		);
 	},
 });
