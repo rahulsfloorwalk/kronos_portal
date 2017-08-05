@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
@@ -19,75 +19,33 @@ import { fetchSections } from '../../auditor/actions/section.js';
 import { fetchAnswers } from '../../auditor/actions/answer.js';
 import { submitAuditorComment, fetchReportSections } from '../../auditor/actions/report_section.js';
 
-var __Section = React.createClass({
-	getInitialState: function(){
-		return {
-			commenting: false,
-			auditor_comment: "",
+class SectionAttachmentBox extends Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			attachments: [],
 			inProgress: {},
 		};
-	},
-	reloadAttachments: function(){
-		findAttachmentsByAuditStoreAndSection(this.props.auditStoreId, this.props.section.id).then((attachments) => {
+	}
+	reloadAttachments = (auditStoreId, sectionId) => {
+		findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId).then((attachments) => {
 			this.setState({
 				attachments
 			});
 		});
-	},
-	componentDidMount: function(){
-		if(this.props.reportSection){
-			this.setState({
-				auditor_comment: this.props.reportSection.auditor_comment
-			});
+	}
+	componentDidMount(){
+		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+	}
+	componentWillReceiveProps(nextProps){
+		if( nextProps.auditStoreId !== this.props.auditStoreId || nextProps.sectionId !== this.props.sectionId){
+			this.reloadAttachments(nextProps.auditStoreId, nextProps.sectionId);
 		}
-		this.reloadAttachments();
-	},
-	componentWillReceiveProps: function(nextProps){
-		if(nextProps.reportSection){
-			this.setState({
-				auditor_comment: nextProps.reportSection.auditor_comment
-			});
-		}
-		this.reloadAttachments();
-	},
-	startEdit: function(e){
-		e.preventDefault();
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED' && !this.state.commenting){
-			this.setState({
-				commenting: true
-			});
-		}
-	},
-	inputChanged: function(e){
-		affectInputEventToComponent(e, this);
-	},
-	componentDidUpdate: function(prevProps, prevState){
-		if(this.commentInput && prevState.commenting === false){
-			this.commentInput.focus();
-			let l = this.commentInput.value.length;
-			this.commentInput.setSelectionRange(l,l);
-		}
-	},
-	submitComment: function(e){
-		e.preventDefault();
-		this.setState({
-			commenting: false,
-			saving: true,
-		});
-		var payload = {
-			sectionId: this.props.section.id,
-			auditor_comment: this.state.auditor_comment,
-			audit_store: this.props.auditStoreId,
-		};
-		//console.log("this.props",this.props);
-		//console.log("payload",payload);
-		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
-	},
-	uploadButtonClicked: function(e){
+	}
+	uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	},
-	setProgressState: function(tempId, progressState){
+	}
+	setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
@@ -95,13 +53,13 @@ var __Section = React.createClass({
 				})
 			});
 		});
-	},
-	attachmentDeleteClicked: function(attachment){
+	}
+	attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(()=>{
-			this.reloadAttachments();
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
-	},
-	uploadFile: function(e){
+	}
+	uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -144,7 +102,7 @@ var __Section = React.createClass({
 				this.setProgressState(tempId, {
 					uploadMessage :"upload successful",
 				});
-				this.reloadAttachments();
+				this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 			}, (errorMessage) => {
 				this.setProgressState(tempId, {
 					uploadMessage: errorMessage,
@@ -152,48 +110,12 @@ var __Section = React.createClass({
 				});
 			});
 		}
-	},
-	render: function(){
+	}
+	render(){
 		let uploadButton;
-		let questionRows = [];
-		if( this.props.section.questions){
-			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow auditStoreId={this.props.auditStoreId} q={q} key={q.id}/>);
-			}
-		}
-		if(questionRows.length === 0){
-			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
-		}
-
-		let pointerStyle = {cursor: 'pointer'};
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
-			var defaultComment = "click to add comment";
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm" style={{
 			}}><Paperclip/> Upload</button>);
-		}
-		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">{defaultComment}</span>);
-		if(this.state.commenting){
-			var commentElement = (
-					<form className="input-group" onSubmit={this.submitComment}>
-						<input
-							className="form-control"
-							name="auditor_comment"
-							value={this.state.auditor_comment}
-							onBlur={this.submitComment}
-							onChange={this.inputChanged}
-							ref={(input) => this.commentInput = input}
-						/>
-						<span className="input-group-btn">
-							<button className="btn btn-primary">Save</button>
-						</span>
-					</form>
-			);
-		} else {
-			var commentElement = (<p style={pointerStyle} onClick={this.startEdit}>{auditor_comment}</p>);
-		}
-
-		if(this.state.saving){
-			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
 		let attachmentRows = [];
@@ -223,13 +145,113 @@ var __Section = React.createClass({
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
 		return (
+			<div className="panel-body">
+				<h4>Attachments {uploadButton}</h4>
+				{attachmentRows}
+				<input type="file" multiple
+					onChange={this.uploadFile}
+					disabled={this.state.uploading}
+					ref={(input)=>this.uploadInput = input}
+					style={{"display":"none"}}/>
+			</div>
+		);
+	}
+}
+
+var __Section = React.createClass({
+	getInitialState: function(){
+		return {
+			auditor_comment: "",
+		};
+	},
+	componentDidMount: function(){
+		if(this.props.reportSection){
+			this.setState({
+				auditor_comment: this.props.reportSection.auditor_comment
+			});
+		}
+	},
+	componentWillReceiveProps: function(nextProps){
+		if(nextProps.reportSection){
+			this.setState({
+				auditor_comment: nextProps.reportSection.auditor_comment
+			});
+		}
+	},
+	startEdit: function(e){
+		e.preventDefault();
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED' && !this.state.commenting){
+			this.setState({
+				commenting: true
+			});
+		}
+	},
+	inputChanged: function(e){
+		affectInputEventToComponent(e, this);
+	},
+	componentDidUpdate: function(prevProps, prevState){
+		if(this.commentInput && prevState.commenting === false){
+			this.commentInput.focus();
+			let l = this.commentInput.value.length;
+			this.commentInput.setSelectionRange(l,l);
+		}
+	},
+	submitComment: function(e){
+		e.preventDefault();
+		this.setState({
+			commenting: false,
+			saving: true,
+		});
+		var payload = {
+			sectionId: this.props.section.id,
+			auditor_comment: this.state.auditor_comment,
+			audit_store: this.props.auditStoreId,
+		};
+		//console.log("this.props",this.props);
+		//console.log("payload",payload);
+		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
+	},
+	render: function(){
+		let questionRows = [];
+		if( this.props.section.questions){
+			for(let q of this.props.section.questions){
+				questionRows.push(<QuestionRow auditStoreId={this.props.auditStoreId} q={q} key={q.id}/>);
+			}
+		}
+		if(questionRows.length === 0){
+			questionRows.push(<tr key="empty"><td className="text-center text-muted">no questions here</td></tr>);
+		}
+
+		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+			var defaultComment = "click to add comment";
+		}
+		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">{defaultComment}</span>);
+		if(this.state.commenting){
+			var commentElement = (
+					<form className="input-group" onSubmit={this.submitComment}>
+						<input
+							className="form-control"
+							name="auditor_comment"
+							value={this.state.auditor_comment}
+							onBlur={this.submitComment}
+							onChange={this.inputChanged}
+							ref={(input) => this.commentInput = input}
+						/>
+						<span className="input-group-btn">
+							<button className="btn btn-primary">Save</button>
+						</span>
+					</form>
+			);
+		} else {
+			var commentElement = (<p onClick={this.startEdit}>{auditor_comment}</p>);
+		}
+
+		if(this.state.saving){
+			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
+		}
+		return (
 			<Panel title={`${this.props.section.sequence} - ${this.props.section.name}`} noBody={true}>
 				<table className="table table-striped">
-			{/*<colgroup>
-						<col style={{width: "5%"}}/>
-						<col style={{width: "50%"}}/>
-						<col style={{width: "45%"}}/>
-					</colgroup>*/}
 					<thead>
 						<tr>
 							<th>
@@ -245,15 +267,7 @@ var __Section = React.createClass({
 						{questionRows}
 					</tbody>
 				</table>
-				<div className="panel-body">
-				<h4>Attachments {uploadButton}</h4>
-				{attachmentRows}
-					<input type="file" multiple
-						onChange={this.uploadFile}
-						disabled={this.state.uploading}
-						ref={(input)=>this.uploadInput = input}
-						style={{"display":"none"}}/>
-				</div>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} auditStore={this.props.auditStore} sectionId={this.props.section.id}/>
 				<div className="panel-footer">
 					<p><b>Section Summary:</b>{savingMessage}</p>
 					{commentElement}
