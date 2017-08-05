@@ -39,11 +39,11 @@ export function submitAnswer(answer){
 			data: JSON.stringify(payload),
 			contentType: "application/json"
 		});
-		req.done(function(payload){
+		req.done(function(newAnswer){
 			dispatch({
 				type: types.ANSWER_POST,
 				status: 'success',
-				answer
+				answer: newAnswer,
 			});
 		});
 		//TODO: Handle error
