@@ -210,7 +210,7 @@ var __Section = React.createClass({
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow auditStoreId={this.props.auditStoreId} q={q} key={q.id}/>);
+				questionRows.push(<QuestionRow auditStoreId={this.props.auditStoreId} q={q} key={q.id} showErrors={this.props.showErrors}/>);
 			}
 		}
 		if(questionRows.length === 0){
@@ -242,6 +242,8 @@ var __Section = React.createClass({
 		}
 
 		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment ? "" : "success";
+		let badClass = this.props.showErrors && !this.state.auditor_comment ? "danger" : "";
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
@@ -263,7 +265,7 @@ var __Section = React.createClass({
 					</thead>
 					<tbody>
 						{questionRows}
-						<tr className={goodClass}>
+						<tr className={goodClass || badClass}>
 							<td>
 								<div className="row">
 									<div className="col-xs-offset-1 col-md-5">
@@ -304,9 +306,9 @@ var SectionList = React.createClass({
 	},
 	componentDidMount: function() {
 		console.log("SectionList#componentDidMount");
-		this.props.dispatch(fetchSections(this.props.params.auditStoreId));
-		this.props.dispatch(fetchAnswers(this.props.params.auditStoreId));
-		this.props.dispatch(fetchReportSections(this.props.params.auditStoreId));
+		this.props.dispatch(fetchSections(this.props.auditStoreId));
+		this.props.dispatch(fetchAnswers(this.props.auditStoreId));
+		this.props.dispatch(fetchReportSections(this.props.auditStoreId));
 	},
 	/*componentWillReceiveProps: function(nextProps){
 		console.log("SectionList#componentWillReceiveProps");
@@ -330,7 +332,7 @@ var SectionList = React.createClass({
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId}/>);
+			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} showErrors={this.props.showErrors}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please contact support"/>);

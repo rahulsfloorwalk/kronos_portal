@@ -61,13 +61,11 @@ var QuestionRow = React.createClass({
 		affectInputEventToComponent(e, this);
 	},
 	render: function(){
-		let goodClass = "";
 		let noAnswerText = "-";
 		let answer;
 
 		if(this.state.answer_text){
 			answer = this.state.answer_text;
-			goodClass = "success";
 		} else {
 			answer = (<span className="text-muted">{noAnswerText}</span>);
 		}
@@ -95,15 +93,12 @@ var QuestionRow = React.createClass({
 
 		if(this.state.saving){
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
-			goodClass = "";
 		}
 
-		if(this.state.focused){
-			goodClass = "";
-		}
-
+		let goodClass = this.state.focused || this.state.saving || !this.state.answer_text ? "" : "success";
+		let badClass = this.props.showErrors && !this.state.answer_text ? "danger" : "";
 		return (
-			<tr className={goodClass}>
+			<tr className={goodClass || badClass}>
 				<td>
 					<div className="row">
 					<div className="col-xs-1 text-right">

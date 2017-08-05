@@ -52,9 +52,7 @@ const Routes = ({store}) => (
 			</Route>
 		</Route>
 		<Route path="audit_store" component={AuditStoreList}/>
-		<Route path="audit_store/:auditStoreId" component={AuditStoreDetails}>
-			<Route path="section" component={SectionList}/>
-		</Route>
+		<Route path="audit_store/:auditStoreId/section" component={AuditStoreDetails}/>
 		<Route path="payment" component={PaymentList}/>
 	</Route>
     </Router>

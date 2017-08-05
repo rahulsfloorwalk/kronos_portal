@@ -16,6 +16,8 @@ import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import AttachmentUploadBox from './AttachmentUploadBox.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
 
+import SectionList from './SectionList.jsx';
+
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 var AuditStoreDetails = React.createClass({
@@ -23,6 +25,7 @@ var AuditStoreDetails = React.createClass({
 		return {
 			submitMessage : "",
 			submitStatus: "",
+			showErrors: false,
 		};
 	},
 	componentDidMount: function(){
@@ -40,6 +43,7 @@ var AuditStoreDetails = React.createClass({
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
+				showErrors: true,
 			});
 		});
 	},
@@ -87,7 +91,7 @@ var AuditStoreDetails = React.createClass({
 					<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId}/>
 				</div>
 				</div>
-				{this.props.children}
+				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors}/>
 			</div>
 		);
 	},
