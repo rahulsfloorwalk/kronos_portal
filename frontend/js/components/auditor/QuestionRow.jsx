@@ -104,7 +104,7 @@ var QuestionRow = React.createClass({
 					<div className="col-xs-1 text-right">
 					{this.props.q.sequence}
 					</div>
-					<div className="col-xs-11 col-md-5">
+					<div className="col-xs-10 col-md-5">
 					<p><b>{this.props.q.question_txt}</b>{savingMessage}</p>
 					</div>
 					<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
