@@ -189,7 +189,7 @@ var __Section = React.createClass({
 	},
 	submitComment: function(e){
 		e.preventDefault();
-		if(this.props.reportSection.auditor_comment === this.state.auditor_comment){
+		if(this.props.reportSection && this.props.reportSection.auditor_comment === this.state.auditor_comment){
 			this.setState({
 				focused: false,
 			});

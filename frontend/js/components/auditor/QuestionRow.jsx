@@ -40,7 +40,7 @@ var QuestionRow = React.createClass({
 	},
 	submitAnswer: function(e){
 		e.preventDefault();
-		if(this.props.answer.answer_text === this.state.answer_text){
+		if( this.props.answer && this.props.answer.answer_text === this.state.answer_text){
 			this.setState({
 				focused: false,
 			});
