@@ -157,12 +157,12 @@ def upload_for_id_proof(user_id, file_name, file_size, mime_type):
 
         basename, file_extension = os.path.splitext(file_name)
         if mime_type is None or file_extension == '':
-            raise AppLogicError("could not detect file type, please ensure you upload a known file type")
+            raise AppLogicError("invalid file type (only image or PDF supported)")
 
-        if mime_type.startswith("image/"):
+        if mime_type.startswith("image/") or mime_type == "application/pdf":
             proof_type = Attachment.ID_PROOF
         else:
-            raise AppLogicError("selected file is not an image file, please upload image file of known type")
+            raise AppLogicError("invalid file type (only image or PDF supported)")
 
         post_data = get_signed_post(file_extension)
 

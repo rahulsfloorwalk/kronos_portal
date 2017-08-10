@@ -116,7 +116,8 @@ var IdProofAttachmentUploadBox = React.createClass({
 				this.reloadState();
 			}, (errorMessage) => {
 				this.setProgressState(tempId, {
-					uploadMessage :"upload failed: " + errorMessage,
+					uploadMessage: errorMessage,
+					error: true,
 				});
 			});
 		}
@@ -147,6 +148,15 @@ var IdProofAttachmentUploadBox = React.createClass({
 					<ProgressBar percentage={this.state.inProgress[id].progress} striped={this.state.inProgress[id].active} active={this.state.inProgress[id].active}/>
 				</div>);
 			}
+			if(this.state.inProgress[id].error){
+				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
+				attachmentRows.push(<div key={id} className="list-group-item list-group-item-danger">
+					<div className="pull-right">
+					<b>{this.state.inProgress[id].uploadMessage}</b>
+					</div>
+					{fileName}<br/>
+				</div>);
+			}
 		}
 
 
@@ -155,7 +165,8 @@ var IdProofAttachmentUploadBox = React.createClass({
 				<div key="empty" className="list-group-item text-center text-muted">
 					<h4>
 						No ID Proofs Uploaded.<br/>
-						Audits will not be assigned unless you upload at least one ID Proof.
+						Audits will not be assigned unless you upload at least one ID Proof.<br/>
+						Only images or PDFs are supported.
 					</h4>
 				</div>
 			);
