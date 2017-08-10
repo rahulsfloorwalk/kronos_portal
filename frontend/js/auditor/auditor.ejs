@@ -41,8 +41,8 @@
 	<body>
 		<div id="root">
 			<div id="loadmsg">
-			<h1 style="text-align:center;">a few seconds please</h1>
-			<h1 style="text-align:center;">:)</h1>
+			<h1 id="first" style="text-align:center;">a few seconds please</h1>
+			<h1 id="second"style="text-align:center;">:)</h1>
 			<div style="text-align:center;">
 			<img src="/static/img/ripple.svg" title="Please Wait" alt="loading..."/>
 			</div>
@@ -50,10 +50,27 @@
 			<div id="unsup" style="text-align:center;"></div>
 		</div>
 		<script>
-		if(/Opera/.test(navigator.userAgent) || /UCBrowser/.test(navigator.userAgent)){
-			document.querySelector("#loadmsg").style.display = "none";
-			document.querySelector("#unsup").innerHTML = "<h2>Your browser is not supported.</h2><h2>Please use a supported browser such as Chrome or Firefox.</h2>";
-		}
+		(function(){
+			if(/Opera/.test(navigator.userAgent) || /UCBrowser/.test(navigator.userAgent)){
+				document.querySelector("#loadmsg").style.display = "none";
+				document.querySelector("#unsup").innerHTML = "<h2>Your browser is not supported.</h2><h2>Please use a supported browser such as Chrome or Firefox.</h2>";
+			}
+
+			var sec5 = setTimeout(function(){
+				document.querySelector("#first").innerHTML = "seems to be taking some time..";
+				document.querySelector("#second").innerHTML = ":/";
+			}, 5000);
+
+			var sec15 = setTimeout(function(){
+				document.querySelector("#first").innerHTML = "still loading...";
+				document.querySelector("#second").innerHTML = ":(";
+			}, 15000);
+
+			window.onload = function(){
+				clearTimeout(sec5);
+				clearTimeout(sec15);
+			};
+		})();
 		</script>
 	</body>
 </html>
