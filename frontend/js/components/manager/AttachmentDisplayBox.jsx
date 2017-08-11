@@ -176,8 +176,8 @@ var AttachmentDisplayBox = React.createClass({
 		}
 
 		if( attachmentRows.length === 0){
-			return <Jumbotron heading="no attachments here" para="none uploaded"/>;
-		} else {
+			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
+		}
 
 		return (
 			<div>
@@ -194,7 +194,6 @@ var AttachmentDisplayBox = React.createClass({
 				</div>
 			</div>
 		);
-		}
 	},
 });
 
