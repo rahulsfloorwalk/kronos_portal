@@ -23,11 +23,8 @@ class QuestionViewBySection(APIView):
             'GET' : [GROUP_NAME_MANAGER],
         }
     def get(self, request, section_id, format=None):
-        try:
-            questions = Question.objects.filter(section_id=section_id).all()
-            return Response(QuestionSerializer(questions, many=True).data)
-        except Question.DoesNotExist:
-            raise Http404
+        questions = question_service.find_questions_by_section_id(section_id)
+        return Response(QuestionSerializer(questions, many=True).data)
 
 class QuestionIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -37,11 +34,8 @@ class QuestionIdView(APIView):
             'DELETE': [GROUP_NAME_MANAGER]
         }
     def get(self, request, question_id, format=None):
-        try:
-            question = Question.objects.get(pk=question_id)
-            return Response(QuestionSerializer(question).data)
-        except Question.DoesNotExist:
-            return Http404
+        question = question_service.find_question_by_id(question_id)
+        return Response(QuestionSerializer(question).data)
 
     def post(self, request, question_id):
         q_ds = QuestionDeSerializer(data=request.data, context={'id':question_id})
@@ -51,12 +45,8 @@ class QuestionIdView(APIView):
         return Response(QuestionSerializer(saved_question).data)
 
     def delete(self, request, question_id):
-        try:
-            question = Question.objects.get(question_id)
-            question.delete()
-            return Response(QuestionSerializer(question).data)
-        except Question.DoesNotExist:
-            raise Http404
+        question_service.delete_question_by_id(question_id)
+        return Response()
 
 class QuestionView(APIView):
     permission_classes = [HasGroupPermission]

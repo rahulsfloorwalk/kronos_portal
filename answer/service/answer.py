@@ -5,7 +5,7 @@ from audit_store.models import AuditStore
 from questionnaire.models import Question
 from auditor.models import ProfileInfo
 
-import questionnaire.service.question as question_service
+from questionnaire.service import question as question_service
 
 from audit_store import service as audit_store_service
 from audit_store import service_client as audit_store_client_service
@@ -14,6 +14,8 @@ def save(answer):
     Answer.save(answer)
     return answer
 
+def find_answers_by_question_id(question_id):
+    return Answer.objects.filter(question_id=question_id)
 
 def find_by_audit_store_and_question(audit_store_id, question_id):
     try:
@@ -42,6 +44,15 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
         raise AppLogicError("Cannot submit answer to current audit store")
 
     answer = find_by_audit_store_and_question(audit_store_id, question_id)
+    q = question_service.find_question_by_id(question_id)
+
+    if answer_text and q.question_type == Question.MUTEX:
+        result = [o for o in q.question_data["options"] if o["value"] == answer_text]
+        if len(result) == 1:
+            answer.marks_obtained = result[0]["marks"]
+        else:
+            raise AppLogicError("invalid answer")
+
     answer.answer_text = answer_text
     answer.answer_text_original = answer_text
     return save(answer)
@@ -88,6 +99,15 @@ def set_answer_text(audit_store_id, question_id, answer_text):
         raise AppLogicError("answer cannot be empty")
 
     answer = find_by_audit_store_and_question(audit_store_id, question_id)
+    q = question_service.find_question_by_id(question_id)
+
+    if q.question_type == Question.MUTEX:
+        result = [o for o in q.question_data["options"] if o["value"] == answer_text]
+        if len(result) == 1:
+            answer.marks_obtained = result[0]["marks"]
+        else:
+            raise AppLogicError("invalid answer")
+
     answer.answer_text = answer_text
     answer.save()
     return answer

@@ -353,6 +353,8 @@ class QuestionSerializer(ModelSerializer):
             'id',
             'sequence',
             'question_txt',
+            'question_type',
+            'question_data',
             'section',
         )
         read_only_fields = fields

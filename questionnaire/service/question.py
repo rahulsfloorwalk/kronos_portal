@@ -2,9 +2,31 @@ from django.db.transaction import atomic
 
 from ..models import Question, Section
 
+import answer.service.answer as answer_service
+
 def save(question):
+    question.full_clean(exclude=["question_data"])
     Question.save(question)
     return question
+
+def find_question_by_id(id):
+    try:
+        return Question.objects.get(pk=id)
+    except Question.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+def delete_question_by_id(id):
+    try:
+        q = Question.objects.get(pk=question_id)
+        if answer_service.find_answers_by_question_id(question_id).count() == 0:
+            q.delete()
+        else:
+            raise AppLogicError("cannot delete question with existing answers")
+    except Question.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+def find_questions_by_section_id(section_id):
+    return Question.objects.filter(section_id=section_id).all()
 
 def find_by_audit_cycle(audit_cycle_id):
     questions = Question.objects.filter(section__audit_cycle_id=audit_cycle_id)

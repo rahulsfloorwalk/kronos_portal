@@ -276,3 +276,18 @@ export function getOccupation(value){
 			return `unknown occupation ${value} - ${typeof value}`;
 	}
 };
+
+
+export function getQuestionType(value){
+	switch(value){
+		case "PLAIN":
+			return "Plain";
+		case "MUTEX":
+			return "Mutually Exclusive";
+		case "":
+		case null:
+		case undefined:
+		default:
+			return "";
+	}
+};

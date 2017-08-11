@@ -55,7 +55,7 @@ let QuestionRow = React.createClass({
 	},
 	saveAnswer: function(e){
 		this.answerChanged(e);
-		setAnswerText( this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text).then(()=> this.setState({answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
+		setAnswerText( this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text).then((answer)=> this.setState({answer, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
 	},
 	marksChanged: function(e){
 		this.setState({
@@ -96,14 +96,28 @@ let QuestionRow = React.createClass({
 
 			let hasAnswerError = this.state.answerError ? "has-error" : "";
 			let hasAnswerSuccess = this.state.answerSuccess ? "has-success" : "";
-			answerElement = (
-				<div className={hasAnswerError + hasAnswerSuccess}>
-					<input className="form-control"
-						onChange={this.answerChanged}
-						onBlur={this.saveAnswer}
-						value={this.state.answer.answer_text}/>
-				</div>
-			);
+			if(this.props.q.question_type === "PLAIN"){
+				answerElement = (
+					<div className={hasAnswerError + hasAnswerSuccess}>
+						<input className="form-control"
+							onChange={this.answerChanged}
+							onBlur={this.saveAnswer}
+							value={this.state.answer.answer_text}/>
+					</div>
+				);
+			} else if(this.props.q.question_type === "MUTEX") {
+				answerElement = (
+					<div className={hasAnswerError + hasAnswerSuccess}>
+						<select className="form-control"
+							onChange={this.answerChanged}
+							onBlur={this.saveAnswer}
+							value={this.state.answer.answer_text}>
+							<option value=""></option>
+							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
+						</select>
+					</div>
+				);
+			}
 
 			notApplicableElement = (
 				<button className="btn btn-default" onClick={this.notApplicableClicked}>

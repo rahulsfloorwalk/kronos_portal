@@ -74,6 +74,7 @@ var QuestionRow = React.createClass({
 		let answerElement = (<p>{answer}</p>);
 
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+			if(this.props.q.question_type === "PLAIN"){
 			answerElement = (
 					<form className="" onSubmit={this.submitAnswer}>
 						<input
@@ -88,6 +89,19 @@ var QuestionRow = React.createClass({
 						/>
 					</form>
 			);
+			} else if(this.props.q.question_type === "MUTEX") {
+				answerElement = (
+						<select className="form-control"
+							name="answer_text"
+							onChange={this.inputChanged}
+							onFocus={this.onFocus}
+							onBlur={this.submitAnswer}
+							value={this.state.answer_text}>
+							<option value="">select answer</option>
+							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
+						</select>
+				);
+			}
 		}
 
 

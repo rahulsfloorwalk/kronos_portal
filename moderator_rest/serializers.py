@@ -242,6 +242,8 @@ class QuestionSerializer(ModelSerializer):
             'question_txt',
             'max_marks',
             'section',
+            'question_type',
+            'question_data',
         )
         read_only_fields = fields
 

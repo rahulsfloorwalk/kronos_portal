@@ -9,6 +9,7 @@ import Panel from '../Panel.jsx';
 import { Duplicate, Tasks, Plus, Cross, Pencil, ChevronRight, ChevronDown } from '../Icons.jsx';
 
 import { orderKeys } from '../../react_utils.js'
+import { getQuestionType } from '../../utils.js';
 import { fetchSections } from '../../manager/actions/section.js'
 
 var QuestionRow = React.createClass({
@@ -16,7 +17,15 @@ var QuestionRow = React.createClass({
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td>{this.props.q.question_txt}</td>
+				<td>
+					{this.props.q.question_txt}<br/>
+					<span className="text-muted">{
+						this.props.q.question_type === "MUTEX" 
+						? this.props.q.question_data.options.map(o => o.value).join(' / ')
+						: null
+					}</span>
+				</td>
+				<td>{getQuestionType(this.props.q.question_type)}</td>
 				<td>{this.props.q.max_marks}</td>
 				<td>
 					<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/edit`} className="btn btn-default"><Pencil/></Link>
@@ -45,23 +54,17 @@ var Section = React.createClass({
 			}
 		}
 		if(questionRows.length === 0){
-			questionRows.push(<tr key="empty"><td colSpan="4" className="text-center text-muted">no questions here</td></tr>);
+			questionRows.push(<tr key="empty"><td colSpan="5" className="text-center text-muted">no questions here</td></tr>);
 		}
 		questionRows.push(
 			<tr key="new">
-			<td colSpan={4} className="text-center">
+			<td colSpan={5} className="text-center">
 				<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
 					<Plus/> Add Question
 				</Link>
 			</td>
 			</tr>
 		);
-		var styles = {
-			col1: { width: "5%" },
-			col2: { width: "80%" },
-			col3: { width: "5%" },
-			col4: { width: "10%" },
-		};
 
 		let expandIcon = (<ChevronRight/>);
 		let panelBody = null;//(<div className="panel-footer text-center text-muted"><button onClick={this.toggleExpanded} className="btn btn-link">expand</button></div>);
@@ -70,12 +73,20 @@ var Section = React.createClass({
 			expandIcon = (<ChevronDown/>);
 			panelBody = (
 				<table className="table table-striped">
+					<colgroup>
+						<col style={{width:"5%"}}/>
+						<col style={{width:"70%"}}/>
+						<col style={{width:"10%"}}/>
+						<col style={{width:"5%"}}/>
+						<col style={{width:"10%"}}/>
+					</colgroup>
 					<thead>
 						<tr>
-							<th style={styles.col1}>#</th>
-							<th style={styles.col2}>Question</th>
-							<th style={styles.col3}>Max. Marks</th>
-							<th style={styles.col4}>
+							<th>#</th>
+							<th>Question</th>
+							<th>Question Type</th>
+							<th>Max. Marks</th>
+							<th>
 								<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
 									<Plus/>
 								</Link>

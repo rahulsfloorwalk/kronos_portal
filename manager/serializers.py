@@ -398,6 +398,8 @@ class QuestionSerializer(ModelSerializer):
             'question_txt',
             'max_marks',
             'section',
+            'question_type',
+            'question_data',
         )
         read_only_fields = fields
 
@@ -411,6 +413,8 @@ class QuestionDeSerializer(ModelSerializer):
             'question_txt',
             'max_marks',
             'section',
+            'question_type',
+            'question_data',
         )
         read_only_fields = ('id',)
 
@@ -423,6 +427,8 @@ class QuestionDeSerializer(ModelSerializer):
         question.question_txt = self.validated_data.get('question_txt', question.question_txt)
         question.max_marks = self.validated_data.get('max_marks', question.max_marks)
         question.section = self.validated_data.get('section', question.section_id)
+        question.question_type = self.validated_data.get('question_type', question.question_type)
+        question.question_data = self.validated_data.get('question_data', question.question_data)
         return question
 
 
