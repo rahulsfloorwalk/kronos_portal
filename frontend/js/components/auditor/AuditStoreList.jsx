@@ -50,7 +50,10 @@ var AuditStoreRow = React.createClass({
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						</div>
 						<div style={inlineBlockStyle}>
-						<ExpandableDetails details={<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description + "\n\n" + this.props.auditStore.audit.audit_cycle.post_approval_description}/>}/>
+						<ExpandableDetails details={<div>
+							<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+							<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+							</div>}/>
 						</div>
 						</div>
 						<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>

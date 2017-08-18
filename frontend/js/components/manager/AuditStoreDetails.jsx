@@ -106,7 +106,10 @@ var AuditStoreDetails = React.createClass({
 				/>
 			</div>)
 		}
-		let detailsElement = <div className="panel-body"><MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || "" + '\n\n' + this.props.auditStore.audit.post_approval_description || ""}/></div>;
+		let detailsElement = (<div className="panel-body">
+			<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+			<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+			</div>);
 		let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
 		let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
 		let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);

@@ -173,7 +173,8 @@ export default React.createClass({
 				<div className="col-md-6">
 					<div className="panel panel-default">
 						<div className="panel-body">
-							<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""  + '\n\n' + this.state.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+							<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""}/>
+							<MarkdownViewer markdown={this.state.auditStore.audit.audit_cycle.post_approval_description || ""}/>
 						</div>
 					</div>
 				</div>
