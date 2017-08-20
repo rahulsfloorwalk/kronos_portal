@@ -17,6 +17,7 @@ urlpatterns = ([
     url(r'profile_info$', views.ProfileInfoView.as_view(), name="profile_info_view"),
     url(r'additional_info$', views.AdditionalInfoView.as_view(), name="additional_info_view"),
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
+    url(r'facebook_info$', views.FacebookInfoView.as_view(), name="facebook_info_view"),
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
 
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),

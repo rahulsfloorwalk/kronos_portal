@@ -62,6 +62,7 @@ PROJECT_APPS = [
     'monitoring',
     'moderator_rest',
     'client_rest',
+    'social',
 ]
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS

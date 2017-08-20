@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { fetchUser } from '../../auditor/actions/user.js';
 
 import ProfileInfoPanel from './ProfileInfoPanel.jsx';
+import SocialInfoPanel from './SocialInfoPanel.jsx';
 import BankInfoPanel from './BankInfoPanel.jsx';
 import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
 import IdProofPanel from './IdProofPanel.jsx'
@@ -19,6 +20,9 @@ var DetailsPage = React.createClass({
 		return (
 			<div>
 			<div className="row">
+				<div className="col-md-12">
+					<SocialInfoPanel/>
+				</div>
 				<div className="col-md-6">
 					<ProfileInfoPanel/>
 					<Panel title="Account Details" body={true}>

@@ -86,6 +86,7 @@ urlpatterns = ([
     url(r'auditor/(?P<auditor_id>[0-9]+)/profile_info$', auditor_views.AuditorProfileInfoView.as_view(), name='auditor_profile_info_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/bank_info$', auditor_views.AuditorBankInfoView.as_view(), name='auditor_bank_info_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/additional_info$', auditor_views.AuditorAdditionalInfoView.as_view(), name='auditor_additional_info_view'),
+    url(r'auditor/(?P<auditor_id>[0-9]+)/facebook_info$', auditor_views.AuditorFacebookInfoView.as_view(), name='auditor_facebook_info_view'),
     url(r'auditor/(?P<user_id>[0-9]+)/verify$', auditor_views.AuditorVerifyView.as_view(), name="auditor_id_verify_view"),
     url(r'auditor/(?P<auditor_id>[0-9]+)/applications$', auditor_views.AuditorApplicationView.as_view(), name='auditor_application_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/reports$', auditor_views.AuditorAuditStoreView.as_view(), name='auditor_audit_store_view'),

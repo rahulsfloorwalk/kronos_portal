@@ -103,6 +103,24 @@ export function fetchAdditionalInfoForAuditor(auditorId){
 	};
 };
 
+export function fetchFacebookInfoForAuditor(auditorId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_GET_FACEBOOK_INFO,
+			status: 'request',
+			auditorId: auditorId
+		});
+
+		$.get( url.api_base_path + `manager/auditor/${auditorId}/facebook_info`, function(socialInfo){
+			dispatch({
+				type: types.AUDITOR_GET_FACEBOOK_INFO,
+				status: 'success',
+				socialInfo: socialInfo,
+			});
+		});
+		//TODO: Handle error
+	};
+};
 
 export function activateAuditor(userId){
 	return function(dispatch){

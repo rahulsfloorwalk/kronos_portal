@@ -1,25 +1,20 @@
-from django.conf import settings
-
-from django.contrib.contenttypes.models import ContentType
-
-from rest_framework import routers, viewsets
-from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField, DateField, RelatedField
-from rest_framework.serializers import CharField, EmailField, BooleanField
 from django.contrib.auth.models import User
-
-from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
+from django.contrib.contenttypes.models import ContentType
 from notifications.models import Notification
+from rest_framework.serializers import CharField, EmailField, BooleanField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField, RelatedField
 
-from questionnaire.models import Section, Question
-from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalInfo
-import auditor.serializers
-from audit.models import Audit, AuditCycle
-from audit_store.models import AuditStore
-from client.models import Client, Store, ClientUser
-from .models import City, Location
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
+from audit.models import Audit, AuditCycle
+from audit_store.models import AuditStore
+from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalInfo
+from client.models import Client, Store, ClientUser
 from payment.models import Payment
+from questionnaire.models import Section, Question
+from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
+from social.models import Facebook
+from .models import City, Location
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -699,6 +694,18 @@ class AdditionalInfoSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'is_complete',
+        )
+        read_only_fields = fields
+
+class FacebookSerializer(ModelSerializer):
+    class Meta:
+        model = Facebook
+        fields = (
+            'id',
+            'facebook_id',
+            'profile_data',
+            'is_verified',
+            'user_id',
         )
         read_only_fields = fields
 

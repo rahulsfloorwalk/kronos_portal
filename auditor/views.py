@@ -1,4 +1,5 @@
-from django.http import Http404
+import requests
+from django.http import Http404, HttpResponse
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -6,31 +7,31 @@ from rest_framework.views import APIView
 import attachment.service_auditor as attachment_auditor_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
-from audit.models import Audit
+from audit.service import audit_service
 from audit_store import service as audit_store_service
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
 from auditor.serializers import AttachmentSerializer
 from auditor.serializers import AuditStoreSerializer
-from auditor.serializers import CitySerializer
 from auditor.serializers import NotificationSerializer
 from auditor.serializers import PaymentSerializer
 from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
 from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from auditor.serializers import SectionSerializer
+from auditor.serializers import FacebookSerializer, FacebookDeSerializer
+from auditor.service import application_service
 from auditor.service import stats as auditor_dashboard_service
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from manager import states
 from manager.models import City
-from .serializers import CitySerializer
-from audit.service import audit_service
-from auditor.service import application_service
 from manager.service import notifications as notification_service
 from payment.service import payment_auditor as payment_service
 from questionnaire.service import section as section_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR
+from social.service import social_auditor as social_service
+from .serializers import CitySerializer
 
 
 class ProfileInfoView(APIView):
@@ -93,6 +94,23 @@ class BankInfoView(APIView):
         bank_info = bank_info_s.deserialize()
         bank_info.save()
         return Response(BankInfoSerializer(bank_info).data)
+
+class FacebookInfoView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_AUDITOR],
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def get(self, request, format=None):
+        fb_info = social_service.find_facebook_by_user(request.user.id)
+        return Response(FacebookSerializer(fb_info).data)
+
+    def post(self, request):
+        facebook_ds = FacebookDeSerializer(data=request.data, context={'current_user' : request.user})
+        facebook_ds.is_valid(raise_exception=True)
+        facebook = facebook_ds.deserialize()
+        facebook.save()
+        return Response(FacebookSerializer(facebook).data)
 
 class AvailableAuditsView(APIView):
     permission_classes = [HasGroupPermission]

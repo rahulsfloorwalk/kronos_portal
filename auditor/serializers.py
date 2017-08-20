@@ -17,6 +17,7 @@ from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from payment.models import Payment
+from social.models import Facebook
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -540,3 +541,45 @@ class PaymentSerializer(ModelSerializer):
             'paid_on',
         )
         read_only_fields = fields
+
+class FacebookSerializer(ModelSerializer):
+    class Meta:
+        model = Facebook
+        fields = (
+            'id',
+            'facebook_id',
+            'profile_data',
+            'is_verified',
+            'user_id',
+        )
+        read_only_fields = fields
+
+class FacebookDeSerializer(ModelSerializer):
+    class Meta:
+        model = Facebook
+        fields = (
+            'id',
+            'facebook_id',
+            'access_token',
+            'profile_data',
+            'is_verified',
+            'user_id',
+        )
+        read_only_fields = ('id', 'user_id')
+
+    def deserialize(self):
+        if self.context.get('current_user') is None:
+            raise TypeError("missing keyword argument 'current_user'")
+
+        try:
+            facebook = Facebook.objects.get(user_id=self.context.get('current_user').id)
+        except Facebook.DoesNotExist:
+            facebook = Facebook()
+            facebook.user_id = self.context.get('current_user').id
+
+        facebook.facebook_id = self.validated_data.get('facebook_id', facebook.facebook_id)
+        facebook.access_token = self.validated_data.get('access_token', facebook.access_token)
+        facebook.profile_data = self.validated_data.get('profile_data', facebook.profile_data)
+        facebook.is_verified = self.validated_data.get('is_verified', facebook.is_verified)
+
+        return facebook

@@ -15,6 +15,7 @@ var initialStore = {
 	profileInfos: {},
 	bankInfos: {},
 	additionalInfos: {},
+	socialInfos: {},
 	answers: {},
 	reportSections: {},
 	clientUsers: {},
@@ -239,6 +240,21 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+
+			case types.AUDITOR_GET_FACEBOOK_INFO:
+				switch(action.status){
+					case "success":
+						return Object.assign({}, store, {
+							socialInfos: Object.assign({}, store.socialInfos, {
+								[action.socialInfo.user_id]: action.socialInfo
+							})
+						});
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+				}
+
 		case types.STORE_GET:
 			switch(action.status){
 				case "success":

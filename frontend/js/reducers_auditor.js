@@ -5,6 +5,7 @@ var initialStore = {
 	profileInfo: {},
 	bankInfo: {},
 	additionalInfo: {},
+	socialInfo: {},
 	audits: {},
 	auditStores: {},
 	states: {},
@@ -257,6 +258,63 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+
+			/*Social Info Reducers */
+
+			case types.SOCIAL_INFO_GET:
+				switch (action.status) {
+					case 'request':
+						return Object.assign({}, store, {
+							loadingSocialInfo: true
+						});
+						break;
+					case 'success':
+						return Object.assign({}, store, {
+							loadingSocialInfo: false,
+							socialInfo: Object.assign({}, store.socialInfo, action.socialInfo)
+						});
+						break;
+					case 'error':
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+				}
+
+			case types.SOCIAL_INFO_POST:
+				switch (action.status) {
+					case 'request':
+						return Object.assign({}, store, {
+							forms: Object.assign({}, store.forms, {
+								socialInfo:{
+									errors: {}
+								}
+							})
+						});
+						break;
+					case 'success':
+						return Object.assign({}, store, {
+							socialInfo: action.socialInfo,
+							forms: Object.assign({}, store.forms, {
+								socialInfo: Object.assign({}, store.forms.socialInfo, {
+									errors: {}
+								})
+							})
+						});
+						break;
+					case 'error':
+						return Object.assign({}, store, {
+							forms: Object.assign({}, store.forms, {
+								socialInfo: Object.assign({}, store.forms.socialInfo, {
+									errors: action.errors
+								})
+							})
+						});
+						break;
+					default:
+						console.warn("WARNING: default case encountered for action: %O", action);
+						return store;
+				}
 
 		case types.AUDIT_GET:
 			switch(action.status){

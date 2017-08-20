@@ -11,12 +11,17 @@ import registration.service.auditor as auditor_service
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from auditor.service import profile_info_service
 from kronos.exceptions import ObjectNotFound
+from manager.serializers import FacebookSerializer
 from manager.serializers import PaymentSerializer
+from manager.serializers import ProfileInfoSerializer, BankInfoSerializer
+from manager.serializers import AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.service import auditor as auditor_service
 from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
+from social.service import social_manager as social_service
+
 
 class AuditorView(generics.ListAPIView):
     permission_classes = [HasGroupPermission]
@@ -96,6 +101,16 @@ class AuditorAdditionalInfoView(APIView):
             return Response(AdditionalInfoSerializer(additionalInfo).data)
         except AdditionalInfo.DoesNotExist:
             return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
+
+class AuditorFacebookInfoView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_MANAGER],
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def get(self, request, auditor_id, format=None):
+        facebookInfo = social_service.find_facebook_by_user(auditor_id)
+        return Response(FacebookSerializer(facebookInfo).data)
 
 class AuditorApplicationView(APIView):
     permission_classes = [HasGroupPermission]
