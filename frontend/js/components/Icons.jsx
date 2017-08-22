@@ -1,5 +1,13 @@
 import React from 'react';
 
+export const ArrowUp	= () => <span className="glyphicon glyphicon-arrow-up"></span>;
+export const ArrowRight	= () => <span className="glyphicon glyphicon-arrow-right"></span>;
+export const ArrowDown	= () => <span className="glyphicon glyphicon-arrow-down"></span>;
+export const ArrowLeft	= () => <span className="glyphicon glyphicon-arrow-left"></span>;
+export const CircleArrowUp	= () => <span className="glyphicon glyphicon-circle-arrow-up"></span>;
+export const CircleArrowRight	= () => <span className="glyphicon glyphicon-circle-arrow-right"></span>;
+export const CircleArrowDown	= () => <span className="glyphicon glyphicon-circle-arrow-down"></span>;
+export const CircleArrowLeft	= () => <span className="glyphicon glyphicon-circle-arrow-left"></span>;
 export const Asterisk	= () => <span className="glyphicon glyphicon-asterisk"></span>;
 export const Education	= () => <span className="glyphicon glyphicon-education"></span>;
 export const Time	= () => <span className="glyphicon glyphicon-time"></span>;

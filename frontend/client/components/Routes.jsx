@@ -15,6 +15,7 @@ import AuditStoreList from './AuditStoreList.jsx'; import AuditStoreDetail from 
 import SectionList from './SectionList.jsx';
 
 import UpcomingAuditStores from './UpcomingAuditStores.jsx';
+import TwitterFeed from './TwitterFeed.jsx';
 
 const IndexComponent = React.createClass({
 	componentDidMount: function(){
@@ -45,6 +46,8 @@ const Routes = () => (
 		</Route>
 		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
 		<Route path="/upcoming" component={UpcomingAuditStores}/>
+
+		<Route path="/twitter" component={TwitterFeed}/>
 	</Route>
     </Router>
 );
