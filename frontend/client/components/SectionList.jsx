@@ -39,7 +39,13 @@ var QuestionRow = React.createClass({
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				<td>{this.props.q.question_txt}</td>
-				<td>{answerText}</td>
+				<td>
+					{answerText}
+					{ this.props.q.question_type === "MUTEX" && this.props.answer && this.props.answer.answer_comment
+						? " ( " + this.props.answer.answer_comment + ")"
+						: null
+					}
+				</td>
 				<td>{answerMarks}</td>
 				<td>{maxMarks}</td>
 				<td>

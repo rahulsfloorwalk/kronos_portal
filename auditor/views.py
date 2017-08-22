@@ -283,6 +283,24 @@ class AnswerSubmitView(APIView):
             }) from e
         return Response(AnswerSerializer(answer).data)
 
+
+class AnswerCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_AUDITOR]
+        }
+    def post(self, request, question_id, format=None):
+        try:
+            audit_store_id = request.data['audit_store_id']
+            answer_comment = request.data['answer_comment']
+            answer = answer_service.set_answer_comment_by_auditor(audit_store_id, question_id, answer_comment, request.user.id)
+            return Response(AnswerSerializer(answer).data)
+        except KeyError as e:
+            raise ValidationError({
+                e.args[0]: "{} is required".format(e.args[0])
+            })
+
+
 class AnswerListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

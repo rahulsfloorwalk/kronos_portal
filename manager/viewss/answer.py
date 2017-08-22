@@ -94,3 +94,18 @@ class AnswerByQuestionAndStore(APIView):
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
                 }) from e
+
+
+class AnswerCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST' : [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_store_id, question_id):
+        try:
+            answer = answer_service.set_answer_comment(audit_store_id, question_id, request.data["answer_comment"])
+            return Response(AnswerSerializer(answer).data)
+        except KeyError as e:
+            raise ValidationError({
+                e.args[0]: "{} is required".format(e.args[0])
+            })

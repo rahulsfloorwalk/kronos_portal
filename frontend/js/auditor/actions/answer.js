@@ -51,3 +51,28 @@ export function submitAnswer(answer){
 	};
 };
 
+
+export function submitAnswerComment(audit_store_id, question_id, answer_comment){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/question/${question_id}/answer_comment`,
+			data: JSON.stringify({
+				audit_store_id,
+				question_id,
+				answer_comment
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(newAnswer){
+			dispatch({
+				type: types.ANSWER_POST,
+				status: 'success',
+				answer: newAnswer,
+			});
+		});
+		//TODO: Handle error
+		return req;
+	};
+};
+

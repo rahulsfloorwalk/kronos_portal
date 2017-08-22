@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
@@ -8,7 +8,39 @@ import { Plus, Cross, Pencil, Check } from '../Icons.jsx';
 
 import { affectInputEventToComponent } from '../../react_utils.js'
 
-import { submitAnswer } from '../../auditor/actions/answer.js';
+import { submitAnswer, submitAnswerComment } from '../../auditor/actions/answer.js';
+
+class __AnswerComment extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			answer_comment: this.props.answer_comment || "",
+		};
+	}
+
+	commentChanged = (e) => {
+		this.setState({
+			answer_comment: e.target.value,
+		});
+	}
+
+	onBlur = (e) => {
+		this.commentChanged(e);
+		this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value));
+	}
+
+	render(){
+		if(this.props.editable){
+			return (
+				<input className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+			);
+		} else {
+			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;
+		}
+	}
+}
+
+let AnswerComment = ReactRedux.connect()(__AnswerComment);
 
 var QuestionRow = React.createClass({
 	getInitialState: function(){
@@ -71,7 +103,17 @@ var QuestionRow = React.createClass({
 		}
 
 
-		let answerElement = (<p>{answer}</p>);
+		let answerComment;
+		let answerElement = (<p>
+			{answer} 
+			{ this.props.q.question_type === "MUTEX" 
+				? <AnswerComment editable={false}
+					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} 
+					answer_comment={this.props.answer && this.props.answer.answer_comment ? this.props.answer.answer_comment : ""}
+				/>
+				: ""
+			}
+		</p>);
 
 		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
 			if(this.props.q.question_type === "PLAIN"){
@@ -91,6 +133,8 @@ var QuestionRow = React.createClass({
 			);
 			} else if(this.props.q.question_type === "MUTEX") {
 				answerElement = (
+					<div className="row">
+						<div className="col-xs-5">
 						<select className="form-control"
 							name="answer_text"
 							onChange={this.inputChanged}
@@ -100,6 +144,11 @@ var QuestionRow = React.createClass({
 							<option value="">select answer</option>
 							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
 						</select>
+						</div>
+						<div className="col-xs-7">
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+						</div>
+					</div>
 				);
 			}
 		}

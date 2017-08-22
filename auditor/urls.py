@@ -34,6 +34,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', views.ReportSectionAttachmentView.as_view(), name="report_section_attachment_view"),
 
     url(r'question/(?P<question_id>[0-9]+)/answer$', views.AnswerSubmitView.as_view(), name="answer_submit_view"),
+    url(r'question/(?P<question_id>[0-9]+)/answer_comment$', views.AnswerCommentView.as_view(), name="answer_comment_view"),
     url(r'section/(?P<section_id>[0-9]+)/comment$', views.CommentSubmitView.as_view(), name="comment_submit_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),

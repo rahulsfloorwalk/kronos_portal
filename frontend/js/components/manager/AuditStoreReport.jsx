@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
@@ -12,12 +12,62 @@ import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, dele
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 import { fetchSections } from '../../manager/actions/section.js'
 import { fetchAnswers, setMarks, setAnswerNotApplicable } from '../../manager/actions/answer.js'
-import { setAnswerText } from '../../manager/service/answer.js'
+import { setAnswerText, setAnswerComment } from '../../manager/service/answer.js'
 import { submitAuditorComment, submitPMComment, fetchReportSections, setNotApplicable } from '../../manager/actions/report_section.js'
 import AttachmentPreview from './AttachmentPreview.jsx';
 
 import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
 import AttachmentInProgressThumbnail from '../AttachmentInProgressThumbnail.jsx';
+
+class AnswerComment extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			answer_comment: this.props.answer_comment || "",
+			error: false,
+			success: false,
+		};
+	}
+
+	setError = (error) => {
+		this.setState( prevState => Object.assign({}, prevState, { error }));
+	}
+
+	setSuccess = (success) => {
+		this.setState( prevState => Object.assign({}, prevState, { success }));
+	}
+
+	commentChanged = (e) => {
+		this.setState({
+			answer_comment: e.target.value,
+		});
+	}
+
+	onBlur = (e) => {
+		this.commentChanged(e);
+		setAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value).then( () => {
+			this.setSuccess(true);
+			this.setError(false);
+		}, () => {
+			this.setSuccess(false)
+			this.setError(true)
+		});
+	}
+
+	render(){
+		if(this.props.editable){
+			let hasSuccess = this.state.success ? "has-success" : "";
+			let hasError = this.state.error ? "has-error" : "";
+			return (
+				<div className={`${hasSuccess} ${hasError}`}>
+					<input className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+				</div>
+			);
+		} else {
+			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;
+		}
+	}
+}
 
 var __QuestionRow = React.createClass({
 	getDefaultProps: function(){
@@ -83,7 +133,15 @@ var __QuestionRow = React.createClass({
 	},
 	render: function(){
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
-		let answerElement = (<big>{this.state.answer.answer_text}</big>);
+		let answerElement = (
+			<span>
+			<big>{this.state.answer.answer_text}</big>
+			{ this.props.q.question_type === "MUTEX" 
+				?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+				: null
+			}
+			</span>
+		);
 
 		let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
 
@@ -115,6 +173,8 @@ var __QuestionRow = React.createClass({
 				);
 			} else if(this.props.q.question_type === "MUTEX") {
 				answerElement = (
+					<div className="row">
+					<div className="col-xs-5">
 					<div className={hasAnswerError + hasAnswerSuccess}>
 						<select className="form-control"
 							onChange={this.answerChanged}
@@ -123,6 +183,11 @@ var __QuestionRow = React.createClass({
 							<option value=""></option>
 							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
 						</select>
+					</div>
+					</div>
+					<div className="col-xs-7">
+						<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+					</div>
 					</div>
 				);
 			}

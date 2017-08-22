@@ -477,6 +477,7 @@ class AnswerSerializer(ModelSerializer):
             'question',
             'audit_store',
             'answer_text',
+            'answer_comment',
             'marks_obtained',
             'not_applicable',
         )

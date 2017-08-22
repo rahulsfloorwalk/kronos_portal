@@ -131,6 +131,7 @@ class QuestionSerializer(ModelSerializer):
             'id',
             'sequence',
             'question_txt',
+            'question_type',
             'max_marks',
             'section',
         )
@@ -158,6 +159,7 @@ class AnswerSerializer(ModelSerializer):
             'question',
             'audit_store',
             'answer_text',
+            'answer_comment',
             'marks_obtained',
             'not_applicable',
         )

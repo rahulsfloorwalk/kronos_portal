@@ -58,6 +58,23 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
     return save(answer)
 
 
+def set_answer_comment_by_auditor(audit_store_id, question_id, answer_comment, user_id):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+
+    if audit_store.status != AuditStore.ASSIGNED:
+        raise AppLogicError("Cannot submit answer comment to this audit store")
+
+    answer = find_by_audit_store_and_question(audit_store_id, question_id)
+    q = question_service.find_question_by_id(question_id)
+
+    if q.question_type == Question.MUTEX:
+        answer.answer_comment = answer_comment
+    else:
+        raise AppLogicError("invalid answer_comment or question")
+
+    return save(answer)
+
+
 def find_by_audit_store_for_auditor(audit_store_id, user_id):
 
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -111,6 +128,23 @@ def set_answer_text(audit_store_id, question_id, answer_text):
     answer.answer_text = answer_text
     answer.save()
     return answer
+
+
+def set_answer_comment(audit_store_id, question_id, answer_comment):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+
+    if audit_store.status != AuditStore.SUBMITTED:
+        raise AppLogicError("Cannot set answer_comment for unsubmitted report")
+
+    answer = find_by_audit_store_and_question(audit_store_id, question_id)
+    q = question_service.find_question_by_id(question_id)
+
+    if q.question_type == Question.MUTEX:
+        answer.answer_comment = answer_comment
+    else:
+        raise AppLogicError("invalid question")
+
+    return save(answer)
 
 
 def set_not_applicable(audit_store_id, question_id, not_applicable):
