@@ -14,6 +14,8 @@ var momentDateTimeFormat = "HH:mm Do MMM YYYY";
 
 const auditorGAId = "UA-XXXXXXX-X";
 
+const impactFactorDataUrl = "http://localhost:8080/random_file.js";
+
 const demo = true;
 
 const facebook_client_id = "122450261725178"
