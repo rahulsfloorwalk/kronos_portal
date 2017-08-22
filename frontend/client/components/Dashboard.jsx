@@ -26,8 +26,8 @@ let TypedDashboard = React.createClass({
 	render: function(){
 		return (
 			<div>
-				<FakeImpactFactor auditType={this.props.params.auditType}/>
 				<AuditCycleTimeSeries auditType={this.props.params.auditType}/>
+				<FakeImpactFactor auditType={this.props.params.auditType}/>
 				<hr/>
 				<AuditCycleStorePerformance auditType={this.props.params.auditType}/>
 				<hr/>
