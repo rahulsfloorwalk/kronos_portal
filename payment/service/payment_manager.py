@@ -194,7 +194,7 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
             settings.PAYMENT_CSV_SETTINGS['ORDERINGACCNO'],
             settings.PAYMENT_CSV_SETTINGS['REMITTER_NAME'],
             ifsc_code,
-            account_number,
+            "=\"" + account_number + "\"",
             (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or ""),
             city_name,
             "",
