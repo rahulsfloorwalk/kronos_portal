@@ -48,9 +48,11 @@ def copy_questions_from_to(from_section_id, to_section_id):
             new_question = Question()
             new_question.question_txt = question.question_txt
             new_question.max_marks = question.max_marks
+            new_question.question_type = question.question_type
+            new_question.question_data = question.question_data
             new_question.sequence = question.sequence
             new_question.section = to_section
-            new_question.save()
+            save(new_question)
 
         to_section.questions.all()
 
