@@ -46,7 +46,7 @@ class QuestionIdView(APIView):
 
     def delete(self, request, question_id):
         question_service.delete_question_by_id(question_id)
-        return Response()
+        return HttpResponse(status=204)
 
 class QuestionView(APIView):
     permission_classes = [HasGroupPermission]

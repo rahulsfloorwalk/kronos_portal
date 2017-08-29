@@ -11,6 +11,7 @@ import { Duplicate, Tasks, Plus, Cross, Pencil, ChevronRight, ChevronDown } from
 import { orderKeys } from '../../react_utils.js'
 import { getQuestionType } from '../../utils.js';
 import { fetchSections } from '../../manager/actions/section.js'
+import { deleteQuestion } from '../../manager/service/question.js';
 
 var QuestionRow = React.createClass({
 	render: function(){
@@ -29,6 +30,7 @@ var QuestionRow = React.createClass({
 				<td>{this.props.q.max_marks}</td>
 				<td>
 					<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/edit`} className="btn btn-default"><Pencil/></Link>
+					<button type="button" onClick={this.props.onDelete ? () => this.props.onDelete(this.props.q): ()=>{}} className="btn btn-default" title="Delete Question"><Cross/></button>
 				</td>
 			</tr>
 		);
@@ -46,11 +48,14 @@ var Section = React.createClass({
 			expanded: !this.state.expanded,
 		});
 	},
+	onQuestionDelete: function(question){
+		deleteQuestion(question.id).then(() => this.props.onChange && this.props.onChange());
+	},
 	render: function(){
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow auditCycleId={this.props.auditCycleId} q={q} key={q.id}/>);
+				questionRows.push(<QuestionRow auditCycleId={this.props.auditCycleId} q={q} key={q.id} onDelete={this.onQuestionDelete}/>);
 			}
 		}
 		if(questionRows.length === 0){
@@ -129,32 +134,23 @@ var SectionList = React.createClass({
 			loading: false
 		};
 	},
-	componentDidMount: function() {
-		console.log("SectionList#componentDidMount");
+	reloadData: function(auditCycleId){
 		this.setState({
 			loading:true
 		});
-		this.props.dispatch(fetchSections(this.props.params.auditCycleId)).always(() => {
+		this.props.dispatch(fetchSections(auditCycleId)).always(() => {
 			this.setState({
 				loading:false
 			});
 		});
 	},
+	componentDidMount: function() {
+		this.reloadData(this.props.params.auditCycleId);
+	},
 	componentWillReceiveProps: function(nextProps){
-		console.log("SectionList#componentWillReceiveProps");
 		if( ! this.state.loading){
-			console.debug("hello world", nextProps);
-			this.setState({
-				loading:true
-			});
-			this.props.dispatch(fetchSections(this.props.params.auditCycleId)).always(() => {
-				console.debug("bye world", nextProps);
-				this.setState({
-					loading:false
-				});
-			});
+			this.reloadData(nextProps.params.auditCycleId);
 		}
-		console.log("SectionList#this.props.children",nextProps.children);
 	},
 	render: function(){
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
@@ -162,7 +158,7 @@ var SectionList = React.createClass({
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId}/>);
+			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId} onChange={() => this.reloadData(this.props.params.auditCycleId)}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="start by adding a section"/>);

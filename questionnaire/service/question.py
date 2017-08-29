@@ -1,4 +1,7 @@
+from django.db.utils import IntegrityError
 from django.db.transaction import atomic
+
+from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from ..models import Question, Section
 
@@ -15,15 +18,12 @@ def find_question_by_id(id):
     except Question.DoesNotExist as e:
         raise ObjectNotFound from e
 
-def delete_question_by_id(id):
+def delete_question_by_id(question_id):
     try:
-        q = Question.objects.get(pk=question_id)
-        if answer_service.find_answers_by_question_id(question_id).count() == 0:
-            q.delete()
-        else:
-            raise AppLogicError("cannot delete question with existing answers")
-    except Question.DoesNotExist as e:
-        raise ObjectNotFound from e
+        q = find_question_by_id(question_id)
+        q.delete()
+    except IntegrityError as e:
+        raise AppLogicError("cannot delete question that already has answers") from e
 
 def find_questions_by_section_id(section_id):
     return Question.objects.filter(section_id=section_id).all()

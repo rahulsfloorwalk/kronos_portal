@@ -19,3 +19,9 @@ export function saveQuestion(question){
 	return req;
 };
 
+export function deleteQuestion(questionId){
+	return $.ajax({
+		url: url.api_base_path + `manager/question/${questionId}`,
+		type: "DELETE",
+	});
+}
