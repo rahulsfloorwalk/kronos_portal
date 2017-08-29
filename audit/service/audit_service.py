@@ -24,6 +24,13 @@ def save(audit):
     except IntegrityError as e:
         raise AppLogicError("store is already added to this audit cycle") from e
 
+def delete(audit_id):
+    try:
+        audit = find_audit_by_id(audit_id)
+        audit.delete()
+    except IntegrityError as e:
+        raise AppLogicError("audit cannot be delete now") from e
+
 
 def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
     try:

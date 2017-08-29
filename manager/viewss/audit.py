@@ -51,9 +51,8 @@ class AuditIdView(APIView):
             })
 
     def delete(self, request, audit_id):
-        audit = audit_service.find_audit_by_id(audit_id)
-        audit.delete()
-        return Response(AuditSerializer(audit).data)
+        audit_service.delete(audit_id)
+        return HttpResponse(status=204)
 
 class AuditView(APIView):
     permission_classes = [HasGroupPermission]

@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
-import { HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
+import { Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 
@@ -14,7 +14,7 @@ import MarkdownViewer from '../MarkdownViewer.jsx';
 
 import { AuditStoreTable } from './AuditStoreList.jsx';
 
-import {fetchAudits} from '../../manager/actions/audit.js';
+import {fetchAudits, deleteAudit} from '../../manager/actions/audit.js';
 
 var AuditApplicationList = React.createClass({
 	contextTypes: {
@@ -112,6 +112,7 @@ var AuditRow = React.createClass({
         <td className="text-right">
           <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign"><HandRight/></Link>
           <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`} title="Edit Audit"><Pencil/></Link>
+          <button className="btn btn-default" onClick={this.props.onDelete ? () => this.props.onDelete(this.props.audit) : ()=>{} } title="Delete Audit"><Cross/></button>
           <button className="btn btn-default" onClick={this.viewButtonClicked} title="Expand Applications">{buttonText}</button>
         </td>
       </tr>
@@ -127,10 +128,13 @@ var AuditList = React.createClass({
   componentDidMount: function(){
     this.props.dispatch(fetchAudits(this.props.params.auditCycleId));
   },
+  onDelete: function(audit){
+	  this.props.dispatch(deleteAudit(audit.id));
+  },
   render: function(){
     var rows = [];
     for(var id in this.props.audits){
-      rows.push(<AuditRow auditCycleId={this.props.params.auditCycleId} audit={this.props.audits[id]} key={id} />);
+      rows.push(<AuditRow auditCycleId={this.props.params.auditCycleId} audit={this.props.audits[id]} key={id} onDelete={this.onDelete}/>);
     }
     var addAuditLink = `/audit_cycle/${this.props.params.auditCycleId}/audit/add`;
     return(

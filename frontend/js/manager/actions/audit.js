@@ -321,3 +321,33 @@ export function saveAuditEditForm(audit){
 		return req;
 	};
 };
+
+export function deleteAudit(auditId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_ID_DELETE,
+			status: 'request',
+			auditId,
+		});
+		let req = $.ajax({
+			url: url.api_base_path + `manager/audit/${auditId}`,
+			type: "DELETE"
+		});
+		req.done(function(){
+			dispatch({
+				type: types.AUDIT_ID_DELETE,
+				status: 'success',
+				auditId,
+			});
+		});
+		req.fail(function(){
+			dispatch({
+				type: types.AUDIT_ID_DELETE,
+				status: 'error',
+				auditId,
+			});
+		});
+		return req;
+	};
+};
+
