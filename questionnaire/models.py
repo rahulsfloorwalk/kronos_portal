@@ -6,16 +6,6 @@ from kronos.exceptions import AppLogicError
 
 from manager.models import Client
 
-#class Questionnaire(Model):
-#    db_table = "questionnaire"
-#
-#    id = AutoField(db_column = 'id', primary_key=True)
-#    name = CharField(db_column='name', max_length=50, blank=False)
-#    client = ForeignKey(Client, related_name='questionnaires', db_column='client_id', blank=False)
-#
-#    def __str__(self):
-#        return 'Questionnaire({}): {}'.format(self.id, self.name)
-
 class Section(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)

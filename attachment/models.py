@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField, IntegerField
+from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField, IntegerField, PROTECT
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -34,7 +34,7 @@ class Attachment(Model):
     file_size = IntegerField(db_column='file_size')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
 
-    content_type = ForeignKey(ContentType)
+    content_type = ForeignKey(ContentType, on_delete=PROTECT)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 

@@ -18,7 +18,7 @@ class ClientUser(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     full_name = CharField(db_column='full_name', max_length=50, blank=False)
-    client = ForeignKey(Client, related_name='users', db_column='client_id', blank=False)
+    client = ForeignKey(Client, related_name='users', db_column='client_id', blank=False, on_delete=PROTECT)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     def __str__(self):
@@ -38,7 +38,7 @@ class Store(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)
     address = CharField(db_column='address', max_length=1024, blank=False)
-    location = ForeignKey('manager.Location', db_column='location_id', blank=False)
+    location = ForeignKey('manager.Location', db_column='location_id', blank=False, on_delete=PROTECT)
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
 
     def __str__(self):
