@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db.models import CASCADE
+from django.db.models import PROTECT
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
     PositiveSmallIntegerField, PositiveIntegerField
 
@@ -68,8 +68,8 @@ class ProfileInfo(Model):
     address = CharField(db_column='address', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
 
-    city = ForeignKey(City, db_column='city_id', null=True, blank=True)
-    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+    city = ForeignKey(City, db_column='city_id', null=True, blank=True, on_delete=PROTECT)
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='profile_infos')
 
@@ -187,7 +187,7 @@ class AdditionalInfo(Model):
     referral_code = CharField(db_column='referral_code', max_length=10, blank=True, null=True, unique=True)
     referred_by = CharField(db_column='referred_by', max_length=10, blank=True, null=True)
 
-    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     def is_complete(self):
         complete = True
@@ -211,7 +211,7 @@ class BankInfo(Model):
     ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
     pan_number = CharField(db_column='pan_number', max_length=10, blank=True)
 
-    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     def is_complete(self):
         complete = True
@@ -239,8 +239,8 @@ class AuditApplication(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
 
-    audit = ForeignKey('audit.Audit', db_column='audit_id', related_name='applications')
-    profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications')
+    audit = ForeignKey('audit.Audit', db_column='audit_id', related_name='applications', on_delete=PROTECT)
+    profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications', on_delete=PROTECT)
 
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)

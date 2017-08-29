@@ -1,5 +1,5 @@
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
-from django.db.models import CASCADE
+from django.db.models import PROTECT
 from django.contrib.postgres.fields import JSONField
 
 from kronos.exceptions import AppLogicError
@@ -20,7 +20,7 @@ class Section(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
-    audit_cycle = ForeignKey('audit.AuditCycle', related_name='sections', db_column='audit_cycle_id', blank=False)
+    audit_cycle = ForeignKey('audit.AuditCycle', related_name='sections', db_column='audit_cycle_id', blank=False, on_delete=PROTECT)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
 
     def __str__(self):
@@ -53,7 +53,7 @@ class Question(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     question_txt = CharField(db_column="question_txt", max_length=1024, blank=False)
     max_marks = PositiveIntegerField(db_column='max_marks', blank=False)
-    section = ForeignKey(Section, related_name='questions', db_column='section_id', blank=False)
+    section = ForeignKey(Section, related_name='questions', db_column='section_id', blank=False, on_delete=PROTECT)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
     question_type = CharField(db_column='question_type', max_length=20, choices=QUESTION_TYPE, default=PLAIN, blank=False)
     question_data = JSONField(db_column='question_data', default=dict(), blank=False)

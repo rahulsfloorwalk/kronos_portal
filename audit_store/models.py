@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet
 from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField
-from django.db.models import CASCADE
+from django.db.models import PROTECT
 
 from guardian.shortcuts import get_users_with_perms, get_objects_for_user
 
@@ -59,8 +59,8 @@ class AuditStore(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
 
-    audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores')
-    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id')
+    audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores', on_delete=PROTECT)
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 

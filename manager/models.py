@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField, DecimalField
-from django.db.models import CASCADE
+from django.db.models import PROTECT
 
 from client.models import Client
 
@@ -28,7 +28,7 @@ class Location(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
     pincode = CharField(db_column='pincode', max_length=6, blank=False)
-    city = ForeignKey(City, related_name='locations', db_column='city_id', blank=False, on_delete=CASCADE)
+    city = ForeignKey(City, related_name='locations', db_column='city_id', blank=False, on_delete=PROTECT)
 
     def __str__(self):
         return 'Location({}): {}, {}'.format(self.id, self.name, self.city)

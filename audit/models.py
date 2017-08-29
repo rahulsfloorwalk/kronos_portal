@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
-from django.db.models import CASCADE
+from django.db.models import PROTECT
 
 import audit_store
 
@@ -53,7 +53,7 @@ class AuditCycle(Model):
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     description = CharField(db_column='description', max_length=4096, blank=False)
-    client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=CASCADE)
+    client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
 
     class Meta:
@@ -94,8 +94,8 @@ class Audit(Model):
     count = PositiveIntegerField(db_column='count', blank=False, default=1)
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
-    store = ForeignKey('client.Store', related_name='audits', db_column='store_id')
-    audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id')
+    store = ForeignKey('client.Store', related_name='audits', db_column='store_id', on_delete=PROTECT)
+    audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
 
     def __str__(self):

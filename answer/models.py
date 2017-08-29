@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, BooleanField, OneToOneField, PositiveIntegerField
-from django.db.models import CASCADE, F, Value, Sum
+from django.db.models import PROTECT, F, Value, Sum
 from django.db.models.functions import Coalesce
 
 from kronos.utils import get_color_code
@@ -13,8 +13,8 @@ class Answer(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
 
-    question = ForeignKey('questionnaire.Question',  db_column='question_id', on_delete=CASCADE)
-    audit_store = ForeignKey('audit_store.AuditStore', related_name='answers', db_column='audit_store_id', on_delete=CASCADE)
+    question = ForeignKey('questionnaire.Question',  db_column='question_id', on_delete=PROTECT)
+    audit_store = ForeignKey('audit_store.AuditStore', related_name='answers', db_column='audit_store_id', on_delete=PROTECT)
 
     answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
     answer_text_original = CharField(db_column='answer_text_original', max_length=2048, blank=True)
@@ -29,8 +29,8 @@ class Answer(Model):
 class ReportSection(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
-    audit_store = ForeignKey('audit_store.AuditStore', related_name='report_sections', db_column='audit_store_id', blank=False)
-    section = ForeignKey('questionnaire.Section', db_column='section_id', blank=False)
+    audit_store = ForeignKey('audit_store.AuditStore', related_name='report_sections', db_column='audit_store_id', blank=False, on_delete=PROTECT)
+    section = ForeignKey('questionnaire.Section', db_column='section_id', blank=False, on_delete=PROTECT)
     pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
     auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)
     auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=2048, blank=True)
