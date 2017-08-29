@@ -85,7 +85,7 @@ var StoreForm = React.createClass({
 			}));
 		}
 		submitPromise.then(function(savedStore){
-			hashHistory.push(`/store/${savedStore.id}`);
+			hashHistory.push(`/client/${savedStore.client.id}/store`);
 		});
 	},
 	render : function(){

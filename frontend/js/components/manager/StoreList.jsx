@@ -2,19 +2,22 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Plus, Home } from '../Icons.jsx';
+import { Plus, Home, Pencil } from '../Icons.jsx';
 import { fetchStores } from '../../manager/actions/store.js'
 
 var StoreRow = React.createClass({
 	render: function(){
-		var linkTo = `/store/${this.props.store.id}`;
+		var linkTo = `/client/${this.props.store.client.id}/store/${this.props.store.id}/edit`;
 		return (
 			<tr>
 				<td>{this.props.store.name}</td>
 				<td>{this.props.store.address}</td>
-				<td>{this.props.store.location.name}, {this.props.store.location.city.name}</td>
 				<td>
-					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
+					{this.props.store.location.name}, <br/>
+					{this.props.store.location.city.name}, <br/>
+					{this.props.store.location.city.state}</td>
+				<td>
+					<Link to={linkTo} className="btn btn-default pull-right"><Pencil/></Link>
 				</td>
 			</tr>
 		);
@@ -38,6 +41,12 @@ var StoreList = React.createClass({
 					<Home/> Store List
 				</h3>
 				<table className="table table-striped">
+					<colgroup>
+						<col style={{width: "25%"}}/>
+						<col style={{width: "50%"}}/>
+						<col style={{width: "20%"}}/>
+						<col style={{width: "5%"}}/>
+					</colgroup>
 					<thead>
 						<tr>
 							<th>Name</th>
@@ -58,7 +67,8 @@ var StoreList = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		stores: store.stores
+		stores: store.stores,
+
 	};
 };
 

@@ -78,6 +78,7 @@ const Routes = () => (
 			<Route path="edit" component={ClientForm}/>
 			<Route path="store" component={StoreList}>
 				<Route path="add" component={StoreForm}/>
+				<Route path=":storeId/edit" component={StoreForm}/>
 			</Route>
 			<Route path="audit_cycle" component={AuditCycleList}>
 				<Route path="add" component={AuditCycleForm}/>
@@ -88,9 +89,6 @@ const Routes = () => (
 			</Route>
 		</Route>
 
-		<Route path="store/:storeId" component={StoreDetail}>
-			<Route path="edit" component={StoreForm}/>
-		</Route>
 
 
 		<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
