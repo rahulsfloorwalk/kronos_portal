@@ -102,6 +102,7 @@ var AuditRow = React.createClass({
     return(
       <tbody>
       <tr>
+        <td className="text-right">{this.props.serial}</td>
         <td>{this.props.audit.store.name}</td>
         <td>{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</td>
         <td>{this.props.audit.earnings_per_audit}</td>
@@ -133,8 +134,9 @@ var AuditList = React.createClass({
   },
   render: function(){
     var rows = [];
+    let serial = 1;
     for(var id in this.props.audits){
-      rows.push(<AuditRow auditCycleId={this.props.params.auditCycleId} audit={this.props.audits[id]} key={id} onDelete={this.onDelete}/>);
+      rows.push(<AuditRow serial={serial++} auditCycleId={this.props.params.auditCycleId} audit={this.props.audits[id]} key={id} onDelete={this.onDelete}/>);
     }
     var addAuditLink = `/audit_cycle/${this.props.params.auditCycleId}/audit/add`;
     return(
@@ -146,6 +148,7 @@ var AuditList = React.createClass({
         <table className="table table-striped">
           <thead>
             <tr>
+              <th className="text-right">#</th>
               <th>Store</th>
               <th>Location</th>
               <th>Fees</th>
