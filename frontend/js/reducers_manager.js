@@ -311,6 +311,25 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+		case types.STORE_ID_DELETE:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						stores: (function(stores, storeId){
+							let obj = {};
+							for( let id in stores){
+								if(parseInt(id) !== parseInt(storeId)){
+									obj[id] = stores[id];
+								}
+							}
+							return obj;
+						}(store.stores, action.storeId))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 			case types.AUDIT_GET:
 				switch(action.status){
 					case "success":

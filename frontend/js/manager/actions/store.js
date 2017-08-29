@@ -40,6 +40,35 @@ export function fetchStore(storeId){
 	};
 };
 
+export function deleteStore(storeId){
+	return function(dispatch){
+		dispatch({
+			type: types.STORE_ID_DELETE,
+			status: 'request',
+			storeId,
+		});
+		let req = $.ajax({
+			url: url.api_base_path + `manager/store/${storeId}`,
+			type: "DELETE"
+		});
+		req.done(function(){
+			dispatch({
+				type: types.STORE_ID_DELETE,
+				status: 'success',
+				storeId,
+			});
+		});
+		req.fail(function(){
+			dispatch({
+				type: types.STORE_ID_DELETE,
+				status: 'error',
+				storeId,
+			});
+		});
+		return req;
+	};
+};
+
 export function loadStoreAddForm(){
 	return function(dispatch){
 		dispatch({

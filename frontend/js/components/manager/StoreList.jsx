@@ -2,8 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Plus, Home, Pencil } from '../Icons.jsx';
-import { fetchStores } from '../../manager/actions/store.js'
+import { Cross, Plus, Home, Pencil } from '../Icons.jsx';
+import { fetchStores, deleteStore } from '../../manager/actions/store.js'
 
 var StoreRow = React.createClass({
 	render: function(){
@@ -17,7 +17,8 @@ var StoreRow = React.createClass({
 					{this.props.store.location.city.name}, <br/>
 					{this.props.store.location.city.state}</td>
 				<td>
-					<Link to={linkTo} className="btn btn-default pull-right"><Pencil/></Link>
+					<Link to={linkTo} className="btn btn-default"><Pencil/></Link>
+					<button type="button" onClick={this.props.onDelete ? () => this.props.onDelete(this.props.store): ()=>{}} className="btn btn-default"><Cross/></button>
 				</td>
 			</tr>
 		);
@@ -28,10 +29,14 @@ var StoreList = React.createClass({
 	componentDidMount: function() {
 		this.props.dispatch(fetchStores(this.props.params.clientId));
 	},
+	onDelete: function(store){
+		console.log("StoreList#onDelete", store);
+		this.props.dispatch(deleteStore(store.id));
+	},
 	render: function(){
 		var rows = [];
 		for(var id in this.props.stores) {
-			rows.push(<StoreRow store={this.props.stores[id]} key={id}/>);
+			rows.push(<StoreRow store={this.props.stores[id]} key={id} onDelete={this.onDelete}/>);
 		}
 		var addStoreLink = `/client/${this.props.params.clientId}/store/add`;
 		return (

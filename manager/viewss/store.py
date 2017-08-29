@@ -51,12 +51,8 @@ class StoreIdView(APIView):
         return Response(StoreSerializer(savedStore).data)
 
     def delete(self, request, store_id):
-        try:
-            store = Store.objects.get(store_id)
-            store.delete()
-            return Response(StoreSerializer(store).data)
-        except Store.DoesNotExist:
-            raise Http404
+        store_service.delete(store_id)
+        return HttpResponse(status=204)
 
 class StoreView(APIView):
     permission_classes = [HasGroupPermission]
