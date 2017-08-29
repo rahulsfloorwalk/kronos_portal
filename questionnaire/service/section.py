@@ -1,3 +1,4 @@
+from django.db.utils import IntegrityError
 from django.db.transaction import atomic
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
@@ -15,6 +16,15 @@ from . import question as question_service
 def save(section):
     Section.save(section)
     return section
+
+def delete_section_by_id(section_id):
+    try:
+        s = Section.objects.get(pk=section_id)
+        s.delete()
+    except Section.DoesNotExist as e:
+        raise ObjectNotFound from e
+    except IntegrityError as e:
+        raise AppLogicError("cannot delete section that has questions or comments on it") from e
 
 def find_by_audit_cycle_and_id(audit_cycle_id, section_id):
     try:

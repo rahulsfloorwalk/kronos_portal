@@ -566,6 +566,25 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
+		case types.SECTION_ID_DELETE:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						sections: (function(sections, sectionId){
+							let obj = {};
+							for( let id in sections){
+								if(parseInt(id) !== parseInt(sectionId)){
+									obj[id] = sections[id];
+								}
+							}
+							return obj;
+						}(store.sections, action.sectionId))
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
 		case types.ANSWER_GET:
 			switch(action.status){
 				case "request":

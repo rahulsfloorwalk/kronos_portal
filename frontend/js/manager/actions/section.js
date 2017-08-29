@@ -149,3 +149,33 @@ export function saveSectionEditForm(section){
 		return req;
 	};
 };
+
+export function deleteSection(sectionId){
+	return function(dispatch){
+		dispatch({
+			type: types.SECTION_ID_DELETE,
+			status: 'request',
+			sectionId,
+		});
+		let req = $.ajax({
+			url: url.api_base_path + `manager/section/${sectionId}`,
+			type: "DELETE"
+		});
+		req.done(function(){
+			dispatch({
+				type: types.SECTION_ID_DELETE,
+				status: 'success',
+				sectionId,
+			});
+		});
+		req.fail(function(){
+			dispatch({
+				type: types.SECTION_ID_DELETE,
+				status: 'error',
+				sectionId,
+			});
+		});
+		return req;
+	};
+};
+

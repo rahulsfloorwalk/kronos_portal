@@ -61,12 +61,8 @@ class SectionIdView(APIView):
         return Response(SectionSerializer(savedSection).data)
 
     def delete(self, request, section_id):
-        try:
-            section = Section.objects.get(section_id)
-            section.delete()
-            return Response(SectionSerializer(section).data)
-        except Section.DoesNotExist:
-            raise Http404
+        section_service.delete_section_by_id(section_id)
+        return HttpResponse(status=204)
 
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]

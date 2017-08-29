@@ -10,7 +10,7 @@ import { Duplicate, Tasks, Plus, Cross, Pencil, ChevronRight, ChevronDown } from
 
 import { orderKeys } from '../../react_utils.js'
 import { getQuestionType } from '../../utils.js';
-import { fetchSections } from '../../manager/actions/section.js'
+import { fetchSections, deleteSection } from '../../manager/actions/section.js'
 import { deleteQuestion } from '../../manager/service/question.js';
 
 var QuestionRow = React.createClass({
@@ -113,6 +113,7 @@ var Section = React.createClass({
 						<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/edit`} className="btn btn-default">
 							<Pencil/>
 						</Link>
+						<button type="button" onClick={this.props.onDelete ? () => this.props.onDelete(this.props.section): ()=>{}} className="btn btn-default" title="Delete Section"><Cross/></button>
 					</span>
 					<h4 className="panel-title">
 						<a onClick={this.toggleExpanded} style={pointerStyle} className="btn btn-sm btn-default">
@@ -152,13 +153,16 @@ var SectionList = React.createClass({
 			this.reloadData(nextProps.params.auditCycleId);
 		}
 	},
+	onSectionDelete: function(section){
+		this.props.dispatch(deleteSection(section.id));
+	},
 	render: function(){
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId} onChange={() => this.reloadData(this.props.params.auditCycleId)}/>);
+			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId} onChange={() => this.reloadData(this.props.params.auditCycleId)} onDelete={this.onSectionDelete}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="start by adding a section"/>);
