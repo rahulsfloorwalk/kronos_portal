@@ -10,6 +10,7 @@ var StoreRow = React.createClass({
 		var linkTo = `/client/${this.props.store.client.id}/store/${this.props.store.id}/edit`;
 		return (
 			<tr>
+				<td className="text-right">{this.props.serial}</td>
 				<td>{this.props.store.name}</td>
 				<td>{this.props.store.address}</td>
 				<td>
@@ -35,8 +36,9 @@ var StoreList = React.createClass({
 	},
 	render: function(){
 		var rows = [];
+		let serial = 1;
 		for(var id in this.props.stores) {
-			rows.push(<StoreRow store={this.props.stores[id]} key={id} onDelete={this.onDelete}/>);
+			rows.push(<StoreRow serial={serial++} store={this.props.stores[id]} key={id} onDelete={this.onDelete}/>);
 		}
 		var addStoreLink = `/client/${this.props.params.clientId}/store/add`;
 		return (
@@ -47,13 +49,15 @@ var StoreList = React.createClass({
 				</h3>
 				<table className="table table-striped">
 					<colgroup>
-						<col style={{width: "25%"}}/>
+						<col style={{width: "5%"}}/>
+						<col style={{width: "20%"}}/>
 						<col style={{width: "50%"}}/>
 						<col style={{width: "20%"}}/>
 						<col style={{width: "5%"}}/>
 					</colgroup>
 					<thead>
 						<tr>
+							<th className="text-right">#</th>
 							<th>Name</th>
 							<th>Address</th>
 							<th>Location</th>
