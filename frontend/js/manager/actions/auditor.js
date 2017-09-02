@@ -160,3 +160,45 @@ export function verifyAuditor(userId){
 		//TODO: Handle error
 	};
 };
+
+export function setEmail(userId, email){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_EMAIL,
+			status: 'request',
+			userId,
+			email,
+		});
+
+		$.post( url.api_base_path + `manager/auditor/${userId}/email`, {email}, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_EMAIL,
+				status: 'success',
+				userId,
+				auditor,
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
+export function setMobileNumber(userId, mobile_number){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_MOBILE_NUMBER,
+			status: 'request',
+			userId,
+			mobile_number,
+		});
+
+		$.post( url.api_base_path + `manager/auditor/${userId}/mobile_number`, {mobile_number}, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_MOBILE_NUMBER,
+				status: 'success',
+				userId,
+				auditor,
+			});
+		});
+		//TODO: Handle error
+	};
+};

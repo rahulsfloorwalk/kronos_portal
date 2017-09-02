@@ -186,6 +186,8 @@ export function rootReducer(store = initialStore, action) {
 		case types.AUDITOR_ID_ACTIVATE:
 		case types.AUDITOR_ID_DEACTIVATE:
 		case types.AUDITOR_ID_VERIFY:
+		case types.AUDITOR_ID_EMAIL:
+		case types.AUDITOR_ID_MOBILE_NUMBER:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {

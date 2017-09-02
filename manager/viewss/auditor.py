@@ -9,11 +9,13 @@ import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
 import registration.service.auditor as auditor_service
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
+from auditor.service import profile_info_service
 from kronos.exceptions import ObjectNotFound
 from manager.serializers import PaymentSerializer
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.service import auditor as auditor_service
 from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
 
 class AuditorView(generics.ListAPIView):
@@ -35,8 +37,26 @@ class AuditorIdView(APIView):
             'POST': [GROUP_NAME_MANAGER]
         }
     def get(self, request, auditor_id, format=None):
-        auditor = User.objects.get(id=auditor_id);
-        return Response(AuditorSerializer(auditor).data)
+        user = auditor_service.find_auditor_by_id(auditor_id);
+        return Response(AuditorSerializer(user).data)
+
+class AuditorIdEmailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id, format=None):
+        user = auditor_service.set_email(user_id, request.data.get('email'))
+        return Response(AuditorSerializer(user).data)
+
+class AuditorIdMobileNumberView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id, format=None):
+        user = profile_info_service.set_mobile_number_for_auditor(user_id, request.data.get('mobile_number'))
+        return Response(AuditorSerializer(user).data)
 
 class AuditorProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]

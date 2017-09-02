@@ -1,12 +1,23 @@
 import logging
 from django.db import IntegrityError, transaction
 from django.contrib.auth.models import User
+from django.forms import ValidationError
+from django.core.validators import validate_email
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_AUDITOR
 from auditor.models import ProfileInfo, AdditionalInfo
 
 _logger = logging.getLogger(__name__)
+
+def find_auditor_by_id(user_id):
+    try:
+        user = User.objects.get(pk=user_id)
+        if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+            return user
+    except User.DoesNotExiste:
+        pass
+    raise ObjectNotFound from e
 
 def deactivate_auditor(user_id):
     user = User.objects.get(pk=user_id)
@@ -38,6 +49,21 @@ def verify_auditor(user_id):
     except User.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def set_email(user_id, email):
+    if not email:
+        raise AppLogicError("invalid email")
+    to_store_email = email.strip().lower()
+    try:
+        validate_email(to_store_email)
+        user = find_auditor_by_id(user_id)
+        user.email = to_store_email
+        user.username = to_store_email
+        user.save()
+        return user
+    except ValidationError as e:
+        raise AppLogicError("invalid email") from e
+    except IntegrityError as e:
+        raise AppLogicError("email already exists in system") from e
 
 # Assumption is that same combination of email[:4] and phone[-4:] will not collide more than 26 times
 # Data set while generating codes indicated 1 collision for every 1500 entries.

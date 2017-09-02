@@ -5,12 +5,13 @@ import { Link, hashHistory } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
-import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor } from '../../manager/actions/auditor.js';
+import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber } from '../../manager/actions/auditor.js';
 
 import { Lock, Check } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
+import InPlaceEditable from '../InPlaceEditable.jsx';
 
 var AuditorDetailsPage = React.createClass({
 	goToFirstTab: function(props){
@@ -26,6 +27,12 @@ var AuditorDetailsPage = React.createClass({
 		if( this.props.params.auditorId !== nextProps.params.auditorId){
 			this.goToFirstTab(nextProps);
 		}
+	},
+	emailChanged: function(newEmail){
+		this.props.dispatch(setEmail(this.props.params.auditorId, newEmail));
+	},
+	mobileNumberChanged: function(newMobileNumber){
+		this.props.dispatch(setMobileNumber(this.props.params.auditorId, newMobileNumber));
 	},
 	render: function(){
 		if(! this.props.auditor){
@@ -54,12 +61,38 @@ var AuditorDetailsPage = React.createClass({
 
 		return (
 			<div>
-				<Panel title="Account Details">
-					<p className="pull-right">{verifyButton}&nbsp;{statusButton}</p>
-					<p>Email Address: <b>{ this.props.auditor.email }</b></p>
-					<p>Date Joined: <b>{ moment(this.props.auditor.date_joined).format(momentDateFormat) }</b></p>
-					<p>Last Login: <b>{ moment(this.props.auditor.last_login).format(momentDateFormat) }</b></p>
-				</Panel>
+				<div className="panel panel-default">
+					<div className="panel-heading">
+						<span className="pull-right">
+							{verifyButton}&nbsp;{statusButton}
+						</span>
+						<h4><b>{this.props.auditor.email}</b></h4>
+					</div>
+					<table className="table">
+						<tbody>
+							<tr>
+								<td className="text-right">Email Address:</td>
+								<td>
+									<InPlaceEditable inputText={this.props.auditor.email} onSave={this.emailChanged}><b>{ this.props.auditor.email }</b></InPlaceEditable>
+								</td>
+								<td className="text-right">Date Joined:</td>
+								<td>
+								<b>{ moment(this.props.auditor.date_joined).format(momentDateFormat) }</b>
+								</td>
+							</tr>
+							<tr>
+								<td className="text-right">Mobile Number:</td>
+								<td>
+									<InPlaceEditable inputText={this.props.auditor.profileinfo.mobile_number} onSave={this.mobileNumberChanged}><b>{ this.props.auditor.profileinfo.mobile_number }</b></InPlaceEditable>
+								</td>
+								<td className="text-right">Last Login:</td>
+								<td>
+								<b>{ moment(this.props.auditor.last_login).format(momentDateFormat) }</b>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div className="row">
 					<div className="col-md-12">
 						<ul className="nav nav-tabs">
