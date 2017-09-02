@@ -36,8 +36,13 @@ class SignUpForm(UserCreationForm):
 
     def is_valid(self):
         valid = super(SignUpForm, self).is_valid() 
-        if User.objects.filter(Q(email__iexact=self.data["username"]) | Q(username__iexact=self.data["username"])).exists():
-            self.add_error("username", "a user with email {} already exists".format(self.data["username"]))
+        to_check_email = self.data["username"]
+
+        if to_check_email:
+            to_check_email = to_check_email.strip().lower()
+
+        if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email)).exists():
+            self.add_error("username", "a user with email {} already exists".format(to_check_email))
             valid = False
 
         if ProfileInfo.objects.filter(mobile_number=self.data["phone"]).exists():
@@ -50,7 +55,7 @@ class SignUpForm(UserCreationForm):
                 valid = False
 
         try:
-            validate_email(self.data["username"])
+            validate_email(to_check_email)
         except forms.ValidationError as e:
             self.add_error("username", "your email is invalid")
             valid = False
