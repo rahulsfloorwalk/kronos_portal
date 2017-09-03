@@ -15,7 +15,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from payment.service import payment_manager as payment_service
-
+from questionnaire.service import questionnaire as questionnaire_service
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
 from manager.serializers import PaymentUserSerializer
 
@@ -120,6 +120,20 @@ class AuditCycleStats(APIView):
         try:
             audit_cycle_stats = audit_cycle_service.get_audit_cycle_stats(audit_cycle_id)
             return Response(audit_cycle_stats)
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
+class ImportQuestionnaire(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        try:
+            report, name = questionnaire_service.import_questionnaire(audit_cycle_id)
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+            return response
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
 

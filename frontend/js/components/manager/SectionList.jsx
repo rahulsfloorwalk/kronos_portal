@@ -2,11 +2,13 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import {url}  from '../../../config.js';
+
 import { pointerStyle } from '../../styles.js';
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Duplicate, Tasks, Plus, Cross, Pencil, ChevronRight, ChevronDown } from '../Icons.jsx';
+import { Duplicate, Tasks, Plus, Cross, Pencil, ChevronRight, ChevronDown, Download } from '../Icons.jsx';
 
 import { orderKeys } from '../../react_utils.js'
 import { getQuestionType } from '../../utils.js';
@@ -21,7 +23,7 @@ var QuestionRow = React.createClass({
 				<td>
 					{this.props.q.question_txt}<br/>
 					<span className="text-muted">{
-						this.props.q.question_type === "MUTEX" 
+						this.props.q.question_type === "MUTEX"
 						? this.props.q.question_data.options.map(o => o.value).join(' / ')
 						: null
 					}</span>
@@ -175,8 +177,11 @@ var SectionList = React.createClass({
 						<Plus/> Add Section
 					</Link>&nbsp;
 					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/copy`} className="btn btn-default" title="Copy Sections">
-						<Duplicate/>
-					</Link>
+						<Duplicate/> Copy Sections
+					</Link>&nbsp;
+					<a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/import_questionnaire'}>
+              <Download/> Import
+          </a>
 					</span>
 					<Tasks/> Questionnaire
 				</h3>
