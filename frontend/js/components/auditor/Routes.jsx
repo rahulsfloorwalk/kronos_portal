@@ -10,6 +10,7 @@ import App from './App.jsx';
 import Dashboard from './Dashboard.jsx';
 import DetailsPage from './DetailsPage.jsx';
 
+import ClientList from './ClientList.jsx';
 import AuditList from './AuditList.jsx';
 import AuditDetails from './AuditDetails.jsx';
 import AuditApplyForm from './AuditApplyForm.jsx';
@@ -45,8 +46,9 @@ const Routes = ({store}) => (
 			<Route path="bank/edit" component={BankInfoForm}/>
 			<Route path="additional/edit" component={AdditionalInfoForm}/>
 		</Route>
-		<Route path="audit" component={AuditList}>
-			<Route path=":auditId">
+		<Route path="audit" component={ClientList}/>
+		<Route path="audit/cycle/:auditCycleId" component={AuditList}>
+			<Route path="audit/:auditId">
 				<Route path="apply" component={AuditApplyForm}/>
 				<Route path="cancel" component={AuditCancelForm}/>
 			</Route>

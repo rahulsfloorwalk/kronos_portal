@@ -43,7 +43,7 @@ var AuditApplyForm = React.createClass({
 			audit_date: this.state.audit_date ? this.state.audit_date.format("YYYY-MM-DD") : ""
 		};
 		var promise = this.props.dispatch(submitAuditApplyForm(obj));
-		promise.then(() => hashHistory.push(`/audit`));
+		promise.then(() => hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`));
 	},
 	render : function(){
 		return (

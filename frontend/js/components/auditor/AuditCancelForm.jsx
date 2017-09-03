@@ -33,7 +33,7 @@ var AuditCancelForm = React.createClass({
 	onSubmit: function(e){
 		e.preventDefault();
 		var promise = this.props.dispatch(submitAuditCancelForm( this.props.audit.id));
-		promise.then(() => hashHistory.push(`/audit`));
+		promise.then(() => hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`));
 	},
 	render : function(){
 		return (
@@ -48,7 +48,7 @@ var AuditCancelForm = React.createClass({
 					<p>Are you sure you want to cancel your application for this audit?</p>
 					<div className="form-group">
 						<SaveButton text="Yes"/>&nbsp;&nbsp;
-						<Link to="/audit" className="btn btn-default">No</Link>
+						<button type="button" onClick={hashHistory.goBack} className="btn btn-default">No</button>
 					</div>
 				</form>
 			</Modal>
