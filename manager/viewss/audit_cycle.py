@@ -123,14 +123,14 @@ class AuditCycleStats(APIView):
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
 
-class ImportQuestionnaire(APIView):
+class ExportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET' : [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
-            report, name = questionnaire_service.import_questionnaire(audit_cycle_id)
+            report, name = questionnaire_service.export_questionnaire(audit_cycle_id)
             response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = 'attachment; filename="' + name + '"'
             return response

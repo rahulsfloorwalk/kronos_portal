@@ -179,8 +179,8 @@ var SectionList = React.createClass({
 					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire/section/copy`} className="btn btn-default" title="Copy Sections">
 						<Duplicate/> Copy Sections
 					</Link>&nbsp;
-					<a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/import_questionnaire'}>
-              <Download/> Import
+					<a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/export_questionnaire'}>
+              <Download/> Export
           </a>
 					</span>
 					<Tasks/> Questionnaire
