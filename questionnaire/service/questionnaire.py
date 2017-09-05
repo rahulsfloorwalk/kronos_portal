@@ -20,7 +20,7 @@ def create_text_structure(sections, questions):
     rows = []
     row = {
         'type': 'header',
-        'text_arr': ['Question/Section', 'Max Marks']
+        'text_arr': ['Sequence','Question/Section', 'Max Marks']
     }
     rows.append(row)
     for section in sections:
@@ -46,7 +46,6 @@ def create_text_structure(sections, questions):
 def write_data(data):
     even_color = '#FFFFFF'
     odd_color = '#D6D6D6'
-    question_color = '#BEBEBE'
     header_color = '#FFFFFF'
     section_color = '#FFFFBF'
     output = io.BytesIO()
@@ -93,8 +92,9 @@ def write_data(data):
 
     start_row = 0
     start_col = 0
-    worksheet.set_column(0, 0, 50)
-    worksheet.set_column(1, 1, 20)
+    worksheet.set_column(0, 0, 20)
+    worksheet.set_column(1, 1, 50)
+    worksheet.set_column(2, 2, 20)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col
@@ -107,15 +107,17 @@ def write_data(data):
                 col += 1
         elif line.get('type') == 'section':
             row += 1
-            worksheet.write(row, col, line.get('text'), section_format)
-            worksheet.write(row, col+1, line.get('max_marks'), section_format)
+            worksheet.write(row, col, line.get('sequence'), section_format)
+            worksheet.write(row, col+1, line.get('text'), section_format)
+            worksheet.write(row, col+2, line.get('max_marks'), section_format)
         elif line.get('type') == 'question':
             if line_counter:
                 curr_format = even_line_format
             else:
                 curr_format = odd_line_format
-            worksheet.write(row, col, line.get('text'), curr_format)
-            worksheet.write(row, col+1, line.get('max_marks'), curr_format)
+            worksheet.write(row, col, line.get('sequence'), curr_format)
+            worksheet.write(row, col+1, line.get('text'), curr_format)
+            worksheet.write(row, col+2, line.get('max_marks'), curr_format)
 
         line_counter = ~line_counter
         col = start_col
