@@ -1,5 +1,6 @@
 import io
 import csv
+import itertools
 from kronos import utils
 from django.utils import timezone
 from django.db import connection
@@ -165,6 +166,7 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
     writer = csv.writer(output)
 
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+    consilidated_payments = consolidate_by_user(pending_payments)
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     client = audit_cycle.client.name
     name = audit_cycle.name
@@ -175,7 +177,7 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
                   'BENEADD1', 'TXNREFNO', 'DATE', 'AMOUNT', 'SENTTORECVINFO', 'INDICATOR',
                   'DETAIL', 'ORIGINAL_REMITTER']
     writer.writerow(fieldnames)
-    for payment in pending_payments:
+    for payment in consilidated_payments:
         try:
             bank_name = payment.user.bankinfo.bank_name
             ifsc_code = payment.user.bankinfo.ifsc_code
@@ -215,3 +217,16 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
 
 def find_by_user(user_id):
     return Payment.objects.filter(user_id=user_id)
+
+def consolidate_by_user(payments):
+    sorted_payments = sorted(payments, key=lambda k: k.user.id)
+    consolidated_payments = []
+    groups = []
+    for k, g in itertools.groupby(sorted_payments, lambda x: x.user.id):
+        groups.append(list(g))
+    for group in groups:
+        unique_user_payment = group[0]
+        for duplicate_user_payment in group[1:]:
+            unique_user_payment.amount += duplicate_user_payment.amount
+        consolidated_payments.append(unique_user_payment)
+    return consolidated_payments
