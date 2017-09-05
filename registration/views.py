@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.utils.http import is_safe_url
 from django.views import View
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -25,17 +26,23 @@ class Login(View):
     __moderator_url = '/static/dist/moderator/index.html'
 
     def get(self, request):
+        next_url = request.GET.get('next')
         _logger.info("login page requested")
         if not request.user.is_authenticated():
             form = AuthenticationForm()
+            if next_url and is_safe_url(next_url, request.get_host()):
+                messages.add_message(request, messages.WARNING, 'You need to login to access this page.')
             _logger.info("login page served")
-            return render(request, self.__template, {'form': form})
+            return render(request, self.__template, {'form': form, 'next': next_url})
         elif request.user.groups.filter(name=GROUP_NAME_MANAGER).exists():
             _logger.info("auto redirecting manager logged in: %s", request.user)
             return redirect(self.__manager_url)
         elif request.user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
             _logger.info("auto redirecting auditor logged in: %s", request.user)
-            return redirect(self.__auditor_url)
+            if next_url and is_safe_url(next_url, request.get_host()):
+                return redirect(next_url)
+            else:
+                return redirect(self.__auditor_url)
         elif request.user.groups.filter(name=GROUP_NAME_MODERATOR).exists():
             _logger.info("auto redirecting moderator logged in: %s", request.user)
             return redirect(self.__moderator_url)
@@ -45,6 +52,7 @@ class Login(View):
             return redirect('registration:client_login')
 
     def post(self, request):
+        next_url = request.POST.get('next')
         form = AuthenticationForm(data=request.POST)
         _logger.info("login attempt with username: >%s<", request.POST.get('username','<blank>'))
         if form.is_valid():
@@ -59,8 +67,12 @@ class Login(View):
                     if verification is not None and verification.is_verified is True:
                         login(request, user)
                         if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
-                            _logger.info("auditor logged in : %s",user)
-                            return redirect(self.__auditor_url)
+                            if next_url and is_safe_url(next_url, request.get_host()):
+                                _logger.info("auditor logged in : %s and redirected to: %s",user, next_url)
+                                return redirect(next_url)
+                            else:
+                                _logger.info("auditor logged in : %s",user)
+                                return redirect(self.__auditor_url)
                         _logger.warn("user without group found : %s",user)
                         messages.add_message(request, messages.WARNING, 'Your account is not in a group. Please contact site administrator.')
                     else:
@@ -72,7 +84,7 @@ class Login(View):
                     pass
         else:
             _logger.info("login failed with invalid form")
-        return render(request, self.__template, {'form': form})
+        return render(request, self.__template, {'form': form, 'next': next_url})
 
 
 class Logout(View):

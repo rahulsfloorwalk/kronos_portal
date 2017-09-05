@@ -29,7 +29,10 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				<form action="{% url 'registration:login' %}" method="POST">
+				<form action="{% url 'registration:login' %}{% if next %}?next={{next}}{%endif%}" method="POST">
+					{% if next %}
+					<input type="hidden" name="next" value="{{next}}"/>
+					{% endif %}
 					{% csrf_token %}
 					<div class="form-group">
 						<label>Email Address or 10-digit Mobile Number</label>
