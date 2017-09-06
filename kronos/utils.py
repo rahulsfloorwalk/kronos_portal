@@ -49,12 +49,12 @@ def view_log(func):
         user="unknown"
         post_data="unknown"
         get_data="unknown"
-        json_data="unknown"
+        body="unknown"
         try:
             user = args[0].user
             post_data = args[0].POST
             get_data = args[0].GET
-            json_data = args[0].data
+            body = args[0].body
         except AttributeError:
             pass
         _logger.info("view: \033[1m%s\033[0m called", func.__name__)
@@ -63,7 +63,7 @@ def view_log(func):
         _logger.info(" ├╌\033[1mkwargs\033[0m: %s", kwargs)
         _logger.info(" ├╌\033[1mGET   \033[0m: %s", get_data)
         _logger.info(" ├╌\033[1mPOST  \033[0m: %s", post_data)
-        _logger.info(" ╰╌\033[1mJSON  \033[0m: %s", json_data)
+        _logger.info(" ╰╌\033[1mbody  \033[0m: %s", body)
         return func(*args, **kwargs)
 
     return wrapper
