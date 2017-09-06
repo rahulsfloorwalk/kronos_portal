@@ -17,11 +17,14 @@ def set_mobile_number_for_auditor(user_id, mobile_number):
         minLengthValidator(mobile_number)
         maxLengthValidator(mobile_number)
         numericValidator(mobile_number)
+
+        profile_info = find_profile_info_by_user_id(user_id)
+        profile_info.mobile_number = mobile_number
+        profile_info.save()
+        return profile_info.user
     except ValidationError as e:
         raise AppLogicError("invalid mobile number") from e
+    except IntegrityError as e:
+        raise AppLogicError("mobile number already exists in system") from e
 
-    profile_info = find_profile_info_by_user_id(user_id)
-    profile_info.mobile_number = mobile_number
-    profile_info.save()
-    return profile_info.user
 
