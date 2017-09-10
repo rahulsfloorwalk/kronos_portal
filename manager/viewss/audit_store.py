@@ -47,12 +47,8 @@ class AuditStoreIdView(APIView):
             'DELETE': [GROUP_NAME_MANAGER]
         }
     def get(self, request, audit_store_id, format=None):
-        try:
-            audit_store = AuditStore.objects.get(pk=audit_store_id)
-            audit_store_serial = AuditStoreSerializer(audit_store).data
-            return Response(audit_store_serial)
-        except AuditStore.DoesNotExist:
-            return Http404
+        audit_store = audit_store_service.find_by_id(audit_store_id)
+        return Response(AuditStoreSerializer(audit_store).data)
 
     def post(self, request, audit_store_id):
         audit_store_ds = AuditStoreDeSerializer(data=request.data, context={'id':audit_store_id})
