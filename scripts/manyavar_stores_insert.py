@@ -22,6 +22,11 @@ def find_or_update_locations():
 
 @transaction.atomic
 def insert_stores():
+    stores = Store.objects.filter(client_id=7)
+    if(len(stores) > 100):
+        print("Stores already present")
+        return
+
     filename = 'scripts/data/manyavar_stores.csv'
     with open(filename) as csvfile:
         reader = csv.DictReader(csvfile)
