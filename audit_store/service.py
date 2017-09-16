@@ -351,7 +351,7 @@ def uncomplete(audit_store_id, user_actor):
         raise ObjectNotFound from e
 
 @atomic
-def accept(audit_store_id, user_actor):
+def accept(audit_store_id, payment_amount, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
@@ -382,7 +382,7 @@ def accept(audit_store_id, user_actor):
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
 
             ## add the entry to the payment row
-            payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, user_actor)
+            payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, payment_amount, user_actor)
 
             return audit_store
         else:

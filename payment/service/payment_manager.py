@@ -21,13 +21,13 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_MANAGER
 
 
-def add_payment_on_audit_store_accepted(audit_store_id, user_actor):
+def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor):
     try:
         audit_store = audit_store_service.find_by_id(audit_store_id)
         payment = Payment()
         payment.audit_store = audit_store
         payment.user = audit_store.user
-        payment.amount = (audit_store.audit.earnings_per_audit or 0) + (audit_store.audit.reimbursement or 0)
+        payment.amount = payment_amount
         payment.comment = "pending payment for {first} {last} for audit done on {date} for {client}".format(
             first=payment.audit_store.user.profileinfo.first_name,
             last=payment.audit_store.user.profileinfo.last_name,

@@ -18,12 +18,7 @@ import { getPaymentStatus } from '../../utils.js';
 
 var __AuditStoreRow = React.createClass({
 	getInitialState: function(){
-		return {
-			payButtonMessage: "",
-		};
-	},
-  acceptButtonClicked: function(e){
-		this.props.dispatch(acceptAuditStore(this.props.auditStore.id));
+		return {};
 	},
 	assignAuditStore: function(e){
 		assignAuditStoreToClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
@@ -49,7 +44,9 @@ var __AuditStoreRow = React.createClass({
     let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
     let acceptButton = null;
     if(this.props.auditStore.status == 'COMPLETED'){
-      acceptButton = (<button onClick={this.acceptButtonClicked} type="button" className="btn btn-default">Accept</button>);
+      if(this.props.auditStore.audit.audit_cycle){
+	      acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-default">Accept</Link>);
+      }
     }
     return(
       <tr>

@@ -50,6 +50,7 @@ export default class AuditorPayment extends Component{
 		let paymentRows = this.state.payments.map(p => {
 			return (<tr key={p.id}>
 				<td>{moment(p.added_on).format(momentDateFormat)}</td>
+				<td><big>₹ {p.amount}</big></td>
 				<td><PaymentStatusLabel status={p.status}/></td>
 				<td>{p.paid_on ? moment(p.paid_on).format(momentDateFormat) : ""}</td>
 				<td>{p.comment}</td>
@@ -67,6 +68,7 @@ export default class AuditorPayment extends Component{
 			<tbody>
 			<tr>
 			<th>Added On</th>
+			<th>Amount</th>
 			<th>Status</th>
 			<th>Paid On</th>
 			<th>Comment</th>

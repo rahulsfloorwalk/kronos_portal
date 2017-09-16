@@ -80,7 +80,7 @@ var AuditStoreDetails = React.createClass({
 		}
 		if (this.props.auditStore.status === 'COMPLETED'){
 			uncompleteButton = (<button onClick={this.uncompleteButtonClicked} type="button" className="btn btn-default">Un Complete</button>);
-			acceptButton = (<button onClick={this.acceptButtonClicked} type="button" className="btn btn-success">Accept</button>);
+			acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-success">Accept</Link>);
 			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
 		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === 'SUBMITTED'){

@@ -166,7 +166,7 @@ export function unSubmitAuditStore(auditStoreId){
 	};
 };
 
-export function acceptAuditStore(auditStoreId){
+export function acceptAuditStore(auditStoreId, payment_amount){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_ACCEPT,
@@ -174,7 +174,15 @@ export function acceptAuditStore(auditStoreId){
 			auditStoreId
 		});
 
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/accept`, function(auditStore){
+		let promise = $.ajax({
+			url: url.api_base_path + `manager/audit_store/${auditStoreId}/accept`,
+			method: 'POST',
+			data: JSON.stringify({
+				'payment_amount': payment_amount,
+			}),
+			contentType: 'application/json',
+		});
+		promise.done(function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_ACCEPT,
 				status: 'success',
@@ -182,6 +190,7 @@ export function acceptAuditStore(auditStoreId){
 			});
 		});
 		//TODO: Handle error
+		return promise;
 	};
 };
 
