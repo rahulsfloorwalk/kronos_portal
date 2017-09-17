@@ -5,8 +5,8 @@ from client.models import Client, Store
 
 
 def get_or_create_if_only_pilot():
-    manyavar_cycles = AuditCycle.objects.filter(client_id=7).reverse()
-    if(len(manyavar_cycles) > 1):
+    manyavar_cycles = AuditCycle.objects.filter(client_id=7).order_by('-end_date')
+    if(manyavar_cycles.count() > 1):
         return manyavar_cycles[0]
     else:
         audit_cycle = AuditCycle()
@@ -26,7 +26,7 @@ def insert_audits():
     stores = Store.objects.filter(client_id=7)
     audits = Audit.objects.filter(audit_cycle=audit_cycle)
     if len(audits) > 0:
-        print("Audits Already Inserted")
+        print("Audits Already Inserted, found",len(audits), audits)
         return
     for store in stores:
         if store.id in [40, 41, 42, 43, 44]:
