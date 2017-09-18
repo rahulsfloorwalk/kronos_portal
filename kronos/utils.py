@@ -54,16 +54,20 @@ def view_log(func):
             user = args[0].user
             post_data = args[0].POST
             get_data = args[0].GET
+            user_agent = args[0].META['HTTP_USER_AGENT']
             body = args[0].body
         except AttributeError:
             pass
+
         _logger.info("view: \033[1m%s\033[0m called", func.__name__)
-        _logger.info(" ├╌\033[1muser  \033[0m: %s", user)
+        _logger.info(" ├╌\033[1muser  \033[0m: %s, UA: %s", user, user_agent)
         _logger.info(" ├╌\033[1margs  \033[0m: %s", args)
         _logger.info(" ├╌\033[1mkwargs\033[0m: %s", kwargs)
         _logger.info(" ├╌\033[1mGET   \033[0m: %s", get_data)
         _logger.info(" ├╌\033[1mPOST  \033[0m: %s", post_data)
-        _logger.info(" ╰╌\033[1mbody  \033[0m: %s", body)
-        return func(*args, **kwargs)
+        _logger.info(" ├╌\033[1mbody  \033[0m: %s", body)
+        ret_val = func(*args, **kwargs)
+        _logger.info(" ╰╌\033[1mstatus\033[0m: %s", ret_val.status_code)
+        return ret_val
 
     return wrapper
