@@ -156,7 +156,9 @@ export default class ReportBrowser3 extends Component{
 			this.setState({
 				auditCycles,
 			})
-			this.auditCycleChanged(auditCycles[0].audit__audit_cycle__id);
+			if( auditCycles.length > 0){
+				this.auditCycleChanged(auditCycles[0].audit__audit_cycle__id);
+			}
 		});
 	}
 	auditCycleChanged = (auditCycleId) => {
@@ -168,6 +170,9 @@ export default class ReportBrowser3 extends Component{
 	}
 
 	render(){
+		if(this.state.auditCycles.length === 0){
+			return (<Jumbotron heading="there are no reports here" para="yet"/>);
+		}
 		if(! this.state.selectedAuditCycleId){
 			return <Loading/>
 		}
