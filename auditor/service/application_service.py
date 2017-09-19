@@ -38,7 +38,7 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.audit_id = audit.id
 
     if not can_auditor_apply(profileinfo.user.id):
-        raise AppLogicError("Please complete all ✳ marked fields under Profile, Bank and Additional Info sections")
+        raise AppLogicError("Please complete all ✳ marked fields under Profile, Bank Info sections")
 
     if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
         raise AppLogicError("preferred audit date is not within range")
@@ -220,11 +220,12 @@ def can_auditor_apply(user_id):
         profileInfo = ProfileInfo.objects.get(user_id=user_id)
         bankInfo = BankInfo.objects.get(user_id=user_id)
         additionalInfo = AdditionalInfo.objects.get(user_id=user_id)
+    except (ProfileInfo.DoesNotExist, BankInfo.DoesNotExist):
+        return False
+    except AdditionalInfo.DoesNotExist:
+        pass
 
-        if profileInfo.is_complete() and additionalInfo.is_complete() and bankInfo.is_complete():
-            return True
-        else:
-            return False
-
-    except (ProfileInfo.DoesNotExist, BankInfo.DoesNotExist, AdditionalInfo.DoesNotExist) as e:
-        raise AppLogicError("Please complete all ✳ marked fields under Profile, Bank and Additional Info sections")
+    if profileInfo.is_complete() and bankInfo.is_complete():
+        return True
+    else:
+        return False

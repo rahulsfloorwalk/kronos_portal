@@ -100,7 +100,7 @@ class AuditApplicationAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
 
-        ## try applying for audits before additional and bank info completion
+        ## try applying for audits before bank info completion
         audit_id = self.fake_audits[0].id
         url = '/auditor/audit/{}/application/apply'.format(audit_id)
         payload = {
@@ -131,28 +131,7 @@ class AuditApplicationAPITestCase(APITestCase):
                 self.assertEqual(v, response.data.get(k))
         self.assertTrue(response.data.get("is_complete"))
 
-        ## fill out the additional information
-        input_data_additional = {
-            'occupation': "STUDENT",
-            'distance': 50,
-            'industry': "IT",
-            'company': "Tgt",
-            'mobile_model': "lenovo",
-            'camera_resoulution': 3,
-            'has_car': False,
-            'laptop_owned': False
-        }
-
-        response = self.client.post('/auditor/additional_info', input_data_additional, format="json")
-        self.assertEqual(response.status_code, 200)
-        for k, v in input_data_additional.items():
-            if isinstance(response.data.get(k), dict):
-                self.assertEqual(v, response.data.get(k).get("id"))
-            else:
-                self.assertEqual(v, response.data.get(k))
-        self.assertTrue(response.data.get("is_complete"))
-
-        ## try applying for audits after additional and bank info completion
+        ## try applying for audits after bank info completion
         audit_id = self.fake_audits[0].id
         url = '/auditor/audit/{}/application/apply'.format(audit_id)
         payload = {
