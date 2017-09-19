@@ -91,7 +91,7 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
             for city, score_series in data_1:
                 if city['id'] == item[0]['id']:
                     if found_item is None:
-                        score_series.append(0)
+                        score_series.append(None)
                     else:
                         score_series.append(found_item[1])
 

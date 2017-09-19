@@ -63,7 +63,7 @@ var AuditCycleStorePerformance = React.createClass({
 		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
 		<XAxis dataKey="name" tick={this.tickFunction} interval={0}/>
 		<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
-		<Tooltip formatter={v => v+"%"}/>
+		<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 		<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
 		{bars}
 		</BarChart>
