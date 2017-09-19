@@ -7,3 +7,47 @@ $label_danger_base : #d9534f;
 .label-success2 { background-color: darken($label_success_base, 20%); }
 .label-danger2 { background-color: darken($label_danger_base, 20%); }
 
+
+/* Fade Animation Classes */
+.fade-enter {
+  opacity: 0.01;
+}
+
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 500ms ease-in;
+}
+
+.fade-leave {
+  opacity: 1;
+}
+
+.fade-leave.fade-leave-active {
+  opacity: 0.01;
+  transition: opacity 300ms ease-in;
+}
+
+
+/* SlideTop Animation Classes */
+.slide-enter {
+  transform: translateY(-100%);
+  z-index: -1000;
+}
+
+.slide-enter.slide-enter-active {
+  transform: translateY(0%);
+  transition: transform 500ms ease-in-out;
+  z-index: initial;
+}
+
+.slide-leave {
+  transform: translateY(0%);
+  z-index: initial;
+}
+
+.slide-leave.slide-leave-active {
+  transform: translateY(-100%);
+  transition: transform 300ms ease-in-out;
+  z-index: -1000;
+}
+

@@ -29,7 +29,6 @@ var AuditCycleSummary = React.createClass({
 		}));
 	},
 	componentWillReceiveProps(nextProps){
-		console.log("AuditCycleDetails#componentWillReceiveProps#nextProps", nextProps);
 	},
 	render: function(){
 		if(! this.state.stats){

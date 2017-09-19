@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { CSSTransitionGroup } from 'react-transition-group';
+
 import {url}  from '../../../config.js';
 
 import { pointerStyle } from '../../styles.js';
@@ -125,7 +127,12 @@ var Section = React.createClass({
 						{this.props.section.sequence} - <b>{this.props.section.name}</b>
 					</h4>
 				</div>
+				<CSSTransitionGroup
+					transitionName="fade"
+					transitionEnterTimeout={500}
+					transitionLeaveTimeout={300}>
 				{panelBody}
+				</CSSTransitionGroup>
 			</div>
 		);
 	},

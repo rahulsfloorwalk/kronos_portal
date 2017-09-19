@@ -2,12 +2,17 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { CSSTransitionGroup } from 'react-transition-group';
+
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
+
+import { pointerStyle }  from '../../styles.js';
 
 import { Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
+import Loading from '../Loading.jsx';
 
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
@@ -34,7 +39,7 @@ var AuditApplicationList = React.createClass({
 			}
 			if( app.status !== "NOT_APPLIED"){
 				rows.push(
-					<div key={app.id} className="col-md-4">
+					<div key={app.id} className="col-xs-6 col-md-3">
 						<div className="panel panel-default">
 						<div className="panel-body">
 						<p><User/>&nbsp;{auditorLink}</p>
@@ -64,7 +69,8 @@ var AuditApplicationList = React.createClass({
 var AuditRow = React.createClass({
   getInitialState: function(){
 	  return {
-		  expanded: false
+		  expanded: false,
+		  dropdown: false,
 	  };
   },
 	viewButtonClicked: function(e){
@@ -74,34 +80,11 @@ var AuditRow = React.createClass({
 		});
 	},
   render: function(){
-	  var row1, row2, row3;
-	  if(this.state.expanded){
-		  row1 = (
-			<tr>
-				<td colSpan="7">
-					<MarkdownViewer markdown={this.props.audit.post_approval_description}/>
-				</td>
-			</tr>
-		  );
-		  row2 = (
-			<tr>
-				<td colSpan="7">
-					<AuditApplicationList applications={this.props.audit.applications}/>
-				</td>
-			</tr>
-		  );
-		  row3 = (
-			<tr>
-				<td colSpan="7">
-					<AuditStoreTable auditStores={this.props.audit.audit_stores}/>
-				</td>
-			</tr>
-		  );
-	  }
-	  var buttonText = this.state.expanded ? <ChevronDown/> : <ChevronRight/>;
+	  let trStyle = Object.assign({}, pointerStyle, {
+	  });
     return(
       <tbody>
-      <tr>
+      <tr style={pointerStyle} onClick={this.viewButtonClicked} title="Click to Expand" className={this.state.expanded ? "active" : ""}>
         <td className="text-right">{this.props.serial}</td>
         <td>{this.props.audit.store.name}</td>
         <td>{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</td>
@@ -111,28 +94,97 @@ var AuditRow = React.createClass({
         <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
         <td>{this.props.audit.audit_stores.length}</td>
         <td className="text-right">
-          <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign"><HandRight/></Link>
-          <Link className="btn btn-default" to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`} title="Edit Audit"><Pencil/></Link>
-          <button className="btn btn-default" onClick={this.props.onDelete ? () => this.props.onDelete(this.props.audit) : ()=>{} } title="Delete Audit"><Cross/></button>
-          <button className="btn btn-default" onClick={this.viewButtonClicked} title="Expand Applications">{buttonText}</button>
+	    <div className="btn-group">
+		    <button type="button" className="btn btn-default" onClick={(e)=>{e.stopPropagation();this.setState({dropdown:!this.state.dropdown});}}>
+			    Options <span className="caret"></span>
+		    </button>
+		    { this.state.dropdown ?
+			    <ul className="dropdown-menu" style={{display:"block"}}
+			    onMouseEnter={()=>clearTimeout(this.state.dropdownId)}
+			    onMouseLeave={()=>this.setState({"dropdownId":setTimeout(()=>this.setState({dropdown:!this.state.dropdown}),500)})}>
+				    <li>
+					  <Link to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign">
+					    <HandRight/> Fiat Assign
+					    </Link>
+				    </li>
+				    <li role="separator" className="divider"></li>
+				    <li>
+					  <Link to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`} title="Edit Audit">
+					    <Pencil/> Edit
+					    </Link>
+				    </li>
+				    <li>
+					  <a onClick={this.props.onDelete ? () => this.props.onDelete(this.props.audit) : ()=>{} } title="Delete Audit">
+					    <Cross/> Delete
+					  </a>
+				    </li>
+			    </ul>
+		    : null}
+	    {/*<button type="button" className="btn btn-default" onClick={this.viewButtonClicked} title="Expand Applications">
+			    View
+		    </button>
+			    {/*this.state.expanded ? <ChevronDown/> : <ChevronRight/>*/}
+	    </div>
         </td>
       </tr>
-	{row1}
-	{row2}
-	{row3}
+	<CSSTransitionGroup
+		component="tr"
+		transitionName="fade"
+		transitionEnterTimeout={500}
+		transitionLeaveTimeout={300}>
+		{ this.state.expanded ?
+			<td colSpan="9">
+				<MarkdownViewer markdown={this.props.audit.post_approval_description}/>
+			</td>
+		: null }
+	</CSSTransitionGroup>
+	<CSSTransitionGroup
+		component="tr"
+		transitionName="fade"
+		transitionEnterTimeout={500}
+		transitionLeaveTimeout={300}>
+		{ this.state.expanded ?
+			<td colSpan="9">
+				<AuditApplicationList applications={this.props.audit.applications}/>
+			</td>
+		: null }
+	</CSSTransitionGroup>
+	<CSSTransitionGroup
+		component="tr"
+		transitionName="fade"
+		transitionEnterTimeout={500}
+		transitionLeaveTimeout={300}>
+		{ this.state.expanded ?
+			<td colSpan="9">
+				<AuditStoreTable auditStores={this.props.audit.audit_stores}/>
+			</td>
+		: null }
+	</CSSTransitionGroup>
       </tbody>
     );
   },
 });
 
 var AuditList = React.createClass({
+	getInitialState: function(){
+		return {
+			loading: false,
+		};
+	},
+	setLoading: function(loading){
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
+	},
   componentDidMount: function(){
-    this.props.dispatch(fetchAudits(this.props.params.auditCycleId));
+	  this.setLoading(true);
+    this.props.dispatch(fetchAudits(this.props.params.auditCycleId)).always(()=>this.setLoading(false));
   },
   onDelete: function(audit){
 	  this.props.dispatch(deleteAudit(audit.id));
   },
   render: function(){
+	  if(this.state.loading){
+		  return <Loading/>;
+	  }
     var rows = [];
     let serial = 1;
     for(var id in this.props.audits){
@@ -145,7 +197,11 @@ var AuditList = React.createClass({
           <Link to={addAuditLink} className="btn btn-default pull-right"><Plus/> Add Audit</Link>
           <Inbox/> Audits
         </h3>
-        <table className="table table-striped">
+        <table className="table table-hover table-bordered">
+	    <colgroup>
+		<col/>
+		<col style={{width:"20%"}}/>
+	    </colgroup>
           <thead>
             <tr>
               <th className="text-right">#</th>
