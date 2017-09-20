@@ -55,13 +55,13 @@ var AuditCycleDetails = React.createClass({
 					<li><Link to={`/client/${this.props.auditCycle.client.id}/audit_cycle`}><King/> {this.props.auditCycle.client.name}</Link></li>
 					<li className="active"><Retweet/> {this.props.auditCycle.name}</li>
 				</ol>
-				<h2 className="page-header">
+				<h3 className="page-header">
 					<Link to={editAuditCycleLink} className="btn btn-default pull-right">
 						<Pencil/>
 					</Link>
 					<Retweet/> { this.props.auditCycle.client.name } - { this.props.auditCycle.name } <small>( { detailsElement }) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>Post Approval Desc.</Link>)</small>
-				</h2>
-				<div className="row" style={{fontSize:"120%"}}>
+				</h3>
+				<div className="row" style={{fontSize:"110%"}}>
 					<div className="col-xs-6 col-md-2">
 					<p>
 						<span className="text-muted">Type</span><br/>
@@ -78,7 +78,7 @@ var AuditCycleDetails = React.createClass({
 
 					<div className="col-xs-6 col-md-1">
 					<p>
-						<span className="text-muted">Fees</span><br/>
+						<span cl table-borderedassName="text-muted">Fees</span><br/>
 						<b>₹ { this.props.auditCycle.earnings_per_audit }</b>
 					</p>
 					</div>
@@ -104,7 +104,7 @@ var AuditCycleDetails = React.createClass({
 					</p>
 					</div>
 				</div>
-				<hr/>
+				<br/>
 				<ul className="nav nav-tabs">
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}><Tasks/> Questionnaire</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>

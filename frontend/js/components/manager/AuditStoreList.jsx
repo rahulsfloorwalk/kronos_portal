@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import moment from 'moment';
 import { momentDateFormat, url}  from '../../../config.js';
 
+import Jumbotron from '../Jumbotron.jsx';
 import { File, Download, Checked, Unchecked } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
@@ -159,6 +160,9 @@ var AuditStoreList = React.createClass({
 			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus}/>
 		    </div>
 	    );
+    }
+    if( rows.length === 0){
+	rows.push(<Jumbotron key="empty" heading="there are no reports here" para="start by assigning a report from Audits section"/>);
     }
     return(
       <div>

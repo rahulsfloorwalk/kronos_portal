@@ -15,7 +15,7 @@ $label_danger_base : #d9534f;
 
 .fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 500ms ease-in;
+  transition: opacity 300ms ease-in;
 }
 
 .fade-leave {
@@ -27,6 +27,25 @@ $label_danger_base : #d9534f;
   transition: opacity 300ms ease-in;
 }
 
+
+/* FadeFast Animation Classes */
+.fadeFast-enter {
+  opacity: 0.01;
+}
+
+.fadeFast-enter.fadeFast-enter-active {
+  opacity: 1;
+  transition: opacity 100ms ease-in;
+}
+
+.fadeFast-leave {
+  opacity: 1;
+}
+
+.fadeFast-leave.fadeFast-leave-active {
+  opacity: 0.01;
+  transition: opacity 100ms ease-in;
+}
 
 /* SlideTop Animation Classes */
 .slide-enter {
