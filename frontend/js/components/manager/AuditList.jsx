@@ -130,10 +130,10 @@ var AuditRow = React.createClass({
 	<CSSTransitionGroup
 		component="tr"
 		transitionName="fade"
-		transitionEnterTimeout={500}
+		transitionEnterTimeout={300}
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
-			<td colSpan="9">
+			<td colSpan="9" style={{paddingLeft:"70px"}}>
 				<MarkdownViewer markdown={this.props.audit.post_approval_description}/>
 			</td>
 		: null }
@@ -141,10 +141,10 @@ var AuditRow = React.createClass({
 	<CSSTransitionGroup
 		component="tr"
 		transitionName="fade"
-		transitionEnterTimeout={500}
+		transitionEnterTimeout={300}
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
-			<td colSpan="9">
+			<td colSpan="9" style={{paddingLeft:"70px"}}>
 				<AuditApplicationList applications={this.props.audit.applications}/>
 			</td>
 		: null }
@@ -152,10 +152,10 @@ var AuditRow = React.createClass({
 	<CSSTransitionGroup
 		component="tr"
 		transitionName="fade"
-		transitionEnterTimeout={500}
+		transitionEnterTimeout={300}
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
-			<td colSpan="9">
+			<td colSpan="9" style={{paddingLeft:"70px"}}>
 				<AuditStoreTable auditStores={this.props.audit.audit_stores}/>
 			</td>
 		: null }
@@ -197,7 +197,7 @@ var AuditList = React.createClass({
           <Link to={addAuditLink} className="btn btn-default pull-right"><Plus/> Add Audit</Link>
           <Inbox/> Audits
         </h3>
-        <table className="table table-hover table-bordered">
+        <table className="table table-hover">
 	    <colgroup>
 		<col/>
 		<col style={{width:"20%"}}/>
