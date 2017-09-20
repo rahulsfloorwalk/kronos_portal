@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from '../../manager/service/attachment.js';
 
 import { Paperclip, Plus, Cross, Record, Picture, Video, File, DownloadAlt } from '../Icons.jsx';
@@ -43,6 +45,7 @@ var AttachmentDisplayBox = React.createClass({
 	deleteButtonClicked: function(){
 		if( this.state.selectedAttachment){
 			deleteAttachment(this.state.selectedAttachment.id).then(() => {
+				Alert.success("ATTACHMENT DELETED");
 				this.setState({
 					selectedAttachment: null,
 					attachments: this.state.attachments.filter((a) => a.id !== this.state.selectedAttachment.id)
@@ -51,7 +54,8 @@ var AttachmentDisplayBox = React.createClass({
 		}
 	},
 	attachmentRenamed: function(file_name){
-		renameAttachment(this.state.selectedAttachment.id, file_name).done((a)=>{
+		renameAttachment(this.state.selectedAttachment.id, file_name).then((a)=>{
+			Alert.success("ATTACHMENT RENAMED");
 			this.setState({
 				selectedAttachment: a
 			});
@@ -64,6 +68,8 @@ var AttachmentDisplayBox = React.createClass({
 					});
 				}
 			}
+		}, ()=> {
+			Alert.warning("INVALIED FILE NAME");
 		});
 	},
 	uploadButtonClicked: function(e){

@@ -112,7 +112,7 @@ export function activateAuditor(userId){
 			userId
 		});
 
-		$.post( url.api_base_path + `manager/auditor/${userId}/activate`, function(auditor){
+		return $.post( url.api_base_path + `manager/auditor/${userId}/activate`, function(auditor){
 			dispatch({
 				type: types.AUDITOR_ID_ACTIVATE,
 				status: 'success',
@@ -131,7 +131,7 @@ export function deactivateAuditor(userId){
 			userId
 		});
 
-		$.post( url.api_base_path + `manager/auditor/${userId}/deactivate`, function(auditor){
+		return $.post( url.api_base_path + `manager/auditor/${userId}/deactivate`, function(auditor){
 			dispatch({
 				type: types.AUDITOR_ID_DEACTIVATE,
 				status: 'success',
@@ -150,7 +150,7 @@ export function verifyAuditor(userId){
 			userId
 		});
 
-		$.post( url.api_base_path + `manager/auditor/${userId}/verify`, function(auditor){
+		return $.post( url.api_base_path + `manager/auditor/${userId}/verify`, function(auditor){
 			dispatch({
 				type: types.AUDITOR_ID_VERIFY,
 				status: 'success',
@@ -170,7 +170,7 @@ export function setEmail(userId, email){
 			email,
 		});
 
-		$.post( url.api_base_path + `manager/auditor/${userId}/email`, {email}, function(auditor){
+		return $.post( url.api_base_path + `manager/auditor/${userId}/email`, {email}, function(auditor){
 			dispatch({
 				type: types.AUDITOR_ID_EMAIL,
 				status: 'success',
@@ -191,7 +191,7 @@ export function setMobileNumber(userId, mobile_number){
 			mobile_number,
 		});
 
-		$.post( url.api_base_path + `manager/auditor/${userId}/mobile_number`, {mobile_number}, function(auditor){
+		return $.post( url.api_base_path + `manager/auditor/${userId}/mobile_number`, {mobile_number}, function(auditor){
 			dispatch({
 				type: types.AUDITOR_ID_MOBILE_NUMBER,
 				status: 'success',

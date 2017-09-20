@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { submitApplicationApproveForm } from '../../manager/actions/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -54,7 +56,10 @@ var ApplicationApproveForm = React.createClass({
 			audit_date: this.state.audit_date
 		};
 		var promise = this.props.dispatch(submitApplicationApproveForm(obj));
-		promise.then(() => hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`));
+		promise.then(() => {
+			hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`);
+			Alert.success("APPLICATION APPROVED");
+		});
 	},
 	render : function(){
 		if( ! this.props.application){

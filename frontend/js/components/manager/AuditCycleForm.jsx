@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import {  loadAuditCycleAddForm, loadAuditCycleEditForm, saveAuditCycleAddForm, saveAuditCycleEditForm } from '../../manager/actions/audit.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -69,6 +71,7 @@ var AuditCycleForm = React.createClass({
 		}
 		promise.then(function(savedAuditCycle){
 			hashHistory.push(`/audit_cycle/${savedAuditCycle.id}/questionnaire`);
+			Alert.success("AUDIT CYCLE SAVED");
 		});
 	},
 	render : function(){

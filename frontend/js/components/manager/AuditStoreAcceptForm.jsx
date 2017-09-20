@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
@@ -48,7 +50,10 @@ class AuditStoreAcceptForm extends Component{
 	onSubmit = (e) => {
 		e.preventDefault();
 		let promise = this.props.dispatch(acceptAuditStore(this.props.params.auditStoreId, this.state.payment_amount));
-		promise.then(hashHistory.goBack, (err)=>{
+		promise.then(()=>{
+			hashHistory.goBack();
+			Alert.success("REPORT ACCEPTED");
+		}, (err)=>{
 			this.setState({
 				errors: err.responseJSON,
 			});

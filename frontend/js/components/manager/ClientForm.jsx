@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { loadClientAddForm, loadClientEditForm, saveClientEditForm, saveClientAddForm } from '../../manager/actions/client.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -38,6 +40,7 @@ var ClientForm = React.createClass({
 		}
 		submitPromise.then(function(savedClient){
 			hashHistory.push(`/client/${savedClient.id}/audit_cycle`);
+			Alert.success("CLIENT SAVED");
 		});
 	},
 	render : function(){

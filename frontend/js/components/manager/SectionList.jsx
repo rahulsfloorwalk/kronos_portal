@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { CSSTransitionGroup } from 'react-transition-group';
 
 import {url}  from '../../../config.js';
@@ -53,7 +55,12 @@ var Section = React.createClass({
 		});
 	},
 	onQuestionDelete: function(question){
-		deleteQuestion(question.id).then(() => this.props.onChange && this.props.onChange());
+		deleteQuestion(question.id).then(() => {
+			this.props.onChange && this.props.onChange();
+			Alert.success("QUESTION DELETED");
+		}, () => {
+			Alert.warning("QUESTION CANNOT BE DELETED");
+		});
 	},
 	render: function(){
 		let questionRows = [];
@@ -163,7 +170,11 @@ var SectionList = React.createClass({
 		}
 	},
 	onSectionDelete: function(section){
-		this.props.dispatch(deleteSection(section.id));
+		this.props.dispatch(deleteSection(section.id)).then(() => {
+			Alert.success("Section deleted");
+		}, () => {
+			Alert.warning("SECTION CANNOT BE DELETED");
+		});
 	},
 	render: function(){
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){

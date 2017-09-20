@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { loadSectionAddForm, loadSectionEditForm, saveSectionEditForm, saveSectionAddForm } from '../../manager/actions/section.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -47,7 +49,10 @@ var SectionForm = React.createClass({
 		} else {
 			submitPromise = this.props.dispatch(saveSectionAddForm(this.state));
 		}
-		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`));
+		submitPromise.then( savedClient => {
+			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`);
+			Alert.success("SECTION SAVED");
+		});
 	},
 	render : function(){
 		var modalTitle = this.props.params.auditCycleId ? "Edit Section" : "Add Section";

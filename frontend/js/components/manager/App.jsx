@@ -4,6 +4,10 @@ import Header from './Header.jsx';
 import Footer from '../Footer.jsx';
 import DevelopmentMarker from '../DevelopmentMarker.jsx';
 
+import Alert from 'react-s-alert';
+import 'react-s-alert/dist/s-alert-default.css';
+import 'react-s-alert/dist/s-alert-css-effects/slide.css';
+
 var App = React.createClass({
 	render: function(){
 		var contentStyle = {
@@ -17,6 +21,7 @@ var App = React.createClass({
 					{this.props.children}
 				</div>
 				<Footer/>
+				<Alert stack={{limit: 5}} effect="slide"/>
 			</div>
 		);
 	},

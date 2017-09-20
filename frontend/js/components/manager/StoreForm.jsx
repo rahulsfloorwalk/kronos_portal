@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js';
 import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from '../../manager/actions/store.js';
 
@@ -86,6 +88,7 @@ var StoreForm = React.createClass({
 		}
 		submitPromise.then(function(savedStore){
 			hashHistory.push(`/client/${savedStore.client.id}/store`);
+			Alert.success("STORE SAVED");
 		});
 	},
 	render : function(){

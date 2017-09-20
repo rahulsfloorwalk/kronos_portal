@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import Datetime from 'react-datetime';
 
 import moment from 'moment';
@@ -33,36 +35,54 @@ var AuditStoreDetails = React.createClass({
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 	},
 	withdrawButtonClicked: function(e){
-		this.props.dispatch(withdrawAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(withdrawAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT WITHDRAWN");
+		});
 	},
 	completeButtonClicked: function(e){
-		this.props.dispatch(completeAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(completeAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT COMPLETED");
+		});
 	},
 	failButtonClicked: function(e){
-		this.props.dispatch(failAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(failAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT FAILED");
+		});
 	},
 	submitButtonClicked: function(e){
-		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT SUBMITTED");
+		});
 	},
 	unSubmitButtonClicked: function(e){
-		this.props.dispatch(unSubmitAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(unSubmitAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT Un SUBMITTED");
+		});
 	},
 	uncompleteButtonClicked: function(e){
-		this.props.dispatch(uncompleteAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(uncompleteAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT Un COMPLETED");
+		});
 	},
 	acceptButtonClicked: function(e){
-		this.props.dispatch(acceptAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(acceptAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT ACCEPTED");
+		});
 	},
 	rejectButtonClicked: function(e){
-		this.props.dispatch(rejectAuditStore(this.props.params.auditStoreId));
+		this.props.dispatch(rejectAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT REJECTED");
+		});
 	},
 	auditDateChanged: function(momentDate){
 		this.setState({auditDateLoading: true});
 		setAuditDate(this.props.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
 			this.props.dispatch(updateAuditStore(auditStore));
 			this.setState({auditDateSuccess: true, auditDateError: false});
+			Alert.success("AUDIT DATE CHANGED");
 		}, () => {
 			this.setState({auditDateSuccess: false, auditDateError: true});
+			Alert.warning("AUDIT DATE INVALID");
 		}).always(() => {
 			this.setState({auditDateLoading: false});
 		});

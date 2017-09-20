@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import moment from 'moment';
 import { momentDateFormat, url}  from '../../../config.js';
 
@@ -31,6 +33,7 @@ class __PaymentRow extends React.Component{
 
 	payButtonClicked = (e) => {
 		this.props.dispatch(payAuditStore(this.props.payment.audit_store_id)).then(() => {
+			Alert.success(`${this.props.payment.user.profileinfo.first_name} PAID`.toUpperCase());
 			this.setState({
 				payButtonMessage: "Marked as paid",
 			});
@@ -40,11 +43,13 @@ class __PaymentRow extends React.Component{
 			this.setState({
 				payButtonMessage: errInfo[0],
 			});
+			Alert.error(errInfo[0]);
 		});
 	}
 
 	unpayButtonClicked = (e) => {
 		this.props.dispatch(unpayAuditStore(this.props.payment.audit_store_id)).then(() => {
+			Alert.success(`${this.props.payment.user.profileinfo.first_name} Un PAID`.toUpperCase());
 			this.setState({
 				payButtonMessage: "Marked as unpaid",
 			});
@@ -54,6 +59,7 @@ class __PaymentRow extends React.Component{
 			this.setState({
 				payButtonMessage: errInfo[0],
 			});
+			Alert.error(errInfo[0]);
 		});
 	}
 

@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { loadAuditAddForm, loadAuditEditForm, saveAuditEditForm, saveAuditAddForm, fetchAuditCycle } from '../../manager/actions/audit.js';
 import {fetchStores} from '../../manager/actions/store.js';
 
@@ -64,7 +66,10 @@ var AuditForm = React.createClass({
 		} else {
 			submitPromise = this.props.dispatch(saveAuditAddForm(this.state));
 		}
-		submitPromise.then( savedClient => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`));
+		submitPromise.then( savedClient => {
+			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
+			Alert.success("AUDIT SAVED");
+		});
 	},
 	render : function(){
 		var modalTitle = this.props.params.auditId ? "Edit Audit" : "Add Audit";

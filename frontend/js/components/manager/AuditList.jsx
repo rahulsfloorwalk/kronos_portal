@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { CSSTransitionGroup } from 'react-transition-group';
 
 import moment from 'moment';
@@ -114,7 +116,7 @@ var AuditRow = React.createClass({
 					    </Link>
 				    </li>
 				    <li>
-					  <a onClick={this.props.onDelete ? () => this.props.onDelete(this.props.audit) : ()=>{} } title="Delete Audit">
+					  <a onClick={this.props.onDelete ? (e) => { e.stopPropagation(); this.props.onDelete(this.props.audit)} : ()=>{} } title="Delete Audit">
 					    <Cross/> Delete
 					  </a>
 				    </li>
@@ -179,7 +181,11 @@ var AuditList = React.createClass({
     this.props.dispatch(fetchAudits(this.props.params.auditCycleId)).always(()=>this.setLoading(false));
   },
   onDelete: function(audit){
-	  this.props.dispatch(deleteAudit(audit.id));
+	  this.props.dispatch(deleteAudit(audit.id)).then(()=>{
+		  Alert.success("AUDIT DELETED");
+	  }, ()=> {
+		  Alert.warning("AUDIT CANNOT BE DELETED");
+	  });
   },
   render: function(){
 	  if(this.state.loading){

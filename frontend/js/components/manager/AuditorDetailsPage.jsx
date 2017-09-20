@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link, hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
@@ -29,10 +31,18 @@ var AuditorDetailsPage = React.createClass({
 		}
 	},
 	emailChanged: function(newEmail){
-		this.props.dispatch(setEmail(this.props.params.auditorId, newEmail));
+		this.props.dispatch(setEmail(this.props.params.auditorId, newEmail)).then(() =>{
+			Alert.success("EMAIL CHANGED");
+		}, ()=>{
+			Alert.warning("EMAIL INVALID");
+		});
 	},
 	mobileNumberChanged: function(newMobileNumber){
-		this.props.dispatch(setMobileNumber(this.props.params.auditorId, newMobileNumber));
+		this.props.dispatch(setMobileNumber(this.props.params.auditorId, newMobileNumber)).then(()=>{
+			Alert.success("MOBILE NUMBER CHANGED");
+		},()=>{
+			Alert.warning("MOBILE NUMBER INVALID");
+		});
 	},
 	render: function(){
 		if(! this.props.auditor){
@@ -40,12 +50,12 @@ var AuditorDetailsPage = React.createClass({
 		}
 		let statusButton;
 		if(this.props.auditor.is_active){
-			statusButton = (<button onClick={() => this.props.dispatch(deactivateAuditor(this.props.params.auditorId))}
+			statusButton = (<button onClick={() => this.props.dispatch(deactivateAuditor(this.props.params.auditorId)).then(()=>Alert.success("AUDITOR DEACTIVATED"))}
 				className="btn btn-default">
 				<Lock/> Deactivate
 			</button>);
 		} else {
-			statusButton = (<button onClick={() => this.props.dispatch(activateAuditor(this.props.params.auditorId))}
+			statusButton = (<button onClick={() => this.props.dispatch(activateAuditor(this.props.params.auditorId)).then(()=>Alert.success("AUDITOR ACTIVATED"))}
 				className="btn btn-default">
 				<Lock/> Activate
 			</button>);

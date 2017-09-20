@@ -3,6 +3,8 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { submitApplicationRejectForm } from '../../manager/actions/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
@@ -29,19 +31,22 @@ var ApplicationRejectForm = React.createClass({
 	onSubmit: function(e){
 		e.preventDefault();
 		var promise = this.props.dispatch(submitApplicationRejectForm(this.props.application.id));
-		promise.then(() => hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`));
+		promise.then(() => {
+			hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`);
+			Alert.success("APPLICATION DENIED");
+		});
 	},
 	render : function(){
 		if( ! this.props.application){
 			return <Loading/>;
 		}
 		return (
-			<Modal modalTitle="Reject Application" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Deny Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
 					<p>Are you sure you want to reject this application?</p>
-					<SaveButton text="Reject"/>
+					<SaveButton text="Deny"/>
 				</form>
 			</Modal>
 		);
