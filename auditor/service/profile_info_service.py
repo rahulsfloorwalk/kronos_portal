@@ -1,4 +1,5 @@
 from django.forms import ValidationError
+from django.db import IntegrityError
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
