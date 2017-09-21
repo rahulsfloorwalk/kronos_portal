@@ -93,6 +93,9 @@ class StoreSerializer(ModelSerializer):
         model = Store
         fields = (
             'id',
+            'code',
+            'type',
+            'priority',
             'name',
             'address',
             'location',

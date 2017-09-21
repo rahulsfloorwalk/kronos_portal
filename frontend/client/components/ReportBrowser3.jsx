@@ -25,6 +25,8 @@ class AuditStoreTable extends Component {
 			loading: false,
 			reports: [],
 			cities: [],
+			types: [],
+			priorities: [],
 			selectedCityId: null,
 		};
 	}
@@ -39,6 +41,8 @@ class AuditStoreTable extends Component {
 		this.setLoading(true);
 		findAuditStoresByAuditCycle(auditCycleId).then(reports => {
 			let cities = [];
+			let types = [];
+			let priorities = []
 			reports.forEach( r => {
 				if(cities.filter(c => c.id === r.city_id).length === 0){
 					cities.push({
@@ -46,10 +50,22 @@ class AuditStoreTable extends Component {
 						name: r.city_name,
 					});
 				}
+				if(types.filter(t => t.type === r.store_type).length === 0){
+					types.push({
+						value: r.store_type,
+					});
+				}
+				if(priorities.filter(p => p.id === r.store_priority).length === 0){
+					priorities.push({
+						value: r.store_priority,
+					});
+				}
 			});
 			this.setState({
 				reports,
 				cities,
+				types,
+				priorities,
 			});
 		}).always(() => this.setLoading(false));
 	}
@@ -75,9 +91,19 @@ class AuditStoreTable extends Component {
 		if(this.state.reports.length === 0) {
 			return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
 		}
-		let citySelect = (<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px"}}>
+		let citySelect = (<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px", margin:"20px"}}>
 			<option value="">All Cities</option>
 			{this.state.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+		</select>);
+
+		let storeTypeSelect = (<select onChange={this.storeTypeSelect} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px", margin:"20px"}}>
+			<option value="">All Types</option>
+			{this.state.types.map(t => <option key={t.value} value={t.value}>{t.value}</option>)}
+		</select>);
+
+		let storePrioritySelect = (<select onChange={this.storePrioritySelect} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px", margin:"20px"}}>
+			<option value="">All Priorities</option>
+			{this.state.priorities.map(p => <option key={p.value} value={p.value}>{p.value}</option>)}
 		</select>);
 
 		let headers = [];
@@ -121,7 +147,13 @@ class AuditStoreTable extends Component {
 		return (
 			<div>
 			<div className="form-group">
-				<big>Filter:</big> {citySelect} <span className="pull-right" style={{fontSize:"130%"}}><big><b>{trs.length}</b> Reports</big></span>
+				<big>City:</big>
+				{citySelect}
+				<big>Store Type:</big>
+				{storeTypeSelect}
+				<big>Store Priority:</big>
+				{storePrioritySelect}
+				<span className="pull-right" style={{fontSize:"130%"}}><big><b>{trs.length}</b> Reports</big></span>
 			</div>
 			<table className="table table-bordered table-hover">
 			<thead>

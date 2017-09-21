@@ -178,6 +178,9 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
             'city_id': audit_store.audit.store.location.city.id,
             'store_name': audit_store.audit.store.name,
             'store_id': audit_store.audit.store.id,
+            'store_code': audit_store.audit.store.code,
+            'store_type': audit_store.audit.store.type,
+            'store_priority': audit_store.audit.store.priority,
             'sections': __get_mean_for_sections(sections, (audit_store,))
         })
 

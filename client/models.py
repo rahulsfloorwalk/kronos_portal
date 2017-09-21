@@ -36,9 +36,9 @@ class ClientUser(Model):
 class Store(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
-    code = CharField(db_column='code', max_length=20, unique=True, blank=True, null=True)
-    type = CharField(db_column='type', max_length=20, blank=True)
-    priority = CharField(db_column='priority', max_length=5, blank=True)
+    code = CharField(db_column='code', max_length=20, blank=True, null=True, default=None)
+    type = CharField(db_column='type', max_length=20, blank=True, default='')
+    priority = CharField(db_column='priority', max_length=5, blank=True, default='')
     name = CharField(db_column='name', max_length=500, blank=False)
     address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=False, on_delete=PROTECT)
@@ -46,3 +46,6 @@ class Store(Model):
 
     def __str__(self):
         return 'Client({}): {}'.format(self.id, self.name)
+
+    class Meta:
+        unique_together = ("client", "code")
