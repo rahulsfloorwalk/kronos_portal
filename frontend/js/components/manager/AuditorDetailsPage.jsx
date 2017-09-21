@@ -93,7 +93,12 @@ var AuditorDetailsPage = React.createClass({
 							<tr>
 								<td className="text-right">Mobile Number:</td>
 								<td>
-									<InPlaceEditable inputText={this.props.auditor.profileinfo.mobile_number} onSave={this.mobileNumberChanged}><b>{ this.props.auditor.profileinfo.mobile_number }</b></InPlaceEditable>
+								<InPlaceEditable inputText={this.props.auditor.profileinfo.mobile_number} onSave={this.mobileNumberChanged}>
+								<b>{ this.props.auditor.profileinfo.mobile_number ?
+									this.props.auditor.profileinfo.mobile_number 
+									: <span className="text-muted">update mobile number</span>
+								}</b>
+								</InPlaceEditable>
 								</td>
 								<td className="text-right">Last Login:</td>
 								<td>
