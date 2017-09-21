@@ -1,7 +1,9 @@
 import $ from 'jquery'
 import { url } from '../../config.js'
 
+let promise;
 export function fetchUser(){
-	return $.get( url.api_base_path + `client/user`);
+	promise = promise || $.get( url.api_base_path + `client/user`);
+	return promise;
 };
 
