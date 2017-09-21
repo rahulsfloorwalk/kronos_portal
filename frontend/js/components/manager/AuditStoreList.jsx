@@ -10,6 +10,7 @@ import { File, Download, Checked, Unchecked } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
+import Loading from '../Loading.jsx';
 
 import AuditCycleSummary from './AuditCycleSummary.jsx'
 import { fetchClientUsers } from '../../manager/actions/client_user.js';
@@ -111,10 +112,15 @@ var AuditStoreList = React.createClass({
 		return {
 			selectedClientUserId: null,
 			selectedStatus: null,
+			loading: false,
 		};
 	},
+	setLoading: function(loading){
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
+	},
   componentDidMount: function(){
-    this.props.dispatch(fetchAuditStores(this.props.params.auditCycleId));
+	  this.setLoading(true);
+    this.props.dispatch(fetchAuditStores(this.props.params.auditCycleId)).always(()=>this.setLoading(false));
     if(this.props.auditCycle){
 	    this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
     }
@@ -161,8 +167,11 @@ var AuditStoreList = React.createClass({
 		    </div>
 	    );
     }
-    if( rows.length === 0){
+    if( !this.state.loading && rows.length === 0){
 	rows.push(<Jumbotron key="empty" heading="there are no reports here" para="start by assigning a report from Audits section"/>);
+    }
+    if(this.state.loading){
+            rows.push(<Loading key="loading"/>);
     }
     return(
       <div>
