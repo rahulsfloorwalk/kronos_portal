@@ -13,6 +13,7 @@ import { InputGroupBtn } from '../InputGroup.jsx';
 import FormInput from '../FormInput.jsx';
 import FormGroup from '../FormGroup.jsx';
 import SaveButton from '../SaveButton.jsx';
+import Loading from '../Loading.jsx';
 
 var AuditorRow = React.createClass({
 	render: function(){
@@ -40,21 +41,27 @@ var AuditorRow = React.createClass({
 var AuditorList = React.createClass({
 	getInitialState: function() {
 		return {
+			loading: false,
 			search: ""
 		};
+	},
+	setLoading: function(loading){
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
 	},
 	componentDidMount: function() {
 		this.setState({
 			search: this.props.search
 		});
 		if( this.props.search && this.props.search !== ""){
-			this.props.dispatch(searchAuditors(this.props.search));
+			this.setLoading(true);
+			this.props.dispatch(searchAuditors(this.props.search)).always(()=>this.setLoading(false));
 		}
 	},
 	onSubmit: function(e) {
 		console.debug("form sub dsadasd!");
 		e.preventDefault();
-		this.props.dispatch(searchAuditors(this.state.search));
+		this.setLoading(true);
+		this.props.dispatch(searchAuditors(this.state.search)).always(()=>this.setLoading(false));
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
@@ -90,6 +97,9 @@ var AuditorList = React.createClass({
 					<p>try modifying your search terms a bit..</p>
 				</div>
 			);
+		}
+		if(this.state.loading){
+			var table = <Loading/>;
 		}
 
 		return (
