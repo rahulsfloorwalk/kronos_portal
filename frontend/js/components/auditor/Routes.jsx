@@ -4,8 +4,6 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 
 import ReactGA from 'react-ga';
 
-import { auditorGAId } from '../../../config.js';
-
 import App from './App.jsx';
 import Dashboard from './Dashboard.jsx';
 import DetailsPage from './DetailsPage.jsx';
@@ -25,8 +23,6 @@ import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';
 
 import PaymentList from './PaymentList.jsx';
-
-ReactGA.initialize(auditorGAId);
 
 function logPageView() {
 	console.log(window.location.pathname, window.location.hash);

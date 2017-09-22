@@ -1,4 +1,4 @@
-import requests
+from django.conf import settings
 from django.http import Http404, HttpResponse
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
@@ -544,3 +544,11 @@ class ScoreView(APIView):
     def get(self, request, format=None):
         auditor_score = auditor_dashboard_service.getAuditorScore(request.user.id)
         return Response(auditor_score)
+
+class ConfigView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        return Response(settings.FRONTEND_CONFIG["AUDITOR"])

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 
@@ -397,3 +398,11 @@ class AuditCycleTimeSeriesReport(APIView):
             return Response(audit_cycle_time_series)
         except ObjectNotFound as e:
             raise NotFound from e
+
+class ConfigView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        return Response(settings.FRONTEND_CONFIG["CLIENT"])

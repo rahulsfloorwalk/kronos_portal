@@ -5,6 +5,8 @@ import 'babel-polyfill';
 
 import Routes from './components/Routes.jsx';
 
+import { fetchConfig } from './service/config.js';
+
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
@@ -15,7 +17,10 @@ $(document).ajaxError(function(event, jqXHR, settings){
 });
 
 
-ReactDOM.render(
-	<Routes/>,
-	document.getElementById('root')
-);
+fetchConfig().then((config) => {
+
+	ReactDOM.render(
+		<Routes/>,
+		document.getElementById('root')
+	);
+});

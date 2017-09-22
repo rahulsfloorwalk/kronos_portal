@@ -35,4 +35,5 @@ urlpatterns = ([
     url(r'audit_cycle/aggregation$', views.AuditCycleAggregate.as_view(), name='audit_cycle_aggregation'),
     url(r'types$', views.AuditTypesByClient.as_view(), name='audit_types_by_client'),
     url(r'city$', views.CityView.as_view(), name='city_view'),
+    url(r'config$', views.ConfigView.as_view(), name='config_view'),
 ], 'client_rest')

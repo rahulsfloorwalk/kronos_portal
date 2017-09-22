@@ -272,7 +272,7 @@ AWS = {
     }
 }
 
-AUTH_GA_ID = properties["GENERAL"]["AUTH_GA_ID"]
+AUTH_GA_ID = properties["FRONTEND"]["AUDITOR_GA_ID"]
 
 IMGIX_SUBDOMAIN = properties["GENERAL"]["IMGIX_SUBDOMAIN"]
 
@@ -283,5 +283,18 @@ EMAIL_SWITCH = {
     "ON_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["ON_REMINDER"] == "True",
     "POST_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["POST_REMINDER"] == "True",
     "WELCOME_EMAIL": properties["EMAIL_SWITCH"]["WELCOME"] == "True",
+}
+
+FRONTEND_CONFIG = {
+        "AUDITOR": {
+            "GA_ID": AUTH_GA_ID,
+            "FB_CLIENT_ID": properties["FRONTEND"]["AUDITOR_FB_CLIENT_ID"],
+            "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
+            "FB_SCOPE": properties["FRONTEND"]["AUDITOR_FB_SCOPE"],
+        },
+        "CLIENT": {
+            "IMPACT_FACTOR_URL": properties["FRONTEND"]["CLIENT_IMPACT_FACTOR_URL"],
+            "TWEET_DATA_URL": properties["FRONTEND"]["CLIENT_TWEET_DATA_URL"],
+        },
 }
 

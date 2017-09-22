@@ -5,6 +5,7 @@ from kronos.utils import view_log
 from . import views
 
 urlpatterns = ([
+    url(r'config$', views.ConfigView.as_view(), name='config_view'),
     url(r'user$', views.UserView.as_view(), name='user_view'),
     url(r'notifications$', views.NotificationsView.as_view(), name='notifications_view'),
     url(r'state$', views.StateView.as_view(), name='state_view'),

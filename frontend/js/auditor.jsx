@@ -2,6 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
+import ReactGA from 'react-ga';
+
 import * as Redux from 'redux';
 import ReduxThunk from 'redux-thunk';
 import ReduxLogger from 'redux-logger';
@@ -10,6 +12,8 @@ import $ from 'jquery';
 
 import Routes from './components/auditor/Routes.jsx';
 import { rootReducer } from './reducers_auditor.js';
+
+import { fetchConfig } from './auditor/service/config.js';
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
@@ -21,18 +25,23 @@ $(document).ajaxError(function(event, jqXHR, settings){
 	}
 });
 
+fetchConfig().then((config) => {
 
-var store = Redux.createStore(
-	rootReducer,
-	Redux.applyMiddleware(
-		ReduxThunk,
-		//ReduxLogger()
-	)
-);
+	ReactGA.initialize(config.GA_ID);
 
-ReactDOM.render(
-	<Provider store={store}>
-		<Routes store={store}/>
-	</Provider>,
-	document.getElementById('root')
-);
+	let store = Redux.createStore(
+		rootReducer,
+		Redux.applyMiddleware(
+			ReduxThunk,
+			//ReduxLogger()
+		)
+	);
+
+	ReactDOM.render(
+		<Provider store={store}>
+			<Routes store={store}/>
+		</Provider>,
+		document.getElementById('root')
+	);
+});
+
