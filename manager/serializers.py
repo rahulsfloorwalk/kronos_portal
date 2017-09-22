@@ -153,6 +153,9 @@ class StoreSerializer(ModelSerializer):
             'address',
             'location',
             'client',
+            'code',
+            'type',
+            'priority',
         )
         read_only_fields = fields
 
@@ -166,8 +169,12 @@ class StoreDeSerializer(ModelSerializer):
             'address',
             'location',
             'client',
+            'code',
+            'type',
+            'priority',
         )
         read_only_fields = ('id',)
+        validators=[]
 
     def deserialize(self):
         if 'id' in self.context and self.context.get('id') is not None:
@@ -178,6 +185,9 @@ class StoreDeSerializer(ModelSerializer):
         store.address = self.validated_data.get('address', store.address)
         store.location = self.validated_data.get('location', store.location_id)
         store.client = self.validated_data.get('client', store.client_id)
+        store.code = self.validated_data.get('code', store.code)
+        store.type = self.validated_data.get('type', store.type)
+        store.priority = self.validated_data.get('priority', store.priority)
         return store
 
 

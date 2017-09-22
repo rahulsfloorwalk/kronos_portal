@@ -11,7 +11,9 @@ var StoreRow = React.createClass({
 		return (
 			<tr>
 				<td className="text-right">{this.props.serial}</td>
-				<td>{this.props.store.name}</td>
+				<td>{this.props.store.code}</td>
+				<td>{this.props.store.name} {this.props.store.priority ? "("+this.props.store.priority+")" : null}</td>
+				<td>{this.props.store.type}</td>
 				<td>{this.props.store.address}</td>
 				<td>
 					{this.props.store.location.name}, <br/>
@@ -58,7 +60,9 @@ var StoreList = React.createClass({
 					<thead>
 						<tr>
 							<th className="text-right">#</th>
+							<th>Code</th>
 							<th>Name</th>
+							<th>Type</th>
 							<th>Address</th>
 							<th>Location</th>
 							<th></th>
