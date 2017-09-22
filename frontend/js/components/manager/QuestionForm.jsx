@@ -180,6 +180,29 @@ var QuestionForm = React.createClass({
 			}
 		);
 	},
+	saveAndNext: function(e){
+		e.preventDefault();
+		saveQuestion(this.state.form).then(
+			(savedQuestion) => {
+				this.setState({
+					form: Object.assign({}, this.state.form, {
+						sequence: savedQuestion.sequence + 1,
+						max_marks: null,
+						question_type: "",
+						question_txt: "",
+					})
+				});
+				hashHistory.push(this.props.location.pathname);
+			},
+			(err) => {
+				if( err.responseJSON){
+					this.setState({
+						errors: err.responseJSON
+					});
+				}
+			}
+		);
+	},
 	questionDataChanged: function(questionData){
 		this.setState({
 			form: Object.assign({}, this.state.form, {
@@ -219,7 +242,10 @@ var QuestionForm = React.createClass({
 						{optionBuilder}
 					</div>
 					<div className="col-md-12">
-						<SaveButton/>
+						<SaveButton/>&nbsp;
+						{ ! this.props.params.questionId ?
+						<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>
+						: null }
 					</div>
 				</form>
 			</Modal>
