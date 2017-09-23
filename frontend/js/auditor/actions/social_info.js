@@ -55,12 +55,7 @@ function socialInfoPostError(errors){
  */
 
 export function fetchFacebookData(socialInfo, access_token){
-	if(!access_token){
-		return function(dispatch){
-			dispatch(socialInfoGetError({"message":"Access Denied by user"}));
-		}
-	}
-	let data_url = "https://graph.facebook.com/v2.10/me?access_token=" + access_token + "&debug=all&fields=" + facebook_fields + "&format=json&method=get&pretty=0&suppress_http_code=1"
+	let data_url = `https://graph.facebook.com/v2.10/me?access_token=${access_token}&debug=all&fields=${facebook_fields}&format=json&method=get&pretty=0&suppress_http_code=1`;
 	return function(dispatch){
 		dispatch(socialInfoGetReq());
 		return $.get( data_url, function(facebook_data){

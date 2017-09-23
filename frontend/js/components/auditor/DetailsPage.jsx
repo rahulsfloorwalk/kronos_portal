@@ -20,10 +20,8 @@ var DetailsPage = React.createClass({
 		return (
 			<div>
 			<div className="row">
-				<div className="col-md-12">
-					<SocialInfoPanel/>
-				</div>
 				<div className="col-md-6">
+					<SocialInfoPanel/>
 					<ProfileInfoPanel/>
 					<Panel title="Account Details" body={true}>
 						<p>Email: <b>{this.props.user.email}</b></p>
