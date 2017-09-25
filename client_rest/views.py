@@ -225,6 +225,24 @@ class AuditCycleXlsxReport(APIView):
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
 
+class AuditCycleFilteredXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        try:
+            filters = {}
+            filters['city'] = request.GET.get('city')
+            filters['type'] = request.GET.get('type')
+            filters['priority'] = request.GET.get('priority')
+            report, name = cycle_xlsx_report_service.get_aggregate_report_with_filters(audit_cycle_id, request.user.id, filters)
+            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+            return response
+        except (ObjectNotFound, AppLogicError) as e:
+            raise Http404
+
 
 class AuditStoreEARSReport(APIView):
     permission_classes = [HasGroupPermission]

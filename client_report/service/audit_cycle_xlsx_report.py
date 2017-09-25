@@ -1,18 +1,15 @@
-import xlsxwriter
 import io
 
-from kronos.utils import get_color_code, get_color_hex_from_code
-from kronos.exceptions import ObjectNotFound, AppLogicError
-
-from client.service.client_user import find_clientuser_by_user_id
-
-from audit.models import AuditCycle
-from audit_store.models import AuditStore
-from answer.models import Answer, ReportSection
-from questionnaire.models import Question
+import xlsxwriter
 
 import audit.service.audit_cycle as audit_cycle_service
+from answer.models import Answer, ReportSection
+from client.service.client_user import find_clientuser_by_user_id
+from kronos.utils import get_color_code, get_color_hex_from_code
 
+
+# Get report for all stores for given client
+# ----------------------------------------
 def get_aggregate_report_for_manager(audit_cycle_id, filter_user=None):
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
 
@@ -31,10 +28,51 @@ def get_aggregate_report_for_manager(audit_cycle_id, filter_user=None):
     name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
     return write_data(data), name
 
+
 def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
     return get_aggregate_report_for_manager(audit_cycle.id, clientuser)
+
+
+# ----------------------------------------
+
+# Get report for audit cycle client with filters
+def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
+    print(filters)
+    audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
+    clientuser = find_clientuser_by_user_id(user_id)
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    sections = audit_cycle.sections.order_by('sequence')
+
+    questions = []
+    for section in sections:
+        questions.extend(section.questions.order_by('sequence'))
+
+    audit_stores = []
+    for audit in audit_cycle.audits.all():
+        qs = audit.audit_stores.presentable()
+        if clientuser:
+            qs.visible_to(clientuser)
+        qs.order_by('audit_date')
+        audit_stores.extend(qs)
+
+    filtered_audit_stores = audit_stores
+    if filters.get('city'):
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit.store.location.city.id == int(filters.get('city'))]
+    if filters.get('type'):
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit.store.type == filters.get('type')]
+    if filters.get('priority'):
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit.store.priority == filters.get('priority')]
+
+    data = create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
+    name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
+    return write_data(data), name
+
+
 
 def create_text_structure(title, sections, questions, audit_stores):
     rows = []
@@ -53,7 +91,7 @@ def create_text_structure(title, sections, questions, audit_stores):
             'value': section.name,
             'colspan': section.questions.count()
         })
-    cells = [{'value':"SECTIONS",'colspan':2}] + section_cells
+    cells = [{'value': "SECTIONS", 'colspan': 2}] + section_cells
     row = {'type': 'sections', 'content': cells}
     rows.append(row)
 
@@ -68,12 +106,12 @@ def create_text_structure(title, sections, questions, audit_stores):
     ## generate answer rows
     for audit_store in audit_stores:
         store_name_cell = {
-            'value': audit_store.audit.store.name + " - "+ audit_store.audit.store.location.city.name,
-            'color_code': get_color_code(0,0)
+            'value': audit_store.audit.store.name + " - " + audit_store.audit.store.location.city.name,
+            'color_code': get_color_code(0, 0)
         }
         audit_date_cell = {
             'value': audit_store.audit_date.strftime('%d-%m-%Y'),
-            'color_code': get_color_code(0,0)
+            'color_code': get_color_code(0, 0)
         }
 
         answer_cells = []
@@ -86,7 +124,7 @@ def create_text_structure(title, sections, questions, audit_stores):
                 if report_section.not_applicable:
                     answer_cells.append({
                         'value': "Not Applicable",
-                        'color_code': get_color_code(0,0)
+                        'color_code': get_color_code(0, 0)
                     })
                 elif answer.not_applicable:
                     answer_cells.append({
@@ -101,7 +139,7 @@ def create_text_structure(title, sections, questions, audit_stores):
             except (Answer.DoesNotExist) as e:
                 answer_cells.append({
                     'value': "",
-                    'color_code': get_color_code(0,0)
+                    'color_code': get_color_code(0, 0)
                 })
         content = [store_name_cell, audit_date_cell] + answer_cells
         row = {
@@ -111,50 +149,51 @@ def create_text_structure(title, sections, questions, audit_stores):
         rows.append(row)
     return rows
 
+
 def write_data(data):
     even_color = '#FFFFFF'
     odd_color = '#D6D6D6'
     title_color = '#FFFFFF'
     question_color = '#BEBEBE'
     output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
     worksheet = workbook.add_worksheet()
     section_format = workbook.add_format({
-        'text_wrap':True,
-        'bold':True,
-        'top':1,
-        'bottom':1,
-        'right':1,
+        'text_wrap': True,
+        'bold': True,
+        'top': 1,
+        'bottom': 1,
+        'right': 1,
         'bg_color': question_color,
-        'font_color':'red',
+        'font_color': 'red',
         'valign': 'vcenter',
-        'font_size':14,
+        'font_size': 14,
     })
     question_format = workbook.add_format({
-        'text_wrap':True,
-        'bold':True,
-        'top':1,
-        'bottom':1,
-        'right':1,
+        'text_wrap': True,
+        'bold': True,
+        'top': 1,
+        'bottom': 1,
+        'right': 1,
         'bg_color': question_color,
-        'font_color':'red',
+        'font_color': 'red',
         'valign': 'vcenter',
     })
 
     title_format = workbook.add_format({
-        'text_wrap':True,
-        'bold':True,
-        'font_size':16,
-        'bottom':1,
+        'text_wrap': True,
+        'bold': True,
+        'font_size': 16,
+        'bottom': 1,
         'bg_color': title_color,
-        'font_color':'red',
+        'font_color': 'red',
         'valign': 'vcenter',
     })
 
     base_answer_style = {
-        'text_wrap':True,
-        'bottom':1,
-        'right':1,
+        'text_wrap': True,
+        'bottom': 1,
+        'right': 1,
         'valign': 'vcenter',
     }
 
@@ -182,16 +221,17 @@ def write_data(data):
     for line in data:
         if line.get('type') == 'title':
             for point in line.get('content'):
-                worksheet.merge_range(row, col, row, col+3, point, title_format)
+                worksheet.merge_range(row, col, row, col + 3, point, title_format)
                 col += 1
         elif line.get('type') == 'sections':
             for cell in line.get('content'):
                 if isinstance(cell, dict):
-                    if cell.get('colspan',1) > 1:
-                        worksheet.merge_range(row, col, row, col+cell.get('colspan')-1, cell.get('value'), section_format)
-                        col += cell.get('colspan',1)
+                    if cell.get('colspan', 1) > 1:
+                        worksheet.merge_range(row, col, row, col + cell.get('colspan') - 1, cell.get('value'),
+                                              section_format)
+                        col += cell.get('colspan', 1)
                     else:
-                        worksheet.write(row, col, cell.get('value',""), section_format)
+                        worksheet.write(row, col, cell.get('value', ""), section_format)
                         col += 1
                 else:
                     worksheet.write(row, col, cell, section_format)
@@ -203,7 +243,8 @@ def write_data(data):
         elif line.get('type') == 'answer':
             for cell in line.get('content'):
                 if cell.get('color_code') is not 0:
-                    worksheet.write(row, col, cell.get('value'), get_format_for_color_code(workbook, base_answer_style, cell.get('color_code', 0)))
+                    worksheet.write(row, col, cell.get('value'),
+                                    get_format_for_color_code(workbook, base_answer_style, cell.get('color_code', 0)))
                 elif line_counter == 0:
                     worksheet.write(row, col, cell.get('value'), even_line_format)
                 else:
