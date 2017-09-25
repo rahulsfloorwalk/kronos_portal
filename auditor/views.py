@@ -32,6 +32,7 @@ from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR
 from social.service import social_auditor as social_service
 from .serializers import CitySerializer
+from auditor.service import profile_info_service
 
 
 class ProfileInfoView(APIView):
@@ -41,11 +42,8 @@ class ProfileInfoView(APIView):
             'POST': [GROUP_NAME_AUDITOR]
         }
     def get(self, request, format=None):
-        try:
-            profile_info = ProfileInfo.objects.get(user_id=request.user.id)
-            return Response(ProfileInfoSerializer(profile_info).data)
-        except ProfileInfo.DoesNotExist:
-            raise Http404
+        profile_info = profile_info_service.find_profile_info_by_user_id(request.user.id)
+        return Response(ProfileInfoSerializer(profile_info).data)
 
     def post(self, request):
         profile_info_ds = ProfileInfoDeSerializer(data=request.data, context={'current_user': request.user})
@@ -109,7 +107,7 @@ class FacebookInfoView(APIView):
         facebook_ds = FacebookDeSerializer(data=request.data, context={'current_user' : request.user})
         facebook_ds.is_valid(raise_exception=True)
         facebook = facebook_ds.deserialize()
-        facebook.save()
+        facebook = social_service.save(facebook)
         return Response(FacebookSerializer(facebook).data)
 
 class AvailableAuditsView(APIView):

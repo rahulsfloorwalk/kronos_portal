@@ -9,7 +9,9 @@ import { momentDateFormat, facebook_client_id, facebook_scope, facebook_fields }
 
 import { Pencil, Check } from '../Icons.jsx';
 
-import { fetchFacebookInfo, fetchFacebookData, saveFacebookInfo } from '../../auditor/actions/social_info.js';
+import { fetchFacebookInfo, saveFacebookInfo } from '../../auditor/actions/social_info.js';
+import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
+import FBGraph from '../../auditor/service/fbgraph.js';
 import Loading from '../Loading.jsx'
 
 var SocialInfoPanelBase = React.createClass({
@@ -24,10 +26,14 @@ var SocialInfoPanelBase = React.createClass({
 
 	facebookResponse: function(response){
 		if(response.accessToken){
+			let fbapi = new FBGraph(response.accessToken);
 			this.setLoading(true);
-			this.props.dispatch(fetchFacebookData(this.props.socialInfo, response.accessToken)).always(()=>this.setLoading(false));
+			fbapi.me(facebook_fields).done((fbResponse) => {
+				this.props.dispatch(saveFacebookInfo(fbResponse, response.accessToken)).done(() => {
+					this.props.dispatch(fetchProfileInfo());
+				}).always(()=>this.setLoading(false));
+			});
 		}
-
 	},
 
 	componentDidMount: function() {
@@ -71,5 +77,4 @@ var mapStoreToProps = function(store){
 	};
 };
 
-export { SocialInfoPanelBase };
 export default ReactRedux.connect(mapStoreToProps)(SocialInfoPanelBase);
