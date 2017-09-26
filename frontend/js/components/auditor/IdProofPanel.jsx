@@ -164,9 +164,8 @@ var IdProofAttachmentUploadBox = React.createClass({
 			attachmentRows.push(
 				<div key="empty" className="list-group-item text-center text-muted">
 					<h4>
-						No ID Proofs Uploaded.<br/>
-						Audits will not be assigned unless you upload at least one ID Proof.<br/>
-						Only images or PDFs are supported.
+						Upload at least one ID Proof<br/>
+						<small>only images or PDFs are supported</small>
 					</h4>
 				</div>
 			);

@@ -60,6 +60,7 @@ var SocialInfoPanelBase = React.createClass({
 						textButton="CONNECT FACEBOOK"
 						disableMobileRedirect={true}
 					/>
+					<p><small className="text-muted">Connecting your Facebook account will improve chances of your application getting approved.</small></p>
 					</div>
 				: <div className="panel panel-default">
 					<div className="panel-body">
