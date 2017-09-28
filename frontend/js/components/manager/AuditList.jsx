@@ -82,19 +82,36 @@ var AuditRow = React.createClass({
 		});
 	},
   render: function(){
+	  let reportCount = this.props.audit.audit_stores.length;
+	  let validReportCount = this.props.audit.audit_stores.filter(report => ["ASSIGNED","SUBMITTED","COMPLETED","ACCEPTED"].includes(report.status)).length;
+
+	  let backgroundColor;
+	  if( validReportCount === 0){
+		  backgroundColor = "";
+	  }
+	  else if( validReportCount >= this.props.audit.count){
+		  backgroundColor = "#DFF0D8";
+	  } else if(validReportCount < this.props.audit.count){
+		  backgroundColor = "#FCF8E3";
+	  }
+
 	  let trStyle = Object.assign({}, pointerStyle, {
+		  backgroundColor
 	  });
     return(
       <tbody>
-      <tr style={pointerStyle} onClick={this.viewButtonClicked} title="Click to Expand" className={this.state.expanded ? "active" : ""}>
+      <tr style={trStyle} onClick={this.viewButtonClicked} title="Click to Expand" className={this.state.expanded ? "active" : ""}>
         <td className="text-right">{this.props.serial}</td>
-        <td>{this.props.audit.store.name}</td>
-        <td>{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</td>
-        <td>{this.props.audit.earnings_per_audit}</td>
-        <td>{this.props.audit.reimbursement}</td>
-        <td>{this.props.audit.count}</td>
-        <td>{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
-        <td>{this.props.audit.audit_stores.length}</td>
+        <td>
+	    {this.props.audit.store.name}<br/>
+	    <small className="text-muted">{this.props.audit.store.address}</small>
+	</td>
+        <td>{this.props.audit.store.location.city.name}</td>
+        <td className="text-right">{this.props.audit.earnings_per_audit}</td>
+        <td className="text-right">{this.props.audit.reimbursement ? this.props.audit.reimbursement : null}</td>
+        <td className="text-right">{this.props.audit.count}</td>
+        <td className="text-right">{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
+        <td className="text-right">{validReportCount} ( {reportCount})</td>
         <td className="text-right">
 	    <div className="btn-group">
 		    <button type="button" className="btn btn-default" onClick={(e)=>{e.stopPropagation();this.setState({dropdown:!this.state.dropdown});}}>
@@ -171,6 +188,7 @@ var AuditList = React.createClass({
 	getInitialState: function(){
 		return {
 			loading: false,
+			selectedCityId: null,
 		};
 	},
 	setLoading: function(loading){
@@ -187,15 +205,38 @@ var AuditList = React.createClass({
 		  Alert.warning("AUDIT CANNOT BE DELETED");
 	  });
   },
+  onCityChanged: function(e){
+	  this.setState({selectedCityId: e.target.value});
+  },
+  cityComparator: function(a,b){
+	if(a.name < b.name) return -1;
+	if(a.name > b.name) return 1;
+	return 0;
+  },
   render: function(){
 	  if(this.state.loading){
 		  return <Loading/>;
 	  }
-    var rows = [];
+
+	let cities = Object.keys(this.props.audits).reduce( (p, id) => {
+		if(! p.find( c => c.id === this.props.audits[id].store.location.city.id)){
+			return p.concat(this.props.audits[id].store.location.city);
+		} else {
+			return p;
+		}
+	}, []).sort(this.cityComparator);
+
     let serial = 1;
-    for(var id in this.props.audits){
-      rows.push(<AuditRow serial={serial++} auditCycleId={this.props.params.auditCycleId} audit={this.props.audits[id]} key={id} onDelete={this.onDelete}/>);
-    }
+    let rows = Object.values(this.props.audits)
+		  .sort((a,b) => this.cityComparator(a.store.location.city, b.store.location.city))
+		  .filter((a) => this.state.selectedCityId ? a.store.location.city.id === parseInt(this.state.selectedCityId) : true)
+		  .map( a => <AuditRow key={a.id}
+				  serial={serial++}
+				  auditCycleId={this.props.params.auditCycleId}
+				  audit={a}
+				  onDelete={this.onDelete}
+				  />
+		  );
     var addAuditLink = `/audit_cycle/${this.props.params.auditCycleId}/audit/add`;
     return(
       <div>
@@ -204,20 +245,21 @@ var AuditList = React.createClass({
           <Inbox/> Audits
         </h3>
         <table className="table table-hover">
-	    <colgroup>
-		<col/>
-		<col style={{width:"20%"}}/>
-	    </colgroup>
           <thead>
             <tr>
               <th className="text-right">#</th>
               <th>Store</th>
-              <th>Location</th>
-              <th>Fees</th>
-              <th>Reimbursement upto</th>
-              <th>Audit Count</th>
-              <th>Applications</th>
-              <th>Reports</th>
+              <th>
+		<select value={this.state.selectedCity} onChange={this.onCityChanged} className="form-control">
+			<option value="">City</option>
+		    {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+	        </select>
+	      </th>
+              <th className="text-right">Fees (₹)</th>
+              <th className="text-right">Reimbursement upto (₹)</th>
+              <th className="text-right">Audit Count</th>
+              <th className="text-right">Applications</th>
+              <th className="text-right">Reports</th>
               <th>&nbsp;</th>
             </tr>
           </thead>
