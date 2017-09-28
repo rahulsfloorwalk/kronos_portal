@@ -7,15 +7,18 @@ import Alert from 'react-s-alert';
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
-import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber } from '../../manager/actions/auditor.js';
+import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber, sendPasswordResetEmail } from '../../manager/actions/auditor.js';
 
-import { Lock, Check } from '../Icons.jsx';
+import { Lock, Check, Envelope } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import InPlaceEditable from '../InPlaceEditable.jsx';
 
 var AuditorDetailsPage = React.createClass({
+	getInitialState: function(){
+		return {};
+	},
 	goToFirstTab: function(props){
 		if(props.route && props.route.path === "auditor/:auditorId"){
 			hashHistory.push(`/auditor/${props.params.auditorId}/details`);
@@ -42,6 +45,16 @@ var AuditorDetailsPage = React.createClass({
 			Alert.success("MOBILE NUMBER CHANGED");
 		},()=>{
 			Alert.warning("MOBILE NUMBER INVALID");
+		});
+	},
+	sendPasswordResetEmail: function(){
+		this.setState({passwordResetEmailLoading: true});
+		this.props.dispatch(sendPasswordResetEmail(this.props.params.auditorId)).then(()=>{
+			Alert.success("PASSWORD RESET EMAIL SENT");
+		},()=>{
+			Alert.warning("THERE WAS A PROBLEM");
+		}).always(() => {
+			this.setState({passwordResetEmailLoading: false});
 		});
 	},
 	render: function(){
@@ -74,6 +87,9 @@ var AuditorDetailsPage = React.createClass({
 				<div className="panel panel-default">
 					<div className="panel-heading">
 						<span className="pull-right">
+							<button onClick={this.sendPasswordResetEmail} className="btn btn-default" disabled={this.state.passwordResetEmailLoading}>
+								<Envelope/> { this.state.passwordResetEmailLoading ? "sending email.." : "Reset Password" }
+							</button>&nbsp;
 							{verifyButton}&nbsp;{statusButton}
 						</span>
 						<h4><b>{this.props.auditor.email}</b></h4>

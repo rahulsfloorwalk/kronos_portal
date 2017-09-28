@@ -1,7 +1,9 @@
 import logging
+import properties
 from django.db import IntegrityError, transaction
 from django.contrib.auth.models import User
 from django.forms import ValidationError
+from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import validate_email
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
@@ -64,6 +66,20 @@ def set_email(user_id, email):
         raise AppLogicError("invalid email") from e
     except IntegrityError as e:
         raise AppLogicError("email already exists in system") from e
+
+def send_password_reset_email(user_id):
+    user = find_auditor_by_id(user_id)
+    form = PasswordResetForm({'email': user.email})
+    if form.is_valid():
+        form.save(
+            subject_template_name='registration/password_reset_subject2.txt',
+            email_template_name='registration/password_reset_email2.txt',
+            html_email_template_name='registration/password_reset_email2.html',
+            domain_override=properties.MY_DOMAIN,
+        )
+        return user
+    else:
+        return None
 
 # Assumption is that same combination of email[:4] and phone[-4:] will not collide more than 26 times
 # Data set while generating codes indicated 1 collision for every 1500 entries.

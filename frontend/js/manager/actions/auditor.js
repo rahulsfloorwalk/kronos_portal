@@ -220,3 +220,23 @@ export function setMobileNumber(userId, mobile_number){
 		//TODO: Handle error
 	};
 };
+
+export function sendPasswordResetEmail(userId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDITOR_ID_SEND_PASSWORD_RESET_EMAIL,
+			status: 'request',
+			userId,
+		});
+
+		return $.post( url.api_base_path + `manager/auditor/${userId}/password_reset`, function(auditor){
+			dispatch({
+				type: types.AUDITOR_ID_SEND_PASSWORD_RESET_EMAIL,
+				status: 'success',
+				userId,
+				auditor,
+			});
+		});
+		//TODO: Handle error
+	};
+};

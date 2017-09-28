@@ -38,9 +38,6 @@ urlpatterns = ([
         'email_template_name': 'registration/password_reset_email2.txt',
         'html_email_template_name': 'registration/password_reset_email2.html',
         'post_reset_redirect': 'registration:password_reset_done',
-        'extra_email_context': {
-            'mydomain': properties.MY_DOMAIN
-        }
         }, name="password_reset"),
 
     url(r'forgot_password/success$', password_reset_done, {

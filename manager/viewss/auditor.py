@@ -163,6 +163,15 @@ class AuditorVerifyView(APIView):
         user = auditor_service.verify_auditor(user_id)
         return Response(AuditorSerializer(user).data)
 
+class AuditorPasswordResetEmailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'POST': [GROUP_NAME_MANAGER]
+        }
+    def post(self, request, user_id):
+        user = auditor_service.send_password_reset_email(user_id)
+        return Response(AuditorSerializer(user).data)
+
 class PaymentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
