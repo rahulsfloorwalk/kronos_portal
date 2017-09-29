@@ -71,7 +71,10 @@ var AuditCycleTimeSeries = React.createClass({
 		if(this.state.loading){
 			chart = <Loading/>;
 		} else {
-			let colors = ["#4ca9d7", "#0085c6", "#005d8a"];
+			let colors = ["#9ED5CD", "#44A7CB", "#2E62A1", "#192574"]; // obtained from goo.gl/CKlX3T
+			//let colors = ["#add8e6", "#99cfe0", "#86c5da", "#72bcd4"];
+			//let colors = ["#dee8eb", "#bed1d8", "#9ebbc6", "#7ea4b3"];
+			//let colors = ["#4ca9d7", "#0085c6", "#005d8a", "#3C00F5"];
 			let bars = [];
 			for(let i=0; i < this.state.labels.length; i++){
 				bars.push(<Bar key={i} barSize={30} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>);

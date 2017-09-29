@@ -32,11 +32,16 @@ def get_section_averages_for_audit_cycle(audit_cycle_id):
     return section_averages
 
 def get_audit_cycle_section_averages_for_client(client_id, audit_type):
-    audit_cycles = AuditCycle.objects.filter(client__id=client_id).filter(type=audit_type).order_by('end_date')
+    qs = AuditCycle.objects.filter(client__id=client_id).filter(type=audit_type).order_by('end_date')
+    if qs.count() > 3:
+        audit_cycles = qs[qs.count()-3:]
+    else:
+        audit_cycles = qs
     section_series = {}
     section_master = []
-    audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles[:4]]
-    for audit_cycle in audit_cycles[:4]:
+    audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles]
+    print("audit_cycles", [(ac.name, ac.end_date) for ac in audit_cycles])
+    for audit_cycle in audit_cycles:
         section_averages = get_section_averages_for_audit_cycle(audit_cycle.id)
         for section_average in section_averages:
             values_array = []
@@ -49,7 +54,7 @@ def get_audit_cycle_section_averages_for_client(client_id, audit_type):
     #print("values_table", values_table)
     #print("audit_cycle_master", audit_cycle_master)
     #print("section_master", section_master)
-    for audit_cycle in audit_cycles[:4]:
+    for audit_cycle in audit_cycles:
         yval = audit_cycle_master.index(audit_cycle.name)
         section_averages = get_section_averages_for_audit_cycle(audit_cycle.id)
         for section_average in section_averages:
