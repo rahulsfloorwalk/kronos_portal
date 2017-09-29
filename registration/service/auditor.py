@@ -76,6 +76,9 @@ def send_password_reset_email(user_id):
             email_template_name='registration/password_reset_email2.txt',
             html_email_template_name='registration/password_reset_email2.html',
             domain_override=properties.MY_DOMAIN,
+            extra_email_context = {
+                'mydomain': properties.MY_DOMAIN
+            }
         )
         return user
     else:
