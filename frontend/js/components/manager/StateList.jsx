@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { truncateStyle } from '../../styles.js';
 
-import { fetchStates } from '../../manager_actions.js';
+import { fetchStates } from '../../manager/actions/location.js';
 
 import { MapMarker } from '../Icons.jsx';
 

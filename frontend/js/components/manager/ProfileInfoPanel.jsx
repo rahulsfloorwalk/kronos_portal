@@ -6,7 +6,7 @@ import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
 import { fetchProfileInfoForAuditor } from '../../manager/actions/auditor.js'
-import { fetchStates } from '../../manager_actions.js'
+import { fetchStates } from '../../manager/actions/location.js'
 import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js';
 
 import { Check, Cross } from '../Icons.jsx';

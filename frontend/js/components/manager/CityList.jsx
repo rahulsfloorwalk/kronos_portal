@@ -3,7 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { ShareAlt, MapMarker } from '../Icons.jsx';
-import { fetchStates, fetchCities } from '../../manager_actions.js'
+import { fetchStates, fetchCities } from '../../manager/actions/location.js'
 
 var CityList = React.createClass({
 	componentDidMount: function() {

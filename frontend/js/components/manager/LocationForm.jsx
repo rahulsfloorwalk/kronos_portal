@@ -3,7 +3,7 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import { fetchStates, fetchCities, loadLocationAddForm, loadLocationEditForm, saveLocationEditForm, saveLocationAddForm } from '../../manager_actions.js';
+import { fetchStates, fetchCities, loadLocationAddForm, loadLocationEditForm, saveLocationEditForm, saveLocationAddForm } from '../../manager/actions/location.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
 import FormSelect from '../FormSelect.jsx';

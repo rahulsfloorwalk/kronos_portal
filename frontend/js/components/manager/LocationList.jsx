@@ -2,26 +2,39 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js';
+import Alert from 'react-s-alert';
 
-import { Plus, Pencil, MapMarker } from '../Icons.jsx';
+import { fetchStates, fetchCities, fetchLocations, deleteLocation } from '../../manager/actions/location.js';
+
+import { Cross, Plus, Pencil, MapMarker } from '../Icons.jsx';
 
 var LocationList = React.createClass({
+	reloadLocations: function(){
+		this.props.dispatch(fetchLocations(this.props.params.cityId));
+	},
 	componentDidMount: function() {
 		this.props.dispatch(fetchStates());
 		this.props.dispatch(fetchCities(this.props.params.stateId));
-		this.props.dispatch(fetchLocations(this.props.params.cityId));
+		this.reloadLocations();
+	},
+	locationDelete: function(locationId){
+		this.props.dispatch(deleteLocation(locationId)).done(() => {
+			this.reloadLocations();
+			Alert.success("LOCATION DELETED");
+		}).fail(() => Alert.warning("LOCATION CANNOT BE DELETED"));
 	},
 	render: function(){
 		var rows = [];
-		for(var id in this.props.locations) {
-			var linkTo = `/state/${this.props.params.stateId}/city/${this.props.params.cityId}/location/${this.props.locations[id].id}/edit`;
+		for(let id in this.props.locations) {
+			let linkTo = `/state/${this.props.params.stateId}/city/${this.props.params.cityId}/location/${this.props.locations[id].id}/edit`;
 			rows.push(
 				<tr key={id}>
 					<td>{this.props.locations[id].name}</td>
 					<td>{this.props.locations[id].pincode}</td>
 					<td>
 						<Link to={linkTo} className="btn btn-default"><Pencil/> Edit</Link>
+						&nbsp;
+						<button className="btn btn-default" title="Delete Location" type="button" onClick={()=>this.locationDelete(id)}><Cross/></button>
 					</td>
 				</tr>
 			);

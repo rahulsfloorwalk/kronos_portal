@@ -4,7 +4,7 @@ import { hashHistory } from 'react-router';
 
 import Alert from 'react-s-alert';
 
-import { fetchStates, fetchCities, fetchLocations } from '../../manager_actions.js';
+import { fetchStates, fetchCities, fetchLocations } from '../../manager/actions/location.js';
 import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from '../../manager/actions/store.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';

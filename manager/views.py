@@ -84,11 +84,8 @@ class LocationIdView(APIView):
             'DELETE': [GROUP_NAME_MANAGER]
         }
     def get(self, request, location_id, format=None):
-        try:
-            location = Location.objects.get(id=location_id)
-            return Response(LocationSerializer(location).data)
-        except Location.DoesNotExist:
-            return Http404
+        location = location_service.find_location_by_id(location_id)
+        return Response(LocationSerializer(location).data)
 
     def post(self, request, location_id):
         location_ds = LocationDeSerializer(data=request.data, context={'id' : location_id})
@@ -98,12 +95,8 @@ class LocationIdView(APIView):
         return Response(LocationSerializer(savedLocation).data)
 
     def delete(self, request, location_id):
-        try:
-            location = Location.objects.get(location_id)
-            location.delete()
-            return Response(LocationSerializer(location).data)
-        except Location.DoesNotExist:
-            raise Http404
+        location_service.delete_location_by_id(location_id)
+        return Response()
 
 
 class AuditApplicationApproveView(APIView):
