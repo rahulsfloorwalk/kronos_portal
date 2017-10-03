@@ -14,6 +14,8 @@ import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 import FBGraph from '../../auditor/service/fbgraph.js';
 import Loading from '../Loading.jsx'
 
+import { fetchConfig } from '../../auditor/service/config.js';
+
 var SocialInfoPanelBase = React.createClass({
 	getInitialState: function(){
 		return {
@@ -28,20 +30,27 @@ var SocialInfoPanelBase = React.createClass({
 		if(response.accessToken){
 			let fbapi = new FBGraph(response.accessToken);
 			this.setLoading(true);
-			fbapi.me(facebook_fields).done((fbResponse) => {
-				this.props.dispatch(saveFacebookInfo(fbResponse, response.accessToken)).done(() => {
-					this.props.dispatch(fetchProfileInfo());
-				}).always(()=>this.setLoading(false));
-			});
+			fetchConfig()
+				.then((config) => fbapi.me(config.FB_FIELDS))
+				.then((fbResponse) => this.props.dispatch(saveFacebookInfo(fbResponse, response.accessToken)))
+				.then(() => this.props.dispatch(fetchProfileInfo()))
+				.then(() =>this.setLoading(false));
 		}
 	},
 
 	componentDidMount: function() {
 		this.setLoading(true);
-		this.props.dispatch(fetchFacebookInfo()).always(()=>this.setLoading(false));
+		Promise.all([
+			this.props.dispatch(fetchFacebookInfo()),
+			fetchConfig().then((config) => this.setState({
+				FB_FIELDS: config.FB_FIELDS,
+				FB_SCOPE: config.FB_SCOPE,
+				FB_CLIENT_ID: config.FB_CLIENT_ID,
+			})),
+		]).then(() => this.setLoading(false))
 	},
 	render: function(){
-		if(! this.props.socialInfo || this.state.loading){
+		if(! this.props.socialInfo || this.state.loading || !this.state.FB_CLIENT_ID){
 			return <Loading/>;
 		}
 		return (
@@ -49,10 +58,10 @@ var SocialInfoPanelBase = React.createClass({
 				{ this.props.socialInfo.id === null || !this.props.socialInfo.is_verified ?
 					<div className="text-center">
 					<FacebookLogin
-						appId={facebook_client_id}
+						appId={this.state.FB_CLIENT_ID}
 						autoLoad={false}
-						fields={facebook_fields}
-						scope={facebook_scope}
+						fields={this.state.FB_FIELDS}
+						scope={this.state.FB_SCOPE}
 						callback={this.facebookResponse}
 						size="metro"
 						cssClass="kep-login-facebook"

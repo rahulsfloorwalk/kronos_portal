@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import { url, facebook_fields } from '../../../config'
+import { url } from '../../../config'
 import { hashHistory } from 'react-router';
 import types from '../action_types.js';
 
