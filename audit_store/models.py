@@ -128,3 +128,6 @@ class AuditStore(Model):
 
     def visible_to(self):
         return get_users_with_perms(self)
+
+    def __str__(self):
+        return "AuditStore({}): audit: {}".format(self.id, self.audit)

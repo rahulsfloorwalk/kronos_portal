@@ -85,7 +85,7 @@ class AuditCycle(Model):
 #        return set(cities)
 
     def __str__(self):
-        return "AuditCycle({}): client: {}".format(self.id, self.client)
+        return "AuditCycle({}): {}, client: {}".format(self.id, self.name, self.client)
 
 
 class Audit(Model):
@@ -99,7 +99,7 @@ class Audit(Model):
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
 
     def __str__(self):
-        return "Audit({}): {}, {}".format(self.id, self.store, self.audit_cycle, self.count)
+        return "Audit({}): audit_cycle: {}, store: {}, count: {}".format(self.id, self.audit_cycle, self.store, self.count)
 
     class Meta:
         unique_together = (("store", "audit_cycle"))

@@ -22,7 +22,7 @@ class ClientUser(Model):
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     def __str__(self):
-        return 'Client({}): {}'.format(self.id, self.full_name)
+        return 'ClientUser({}): {}, client: {}'.format(self.id, self.full_name, self.client)
 
     def is_client_admin(self):
         return self.user.has_perm('client.clientuser_admin')
@@ -45,7 +45,7 @@ class Store(Model):
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
 
     def __str__(self):
-        return 'Client({}): {}'.format(self.id, self.name)
+        return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
 
     class Meta:
         unique_together = ("client", "code")
