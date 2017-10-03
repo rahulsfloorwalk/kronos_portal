@@ -12,7 +12,6 @@ import DetailsPage from './DetailsPage.jsx';
 
 import ClientList from './ClientList.jsx';
 import AuditList from './AuditList.jsx';
-import AuditDetails from './AuditDetails.jsx';
 import AuditApplyForm from './AuditApplyForm.jsx';
 import AuditCancelForm from './AuditCancelForm.jsx';
 

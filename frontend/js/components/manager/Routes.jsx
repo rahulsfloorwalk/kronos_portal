@@ -55,8 +55,6 @@ import AuditFiatAssignForm from './AuditFiatAssignForm.jsx';
 
 import ApplicationApproveForm from './ApplicationApproveForm.jsx';
 import ApplicationRejectForm from './ApplicationRejectForm.jsx';
-import ApplicationCompleteForm from './ApplicationCompleteForm.jsx';
-import ApplicationFailForm from './ApplicationFailForm.jsx';
 
 import ModeratorList from './moderator/ModeratorList.jsx';
 import ModeratorForm from './moderator/ModeratorForm.jsx';
