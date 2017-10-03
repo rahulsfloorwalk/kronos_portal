@@ -10,7 +10,7 @@ urlpatterns = ([
     url(r'notifications$', views.NotificationsView.as_view(), name='notifications_view'),
     url(r'state$', views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
-    url(r'id_proof/attachment$', view_log(views.UserIdProofAttachmentView.as_view()), name="id_proof_upload_view"),
+    url(r'id_proof/attachment$', view_log(views.UserIdProofAttachmentView.as_view(), "POST"), name="id_proof_upload_view"),
 
     url(r'dashboard/stats$', views.StatsView.as_view(), name="payment_view"),
     url(r'dashboard/score$', views.ScoreView.as_view(), name="payment_view"),
@@ -34,13 +34,13 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', views.AnswerListView.as_view(), name="answer_list_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', views.ReportSectionListView.as_view(), name="report_section_list_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', views.AuditStoreIdSubmitView.as_view(), name="audit_store_id_submit_view"),
-    url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', view_log(views.AuditStoreAttachmentView.as_view()), name="audit_store_upload_view"),
-    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', view_log(views.ReportSectionAttachmentView.as_view()), name="report_section_attachment_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', view_log(views.AuditStoreAttachmentView.as_view(), "POST"), name="audit_store_upload_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', view_log(views.ReportSectionAttachmentView.as_view(), "POST"), name="report_section_attachment_view"),
 
     url(r'question/(?P<question_id>[0-9]+)/answer$', views.AnswerSubmitView.as_view(), name="answer_submit_view"),
     url(r'question/(?P<question_id>[0-9]+)/answer_comment$', views.AnswerCommentView.as_view(), name="answer_comment_view"),
     url(r'section/(?P<section_id>[0-9]+)/comment$', views.CommentSubmitView.as_view(), name="comment_submit_view"),
-    url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', view_log(views.AttachmentCompleteView.as_view()), name="attachment_complete_view"),
-    url(r'attachment/(?P<attachment_id>[0-9]+)$', view_log(views.AttachmentIdView.as_view()), name="attachment_id_view"),
+    url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', view_log(views.AttachmentCompleteView.as_view(), "POST"), name="attachment_complete_view"),
+    url(r'attachment/(?P<attachment_id>[0-9]+)$', view_log(views.AttachmentIdView.as_view(), "POST"), name="attachment_id_view"),
 
 ], 'auditor')

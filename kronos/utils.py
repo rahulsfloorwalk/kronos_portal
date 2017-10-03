@@ -43,7 +43,7 @@ def today_ist():
     return timezone.localtime(timezone.now(), IST).date()
 
 
-def view_log(func):
+def view_log(func, method=None, *outerargs):
     _logger = logging.getLogger("function:view_log")
     def wrapper(*args, **kwargs):
         user="unknown"
@@ -52,6 +52,7 @@ def view_log(func):
         body="unknown"
         try:
             user = args[0].user
+            req_method = args[0].method
             post_data = args[0].POST
             get_data = args[0].GET
             user_agent = args[0].META['HTTP_USER_AGENT']
@@ -59,15 +60,21 @@ def view_log(func):
         except AttributeError:
             pass
 
-        _logger.info("view: \033[1m%s\033[0m called", func.__name__)
-        _logger.info(" ├╌\033[1muser  \033[0m: %s, UA: %s", user, user_agent)
-        _logger.info(" ├╌\033[1margs  \033[0m: %s", args)
-        _logger.info(" ├╌\033[1mkwargs\033[0m: %s", kwargs)
-        _logger.info(" ├╌\033[1mGET   \033[0m: %s", get_data)
-        _logger.info(" ├╌\033[1mPOST  \033[0m: %s", post_data)
-        _logger.info(" ├╌\033[1mbody  \033[0m: %s", body)
+        if (method and method == req_method) or not method:
+            _logger.info("view: \033[1m%s\033[0m called", func.__name__)
+            _logger.info(" ├╌\033[1muser  \033[0m: %s, UA: %s", user, user_agent)
+            _logger.info(" ├╌\033[1margs  \033[0m: %s", args)
+            _logger.info(" ├╌\033[1mkwargs\033[0m: %s", kwargs)
+            _logger.info(" ├╌\033[1mGET   \033[0m: %s", get_data)
+            _logger.info(" ├╌\033[1mPOST  \033[0m: %s", post_data)
+            _logger.info(" ├╌\033[1mbody  \033[0m: %s", body)
+
         ret_val = func(*args, **kwargs)
-        _logger.info(" ╰╌\033[1mstatus\033[0m: %s", ret_val.status_code)
+
+        if (method and method == req_method) or not method:
+            _logger.info(" ├╌\033[1mstatus\033[0m: %s", ret_val.status_code)
+            _logger.info(" ╰╌\033[1mdata  \033[0m: %s", ret_val.data)
+
         return ret_val
 
     return wrapper
