@@ -17,7 +17,7 @@ $(document).ajaxError(function(event, jqXHR, settings){
 });
 
 
-fetchConfig().then((config) => {
+fetchConfig().done((config) => {
 
 	ReactDOM.render(
 		<Routes/>,

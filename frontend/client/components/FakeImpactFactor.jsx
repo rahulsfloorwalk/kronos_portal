@@ -5,15 +5,17 @@ import {demo} from '../../config.js';
 
 import Loading from '../../js/components/Loading.jsx';
 
+import { fetchConfig } from '../service/config.js';
 import { fetchUser } from '../service/user.js';
 
 /*-----------------*/
 
 import $ from 'jquery'
-import { impactFactorDataUrl } from '../../config.js'
 
 let fetchImpactFactorData = () => {
-	return $.get(impactFactorDataUrl);
+	return fetchConfig().then((config) => {
+		return $.get(config.IMPACT_FACTOR_URL);
+	});
 };
 
 /*-----------------*/
