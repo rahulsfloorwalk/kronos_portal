@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router';
 
+import { pointerStyle } from '../../js/styles.js';
+
 import NavLink from '../../js/components/NavLink.jsx';
 import { Dashboard, File, LogOut, Time, Retweet } from '../../js/components/Icons.jsx';
 
@@ -79,13 +81,14 @@ export default React.createClass({
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
-							<form action="/auth/client/logout" method="POST">
-							<button className="btn btn-lg btn-link">
-							<LogOut/> Logout
-							</button>
-							</form>
+							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
+								<LogOut/> Logout
+								&nbsp;
+								&nbsp;
+							</a>
 						</li>
 					</ul>
+					<form style={{display:"none"}} action="/auth/client/logout" method="POST" ref={r => this._logoutForm = r}/>
 				</nav>
 			</div>
 		);

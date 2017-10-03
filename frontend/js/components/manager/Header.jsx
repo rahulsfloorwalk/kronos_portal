@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { pointerStyle } from '../../styles.js';
+
 import Heartbeat from '../Heartbeat.jsx';
 import NavLink from '../NavLink.jsx';
 import { NewWindow, User, MapMarker, King, LogOut, Knight, Queen } from '../Icons.jsx';
@@ -37,13 +39,12 @@ var Header = React.createClass({
 							</a>
 						</li>
 						<li>
-							<form action="/auth/logout" method="POST">
-							<button className="btn btn-lg btn-link">
-							<LogOut/> Logout
-							</button>
-							</form>
+							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
+								<LogOut/> Logout
+							</a>
 						</li>
 					</ul>
+					<form style={{display:"none"}} action="/auth/logout" method="POST" ref={r => this._logoutForm = r}/>
 				</div>
 			</nav>
 		);

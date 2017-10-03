@@ -1,9 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
 
+import { pointerStyle } from '../../styles.js';
+
 import NavLink from '../NavLink.jsx';
 
-import { File, User, Inbox } from '../Icons.jsx';
+import { File, User, Inbox, LogOut } from '../Icons.jsx';
+
 
 var Header = React.createClass({
 	render: function(){
@@ -12,6 +15,7 @@ var Header = React.createClass({
 		};
 		return (
 			<nav className="navbar navbar-default navbar-static-top">
+				<form style={{display:"none"}} action="/auth/logout" method="POST" ref={r => this._logoutForm = r}/>
 				<div className="container">
 					<div className="navbar-header">
 						<Link className="navbar-brand" to="/">
@@ -26,11 +30,9 @@ var Header = React.createClass({
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
-							<form action="/auth/logout" method="POST">
-							<button className="btn btn-lg btn-link">
-							Logout
-							</button>
-							</form>
+							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
+								<LogOut/> Logout
+							</a>
 						</li>
 					</ul>
 				</div>
