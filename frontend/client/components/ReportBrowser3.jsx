@@ -65,6 +65,14 @@ class AuditStoreTable extends Component {
 			});
 		}).always(() => this.setLoading(false));
 	}
+
+	createFilterUrl(){
+		let base = url.api_base_path + 'client/audit_cycle/' + this.props.auditCycleId + '/audit_cycle_filtered_xlsx_report?';
+		base += 'city=' + encodeURIComponent(this.state.selectedCityId || '') + '&';
+		base += 'priority=' + encodeURIComponent(this.state.selectedPriority || '') + '&';
+		base += 'type=' + encodeURIComponent(this.state.selectedType || '');
+		return base;
+	}
 	componentDidMount(){
 		this.reloadData(this.props.auditCycleId);
 	}
@@ -155,7 +163,7 @@ class AuditStoreTable extends Component {
 			);
 			previousStore = r.store_id;
 		});
-
+		var filteredUrl = this.createFilterUrl()
 		return (
 			<div>
 			<div className="form-group">
@@ -163,7 +171,13 @@ class AuditStoreTable extends Component {
 				{citySelect}&nbsp;
 				{storeTypeSelect}&nbsp;
 				{storePrioritySelect}&nbsp;
-				<span className="pull-right" style={{fontSize:"130%"}}><big><b>{trs.length}</b> Reports</big></span>
+				<span className="pull-right" style={{fontSize:"130%"}}>
+					<big><b>{trs.length}</b> Reports</big>
+					&nbsp;
+					<a className="btn btn-default" href={filteredUrl}>
+						<Download/> Download Excel
+					</a>
+				</span>
 			</div>
 			<table className="table table-bordered table-hover">
 			<thead>
@@ -227,9 +241,6 @@ export default class ReportBrowser3 extends Component{
 		return (
 			<div>
 				<h2 className="page-header">
-					<a className="btn btn-default pull-right" href={url.api_base_path + 'client/audit_cycle/' + auditCycle.audit__audit_cycle__id + '/audit_cycle_xlsx_report'}>
-						<Download/> Download Excel
-					</a>
 					<AuditTypeIcon type={auditCycle.audit__audit_cycle__type}/> &nbsp;
 					<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="audit_cycle" value={this.state.selectedAuditCycleId} onChange={(e) => this.auditCycleChanged(parseInt(e.target.value))}>
 						{auditCycleRows}

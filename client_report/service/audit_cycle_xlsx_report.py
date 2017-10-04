@@ -6,6 +6,7 @@ import audit.service.audit_cycle as audit_cycle_service
 from answer.models import Answer, ReportSection
 from client.service.client_user import find_clientuser_by_user_id
 from kronos.utils import get_color_code, get_color_hex_from_code
+from manager.models import City
 
 
 # Get report for all stores for given client
@@ -39,11 +40,11 @@ def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
 
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
-    print(filters)
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     sections = audit_cycle.sections.order_by('sequence')
+    city_name = ''
 
     questions = []
     for section in sections:
@@ -58,18 +59,20 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
         audit_stores.extend(qs)
 
     filtered_audit_stores = audit_stores
-    if filters.get('city'):
+    ignored_filters = ['', 'undefined', None]
+    if filters.get('city') not in ignored_filters:
+        city_name = City.objects.get(pk=int(filters.get('city'))).name
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.location.city.id == int(filters.get('city'))]
-    if filters.get('type'):
+    if filters.get('type') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.type == filters.get('type')]
-    if filters.get('priority'):
+    if filters.get('priority') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.priority == filters.get('priority')]
 
     data = create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
-    name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
+    name = (str(audit_cycle.name) + city_name + filters.get('type') + filters.get('priority') + ".xlsx").replace("-", "")
     return write_data(data), name
 
 
