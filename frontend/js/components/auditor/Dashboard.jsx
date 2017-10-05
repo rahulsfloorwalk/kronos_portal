@@ -7,15 +7,31 @@ import StatCard from './StatCard.jsx';
 import ProfileCard from './ProfileCard.jsx';
 import RatingCard from './RatingCard.jsx';
 
+import Loading from '../Loading.jsx';
+
 import { fetchProfileInfo, fetchAuditorStats, fetchAuditorScore } from '../../auditor/actions/dashboard.js';
 
 var Dashboard = React.createClass({
+	getInitialState: function(){
+		return {
+			loading: false,
+		};
+	},
+	setLoading: function(loading){
+		this.setState((prevState) => Object.assign({}, prevState, { loading }));
+	},
 	componentWillMount: function(){
-		this.props.dispatch(fetchProfileInfo());
-		this.props.dispatch(fetchAuditorStats());
-		this.props.dispatch(fetchAuditorScore());
+		this.setLoading(true);
+		Promise.all([
+			this.props.dispatch(fetchProfileInfo()),
+			this.props.dispatch(fetchAuditorStats()),
+			this.props.dispatch(fetchAuditorScore()),
+		]).then(()=>this.setLoading(false));
 	},
 	render: function(){
+		if(this.state.loading){
+			return <Loading/>;
+		}
 		let stats = this.props.auditorStats || {};
 		let score = this.props.auditorScore || {};
 		console.log(stats)
