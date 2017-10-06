@@ -96,7 +96,10 @@ export default class DOBPicker extends React.Component{
 	}
 
 	getSelectedDate = () => {
-		if( parseInt(this.state.year) && parseInt(this.state.month) && parseInt(this.state.date)){
+		if( !isNaN(parseInt(this.state.year))
+			&& !isNaN(parseInt(this.state.month))
+			&& !isNaN(parseInt(this.state.date))
+		){
 			let d =  moment({
 				year: parseInt(this.state.year),
 				month: parseInt(this.state.month),
