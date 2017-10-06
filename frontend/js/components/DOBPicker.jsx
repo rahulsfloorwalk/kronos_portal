@@ -4,6 +4,7 @@ import moment from 'moment';
 import { momentDateFormat }  from '../../config.js';
 
 import FormSelect from './FormSelect.jsx';
+import FormErrorList from './FormErrorList.jsx';
 
 export default class DOBPicker extends React.Component{
 	constructor(props){
@@ -18,6 +19,8 @@ export default class DOBPicker extends React.Component{
 	static defaultProps = {
 		onChange: () => {},
 		initialDate: null,
+		disabled: false,
+		errors: [],
 	}
 
 	componentDidMount(){
@@ -88,12 +91,16 @@ export default class DOBPicker extends React.Component{
 		}, () => this.props.onChange(this.getSelectedDate()));
 	}
 
+	isValid = () => {
+		return !!this.getSelectedDate();
+	}
+
 	getSelectedDate = () => {
 		if( parseInt(this.state.year) && parseInt(this.state.month) && parseInt(this.state.date)){
 			let d =  moment({
-				year: this.state.year,
-				month: this.state.month,
-				date: this.state.date,
+				year: parseInt(this.state.year),
+				month: parseInt(this.state.month),
+				date: parseInt(this.state.date),
 			});
 			if(d.isValid()){
 				return d;
@@ -131,19 +138,19 @@ export default class DOBPicker extends React.Component{
 				<tbody>
 				<tr>
 				<td style={{width:"30%"}}>
-				<select className="form-control" value={this.state.year} onChange={this.yearChanged}>
+				<select className="form-control" value={this.state.year} onChange={this.yearChanged} disabled={this.props.disabled}>
 					<option value="">Year</option>
 					{yearOptions}
 				</select>
 				</td>
 				<td style={{width:"40%"}}>
-				<select className="form-control" value={this.state.month} onChange={this.monthChanged}>
+				<select className="form-control" value={this.state.month} onChange={this.monthChanged} disabled={this.props.disabled}>
 					<option value="">Month</option>
 					{monthOptions}
 				</select>
 				</td>
 				<td style={{width:"30%"}}>
-				<select className="form-control" value={this.state.date} onChange={this.dateChanged}>
+				<select className="form-control" value={this.state.date} onChange={this.dateChanged} disabled={this.props.disabled}>
 					<option value="">Day</option>
 					{dateOptions}
 				</select>
@@ -151,6 +158,7 @@ export default class DOBPicker extends React.Component{
 				</tr>
 				</tbody>
 				</table>
+				<FormErrorList errors={this.props.errors}/>
 			</div>
 		);
 	}

@@ -47,6 +47,7 @@ class ProfileInfoSerializer(ModelSerializer):
             'address',
             'pincode',
             'city',
+            'city_id',
             'user_id',
             'is_complete'
         )
@@ -54,6 +55,7 @@ class ProfileInfoSerializer(ModelSerializer):
 
 
 class ProfileInfoDeSerializer(ModelSerializer):
+    city_id = PrimaryKeyRelatedField(queryset=City.objects.all(), required=False, allow_null=True)
     class Meta:
         model = ProfileInfo
         fields = (
@@ -66,9 +68,8 @@ class ProfileInfoDeSerializer(ModelSerializer):
             'date_of_birth',
             'address',
             'pincode',
-            'city',
+            'city_id',
             'user_id',
-            'is_complete'
         )
         read_only_fields = ('id', 'user_id')
 
@@ -90,7 +91,7 @@ class ProfileInfoDeSerializer(ModelSerializer):
         profile_info.date_of_birth = self.validated_data.get('date_of_birth', profile_info.date_of_birth)
         profile_info.address = self.validated_data.get('address', profile_info.address)
         profile_info.pincode = self.validated_data.get('pincode', profile_info.pincode)
-        profile_info.city = self.validated_data.get('city', profile_info.city)
+        profile_info.city = self.validated_data.get('city_id', profile_info.city)
 
         #profile_info.save()
         return profile_info
