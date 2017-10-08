@@ -69,6 +69,7 @@ urlpatterns = ([
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
 
+    url(r'store/(?P<store_id>[0-9]+)/client_user$', store_views.StoreIdClientUserView.as_view(), name='store_id_client_user_view'),
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
 

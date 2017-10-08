@@ -7,6 +7,7 @@ from django.contrib.auth.models import User, Group
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.serializers import Serializer, IntegerField
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -65,3 +66,31 @@ class StoreView(APIView):
         store = store_ds.deserialize()
         savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
+
+
+class StoreIdClientUserView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        user_id = IntegerField()
+
+    def post(self, request, store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_store = store_service.assign_store_to_client_user(
+                store_id,
+                ds.validated_data["user_id"],
+            )
+        return Response(StoreSerializer(saved_store).data)
+
+    def delete(self, request, store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_store = store_service.revoke_store_from_client_user(
+                store_id,
+                ds.validated_data["user_id"],
+            )
+        return Response(StoreSerializer(saved_store).data)

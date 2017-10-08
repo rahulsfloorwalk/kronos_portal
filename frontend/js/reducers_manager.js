@@ -273,6 +273,7 @@ export function rootReducer(store = initialStore, action) {
 					return store;
 			}
 		case types.STORE_ID_GET:
+		case types.STORE_UPDATED:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {

@@ -9,6 +9,7 @@ from django.db.models import PROTECT
 
 from guardian.shortcuts import get_users_with_perms, get_objects_for_user
 
+from client.models import Store
 from audit.models import Audit, AuditCycle
 from answer.models import Answer
 from questionnaire.models import Question
@@ -29,7 +30,8 @@ class AuditStoreQuerySet(QuerySet):
             if user.has_perm('client.clientuser_admin'):
                 return self
             else:
-                return get_objects_for_user(user, 'clientuser_visible', klass=self)
+                stores = get_objects_for_user(user, 'client.clientuser_store_visible', klass=Store)
+                return get_objects_for_user(user, 'audit_store.clientuser_visible', klass=self) | AuditStore.objects.filter(audit__store__in=stores)
         else:
             raise TypeError("user needs to be of type: django.contrib.auth.models.User")
 

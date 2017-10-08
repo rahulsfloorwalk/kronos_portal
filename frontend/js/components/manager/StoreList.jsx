@@ -2,12 +2,13 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Cross, Plus, Home, Pencil } from '../Icons.jsx';
+import { Cross, Plus, Home, Pencil, HandRight } from '../Icons.jsx';
 import { fetchStores, deleteStore } from '../../manager/actions/store.js'
 
 var StoreRow = React.createClass({
 	render: function(){
-		var linkTo = `/client/${this.props.store.client.id}/store/${this.props.store.id}/edit`;
+		let linkTo = `/client/${this.props.store.client.id}/store/${this.props.store.id}/edit`;
+		let assignLink = `/client/${this.props.store.client.id}/store/${this.props.store.id}/assign`;
 		return (
 			<tr>
 				<td className="text-right">{this.props.serial}</td>
@@ -20,6 +21,7 @@ var StoreRow = React.createClass({
 					{this.props.store.location.city.name}, <br/>
 					{this.props.store.location.city.state}</td>
 				<td>
+					<Link to={assignLink} className="btn btn-default"><HandRight/></Link>
 					<Link to={linkTo} className="btn btn-default"><Pencil/></Link>
 					<button type="button" onClick={this.props.onDelete ? () => this.props.onDelete(this.props.store): ()=>{}} className="btn btn-default"><Cross/></button>
 				</td>

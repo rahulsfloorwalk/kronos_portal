@@ -15,6 +15,7 @@ import ClientUserForm from './client_user/ClientUserForm.jsx';
 import StoreList from './StoreList.jsx';
 import StoreForm from './StoreForm.jsx';
 import StoreDetail from './StoreDetail.jsx';
+import StoreAssignForm from './StoreAssignForm.jsx';
 
 import AuditorList from './AuditorList.jsx';
 import AuditorDetailsPage from './AuditorDetailsPage.jsx';
@@ -78,6 +79,7 @@ const Routes = () => (
 			<Route path="store" component={StoreList}>
 				<Route path="add" component={StoreForm}/>
 				<Route path=":storeId/edit" component={StoreForm}/>
+				<Route path=":storeId/assign" component={StoreAssignForm}/>
 			</Route>
 			<Route path="audit_cycle" component={AuditCycleList}>
 				<Route path="add" component={AuditCycleForm}/>

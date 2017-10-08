@@ -22,15 +22,12 @@ def get_aggregate_report_for_manager(audit_cycle_id, filter_user=None):
     for section in sections:
         questions.extend(section.questions.order_by('sequence'))
 
-    audit_stores = []
-    for audit in audit_cycle.audits.all():
-        qs = audit.audit_stores.presentable()
-        if filter_user:
-            qs.visible_to(filter_user)
-        qs.order_by('audit_date')
-        audit_stores.extend(qs)
+    qs = AuditStore.objects.filter(audit__audit_cycle=audit_cycle).presentable()
+    if filter_user:
+        qs = qs.visible_to(filter_user)
+    qs.order_by('audit_date')
 
-    data = create_text_structure(audit_cycle.name, sections, questions, audit_stores)
+    data = create_text_structure(audit_cycle.name, sections, questions, qs)
     name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
     return write_data(data), name
 

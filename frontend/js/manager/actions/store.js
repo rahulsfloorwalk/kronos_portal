@@ -178,3 +178,13 @@ export function saveStoreEditForm(store){
 		return req;
 	};
 };
+
+export function updateStore(store){
+	return function(dispatch){
+		dispatch({
+			type: types.STORE_UPDATED,
+			status: 'success',
+			store
+		});
+	};
+};

@@ -145,6 +145,7 @@ class AuditCycleDeSerializer(ModelSerializer):
 class StoreSerializer(ModelSerializer):
     location = LocationSerializer()
     client = ClientSerializer()
+    visible_to = PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Store
         fields = (
@@ -156,6 +157,7 @@ class StoreSerializer(ModelSerializer):
             'code',
             'type',
             'priority',
+            'visible_to',
         )
         read_only_fields = fields
 
