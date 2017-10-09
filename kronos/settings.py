@@ -73,6 +73,7 @@ PROJECT_APPS = [
     'moderator_rest',
     'client_rest',
     'social',
+    'referral',
 ]
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS
@@ -300,3 +301,6 @@ FRONTEND_CONFIG = {
         },
 }
 
+REFERRAL_SIGNUP_AMOUNT = properties["REFERRAL"]["SIGNUP_AMOUNT"]
+REFERRAL_AUDIT_AMOUNT = properties["REFERRAL"]["AUDIT_AMOUNT"]
+MAX_AUDIT_REFERRALS = properties["REFERRAL"]["MAX_AUDIT_REFERRALS"]
