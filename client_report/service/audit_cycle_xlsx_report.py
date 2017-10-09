@@ -7,6 +7,7 @@ from answer.models import Answer, ReportSection
 from client.service.client_user import find_clientuser_by_user_id
 from kronos.utils import get_color_code, get_color_hex_from_code
 from manager.models import City
+from audit_store.models import AuditStore
 
 
 # Get report for all stores for given client
@@ -42,7 +43,6 @@ def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
-    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     sections = audit_cycle.sections.order_by('sequence')
     city_name = ''
 
@@ -50,13 +50,10 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     for section in sections:
         questions.extend(section.questions.order_by('sequence'))
 
-    audit_stores = []
-    for audit in audit_cycle.audits.all():
-        qs = audit.audit_stores.presentable()
-        if clientuser:
-            qs.visible_to(clientuser)
-        qs.order_by('audit_date')
-        audit_stores.extend(qs)
+    audit_stores = AuditStore.objects.filter(audit__audit_cycle=audit_cycle).presentable()
+    if clientuser:
+        audit_stores = audit_stores.visible_to(clientuser)
+    audit_stores.order_by('audit_date')
 
     filtered_audit_stores = audit_stores
     ignored_filters = ['', 'undefined', None]

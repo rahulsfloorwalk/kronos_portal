@@ -31,7 +31,7 @@ class AuditStoreQuerySet(QuerySet):
                 return self
             else:
                 stores = get_objects_for_user(user, 'client.clientuser_store_visible', klass=Store)
-                return get_objects_for_user(user, 'audit_store.clientuser_visible', klass=self) | AuditStore.objects.filter(audit__store__in=stores)
+                return self & (get_objects_for_user(user, 'audit_store.clientuser_visible', klass=self) | AuditStore.objects.filter(audit__store__in=stores))
         else:
             raise TypeError("user needs to be of type: django.contrib.auth.models.User")
 
