@@ -288,6 +288,7 @@ EMAIL_SWITCH = {
 
 FRONTEND_CONFIG = {
         "AUDITOR": {
+            "TAWK_TO_SRC": TAWK_TO_SRC,
             "GA_ID": AUTH_GA_ID,
             "FB_CLIENT_ID": properties["FRONTEND"]["AUDITOR_FB_CLIENT_ID"],
             "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
