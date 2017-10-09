@@ -273,6 +273,7 @@ AWS = {
 }
 
 AUTH_GA_ID = properties["FRONTEND"]["AUDITOR_GA_ID"]
+TAWK_TO_SRC = properties["FRONTEND"]["TAWK_TO_SRC"]
 
 IMGIX_SUBDOMAIN = properties["GENERAL"]["IMGIX_SUBDOMAIN"]
 
