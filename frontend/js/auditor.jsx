@@ -15,6 +15,8 @@ import { rootReducer } from './reducers_auditor.js';
 
 import { fetchConfig } from './auditor/service/config.js';
 
+import { initializeTawk } from './auditor/service/tawk.js';
+
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
@@ -26,19 +28,7 @@ $(document).ajaxError(function(event, jqXHR, settings){
 });
 
 fetchConfig().then((config) => {
-	if(config.TAWK_TO_SRC){
-		//Start of Tawk.to Script
-		let Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
-		(function(){
-			let s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
-			s1.async=true;
-			s1.src=config.TAWK_TO_SRC;
-			s1.charset='UTF-8';
-			s1.setAttribute('crossorigin','*');
-			s0.parentNode.insertBefore(s1,s0);
-		})();
-		//End of Tawk.to Script
-	}
+	config.TAWK_TO_SRC && initializeTawk(window, config.TAWK_TO_SRC);
 
 	ReactGA.initialize(config.GA_ID);
 

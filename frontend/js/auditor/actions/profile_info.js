@@ -45,11 +45,16 @@ function profileInfoPostError(errors){
  * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
  * This allows you to configure the returned function with parameters ala factories.
  */
+
+export function _fetchProfileInfo(){
+	return $.get( url.api_base_path + "auditor/profile_info");
+}
+
 export function fetchProfileInfo(){
 	return function(dispatch){
 		dispatch(profileInfoGetReq());
 
-		return $.get( url.api_base_path + "auditor/profile_info", function(profileInfo){
+		return _fetchProfileInfo().done(function(profileInfo){
 			dispatch(profileInfoGetSuccess(profileInfo));
 		});
 		//TODO: Handle error
