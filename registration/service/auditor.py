@@ -9,6 +9,7 @@ from django.core.validators import validate_email
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_AUDITOR
 from auditor.models import ProfileInfo, AdditionalInfo
+from referral.service import referral_auditor
 
 _logger = logging.getLogger(__name__)
 
@@ -45,6 +46,7 @@ def verify_auditor(user_id):
         if user.groups.filter(name=GROUP_NAME_AUDITOR).exists() and not user.verification.is_verified:
             user.verification.is_verified = True
             user.verification.save()
+            referral_auditor.trigger_signup_referral(user.id)
             return user
         else:
             raise ObjectNotFound
