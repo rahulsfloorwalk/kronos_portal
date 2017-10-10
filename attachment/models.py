@@ -1,5 +1,6 @@
+from django.utils import timezone
 from django.conf import settings
-from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField, IntegerField, PROTECT
+from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField, IntegerField, PROTECT, DateTimeField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -34,9 +35,20 @@ class Attachment(Model):
     file_size = IntegerField(db_column='file_size')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
 
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+    completed_at = DateTimeField(db_column="completed_at", null=True)
+
     content_type = ForeignKey(ContentType, on_delete=PROTECT)
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(Attachment, self).save(*args, **kwargs)
 
     def direct_url(self):
         s3 = settings.AWS["S3_ATTACHMENTS"]

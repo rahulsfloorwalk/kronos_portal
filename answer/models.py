@@ -1,6 +1,7 @@
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, BooleanField, OneToOneField, PositiveIntegerField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, BooleanField, OneToOneField, PositiveIntegerField, DateTimeField
 from django.db.models import PROTECT, F, Value, Sum
 from django.db.models.functions import Coalesce
 
@@ -23,6 +24,16 @@ class Answer(Model):
     answer_comment = CharField(db_column='answer_comment', max_length=2048, blank=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
 
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(Answer, self).save(*args, **kwargs)
+
     class Meta:
         unique_together = (('question', 'audit_store',))
 
@@ -36,7 +47,17 @@ class ReportSection(Model):
     auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=2048, blank=True)
     not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
 
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
     attachments = GenericRelation('attachment.Attachment', related_query_name='report_sections')
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(ReportSection, self).save(*args, **kwargs)
 
     def __str__(self):
         return "ReportSection({}): {}, {}".format(self.id, self.pm_comment, self.auditor_comment)

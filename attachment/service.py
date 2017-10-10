@@ -4,6 +4,7 @@ import string
 from datetime import date
 import os
 
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models import Q
@@ -70,6 +71,7 @@ def complete(attachment_id):
     try:
         attachment = Attachment.objects.get(pk=attachment_id)
         attachment.status = Attachment.ATTACHED
+        attachment.completed_at = timezone.now()
         attachment.save()
         return attachment
     except (Attachment.DoesNotExist) as e:

@@ -1,8 +1,9 @@
+from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import PROTECT
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
-    PositiveSmallIntegerField, PositiveIntegerField
+    PositiveSmallIntegerField, PositiveIntegerField, DateTimeField
 
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
@@ -241,6 +242,16 @@ class AuditApplication(Model):
 
     audit = ForeignKey('audit.Audit', db_column='audit_id', related_name='applications', on_delete=PROTECT)
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications', on_delete=PROTECT)
+
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(AuditApplication, self).save(*args, **kwargs)
 
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)

@@ -1,10 +1,11 @@
 import logging
 
+from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet
-from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField
+from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField, DateTimeField
 from django.db.models import PROTECT
 
 from guardian.shortcuts import get_users_with_perms, get_objects_for_user
@@ -64,6 +65,9 @@ class AuditStore(Model):
     audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores', on_delete=PROTECT)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 
     objects = AuditStoreQuerySet.as_manager()
@@ -72,6 +76,13 @@ class AuditStore(Model):
         permissions = (
                 ('clientuser_visible', 'ClientUser can view this AuditStore instance'),
             )
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(AuditStore, self).save(*args, **kwargs)
 
     def marks_obtained(self):
         return sum(rs.marks_obtained() for rs in self.report_sections.all())
