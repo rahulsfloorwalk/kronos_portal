@@ -17,6 +17,7 @@ from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from payment.models import Payment
+from referral.models import AuditorReferral
 from social.models import Facebook
 
 class CitySerializer(ModelSerializer):
@@ -584,3 +585,17 @@ class FacebookDeSerializer(ModelSerializer):
         facebook.is_verified = self.validated_data.get('is_verified', facebook.is_verified)
 
         return facebook
+
+class ReferralSerializer(ModelSerializer):
+    class Meta:
+        model = AuditorReferral
+        fields = (
+            'id',
+            'type',
+            'comment',
+            'referred_by',
+            'referred_to',
+            'amount',
+            'added_on'
+        )
+        read_only_fields = fields

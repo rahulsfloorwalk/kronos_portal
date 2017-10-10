@@ -20,6 +20,7 @@ urlpatterns = ([
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
     url(r'facebook_info$', views.FacebookInfoView.as_view(), name="facebook_info_view"),
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
+    url(r'referral$', views.ReferralView.as_view(), name="referral_view"),
 
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/cancel$', views.AuditApplicationCancelView.as_view(), name="audit_application_cancel_view"),

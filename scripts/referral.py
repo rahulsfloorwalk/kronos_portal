@@ -2,6 +2,7 @@ from random import choice
 from string import digits
 from django.db import IntegrityError
 from auditor.models import ProfileInfo, AdditionalInfo
+from referral.service import referral_auditor
 
 def insert_referral_codes():
     pis = ProfileInfo.objects.all()
@@ -42,5 +43,17 @@ def generate_ref_code(email, phone):
         is_duplicate = AdditionalInfo.objects.filter(referral_code=ref_code_final)
 
     return ref_code_final
+
+def fix_case_for_referral_codes():
+    additional_infos = AdditionalInfo.objects.all()
+    for ai in additional_infos:
+        if ai.referred_by:
+            ai.referred_by = ai.referred_by.lower()
+            ai.save()
+
+def insert_referral_signup_payments():
+    additional_infos = AdditionalInfo.objects.all()
+    for ai in additional_infos:
+        referral_auditor.trigger_signup_referral(ai.user.id)
 
 
