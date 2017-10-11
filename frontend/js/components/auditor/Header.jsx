@@ -27,6 +27,7 @@ var Header = React.createClass({
 						<NavLink to="/audit"><Inbox/> Audits</NavLink>
 						<NavLink to="/audit_store"><File/> Reports</NavLink>
 						<NavLink to="/payment"><big><b>₹</b></big> Payments</NavLink>
+						<NavLink to="/referral"><big><b>₹</b></big> Referrals</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
@@ -42,5 +43,3 @@ var Header = React.createClass({
 });
 
 export default Header;
-
-

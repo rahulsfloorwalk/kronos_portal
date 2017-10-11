@@ -291,3 +291,20 @@ export function getQuestionType(value){
 			return "";
 	}
 };
+
+export function getReferralType(value){
+	switch(value){
+		case "SIGNUP":
+			return "Signup";
+		case "AUDIT":
+			return "Audit";
+		case "PAID":
+			return "Paid";
+		case "":
+		case null:
+		case undefined:
+			return "";
+		default:
+			return `unknown referral type ${value} - ${typeof value}`;
+	}
+};

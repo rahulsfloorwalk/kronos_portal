@@ -23,6 +23,7 @@ import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';
 
 import PaymentList from './PaymentList.jsx';
+import ReferralList from './ReferralList.jsx';
 
 function logPageView() {
 	console.log(window.location.pathname, window.location.hash);
@@ -51,6 +52,7 @@ const Routes = ({store}) => (
 		<Route path="audit_store" component={AuditStoreList}/>
 		<Route path="audit_store/:auditStoreId/section" component={AuditStoreDetails}/>
 		<Route path="payment" component={PaymentList}/>
+		<Route path="referral" component={ReferralList}/>
 	</Route>
     </Router>
   </Provider>
