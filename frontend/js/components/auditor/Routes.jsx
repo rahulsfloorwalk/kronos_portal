@@ -21,6 +21,7 @@ import SectionList from './SectionList.jsx';
 import ProfileInfoForm from './ProfileInfoForm.jsx';
 import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';
+import PreferencesForm from './PreferencesForm.jsx';
 
 import PaymentList from './PaymentList.jsx';
 import ReferralList from './ReferralList.jsx';
@@ -41,6 +42,7 @@ const Routes = ({store}) => (
 			<Route path="profile/edit" component={ProfileInfoForm}/>
 			<Route path="bank/edit" component={BankInfoForm}/>
 			<Route path="additional/edit" component={AdditionalInfoForm}/>
+			<Route path="preferences/edit" component={PreferencesForm}/>
 		</Route>
 		<Route path="audit" component={ClientList}/>
 		<Route path="audit/cycle/:auditCycleId" component={AuditList}>

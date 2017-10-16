@@ -19,6 +19,7 @@ from attachment.models import Attachment
 from payment.models import Payment
 from referral.models import AuditorReferral
 from social.models import Facebook
+from auditor.models import Preferences
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -599,3 +600,27 @@ class ReferralSerializer(ModelSerializer):
             'added_on'
         )
         read_only_fields = fields
+
+class PreferencesSerializer(ModelSerializer):
+    class Meta:
+        model = Preferences
+        fields = (
+            'id',
+            'receive_new_opportunities_email',
+            'user_id',
+        )
+        read_only_fields = ('id', 'user_id')
+
+    def deserialize(self):
+        if self.context.get('current_user') is None:
+            raise TypeError("missing keyword argument 'current_user'")
+
+        try:
+            preferences = Preferences.objects.get(user_id=self.context.get('current_user').id)
+        except Preferences.DoesNotExist:
+            preferences = Preferences()
+            preferences.user_id = self.context.get('current_user').id
+
+        preferences.receive_new_opportunities_email = self.validated_data.get('receive_new_opportunities_email', preferences.receive_new_opportunities_email)
+
+        return preferences

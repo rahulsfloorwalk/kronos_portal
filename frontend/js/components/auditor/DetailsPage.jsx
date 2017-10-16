@@ -3,6 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import { fetchUser } from '../../auditor/actions/user.js';
+import { fetchPreferences } from '../../auditor/service/preferences.js';
 
 import ProfileInfoPanel from './ProfileInfoPanel.jsx';
 import SocialInfoPanel from './SocialInfoPanel.jsx';
@@ -11,10 +12,30 @@ import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
 import IdProofPanel from './IdProofPanel.jsx'
 
 import Panel from '../Panel.jsx';
+import { Pencil, Cross, Check } from '../Icons.jsx';
 
 var DetailsPage = React.createClass({
+	getInitialState: function(){
+		return {
+			loading: false,
+			preferences: null,
+		};
+	},
+	setLoading: function(loading){
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
+	},
 	componentDidMount: function(){
+		this.setLoading(true);
 		this.props.dispatch(fetchUser());
+		fetchPreferences().done((preferences) => {
+			this.setState({preferences});
+		}).always(() => this.setLoading(false));
+	},
+	componentWillReceiveProps: function(){
+		this.setLoading(true);
+		fetchPreferences().done((preferences) => {
+			this.setState({preferences});
+		}).always(() => this.setLoading(false));
 	},
 	render: function(){
 		return (
@@ -27,6 +48,10 @@ var DetailsPage = React.createClass({
 						<p>Email: <b>{this.props.user.email}</b></p>
 						<p>Mobile Number: <b>{this.props.profileInfo.mobile_number}</b></p>
 						<p>Password: <a href="/auth/password_change">Click here</a> to change your password.</p>
+						<p>
+							{ this.state.preferences && this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>} Receive email from us about new opportunities
+							<Link to="details/preferences/edit" className=""> change </Link>
+						</p>
 						<p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p>
 					</Panel>
 				</div>

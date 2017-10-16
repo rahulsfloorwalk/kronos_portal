@@ -10,11 +10,13 @@ import auditor.service.stats as auditor_stats_service
 import registration.service.auditor as auditor_service
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from auditor.service import profile_info_service
+from auditor.service import preferences_service
 from kronos.exceptions import ObjectNotFound
 from manager.serializers import FacebookSerializer
 from manager.serializers import PaymentSerializer
 from manager.serializers import ProfileInfoSerializer, BankInfoSerializer
 from manager.serializers import AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
+from manager.serializers import PreferencesSerializer
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
@@ -209,3 +211,14 @@ class ReferralView(APIView):
     def get(self, request, auditor_id, format=None):
         referrals = referral_service.find_by_referred_by(auditor_id)
         return Response(AuditorReferralSerializer(referrals, many=True).data)
+
+
+class PreferencesView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+
+    def get(self, request, auditor_id, format=None):
+        preference = preferences_service.find_preferences_by_user_id(auditor_id)
+        return Response(PreferencesSerializer(preference).data)

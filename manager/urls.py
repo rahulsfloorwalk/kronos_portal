@@ -84,6 +84,7 @@ urlpatterns = ([
     url(r'location/(?P<location_id>[0-9]+)$', views.LocationIdView.as_view(), name='location_id_view'),
     url(r'location$', views.LocationView.as_view(), name='location_view'),
 
+    url(r'auditor/(?P<auditor_id>[0-9]+)/preferences$', auditor_views.PreferencesView.as_view(), name='auditor_preferences_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/profile_info$', auditor_views.AuditorProfileInfoView.as_view(), name='auditor_profile_info_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/bank_info$', auditor_views.AuditorBankInfoView.as_view(), name='auditor_bank_info_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/additional_info$', auditor_views.AuditorAdditionalInfoView.as_view(), name='auditor_additional_info_view'),

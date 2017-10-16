@@ -16,13 +16,13 @@ from auditor.serializers import AttachmentSerializer
 from auditor.serializers import AuditStoreSerializer
 from auditor.serializers import NotificationSerializer
 from auditor.serializers import PaymentSerializer
-from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer
-from auditor.serializers import ReferralSerializer
+from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer, PreferencesSerializer
 from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from auditor.serializers import ReferralSerializer
 from auditor.serializers import SectionSerializer
 from auditor.serializers import FacebookSerializer, FacebookDeSerializer
 from auditor.service import application_service
+from auditor.service import preferences_service
 from auditor.service import stats as auditor_dashboard_service
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from manager import states
@@ -564,3 +564,23 @@ class ConfigView(APIView):
     }
     def get(self, request, format=None):
         return Response(settings.FRONTEND_CONFIG["AUDITOR"])
+
+class PreferencesView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        try:
+            preferences = preferences_service.find_preferences_by_user_id(request.user.id)
+            return Response(PreferencesSerializer(preferences).data)
+        except BankInfo.DoesNotExist:
+            return Response(BankInfoSerializer(BankInfo()).data)
+
+    def post(self, request):
+        preferences_s = PreferencesSerializer(data=request.data, context={'current_user': request.user})
+        preferences_s.is_valid(raise_exception=True)
+        preferences = preferences_s.deserialize()
+        preferences.save()
+        return Response(PreferencesSerializer(preferences).data)

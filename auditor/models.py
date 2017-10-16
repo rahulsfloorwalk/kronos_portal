@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import PROTECT
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
-    PositiveSmallIntegerField, PositiveIntegerField, DateTimeField
+    PositiveSmallIntegerField, PositiveIntegerField, DateTimeField, BooleanField
 
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
@@ -222,6 +222,16 @@ class BankInfo(Model):
         if self.ifsc_code in [None, ""]: complete = False
         if self.pan_number in [None, ""]: complete = False
         return complete
+
+
+class Preferences(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    receive_new_opportunities_email = BooleanField(db_column='receive_new_opportunities_email', default=True)
+    receive_transactional_email = BooleanField(db_column='receive_transactional_email', default=True)
+    # tos_accepted = BooleanField(db_column='tos_accepted', default=True)
+    # pp_accepted = BooleanField(db_column='pp_accepted', default=True)
+
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
 
 class AuditApplication(Model):
