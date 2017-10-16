@@ -1,3 +1,4 @@
+from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.db.models import Q
 
@@ -7,6 +8,8 @@ from auditor.models import ProfileInfo, AdditionalInfo
 from audit.models import AuditCycle, Audit
 from manager.models import City
 from manager.service import geo
+
+from audit.service import audit_cycle as audit_cycle_service
 
 def find_audit_by_id(audit_id):
     try:
@@ -87,3 +90,24 @@ def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
             raise AppLogicError("please complete your personal information to view audits")
     except (ProfileInfo.DoesNotExist, City.DoesNotExist) as e:
         raise ObjectNotFound from e
+
+
+@atomic
+def copy_audits_from_to(from_audit_cycle_id, to_audit_cycle_id):
+    try:
+        from_audit_cycle = audit_cycle_service.find_by_id(from_audit_cycle_id)
+        to_audit_cycle = audit_cycle_service.find_by_id(to_audit_cycle_id)
+
+        for audit in from_audit_cycle.audits.all():
+            new_audit = Audit()
+            new_audit.audit_cycle = to_audit_cycle
+            new_audit.store = audit.store
+            new_audit.count = audit.count
+            new_audit.earnings_per_audit = audit.earnings_per_audit
+            new_audit.reimbursement = audit.reimbursement
+            new_audit.post_approval_description = audit.post_approval_description
+            new_audit.save()
+
+        return to_audit_cycle.audits.all()
+    except IntegrityError as e:
+        raise AppLogicError("a store with audit already exists in this audit cycle")

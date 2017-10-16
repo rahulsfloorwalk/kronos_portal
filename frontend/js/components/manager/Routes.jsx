@@ -46,6 +46,7 @@ import SectionCopyForm from './SectionCopyForm.jsx';
 import QuestionForm from './QuestionForm.jsx';
 
 import AuditList from './AuditList.jsx';
+import AuditCopyForm from './AuditCopyForm.jsx';
 import AuditForm from './AuditForm.jsx';
 
 import AuditStoreList from './AuditStoreList.jsx';
@@ -105,6 +106,7 @@ const Routes = () => (
 				<Route path="section/:sectionId/question/:questionId/delete" component={QuestionForm}/>
 			</Route>
 			<Route path="audit" components={AuditList}>
+				<Route path="copy" component={AuditCopyForm}/>
 				<Route path="add" component={AuditForm}/>
 				<Route path=":auditId/edit" component={AuditForm}/>
 				<Route path=":auditId/application/fiat" component={AuditFiatAssignForm}/>

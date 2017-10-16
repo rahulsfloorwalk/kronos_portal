@@ -11,7 +11,7 @@ import { momentDateFormat }  from '../../../config.js';
 
 import { pointerStyle }  from '../../styles.js';
 
-import { Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
+import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -241,7 +241,12 @@ var AuditList = React.createClass({
     return(
       <div>
         <h3 className="page-header">
-          <Link to={addAuditLink} className="btn btn-default pull-right"><Plus/> Add Audit</Link>
+	  <span className="pull-right">
+            <Link to={addAuditLink} className="btn btn-default"><Plus/> Add Audit</Link>&nbsp;
+            <Link to={`/audit_cycle/${this.props.params.auditCycleId}/audit/copy`} className="btn btn-default" title="Copy Audits">
+              <Duplicate/> Copy Audits
+            </Link>
+          </span>
           <Inbox/> Audits
         </h3>
         <table className="table table-hover">

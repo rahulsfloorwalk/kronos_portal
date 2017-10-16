@@ -95,3 +95,13 @@ class AuditFiatAssignView(APIView):
             raise ValidationError({
                 'non_field_errors': [e.__str__()]
             })
+
+
+class AuditCopyByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, to_audit_cycle_id, format=None):
+        audits = audit_service.copy_audits_from_to(request.data.get('from_audit_cycle_id'), to_audit_cycle_id)
+        return Response(AuditSerializer(audits, many=True).data)
