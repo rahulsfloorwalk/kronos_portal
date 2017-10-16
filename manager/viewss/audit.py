@@ -16,6 +16,7 @@ from registration.mixins import HasGroupPermission
 from ..service import audit as manager_audit_service
 from ..serializers import AuditSerializer, AuditDeSerializer, AuditFiatAssignDeSerializer, AuditStoreSerializer
 from audit.service import audit_service
+from auditor.service import application_service
 
 class AuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -105,3 +106,13 @@ class AuditCopyByAuditCycle(APIView):
     def post(self, request, to_audit_cycle_id, format=None):
         audits = audit_service.copy_audits_from_to(request.data.get('from_audit_cycle_id'), to_audit_cycle_id)
         return Response(AuditSerializer(audits, many=True).data)
+
+
+class AuditRejectAllApplicationsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_id):
+        rejected_applications = application_service.reject_all_applications_for_audit(audit_id, request.user)
+        return Response(len(rejected_applications))

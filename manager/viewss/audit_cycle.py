@@ -14,7 +14,9 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
+from audit_store import service as audit_store_service
 from payment.service import payment_manager as payment_service
+from auditor.service import application_service
 from questionnaire.service import questionnaire as questionnaire_service
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
 from manager.serializers import PaymentUserSerializer
@@ -194,3 +196,33 @@ class PendingPaymentCsvView(APIView):
         response = HttpResponse(data.read(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
         return response
+
+
+class AuditCycleRejectAllApplicationsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_cycle_id):
+        rejected_applications = application_service.reject_all_applications_for_audit_cycle(audit_cycle_id, request.user)
+        return Response(len(rejected_applications))
+
+
+class AuditCycleApplicationStats(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id):
+        stats = application_service.get_application_stats(audit_cycle_id)
+        return Response(stats)
+
+
+class AuditCycleAuditStoreStats(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id):
+        stats = audit_store_service.get_audit_store_stats(audit_cycle_id)
+        return Response(stats)

@@ -13,6 +13,7 @@ import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
 import Loading from '../Loading.jsx';
 
 import AuditCycleSummary from './AuditCycleSummary.jsx'
+import AuditStoreStatusSummary from './AuditStoreStatusSummary.jsx'
 import { fetchClientUsers } from '../../manager/actions/client_user.js';
 import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore, updateAuditStore} from '../../manager/actions/audit_store.js';
 import { assignAuditStoreToClientUser, revokeAuditStoreFromClientUser } from '../../manager/service/audit_store.js';
@@ -181,11 +182,7 @@ var AuditStoreList = React.createClass({
               <Download/> Excel Report
           </a>
         </h3>
-	    <div className="row">
-		    <div className="col-md-4">
-			<AuditCycleSummary auditCycleId = {this.props.params.auditCycleId}/>
-		    </div>
-		    <div className="col-md-8">
+		<AuditStoreStatusSummary auditCycleId={this.props.params.auditCycleId}/>
 	    <div className="form-group">
 	  <select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.clientUserChanged} value={this.state.selectedClientUserId}>
 	    <option value="">Select Client User</option>
@@ -204,8 +201,6 @@ var AuditStoreList = React.createClass({
 	   </select>
 	    </div>
 	    {rows}
-		    </div>
-	    </div>
         {this.props.children}
       </div>
     );

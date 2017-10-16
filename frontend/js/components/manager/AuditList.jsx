@@ -1,6 +1,6 @@
 import React from 'react';
 import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import { hashHistory, Link } from 'react-router';
 
 import Alert from 'react-s-alert';
 
@@ -19,9 +19,13 @@ import Loading from '../Loading.jsx';
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
 
+import ApplicationStatusSummary from './ApplicationStatusSummary.jsx';
+
 import { AuditStoreTable } from './AuditStoreList.jsx';
 
 import {fetchAudits, deleteAudit} from '../../manager/actions/audit.js';
+
+import { rejectAllForAudit, rejectAllForAuditCycle } from '../../manager/service/application.js';
 
 var AuditApplicationList = React.createClass({
 	contextTypes: {
@@ -81,6 +85,14 @@ var AuditRow = React.createClass({
 			expanded: !this.state.expanded
 		});
 	},
+  rejectAllForAuditClicked: function(e){
+	  if(confirm("Are you sure you want to deny all applications for this audit?")){
+		  rejectAllForAudit(this.props.audit.id).done((count)=>{
+			  Alert.success(`${count} APPLICATIONS DENIED`);
+			  hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
+		  });
+	  }
+  },
   render: function(){
 	  let reportCount = this.props.audit.audit_stores.length;
 	  let validReportCount = this.props.audit.audit_stores.filter(report => ["ASSIGNED","SUBMITTED","COMPLETED","ACCEPTED"].includes(report.status)).length;
@@ -125,6 +137,11 @@ var AuditRow = React.createClass({
 					  <Link to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign">
 					    <HandRight/> Fiat Assign
 					    </Link>
+				    </li>
+				    <li>
+					    <a style={pointerStyle} onClick={this.rejectAllForAuditClicked}>
+						    <ThumbsDown/> Deny All Applications
+					    </a>
 				    </li>
 				    <li role="separator" className="divider"></li>
 				    <li>
@@ -213,6 +230,14 @@ var AuditList = React.createClass({
 	if(a.name > b.name) return 1;
 	return 0;
   },
+  rejectAllForAuditCycleClicked: function(e){
+	  if(confirm("Are you sure you want to deny all applications for this audit cycle?")){
+		  rejectAllForAuditCycle(this.props.params.auditCycleId).done((count)=>{
+			  Alert.success(`${count} APPLICATIONS DENIED`);
+			  hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
+		  });
+	  }
+  },
   render: function(){
 	  if(this.state.loading){
 		  return <Loading/>;
@@ -242,13 +267,33 @@ var AuditList = React.createClass({
       <div>
         <h3 className="page-header">
 	  <span className="pull-right">
-            <Link to={addAuditLink} className="btn btn-default"><Plus/> Add Audit</Link>&nbsp;
-            <Link to={`/audit_cycle/${this.props.params.auditCycleId}/audit/copy`} className="btn btn-default" title="Copy Audits">
-              <Duplicate/> Copy Audits
-            </Link>
+	    <div className="btn-group">
+		    <Link to={addAuditLink} className="btn btn-default"> <Plus/> Add Audit </Link>
+		    <button type="button" className="btn btn-default" onClick={(e)=>{e.stopPropagation();this.setState({dropdown:!this.state.dropdown});}}>
+			    <span className="caret"></span>
+		    </button>
+		    { this.state.dropdown ?
+			    <ul className="dropdown-menu" style={{display:"block"}}
+			    onMouseEnter={()=>clearTimeout(this.state.dropdownId)}
+			    onMouseLeave={()=>this.setState({"dropdownId":setTimeout(()=>this.setState({dropdown:!this.state.dropdown}),500)})}>
+				    <li>
+					    <Link to={`/audit_cycle/${this.props.params.auditCycleId}/audit/copy`} title="Copy Audits">
+					      <Duplicate/> Copy Audits
+					    </Link>
+				    </li>
+				    <li>
+					    <a style={pointerStyle} onClick={this.rejectAllForAuditCycleClicked}>
+						    <ThumbsDown/> Deny All Applications
+					    </a>
+				    </li>
+			    </ul>
+		    : null}
+	    </div>
+	    &nbsp;
           </span>
           <Inbox/> Audits
         </h3>
+	<ApplicationStatusSummary auditCycleId={this.props.params.auditCycleId}/>
         <table className="table table-hover">
           <thead>
             <tr>

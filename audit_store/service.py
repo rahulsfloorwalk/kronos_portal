@@ -3,6 +3,7 @@ from datetime import timedelta, date
 from django.db import connection
 from django.db.transaction import atomic
 from django.db import IntegrityError
+from django.db.models import Count
 from django.contrib.auth.models import Group
 from django.utils.timezone import localtime, now
 
@@ -444,3 +445,7 @@ def revoke_audit_store_from_client_user(audit_store_id, user_id):
 
     remove_perm('clientuser_visible', user, audit_store)
     return audit_store
+
+
+def get_audit_store_stats(audit_cycle_id):
+    return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))

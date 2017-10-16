@@ -15,3 +15,20 @@ export function fiatAssignAudit(audit_id, email, audit_date){
 	return promise;
 };
 
+export function rejectAllForAudit(audit_id){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit/${audit_id}/application/deny_all`,
+		method: 'POST',
+		contentType: 'application/json'
+	});
+	return promise;
+};
+
+export function rejectAllForAuditCycle(audit_cycle_id){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/application/deny_all`,
+		method: 'POST',
+		contentType: 'application/json'
+	});
+};
+

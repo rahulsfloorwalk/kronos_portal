@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group
 from django.db import connection
 from django.db.transaction import atomic
+from django.db.models import Count
 from notifications.models import Notification
 from notifications.signals import notify
 
@@ -11,6 +12,8 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from manager import notification
 from notify.service import mail_notify
 from registration.models import GROUP_NAME_MANAGER
+from audit.service import audit_service
+from audit.service import audit_cycle as audit_cycle_service
 
 
 def get_applications( profileinfo_id):
@@ -229,3 +232,22 @@ def can_auditor_apply(user_id):
         return True
     else:
         return False
+
+
+@atomic
+def reject_all_applications_for_audit(audit_id, user_actor):
+    audit = audit_service.find_audit_by_id(audit_id)
+    return [reject(a.id, user_actor) for a in audit.applications.filter(status=AuditApplication.APPLIED)]
+
+
+@atomic
+def reject_all_applications_for_audit_cycle(audit_cycle_id, user_actor):
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    applications = []
+    for audit in audit_cycle.audits.all():
+        applications.extend(reject_all_applications_for_audit(audit.id, user_actor))
+    return applications
+
+
+def get_application_stats(audit_cycle_id):
+    return AuditApplication.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
