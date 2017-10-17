@@ -20,7 +20,9 @@ from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.service import auditor as auditor_service
 from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
+from ..serializers import AuditorReferralSerializer
 from social.service import social_manager as social_service
+from referral.service import referral_auditor as referral_service
 
 
 class AuditorView(generics.ListAPIView):
@@ -196,3 +198,14 @@ class IdProofAttachmentView(APIView):
             return Response(AttachmentSerializer(attachments, many=True).data)
         except ObjectNotFound:
             raise NotFound
+
+
+class ReferralView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+
+    def get(self, request, auditor_id, format=None):
+        referrals = referral_service.find_by_referred_by(auditor_id)
+        return Response(AuditorReferralSerializer(referrals, many=True).data)

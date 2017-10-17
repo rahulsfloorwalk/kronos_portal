@@ -30,6 +30,7 @@ var AuditorDetailsPage = React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps){
 		if( this.props.params.auditorId !== nextProps.params.auditorId){
+			this.props.dispatch(fetchAuditor(nextProps.params.auditorId));
 			this.goToFirstTab(nextProps);
 		}
 	},
@@ -132,6 +133,7 @@ var AuditorDetailsPage = React.createClass({
 							<NavLink to={`/auditor/${this.props.params.auditorId}/applications`}>Applications</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/reports`}>Reports</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/payment`}>Payments</NavLink>
+							<NavLink to={`/auditor/${this.props.params.auditorId}/referral`}>Referrals</NavLink>
 							<NavLink to={`/auditor/${this.props.params.auditorId}/email_log`}>Email Log</NavLink>
 						</ul>
 						<br/>

@@ -99,6 +99,7 @@ urlpatterns = ([
     url(r'auditor/(?P<user_id>[0-9]+)/email$', auditor_views.AuditorIdEmailView.as_view(), name='auditor_id_email_view'),
     url(r'auditor/(?P<user_id>[0-9]+)/mobile_number$', auditor_views.AuditorIdMobileNumberView.as_view(), name='auditor_id_mobile_number_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/attachment$', auditor_views.IdProofAttachmentView.as_view(), name='id_proof_attachment_view'),
+    url(r'auditor/(?P<auditor_id>[0-9]+)/referral$', auditor_views.ReferralView.as_view(), name='auditor_id_referral_view'),
     url(r'auditor$', auditor_views.AuditorView.as_view(), name='auditor_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', section_views.SectionViewByAuditCycle.as_view(), name='section_by_audit_cycle'),

@@ -14,6 +14,7 @@ from payment.models import Payment
 from questionnaire.models import Section, Question
 from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
 from social.models import Facebook
+from referral.models import AuditorReferral
 from .models import City, Location
 
 class ClientSerializer(ModelSerializer):
@@ -762,3 +763,17 @@ class ManagerDeSerializer(Serializer):
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
 
+
+class AuditorReferralSerializer(ModelSerializer):
+    class Meta:
+        model = AuditorReferral
+        fields = (
+            'id',
+            'type',
+            'comment',
+            'referred_by',
+            'referred_to',
+            'amount',
+            'added_on'
+        )
+        read_only_fields = fields
