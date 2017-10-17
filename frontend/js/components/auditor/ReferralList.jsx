@@ -24,10 +24,10 @@ class ReferralRow extends React.Component{
 							<br/>
 							<p>{this.props.referral.comment}</p>
 						</div>
-						<div className="col-md-2">
+			{/*<div className="col-md-2">
 							<br/>
               <p><ReferralTypeLabel type={this.props.referral.type}/></p>
-						</div>
+						</div>*/}
 					</div>
 				</div>
 		);
@@ -57,9 +57,7 @@ class ReferralList extends React.Component{
 	}
 
   calculatePending = (referrals) => {
-    let total = 0;
-    referrals.map(r => total += r.amount);
-    return total;
+    return referrals.reduce((sum, r) => sum += r.amount, 0);
   }
 
   setLoading = (loading) => {
@@ -89,9 +87,9 @@ class ReferralList extends React.Component{
 		} else {
 			return (
 				<div className="jumbotron text-center">
-					<h2>There are no referral payments here.</h2>
-					<h3>Pending payments will start appearing once your referred auditors complete their email verification or complete an audit</h3>
-					<p>We will keep you informed when payments are approved and processed for you</p>
+					<h2>You have not referred anyone yet</h2>
+					<h3>Referral payments will start appearing after an email is verified or an audit is completed</h3>
+					<p className="text-muted">We will keep you informed when payments are approved and processed for you</p>
 				</div>
 			);
 		}

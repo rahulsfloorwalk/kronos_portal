@@ -1,12 +1,14 @@
 import logging
 from django.conf import settings
 from django.db import IntegrityError, transaction
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.forms import ValidationError
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.validators import validate_email
+from django.db.transaction import atomic
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
+from registration.models import Verification
 from registration.models import GROUP_NAME_AUDITOR
 from auditor.models import ProfileInfo, AdditionalInfo
 from referral.service import referral_auditor
@@ -40,18 +42,36 @@ def activate_auditor(user_id):
     else:
         raise ObjectNotFound
 
+
+def find_verification_by_key(key):
+    try:
+        return Verification.objects.get(activation_key=key)
+    except Verification.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+@atomic
 def verify_auditor(user_id):
     try:
-        user = User.objects.get(pk=user_id)
-        if user.groups.filter(name=GROUP_NAME_AUDITOR).exists() and not user.verification.is_verified:
+        user = find_auditor_by_id(user_id)
+        if not user.verification.is_verified:
             user.verification.is_verified = True
             user.verification.save()
+            _logger.info("verified user %s successfully", user)
             referral_auditor.trigger_signup_referral(user.id)
             return user
         else:
+            _logger.info("verification is already done for user: %s", user.email)
             raise ObjectNotFound
-    except User.DoesNotExist as e:
+    except (User.DoesNotExist, Verification.DoesNotExist) as e:
         raise ObjectNotFound from e
+
+
+@atomic
+def verify_auditor_by_key(key):
+    verification = find_verification_by_key(key)
+    _logger.info("found verification for key: %s", key)
+    return verify_auditor(verification.user_id)
+
 
 def set_email(user_id, email):
     if not email:

@@ -18,7 +18,7 @@ def add_signup_referred_by(referred_by, referred_to):
     auditor_referral.referred_to = referred_to
     auditor_referral.type = AuditorReferral.SIGNUP
     auditor_referral.amount = REFERRAL_SIGNUP_AMOUNT
-    auditor_referral.comment = "Referral amount added to FloorWalk account for signup by " + referred_to.email
+    auditor_referral.comment = "referral amount for signup by {}".format(referred_to.email)
     auditor_referral.save()
     return auditor_referral
 
@@ -30,7 +30,7 @@ def add_audit_referred_by(referred_by, referred_to):
         auditor_referral.referred_to = referred_to
         auditor_referral.type = AuditorReferral.AUDIT
         auditor_referral.amount = REFERRAL_AUDIT_AMOUNT
-        auditor_referral.comment = "Referral amount added to FloorWalk account for audit conducted by " + referred_to.email
+        auditor_referral.comment = "referral amount for audit conducted by {}".format(referred_to.email)
         auditor_referral.save()
         return auditor_referral
     else:

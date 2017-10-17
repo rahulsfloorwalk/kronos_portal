@@ -16,6 +16,7 @@ from registration.service import auditor as auditor_service
 from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from .forms import SignUpForm
 import datetime
+from kronos.exceptions import ObjectNotFound
 
 _logger = logging.getLogger(__name__)
 
@@ -119,22 +120,12 @@ class SignUp(View):
 def signup_success(request):
     return render(request, 'registration/signup_success.html')
 
+
 @atomic
 def activate(request, key):
-    verification = get_object_or_404(Verification, activation_key=key)
-    if verification is not None:
-        _logger.info("found verification for key: %s", key)
-        if verification.is_verified is False:
-            verification.is_verified = True
-            verification.save()
-            user = verification.user
-            user.is_active = True
-            user.save()
-            _logger.info("verified user %s successfully", user)
-            login(request, user, backend='registration.backends.CaseInsensitiveModelBackend')
-            #messages.add_message(request, messages.SUCCESS, 'Your email has been verified. Please login to continue.')
-        else:
-            _logger.info("verification is already done for key: %s", key)
-    else:
-        _logger.info("verification not found for key: %s", key)
+    try:
+        user = auditor_service.verify_auditor_by_key(key)
+        login(request, user, backend='registration.backends.CaseInsensitiveModelBackend')
+    except ObjectNotFound as e:
+        _logger.info("verification failed for key: %s", key)
     return redirect('registration:login')
