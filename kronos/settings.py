@@ -227,6 +227,14 @@ PAYMENT_CSV_SETTINGS = {
     "INDICATOR": properties["PAYMENT_CSV_SETTINGS"]["INDICATOR"],
     "ORIGINAL_REMITTER": properties["PAYMENT_CSV_SETTINGS"]["ORIGINAL_REMITTER"],
 }
+
+PAYMENT_NEW_CSV_SETTINGS = {
+    "Record_Identifier": properties["PAYMENT_NEW_CSV_SETTINGS"]["Record_Identifier"],
+    "Debit_Account_No": properties["PAYMENT_NEW_CSV_SETTINGS"]["Debit_Account_No"],
+    "Payment_Product_Code": properties["PAYMENT_NEW_CSV_SETTINGS"]["Payment_Product_Code"],
+    "ReasonForPayment": properties["PAYMENT_NEW_CSV_SETTINGS"]["ReasonForPayment"],
+    "Debit_Narration": properties["PAYMENT_NEW_CSV_SETTINGS"]["Debit_Narration"],
+}
 # payment_settings = properties.payment_settings
 
 

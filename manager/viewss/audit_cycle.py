@@ -192,7 +192,7 @@ class PendingPaymentCsvView(APIView):
         'GET' : [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        data, filename = payment_service.find_pending_csv_for_audit_cycle(audit_cycle_id)
+        data, filename = payment_service.find_new_pending_csv_for_audit_cycle(audit_cycle_id)
         response = HttpResponse(data.read(), content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
         return response
