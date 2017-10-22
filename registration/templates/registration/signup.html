@@ -23,7 +23,7 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				<form action="{% url 'registration:signup' %}" method="POST">
+				<form action="{% url 'registration:signup' %}" method="POST" id="signup_form">
 					{% csrf_token %}
 					<div class="form-group">
 						<label>Email Address</label>
@@ -33,22 +33,25 @@
 						</p>
 					</div>
 					<div class="form-group">
-						{{ form.phone.label_tag }}
+						<label class="control-label" for="{{form.phone.auto_id}}">{{form.phone.label}}:</label>
 						{{ form.phone | add_class:"form-control input-lg" | attr:"placeholder:your primary contact number"}}
 						<p class="help-block">
 						{{ form.phone.errors }}
 						</p>
 					</div>
-					<div class="form-group">
-						{{ form.password1.label_tag }}
+					<div class="form-group has-feedback">
+						<span id="str_meter" style="display:none"></span>
+						<label class="control-label" for="{{form.password1.auto_id}}">{{form.password1.label}}:</label>
 						{{ form.password1 | add_class:"form-control input-lg" | attr:"placeholder:a secret password"}}
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="p1-icon" style="display:none"></span>
 						<p class="help-text">
 						{{ form.password1.errors }}
 						</p>
 					</div>
-					<div class="form-group">
-						{{ form.password2.label_tag }}
+					<div class="form-group has-feedback">
+						<label class="control-label" for="{{form.password2.auto_id}}">{{form.password2.label}}:</label>
 						{{ form.password2 | add_class:"form-control input-lg" | attr:"placeholder:please repeat your password"}}
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="p2-icon" style="display:none"></span>
 						<p class="help-text">
 						{{ form.password2.errors }}
 						</p>
@@ -119,4 +122,176 @@
 	</div>
 </div>
 {% include "registration/tawk.html" %}
+	<script>
+		var isValidPassword = function(password){
+			if(!password){
+				return [false, "password cannot be blank", 0];
+			}
+			if(password.length < 8){
+				return [false, "password must be atleast 8 characters", 0];
+			}
+			if(! /[0-9]/.test(password)){
+				return [false, "password must be alphanumeric", 0];
+			}
+			if(password.length > 12){
+				return [true, null, 3];
+			}
+			if(password.length > 8){
+				return [true, null, 2];
+			}
+			if(password.length === 8){
+				return [true, null, 1];
+			}
+		};
+		var checkPasswords = function(password1, password2){
+			return isValidPassword(password1)[0] && password1 && password2 && password1 === password2;
+		};
+		var checkPhone = function(phone){
+			return /[0-9]{10}/.test(phone);
+		};
+	(function(){
+
+		var resetPasswordValidationState = function(){
+			var p1 = document.querySelector("#id_password1");
+			var p1_icon = document.querySelector("#p1-icon");
+			p1.parentNode.classList.remove("has-error");
+			p1.parentNode.classList.remove("has-success");
+			p1_icon.style.display = "none";
+			p1_icon.classList.remove("glyphicon-ok");
+			p1_icon.classList.remove("glyphicon-remove");
+		};
+
+		var setPasswordInvalidState = function(){
+			resetPasswordValidationState();
+			var p1 = document.querySelector("#id_password1");
+			var p1_icon = document.querySelector("#p1-icon");
+
+			p1.parentNode.classList.add("has-error");
+		};
+
+		var setPasswordValidState = function(){
+			resetPasswordValidationState();
+			var p1 = document.querySelector("#id_password1");
+			var p1_icon = document.querySelector("#p1-icon");
+
+			p1.parentNode.classList.add("has-success");
+			p1_icon.style.display = "block";
+			p1_icon.classList.add("glyphicon-ok");
+		};
+
+		var resetPasswordConfirmationState = function(){
+			var p2 = document.querySelector("#id_password2");
+			var p2_icon = document.querySelector("#p2-icon");
+			p2.parentNode.classList.remove("has-error");
+			p2.parentNode.classList.remove("has-success");
+			p2_icon.style.display = "none";
+			p2_icon.classList.remove("glyphicon-ok");
+			p2_icon.classList.remove("glyphicon-remove");
+		};
+
+		var setPasswordConfirmationError = function(){
+			resetPasswordConfirmationState();
+			var p2 = document.querySelector("#id_password2");
+			var p2_icon = document.querySelector("#p2-icon");
+			p2.parentNode.classList.add("has-error");
+		};
+
+		var setPasswordConfirmationSuccess = function(){
+			resetPasswordConfirmationState();
+			var p2 = document.querySelector("#id_password2");
+			var p2_icon = document.querySelector("#p2-icon");
+			p2.parentNode.classList.add("has-success");
+			p2_icon.style.display = "block";
+			p2_icon.classList.add("glyphicon-ok");
+		};
+
+		var confirmPasswordEquals = function(){
+			resetPasswordConfirmationState();
+			var p1 = document.querySelector("#id_password1");
+			var p2 = document.querySelector("#id_password2");
+			if(checkPasswords(p1.value, p2.value)){
+				setPasswordConfirmationSuccess();
+			} else {
+				setPasswordConfirmationError();
+			}
+		};
+
+		var setPasswordStrength = function(strength){
+			var strMeter = document.querySelector("#str_meter");
+			switch(strength){
+				case null:
+				case undefined:
+				case "": {
+					strMeter.style.display = "none";
+				}
+				break;
+				case 0:{
+					strMeter.style.display = "block";
+					strMeter.innerHTML = "WEAK"
+					strMeter.className = "pull-right label label-danger";
+				}
+				break;
+				case 1:{
+					strMeter.style.display = "block";
+					strMeter.innerHTML = "MILD"
+					strMeter.className = "pull-right label label-warning";
+				}
+				break;
+				case 2:{
+					strMeter.style.display = "block";
+					strMeter.innerHTML = "GOOD";
+					strMeter.className = "pull-right label label-primary";
+				}
+				break;
+				case 3:{
+					strMeter.style.display = "block";
+					strMeter.innerHTML = "STRONG";
+					strMeter.className = "pull-right label label-success";
+				}
+				break;
+			}
+		};
+
+		document.querySelector("#id_password1").addEventListener("blur", function(e){
+			var p1 = document.querySelector("#id_password1");
+			var p2 = document.querySelector("#id_password2");
+			if(p2.value !== ""){
+				confirmPasswordEquals();
+			}
+
+			var v = isValidPassword(p1.value);
+
+			setPasswordStrength(v[2]);
+
+			if( ! v[0]){
+				setPasswordInvalidState();
+			} else {
+				setPasswordValidState();
+			}
+		});
+
+		document.querySelector("#id_password2").addEventListener("blur", confirmPasswordEquals);
+		document.querySelector("#id_password2").addEventListener("keyup", confirmPasswordEquals);
+
+		document.querySelector("#id_phone").addEventListener("blur", function(e){
+			if( ! checkPhone(e.target.value)){
+				e.target.parentNode.classList.add("has-error");
+			} else {
+				e.target.parentNode.classList.remove("has-error");
+			}
+		});
+
+		document.querySelector("#signup_form").addEventListener("submit", function(e){
+			var p1 = document.querySelector("#id_password1");
+			var p2 = document.querySelector("#id_password2");
+			var phone = document.querySelector("#id_phone");
+
+			if( ! checkPasswords(p1.value, p2.value) || ! checkPhone(phone.value)){
+				e.preventDefault();
+			}
+		});
+
+		resetPasswordConfirmationState();
+	})();
+	</script>
 {% endblock %}
