@@ -7,7 +7,7 @@
 		</div>
 	</div>
 <div class="row">
-	<div class="col-md-5">
+	<div class="col-md-4 col-md-offset-4">
 <h1 class="page-header">
 			<a href="http://floorwalk.in">
 			<img class="img-responsive" src="/static/img/logo_3_500x100.png"/>
@@ -27,33 +27,35 @@
 					{% csrf_token %}
 					<div class="form-group">
 						<label>Email Address</label>
-						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com" }}
+						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com" | attr:"type:email"}}
 						<p class="help-block">
 						{{ form.username.errors }}
 						</p>
 					</div>
 					<div class="form-group">
-						<label class="control-label" for="{{form.phone.auto_id}}">{{form.phone.label}}:</label>
-						{{ form.phone | add_class:"form-control input-lg" | attr:"placeholder:your primary contact number"}}
+						<label class="control-label" for="{{form.phone.auto_id}}">10-digit Mobile Number:</label>
+						<div class="input-group">
+							<span class="input-group-addon">+91-</span>
+						{{ form.phone | add_class:"form-control input-lg" | attr:"placeholder:your primary contact number" | attr:"type:tel"}}
+						</div>
 						<p class="help-block">
 						{{ form.phone.errors }}
 						</p>
 					</div>
 					<div class="form-group has-feedback">
-						<span id="str_meter" style="display:none"></span>
 						<label class="control-label" for="{{form.password1.auto_id}}">{{form.password1.label}}:</label>
 						{{ form.password1 | add_class:"form-control input-lg" | attr:"placeholder:a secret password"}}
 						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="p1-icon" style="display:none"></span>
 						<p class="help-text">
 						{{ form.password1.errors }}
+						{{ form.password2.errors }}
 						</p>
 					</div>
-					<div class="form-group has-feedback">
+					<div class="form-group has-feedback" style="display:none">
 						<label class="control-label" for="{{form.password2.auto_id}}">{{form.password2.label}}:</label>
 						{{ form.password2 | add_class:"form-control input-lg" | attr:"placeholder:please repeat your password"}}
 						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="p2-icon" style="display:none"></span>
 						<p class="help-text">
-						{{ form.password2.errors }}
 						</p>
 					</div>
 					<div class="form-group">
@@ -90,6 +92,7 @@
 			</div>
 		</div>
 	</div>
+	<!--
 	<div class="col-md-7">
 		<br/>
 		<br/>
@@ -120,6 +123,7 @@
 			</div>
 		</div>
 	</div>
+	-->
 </div>
 {% include "registration/tawk.html" %}
 	<script>
@@ -161,12 +165,13 @@
 			p1_icon.classList.remove("glyphicon-remove");
 		};
 
-		var setPasswordInvalidState = function(){
+		var setPasswordInvalidState = function(v){
 			resetPasswordValidationState();
 			var p1 = document.querySelector("#id_password1");
 			var p1_icon = document.querySelector("#p1-icon");
 
 			p1.parentNode.classList.add("has-error");
+			p1.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>" + v[1] + "</span>";
 		};
 
 		var setPasswordValidState = function(){
@@ -177,6 +182,7 @@
 			p1.parentNode.classList.add("has-success");
 			p1_icon.style.display = "block";
 			p1_icon.classList.add("glyphicon-ok");
+			p1.parentNode.querySelector("p").innerHTML = "";
 		};
 
 		var resetPasswordConfirmationState = function(){
@@ -194,6 +200,7 @@
 			var p2 = document.querySelector("#id_password2");
 			var p2_icon = document.querySelector("#p2-icon");
 			p2.parentNode.classList.add("has-error");
+			p2.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>passwords do not match</span>";
 		};
 
 		var setPasswordConfirmationSuccess = function(){
@@ -203,6 +210,7 @@
 			p2.parentNode.classList.add("has-success");
 			p2_icon.style.display = "block";
 			p2_icon.classList.add("glyphicon-ok");
+			p2.parentNode.querySelector("p").innerHTML = "";
 		};
 
 		var confirmPasswordEquals = function(){
@@ -216,68 +224,31 @@
 			}
 		};
 
-		var setPasswordStrength = function(strength){
-			var strMeter = document.querySelector("#str_meter");
-			switch(strength){
-				case null:
-				case undefined:
-				case "": {
-					strMeter.style.display = "none";
-				}
-				break;
-				case 0:{
-					strMeter.style.display = "block";
-					strMeter.innerHTML = "WEAK"
-					strMeter.className = "pull-right label label-danger";
-				}
-				break;
-				case 1:{
-					strMeter.style.display = "block";
-					strMeter.innerHTML = "MILD"
-					strMeter.className = "pull-right label label-warning";
-				}
-				break;
-				case 2:{
-					strMeter.style.display = "block";
-					strMeter.innerHTML = "GOOD";
-					strMeter.className = "pull-right label label-primary";
-				}
-				break;
-				case 3:{
-					strMeter.style.display = "block";
-					strMeter.innerHTML = "STRONG";
-					strMeter.className = "pull-right label label-success";
-				}
-				break;
-			}
-		};
+		document.querySelector("#id_password1").addEventListener("focus", function(e){
+			document.querySelector("#id_password2").parentNode.style.display = "block";
+		});
 
-		document.querySelector("#id_password1").addEventListener("blur", function(e){
-			var p1 = document.querySelector("#id_password1");
-			var p2 = document.querySelector("#id_password2");
-			if(p2.value !== ""){
-				confirmPasswordEquals();
-			}
+		document.querySelector("#id_password1").addEventListener("keyup", function(e){
+			var p1 = e.target;
 
 			var v = isValidPassword(p1.value);
 
-			setPasswordStrength(v[2]);
-
 			if( ! v[0]){
-				setPasswordInvalidState();
+				setPasswordInvalidState(v);
 			} else {
 				setPasswordValidState();
 			}
 		});
 
-		document.querySelector("#id_password2").addEventListener("blur", confirmPasswordEquals);
 		document.querySelector("#id_password2").addEventListener("keyup", confirmPasswordEquals);
 
-		document.querySelector("#id_phone").addEventListener("blur", function(e){
+		document.querySelector("#id_phone").addEventListener("keyup", function(e){
 			if( ! checkPhone(e.target.value)){
 				e.target.parentNode.classList.add("has-error");
+				e.target.parentNode.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>invalid mobile number</span>";
 			} else {
 				e.target.parentNode.classList.remove("has-error");
+				e.target.parentNode.parentNode.querySelector("p").innerHTML = "";
 			}
 		});
 
