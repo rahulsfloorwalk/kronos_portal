@@ -2,9 +2,10 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Loading from '../../Loading.jsx'
 import { Check, Cross, Pencil, Plus, User } from '../../Icons.jsx'
 
-import { fetchClientUsers } from '../../../manager/actions/client_user.js'
+import { fetchClientUsers } from '../../../manager/service/client_user.js'
 
 var ClientUserRow = React.createClass({
 	render: function(){
@@ -24,16 +25,26 @@ var ClientUserRow = React.createClass({
 	},
 });
 
-var ClientUserList = React.createClass({
+export default React.createClass({
+	getInitialState: function(){
+		return {};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchClientUsers(this.props.params.clientId));
+		fetchClientUsers(this.props.params.clientId).done((clientUsers)=>this.setState({clientUsers}));
+	},
+	componentWillReceiveProps: function(nextProps) {
+		fetchClientUsers(nextProps.params.clientId).done((clientUsers)=>this.setState({clientUsers}));
 	},
 	render: function(){
-		var rows = [];
-		for(var id in this.props.clientUsers) {
-			rows.push(<ClientUserRow clientUser={this.props.clientUsers[id]} key={id}/>);
+		if(! this.state.clientUsers){
+			return <Loading/>;
 		}
-		var addClientUserLink = `/client/${this.props.params.clientId}/client_user/add`;
+
+		let rows = [];
+		for(let cu of this.state.clientUsers) {
+			rows.push(<ClientUserRow clientUser={cu} key={cu.id}/>);
+		}
+		let addClientUserLink = `/client/${this.props.params.clientId}/client_user/add`;
 		return (
 			<div>
 				<h3 className="page-header">
@@ -59,11 +70,3 @@ var ClientUserList = React.createClass({
 		);
 	},
 });
-
-var mapStoreToProps = function(store, ownProps){
-	return {
-		clientUsers: store.clientUsers
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(ClientUserList);

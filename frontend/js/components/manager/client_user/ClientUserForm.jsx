@@ -3,10 +3,10 @@ import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
 import { hashHistory } from 'react-router';
 
-import {  loadClientUserAddForm, loadClientUserEditForm, saveClientUserAddForm, saveClientUserEditForm } from '../../../manager/actions/client_user.js';
+import { fetchClientUser, addClientUser, updateClientUser } from '../../../manager/service/client_user.js';
 
 import { getAuditType, getAuditStatus } from '../../../utils.js';
-import { affectInputEventToComponent } from '../../../react_utils.js';
+import { getInputEventChangeValue } from '../../../react_utils.js';
 import FormInput from '../../FormInput.jsx';
 import { FormDateInput } from '../../FormInput.jsx';
 import FormSelect from '../../FormSelect.jsx';
@@ -17,55 +17,67 @@ import Modal from '../../Modal.jsx';
 import Loading from '../../Loading.jsx';
 import FormErrorList from '../../FormErrorList.jsx';
 
-var ClientUserForm = React.createClass({
+export default React.createClass({
 	getInitialState: function(){
-		return {};
+		return {
+			clientUser: null,
+			errors: {},
+			form: {},
+		};
 	},
 	componentDidMount: function() {
 		this.setState({
 			'client': this.props.params.clientId
 		});
 		if(this.props.params.clientUserId){
-			this.props.dispatch(loadClientUserEditForm(this.props.params.clientUserId));
-		} else {
-			this.props.dispatch(loadClientUserAddForm());
-		}
-	},
-	componentWillReceiveProps: function(nextProps) {
-		if(nextProps.clientUser && nextProps.clientUser.user){
-			this.setState({
-				id : nextProps.clientUser.id,
-				client: nextProps.clientUser.client,
-				full_name : nextProps.clientUser.full_name,
-				email : nextProps.clientUser.user.email,
-				is_active : nextProps.clientUser.user.is_active,
-				is_client_admin : nextProps.clientUser.is_client_admin,
-				password : "",
-			});
-		} else {
-			this.setState({
-				client: nextProps.params.clientId,
-				full_name: "",
-				email: "",
-				password: "",
-				is_active: true,
-				is_client_admin: false,
+			fetchClientUser(this.props.params.clientUserId).done((clientUser)=>{
+				this.setState({
+					clientUser,
+					form: {
+						full_name : clientUser.full_name,
+						email : clientUser.user.email,
+						is_active : clientUser.user.is_active,
+						is_client_admin : clientUser.is_client_admin,
+						password : "",
+					},
+				});
 			});
 		}
 	},
 	fieldChanged: function(e){
-		affectInputEventToComponent(e, this);
+		this.setState({
+			form: Object.assign({}, this.state.form, getInputEventChangeValue(e)),
+		});
 	},
 	onSubmit: function(e){
 		e.preventDefault();
-		var promise;
+		let promise;
 		if(this.props.params.clientUserId){
-			promise = this.props.dispatch(saveClientUserEditForm(this.state));
+			promise = updateClientUser({
+				id : this.props.params.clientUserId,
+				client: this.props.params.clientId,
+				full_name : this.state.form.full_name,
+				email : this.state.form.email,
+				is_active : this.state.form.is_active,
+				is_client_admin : this.state.form.is_client_admin,
+				password : this.state.form.password,
+			});
 		} else {
-			promise = this.props.dispatch(saveClientUserAddForm(this.state));
+			promise = addClientUser({
+				client: this.props.params.clientId,
+				full_name : this.state.form.full_name,
+				email : this.state.form.email,
+				is_active : this.state.form.is_active,
+				is_client_admin : this.state.form.is_client_admin,
+				password : this.state.form.password,
+			});
 		}
-		promise.then(function(savedClientUser){
+		promise.done((savedClientUser)=>{
 			hashHistory.push(`/client/${savedClientUser.client}/client_user`);
+		}).fail((err)=>{
+			this.setState({
+				errors: err.responseJSON || {},
+			});
 		});
 	},
 	render : function(){
@@ -73,24 +85,15 @@ var ClientUserForm = React.createClass({
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					<FormInput label="Full Name" type="text" value={this.state.full_name} name="full_name" onChange={this.fieldChanged} errors={this.props.errors.full_name}/>
-					<FormInput label="Email Address" type="email" value={this.state.email} name="email" onChange={this.fieldChanged} errors={this.props.errors.email}/>
-					<FormInput label="Password" type="text" value={this.state.password} name="password" onChange={this.fieldChanged} errors={this.props.errors.password} placeholder="leave blank to keep password unchanged"/>
-					<FormInput label="Admin?" type="checkbox" checked={this.state.is_client_admin} name="is_client_admin" onChange={this.fieldChanged} errors={this.props.errors.is_client_admin}/>
-					<FormInput label="Active?" type="checkbox" checked={this.state.is_active} name="is_active" onChange={this.fieldChanged} errors={this.props.errors.is_active}/>
+					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					<FormInput label="Full Name" type="text" value={this.state.form.full_name} name="full_name" onChange={this.fieldChanged} errors={this.state.errors.full_name}/>
+					<FormInput label="Email Address" type="email" value={this.state.form.email} name="email" onChange={this.fieldChanged} errors={this.state.errors.email}/>
+					<FormInput label="Password" type="text" value={this.state.form.password} name="password" onChange={this.fieldChanged} errors={this.state.errors.password} placeholder="leave blank to keep password unchanged"/>
+					<FormInput label="Admin?" type="checkbox" checked={this.state.form.is_client_admin} name="is_client_admin" onChange={this.fieldChanged} errors={this.state.errors.is_client_admin}/>
+					<FormInput label="Active?" type="checkbox" checked={this.state.form.is_active} name="is_active" onChange={this.fieldChanged} errors={this.state.errors.is_active}/>
 					<SaveButton/>
 				</form>
 			</Modal>
 		);
 	},
 });
-
-var mapStoreToProps = function(store, ownProps){
-	return {
-		clientUser: store.clientUsers[ownProps.params.clientUserId] || {},
-		errors: store.forms.clientUser.errors,
-	};
-};
-
-export default ReactRedux.connect( mapStoreToProps)(ClientUserForm);
