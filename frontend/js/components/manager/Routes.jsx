@@ -17,10 +17,10 @@ import StoreForm from './StoreForm.jsx';
 import StoreDetail from './StoreDetail.jsx';
 import StoreAssignForm from './StoreAssignForm.jsx';
 
-import AuditorList from './AuditorList.jsx';
-import AuditorDetailsPage from './AuditorDetailsPage.jsx';
-import AuditorReportList from './AuditorReportList.jsx';
-import AuditorApplicationList from './AuditorApplicationList.jsx';
+import AuditorList from './auditor/AuditorList.jsx';
+import AuditorDetailsPage from './auditor/AuditorDetailsPage.jsx';
+import AuditorReportList from './auditor/AuditorReportList.jsx';
+import AuditorApplicationList from './auditor/AuditorApplicationList.jsx';
 import AuditorEmailLog from './auditor/AuditorEmailLog.jsx';
 import AuditorIdProof from './auditor/AuditorIdProof.jsx';
 import AuditorPayment from './auditor/AuditorPayment.jsx';

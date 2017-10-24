@@ -3,26 +3,26 @@ import * as ReactRedux from 'react-redux';
 import { hashHistory, Link } from 'react-router';
 
 import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import { momentDateFormat }  from '../../../../config.js';
 
-import { getAuditorReports } from '../../manager/service/auditor_stats.js';
+import { getAuditorApplications } from '../../../manager/service/auditor_stats.js';
 
-import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
-import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
-import { King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
-import NavLink from '../NavLink.jsx';
-import Panel from '../Panel.jsx';
-import Loading from '../Loading.jsx';
+import AuditStoreStatusLabel from '../../AuditStoreStatusLabel.jsx';
+import ApplicationStatusLabel from '../../ApplicationStatusLabel.jsx';
+import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../Icons.jsx';
+import NavLink from '../../NavLink.jsx';
+import Panel from '../../Panel.jsx';
+import Loading from '../../Loading.jsx';
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../../utils.js';
 
-var AuditReportStats = React.createClass({
+var AuditorApplicationStats = React.createClass({
 
   getInitialState: function(){
     return {};
   },
 	componentDidMount: function(){
-    getAuditorReports(this.props.params.auditorId).then((stats)=> this.setState({
+    getAuditorApplications(this.props.params.auditorId).then((stats)=> this.setState({
 			stats
 		}));
 	},
@@ -33,15 +33,15 @@ var AuditReportStats = React.createClass({
 		if(! this.state.stats){
 			return <Loading/>;
 		}
-    let audit_store_arr = this.state.stats.map((row) => {
-      let linkTo = `audit_store/${row.id}/report`
+    let appl_arr = this.state.stats.map((row) => {
+      let linkTo = `audit_cycle/${row.audit__audit_cycle__id}/audit`
       return (
         <tr key={row.id} onClick={() => hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
           <td>{row.audit__audit_cycle__client__name}</td>
           <td>{row.audit__store__name}</td>
           <td>{row.audit__audit_cycle__name}</td>
           <td>{row.audit_date}</td>
-          <td><AuditStoreStatusLabel status={row.status} /></td>
+          <td><ApplicationStatusLabel status={row.status} /></td>
         </tr>
       );
     });
@@ -50,7 +50,7 @@ var AuditReportStats = React.createClass({
 			<div className="row">
         <div className="panel panel-default">
           <div className="panel-heading">
-            <h4 className="panel-title">Audit Report Summary</h4>
+            <h4 className="panel-title">Application Summary</h4>
           </div>
           <table className="table table-striped table-hover">
             <tbody>
@@ -61,7 +61,7 @@ var AuditReportStats = React.createClass({
                 <th>Audit Date</th>
                 <th>Status</th>
               </tr>
-              {audit_store_arr}
+              {appl_arr}
             </tbody>
           </table>
         </div>
@@ -70,4 +70,4 @@ var AuditReportStats = React.createClass({
 	},
 });
 
-export default AuditReportStats;
+export default AuditorApplicationStats;

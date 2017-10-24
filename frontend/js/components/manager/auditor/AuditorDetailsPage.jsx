@@ -5,15 +5,15 @@ import { Link, hashHistory } from 'react-router';
 import Alert from 'react-s-alert';
 
 import moment from 'moment';
-import { momentDateFormat, url }  from '../../../config.js';
+import { momentDateFormat, url }  from '../../../../config.js';
 
-import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber, sendPasswordResetEmail } from '../../manager/service/auditor.js';
+import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber, sendPasswordResetEmail } from '../../../manager/service/auditor.js';
 
-import { Lock, Check, Envelope } from '../Icons.jsx';
-import NavLink from '../NavLink.jsx';
-import Panel from '../Panel.jsx';
-import Loading from '../Loading.jsx';
-import InPlaceEditable from '../InPlaceEditable.jsx';
+import { Lock, Check, Envelope } from '../../Icons.jsx';
+import NavLink from '../../NavLink.jsx';
+import Panel from '../../Panel.jsx';
+import Loading from '../../Loading.jsx';
+import InPlaceEditable from '../../InPlaceEditable.jsx';
 
 export default React.createClass({
 	getInitialState: function(){
