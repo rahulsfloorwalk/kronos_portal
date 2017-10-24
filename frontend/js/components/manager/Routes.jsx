@@ -5,9 +5,9 @@ import { Router, Route, IndexRoute, hashHistory } from 'react-router';
 import App from './App.jsx';
 import Dashboard from './Dashboard.jsx';
 
-import ClientList from './ClientList.jsx';
-import ClientForm from './ClientForm.jsx';
-import ClientDetail from './ClientDetail.jsx';
+import ClientList from './client/ClientList.jsx';
+import ClientForm from './client/ClientForm.jsx';
+import ClientDetail from './client/ClientDetail.jsx';
 
 import ClientUserList from './client_user/ClientUserList.jsx';
 import ClientUserForm from './client_user/ClientUserForm.jsx';
