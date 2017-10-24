@@ -5,7 +5,8 @@ import { Link } from 'react-router';
 import { affectInputEventToComponent } from '../../react_utils.js';
 import { getGender } from '../../utils.js';
 
-import { searchAuditors } from '../../manager/actions/auditor.js'
+import { setAuditorSearch } from '../../manager/actions/auditor.js';
+import { searchAuditors } from '../../manager/service/auditor.js';
 
 import { User, Search, Check, Cross } from '../Icons.jsx';
 import InputGroup from '../InputGroup.jsx';
@@ -41,6 +42,7 @@ var AuditorRow = React.createClass({
 var AuditorList = React.createClass({
 	getInitialState: function() {
 		return {
+			auditors: [],
 			loading: false,
 			search: ""
 		};
@@ -48,28 +50,34 @@ var AuditorList = React.createClass({
 	setLoading: function(loading){
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
 	},
+	searchAuditors: function(search){
+		this.setLoading(true);
+		searchAuditors(search).done((page) => {
+			this.setState({
+				auditors: page.results,
+			});
+		}).always(()=>this.setLoading(false));
+	},
 	componentDidMount: function() {
 		this.setState({
 			search: this.props.search
 		});
 		if( this.props.search && this.props.search !== ""){
-			this.setLoading(true);
-			this.props.dispatch(searchAuditors(this.props.search)).always(()=>this.setLoading(false));
+			this.searchAuditors(this.props.search);
 		}
 	},
 	onSubmit: function(e) {
-		console.debug("form sub dsadasd!");
 		e.preventDefault();
-		this.setLoading(true);
-		this.props.dispatch(searchAuditors(this.state.search)).always(()=>this.setLoading(false));
+		this.props.dispatch(setAuditorSearch(this.state.search));
+		this.searchAuditors(this.state.search);
 	},
 	inputChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
 	render: function(){
-		var rows = [];
-		for(var id in this.props.auditors) {
-			rows.push(<AuditorRow auditor={this.props.auditors[id]} key={id}/>);
+		let rows = [];
+		for(let a of this.state.auditors) {
+			rows.push(<AuditorRow auditor={a} key={a.id}/>);
 		}
 		if(rows.length > 0){
 			var table = (
@@ -124,7 +132,6 @@ var AuditorList = React.createClass({
 
 var mapStoreToProps = function(store){
 	return {
-		auditors: store.auditors,
 		search: store.forms.auditorSearch.search
 	};
 };

@@ -7,7 +7,7 @@ import Alert from 'react-s-alert';
 import moment from 'moment';
 import { momentDateFormat, url }  from '../../../config.js';
 
-import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber, sendPasswordResetEmail } from '../../manager/actions/auditor.js';
+import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber, sendPasswordResetEmail } from '../../manager/service/auditor.js';
 
 import { Lock, Check, Envelope } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
@@ -15,7 +15,7 @@ import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import InPlaceEditable from '../InPlaceEditable.jsx';
 
-var AuditorDetailsPage = React.createClass({
+export default React.createClass({
 	getInitialState: function(){
 		return {};
 	},
@@ -25,24 +25,26 @@ var AuditorDetailsPage = React.createClass({
 		}
 	},
 	componentDidMount: function(){
-		this.props.dispatch(fetchAuditor(this.props.params.auditorId));
+		fetchAuditor(this.props.params.auditorId).done((auditor)=>this.setState({auditor}));
 		this.goToFirstTab(this.props);
 	},
 	componentWillReceiveProps: function(nextProps){
 		if( this.props.params.auditorId !== nextProps.params.auditorId){
-			this.props.dispatch(fetchAuditor(nextProps.params.auditorId));
+			fetchAuditor(nextProps.params.auditorId).done((auditor)=>this.setState({auditor}));
 			this.goToFirstTab(nextProps);
 		}
 	},
 	emailChanged: function(newEmail){
-		this.props.dispatch(setEmail(this.props.params.auditorId, newEmail)).then(() =>{
+		setEmail(this.props.params.auditorId, newEmail).then((auditor) =>{
+			this.setState({auditor});
 			Alert.success("EMAIL CHANGED");
 		}, ()=>{
 			Alert.warning("EMAIL INVALID");
 		});
 	},
 	mobileNumberChanged: function(newMobileNumber){
-		this.props.dispatch(setMobileNumber(this.props.params.auditorId, newMobileNumber)).then(()=>{
+		setMobileNumber(this.props.params.auditorId, newMobileNumber).then((auditor)=>{
+			this.setState({auditor});
 			Alert.success("MOBILE NUMBER CHANGED");
 		},()=>{
 			Alert.warning("MOBILE NUMBER INVALID");
@@ -50,7 +52,8 @@ var AuditorDetailsPage = React.createClass({
 	},
 	sendPasswordResetEmail: function(){
 		this.setState({passwordResetEmailLoading: true});
-		this.props.dispatch(sendPasswordResetEmail(this.props.params.auditorId)).then(()=>{
+		sendPasswordResetEmail(this.props.params.auditorId).then((auditor)=>{
+			this.setState({auditor});
 			Alert.success("PASSWORD RESET EMAIL SENT");
 		},()=>{
 			Alert.warning("THERE WAS A PROBLEM");
@@ -59,25 +62,34 @@ var AuditorDetailsPage = React.createClass({
 		});
 	},
 	render: function(){
-		if(! this.props.auditor){
+		if(! this.state.auditor){
 			return <Loading/>;
 		}
 		let statusButton;
-		if(this.props.auditor.is_active){
-			statusButton = (<button onClick={() => this.props.dispatch(deactivateAuditor(this.props.params.auditorId)).then(()=>Alert.success("AUDITOR DEACTIVATED"))}
+		if(this.state.auditor.is_active){
+			statusButton = (<button onClick={() => deactivateAuditor(this.props.params.auditorId).then((auditor)=>{
+				this.setState({auditor});
+				Alert.success("AUDITOR DEACTIVATED")
+			})}
 				className="btn btn-default">
 				<Lock/> Deactivate
 			</button>);
 		} else {
-			statusButton = (<button onClick={() => this.props.dispatch(activateAuditor(this.props.params.auditorId)).then(()=>Alert.success("AUDITOR ACTIVATED"))}
+			statusButton = (<button onClick={() => activateAuditor(this.props.params.auditorId).then((auditor)=>{
+				this.setState({auditor});
+				Alert.success("AUDITOR ACTIVATED");
+			})}
 				className="btn btn-default">
 				<Lock/> Activate
 			</button>);
 		}
 
 		let verifyButton;
-		if( ! this.props.auditor.verification.is_verified){
-			verifyButton = (<button onClick={() => this.props.dispatch(verifyAuditor(this.props.params.auditorId))}
+		if( ! this.state.auditor.verification.is_verified){
+			verifyButton = (<button onClick={() => verifyAuditor(this.props.params.auditorId).then((auditor)=>{
+				this.setState({auditor});
+				Alert.success("AUDITOR VERIFIED");
+			})}
 				className="btn btn-success">
 				<Check/> Verify
 			</button>);
@@ -93,33 +105,33 @@ var AuditorDetailsPage = React.createClass({
 							</button>&nbsp;
 							{verifyButton}&nbsp;{statusButton}
 						</span>
-						<h4><b>{this.props.auditor.email}</b></h4>
+						<h4><b>{this.state.auditor.email}</b></h4>
 					</div>
 					<table className="table">
 						<tbody>
 							<tr>
 								<td className="text-right">Email Address:</td>
 								<td>
-									<InPlaceEditable inputText={this.props.auditor.email} onSave={this.emailChanged}><b>{ this.props.auditor.email }</b></InPlaceEditable>
+									<InPlaceEditable inputText={this.state.auditor.email} onSave={this.emailChanged}><b>{ this.state.auditor.email }</b></InPlaceEditable>
 								</td>
 								<td className="text-right">Date Joined:</td>
 								<td>
-								<b>{ moment(this.props.auditor.date_joined).format(momentDateFormat) }</b>
+								<b>{ moment(this.state.auditor.date_joined).format(momentDateFormat) }</b>
 								</td>
 							</tr>
 							<tr>
 								<td className="text-right">Mobile Number:</td>
 								<td>
-								<InPlaceEditable inputText={this.props.auditor.profileinfo.mobile_number} onSave={this.mobileNumberChanged}>
-								<b>{ this.props.auditor.profileinfo.mobile_number ?
-									this.props.auditor.profileinfo.mobile_number 
+								<InPlaceEditable inputText={this.state.auditor.profileinfo.mobile_number} onSave={this.mobileNumberChanged}>
+								<b>{ this.state.auditor.profileinfo.mobile_number ?
+									this.state.auditor.profileinfo.mobile_number 
 									: <span className="text-muted">update mobile number</span>
 								}</b>
 								</InPlaceEditable>
 								</td>
 								<td className="text-right">Last Login:</td>
 								<td>
-								<b>{ moment(this.props.auditor.last_login).format(momentDateFormat) }</b>
+								<b>{ moment(this.state.auditor.last_login).format(momentDateFormat) }</b>
 								</td>
 							</tr>
 						</tbody>
@@ -144,11 +156,3 @@ var AuditorDetailsPage = React.createClass({
 		);
 	},
 });
-
-var mapStoreToProps = function(store, ownProps){
-	return {
-		auditor: store.auditors[ownProps.params.auditorId]
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(AuditorDetailsPage);
