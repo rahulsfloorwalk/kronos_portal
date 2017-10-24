@@ -5,6 +5,7 @@ import { hashHistory, Link } from 'react-router';
 import moment from 'moment';
 import { momentDateTimeFormat }  from '../../../../config.js';
 
+import { fetchAuditor } from '../../../manager/service/auditor.js';
 import { findEmailLogByEmail } from '../../../manager/service/email_log.js';
 
 import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../Icons.jsx';
@@ -12,7 +13,7 @@ import Loading from '../../Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../../utils.js';
 
-class AuditorEmailLog extends Component{
+export default class AuditorEmailLog extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -29,25 +30,21 @@ class AuditorEmailLog extends Component{
 		});
 	}
 
-	reloadData = (email) => {
+	reloadData = (auditorId) => {
 		this.setLoading(true);
-		findEmailLogByEmail(this.props.auditor.email).then((emails)=> this.setState({ emails })).always(() => this.setLoading(false));
+		fetchAuditor(auditorId).done((auditor)=>{
+			findEmailLogByEmail(auditor.email).done((emails)=> {
+				this.setState({ emails });
+			}).always(() => this.setLoading(false));
+		});
 	}
 
 	componentDidMount(){
-		if(this.props.auditor){
-			this.reloadData(this.props.auditor.email);
-		}
-	}
-
-	componentWillReceiveProps = (nextProps) => {
-		if(this.props.auditor){
-			this.reloadData(nextProps.auditor.email);
-		}
+		this.reloadData(this.props.params.auditorId);
 	}
 
 	render(){
-		if(! this.props.auditor || this.state.loading){
+		if( this.state.loading){
 			return <Loading/>;
 		}
 		let emailRows = this.state.emails.map(e => {
@@ -81,11 +78,3 @@ class AuditorEmailLog extends Component{
 		);
 	}
 }
-
-let mapStoreToProps = function(store, ownProps){
-	return {
-		auditor: store.auditors[ownProps.params.auditorId]
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(AuditorEmailLog);

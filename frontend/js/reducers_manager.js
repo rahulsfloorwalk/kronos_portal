@@ -8,7 +8,6 @@ var initialStore = {
 	clients: {},
 	stores: {},
 	sections: {},
-	auditors: {},
 	locations: {},
 	states: {},
 	cities: [],
@@ -157,104 +156,6 @@ export function rootReducer(store = initialStore, action) {
 					console.warn("WARNING: default case encountered for action: %O", action);
 					return store;
 			}
-		/*Auditor Search Request*/
-		case types.AUDITOR_SEARCH:
-			switch(action.status){
-				case "request":
-					return Object.assign({}, store, {
-						forms: Object.assign({}, store.forms, {
-							auditorSearch: {
-								search: action.search
-							}
-						})
-					});
-				case "success":
-					return Object.assign({}, store, {
-						auditors: (function(auditors){
-							var obj = {};
-								for( var a of auditors){
-								obj[a.id] = a;
-							}
-							return obj;
-						}(action.page.results))
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-		case types.AUDITOR_ID_GET:
-		case types.AUDITOR_ID_ACTIVATE:
-		case types.AUDITOR_ID_DEACTIVATE:
-		case types.AUDITOR_ID_VERIFY:
-		case types.AUDITOR_ID_EMAIL:
-		case types.AUDITOR_ID_MOBILE_NUMBER:
-			switch(action.status){
-				case "success":
-					return Object.assign({}, store, {
-						auditors: Object.assign({}, store.auditors, {
-							[action.auditor.id]: action.auditor
-						})
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-		case types.AUDITOR_GET_PROFILE_INFO:
-			switch(action.status){
-				case "success":
-					return Object.assign({}, store, {
-						profileInfos: Object.assign({}, store.profileInfos, {
-							[action.profileInfo.user_id]: action.profileInfo
-						})
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-		case types.AUDITOR_GET_BANK_INFO:
-			switch(action.status){
-				case "success":
-					return Object.assign({}, store, {
-						bankInfos: Object.assign({}, store.bankInfos, {
-							[action.bankInfo.user_id]: action.bankInfo
-						})
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-		case types.AUDITOR_GET_ADDITIONAL_INFO:
-			switch(action.status){
-				case "success":
-					return Object.assign({}, store, {
-						additionalInfos: Object.assign({}, store.additionalInfos, {
-							[action.additionalInfo.user_id]: action.additionalInfo
-						})
-					});
-					break;
-				default:
-					console.warn("WARNING: default case encountered for action: %O", action);
-					return store;
-			}
-
-			case types.AUDITOR_GET_FACEBOOK_INFO:
-				switch(action.status){
-					case "success":
-						return Object.assign({}, store, {
-							socialInfos: Object.assign({}, store.socialInfos, {
-								[action.socialInfo.user_id]: action.socialInfo
-							})
-						});
-						break;
-					default:
-						console.warn("WARNING: default case encountered for action: %O", action);
-						return store;
-				}
-
 		case types.STORE_GET:
 			switch(action.status){
 				case "success":

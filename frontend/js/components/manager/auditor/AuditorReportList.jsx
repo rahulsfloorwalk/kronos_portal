@@ -16,7 +16,7 @@ import Loading from '../../Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../../utils.js';
 
-var AuditReportStats = React.createClass({
+export default React.createClass({
 
   getInitialState: function(){
     return {};
@@ -69,5 +69,3 @@ var AuditReportStats = React.createClass({
 		);
 	},
 });
-
-export default AuditReportStats;

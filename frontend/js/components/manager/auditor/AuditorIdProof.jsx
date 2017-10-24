@@ -11,7 +11,7 @@ import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../Icons.jsx';
 import Loading from '../../Loading.jsx';
 
 
-class AuditorIdProof extends Component{
+export default class AuditorIdProof extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -72,11 +72,3 @@ class AuditorIdProof extends Component{
 		);
 	}
 }
-
-let mapStoreToProps = function(store, ownProps){
-	return {
-		auditor: store.auditors[ownProps.params.auditorId]
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(AuditorIdProof);
