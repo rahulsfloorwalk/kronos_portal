@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 
-import ProfileInfoPanel from '../ProfileInfoPanel.jsx';
-import BankInfoPanel from '../BankInfoPanel.jsx';
-import AdditionalInfoPanel from '../AdditionalInfoPanel.jsx';
-import SocialInfoPanel from '../SocialInfoPanel.jsx';
+import ProfileInfoPanel from './ProfileInfoPanel.jsx';
+import BankInfoPanel from './BankInfoPanel.jsx';
+import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
+import SocialInfoPanel from './SocialInfoPanel.jsx';
 import AuditorPreferencesPanel from './AuditorPreferencesPanel.jsx';
 
 export default class AuditorDetails extends Component{
