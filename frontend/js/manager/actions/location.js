@@ -1,6 +1,12 @@
 import $ from 'jquery';
 import { url } from '../../../config.js';
 import types from '../action_types.js';
+import { fetchStates as _fetchStates } from '../service/location.js';
+import { fetchCities as _fetchCities } from '../service/location.js';
+import { addLocation, updateLocation } from '../service/location.js';
+import { deleteLocation as _deleteLocation } from '../service/location.js';
+import { fetchLocations as _fetchLocations } from '../service/location.js';
+import { fetchLocation as _fetchLocation } from '../service/location.js';
 
 export function fetchLocations(cityId){
 	return function(dispatch){
@@ -10,7 +16,7 @@ export function fetchLocations(cityId){
 			cityId
 		});
 
-		$.get( url.api_base_path + "manager/location", { 'city_id': cityId}, function(locations){
+		return _fetchLocations(cityId).done(function(locations){
 			dispatch({
 				type: types.LOCATION_GET,
 				status: 'success',
@@ -29,7 +35,7 @@ export function fetchLocation(locationId){
 			locationId: locationId
 		});
 
-		$.get( url.api_base_path + `manager/location/${locationId}`, function(location){
+		return _fetchLocation(locationId).done(function(location){
 			dispatch({
 				type: types.LOCATION_ID_GET,
 				status: 'success',
@@ -73,12 +79,7 @@ export function saveLocationEditForm(location){
 			location: location
 		});
 
-		var req = $.ajax({
-			type: "POST",
-			url: url.api_base_path + `manager/location/${location.id}`,
-			data: JSON.stringify(location),
-			contentType: "application/json"
-		});
+		var req = updateLocation(location);
 		req.done(function(savedLocation){
 			dispatch({
 				type: types.LOCATION_ID_POST,
@@ -119,12 +120,7 @@ export function saveLocationAddForm(location){
 			location: location
 		});
 
-		var req = $.ajax({
-			type: "POST",
-			url: url.api_base_path + "manager/location",
-			data: JSON.stringify(location),
-			contentType: "application/json"
-		});
+		var req = addLocation(location);
 		req.done(function(savedLocation){
 			dispatch({
 				type: types.LOCATION_POST,
@@ -160,10 +156,7 @@ export function deleteLocation(locationId){
 			locationId: locationId
 		});
 
-		return $.ajax({
-			url: url.api_base_path + `manager/location/${locationId}`, 
-			type: "DELETE",
-		}).done(function(){
+		return _deleteLocation(locationId).done(function(){
 			dispatch({
 				type: types.LOCATION_ID_DELETE,
 				status: 'success',
@@ -181,7 +174,7 @@ export function fetchStates(){
 			status: 'request',
 		});
 
-		return $.get( url.api_base_path + "manager/state", function(states){
+		return _fetchStates().done(function(states){
 			dispatch({
 				type: types.STATE_GET,
 				status: 'success',
@@ -200,7 +193,7 @@ export function fetchCities(stateCode){
 			stateCode
 		});
 
-		return $.get( url.api_base_path + `manager/city/${stateCode}`, function(cities){
+		return _fetchCities(stateCode).done(function(cities){
 			dispatch({
 				type: types.CITY_GET,
 				status: 'success',

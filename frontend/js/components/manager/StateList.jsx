@@ -4,24 +4,30 @@ import { Link } from 'react-router';
 
 import { truncateStyle } from '../../styles.js';
 
-import { fetchStates } from '../../manager/actions/location.js';
+import { fetchStates } from '../../manager/service/location.js';
 
 import { MapMarker } from '../Icons.jsx';
+import Loading from '../Loading.jsx';
 
-var StateList = React.createClass({
+export default React.createClass({
+	getInitialState: function(){
+		return {};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchStates());
+		fetchStates().done((states) => this.setState({states}));
 	},
 	render: function(){
-		console.debug("PROPS",this.props);
-		var rows = [];
-		for(var stateId in this.props.states) {
-			var linkTo = `state/${stateId}/city`;
+		if(! this.state.states){
+			return <Loading/>;
+		}
+		let rows = [];
+		for(var stateId in this.state.states) {
+			let linkTo = `state/${stateId}/city`;
 			rows.push(
 				<div key={stateId} className="col-md-3">
 					<div className="panel panel-default">
 						<div className="panel-body">
-							<h4 style={truncateStyle}>{this.props.states[stateId]}</h4>
+							<h4 style={truncateStyle}>{this.state.states[stateId]}</h4>
 							<Link to={linkTo} className="btn btn-default">View</Link>
 						</div>
 					</div>
@@ -42,10 +48,3 @@ var StateList = React.createClass({
 	},
 });
 
-var mapStoreToProps = function(store){
-	return {
-		states: store.states
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(StateList); 
