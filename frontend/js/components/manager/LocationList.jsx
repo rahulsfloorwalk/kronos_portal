@@ -4,37 +4,50 @@ import { Link } from 'react-router';
 
 import Alert from 'react-s-alert';
 
-import { fetchStates, fetchCities, fetchLocations, deleteLocation } from '../../manager/actions/location.js';
+import { fetchStates, fetchCities, fetchLocations, deleteLocation } from '../../manager/service/location.js';
 
 import { Cross, Plus, Pencil, MapMarker } from '../Icons.jsx';
+import Loading from '../Loading.jsx';
 
-var LocationList = React.createClass({
-	reloadLocations: function(){
-		this.props.dispatch(fetchLocations(this.props.params.cityId));
+export default React.createClass({
+	getInitialState: function(){
+		return {};
+	},
+	reloadLocations: function(stateId, cityId){
+		fetchStates().done((states)=>this.setState({states}));
+		fetchCities(stateId).done((cities)=>this.setState({cities}));
+		fetchLocations(cityId).done((locations)=>this.setState({locations}));
 	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchStates());
-		this.props.dispatch(fetchCities(this.props.params.stateId));
-		this.reloadLocations();
+		this.reloadLocations(this.props.params.stateId, this.props.params.cityId);
+	},
+	componentWillReceiveProps: function(nextProps){
+		this.reloadLocations(nextProps.params.stateId, nextProps.params.cityId);
 	},
 	locationDelete: function(locationId){
-		this.props.dispatch(deleteLocation(locationId)).done(() => {
-			this.reloadLocations();
+		deleteLocation(locationId).done(() => {
+			this.reloadLocations(this.props.params.stateId, this.props.params.cityId);
 			Alert.success("LOCATION DELETED");
 		}).fail(() => Alert.warning("LOCATION CANNOT BE DELETED"));
 	},
 	render: function(){
-		var rows = [];
-		for(let id in this.props.locations) {
-			let linkTo = `/state/${this.props.params.stateId}/city/${this.props.params.cityId}/location/${this.props.locations[id].id}/edit`;
+		if( ! this.state.states || ! this.state.cities || ! this.state.locations){
+			return <Loading/>;
+		}
+		let stateName = this.state.states[this.props.params.stateId];
+		let city = this.state.cities.find( c => c.id === parseInt(this.props.params.cityId)) || {};
+
+		let rows = [];
+		for(let l of this.state.locations) {
+			let linkTo = `/state/${this.props.params.stateId}/city/${this.props.params.cityId}/location/${l.id}/edit`;
 			rows.push(
-				<tr key={id}>
-					<td>{this.props.locations[id].name}</td>
-					<td>{this.props.locations[id].pincode}</td>
+				<tr key={l.id}>
+					<td>{l.name}</td>
+					<td>{l.pincode}</td>
 					<td>
 						<Link to={linkTo} className="btn btn-default"><Pencil/> Edit</Link>
 						&nbsp;
-						<button className="btn btn-default" title="Delete Location" type="button" onClick={()=>this.locationDelete(id)}><Cross/></button>
+						<button className="btn btn-default" title="Delete Location" type="button" onClick={()=>this.locationDelete(l.id)}><Cross/></button>
 					</td>
 				</tr>
 			);
@@ -70,8 +83,8 @@ var LocationList = React.createClass({
 				<h2 className="page-header">
 					<Link to={addLocationLink} className="btn btn-default pull-right"><Plus/> Add Location</Link>
 
-					<Link to="/state">States</Link> / <Link to={cityLink}>{this.props.stateName }</Link> / <b>{this.props.city.name }</b> / Location List
-					<a href={this.props.city.gmaps_url} className="btn btn-link" target="_blank">
+					<Link to="/state">States</Link> / <Link to={cityLink}>{stateName }</Link> / <b>{city.name }</b> / Location List
+					<a href={city.gmaps_url} className="btn btn-link" target="_blank">
 						<MapMarker/>
 					</a>
 				</h2>
@@ -81,13 +94,3 @@ var LocationList = React.createClass({
 		);
 	},
 });
-
-var mapStoreToProps = function(store, ownProps){
-	return {
-		locations: store.locations,
-		stateName: store.states[ownProps.params.stateId],
-		city: store.cities.filter( c => c.id === parseInt(ownProps.params.cityId))[0] || {},
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(LocationList); 
