@@ -2,12 +2,12 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { truncateStyle } from '../../styles.js';
+import { truncateStyle } from '../../../styles.js';
 
-import { fetchStates } from '../../manager/service/location.js';
+import { fetchStates } from '../../../manager/service/location.js';
 
-import { MapMarker } from '../Icons.jsx';
-import Loading from '../Loading.jsx';
+import { MapMarker } from '../../Icons.jsx';
+import Loading from '../../Loading.jsx';
 
 export default React.createClass({
 	getInitialState: function(){

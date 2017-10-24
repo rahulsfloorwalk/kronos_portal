@@ -27,11 +27,11 @@ import AuditorPayment from './auditor/AuditorPayment.jsx';
 import AuditorDetails from './auditor/AuditorDetails.jsx';
 import AuditorReferralList from './auditor/AuditorReferralList.jsx';
 
-import StateList from './StateList.jsx';
-import CityList from './CityList.jsx';
+import StateList from './location/StateList.jsx';
+import CityList from './location/CityList.jsx';
 
-import LocationList from './LocationList.jsx';
-import LocationForm from './LocationForm.jsx';
+import LocationList from './location/LocationList.jsx';
+import LocationForm from './location/LocationForm.jsx';
 
 import AuditCycleList from './AuditCycleList.jsx';
 import AuditCycleForm from './AuditCycleForm.jsx';

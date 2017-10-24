@@ -2,9 +2,9 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import Loading from '../Loading.jsx';
-import { ShareAlt, MapMarker } from '../Icons.jsx';
-import { fetchStates, fetchCities } from '../../manager/service/location.js'
+import Loading from '../../Loading.jsx';
+import { ShareAlt, MapMarker } from '../../Icons.jsx';
+import { fetchStates, fetchCities } from '../../../manager/service/location.js'
 
 export default React.createClass({
 	getInitialState: function(){

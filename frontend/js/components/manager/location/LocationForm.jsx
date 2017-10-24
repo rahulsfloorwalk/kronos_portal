@@ -5,15 +5,15 @@ import { hashHistory } from 'react-router';
 
 import Alert from 'react-s-alert';
 
-import { fetchStates, fetchCities, updateLocation, addLocation, fetchLocation } from '../../manager/service/location.js';
+import { fetchStates, fetchCities, updateLocation, addLocation, fetchLocation } from '../../../manager/service/location.js';
 
-import { getInputEventChangeValue } from '../../react_utils.js';
-import FormSelect from '../FormSelect.jsx';
-import FormInput from '../FormInput.jsx';
-import FormGroup from '../FormGroup.jsx';
-import SaveButton from '../SaveButton.jsx';
-import Modal from '../Modal.jsx';
-import Loading from '../Loading.jsx';
+import { getInputEventChangeValue } from '../../../react_utils.js';
+import FormSelect from '../../FormSelect.jsx';
+import FormInput from '../../FormInput.jsx';
+import FormGroup from '../../FormGroup.jsx';
+import SaveButton from '../../SaveButton.jsx';
+import Modal from '../../Modal.jsx';
+import Loading from '../../Loading.jsx';
 
 export default React.createClass({
 	getInitialState: function(){

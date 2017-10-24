@@ -4,10 +4,10 @@ import { Link } from 'react-router';
 
 import Alert from 'react-s-alert';
 
-import { fetchStates, fetchCities, fetchLocations, deleteLocation } from '../../manager/service/location.js';
+import { fetchStates, fetchCities, fetchLocations, deleteLocation } from '../../../manager/service/location.js';
 
-import { Cross, Plus, Pencil, MapMarker } from '../Icons.jsx';
-import Loading from '../Loading.jsx';
+import { Cross, Plus, Pencil, MapMarker } from '../../Icons.jsx';
+import Loading from '../../Loading.jsx';
 
 export default React.createClass({
 	getInitialState: function(){
