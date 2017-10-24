@@ -2,8 +2,10 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Plus, King } from '../Icons.jsx'
-import { fetchClients } from '../../manager/actions/client.js'
+import Loading from '../Loading.jsx';
+import { Plus, King } from '../Icons.jsx';
+
+import { fetchClients } from '../../manager/service/client.js';
 
 var ClientRow = React.createClass({
 	render: function(){
@@ -27,14 +29,21 @@ var ClientRow = React.createClass({
 	},
 });
 
-var ClientList = React.createClass({
+export default React.createClass({
+	getInitialState: function(){
+		return {};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchClients());
+		fetchClients().done((clients)=>this.setState({clients}));
 	},
 	render: function(){
-		var rows = [];
-		for(var id in this.props.clients) {
-			rows.push(<ClientRow client={this.props.clients[id]} key={id}/>);
+		if(! this.state.clients){
+			return <Loading/>;
+		}
+
+		let rows = [];
+		for(let c of this.state.clients) {
+			rows.push(<ClientRow client={c} key={c.id}/>);
 		}
 		return (
 			<div>
@@ -50,11 +59,3 @@ var ClientList = React.createClass({
 		);
 	},
 });
-
-var mapStoreToProps = function(store){
-	return {
-		clients: store.clients
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(ClientList); 
