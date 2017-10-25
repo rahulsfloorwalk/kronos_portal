@@ -164,11 +164,32 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
     user = find_clientuser_by_user_id(user_id)
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
-    audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id)
+    sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
 
-    sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).order_by('sequence').all()
     audit_stores = []
-    qs = AuditStore.objects.filter(audit__in=audits).presentable().visible_to(user).order_by('audit__store__location__city__name','audit__store__name','-audit_date')
+    qs = AuditStore.objects \
+        .filter(audit__audit_cycle=audit_cycle) \
+        .presentable() \
+        .visible_to(user) \
+        .order_by(
+            'audit__store__location__city__name',
+            'audit__store__name',
+            '-audit_date',
+        ) \
+        .select_related(
+            # join in related audit, store, location and city to avoid redundant queries
+            'audit',
+            'audit__store',
+            'audit__store__location',
+            'audit__store__location__city',
+        ) \
+        .prefetch_related(
+            # prefetch report_sections, questions and answers for the given sections
+            'report_sections',
+            'report_sections__section',
+            'report_sections__section__questions',
+            'report_sections__section__questions__answers',
+        )
 
     for audit_store in qs:
         audit_stores.append({
@@ -199,7 +220,11 @@ def __get_mean_for_sections(sections, audit_stores):
         count = 0
 
         for audit_store in audit_stores:
-            report_section = ReportSection.objects.get(section=section, audit_store=audit_store)
+            # run the find by section and audit_store in python because we have already prefetched report_sections for the audit_store
+            report_section = None
+            for rs in audit_store.report_sections.all():
+                if rs.section_id == section.id:
+                    report_section = rs
             if not report_section.not_applicable:
                 total_percentage += report_section.marks_percentage()
                 count += 1
@@ -215,7 +240,7 @@ def __get_mean_for_sections(sections, audit_stores):
             'sequence': section.sequence,
             'section': section.name,
             'percentage': avg_percentage,
-            'max_marks': section.max_marks(),
+            'max_marks': section.max_marks(),  # this call is inefficient right now
             'color': color
         })
     return mean

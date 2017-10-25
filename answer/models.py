@@ -14,7 +14,7 @@ class Answer(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
 
-    question = ForeignKey('questionnaire.Question',  db_column='question_id', on_delete=PROTECT)
+    question = ForeignKey('questionnaire.Question', related_name='answers', db_column='question_id', on_delete=PROTECT)
     audit_store = ForeignKey('audit_store.AuditStore', related_name='answers', db_column='audit_store_id', on_delete=PROTECT)
 
     answer_text = CharField(db_column='answer_text', max_length=2048, blank=True)
@@ -41,7 +41,7 @@ class ReportSection(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     audit_store = ForeignKey('audit_store.AuditStore', related_name='report_sections', db_column='audit_store_id', blank=False, on_delete=PROTECT)
-    section = ForeignKey('questionnaire.Section', db_column='section_id', blank=False, on_delete=PROTECT)
+    section = ForeignKey('questionnaire.Section', db_column='section_id', related_name='report_sections', blank=False, on_delete=PROTECT)
     pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
     auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)
     auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=2048, blank=True)
@@ -67,16 +67,24 @@ class ReportSection(Model):
         if self.not_applicable:
             return 0
         else:
-            not_applicable_total = Answer.objects.filter(
-                    question__section=self.section,
-                    audit_store=self.audit_store,
-                    not_applicable=True
-                ).aggregate(
-                        not_applicable_total=Coalesce(
-                            Sum(F('question__max_marks')),
-                            Value(0)
-                        )
-                )["not_applicable_total"]
+            not_applicable_total = 0
+
+            # run the summing code in python because we have already prefetched questions, answers for the report_sections
+            for question in self.section.questions.all():
+                for answer in question.answers.all():
+                    if answer.audit_store_id == self.audit_store_id and answer.not_applicable:
+                        not_applicable_total += answer.question.max_marks
+
+            #not_applicable_total = Answer.objects.filter(
+            #        question__section=self.section,
+            #        audit_store=self.audit_store,
+            #        not_applicable=True
+            #    ).aggregate(
+            #            not_applicable_total=Coalesce(
+            #                Sum(F('question__max_marks')),
+            #                Value(0)
+            #            )
+            #    )["not_applicable_total"]
 
             return self.section.max_marks() - not_applicable_total
 
@@ -84,16 +92,24 @@ class ReportSection(Model):
         if self.not_applicable:
             return 0
         else:
-            return Answer.objects.filter(
-                    audit_store_id=self.audit_store_id,
-                    question__section_id=self.section_id,
-                    not_applicable=False
-                ).aggregate(
-                        marks_obtained=Coalesce(
-                            Sum(F('marks_obtained')),
-                            Value(0)
-                        )
-                )["marks_obtained"]
+            marks_obtained = 0
+            # run the summing code in python because we have already prefetched questions, answers for the report_sections
+            for question in self.section.questions.all():
+                for answer in question.answers.all():
+                    if answer.audit_store_id == self.audit_store_id and not answer.not_applicable:
+                        marks_obtained += answer.marks_obtained
+            return marks_obtained
+
+            #return Answer.objects.filter(
+            #        audit_store_id=self.audit_store_id,
+            #        question__section_id=self.section_id,
+            #        not_applicable=False
+            #    ).aggregate(
+            #            marks_obtained=Coalesce(
+            #                Sum(F('marks_obtained')),
+            #                Value(0)
+            #            )
+            #    )["marks_obtained"]
 
     def marks_percentage(self):
         max_marks = self.max_marks()

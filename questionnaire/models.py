@@ -18,8 +18,7 @@ class Section(Model):
 
     def max_marks(self):
         '''may return zero so make sure you check for DivideByZero before using this blindly in the denominator'''
-        questions = Question.objects.filter(section_id=self.id)
-        return sum(q.max_marks for q in questions if type(q.max_marks) is int)
+        return sum(q.max_marks for q in self.questions.all() if type(q.max_marks) is int)
 
     class Meta:
         ordering = ['sequence']
