@@ -16,6 +16,7 @@ Including another URLconf
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.conf.urls import include, url
+from django.conf import settings
 from django.contrib import admin
 import registration.urls as registration_urls
 import auditor.urls as auditor_urls
@@ -32,3 +33,9 @@ urlpatterns = [
     url(r'^client/', include(client_urls.urlpatterns)),
     url(r'^moderator/', include(moderator_urls.urlpatterns)),
 ]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + urlpatterns
