@@ -121,7 +121,7 @@ def set_not_applicable(audit_store_id, section_id, not_applicable):
 
 def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
-    return ReportSection.objects.filter(audit_store_id=audit_store.id)
+    return ReportSection.objects.filter(audit_store_id=audit_store.id).prefetch_related('section','section__questions','section__questions__answers')
 
 def find_by_audit_store_and_section_for_client(audit_store_id, section_id, client_id):
     report_section = find_by_audit_store_and_section(audit_store_id, section_id)

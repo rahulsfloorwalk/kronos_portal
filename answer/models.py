@@ -69,22 +69,25 @@ class ReportSection(Model):
         else:
             not_applicable_total = 0
 
-            # run the summing code in python because we have already prefetched questions, answers for the report_sections
-            for question in self.section.questions.all():
-                for answer in question.answers.all():
-                    if answer.audit_store_id == self.audit_store_id and answer.not_applicable:
-                        not_applicable_total += answer.question.max_marks
-
-            #not_applicable_total = Answer.objects.filter(
-            #        question__section=self.section,
-            #        audit_store=self.audit_store,
-            #        not_applicable=True
-            #    ).aggregate(
-            #            not_applicable_total=Coalesce(
-            #                Sum(F('question__max_marks')),
-            #                Value(0)
-            #            )
-            #    )["not_applicable_total"]
+            # check if prefetched cache exists,
+            if hasattr(self, '_section_cache'):
+                # run the summing code in python because we have already prefetched questions, answers for the report_sections
+                for question in self.section.questions.all():
+                    for answer in question.answers.all():
+                        if answer.audit_store_id == self.audit_store_id and answer.not_applicable:
+                            not_applicable_total += answer.question.max_marks
+            else:
+                # else ask the database to perform the summing for us
+                not_applicable_total = Answer.objects.filter(
+                    question__section=self.section,
+                    audit_store_id=self.audit_store_id,
+                    not_applicable=True
+                ).aggregate(
+                    not_applicable_total=Coalesce(
+                        Sum(F('question__max_marks')),
+                        Value(0)
+                    )
+                )["not_applicable_total"]
 
             return self.section.max_marks() - not_applicable_total
 
@@ -92,24 +95,27 @@ class ReportSection(Model):
         if self.not_applicable:
             return 0
         else:
-            marks_obtained = 0
-            # run the summing code in python because we have already prefetched questions, answers for the report_sections
-            for question in self.section.questions.all():
-                for answer in question.answers.all():
-                    if answer.audit_store_id == self.audit_store_id and not answer.not_applicable and answer.marks_obtained:
-                        marks_obtained += answer.marks_obtained
-            return marks_obtained
-
-            #return Answer.objects.filter(
-            #        audit_store_id=self.audit_store_id,
-            #        question__section_id=self.section_id,
-            #        not_applicable=False
-            #    ).aggregate(
-            #            marks_obtained=Coalesce(
-            #                Sum(F('marks_obtained')),
-            #                Value(0)
-            #            )
-            #    )["marks_obtained"]
+            # check if prefetched cache exists,
+            if hasattr(self, '_section_cache'):
+                marks_obtained = 0
+                # run the summing code in python because we have already prefetched questions, answers for the report_sections
+                for question in self.section.questions.all():
+                    for answer in question.answers.all():
+                        if answer.audit_store_id == self.audit_store_id and not answer.not_applicable and answer.marks_obtained:
+                            marks_obtained += answer.marks_obtained
+                return marks_obtained
+            else:
+                # else ask the database to perform the summing for us
+                return Answer.objects.filter(
+                    audit_store_id=self.audit_store_id,
+                    question__section_id=self.section_id,
+                    not_applicable=False
+                ).aggregate(
+                    marks_obtained=Coalesce(
+                        Sum(F('marks_obtained')),
+                        Value(0)
+                    )
+                )["marks_obtained"]
 
     def marks_percentage(self):
         max_marks = self.max_marks()

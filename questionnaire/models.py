@@ -1,5 +1,6 @@
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
-from django.db.models import PROTECT
+from django.db.models import PROTECT, F, Value, Sum
+from django.db.models.functions import Coalesce
 from django.contrib.postgres.fields import JSONField
 
 from kronos.exceptions import AppLogicError
@@ -18,7 +19,17 @@ class Section(Model):
 
     def max_marks(self):
         '''may return zero so make sure you check for DivideByZero before using this blindly in the denominator'''
-        return sum(q.max_marks for q in self.questions.all() if type(q.max_marks) is int)
+        # check if prefetched cache exists,
+        if hasattr(self, '_prefetched_objects_cache') and 'questions' in self._prefetched_objects_cache:
+            # run the summing code in python because we have already prefetched questions
+            return sum(q.max_marks for q in self.questions.all() if type(q.max_marks) is int)
+        else:
+            return self.questions.aggregate(
+                max_marks=Coalesce(
+                    Sum(F('max_marks')),
+                    Value(0)
+                )
+            )["max_marks"]
 
     class Meta:
         ordering = ['sequence']
