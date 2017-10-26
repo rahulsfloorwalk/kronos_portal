@@ -1,3 +1,5 @@
+from django.db.models import Prefetch
+
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle, Audit
@@ -8,14 +10,13 @@ from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from questionnaire.models import Section
 
-def get_performing_cities(audit_cycle_id, client_id):
-    audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, client_id)
-
+def get_performing_cities(audit_cycle):
     stores = {}
+
     for audit in audit_cycle.audits.all():
         obtained = 0
         count = 0
-        for audit_store in audit.audit_stores.presentable():
+        for audit_store in audit.audit_stores.all():
             obtained += audit_store.percentage()
             count += 1
         if count > 0: stores[audit.store] = obtained / count
@@ -51,15 +52,25 @@ def get_performing_cities(audit_cycle_id, client_id):
 
 
 def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
-    #print("got audit_type",audit_type)
-
     qs = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, user_id).order_by('end_date')
+    qs = qs.prefetch_related(
+        'audits',
+        'audits__store',
+        'audits__store__location',
+        'audits__store__location__city',
+        Prefetch('audits__audit_stores', queryset=AuditStore.objects.presentable()),
+        'audits__audit_stores__report_sections',
+        'audits__audit_stores__report_sections__section',
+        'audits__audit_stores__report_sections__section__questions',
+        'audits__audit_stores__report_sections__section__questions__answers',
+    )
 
-    if qs.count() is 0:
+    audit_cycle_count = qs.count()
+    if audit_cycle_count is 0:
         return []
 
-    if qs.count() > 3:
-        audit_cycles = qs[qs.count()-3:]
+    if audit_cycle_count > 3:
+        audit_cycles = qs[audit_cycle_count - 3:]
     else:
         audit_cycles = qs
 
@@ -68,10 +79,7 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
     data = []
     for audit_cycle in audit_cycles:
         audit_cycle_names.append(audit_cycle.name)
-
-        data.append((audit_cycle, get_performing_cities(audit_cycle.id, user_id)))
-
-    #print("data", data)
+        data.append((audit_cycle, get_performing_cities(audit_cycle)))
 
     last_cycle_performing_cities = data[-1][1]
 

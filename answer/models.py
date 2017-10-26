@@ -96,7 +96,7 @@ class ReportSection(Model):
             # run the summing code in python because we have already prefetched questions, answers for the report_sections
             for question in self.section.questions.all():
                 for answer in question.answers.all():
-                    if answer.audit_store_id == self.audit_store_id and not answer.not_applicable:
+                    if answer.audit_store_id == self.audit_store_id and not answer.not_applicable and answer.marks_obtained:
                         marks_obtained += answer.marks_obtained
             return marks_obtained
 
