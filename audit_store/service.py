@@ -51,14 +51,17 @@ def find_audit_stores_for_auditor(profileinfo_id):
         raise ObjectNotFound from e
 
 def find_by_audit_cycle(audit_cycle_id):
-    try:
-        audit_stores = []
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
-        for audit in audit_cycle.audits.all():
-            audit_stores.extend(audit.audit_stores.all())
-    except AuditCycle.DoesNotExist as e:
-        raise ObjectNotFound from e
-    return audit_stores
+    return AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id).prefetch_related(
+        'user',
+        'user__profileinfo',
+        'audit',
+        'audit__audit_cycle',
+        'audit__audit_cycle__client',
+        'audit__store',
+        'audit__store__location',
+        'audit__store__location__city',
+        'audit__store__client',
+    )
 
 def find_by_id_for_auditor(audit_store_id, user_id):
     try:
