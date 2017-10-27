@@ -156,7 +156,10 @@ def get_pending_payments():
     return payments
 
 def find_by_audit_cycle(audit_cycle_id):
-    return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id)
+    return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).prefetch_related(
+        'user',
+        'user__profileinfo',
+    )
 
 def find_pending_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)
