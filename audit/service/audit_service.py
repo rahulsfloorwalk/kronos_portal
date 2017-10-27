@@ -18,7 +18,18 @@ def find_audit_by_id(audit_id):
         raise ObjectNotFound from e
 
 def find_audits_by_audit_cycle_id(audit_cycle_id):
-    return Audit.objects.filter(audit_cycle_id=audit_cycle_id)
+    return Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related(
+        'store',
+        'store__client',
+        'store__location',
+        'store__location__city',
+        'audit_stores',
+        'audit_stores__user',
+        'audit_stores__user__profileinfo',
+        'applications',
+        'applications__profileinfo',
+        'applications__profileinfo__user',
+    )
 
 def save(audit):
     try:
