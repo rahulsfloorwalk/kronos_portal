@@ -2,12 +2,14 @@ import io
 
 import xlsxwriter
 
+from django.db.models import Prefetch
+
 import audit.service.audit_cycle as audit_cycle_service
-from answer.models import Answer, ReportSection
 from client.service.client_user import find_clientuser_by_user_id
 from kronos.utils import get_color_code, get_color_hex_from_code
 from manager.models import City
 from audit_store.models import AuditStore
+from questionnaire.models import Question
 
 
 # Get report for all stores for given client
@@ -15,11 +17,13 @@ from audit_store.models import AuditStore
 def get_aggregate_report_for_manager(audit_cycle_id, filter_user=None):
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
 
-    sections = audit_cycle.sections.order_by('sequence')
+    sections = audit_cycle.sections.order_by('sequence').prefetch_related(
+        Prefetch('questions', queryset=Question.objects.order_by('section__sequence','sequence')),
+    )
 
     questions = []
-    for section in sections:
-        questions.extend(section.questions.order_by('sequence'))
+    for section in sections.questions:
+        questions.extend(section.questions.all())
 
     qs = AuditStore.objects.filter(audit__audit_cycle=audit_cycle).presentable()
     if filter_user:
@@ -43,17 +47,30 @@ def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
-    sections = audit_cycle.sections.order_by('sequence')
+
+    sections = audit_cycle.sections.order_by('sequence').prefetch_related(
+        Prefetch('questions', queryset=Question.objects.order_by('section__sequence','sequence')),
+    )
+
     city_name = ''
 
     questions = []
     for section in sections:
-        questions.extend(section.questions.order_by('sequence'))
+        questions.extend(section.questions.all())
 
-    audit_stores = AuditStore.objects.filter(audit__audit_cycle=audit_cycle).presentable()
-    if clientuser:
-        audit_stores = audit_stores.visible_to(clientuser)
-    audit_stores.order_by('audit_date')
+    audit_stores = AuditStore.objects \
+        .filter(audit__audit_cycle=audit_cycle) \
+        .presentable() \
+        .visible_to(clientuser) \
+        .order_by('audit_date') \
+        .prefetch_related(
+            'audit',
+            'audit__store',
+            'audit__store__location',
+            'audit__store__location__city',
+            'answers',
+            'report_sections',
+        )
 
     filtered_audit_stores = audit_stores
     ignored_filters = ['', 'undefined', None]
@@ -73,7 +90,6 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     return write_data(data), name
 
 
-
 def create_text_structure(title, sections, questions, audit_stores):
     rows = []
 
@@ -89,7 +105,7 @@ def create_text_structure(title, sections, questions, audit_stores):
     for section in sections:
         section_cells.append({
             'value': section.name,
-            'colspan': section.questions.count()
+            'colspan': len(section.questions.all())
         })
     cells = [{'value': "SECTIONS", 'colspan': 2}] + section_cells
     row = {'type': 'sections', 'content': cells}
@@ -116,31 +132,40 @@ def create_text_structure(title, sections, questions, audit_stores):
 
         answer_cells = []
         for question in questions:
-            try:
-                answer = audit_store.answers.get(question_id=question.id)
-                store = answer.audit_store
-                section = question.section
-                report_section = ReportSection.objects.get(audit_store=store, section=section)
-                if report_section.not_applicable:
-                    answer_cells.append({
-                        'value': "Not Applicable",
-                        'color_code': get_color_code(0, 0)
-                    })
-                elif answer.not_applicable:
-                    answer_cells.append({
-                        'value': "Not Applicable",
-                        'color_code': get_color_code(0, 0)
-                    })
-                else:
-                    answer_cells.append({
-                        'value': answer.answer_text,
-                        'color_code': get_color_code(answer.marks_obtained, answer.question.max_marks)
-                    })
-            except (Answer.DoesNotExist) as e:
+            # look for the answer in the prefetched answers
+            for a in audit_store.answers.all():
+                if a.question_id == question.id:
+                    answer = a
+                    break
+
+            # look for the report_section in the prefetched report_sections
+            for rs in audit_store.report_sections.all():
+                if rs.section_id == question.section_id:
+                    report_section = rs
+                    break
+
+            if not report_section or not answer:
                 answer_cells.append({
                     'value': "",
                     'color_code': get_color_code(0, 0)
                 })
+
+            if report_section.not_applicable:
+                answer_cells.append({
+                    'value': "Not Applicable",
+                    'color_code': get_color_code(0, 0)
+                })
+            elif answer.not_applicable:
+                answer_cells.append({
+                    'value': "Not Applicable",
+                    'color_code': get_color_code(0, 0)
+                })
+            else:
+                answer_cells.append({
+                    'value': answer.answer_text,
+                    'color_code': get_color_code(answer.marks_obtained, question.max_marks)
+                })
+
         content = [store_name_cell, audit_date_cell] + answer_cells
         row = {
             'type': 'answer',
