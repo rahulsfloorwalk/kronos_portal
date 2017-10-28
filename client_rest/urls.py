@@ -14,6 +14,7 @@ urlpatterns = ([
     url(r'report/performance/city$', views.DashboardCityWiseTrends.as_view(), name='dashboard_city_trends'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
     url(r'report/audit_cycle/time_series$', views.AuditCycleTimeSeriesReport.as_view(), name='audit_cycle_time_series'),
+    url(r'report/store/(?P<store_id>[0-9]+)/marking', views.MarkingByStore.as_view(), name='marking_by_store'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_xlsx_report$', views.AuditCycleXlsxReport.as_view(), name='audit_cycle_xlsx_report'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_filtered_xlsx_report$', views.AuditCycleFilteredXlsxReport.as_view(), name='audit_cycle_filtered_xlsx_report'),
 

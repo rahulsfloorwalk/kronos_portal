@@ -35,6 +35,7 @@ from client_report.service import audit_section
 from client_report.service import city_trends
 from client_report.service import store_trends
 from client_report.service import audit_cycle
+from client_report.service import store_marking as store_marking_service
 
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 
@@ -100,6 +101,15 @@ class StoreById(APIView):
         except Store.DoesNotExist as e:
             raise NotFound from e
 
+class MarkingByStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+            'GET' : [GROUP_NAME_CLIENT],
+        }
+    def get(self, request, store_id, format=None):
+        audit_type = request.GET.get('audit_type', AuditCycle.WALKIN)
+        data = store_marking_service.get_scores_for_store(store_id, request.user.clientuser.client.id, audit_type)
+        return Response(data)
 
 class AuditStoreByStore(APIView):
     permission_classes = [HasGroupPermission]
