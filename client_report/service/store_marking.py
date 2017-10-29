@@ -3,6 +3,7 @@ from audit_store.models import AuditStore
 from audit.models import AuditCycle
 from questionnaire.models import Question
 from answer.models import Answer
+from kronos.utils import get_color_code
 
 def get_scores_for_store(store_id, client_id, audit_type):
     all_cycles = AuditCycle.objects.filter(client_id=client_id).filter(type=audit_type).order_by('end_date')
@@ -14,7 +15,7 @@ def get_scores_for_store(store_id, client_id, audit_type):
 
     audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles]
 
-    master_questions = Question.objects.filter(section__audit_cycle__id=audit_cycles[len(audit_cycles)-1].id) \
+    master_questions = Question.objects.filter(section__audit_cycle__id=audit_cycles[len(audit_cycles) - 1].id) \
         .order_by('section__sequence') \
         .order_by('sequence') \
         .select_related('section')
@@ -56,16 +57,19 @@ def get_average_score_for_question_in_audit_cycle(question, store_id):
 
     total = 0
     count = 0
-    average = -1
+    average = None
 
     for answer in question.answers.all():
-        if answer.marks_obtained is not None:
+        if answer.marks_obtained is not None and not answer.not_applicable:
             total += answer.marks_obtained
             count += 1
     if count > 0:
         average = total / count
 
-    return average
+    return {
+        "marks": average,
+        "color": get_color_code(average, question.max_marks) if average is not None else None,
+    }
 
 def transpose_data(master_questions, audit_cycle_scores):
     response_data = []

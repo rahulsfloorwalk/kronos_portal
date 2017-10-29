@@ -28,21 +28,33 @@ export default React.createClass({
 					<li><Link to="/store">Stores</Link></li>
 					<li className="active">{this.state.store.name}</li>
 				</ol>
-				<h2 className="page-header">
-					{ this.state.store.name }
-				</h2>
+			{/*<h2 className="page-header"> { this.state.store.name } </h2>*/}
 				<div className="row">
-				<div className="col-md-6">
-				<Panel title="Store Info" noBody={true}>
-					<table className="table table-striped">
+				<div className="col-md-12">
+				<div className="panel panel-default">
+					<table className="table table-striped table-bordered">
 						<tbody>
-							<tr><td className="text-right">Name</td><td><b>{ this.state.store.name }</b></td></tr>
-							<tr><td className="text-right">Address</td><td><b>{ this.state.store.address }</b></td></tr>
-							<tr><td className="text-right">Location</td><td><b>{ this.state.store.location.name }</b></td></tr>
-							<tr><td className="text-right">City</td><td><b>{ this.state.store.location.city.name }</b></td></tr>
+							<tr>
+								<td className="">Code</td>
+								<td className="">Name</td>
+								<td className="">Type</td>
+								<td className="">Priority</td>
+								<td className="">Address</td>
+								<td className="">Location</td>
+								<td className="">City</td>
+							</tr>
+							<tr>
+								<td><b>{ this.state.store.code }</b></td>
+								<td><b>{ this.state.store.name }</b></td>
+								<td><b>{ this.state.store.type }</b></td>
+								<td><b>{ this.state.store.priority }</b></td>
+								<td><b>{ this.state.store.address }</b></td>
+								<td><b>{ this.state.store.location.name }</b></td>
+								<td><b>{ this.state.store.location.city.name }</b></td>
+							</tr>
 						</tbody>
 					</table>
-				</Panel>
+				</div>
 				</div>
 				</div>
 				{this.props.children}

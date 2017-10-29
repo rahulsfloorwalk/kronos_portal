@@ -4,7 +4,7 @@ import { Link, hashHistory } from 'react-router';
 import { pointerStyle } from '../../js/styles.js';
 
 import NavLink from '../../js/components/NavLink.jsx';
-import { Dashboard, File, LogOut, Time, Retweet } from '../../js/components/Icons.jsx';
+import { Dashboard, File, LogOut, Time, Retweet, Home } from '../../js/components/Icons.jsx';
 
 import { fetchUser } from '../service/user.js';
 
@@ -68,6 +68,11 @@ export default React.createClass({
 						}
 						{/*<NavLink to="/browser"><File/> Report Browser</NavLink>*/}
 						<NavLink to="/browser3"><File/> Report Browser</NavLink>
+						{
+							this.state.clientUser.is_client_admin
+							? <NavLink to="/store"><Home/> Store Browser</NavLink>
+							: null
+						}
 						{
 							this.state.clientUser.is_client_admin
 							? <NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>

@@ -85,8 +85,11 @@ class StoreByClient(APIView):
     required_groups = {
             'GET' : [GROUP_NAME_CLIENT],
         }
-    def get(self, request, city_id=None, format=None):
-        stores = Store.objects.filter(client_id=request.user.clientuser.client.id, location__city_id=request.GET.get('city_id'))
+    def get(self, request, format=None):
+        if request.GET.get('city_id'):
+            stores = store_service.find_stores_by_clientuser_and_city(request.user.id, request.GET.get('city_id'))
+        else:
+            stores = store_service.find_stores_by_clientuser(request.user.id)
         return Response(StoreSerializer(stores, many=True).data)
 
 class StoreById(APIView):
