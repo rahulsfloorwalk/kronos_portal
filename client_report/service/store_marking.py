@@ -30,6 +30,9 @@ def get_question_wise_marks_for_audit_cycle(audit_cycle_id, store_id):
     for question in questions:
         question_object = {}
         question_object['question_txt'] = question.question_txt
+        question_object['section_name'] = question.section.name
+        question_object['section_sequence'] = question.section.sequence
+        question_object['sequence'] = question.sequence
         question_object['score'] = get_average_score_for_question_in_audit_cycle(question.id, store_id)
         response_data.append(question_object)
     return response_data
@@ -48,7 +51,6 @@ def get_average_score_for_question_in_audit_cycle(question_id, store_id):
                 count += 1
         if count > 0:
             average = total/count
-            print(count)
         else:
             average = -1
     else:
@@ -56,4 +58,26 @@ def get_average_score_for_question_in_audit_cycle(question_id, store_id):
     return average
 
 def transpose_data(master_questions, audit_cycle_scores):
-    return audit_cycle_scores
+    response_data = []
+    for question in master_questions:
+        obj = {}
+        obj['question_id'] = question.id
+        obj['sequence'] = question.sequence
+        obj['max_marks'] = question.max_marks
+        obj['question_txt'] = question.question_txt
+        obj['scores'] = []
+        for dataline in audit_cycle_scores:
+            for scoreline in dataline.get('data'):
+                if question.question_txt == scoreline.get('question_txt')\
+                    and question.section.name == scoreline.get('section_name')\
+                        and question.sequence == scoreline.get('sequence'):
+                    obj['scores'].append(scoreline.get('score'))
+                    obj['section_name'] = scoreline.get('section_name')
+                    obj['section_sequence'] = scoreline.get('section_sequence')
+
+        response_data.append(obj)
+
+    sorted_by_sequence = sorted(response_data, key=lambda x: x['sequence'])
+    sorted_by_section = sorted(sorted_by_sequence, key=lambda x: x['section_sequence'])
+
+    return sorted_by_section
