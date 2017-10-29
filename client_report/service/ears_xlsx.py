@@ -219,6 +219,17 @@ def generate_ears_report_for_clientuser(audit_store_id, user):
     if not audit_store.is_presentable():
         raise AppLogicError("report is not presentable")
 
+    audit_store = AuditStore.objects.prefetch_related(
+        'answers',
+        'report_sections',
+        'report_sections__section',
+        'report_sections__section__questions',
+        'report_sections__section__questions__answers',
+        #'audit__audit_cycle__sections',
+        #'audit__audit_cycle__sections__questions',
+        #'audit__audit_cycle__sections__questions__answers',
+    ).filter(pk=audit_store_id).first()
+
     report_data = {
             "title": "Action Plan using E.A.R.S Model",
             "subtitle": "External Audit - " + audit_store.audit.audit_cycle.name,
@@ -242,23 +253,22 @@ def generate_ears_report_for_clientuser(audit_store_id, user):
                 "questions": [],
             }
         for q in rs.section.questions.all():
-            try:
-                a = Answer.objects.get(audit_store_id=audit_store.id, question=q)
-                if a.not_applicable or q.max_marks in (a.marks_obtained, 0):
-                    continue
+            for answer in audit_store.answers.all():
+                if answer.audit_store_id == audit_store.id and answer.question_id == q.id:
+                    a = answer
 
-                marks_obtained = 0
-                if a.marks_obtained is not None:
-                    marks_obtained = a.marks_obtained
-
-                report_section["questions"].append({
-                        "question_text": q.question_txt,
-                        "answer_text" : a.answer_text,
-                        "points_lost" : q.max_marks - marks_obtained,
-                    })
-
-            except Answer.DoesNotExist as e:
+            if not a or a.not_applicable or q.max_marks in (a.marks_obtained, 0):
                 continue
+
+            marks_obtained = 0
+            if a.marks_obtained is not None:
+                marks_obtained = a.marks_obtained
+
+            report_section["questions"].append({
+                "question_text": q.question_txt,
+                "answer_text": a.answer_text,
+                "points_lost": q.max_marks - marks_obtained,
+            })
 
         if len(report_section["questions"]) is not 0:
             report_data["sections"].append(report_section)
