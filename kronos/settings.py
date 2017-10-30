@@ -34,7 +34,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = properties["GENERAL"]["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = properties["GENERAL"]["DEBUG"]
+DEBUG = properties["GENERAL"]["DEBUG"] == "True"
 
 ALLOWED_HOSTS = ['*']
 
@@ -53,8 +53,10 @@ DEPENDENCY_APPS = [
     'notifications',
     'guardian',
     'markdown_deux',
-    'debug_toolbar',
 ]
+
+if DEBUG:
+    DEPENDENCY_APPS.append('debug_toolbar')
 
 PROJECT_APPS = [
     'registration',
@@ -89,8 +91,10 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'registration.DisableCSRF',
     'kronos.exceptions.KronosExceptionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+
+if DEBUG:
+    MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'kronos.urls'
 
