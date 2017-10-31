@@ -11,7 +11,7 @@ import Jumbotron from '../../js/components/Jumbotron.jsx';
 import { getColor, getAuditType } from '../../js/utils.js';
 import { ChevronRight, ChevronDown, ShareAlt } from '../../js/components/Icons.jsx';
 
-import { fetchStoreMarkingTrends } from '../service/store.js';
+import { fetchStore, fetchStoreMarkingTrends } from '../service/store.js';
 import { fetchAuditTypes } from '../service/dashboard.js';
 
 export default class StoreTrends extends Component{
@@ -20,24 +20,45 @@ export default class StoreTrends extends Component{
 		this.state = {};
 	}
 
-	reloadReport = (storeId, audit_type) => {
-		fetchStoreMarkingTrends(storeId, audit_type).then((data)=>{
-			this.setState({
-				data
+	reloadReport = (storeId, audit_type=undefined) => {
+		fetchStore(storeId).then((store)=>{
+			if(!audit_type){
+				switch(store.type){
+					case "Fine Dine":
+						audit_type = "FINE_DINE";
+						break;
+					case "Sky Karting":
+						audit_type = "SKY_KARTING";
+						break;
+					case "Arena":
+					case "":
+					case undefined:
+					case null:
+					default:
+						audit_type = "WALKIN";
+						break;
+				}
+			}
+
+			fetchStoreMarkingTrends(storeId, audit_type).then((data)=>{
+				this.setState({
+					data,
+					audit_type,
+				});
 			});
 		});
 	}
 
 	componentDidMount() {
 		fetchAuditTypes().then(types => {
-			let audit_type = types.indexOf("WALKIN") > -1 ? "WALKIN" : types[0];
+			//let audit_type = types.indexOf("WALKIN") > -1 ? "WALKIN" : types[0];
 
 			this.setState({
 				types,
-				audit_type,
+				//audit_type,
 			});
 
-			this.reloadReport(this.props.params.storeId, audit_type);
+			this.reloadReport(this.props.params.storeId);
 		});
 	}
 
