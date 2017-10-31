@@ -16,11 +16,11 @@ def save(store):
 
 def find_stores_by_clientuser(user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
-    return Store.objects.filter(client_id=user.clientuser.client.id).select_related('client','location','location__city')
+    return Store.objects.filter(client_id=user.clientuser.client.id).order_by('location__city__name').select_related('client','location','location__city')
 
 def find_stores_by_clientuser_and_city(user_id, city_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
-    return Store.objects.filter(client_id=user.clientuser.client.id, location__city_id=city_id).select_related('client','location','location__city')
+    return Store.objects.filter(client_id=user.clientuser.client.id, location__city_id=city_id).order_by('location__city__name').select_related('client','location','location__city')
 
 
 def find_store_by_id(store_id):

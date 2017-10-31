@@ -62,7 +62,8 @@ export default class StoreTrends extends Component{
 					<td className="text-right">{prevSection !== score.section_name ? score.section_sequence : null}</td>
 					<td>{prevSection !== score.section_name ? score.section_name : null}</td>
 					<td>{score.question_txt}</td>
-					{score.scores.map((s,i) => <td key={i} className={getColor(s.color) + " text-right"}>{s.marks}</td>)}
+					{score.scores.map((s,i) => <td key={i} className={getColor(s.color) + " text-right"}>{parseFloat(s.marks) ? s.marks.toFixed(2) : s.marks}</td>)}
+					<td className="text-right">{score.max_marks}</td>
 				</tr>
 			);
 			prevSection=score.section_name;
@@ -83,6 +84,7 @@ export default class StoreTrends extends Component{
 							<th>Section</th>
 							<th>Question</th>
 							{cycles}
+							<th className="text-right">Max. Marks</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -97,7 +99,7 @@ export default class StoreTrends extends Component{
 			<h3 className="page-header">
 				Store Trends
 				<div className="pull-right">
-				<select className="form-control" value={this.state.audit_type} onChange={this.auditTypeChanged}>
+				<select className="form-control input-lg" value={this.state.audit_type} onChange={this.auditTypeChanged}>
 				{this.state.types.map((type) => <option key={type} value={type}>{getAuditType(type)}</option>)}
 				</select>
 				</div>
