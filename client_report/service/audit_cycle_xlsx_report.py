@@ -107,7 +107,7 @@ def create_text_structure(title, sections, questions, audit_stores):
             'value': section.name,
             'colspan': len(section.questions.all())
         })
-    cells = [{'value': "SECTIONS", 'colspan': 2}] + section_cells
+    cells = [{'value': "SECTIONS", 'colspan': 3}] + section_cells
     row = {'type': 'sections', 'content': cells}
     rows.append(row)
 
@@ -115,12 +115,16 @@ def create_text_structure(title, sections, questions, audit_stores):
     question_cells = []
     for question in questions:
         question_cells.append(question.question_txt)
-    content = ["Store", "Audit Date"] + question_cells
+    content = ["Store Code", "Store", "Audit Date"] + question_cells
     row = {'type': 'question', 'content': content}
     rows.append(row)
 
     ## generate answer rows
     for audit_store in audit_stores:
+        store_code_cell = {
+            'value': audit_store.audit.store.code,
+            'color_code': get_color_code(0, 0)
+        }
         store_name_cell = {
             'value': audit_store.audit.store.name + " - " + audit_store.audit.store.location.city.name,
             'color_code': get_color_code(0, 0)
@@ -166,7 +170,7 @@ def create_text_structure(title, sections, questions, audit_stores):
                     'color_code': get_color_code(answer.marks_obtained, question.max_marks)
                 })
 
-        content = [store_name_cell, audit_date_cell] + answer_cells
+        content = [store_code_cell, store_name_cell, audit_date_cell] + answer_cells
         row = {
             'type': 'answer',
             'content': content

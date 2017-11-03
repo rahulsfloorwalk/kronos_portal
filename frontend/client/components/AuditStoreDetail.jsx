@@ -86,8 +86,20 @@ export default React.createClass({
 									<th>{this.state.auditStore.audit.store.client.name}</th>
 								</tr>
 								<tr>
+									<td className="text-right">Store Code:</td>
+									<th>{this.state.auditStore.audit.store.code}</th>
+								</tr>
+								<tr>
 									<td className="text-right">Store:</td>
 									<th>{this.state.auditStore.audit.store.name}</th>
+								</tr>
+								<tr>
+									<td className="text-right">Store Type:</td>
+									<th>{this.state.auditStore.audit.store.type}</th>
+								</tr>
+								<tr>
+									<td className="text-right">Store Priority:</td>
+									<th>{this.state.auditStore.audit.store.priority}</th>
 								</tr>
 								<tr>
 									<td className="text-right">Audit Type:</td>

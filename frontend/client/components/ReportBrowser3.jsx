@@ -123,7 +123,8 @@ class AuditStoreTable extends Component {
 		</select>);
 
 		let headers = [];
-		headers.push(<th key="store_name">Store</th>);
+		headers.push(<th key="store_code">Store Code</th>);
+		headers.push(<th key="store_name">Name</th>);
 		headers.push(<th key="date" className="text-right">Date</th>);
 		headers = headers.concat(this.state.reports[0].sections.filter(s => s.max_marks > 0).map(s => <th key={s.sequence} className="text-right">{s.section}</th>));
 
@@ -137,6 +138,7 @@ class AuditStoreTable extends Component {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
 			let cityName = previousStore === r.store_id ? "" : r.city_name;
+			let storeCode = previousStore === r.store_id ? "" : r.store_code;
 			let tdStyle = {};
 			if(previousStore === r.store_id){
 				//trs.push(<td colSpan={2 + tds.length}>&nbsp;</td>);
@@ -153,6 +155,7 @@ class AuditStoreTable extends Component {
 			}
 			trs.push(
 				<tr key={r.audit_store_id} style={pointerStyle} onClick={()=> hashHistory.push(`/audit_store/${r.audit_store_id}`)}>
+				<td className="">{storeCode}</td>
 				<td style={tdStyle}>
 					<b>{storeName}</b><br/>
 					<small>{cityName}</small>

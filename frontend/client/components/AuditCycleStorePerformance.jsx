@@ -27,6 +27,8 @@ var AuditCycleStorePerformance = React.createClass({
 		for(let i=0; i < size; i++){
 			let obj = {};
 			obj['name'] = data_arr[i][0].name;
+			obj['type'] = data_arr[i][0].type;
+			obj['code'] = data_arr[i][0].code;
 			for(let j=0; j < label_arr.length; j++){
 				obj[label_arr[j]] = data_arr[i][1][j];
 			}

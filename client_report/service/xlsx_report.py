@@ -43,6 +43,7 @@ def create_text_structure(sections, answers, report_sections, audit_store):
 def get_details_section(audit_store, report_sections, sections):
     audit_date = audit_store.audit_date.strftime('%d-%m-%Y')
     percentage = audit_store.percentage()
+    store = audit_store.audit.store
     store_location = audit_store.audit.store.location.name
     client_name = audit_store.audit.audit_cycle.client.name
     audit_cycle_type = audit_store.audit.audit_cycle.type
@@ -50,10 +51,19 @@ def get_details_section(audit_store, report_sections, sections):
     content = ["", "Audit Report"]
     row = {'type': 'title', 'content': content}
     rows.append(row)
-    content = ["Name", client_name]
+    content = ["Store Code", store.code]
     row = {'type': 'line', 'content': content}
     rows.append(row)
-    content = ["Type", audit_cycle_type]
+    content = ["Store Name", store.name]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    content = ["Store Type", store.type]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    content = ["Store Priority", store.priority]
+    row = {'type': 'line', 'content': content}
+    rows.append(row)
+    content = ["Audit Type", audit_cycle_type]
     row = {'type': 'line', 'content': content}
     rows.append(row)
     content = ["Location", store_location]
@@ -240,8 +250,8 @@ def write_data(sections):
             row = start_row
         elif(sec_num == 2):
             start_col -= 2
-            if(row < 7):
-                row = 7
+            if(row < 10):
+                row = 10
     workbook.close()
     output.seek(0)
     return output

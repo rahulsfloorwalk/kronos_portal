@@ -22,6 +22,9 @@ def get_performing_stores(audit_cycle):
             "id": audit.store.id,
             "name": audit.store.name,
             "address": audit.store.address,
+            "type": audit.store.type,
+            "code": audit.store.code,
+            "priority": audit.store.priority,
             "city": {
                 "id": audit.store.location.city.id,
                 "name": audit.store.location.city.name,
