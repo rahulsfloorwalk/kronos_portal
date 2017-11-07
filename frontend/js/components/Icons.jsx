@@ -10,6 +10,7 @@ export const CircleArrowDown	= () => <span className="glyphicon glyphicon-circle
 export const CircleArrowLeft	= () => <span className="glyphicon glyphicon-circle-arrow-left"></span>;
 export const Asterisk	= () => <span className="glyphicon glyphicon-asterisk"></span>;
 export const Education	= () => <span className="glyphicon glyphicon-education"></span>;
+export const Stats	= () => <span className="glyphicon glyphicon-stats"></span>;
 export const Time	= () => <span className="glyphicon glyphicon-time"></span>;
 export const Duplicate	= () => <span className="glyphicon glyphicon-duplicate"></span>;
 export const Lock	= () => <span className="glyphicon glyphicon-lock"></span>;

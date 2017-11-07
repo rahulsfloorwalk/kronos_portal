@@ -3,9 +3,10 @@ import { Link } from 'react-router';
 
 import { fetchStore } from '../service/store.js';
 
-import { Pencil } from '../../js/components/Icons.jsx';
+import { File, Stats } from '../../js/components/Icons.jsx';
 import Panel from '../../js/components/Panel.jsx';
 import Loading from '../../js/components/Loading.jsx';
+import NavLink from '../../js/components/NavLink.jsx';
 
 export default React.createClass({
 	getInitialState: function(){
@@ -57,6 +58,10 @@ export default React.createClass({
 				</div>
 				</div>
 				</div>
+				<ul className="nav nav-tabs">
+					<NavLink to={`/store/${this.props.params.storeId}/trends`}><Stats/> Trends</NavLink>
+					<NavLink to={`/store/${this.props.params.storeId}/reports`}><File/> Reports</NavLink>
+				</ul>
 				{this.props.children}
 			</div>
 		);

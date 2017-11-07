@@ -81,9 +81,21 @@ def find_latest_for_client(client_id):
 
 def find_by_store_for_client(store_id, client_id):
     return AuditStore.objects.presentable().filter(
-            audit__audit_cycle__client_id=client_id,
-            audit__store_id=store_id,
-        )
+        audit__audit_cycle__client_id=client_id,
+        audit__store_id=store_id,
+    ).prefetch_related(
+        'report_sections',
+        'report_sections__section',
+        'report_sections__section__questions',
+        'report_sections__section__questions__answers',
+        'audit',
+        'audit__store',
+        'audit__store__location',
+        'audit__store__location__city',
+        'audit__audit_cycle',
+        'audit__audit_cycle__client',
+        'audit__audit_cycle__sections',
+    )
 
 
 def find_for_pre_reminder():

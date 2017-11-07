@@ -11,6 +11,7 @@ import ReportBrowser3 from './ReportBrowser3.jsx';
 import StoreDetail from './StoreDetail.jsx';
 import StoreTrends from './StoreTrends.jsx';
 import StoreList2 from './StoreList2.jsx';
+import StoreAuditStoreList from './StoreAuditStoreList.jsx';
 
 import AuditStoreList from './AuditStoreList.jsx'; import AuditStoreDetail from './AuditStoreDetail.jsx';
 
@@ -46,6 +47,7 @@ const Routes = () => (
 		<Route path="/store" component={StoreList2}/>
 		<Route path="/store/:storeId" component={StoreDetail}>
 			<Route path="trends" component={StoreTrends}/>
+			<Route path="reports" component={StoreAuditStoreList}/>
 		</Route>
 		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
 		<Route path="/upcoming" component={UpcomingAuditStores}/>

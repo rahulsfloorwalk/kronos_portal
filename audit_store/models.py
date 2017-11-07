@@ -8,6 +8,8 @@ from django.db.models import QuerySet
 from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField, DateTimeField
 from django.db.models import PROTECT
 
+from kronos.utils import get_color_code_by_percentage
+
 from guardian.shortcuts import get_users_with_perms, get_objects_for_user
 
 from client.models import Store
@@ -97,6 +99,9 @@ class AuditStore(Model):
             return max_marks
         else:
             return int(self.marks_obtained() * 100 / max_marks )
+
+    def color(self):
+        return get_color_code_by_percentage(self.percentage())
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()

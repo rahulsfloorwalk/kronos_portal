@@ -9,7 +9,7 @@ export function fetchUpcomingAuditStores(){
 	return $.get( url.api_base_path + `client/audit_store/upcoming`);
 };
 
-export function fetchAuditStores(storeId){
+export function fetchAuditStoresByStore(storeId){
 	return $.get( url.api_base_path + `client/store/${storeId}/audit_store`);
 };
 
