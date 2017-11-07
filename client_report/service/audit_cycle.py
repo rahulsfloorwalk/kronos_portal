@@ -1,6 +1,7 @@
 from django.db.models import Prefetch
 
 from kronos.exceptions import AppLogicError
+from kronos.utils import get_color_code_by_percentage
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from answer.models import ReportSection, Answer
@@ -15,7 +16,10 @@ def get_average_for_section(section):
                 counter += 1
                 total += report_section.marks_percentage()
         if counter > 0:
-            return int(total / counter)
+            return {
+                'color_code': get_color_code_by_percentage(int(total / counter)),
+                'value': int(total / counter)
+            }
     return None
 
 def get_section_averages_for_audit_cycle(audit_cycle):
@@ -79,7 +83,8 @@ def get_audit_cycle_section_averages_for_client(client_id, audit_type):
     response_obj['values'] = values_table
     return response_obj
 
-
+def get_excel_report(data):
+    return data
 # ###Old logic
 
 # section_series = {}

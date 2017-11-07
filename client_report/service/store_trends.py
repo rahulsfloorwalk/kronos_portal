@@ -1,6 +1,7 @@
 from django.db.models import Prefetch
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.utils import get_color_code_by_percentage
 
 from audit.models import AuditCycle, Audit
 import audit.service.audit_cycle as audit_cycle_service
@@ -18,24 +19,30 @@ def get_performing_stores(audit_cycle):
         for audit_store in audit.audit_stores.all():
             obtained += audit_store.percentage()
             count += 1
-        if count > 0: stores.append(({
-            "id": audit.store.id,
-            "name": audit.store.name,
-            "address": audit.store.address,
-            "type": audit.store.type,
-            "code": audit.store.code,
-            "priority": audit.store.priority,
-            "city": {
-                "id": audit.store.location.city.id,
-                "name": audit.store.location.city.name,
+        if count > 0:
+            stores.append(({
+                "id": audit.store.id,
+                "name": audit.store.name,
+                "address": audit.store.address,
+                "type": audit.store.type,
+                "code": audit.store.code,
+                "priority": audit.store.priority,
+                "city": {
+                    "id": audit.store.location.city.id,
+                    "name": audit.store.location.city.name,
+                }
+            },
+            {
+                "color_code": get_color_code_by_percentage(int(obtained / count)),
+                "value": int(obtained / count)
             }
-        }, int(obtained / count)))
+            ))
 
 
     if len(stores) is 0:
         return stores
     else:
-        return sorted(stores, key=lambda s: s[1], reverse=True)
+        return sorted(stores, key=lambda s: s[1].get('value'), reverse=True)
 
 
 def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
@@ -109,3 +116,6 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
             'columns': audit_cycle_names,
             'data': data_1
     }
+
+def get_excel_report(data):
+    return data

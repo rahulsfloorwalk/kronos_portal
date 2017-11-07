@@ -409,6 +409,26 @@ class DashboardCityWiseTrends(APIView):
         data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
         return Response(data)
 
+class DashboardStoreTrendsXlsx(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+        response_data=store_trends.get_excel_report(data)
+        return Response(response_data)
+
+class DashboardCityWiseTrendsXlsx(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+        response_data = city_trends.get_excel_report(data)
+        return Response(response_data)
+
 class AuditStoreUpcoming(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -426,6 +446,19 @@ class AuditCycleTimeSeriesReport(APIView):
     def get(self, request, format=None):
         try:
             audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, request.GET.get('audit_type',AuditCycle.WALKIN))
+            return Response(audit_cycle_time_series)
+        except ObjectNotFound as e:
+            raise NotFound from e
+
+class AuditCycleTimeSeriesReportXlsx(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET' : [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        try:
+            data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, request.GET.get('audit_type',AuditCycle.WALKIN))
+            audit_cycle_time_series = audit_cycle.get_excel_report(data)
             return Response(audit_cycle_time_series)
         except ObjectNotFound as e:
             raise NotFound from e

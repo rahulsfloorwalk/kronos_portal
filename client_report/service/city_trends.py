@@ -1,14 +1,9 @@
 from django.db.models import Prefetch
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
-
-from audit.models import AuditCycle, Audit
 import audit.service.audit_cycle as audit_cycle_service
-
 from audit_store.models import AuditStore
+from kronos.utils import get_color_code_by_percentage
 
-from answer.models import Answer, ReportSection
-from questionnaire.models import Section
 
 def get_performing_cities(audit_cycle):
     stores = {}
@@ -35,7 +30,11 @@ def get_performing_cities(audit_cycle):
                 ({
                     "id": city.id,
                     "name": city.name,
-                }, int(total / count))
+                },
+                {
+                    "color_code": get_color_code_by_percentage(int(total / count)),
+                    "value": int(total / count)
+                })
             )
         else:
             averages.append(
@@ -48,7 +47,7 @@ def get_performing_cities(audit_cycle):
     if len(averages) is 0:
         return averages
     else:
-        return sorted(averages, key=lambda s: s[1], reverse=True)
+        return sorted(averages, key=lambda s: s[1].get('value'), reverse=True)
 
 
 def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
@@ -119,3 +118,6 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
             'columns': audit_cycle_names,
             'data': data_1
     }
+
+def get_excel_report(data):
+    return data
