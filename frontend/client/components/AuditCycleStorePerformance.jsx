@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import { Text } from 'recharts';
 
@@ -111,6 +112,7 @@ var AuditCycleStorePerformance = React.createClass({
 									for(let j=0; j < reportData.columns.length; j++){
 										tds.push(<td key={i+"."+j} className={"text-right "+getColor(data[i][1][j].color_code)}>{data[i][1][j].value}%</td>);
 									}
+									tds.push(<td key={data[i][0].id}><Link to={`/store/${data[i][0].id}/trends`} className="btn btn-default">View</Link></td>);
 									trs.push(<tr key={data[i][0].name}>{tds}</tr>);
 								}
 								return trs;

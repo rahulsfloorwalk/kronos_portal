@@ -72,7 +72,7 @@ var CityWisePerformanceChart = React.createClass({
 
 		let chart = (
 		<ResponsiveContainer width="100%" aspect={3 / 1}>
-		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
+		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}} onClick={(active)=>active&&this.toggleModal()}>
 		<XAxis dataKey="name" tick={this.tickFunction} interval={0}/>
 		<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
 		<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
