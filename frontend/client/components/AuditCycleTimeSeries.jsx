@@ -29,7 +29,7 @@ var AuditCycleTimeSeries = React.createClass({
 			let obj = {};
 			obj['name'] = ts.section_master[i];
 			for(let j=0; j < ts.audit_cycle_master.length; j++){
-				obj[ts.audit_cycle_master[j]] = ts.values[j][i];
+				obj[ts.audit_cycle_master[j]] = ts.values[j][i].value;
 			}
 			data.push(obj);
 		}

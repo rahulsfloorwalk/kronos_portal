@@ -28,7 +28,7 @@ var CityWisePerformanceChart = React.createClass({
 			let obj = {};
 			obj['name'] = data_arr[i][0].name;
 			for(let j=0; j < label_arr.length; j++){
-				obj[label_arr[j]] = data_arr[i][1][j];
+				obj[label_arr[j]] = data_arr[i][1][j].value;
 			}
 			data.push(obj);
 		}
