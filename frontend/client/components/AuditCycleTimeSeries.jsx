@@ -3,7 +3,10 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Toolti
 
 import {demo} from '../../config.js';
 
+import { ThList } from '../../js/components/Icons.jsx';
 import Loading from '../../js/components/Loading.jsx';
+import Modal from '../../js/components/Modal.jsx';
+import { getColor } from '../../js/utils.js';
 
 import {fetchAuditCyclesTimeSeries} from '../service/audit_cycle.js';
 
@@ -11,6 +14,7 @@ var AuditCycleTimeSeries = React.createClass({
 	getInitialState: function(){
 		return {
 			loading: false,
+			dataPopup: false,
 			labels: [],
 			data: [],
 			title: ""
@@ -22,6 +26,9 @@ var AuditCycleTimeSeries = React.createClass({
 				loading
 			});
 		});
+	},
+	toggleModal: function(){
+		this.setState( prevState => Object.assign({}, prevState, { dataPopup: !this.state.dataPopup }));
 	},
 	create_structure: function(ts){
 		let data = [];
@@ -41,6 +48,7 @@ var AuditCycleTimeSeries = React.createClass({
 			let ts = fetchAuditCyclesTimeSeries(auditType).then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
 				this.setState({
+					reportData,
 					'data': ts_structure,
 					'labels': reportData.audit_cycle_master,
 					'title': reportData.title
@@ -82,7 +90,7 @@ var AuditCycleTimeSeries = React.createClass({
 
 			chart = (
 			<ResponsiveContainer width="100%" aspect={3 / 1}>
-			<BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}}>
+			<BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 			<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
 			<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
 			<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
@@ -94,8 +102,35 @@ var AuditCycleTimeSeries = React.createClass({
 		}
 		return(
 			<div>
+			{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button> : null }
 				<h3 className="text-center">{this.state.title}</h3>
 				{chart}
+				{ this.state.dataPopup ?
+					<Modal modalTitle="Section Improvement over time" onClose={this.toggleModal}>
+						<table className="table table-striped ">
+							<thead>
+								<tr>
+								<th>Section</th>
+								{this.state.labels.map((l) => <th key={l} className="text-right">{l}</th>)}
+								</tr>
+							</thead>
+							<tbody>
+								{((reportData) => {
+									let trs = [];
+									for(let i=0; i < reportData.section_master.length; i++){
+										let tds = [];
+										tds.push(<td key={reportData.section_master[i]}>{reportData.section_master[i]}</td>);
+										for(let j=0; j < reportData.audit_cycle_master.length; j++){
+											tds.push(<td className={"text-right "+getColor(reportData.values[j][i].color_code)} key={j+"-"+i}>{reportData.values[j][i].value}%</td>);
+										}
+										trs.push(<tr key={reportData.section_master[i]}>{tds}</tr>);
+									}
+									return trs;
+								})(this.state.reportData)}
+							</tbody>
+						</table>
+					</Modal>
+				: null }
 			</div>
 		);
 	},

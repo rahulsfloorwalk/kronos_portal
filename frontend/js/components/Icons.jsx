@@ -85,4 +85,8 @@ export const DownloadAlt= () => <span className="glyphicon glyphicon-download-al
 export const Download	= () => <span className="glyphicon glyphicon-download"></span>;
 export const Upload	= () => <span className="glyphicon glyphicon-upload"></span>;
 export const Dashboard	= () => <span className="glyphicon glyphicon-dashboard"></span>;
+export const Th		= () => <span className="glyphicon glyphicon-th"></span>;
+export const ThLarge	= () => <span className="glyphicon glyphicon-th-large"></span>;
+export const ThList	= () => <span className="glyphicon glyphicon-th-list"></span>;
+export const List	= () => <span className="glyphicon glyphicon-list"></span>;
 

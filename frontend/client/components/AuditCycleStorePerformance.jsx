@@ -6,8 +6,11 @@ import {demo} from '../../config.js';
 
 import {fetchAuditCycleStorePerformance} from '../service/audit_cycle.js';
 
+import { getColor } from '../../js/utils.js';
+import { ThList } from '../../js/components/Icons.jsx';
 import Loading from '../../js/components/Loading.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
+import Modal from '../../js/components/Modal.jsx';
 
 var AuditCycleStorePerformance = React.createClass({
 	getDefaultProps: function(){
@@ -15,13 +18,21 @@ var AuditCycleStorePerformance = React.createClass({
 			type: "best",
 		};
 	},
+	getInitialState: function(){
+		return {
+			dataPopup: false,
+		};
+	},
+	toggleModal: function(){
+		this.setState( prevState => Object.assign({}, prevState, { dataPopup: !this.state.dataPopup }));
+	},
 	create_structure: function(input_data){
 		let data_arr = input_data.data;
 		let label_arr = input_data.columns
 		let size = this.props.type === "all" ? data_arr.length : 5;
 
 		if(this.props.type === "worst"){
-			data_arr.reverse();
+			data_arr = data_arr.slice().reverse();
 		}
 		let data = [];
 		for(let i=0; i < size; i++){
@@ -62,7 +73,7 @@ var AuditCycleStorePerformance = React.createClass({
 
 		let chart = (
 		<ResponsiveContainer width="100%" aspect={3 / 1}>
-		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}}>
+		<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}} onClick={(active)=>active&&this.toggleModal()}>
 		<XAxis dataKey="name" tick={this.tickFunction} interval={0}/>
 		<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
 		<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
@@ -73,8 +84,41 @@ var AuditCycleStorePerformance = React.createClass({
 		);
 		return(
 			<div>
+			<button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button>
 			<h3 className="text-center">{this.props.title}</h3>
 			{chart}
+			{ this.state.dataPopup ?
+				<Modal modalTitle={this.props.title} onClose={this.toggleModal}>
+					<table className="table table-striped ">
+						<thead>
+							<tr>
+							<th>Store Code</th>
+							<th>Store Name</th>
+							{this.props.reportData.columns.map((l) => <th key={l} className="text-right">{l}</th>)}
+							</tr>
+						</thead>
+						<tbody>
+							{((reportData) => {
+								let trs = [];
+								let data = reportData.data;
+								if(this.props.type === "worst"){
+									data = data.slice().reverse();
+								}
+								for(let i=0; i < data.length; i++){
+									let tds = [];
+									tds.push(<td key={data[i][0].code}>{data[i][0].code}</td>);
+									tds.push(<td key={data[i][0].name}>{data[i][0].name}</td>);
+									for(let j=0; j < reportData.columns.length; j++){
+										tds.push(<td key={i+"."+j} className={"text-right "+getColor(data[i][1][j].color_code)}>{data[i][1][j].value}%</td>);
+									}
+									trs.push(<tr key={data[i][0].name}>{tds}</tr>);
+								}
+								return trs;
+							})(this.props.reportData)}
+						</tbody>
+					</table>
+				</Modal>
+			: null }
 			</div>
 		);
 	}
