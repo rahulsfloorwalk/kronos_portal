@@ -36,7 +36,7 @@ var AuditCycleTimeSeries = React.createClass({
 			let obj = {};
 			obj['name'] = ts.section_master[i];
 			for(let j=0; j < ts.audit_cycle_master.length; j++){
-				obj[ts.audit_cycle_master[j]] = ts.values[j][i].value;
+				obj[ts.audit_cycle_master[j]] = ts.values[j][i] ? ts.values[j][i].value : null;
 			}
 			data.push(obj);
 		}
@@ -121,7 +121,11 @@ var AuditCycleTimeSeries = React.createClass({
 										let tds = [];
 										tds.push(<td key={reportData.section_master[i]}>{reportData.section_master[i]}</td>);
 										for(let j=0; j < reportData.audit_cycle_master.length; j++){
-											tds.push(<td className={"text-right "+getColor(reportData.values[j][i].color_code)} key={j+"-"+i}>{reportData.values[j][i].value}%</td>);
+											if(reportData.values[j][i]){
+												tds.push(<td className={"text-right "+getColor(reportData.values[j][i].color_code)} key={j+"-"+i}>{reportData.values[j][i].value}%</td>);
+											} else {
+												tds.push(<td className="text-right" key={j+"-"+i}></td>);
+											}
 										}
 										trs.push(<tr key={reportData.section_master[i]}>{tds}</tr>);
 									}

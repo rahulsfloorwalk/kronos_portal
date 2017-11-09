@@ -114,12 +114,12 @@ class AuditStoreTable extends Component {
 
 		let storeTypeSelect = (<select onChange={this.selectStoreType} value={this.state.selectedType} className="form-control" style={{display:"inline-block",width:"200px"}}>
 			<option value="">All Types</option>
-			{this.state.types.map(t => <option key={t} value={t}>{t}</option>)}
+			{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
 		</select>);
 
 		let storePrioritySelect = (<select onChange={this.selectStorePriority} value={this.state.selectedPriority} className="form-control" style={{display:"inline-block",width:"200px"}}>
 			<option value="">All Priorities</option>
-			{this.state.priorities.map(p => <option key={p} value={p}>{p}</option>)}
+			{this.state.priorities.filter(p=>!!p).map(p => <option key={p} value={p}>{p}</option>)}
 		</select>);
 
 		let headers = [];

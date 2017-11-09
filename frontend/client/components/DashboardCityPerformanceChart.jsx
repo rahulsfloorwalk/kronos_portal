@@ -40,7 +40,7 @@ var CityWisePerformanceChart = React.createClass({
 			let obj = {};
 			obj['name'] = data_arr[i][0].name;
 			for(let j=0; j < label_arr.length; j++){
-				obj[label_arr[j]] = data_arr[i][1][j].value;
+				obj[label_arr[j]] = data_arr[i][1][j] ? data_arr[i][1][j].value : null;
 			}
 			data.push(obj);
 		}
@@ -106,7 +106,11 @@ var CityWisePerformanceChart = React.createClass({
 									let tds = [];
 									tds.push(<td key={data[i][0].name}>{data[i][0].name}</td>);
 									for(let j=0; j < reportData.columns.length; j++){
+										if(data[i][1][j]){
 										tds.push(<td key={i+"."+j} className={"text-right "+getColor(data[i][1][j].color_code)}>{data[i][1][j].value}%</td>);
+										} else {
+										tds.push(<td className="text-right" key={j+"-"+i}></td>);
+										}
 									}
 									trs.push(<tr key={data[i][0].name}>{tds}</tr>);
 								}

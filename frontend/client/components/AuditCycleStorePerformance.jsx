@@ -42,7 +42,7 @@ var AuditCycleStorePerformance = React.createClass({
 			obj['type'] = data_arr[i][0].type;
 			obj['code'] = data_arr[i][0].code;
 			for(let j=0; j < label_arr.length; j++){
-				obj[label_arr[j]] = data_arr[i][1][j].value;
+				obj[label_arr[j]] = data_arr[i][1][j] ? data_arr[i][1][j].value : null;
 			}
 			data.push(obj);
 		}
@@ -110,7 +110,11 @@ var AuditCycleStorePerformance = React.createClass({
 									tds.push(<td key={data[i][0].code}>{data[i][0].code}</td>);
 									tds.push(<td key={data[i][0].name}>{data[i][0].name}</td>);
 									for(let j=0; j < reportData.columns.length; j++){
+										if(data[i][1][j]){
 										tds.push(<td key={i+"."+j} className={"text-right "+getColor(data[i][1][j].color_code)}>{data[i][1][j].value}%</td>);
+										} else {
+										tds.push(<td className="text-right" key={j+"-"+i}></td>);
+										}
 									}
 									tds.push(<td key={data[i][0].id}><Link to={`/store/${data[i][0].id}/trends`} className="btn btn-default">View</Link></td>);
 									trs.push(<tr key={data[i][0].name}>{tds}</tr>);
