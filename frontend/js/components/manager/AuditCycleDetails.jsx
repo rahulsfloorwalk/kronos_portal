@@ -10,7 +10,7 @@ import { fetchAuditCycle } from '../../manager/actions/audit.js';
 import AuditTypeLabel from '../AuditTypeLabel.jsx';
 import ExpandableDetails from '../ExpandableDetails.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
-import { Knight, King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
+import { Envelope, Knight, King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -110,6 +110,7 @@ var AuditCycleDetails = React.createClass({
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/payment`}><b>₹</b> Payments</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`}><Envelope/> Email</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator`}><Knight/> Moderators</NavLink>
 				</ul>
 				{this.props.children}

@@ -1,0 +1,114 @@
+import logging
+
+from django.conf import settings
+from django.template import Context
+from django.template.loader import get_template
+from django.db.models import F
+from django.db.transaction import atomic
+
+from celery.result import ResultSet
+
+from kronos.exceptions import ObjectNotFound, AppLogicError
+
+from audit.models import AuditCycle
+from audit.service import audit_cycle as audit_cycle_service
+from auditor.models import Preferences
+from auditor.service.profile_info_service import count_auditors_in_city, find_profileinfo_by_city
+from registration.service.auditor import find_auditor_by_id
+from manager.models import City
+from ..models import OpportunityEmailRecord
+
+from celery import shared_task
+
+from .mail import send_email
+
+_logger = logging.getLogger(__name__)
+
+@atomic
+def schedule_opportunity_emails_for_audit_cycle_and_city(audit_cycle_id, city_id):
+    try:
+        city = City.objects.get(pk=city_id)
+    except City.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+
+    if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
+        raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity email")
+
+    opp = OpportunityEmailRecord()
+    opp.city = city
+    opp.audit_cycle = audit_cycle
+    opp.total_count = count_auditors_in_city(city_id)
+    opp.progress_count = 0
+    opp.save()
+
+    # start the task to send the emails
+    send_opportunity_emails_for_record.delay(opp.id)
+
+    return opp
+
+
+@shared_task(ignore_result=True)
+def send_opportunity_emails_for_record(opportunity_email_record_id):
+    try:
+        opp = OpportunityEmailRecord.objects.get(pk=opportunity_email_record_id)
+    except OpportunityEmailRecord.DoesNotExist as e:
+        _logger.warn("OpportunityEmailRecord(%s): NOT FOUND", opportunity_email_record_id)
+        return
+
+    async_results = ResultSet([])
+    for profile in find_profileinfo_by_city(opp.city_id):
+        if settings.EMAIL_SWITCH['OPPORTUNITY_EMAIL']:
+            async_results.add(opportunity_email_task.delay(opp.id, opp.audit_cycle_id, profile.user_id))
+        else:
+            _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, profile.user_id)
+
+    _logger.info("scheduled %s emails for audit cycle: %s", len(async_results), opp.audit_cycle_id)
+
+
+@shared_task()
+def opportunity_email_task(opp_id, audit_cycle_id, user_id):
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+
+    if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
+        _logger.warn("audit cycle(%s): %s must be in UPCOMING or ACTIVE status to send opportunity email", audit_cycle_id, audit_cycle.name)
+        return False
+
+    try:
+        user = find_auditor_by_id(user_id)
+    except ObjectNotFound as e:
+        _logger.warn("auditor with user_id: %s NOT FOUND", user_id)
+        return False
+
+    try:
+        if not user.preferences.receive_new_opportunities_email:
+            return False
+    except Preferences.DoesNotExist as e:
+        pass
+
+    params = {
+        'client_name': audit_cycle.client.name,
+        'client_logo_url': audit_cycle.client.logo_url,
+        'city_name': user.profileinfo.city.name,
+        'first_name': user.profileinfo.first_name,
+        'last_name': user.profileinfo.last_name,
+        'to_email': user.email,
+        'kronos_protocol': "https",
+        'kronos_domain': settings.BASE_DOMAIN_NAME,
+    }
+
+    # generate email from templates
+    subject = "Hi {}, {} audits are available in {}!".format(params['first_name'], params['client_name'], params['city_name'])
+    html_message = get_template("notify/opportunity_email.html").render(Context(params))
+    txt_message = get_template("notify/opportunity_email.txt").render(Context(params))
+
+    send_email(params['to_email'], subject, html_message, txt_message)
+
+    # increment the progress counter in the DB
+    OpportunityEmailRecord.objects.filter(pk=opp_id).update(progress_count=F('progress_count') + 1)
+    return True
+
+
+def find_opportunity_email_records_by_audit_cycle(audit_cycle_id):
+    return OpportunityEmailRecord.objects.filter(audit_cycle_id=audit_cycle_id)

@@ -29,3 +29,5 @@ var mapStoreToPropsForCitySelector = function(store){
 export default ReactRedux.connect(mapStoreToPropsForCitySelector)(__CitySelector);
 
 /* City Selector Ends */
+
+export { __CitySelector };

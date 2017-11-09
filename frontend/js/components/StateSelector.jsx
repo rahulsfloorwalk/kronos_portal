@@ -28,4 +28,6 @@ var mapStoreToPropsForStateSelector = function(store){
 
 export default ReactRedux.connect(mapStoreToPropsForStateSelector)(__StateSelector);
 
+export { __StateSelector };
+
 /* State Selector Ends */

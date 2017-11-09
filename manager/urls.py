@@ -17,6 +17,7 @@ from .viewss import report_stats as report_stats_views
 from .viewss import moderator as moderator_views
 from .viewss import manager as manager_views
 from .viewss import email_log as email_log_views
+from .viewss import opportunity_email as opportunity_email_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -69,6 +70,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/csv$', audit_cycle_views.PendingPaymentCsvView.as_view(), name='audit_cycle_pending_payment_csv_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending$', audit_cycle_views.PendingPaymentView.as_view(), name='audit_cycle_pending_payment_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment$', audit_cycle_views.PaymentView.as_view(), name='audit_cycle_payment_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_email$', opportunity_email_views.OpportunityEmailRecordView.as_view(), name='audit_cycle_opportunity_email_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
 

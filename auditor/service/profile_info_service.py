@@ -29,3 +29,8 @@ def set_mobile_number_for_auditor(user_id, mobile_number):
         raise AppLogicError("mobile number already exists in system") from e
 
 
+def count_auditors_in_city(city_id):
+    return ProfileInfo.objects.filter(city_id=city_id).count()
+
+def find_profileinfo_by_city(city_id):
+    return ProfileInfo.objects.filter(city_id=city_id)

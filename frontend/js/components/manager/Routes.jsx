@@ -38,6 +38,8 @@ import AuditCycleForm from './AuditCycleForm.jsx';
 import AuditCycleDetails from './AuditCycleDetails.jsx';
 import AuditCyclePaymentList from './AuditCyclePaymentList.jsx';
 import PostApprovalDescriptionForm from './PostApprovalDescriptionForm.jsx';
+import OpportunityEmailRecordList from './OpportunityEmailRecordList.jsx';
+import OpportunityEmailRecordForm from './OpportunityEmailRecordForm.jsx';
 
 import SectionForm from './SectionForm.jsx';
 import SectionList from './SectionList.jsx';
@@ -119,6 +121,9 @@ const Routes = () => (
 			<Route path="payment" components={AuditCyclePaymentList}/>
 			<Route path="moderator" components={AuditCycleModeratorList}>
 				<Route path="assign" component={AuditCycleModeratorAssignForm}/>
+			</Route>
+			<Route path="opportunity_email" components={OpportunityEmailRecordList}>
+				<Route path="schedule" component={OpportunityEmailRecordForm}/>
 			</Route>
 		</Route>
 

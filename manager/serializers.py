@@ -16,6 +16,7 @@ from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUD
 from social.models import Facebook
 from referral.models import AuditorReferral
 from .models import City, Location
+from notify.models import OpportunityEmailRecord
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -786,5 +787,20 @@ class PreferencesSerializer(ModelSerializer):
             'receive_new_opportunities_email',
             'receive_transactional_email',
             'user_id',
+        )
+        read_only_fields = fields
+
+class OpportunityEmailRecordSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = OpportunityEmailRecord
+        fields = (
+            'id',
+            'audit_cycle_id',
+            'city',
+            'total_count',
+            'progress_count',
+            'created_at',
+            'modified_at',
         )
         read_only_fields = fields

@@ -299,6 +299,7 @@ EMAIL_SWITCH = {
     "ON_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["ON_REMINDER"] == "True",
     "POST_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["POST_REMINDER"] == "True",
     "WELCOME_EMAIL": properties["EMAIL_SWITCH"]["WELCOME"] == "True",
+    "OPPORTUNITY_EMAIL": properties["EMAIL_SWITCH"]["OPPORTUNITY"] == "True",
 }
 
 FRONTEND_CONFIG = {
