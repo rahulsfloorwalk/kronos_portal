@@ -81,7 +81,7 @@ class AuditApplicationAPITestCase(APITestCase):
             'date_of_birth': dob,
             'marital_status': random.choice(ProfileInfo.MARITAL_STATUS)[0],
             'address': fake.address(),
-            'city': self.city.id,
+            'city_id': self.city.id,
             'pincode': fake.zipcode(),
         }
 
