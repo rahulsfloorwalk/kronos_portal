@@ -8,13 +8,13 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 	entry: {
 		auditor: path.resolve(__dirname, './js/auditor.jsx'),
-		auditor_vendor: ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga'],
+		auditor_vendor: ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login'],
 
 		manager: path.resolve(__dirname, './js/manager.jsx'),
-		manager_vendor: ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router'],
+		manager_vendor: ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
 
 		client: path.resolve(__dirname, './client/client.jsx'),
-		client_vendor: ['jquery','react','react-dom','react-router'],
+		client_vendor: ['jquery','react','react-dom','react-router','recharts'],
 
 		report_print: path.resolve(__dirname, './client/report_print.jsx'),
 		report_print_vendor: ['jquery','react','react-dom','react-router'],
