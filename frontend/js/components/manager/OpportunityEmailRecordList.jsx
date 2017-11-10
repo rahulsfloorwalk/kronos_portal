@@ -77,9 +77,6 @@ export default class OpportunityEmailRecordList extends React.Component{
 	}
 
 	render(){
-		if(this.state.loading && this.state.records.length === 0){
-			return <Loading/>;
-		}
 
 		let rows = this.state.records.map( r => (<OpportunityEmailRecordRow record={r} key={r.id}/>));
 
@@ -108,7 +105,7 @@ export default class OpportunityEmailRecordList extends React.Component{
 				</Link>
 				Opportunity Emails Scheduled
 			</h3>
-			{table}
+			{ this.state.loading && this.state.records.length === 0 ?  <Loading/> : table }
 			{this.props.children}
 			</div>
 		);
