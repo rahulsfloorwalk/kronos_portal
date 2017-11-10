@@ -134,9 +134,6 @@
 			if(password.length < 8){
 				return [false, "password must be atleast 8 characters", 0];
 			}
-			if(! /[0-9]/.test(password)){
-				return [false, "password must be alphanumeric", 0];
-			}
 			if(password.length > 12){
 				return [true, null, 3];
 			}
