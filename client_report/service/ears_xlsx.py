@@ -12,6 +12,7 @@ import audit_store.service_client as audit_store_client_service
 # Import the byte stream handler.
 from io import BytesIO
 from urllib.request import urlopen
+from urllib.error import HTTPError
 
 not_applicable_text = "N/A"
 
@@ -93,26 +94,29 @@ def generate_xlsx_from_structure(report_data):
     col = start_col
     worksheet.merge_range(row, col, row, col+4, report_data["client_name"], title_format)
 
-    if report_data.get("logo_url"):
-        image_data = BytesIO(urlopen(report_data["logo_url"]).read())
-        img = Image.open(image_data)
-        print("DPI", img.info.get('dpi'),img.info.get('jfif_density'))
-        image_width, image_height = img.size
+    try:
+        if report_data.get("logo_url"):
+            image_data = BytesIO(urlopen(report_data["logo_url"]).read())
+            img = Image.open(image_data)
+            #print("DPI", img.info.get('dpi'),img.info.get('jfif_density'))
+            image_width, image_height = img.size
 
-        if image_width > image_height:
-            scale_factor = cell_width / image_width
-        else:
-            scale_factor = cell_height * 3 / image_height
+            if image_width > image_height:
+                scale_factor = cell_width / image_width
+            else:
+                scale_factor = cell_height * 3 / image_height
 
-        #x_scale = cell_height * 3 / image_height#
-        #y_scale = cell_height * 3 / image_height
+            #x_scale = cell_height * 3 / image_height#
+            #y_scale = cell_height * 3 / image_height
 
-        worksheet.merge_range(row, col+5, row+2, col+5, "", title_format)
-        worksheet.insert_image(row, col+5, report_data["logo_url"], {
-            'image_data': image_data,
-            'x_scale': scale_factor,
-            'y_scale': scale_factor,
-        })
+            worksheet.merge_range(row, col+5, row+2, col+5, "", title_format)
+            worksheet.insert_image(row, col+5, report_data["logo_url"], {
+                'image_data': image_data,
+                'x_scale': scale_factor,
+                'y_scale': scale_factor,
+            })
+    except HTTPError as e:
+        pass
 
     row += 1
 
