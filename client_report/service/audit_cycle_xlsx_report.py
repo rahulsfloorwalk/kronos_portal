@@ -194,7 +194,7 @@ def write_data(data):
         'bottom': 1,
         'right': 1,
         'bg_color': question_color,
-        'font_color': 'red',
+        'font_color': 'black',
         'valign': 'vcenter',
         'font_size': 14,
     })
@@ -205,7 +205,7 @@ def write_data(data):
         'bottom': 1,
         'right': 1,
         'bg_color': question_color,
-        'font_color': 'red',
+        'font_color': 'black',
         'valign': 'vcenter',
     })
 
@@ -215,7 +215,7 @@ def write_data(data):
         'font_size': 16,
         'bottom': 1,
         'bg_color': title_color,
-        'font_color': 'red',
+        'font_color': 'black',
         'valign': 'vcenter',
     })
 
