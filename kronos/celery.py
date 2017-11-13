@@ -12,9 +12,10 @@ _logger = logging.getLogger(__name__)
 broker_url = 'amqp://guest@localhost'
 
 imports = (
-        'registration.service.mail',
         'notify.service.mail_notify',
         'notify.service.mail_reminders',
+        'notify.service.mail_welcome',
+        'notify.service.mail_opportunity',
         )
 
 queue_prefix = 'fw-testing'
