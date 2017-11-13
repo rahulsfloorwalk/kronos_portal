@@ -14,6 +14,9 @@ class Client(Model):
     def __str__(self):
         return 'Client({}): {}'.format(self.id, self.name)
 
+    class Meta:
+        ordering = ['name']
+
 
 class ClientUser(Model):
 
