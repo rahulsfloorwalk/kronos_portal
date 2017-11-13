@@ -124,3 +124,7 @@ def set_post_approval_description(audit_cycle_id, post_approval_description):
 
     audit_cycle.post_approval_description = post_approval_description
     return save(audit_cycle)
+
+
+def find_audit_cycles_by_client(client_id):
+    return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')

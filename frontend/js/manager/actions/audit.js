@@ -3,6 +3,8 @@ import { url } from '../../../config.js'
 import types from '../action_types.js';
 import { hashHistory } from 'react-router';
 
+import { fetchAuditCyclesByClient } from '../service/audit_cycle.js';
+
 export function fetchAuditCycles(clientId){
 	return function(dispatch){
 		dispatch({
@@ -11,7 +13,7 @@ export function fetchAuditCycles(clientId){
 			clientId
 		});
 
-		return $.get( url.api_base_path + `manager/client/${clientId}/audit_cycle`, function(auditCycles){
+		return fetchAuditCyclesByClient(clientId).done(function(auditCycles){
 			dispatch({
 				type: types.AUDIT_CYCLE_GET,
 				status: 'success',

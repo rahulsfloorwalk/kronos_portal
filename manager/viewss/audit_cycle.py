@@ -30,7 +30,7 @@ class AuditCycleViewByClient(APIView):
         }
     def get(self, request, client_id, format=None):
         try:
-            audit_cycles = AuditCycle.objects.filter(client_id=client_id).all()
+            audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
             return Response(AuditCycleSerializer(audit_cycles, many=True).data)
         except AuditCycle.DoesNotExist:
             raise Http404

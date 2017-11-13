@@ -7,7 +7,7 @@ import { momentDateFormat }  from '../../../config.js';
 
 import { Plus, Retweet } from '../Icons.jsx';
 import AuditTypeLabel from '../AuditTypeLabel.jsx';
-import { fetchAuditCycles } from '../../manager/actions/audit.js'
+import { fetchAuditCyclesByClient } from '../../manager/service/audit_cycle.js'
 import { getAuditType, getAuditStatus } from '../../utils.js';
 
 var AuditCycleRow = React.createClass({
@@ -28,16 +28,23 @@ var AuditCycleRow = React.createClass({
 	},
 });
 
-var AuditCycleList = React.createClass({
+export default React.createClass({
+	getInitialState: function(){
+		return {
+			auditCycles: [],
+		};
+	},
 	componentDidMount: function() {
-		this.props.dispatch(fetchAuditCycles(this.props.params.clientId));
+		fetchAuditCyclesByClient(this.props.params.clientId).then((auditCycles) => {
+			this.setState({auditCycles});
+		});
 	},
 	render: function(){
-		var rows = [];
-		for(var id in this.props.auditCycles) {
-			rows.push(<AuditCycleRow auditCycle={this.props.auditCycles[id]} key={id}/>);
+		let rows = [];
+		for(let ac of this.state.auditCycles) {
+			rows.push(<AuditCycleRow auditCycle={ac} key={ac.id}/>);
 		}
-		var addAuditCycleLink = `/client/${this.props.params.clientId}/audit_cycle/add`;
+		let addAuditCycleLink = `/client/${this.props.params.clientId}/audit_cycle/add`;
 		return (
 			<div>
 				<h3 className="page-header">
@@ -64,11 +71,3 @@ var AuditCycleList = React.createClass({
 		);
 	},
 });
-
-var mapStoreToProps = function(store, ownProps){
-	return {
-		auditCycles: store.auditCycles,
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(AuditCycleList);
