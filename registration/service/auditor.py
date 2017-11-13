@@ -13,6 +13,7 @@ from registration.models import Verification
 from registration.models import GROUP_NAME_AUDITOR
 from auditor.models import ProfileInfo, AdditionalInfo
 from referral.service import referral_auditor
+from notify.service.mail_welcome import send_welcome_email
 
 _logger = logging.getLogger(__name__)
 
@@ -51,6 +52,10 @@ def verify_auditor(user_id):
             user.verification.save()
             _logger.info("verified user %s successfully", user)
             referral_auditor.trigger_signup_referral(user.id)
+
+            if settings.EMAIL_SWITCH['WELCOME_EMAIL']:
+                send_welcome_email.delay(user.email)
+
             return user
         else:
             _logger.info("verification is already done for user: %s", user.email)
