@@ -49,21 +49,11 @@ class LogoutForm(Form):
     pass
 
 class Logout(View):
-    __template = 'registration/client/logout.html'
-
-    @method_decorator(login_required)
-    def get(self, request):
-        form = LogoutForm()
-        return render(request, self.__template, {'form': form})
 
     @method_decorator(login_required)
     def post(self, request):
-        form = LogoutForm(request.POST)
-        if form.is_valid():
-            logout(request)
-            messages.add_message(request, messages.SUCCESS, 'Logged out successfully.')
-            _logger.info("client_user successfully logged out")
-            return redirect('registration:client_login')
-        else:
-            _logger.warn("client_user logout failed")
-            return render(request, self.__template, {'form': form})
+        _logger.info("logging out client_user: %s", request.user)
+        logout(request)
+        messages.add_message(request, messages.SUCCESS, 'Logged out successfully.')
+        _logger.info("client_user successfully logged out")
+        return redirect('registration:client_login')
