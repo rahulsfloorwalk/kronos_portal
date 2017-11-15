@@ -61,7 +61,6 @@ if DEBUG:
 PROJECT_APPS = [
     'registration',
     'auditor',
-    'nav',
     'manager',
     'client',
     'questionnaire',
