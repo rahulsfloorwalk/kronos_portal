@@ -34,8 +34,18 @@ SECRET_KEY = properties["GENERAL"]["SECRET_KEY"]
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = properties["GENERAL"]["DEBUG"] == "True"
 
-ALLOWED_HOSTS = ['*']
+# Kronos URL values
+KRONOS_DOMAIN = properties["GENERAL"]["KRONOS_DOMAIN"]
+KRONOS_PROTOCOL = properties["GENERAL"]["KRONOS_PROTOCOL"]
+KRONOS_BASE_URL = "{}://{}".format(KRONOS_PROTOCOL, KRONOS_DOMAIN)
 
+# Rhea URL values
+RHEA_PROTOCOL = properties["RHEA"]["RHEA_PROTOCOL"]
+RHEA_DOMAIN = properties["RHEA"]["RHEA_DOMAIN"]
+RHEA_BASE_URL = "{}://{}".format(RHEA_PROTOCOL, RHEA_DOMAIN)
+
+# only allow requests with Host: KRONOS_DOMAIN.split(':')[0]
+ALLOWED_HOSTS = [KRONOS_DOMAIN.split(':')[0],]
 
 # Application definition
 
@@ -254,16 +264,6 @@ LOGGING = {
         },
     },
 }
-
-# Kronos URL values
-KRONOS_DOMAIN = properties["GENERAL"]["KRONOS_DOMAIN"]
-KRONOS_PROTOCOL = properties["GENERAL"]["KRONOS_PROTOCOL"]
-KRONOS_BASE_URL = "{}://{}".format(KRONOS_PROTOCOL, KRONOS_DOMAIN)
-
-# Rhea URL values
-RHEA_PROTOCOL = properties["RHEA"]["RHEA_PROTOCOL"]
-RHEA_DOMAIN = properties["RHEA"]["RHEA_DOMAIN"]
-RHEA_BASE_URL = "{}://{}".format(RHEA_PROTOCOL, RHEA_DOMAIN)
 
 AWS = {
     "S3_ATTACHMENTS": {
