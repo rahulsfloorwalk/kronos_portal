@@ -193,11 +193,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend"),
 ]
 
-# django.contrib.auth settings
-LOGIN_URL = '/auth/login'
-LOGIN_REDIRECT_URL = '/auditor/dashboard'
-LOGOUT_REDIRECT_URL = '/auth/login'
-
 # email settings
 EMAIL_HOST = properties["EMAIL_SETTINGS"]["HOST"]
 EMAIL_PORT = int(properties["EMAIL_SETTINGS"]["PORT"])
