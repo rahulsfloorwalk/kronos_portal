@@ -2,7 +2,7 @@ Hi {{first_name}},
 
 We are pleased to inform you that {{client_name}} audits are now available in {{city_name}}. Click the link below to apply. Apply Now!
 
-{{kronos_protocol}}://{{kronos_domain}}/auth/login?next=/static/dist/auditor/index.html%23/audit/cycle/65&ref=email_cta&utm_source=email_footer
+{{ kronos_base_url }}/auth/login?next=/static/dist/auditor/index.html%23/audit/cycle/65&ref=email_cta&utm_source=email_footer
 
  * Make sure your profile is complete including the Bank Details.
  * Apply as soon as possible to increase your chances of approval.
@@ -13,4 +13,4 @@ We are pleased to inform you that {{client_name}} audits are now available in {{
 FloorWalk Consultants Pvt. Ltd.
 Gurugram, Bengaluru and Navi Mumbai
 
-http://floorwalk.in | Facebook (https://www.facebook.com/FloorWalk/https://www.facebook.com/FloorWalk/) | Twitter (https://twitter.com/floorwalkindia) | +91-849-600-3316
+{{ rhea_base_url }} | Facebook (https://www.facebook.com/FloorWalk/) | Twitter (https://twitter.com/floorwalkindia) | +91-849-600-3316

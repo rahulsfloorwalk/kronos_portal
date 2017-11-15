@@ -5,8 +5,8 @@
 	<body>
 		<h1>Please verify your email</h1>
 		<p>To continue logging in to FloorWalk, you will have to verify this email address: <b>{{ email }}</b></p>
-		<p>Please <a href="{{ protocol }}://{{ mydomain }}{% url 'registration:activate' key=key %}">Click Here</a> to verify your email or copy and paste the link below in your browser address bar.</p>
-		<p><b>Verification Link:</b> {{ protocol }}://{{ mydomain }}{% url 'registration:activate' key=key %}</p>
+		<p>Please <a href="{{ kronos_base_url }}{% url 'registration:activate' key=key %}">Click Here</a> to verify your email or copy and paste the link below in your browser address bar.</p>
+		<p><b>Verification Link:</b> {{ kronos_base_url }}{% url 'registration:activate' key=key %}</p>
 		<p>If you did not regiter this email for FloorWalk, you can safely delete or ignore this email. The above link will expire in 2 days from the date of signing up.</p>
 		<p>--</p>
 		<p>FloorWalk Team</p>

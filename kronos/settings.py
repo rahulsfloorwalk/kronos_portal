@@ -109,7 +109,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'registration.context.auth_ga_id',
+                'registration.context.registration_request_context',
             ],
         },
     },
@@ -267,7 +267,15 @@ LOGGING = {
          },
 }
 
-BASE_DOMAIN_NAME = properties["GENERAL"]["BASE_DOMAIN_NAME"]
+# Kronos URL values
+KRONOS_DOMAIN = properties["GENERAL"]["KRONOS_DOMAIN"]
+KRONOS_PROTOCOL = properties["GENERAL"]["KRONOS_PROTOCOL"]
+KRONOS_BASE_URL = "{}://{}".format(KRONOS_PROTOCOL, KRONOS_DOMAIN)
+
+# Rhea URL values
+RHEA_PROTOCOL = properties["RHEA"]["RHEA_PROTOCOL"]
+RHEA_DOMAIN = properties["RHEA"]["RHEA_DOMAIN"]
+RHEA_BASE_URL = "{}://{}".format(RHEA_PROTOCOL, RHEA_DOMAIN)
 
 AWS = {
     "S3_ATTACHMENTS": {
@@ -303,10 +311,15 @@ FRONTEND_CONFIG = {
             "FB_CLIENT_ID": properties["FRONTEND"]["AUDITOR_FB_CLIENT_ID"],
             "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
             "FB_SCOPE": properties["FRONTEND"]["AUDITOR_FB_SCOPE"],
+            "RHEA_BASE_URL": RHEA_BASE_URL,
         },
         "CLIENT": {
             "IMPACT_FACTOR_URL": properties["FRONTEND"]["CLIENT_IMPACT_FACTOR_URL"],
             "TWEET_DATA_URL": properties["FRONTEND"]["CLIENT_TWEET_DATA_URL"],
+            "RHEA_BASE_URL": RHEA_BASE_URL,
+        },
+        "MANAGER": {
+            "RHEA_BASE_URL": RHEA_BASE_URL,
         },
 }
 

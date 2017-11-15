@@ -15,6 +15,7 @@ from audit.service import audit_cycle as audit_cycle_service
 from auditor.models import Preferences
 from auditor.service.profile_info_service import count_auditors_in_city, find_profileinfo_by_city
 from registration.service.auditor import find_auditor_by_id
+from registration.context import registration_context
 from manager.models import City
 from ..models import OpportunityEmailRecord
 
@@ -94,8 +95,7 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
         'first_name': user.profileinfo.first_name,
         'last_name': user.profileinfo.last_name,
         'to_email': user.email,
-        'kronos_protocol': "https",
-        'kronos_domain': settings.BASE_DOMAIN_NAME,
+        **registration_context(),
     }
 
     # generate email from templates

@@ -1,21 +1,20 @@
 import logging
 
-from django.conf import settings
 from django.template import Context
 from django.template.loader import get_template
 
 from celery import shared_task
 
 from .mail import send_email
+from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
 
 @shared_task(ignore_result=True)
 def send_welcome_email(email_address):
     params = {
-        'kronos_protocol': 'https',
-        'kronos_domain': settings.BASE_DOMAIN_NAME,
         'email': email_address,
+        **registration_context(),
     }
 
     # generate email from templates

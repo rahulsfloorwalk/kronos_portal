@@ -8,6 +8,7 @@ from kronos.utils import view_log
 from . import views
 from . import client_views
 from . import moderator_views
+from .context import registration_context
 
 urlpatterns = ([
     ## Moderator Portal Login Logout Views
@@ -38,9 +39,7 @@ urlpatterns = ([
         'email_template_name': 'registration/password_reset_email2.txt',
         'html_email_template_name': 'registration/password_reset_email2.html',
         'post_reset_redirect': 'registration:password_reset_done',
-        'extra_email_context': {
-            'mydomain': settings.BASE_DOMAIN_NAME
-        }
+        'extra_email_context': registration_context(),
         }, name="password_reset"),
 
     url(r'forgot_password/success$', password_reset_done, {

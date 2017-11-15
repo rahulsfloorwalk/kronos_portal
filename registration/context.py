@@ -1,7 +1,20 @@
 from django.conf import settings
 
-def auth_ga_id(request):
+def registration_context():
     return {
         "auth_ga_id": settings.AUTH_GA_ID,
         "TAWK_TO_SRC": settings.TAWK_TO_SRC,
+
+        # Kronos
+        "kronos_protocol": settings.KRONOS_PROTOCOL,
+        "kronos_domain": settings.KRONOS_DOMAIN,
+        "kronos_base_url": settings.KRONOS_BASE_URL,
+
+        # Rhea
+        "rhea_protocol": settings.RHEA_PROTOCOL,
+        "rhea_domain": settings.RHEA_DOMAIN,
+        "rhea_base_url": settings.RHEA_BASE_URL,
     }
+
+def registration_request_context(request):
+    return registration_context()

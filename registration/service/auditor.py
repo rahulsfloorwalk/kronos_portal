@@ -14,6 +14,7 @@ from registration.models import GROUP_NAME_AUDITOR
 from auditor.models import ProfileInfo, AdditionalInfo
 from referral.service import referral_auditor
 from notify.service.mail_welcome import send_welcome_email
+from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
 
@@ -95,10 +96,8 @@ def send_password_reset_email(user_id):
             subject_template_name='registration/password_reset_subject2.txt',
             email_template_name='registration/password_reset_email2.txt',
             html_email_template_name='registration/password_reset_email2.html',
-            domain_override=settings.BASE_DOMAIN_NAME,
-            extra_email_context = {
-                'mydomain': settings.BASE_DOMAIN_NAME
-            }
+            domain_override=settings.KRONOS_DOMAIN,
+            extra_email_context=registration_context(),
         )
         return user
     else:

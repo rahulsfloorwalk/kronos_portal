@@ -22,6 +22,7 @@ import strings
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from registration.service.auditor import generate_ref_code
 from auditor.validators import numericValidator
+from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
 
@@ -98,10 +99,9 @@ class SignUpForm(UserCreationForm):
         verification.save()
 
         message = get_template('registration/verification_mail.html').render(Context({
-            'protocol': 'http',
             'key': activation_key,
             'email': user.email,
-            'mydomain': settings.BASE_DOMAIN_NAME
+            **registration_context(),
         }))
 
         msg = EmailMessage( strings.SIGN_UP_SUBJECT, message, to=(user.email,))
