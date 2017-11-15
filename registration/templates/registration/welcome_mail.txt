@@ -27,4 +27,4 @@ This is an auto generated email. You are receiving this email because {{email}} 
 FloorWalk Consultants Pvt. Ltd.
 Gurugram, Bengaluru and Navi Mumbai
 
-{{rhea_base_url}} | Facebook (https://www.facebook.com/FloorWalk/https://www.facebook.com/FloorWalk/) | Twitter (https://twitter.com/floorwalkindia) | +91-849-600-3316
+{{rhea_base_url}} | Facebook ({{ FB_PAGE_URL }}) | Twitter ({{ TW_PAGE_URL }}) | {{ SUPPORT_PHONE }}

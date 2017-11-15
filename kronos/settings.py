@@ -47,6 +47,9 @@ RHEA_BASE_URL = "{}://{}".format(RHEA_PROTOCOL, RHEA_DOMAIN)
 # only allow requests with Host: KRONOS_DOMAIN.split(':')[0]
 ALLOWED_HOSTS = [KRONOS_DOMAIN.split(':')[0],]
 
+BRAND_NAME = properties["GENERAL"]["BRAND_NAME"]
+BRAND_SHORTNAME = properties["GENERAL"]["BRAND_SHORTNAME"]
+
 # Application definition
 
 DEPENDENCY_APPS = [
@@ -293,6 +296,13 @@ EMAIL_SWITCH = {
 }
 
 FRONTEND_CONFIG = {
+    "COMMON": {
+        "FB_PAGE_URL": properties["FRONTEND"]["FB_PAGE_URL"],
+        "TW_PAGE_URL": properties["FRONTEND"]["TW_PAGE_URL"],
+        "TW_USERNAME": properties["FRONTEND"]["TW_USERNAME"],
+        "SUPPORT_EMAIL": properties["FRONTEND"]["SUPPORT_EMAIL"],
+        "SUPPORT_PHONE": properties["FRONTEND"]["SUPPORT_PHONE"],
+    },
     "AUDITOR": {
         "TAWK_TO_SRC": TAWK_TO_SRC,
         "GA_ID": AUTH_GA_ID,

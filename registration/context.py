@@ -14,6 +14,12 @@ def registration_context():
         "rhea_protocol": settings.RHEA_PROTOCOL,
         "rhea_domain": settings.RHEA_DOMAIN,
         "rhea_base_url": settings.RHEA_BASE_URL,
+
+        # all footer data
+        **settings.FRONTEND_CONFIG["COMMON"],
+
+        "brand_name": settings.BRAND_NAME,
+        "brand_shortname": settings.BRAND_SHORTNAME,
     }
 
 def registration_request_context(request):
