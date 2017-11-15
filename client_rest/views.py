@@ -469,4 +469,12 @@ class ConfigView(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
-        return Response(settings.FRONTEND_CONFIG["CLIENT"])
+        return Response({
+            "RHEA_PROTOCOL": settings.RHEA_PROTOCOL,
+            "RHEA_DOMAIN": settings.RHEA_DOMAIN,
+            "RHEA_BASE_URL": settings.RHEA_BASE_URL,
+            "BRAND_NAME": settings.BRAND_NAME,
+            "BRAND_SHORTNAME": settings.BRAND_SHORTNAME,
+            **settings.FRONTEND_CONFIG["CLIENT"],
+            **settings.FRONTEND_CONFIG["COMMON"],
+        })

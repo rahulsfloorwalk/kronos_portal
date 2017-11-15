@@ -1,6 +1,11 @@
 import React from 'react';
 
 var Footer = React.createClass({
+	getDefaultProps: function(){
+		return {
+			config: {},
+		};
+	},
 	render: function(){
 		var brandStyle = {
 			height:"30px"
@@ -12,13 +17,16 @@ var Footer = React.createClass({
 					<img style={brandStyle} src="/static/img/logo_3_500x100.png"/>
 				</p>
 				<p className="text-center text-muted small">
-					Floorwalk Consultants Pvt. Ltd. &copy; 2016
+					{this.props.config.BRAND_NAME} &copy; 2014 to Present
 				</p>
 				<p className="text-center text-muted small">
-					<a href="http://floorwalk.in">floorwalk.in</a> |
-					<a href="mailto:contactus@floorwalk.in">contactus@floorwalk.in</a> |
-					<a href="tel:+91-8496003316">+91-8496003316</a> |
-					<a href="https://twitter.com/FloorWalkIndia">@FloorWalkIndia</a>
+					<a href={this.props.config.RHEA_BASE_URL}>{ this.props.config.RHEA_DOMAIN }</a> 
+					&nbsp;|&nbsp;
+					<a href={"mailto:"+ this.props.config.SUPPORT_EMAIL }>{this.props.config.SUPPORT_EMAIL}</a> 
+					&nbsp;|&nbsp;
+					<a href={"tel:"+ this.props.config.SUPPORT_PHONE }>{ this.props.config.SUPPORT_PHONE }</a> 
+					&nbsp;|&nbsp;
+					<a href={ this.props.config.TW_PAGE_URL }>@{ this.props.config.TW_USERNAME }</a>
 				</p>
 			</div>
 		);
