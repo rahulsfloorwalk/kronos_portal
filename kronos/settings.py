@@ -15,14 +15,12 @@ import sys
 import logging
 from configparser import ConfigParser
 
-from django import urls
-
 _logger = logging.getLogger(__name__)
 
 properties = ConfigParser()
 if "properties.ini" not in properties.read("properties.ini"):
-     _logger.error("properties.ini not found")
-     sys.exit(1)
+    _logger.error("properties.ini not found")
+    sys.exit(1)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -100,7 +98,7 @@ ROOT_URLCONF = 'kronos.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [ ],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,10 +144,10 @@ AUTH_PASSWORD_VALIDATORS = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated' # only allow authenticated users
+        'rest_framework.permissions.IsAuthenticated',  # only allow authenticated users
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication', # only allow session based authentication
+        'rest_framework.authentication.SessionAuthentication',  # only allow session based authentication
     ),
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -162,9 +160,9 @@ REST_FRAMEWORK = {
 }
 
 AUTHENTICATION_BACKENDS = (
-        'registration.backends.CaseInsensitiveModelBackend',
-        'guardian.backends.ObjectPermissionBackend',
-    )
+    'registration.backends.CaseInsensitiveModelBackend',
+    'guardian.backends.ObjectPermissionBackend',
+)
 
 if DEBUG:
     # add the Web Browsable API Renderer when DEBUG is enabled
@@ -195,14 +193,12 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend"),
 ]
 
-## django.contrib.auth settings
-
+# django.contrib.auth settings
 LOGIN_URL = '/auth/login'
 LOGIN_REDIRECT_URL = '/auditor/dashboard'
 LOGOUT_REDIRECT_URL = '/auth/login'
 
-## email settings
-
+# email settings
 EMAIL_HOST = properties["EMAIL_SETTINGS"]["HOST"]
 EMAIL_PORT = int(properties["EMAIL_SETTINGS"]["PORT"])
 EMAIL_HOST_USER = properties["EMAIL_SETTINGS"]["HOST_USER"]
@@ -212,7 +208,6 @@ SERVER_EMAIL = properties["EMAIL_SETTINGS"]["SERVER_EMAIL"]
 EMAIL_USE_TLS = True
 
 # payment csv file settings
-
 PAYMENT_CSV_SETTINGS = {
     "ORDERINGACCNO": properties["PAYMENT_CSV_SETTINGS"]["ORDERINGACCNO"],
     "REMITTER_NAME": properties["PAYMENT_CSV_SETTINGS"]["ORDERINGACCNO"],
@@ -228,42 +223,41 @@ PAYMENT_NEW_CSV_SETTINGS = {
     "ReasonForPayment": properties["PAYMENT_NEW_CSV_SETTINGS"]["ReasonForPayment"],
     "Debit_Narration": properties["PAYMENT_NEW_CSV_SETTINGS"]["Debit_Narration"],
 }
-# payment_settings = properties.payment_settings
 
 
 LOGGING = {
-        'version': 1,
-        'disable_existing_loggers': False,
-        'formatters': {
-            'simple': {
-                'format': '[%(asctime)s][%(levelname)s] %(message)s'
-                },
-            },
-        'handlers': {
-                'console':{
-                        'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
-                        'class': 'logging.StreamHandler',
-                        'formatter': 'simple'
-                },
-                'logfile':{
-                        'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
-                        'class': 'logging.FileHandler',
-                        'filename': properties["LOGGER_SETTINGS"]["DJANGO_LOG_FILENAME"],
-                        'formatter': 'simple'
-                },
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '[%(asctime)s][%(levelname)s] %(message)s'
         },
-        'loggers': {
-            #'django': {
-            #    'level': properties.log_level,
-            #    'filters': [],
-            #    'handlers': properties.log_handlers,
-            #    'propagate': True
-            #},
-            '': {
-                'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
-                'handlers': properties["LOGGER_SETTINGS"]["LOG_HANDLERS"].split(','),
-            },
-         },
+    },
+    'handlers': {
+        'console':{
+            'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'logfile':{
+            'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
+            'class': 'logging.FileHandler',
+            'filename': properties["LOGGER_SETTINGS"]["DJANGO_LOG_FILENAME"],
+            'formatter': 'simple'
+        },
+    },
+    'loggers': {
+        # 'django': {
+        #     'level': properties.log_level,
+        #     'filters': [],
+        #     'handlers': properties.log_handlers,
+        #     'propagate': True
+        # },
+        '': {
+            'level': properties["LOGGER_SETTINGS"]["LOG_LEVEL"],
+            'handlers': properties["LOGGER_SETTINGS"]["LOG_HANDLERS"].split(','),
+        },
+    },
 }
 
 # Kronos URL values
@@ -304,22 +298,22 @@ EMAIL_SWITCH = {
 }
 
 FRONTEND_CONFIG = {
-        "AUDITOR": {
-            "TAWK_TO_SRC": TAWK_TO_SRC,
-            "GA_ID": AUTH_GA_ID,
-            "FB_CLIENT_ID": properties["FRONTEND"]["AUDITOR_FB_CLIENT_ID"],
-            "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
-            "FB_SCOPE": properties["FRONTEND"]["AUDITOR_FB_SCOPE"],
-            "RHEA_BASE_URL": RHEA_BASE_URL,
-        },
-        "CLIENT": {
-            "IMPACT_FACTOR_URL": properties["FRONTEND"]["CLIENT_IMPACT_FACTOR_URL"],
-            "TWEET_DATA_URL": properties["FRONTEND"]["CLIENT_TWEET_DATA_URL"],
-            "RHEA_BASE_URL": RHEA_BASE_URL,
-        },
-        "MANAGER": {
-            "RHEA_BASE_URL": RHEA_BASE_URL,
-        },
+    "AUDITOR": {
+        "TAWK_TO_SRC": TAWK_TO_SRC,
+        "GA_ID": AUTH_GA_ID,
+        "FB_CLIENT_ID": properties["FRONTEND"]["AUDITOR_FB_CLIENT_ID"],
+        "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
+        "FB_SCOPE": properties["FRONTEND"]["AUDITOR_FB_SCOPE"],
+        "RHEA_BASE_URL": RHEA_BASE_URL,
+    },
+    "CLIENT": {
+        "IMPACT_FACTOR_URL": properties["FRONTEND"]["CLIENT_IMPACT_FACTOR_URL"],
+        "TWEET_DATA_URL": properties["FRONTEND"]["CLIENT_TWEET_DATA_URL"],
+        "RHEA_BASE_URL": RHEA_BASE_URL,
+    },
+    "MANAGER": {
+        "RHEA_BASE_URL": RHEA_BASE_URL,
+    },
 }
 
 REFERRAL_SIGNUP_AMOUNT = properties["REFERRAL"]["SIGNUP_AMOUNT"]
