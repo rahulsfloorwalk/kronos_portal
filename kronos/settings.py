@@ -18,12 +18,22 @@ from configparser import ConfigParser
 _logger = logging.getLogger(__name__)
 
 properties = ConfigParser()
-if "properties.ini" not in properties.read("properties.ini"):
-    _logger.error("properties.ini not found")
-    sys.exit(1)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+CONFIG_FILE_ORDER = [
+    "/etc/kronos/properties.ini",
+    os.path.expanduser("~/.config/kronos/properties.ini"),
+    os.path.join(BASE_DIR, "properties.ini")
+]
+
+if "KRONOS_CONFIG_FILE" in os.environ:
+    CONFIG_FILE_ORDER.append(os.environ.get("KRONOS_CONFIG_FILE"))
+
+if not properties.read(CONFIG_FILE_ORDER):
+    _logger.error("no config files found at following locations: %s", CONFIG_FILE_ORDER)
+    sys.exit(1)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
