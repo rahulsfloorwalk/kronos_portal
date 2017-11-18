@@ -37,7 +37,11 @@ from client_report.service import store_trends
 from client_report.service import audit_cycle
 from client_report.service import store_marking as store_marking_service
 
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
+from social.service import twitter_client
+from social.service import twitter_manager
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
+from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
+from .serializers import TwitterFeedSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -478,3 +482,17 @@ class ConfigView(APIView):
             **settings.FRONTEND_CONFIG["CLIENT"],
             **settings.FRONTEND_CONFIG["COMMON"],
         })
+        return Response(settings.FRONTEND_CONFIG["CLIENT"])
+
+
+class TwitterFeedView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        client_id = request.user.clientuser.client_id
+        twitter_feeds = twitter_client.get_feeds_for_client(client_id)
+
+        # twitter_feed = twitter_client.get_feeds_for_handle(twitter_handle.id)
+        return Response(twitter_feeds)

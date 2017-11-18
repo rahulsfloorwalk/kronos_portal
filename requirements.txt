@@ -33,5 +33,8 @@ pytz==2016.10
 requests==2.11.1
 s3transfer==0.1.10
 six==1.10.0
+textblob==0.13.1
+tweepy==3.5.0
+twython==3.6.0
 vine==1.1.3
 XlsxWriter==0.9.6

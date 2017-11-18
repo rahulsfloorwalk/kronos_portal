@@ -10,6 +10,7 @@ from manager.models import City, Location
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
+from social.models import TwitterFeed
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -197,6 +198,19 @@ class AttachmentSerializer(ModelSerializer):
             'object_id',
             'direct_url',
             'extra',
+        )
+        read_only_fields = fields
+
+class TwitterFeedSerializer(ModelSerializer):
+    class Meta:
+        model = TwitterFeed
+        fields = (
+            'id',
+            'tweet_id',
+            'tweet_text',
+            'tweet_created_on',
+            'sentiment_score',
+            'sentiment_text'
         )
         read_only_fields = fields
 
