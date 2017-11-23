@@ -3,6 +3,9 @@ import re
 
 from django.conf import settings
 from django.core.checks import Warning, register
+from django.apps import apps
+from django.db.models import ForeignKey, OneToOneField
+from django.db.models import CASCADE
 
 ignore_dirs = re.compile("^.*(__pycache__|\.git|frontend|venv|templates|fixtures|egg-info|dist|static|logs)$")
 
@@ -32,3 +35,24 @@ def check_dir(directory):
 def non_package_dir_check(app_configs, **kwargs):
     return check_dir(settings.BASE_DIR)
 
+
+@register
+def check_on_delete_cascade_protect(app_configs, **kwargs):
+    messages = []
+
+    to_check_apps = app_configs or apps.get_app_configs()
+
+    for app in to_check_apps:
+        if app.name not in settings.DEPENDENCY_APPS:
+            for model in app.get_models():
+                for field in model._meta.get_fields():
+                    if type(field) in (ForeignKey, OneToOneField):
+                        if field.remote_field.on_delete is CASCADE:
+                            messages.append(
+                                Warning(
+                                    "ForeignObject Relation on_delete policy is set to CASCADE.",
+                                    hint='set kwarg on_delete to any one of PROTECT, SET_NULL or DEFAULT',
+                                    obj=field,
+                                )
+                            )
+    return messages
