@@ -1,9 +1,9 @@
 Hello {{ name }},
 Thank you for showing interest in FloorWalk.
-Your Application for audit at {{ client }} on {{ audit_date }} has been recieved.
+Your Application for audit at {{ client }} on {{ audit_date }} has been received.
 We would process your application and get back to you with confirmation soon.
-You will receive an email confirmation and phone call from project manager to explain the audit details.
-Do not conduct the audit until the application has been approved on call by project manager.
+You will receive an email confirmation containing the audit details.
+Do not conduct the audit until the application has been approved.
 --
 FloorWalk Team
 
