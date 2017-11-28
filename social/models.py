@@ -1,7 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db.models import Model, CharField, AutoField, DateTimeField, OneToOneField, BooleanField
 from django.conf import settings
-from django.db.models import CASCADE
+from django.db.models import PROTECT
 
 
 class Facebook(Model):
@@ -13,4 +13,4 @@ class Facebook(Model):
     modified_date = DateTimeField(auto_now=True)
     is_verified = BooleanField(db_column='is_verified', default=False, null=False, blank=False)
 
-    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=CASCADE)
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
