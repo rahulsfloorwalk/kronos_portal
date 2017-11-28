@@ -13,9 +13,6 @@ class ObjectNotFound(Exception):
 class AppLogicError(Exception):
     pass
 
-class ResourceAuthError(Exception):
-    pass
-
 class KronosExceptionMiddleware(object):
     def process_exception(self, request, e):
         frame = traceback.extract_tb(sys.exc_info()[-1], limit=-1)[0]

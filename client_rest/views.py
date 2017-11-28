@@ -41,7 +41,7 @@ from social.service import twitter_client
 from social.service import twitter_manager
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
-from .serializers import TwitterFeedSerializer
+from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -485,14 +485,20 @@ class ConfigView(APIView):
         return Response(settings.FRONTEND_CONFIG["CLIENT"])
 
 
-class TwitterFeedView(APIView):
+class TwitterHandlesView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
-        client_id = request.user.clientuser.client_id
-        twitter_feeds = twitter_client.get_feeds_for_client(client_id)
+        handles = twitter_client.get_handles_for_client(request.user.clientuser.client_id)
+        return Response(TwitterHandleSerializer(handles, many=True).data)
 
-        # twitter_feed = twitter_client.get_feeds_for_handle(twitter_handle.id)
-        return Response(twitter_feeds)
+class TwitterFeedView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, twitter_handle_id, format=None):
+        twitter_feeds = twitter_client.get_feeds_for_client_and_handle(request.user.clientuser.client_id, twitter_handle_id)
+        return Response(TwitterFeedSerializer(twitter_feeds, many=True).data)

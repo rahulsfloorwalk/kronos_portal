@@ -41,5 +41,6 @@ urlpatterns = ([
     url(r'types$', views.AuditTypesByClient.as_view(), name='audit_types_by_client'),
     url(r'city$', views.CityView.as_view(), name='city_view'),
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
-    url(r'twitter_feed', views.TwitterFeedView.as_view(), name='twitter_feed_view'),
+    url(r'twitter/handles/(?P<twitter_handle_id>[0-9]+)/feed$', views.TwitterFeedView.as_view(), name='twitter_feed_view'),
+    url(r'twitter/handles', views.TwitterHandlesView.as_view(), name='twitter_handles_view'),
 ], 'client_rest')

@@ -26,6 +26,9 @@ class TwitterHandle(Model):
     class Meta:
         unique_together = (("client", "twitter_handle"))
 
+    def __str__(self):
+        return "Handle({}): {}, {}".format(self.id, self.twitter_handle, self.client)
+
 class TwitterFeed(Model):
     id = AutoField(db_column='id', primary_key=True)
     tweet_id = CharField(db_column="tweet_id", max_length=100, unique=True, blank=False, null=False)
@@ -35,3 +38,6 @@ class TwitterFeed(Model):
     sentiment_text = CharField(db_column="sentiment_text", max_length=100, blank=False, null=False)
     tweet_data = JSONField(db_column='tweet_data', default=dict(), blank=False)
     twitter_handle = ForeignKey(TwitterHandle, related_name='twitter_feeds', db_column='twitter_handle_id', blank=False, on_delete=PROTECT)
+
+    def __str__(self):
+        return "Tweet: {}: {}".format(self.tweet_created_on, self.tweet_text)

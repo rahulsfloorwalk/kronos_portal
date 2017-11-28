@@ -12,6 +12,7 @@ export const Asterisk	= () => <span className="glyphicon glyphicon-asterisk"></s
 export const Education	= () => <span className="glyphicon glyphicon-education"></span>;
 export const Stats	= () => <span className="glyphicon glyphicon-stats"></span>;
 export const Time	= () => <span className="glyphicon glyphicon-time"></span>;
+export const Minus	= () => <span className="glyphicon glyphicon-minus"></span>;
 export const Duplicate	= () => <span className="glyphicon glyphicon-duplicate"></span>;
 export const Lock	= () => <span className="glyphicon glyphicon-lock"></span>;
 export const Road	= () => <span className="glyphicon glyphicon-road"></span>;

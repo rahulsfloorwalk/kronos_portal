@@ -10,11 +10,11 @@ import { momentDateFormat }  from '../../config.js';
 import { Tweet } from 'react-twitter-widgets';
 
 import { fetchUser } from '../service/user.js';
-import { fetchClientTwitterFeed } from '../service/twitter.js'
+import { fetchClientHandles, fetchClientTwitterFeedByHandle } from '../service/twitter.js'
 
 import Loading from '../../js/components/Loading.jsx';
 import { Time } from '../../js/components/Icons.jsx';
-import { ArrowUp, ArrowDown, CircleArrowUp, CircleArrowDown } from '../../js/components/Icons.jsx';
+import { ArrowUp, ArrowDown, CircleArrowUp, CircleArrowDown, Minus } from '../../js/components/Icons.jsx';
 import { getAuditType, getAuditStatus } from '../../js/utils.js';
 import { LabelValue_2_10 } from '../../js/components/LabelValue.jsx';
 import AuditTypeLabel from '../../js/components/AuditTypeLabel.jsx';
@@ -27,9 +27,8 @@ export default class TwitterFeed extends Component{
 		this.state = {
 			loading: false,
 			error: false,
-			twitter_feed: [],
+			handles: [],
 			selectedTwitterHandle: null,
-			current_feed: []
 		};
 	}
 
@@ -42,34 +41,19 @@ export default class TwitterFeed extends Component{
 	}
 
 	componentDidMount() {
-
 		this.setLoading(true);
-		fetchClientTwitterFeed().then((twitter_feed) => {
+		fetchClientHandles().then((handles) => {
 			this.setState({
-				'twitter_feed': twitter_feed,
-				'selectedTwitterHandle': twitter_feed.length >  0 ? twitter_feed[0].handle : null,
+				handles,
+				selectedTwitterHandle: handles.length > 0 ? handles[0].id : null,
 			});
-			if(twitter_feed.length > 0){
-				this.twitterHandleChanged(twitter_feed[0].handle);
-			}
-		});
-		this.setLoading(false);
+		}).always(() => this.setLoading(false));
 	}
 
-	reloadFeeds = (handle) => {
-		let current_feed = this.state.twitter_feed.find( f => f.handle === handle);
-		if(current_feed){
-			this.setState({
-				'current_feed': current_feed.data,
-			});
-		}
-	}
-
-	twitterHandleChanged = (handle) => {
+	twitterHandleChanged = (e) => {
 		this.setState({
-			selectedTwitterHandle: handle,
+			selectedTwitterHandle: e.target.value,
 		});
-		this.reloadFeeds(handle);
 	}
 
 	render(){
@@ -79,26 +63,20 @@ export default class TwitterFeed extends Component{
 		if(this.state.error){
 			return (<Jumbotron heading="Error getting Twitter feeds." para=""/>);
 		}
-		if(this.state.twitter_feed.length === 0){
+		if(this.state.handles.length === 0){
 			return (<Jumbotron heading="Please Contact FloorWalk team to get this feature" para=""/>);
 		}
 
-		if(this.state.twitter_feed.length > 0){
-			var twitterHandles = [];
-			var i = 0;
-			this.state.twitter_feed.map(function(a, i){
-				twitterHandles.push(<option value={a.handle} key={i}>{a.handle}</option>);
-			})
-			return (
-				<div>
-				<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="twitter_handle" value={this.state.selectedTwitterHandle} onChange={(e) => this.twitterHandleChanged(e.target.value)}>
-					{twitterHandles}
-				</select>
-				<hr/>
-				<TwitterData current_feed={this.state.current_feed} />
-				</div>
-			);
-		}
+		console.log("currently selected", this.state.handles.find(h => { console.log("h",h,h.id,this.state.selectedTwitterHandle); console.log("eqqualcheck", h.id === this.state.selectedTwitterHandle); return h.id === this.state.selectedTwitterHandle;}));
+		return (
+			<div>
+			<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="selectedTwitterHandle" value={this.state.selectedTwitterHandle} onChange={this.twitterHandleChanged}>
+			{ this.state.handles.map((h) => <option value={h.id} key={h.id}>{h.twitter_handle}</option>) }
+			</select>
+			<hr/>
+			<TwitterData handle={this.state.handles.find(h => h.id === parseInt(this.state.selectedTwitterHandle))} />
+			</div>
+		);
 	}
 }
 
@@ -108,7 +86,7 @@ class TwitterData extends Component{
 		this.state = {
 			loading: false,
 			error: false,
-			current_feed: [],
+			tweets: [],
 		};
 	}
 
@@ -121,15 +99,20 @@ class TwitterData extends Component{
 	}
 
 	componentDidMount(){
-		this.setState({
-			'current_feed': this.props.current_feed
+		fetchClientTwitterFeedByHandle(this.props.handle.id).then((tweets) => {
+			this.setState({ tweets });
 		});
-
 	}
 	componentWillReceiveProps(nextProps){
-			this.setState({
-				'current_feed': nextProps.current_feed
-			});
+		if(nextProps.handle) {
+			console.log("componentWillReceiveProps", nextProps);
+			if( nextProps.handle.id !== this.props.handle.id){
+				console.log("componentWillReceiveProps","nequalto", nextProps);
+				fetchClientTwitterFeedByHandle(nextProps.handle.id).then((tweets) => {
+					this.setState({ tweets });
+				});
+			}
+		}
 	}
 
 	render(){
@@ -141,13 +124,13 @@ class TwitterData extends Component{
 			return (<Jumbotron heading="Twitter feed is not active for your account." para=""/>);
 		}
 
-		if(this.state.current_feed && this.state.current_feed.length === 0){
+		if(this.state.tweets && this.state.tweets.length === 0){
 			return (<Jumbotron heading="No tweets for this handle available" para=""/>);
 		}
 
-		const positiveTweetCount = this.state.current_feed.filter(t => t.sentiment_score > 0).length;
-		const neutralTweetCount = this.state.current_feed.filter(t => t.sentiment_score == 0).length;
-		const negativeTweetCount = this.state.current_feed.filter(t => t.sentiment_score < 0).length;
+		const positiveTweetCount = this.state.tweets.filter(t => t.sentiment_score > 0).length;
+		const neutralTweetCount = this.state.tweets.filter(t => t.sentiment_score == 0).length;
+		const negativeTweetCount = this.state.tweets.filter(t => t.sentiment_score < 0).length;
 
 
 		const positiveTweetHandled = positiveTweetCount/2;
@@ -159,10 +142,6 @@ class TwitterData extends Component{
 
 		const pendingCount = "", handledCount="";
 
-		let tweetOptions = {
-			align: "center",
-			wdith: "555",
-		};
 		let chartData = [
 			{ name: "Negative", value: negativeTweetCount},
 			{ name: "Positive", value: positiveTweetCount},
@@ -234,16 +213,16 @@ class TwitterData extends Component{
 						<div className="text-center form-group">
 							<h2><big>{negativeTweetCount}</big> <span className="text-muted">Tweets</span></h2>
 						</div>
-						{this.state.current_feed.filter(t => t.sentiment_score < 0).map( t => <Tweet key={t.tweet_id} tweetId={t.tweet_id} options={tweetOptions}/>)}
+						<TweetPager tweets={this.state.tweets.filter(t => t.sentiment_score < 0)}/>
 				</div>
 				<div className="col-md-4">
 					<div className="panel panel-warning">
-						<div className="panel-heading"><h4 className=""> Neutral</h4></div>
+						<div className="panel-heading"><h4 className=""><Minus/> Neutral</h4></div>
 					</div>
 						<div className="text-center form-group">
 							<h2><big>{neutralTweetCount}</big> <span className="text-muted">Tweets</span></h2>
 						</div>
-						{this.state.current_feed.filter(t => t.sentiment_score == 0).map( t => <Tweet key={t.tweet_id} tweetId={t.tweet_id} options={tweetOptions}/>)}
+						<TweetPager tweets={this.state.tweets.filter(t => t.sentiment_score == 0)}/>
 				</div>
 				<div className="col-md-4">
 					<div className="panel panel-success">
@@ -252,9 +231,63 @@ class TwitterData extends Component{
 						<div className="text-center form-group">
 							<h2><big>{positiveTweetCount}</big> <span className="text-muted">Tweets</span></h2>
 						</div>
-						{this.state.current_feed.filter(t => t.sentiment_score > 0).map( t => <Tweet key={t.tweet_id} tweetId={t.tweet_id} options={tweetOptions}/>)}
+						<TweetPager tweets={this.state.tweets.filter(t => t.sentiment_score > 0)}/>
 				</div>
 			</div>
+			</div>
+		);
+	}
+}
+
+class TweetPager extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			pagedUpto: 10,
+		};
+	}
+
+	setInitialPageSize = (tweetLength) => {
+		if(tweetLength < 10){
+			this.setState({
+				pagedUpto: tweetLength,
+			});
+		}
+	}
+
+	componentDidMount(){
+		this.setInitialPageSize(this.props.tweets.length);
+	}
+	componentWillReceiveProps(nextProps){
+		this.setInitialPageSize(nextProps.tweets.length);
+	}
+
+	tweetOptions = {
+		align: "center",
+		width: "555",
+		conversation: "all",
+		cards: "hidden",
+	}
+
+	pageNext = () => {
+		this.setState({
+			pagedUpto: this.state.pagedUpto + 10 > this.props.tweets.length ? this.props.tweets.length : this.state.pagedUpto + 10,
+		});
+	}
+
+	render(){
+		let renderedTweets = [];
+		this.props.tweets.forEach((t, i) => {
+			if(i < this.state.pagedUpto){
+				renderedTweets.push(<Tweet key={t.tweet_id} tweetId={t.tweet_id} options={this.tweetOptions}/>);
+			}
+		})
+		return (
+			<div>
+				{renderedTweets}
+				{ this.state.pagedUpto !== this.props.tweets.length ?
+					<button className="btn btn-primary btn-lg btn-block" onClick={this.pageNext}>View More</button>
+				: null }
 			</div>
 		);
 	}

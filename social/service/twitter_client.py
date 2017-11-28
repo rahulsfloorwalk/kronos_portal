@@ -1,4 +1,3 @@
-import json
 import logging
 import re
 from django.conf import settings
@@ -8,7 +7,6 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 from social.models import TwitterFeed, TwitterHandle
 from tweepy import OAuthHandler, API, TweepError
 from textblob import TextBlob
-from client_rest.serializers import TwitterFeedSerializer
 
 _logger = logging.getLogger(__name__)
 
@@ -20,28 +18,21 @@ def save_handle_for_client(client_id, handle):
     return twitter_handle
 
 def get_handles_for_client(client_id):
-    twitter_handle = TwitterHandle.objects.filter(client_id=client_id)
-    return twitter_handle
+    return TwitterHandle.objects.filter(client_id=client_id)
 
-def get_feeds_for_client(client_id):
-    handles = get_handles_for_client(client_id)
-    handles_feed = []
-    for handle in handles:
-        feed = {}
-        twitter_feed = get_feeds_for_handle(handle)
-        feed['handle'] = handle.twitter_handle
-        feed['data'] = TwitterFeedSerializer(twitter_feed, many=True).data
-        handles_feed.append(feed)
-    return handles_feed
+def get_handle_by_client_and_id(client_id, twitter_handle_id):
+    try:
+        return TwitterHandle.objects.get(client_id=client_id, pk=twitter_handle_id)
+    except TwitterHandle.DoesNotExist as e:
+        raise ObjectNotFound from e
 
-
-
-def get_feeds_for_handle(twitter_handle):
+def get_feeds_for_client_and_handle(client_id, twitter_handle_id):
+    twitter_handle = get_handle_by_client_and_id(client_id, twitter_handle_id)
     if twitter_handle.is_enabled:
-        twitter_feeds = TwitterFeed.objects.filter(twitter_handle=twitter_handle).order_by('tweet_created_on')
+        twitter_feeds = TwitterFeed.objects.filter(twitter_handle=twitter_handle).order_by('-tweet_created_on')
         return twitter_feeds
     else:
-        return None
+        raise ObjectNotFound("handle not found")
 
 def save_tweets_for_handle(twitter_handle):
     try:
@@ -68,7 +59,6 @@ def save_tweets_for_handle(twitter_handle):
             _logger.warn("tweet with id %s not inserted", twitter_feed.tweet_id)
             continue
     return saved_tweets
-
 
 
 class TwitterClient(object):
