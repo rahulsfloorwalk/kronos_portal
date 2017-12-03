@@ -15,7 +15,7 @@ import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
 
 import { payAuditStore, unpayAuditStore} from '../../manager/actions/audit_store.js';
-import { findPaymentsByAuditCycleId } from '../../manager/service/payment.js';
+import { findPaymentsByAuditCycleId, payAllPendingPaymentsForAuditCycle } from '../../manager/service/payment.js';
 
 class __PaymentRow extends React.Component{
 	constructor(props){
@@ -119,6 +119,13 @@ class AuditCyclePaymentList extends React.Component{
 		this.reloadData();
 	}
 
+	payAllPendingPayments = () => {
+		payAllPendingPaymentsForAuditCycle(this.props.params.auditCycleId).then(count => {
+			this.reloadData();
+			Alert.success(`${count} PAYMENTS MARKED AS PAID`);
+		});
+	}
+
 	render(){
 
 		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.reloadData}/>));
@@ -150,9 +157,12 @@ class AuditCyclePaymentList extends React.Component{
 			<div>
 			<h3 className="page-header">
 			<b>₹</b> Payments
-			<a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/csv'}>
-			<Download/> Pending Payment List
-			</a>
+			<span className="pull-right">
+				<a className="btn btn-default" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/csv'}>
+				<Download/> Pending Payment List
+				</a>
+				<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>
+			</span>
 			</h3>
 			{table}
 			{this.props.children}

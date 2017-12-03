@@ -19,6 +19,7 @@ from .viewss import manager as manager_views
 from .viewss import email_log as email_log_views
 from .viewss import opportunity_email as opportunity_email_views
 from .viewss import social as social_views
+from .viewss import payment as payment_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -45,8 +46,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/uncomplete$', audit_store_views.AuditStoreIdUnCompleteView.as_view(), name='audit_store_id_uncomplete_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/accept', audit_store_views.AuditStoreIdAcceptView.as_view(), name='audit_store_id_accept_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reject', audit_store_views.AuditStoreIdRejectView.as_view(), name='audit_store_id_reject_view'),
-    url(r'audit_store/(?P<audit_store_id>[0-9]+)/pay$', audit_store_views.AuditStoreIdPayView.as_view(), name='audit_store_id_pay_view'),
-    url(r'audit_store/(?P<audit_store_id>[0-9]+)/unpay', audit_store_views.AuditStoreIdUnpayView.as_view(), name='audit_store_id_unpay_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/pay$', payment_views.AuditStoreIdPayView.as_view(), name='audit_store_id_pay_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/unpay', payment_views.AuditStoreIdUnpayView.as_view(), name='audit_store_id_unpay_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', answer_views.AnswerByAuditStore.as_view(), name='answers_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/mark$', answer_views.MarkByQuestionAndStore.as_view(), name='mark_by_question_and_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_text$', answer_views.AnswerByQuestionAndStore.as_view(), name='answer_by_question_and_store'),
@@ -68,9 +69,10 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_stats$', audit_cycle_views.AuditCycleAuditStoreStats.as_view(), name='audit_cycle_audit_store_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/post_approval_description$', audit_cycle_views.AuditCycleIdPostApprovalDescriptionView.as_view(), name='audit_cycle_id_post_approval_description_view'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/csv$', audit_cycle_views.PendingPaymentCsvView.as_view(), name='audit_cycle_pending_payment_csv_view'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending$', audit_cycle_views.PendingPaymentView.as_view(), name='audit_cycle_pending_payment_view'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment$', audit_cycle_views.PaymentView.as_view(), name='audit_cycle_payment_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/csv$', payment_views.PendingPaymentCsvView.as_view(), name='audit_cycle_pending_payment_csv_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/pay$', payment_views.PayAllPendingPaymentsForAuditCycle.as_view(), name='audit_cycle_pay_all_pending_payment_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending$', payment_views.PendingPaymentView.as_view(), name='audit_cycle_pending_payment_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment$', payment_views.PaymentView.as_view(), name='audit_cycle_payment_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_email$', opportunity_email_views.OpportunityEmailRecordView.as_view(), name='audit_cycle_opportunity_email_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 

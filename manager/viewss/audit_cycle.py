@@ -162,41 +162,6 @@ class AuditCycleDashboard(APIView):
         except (ObjectNotFound, AppLogicError) as e:
             raise Http404
 
-class PaymentView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, audit_cycle_id, format=None):
-        try:
-            payments = payment_service.find_by_audit_cycle(audit_cycle_id)
-            return Response(PaymentUserSerializer(payments, many=True).data)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
-
-class PendingPaymentView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, audit_cycle_id, format=None):
-        try:
-            payments = payment_service.find_pending_by_audit_cycle(audit_cycle_id)
-            return Response(PaymentUserSerializer(payments, many=True).data)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
-
-class PendingPaymentCsvView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, audit_cycle_id, format=None):
-        data, filename = payment_service.find_new_pending_csv_for_audit_cycle(audit_cycle_id)
-        response = HttpResponse(data.read(), content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="' + filename + '"'
-        return response
-
 
 class AuditCycleRejectAllApplicationsView(APIView):
     permission_classes = [HasGroupPermission]

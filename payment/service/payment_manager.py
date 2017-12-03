@@ -301,3 +301,11 @@ def consolidate_by_user(payments):
             unique_user_payment.amount += duplicate_user_payment.amount
         consolidated_payments.append(unique_user_payment)
     return consolidated_payments
+
+
+@atomic
+def pay_all_pending_for_audit_cycle(audit_cycle_id, user_actor):
+    pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+    for payment in pending_payments:
+        pay_for_audit_store(payment.audit_store_id, user_actor)
+    return len(pending_payments)
