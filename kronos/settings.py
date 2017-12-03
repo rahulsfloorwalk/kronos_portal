@@ -43,6 +43,7 @@ SECRET_KEY = properties["GENERAL"]["SECRET_KEY"]
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = properties["GENERAL"]["DEBUG"] == "True"
+DEBUG_TOOLBAR = properties["GENERAL"]["DEBUG_TOOLBAR"] == "True"
 
 # Kronos URL values
 KRONOS_DOMAIN = properties["GENERAL"]["KRONOS_DOMAIN"]
@@ -76,7 +77,7 @@ DEPENDENCY_APPS = [
     'markdown_deux',
 ]
 
-if DEBUG:
+if DEBUG and DEBUG_TOOLBAR:
     DEPENDENCY_APPS.append('debug_toolbar')
 
 PROJECT_APPS = [
@@ -113,7 +114,7 @@ MIDDLEWARE_CLASSES = [
     'kronos.exceptions.KronosExceptionMiddleware',
 ]
 
-if DEBUG:
+if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'kronos.urls'
@@ -212,7 +213,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
     os.path.join(BASE_DIR, "frontend"),
 ]
 
