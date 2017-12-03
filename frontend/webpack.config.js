@@ -7,28 +7,28 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	entry: {
-		auditor: path.resolve(__dirname, './js/auditor.jsx'),
-		auditor_vendor: ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login'],
+		'auditor/auditor': path.resolve(__dirname, './js/auditor.jsx'),
+		'auditor/auditor_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login'],
 
-		manager: path.resolve(__dirname, './js/manager.jsx'),
-		manager_vendor: ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
+		'manager/manager': path.resolve(__dirname, './js/manager.jsx'),
+		'manager/manager_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
 
-		client: path.resolve(__dirname, './client/client.jsx'),
-		client_vendor: ['jquery','react','react-dom','react-router','recharts'],
+		'client/client': path.resolve(__dirname, './client/client.jsx'),
+		'client/client_vendor': ['jquery','react','react-dom','react-router','recharts'],
 
-		report_print: path.resolve(__dirname, './client/report_print.jsx'),
-		report_print_vendor: ['jquery','react','react-dom','react-router'],
+		'client/report_print': path.resolve(__dirname, './client/report_print.jsx'),
+		'client/report_print_vendor': ['jquery','react','react-dom','react-router'],
 
-		moderator: path.resolve(__dirname, './js/moderator/moderator.jsx'),
-		moderator_vendor: ['jquery','react','react-dom','react-router'],
+		'moderator/moderator': path.resolve(__dirname, './js/moderator/moderator.jsx'),
+		'moderator/moderator_vendor': ['jquery','react','react-dom','react-router'],
 
-		'react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
-		'bs_overrides': path.resolve(__dirname, './css/bs_overrides.scss'),
+		'css/react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
+		'css/bs_overrides': path.resolve(__dirname, './css/bs_overrides.scss'),
 	},
 	output: {
 		path: path.resolve(__dirname, './dist'),
 		filename: '[name].bundle.js',
-		publicPath: '/static/dist/'
+		publicPath: '/static/'
 	},
 	externals: {
 	},
@@ -60,48 +60,50 @@ module.exports = {
 		]
 	},
 	plugins: [
-		new webpack.optimize.CommonsChunkPlugin({ name: "auditor_vendor", chunks: ['auditor']}),
-		new webpack.optimize.CommonsChunkPlugin({ name: "client_vendor", chunks: ['client']}),
-		new webpack.optimize.CommonsChunkPlugin({ name: "manager_vendor", chunks: ['manager']}),
-		new webpack.optimize.CommonsChunkPlugin({ name: "moderator_vendor", chunks: ['moderator']}),
+		new webpack.optimize.CommonsChunkPlugin({ name: "auditor/auditor_vendor", chunks: ['auditor/auditor']}),
+		new webpack.optimize.CommonsChunkPlugin({ name: "client/client_vendor", chunks: ['client/client']}),
+		new webpack.optimize.CommonsChunkPlugin({ name: "manager/manager_vendor", chunks: ['manager/manager']}),
+		new webpack.optimize.CommonsChunkPlugin({ name: "moderator/moderator_vendor", chunks: ['moderator/moderator']}),
 		new ExtractTextPlugin("[name].css"),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Moderator Portal',
 			filename: 'moderator/index.html',
-			chunks: ['moderator_vendor', 'moderator'],
+			chunks: ['moderator/moderator_vendor', 'moderator/moderator', 'css/react-datetime', 'css/bs_overrides'],
 			template: path.resolve(__dirname, './js/moderator/moderator.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Manager Portal',
 			filename: 'manager/index.html',
-			chunks: ['manager_vendor', 'manager'],
+			chunks: ['manager/manager_vendor', 'manager/manager', 'css/react-datetime', 'css/bs_overrides'],
 			template: path.resolve(__dirname, './js/manager/manager.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Auditor Portal',
 			filename: 'auditor/index.html',
-			chunks: ['auditor_vendor', 'auditor'],
+			chunks: ['auditor/auditor_vendor', 'auditor/auditor', 'css/react-datetime', 'css/bs_overrides'],
 			template: path.resolve(__dirname, './js/auditor/auditor.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Client Portal',
 			filename: 'client/index.html',
-			chunks: ['client_vendor', 'client'],
+			chunks: ['client/client_vendor', 'client/client', 'css/react-datetime', 'css/bs_overrides'],
 			template: path.resolve(__dirname, './client/client.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Report Print',
 			filename: 'client/report_print.html',
-			chunks: ['report_print_vendor', 'report_print'],
+			chunks: ['client/report_print_vendor', 'client/report_print', 'css/react-datetime', 'css/bs_overrides'],
 			template: path.resolve(__dirname, './client/client.ejs'),
 		}),
 		new CopyWebpackPlugin([
-			{ from: path.resolve(__dirname, './bsvendor'), to: 'bsvendor/' }
+			{ from: path.resolve(__dirname, './bsvendor'), to: 'bsvendor/' },
+			{ from: path.resolve(__dirname, './img'), to: 'img/' },
+			{ from: path.resolve(__dirname, './heartbeat.html'), to: './' },
 		])
 	],
 	devServer: {
 		inline: true,
-		publicPath: "/static/dist/",
+		publicPath: "/static/",
 		proxy: {
 			'/': {
 				target: "http://localhost:8000/",

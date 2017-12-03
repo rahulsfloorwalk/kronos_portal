@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.forms import Form
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -14,7 +15,7 @@ _logger = logging.getLogger(__name__)
 
 class Login(View):
     __template = 'registration/client/login.html'
-    __client_url = '/static/dist/client/index.html'
+    __client_url = settings.FRONTEND_CONFIG["CLIENT"]["LOGIN_SUCCESS_REDIRECT_URL"]
 
     def get(self, request):
         if not request.user.is_authenticated():

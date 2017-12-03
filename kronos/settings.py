@@ -215,7 +215,7 @@ STATIC_URL = '/static/'
 STATIC_ROOT = properties["GENERAL"]["STATIC_ROOT"]
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "frontend"),
+    os.path.join(BASE_DIR, "frontend", "dist"),
 ]
 
 # email settings
@@ -322,15 +322,21 @@ FRONTEND_CONFIG = {
         "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
         "FB_SCOPE": properties["FRONTEND"]["AUDITOR_FB_SCOPE"],
         "RHEA_BASE_URL": RHEA_BASE_URL,
+        "LOGIN_SUCCESS_REDIRECT_URL": properties["FRONTEND"]["AUDITOR_LOGIN_SUCCESS_REDIRECT_URL"]
     },
     "CLIENT": {
         "IMPACT_FACTOR_URL": properties["FRONTEND"]["CLIENT_IMPACT_FACTOR_URL"],
         "TWEET_DATA_URL": properties["FRONTEND"]["CLIENT_TWEET_DATA_URL"],
         "RHEA_BASE_URL": RHEA_BASE_URL,
+        "LOGIN_SUCCESS_REDIRECT_URL": properties["FRONTEND"]["CLIENT_LOGIN_SUCCESS_REDIRECT_URL"]
     },
     "MANAGER": {
         "RHEA_BASE_URL": RHEA_BASE_URL,
+        "LOGIN_SUCCESS_REDIRECT_URL": properties["FRONTEND"]["MANAGER_LOGIN_SUCCESS_REDIRECT_URL"]
     },
+    "MODERATOR": {
+        "LOGIN_SUCCESS_REDIRECT_URL": properties["FRONTEND"]["MODERATOR_LOGIN_SUCCESS_REDIRECT_URL"]
+    }
 }
 
 REFERRAL_SIGNUP_AMOUNT = properties["REFERRAL"]["SIGNUP_AMOUNT"]

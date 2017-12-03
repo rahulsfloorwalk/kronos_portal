@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.forms import Form
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -22,9 +23,9 @@ _logger = logging.getLogger(__name__)
 
 class Login(View):
     __template = 'registration/login.html'
-    __auditor_url = '/static/dist/auditor/index.html'
-    __manager_url = '/static/dist/manager/index.html'
-    __moderator_url = '/static/dist/moderator/index.html'
+    __auditor_url = settings.FRONTEND_CONFIG["AUDITOR"]["LOGIN_SUCCESS_REDIRECT_URL"]
+    __manager_url = settings.FRONTEND_CONFIG["MANAGER"]["LOGIN_SUCCESS_REDIRECT_URL"]
+    __moderator_url = settings.FRONTEND_CONFIG["MODERATOR"]["LOGIN_SUCCESS_REDIRECT_URL"]
 
     def get(self, request):
         next_url = request.GET.get('next')
