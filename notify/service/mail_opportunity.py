@@ -13,7 +13,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from auditor.models import Preferences
-from auditor.service.profile_info_service import count_auditors_in_city, find_profileinfo_by_city
+from auditor.service.profile_info_service import count_profileinfo_in_city, find_profileinfo_by_city
 from registration.service.auditor import find_auditor_by_id
 from registration.context import registration_context
 from manager.models import City
@@ -40,7 +40,7 @@ def schedule_opportunity_emails_for_audit_cycle_and_city(audit_cycle_id, city_id
     opp = OpportunityEmailRecord()
     opp.city = city
     opp.audit_cycle = audit_cycle
-    opp.total_count = count_auditors_in_city(city_id)
+    opp.total_count = count_profileinfo_in_city(city_id)
     opp.progress_count = 0
     opp.save()
 
@@ -83,7 +83,7 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
         return False
 
     try:
-        if not user.preferences.receive_new_opportunities_email:
+        if not user.is_active or not user.preferences.receive_new_opportunities_email:
             return False
     except Preferences.DoesNotExist as e:
         pass
