@@ -80,6 +80,7 @@ var StoreForm = React.createClass({
 				code: this.state.code,
 				type: this.state.type,
 				priority: this.state.priority,
+				phone: this.state.phone,
 			}));
 		} else {
 			submitPromise = this.props.dispatch(saveStoreAddForm({
@@ -92,6 +93,7 @@ var StoreForm = React.createClass({
 				code: this.state.code,
 				type: this.state.type,
 				priority: this.state.priority,
+				phone: this.state.phone,
 			}));
 		}
 		submitPromise.then(function(savedStore){
@@ -135,6 +137,11 @@ var StoreForm = React.createClass({
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Priority" type="text" value={this.state.priority} name="priority" onChange={this.inputChanged} errors={this.props.errors.priority}/>
+						</div>
+					</div>
+					<div className="row">
+						<div className="col-sm-6">
+							<FormInput label="Phone Number" type="text" value={this.state.phone} name="phone" onChange={this.inputChanged} errors={this.props.errors.phone}/>
 						</div>
 					</div>
 					<SaveButton/>

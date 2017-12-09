@@ -159,6 +159,7 @@ class StoreSerializer(ModelSerializer):
             'code',
             'type',
             'priority',
+            'phone',
             'visible_to',
         )
         read_only_fields = fields
@@ -175,6 +176,7 @@ class StoreDeSerializer(ModelSerializer):
             'client',
             'code',
             'type',
+            'phone',
             'priority',
         )
         read_only_fields = ('id',)
@@ -192,6 +194,7 @@ class StoreDeSerializer(ModelSerializer):
         store.code = self.validated_data.get('code', store.code)
         store.type = self.validated_data.get('type', store.type)
         store.priority = self.validated_data.get('priority', store.priority)
+        store.phone = self.validated_data.get('phone', store.phone)
         return store
 
 

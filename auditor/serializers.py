@@ -271,6 +271,7 @@ class StoreSerializer(ModelSerializer):
             'name',
             'address',
             'location',
+            'phone',
         )
         read_only_fields = fields
 

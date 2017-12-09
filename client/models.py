@@ -47,6 +47,7 @@ class Store(Model):
     address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=False, on_delete=PROTECT)
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
+    phone = CharField(db_column='phone', max_length=15, blank=True)
 
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
