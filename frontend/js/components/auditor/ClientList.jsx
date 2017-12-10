@@ -43,7 +43,7 @@ class AuditCycleRow extends Component{
 			<div className="panel panel-default">
 				<div style={{textAlign: "center", height: maxImageHeight}}>
 					<Link to={viewLink}>
-						<img style={mediaImgStyle} src={this.props.audit_cycle.client.logo_url} alt="client logo" title={this.props.audit_cycle.client.name}/>
+						<img style={mediaImgStyle} src={this.props.audit_cycle.client.auditor_logo_url} alt="client logo" title={this.props.audit_cycle.client.auditor_display_name}/>
 					</Link>
 				</div>
 				<table className="table table-striped">

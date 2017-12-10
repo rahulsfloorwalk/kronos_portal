@@ -69,7 +69,7 @@ var AuditStoreDetails = React.createClass({
 				<div className="col-md-6">
 					<div className="panel panel-default">
 						<div className="panel-heading">
-							<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.name}</b></h4>
+							<h4 className="panel-title"><b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h4>
 						</div>
 						<div className="panel-body">
 							<div className="form-horizontal">

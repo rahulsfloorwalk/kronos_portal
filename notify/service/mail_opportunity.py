@@ -89,8 +89,8 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
         pass
 
     params = {
-        'client_name': audit_cycle.client.name,
-        'client_logo_url': audit_cycle.client.logo_url,
+        'client_name': audit_cycle.client.auditor_display_name(),
+        'client_logo_url': audit_cycle.client.auditor_logo_url(),
         'city_name': user.profileinfo.city.name,
         'first_name': user.profileinfo.first_name,
         'last_name': user.profileinfo.last_name,

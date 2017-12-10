@@ -228,8 +228,8 @@ class ClientSerializer(ModelSerializer):
     class Meta:
         model = Client
         fields = (
-            'name',
-            'logo_url',
+            'auditor_logo_url',
+            'auditor_display_name',
         )
         read_only_fields = fields
 

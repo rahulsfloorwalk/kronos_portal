@@ -50,7 +50,7 @@ var AuditRow = React.createClass({
 			<div className="row">
 				<div className="col-sm-4">
 					<label className="hidden-sm hidden-md hidden-lg">Store Location</label>
-					<p><b><big>{this.props.audit.store.location.name}, {this.props.audit.store.location.city.name}</big></b></p>
+					<p><b><big>{this.props.audit.store.name}, {this.props.audit.store.location.city.name}</big></b></p>
 					<p><b>{this.props.audit.store.address}</b></p>
 				</div>
 				<div className="col-sm-4">
@@ -120,13 +120,13 @@ class AuditList extends Component{
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link className="btn btn-default btn-lg" to="/audit"><b>↲</b></Link> <b>{this.props.auditCycle.client.name}</b> Audits
+					<Link className="btn btn-default btn-lg" to="/audit"><b>↲</b></Link> <b>{this.props.auditCycle.client.auditor_display_name}</b> Audits
 				</h2>
 				<div className="row">
 					<div className="col-sm-3" style={flexCenter}>
 						<img style={{boxSizing: "border-box",maxWidth:"100%",maxHeight:"100%",padding:"10px"}} 
-							src={this.props.auditCycle.client.logo_url} alt="client logo" 
-							title={this.props.auditCycle.client.name}/>
+							src={this.props.auditCycle.client.auditor_logo_url} alt="client logo" 
+							title={this.props.auditCycle.client.auditor_display_name}/>
 					</div>
 					<div className="col-sm-9">
 					<div className="row">

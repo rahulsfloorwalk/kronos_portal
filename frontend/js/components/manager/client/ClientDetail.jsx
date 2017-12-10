@@ -28,6 +28,7 @@ export default React.createClass({
 		}
 		var editLink = `/client/${this.props.params.clientId}/edit`;
 		var clientLogo = this.state.client.logo_url ? <img style={{"padding":"10px"}} className="img-responsive" src={this.state.client.logo_url}/> : "";
+		let brandLogo = this.state.client.brand_logo_url ? <img style={{"padding":"10px"}} className="img-responsive" src={this.state.client.brand_logo_url}/> : "";
 		return (
 			<div>
 				<ol className="breadcrumb">
@@ -47,10 +48,12 @@ export default React.createClass({
 					<table className="table table-striped">
 						<tbody>
 							<tr><td className="text-right">Name</td><td><b>{ this.state.client.name }</b></td></tr>
+							<tr><td className="text-right">Brand Name</td><td><b>{ this.state.client.brand_name }</b></td></tr>
 							<tr><td className="text-right">Email</td><td><b>{ this.state.client.email }</b></td></tr>
 							<tr><td className="text-right">Phone</td><td><b>{ this.state.client.phone }</b></td></tr>
 						</tbody>
 					</table>
+					{brandLogo}
 				</div>
 				</div>
 				<div className="col-md-8">

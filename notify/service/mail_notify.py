@@ -40,7 +40,7 @@ def notification_email_task(notif_id):
         params = {}
         params['name'] = notif.recipient.profileinfo.first_name
         params['audit_date'] = notif.action_object.audit_date
-        params['client'] = notif.action_object.audit.audit_cycle.client.name
+        params['client'] = notif.action_object.audit.audit_cycle.client.auditor_display_name()
         params['store_name'] = notif.action_object.audit.store.name
         params['store_address'] = notif.action_object.audit.store.address
 

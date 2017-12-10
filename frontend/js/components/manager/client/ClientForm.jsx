@@ -28,9 +28,11 @@ export default React.createClass({
 					client,
 					form: {
 						name: client.name,
+						brand_name: client.brand_name,
 						email: client.email,
 						phone: client.phone,
 						logo_url: client.logo_url,
+						brand_logo_url: client.brand_logo_url,
 					},
 				});
 			});
@@ -48,16 +50,20 @@ export default React.createClass({
 			submitPromise = updateClient({
 				id: this.props.params.clientId,
 				name: this.state.form.name,
+				brand_name: this.state.form.brand_name,
 				email: this.state.form.email,
 				phone: this.state.form.phone,
 				logo_url: this.state.form.logo_url,
+				brand_logo_url: this.state.form.brand_logo_url,
 			});
 		} else {
 			submitPromise = addClient({
 				name: this.state.form.name,
+				brand_name: this.state.form.brand_name,
 				email: this.state.form.email,
 				phone: this.state.form.phone,
 				logo_url: this.state.form.logo_url,
+				brand_logo_url: this.state.form.brand_logo_url,
 			});
 		}
 		submitPromise.done(function(savedClient){
@@ -75,9 +81,11 @@ export default React.createClass({
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormInput label="Client Name" maxLength="50" type="text" value={this.state.form.name} name="name" onChange={this.inputChanged} errors={this.state.errors.name}/>
+					<FormInput label="Brand Name" maxLength="50" type="text" value={this.state.form.brand_name} name="brand_name" onChange={this.inputChanged} errors={this.state.errors.brand_name}/>
 					<FormInput label="Email Address" maxLength="50" type="email" value={this.state.form.email} name="email" onChange={this.inputChanged} errors={this.state.errors.email}/>
 					<FormInput label="Phone Number" maxLength="15" type="text" value={this.state.form.phone} name="phone" onChange={this.inputChanged} errors={this.state.errors.phone}/>
 					<FormInput label="Logo URL" maxLength="512" type="text" value={this.state.form.logo_url} name="logo_url" onChange={this.inputChanged} errors={this.state.errors.logo_url}/>
+					<FormInput label="Brand Logo URL" maxLength="512" type="text" value={this.state.form.brand_logo_url} name="brand_logo_url" onChange={this.inputChanged} errors={this.state.errors.brand_logo_url}/>
 					<SaveButton/>
 				</form>
 			</Modal>

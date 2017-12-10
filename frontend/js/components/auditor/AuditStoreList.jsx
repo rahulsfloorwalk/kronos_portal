@@ -32,7 +32,7 @@ var AuditStoreRow = React.createClass({
 				<div className="panel panel-default">
 					<div className="panel-body">
 						<h3 className="">
-							<b>{this.props.auditStore.audit.audit_cycle.client.name}</b> - {this.props.auditStore.audit.store.name}
+							<b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
 						</h3>
 						<div>
 						<AuditStoreStatusLabel status={this.props.auditStore.status}/>

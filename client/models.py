@@ -7,9 +7,17 @@ class Client(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)
+    brand_name = CharField(db_column='brand_name', max_length=50, blank=True)
     email = EmailField(db_column='email', max_length=50, blank=False)
     phone = CharField(db_column='phone', max_length=15, blank=True)
     logo_url = CharField(db_column='logo_url', max_length=512, blank=True)
+    brand_logo_url = CharField(db_column='brand_logo_url', max_length=512, blank=True)
+
+    def auditor_logo_url(self):
+        return self.brand_logo_url or self.logo_url
+
+    def auditor_display_name(self):
+        return self.brand_name or self.name
 
     def __str__(self):
         return 'Client({}): {}'.format(self.id, self.name)

@@ -69,7 +69,7 @@ def send_reminder_for_audit_store(audit_store_id, reminder_type):
     params['first_name'] = audit_store.user.profileinfo.first_name
     params['last_name'] = audit_store.user.profileinfo.last_name
     params['audit_date'] = audit_store.audit_date
-    params['client'] = audit_store.audit.audit_cycle.client.name
+    params['client'] = audit_store.audit.audit_cycle.client.auditor_display_name()
     params['store_name'] = audit_store.audit.store.name
     params['store_address'] = audit_store.audit.store.address
     params['audit_cycle_post_approval_description'] = audit_store.audit.audit_cycle.post_approval_description
