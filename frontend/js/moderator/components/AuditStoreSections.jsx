@@ -231,7 +231,9 @@ class SectionAttachmentBox extends React.Component{
 	}
 
 	componentWillReceiveProps(nextProps){
-		this.reloadAttachments(nextProps.auditStoreId, nextProps.sectionId);
+		if(! (this.props.auditStoreId === nextProps.auditStoreId && this.props.sectionId === nextProps.sectionId)){
+			this.reloadAttachments(nextProps.auditStoreId, nextProps.sectionId);
+		}
 	}
 
 	uploadButtonClicked = (e) => {
