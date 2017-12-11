@@ -17,6 +17,10 @@ def set_answer_text_for_moderator(audit_store_id, question_id, answer_text, user
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
     return answer_service.set_answer_text(audit_store_id, question_id, answer_text)
 
+def set_answer_comment_for_moderator(audit_store_id, question_id, answer_comment, user_id):
+    answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
+    return answer_service.set_answer_comment(audit_store_id, question_id, answer_comment)
+
 def set_marks_obtained_for_moderator(audit_store_id, question_id, marks_obtained, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
     return answer_service.set_marks(audit_store_id, question_id, marks_obtained)

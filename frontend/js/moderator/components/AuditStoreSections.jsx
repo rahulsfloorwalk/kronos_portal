@@ -1,5 +1,4 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import { truncateStyle } from '../../styles.js';
@@ -11,11 +10,61 @@ import Panel from '../../components/Panel.jsx';
 import { Save, Plus, Cross, Pencil, Tasks, OptionHorizontal, Checked, Unchecked, Paperclip } from '../../components/Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
-import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable } from '../service/answer.js'
+import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment } from '../service/answer.js'
 import { fetchSections, fetchReportSections, submitAuditorComment, submitPMComment, setNotApplicable } from '../service/section.js'
 import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection } from '../service/attachment.js'
 
 import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
+
+class AnswerComment extends Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			answer_comment: this.props.answer_comment || "",
+			error: false,
+			success: false,
+		};
+	}
+
+	setError = (error) => {
+		this.setState( prevState => Object.assign({}, prevState, { error }));
+	}
+
+	setSuccess = (success) => {
+		this.setState( prevState => Object.assign({}, prevState, { success }));
+	}
+
+	commentChanged = (e) => {
+		this.setState({
+			answer_comment: e.target.value,
+		});
+	}
+
+	onBlur = (e) => {
+		this.commentChanged(e);
+		setAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value).then( () => {
+			this.setSuccess(true);
+			this.setError(false);
+		}, () => {
+			this.setSuccess(false)
+			this.setError(true)
+		});
+	}
+
+	render(){
+		if(this.props.editable){
+			let hasSuccess = this.state.success ? "has-success" : "";
+			let hasError = this.state.error ? "has-error" : "";
+			return (
+				<div className={`${hasSuccess} ${hasError}`}>
+					<input className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+				</div>
+			);
+		} else {
+			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;
+		}
+	}
+}
 
 let QuestionRow = React.createClass({
 	getDefaultProps: function(){
@@ -80,7 +129,15 @@ let QuestionRow = React.createClass({
 
 		let notApplicableElement = (notApplicableIcon);
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
-		let answerElement = (<big>{this.state.answer.answer_text}</big>);
+		let answerElement = (
+			<span>
+			<big>{this.state.answer.answer_text}</big>
+			{ this.props.q.question_type === "MUTEX"
+				?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+				: null
+			}
+			</span>
+		);
 		if( this.props.marking){
 			let hasError = this.state.error ? "has-error" : "";
 			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
@@ -107,6 +164,8 @@ let QuestionRow = React.createClass({
 				);
 			} else if(this.props.q.question_type === "MUTEX") {
 				answerElement = (
+					<div className="row">
+					<div className="col-xs-5">
 					<div className={hasAnswerError + hasAnswerSuccess}>
 						<select className="form-control"
 							onChange={this.answerChanged}
@@ -115,6 +174,11 @@ let QuestionRow = React.createClass({
 							<option value=""></option>
 							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
 						</select>
+					</div>
+					</div>
+					<div className="col-xs-7">
+						<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+					</div>
 					</div>
 				);
 			}

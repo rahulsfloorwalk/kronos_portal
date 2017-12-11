@@ -437,3 +437,18 @@ class AnswerNotApplicableView(APIView):
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
                 }) from e
+
+
+class AnswerCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    def post(self, request, audit_store_id, question_id):
+        try:
+            answer = answer_moderator_service.set_answer_comment_for_moderator(audit_store_id, question_id, request.data["answer_comment"], request.user.id)
+            return Response(AnswerSerializer(answer).data)
+        except KeyError as e:
+            raise ValidationError({
+                e.args[0]: "{} is required".format(e.args[0])
+            })
