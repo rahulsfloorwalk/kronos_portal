@@ -1,4 +1,5 @@
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
+from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField
+from django.contrib.postgres.fields import JSONField
 from guardian.shortcuts import get_users_with_perms
 from django.db.models import PROTECT
 from django.conf import settings
@@ -41,8 +42,8 @@ class ClientUser(Model):
 
     class Meta:
         permissions = (
-                ('clientuser_admin', 'ClientUser can view all reports, the dashboard and access related reporting APIs'),
-            )
+            ('clientuser_admin', 'ClientUser can view all reports, the dashboard and access related reporting APIs'),
+        )
 
 
 class Store(Model):
@@ -55,7 +56,8 @@ class Store(Model):
     address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=False, on_delete=PROTECT)
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
-    phone = CharField(db_column='phone', max_length=15, blank=True)
+    phone = CharField(db_column='phone', max_length=100, blank=True)
+    extra_data = JSONField(db_column='extra_data', default=dict(), blank=False)
 
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
@@ -66,5 +68,5 @@ class Store(Model):
     class Meta:
         unique_together = ("client", "code")
         permissions = (
-                ('clientuser_store_visible', 'ClientUser can view all AuditStore instances for this Store'),
-            )
+            ('clientuser_store_visible', 'ClientUser can view all AuditStore instances for this Store'),
+        )
