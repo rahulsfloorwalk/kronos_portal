@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
-import { hashHistory, Link, withRouter } from 'react-router';
+import { Link, withRouter } from 'react-router';
 
 import { ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
 

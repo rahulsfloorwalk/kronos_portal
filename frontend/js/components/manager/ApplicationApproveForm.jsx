@@ -1,7 +1,6 @@
 import React from 'react';
 import $ from 'jquery';
 import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
 
 import Alert from 'react-s-alert';
 
@@ -64,7 +63,7 @@ let ApplicationApproveForm = React.createClass({
 		};
 		var promise = this.props.dispatch(submitApplicationApproveForm(obj));
 		promise.then(() => {
-			hashHistory.push({
+			this.props.router.push({
 				pathname: `/audit_cycle/${this.context.auditCycleId}/audit`,
 				state: { t: Date.now() },
 			});
@@ -78,7 +77,7 @@ let ApplicationApproveForm = React.createClass({
 			return <Loading/>;
 		}
 		return (
-			<Modal modalTitle="Approve Application" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Approve Application" onClose={this.props.router.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.state.application.profileinfo.first_name } {this.state.application.profileinfo.last_name}</p>

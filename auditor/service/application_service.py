@@ -209,7 +209,7 @@ def reject(application_id, user_actor):
     return application
 
 def find_applications_by_audit(audit_id):
-    return audit_service.find_audit_by_id(audit_id).applications.exclude(status=AuditApplication.NOT_APPLIED)
+    return audit_service.find_audit_by_id(audit_id).applications.exclude(status=AuditApplication.NOT_APPLIED).order_by('audit_date')
 
 def find_application_by_id(application_id):
     try:
