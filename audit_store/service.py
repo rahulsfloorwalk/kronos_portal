@@ -12,9 +12,6 @@ from guardian.shortcuts import assign_perm, remove_perm
 from notifications.signals import notify
 from notifications.models import Notification
 
-from manager.notification import verbs
-from manager import notification
-
 from notify.service import mail_notify
 
 from kronos.utils import now_ist, today_ist
@@ -30,6 +27,7 @@ import questionnaire.service.question as question_service
 import questionnaire.service.section as section_service
 import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
+from notify import verbs
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 
@@ -131,24 +129,23 @@ def withdraw(audit_store_id, user_actor):
         if audit_store.status not in (AuditStore.COMPLETED, AuditStore.FAILED):
             audit_store.status = AuditStore.WITHDRAWN
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_WITHDRAWN',
+                verb=verbs.AUDIT_STORE_WITHDRAWN,
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_WITHDRAWN',
+                    verb=verbs.AUDIT_STORE_WITHDRAWN,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
@@ -181,24 +178,23 @@ def submit(audit_store_id, user_id):
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                     audit_store.user,
                     recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                    verb='AUDIT_STORE_SUBMITTED',
+                    verb=verbs.AUDIT_STORE_SUBMITTED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     audit_store.user,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_SUBMITTED',
+                    verb=verbs.AUDIT_STORE_SUBMITTED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
@@ -218,24 +214,23 @@ def complete(audit_store_id, user_actor):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.COMPLETED
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_COMPLETED',
+                verb=verbs.AUDIT_STORE_COMPLETED,
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_COMPLETED',
+                    verb=verbs.AUDIT_STORE_COMPLETED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
@@ -251,24 +246,23 @@ def fail(audit_store_id, user_actor):
         if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED):
             audit_store.status = AuditStore.FAILED
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_FAILED',
+                verb=verbs.AUDIT_STORE_FAILED,
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FAILED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_FAILED',
+                    verb=verbs.AUDIT_STORE_FAILED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FAILED).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FAILED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
@@ -284,18 +278,17 @@ def submit_by_manager(audit_store_id, user_actor):
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_SUBMITTED',
+                verb=verbs.AUDIT_STORE_SUBMITTED,
                 action_object=audit_store,
                 target=audit_store.audit
             )
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_SUBMITTED',
+                    verb=verbs.AUDIT_STORE_SUBMITTED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
@@ -331,24 +324,23 @@ def unsubmit(audit_store_id, user_actor):
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.ASSIGNED
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_UNSUBMITTED',
+                verb=verbs.AUDIT_STORE_UNSUBMITTED,
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_UNSUBMITTED',
+                    verb=verbs.AUDIT_STORE_UNSUBMITTED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
@@ -379,26 +371,23 @@ def accept(audit_store_id, payment_amount, user_actor):
             audit_store.status = AuditStore.ACCEPTED
             audit_store.save()
 
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_ACCEPTED',
+                verb=verbs.AUDIT_STORE_ACCEPTED,
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
-            connection.on_commit(lambda: print("TRANSACTION COMMITTED 1"))
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_ACCEPTED',
+                    verb=verbs.AUDIT_STORE_ACCEPTED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
-            connection.on_commit(lambda: print("TRANSACTION COMMITTED 2"))
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
 
             ## add the entry to the payment row
@@ -418,24 +407,23 @@ def reject(audit_store_id, user_actor):
         if audit_store.status == AuditStore.COMPLETED:
             audit_store.status = AuditStore.REJECTED
             audit_store.save()
-            #TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_REJECTED',
+                verb=verbs.AUDIT_STORE_REJECTED,
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                     user_actor,
                     recipient=audit_store.user,
-                    verb='AUDIT_STORE_REJECTED',
+                    verb=verbs.AUDIT_STORE_REJECTED,
                     action_object=audit_store,
                     target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:

@@ -4,7 +4,7 @@ from notifications.models import Notification
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
-from manager.notification import verbs
+from notify import verbs
 
 
 def find_by_recipient_user_and_verb(user_id, verb=None, before=None):
@@ -13,8 +13,8 @@ def find_by_recipient_user_and_verb(user_id, verb=None, before=None):
 
         qs = user.notifications
 
-        if verb not in (None, ""):
-            if verb not in verbs:
+        if verb:
+            if verb not in [v for v in dir(verbs) if not v.startswith("__")]:
                 raise AppLogicError("invalid verb")
             else:
                 qs = qs.filter(verb=verb)

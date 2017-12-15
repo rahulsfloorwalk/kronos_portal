@@ -11,7 +11,7 @@ from notifications.signals import notify
 from notifications.models import Notification
 from audit_store import service as audit_store_service
 from payment.models import Payment
-from manager import notification
+from notify import verbs
 
 from django.conf import settings
 
@@ -35,24 +35,23 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
             client=payment.audit_store.audit.audit_cycle.client.name
         )
         payment.save()
-        # TODO:VERB should be encapsulated
         notify.send(
             user_actor,
             recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-            verb='AUDIT_STORE_PENDING',
+            verb=verbs.AUDIT_STORE_PENDING,
             action_object=payment.audit_store,
             target=payment.audit_store.audit
         )
-        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+        manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             user_actor,
             recipient=payment.user,
-            verb='AUDIT_STORE_PENDING',
+            verb=verbs.AUDIT_STORE_PENDING,
             action_object=payment.audit_store,
             target=payment.audit_store.audit
         )
-        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+        auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
 
     except Payment.DoesNotExist as e:
@@ -82,24 +81,23 @@ def pay_for_audit_store(audit_store_id, user_actor):
                 account = bi.account_number
             )
             payment.save()
-            # TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_PAID',
+                verb=verbs.AUDIT_STORE_PAID,
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PAID).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=payment.user,
-                verb='AUDIT_STORE_PAID',
+                verb=verbs.AUDIT_STORE_PAID,
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PAID).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
@@ -122,24 +120,23 @@ def unpay_for_audit_store(audit_store_id, user_actor):
                 client=payment.audit_store.audit.audit_cycle.client.name
             )
             payment.save()
-            # TODO:VERB should be encapsulated
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_STORE_PENDING',
+                verb=verbs.AUDIT_STORE_PENDING,
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=payment.user,
-                verb='AUDIT_STORE_PENDING',
+                verb=verbs.AUDIT_STORE_PENDING,
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:

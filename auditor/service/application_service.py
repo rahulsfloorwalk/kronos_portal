@@ -9,8 +9,8 @@ from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
 from auditor.models import AuditApplication, ProfileInfo, BankInfo, AdditionalInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from manager import notification
 from notify.service import mail_notify
+from notify import verbs
 from registration.models import GROUP_NAME_MANAGER
 from audit.service import audit_service
 from audit.service import audit_cycle as audit_cycle_service
@@ -50,24 +50,23 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.status = AuditApplication.APPLIED
         application.audit_date = audit_date
         application.save()
-        #TODO:VERB should be encapsulated
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=notification.AUDIT_APPLICATION_APPLIED,
+                verb=verbs.AUDIT_APPLICATION_APPLIED,
                 action_object=application,
                 target=audit
         )
-        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
-            verb=notification.AUDIT_APPLICATION_APPLIED,
+            verb=verbs.AUDIT_APPLICATION_APPLIED,
             action_object=application,
             target=audit
         )
-        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+        auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
         return application
     else:
@@ -86,24 +85,23 @@ def cancel( audit_id, profileinfo_id):
     if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.REPORT, AuditCycle.ARCHIVED) and application.status == AuditApplication.APPLIED:
         application.status = AuditApplication.NOT_APPLIED
         application.save()
-        #TODO:VERB should be encapsulated
         notify.send(
                 profileinfo.user,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb='AUDIT_APPLICATION_CANCELED',
+                verb=verbs.AUDIT_APPLICATION_CANCELED,
                 action_object=application,
                 target=audit
         )
-        manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             profileinfo.user,
             recipient=profileinfo.user,
-            verb='AUDIT_APPLICATION_CANCELED',
+            verb=verbs.AUDIT_APPLICATION_CANCELED,
             action_object=application,
             target=audit
         )
-        auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
+        auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
         return application
     else:
@@ -129,18 +127,17 @@ def approve(application_id, audit_date, user_actor):
     application.status = AuditApplication.APPROVED
     application.audit_date = audit_date
     application.save()
-    #TODO:VERB should be encapsulated
     notify.send(
         user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb='AUDIT_APPLICATION_APPROVED',
+        verb=verbs.AUDIT_APPLICATION_APPROVED,
         action_object=application,
         target=application.audit
     )
     notify.send(
             user_actor,
             recipient=application.profileinfo.user,
-            verb='AUDIT_APPLICATION_APPROVED',
+            verb=verbs.AUDIT_APPLICATION_APPROVED,
             action_object=application,
             target=application.audit
     )
@@ -152,24 +149,23 @@ def approve(application_id, audit_date, user_actor):
     audit_store.user_id = application.profileinfo.user_id
 
     audit_store.save()
-    #TODO:VERB should be encapsulated
     notify.send(
         user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb='AUDIT_STORE_ASSIGNED',
+        verb=verbs.AUDIT_STORE_ASSIGNED,
         action_object=audit_store,
         target=audit_store.audit
     )
-    manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
+    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
             user_actor,
             recipient=audit_store.user,
-            verb='AUDIT_STORE_ASSIGNED',
+            verb=verbs.AUDIT_STORE_ASSIGNED,
             action_object=audit_store,
             target=audit_store.audit
     )
-    auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
+    auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return application
 
@@ -187,24 +183,23 @@ def reject(application_id, user_actor):
 
     application.status = AuditApplication.REJECTED
     application.save()
-    #TODO:VERB should be encapsulated
     notify.send(
         user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb='AUDIT_APPLICATION_REJECTED',
+        verb=verbs.AUDIT_APPLICATION_REJECTED,
         action_object=application,
         target=application.audit
     )
-    manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
+    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
             user_actor,
             recipient=application.profileinfo.user,
-            verb='AUDIT_APPLICATION_REJECTED',
+            verb=verbs.AUDIT_APPLICATION_REJECTED,
             action_object=application,
             target=application.audit
     )
-    auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
+    auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return application
 

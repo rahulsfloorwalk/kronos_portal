@@ -8,7 +8,7 @@ from django.core.mail import EmailMultiAlternatives
 from notifications.models import Notification
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
-from manager import notification
+from .. import verbs
 
 from celery import shared_task
 
@@ -44,71 +44,71 @@ def notification_email_task(notif_id):
         params['store_name'] = notif.action_object.audit.store.name
         params['store_address'] = notif.action_object.audit.store.address
 
-        if notif.verb == notification.AUDIT_APPLICATION_APPLIED:
+        if notif.verb == verbs.AUDIT_APPLICATION_APPLIED:
             subject = "Audit Application for {}".format(params['client'])
             params['html_template'] = 'notify/application_email.html'
             params['txt_template'] = 'notify/application_email.txt'
 
-        elif notif.verb == notification.AUDIT_APPLICATION_CANCELED:
+        elif notif.verb == verbs.AUDIT_APPLICATION_CANCELED:
             subject = "Audit Cancelled for {}".format(params['client'])
             params['html_template'] = 'notify/cancel_email.html'
             params['txt_template'] = 'notify/cancel_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_FIAT_ASSIGNED:
+        elif notif.verb == verbs.AUDIT_STORE_FIAT_ASSIGNED:
             subject = "Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/fiat_assign_email.html'
             params['txt_template'] = 'notify/fiat_assign_email.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
 
-        elif notif.verb == notification.AUDIT_STORE_ASSIGNED:
+        elif notif.verb == verbs.AUDIT_STORE_ASSIGNED:
             subject = "Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email.html'
             params['txt_template'] = 'notify/assign_email.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
 
-        elif notif.verb == notification.AUDIT_APPLICATION_REJECTED:
+        elif notif.verb == verbs.AUDIT_APPLICATION_REJECTED:
             subject = "Audit Application Not Accepted {}".format(params['client'])
             params['html_template'] = 'notify/reject_email.html'
             params['txt_template'] = 'notify/reject_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_WITHDRAWN:
+        elif notif.verb == verbs.AUDIT_STORE_WITHDRAWN:
             subject = "Audit Withdrawn for {}".format(params['client'])
             params['html_template'] = 'notify/withdrawn_email.html'
             params['txt_template'] = 'notify/withdrawn_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_SUBMITTED:
+        elif notif.verb == verbs.AUDIT_STORE_SUBMITTED:
             subject = "Audit Report Submitted for {}".format(params['client'])
             params['html_template'] = 'notify/submitted_email.html'
             params['txt_template'] = 'notify/submitted_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_UNSUBMITTED:
+        elif notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
             subject = "Audit Report Unsubmitted for {}".format(params['client'])
             params['html_template'] = 'notify/unsubmitted.html'
             params['txt_template'] = 'notify/unsubmitted.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_COMPLETED:
+        elif notif.verb == verbs.AUDIT_STORE_COMPLETED:
             subject = "Audit Report Completed for {}".format(params['client'])
             params['html_template'] = 'notify/completed_email.html'
             params['txt_template'] = 'notify/completed_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_FAILED:
+        elif notif.verb == verbs.AUDIT_STORE_FAILED:
             subject = "Audit Failed for {}".format(params['client'])
             params['html_template'] = 'notify/failed_email.html'
             params['txt_template'] = 'notify/failed_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_ACCEPTED:
+        elif notif.verb == verbs.AUDIT_STORE_ACCEPTED:
             subject = "Audit Report Accepted for {}".format(params['client'])
             params['html_template'] = 'notify/report_accepted_email.html'
             params['txt_template'] = 'notify/report_accepted_email.txt'
 
-        # elif notif.verb == notification.AUDIT_STORE_REJECTED:
+        # elif notif.verb == verbs.AUDIT_STORE_REJECTED:
         #     subject = "Audit Failed for {}".format(params['client'])
         #     params['html_template'] = 'notify/report_reject_email.html'
         #     params['txt_template'] = 'notify/report_reject_email.txt'
 
-        elif notif.verb == notification.AUDIT_STORE_PAID:
+        elif notif.verb == verbs.AUDIT_STORE_PAID:
             subject = "Payment cleared for {}".format(params['client'])
             params['html_template'] = 'notify/report_paid_email.html'
             params['txt_template'] = 'notify/report_paid_email.txt'

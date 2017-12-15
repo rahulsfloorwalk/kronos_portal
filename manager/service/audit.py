@@ -6,9 +6,6 @@ from django.contrib.auth.models import User, Group
 from notifications.signals import notify
 from notifications.models import Notification
 
-from manager.notification import verbs
-from manager import notification
-
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from notify.service import mail_notify
 
@@ -16,6 +13,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
 from auditor.models import AuditApplication
+from notify import verbs
 
 
 @atomic
@@ -41,24 +39,23 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
     audit_store.user_id = user.id
 
     audit_store.save()
-    #TODO:VERB should be encapsulated
     notify.send(
         user_actor,
         recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb='AUDIT_STORE_FIAT_ASSIGNED',
+        verb=verbs.AUDIT_STORE_FIAT_ASSIGNED,
         action_object=audit_store,
         target=audit
     )
-    manager_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
+    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
         user_actor,
         recipient=audit_store.user,
-        verb='AUDIT_STORE_FIAT_ASSIGNED',
+        verb=verbs.AUDIT_STORE_FIAT_ASSIGNED,
         action_object=audit_store,
         target=audit
     )
-    auditor_notif_id = Notification.objects.filter(verb=notification.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
+    auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return audit_store
 
