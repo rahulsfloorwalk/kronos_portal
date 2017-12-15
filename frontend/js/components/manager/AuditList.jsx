@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { hashHistory, Link } from 'react-router';
 
@@ -26,8 +26,37 @@ import { AuditStoreTable } from './AuditStoreList.jsx';
 import {fetchAudits, deleteAudit} from '../../manager/actions/audit.js';
 
 import { rejectAllForAudit, rejectAllForAuditCycle } from '../../manager/service/application.js';
+import { findAuditStoresByAudit } from '../../manager/service/audit_store.js';
 
 import AuditApplicationList from './AuditApplicationList.jsx';
+
+class AuditStoreTableForAudit extends Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			auditStores: [],
+			loading: false,
+		};
+	}
+
+	setLoading = (loading) => {
+		this.setState(prevState => Object.assign({}, prevState, { loading }));
+	}
+
+	componentDidMount(){
+		this.setLoading(true);
+		findAuditStoresByAudit(this.props.auditId).then((auditStores) => {
+			this.setState({auditStores});
+		}).always(()=>this.setLoading(false));
+	}
+	render(){
+		if(this.state.loading) {
+			return <Loading/>;
+		} else {
+			return (<AuditStoreTable auditStores={this.state.auditStores}/>);
+		}
+	}
+}
 
 var AuditRow = React.createClass({
   getInitialState: function(){
@@ -51,8 +80,8 @@ var AuditRow = React.createClass({
 	  }
   },
   render: function(){
-	  let reportCount = this.props.audit.audit_stores.length;
-	  let validReportCount = this.props.audit.audit_stores.filter(report => ["ASSIGNED","SUBMITTED","COMPLETED","ACCEPTED"].includes(report.status)).length;
+	  let reportCount = this.props.audit.report_count;
+	  let validReportCount = this.props.audit.valid_report_count;
 
 	  let backgroundColor;
 	  if( validReportCount === 0){
@@ -149,7 +178,7 @@ var AuditRow = React.createClass({
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
 			<td colSpan="9" style={{paddingLeft:"70px"}}>
-				<AuditStoreTable auditStores={this.props.audit.audit_stores}/>
+				<AuditStoreTableForAudit auditId={this.props.audit.id}/>
 			</td>
 		: null }
 	</CSSTransitionGroup>

@@ -38,6 +38,15 @@ class AuditStoreByAuditCycle(APIView):
         except ObjectNotFound:
             raise Http404
 
+class AuditStoreByAudit(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_id, format=None):
+        audit_stores = audit_store_service.find_by_audit(audit_id)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+
 class AuditStoreIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

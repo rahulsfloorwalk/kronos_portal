@@ -100,7 +100,29 @@ class Audit(Model):
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
 
     def application_count(self):
-        return self.applications.exclude(status=AuditApplication.NOT_APPLIED).count()
+        # check if prefetched cache exists,
+        if hasattr(self, '_prefetched_objects_cache') and 'applications' in self._prefetched_objects_cache:
+            # run the summing code in python because we have already prefetched questions
+            return len([a for a in self.applications.all() if a.status is not AuditApplication.NOT_APPLIED])
+        else:
+            return self.applications.exclude(status=AuditApplication.NOT_APPLIED).count()
+
+    def valid_report_count(self):
+        valid_status = (
+            audit_store.models.AuditStore.COMPLETED,
+            audit_store.models.AuditStore.ACCEPTED,
+            audit_store.models.AuditStore.ASSIGNED,
+            audit_store.models.AuditStore.SUBMITTED,
+        )
+        # check if prefetched cache exists,
+        if hasattr(self, '_prefetched_objects_cache') and 'audit_stores' in self._prefetched_objects_cache:
+            # run the summing code in python because we have already prefetched questions
+            return len([a for a in self.audit_stores.all() if a.status not in valid_status])
+        else:
+            return self.audit_stores.filter(status__in=valid_status).count()
+
+    def report_count(self):
+        return self.audit_stores.count()
 
     def __str__(self):
         return "Audit({}): audit_cycle: {}, store: {}, count: {}".format(self.id, self.audit_cycle, self.store, self.count)

@@ -19,10 +19,14 @@ class AuditApplicationList extends Component{
 			applications: [],
 		};
 	}
+	setLoading = (loading) => {
+		this.setState(prevState => Object.assign({}, prevState, { loading }));
+	}
 	reloadApplications = (auditId) => {
+		this.setLoading(true);
 		findByAudit(auditId).then((applications) => {
 			this.setState({applications});
-		});
+		}).always(()=>this.setLoading(false));
 	}
 	componentDidMount(){
 		this.reloadApplications(this.props.auditId);

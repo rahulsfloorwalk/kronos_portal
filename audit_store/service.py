@@ -50,6 +50,12 @@ def find_audit_stores_for_auditor(profileinfo_id):
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_by_audit(audit_id):
+    return AuditStore.objects.filter(audit_id=audit_id).prefetch_related(
+        'user',
+        'user__profileinfo',
+    )
+
 def find_by_audit_cycle(audit_cycle_id):
     return AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id).prefetch_related(
         'user',

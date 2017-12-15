@@ -33,3 +33,7 @@ export function revokeAuditStoreFromClientUser(audit_store_id, client_user_id){
 		contentType: 'application/json'
 	});
 };
+
+export function findAuditStoresByAudit(audit_id){
+	return $.get(url.api_base_path + `manager/audit/${audit_id}/audit_store`);
+};

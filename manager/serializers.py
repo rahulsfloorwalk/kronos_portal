@@ -169,6 +169,23 @@ class StoreSerializer(ModelSerializer):
         read_only_fields = fields
 
 
+class StoreSerializerWithoutClientUserAndClient(ModelSerializer):
+    location = LocationSerializer()
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'address',
+            'location',
+            'code',
+            'type',
+            'priority',
+            'phone',
+        )
+        read_only_fields = fields
+
+
 class StoreDeSerializer(ModelSerializer):
     class Meta:
         model = Store
@@ -255,8 +272,7 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
         read_only_fields = fields
 
 class AuditSerializer(ModelSerializer):
-    store = StoreSerializer()
-    audit_stores = AuditStoreSerializerWithoutAudit(many=True)
+    store = StoreSerializerWithoutClientUserAndClient()
     class Meta:
         model = Audit
         fields = (
@@ -266,9 +282,10 @@ class AuditSerializer(ModelSerializer):
             'reimbursement',
             'store',
             'audit_cycle',
-            'audit_stores',
             'post_approval_description',
             'application_count',
+            'report_count',
+            'valid_report_count',
         )
         read_only_fields = fields
 
