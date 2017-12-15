@@ -54,28 +54,26 @@ class AuditApplicationList extends Component{
 				statusLabel = <ApplicationStatusLabel status={app.status}/>;
 			}
 			rows.push(
-				<div key={app.id} className="col-xs-6 col-md-3">
-					<div className="panel panel-default">
-					<div className="panel-body">
-					<p><User/>&nbsp;{auditorLink}</p>
-					<p><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></p>
-					<p><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</p>
-					<p>
-						{approveLink}{rejectLink}
+				<tr key={app.id} className="">
+					<td><User/>&nbsp;{auditorLink}</td>
+					<td><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></td>
+					<td><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</td>
+					<td>
+						{approveLink}&nbsp;{rejectLink}
 						{statusLabel}
-					</p>
-					</div>
-					</div>
-				</div>
+					</td>
+				</tr>
 			);
 		}
 		if(rows.length === 0){
-			rows = <div className="well well-sm col-md-offset-2 col-md-8 text-center text-muted">no applications for this audit</div>;
+			rows = <tr><td><div className="well well-sm col-md-offset-2 col-md-8 text-center text-muted">no applications for this audit</div></td></tr>;
 		}
 		return (
-			<div className="row">
+			<table className="table">
+				<tbody>
 				{rows}
-			</div>
+				</tbody>
+			</table>
 		);
 	}
 }

@@ -11,7 +11,7 @@ import { momentDateFormat }  from '../../../config.js';
 
 import { pointerStyle }  from '../../styles.js';
 
-import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../Icons.jsx';
+import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight, File } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -63,6 +63,7 @@ var AuditRow = React.createClass({
 	  return {
 		  expanded: false,
 		  dropdown: false,
+		  selectedTab: "applications",
 	  };
   },
 	viewButtonClicked: function(e){
@@ -96,6 +97,18 @@ var AuditRow = React.createClass({
 	  let trStyle = Object.assign({}, pointerStyle, {
 		  backgroundColor
 	  });
+
+	  let currentTab;
+
+	  switch(this.state.selectedTab){
+		  case "applications":
+			  currentTab = <AuditApplicationList auditId={this.props.audit.id}/>;
+			  break;
+		  case "reports":
+			  currentTab = <AuditStoreTableForAudit auditId={this.props.audit.id}/>;
+			  break;
+	  }
+
     return(
       <tbody>
       <tr style={trStyle} onClick={this.viewButtonClicked} title="Click to Expand" className={this.state.expanded ? "active" : ""}>
@@ -167,18 +180,20 @@ var AuditRow = React.createClass({
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
 			<td colSpan="9" style={{paddingLeft:"70px"}}>
-				<AuditApplicationList auditId={this.props.audit.id}/>
-			</td>
-		: null }
-	</CSSTransitionGroup>
-	<CSSTransitionGroup
-		component="tr"
-		transitionName="fade"
-		transitionEnterTimeout={300}
-		transitionLeaveTimeout={300}>
-		{ this.state.expanded ?
-			<td colSpan="9" style={{paddingLeft:"70px"}}>
-				<AuditStoreTableForAudit auditId={this.props.audit.id}/>
+				<ul className="nav nav-tabs">
+					<li className={this.state.selectedTab === "applications" ? "active" : ""} style={pointerStyle} role="presentation">
+						<a onClick={() => this.setState({selectedTab:"applications"})}><Inbox/> Applications</a>
+					</li>
+					<li className={this.state.selectedTab === "reports" ? "active" : ""} style={pointerStyle} role="presentation">
+						<a onClick={() => this.setState({selectedTab:"reports"})}><File/> Reports</a>
+					</li>
+				</ul>
+				<CSSTransitionGroup
+					transitionName="fade"
+					transitionEnterTimeout={300}
+					transitionLeaveTimeout={300}>
+						{currentTab}
+				</CSSTransitionGroup>
 			</td>
 		: null }
 	</CSSTransitionGroup>
