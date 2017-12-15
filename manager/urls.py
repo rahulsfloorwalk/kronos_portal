@@ -20,6 +20,7 @@ from .viewss import email_log as email_log_views
 from .viewss import opportunity_email as opportunity_email_views
 from .viewss import social as social_views
 from .viewss import payment as payment_views
+from .viewss import application as application_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -81,13 +82,16 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
 
-    url(r'application/(?P<application_id>[0-9]+)/approve$', views.AuditApplicationApproveView.as_view(), name='audit_application_approve_view'),
-    url(r'application/(?P<application_id>[0-9]+)/reject$', views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),
+    url(r'application/(?P<application_id>[0-9]+)/approve$', application_views.AuditApplicationApproveView.as_view(), name='audit_application_approve_view'),
+    url(r'application/(?P<application_id>[0-9]+)/reject$', application_views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),
+    url(r'application/(?P<application_id>[0-9]+)$', application_views.AuditApplicationIdView.as_view(), name='audit_application_id_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', audit_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/audit/copy$', audit_views.AuditCopyByAuditCycle.as_view(), name='audit_copy_by_audit_cycle'),
     url(r'audit/(?P<audit_id>[0-9]+)/assign$', audit_views.AuditFiatAssignView.as_view(), name='audit_fiat_assign_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/application/deny_all$', audit_views.AuditRejectAllApplicationsView.as_view(), name='audit_id_reject_all_applications_view'),
+    url(r'audit/(?P<audit_id>[0-9]+)/audit_store$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
+    url(r'audit/(?P<audit_id>[0-9]+)/application$', application_views.AuditApplicationsByAuditView.as_view(), name='applications_by_audit_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 

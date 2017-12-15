@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
 from django.db.models import PROTECT
+from auditor.models import AuditApplication
 
 import audit_store
 
@@ -97,6 +98,9 @@ class Audit(Model):
     store = ForeignKey('client.Store', related_name='audits', db_column='store_id', on_delete=PROTECT)
     audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
+
+    def application_count(self):
+        return self.applications.exclude(status=AuditApplication.NOT_APPLIED).count()
 
     def __str__(self):
         return "Audit({}): audit_cycle: {}, store: {}, count: {}".format(self.id, self.audit_cycle, self.store, self.count)

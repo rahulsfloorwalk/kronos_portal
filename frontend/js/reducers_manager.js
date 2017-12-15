@@ -931,6 +931,7 @@ export function rootReducer(store = initialStore, action) {
 		case types.AUDIT_APPLICATION_APPROVE:
 		case types.AUDIT_APPLICATION_REJECT:
 			switch(action.status){
+					/*
 				case "success":
 					return Object.assign({}, store, {
 						audits: Object.assign({}, store.audits, {
@@ -940,6 +941,7 @@ export function rootReducer(store = initialStore, action) {
 						})
 					});
 					break;
+					*/
 				case "error":
 					return Object.assign({}, store, {
 						errors: action.errors

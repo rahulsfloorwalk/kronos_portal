@@ -6,6 +6,7 @@ import { hashHistory } from 'react-router';
 import Alert from 'react-s-alert';
 
 import { submitApplicationRejectForm } from '../../manager/actions/application.js';
+import { findById } from '../../manager/service/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -20,31 +21,44 @@ import Loading from '../Loading.jsx';
 
 var ApplicationRejectForm = React.createClass({
 	getInitialState: function(){
-		return {};
+		return {
+			application: null,
+			errors: {},
+		};
 	},
 	contextTypes: {
 		auditCycleId: React.PropTypes.number
+	},
+	componentDidMount: function(){
+		findById(this.props.params.applicationId).then(application => {
+			this.setState({
+				application,
+			});
+		});
 	},
 	fieldChanged: function(e){
 		affectInputEventToComponent(e, this);
 	},
 	onSubmit: function(e){
 		e.preventDefault();
-		var promise = this.props.dispatch(submitApplicationRejectForm(this.props.application.id));
+		var promise = this.props.dispatch(submitApplicationRejectForm(this.props.params.applicationId));
 		promise.then(() => {
-			hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`);
+			hashHistory.push({
+				pathname: `/audit_cycle/${this.context.auditCycleId}/audit`,
+				state: { t: Date.now() },
+			});
 			Alert.success("APPLICATION DENIED");
 		});
 	},
 	render : function(){
-		if( ! this.props.application){
+		if( ! this.state.application){
 			return <Loading/>;
 		}
 		return (
 			<Modal modalTitle="Deny Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
+					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					<p><label>Auditor Name:</label> { this.state.application.profileinfo.first_name } {this.state.application.profileinfo.last_name}</p>
 					<p>Are you sure you want to reject this application?</p>
 					<SaveButton text="Deny"/>
 				</form>
@@ -68,4 +82,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(ApplicationRejectForm);
+export default ReactRedux.connect()(ApplicationRejectForm);

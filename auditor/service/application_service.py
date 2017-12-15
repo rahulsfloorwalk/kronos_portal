@@ -208,15 +208,14 @@ def reject(application_id, user_actor):
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return application
 
-def find_by_audit(audit_id):
+def find_applications_by_audit(audit_id):
+    return audit_service.find_audit_by_id(audit_id).applications.exclude(status=AuditApplication.NOT_APPLIED)
+
+def find_application_by_id(application_id):
     try:
-        applications = []
-        for al in Audit.objects.get(id=audit_id).auditlocations.all():
-            for app in al.applications.all():
-                applications.append(app)
-        return applications
-    except Audit.DoesNotExist:
-        raise ObjectNotFound
+        return AuditApplication.objects.get(pk=application_id)
+    except AuditApplication.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 def can_auditor_apply(user_id):
     try:

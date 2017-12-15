@@ -15,6 +15,14 @@ export function fiatAssignAudit(audit_id, email, audit_date){
 	return promise;
 };
 
+export function findById(application_id){
+	return $.get(url.api_base_path + `manager/application/${application_id}`);
+};
+
+export function findByAudit(audit_id){
+	return $.get(url.api_base_path + `manager/audit/${audit_id}/application`);
+};
+
 export function rejectAllForAudit(audit_id){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit/${audit_id}/application/deny_all`,

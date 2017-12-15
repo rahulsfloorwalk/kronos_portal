@@ -6,6 +6,7 @@ import { hashHistory } from 'react-router';
 import Alert from 'react-s-alert';
 
 import { submitApplicationApproveForm } from '../../manager/actions/application.js';
+import { findById } from '../../manager/service/application.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -19,20 +20,25 @@ import SaveButton from '../SaveButton.jsx';
 import Modal from '../Modal.jsx';
 import Loading from '../Loading.jsx';
 
-var ApplicationApproveForm = React.createClass({
+let ApplicationApproveForm = React.createClass({
 	getInitialState: function(){
-		return {};
+		return {
+			application: null,
+			errors: {},
+		};
 	},
 	contextTypes: {
 		auditCycleId: React.PropTypes.number
 	},
 	componentDidMount: function(){
-		if(this.props.application){
+		findById(this.props.params.applicationId).then(application => {
 			this.setState({
-				'audit_date': this.props.application.audit_date
+				application,
+				'audit_date': application.audit_date
 			});
-		}
+		});
 	},
+	/*
 	componentWillReceiveProps: function(nextProps) {
 		console.debug("nextProps.application",nextProps.application);
 		if(nextProps.application && ! this.state.date_set ){
@@ -42,6 +48,7 @@ var ApplicationApproveForm = React.createClass({
 			});
 		};
 	},
+	*/
 	dateChanged: function(date){
 		if( typeof date !== "string"){
 			this.setState({
@@ -52,25 +59,30 @@ var ApplicationApproveForm = React.createClass({
 	onSubmit: function(e){
 		e.preventDefault();
 		var obj = {
-			application_id: this.props.application.id,
+			application_id: this.state.application.id,
 			audit_date: this.state.audit_date
 		};
 		var promise = this.props.dispatch(submitApplicationApproveForm(obj));
 		promise.then(() => {
-			hashHistory.push(`/audit_cycle/${this.context.auditCycleId}/audit`);
+			hashHistory.push({
+				pathname: `/audit_cycle/${this.context.auditCycleId}/audit`,
+				state: { t: Date.now() },
+			});
 			Alert.success("APPLICATION APPROVED");
+		}, (err) => {
+			this.setState({ errors: err && err.responseJSON });
 		});
 	},
 	render : function(){
-		if( ! this.props.application){
+		if( ! this.state.application){
 			return <Loading/>;
 		}
 		return (
 			<Modal modalTitle="Approve Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					<p><label>Auditor Name:</label> { this.props.application.profileinfo.first_name } {this.props.application.profileinfo.last_name}</p>
-					<FormDateInput label="Approved Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.props.errors.audit_date}/>
+					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					<p><label>Auditor Name:</label> { this.state.application.profileinfo.first_name } {this.state.application.profileinfo.last_name}</p>
+					<FormDateInput label="Approved Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
 					<SaveButton text="Approve"/>
 				</form>
 			</Modal>
@@ -93,4 +105,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(ApplicationApproveForm);
+export default ReactRedux.connect()(ApplicationApproveForm);

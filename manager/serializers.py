@@ -256,7 +256,6 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
 
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
-    applications = AuditApplicationSerializer(many=True)
     audit_stores = AuditStoreSerializerWithoutAudit(many=True)
     class Meta:
         model = Audit
@@ -267,9 +266,9 @@ class AuditSerializer(ModelSerializer):
             'reimbursement',
             'store',
             'audit_cycle',
-            'applications',
             'audit_stores',
             'post_approval_description',
+            'application_count',
         )
         read_only_fields = fields
 

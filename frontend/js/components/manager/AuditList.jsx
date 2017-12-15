@@ -27,50 +27,7 @@ import {fetchAudits, deleteAudit} from '../../manager/actions/audit.js';
 
 import { rejectAllForAudit, rejectAllForAuditCycle } from '../../manager/service/application.js';
 
-var AuditApplicationList = React.createClass({
-	contextTypes: {
-		auditCycleId: React.PropTypes.number
-	},
-	render: function(){
-		var rows = [];
-		for( let app of this.props.applications){
-			let auditorUrl = `/auditor/${app.profileinfo.user_id}`;
-			let auditorLink = (<Link to={auditorUrl}>{app.profileinfo.first_name} { app.profileinfo.last_name}</Link>);
-			let approveLink, rejectLink, statusLabel;
-			if( app.status === "APPLIED"){
-				approveLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/approve`} className="btn btn-primary"><ThumbsUp/> Approve</Link>);
-				rejectLink = (<Link to={`/audit_cycle/${this.context.auditCycleId}/audit/${app.audit}/application/${app.id}/reject`} className="btn btn-default"><ThumbsDown/> Deny</Link>);
-			} else {
-				statusLabel = <ApplicationStatusLabel status={app.status}/>;
-			}
-			if( app.status !== "NOT_APPLIED"){
-				rows.push(
-					<div key={app.id} className="col-xs-6 col-md-3">
-						<div className="panel panel-default">
-						<div className="panel-body">
-						<p><User/>&nbsp;{auditorLink}</p>
-						<p><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></p>
-						<p><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</p>
-						<p>
-							{approveLink}{rejectLink}
-							{statusLabel}
-						</p>
-						</div>
-						</div>
-					</div>
-				);
-			}
-		}
-		if(rows.length === 0){
-			rows = <div className="well well-sm col-md-offset-2 col-md-8 text-center text-muted">no applications for this audit</div>;
-		}
-		return (
-			<div className="row">
-				{rows}
-			</div>
-		);
-	}
-});
+import AuditApplicationList from './AuditApplicationList.jsx';
 
 var AuditRow = React.createClass({
   getInitialState: function(){
@@ -122,7 +79,7 @@ var AuditRow = React.createClass({
         <td className="text-right">{this.props.audit.earnings_per_audit}</td>
         <td className="text-right">{this.props.audit.reimbursement ? this.props.audit.reimbursement : null}</td>
         <td className="text-right">{this.props.audit.count}</td>
-        <td className="text-right">{this.props.audit.applications.filter(app => app.status !== "NOT_APPLIED").length}</td>
+        <td className="text-right">{this.props.audit.application_count}</td>
         <td className="text-right">{validReportCount} ( {reportCount})</td>
         <td className="text-right">
 	    <div className="btn-group">
@@ -181,7 +138,7 @@ var AuditRow = React.createClass({
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
 			<td colSpan="9" style={{paddingLeft:"70px"}}>
-				<AuditApplicationList applications={this.props.audit.applications}/>
+				<AuditApplicationList auditId={this.props.audit.id}/>
 			</td>
 		: null }
 	</CSSTransitionGroup>
