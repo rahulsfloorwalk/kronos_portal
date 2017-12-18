@@ -66,7 +66,7 @@ class AuditApplicationList extends Component{
 			);
 		}
 		if(rows.length === 0){
-			rows = <tr><td><div className="well well-sm col-md-offset-2 col-md-8 text-center text-muted">no applications for this audit</div></td></tr>;
+			rows = <tr><td className="text-center text-muted">no applications for this audit</td></tr>;
 		}
 		return (
 			<table className="table">

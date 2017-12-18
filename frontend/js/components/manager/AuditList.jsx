@@ -84,6 +84,11 @@ var AuditRow = React.createClass({
 	  let reportCount = this.props.audit.report_count;
 	  let validReportCount = this.props.audit.valid_report_count;
 
+	  let expandedBorder = {
+		  borderLeft: "solid Black 1px",
+		  //borderRight: "solid Black 1px",
+	  };
+
 	  let backgroundColor;
 	  if( validReportCount === 0){
 		  backgroundColor = "";
@@ -96,7 +101,9 @@ var AuditRow = React.createClass({
 
 	  let trStyle = Object.assign({}, pointerStyle, {
 		  backgroundColor
-	  });
+	  }, this.state.expanded ? expandedBorder : {},
+	  this.state.expanded ? { fontSize : "130%", fontWeight: "bold", } : {},
+	  );
 
 	  let currentTab;
 
@@ -111,7 +118,7 @@ var AuditRow = React.createClass({
 
     return(
       <tbody>
-      <tr style={trStyle} onClick={this.viewButtonClicked} title="Click to Expand" className={this.state.expanded ? "active" : ""}>
+      <tr style={trStyle} onClick={this.viewButtonClicked} title={this.state.expanded ? "Click to Collapse" : "Click to Expand"} className={this.state.expanded ? "active" : ""}>
         <td className="text-right">{this.props.serial}</td>
         <td>
 	    {this.props.audit.store.name}<br/>
@@ -162,24 +169,28 @@ var AuditRow = React.createClass({
 	    </div>
         </td>
       </tr>
+	{ this.props.audit.post_approval_description ?
 	<CSSTransitionGroup
 		component="tr"
 		transitionName="fade"
+		style={expandedBorder}
 		transitionEnterTimeout={300}
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
-			<td colSpan="9" style={{paddingLeft:"70px"}}>
+			<td colSpan="9" style={{backgroundColor: "White"}}>
 				<MarkdownViewer markdown={this.props.audit.post_approval_description}/>
 			</td>
 		: null }
 	</CSSTransitionGroup>
+	: null }
 	<CSSTransitionGroup
 		component="tr"
 		transitionName="fade"
+		style={expandedBorder}
 		transitionEnterTimeout={300}
 		transitionLeaveTimeout={300}>
 		{ this.state.expanded ?
-			<td colSpan="9" style={{paddingLeft:"70px"}}>
+			<td colSpan="9" style={{backgroundColor: "White"}}>
 				<ul className="nav nav-tabs">
 					<li className={this.state.selectedTab === "applications" ? "active" : ""} style={pointerStyle} role="presentation">
 						<a onClick={() => this.setState({selectedTab:"applications"})}><Inbox/> Applications</a>
