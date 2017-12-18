@@ -21,19 +21,14 @@ export default React.createClass({
 		let rows = [];
 		let stateName = this.state.states[this.props.params.stateId];
 		for(let c of this.state.cities) {
-			let linkTo = `/state/${this.props.params.stateId}/city/${c.id}/location`;
 			rows.push(
 				<div key={c.id} className="col-md-3">
 					<div className="panel panel-default">
 						<div className="panel-body">
-							<a href={c.gmaps_url} className="btn btn-link pull-right" target="_blank">
+							<a href={c.gmaps_url} className="btn btn-default pull-right" target="_blank">
 								<MapMarker/>
 							</a>
 							<h4>{c.name}</h4>
-							<Link to={linkTo} className="btn btn-default">
-								<ShareAlt/>
-								View
-							</Link>
 						</div>
 					</div>
 				</div>

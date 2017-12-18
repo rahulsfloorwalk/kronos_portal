@@ -23,8 +23,8 @@ def get_audit_cycle_comparison(client_id, audit_cycle_type):
         for audit_store in audit_stores:
             row = []
             row.append(audit_store.id)
-            row.append(store.location.name)
-            row.append(store.location.city.name)
+            row.append(store.name)
+            row.append(store.city.name)
             row.append(audit_store.audit_date)
             report_sections = audit_store.report_sections.order_by("section__sequence").all()
             for report_section in report_sections:

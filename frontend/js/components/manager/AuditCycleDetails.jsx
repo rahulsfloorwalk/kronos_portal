@@ -17,13 +17,6 @@ import Loading from '../Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-var AuditLocation = React.createClass({
-	render: function(){
-		return (
-			<li><strong>{this.props.auditLocation.count}</strong> - {this.props.auditLocation.location.name}, {this.props.auditLocation.location.city.name}</li>
-		);
-	}
-});
 
 var AuditCycleDetails = React.createClass({
 	childContextTypes: {

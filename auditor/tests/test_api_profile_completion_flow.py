@@ -49,7 +49,7 @@ class ProfileCompletionAPITestCase(APITestCase):
                 audit_cycle__status=AuditCycle.ACTIVE,
                 audit_cycle__start_date=date(2017, 6, 1),
                 audit_cycle__end_date=date(2017, 6, 20),
-                store__location__city=self.city,
+                store__city=self.city,
             )
 
         self.audit_recipe.make(_quantity=5)

@@ -162,7 +162,7 @@ var AuditStoreList = React.createClass({
 	    rows.push(
 		    <div className="panel panel-default" key={audits[i].id}>
 			<div className="panel-heading">
-				<b>{audits[i].store.name}</b>, {audits[i].store.location.name}, {audits[i].store.location.city.name}
+				<b>{audits[i].store.name}</b>, {audits[i].store.address}, {audits[i].store.city.name}
 			</div>
 			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus}/>
 		    </div>

@@ -15,7 +15,7 @@ from questionnaire.models import Section, Question
 from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
 from social.models import Facebook
 from referral.models import AuditorReferral
-from .models import City, Location
+from .models import City
 from notify.models import OpportunityEmailRecord
 
 class ClientSerializer(ModelSerializer):
@@ -57,40 +57,6 @@ class CitySerializer(ModelSerializer):
             'gmaps_url',
         )
         read_only_fields = fields
-
-class LocationSerializer(ModelSerializer):
-    city = CitySerializer()
-
-    class Meta:
-        model = Location
-        fields = (
-            'id',
-            'name',
-            'pincode',
-            'city',
-        )
-        read_only_fields = fields
-
-class LocationDeSerializer(ModelSerializer):
-    class Meta:
-        model = Location
-        fields = (
-            'id',
-            'name',
-            'pincode',
-            'city',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if self.context.get('id') is not None:
-            location = Location.objects.get(id=self.context.get('id'))
-        else:
-            location = Location()
-        location.name = self.validated_data.get('name', location.name)
-        location.pincode = self.validated_data.get('pincode', location.pincode)
-        location.city = self.validated_data.get('city', location.city_id)
-        return location
 
 
 class AuditCycleSerializer(ModelSerializer):
@@ -149,8 +115,8 @@ class AuditCycleDeSerializer(ModelSerializer):
 
 
 class StoreSerializer(ModelSerializer):
-    location = LocationSerializer()
     client = ClientSerializer()
+    city = CitySerializer()
     visible_to = PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = Store
@@ -158,30 +124,30 @@ class StoreSerializer(ModelSerializer):
             'id',
             'name',
             'address',
-            'location',
             'client',
             'code',
             'type',
             'priority',
             'phone',
             'visible_to',
+            'city',
         )
         read_only_fields = fields
 
 
 class StoreSerializerWithoutClientUserAndClient(ModelSerializer):
-    location = LocationSerializer()
+    city = CitySerializer()
     class Meta:
         model = Store
         fields = (
             'id',
             'name',
             'address',
-            'location',
             'code',
             'type',
             'priority',
             'phone',
+            'city',
         )
         read_only_fields = fields
 
@@ -193,12 +159,12 @@ class StoreDeSerializer(ModelSerializer):
             'id',
             'name',
             'address',
-            'location',
             'client',
             'code',
             'type',
             'phone',
             'priority',
+            'city',
         )
         read_only_fields = ('id',)
         validators=[]
@@ -210,7 +176,7 @@ class StoreDeSerializer(ModelSerializer):
             store = Store()
         store.name = self.validated_data.get('name', store.name)
         store.address = self.validated_data.get('address', store.address)
-        store.location = self.validated_data.get('location', store.location_id)
+        store.city = self.validated_data.get('city', store.city_id)
         store.client = self.validated_data.get('client', store.client_id)
         store.code = self.validated_data.get('code', store.code)
         store.type = self.validated_data.get('type', store.type)

@@ -56,7 +56,7 @@ var AuditApplyForm = React.createClass({
 	},
 	render : function(){
 		return (
-			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.location.city.name}`} onClose={hashHistory.goBack}>
+			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p className="text-center">

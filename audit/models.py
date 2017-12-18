@@ -1,5 +1,4 @@
-from django.conf import settings
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField
 from django.db.models import PROTECT
 from auditor.models import AuditApplication
 
@@ -59,8 +58,8 @@ class AuditCycle(Model):
 
     class Meta:
         permissions = (
-                ('moderator_manage', 'Moderator can manage this Audit Cycle'),
-            )
+            ('moderator_manage', 'Moderator can manage this Audit Cycle'),
+        )
 
     def max_marks(self):
         return sum(s.max_marks() for s in self.sections.all())
@@ -80,10 +79,6 @@ class AuditCycle(Model):
             return audit_count
         else:
             return self.completed_audit_count() * 100 / audit_count
-#
-#    def cities(self):
-#        cities = [al.location.city for al in self.auditlocations.all()]
-#        return set(cities)
 
     def __str__(self):
         return "AuditCycle({}): {}, client: {}".format(self.id, self.name, self.client)

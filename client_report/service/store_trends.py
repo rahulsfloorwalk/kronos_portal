@@ -28,8 +28,8 @@ def get_performing_stores(audit_cycle):
                 "code": audit.store.code,
                 "priority": audit.store.priority,
                 "city": {
-                    "id": audit.store.location.city.id,
-                    "name": audit.store.location.city.name,
+                    "id": audit.store.city.id,
+                    "name": audit.store.city.name,
                 }
             },
             {
@@ -52,8 +52,7 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
     qs = qs.prefetch_related(
         'audits',
         'audits__store',
-        'audits__store__location',
-        'audits__store__location__city',
+        'audits__store__city',
         Prefetch('audits__audit_stores', queryset=AuditStore.objects.presentable()),
         'audits__audit_stores__report_sections',
         'audits__audit_stores__report_sections__section',

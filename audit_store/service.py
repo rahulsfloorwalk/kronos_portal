@@ -64,8 +64,7 @@ def find_by_audit_cycle(audit_cycle_id):
         'audit__audit_cycle',
         'audit__audit_cycle__client',
         'audit__store',
-        'audit__store__location',
-        'audit__store__location__city',
+        'audit__store__city',
         'audit__store__client',
     )
 
@@ -96,8 +95,7 @@ def find_by_store_for_client(store_id, client_id):
         'report_sections__section__questions__answers',
         'audit',
         'audit__store',
-        'audit__store__location',
-        'audit__store__location__city',
+        'audit__store__city',
         'audit__audit_cycle',
         'audit__audit_cycle__client',
         'audit__audit_cycle__sections',

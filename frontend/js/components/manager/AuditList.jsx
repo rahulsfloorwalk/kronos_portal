@@ -104,7 +104,7 @@ var AuditRow = React.createClass({
 	    {this.props.audit.store.name}<br/>
 	    <small className="text-muted">{this.props.audit.store.address}</small>
 	</td>
-        <td>{this.props.audit.store.location.city.name}</td>
+        <td>{this.props.audit.store.city.name}</td>
         <td className="text-right">{this.props.audit.earnings_per_audit}</td>
         <td className="text-right">{this.props.audit.reimbursement ? this.props.audit.reimbursement : null}</td>
         <td className="text-right">{this.props.audit.count}</td>
@@ -230,8 +230,8 @@ var AuditList = React.createClass({
 	  }
 
 	let cities = Object.keys(this.props.audits).reduce( (p, id) => {
-		if(! p.find( c => c.id === this.props.audits[id].store.location.city.id)){
-			return p.concat(this.props.audits[id].store.location.city);
+		if(! p.find( c => c.id === this.props.audits[id].store.city.id)){
+			return p.concat(this.props.audits[id].store.city);
 		} else {
 			return p;
 		}
@@ -239,8 +239,8 @@ var AuditList = React.createClass({
 
     let serial = 1;
     let rows = Object.values(this.props.audits)
-		  .sort((a,b) => this.cityComparator(a.store.location.city, b.store.location.city))
-		  .filter((a) => this.state.selectedCityId ? a.store.location.city.id === parseInt(this.state.selectedCityId) : true)
+		  .sort((a,b) => this.cityComparator(a.store.city, b.store.city))
+		  .filter((a) => this.state.selectedCityId ? a.store.city.id === parseInt(this.state.selectedCityId) : true)
 		  .map( a => <AuditRow key={a.id}
 				  serial={serial++}
 				  auditCycleId={this.props.params.auditCycleId}

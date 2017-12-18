@@ -66,8 +66,7 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
         .prefetch_related(
             'audit',
             'audit__store',
-            'audit__store__location',
-            'audit__store__location__city',
+            'audit__store__city',
             'answers',
             'report_sections',
         )
@@ -77,7 +76,7 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     if filters.get('city') not in ignored_filters:
         city_name = City.objects.get(pk=int(filters.get('city'))).name
         filtered_audit_stores = [x for x in filtered_audit_stores if
-                                 x.audit.store.location.city.id == int(filters.get('city'))]
+                                 x.audit.store.city.id == int(filters.get('city'))]
     if filters.get('type') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.type == filters.get('type')]
@@ -126,7 +125,7 @@ def create_text_structure(title, sections, questions, audit_stores):
             'color_code': get_color_code(0, 0)
         }
         store_name_cell = {
-            'value': audit_store.audit.store.name + " - " + audit_store.audit.store.location.city.name,
+            'value': audit_store.audit.store.name + " - " + audit_store.audit.store.city.name,
             'color_code': get_color_code(0, 0)
         }
         audit_date_cell = {

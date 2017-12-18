@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from client.models import Client, Store, ClientUser
-from manager.models import City, Location
+from manager.models import City
 
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
@@ -22,18 +22,6 @@ class CitySerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 
-class LocationSerializer(ModelSerializer):
-    city = CitySerializer()
-
-    class Meta:
-        model = Location
-        fields = (
-            'id',
-            'name',
-            'pincode',
-            'city',
-        )
-        read_only_fields = fields
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -85,7 +73,7 @@ class AuditCycleSerializer(ModelSerializer):
         read_only_fields = fields
 
 class StoreSerializer(ModelSerializer):
-    location = LocationSerializer()
+    city = CitySerializer()
     client = ClientSerializer()
     class Meta:
         model = Store
@@ -96,7 +84,7 @@ class StoreSerializer(ModelSerializer):
             'priority',
             'name',
             'address',
-            'location',
+            'city',
             'client',
         )
         read_only_fields = fields

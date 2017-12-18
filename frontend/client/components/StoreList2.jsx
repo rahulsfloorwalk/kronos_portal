@@ -38,7 +38,7 @@ export default class StoreList2 extends Component{
 					<td>{store.type}</td>
 					<td>{store.priority}</td>
 					<td>{store.address}</td>
-					<td>{store.location.city.name}</td>
+					<td>{store.city.name}</td>
 				</tr>
 			);
 		}

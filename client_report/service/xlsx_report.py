@@ -44,7 +44,8 @@ def get_details_section(audit_store, report_sections, sections):
     audit_date = audit_store.audit_date.strftime('%d-%m-%Y')
     percentage = audit_store.percentage()
     store = audit_store.audit.store
-    store_location = audit_store.audit.store.location.name
+    store_address = audit_store.audit.store.address
+    store_city_name = audit_store.audit.store.city.name
     client_name = audit_store.audit.audit_cycle.client.name
     audit_cycle_type = audit_store.audit.audit_cycle.type
     rows = []
@@ -66,7 +67,7 @@ def get_details_section(audit_store, report_sections, sections):
     content = ["Audit Type", audit_cycle_type]
     row = {'type': 'line', 'content': content}
     rows.append(row)
-    content = ["Location", store_location]
+    content = ["Address", "{}, {}".format(store_address, store_city_name)]
     row = {'type': 'line', 'content': content}
     rows.append(row)
     content = ["Audit Date", str(audit_date)]

@@ -43,7 +43,7 @@ export default React.createClass({
 			this.selectAuditCycleOrCity(this.props.params.auditCycleId, this.props.params.cityId);
 		} else {
 			if(this.state.auditCycles.length > 0 && this.state.cities.length > 0){
-				hashHistory.push(`/browser/auditCycle/${this.state.auditCycles[0].id}/city/${this.state.cities[0].location__city__id}`);
+				hashHistory.push(`/browser/auditCycle/${this.state.auditCycles[0].id}/city/${this.state.cities[0].city__id}`);
 			}
 		}
 	},
@@ -73,7 +73,7 @@ export default React.createClass({
 	render: function(){
 		var cityRows = [];
 		for(let id in this.state.cities) {
-			cityRows.push(<option value={this.state.cities[id].location__city__id} key={id}>{this.state.cities[id].location__city__name}</option>);
+			cityRows.push(<option value={this.state.cities[id].city__id} key={id}>{this.state.cities[id].city__name}</option>);
 		}
 
 		var auditCycleRows = [];
@@ -107,7 +107,7 @@ export default React.createClass({
 		}
 
 		let auditCycle = this.state.auditCycles.filter( ac => ac.id === parseInt(this.state.selectedAuditCycleId))[0] || {};
-		let city = this.state.cities.filter( c => c.location__city__id === parseInt(this.state.selectedCityId))[0] || {};
+		let city = this.state.cities.filter( c => c.city__id === parseInt(this.state.selectedCityId))[0] || {};
 		return (
 			<div>
 				<h3 className="page-header">
@@ -172,7 +172,7 @@ export default React.createClass({
 					<div className="col-md-6">
 						<div className="panel panel-default">
 							<div className="panel-heading">
-								<h4 className="panel-title">Average Score for <b>{city.location__city__name}</b></h4>
+								<h4 className="panel-title">Average Score for <b>{city.city__name}</b></h4>
 							</div>
 							<div className="list-group">
 								{chartRows}
@@ -180,7 +180,7 @@ export default React.createClass({
 						</div>
 					</div>
 				</div>
-				<StoreList auditCycleId={this.state.selectedAuditCycleId} cityId={this.state.selectedCityId} cityName={city.location__city__name}/>
+				<StoreList auditCycleId={this.state.selectedAuditCycleId} cityId={this.state.selectedCityId} cityName={city.city__name}/>
 				{this.props.children}
 			</div>
 		);

@@ -50,7 +50,7 @@ var AuditRow = React.createClass({
 			<div className="row">
 				<div className="col-sm-4">
 					<label className="hidden-sm hidden-md hidden-lg">Store Location</label>
-					<p><b><big>{this.props.audit.store.name}, {this.props.audit.store.location.city.name}</big></b></p>
+					<p><b><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></b></p>
 					<p><b>{this.props.audit.store.address}</b></p>
 				</div>
 				<div className="col-sm-4">

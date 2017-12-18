@@ -64,7 +64,7 @@ var NotificationItem = React.createClass({
 				return <span>
 					audit,<br/>
 					client: <b>{target.audit_cycle.client.name}</b>,
-					store: <b>{target.store.location.name}</b>,
+					store: <b>{target.store.name}</b>,
 					cycle: <b>{target.audit_cycle.name}</b>
 					</span>
 			default:

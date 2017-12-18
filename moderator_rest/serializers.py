@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
 from notifications.models import Notification
 from client.models import Client, Store
-from manager.models import City, Location
+from manager.models import City
 from audit.models import AuditCycle, Audit
 from auditor.models import ProfileInfo
 from audit_store.models import AuditStore
@@ -36,19 +36,6 @@ class CitySerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class LocationSerializer(ModelSerializer):
-    city = CitySerializer()
-
-    class Meta:
-        model = Location
-        fields = (
-            'id',
-            'name',
-            'pincode',
-            'city',
-        )
-        read_only_fields = fields
-
 
 class AuditCycleSerializer(ModelSerializer):
     client = ClientSerializer()
@@ -71,7 +58,7 @@ class AuditCycleSerializer(ModelSerializer):
 
 
 class StoreSerializer(ModelSerializer):
-    location = LocationSerializer()
+    city = CitySerializer()
     client = ClientSerializer()
     class Meta:
         model = Store
@@ -79,34 +66,10 @@ class StoreSerializer(ModelSerializer):
             'id',
             'name',
             'address',
-            'location',
+            'city',
             'client',
         )
         read_only_fields = fields
-
-
-class StoreDeSerializer(ModelSerializer):
-    class Meta:
-        model = Store
-        fields = (
-            'id',
-            'name',
-            'address',
-            'location',
-            'client',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if 'id' in self.context and self.context.get('id') is not None:
-            store = Store.objects.get(id=self.context.get('id'))
-        else:
-            store = Store()
-        store.name = self.validated_data.get('name', store.name)
-        store.address = self.validated_data.get('address', store.address)
-        store.location = self.validated_data.get('location', store.location_id)
-        store.client = self.validated_data.get('client', store.client_id)
-        return store
 
 
 class ProfileInfoSmallSerializer(ModelSerializer):
@@ -121,8 +84,6 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'user_id'
         )
         read_only_fields = fields
-
-
 
 
 class UserSerializer(ModelSerializer):

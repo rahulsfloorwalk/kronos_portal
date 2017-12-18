@@ -44,7 +44,7 @@ var AuditCancelForm = React.createClass({
 					<p><label>Start Date:</label> { moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat) }</p>
 					<p><label>End Date:</label> { moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat) }</p>
 					<p><label>Audit Date:</label> { moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat) }</p>
-					<p><label>Location:</label> { this.props.audit.store.location.name }, { this.props.audit.store.location.city.name }</p>
+					<p><label>Address:</label> { this.props.audit.store.address }, { this.props.audit.store.city.name }</p>
 					<p>Are you sure you want to cancel your application for this audit?</p>
 					<div className="form-group">
 						<SaveButton text="Yes"/>&nbsp;&nbsp;

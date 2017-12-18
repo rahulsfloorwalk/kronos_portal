@@ -56,7 +56,7 @@ export default React.createClass({
 				<div className="row" key={as.id}>
 					<div className="col-md-12"><br/></div>
 					<div className="col-md-3">{as.audit.audit_cycle.name}</div>
-					<div className="col-md-1">{as.audit.store.location.city.name}</div>
+					<div className="col-md-1">{as.audit.store.city.name}</div>
 					<div className="col-md-6">
 						{as.audit.store.name}<br/>
 						<small className="text-muted">{as.audit.store.address}</small>

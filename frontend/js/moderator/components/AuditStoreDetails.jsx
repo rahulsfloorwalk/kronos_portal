@@ -139,8 +139,8 @@ export default React.createClass({
 							</tr>
 							<tr>
 
-								<td className="text-right">Location:</td>
-								<th>{`${this.state.auditStore.audit.store.location.name}, ${this.state.auditStore.audit.store.location.city.name}`}</th>
+								<td className="text-right">Address:</td>
+								<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
 							</tr>
 							<tr>
 								<td className="text-right">Type:</td>

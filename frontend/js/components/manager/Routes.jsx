@@ -30,9 +30,6 @@ import AuditorReferralList from './auditor/AuditorReferralList.jsx';
 import StateList from './location/StateList.jsx';
 import CityList from './location/CityList.jsx';
 
-import LocationList from './location/LocationList.jsx';
-import LocationForm from './location/LocationForm.jsx';
-
 import AuditCycleList from './AuditCycleList.jsx';
 import AuditCycleForm from './AuditCycleForm.jsx';
 import AuditCycleDetails from './AuditCycleDetails.jsx';
@@ -144,10 +141,6 @@ const Routes = () => (
 
 		<Route path="state" component={StateList}/>
 		<Route path="state/:stateId/city" component={CityList}/>
-		<Route path="state/:stateId/city/:cityId/location" component={LocationList}>
-			<Route path="add" component={LocationForm}/>
-			<Route path=":locationId/edit" component={LocationForm}/>
-		</Route>
 
 		<Route path="moderator" component={ModeratorList}>
 			<Route path="add" component={ModeratorForm}/>

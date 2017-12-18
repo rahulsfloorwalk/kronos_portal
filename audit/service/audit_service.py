@@ -21,8 +21,7 @@ def find_audits_by_audit_cycle_id(audit_cycle_id):
     return Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related(
         'store',
         'store__client',
-        'store__location',
-        'store__location__city',
+        'store__city',
         'audit_stores',
         'audit_stores__user',
         'audit_stores__user__profileinfo',
@@ -90,10 +89,10 @@ def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
                 #Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
                 Q(audit_cycle__type=AuditCycle.GENERAL) |
                 Q(
-                    store__location__city__lat__lte=lat_max,
-                    store__location__city__lat__gte=lat_min,
-                    store__location__city__lon__lte=lon_max,
-                    store__location__city__lon__gte=lon_min
+                    store__city__lat__lte=lat_max,
+                    store__city__lat__gte=lat_min,
+                    store__city__lon__lte=lon_max,
+                    store__city__lon__gte=lon_min
                 )
             )
             return available_audits

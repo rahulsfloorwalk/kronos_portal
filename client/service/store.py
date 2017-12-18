@@ -16,11 +16,11 @@ def save(store):
 
 def find_stores_by_clientuser(user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
-    return Store.objects.filter(client_id=user.clientuser.client.id).order_by('location__city__name').select_related('client','location','location__city')
+    return Store.objects.filter(client_id=user.clientuser.client.id).order_by('city__name').select_related('client','city')
 
 def find_stores_by_clientuser_and_city(user_id, city_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
-    return Store.objects.filter(client_id=user.clientuser.client.id, location__city_id=city_id).order_by('location__city__name').select_related('client','location','location__city')
+    return Store.objects.filter(client_id=user.clientuser.client.id, city_id=city_id).order_by('city__name').select_related('client','city')
 
 
 def find_store_by_id(store_id):
@@ -43,7 +43,7 @@ def delete(store_id):
 def find_cities_for_clientuser(user_id):
     try:
         user = User.objects.get(pk=user_id)
-        return Store.objects.filter(client_id=user.clientuser.client_id).distinct('location__city_id').values('location__city__name','location__city__id', 'location__city__state').all()
+        return Store.objects.filter(client_id=user.clientuser.client_id).distinct('city_id').values('city__name','city__id', 'city__state').all()
     except User.DoesNotExist as e:
         raise ObjectNotFound from e
 

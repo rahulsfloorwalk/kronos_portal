@@ -8,7 +8,7 @@ from notifications.models import Notification
 
 from registration.models import GROUP_NAME_AUDITOR
 
-from manager.models import Location, City
+from manager.models import City
 from audit.models import Audit, AuditCycle
 from client.models import Client, Store
 from audit_store.models import AuditStore
@@ -233,18 +233,6 @@ class ClientSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class LocationSerializer(ModelSerializer):
-    city = CitySerializer()
-
-    class Meta:
-        model = Location
-        fields = (
-            'id',
-            'name',
-            'pincode',
-            'city',
-        )
-        read_only_fields = fields
 
 class AuditCycleSerializer(ModelSerializer):
     client = ClientSerializer()
@@ -264,13 +252,13 @@ class AuditCycleSerializer(ModelSerializer):
 
 
 class StoreSerializer(ModelSerializer):
-    location = LocationSerializer()
+    city = CitySerializer()
     class Meta:
         model = Store
         fields = (
             'name',
             'address',
-            'location',
+            'city',
             'phone',
         )
         read_only_fields = fields

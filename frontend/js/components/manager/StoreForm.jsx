@@ -4,7 +4,7 @@ import { hashHistory } from 'react-router';
 
 import Alert from 'react-s-alert';
 
-import { fetchStates, fetchCities, fetchLocations } from '../../manager/actions/location.js';
+import { fetchStates, fetchCities } from '../../manager/actions/location.js';
 import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from '../../manager/actions/store.js';
 
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -17,7 +17,6 @@ import Modal from '../Modal.jsx';
 
 import StateSelector from '../StateSelector.jsx';
 import CitySelector from '../CitySelector.jsx';
-import LocationSelector from '../LocationSelector.jsx';
 
 var StoreForm = React.createClass({
 	getInitialState: function(){
@@ -35,14 +34,12 @@ var StoreForm = React.createClass({
 	componentWillReceiveProps: function(nextProps) {
 		console.log("nextProps",nextProps);
 		this.setState(nextProps.store);
-		if(nextProps.store && nextProps.store.location){
+		if(nextProps.store && nextProps.store.city){
 			this.setState({
-				'location': nextProps.store.location.id,
-				'city': nextProps.store.location.city.id,
-				'state': nextProps.store.location.city.state
+				'city': nextProps.store.city.id,
+				'state': nextProps.store.city.state
 			});
-			this.props.dispatch(fetchCities(nextProps.store.location.city.state));
-			this.props.dispatch(fetchLocations(nextProps.store.location.city.id));
+			this.props.dispatch(fetchCities(nextProps.store.city.state));
 		}
 	},
 	inputChanged: function(e){
@@ -59,10 +56,6 @@ var StoreForm = React.createClass({
 	myCityChanged: function(e){
 		this.inputChanged(e);
 		var cityId = e.target.value;
-		console.debug("cityId",cityId);
-		if( cityId){
-			this.props.dispatch(fetchLocations(cityId));
-		}
 	},
 	onSubmit: function(e){
 		e.preventDefault();
@@ -72,7 +65,7 @@ var StoreForm = React.createClass({
 				id: this.props.params.storeId,
 
 				client: this.state.client.id,
-				location: this.state.location,
+				city: this.state.city,
 
 				name: this.state.name,
 				address: this.state.address,
@@ -85,7 +78,7 @@ var StoreForm = React.createClass({
 		} else {
 			submitPromise = this.props.dispatch(saveStoreAddForm({
 				client: this.props.params.clientId,
-				location: this.state.location,
+				city: this.state.city,
 
 				name: this.state.name,
 				address: this.state.address,
@@ -102,7 +95,7 @@ var StoreForm = React.createClass({
 		});
 	},
 	render : function(){
-		var modalTitle = this.props.params.auditLocationId ? "Edit Store" : "Add Store";
+		var modalTitle = this.props.params.storeId ? "Edit Store" : "Add Store";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -116,9 +109,6 @@ var StoreForm = React.createClass({
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-sm-6">
-							<LocationSelector value={this.state.location} onChange={this.inputChanged} errors={this.props.errors.location}/>
-						</div>
 						<div className="col-sm-6">
 							<FormInput label="Name" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
 						</div>

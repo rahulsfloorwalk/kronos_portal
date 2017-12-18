@@ -169,8 +169,8 @@ var AuditStoreDetails = React.createClass({
 							</tr>
 							<tr>
 
-								<td className="text-right">Location:</td>
-								<th>{`${this.props.auditStore.audit.store.location.name}, ${this.props.auditStore.audit.store.location.city.name}`}</th>
+								<td className="text-right">Address:</td>
+								<th>{`${this.props.auditStore.audit.store.address}, ${this.props.auditStore.audit.store.city.name}`}</th>
 							</tr>
 							<tr>
 								<td className="text-right">Type:</td>

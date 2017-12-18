@@ -18,10 +18,10 @@ def get_performing_cities(audit_cycle):
 
     cities = {}
     for store, avg in stores.items():
-        if cities.get(store.location.city) is None:
-            cities[store.location.city] = (0,0)
-        total, count = cities[store.location.city]
-        cities[store.location.city] = (total + avg, count+1)
+        if cities.get(store.city) is None:
+            cities[store.city] = (0,0)
+        total, count = cities[store.city]
+        cities[store.city] = (total + avg, count+1)
 
     averages = []
     for city, (total, count) in cities.items():
@@ -55,8 +55,7 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
     qs = qs.prefetch_related(
         'audits',
         'audits__store',
-        'audits__store__location',
-        'audits__store__location__city',
+        'audits__store__city',
         Prefetch('audits__audit_stores', queryset=AuditStore.objects.presentable()),
         'audits__audit_stores__report_sections',
         'audits__audit_stores__report_sections__section',

@@ -48,7 +48,7 @@ def get_city_section_aggregation_for_client(audit_cycle_id, city_id, client_id):
         raise ObjectNotFound("Invalid Client")
 
     try:
-        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__location__city_id=city_id)
+        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__city_id=city_id)
     except Audit.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -74,7 +74,7 @@ def get_store_aggregation_list_for_client(audit_cycle_id, city_id, client_id):
         raise ObjectNotFound("Invalid Client")
 
     try:
-        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__location__city_id=city_id)
+        audits = Audit.objects.filter(audit_cycle_id=audit_cycle_id, store__city_id=city_id)
     except Audit.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -94,7 +94,7 @@ def get_store_aggregation_list_for_client(audit_cycle_id, city_id, client_id):
             'address': v[0].audit.store.address,
             'store_id': v[0].audit.store.id,
             'client_id': v[0].audit.store.client.id,
-            'location': v[0].audit.store.location.name,
+            'city': v[0].audit.store.city.name,
             'audit_store_count': len(v),
             'sections': store_sections
         }
@@ -118,13 +118,13 @@ def get_city_aggregation_for_client(audit_cycle_id, client_id):
     for audit in audits:
         audit_stores.extend(audit.audit_stores.presentable())
     buckets = {}
-    for a in audit_stores: buckets.setdefault(a.audit.store.location.city.id, []).append(a)
+    for a in audit_stores: buckets.setdefault(a.audit.store.city.id, []).append(a)
     mean_values = []
     for k,v in buckets.items():
         store_sections = __get_mean_for_sections(sections, v)
         mean_object = {
-            'city_name': v[0].audit.store.location.city.name,
-            'city_id': v[0].audit.store.location.city.id,
+            'city_name': v[0].audit.store.city.name,
+            'city_id': v[0].audit.store.city.id,
             'client_id': v[0].audit.store.client.id,
             'audit_store_count': len(v),
             'sections': store_sections
@@ -174,16 +174,15 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
         .presentable() \
         .visible_to(user) \
         .order_by(
-            'audit__store__location__city__name',
+            'audit__store__city__name',
             'audit__store__name',
             '-audit_date',
         ) \
         .select_related(
-            # join in related audit, store, location and city to avoid redundant queries
+            # join in related audit, store and city to avoid redundant queries
             'audit',
             'audit__store',
-            'audit__store__location',
-            'audit__store__location__city',
+            'audit__store__city',
         ) \
         .prefetch_related(
             # prefetch report_sections, questions and answers for the given sections
@@ -197,8 +196,8 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
         audit_stores.append({
             'audit_store_id': audit_store.id,
             'audit_date': audit_store.audit_date,
-            'city_name': audit_store.audit.store.location.city.name,
-            'city_id': audit_store.audit.store.location.city.id,
+            'city_name': audit_store.audit.store.city.name,
+            'city_id': audit_store.audit.store.city.id,
             'store_name': audit_store.audit.store.name,
             'store_id': audit_store.audit.store.id,
             'store_code': audit_store.audit.store.code,
