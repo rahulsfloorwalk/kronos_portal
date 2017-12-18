@@ -14,6 +14,11 @@ export default React.createClass({
 		fetchStates().done((states) => this.setState({states}));
 		fetchCities(this.props.params.stateId).done((cities) => this.setState({cities}));
 	},
+	componentWillReceiveProps: function(nextProps){
+		if(this.props.params.stateId !== nextProps.params.stateId){
+			fetchCities(nextProps.params.stateId).done((cities) => this.setState({cities}));
+		}
+	},
 	render: function(){
 		if( ! this.state.states || !this.state.cities){
 			return <Loading/>;
@@ -22,24 +27,23 @@ export default React.createClass({
 		let stateName = this.state.states[this.props.params.stateId];
 		for(let c of this.state.cities) {
 			rows.push(
-				<div key={c.id} className="col-md-3">
-					<div className="panel panel-default">
-						<div className="panel-body">
-							<a href={c.gmaps_url} className="btn btn-default pull-right" target="_blank">
-								<MapMarker/>
-							</a>
-							<h4>{c.name}</h4>
-						</div>
-					</div>
+				<div key={c.id} className="list-group-item">
+					<a href={c.gmaps_url} className="btn btn-sm btn-default " target="_blank">
+						<MapMarker/>
+					</a>
+				&nbsp;
+					{c.name}
 				</div>
 			);
 		}
 		return (
 			<div>
 				<h2 className="page-header">
-					<Link to="/state">States</Link> / <b>{ stateName }</b> / City List
+					<b>{ stateName }</b>
 				</h2>
-				{rows}
+				<div className="list-group">
+					{rows}
+				</div>
 				{this.props.children}
 			</div>
 		);

@@ -139,8 +139,9 @@ const Routes = () => (
           <Route path="referral" component={AuditorReferralList}/>
     </Route>
 
-		<Route path="state" component={StateList}/>
-		<Route path="state/:stateId/city" component={CityList}/>
+		<Route path="state" component={StateList}>
+			<Route path=":stateId" component={CityList}/>
+		</Route>
 
 		<Route path="moderator" component={ModeratorList}>
 			<Route path="add" component={ModeratorForm}/>

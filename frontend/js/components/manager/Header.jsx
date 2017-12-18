@@ -23,7 +23,6 @@ var Header = React.createClass({
 					<ul className="nav navbar-nav">
 						<NavLink to="/client"><King/> Clients</NavLink>
 						<NavLink to="/auditor"><User/> Auditors</NavLink>
-						<NavLink to="/state"><MapMarker/> Locations</NavLink>
 						<NavLink to="/moderator"><Knight/> Moderators</NavLink>
 						<NavLink to="/manager"><Queen/> Managers</NavLink>
 					</ul>
@@ -33,6 +32,7 @@ var Header = React.createClass({
 							<Heartbeat/>
 							</a>
 						</li>
+						<NavLink to="/state"><MapMarker/> Cities</NavLink>
 						<li>
 							<a href="http://mbase.floorwalk.in:3000" target="_blank">
 								<NewWindow/> Metabase

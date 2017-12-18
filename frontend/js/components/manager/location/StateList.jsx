@@ -21,28 +21,30 @@ export default React.createClass({
 			return <Loading/>;
 		}
 		let rows = [];
-		for(var stateId in this.state.states) {
-			let linkTo = `state/${stateId}/city`;
+		for(let stateId in this.state.states) {
+			let linkTo = `state/${stateId}`;
+			let activeClass = this.props.params.stateId === stateId ? "active" : "";
 			rows.push(
-				<div key={stateId} className="col-md-3">
-					<div className="panel panel-default">
-						<div className="panel-body">
-							<h4 style={truncateStyle}>{this.state.states[stateId]}</h4>
-							<Link to={linkTo} className="btn btn-default">View</Link>
-						</div>
-					</div>
-				</div>
+				<Link key={stateId} to={linkTo} className={"list-group-item " + activeClass}>
+					{this.state.states[stateId]}
+				</Link>
 			);
 		}
 		return (
 			<div>
-				<h2 className="page-header">
-					<MapMarker/> States
-				</h2>
 				<div className="row">
-					{rows}
+				<div className="col-md-3">
+					<h2 className="page-header">
+						<MapMarker/> States
+					</h2>
+					<div className="list-group">
+						{rows}
+					</div>
 				</div>
-				{this.props.children}
+				<div className="col-md-6">
+					{this.props.children}
+				</div>
+				</div>
 			</div>
 		);
 	},
