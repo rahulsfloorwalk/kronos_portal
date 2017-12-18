@@ -1,11 +1,9 @@
-from datetime import timedelta, date
+from datetime import timedelta
 
 from django.db import connection
 from django.db.transaction import atomic
-from django.db import IntegrityError
 from django.db.models import Count
 from django.contrib.auth.models import Group
-from django.utils.timezone import localtime, now
 
 from guardian.shortcuts import assign_perm, remove_perm
 
@@ -14,9 +12,8 @@ from notifications.models import Notification
 
 from notify.service import mail_notify
 
-from kronos.utils import now_ist, today_ist
+from kronos.utils import today_ist
 
-from client.models import Client
 from .models import AuditStore
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle
@@ -29,7 +26,7 @@ import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
 from notify import verbs
 
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
+from registration.models import GROUP_NAME_MANAGER
 
 def find_by_id(audit_store_id):
     try:
@@ -41,10 +38,10 @@ def find_audit_stores_for_auditor(profileinfo_id):
     try:
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
         return AuditStore.objects.filter(
-                user_id=profile_info.user_id,
-                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
-                audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
-                ).order_by('-audit_date')
+            user_id=profile_info.user_id,
+            status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
+            audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+        ).order_by('-audit_date')
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -69,11 +66,11 @@ def find_by_audit_cycle(audit_cycle_id):
 def find_by_id_for_auditor(audit_store_id, user_id):
     try:
         return AuditStore.objects.get(
-                pk=audit_store_id,
-                user_id=user_id,
-                status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
-                audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
-                )
+            pk=audit_store_id,
+            user_id=user_id,
+            status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+            audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+        )
     except (AuditStore.DoesNotExist) as e:
         raise ObjectNotFound from e
 
@@ -102,21 +99,21 @@ def find_by_store_for_client(store_id, client_id):
 
 def find_for_pre_reminder():
     return AuditStore.objects.filter(
-            audit_date=today_ist() + timedelta(days=1),
-            status=AuditStore.ASSIGNED,
-        )
+        audit_date=today_ist() + timedelta(days=1),
+        status=AuditStore.ASSIGNED,
+    )
 
 def find_for_on_reminder():
     return AuditStore.objects.filter(
-            audit_date=today_ist(),
-            status=AuditStore.ASSIGNED,
-        )
+        audit_date=today_ist(),
+        status=AuditStore.ASSIGNED,
+    )
 
 def find_for_post_reminder():
     return AuditStore.objects.filter(
-            audit_date=today_ist() - timedelta(days=1),
-            status=AuditStore.ASSIGNED,
-        )
+        audit_date=today_ist() - timedelta(days=1),
+        status=AuditStore.ASSIGNED,
+    )
 
 def save(audit_store):
     AuditStore.save(audit_store)
@@ -139,11 +136,11 @@ def withdraw(audit_store_id, user_actor):
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_WITHDRAWN,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_WITHDRAWN,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_WITHDRAWN).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -168,31 +165,31 @@ def submit(audit_store_id, user_id):
             raise AppLogicError("Please answer all the questions")
 
         for report_section in report_sections:
-            if report_section.auditor_comment in ( None ,''):
+            if report_section.auditor_comment in (None, ''):
                 raise AppLogicError("Please fill all the section summaries")
 
         for answer in answers:
-            if answer.answer_text in ( None ,''):
+            if answer.answer_text in (None, ''):
                 raise AppLogicError("Please fill all the answers")
 
         if audit_store.status == AuditStore.ASSIGNED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
             notify.send(
-                    audit_store.user,
-                    recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                    verb=verbs.AUDIT_STORE_SUBMITTED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                audit_store.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb=verbs.AUDIT_STORE_SUBMITTED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    audit_store.user,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_SUBMITTED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                audit_store.user,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_SUBMITTED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_SUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -224,11 +221,11 @@ def complete(audit_store_id, user_actor):
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_COMPLETED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_COMPLETED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -256,11 +253,11 @@ def fail(audit_store_id, user_actor):
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FAILED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_FAILED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_FAILED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FAILED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -286,11 +283,11 @@ def submit_by_manager(audit_store_id, user_actor):
                 target=audit_store.audit
             )
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_SUBMITTED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_SUBMITTED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             return audit_store
         else:
@@ -334,11 +331,11 @@ def unsubmit(audit_store_id, user_actor):
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_UNSUBMITTED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_UNSUBMITTED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_UNSUBMITTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -381,11 +378,11 @@ def accept(audit_store_id, payment_amount, user_actor):
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_ACCEPTED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_ACCEPTED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -417,11 +414,11 @@ def reject(audit_store_id, user_actor):
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
-                    user_actor,
-                    recipient=audit_store.user,
-                    verb=verbs.AUDIT_STORE_REJECTED,
-                    action_object=audit_store,
-                    target=audit_store.audit
+                user_actor,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_REJECTED,
+                action_object=audit_store,
+                target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
             #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))

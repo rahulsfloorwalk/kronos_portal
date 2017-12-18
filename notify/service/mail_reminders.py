@@ -2,13 +2,9 @@ import logging
 
 from django.conf import settings
 from django.template import Context
-from django.template.loader import render_to_string, get_template
-from django.core.mail import EmailMultiAlternatives
+from django.template.loader import get_template
 
 import audit_store.service as audit_store_service
-
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
-from manager import notification
 
 from kronos.celery import app
 

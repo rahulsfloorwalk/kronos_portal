@@ -1,12 +1,7 @@
 from django.db.transaction import atomic
 
-from django.contrib.auth.models import User, Group
+from kronos.exceptions import ObjectNotFound
 
-from notifications.signals import notify
-
-from kronos.exceptions import ObjectNotFound, AppLogicError
-
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from registration.service.moderator import find_moderator_by_user_id
 
 from .models import AuditStore
@@ -57,7 +52,6 @@ def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
     return audit_store_service.set_audit_date(audit_store.id, audit_date)
-
 
 
 @atomic

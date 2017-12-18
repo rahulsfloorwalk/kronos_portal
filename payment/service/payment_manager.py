@@ -172,7 +172,6 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
     name = audit_cycle.name
     audit = client + "_" + name
 
-
     fieldnames = ['ORDERINGACCNO', 'REMITTER_NAME', 'IFSCCODE', 'BENEACCNO', 'BENENAME',
                   'BENEADD1', 'TXNREFNO', 'DATE', 'AMOUNT', 'SENTTORECVINFO', 'INDICATOR',
                   'DETAIL', 'ORIGINAL_REMITTER']
@@ -222,7 +221,6 @@ def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
     client = audit_cycle.client.name
     name = audit_cycle.name
     audit = client + "_" + name
-
 
     fieldnames = ['Record_Identifier', 'Payment_Value_Date', 'Payment_Amount', 'Debit_Account_No', 'Customer_Reference_No',
                   'Customer_Instrument_No', 'Payment_Product_Code', 'Beneficiary_Code', 'Beneficiary_Name',
@@ -280,7 +278,6 @@ def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
     output.seek(0)
 
     return output, audit.replace(" ", "-") + "_payments.csv"
-
 
 
 def find_by_user(user_id):

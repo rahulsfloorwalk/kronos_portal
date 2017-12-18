@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet
-from django.db.models import Model, Manager, CharField, AutoField, DateField, ForeignKey, OneToOneField, DateTimeField
+from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField
 from django.db.models import PROTECT
 
 from kronos.utils import get_color_code_by_percentage
@@ -24,9 +24,9 @@ class AuditStoreQuerySet(QuerySet):
         presentable_status = (AuditStore.COMPLETED, AuditStore.ACCEPTED)
         presentable_audit_cycle_status = (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.ARCHIVED)
         return self.filter(
-                audit__audit_cycle__status__in=presentable_audit_cycle_status,
-                status__in=presentable_status,
-                )
+            audit__audit_cycle__status__in=presentable_audit_cycle_status,
+            status__in=presentable_status,
+        )
 
     def visible_to(self, user):
         if isinstance(user, User):
@@ -37,7 +37,6 @@ class AuditStoreQuerySet(QuerySet):
                 return self & (get_objects_for_user(user, 'audit_store.clientuser_visible') | AuditStore.objects.filter(audit__store__in=stores))
         else:
             raise TypeError("user needs to be of type: django.contrib.auth.models.User")
-
 
 
 class AuditStore(Model):
@@ -51,13 +50,13 @@ class AuditStore(Model):
     REJECTED = 'REJECTED'
 
     STATUS = (
-            (ASSIGNED, "Assigned"),
-            (FAILED, "Failed"),
-            (SUBMITTED, "Submitted"),
-            (COMPLETED, "Completed"),
-            (WITHDRAWN, "Withdrawn"),
-            (ACCEPTED, "Accepted"),
-            (REJECTED, "Rejected"),
+        (ASSIGNED, "Assigned"),
+        (FAILED, "Failed"),
+        (SUBMITTED, "Submitted"),
+        (COMPLETED, "Completed"),
+        (WITHDRAWN, "Withdrawn"),
+        (ACCEPTED, "Accepted"),
+        (REJECTED, "Rejected"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
@@ -76,8 +75,8 @@ class AuditStore(Model):
 
     class Meta:
         permissions = (
-                ('clientuser_visible', 'ClientUser can view this AuditStore instance'),
-            )
+            ('clientuser_visible', 'ClientUser can view this AuditStore instance'),
+        )
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
@@ -98,7 +97,7 @@ class AuditStore(Model):
         if max_marks is 0:
             return max_marks
         else:
-            return int(self.marks_obtained() * 100 / max_marks )
+            return int(self.marks_obtained() * 100 / max_marks)
 
     def color(self):
         return get_color_code_by_percentage(self.percentage())
@@ -113,25 +112,25 @@ class AuditStore(Model):
 
         for report_section in report_sections:
             if not report_section.not_applicable:
-                if report_section.auditor_comment in ( None ,''):
+                if report_section.auditor_comment in (None, ''):
                     _logger.debug("report not completable, some auditor comment is incomplete")
                     return False
-                if report_section.pm_comment in ( None ,''):
+                if report_section.pm_comment in (None, ''):
                     _logger.debug("report not completable, some PM comment is incomplete")
                     return False
 
                 questions = Question.objects.filter(section_id=report_section.section_id).all()
                 answers = Answer.objects.filter(
-                        audit_store__id=self.id,
-                        question__section_id=report_section.section_id
-                    ).all()
+                    audit_store__id=self.id,
+                    question__section_id=report_section.section_id
+                ).all()
 
                 if len(questions) != len(answers):
                     _logger.debug("report not completable, question length does not match answer length")
                     return False
 
                 for answer in answers:
-                    if not answer.not_applicable and (answer.answer_text in ( None ,'') or answer.marks_obtained is None):
+                    if not answer.not_applicable and (answer.answer_text in (None, '') or answer.marks_obtained is None):
                             _logger.debug("report not completable, some answer is incomplete")
                             return False
 
