@@ -117,7 +117,7 @@ class Audit(Model):
         # check if prefetched cache exists,
         if hasattr(self, '_prefetched_objects_cache') and 'audit_stores' in self._prefetched_objects_cache:
             # run the summing code in python because we have already prefetched questions
-            return len([a for a in self.audit_stores.all() if a.status not in valid_status])
+            return len([a for a in self.audit_stores.all() if a.status in valid_status])
         else:
             return self.audit_stores.filter(status__in=valid_status).count()
 
