@@ -15,34 +15,28 @@ from registration.mixins import HasGroupPermission
 from client.service import store as store_service
 
 from client.models import Store
-from ..serializers import StoreSerializer, StoreDeSerializer
+from ..serializers import StoreSerializer, StoreSerializerWithoutClientUserAndClient, StoreDeSerializer
 
 
 class StoreViewByClient(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-        }
+        'GET': [GROUP_NAME_MANAGER],
+    }
     def get(self, request, client_id, format=None):
-        try:
-            stores = Store.objects.filter(client_id=client_id).all()
-            return Response(StoreSerializer(stores, many=True).data)
-        except Store.DoesNotExist:
-            raise Http404
+        stores = store_service.find_stores_by_client(client_id)
+        return Response(StoreSerializerWithoutClientUserAndClient(stores, many=True).data)
 
 class StoreIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, store_id, format=None):
-        try:
-            store = Store.objects.get(pk=store_id)
-            return Response(StoreSerializer(store).data)
-        except Store.DoesNotExist:
-            return Http404
+        store = store_service.find_store_by_id(store_id)
+        return Response(StoreSerializer(store).data)
 
     def post(self, request, store_id):
         store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})

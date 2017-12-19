@@ -14,6 +14,9 @@ def save(store):
     store.save()
     return store
 
+def find_stores_by_client(client_id):
+    return Store.objects.filter(client_id=client_id).order_by('city__name').select_related('client','city')
+
 def find_stores_by_clientuser(user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
     return Store.objects.filter(client_id=user.clientuser.client.id).order_by('city__name').select_related('client','city')

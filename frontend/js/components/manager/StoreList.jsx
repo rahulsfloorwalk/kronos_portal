@@ -7,8 +7,8 @@ import { fetchStores, deleteStore } from '../../manager/actions/store.js'
 
 var StoreRow = React.createClass({
 	render: function(){
-		let linkTo = `/client/${this.props.store.client.id}/store/${this.props.store.id}/edit`;
-		let assignLink = `/client/${this.props.store.client.id}/store/${this.props.store.id}/assign`;
+		let linkTo = `/client/${this.props.store.client_id}/store/${this.props.store.id}/edit`;
+		let assignLink = `/client/${this.props.store.client_id}/store/${this.props.store.id}/assign`;
 		return (
 			<tr>
 				<td className="text-right">{this.props.serial}</td>

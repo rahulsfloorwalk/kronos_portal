@@ -125,6 +125,7 @@ class StoreSerializer(ModelSerializer):
             'name',
             'address',
             'client',
+            'client_id',
             'code',
             'type',
             'priority',
@@ -148,6 +149,8 @@ class StoreSerializerWithoutClientUserAndClient(ModelSerializer):
             'priority',
             'phone',
             'city',
+            'client_id',
+            'city_id',
         )
         read_only_fields = fields
 
