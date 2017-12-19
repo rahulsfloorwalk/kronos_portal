@@ -51,6 +51,7 @@ class AuditCycle(Model):
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
+    revenue_per_audit = IntegerField(db_column='revenue_per_audit', blank=True, null=True)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     description = CharField(db_column='description', max_length=4096, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)

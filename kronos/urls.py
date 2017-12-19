@@ -24,6 +24,8 @@ import manager.urls as manager_urls
 import client_rest.urls as client_urls
 import moderator_rest.urls as moderator_urls
 
+admin.site.site_header = 'FloorWalk Admin Panel'
+
 urlpatterns = [
     url(r'^$', lambda r: HttpResponseRedirect(reverse('registration:login'))),
     url(r'^admin/', admin.site.urls),
