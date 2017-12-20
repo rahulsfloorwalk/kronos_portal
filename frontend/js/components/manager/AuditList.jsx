@@ -103,6 +103,7 @@ var AuditRow = React.createClass({
 		  backgroundColor
 	  }, this.state.expanded ? expandedBorder : {},
 	  this.state.expanded ? { fontSize : "130%", fontWeight: "bold", } : {},
+	  this.props.audit.count === 0 ? { opacity : "0.3" } : {},
 	  );
 
 	  let currentTab;
@@ -121,7 +122,7 @@ var AuditRow = React.createClass({
       <tr style={trStyle} onClick={this.viewButtonClicked} title={this.state.expanded ? "Click to Collapse" : "Click to Expand"} className={this.state.expanded ? "active" : ""}>
         <td className="text-right">{this.props.serial}</td>
         <td>
-	    {this.props.audit.store.name}<br/>
+	    {this.props.audit.store.name} {this.props.audit.store.code && " - "+this.props.audit.store.code}<br/>
 	    <small className="text-muted">{this.props.audit.store.address}</small>
 	</td>
         <td>{this.props.audit.store.city.name}</td>
