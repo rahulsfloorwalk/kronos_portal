@@ -41,31 +41,42 @@ var AuditCycleDashBoard = React.createClass({
     let audit_cycle_blocks = this.state.active_cycles.map((value) => {
       let linkTo = `/audit_cycle/${value.id}/questionnaire`
       return (
-          <div className="col-md-4" key={value.id}>
-          <div className="panel panel-default" onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
-            <div className="panel-heading">
-              <h4 className="panel-title"><b>{value.client} - {value.name}</b></h4>
-            </div>
-            <table className="table">
-              <tbody>
-                <tr><td style={{width:"50%"}} className="text-right"><b>Status</b></td><td><b>{getAuditStatus(value.status)}</b></td></tr>
-                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"ASSIGNED"}/></td><td><b>{value.stats.audit_store.ASSIGNED}</b></td></tr>
-                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"SUBMITTED"}/></td><td><b>{value.stats.audit_store.SUBMITTED}</b></td></tr>
-                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"COMPLETED"}/></td><td><b>{value.stats.audit_store.COMPLETED}</b></td></tr>
-                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"ACCEPTED"}/></td><td><b>{value.stats.audit_store.ACCEPTED}</b></td></tr>
-                <tr><td style={{width:"50%"}} className="text-right"><AuditStoreStatusLabel status= {"REJECTED"}/></td><td><b>{value.stats.audit_store.REJECTED}</b></td></tr>
-              </tbody>
-            </table>
-          </div>
-          </div>
+          <tr key={value.id} onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
+	      <td className="">{value.client}</td>
+	      <td className="">{value.name}</td>
+	      <td className="">{getAuditStatus(value.status)}</td>
+	      <td className="text-right"><b>{value.stats.application.APPLIED || ""}</b></td>
+	      <td className="text-right"><b>{value.stats.application.APPROVED || ""}</b></td>
+	      <td className="text-right"><b>{value.stats.audit_store.ASSIGNED || ""}</b></td>
+	      <td className="text-right"><b>{value.stats.audit_store.SUBMITTED || ""}</b></td>
+	      <td className="text-right"><b>{value.stats.audit_store.COMPLETED || ""}</b></td>
+	      <td className="text-right"><b>{value.stats.audit_store.ACCEPTED || ""}</b></td>
+          </tr>
       );
     });
 		return (
-      <div className="container">
-  			<div className="row">
-          {audit_cycle_blocks}
-  			</div>
-      </div>
+			<table className="table table-hover table-striped table-bordered">
+				<thead>
+					<tr>
+					      <th rowSpan="2">Client</th>
+					      <th rowSpan="2">Cycle</th>
+					      <th rowSpan="2">Status</th>
+					      <th colSpan="3" className="text-center">Application Status</th>
+					      <th colSpan="4" className="text-center">Report Status</th>
+					</tr>
+					<tr>
+					      <th className="text-right"><ApplicationStatusLabel status={"APPLIED"}/></th>
+					      <th className="text-right"><ApplicationStatusLabel status={"APPROVED"}/></th>
+					      <th className="text-right"><AuditStoreStatusLabel status={"ASSIGNED"}/></th>
+					      <th className="text-right"><AuditStoreStatusLabel status={"SUBMITTED"}/></th>
+					      <th className="text-right"><AuditStoreStatusLabel status={"COMPLETED"}/></th>
+					      <th className="text-right"><AuditStoreStatusLabel status={"ACCEPTED"}/></th>
+					</tr>
+				</thead>
+				<tbody>
+				  {audit_cycle_blocks}
+				</tbody>
+			</table>
 		);
 	},
 });
