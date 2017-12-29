@@ -47,7 +47,7 @@ def complete_for_auditor(attachment_id, user_id):
         if audit_store.user.id != user_id:
             raise ObjectNotFound
 
-        if audit_store.status != AuditStore.ASSIGNED:
+        if audit_store.status != AuditStore.ACKNOWLEDGED:
             raise AppLogicError("cannot complete attachment now")
     elif attachment.content_type.model_class() == ProfileInfo:
         profile_info = attachment_service.get_auditor_for_attachment(attachment_id)
@@ -69,7 +69,7 @@ def delete_for_auditor(attachment_id, user_id):
         if audit_store.user.id != user_id:
             raise ObjectNotFound
 
-        if audit_store.status != AuditStore.ASSIGNED:
+        if audit_store.status != AuditStore.ACKNOWLEDGED:
             raise AppLogicError("cannot complete attachment now")
 
     elif attachment.content_type.model_class() == ProfileInfo:

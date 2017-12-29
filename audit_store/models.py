@@ -43,6 +43,7 @@ class AuditStore(Model):
 
     ASSIGNED = 'ASSIGNED'
     FAILED = 'FAILED'
+    ACKNOWLEDGED = 'ACKNOWLEDGED'
     SUBMITTED = 'SUBMITTED'
     WITHDRAWN = 'WITHDRAWN'
     COMPLETED = 'COMPLETED'
@@ -52,6 +53,7 @@ class AuditStore(Model):
     STATUS = (
         (ASSIGNED, "Assigned"),
         (FAILED, "Failed"),
+        (ACKNOWLEDGED, "Acknowledged"),
         (SUBMITTED, "Submitted"),
         (COMPLETED, "Completed"),
         (WITHDRAWN, "Withdrawn"),

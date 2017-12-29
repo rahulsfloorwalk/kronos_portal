@@ -38,7 +38,7 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
     if user_id != audit_store.user_id:
         raise ObjectNotFound()
 
-    if audit_store.status != AuditStore.ASSIGNED:
+    if audit_store.status != AuditStore.ACKNOWLEDGED:
         raise AppLogicError("Cannot submit answer to current audit store")
 
     answer = find_by_audit_store_and_question(audit_store_id, question_id)
@@ -59,7 +59,7 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
 def set_answer_comment_by_auditor(audit_store_id, question_id, answer_comment, user_id):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
 
-    if audit_store.status != AuditStore.ASSIGNED:
+    if audit_store.status != AuditStore.ACKNOWLEDGED:
         raise AppLogicError("Cannot submit answer comment to this audit store")
 
     answer = find_by_audit_store_and_question(audit_store_id, question_id)

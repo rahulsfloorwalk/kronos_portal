@@ -39,7 +39,7 @@ def find_audit_stores_for_auditor(profileinfo_id):
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
         return AuditStore.objects.filter(
             user_id=profile_info.user_id,
-            status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED),
             audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
         ).order_by('-audit_date')
     except ProfileInfo.DoesNotExist as e:
@@ -74,7 +74,7 @@ def find_by_id_for_auditor(audit_store_id, user_id):
         return AuditStore.objects.get(
             pk=audit_store_id,
             user_id=user_id,
-            status__in=(AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
             audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
         )
     except (AuditStore.DoesNotExist) as e:
@@ -106,20 +106,21 @@ def find_by_store_for_client(store_id, client_id):
 def find_for_pre_reminder():
     return AuditStore.objects.filter(
         audit_date=today_ist() + timedelta(days=1),
-        status=AuditStore.ASSIGNED,
+        status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
 
 def find_for_on_reminder():
     return AuditStore.objects.filter(
         audit_date=today_ist(),
-        status=AuditStore.ASSIGNED,
+        status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
 
 def find_for_post_reminder():
     return AuditStore.objects.filter(
         audit_date=today_ist() - timedelta(days=1),
-        status=AuditStore.ASSIGNED,
+        status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
+
 
 def save(audit_store):
     AuditStore.save(audit_store)
@@ -157,6 +158,39 @@ def withdraw(audit_store_id, user_actor):
         raise ObjectNotFound from e
 
 @atomic
+def acknowledge(audit_store_id, user_id):
+    try:
+        audit_store = find_by_id_for_auditor(audit_store_id, user_id)
+
+        if audit_store.status == AuditStore.ASSIGNED:
+            audit_store.status = AuditStore.ACKNOWLEDGED
+            audit_store.save()
+            notify.send(
+                audit_store.user,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb=verbs.AUDIT_STORE_ACKNOWLEDGED,
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACKNOWLEDGED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+            notify.send(
+                audit_store.user,
+                recipient=audit_store.user,
+                verb=verbs.AUDIT_STORE_ACKNOWLEDGED,
+                action_object=audit_store,
+                target=audit_store.audit
+            )
+            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACKNOWLEDGED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+            return audit_store
+        else:
+            raise AppLogicError("audit store cannot be submitted now")
+    except AuditStore.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+@atomic
 def submit(audit_store_id, user_id):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id, user_id=user_id)
@@ -178,7 +212,7 @@ def submit(audit_store_id, user_id):
             if answer.answer_text in (None, ''):
                 raise AppLogicError("Please fill all the answers")
 
-        if audit_store.status == AuditStore.ASSIGNED:
+        if audit_store.status == AuditStore.ACKNOWLEDGED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
             notify.send(
@@ -246,7 +280,7 @@ def fail(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
-        if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED):
+        if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED):
             audit_store.status = AuditStore.FAILED
             audit_store.qa_rating = AuditStore.BAD
             audit_store.save()
@@ -279,7 +313,7 @@ def submit_by_manager(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
-        if audit_store.status == AuditStore.ASSIGNED:
+        if audit_store.status == AuditStore.ACKNOWLEDGED:
             audit_store.status = AuditStore.SUBMITTED
             audit_store.save()
             notify.send(
@@ -326,7 +360,7 @@ def unsubmit(audit_store_id, user_actor):
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
         if audit_store.status == AuditStore.SUBMITTED:
-            audit_store.status = AuditStore.ASSIGNED
+            audit_store.status = AuditStore.ACKNOWLEDGED
             audit_store.save()
             notify.send(
                 user_actor,
