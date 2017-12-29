@@ -81,6 +81,7 @@ var AuditorList = React.createClass({
 		}
 		if(rows.length > 0){
 			var table = (
+				<div className="table-responsive">
 				<table className="table table-striped">
 					<thead>
 						<tr>
@@ -97,6 +98,7 @@ var AuditorList = React.createClass({
 						{rows}
 					</tbody>
 				</table>
+				</div>
 			);
 		} else {
 			var table = (

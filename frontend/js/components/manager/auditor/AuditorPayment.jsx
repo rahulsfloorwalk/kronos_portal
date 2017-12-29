@@ -59,7 +59,6 @@ export default class AuditorPayment extends Component{
 		});
 
 		return (
-			<div className="row">
 			<div className="panel panel-default">
 			<div className="panel-heading">
 			<h4 className="panel-title">Payments</h4>
@@ -77,7 +76,6 @@ export default class AuditorPayment extends Component{
 			{paymentRows}
 			</tbody>
 			</table>
-			</div>
 			</div>
 		);
 	}

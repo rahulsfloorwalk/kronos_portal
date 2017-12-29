@@ -15,7 +15,7 @@ var ClientRow = React.createClass({
 		};
 		let logoUrl = this.props.client.logo_url ? this.props.client.logo_url : `https://dummyimage.com/250x250/efefef/000000.png&text=${this.props.client.name}`;
 		return (
-			<div className="col-md-3">
+			<div className="col-sm-6 col-md-3">
 				<div className="panel panel-default" style={style}>
 				<div className="panel-body text-center">
 				<h4>{this.props.client.name}</h4>

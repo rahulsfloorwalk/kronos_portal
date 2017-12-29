@@ -55,13 +55,14 @@ var AuditCycleDashBoard = React.createClass({
       );
     });
 		return (
+			<div className="table-responsive">
 			<table className="table table-hover table-striped table-bordered">
 				<thead>
 					<tr>
 					      <th rowSpan="2">Client</th>
 					      <th rowSpan="2">Cycle</th>
 					      <th rowSpan="2">Status</th>
-					      <th colSpan="3" className="text-center">Application Status</th>
+					      <th colSpan="2" className="text-center">Application Status</th>
 					      <th colSpan="4" className="text-center">Report Status</th>
 					</tr>
 					<tr>
@@ -77,6 +78,7 @@ var AuditCycleDashBoard = React.createClass({
 				  {audit_cycle_blocks}
 				</tbody>
 			</table>
+			</div>
 		);
 	},
 });

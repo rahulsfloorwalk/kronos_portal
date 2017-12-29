@@ -47,7 +47,6 @@ export default React.createClass({
     });
 
 		return (
-			<div className="row">
         <div className="panel panel-default">
           <div className="panel-heading">
             <h4 className="panel-title">Audit Report Summary</h4>
@@ -65,7 +64,6 @@ export default React.createClass({
             </tbody>
           </table>
         </div>
-			</div>
 		);
 	},
 });

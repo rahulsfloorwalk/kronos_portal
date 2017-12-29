@@ -176,13 +176,8 @@ var AuditStoreList = React.createClass({
     }
     return(
       <div>
-        <h3 className="page-header">
-          <File/> Reports
-          <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
-              <Download/> Excel Report
-          </a>
-        </h3>
-		<AuditStoreStatusSummary auditCycleId={this.props.params.auditCycleId}/>
+	    <br/>
+	<AuditStoreStatusSummary auditCycleId={this.props.params.auditCycleId}/>
 	    <div className="form-group">
 	  <select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.clientUserChanged} value={this.state.selectedClientUserId}>
 	    <option value="">Select Client User</option>
@@ -199,6 +194,9 @@ var AuditStoreList = React.createClass({
 	    <option value="ACCEPTED">{getAuditStoreStatus("ACCEPTED")}</option>
 	    <option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
 	   </select>
+		  <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
+		      <Download/> Excel Report
+		  </a>
 	    </div>
 	    {rows}
         {this.props.children}

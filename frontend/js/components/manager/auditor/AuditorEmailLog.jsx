@@ -57,7 +57,6 @@ export default class AuditorEmailLog extends Component{
 		});
 
 		return (
-			<div className="row">
 			<div className="panel panel-default">
 			<div className="panel-heading">
 			<h4 className="panel-title">Email Logs</h4>
@@ -73,7 +72,6 @@ export default class AuditorEmailLog extends Component{
 			{emailRows}
 			</tbody>
 			</table>
-			</div>
 			</div>
 		);
 	}

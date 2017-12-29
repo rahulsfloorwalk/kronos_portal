@@ -47,7 +47,6 @@ var AuditorApplicationStats = React.createClass({
     });
 
 		return (
-			<div className="row">
         <div className="panel panel-default">
           <div className="panel-heading">
             <h4 className="panel-title">Application Summary</h4>
@@ -65,7 +64,6 @@ var AuditorApplicationStats = React.createClass({
             </tbody>
           </table>
         </div>
-			</div>
 		);
 	},
 });

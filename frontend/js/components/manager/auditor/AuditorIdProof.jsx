@@ -53,7 +53,6 @@ export default class AuditorIdProof extends Component{
 		});
 
 		return (
-			<div className="row">
 			<div className="panel panel-default">
 			<div className="panel-heading">
 			<h4 className="panel-title">ID Proofs</h4>
@@ -67,7 +66,6 @@ export default class AuditorIdProof extends Component{
 			{idProofRows}
 			</tbody>
 			</table>
-			</div>
 			</div>
 		);
 	}

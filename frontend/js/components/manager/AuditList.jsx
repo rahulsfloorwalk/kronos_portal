@@ -307,6 +307,7 @@ var AuditList = React.createClass({
           <Inbox/> Audits
         </h3>
 	<ApplicationStatusSummary auditCycleId={this.props.params.auditCycleId}/>
+	    <div className="table-responsive">
         <table className="table table-hover">
           <thead>
             <tr>
@@ -328,6 +329,7 @@ var AuditList = React.createClass({
           </thead>
             {rows}
         </table>
+	    </div>
         {this.props.children}
       </div>
     );
