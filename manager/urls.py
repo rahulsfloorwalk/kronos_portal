@@ -82,6 +82,7 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
 
     url(r'application/(?P<application_id>[0-9]+)/approve$', application_views.AuditApplicationApproveView.as_view(), name='audit_application_approve_view'),
+    url(r'application/(?P<application_id>[0-9]+)/waitlist$', application_views.AuditApplicationWaitListView.as_view(), name='audit_application_waitlist_view'),
     url(r'application/(?P<application_id>[0-9]+)/reject$', application_views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),
     url(r'application/(?P<application_id>[0-9]+)$', application_views.AuditApplicationIdView.as_view(), name='audit_application_id_view'),
 

@@ -60,3 +60,13 @@ class AuditApplicationRejectView(APIView):
             raise NotFound
         except AppLogicError as e:
             raise ValidationError(e) from e
+
+
+class AuditApplicationWaitListView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def post(self, request, application_id, format=None):
+        application = application_service.waitlist(application_id, request.user)
+        return Response(AuditApplicationSerializer(application).data)

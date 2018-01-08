@@ -114,6 +114,8 @@ export function getAuditApplicationStatus(value){
 			return "Pending for Approval";
 		case "NOT_APPLIED":
 			return "Not Applied";
+		case "WAITLISTED":
+			return "Wait Listed";
 		case "APPROVED":
 			return "Approved";
 		case "REJECTED":

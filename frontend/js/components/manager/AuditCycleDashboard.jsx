@@ -46,6 +46,7 @@ var AuditCycleDashBoard = React.createClass({
 	      <td className="">{value.name}</td>
 	      <td className="">{getAuditStatus(value.status)}</td>
 	      <td className="text-right"><b>{value.stats.application.APPLIED || ""}</b></td>
+	      <td className="text-right"><b>{value.stats.application.WAITLISTED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.application.APPROVED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.audit_store.ASSIGNED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.audit_store.SUBMITTED || ""}</b></td>
@@ -67,6 +68,7 @@ var AuditCycleDashBoard = React.createClass({
 					</tr>
 					<tr>
 					      <th className="text-right"><ApplicationStatusLabel status={"APPLIED"}/></th>
+					      <th className="text-right"><ApplicationStatusLabel status={"WAITLISTED"}/></th>
 					      <th className="text-right"><ApplicationStatusLabel status={"APPROVED"}/></th>
 					      <th className="text-right"><AuditStoreStatusLabel status={"ASSIGNED"}/></th>
 					      <th className="text-right"><AuditStoreStatusLabel status={"SUBMITTED"}/></th>

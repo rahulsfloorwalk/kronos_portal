@@ -82,7 +82,7 @@ def cancel( audit_id, profileinfo_id):
     except (Audit.DoesNotExist, AuditApplication.DoesNotExist, ProfileInfo.DoesNotExist ) as e:
         raise ObjectNotFound from e
 
-    if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.REPORT, AuditCycle.ARCHIVED) and application.status == AuditApplication.APPLIED:
+    if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.REPORT, AuditCycle.ARCHIVED) and application.status in (AuditApplication.APPLIED, AuditApplication.WAITLISTED):
         application.status = AuditApplication.NOT_APPLIED
         application.save()
         notify.send(
@@ -117,7 +117,7 @@ def approve(application_id, audit_date, user_actor):
     except (AuditApplication.DoesNotExist, Audit.DoesNotExist, AuditCycle.DoesNotExist, ProfileInfo.DoesNotExist):
         raise ObjectNotFound
 
-    if application.status != AuditApplication.APPLIED:
+    if application.status not in (AuditApplication.APPLIED, AuditApplication.WAITLISTED):
         raise AppLogicError("application cannot be approved right now")
     if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
         raise AppLogicError("audit date is out of range")
@@ -178,7 +178,7 @@ def reject(application_id, user_actor):
     except (AuditApplication.DoesNotExist, Audit.DoesNotExist, AuditCycle.DoesNotExist, ProfileInfo.DoesNotExist):
         raise ObjectNotFound
 
-    if application.status != AuditApplication.APPLIED:
+    if application.status not in (AuditApplication.APPLIED, AuditApplication.WAITLISTED):
         raise AppLogicError("application cannot be rejected now")
 
     application.status = AuditApplication.REJECTED
@@ -202,6 +202,39 @@ def reject(application_id, user_actor):
     auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
     return application
+
+@atomic
+def waitlist(application_id, user_actor):
+    try:
+        application = AuditApplication.objects.get(id=application_id)
+    except (AuditApplication.DoesNotExist, Audit.DoesNotExist, AuditCycle.DoesNotExist, ProfileInfo.DoesNotExist):
+        raise ObjectNotFound
+
+    if application.status != AuditApplication.APPLIED:
+        raise AppLogicError("application cannot be waitlisted now")
+
+    application.status = AuditApplication.WAITLISTED
+    application.save()
+    notify.send(
+        user_actor,
+        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+        verb=verbs.AUDIT_APPLICATION_WAITLISTED,
+        action_object=application,
+        target=application.audit
+    )
+    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_WAITLISTED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+    notify.send(
+        user_actor,
+        recipient=application.profileinfo.user,
+        verb=verbs.AUDIT_APPLICATION_WAITLISTED,
+        action_object=application,
+        target=application.audit
+    )
+    auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_WAITLISTED).order_by('-id')[0].id
+    connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+    return application
+
 
 def find_applications_by_audit(audit_id):
     return audit_service.find_audit_by_id(audit_id).applications.exclude(status=AuditApplication.NOT_APPLIED).order_by('audit_date')

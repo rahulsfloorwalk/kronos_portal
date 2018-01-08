@@ -40,3 +40,10 @@ export function rejectAllForAuditCycle(audit_cycle_id){
 	});
 };
 
+export function waitListApplication(application_id){
+	return $.ajax({
+		url: url.api_base_path + `manager/application/${application_id}/waitlist`,
+		method: 'POST',
+		contentType: 'application/json'
+	});
+};

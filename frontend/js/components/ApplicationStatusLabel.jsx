@@ -10,6 +10,8 @@ export default React.createClass({
 				return "primary";
 			case "NOT_APPLIED":
 				return "default";
+			case "WAITLISTED":
+				return "warning";
 			case "APPROVED":
 				return "success";
 			case "REJECTED":

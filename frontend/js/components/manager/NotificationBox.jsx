@@ -17,6 +17,8 @@ var NotificationItem = React.createClass({
 				return <span className="text-default"> canceled </span>;
 			case "AUDIT_APPLICATION_APPLIED":
 				return <span className="text-warning"> applied </span>;
+			case "AUDIT_APPLICATION_WAITLISTED":
+				return <span className="text-warning"> waitlisted </span>;
 			case "AUDIT_APPLICATION_APPROVED":
 				return <span className="text-success"> approved </span>;
 			case "AUDIT_APPLICATION_REJECTED":
@@ -159,6 +161,7 @@ export default React.createClass({
 							<option value="">All Types</option>
 							<option value="AUDIT_APPLICATION_APPLIED">Application Applied</option>
 							<option value="AUDIT_APPLICATION_CANCELED">Application Canceled</option>
+							<option value="AUDIT_APPLICATION_WAITLISTED">Application Wait Listed</option>
 							<option value="AUDIT_APPLICATION_APPROVED">Application Approved</option>
 							<option value="AUDIT_APPLICATION_REJECTED">Application Rejected</option>
 							<option value="AUDIT_STORE_SUBMITTED">Report Submitted</option>

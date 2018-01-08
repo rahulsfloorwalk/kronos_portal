@@ -30,7 +30,7 @@ var AuditRow = React.createClass({
 			button = applyButton;
 			//textLabel = <ApplicationStatusLabel status="NOT_APPLIED"/>;
 		}
-		else if( this.props.application.status === "APPLIED"){
+		else if( this.props.application.status === "APPLIED" || this.props.application.status === "WAITLISTED"){
 			let cancelLink = `/audit/cycle/${this.props.audit.audit_cycle.id}/audit/${this.props.audit.id}/cancel`;
 			let cancelButton = <Link to={cancelLink} className="btn btn-sm btn-default" title="Cancel Application"><Cross/> Cancel</Link>;
 			auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}.</b><br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;

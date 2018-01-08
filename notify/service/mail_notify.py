@@ -71,6 +71,11 @@ def notification_email_task(notif_id):
             params['html_template'] = 'notify/reject_email.html'
             params['txt_template'] = 'notify/reject_email.txt'
 
+        elif notif.verb == verbs.AUDIT_APPLICATION_WAITLISTED:
+            subject = "Audit Application has been wait listed {}".format(params['client'])
+            params['html_template'] = 'notify/waitlist_email.html'
+            params['txt_template'] = 'notify/waitlist_email.txt'
+
         elif notif.verb == verbs.AUDIT_STORE_WITHDRAWN:
             subject = "Audit Withdrawn for {}".format(params['client'])
             params['html_template'] = 'notify/withdrawn_email.html'
