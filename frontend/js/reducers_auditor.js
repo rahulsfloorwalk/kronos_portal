@@ -456,6 +456,7 @@ export function rootReducer(store = initialStore, action) {
 			}
 		case types.AUDIT_STORE_ID_GET:
 		case types.AUDIT_STORE_ID_SUBMIT:
+		case types.AUDIT_STORE_ID_ACKNOWLEDGE:
 			switch(action.status){
 				case "success":
 					return Object.assign({}, store, {

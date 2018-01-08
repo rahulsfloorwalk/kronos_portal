@@ -115,7 +115,7 @@ var QuestionRow = React.createClass({
 			}
 		</p>);
 
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+		if(this.props.auditStore && this.props.auditStore.status === 'ACKNOWLEDGED'){
 			if(this.props.q.question_type === "PLAIN"){
 			answerElement = (
 					<form className="" onSubmit={this.submitAnswer}>

@@ -185,7 +185,7 @@ def acknowledge(audit_store_id, user_id):
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
-            raise AppLogicError("audit store cannot be submitted now")
+            raise AppLogicError("audit store cannot be acknowledged now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -332,7 +332,7 @@ def submit_by_manager(audit_store_id, user_actor):
             )
             return audit_store
         else:
-            raise AppLogicError("audit store cannot be unsubmitted now")
+            raise AppLogicError("audit store cannot be submitted now")
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 

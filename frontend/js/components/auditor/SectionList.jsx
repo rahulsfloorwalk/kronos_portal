@@ -10,7 +10,7 @@ import AttachmentInProgressThumbnail from '../AttachmentInProgressThumbnail.jsx'
 
 import Jumbotron from '../Jumbotron.jsx';
 import Panel from '../Panel.jsx';
-import { Plus, Cross, Pencil, Paperclip } from '../Icons.jsx';
+import { Tasks, Plus, Cross, Pencil, Paperclip } from '../Icons.jsx';
 
 import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
 
@@ -113,14 +113,14 @@ class SectionAttachmentBox extends Component{
 	}
 	render(){
 		let uploadButton;
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+		if(this.props.auditStore && this.props.auditStore.status === 'ACKNOWLEDGED'){
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm" style={{
 			}}><Paperclip/> Upload</button>);
 		}
 
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let deletable = this.props.auditStore && this.props.auditStore.status === 'ASSIGNED';
+			let deletable = this.props.auditStore && this.props.auditStore.status === 'ACKNOWLEDGED';
 			attachmentRows.push(<AttachmentThumbnail
 				key={a.id}
 				attachment={a}
@@ -220,7 +220,7 @@ var __Section = React.createClass({
 		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">-</span>);
 
 		let commentElement = (<p>{auditor_comment}</p>);
-		if(this.props.auditStore && this.props.auditStore.status === 'ASSIGNED'){
+		if(this.props.auditStore && this.props.auditStore.status === 'ACKNOWLEDGED'){
 			commentElement = (
 				<form onSubmit={this.submitComment}>
 					<input
@@ -337,7 +337,7 @@ var SectionList = React.createClass({
 		}
 		return (
 			<div>
-				<h3 className="page-header">Report Details</h3>
+				<h3 className="page-header"><Tasks/> Questionnaire</h3>
 				{sectionRows}
 				{this.props.children}
 			</div>

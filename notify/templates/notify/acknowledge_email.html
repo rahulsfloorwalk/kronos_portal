@@ -4,15 +4,19 @@
 	<head>
 	</head>
 	<body>
-		<h1>Audit Assigned</h1>
+		<h1>Audit Acknowledged</h1>
 		<p>Hello <b>{{ name }},</b></p>
-		<p>We have approved your application to perform an audit at <b>{{ client }}</b> on <b>{{ audit_date }}</b>. You must log into the portal and go through the questionnaire before agreeing to conduct the audit.</p>
+		<p>Thank you for going through the instructions, questionnaire and confirming that you're going to audit at <b>{{ client }}</b> on <b>{{ audit_date }}</b>.</p>
 		<p>The audit details are as follows:</p>
 		<p><b>Store Name:</b> {{ store_name }}</p>
 		<p><b>Store Address:</b> {{ store_address }}</p>
 		<p><b>Audit Date:</b> {{ audit_date }}</p>
-		<p><b>Note: It is mandatory to view the questionnaire and agree to it before conducting the audit.</b></p>
+		<p><b>Note: You can always view the questionnaire and other details on the portal.</b></p>
 
+		<h2>Audit Instructions</h2>
+		{{ audit_post_approval_description | markdown }}
+
+		{{ audit_cycle_post_approval_description | markdown }}
 		<p>--</p>
 		<p>Thanks and regards,</p>
 		<p>FloorWalk Team</p>

@@ -25,6 +25,7 @@ def send_notification_mail(notif_id):
 
 @shared_task(ignore_result=True)
 def notification_email_task(notif_id):
+    '''generates and sends a notificaiton email based on given notification id and configured rules'''
     notif = Notification.objects.get(pk=notif_id)
     if notif.emailed:
         _logger.info("notification email already sent for id id %s", notif_id)
@@ -37,7 +38,11 @@ def notification_email_task(notif_id):
         to_email = notif.recipient.email
         params = {}
         params['name'] = notif.recipient.profileinfo.first_name
+
+        # the audit_date property may come from either an application or audit_store instance
         params['audit_date'] = notif.action_object.audit_date
+
+        # the audit property may come from either an application or audit_store instance
         params['client'] = notif.action_object.audit.audit_cycle.client.auditor_display_name()
         params['store_name'] = notif.action_object.audit.store.name
         params['store_address'] = notif.action_object.audit.store.address
@@ -63,6 +68,13 @@ def notification_email_task(notif_id):
             subject = "Audit Assigned for {}".format(params['client'])
             params['html_template'] = 'notify/assign_email.html'
             params['txt_template'] = 'notify/assign_email.txt'
+            params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
+            params['audit_post_approval_description'] = notif.target.post_approval_description
+
+        elif notif.verb == verbs.AUDIT_STORE_ACKNOWLEDGED:
+            subject = "Audit Acknowledged for {}".format(params['client'])
+            params['html_template'] = 'notify/acknowledge_email.html'
+            params['txt_template'] = 'notify/acknowledge_email.txt'
             params['audit_cycle_post_approval_description'] = notif.target.audit_cycle.post_approval_description
             params['audit_post_approval_description'] = notif.target.post_approval_description
 

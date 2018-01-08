@@ -8,6 +8,8 @@ export default React.createClass({
 		switch(this.props.status){
 			case "ASSIGNED":
 				return "warning";
+			case "ACKNOWLEDGED":
+				return "warning2";
 			case "SUBMITTED":
 				return "primary";
 			case "COMPLETED":

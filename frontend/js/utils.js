@@ -133,6 +133,8 @@ export function getAuditStoreStatus(value){
 	switch(value){
 		case "ASSIGNED":
 			return "Assigned";
+		case "ACKNOWLEDGED":
+			return "In Progress";
 		case "FAILED":
 			return "Failed";
 		case "WITHDRAWN":

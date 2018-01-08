@@ -96,7 +96,7 @@ var AuditStoreDetails = React.createClass({
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
 		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton;
-		if (this.props.auditStore.status === 'ASSIGNED'){
+		if (this.props.auditStore.status === 'ACKNOWLEDGED'){
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
 		}
 		if (this.props.auditStore.status === 'COMPLETED'){
@@ -104,7 +104,7 @@ var AuditStoreDetails = React.createClass({
 			acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-success">Accept</Link>);
 			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
-		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === 'SUBMITTED'){
+		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === "ACKNOWLEDGED" || this.props.auditStore.status === 'SUBMITTED'){
 			withdrawButton = (<button onClick={this.withdrawButtonClicked} type="button" className="btn btn-default">Withdraw</button>);
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
 		}

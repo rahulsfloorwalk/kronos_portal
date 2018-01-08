@@ -32,7 +32,7 @@ export default React.createClass({
 			<thead>
 			<tr>
 			{
-				["ASSIGNED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
+				["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
 					return (
 					<td key={status} className="text-center">
 						<AuditStoreStatusLabel status={status}/>
@@ -45,7 +45,7 @@ export default React.createClass({
 			<tbody>
 			<tr>
 			{
-				["ASSIGNED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
+				["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
 					let item = this.state.stats.find( s => s.status === status);
 					return (
 					<td key={status} className="text-center">

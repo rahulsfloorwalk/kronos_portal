@@ -27,6 +27,10 @@ var NotificationItem = React.createClass({
 				return <span className="text-default"> withdrew </span>;
 			case "AUDIT_STORE_ASSIGNED":
 				return <span className="text-warning"> assigned </span>;
+			case "AUDIT_STORE_FIAT_ASSIGNED":
+				return <span className="text-warning"> fiat assigned </span>;
+			case "AUDIT_STORE_ACKNOWLEDGED":
+				return <span className="text-warning"> acknowledged </span>;
 			case "AUDIT_STORE_UNSUBMITTED":
 				return <span className="text-warning"> unsubmitted </span>;
 			case "AUDIT_STORE_SUBMITTED":
@@ -168,6 +172,7 @@ export default React.createClass({
 							<option value="AUDIT_STORE_UNSUBMITTED">Report Un Submitted</option>
 							<option value="AUDIT_STORE_ASSIGNED">Report Assigned</option>
 							<option value="AUDIT_STORE_FIAT_ASSIGNED">Report Fiat Assigned</option>
+							<option value="AUDIT_STORE_ACKNOWLEDGED">Report Acknowledged</option>
 							<option value="AUDIT_STORE_WITHDRAWN">Report Withdrawn</option>
 							<option value="AUDIT_STORE_FAILED">Report Failed</option>
 							<option value="AUDIT_STORE_COMPLETED">Report Completed</option>

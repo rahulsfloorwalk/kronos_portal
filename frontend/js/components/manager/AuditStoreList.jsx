@@ -224,6 +224,7 @@ var AuditStoreList = React.createClass({
 	  <select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.statusChanged} value={this.state.selectedStatus}>
 	    <option value="">All Status</option>
 	    <option value="ASSIGNED">{getAuditStoreStatus("ASSIGNED")}</option>
+	    <option value="ACKNOWLEDGED">{getAuditStoreStatus("ACKNOWLEDGED")}</option>
 	    <option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
 	    <option value="WITHDRAWN">{getAuditStoreStatus("WITHDRAWN")}</option>
 	    <option value="COMPLETED">{getAuditStoreStatus("COMPLETED")}</option>

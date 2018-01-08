@@ -11,13 +11,13 @@ from . import service as audit_store_service
 
 def find_by_audit_cycle_for_moderator(audit_cycle_id, user_id):
     audit_cycle = audit_cycle_service.find_by_id_for_moderator(audit_cycle_id, user_id)
-    return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle.id, status__in=[AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED]).order_by('-audit_date')
+    return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle.id, status__in=[AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED]).order_by('-audit_date')
 
 
 def find_by_id_for_moderator(audit_store_id, user_id):
     try:
         user = find_moderator_by_user_id(user_id)
-        audit_store = AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ASSIGNED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED])
+        audit_store = AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED])
         if user.has_perm('moderator_manage', audit_store.audit.audit_cycle):
             return audit_store
         else:

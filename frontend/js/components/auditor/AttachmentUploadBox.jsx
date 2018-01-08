@@ -110,8 +110,18 @@ var AttachmentUploadBox = React.createClass({
 
 		let uploadButton;
 		let deletable = false;
-		if(this.props.auditStore.status === 'ASSIGNED'){
-			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default"><Paperclip/> Upload</button>);
+		if(this.props.auditStore.status === 'ACKNOWLEDGED'){
+			uploadButton = (
+				<span>
+					<input type="file" multiple
+						onChange={this.uploadFile}
+						disabled={this.state.uploading}
+						ref={(input)=>this.uploadInput = input}
+						className="hidden"/>
+					<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default">
+						<Paperclip/> Upload
+					</button>
+				</span>);
 			deletable = true;
 		}
 
@@ -136,29 +146,19 @@ var AttachmentUploadBox = React.createClass({
 
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
-				<div key="empty" className="list-group-item text-center text-muted">
-					<h4>no attachments here</h4>
+				<div key="empty" className="text-muted">
+					no attachments here
 				</div>
 			);
 		}
 
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					<h4 className="panel-title">
-						<Paperclip/> Attachments
-					</h4>
-				</div>
-				<div className="list-group" style={{"minHeight":"239px", "maxHeight":"250px", "overflowY":"auto"}}>
+			<div className="">
+				<h3 className="page-header">
+					<Paperclip/> Attachments {uploadButton}
+				</h3>
+				<div className="form-group" style={{}}>
 					{attachmentRows}
-				</div>
-				<div className="panel-footer text-right">
-					<input type="file" multiple
-						onChange={this.uploadFile} 
-						disabled={this.state.uploading}
-						ref={(input)=>this.uploadInput = input}
-						style={{"display":"none"}}/>
-						{uploadButton}
 				</div>
 			</div>
 		);

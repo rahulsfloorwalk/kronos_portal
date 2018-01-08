@@ -39,6 +39,25 @@ export function fetchAuditStore(auditStoreId){
 	};
 };
 
+export function acknowledgeAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_ACKNOWLEDGE,
+			status: 'request',
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/acknowledge`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_ACKNOWLEDGE,
+				status: 'success',
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+};
+
 export function submitAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({

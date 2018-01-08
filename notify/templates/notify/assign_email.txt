@@ -1,16 +1,11 @@
 Hello {{ name }}
-We have approved you to perform an audit at {{ client }} on {{ audit_date }}.
+We have approved your application to performa an audit at {{ client }} on {{ audit_date }}. You must log into the portal and go through the questionnaire before agreeing to conduct the audit.
+
 The audit details are as follows:
 Store Name: {{ store_name }}
 Store Address: {{ store_address }}
 Audit Date: {{ audit_date }}
-Note: You can view the questionnaire on the portal. It is required that you go through the questionnaire before conducting the audit.
-
-## Audit Instructions
-
-{{audit_post_approval_description}}
-
-{{audit_cycle_post_approval_description}}
+Note: It is mandatory to view the questionnaire and agree to it before conducting the audit.
 
 --
 Thanks and regards,
