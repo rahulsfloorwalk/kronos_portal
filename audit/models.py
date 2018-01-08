@@ -99,7 +99,7 @@ class Audit(Model):
         # check if prefetched cache exists,
         if hasattr(self, '_prefetched_objects_cache') and 'applications' in self._prefetched_objects_cache:
             # run the summing code in python because we have already prefetched questions
-            return len([a for a in self.applications.all() if a.status is not AuditApplication.NOT_APPLIED])
+            return len([a for a in self.applications.all() if a.status != AuditApplication.NOT_APPLIED])
         else:
             return self.applications.exclude(status=AuditApplication.NOT_APPLIED).count()
 
