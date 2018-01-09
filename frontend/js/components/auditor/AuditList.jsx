@@ -33,7 +33,14 @@ var AuditRow = React.createClass({
 		else if( this.props.application.status === "APPLIED" || this.props.application.status === "WAITLISTED"){
 			let cancelLink = `/audit/cycle/${this.props.audit.audit_cycle.id}/audit/${this.props.audit.id}/cancel`;
 			let cancelButton = <Link to={cancelLink} className="btn btn-sm btn-default" title="Cancel Application"><Cross/> Cancel</Link>;
-			auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}.</b><br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
+			if(this.props.application.status === "APPLIED"){
+				auditDate = <p>You have <b className="text-info">applied</b> for an audit on <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. It is pending for approval.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
+			}
+
+			if(this.props.application.status === "WAITLISTED"){
+				auditDate = <p>Your application is on <b className="text-warning">wait list</b>. There is a good chance that it may get approved.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT UNTIL YOUR APPLICATION IS APPROVED.</b></small></p>;
+			}
+
 			button = cancelButton;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} 

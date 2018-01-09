@@ -19,6 +19,8 @@ var NotificationItem = React.createClass({
 				return <span className="text-warning"> applied </span>;
 			case "AUDIT_APPLICATION_APPROVED":
 				return <span className="text-success"> approved </span>;
+			case "AUDIT_APPLICATION_WAITLISTED":
+				return <span className="text-warning"> wait listed </span>;
 			case "AUDIT_APPLICATION_REJECTED":
 				return <span className="text-danger"> rejected </span>;
 			case "AUDIT_STORE_WITHDRAWN":
