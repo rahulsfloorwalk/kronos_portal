@@ -54,7 +54,7 @@ class Store(Model):
     priority = CharField(db_column='priority', max_length=5, blank=True, default='')
     name = CharField(db_column='name', max_length=500, blank=False)
     address = CharField(db_column='address', max_length=1024, blank=False)
-    location = ForeignKey('manager.Location', db_column='location_id', blank=False, on_delete=PROTECT)
+    location = ForeignKey('manager.Location', db_column='location_id', blank=True, null=True, on_delete=PROTECT)
     city = ForeignKey('manager.City', db_column='city_id', null=True, on_delete=PROTECT)
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
     phone = CharField(db_column='phone', max_length=100, blank=True)
