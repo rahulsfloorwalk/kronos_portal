@@ -88,6 +88,7 @@ let QuestionRow = React.createClass({
 			});
 		}
 	},
+	/*
 	componentWillReceiveProps: function(nextProps){
 		if(nextProps.answer){
 			this.setState({
@@ -95,6 +96,7 @@ let QuestionRow = React.createClass({
 			});
 		}
 	},
+	*/
 	answerChanged: function(e){
 		this.setState({
 			answer: Object.assign({}, this.state.answer, {
@@ -438,7 +440,11 @@ let Section = React.createClass({
 		this.setState({
 			savingPMComment: true,
 		});
-		submitPMComment(this.props.auditStoreId, this.props.section.id, this.state.pm_comment).then(()=> this.setState({pmCommentError: false}), () => this.setState({pmCommentError: true})).always(() => this.setState({savingPMComment: false}));
+		submitPMComment(this.props.auditStoreId, this.props.section.id, this.state.pm_comment).then(()=> {
+			this.setState({pmCommentError: false});
+		}, () => {
+			this.setState({pmCommentError: true});
+		}).always(() => this.setState({savingPMComment: false}));
 	},
 	notApplicableButtonClicked: function(e){
 		this.setState({

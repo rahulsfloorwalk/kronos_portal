@@ -50,6 +50,7 @@ import AuditForm from './AuditForm.jsx';
 
 import AuditStoreList from './AuditStoreList.jsx';
 import AuditStoreAcceptForm from './AuditStoreAcceptForm.jsx';
+import AuditStoreCompleteForm from './AuditStoreCompleteForm.jsx';
 import AuditStoreDetails from './AuditStoreDetails.jsx';
 import AuditStoreReport from './AuditStoreReport.jsx';
 
@@ -126,6 +127,7 @@ const Routes = () => (
 
 		<Route path="audit_store/:auditStoreId" components={AuditStoreDetails}>
 			<Route path="report" components={AuditStoreReport}/>
+			<Route path="complete" components={AuditStoreCompleteForm}/>
 		</Route>
 
 		<Route path="auditor" component={AuditorList}/>

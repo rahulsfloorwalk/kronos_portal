@@ -9,6 +9,8 @@ import AuditCycleDetails from './AuditCycleDetails.jsx';
 import AuditStoreList from './AuditStoreList.jsx';
 import AuditStoreDetails from './AuditStoreDetails.jsx';
 
+import AuditStoreCompleteForm from './AuditStoreCompleteForm.jsx';
+
 const Routes = () => (
     <Router history={hashHistory}>
 	<Route path="/login" component={Login}/>
@@ -18,6 +20,7 @@ const Routes = () => (
 			<Route path="audit_store" component={AuditStoreList}/>
 		</Route>
 		<Route path="audit_store/:auditStoreId/report" component={AuditStoreDetails}>
+			<Route path="complete" component={AuditStoreCompleteForm}/>
 		</Route>
 	</Route>
     </Router>

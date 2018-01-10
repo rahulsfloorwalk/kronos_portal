@@ -18,6 +18,7 @@ import { Calendar, Retweet, King, File, Download } from '../Icons.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
 import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
+import AuditStoreRating from '../AuditStoreRating.jsx';
 import { LabelValue_2_10 } from '../LabelValue.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
 
@@ -109,7 +110,7 @@ var AuditStoreDetails = React.createClass({
 		}
 		if(this.props.auditStore.status === 'SUBMITTED'){
 			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
-			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
+			completeButton = (<Link to={`/audit_store/${this.props.params.auditStoreId}/complete`} className="btn btn-success">Complete</Link>);
 
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
@@ -195,6 +196,10 @@ var AuditStoreDetails = React.createClass({
 							<tr>
 								<td className="text-right">Status:</td>
 								<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
+							</tr>
+							<tr>
+								<td className="text-right">Rating:</td>
+								<th><AuditStoreRating rating={this.props.auditStore.qa_rating}/></th>
 							</tr>
 						</tbody>
 					</table>

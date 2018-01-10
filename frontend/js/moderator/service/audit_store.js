@@ -21,8 +21,15 @@ export function fail(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`);
 };
 
-export function complete(auditStoreId){
-	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/complete`);
+export function complete(auditStoreId, qa_rating){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/complete`,
+		type: "POST",
+		data: JSON.stringify({
+			qa_rating,
+		}),
+		contentType: "application/json"
+	});
 };
 
 export function setAuditDate(auditStoreId, auditDate){

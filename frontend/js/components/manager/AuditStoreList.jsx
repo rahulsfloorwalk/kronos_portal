@@ -16,7 +16,7 @@ import AuditCycleSummary from './AuditCycleSummary.jsx'
 import AuditStoreStatusSummary from './AuditStoreStatusSummary.jsx'
 import { fetchClientUsers } from '../../manager/actions/client_user.js';
 import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore, updateAuditStore} from '../../manager/actions/audit_store.js';
-import { assignAuditStoreToClientUser, revokeAuditStoreFromClientUser } from '../../manager/service/audit_store.js';
+import { findAuditStoresByAuditCycle, assignAuditStoreToClientUser, revokeAuditStoreFromClientUser } from '../../manager/service/audit_store.js';
 import { getAuditStoreStatus } from '../../utils.js';
 import { getPaymentStatus } from '../../utils.js';
 
@@ -25,10 +25,10 @@ var __AuditStoreRow = React.createClass({
 		return {};
 	},
 	assignAuditStore: function(e){
-		assignAuditStoreToClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
+		assignAuditStoreToClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.onUpdate(auditStore));
 	},
 	revokeAuditStore: function(e){
-		revokeAuditStoreFromClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.dispatch(updateAuditStore(auditStore)));
+		revokeAuditStoreFromClientUser(this.props.auditStore.id, this.props.selectedClientUser.user.id).then((auditStore) => this.props.onUpdate(auditStore));
 	},
   render: function(){
 	  let visibleCheckbox;
@@ -76,7 +76,7 @@ var AuditStoreTable = React.createClass({
 			    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser}/>);
 		    }
 	    } else {
-	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser}/>);
+	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser} onUpdate={this.props.onUpdate}/>);
 	    }
     }
     let checkBoxHeader = null;
@@ -111,6 +111,7 @@ var AuditStoreTable = React.createClass({
 var AuditStoreList = React.createClass({
 	getInitialState: function(){
 		return {
+			auditStores: [],
 			selectedClientUserId: null,
 			selectedStatus: null,
 			loading: false,
@@ -119,13 +120,15 @@ var AuditStoreList = React.createClass({
 	setLoading: function(loading){
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
 	},
-  componentDidMount: function(){
-	  this.setLoading(true);
-    this.props.dispatch(fetchAuditStores(this.props.params.auditCycleId)).always(()=>this.setLoading(false));
-    if(this.props.auditCycle){
-	    this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
-    }
-  },
+	componentDidMount: function(){
+		this.setLoading(true);
+		findAuditStoresByAuditCycle(this.props.params.auditCycleId).then(auditStores => {
+			this.setState({auditStores});
+		}).always(()=>this.setLoading(false));
+		if(this.props.auditCycle){
+			this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
+		}
+	},
   componentWillReceiveProps: function(nextProps){
     if(nextProps.auditCycle && ! this.props.auditCycle){
 	    this.props.dispatch(fetchClientUsers(nextProps.auditCycle.client.id));
@@ -141,30 +144,40 @@ var AuditStoreList = React.createClass({
 			selectedStatus: e.target.value
 		});
 	},
+	auditStoreUpdated: function(auditStore){
+		let i = this.state.auditStores.findIndex(as => as.id === auditStore.id);
+		if( i !== -1){
+			let auditStores = this.state.auditStores;
+			auditStores[i] = auditStore;
+			this.setState({
+				auditStores: auditStores,
+			});
+		}
+	},
   render: function(){
 	  let clientUserRows = [];
 	  for( let clientUserId in this.props.clientUsers){
 		  clientUserRows.push(<option key={this.props.clientUsers[clientUserId].id} value={this.props.clientUsers[clientUserId].id}>{this.props.clientUsers[clientUserId].full_name}</option>);
 	  }
 	  let checkBoxHeader = null;
-		var audits = [];
-		for(var id in this.props.auditStores) {
-			let audit = audits.filter((a)=> a.id === this.props.auditStores[id].audit.id)[0];
+		let audits = [];
+		for(let id in this.state.auditStores) {
+			let audit = audits.find((a)=> a && a.id === this.state.auditStores[id].audit.id);
 			if(! audit){
-				audits.push(this.props.auditStores[id].audit);
-				audit = audits.filter((a)=> a.id === this.props.auditStores[id].audit.id)[0];
+				audits.push(this.state.auditStores[id].audit);
+				audit = audits.find((a)=> a && a.id === this.state.auditStores[id].audit.id);
 				audit.reports = [];
 			}
-			audit.reports.push(this.props.auditStores[id]);
+			audit.reports.push(this.state.auditStores[id]);
 		}
-    var rows = [];
-    for( var i in audits){
+    let rows = [];
+    for( let i in audits){
 	    rows.push(
 		    <div className="panel panel-default" key={audits[i].id}>
 			<div className="panel-heading">
 				<b>{audits[i].store.name}</b>, {audits[i].store.address}, {audits[i].store.city.name}
 			</div>
-			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus}/>
+			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus} onUpdate={this.auditStoreUpdated}/>
 		    </div>
 	    );
     }
@@ -207,7 +220,6 @@ var AuditStoreList = React.createClass({
 
 var mapStoreToProps = function(store, ownProps){
   return{
-    auditStores: store.auditStores,
     auditCycle: store.auditCycles[ownProps.params.auditCycleId],
     clientUsers: store.clientUsers,
   };

@@ -115,15 +115,15 @@ class AuditStoreIdWithdrawView(APIView):
 class AuditStoreIdCompleteView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.complete(audit_store_id, request.user)
+            audit_store = audit_store_service.complete(audit_store_id, request.data["qa_rating"], request.user)
             return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
+        except (KeyError) as e:
             raise ValidationError({
-                'non_field_errors': [e.__str__()]
+                'non_field_errors': ["Rating is mandatory"]
             })
 
 class AuditStoreIdUnCompleteView(APIView):

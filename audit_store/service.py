@@ -200,7 +200,7 @@ def submit(audit_store_id, user_id):
         raise ObjectNotFound from e
 
 @atomic
-def complete(audit_store_id, user_actor):
+def complete(audit_store_id, qa_rating, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
         report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, audit_store.user.id)
@@ -210,6 +210,7 @@ def complete(audit_store_id, user_actor):
 
         if audit_store.status == AuditStore.SUBMITTED:
             audit_store.status = AuditStore.COMPLETED
+            audit_store.qa_rating = qa_rating
             audit_store.save()
             notify.send(
                 user_actor,
@@ -242,6 +243,7 @@ def fail(audit_store_id, user_actor):
 
         if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED):
             audit_store.status = AuditStore.FAILED
+            audit_store.qa_rating = AuditStore.BAD
             audit_store.save()
             notify.send(
                 user_actor,
@@ -403,6 +405,7 @@ def reject(audit_store_id, user_actor):
 
         if audit_store.status == AuditStore.COMPLETED:
             audit_store.status = AuditStore.REJECTED
+            audit_store.qa_rating = AuditStore.BAD
             audit_store.save()
             notify.send(
                 user_actor,

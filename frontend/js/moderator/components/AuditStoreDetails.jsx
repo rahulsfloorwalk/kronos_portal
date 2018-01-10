@@ -17,6 +17,7 @@ import Loading from '../../components/Loading.jsx';
 import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
 import MarkdownViewer from '../../components/MarkdownViewer.jsx';
 import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
+import AuditStoreRating from '../../components/AuditStoreRating.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
@@ -39,6 +40,9 @@ export default React.createClass({
 		});
 	},
 	componentDidMount: function(){
+		findById(this.props.params.auditStoreId).then(this.setAuditStore);
+	},
+	componentWillReceiveProps: function(){
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
 	},
 	completeButtonClicked: function(e){
@@ -86,7 +90,7 @@ export default React.createClass({
 		}
 		if(this.state.auditStore.status === 'SUBMITTED'){
 			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
-			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
+			completeButton = (<Link to={`/audit_store/${this.props.params.auditStoreId}/report/complete`} className="btn btn-success">Complete</Link>);
 
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
@@ -147,6 +151,14 @@ export default React.createClass({
 								<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type}/></th>
 							</tr>
 							<tr>
+								<td className="text-right">Audit Fees:</td>
+								<th>₹ {this.state.auditStore.audit.earnings_per_audit}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Reimbursement upto:</td>
+								<th>₹ {this.state.auditStore.audit.reimbursement}</th>
+							</tr>
+							<tr>
 								<td className="text-right">Auditor:</td>
 								<td>
 									<b>{this.state.auditStore.user.profileinfo.first_name} {this.state.auditStore.user.profileinfo.last_name}</b><br/>
@@ -161,6 +173,10 @@ export default React.createClass({
 							<tr>
 								<td className="text-right">Status:</td>
 								<th><AuditStoreStatusLabel status={this.state.auditStore.status}/></th>
+							</tr>
+							<tr>
+								<td className="text-right">QA Rating:</td>
+								<th><AuditStoreRating rating={this.state.auditStore.qa_rating}/></th>
 							</tr>
 						</tbody>
 					</table>

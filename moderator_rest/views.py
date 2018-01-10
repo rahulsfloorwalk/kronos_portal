@@ -131,14 +131,16 @@ class AuditStoreIdFailView(APIView):
 class AuditStoreIdCompleteView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST' : [GROUP_NAME_MODERATOR],
-        }
+        'POST': [GROUP_NAME_MODERATOR],
+    }
     def post(self, request, audit_store_id):
         try:
-            audit_store = audit_store_service.complete_for_moderator(audit_store_id, request.user.id)
+            audit_store = audit_store_service.complete_for_moderator(audit_store_id, request.data["qa_rating"], request.user.id)
             return Response(AuditStoreSerializer(audit_store).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
+        except KeyError as e:
+            raise ValidationError({
+                'non_field_errors': ["Rating is required"]
+            })
 
 
 class AuditStoreAttachmentView(APIView):

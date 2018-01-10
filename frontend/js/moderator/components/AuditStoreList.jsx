@@ -21,6 +21,8 @@ var AuditStoreRow = React.createClass({
     return(
       <tr style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${this.props.auditStore.id}/report`)}>
         <td><b>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</b> ( {auditorPhoneLink})</td>
+        <td className="text-right">{this.props.auditStore.audit.earnings_per_audit}</td>
+        <td className="text-right">{this.props.auditStore.audit.reimbursement}</td>
         <td>{this.props.auditStore.audit.store.city.name}</td>
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
@@ -56,6 +58,8 @@ export default React.createClass({
 				<thead>
 					<tr>
 					<th>Auditor Name</th>
+					<th className="text-right">Fees</th>
+					<th className="text-right">Reimbursement</th>
 					<th>City</th>
 					<th>Audit Date</th>
 					<th>Report Status</th>

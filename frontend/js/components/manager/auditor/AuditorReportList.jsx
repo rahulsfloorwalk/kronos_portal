@@ -13,6 +13,7 @@ import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../Icons.jsx';
 import NavLink from '../../NavLink.jsx';
 import Panel from '../../Panel.jsx';
 import Loading from '../../Loading.jsx';
+import AuditStoreRating from '../../AuditStoreRating.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../../utils.js';
 
@@ -41,6 +42,7 @@ export default React.createClass({
           <td>{row.audit__store__name}</td>
           <td>{row.audit__audit_cycle__name}</td>
           <td>{row.audit_date}</td>
+          <td><AuditStoreRating rating={row.qa_rating}/></td>
           <td><AuditStoreStatusLabel status={row.status} /></td>
         </tr>
       );
@@ -58,6 +60,7 @@ export default React.createClass({
                 <th>Store</th>
                 <th>Audit Cycle</th>
                 <th>Audit Date</th>
+                <th>QA Rating</th>
                 <th>Status</th>
               </tr>
               {audit_store_arr}

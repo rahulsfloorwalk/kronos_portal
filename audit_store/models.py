@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet
-from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField
+from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField
 from django.db.models import PROTECT
 
 from kronos.utils import get_color_code_by_percentage
@@ -59,9 +59,21 @@ class AuditStore(Model):
         (REJECTED, "Rejected"),
     )
 
+    BAD = 0
+    AVERAGE = 1
+    GOOD = 2
+
+    QA_RATING = (
+        (BAD, "Bad"),
+        (AVERAGE, "Average"),
+        (GOOD, "Good"),
+    )
+
     id = AutoField(db_column='id', primary_key=True)
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
+
+    qa_rating = IntegerField(db_column='qa_rating', choices=QA_RATING, null=True)
 
     audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores', on_delete=PROTECT)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)

@@ -1,6 +1,7 @@
 import $ from 'jquery'
 import { url } from '../../../config.js'
 import types from '../action_types.js';
+import { findAuditStoresByAuditCycle } from '../service/audit_store.js';
 
 export function fetchAuditStores(auditCycleId){
 	return function(dispatch){
@@ -10,7 +11,7 @@ export function fetchAuditStores(auditCycleId){
 			auditCycleId
 		});
 
-		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit_store`, function(auditStores){
+		return findAuditStoresByAuditCycle(auditCycleId).then(function(auditStores){
 			dispatch({
 				type: types.AUDIT_STORE_GET,
 				status: 'success',
@@ -59,7 +60,7 @@ export function withdrawAuditStore(auditStoreId){
 	};
 };
 
-export function completeAuditStore(auditStoreId){
+export function completeAuditStore(auditStoreId, qa_rating){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_COMPLETE,
@@ -67,7 +68,15 @@ export function completeAuditStore(auditStoreId){
 			auditStoreId
 		});
 
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/complete`).then(function(auditStore){
+		let promise = $.ajax({
+			url: url.api_base_path + `manager/audit_store/${auditStoreId}/complete`,
+			method: 'POST',
+			data: JSON.stringify({
+				'qa_rating': qa_rating
+			}),
+			contentType: 'application/json'
+		});
+		promise.then(function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_COMPLETE,
 				status: 'success',
@@ -80,6 +89,8 @@ export function completeAuditStore(auditStoreId){
 				errors: err.responseJSON || {}
 			});
 		});
+
+		return promise;
 		//TODO: Handle error
 	};
 };

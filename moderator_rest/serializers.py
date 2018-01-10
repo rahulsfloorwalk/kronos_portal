@@ -107,6 +107,7 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             'audit_date',
             'audit',
             'user',
+            'qa_rating',
         )
         read_only_fields = fields
 
@@ -165,6 +166,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'user',
+            'qa_rating',
         )
         read_only_fields = fields
 
