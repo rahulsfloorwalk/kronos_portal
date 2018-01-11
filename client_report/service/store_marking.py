@@ -8,6 +8,10 @@ from kronos.utils import get_color_code
 def get_scores_for_store(store_id, client_id, audit_type):
     all_cycles = AuditCycle.objects.filter(client_id=client_id).filter(type=audit_type).order_by('end_date')
     all_cycle_count = all_cycles.count()
+
+    if all_cycle_count is 0:
+        return {"scores": [], "audit_cycle": []}
+
     if all_cycle_count > 5:
         audit_cycles = all_cycles[all_cycle_count - 5:]
     else:
