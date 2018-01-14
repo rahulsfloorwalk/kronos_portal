@@ -2,9 +2,6 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -36,16 +33,11 @@ class AuditIdView(APIView):
         return Response(AuditSerializer(audit).data)
 
     def post(self, request, audit_id):
-        try:
-            audit_ds = AuditDeSerializer(data=request.data, context={'id':audit_id})
-            audit_ds.is_valid(raise_exception=True)
-            audit = audit_ds.deserialize()
-            audit = audit_service.save(audit)
-            return Response(AuditSerializer(audit).data)
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_ds = AuditDeSerializer(data=request.data, context={'id':audit_id})
+        audit_ds.is_valid(raise_exception=True)
+        audit = audit_ds.deserialize()
+        audit = audit_service.save(audit)
+        return Response(AuditSerializer(audit).data)
 
     def delete(self, request, audit_id):
         audit_service.delete(audit_id)
@@ -57,16 +49,11 @@ class AuditView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request):
-        try:
-            audit_ds = AuditDeSerializer(data=request.data)
-            audit_ds.is_valid(raise_exception=True)
-            audit = audit_ds.deserialize()
-            audit_service.save(audit)
-            return Response(AuditSerializer(audit).data)
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_ds = AuditDeSerializer(data=request.data)
+        audit_ds.is_valid(raise_exception=True)
+        audit = audit_ds.deserialize()
+        audit_service.save(audit)
+        return Response(AuditSerializer(audit).data)
 
 
 class AuditFiatAssignView(APIView):
@@ -75,23 +62,16 @@ class AuditFiatAssignView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request, audit_id):
-        try:
-            request.data["audit"] = audit_id
-            audit_f_assign_ds = AuditFiatAssignDeSerializer(data=request.data)
-            audit_f_assign_ds.is_valid(raise_exception=True)
-            audit_store = manager_audit_service.fiat_assign(
-                audit_f_assign_ds.validated_data["audit"].id,
-                audit_f_assign_ds.validated_data["email"],
-                audit_f_assign_ds.validated_data["audit_date"],
-                request.user
-            )
-            return Response(AuditStoreSerializer(audit_store).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        request.data["audit"] = audit_id
+        audit_f_assign_ds = AuditFiatAssignDeSerializer(data=request.data)
+        audit_f_assign_ds.is_valid(raise_exception=True)
+        audit_store = manager_audit_service.fiat_assign(
+            audit_f_assign_ds.validated_data["audit"].id,
+            audit_f_assign_ds.validated_data["email"],
+            audit_f_assign_ds.validated_data["audit_date"],
+            request.user
+        )
+        return Response(AuditStoreSerializer(audit_store).data)
 
 
 class AuditCopyByAuditCycle(APIView):

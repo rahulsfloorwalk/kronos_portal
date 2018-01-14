@@ -52,6 +52,7 @@ class ClientIdView(APIView):
         client = client_s.deserialize()
         savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
+
     def delete(self, request, client_id):
         try:
             client = Client.objects.get(id=client_id)

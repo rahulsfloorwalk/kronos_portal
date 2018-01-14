@@ -1,9 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.serializers import Serializer, CharField, BooleanField
-
-from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -17,11 +14,8 @@ class ReportSectionByAuditStore(APIView):
         'GET': [GROUP_NAME_MANAGER]
     }
     def get(self, request, audit_store_id, format=None):
-        try:
-            report_sections = report_section_service.find_by_audit_store(audit_store_id)
-            return Response(ReportSectionSerializer(report_sections, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
+        report_sections = report_section_service.find_by_audit_store(audit_store_id)
+        return Response(ReportSectionSerializer(report_sections, many=True).data)
 
 class PMCommentSubmitView(APIView):
     permission_classes = [HasGroupPermission]
@@ -36,15 +30,8 @@ class PMCommentSubmitView(APIView):
         audit_store = ds.validated_data['audit_store']
         pm_comment = ds.validated_data['pm_comment']
         section = ds.validated_data['section']
-        try:
-            report_section = report_section_service.submit_pm_comment(audit_store.id, section.id, pm_comment)
-            return Response(ReportSectionSerializer(report_section).data)
-        except ObjectNotFound:
-            raise NotFound
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        report_section = report_section_service.submit_pm_comment(audit_store.id, section.id, pm_comment)
+        return Response(ReportSectionSerializer(report_section).data)
 
 class AuditorCommentSubmitView(APIView):
     permission_classes = [HasGroupPermission]
@@ -58,15 +45,8 @@ class AuditorCommentSubmitView(APIView):
     def post(self, request, audit_store_id, section_id, format=None):
         ds = AuditorCommentSubmitView.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        try:
-            report_section = report_section_service.set_auditor_comment_by_manager(audit_store_id, section_id, ds.validated_data["auditor_comment"])
-            return Response(ReportSectionSerializer(report_section).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        report_section = report_section_service.set_auditor_comment_by_manager(audit_store_id, section_id, ds.validated_data["auditor_comment"])
+        return Response(ReportSectionSerializer(report_section).data)
 
 class NotApplicableView(APIView):
     permission_classes = [HasGroupPermission]
@@ -80,12 +60,5 @@ class NotApplicableView(APIView):
     def post(self, request, audit_store_id, section_id, format=None):
         ds = NotApplicableView.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        try:
-            report_section = report_section_service.set_not_applicable(audit_store_id, section_id, ds.validated_data["not_applicable"])
-            return Response(ReportSectionSerializer(report_section).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        report_section = report_section_service.set_not_applicable(audit_store_id, section_id, ds.validated_data["not_applicable"])
+        return Response(ReportSectionSerializer(report_section).data)

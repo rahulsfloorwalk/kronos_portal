@@ -1,8 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -22,21 +19,14 @@ class ManagerView(APIView):
         return Response(PlainUserSerializer(users, many=True).data)
 
     def post(self, request):
-        try:
-            manager_ds = ManagerDeSerializer(data=request.data)
-            manager_ds.is_valid(raise_exception=True)
-            saved_manager_user = manager_service.insert(
-                manager_ds.validated_data["email"],
-                manager_ds.validated_data["password"],
-                manager_ds.validated_data["is_active"]
-            )
-            return Response(PlainUserSerializer(saved_manager_user).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        manager_ds = ManagerDeSerializer(data=request.data)
+        manager_ds.is_valid(raise_exception=True)
+        saved_manager_user = manager_service.insert(
+            manager_ds.validated_data["email"],
+            manager_ds.validated_data["password"],
+            manager_ds.validated_data["is_active"]
+        )
+        return Response(PlainUserSerializer(saved_manager_user).data)
 
 class ManagerIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -50,20 +40,13 @@ class ManagerIdView(APIView):
         return Response(PlainUserSerializer(user).data)
 
     def post(self, request, user_id):
-        try:
-            manager_ds = ManagerDeSerializer(data=request.data)
-            manager_ds.is_valid(raise_exception=True)
-            saved_user = manager_service.update(
-                user_id,
-                manager_ds.validated_data["email"],
-                manager_ds.validated_data["password"],
-                manager_ds.validated_data["is_active"]
-            )
-            return Response(PlainUserSerializer(saved_user).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        manager_ds = ManagerDeSerializer(data=request.data)
+        manager_ds.is_valid(raise_exception=True)
+        saved_user = manager_service.update(
+            user_id,
+            manager_ds.validated_data["email"],
+            manager_ds.validated_data["password"],
+            manager_ds.validated_data["is_active"]
+        )
+        return Response(PlainUserSerializer(saved_user).data)
 

@@ -1,9 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.serializers import Serializer, IntegerField
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -23,21 +20,14 @@ class ModeratorView(APIView):
         return Response(PlainUserSerializer(users, many=True).data)
 
     def post(self, request):
-        try:
-            moderator_ds = ModeratorDeSerializer(data=request.data)
-            moderator_ds.is_valid(raise_exception=True)
-            saved_client_user = moderator_service.insert(
-                moderator_ds.validated_data["email"],
-                moderator_ds.validated_data["password"],
-                moderator_ds.validated_data["is_active"]
-            )
-            return Response(PlainUserSerializer(saved_client_user).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        moderator_ds = ModeratorDeSerializer(data=request.data)
+        moderator_ds.is_valid(raise_exception=True)
+        saved_client_user = moderator_service.insert(
+            moderator_ds.validated_data["email"],
+            moderator_ds.validated_data["password"],
+            moderator_ds.validated_data["is_active"]
+        )
+        return Response(PlainUserSerializer(saved_client_user).data)
 
 class ModeratorIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -51,22 +41,15 @@ class ModeratorIdView(APIView):
         return Response(PlainUserSerializer(user).data)
 
     def post(self, request, user_id):
-        try:
-            moderator_ds = ModeratorDeSerializer(data=request.data)
-            moderator_ds.is_valid(raise_exception=True)
-            saved_user = moderator_service.update(
-                user_id,
-                moderator_ds.validated_data["email"],
-                moderator_ds.validated_data["password"],
-                moderator_ds.validated_data["is_active"]
-            )
-            return Response(PlainUserSerializer(saved_user).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        moderator_ds = ModeratorDeSerializer(data=request.data)
+        moderator_ds.is_valid(raise_exception=True)
+        saved_user = moderator_service.update(
+            user_id,
+            moderator_ds.validated_data["email"],
+            moderator_ds.validated_data["password"],
+            moderator_ds.validated_data["is_active"]
+        )
+        return Response(PlainUserSerializer(saved_user).data)
 
 
 class ModeratorByAuditCycle(APIView):
@@ -78,44 +61,26 @@ class ModeratorByAuditCycle(APIView):
     }
 
     def get(self, request, audit_cycle_id):
-        try:
-            users = moderator_service.find_by_audit_cycle(audit_cycle_id)
-            print(users)
-            return Response(PlainUserSerializer(users, many=True).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
+        users = moderator_service.find_by_audit_cycle(audit_cycle_id)
+        return Response(PlainUserSerializer(users, many=True).data)
 
     class DeSerializer(Serializer):
         user_id = IntegerField()
 
     def post(self, request, audit_cycle_id):
-        try:
-            ds = self.DeSerializer(data=request.data)
-            ds.is_valid(raise_exception=True)
-            saved_user = moderator_service.assign_audit_cycle(
-                ds.validated_data["user_id"],
-                audit_cycle_id
-            )
-            return Response(PlainUserSerializer(saved_user).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_user = moderator_service.assign_audit_cycle(
+            ds.validated_data["user_id"],
+            audit_cycle_id
+        )
+        return Response(PlainUserSerializer(saved_user).data)
 
     def delete(self, request, audit_cycle_id):
-        try:
-            ds = self.DeSerializer(data=request.data)
-            ds.is_valid(raise_exception=True)
-            saved_user = moderator_service.revoke_audit_cycle(
-                ds.validated_data["user_id"],
-                audit_cycle_id
-            )
-            return Response(PlainUserSerializer(saved_user).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        saved_user = moderator_service.revoke_audit_cycle(
+            ds.validated_data["user_id"],
+            audit_cycle_id
+        )
+        return Response(PlainUserSerializer(saved_user).data)

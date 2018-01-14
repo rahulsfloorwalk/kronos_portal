@@ -1,8 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
+from rest_framework.exceptions import ValidationError
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -18,11 +16,8 @@ class AuditStoreAttachmentView(APIView):
     }
 
     def get(self, request, audit_store_id, format=None):
-        try:
-            attachments = attachment_manager_service.find_by_audit_store_for_manager(audit_store_id)
-            return Response(AttachmentSerializer(attachments, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
+        attachments = attachment_manager_service.find_by_audit_store_for_manager(audit_store_id)
+        return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id):
         try:
@@ -37,12 +32,6 @@ class AuditStoreAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
-        except ObjectNotFound as e:
-            raise NotFound() from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
 
 class ReportSectionAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
@@ -52,11 +41,8 @@ class ReportSectionAttachmentView(APIView):
     }
 
     def get(self, request, audit_store_id, section_id, format=None):
-        try:
-            attachments = attachment_manager_service.find_by_audit_store_and_section_for_manager(audit_store_id, section_id, request.user.id)
-            return Response(AttachmentSerializer(attachments, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
+        attachments = attachment_manager_service.find_by_audit_store_and_section_for_manager(audit_store_id, section_id, request.user.id)
+        return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id, section_id):
         try:
@@ -73,12 +59,6 @@ class ReportSectionAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
-        except ObjectNotFound as e:
-            raise NotFound() from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
 
 class AttachmentIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -87,15 +67,8 @@ class AttachmentIdView(APIView):
     }
 
     def delete(self, request, attachment_id):
-        try:
-            attachment_manager_service.delete_for_manager(attachment_id)
-            return Response()
-        except ObjectNotFound as e:
-            raise NotFound() from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        attachment_manager_service.delete_for_manager(attachment_id)
+        return Response()
 
 
 class AttachmentIdRenameView(APIView):
@@ -108,15 +81,9 @@ class AttachmentIdRenameView(APIView):
         try:
             attachment = attachment_manager_service.rename_for_manager(attachment_id, request.data["file_name"])
             return Response(AttachmentSerializer(attachment).data)
-        except ObjectNotFound as e:
-            raise NotFound() from e
         except KeyError as e:
             raise ValidationError({
                 'file_name': "file name is required"
-            })
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
             })
 
 
@@ -127,12 +94,5 @@ class AttachmentCompleteView(APIView):
     }
 
     def post(self, request, attachment_id):
-        try:
-            attachment = attachment_manager_service.complete_for_manager(attachment_id)
-            return Response(AttachmentSerializer(attachment).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        attachment = attachment_manager_service.complete_for_manager(attachment_id)
+        return Response(AttachmentSerializer(attachment).data)

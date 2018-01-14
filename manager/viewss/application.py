@@ -1,6 +1,5 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.serializers import Serializer, DateField
 
 from ..serializers import AuditApplicationSerializer
@@ -9,8 +8,6 @@ from auditor.service import application_service
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-
-from kronos.exceptions import AppLogicError, ObjectNotFound
 
 class AuditApplicationsByAuditView(APIView):
     permission_classes = [HasGroupPermission]
@@ -53,13 +50,8 @@ class AuditApplicationRejectView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request, application_id, format=None):
-        try:
-            application = application_service.reject(application_id, request.user)
-            return Response(AuditApplicationSerializer(application).data)
-        except ObjectNotFound:
-            raise NotFound
-        except AppLogicError as e:
-            raise ValidationError(e) from e
+        application = application_service.reject(application_id, request.user)
+        return Response(AuditApplicationSerializer(application).data)
 
 
 class AuditApplicationWaitListView(APIView):

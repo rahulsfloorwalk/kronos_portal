@@ -1,12 +1,10 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, CharField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-
-from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
@@ -23,11 +21,8 @@ class AuditCycleViewByClient(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, client_id, format=None):
-        try:
-            audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
-            return Response(AuditCycleSerializer(audit_cycles, many=True).data)
-        except AuditCycle.DoesNotExist:
-            raise Http404
+        audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
+        return Response(AuditCycleSerializer(audit_cycles, many=True).data)
 
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
@@ -54,11 +49,8 @@ class AuditCycleIdView(APIView):
         'DELETE': [GROUP_NAME_MANAGER]
     }
     def get(self, request, audit_cycle_id, format=None):
-        try:
-            audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-            return Response(AuditCycleSerializer(audit_cycle).data)
-        except AuditCycle.DoesNotExist:
-            return Http404
+        audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+        return Response(AuditCycleSerializer(audit_cycle).data)
 
     def post(self, request, audit_cycle_id):
         audit_cycle_ds = AuditCycleDeSerializer(data=request.data, context={'id': audit_cycle_id})
@@ -68,12 +60,9 @@ class AuditCycleIdView(APIView):
         return Response(AuditCycleSerializer(saved_audit_cycle).data)
 
     def delete(self, request, audit_cycle_id):
-        try:
-            audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
-            audit_cycle.delete()
-            return Response(AuditCycleSerializer(audit_cycle).data)
-        except AuditCycle.DoesNotExist:
-            return Http404
+        audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+        audit_cycle.delete()
+        return Response(AuditCycleSerializer(audit_cycle).data)
 
 
 class AuditCycleIdPostApprovalDescriptionView(APIView):
@@ -99,13 +88,10 @@ class AuditCycleXlsxReport(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        try:
-            report, name = xlsx_report_service.get_aggregate_report_for_manager(audit_cycle_id)
-            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
-            return response
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        report, name = xlsx_report_service.get_aggregate_report_for_manager(audit_cycle_id)
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
 
 class AuditCycleStats(APIView):
     permission_classes = [HasGroupPermission]
@@ -113,11 +99,8 @@ class AuditCycleStats(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        try:
-            audit_cycle_stats = audit_cycle_service.get_audit_cycle_stats(audit_cycle_id)
-            return Response(audit_cycle_stats)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        audit_cycle_stats = audit_cycle_service.get_audit_cycle_stats(audit_cycle_id)
+        return Response(audit_cycle_stats)
 
 class ExportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]
@@ -125,13 +108,10 @@ class ExportQuestionnaire(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        try:
-            report, name = questionnaire_service.export_questionnaire(audit_cycle_id)
-            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
-            return response
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        report, name = questionnaire_service.export_questionnaire(audit_cycle_id)
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
 
 class AuditCycleDashboard(APIView):
     permission_classes = [HasGroupPermission]
@@ -139,22 +119,19 @@ class AuditCycleDashboard(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        try:
-            audit_cycles = audit_cycle_service.get_audit_cycle_dashboard()
-            response = []
-            for audit_cycle in audit_cycles:
-                obj = {}
-                obj['id'] = audit_cycle.id
-                obj['name'] = audit_cycle.name
-                obj['status'] = audit_cycle.status
-                obj['client'] = audit_cycle.client.name
-                obj['start_date'] = audit_cycle.start_date
-                obj['end_date'] = audit_cycle.end_date
-                obj['stats'] = audit_cycle_service.get_audit_cycle_stats(audit_cycle.id)
-                response.append(obj)
-            return Response(response)
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
+        audit_cycles = audit_cycle_service.get_audit_cycle_dashboard()
+        response = []
+        for audit_cycle in audit_cycles:
+            obj = {}
+            obj['id'] = audit_cycle.id
+            obj['name'] = audit_cycle.name
+            obj['status'] = audit_cycle.status
+            obj['client'] = audit_cycle.client.name
+            obj['start_date'] = audit_cycle.start_date
+            obj['end_date'] = audit_cycle.end_date
+            obj['stats'] = audit_cycle_service.get_audit_cycle_stats(audit_cycle.id)
+            response.append(obj)
+        return Response(response)
 
 
 class AuditCycleRejectAllApplicationsView(APIView):

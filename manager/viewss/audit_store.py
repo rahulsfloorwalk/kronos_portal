@@ -1,23 +1,19 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import Serializer, IntegerField
-
-from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from audit_store.models import AuditStore
 from audit_store import service as audit_store_service
 
 
 from client_report.service import xlsx_report as xlsx_report_service
 
-from audit.models import Audit
 from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer
 
 class AuditStoreByAuditCycle(APIView):
@@ -26,12 +22,9 @@ class AuditStoreByAuditCycle(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        try:
-            audit_stores = audit_store_service.find_by_audit_cycle(audit_cycle_id)
-            serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
-            return Response(serial_audit_stores)
-        except ObjectNotFound:
-            raise Http404
+        audit_stores = audit_store_service.find_by_audit_cycle(audit_cycle_id)
+        serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
+        return Response(serial_audit_stores)
 
 class AuditStoreByAudit(APIView):
     permission_classes = [HasGroupPermission]
@@ -47,7 +40,6 @@ class AuditStoreIdView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER],
-        'DELETE': [GROUP_NAME_MANAGER]
     }
     def get(self, request, audit_store_id, format=None):
         audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -61,15 +53,6 @@ class AuditStoreIdView(APIView):
         audit_store_serial = AuditStoreSerializer(savedAuditStore).data
         return Response(audit_store_serial)
 
-    def delete(self, request, audit_store_id):
-        try:
-            audit_store = AuditStore.objects.get(audit_store_id)
-            audit_store.delete()
-            audit_store_serial = AuditStoreSerializer(audit_store).data
-            return Response(audit_store_serial)
-        except Audit.DoesNotExist:
-            raise Http404
-
 class AuditStoreIdAuditDateView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -80,17 +63,10 @@ class AuditStoreIdAuditDateView(APIView):
         audit_date = serializers.DateField()
 
     def post(self, request, audit_store_id):
-        try:
-            ds = AuditStoreIdAuditDateView.DeSerializer(data=request.data)
-            ds.is_valid(raise_exception=True)
-            audit_store = audit_store_service.set_audit_date(audit_store_id, ds.validated_data['audit_date'])
-            return Response(AuditStoreSerializer(audit_store).data)
-        except ObjectNotFound as e:
-            raise NotFound from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        ds = AuditStoreIdAuditDateView.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = audit_store_service.set_audit_date(audit_store_id, ds.validated_data['audit_date'])
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdWithdrawView(APIView):
     permission_classes = [HasGroupPermission]
@@ -98,13 +74,8 @@ class AuditStoreIdWithdrawView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.withdraw(audit_store_id, request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.withdraw(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 
 class AuditStoreIdCompleteView(APIView):
@@ -127,13 +98,8 @@ class AuditStoreIdUnCompleteView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.uncomplete(audit_store_id, request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.uncomplete(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 
 class AuditStoreIdFailView(APIView):
@@ -142,13 +108,8 @@ class AuditStoreIdFailView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.fail(audit_store_id, request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.fail(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdSubmitView(APIView):
     permission_classes = [HasGroupPermission]
@@ -156,13 +117,8 @@ class AuditStoreIdSubmitView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.submit_by_manager(audit_store_id, request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.submit_by_manager(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdUnSubmitView(APIView):
     permission_classes = [HasGroupPermission]
@@ -170,13 +126,8 @@ class AuditStoreIdUnSubmitView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdAcceptView(APIView):
     permission_classes = [HasGroupPermission]
@@ -197,14 +148,8 @@ class AuditStoreIdRejectView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.reject(audit_store_id, request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
-
+        audit_store = audit_store_service.reject(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
@@ -212,14 +157,10 @@ class AuditStoreXlsxReport(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, client_id, audit_store_id, format=None):
-        try:
-            report, name = xlsx_report_service.get_xlsx_report(audit_store_id, client_id)
-            response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = 'attachment; filename="' + name + '"'
-            return response
-        except (ObjectNotFound, AppLogicError) as e:
-            raise Http404
-
+        report, name = xlsx_report_service.get_xlsx_report(audit_store_id, client_id)
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
 
 class AuditStoreIdClientUserView(APIView):
     permission_classes = [HasGroupPermission]
