@@ -27,6 +27,15 @@ $(document).ajaxError(function(event, jqXHR, settings){
 	}
 });
 
+let render = store => {
+	ReactDOM.render(
+		<Provider store={store}>
+			<Routes store={store}/>
+		</Provider>,
+		document.getElementById('root')
+	);
+}
+
 fetchConfig().then((config) => {
 	config.TAWK_TO_SRC && initializeTawk(window, config.TAWK_TO_SRC);
 
@@ -40,11 +49,13 @@ fetchConfig().then((config) => {
 		)
 	);
 
-	ReactDOM.render(
-		<Provider store={store}>
-			<Routes store={store}/>
-		</Provider>,
-		document.getElementById('root')
-	);
+	render(store);
+	if(module.hot){
+		console.log("module is HOT HOT HOT!", module);
+		module.hot.dispose(function(){
+			render(store);
+		});
+		module.hot.accept();
+	}
 });
 
