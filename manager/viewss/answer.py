@@ -6,7 +6,6 @@ from rest_framework.serializers import Serializer, IntegerField, CharField, Bool
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from answer.models import Answer
 from ..serializers import AnswerSerializer
 from answer.service import answer as answer_service
 
@@ -16,7 +15,7 @@ class AnswerByAuditStore(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_store_id, format=None):
-        answers = Answer.objects.filter(audit_store_id=audit_store_id)
+        answers = answer_service.find_by_audit_store(audit_store_id)
         return Response(AnswerSerializer(answers, many=True).data)
 
 class MarkByQuestionAndStore(APIView):

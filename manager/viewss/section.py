@@ -1,4 +1,4 @@
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,7 +8,6 @@ from registration.mixins import HasGroupPermission
 
 from questionnaire.service import section as section_service
 
-from questionnaire.models import Section
 from ..serializers import SectionSerializer, SectionDeSerializer
 
 
@@ -18,11 +17,8 @@ class SectionViewByAuditCycle(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        try:
-            sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).all()
-            return Response(SectionSerializer(sections, many=True).data)
-        except Section.DoesNotExist:
-            raise Http404
+        sections = section_service.find_by_audit_cycle(audit_cycle_id)
+        return Response(SectionSerializer(sections, many=True).data)
 
 class SectionCopyByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -42,11 +38,8 @@ class SectionIdView(APIView):
         'DELETE': [GROUP_NAME_MANAGER]
     }
     def get(self, request, section_id, format=None):
-        try:
-            section = Section.objects.get(pk=section_id)
-            return Response(SectionSerializer(section).data)
-        except Section.DoesNotExist:
-            return Http404
+        section = section_service.find_section_by_id(section_id)
+        return Response(SectionSerializer(section).data)
 
     def post(self, request, section_id):
         section_ds = SectionDeSerializer(data=request.data, context={'id':section_id})

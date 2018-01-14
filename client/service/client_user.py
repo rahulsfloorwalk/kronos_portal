@@ -9,6 +9,20 @@ from registration.models import GROUP_NAME_CLIENT
 
 from ..models import ClientUser
 
+from . import client_service
+
+
+def find_clientusers_by_client_id(client_id):
+    return client_service.find_client_by_id(client_id).users
+
+
+def find_clientuser_by_id(client_user_id):
+    try:
+        return ClientUser.objects.get(id=client_user_id)
+    except ClientUser.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
 def find_clientuser_by_user_id(user_id):
     try:
         return Group.objects.get(name=GROUP_NAME_CLIENT).user_set.get(pk=user_id)

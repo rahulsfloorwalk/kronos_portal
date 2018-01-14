@@ -1,5 +1,3 @@
-from django.http import Http404
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -7,10 +5,7 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from ..serializers import ClientSerializer
-from ..service import client as client_service
-
-from client.models import Client
-
+from client.service import client_service
 
 class ClientView(APIView):
     permission_classes = [HasGroupPermission]
@@ -19,11 +14,8 @@ class ClientView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, format=None):
-        try:
-            client = Client.objects.all()
-            return Response(ClientSerializer(client, many=True).data)
-        except Client.DoesNotExist:
-            raise Http404
+        clients = client_service.find_all_clients()
+        return Response(ClientSerializer(clients, many=True).data)
 
     def post(self, request):
         client_s = ClientSerializer(data=request.data)
@@ -37,14 +29,10 @@ class ClientIdView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER],
-        'DELETE': [GROUP_NAME_MANAGER]
     }
     def get(self, request, client_id, format=None):
-        try:
-            client = Client.objects.get(id=client_id)
-            return Response(ClientSerializer(client).data)
-        except Client.DoesNotExist:
-            raise Http404
+        client = client_service.find_client_by_id(client_id)
+        return Response(ClientSerializer(client).data)
 
     def post(self, request, client_id):
         client_s = ClientSerializer(data=request.data, context={'id': client_id})
@@ -52,11 +40,3 @@ class ClientIdView(APIView):
         client = client_s.deserialize()
         savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
-
-    def delete(self, request, client_id):
-        try:
-            client = Client.objects.get(id=client_id)
-            client.delete()
-            return Response(ClientSerializer(client).data)
-        except Client.DoesNotExist:
-            raise Http404

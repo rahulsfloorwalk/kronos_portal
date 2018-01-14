@@ -7,8 +7,7 @@ from rest_framework.views import APIView
 import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
 import registration.service.auditor as auditor_service
-from auditor.models import BankInfo, AdditionalInfo
-from auditor.service import profile_info_service
+from auditor.service import profile_info_service, bank_info_service, additional_info_service
 from auditor.service import preferences_service
 from manager.serializers import FacebookSerializer
 from manager.serializers import PaymentSerializer
@@ -80,11 +79,8 @@ class AuditorBankInfoView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, auditor_id, format=None):
-        try:
-            bankInfo = BankInfo.objects.get(user_id=auditor_id)
-            return Response(BankInfoSerializer(bankInfo).data)
-        except BankInfo.DoesNotExist:
-            return Response(BankInfoSerializer(BankInfo(user_id=auditor_id)).data)
+        bank_info = bank_info_service.find_bank_info_by_user_id(auditor_id)
+        return Response(BankInfoSerializer(bank_info).data)
 
 class AuditorAdditionalInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -93,11 +89,8 @@ class AuditorAdditionalInfoView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, auditor_id, format=None):
-        try:
-            additionalInfo = AdditionalInfo.objects.get(user_id=auditor_id)
-            return Response(AdditionalInfoSerializer(additionalInfo).data)
-        except AdditionalInfo.DoesNotExist:
-            return Response(AdditionalInfoSerializer(AdditionalInfo(user_id=auditor_id)).data)
+        additional_info = additional_info_service.find_additional_info_by_user_id(auditor_id)
+        return Response(AdditionalInfoSerializer(additional_info).data)
 
 class AuditorFacebookInfoView(APIView):
     permission_classes = [HasGroupPermission]

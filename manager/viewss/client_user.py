@@ -1,15 +1,12 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from ..serializers import ClientUserSerializer, ClientUserDeSerializer
 from client.service import client_user as client_user_service
-
-from client.models import Client, ClientUser
-
+from client.service import client_service
 
 class ClientUserByClientView(APIView):
     permission_classes = [HasGroupPermission]
@@ -17,11 +14,8 @@ class ClientUserByClientView(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, client_id, format=None):
-        try:
-            client_users = Client.objects.get(pk=client_id).users
-            return Response(ClientUserSerializer(client_users, many=True).data)
-        except Client.DoesNotExist:
-            raise NotFound
+        client_users = client_service.find_client_by_id(client_id).users
+        return Response(ClientUserSerializer(client_users, many=True).data)
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -46,14 +40,10 @@ class ClientUserIdView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER],
-        'DELETE': [GROUP_NAME_MANAGER]
     }
     def get(self, request, client_user_id, format=None):
-        try:
-            client_user = ClientUser.objects.get(id=client_user_id)
-            return Response(ClientUserSerializer(client_user).data)
-        except ClientUser.DoesNotExist:
-            raise NotFound
+        client_user = client_user_service.find_clientuser_by_id(client_user_id)
+        return Response(ClientUserSerializer(client_user).data)
 
     def post(self, request, client_user_id):
         client_user_ds = ClientUserDeSerializer(data=request.data)
@@ -69,10 +59,3 @@ class ClientUserIdView(APIView):
         )
         return Response(ClientUserSerializer(saved_client_user).data)
 
-    def delete(self, request, client_user_id):
-        try:
-            client_user = ClientUser.objects.get(id=client_user_id)
-            client_user.delete()
-            return Response(None)
-        except ClientUser.DoesNotExist:
-            raise NotFound

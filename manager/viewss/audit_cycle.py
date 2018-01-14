@@ -6,7 +6,6 @@ from rest_framework.serializers import Serializer, CharField
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
 from auditor.service import application_service
@@ -27,12 +26,8 @@ class AuditCycleViewByClient(APIView):
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER]
     }
-    def get(self, request, format=None):
-        audit_cycles = AuditCycle.objects.all()
-        return Response(AuditCycleSerializer(audit_cycles, many=True).data)
 
     def post(self, request):
         audit_cycle_ds = AuditCycleDeSerializer(data=request.data)
