@@ -3,16 +3,12 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound
 
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_CLIENT
 
-from client.models import Store
 from client.service import audit_cycle_aggregation as audit_cycle_aggregation_service
 from client.service import store as store_service
-
-from audit.models import AuditCycle
 
 from audit_store import service as audit_store_service
 from audit_store import service_client as audit_store_client_service
@@ -24,6 +20,8 @@ from answer.service import report_section as report_section_service
 import attachment.service_client as attachment_client_service
 
 import audit.service.audit_cycle as audit_cycle_service
+
+from audit.models import AuditCycle
 
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
@@ -95,11 +93,8 @@ class StoreById(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, store_id, format=None):
-        try:
-            store = Store.objects.get(id=store_id, client_id=request.user.clientuser.client.id)
-            return Response(StoreSerializer(store).data)
-        except Store.DoesNotExist as e:
-            raise NotFound from e
+        store = store_service.find_store_by_client_and_id(request.user.clientuser.client.id, store_id)
+        return Response(StoreSerializer(store).data)
 
 class MarkingByStore(APIView):
     permission_classes = [HasGroupPermission]

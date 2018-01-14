@@ -26,6 +26,9 @@ def find_stores_by_clientuser_and_city(user_id, city_id):
     return Store.objects.filter(client_id=user.clientuser.client.id, city_id=city_id).order_by('city__name').select_related('client','city')
 
 
+def find_store_by_client_and_id(client_id, store_id):
+    return Store.objects.get(id=store_id, client_id=client_id)
+
 def find_store_by_id(store_id):
     try:
         return Store.objects.get(pk=store_id)
