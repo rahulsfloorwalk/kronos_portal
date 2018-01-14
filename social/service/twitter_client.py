@@ -14,6 +14,7 @@ def save_handle_for_client(client_id, handle):
     twitter_handle = TwitterHandle()
     twitter_handle.client_id = client_id
     twitter_handle.twitter_handle = handle
+    twitter_handle.is_enabled = True
     twitter_handle.save()
     return twitter_handle
 
