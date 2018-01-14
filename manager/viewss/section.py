@@ -1,14 +1,9 @@
-from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User, Group
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from questionnaire.service import section as section_service
@@ -20,8 +15,8 @@ from ..serializers import SectionSerializer, SectionDeSerializer
 class SectionViewByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-        }
+        'GET': [GROUP_NAME_MANAGER],
+    }
     def get(self, request, audit_cycle_id, format=None):
         try:
             sections = Section.objects.filter(audit_cycle_id=audit_cycle_id).all()
@@ -32,8 +27,8 @@ class SectionViewByAuditCycle(APIView):
 class SectionCopyByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST' : [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, to_audit_cycle_id, format=None):
         sections = section_service.copy_sections_from_to(request.data.get('from_audit_cycle_id'), to_audit_cycle_id)
         return Response(SectionSerializer(sections, many=True).data)
@@ -42,10 +37,10 @@ class SectionCopyByAuditCycle(APIView):
 class SectionIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, section_id, format=None):
         try:
             section = Section.objects.get(pk=section_id)
@@ -67,8 +62,8 @@ class SectionIdView(APIView):
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request):
         section_ds = SectionDeSerializer(data=request.data)
         section_ds.is_valid(raise_exception=True)

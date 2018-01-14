@@ -1,13 +1,9 @@
-from django.contrib.auth.models import User, Group
 from django.http import HttpResponse, Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, Serializer, DateField, CharField
-from rest_framework import generics
+from rest_framework.serializers import Serializer, CharField
 
-from rest_framework.filters import SearchFilter
-
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
@@ -15,19 +11,17 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
-from payment.service import payment_manager as payment_service
 from auditor.service import application_service
 from questionnaire.service import questionnaire as questionnaire_service
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
-from manager.serializers import PaymentUserSerializer
 
 from client_report.service import audit_cycle_xlsx_report as xlsx_report_service
 
 class AuditCycleViewByClient(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-        }
+        'GET': [GROUP_NAME_MANAGER],
+    }
     def get(self, request, client_id, format=None):
         try:
             audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
@@ -38,9 +32,9 @@ class AuditCycleViewByClient(APIView):
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, format=None):
         audit_cycles = AuditCycle.objects.all()
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
@@ -55,10 +49,10 @@ class AuditCycleView(APIView):
 class AuditCycleIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, audit_cycle_id, format=None):
         try:
             audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
@@ -77,7 +71,7 @@ class AuditCycleIdView(APIView):
         try:
             audit_cycle = AuditCycle.objects.get(id=audit_cycle_id)
             audit_cycle.delete()
-            return Response(AuditCycleSerializer(audit).data)
+            return Response(AuditCycleSerializer(audit_cycle).data)
         except AuditCycle.DoesNotExist:
             return Http404
 
@@ -85,10 +79,10 @@ class AuditCycleIdView(APIView):
 class AuditCycleIdPostApprovalDescriptionView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     class DeSerializer(Serializer):
         post_approval_description = CharField(allow_blank=True, max_length=4096)
 
@@ -102,7 +96,7 @@ class AuditCycleIdPostApprovalDescriptionView(APIView):
 class AuditCycleXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -116,7 +110,7 @@ class AuditCycleXlsxReport(APIView):
 class AuditCycleStats(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -128,7 +122,7 @@ class AuditCycleStats(APIView):
 class ExportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -142,12 +136,12 @@ class ExportQuestionnaire(APIView):
 class AuditCycleDashboard(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
         try:
             audit_cycles = audit_cycle_service.get_audit_cycle_dashboard()
-            response  = []
+            response = []
             for audit_cycle in audit_cycles:
                 obj = {}
                 obj['id'] = audit_cycle.id

@@ -1,25 +1,24 @@
+from os import urandom
 import logging
+import hashlib
+import datetime
 
 from django.conf import settings
 from django import forms
-from django.urls import reverse
 from django.contrib.auth.models import User,Group
 from django.core.validators import validate_email
 from registration.models import Verification
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
-from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserCreationForm
 from auditor.models import ProfileInfo, AdditionalInfo
-from django.core.mail import send_mail
 from django.utils import timezone
 from django.db.models import Q
-import hashlib, datetime
-from os import urandom
+from django.db import IntegrityError
 from django.template import Context
-from django.template.loader import render_to_string, get_template
+from django.template.loader import get_template
 from django.core.mail import EmailMessage
 
 import strings
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_AUDITOR
 from registration.service.auditor import generate_ref_code
 from auditor.validators import numericValidator
 from registration.context import registration_context
@@ -35,7 +34,7 @@ class SignUpForm(UserCreationForm):
         fields = ("username", "phone", "password1", "password2")
 
     def is_valid(self):
-        valid = super(SignUpForm, self).is_valid() 
+        valid = super(SignUpForm, self).is_valid()
         to_check_email = self.data["username"]
 
         if to_check_email:
@@ -86,7 +85,7 @@ class SignUpForm(UserCreationForm):
 
         auth_data = {}
         auth_data['email'] = self.cleaned_data['username']
-        
+
         salt_hash_hexstr = hashlib.sha1(urandom(16)).hexdigest()
         email_hash_hexstr = hashlib.sha1(auth_data["email"].encode('utf-8')).hexdigest()
         cat_str = salt_hash_hexstr + email_hash_hexstr
@@ -104,7 +103,7 @@ class SignUpForm(UserCreationForm):
             **registration_context(),
         }))
 
-        msg = EmailMessage( strings.SIGN_UP_SUBJECT, message, to=(user.email,))
+        msg = EmailMessage(strings.SIGN_UP_SUBJECT, message, to=(user.email,))
         msg.content_subtype = 'html'
 
         if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:

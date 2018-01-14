@@ -15,12 +15,12 @@ if sys.argv[-1] == 'build_frontend':
     sys.exit()
 
 setup(
-        name='kronos',
-        version=version,
-        description='Kronos portal for FloorWalk',
-        author='FloorWalk',
-        author_email='contactus@floorwalk.in',
-        packages=find_packages(),
-        include_package_data=True,
-        ) 
+    name='kronos',
+    version=version,
+    description='Kronos portal for FloorWalk',
+    author='FloorWalk',
+    author_email='contactus@floorwalk.in',
+    packages=find_packages(),
+    include_package_data=True,
+)
 

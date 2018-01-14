@@ -3,10 +3,8 @@ import io
 from PIL import Image
 
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.exceptions import AppLogicError
 from audit_store.models import AuditStore
-from answer.models import Answer, ReportSection
-from questionnaire.models import Question
 import audit_store.service_client as audit_store_client_service
 
 # Import the byte stream handler.
@@ -18,7 +16,7 @@ not_applicable_text = "N/A"
 
 def generate_xlsx_from_structure(report_data):
     output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
 
     base_style = {
         'text_wrap':True,
@@ -81,7 +79,7 @@ def generate_xlsx_from_structure(report_data):
     # assuming Calibri as the default font and 7px as widest single char width
     cell_char_width = 30
 
-    cell_width = 171 #6.02cm to px with 72 dpi
+    cell_width = 171  # 6.02cm to px with 72 dpi
     cell_height = 30
 
     start_row = 0
@@ -92,13 +90,13 @@ def generate_xlsx_from_structure(report_data):
     row = start_row
 
     col = start_col
-    worksheet.merge_range(row, col, row, col+4, report_data["client_name"], title_format)
+    worksheet.merge_range(row, col, row, col + 4, report_data["client_name"], title_format)
 
     try:
         if report_data.get("logo_url"):
             image_data = BytesIO(urlopen(report_data["logo_url"]).read())
             img = Image.open(image_data)
-            #print("DPI", img.info.get('dpi'),img.info.get('jfif_density'))
+            # print("DPI", img.info.get('dpi'),img.info.get('jfif_density'))
             image_width, image_height = img.size
 
             if image_width > image_height:
@@ -106,11 +104,11 @@ def generate_xlsx_from_structure(report_data):
             else:
                 scale_factor = cell_height * 3 / image_height
 
-            #x_scale = cell_height * 3 / image_height#
-            #y_scale = cell_height * 3 / image_height
+            # x_scale = cell_height * 3 / image_height#
+            # y_scale = cell_height * 3 / image_height
 
-            worksheet.merge_range(row, col+5, row+2, col+5, "", title_format)
-            worksheet.insert_image(row, col+5, report_data["logo_url"], {
+            worksheet.merge_range(row, col + 5, row + 2, col + 5, "", title_format)
+            worksheet.insert_image(row, col + 5, report_data["logo_url"], {
                 'image_data': image_data,
                 'x_scale': scale_factor,
                 'y_scale': scale_factor,
@@ -120,9 +118,9 @@ def generate_xlsx_from_structure(report_data):
 
     row += 1
 
-    worksheet.merge_range(row, col, row, col+4, report_data["subtitle"], title_format)
+    worksheet.merge_range(row, col, row, col + 4, report_data["subtitle"], title_format)
     row += 1
-    worksheet.merge_range(row, col, row, col+4, report_data["title"], title_format)
+    worksheet.merge_range(row, col, row, col + 4, report_data["title"], title_format)
     row += 1
 
     col = start_col
@@ -197,7 +195,7 @@ def generate_xlsx_from_structure(report_data):
         worksheet.write(row, col, section["points_lost"], points_format)
         col += 1
 
-        worksheet.merge_range(row, col, row, col+4, section["name"], section_format)
+        worksheet.merge_range(row, col, row, col + 4, section["name"], section_format)
         row += 1
 
         for q in section["questions"]:
@@ -229,33 +227,33 @@ def generate_ears_report_for_clientuser(audit_store_id, user):
         'report_sections__section',
         'report_sections__section__questions',
         'report_sections__section__questions__answers',
-        #'audit__audit_cycle__sections',
-        #'audit__audit_cycle__sections__questions',
-        #'audit__audit_cycle__sections__questions__answers',
+        # 'audit__audit_cycle__sections',
+        # 'audit__audit_cycle__sections__questions',
+        # 'audit__audit_cycle__sections__questions__answers',
     ).filter(pk=audit_store_id).first()
 
     report_data = {
-            "title": "Action Plan using E.A.R.S Model",
-            "subtitle": "External Audit - " + audit_store.audit.audit_cycle.name,
-            "client_name": audit_store.audit.audit_cycle.client.name,
-            "audit_date": audit_store.audit_date.strftime('%d-%m-%Y'),
-            "marks_percentage": str(audit_store.percentage()) + "%",
-            "store_name": audit_store.audit.store.name,
-            "store_address": audit_store.audit.store.address,
-            "logo_url": audit_store.audit.audit_cycle.client.logo_url,
-            "sections": []
-            }
+        "title": "Action Plan using E.A.R.S Model",
+        "subtitle": "External Audit - " + audit_store.audit.audit_cycle.name,
+        "client_name": audit_store.audit.audit_cycle.client.name,
+        "audit_date": audit_store.audit_date.strftime('%d-%m-%Y'),
+        "marks_percentage": str(audit_store.percentage()) + "%",
+        "store_name": audit_store.audit.store.name,
+        "store_address": audit_store.audit.store.address,
+        "logo_url": audit_store.audit.audit_cycle.client.logo_url,
+        "sections": []
+    }
 
     for rs in audit_store.report_sections.all():
         if rs.not_applicable or rs.max_marks() is 0:
             continue
 
         report_section = {
-                "name": rs.section.name,
-                "max_marks": rs.max_marks(),
-                "points_lost": rs.max_marks() - rs.marks_obtained(),
-                "questions": [],
-            }
+            "name": rs.section.name,
+            "max_marks": rs.max_marks(),
+            "points_lost": rs.max_marks() - rs.marks_obtained(),
+            "questions": [],
+        }
         for q in rs.section.questions.all():
             for answer in audit_store.answers.all():
                 if answer.audit_store_id == audit_store.id and answer.question_id == q.id:

@@ -23,7 +23,7 @@ def find_by_audit_store_for_user(audit_store_id, user_id):
 def find_by_audit_store(audit_store_id):
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
-        return ReportSection.objects.filter(audit_store_id=audit_store_id)
+        return ReportSection.objects.filter(audit_store_id=audit_store.id)
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -88,7 +88,7 @@ def set_auditor_comment_by_manager(audit_store_id, section_id, auditor_comment):
         if auditor_comment in (None, ""):
             raise AppLogicError("auditor comment cannot be blank")
         audit_store = AuditStore.objects.get(pk=audit_store_id)
-        if audit_store.status != AuditStore.SUBMITTED :
+        if audit_store.status != AuditStore.SUBMITTED:
             raise AppLogicError("Cannot submit auditor comment to current audit store")
         section = Section.objects.get(pk=section_id)
     except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
@@ -107,13 +107,13 @@ def set_auditor_comment_by_manager(audit_store_id, section_id, auditor_comment):
 def set_not_applicable(audit_store_id, section_id, not_applicable):
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
-        if audit_store.status != AuditStore.SUBMITTED :
+        if audit_store.status != AuditStore.SUBMITTED:
             raise AppLogicError("Cannot change current audit store")
         section = Section.objects.get(pk=section_id)
     except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
         raise ObjectNotFound from e
 
-    report_section = find_by_audit_store_and_section(audit_store_id, section_id)
+    report_section = find_by_audit_store_and_section(audit_store_id, section.id)
     report_section.not_applicable = not_applicable
     report_section.save()
     return report_section

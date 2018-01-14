@@ -1,9 +1,7 @@
-from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField, DateField, RelatedField
-from rest_framework.serializers import CharField, EmailField, BooleanField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField
+from rest_framework.serializers import CharField, EmailField
 from django.contrib.auth.models import User
 
-from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
-from notifications.models import Notification
 from client.models import Client, Store
 from manager.models import City
 from audit.models import AuditCycle, Audit
@@ -53,8 +51,6 @@ class AuditCycleSerializer(ModelSerializer):
             'client',
         )
         read_only_fields = fields
-
-
 
 
 class StoreSerializer(ModelSerializer):

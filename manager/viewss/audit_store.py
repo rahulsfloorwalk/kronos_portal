@@ -1,8 +1,4 @@
-from django.shortcuts import render, redirect
 from django.http import HttpResponse, Http404
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User, Group
 
 from rest_framework import serializers
 from rest_framework.views import APIView
@@ -12,23 +8,22 @@ from rest_framework.serializers import Serializer, IntegerField
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from audit_store.models import AuditStore
 from audit_store import service as audit_store_service
 
 
-from client.service import client_user as client_user_service
 from client_report.service import xlsx_report as xlsx_report_service
 
-from audit.models import Audit, AuditCycle
-from ..serializers import AuditStoreSerializer, AuditStoreSerializerWithPayment, AuditStoreDeSerializer
+from audit.models import Audit
+from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -50,10 +45,10 @@ class AuditStoreByAudit(APIView):
 class AuditStoreIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, audit_store_id, format=None):
         audit_store = audit_store_service.find_by_id(audit_store_id)
         return Response(AuditStoreSerializer(audit_store).data)
@@ -61,7 +56,7 @@ class AuditStoreIdView(APIView):
     def post(self, request, audit_store_id):
         audit_store_ds = AuditStoreDeSerializer(data=request.data, context={'id':audit_store_id})
         audit_store_ds.is_valid(raise_exception=True)
-        audit_store = audit_ds.deserialize()
+        audit_store = audit_store_ds.deserialize()
         savedAuditStore = audit_store.save()
         audit_store_serial = AuditStoreSerializer(savedAuditStore).data
         return Response(audit_store_serial)
@@ -78,8 +73,8 @@ class AuditStoreIdView(APIView):
 class AuditStoreIdAuditDateView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
 
     class DeSerializer(Serializer):
         audit_date = serializers.DateField()
@@ -100,8 +95,8 @@ class AuditStoreIdAuditDateView(APIView):
 class AuditStoreIdWithdrawView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.withdraw(audit_store_id, request.user)
@@ -129,8 +124,8 @@ class AuditStoreIdCompleteView(APIView):
 class AuditStoreIdUnCompleteView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.uncomplete(audit_store_id, request.user)
@@ -144,8 +139,8 @@ class AuditStoreIdUnCompleteView(APIView):
 class AuditStoreIdFailView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.fail(audit_store_id, request.user)
@@ -158,8 +153,8 @@ class AuditStoreIdFailView(APIView):
 class AuditStoreIdSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.submit_by_manager(audit_store_id, request.user)
@@ -172,8 +167,8 @@ class AuditStoreIdSubmitView(APIView):
 class AuditStoreIdUnSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
@@ -186,8 +181,8 @@ class AuditStoreIdUnSubmitView(APIView):
 class AuditStoreIdAcceptView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     class DeSerializer(Serializer):
         payment_amount = IntegerField()
     def post(self, request, audit_store_id):
@@ -199,8 +194,8 @@ class AuditStoreIdAcceptView(APIView):
 class AuditStoreIdRejectView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER],
-        }
+        'POST': [GROUP_NAME_MANAGER],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.reject(audit_store_id, request.user)
@@ -214,7 +209,7 @@ class AuditStoreIdRejectView(APIView):
 class AuditStoreXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, client_id, audit_store_id, format=None):
         try:
@@ -239,16 +234,16 @@ class AuditStoreIdClientUserView(APIView):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         saved_audit_store = audit_store_service.assign_audit_store_to_client_user(
-                audit_store_id,
-                ds.validated_data["client_user_id"],
-            )
+            audit_store_id,
+            ds.validated_data["client_user_id"],
+        )
         return Response(AuditStoreSerializer(saved_audit_store).data)
 
     def delete(self, request, audit_store_id):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         saved_audit_store = audit_store_service.revoke_audit_store_from_client_user(
-                audit_store_id,
-                ds.validated_data["client_user_id"],
-            )
+            audit_store_id,
+            ds.validated_data["client_user_id"],
+        )
         return Response(AuditStoreSerializer(saved_audit_store).data)

@@ -1,5 +1,4 @@
 from django.conf.urls import url
-from . import views
 from .views import AuditCycleView, AuditCycleIdView, AuditStoreByAuditCycle, AuditStoreIdView
 from .views import AuditStoreIdAuditDateView, AuditStoreIdCompleteView, AuditStoreIdFailView, AuditStoreIdSubmitView, AuditStoreIdUnSubmitView
 from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView

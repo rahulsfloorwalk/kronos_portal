@@ -1,11 +1,10 @@
-from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.exceptions import ObjectNotFound
 from kronos.utils import get_color_code_by_percentage
 
 from client.service.client_user import find_clientuser_by_user_id
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from answer.models import Answer, ReportSection
 from questionnaire.models import Section
 
 from audit.service import audit_cycle as audit_cycle_service

@@ -1,9 +1,3 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User, Group
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import NotFound, ValidationError
@@ -15,14 +9,13 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from answer.service import report_section as report_section_service
-from answer.models import Answer
-from ..serializers import AnswerSerializer, ReportSectionSerializer, ReportSectionDeSerializer
+from ..serializers import ReportSectionSerializer, ReportSectionDeSerializer
 
 class ReportSectionByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             report_sections = report_section_service.find_by_audit_store(audit_store_id)
@@ -33,8 +26,8 @@ class ReportSectionByAuditStore(APIView):
 class PMCommentSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, audit_store_id, section_id, format=None):
         request.data['section'] = section_id
         request.data['audit_store'] = audit_store_id
@@ -56,8 +49,8 @@ class PMCommentSubmitView(APIView):
 class AuditorCommentSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
 
     class DeSerializer(Serializer):
         auditor_comment = CharField()
@@ -78,8 +71,8 @@ class AuditorCommentSubmitView(APIView):
 class NotApplicableView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
 
     class DeSerializer(Serializer):
         not_applicable = BooleanField()

@@ -1,10 +1,9 @@
 from django.conf import settings
-from django.shortcuts import render
 from django.http import HttpResponse, Http404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
+from rest_framework.exceptions import NotFound
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -38,7 +37,6 @@ from client_report.service import audit_cycle
 from client_report.service import store_marking as store_marking_service
 
 from social.service import twitter_client
-from social.service import twitter_manager
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
@@ -46,16 +44,16 @@ from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, format=None):
         return Response(ClientUserSerializer(request.user.clientuser).data)
 
 class AuditStoreLatest(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, format=None):
         audit_stores = audit_store_service.find_latest_for_client(request.user.clientuser.client.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
@@ -63,7 +61,7 @@ class AuditStoreLatest(APIView):
 class AuditCycleAggregate(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         try:
@@ -77,8 +75,8 @@ class AuditCycleAggregate(APIView):
 class AuditTypesByClient(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request):
         types = audit_cycle_service.find_distinct_types_for_clientuser(request.user.id)
         return Response(types)
@@ -87,8 +85,8 @@ class AuditTypesByClient(APIView):
 class StoreByClient(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, format=None):
         if request.GET.get('city_id'):
             stores = store_service.find_stores_by_clientuser_and_city(request.user.id, request.GET.get('city_id'))
@@ -99,8 +97,8 @@ class StoreByClient(APIView):
 class StoreById(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, store_id, format=None):
         try:
             store = Store.objects.get(id=store_id, client_id=request.user.clientuser.client.id)
@@ -111,8 +109,8 @@ class StoreById(APIView):
 class MarkingByStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, store_id, format=None):
         audit_type = request.GET.get('audit_type', AuditCycle.WALKIN)
         data = store_marking_service.get_scores_for_store(store_id, request.user.clientuser.client.id, audit_type)
@@ -121,8 +119,8 @@ class MarkingByStore(APIView):
 class AuditStoreByStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, store_id, format=None):
         audit_stores = audit_store_service.find_by_store_for_client(store_id, request.user.clientuser.client.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
@@ -130,8 +128,8 @@ class AuditStoreByStore(APIView):
 class AuditStoreIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, request.user)
@@ -142,8 +140,8 @@ class AuditStoreIdView(APIView):
 class AuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_cycle_id, format=None):
         try:
             audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
@@ -154,8 +152,8 @@ class AuditStoreView(APIView):
 class SectionByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             sections = section_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
@@ -167,8 +165,8 @@ class SectionByAuditStore(APIView):
 class AnswerByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             answers = answer_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
@@ -180,8 +178,8 @@ class AnswerByAuditStore(APIView):
 class ReportSectionByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             report_sections = report_section_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
@@ -193,8 +191,8 @@ class ReportSectionByAuditStore(APIView):
 class AttachmentByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             attachments = attachment_client_service.find_by_audit_store_for_clientuser(audit_store_id, request.user)
@@ -205,8 +203,8 @@ class AttachmentByAuditStore(APIView):
 class AttachmentByReportSection(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_store_id, section_id, format=None):
         try:
             attachments = attachment_client_service.find_by_audit_store_and_section_for_client(audit_store_id, section_id, request.user.clientuser.client.id)
@@ -217,7 +215,7 @@ class AttachmentByReportSection(APIView):
 class AuditStoreXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_store_id, format=None):
         try:
@@ -231,7 +229,7 @@ class AuditStoreXlsxReport(APIView):
 class AuditCycleXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -245,7 +243,7 @@ class AuditCycleXlsxReport(APIView):
 class AuditCycleFilteredXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -264,7 +262,7 @@ class AuditCycleFilteredXlsxReport(APIView):
 class AuditStoreEARSReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_store_id, format=None):
         try:
@@ -279,21 +277,21 @@ class AuditStoreEARSReport(APIView):
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, format=None):
         try:
             audit_cycles = audit_cycle_service.find_for_clientuser(request.user.id)
             return Response(audit_cycles)
-            #return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+            # return Response(AuditCycleSerializer(audit_cycles, many=True).data)
         except ObjectNotFound as e:
             raise NotFound from e
 
 class AuditCycleByTypeView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, audit_type, format=None):
         try:
             audit_cycles = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, request.user.id)
@@ -304,8 +302,8 @@ class AuditCycleByTypeView(APIView):
 class CityView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_CLIENT],
-        }
+        'GET': [GROUP_NAME_CLIENT],
+    }
     def get(self, request, format=None):
         try:
             cities = store_service.find_cities_for_clientuser(request.user.id)
@@ -317,7 +315,7 @@ class CityView(APIView):
 class AuditCycleCitySectionAverageReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, city_id, format=None):
         try:
@@ -329,7 +327,7 @@ class AuditCycleCitySectionAverageReport(APIView):
 class AuditCycleStoreSectionAverageReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, store_id, format=None):
         try:
@@ -341,7 +339,7 @@ class AuditCycleStoreSectionAverageReport(APIView):
 class AuditCycleCityStoreAverageReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, city_id, format=None):
         try:
@@ -353,7 +351,7 @@ class AuditCycleCityStoreAverageReport(APIView):
 class AuditCycleCityAverageReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
         try:
@@ -365,7 +363,7 @@ class AuditCycleCityAverageReport(APIView):
 class AuditCycleAuditStoreSectionReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, store_id, format=None):
         try:
@@ -378,7 +376,7 @@ class AuditCycleAuditStoreSectionReport(APIView):
 class AuditCycleCityPerformance(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
         data = city_trends.get_performing_cities(audit_cycle_id, request.user.id)
@@ -388,7 +386,7 @@ class AuditCycleCityPerformance(APIView):
 class AuditCycleStorePerformance(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
         data = store_trends.get_performing_stores(audit_cycle_id, request.user.id)
@@ -398,7 +396,7 @@ class AuditCycleStorePerformance(APIView):
 class DashboardStoreTrends(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
@@ -407,7 +405,7 @@ class DashboardStoreTrends(APIView):
 class DashboardCityWiseTrends(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
@@ -416,7 +414,7 @@ class DashboardCityWiseTrends(APIView):
 class DashboardStoreTrendsXlsx(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
@@ -426,7 +424,7 @@ class DashboardStoreTrendsXlsx(APIView):
 class DashboardCityWiseTrendsXlsx(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
@@ -436,7 +434,7 @@ class DashboardCityWiseTrendsXlsx(APIView):
 class AuditStoreUpcoming(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         audit_stores = audit_store_client_service.find_upcoming_for_client(request.user.clientuser.client_id)
@@ -445,7 +443,7 @@ class AuditStoreUpcoming(APIView):
 class AuditCycleTimeSeriesReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         try:
@@ -457,7 +455,7 @@ class AuditCycleTimeSeriesReport(APIView):
 class AuditCycleTimeSeriesReportXlsx(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
         try:

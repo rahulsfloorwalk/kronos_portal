@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http import Http404, HttpResponse
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -41,9 +40,9 @@ from auditor.service import profile_info_service
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         profile_info = profile_info_service.find_profile_info_by_user_id(request.user.id)
         return Response(ProfileInfoSerializer(profile_info).data)
@@ -58,9 +57,9 @@ class ProfileInfoView(APIView):
 class AdditionalInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         try:
             additional_info = AdditionalInfo.objects.get(user_id=request.user.id)
@@ -69,7 +68,7 @@ class AdditionalInfoView(APIView):
             return Response(AdditionalInfoSerializer(AdditionalInfo()).data)
 
     def post(self, request):
-        additional_info_ds= AdditionalInfoDeSerializer(data=request.data, context={'current_user' : request.user})
+        additional_info_ds= AdditionalInfoDeSerializer(data=request.data, context={'current_user': request.user})
         additional_info_ds.is_valid(raise_exception=True)
         additional_info = additional_info_ds.deserialize()
         additional_info.save()
@@ -79,9 +78,9 @@ class AdditionalInfoView(APIView):
 class BankInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         try:
             bank_info = BankInfo.objects.get(user_id=request.user.id)
@@ -90,7 +89,7 @@ class BankInfoView(APIView):
             return Response(BankInfoSerializer(BankInfo()).data)
 
     def post(self, request):
-        bank_info_s = BankInfoSerializer(data=request.data, context={'current_user' : request.user})
+        bank_info_s = BankInfoSerializer(data=request.data, context={'current_user': request.user})
         bank_info_s.is_valid(raise_exception=True)
         bank_info = bank_info_s.deserialize()
         bank_info.save()
@@ -99,15 +98,15 @@ class BankInfoView(APIView):
 class FacebookInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         fb_info = social_service.find_facebook_by_user(request.user.id)
         return Response(FacebookSerializer(fb_info).data)
 
     def post(self, request):
-        facebook_ds = FacebookDeSerializer(data=request.data, context={'current_user' : request.user})
+        facebook_ds = FacebookDeSerializer(data=request.data, context={'current_user': request.user})
         facebook_ds.is_valid(raise_exception=True)
         facebook = facebook_ds.deserialize()
         facebook = social_service.save(facebook)
@@ -116,9 +115,9 @@ class FacebookInfoView(APIView):
 class AvailableAuditsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         city_id = request.GET.get('city_id')
         kms = request.GET.get('kms')
@@ -133,9 +132,9 @@ class AvailableAuditsView(APIView):
 class AuditView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, audit_id, format=None):
         audit = audit_service.find_audit_by_id(audit_id)
         return Response(AuditSerializer(audit).data)
@@ -143,12 +142,12 @@ class AuditView(APIView):
 class AuditApplicationsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         try:
-            applications = application_service.get_applications( request.user.profileinfo.id)
+            applications = application_service.get_applications(request.user.profileinfo.id)
             return Response(AuditApplicationSerializer(applications, many=True).data)
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
@@ -159,12 +158,12 @@ class AuditApplicationsView(APIView):
 class AuditStoresView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         try:
-            audit_stores = audit_store_service.find_audit_stores_for_auditor( request.user.profileinfo.id)
+            audit_stores = audit_store_service.find_audit_stores_for_auditor(request.user.profileinfo.id)
             return Response(AuditStoreSerializer(audit_stores, many=True).data)
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
@@ -175,12 +174,12 @@ class AuditStoresView(APIView):
 class AuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, audit_store_id, format=None):
         try:
-            audit_store = audit_store_service.find_by_id_for_auditor( audit_store_id, request.user.id)
+            audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, request.user.id)
             return Response(AuditStoreSerializer(audit_store).data)
         except ProfileInfo.DoesNotExist as e:
             raise ValidationError({
@@ -190,9 +189,9 @@ class AuditStoreView(APIView):
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, audit_store_id, format=None):
         try:
             sections = section_service.get_for_auditor(audit_store_id, request.user.profileinfo.id)
@@ -205,9 +204,9 @@ class SectionView(APIView):
 class AuditApplicationView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, audit_id, format=None):
         application = application_service.get_application(audit_id, request.user.profileinfo.id)
         return Response(AuditApplicationSerializer(application).data)
@@ -215,8 +214,8 @@ class AuditApplicationView(APIView):
 class AuditApplicationApplyView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def post(self, request, audit_id, format=None):
         try:
             request.data["audit_id"] = audit_id
@@ -226,21 +225,21 @@ class AuditApplicationApplyView(APIView):
             application_apply_ds.is_valid(raise_exception=True)
 
             application = application_service.apply(
-                    application_apply_ds.validated_data["audit_id"].id,
-                    application_apply_ds.validated_data["profileinfo_id"].id,
-                    application_apply_ds.validated_data["audit_date"]
+                application_apply_ds.validated_data["audit_id"].id,
+                application_apply_ds.validated_data["profileinfo_id"].id,
+                application_apply_ds.validated_data["audit_date"]
             )
             return Response(AuditApplicationSerializer(application).data)
         except (AppLogicError, ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
-                }) from e
+            }) from e
 
 class AuditApplicationCancelView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def post(self, request, audit_id, format=None):
         try:
             data = {}
@@ -251,22 +250,22 @@ class AuditApplicationCancelView(APIView):
             application_cancel_ds.is_valid(raise_exception=True)
 
             application = application_service.cancel(
-                    application_cancel_ds.data["audit_id"],
-                    application_cancel_ds.data["profileinfo_id"]
+                application_cancel_ds.data["audit_id"],
+                application_cancel_ds.data["profileinfo_id"]
             )
             return Response(AuditApplicationSerializer(application).data)
         except (AppLogicError, ProfileInfo.DoesNotExist) as e:
             raise ValidationError({
                 "non_field_errors": [e.__str__()]
-                }) from e
+            }) from e
 
 
 class CityView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, state, format=None):
         if state in states.states:
             cities = City.objects.filter(state=state)
@@ -276,17 +275,17 @@ class CityView(APIView):
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, format=None):
         return Response(states.states)
 
 class AnswerSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def post(self, request, question_id, format=None):
         request.data['question'] = question_id
         ds = AnswerDeSerializer(data=request.data)
@@ -306,8 +305,8 @@ class AnswerSubmitView(APIView):
 class AnswerCommentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def post(self, request, question_id, format=None):
         try:
             audit_store_id = request.data['audit_store_id']
@@ -323,8 +322,8 @@ class AnswerCommentView(APIView):
 class AnswerListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, audit_store_id, format=None):
         answers = answer_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
         return Response(AnswerSerializer(answers, many=True).data)
@@ -333,8 +332,8 @@ class AnswerListView(APIView):
 class AuditStoreIdSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR],
-        }
+        'POST': [GROUP_NAME_AUDITOR],
+    }
     def post(self, request, audit_store_id):
         try:
             audit_store = audit_store_service.submit(audit_store_id, request.user.profileinfo.user_id)
@@ -348,8 +347,8 @@ class AuditStoreIdSubmitView(APIView):
 class ReportSectionListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR]
+    }
     def get(self, request, audit_store_id, format=None):
         report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, request.user.id)
         return Response(ReportSectionSerializer(report_sections, many=True).data)
@@ -357,8 +356,8 @@ class ReportSectionListView(APIView):
 class CommentSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'POST': [GROUP_NAME_AUDITOR]
+    }
     def post(self, request, section_id, format=None):
         request.data['section'] = section_id
         ds = ReportSectionDeSerializer(data=request.data)
@@ -378,9 +377,9 @@ class CommentSubmitView(APIView):
 class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET': [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
 
     def get(self, request, audit_store_id, format=None):
             attachments = attachment_auditor_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
@@ -389,11 +388,11 @@ class AuditStoreAttachmentView(APIView):
     def post(self, request, audit_store_id):
         try:
             post_data, attachment = attachment_auditor_service.upload_for_audit_store_by_auditor(
-                    audit_store_id,
-                    request.user.id,
-                    request.data["file_name"],
-                    request.data["file_size"],
-                    request.data["file_type"])
+                audit_store_id,
+                request.user.id,
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"])
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:
@@ -408,9 +407,9 @@ class AuditStoreAttachmentView(APIView):
 class ReportSectionAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET': [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
 
     def get(self, request, audit_store_id, section_id, format=None):
         attachments = attachment_auditor_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, request.user.id)
@@ -419,12 +418,12 @@ class ReportSectionAttachmentView(APIView):
     def post(self, request, audit_store_id, section_id):
         try:
             post_data, attachment = attachment_auditor_service.upload_for_report_section_by_auditor(
-                    audit_store_id,
-                    section_id,
-                    request.data["file_name"],
-                    request.data["file_size"],
-                    request.data["file_type"],
-                    request.user.id)
+                audit_store_id,
+                section_id,
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"],
+                request.user.id)
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:
@@ -439,9 +438,9 @@ class ReportSectionAttachmentView(APIView):
 class UserIdProofAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET': [GROUP_NAME_AUDITOR],
-            'POST': [GROUP_NAME_AUDITOR]
-        }
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
 
     def get(self, request, format=None):
         try:
@@ -453,10 +452,10 @@ class UserIdProofAttachmentView(APIView):
     def post(self, request):
         try:
             post_data, attachment = attachment_auditor_service.upload_for_id_proof_by_auditor(
-                    request.user.id,
-                    request.data["file_name"],
-                    request.data["file_size"],
-                    request.data["file_type"])
+                request.user.id,
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"])
             post_data["attachment"] = AttachmentSerializer(attachment).data
             return Response(post_data)
         except KeyError as e:
@@ -476,8 +475,8 @@ class UserIdProofAttachmentView(APIView):
 class AttachmentIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'DELETE': [GROUP_NAME_AUDITOR],
-        }
+        'DELETE': [GROUP_NAME_AUDITOR],
+    }
 
     def delete(self, request, attachment_id):
         try:
@@ -491,8 +490,8 @@ class AttachmentIdView(APIView):
 class AttachmentCompleteView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_AUDITOR],
-        }
+        'POST': [GROUP_NAME_AUDITOR],
+    }
 
     def post(self, request, attachment_id):
         try:
@@ -576,7 +575,7 @@ class ConfigView(APIView):
 class PreferencesView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_AUDITOR],
+        'GET': [GROUP_NAME_AUDITOR],
         'POST': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):

@@ -1,14 +1,9 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User, Group
+from django.http import Http404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from ..serializers import ClientSerializer
@@ -20,9 +15,9 @@ from client.models import Client
 class ClientView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, format=None):
         try:
             client = Client.objects.all()
@@ -40,10 +35,10 @@ class ClientView(APIView):
 class ClientIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, client_id, format=None):
         try:
             client = Client.objects.get(id=client_id)
@@ -52,7 +47,7 @@ class ClientIdView(APIView):
             raise Http404
 
     def post(self, request, client_id):
-        client_s = ClientSerializer(data=request.data, context={'id' : client_id})
+        client_s = ClientSerializer(data=request.data, context={'id': client_id})
         client_s.is_valid(raise_exception=True)
         client = client_s.deserialize()
         savedClient = client_service.save(client)

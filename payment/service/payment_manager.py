@@ -146,7 +146,7 @@ def unpay_for_audit_store(audit_store_id, user_actor):
 
 
 def clear_payment_for_audit_cycle(audit_cycle_id):
-    payments = Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).update(status=Payment.PAID)
+    Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).update(status=Payment.PAID)
 
 def get_pending_payments():
     payments = Payment.objects.filter(status=Payment.PENDING)

@@ -1,9 +1,7 @@
-from django.contrib.auth.models import User
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from ..models import Answer
 from audit_store.models import AuditStore
 from questionnaire.models import Question
-from auditor.models import ProfileInfo
 
 from questionnaire.service import question as question_service
 

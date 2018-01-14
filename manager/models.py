@@ -1,8 +1,5 @@
-from django.conf import settings
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField, DecimalField
+from django.db.models import Model, CharField, AutoField, ForeignKey, DecimalField
 from django.db.models import PROTECT
-
-from client.models import Client
 
 from . import states
 

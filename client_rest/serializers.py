@@ -1,5 +1,4 @@
-from rest_framework.serializers import Serializer, ModelSerializer, ValidationError, SlugRelatedField, PrimaryKeyRelatedField
-from rest_framework.serializers import CharField, EmailField, BooleanField
+from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
 
 from audit.models import Audit, AuditCycle

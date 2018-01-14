@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User, Group
 
+from kronos.exceptions import ObjectNotFound
+
 from registration.models import GROUP_NAME_MODERATOR
 
 def find_moderator_by_user_id(user_id):

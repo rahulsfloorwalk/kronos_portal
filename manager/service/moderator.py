@@ -47,7 +47,7 @@ def update(user_id, email, password="", is_active=True):
         user.is_active = is_active
 
         if password != "":
-            user.set_password( password)
+            user.set_password(password)
 
         user.save()
 

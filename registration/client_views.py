@@ -3,7 +3,7 @@ import logging
 from django.conf import settings
 from django.forms import Form
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -25,8 +25,8 @@ class Login(View):
             _logger.info("client auto redirected: %s", request.user)
             return redirect(self.__client_url)
         else:
-            ## user IS logged in, but is not a client
-            ## let the other login view handle this shit
+            # user IS logged in, but is not a client
+            # let the other login view handle this shit
             return redirect('registration:login')
 
     def post(self, request):

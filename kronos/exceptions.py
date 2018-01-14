@@ -18,7 +18,8 @@ class KronosExceptionMiddleware(object):
         frame = traceback.extract_tb(sys.exc_info()[-1], limit=-1)[0]
         if isinstance(e, ObjectNotFound):
             _logger.info("404 for path: %s caused by ObjectNotFound at %s, %s, %s", request.path, frame.filename, frame.lineno, frame.name)
-            return HttpResponse(json.dumps({
+            return HttpResponse(
+                json.dumps({
                     'non_field_errors': ["Not Found"]
                 }),
                 status=404,
@@ -26,7 +27,8 @@ class KronosExceptionMiddleware(object):
             )
         if isinstance(e, AppLogicError):
             _logger.info("400 for path: %s caused by AppLogicError(\"%s\") at %s, %s, %s", request.path, e.args[0], frame.filename, frame.lineno, frame.name)
-            return HttpResponse(json.dumps({
+            return HttpResponse(
+                json.dumps({
                     'non_field_errors': [e.__str__()]
                 }),
                 status=400,

@@ -1,6 +1,6 @@
 from django.utils import timezone
 from django.conf import settings
-from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, OneToOneField, IntegerField, PROTECT, DateTimeField
+from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, IntegerField, PROTECT, DateTimeField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -62,8 +62,8 @@ class Attachment(Model):
             preview_width = 750
             preview_height = 500
             return {
-                    "thumbnail_url": "https://{}/{}?fit=crop&auto=enhance,compress&crop=entropy&w={}&h={}".format(subdomain,self.file_slug,thumbnail_width,thumbnail_height),
-                    "preview_url": "https://{}/{}?auto=enhance,compress&h={}".format(subdomain,self.file_slug,preview_height)
+                "thumbnail_url": "https://{}/{}?fit=crop&auto=enhance,compress&crop=entropy&w={}&h={}".format(subdomain,self.file_slug,thumbnail_width,thumbnail_height),
+                "preview_url": "https://{}/{}?auto=enhance,compress&h={}".format(subdomain,self.file_slug,preview_height)
             }
         else:
             return {}

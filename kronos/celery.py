@@ -12,11 +12,11 @@ _logger = logging.getLogger(__name__)
 broker_url = 'amqp://guest@localhost'
 
 imports = (
-        'notify.service.mail_notify',
-        'notify.service.mail_reminders',
-        'notify.service.mail_welcome',
-        'notify.service.mail_opportunity',
-        )
+    'notify.service.mail_notify',
+    'notify.service.mail_reminders',
+    'notify.service.mail_welcome',
+    'notify.service.mail_opportunity',
+)
 
 queue_prefix = 'fw-testing'
 
@@ -30,7 +30,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
     queue_at = crontab(hour=12, minute=30)
-    sender.add_periodic_task( queue_at, send_pre_audit_reminders.s())
-    sender.add_periodic_task( queue_at, send_on_audit_reminders.s())
-    sender.add_periodic_task( queue_at, send_post_audit_reminders.s())
+    sender.add_periodic_task(queue_at, send_pre_audit_reminders.s())
+    sender.add_periodic_task(queue_at, send_on_audit_reminders.s())
+    sender.add_periodic_task(queue_at, send_post_audit_reminders.s())
 

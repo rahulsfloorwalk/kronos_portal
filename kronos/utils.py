@@ -24,7 +24,7 @@ def get_color_code(marks_obtained, max_marks):
     if max_marks is not 0:
         percentage = int((marks_obtained * 100) / max_marks)
     else:
-        percentage = -1 
+        percentage = -1
 
     return get_color_code_by_percentage(percentage)
 
@@ -45,6 +45,7 @@ def today_ist():
 
 def view_log(func, method=None, *outerargs):
     _logger = logging.getLogger("function:view_log")
+
     def wrapper(*args, **kwargs):
         user="unknown"
         post_data="unknown"

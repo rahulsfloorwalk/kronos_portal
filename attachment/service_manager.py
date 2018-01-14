@@ -1,11 +1,10 @@
-from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.exceptions import AppLogicError
 
 from audit_store.models import AuditStore
 import audit_store.service as audit_store_service
 
 import answer.service.report_section as report_section_service
 
-from .models import Attachment
 from . import service as attachment_service
 
 

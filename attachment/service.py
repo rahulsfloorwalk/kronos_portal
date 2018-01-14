@@ -7,7 +7,6 @@ import os
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.db.models import Q
 
 import boto3
 
@@ -39,11 +38,12 @@ def generate_attachment_slug(file_extension):
 
 def get_signed_post(file_extension):
     # Get the service client
-    s3 = boto3.client('s3',
-            aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
-            aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
-            region_name=AWS["S3_ATTACHMENTS"]["REGION"]
-        )
+    s3 = boto3.client(
+        's3',
+        aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
+        aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
+        region_name=AWS["S3_ATTACHMENTS"]["REGION"]
+    )
 
     # Make sure everything posted is publicly readable
     fields = {"acl": "public-read"}
@@ -118,7 +118,7 @@ def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
 def upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type):
     try:
         audit_store = audit_store_service.find_by_id(audit_store_id)
-        report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
+        report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
 
         check_file_size(file_size)
 
@@ -212,7 +212,6 @@ def get_auditor_for_attachment(attachment_id):
 
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
-
 
 
 def find_by_audit_store(audit_store_id):

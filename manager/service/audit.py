@@ -1,18 +1,16 @@
 from django.db import connection
 from django.db.transaction import atomic
-from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
 
 from notifications.signals import notify
 from notifications.models import Notification
 
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
+from registration.models import GROUP_NAME_MANAGER
 from notify.service import mail_notify
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from auditor.models import AuditApplication
 from notify import verbs
 
 

@@ -2,8 +2,6 @@ import xlsxwriter
 import io
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
-from answer.models import Answer, ReportSection
-from questionnaire.models import Question
 
 not_applicable_text = "N/A"
 
@@ -18,9 +16,9 @@ def get_xlsx_report(audit_store_id, client_id):
         sections = list(audit_store.audit.audit_cycle.sections.all().order_by('sequence'))
         answers = audit_store.answers.all()
         sorted_answers = sorted(
-                sorted(answers, key=lambda answer:answer.question.sequence),
-                key=lambda answer:answer.question.section.sequence
-            )
+            sorted(answers, key=lambda answer:answer.question.sequence),
+            key=lambda answer:answer.question.section.sequence
+        )
         report_sections = audit_store.report_sections.all()
         sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
         data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
@@ -34,7 +32,6 @@ def create_text_structure(sections, answers, report_sections, audit_store):
     answers_section = get_answers_section(sections, answers, report_sections)
 
     audit_date = audit_store.audit_date
-    client_name = audit_store.audit.audit_cycle.client.name
     store_name = audit_store.audit.store.name
     name = (store_name + " " + str(audit_date) + ".xlsx")
     data = [details_section, summary_section, answers_section]
@@ -46,7 +43,6 @@ def get_details_section(audit_store, report_sections, sections):
     store = audit_store.audit.store
     store_address = audit_store.audit.store.address
     store_city_name = audit_store.audit.store.city.name
-    client_name = audit_store.audit.audit_cycle.client.name
     audit_cycle_type = audit_store.audit.audit_cycle.type
     rows = []
     content = ["", "Audit Report"]
@@ -123,7 +119,7 @@ def get_answers_section(sections, answers, report_sections):
                     content = ["", answers[key].question.question_txt, not_applicable_text, not_applicable_text, not_applicable_text]
                 else:
                     content = ["", answers[key].question.question_txt, answers[key].answer_text,
-                            answers[key].marks_obtained, answers[key].question.max_marks]
+                               answers[key].marks_obtained, answers[key].question.max_marks]
                 row = {'type': 'line', 'content': content}
                 rows.append(row)
             else:
@@ -146,7 +142,7 @@ def write_data(sections):
     auditor_comment_color = '#E3B9B8'
     pm_comment_color = '#FFFFBF'
     output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory' : True})
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
     worksheet = workbook.add_worksheet()
     title_format = workbook.add_format({
         'text_wrap':True,
@@ -170,7 +166,8 @@ def write_data(sections):
         'bg_color': header_color,
         'valign': 'vcenter',
     })
-    odd_line_format = workbook.add_format({'text_wrap':True,
+    odd_line_format = workbook.add_format({
+        'text_wrap':True,
         'bg_color': odd_color,
         'top':1,
         'bottom':1,
@@ -178,7 +175,8 @@ def write_data(sections):
         'right':1,
         'valign': 'vcenter',
     })
-    even_line_format = workbook.add_format({'text_wrap':True,
+    even_line_format = workbook.add_format({
+        'text_wrap':True,
         'bg_color': even_color,
         'top':1,
         'bottom':1,
@@ -186,7 +184,8 @@ def write_data(sections):
         'right':1,
         'valign': 'vcenter',
     })
-    auditor_comment_format = workbook.add_format({'text_wrap':True,
+    auditor_comment_format = workbook.add_format({
+        'text_wrap':True,
         'bg_color': auditor_comment_color,
         'top':1,
         'bottom':1,
@@ -206,8 +205,8 @@ def write_data(sections):
     start_row = 0
     start_col = 0
     worksheet.set_column(start_col, start_col, 15)
-    worksheet.set_column(start_col+1, start_col+2, 60)
-    worksheet.set_column(start_col+3, start_col+4, 20)
+    worksheet.set_column(start_col + 1, start_col + 2, 60)
+    worksheet.set_column(start_col + 3, start_col + 4, 20)
     worksheet.set_default_row(20)
     row = start_row
     col = start_col

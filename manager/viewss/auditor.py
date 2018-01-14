@@ -20,8 +20,6 @@ from manager.serializers import PreferencesSerializer
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from registration.service import auditor as auditor_service
-from ..serializers import ProfileInfoSerializer, BankInfoSerializer, AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
 from ..serializers import AuditorReferralSerializer
 from social.service import social_manager as social_service
 from referral.service import referral_auditor as referral_service
@@ -30,9 +28,9 @@ from referral.service import referral_auditor as referral_service
 class AuditorView(generics.ListAPIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     queryset = User.objects.filter(groups__name=GROUP_NAME_AUDITOR)
     serializer_class = AuditorSerializer
     filter_backends = (SearchFilter,)
@@ -42,18 +40,18 @@ class AuditorView(generics.ListAPIView):
 class AuditorIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
-        user = auditor_service.find_auditor_by_id(auditor_id);
+        user = auditor_service.find_auditor_by_id(auditor_id)
         return Response(AuditorSerializer(user).data)
 
 class AuditorIdEmailView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, user_id, format=None):
         user = auditor_service.set_email(user_id, request.data.get('email'))
         return Response(AuditorSerializer(user).data)
@@ -61,8 +59,8 @@ class AuditorIdEmailView(APIView):
 class AuditorIdMobileNumberView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, user_id, format=None):
         user = profile_info_service.set_mobile_number_for_auditor(user_id, request.data.get('mobile_number'))
         return Response(AuditorSerializer(user).data)
@@ -70,9 +68,9 @@ class AuditorIdMobileNumberView(APIView):
 class AuditorProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
         try:
             profileInfo = ProfileInfo.objects.get(user_id=auditor_id)
@@ -83,9 +81,9 @@ class AuditorProfileInfoView(APIView):
 class AuditorBankInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
         try:
             bankInfo = BankInfo.objects.get(user_id=auditor_id)
@@ -96,9 +94,9 @@ class AuditorBankInfoView(APIView):
 class AuditorAdditionalInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
         try:
             additionalInfo = AdditionalInfo.objects.get(user_id=auditor_id)
@@ -109,9 +107,9 @@ class AuditorAdditionalInfoView(APIView):
 class AuditorFacebookInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
         facebookInfo = social_service.find_facebook_by_user(auditor_id)
         return Response(FacebookSerializer(facebookInfo).data)
@@ -119,8 +117,8 @@ class AuditorFacebookInfoView(APIView):
 class AuditorApplicationView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
         try:
             auditor_applications = auditor_stats_service.getAuditApplications(auditor_id)
@@ -131,8 +129,8 @@ class AuditorApplicationView(APIView):
 class AuditorAuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, auditor_id, format=None):
         try:
             auditor_audit_stores = auditor_stats_service.getAuditStores(auditor_id)
@@ -143,8 +141,8 @@ class AuditorAuditStoreView(APIView):
 class AuditorDeactivateView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, user_id):
         user = auditor_service.deactivate_auditor(user_id)
         return Response(AuditorSerializer(user).data)
@@ -152,8 +150,8 @@ class AuditorDeactivateView(APIView):
 class AuditorActivateView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, user_id):
         user = auditor_service.activate_auditor(user_id)
         return Response(AuditorSerializer(user).data)
@@ -161,8 +159,8 @@ class AuditorActivateView(APIView):
 class AuditorVerifyView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, user_id):
         user = auditor_service.verify_auditor(user_id)
         return Response(AuditorSerializer(user).data)
@@ -170,8 +168,8 @@ class AuditorVerifyView(APIView):
 class AuditorPasswordResetEmailView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request, user_id):
         user = auditor_service.send_password_reset_email(user_id)
         return Response(AuditorSerializer(user).data)
@@ -179,8 +177,8 @@ class AuditorPasswordResetEmailView(APIView):
 class PaymentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, user_id, format=None):
         try:
             payments = payment_service.find_by_user(user_id)
@@ -191,8 +189,8 @@ class PaymentView(APIView):
 class IdProofAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER]
+    }
 
     def get(self, request, auditor_id, format=None):
         try:

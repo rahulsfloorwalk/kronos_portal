@@ -2,10 +2,7 @@ from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
 
-from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
-
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from audit.models import AuditCycle
 from registration.models import GROUP_NAME_MANAGER
 
 def find_all():
@@ -47,7 +44,7 @@ def update(user_id, email, password="", is_active=True):
         user.is_active = is_active
 
         if password != "":
-            user.set_password( password)
+            user.set_password(password)
 
         user.save()
 

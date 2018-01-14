@@ -5,8 +5,6 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from ..models import Question, Section
 
-import answer.service.answer as answer_service
-
 def save(question):
     question.full_clean(exclude=["question_data"])
     Question.save(question)

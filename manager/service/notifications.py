@@ -1,7 +1,5 @@
 from django.contrib.auth.models import User
 
-from notifications.models import Notification
-
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from notify import verbs

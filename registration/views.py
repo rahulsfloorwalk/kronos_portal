@@ -1,22 +1,19 @@
 import logging
 
 from django.conf import settings
-from django.forms import Form
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, PasswordResetForm, SetPasswordForm
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
 from django.views import View
-from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.transaction import atomic
-from auditor.models import ProfileInfo
 from registration.service import auditor as auditor_service
 from .models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from .forms import SignUpForm
-import datetime
+
 from kronos.exceptions import ObjectNotFound
 
 _logger = logging.getLogger(__name__)
@@ -49,8 +46,8 @@ class Login(View):
             _logger.info("auto redirecting moderator logged in: %s", request.user)
             return redirect(self.__moderator_url)
         else:
-            ## user IS logged in, but is not an auditor or manager or moderator
-            ## let the client login view handle this shit
+            # user IS logged in, but is not an auditor or manager or moderator
+            # let the client login view handle this shit
             return redirect('registration:client_login')
 
     def post(self, request):

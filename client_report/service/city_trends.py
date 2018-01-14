@@ -21,7 +21,7 @@ def get_performing_cities(audit_cycle):
         if cities.get(store.city) is None:
             cities[store.city] = (0,0)
         total, count = cities[store.city]
-        cities[store.city] = (total + avg, count+1)
+        cities[store.city] = (total + avg, count + 1)
 
     averages = []
     for city, (total, count) in cities.items():
@@ -30,8 +30,7 @@ def get_performing_cities(audit_cycle):
                 ({
                     "id": city.id,
                     "name": city.name,
-                },
-                {
+                }, {
                     "color_code": get_color_code_by_percentage(int(total / count)),
                     "value": int(total / count)
                 })
@@ -81,15 +80,15 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
 
     last_cycle_performing_cities = data[-1][1]
 
-    #print("first_cycle_performing_stores", first_cycle_performing_stores)
-    #print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
+    # print("first_cycle_performing_stores", first_cycle_performing_stores)
+    # print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
 
     data_1 = []
     for item in last_cycle_performing_cities:
         data_1.append((item[0],[item[1]]))
 
     for audit_cycle, best_performing_cities in data[:-1]:
-        #print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
+        # print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
         for item in last_cycle_performing_cities:
             found_item = None
 
@@ -111,11 +110,11 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
     for city, score_series in data_1:
         score_series.append(score_series.pop(0))
 
-    #print("data_1",data_1)
+    # print("data_1",data_1)
     return {
-            'type': audit_type,
-            'columns': audit_cycle_names,
-            'data': data_1
+        'type': audit_type,
+        'columns': audit_cycle_names,
+        'data': data_1
     }
 
 def get_excel_report(data):

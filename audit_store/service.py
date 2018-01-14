@@ -203,7 +203,6 @@ def submit(audit_store_id, user_id):
 def complete(audit_store_id, qa_rating, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
-        report_sections = report_section_service.find_by_audit_store_for_user(audit_store_id, audit_store.user.id)
 
         if not audit_store.is_completable():
             raise AppLogicError("Report is not complete.")

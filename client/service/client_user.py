@@ -56,7 +56,7 @@ def update(client_user_id, client, full_name, email, is_client_admin, password="
         client_user.user.is_active = is_active
 
         if password != "":
-            client_user.user.set_password( password)
+            client_user.user.set_password(password)
 
         if is_client_admin:
             assign_perm('client.clientuser_admin', client_user.user)

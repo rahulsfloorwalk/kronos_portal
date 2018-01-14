@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField, RelatedField, IntegerField
@@ -95,9 +94,8 @@ class ProfileInfoDeSerializer(ModelSerializer):
         profile_info.pincode = self.validated_data.get('pincode', profile_info.pincode)
         profile_info.city = self.validated_data.get('city_id', profile_info.city)
 
-        #profile_info.save()
+        # profile_info.save()
         return profile_info
-
 
 
 class AdditionalInfoSerializer(ModelSerializer):

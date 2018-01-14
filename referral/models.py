@@ -1,7 +1,5 @@
-from django.db import models
-
 from django.conf import settings
-from django.db.models import Model, AutoField, CharField, IntegerField, ForeignKey, BooleanField, OneToOneField, DateTimeField, PROTECT
+from django.db.models import Model, AutoField, CharField, IntegerField, ForeignKey, DateTimeField, PROTECT
 
 class AuditorReferral(Model):
 

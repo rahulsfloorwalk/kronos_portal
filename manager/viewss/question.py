@@ -1,27 +1,21 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User, Group
+from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from questionnaire.service import question as question_service
 
-from questionnaire.models import Question
 from ..serializers import QuestionSerializer, QuestionDeSerializer
 
 
 class QuestionViewBySection(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-        }
+        'GET': [GROUP_NAME_MANAGER],
+    }
     def get(self, request, section_id, format=None):
         questions = question_service.find_questions_by_section_id(section_id)
         return Response(QuestionSerializer(questions, many=True).data)
@@ -29,10 +23,10 @@ class QuestionViewBySection(APIView):
 class QuestionIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'GET' : [GROUP_NAME_MANAGER],
-            'POST': [GROUP_NAME_MANAGER],
-            'DELETE': [GROUP_NAME_MANAGER]
-        }
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER]
+    }
     def get(self, request, question_id, format=None):
         question = question_service.find_question_by_id(question_id)
         return Response(QuestionSerializer(question).data)
@@ -51,8 +45,8 @@ class QuestionIdView(APIView):
 class QuestionView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request):
         q_ds = QuestionDeSerializer(data=request.data)
         q_ds.is_valid(raise_exception=True)

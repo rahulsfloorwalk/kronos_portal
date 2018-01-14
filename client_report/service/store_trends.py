@@ -1,15 +1,10 @@
 from django.db.models import Prefetch
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
 from kronos.utils import get_color_code_by_percentage
 
-from audit.models import AuditCycle, Audit
 import audit.service.audit_cycle as audit_cycle_service
 
 from audit_store.models import AuditStore
-
-from answer.models import Answer, ReportSection
-from questionnaire.models import Section
 
 def get_performing_stores(audit_cycle):
     stores = []
@@ -31,13 +26,11 @@ def get_performing_stores(audit_cycle):
                     "id": audit.store.city.id,
                     "name": audit.store.city.name,
                 }
-            },
-            {
+            }, {
                 "color_code": get_color_code_by_percentage(int(obtained / count)),
                 "value": int(obtained / count)
             }
             ))
-
 
     if len(stores) is 0:
         return stores
@@ -46,7 +39,7 @@ def get_performing_stores(audit_cycle):
 
 
 def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
-    #print("got audit_type",audit_type)
+    # print("got audit_type",audit_type)
 
     qs = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, user_id).order_by('end_date')
     qs = qs.prefetch_related(
@@ -64,7 +57,7 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
 
     audit_cycle_count = qs.count()
     if audit_cycle_count is 0:
-        #print("audit_cycles are len = 0", audit_cycles)
+        # print("audit_cycles are len = 0", audit_cycles)
         return []
 
     if audit_cycle_count > 3:
@@ -78,19 +71,19 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
 
         data.append((audit_cycle, get_performing_stores(audit_cycle)))
 
-    #print("data", data)
+    # print("data", data)
 
     last_cycle_performing_stores = data[-1][1]
 
-    #print("first_cycle_performing_stores", first_cycle_performing_stores)
-    #print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
+    # print("first_cycle_performing_stores", first_cycle_performing_stores)
+    # print("len(first_cycle_performing_stores)", len(first_cycle_performing_stores))
 
     data_1 = []
     for item in last_cycle_performing_stores:
         data_1.append((item[0],[item[1]]))
 
     for audit_cycle, best_performing_stores in data[:-1]:
-        #print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
+        # print("audit_cycle", audit_cycle, "best_performing_stores", best_performing_stores)
         for item in last_cycle_performing_stores:
             found_item = None
             for store, score in best_performing_stores:
@@ -109,11 +102,11 @@ def get_performing_stores_by_type_for_clientuser(audit_type, user_id):
     for store, score_series in data_1:
         score_series.append(score_series.pop(0))
 
-    #print("data_1",data_1)
+    # print("data_1",data_1)
     return {
-            'type': audit_type,
-            'columns': audit_cycle_names,
-            'data': data_1
+        'type': audit_type,
+        'columns': audit_cycle_names,
+        'data': data_1
     }
 
 def get_excel_report(data):

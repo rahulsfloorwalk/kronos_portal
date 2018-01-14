@@ -1,11 +1,9 @@
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, EmailField, ForeignKey, NullBooleanField, OneToOneField, PositiveIntegerField
+from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField
 from django.db.models import PROTECT, F, Value, Sum
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.fields import JSONField
 
 from kronos.exceptions import AppLogicError
-
-from manager.models import Client
 
 class Section(Model):
 
@@ -49,7 +47,6 @@ class Question(Model):
         QUESTION_DATA_V1,
     )
 
-
     id = AutoField(db_column = 'id', primary_key=True)
     question_txt = CharField(db_column="question_txt", max_length=1024, blank=False)
     max_marks = PositiveIntegerField(db_column='max_marks', blank=False)
@@ -84,8 +81,6 @@ class Question(Model):
 
                     if option.get("sequence") is None or not isinstance(option["sequence"], int):
                         raise AppLogicError("question_data (v{}) all 'options' should have key 'sequence' of type int".format(self.QUESTION_DATA_V1))
-
-
 
     def __str__(self):
         return 'Question({}): {}, {}'.format(self.id, self.question_txt, self.max_marks)

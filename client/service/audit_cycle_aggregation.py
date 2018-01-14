@@ -1,15 +1,7 @@
-from django.contrib.auth.models import User, Group
-
-from kronos.exceptions import ObjectNotFound, AppLogicError
-from registration.models import GROUP_NAME_CLIENT
-
-from audit_store.models import AuditStore
 from manager.service import audit as audit_service
-from ..models import ClientUser
 
 def get_audit_cycle_comparison(client_id, audit_cycle_type):
     data = {}
-    store_names = []
     section_names = []
     section_max_marks = []
     rows = []

@@ -1,22 +1,21 @@
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.exceptions import AppLogicError
 
 from audit_store.models import AuditStore
 import audit_store.service_moderator as audit_store_service
 import answer.service.report_section_moderator as report_section_moderator_service
 
-from .models import Attachment
 from . import service as attachment_service
 
 
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
-    return attachment_service.find_by_audit_store(audit_store_id)
+    return attachment_service.find_by_audit_store(audit_store.id)
 
 
 def find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id):
     report_section = report_section_moderator_service.find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
-    return attachment_service.find_by_audit_store_and_section(audit_store_id, section_id)
+    return attachment_service.find_by_audit_store_and_section(audit_store_id, report_section.section_id)
 
 
 def upload_for_audit_store_for_moderator(audit_store_id, user_id, file_name, file_size, mime_type):

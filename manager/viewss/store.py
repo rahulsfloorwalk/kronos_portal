@@ -1,20 +1,14 @@
-from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.contrib.auth.models import User, Group
+from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.serializers import Serializer, IntegerField
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from client.service import store as store_service
 
-from client.models import Store
 from ..serializers import StoreSerializer, StoreSerializerWithoutClientUserAndClient, StoreDeSerializer
 
 
@@ -52,8 +46,8 @@ class StoreIdView(APIView):
 class StoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-            'POST': [GROUP_NAME_MANAGER]
-        }
+        'POST': [GROUP_NAME_MANAGER]
+    }
     def post(self, request):
         store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
@@ -75,16 +69,16 @@ class StoreIdClientUserView(APIView):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         saved_store = store_service.assign_store_to_client_user(
-                store_id,
-                ds.validated_data["user_id"],
-            )
+            store_id,
+            ds.validated_data["user_id"],
+        )
         return Response(StoreSerializer(saved_store).data)
 
     def delete(self, request, store_id):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         saved_store = store_service.revoke_store_from_client_user(
-                store_id,
-                ds.validated_data["user_id"],
-            )
+            store_id,
+            ds.validated_data["user_id"],
+        )
         return Response(StoreSerializer(saved_store).data)

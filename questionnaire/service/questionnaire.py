@@ -108,21 +108,20 @@ def write_data(data):
         elif line.get('type') == 'section':
             row += 1
             worksheet.write(row, col, line.get('sequence'), section_format)
-            worksheet.write(row, col+1, line.get('text'), section_format)
-            worksheet.write(row, col+2, line.get('max_marks'), section_format)
+            worksheet.write(row, col + 1, line.get('text'), section_format)
+            worksheet.write(row, col + 2, line.get('max_marks'), section_format)
         elif line.get('type') == 'question':
             if line_counter:
                 curr_format = even_line_format
             else:
                 curr_format = odd_line_format
             worksheet.write(row, col, line.get('sequence'), curr_format)
-            worksheet.write(row, col+1, line.get('text'), curr_format)
-            worksheet.write(row, col+2, line.get('max_marks'), curr_format)
+            worksheet.write(row, col + 1, line.get('text'), curr_format)
+            worksheet.write(row, col + 2, line.get('max_marks'), curr_format)
 
         line_counter = ~line_counter
         col = start_col
         row += 1
-
 
     workbook.close()
     output.seek(0)

@@ -7,7 +7,6 @@ from ..models import Section
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
-from audit_store import service as audit_store_service
 import audit_store.service_client as audit_store_client_service
 from audit_store.service_moderator import find_by_id_for_moderator
 
@@ -33,7 +32,7 @@ def find_by_audit_cycle_and_id(audit_cycle_id, section_id):
         raise ObjectNotFound from e
 
 
-def get_for_auditor( audit_store_id, profile_info_id):
+def get_for_auditor(audit_store_id, profile_info_id):
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
         profile_info = ProfileInfo.objects.get(pk=profile_info_id)
@@ -46,11 +45,11 @@ def get_for_auditor( audit_store_id, profile_info_id):
         raise ObjectNotFound()
 
 
-def find_by_audit_store_for_clientuser( audit_store_id, user):
+def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
-def find_by_audit_store_for_moderator( audit_store_id, user_id):
+def find_by_audit_store_for_moderator(audit_store_id, user_id):
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 

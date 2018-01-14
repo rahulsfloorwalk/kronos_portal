@@ -92,14 +92,14 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
 def create_text_structure(title, sections, questions, audit_stores):
     rows = []
 
-    ## generate title row
+    # generate title row
     row = {'type': 'title', 'content': [title]}
     rows.append(row)
 
     if len(audit_stores) == 0:
         return rows
 
-    ## generate sections row
+    # generate sections row
     section_cells = []
     for section in sections:
         section_cells.append({
@@ -110,7 +110,7 @@ def create_text_structure(title, sections, questions, audit_stores):
     row = {'type': 'sections', 'content': cells}
     rows.append(row)
 
-    ## generate questions row
+    # generate questions row
     question_cells = []
     for question in questions:
         question_cells.append(question.question_txt)
@@ -118,7 +118,7 @@ def create_text_structure(title, sections, questions, audit_stores):
     row = {'type': 'question', 'content': content}
     rows.append(row)
 
-    ## generate answer rows
+    # generate answer rows
     for audit_store in audit_stores:
         store_code_cell = {
             'value': audit_store.audit.store.code,
