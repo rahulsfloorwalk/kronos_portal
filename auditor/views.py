@@ -119,10 +119,9 @@ class AvailableAuditsView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        city_id = request.GET.get('city_id')
         kms = request.GET.get('kms')
         try:
-            available_audits = audit_service.get_available_audits_within_box(request.user.profileinfo.id, city_id, kms)
+            available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
             return Response(AuditSerializer(available_audits, many=True).data)
         except AppLogicError as e:
             raise ValidationError({

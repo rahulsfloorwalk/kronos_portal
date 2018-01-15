@@ -4,10 +4,10 @@ from django.db.models import Q
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
-from auditor.models import ProfileInfo, AdditionalInfo
 from audit.models import AuditCycle, Audit
 from manager.models import City
 from manager.service import geo
+from registration.service import auditor as auditor_service
 
 from audit.service import audit_cycle as audit_cycle_service
 
@@ -45,61 +45,51 @@ def delete(audit_id):
         raise AppLogicError("audit cannot be delete now") from e
 
 
-def get_available_audits_within_box(profileinfo_id, city_id=None, kms=None):
-    try:
-        if kms is not None: kms = int(kms)
-    except ValueError:
-        kms = None
+def find_audits_around_city(city_id:int, kms:int=None):
+
+    if kms not in [1,5,10,20,50,100]:
+        kms=50  # default distance to search for
 
     try:
-        if city_id is not None: city_id = int(city_id)
-    except ValueError:
-        city_id = None
-
-    try:
-        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
-
-        if profileinfo.is_complete():
-            if kms is None:
-                try:
-                    addl_info = AdditionalInfo.objects.get(user_id=profileinfo.user_id)
-                    kms = addl_info.distance
-                except AdditionalInfo.DoesNotExist as e:
-                    pass
-
-            if kms not in [1,5,10,20,50,100]:
-                kms=50 ## default distance to search for
-
-            if city_id is None:
-                city_id = profileinfo.city_id
-
-            city = City.objects.get(pk=city_id)
-
-            active_audits = Audit.objects.filter(
-                audit_cycle__status__in=[
-                    AuditCycle.UPCOMING,
-                    AuditCycle.ACTIVE
-                ]
-            )
-
-            ## get the bounding box
-            lon_max, lon_min, lat_max, lat_min = geo.bounding_box(city.lat, city.lon, kms)
-
-            available_audits = active_audits.filter(
-                #Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
-                Q(audit_cycle__type=AuditCycle.GENERAL) |
-                Q(
-                    store__city__lat__lte=lat_max,
-                    store__city__lat__gte=lat_min,
-                    store__city__lon__lte=lon_max,
-                    store__city__lon__gte=lon_min
-                )
-            )
-            return available_audits
-        else:
-            raise AppLogicError("please complete your personal information to view audits")
-    except (ProfileInfo.DoesNotExist, City.DoesNotExist) as e:
+        city = City.objects.get(pk=city_id)
+    except City.DoesNotExist as e:
         raise ObjectNotFound from e
+
+    active_audits = Audit.objects.filter(
+        audit_cycle__status__in=[
+            AuditCycle.UPCOMING,
+            AuditCycle.ACTIVE
+        ]
+    )
+
+    # get the bounding box
+    lon_max, lon_min, lat_max, lat_min = geo.bounding_box(city.lat, city.lon, kms)
+
+    available_audits = active_audits.filter(
+        # Q(audit_cycle__type__in=[AuditCycle.WEB, AuditCycle.PHONE]) |
+        Q(audit_cycle__type=AuditCycle.GENERAL) |
+        Q(
+            store__city__lat__lte=lat_max,
+            store__city__lat__gte=lat_min,
+            store__city__lon__lte=lon_max,
+            store__city__lon__gte=lon_min
+        )
+    )
+    return available_audits
+
+
+def find_audits_for_auditor(user_id, kms):
+    auditor = auditor_service.find_auditor_by_id(user_id)
+
+    if not auditor.profileinfo.is_complete():
+        raise AppLogicError("please complete your personal information to view audits")
+
+    if kms is None and hasattr(auditor, 'additionalinfo') and auditor.additionalinfo.distance:
+        kms = auditor.additionalinfo.distance
+    else:
+        kms = 50
+
+    return find_audits_around_city(auditor.profileinfo.city_id, int(kms))
 
 
 @atomic
