@@ -1,9 +1,13 @@
 {
+    "parser": "babel-eslint",
     "env": {
         "browser": true,
         "es6": true
     },
-    "extends": "eslint:recommended",
+    "extends": [
+	    "eslint:recommended",
+	    "plugin:react/recommended"
+    ],
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
@@ -12,6 +16,7 @@
         "sourceType": "module"
     },
     "plugins": [
+	"babel",
         "react"
     ],
     "rules": {
@@ -30,6 +35,8 @@
         "semi": [
             "error",
             "always"
-        ]
+        ],
+	"react/jsx-uses-vars": 2,
+	"babel/semi": 1
     }
 }
