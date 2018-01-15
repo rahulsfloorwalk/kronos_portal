@@ -14,6 +14,12 @@ class AppLogicError(Exception):
     pass
 
 class KronosExceptionMiddleware(object):
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        return self.get_response(request)
+
     def process_exception(self, request, e):
         frame = traceback.extract_tb(sys.exc_info()[-1], limit=-1)[0]
         if isinstance(e, ObjectNotFound):

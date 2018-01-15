@@ -102,7 +102,7 @@ PROJECT_APPS = [
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS
 
-MIDDLEWARE_CLASSES = [
+MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -115,7 +115,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 if DEBUG and DEBUG_TOOLBAR:
-    MIDDLEWARE_CLASSES.append('debug_toolbar.middleware.DebugToolbarMiddleware')
+    MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
 
 ROOT_URLCONF = 'kronos.urls'
 
