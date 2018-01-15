@@ -4,6 +4,7 @@ from .views import AuditStoreIdAuditDateView, AuditStoreIdCompleteView, AuditSto
 from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView
 from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView
+from .views import ConfigView
 
 urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', AttachmentIdCompleteView.as_view(), name='attachment_id_complete_view'),
@@ -35,4 +36,5 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', AuditCycleIdView.as_view(), name='audit_cycle_id_view'),
     url(r'audit_cycle$', AuditCycleView.as_view(), name='audit_cycle_view'),
+    url(r'config$', ConfigView.as_view(), name='config_view'),
 ], 'manager')

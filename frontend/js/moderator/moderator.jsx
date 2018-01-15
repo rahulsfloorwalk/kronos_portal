@@ -4,6 +4,8 @@ import $ from 'jquery';
 
 import { hashHistory } from 'react-router';
 
+import { fetchConfig } from "./service/config.js";
+
 import Routes from './components/Routes.jsx';
 
 const render = () => {
@@ -21,12 +23,14 @@ $(document).ajaxError(function(event, jqXHR, settings){
 	}
 });
 
-render();
 
-if(module.hot){
-	console.debug("Module is HOT HOT HOT!");
-	module.hot.dispose(function(){
-		render();
-	});
-	module.hot.accept();
-}
+fetchConfig().then((config) => {
+	render();
+	if(module.hot){
+		console.debug("Module is HOT HOT HOT!");
+		module.hot.dispose(function(){
+			render();
+		});
+		module.hot.accept();
+	}
+}).always(() => render());

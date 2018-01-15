@@ -4,7 +4,17 @@ import Header from './Header.jsx';
 import Footer from '../../components/Footer.jsx';
 import DevelopmentMarker from '../../components/DevelopmentMarker.jsx';
 
+import { fetchConfig } from "../service/config.js";
+
 export default React.createClass({
+	getInitialState: function(){
+		return {
+			config: {},
+		};
+	},
+	componentDidMount: function(){
+		fetchConfig().then((config) => this.setState({config}));
+	},
 	render: function(){
 		var contentStyle = {
 			'minHeight': "600px"
@@ -16,7 +26,7 @@ export default React.createClass({
 				<div className="container" style={contentStyle}>
 					{this.props.children}
 				</div>
-				<Footer/>
+				<Footer config={this.state.config}/>
 			</div>
 		);
 	},
