@@ -59,7 +59,7 @@ class AuditorIdMobileNumberView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request, user_id, format=None):
-        user = profile_info_service.set_mobile_number_for_auditor(user_id, request.data.get('mobile_number'))
+        user = profile_info_service.set_mobile_number_for_manager(user_id, request.data.get('mobile_number'))
         return Response(AuditorSerializer(user).data)
 
 class AuditorProfileInfoView(APIView):
@@ -69,7 +69,7 @@ class AuditorProfileInfoView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def get(self, request, auditor_id, format=None):
-        profile_info = profile_info_service.find_profile_info_by_user_id(request.user.id)
+        profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class AuditorBankInfoView(APIView):

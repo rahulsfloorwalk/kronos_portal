@@ -95,6 +95,16 @@ class BankInfoView(APIView):
         bank_info.save()
         return Response(BankInfoSerializer(bank_info).data)
 
+class MobileNumberView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    def post(self, request):
+        profile_info = profile_info_service.set_mobile_number_for_auditor(request.user.id, request.data.get('mobile_number'))
+        return Response(ProfileInfoSerializer(profile_info).data)
+
 class FacebookInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

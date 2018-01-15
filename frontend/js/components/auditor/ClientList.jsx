@@ -109,13 +109,23 @@ class ClientList extends Component{
 	}
 	render(){
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
-			return (
-				<div className="jumbotron text-center">
-					<h2>Please complete your personal information</h2>
-					<h3>Please <Link className="btn btn-success" to="details/profile/edit"> Click Here</Link> to begin by saving your details</h3>
-					<p>We're sorry, but we need to know more about you to assign audits to you.</p>
-				</div>
-			);
+			if( this.props.profileInfo.mobile_number){
+				return (
+					<div className="jumbotron text-center">
+						<h2>Please complete your personal information</h2>
+						<h3>Please <Link className="btn btn-success" to="details/profile/edit"> Click Here</Link> to begin by saving your details</h3>
+						<p>We're sorry, but we need to know more about you to assign audits to you.</p>
+					</div>
+				);
+			} else {
+				return (
+					<div className="jumbotron text-center">
+						<h2>Please update your Mobile Number</h2>
+						<h3>Please <Link className="btn btn-success" to="details/mobile_number/edit"> Click Here</Link> to update your mobile number.</h3>
+						<p>We're sorry, but we need to know how to contact your begore assigning audits to you.</p>
+					</div>
+				);
+			}
 		}
 		let auditCycles = [];
 		let auditCycleExtra = {};

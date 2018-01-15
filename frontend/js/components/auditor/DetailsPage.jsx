@@ -46,7 +46,11 @@ var DetailsPage = React.createClass({
 					<ProfileInfoPanel/>
 					<Panel title="Account Details" body={true}>
 						<p>Email: <b>{this.props.user.email}</b></p>
-						<p>Mobile Number: <b>{this.props.profileInfo.mobile_number}</b></p>
+						<p>Mobile Number: &nbsp;
+						{ this.props.profileInfo.mobile_number ?
+							<b>{this.props.profileInfo.mobile_number}</b>
+							: <Link to="/details/mobile_number/edit"><b className="text-danger">Please click here to update your Mobile Number.</b></Link> }
+						</p>
 						<p>Password: <a href="/auth/password_change">Click here</a> to change your password.</p>
 						<p>
 							{ this.state.preferences && this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>} Receive email from us about new opportunities

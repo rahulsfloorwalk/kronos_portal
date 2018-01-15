@@ -83,3 +83,22 @@ export function saveProfileInfo(profileInfo){
 		return req;
 	};
 };
+
+export function setMobileNumber(mobile_number){
+	return function(dispatch){
+
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "auditor/mobile_number",
+			data: JSON.stringify({mobile_number}),
+			contentType: "application/json"
+		});
+		req.then((profileInfo) => {
+			dispatch(profileInfoPostSuccess(profileInfo));
+		}, (error) => {
+			dispatch(profileInfoPostError(error.responseJSON));
+		});
+
+		return req;
+	};
+}

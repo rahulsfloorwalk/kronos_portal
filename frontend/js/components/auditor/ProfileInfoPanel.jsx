@@ -30,7 +30,7 @@ var ProfileInfoPanelBase = React.createClass({
 			dateOfBirth = date.format(momentDateFormat)
 		}
 		var auditorCity = this.props.profileInfo.city || {};
-		if( ! this.props.profileInfo.is_complete){
+		if( ! this.props.profileInfo.is_complete && this.props.profileInfo.mobile_number){
 			var completeWarning = (
 				<div className="panel-footer">
 					<p className="text-danger">Please complete your personal information.</p>

@@ -1,0 +1,66 @@
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+
+import { setMobileNumber } from "../../auditor/actions/profile_info.js";
+
+import { affectInputEventToComponent } from "../../react_utils.js";
+import FormInput from "../FormInput.jsx";
+import { Save } from "../Icons.jsx";
+import FormErrorList from "../FormErrorList.jsx";
+import Modal from "../Modal.jsx";
+
+
+class MobileNumberForm extends Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			mobile_number: "",
+			submitting: false,
+			errors: {},
+		};
+	}
+
+	setSubmitting = (submitting) => {
+		this.setState((prevState) => Object.assign({}, prevState, { submitting }));
+	};
+
+	inputChanged = (e) => {
+		affectInputEventToComponent(e, this);
+	};
+
+	onSubmit = (e) => {
+		e.preventDefault();
+		this.setSubmitting(true);
+		this.props.dispatch(setMobileNumber(this.state.mobile_number)).then(() => {
+			this.props.router.push("/details");
+		}, (err) => {
+			this.setState({
+				errors: err && err.responseJSON,
+			});
+		}).always(() => this.setSubmitting(false));
+	};
+
+	render(){
+		return (
+			<Modal modalTitle="Update Mobile Number" onClose={this.props.router.goBack}>
+				<form onSubmit={this.onSubmit}>
+					<p><big>You must have a registered mobile number in order to view available audits in your region</big></p>
+					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					<FormInput label="Mobile Number (10-digit)" placeholder="__________"
+						maxLength="10" type="text" required={true}
+						value={this.state.mobile_number} 
+						name="mobile_number" onChange={this.inputChanged} 
+						errors={this.state.errors.mobile_number}
+						disabled={this.state.submitting}/>
+					<div className="form-group">
+						<button className="btn btn-lg btn-primary" disabled={this.state.submitting}>
+							{ !this.state.submitting ? <span><Save/> Save</span> : "saving..."}
+						</button>
+					</div>
+				</form>
+			</Modal>
+		);
+	}
+}
+
+export default ReactRedux.connect()(MobileNumberForm);

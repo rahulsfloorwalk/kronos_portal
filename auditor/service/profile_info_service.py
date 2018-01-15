@@ -8,26 +8,36 @@ from ..models import ProfileInfo
 
 def find_profile_info_by_user_id(user_id):
     try:
-        profile_info = ProfileInfo.objects.get(user_id=user_id)
-        return profile_info
+        return ProfileInfo.objects.get(user_id=user_id)
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 
-def set_mobile_number_for_auditor(user_id, mobile_number):
+def set_mobile_number(profile_info, mobile_number):
+    """Performs basic validation and unique checks and sets the mobile_number if satisfied"""
     try:
         minLengthValidator(mobile_number)
         maxLengthValidator(mobile_number)
         numericValidator(mobile_number)
 
-        profile_info = find_profile_info_by_user_id(user_id)
         profile_info.mobile_number = mobile_number
         profile_info.save()
         return profile_info.user
     except ValidationError as e:
         raise AppLogicError("invalid mobile number") from e
     except IntegrityError as e:
-        raise AppLogicError("mobile number already exists in system") from e
+        raise AppLogicError("an account with this mobile number already exists") from e
 
+def set_mobile_number_for_manager(user_id, mobile_number):
+    profile_info = find_profile_info_by_user_id(user_id)
+    return set_mobile_number(profile_info, mobile_number)
+
+def set_mobile_number_for_auditor(user_id, mobile_number):
+    profile_info = find_profile_info_by_user_id(user_id)
+    if not profile_info.mobile_number:
+        user = set_mobile_number(profile_info, mobile_number)
+        return user.profileinfo
+    else:
+        return profile_info
 
 def count_profileinfo_in_city(city_id):
     return ProfileInfo.objects.filter(city_id=city_id, user__is_active=True).count()

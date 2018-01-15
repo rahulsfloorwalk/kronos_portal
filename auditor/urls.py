@@ -15,6 +15,7 @@ urlpatterns = ([
     url(r'dashboard/score$', views.ScoreView.as_view(), name="payment_view"),
 
     url(r'profile_info$', views.ProfileInfoView.as_view(), name="profile_info_view"),
+    url(r'mobile_number$', views.MobileNumberView.as_view(), name="mobile_number_view"),
     url(r'preferences$', views.PreferencesView.as_view(), name="preferences_view"),
     url(r'additional_info$', views.AdditionalInfoView.as_view(), name="additional_info_view"),
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
