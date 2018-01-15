@@ -74,6 +74,7 @@ class AuditApplicationList extends Component{
 					<td><User/>&nbsp;{auditorLink}</td>
 					<td><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></td>
 					<td><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</td>
+					<td>{app.avg_qa_rating}</td>
 					<td>
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
 						{statusLabel}

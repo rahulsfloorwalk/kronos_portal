@@ -2,7 +2,7 @@ from datetime import timedelta
 
 from django.db import connection
 from django.db.transaction import atomic
-from django.db.models import Count
+from django.db.models import Count, Avg
 from django.contrib.auth.models import Group
 
 from guardian.shortcuts import assign_perm, remove_perm
@@ -44,6 +44,12 @@ def find_audit_stores_for_auditor(profileinfo_id):
         ).order_by('-audit_date')
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def average_rating_for_auditor(user_id):
+    return AuditStore.objects.filter(
+        user_id=user_id,
+        status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+    ).aggregate(Avg('qa_rating'))["qa_rating__avg"]
 
 def find_by_audit(audit_id):
     return AuditStore.objects.filter(audit_id=audit_id).prefetch_related(

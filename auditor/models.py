@@ -265,6 +265,10 @@ class AuditApplication(Model):
         self.modified_at = timezone.now()
         return super(AuditApplication, self).save(*args, **kwargs)
 
+    def avg_qa_rating(self):
+        from audit_store.service import average_rating_for_auditor
+        return average_rating_for_auditor(self.profileinfo.user_id)
+
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)
 

@@ -212,6 +212,7 @@ class AuditApplicationSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'profileinfo',
+            'avg_qa_rating',
         )
         read_only_fields = fields
 
