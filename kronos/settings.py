@@ -15,6 +15,8 @@ import sys
 import logging
 from configparser import ConfigParser
 
+from setup import version
+
 _logger = logging.getLogger(__name__)
 
 properties = ConfigParser()
@@ -54,6 +56,8 @@ KRONOS_BASE_URL = "{}://{}".format(KRONOS_PROTOCOL, KRONOS_DOMAIN)
 RHEA_PROTOCOL = properties["RHEA"]["RHEA_PROTOCOL"]
 RHEA_DOMAIN = properties["RHEA"]["RHEA_DOMAIN"]
 RHEA_BASE_URL = "{}://{}".format(RHEA_PROTOCOL, RHEA_DOMAIN)
+
+PHOEBE_VERSION = version
 
 # only allow requests with Host: KRONOS_DOMAIN.split(':')[0]
 ALLOWED_HOSTS = ["localhost", KRONOS_DOMAIN.split(':')[0]]
@@ -112,6 +116,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'registration.DisableCSRF',
     'kronos.exceptions.KronosExceptionMiddleware',
+    'kronos.middlewares.PhoebeVersionHeaderMiddleware',
 ]
 
 if DEBUG and DEBUG_TOOLBAR:

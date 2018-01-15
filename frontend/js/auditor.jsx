@@ -27,6 +27,13 @@ $(document).ajaxError(function(event, jqXHR, settings){
 	}
 });
 
+// auto reload if client/server versions don't match
+$(document).ajaxComplete(function(event, jqXHR){
+	if(jqXHR.getResponseHeader("X-Phoebe-Version") !== PHOEBE_VERSION){
+		window.location.reload(true);
+	}
+});
+
 let render = store => {
 	ReactDOM.render(
 		<Provider store={store}>

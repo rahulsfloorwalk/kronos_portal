@@ -99,7 +99,10 @@ module.exports = {
 			{ from: path.resolve(__dirname, './bsvendor'), to: 'bsvendor/' },
 			{ from: path.resolve(__dirname, './img'), to: 'img/' },
 			{ from: path.resolve(__dirname, './heartbeat.html'), to: './' },
-		])
+		]),
+		new webpack.DefinePlugin({
+			PHOEBE_VERSION: JSON.stringify(require('./package.json').version),
+		}),
 	],
 	devServer: {
 		inline: true,
