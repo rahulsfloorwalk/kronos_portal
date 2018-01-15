@@ -14,6 +14,10 @@ if sys.argv[-1] == 'build_frontend':
 
     sys.exit()
 
+if sys.argv[-2] == 'bump':
+    call(["bumpversion", "--commit", "--tag", "--current-version", version, sys.argv[-1], "setup.py", "./frontend/package.json"])
+    sys.exit()
+
 if __name__ == "__main__":
     setup(
         name='kronos',
