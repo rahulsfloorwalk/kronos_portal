@@ -21,6 +21,7 @@ from .viewss import opportunity_email as opportunity_email_views
 from .viewss import social as social_views
 from .viewss import payment as payment_views
 from .viewss import application as application_views
+from .viewss import config as config_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -142,5 +143,6 @@ urlpatterns = ([
     url(r'email_log/view/(?P<email_log_id>[0-9]+)$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),
     url(r'email_log/(?P<to_email>[0-9a-zA-Z_@\.]+)$', email_log_views.EmailLogByEmail.as_view(), name='email_log_by_email'),
     url(r'twitter_feed/fetch', social_views.FetchTwitterFeedView.as_view(), name='fetch_twitter_feed_view'),
+    url(r'config', config_views.ConfigView.as_view(), name='config_view'),
 
 ], 'manager')

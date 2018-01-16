@@ -8,7 +8,17 @@ import Alert from 'react-s-alert';
 import 'react-s-alert/dist/s-alert-default.css';
 import 'react-s-alert/dist/s-alert-css-effects/slide.css';
 
+import { fetchConfig } from "../../manager/service/config.js";
+
 var App = React.createClass({
+	getInitialState: function(){
+		return {
+			config: {},
+		};
+	},
+	componentDidMount: function(){
+		fetchConfig().then((config) => this.setState({config}));
+	},
 	render: function(){
 		var contentStyle = {
 			'minHeight': "600px"
@@ -20,7 +30,7 @@ var App = React.createClass({
 				<div className="container" style={contentStyle}>
 					{this.props.children}
 				</div>
-				<Footer/>
+				<Footer config={this.state.config}/>
 				<Alert stack={{limit: 5}} effect="slide"/>
 			</div>
 		);

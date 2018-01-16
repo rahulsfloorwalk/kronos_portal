@@ -319,6 +319,7 @@ FRONTEND_CONFIG = {
         "TW_USERNAME": properties["FRONTEND"]["TW_USERNAME"],
         "SUPPORT_EMAIL": properties["FRONTEND"]["SUPPORT_EMAIL"],
         "SUPPORT_PHONE": properties["FRONTEND"]["SUPPORT_PHONE"],
+        "PHOEBE_VERSION": PHOEBE_VERSION,
     },
     "AUDITOR": {
         "TAWK_TO_SRC": TAWK_TO_SRC,
