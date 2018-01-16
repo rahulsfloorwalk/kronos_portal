@@ -1,3 +1,5 @@
+/* global PHOEBE_VERSION:false */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -17,6 +19,13 @@ $(document).ajaxError(function(event, jqXHR, settings){
 		forbiddenEncountered = true;
 		alert("It looks like your session has expired, please click 'OK' to login again.");
 		window.location.replace("/auth/login");
+	}
+});
+
+// auto reload if client/server versions don't match
+$(document).ajaxComplete(function(event, jqXHR){
+	if(jqXHR.getResponseHeader("X-Phoebe-Version") !== PHOEBE_VERSION){
+		window.location.reload(true);
 	}
 });
 
