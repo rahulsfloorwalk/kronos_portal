@@ -56,8 +56,8 @@ export default React.createClass({
 				<div className="row" key={as.id}>
 					<div className="col-md-12"><br/></div>
 					<div className="col-md-3">{as.audit.audit_cycle.name}</div>
-					<div className="col-md-1">{as.audit.store.city.name}</div>
-					<div className="col-md-6">
+					<div className="col-md-2">{as.audit.store.city.name}</div>
+					<div className="col-md-5">
 						{as.audit.store.name}<br/>
 						<small className="text-muted">{as.audit.store.address}</small>
 					</div>
@@ -91,8 +91,8 @@ export default React.createClass({
 						<div className="col-md-9">
 							<div className="row">
 								<div className="col-md-3"><h3>Audit Cycle</h3></div>
-								<div className="col-md-1"><h3>City</h3></div>
-								<div className="col-md-6"><h3>Store</h3></div>
+								<div className="col-md-2"><h3>City</h3></div>
+								<div className="col-md-5"><h3>Store</h3></div>
 								<div className="col-md-2"><h3>Audit Type</h3></div>
 							</div>
 						</div>
