@@ -12,6 +12,7 @@ import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, Chev
 import { findByAudit, waitListApplication } from '../../manager/service/application.js';
 
 import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
+import AuditStoreRating from '../AuditStoreRating.jsx';
 
 class AuditApplicationList extends Component{
 	constructor(props){
@@ -74,7 +75,7 @@ class AuditApplicationList extends Component{
 					<td><User/>&nbsp;{auditorLink}</td>
 					<td><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></td>
 					<td><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</td>
-					<td>{app.avg_qa_rating}</td>
+					<td>{app.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(app.avg_qa_rating)}/> : null}</td>
 					<td>
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
 						{statusLabel}
