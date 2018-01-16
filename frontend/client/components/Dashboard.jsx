@@ -51,13 +51,18 @@ export default React.createClass({
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.debug("Dashboard","componentWillReceiveProps", nextProps.params.auditType);
-		if( ! nextProps.params.auditType){
-			if( this.state.types.indexOf("WALKIN") > -1){
-				hashHistory.push("/dashboard/WALKIN");
-			} else {
-				hashHistory.push(`/dashboard/${this.state.types[0]}`);
+		fetchAuditTypes().then(types => {
+			this.setState({
+				types
+			});
+			if( ! nextProps.params.auditType){
+				if( this.state.types.indexOf("WALKIN") > -1){
+					hashHistory.push("/dashboard/WALKIN");
+				} else {
+					hashHistory.push(`/dashboard/${types[0]}`);
+				}
 			}
-		}
+		});
 	},
 	componentDidMount: function(){
 		//console.debug("Dashboard","componentDidMount", this.props.params.auditType);
