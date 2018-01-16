@@ -120,20 +120,26 @@ var AuditStoreList = React.createClass({
 	setLoading: function(loading){
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
 	},
-	componentDidMount: function(){
+	reloadReports: function(auditCycleId){
 		this.setLoading(true);
-		findAuditStoresByAuditCycle(this.props.params.auditCycleId).then(auditStores => {
+		findAuditStoresByAuditCycle(auditCycleId).then(auditStores => {
 			this.setState({auditStores});
 		}).always(()=>this.setLoading(false));
+	},
+	componentDidMount: function(){
+		this.reloadReports(this.props.params.auditCycleId);
 		if(this.props.auditCycle){
 			this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
 		}
 	},
-  componentWillReceiveProps: function(nextProps){
-    if(nextProps.auditCycle && ! this.props.auditCycle){
-	    this.props.dispatch(fetchClientUsers(nextProps.auditCycle.client.id));
-    }
-  },
+	componentWillReceiveProps: function(nextProps){
+		if(nextProps.auditCycle && ! this.props.auditCycle){
+			this.props.dispatch(fetchClientUsers(nextProps.auditCycle.client.id));
+		}
+		if(nextProps.params.auditCycleId !== this.props.params.auditCycleId || (nextProps.location.state && nextProps.location.state.reload)){
+			this.reloadReports(nextProps.params.auditCycleId);
+		}
+	},
 	clientUserChanged: function(e){
 		this.setState({
 			selectedClientUserId: e.target.value
@@ -170,6 +176,24 @@ var AuditStoreList = React.createClass({
 			}
 			audit.reports.push(this.state.auditStores[id]);
 		}
+		audits.forEach((audit) => audit.reports.sort((a,b) => {
+			if(moment(a.audit_date).isBefore(b.audit_date)){
+				return -1;
+			} else if(moment(a.audit_date).isAfter(b.audit_date)){
+				return 1;
+			} else {
+				return 0;
+			}
+		}));
+		audits.sort((a,b) => {
+			if(a.id < b.id){
+				return -1;
+			} else if(a.id > b.id){
+				return 1;
+			} else {
+				return 0;
+			}
+		});
     let rows = [];
     for( let i in audits){
 	    rows.push(

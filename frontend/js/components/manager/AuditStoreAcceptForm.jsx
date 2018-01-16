@@ -8,7 +8,7 @@ import Alert from 'react-s-alert';
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
-import { acceptAuditStore } from '../../manager/actions/audit_store.js';
+import { fetchAuditStore, acceptAuditStore } from '../../manager/actions/audit_store.js';
 
 import { getAuditType, getAuditStatus } from '../../utils.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
@@ -31,6 +31,7 @@ class AuditStoreAcceptForm extends Component{
 		};
 	}
 	componentDidMount(){
+		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
 		if(this.props.auditStore){
 			this.setState({
 				'payment_amount': this.props.auditStore.audit.earnings_per_audit + this.props.auditStore.audit.reimbursement,
@@ -51,7 +52,12 @@ class AuditStoreAcceptForm extends Component{
 		e.preventDefault();
 		let promise = this.props.dispatch(acceptAuditStore(this.props.params.auditStoreId, this.state.payment_amount));
 		promise.then(()=>{
-			hashHistory.goBack();
+			this.props.router.push({
+				pathname: `/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`,
+				state: {
+					reload: true,
+				},
+			});
 			Alert.success("REPORT ACCEPTED");
 		}, (err)=>{
 			this.setState({
