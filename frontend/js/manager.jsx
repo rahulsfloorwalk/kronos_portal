@@ -24,7 +24,7 @@ $(document).ajaxError(function(event, jqXHR, settings){
 
 // auto reload if client/server versions don't match
 $(document).ajaxComplete(function(event, jqXHR, settings){
-	if(settings.url.startsWith("/manager") && jqXHR.getResponseHeader("X-Phoebe-Version") !== PHOEBE_VERSION){
+	if(jqXHR.status === 200 && settings.url.startsWith("/manager") && jqXHR.getResponseHeader("X-Phoebe-Version") !== PHOEBE_VERSION){
 		window.location.reload(true);
 	}
 });

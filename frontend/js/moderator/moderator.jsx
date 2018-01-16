@@ -26,8 +26,8 @@ $(document).ajaxError(function(event, jqXHR, settings){
 });
 
 // auto reload if client/server versions don't match
-$(document).ajaxComplete(function(event, jqXHR){
-	if(jqXHR.getResponseHeader("X-Phoebe-Version") !== PHOEBE_VERSION){
+$(document).ajaxComplete(function(event, jqXHR, settings){
+	if(jqXHR.status === 200 && settings.url.startsWith("/moderator") && jqXHR.getResponseHeader("X-Phoebe-Version") !== PHOEBE_VERSION){
 		window.location.reload(true);
 	}
 });
