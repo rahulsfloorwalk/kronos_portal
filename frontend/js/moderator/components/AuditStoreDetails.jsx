@@ -82,10 +82,10 @@ export default React.createClass({
 		let auditDateElement = moment(this.state.auditStore.audit_date).format(momentDateFormat);
 
 		let failButton, completeButton, unSubmitButton, submitButton;
-		if (this.state.auditStore.status === 'ASSIGNED'){
+		if (this.state.auditStore.status === 'ACKNOWLEDGED'){
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
 		}
-		if(this.state.auditStore.status === 'ASSIGNED' || this.state.auditStore.status === 'SUBMITTED'){
+		if(this.state.auditStore.status === 'ASSIGNED' || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === 'SUBMITTED'){
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
 		}
 		if(this.state.auditStore.status === 'SUBMITTED'){
