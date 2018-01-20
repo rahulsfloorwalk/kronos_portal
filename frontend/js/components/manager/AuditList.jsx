@@ -126,8 +126,8 @@ var AuditRow = React.createClass({
 	    <small className="text-muted">{this.props.audit.store.address}</small>
 	</td>
         <td>{this.props.audit.store.city.name}</td>
-        <td className="text-right">{this.props.audit.earnings_per_audit}</td>
-        <td className="text-right">{this.props.audit.reimbursement ? this.props.audit.reimbursement : null}</td>
+	    { this.props.showAuditFees ? <td className="text-right">{this.props.audit.earnings_per_audit}</td> : null }
+	    { this.props.showReimbursement ? <td className="text-right">{this.props.audit.reimbursement ? this.props.audit.reimbursement : null}</td> : null }
         <td className="text-right">{this.props.audit.count}</td>
         <td className="text-right">{this.props.audit.application_count}</td>
         <td className="text-right">{validReportCount} ( {reportCount})</td>
@@ -264,17 +264,31 @@ var AuditList = React.createClass({
 		}
 	}, []).sort(this.cityComparator);
 
+	let showAuditFees = false, showReimbursement = false;
+
+	for(let id in this.props.audits){
+		if(this.props.audits[id].earnings_per_audit){
+			showAuditFees = true;
+		}
+		if(this.props.audits[id].reimbursement){
+			showReimbursement = true;
+		}
+	}
+
     let serial = 1;
     let rows = Object.values(this.props.audits)
 		  .sort((a,b) => this.cityComparator(a.store.city, b.store.city))
 		  .filter((a) => this.state.selectedCityId ? a.store.city.id === parseInt(this.state.selectedCityId) : true)
 		  .map( a => <AuditRow key={a.id}
+				showAuditFees={showAuditFees}
+				showReimbursement={showReimbursement}
 				  serial={serial++}
 				  auditCycleId={this.props.params.auditCycleId}
 				  audit={a}
 				  onDelete={this.onDelete}
 				  />
 		  );
+
     var addAuditLink = `/audit_cycle/${this.props.params.auditCycleId}/audit/add`;
     return(
       <div>
@@ -318,8 +332,8 @@ var AuditList = React.createClass({
 		    {cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
 	        </select>
 	      </th>
-              <th className="text-right">Fees (₹)</th>
-              <th className="text-right">Reimbursement upto (₹)</th>
+		{ showAuditFees ? <th className="text-right">Fees (₹)</th> : null }
+		{ showReimbursement ? <th className="text-right">Reimbursement (₹)</th> : null }
               <th className="text-right">Audit Count</th>
               <th className="text-right">Applications</th>
               <th className="text-right">Reports</th>
