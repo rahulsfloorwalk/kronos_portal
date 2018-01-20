@@ -481,6 +481,14 @@ class StatsView(APIView):
         auditor_history = auditor_dashboard_service.getAuditorStats(request.user.id)
         return Response(auditor_history)
 
+class ProfilePercentageView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        return Response(auditor_dashboard_service.get_profile_percentage(request.user.id))
+
 class ScoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

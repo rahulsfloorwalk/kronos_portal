@@ -45,27 +45,51 @@ class ProfileInfoTestCase(TestCase):
         p = self.create_complete_profile()
 
         self.assertTrue(p.is_complete())
+        self.assertEqual(p.completed_field_count(), p.field_count())
 
     def test_profile_is_not_complete_for_first_name(self):
         """checks if ProfileInfo is not complete for first_name"""
         p = self.create_complete_profile()
         p.first_name = ''
         self.assertFalse(p.is_complete())
+        self.assertEqual(p.completed_field_count(), p.field_count() - 1)
 
     def test_profile_is_not_complete_for_last_name(self):
         """checks if ProfileInfo is not complete for last_name"""
         p = self.create_complete_profile()
         p.last_name = ''
         self.assertFalse(p.is_complete())
+        self.assertEqual(p.completed_field_count(), p.field_count() - 1)
 
     def test_profile_is_not_complete_for_education(self):
         """checks if ProfileInfo is not complete for education"""
         p = self.create_complete_profile()
         p.education = ''
         self.assertFalse(p.is_complete())
+        self.assertEqual(p.completed_field_count(), p.field_count() - 1)
 
     def test_profile_is_not_complete_for_mobile_number(self):
         """checks if ProfileInfo is not complete for mobile_number"""
         p = self.create_complete_profile()
         p.mobile_number = ''
         self.assertFalse(p.is_complete())
+        self.assertEqual(p.completed_field_count(), p.field_count() - 1)
+
+    def test_profile_completed_field_count(self):
+        """checks ProfileInfo completed field count works as expected"""
+        p = self.create_complete_profile()
+        p.first_name = ''
+        self.assertEqual(p.completed_field_count(), p.field_count() - 1)
+        p.last_name = ''
+        self.assertEqual(p.completed_field_count(), p.field_count() - 2)
+        p.mobile_number = ''
+        self.assertEqual(p.completed_field_count(), p.field_count() - 3)
+        p.city = None
+        self.assertEqual(p.completed_field_count(), p.field_count() - 4)
+        p.date_of_birth = ''
+        self.assertEqual(p.completed_field_count(), p.field_count() - 5)
+        p.last_name = fake.last_name()
+        self.assertEqual(p.completed_field_count(), p.field_count() - 4)
+        p.first_name = fake.first_name()
+        self.assertEqual(p.completed_field_count(), p.field_count() - 3)
+

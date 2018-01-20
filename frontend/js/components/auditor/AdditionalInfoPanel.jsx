@@ -2,14 +2,23 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
-import { Pencil } from '../Icons.jsx';
+import { pointerStyle } from '../../styles.js';
+
+import { Check, Warning, Pencil, Cross } from '../Icons.jsx';
 
 import { getHairColor, getCameraResolution, getOccupation } from '../../utils.js'
 import { fetchAdditionalInfo } from '../../auditor/actions/additional_info.js'
-import { Check, Cross } from '../Icons.jsx';
 import LabelValue from '../LabelValue.jsx';
 
 var AdditionalInfoPanelBase = React.createClass({
+	getInitialState: function() {
+		return {
+			expanded: false,
+		};
+	},
+	toggleExpand: function(){
+		this.setState({expanded: !this.state.expanded});
+	},
 	componentDidMount: function() {
 		this.props.dispatch(fetchAdditionalInfo());
 	},
@@ -21,12 +30,16 @@ var AdditionalInfoPanelBase = React.createClass({
 		var laptop_owned = this.props.additionalInfo.laptop_owned ? <Check/> : <Cross/>;
 
 		var editButton = this.props.editButton ? <Link to="details/additional/edit" className="btn btn-default pull-right">EDIT</Link> : undefined;
+
+		let panelClass = this.props.additionalInfo.is_complete ? "panel-success-hoverable" : "panel-default";
+		let panelIcon = this.props.additionalInfo.is_complete ? <Check/> : <Warning/>;
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
+			<div className={"panel " + panelClass}>
+				<div className="panel-heading" style={pointerStyle} onClick={this.toggleExpand}>
 					<Link to="details/additional/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link>
-					<h4 className="">Additional Info</h4>
+					<h4>{panelIcon} Additional Info</h4>
 				</div>
+				{ this.state.expanded || !this.props.additionalInfo.is_complete ?
 				<table className="table table-striped">
 					<colgroup>
 						<col style={{width:"40%"}}/>
@@ -47,6 +60,7 @@ var AdditionalInfoPanelBase = React.createClass({
 					<tr><td className="text-right text-muted">MSPA Certification code:</td><th>{ this.props.additionalInfo.mspa_code }</th></tr>
 					</tbody>
 				</table>
+				: null }
 			</div>
 		);
 	},

@@ -9,7 +9,8 @@ import ProfileInfoPanel from './ProfileInfoPanel.jsx';
 import SocialInfoPanel from './SocialInfoPanel.jsx';
 import BankInfoPanel from './BankInfoPanel.jsx';
 import AdditionalInfoPanel from './AdditionalInfoPanel.jsx';
-import IdProofPanel from './IdProofPanel.jsx'
+import IdProofPanel from './IdProofPanel.jsx';
+import ProfilePercentage from "./ProfilePercentage.jsx";
 
 import Panel from '../Panel.jsx';
 import { Pencil, Cross, Check } from '../Icons.jsx';
@@ -41,9 +42,7 @@ var DetailsPage = React.createClass({
 		return (
 			<div>
 			<div className="row">
-				<div className="col-md-6">
-					<SocialInfoPanel/>
-					<ProfileInfoPanel/>
+				<div className="col-md-4">
 					<Panel title="Account Details" body={true}>
 						<p>Email: <b>{this.props.user.email}</b></p>
 						<p>Mobile Number: &nbsp;
@@ -59,9 +58,12 @@ var DetailsPage = React.createClass({
 						<p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p>
 					</Panel>
 				</div>
-				<div className="col-md-6">
-					<IdProofPanel/>
+				<div className="col-md-8">
+			{/*<ProfilePercentage/>*/}
+					<ProfileInfoPanel/>
 					<BankInfoPanel/>
+					<SocialInfoPanel/>
+					<IdProofPanel/>
 					<AdditionalInfoPanel/>
 				</div>
 				{this.props.children}

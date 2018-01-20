@@ -9,8 +9,33 @@ from manager.models import City
 from .validators import numericValidator, minLengthValidator
 from kronos.utils import validate_ifsc, validate_pan, get_bank_name_from_ifsc
 
+class CompletableMixin:
+    """
+    Provides three methods which operate on the `is_complete_attrs` class variable
+        - `is_complete`
+        - `completed_field_count`
+        - `field_count`
+    """
+    is_complete_attrs = []
 
-class ProfileInfo(Model):
+    def is_complete(self):
+        """returns `True` if number of completed fields matches specified field count"""
+        return self.field_count() is self.completed_field_count()
+
+    def completed_field_count(self):
+        """returns the count of fields in is_complete_attrs that are complete"""
+        count = 0
+        for attr in self.is_complete_attrs:
+            if getattr(self, attr) not in [None, ""]:
+                count += 1
+        return count
+
+    def field_count(self):
+        """returns the count of fields that need to be complete for the whole instance to be complete"""
+        return len(self.is_complete_attrs)
+
+
+class ProfileInfo(Model, CompletableMixin):
     MALE = 'M'
     FEMALE = 'F'
     GENDER = (
@@ -75,27 +100,25 @@ class ProfileInfo(Model):
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='profile_infos')
 
-    def is_complete(self):
-        complete = True
-        if self.first_name in [None, ""]: complete = False
-        if self.last_name in [None, ""]: complete = False
-        if self.gender in [None, ""]: complete = False
-        if self.marital_status in [None, ""]: complete = False
-        if self.education in [None, ""]: complete = False
-        # if self.household_income in [None, ""]: complete = False
-        if self.mobile_number in [None, ""]: complete = False
-        if self.date_of_birth is None: complete = False
-        if self.address in [None, ""]: complete = False
-        if self.pincode in [None, ""]: complete = False
-        if self.city in [None, ""]: complete = False
-
-        return complete
+    is_complete_attrs = [
+        "first_name",
+        "last_name",
+        "gender",
+        "marital_status",
+        "education",
+        # "household_income",
+        "mobile_number",
+        "date_of_birth",
+        "address",
+        "pincode",
+        "city",
+    ]
 
     def __str__(self):
         return "Profile: {} {}".format(self.first_name, self.last_name)
 
 
-class AdditionalInfo(Model):
+class AdditionalInfo(Model, CompletableMixin):
     AFRICAN_AMERICAN = 1
     ASIAN = 2
     CAUCASIAN = 3
@@ -191,20 +214,22 @@ class AdditionalInfo(Model):
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
-    def is_complete(self):
-        complete = True
-        if self.occupation in [None, ""]: complete = False
-        if self.distance in [None, ""]: complete = False
-        if self.industry in [None, ""]: complete = False
-        if self.company in [None, ""]: complete = False
-        if self.mobile_model in [None, ""]: complete = False
-        if self.camera_resoulution in [None, ""]: complete = False
-        if self.has_car and (self.car_model in [None, ""] or self.car_cost in [None, ""]): complete = False
-        if self.laptop_owned and self.laptop_model in [None, ""]: complete = False
-        return complete
+    is_complete_attrs = [
+        "occupation",
+        "distance",
+        "industry",
+        "company",
+        "mobile_model",
+        "camera_resoulution",
+        "has_car",
+        "laptop_owned",
+    ]
+
+    def __str__(self):
+        return "AdditionalInfo: " + " ".join(["{}" for _ in self.is_complete_attrs]).format(*[getattr(self, attr) for attr in self.is_complete_attrs])
 
 
-class BankInfo(Model):
+class BankInfo(Model, CompletableMixin):
     id = AutoField(db_column='id', primary_key=True)
     bank_name = CharField(db_column='bank_name', max_length=40, blank=True)
     bank_address = CharField(db_column='bank_address', max_length=300, blank=True)
@@ -215,14 +240,13 @@ class BankInfo(Model):
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
-    def is_complete(self):
-        complete = True
-        # if self.bank_name in [None, ""]: complete = False
-        if self.account_holder_name in [None, ""]: complete = False
-        if self.account_number in [None, ""]: complete = False
-        if self.ifsc_code in [None, ""]: complete = False
-        if self.pan_number in [None, ""]: complete = False
-        return complete
+    is_complete_attrs = [
+        # "bank_name",
+        "account_holder_name",
+        "account_number",
+        "ifsc_code",
+        "pan_number",
+    ]
 
     def is_valid(self):
         return bool(validate_pan(self.pan_number)) and bool(validate_ifsc(self.ifsc_code))

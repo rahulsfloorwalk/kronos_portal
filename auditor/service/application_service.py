@@ -48,7 +48,7 @@ def apply(audit_id, user_id, audit_date):
         raise AppLogicError("Please complete all required fields under PROFILE SECTION")
 
     if not bank_info.is_complete():
-        raise AppLogicError("Please complete all required fields under BANK DETAILS Section")
+        raise AppLogicError("Please complete all required fields under PAYMENT DETAILS Section")
 
     # if bank_info.is_complete() and not bank_info.is_valid():
         # raise AppLogicError("Please enter VALID INFORMATION under BANK DETAILS Section")

@@ -2,9 +2,11 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import { pointerStyle } from '../../styles.js';
+
 import { findAttachmentsByUser, uploadFileForUser, deleteAttachment } from '../../auditor/service/attachment.js';
 
-import { Paperclip, Cross, Record, Picture, Video, File } from '../Icons.jsx';
+import { Check, Warning, Paperclip, Cross, Record, Picture, Video, File } from '../Icons.jsx';
 import ProgressBar from '../ProgressBar.jsx';
 import Loading from '../Loading.jsx';
 import Jumbotron from '../Jumbotron.jsx';
@@ -45,8 +47,12 @@ var IdProofAttachmentUploadBox = React.createClass({
 			attachments: [],
 			inProgress: {},
 			progress: "",
+			expanded: false,
 			uploading: false
 		};
+	},
+	toggleExpand: function(){
+		this.setState({expanded: !this.state.expanded});
 	},
 	reloadState: function(){
 		findAttachmentsByUser().then((attachments) => {
@@ -137,6 +143,11 @@ var IdProofAttachmentUploadBox = React.createClass({
 			attachmentRows.push(<AttachmentItem attachment={a} deletable={deletable} onDelete={this.attachmentDeleteClicked} key={a.id}/>);
 		}
 
+		let panelClass = this.state.attachments.length > 0 ? "panel-success-hoverable" : "panel-default";
+		let panelIcon = this.state.attachments.length > 0 ? <Check/> : <Warning/>;
+
+		let toShow = this.state.expanded || this.state.attachments.length === 0;
+
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
@@ -172,21 +183,23 @@ var IdProofAttachmentUploadBox = React.createClass({
 		}
 
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
+			<div className={"panel " + panelClass}>
+				<div className="panel-heading" style={pointerStyle} onClick={this.toggleExpand}>
 					<input type="file" multiple
 						onChange={this.uploadFile}
 						disabled={this.state.uploading}
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
 						{uploadButton}
-					<h4 className="">
-						<Paperclip/> ID Proofs
+					<h4>
+						{panelIcon} ID Proofs
 					</h4>
 				</div>
+				{ toShow ?
 				<div className="list-group" style={{"height":"150px", "overflowY":"auto"}}>
 					{attachmentRows}
 				</div>
+				: null }
 			</div>
 		);
 	},

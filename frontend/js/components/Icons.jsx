@@ -48,7 +48,7 @@ export const Globe	= () => <span className="glyphicon glyphicon-globe"></span>;
 export const Bell	= () => <span className="glyphicon glyphicon-bell"></span>;
 export const Comment	= () => <span className="glyphicon glyphicon-comment"></span>;
 export const Retweet	= () => <span className="glyphicon glyphicon-retweet"></span>;
-export const Warning	= () => <span className="glyphicon glyphicon-warning"></span>;
+export const Warning	= () => <span className="glyphicon glyphicon-warning-sign"></span>;
 export const Leaf	= () => <span className="glyphicon glyphicon-leaf"></span>;
 export const Fire	= () => <span className="glyphicon glyphicon-fire"></span>;
 export const Tasks	= () => <span className="glyphicon glyphicon-tasks"></span>;

@@ -11,9 +11,10 @@ urlpatterns = ([
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
     url(r'id_proof/attachment$', views.UserIdProofAttachmentView.as_view(), name="id_proof_upload_view"),
 
-    url(r'dashboard/stats$', views.StatsView.as_view(), name="payment_view"),
-    url(r'dashboard/score$', views.ScoreView.as_view(), name="payment_view"),
+    url(r'dashboard/stats$', views.StatsView.as_view(), name="auditor_stats_view"),
+    url(r'dashboard/score$', views.ScoreView.as_view(), name="auditor_score_view"),
 
+    url(r'profile_completion_percentage$', views.ProfilePercentageView.as_view(), name="auditor_profile_percentage_view"),
     url(r'profile_info$', views.ProfileInfoView.as_view(), name="profile_info_view"),
     url(r'mobile_number$', views.MobileNumberView.as_view(), name="mobile_number_view"),
     url(r'preferences$', views.PreferencesView.as_view(), name="preferences_view"),

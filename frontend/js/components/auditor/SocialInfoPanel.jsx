@@ -3,11 +3,13 @@ import * as ReactRedux from 'react-redux';
 import FacebookLogin from 'react-facebook-login';
 import { Link } from 'react-router';
 
+import { pointerStyle } from '../../styles.js';
+
 import moment from 'moment';
 
 import { momentDateFormat, facebook_client_id, facebook_scope, facebook_fields }  from '../../../config.js';
 
-import { Pencil, Check } from '../Icons.jsx';
+import { Pencil, Check, Warning } from '../Icons.jsx';
 
 import { fetchFacebookInfo, saveFacebookInfo } from '../../auditor/actions/social_info.js';
 import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
@@ -20,7 +22,11 @@ var SocialInfoPanelBase = React.createClass({
 	getInitialState: function(){
 		return {
 			loading: false,
+			expanded: false,
 		};
+	},
+	toggleExpand: function(){
+		this.setState({expanded: !this.state.expanded});
 	},
 	setLoading: function(loading){
 		this.setState((prevState) => Object.assign({}, prevState, { loading }));
@@ -53,8 +59,17 @@ var SocialInfoPanelBase = React.createClass({
 		if(! this.props.socialInfo || this.state.loading || !this.state.FB_CLIENT_ID){
 			return <Loading/>;
 		}
+
+		let panelClass = this.props.socialInfo.id && this.props.socialInfo.is_verified ? "panel-success-hoverable" : "panel-default";
+		let panelIcon = this.props.socialInfo.id && this.props.socialInfo.is_verified ? <Check/> : <Warning/>;
+
 		return (
-			<div className="form-group">
+			<div className={"panel " + panelClass}>
+				<div className="panel-heading" style={pointerStyle} onClick={this.toggleExpand}>
+					<h4>{panelIcon} Social Connections</h4>
+				</div>
+				{ this.state.expanded || this.props.socialInfo.id === null || !this.props.socialInfo.is_verified ?
+				<div className="panel-body">
 				{ this.props.socialInfo.id === null || !this.props.socialInfo.is_verified ?
 					<div className="text-center">
 					<FacebookLogin
@@ -71,11 +86,11 @@ var SocialInfoPanelBase = React.createClass({
 					/>
 					<p><small className="text-muted">Connecting your Facebook account will improve chances of your application getting approved.</small></p>
 					</div>
-				: <div className="panel panel-default">
-					<div className="panel-body">
+				: 
 						<p><Check/> Your connected Facebook account is <b>{this.props.socialInfo.profile_data.name}</b></p>
-					</div>
-				</div> }
+				}
+				</div> 
+				: null }
 			</div>
 		);
 	},

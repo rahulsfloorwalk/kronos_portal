@@ -10,6 +10,22 @@ $label_warning_base: #F0AD4E;
 .label-warning2 { background-color: darken($label_warning_base, 20%); }
 
 
+$panel_success_base : #DFF0D8;
+$darken_percentage: 5%;
+.panel-success-hoverable { 
+	border-color: $panel_success_base;
+	.panel-heading{
+		background-color: $panel_success_base;
+	}
+
+	&:hover {
+		border-color: darken($panel_success_base, $darken_percentage);
+		.panel-heading{
+			background-color: darken($panel_success_base, $darken_percentage);
+		}
+	}
+}
+
 /* Print Fix Styles */
 @media print {
     .container {

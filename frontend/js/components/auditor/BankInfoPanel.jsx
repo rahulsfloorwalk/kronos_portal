@@ -1,23 +1,55 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { Link } from "react-router";
 
-import { Pencil } from '../Icons.jsx';
+import { pointerStyle } from "../../styles.js";
 
-import { fetchBankInfo } from '../../auditor/actions/bank_info.js'
-import LabelValue from '../LabelValue.jsx'
+import { Pencil, Check, Warning } from "../Icons.jsx";
 
-var BankInfoPanelBase = React.createClass({
-	componentDidMount: function() {
+import { fetchBankInfo } from "../../auditor/actions/bank_info.js";
+
+class BankInfoPanelBase extends React.Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		bankInfo: PropTypes.object.isRequired,
+	};
+
+	constructor(props) {
+		super(props);
+		this.state = {
+			hover: false,
+			expanded: false,
+		};
+	}
+
+	toggleExpand = () => {
+		this.setState({expanded: !this.state.expanded});
+	};
+
+	setHover = (hover) => this.setState(prevState => Object.assign({}, prevState, { hover }));
+
+	componentDidMount(){
 		this.props.dispatch(fetchBankInfo());
-	},
-	render: function(){
+	}
+
+	render(){
+		let panelClass = this.props.bankInfo.is_complete ? "panel-success-hoverable" : "panel-default";
+		let panelIcon = this.props.bankInfo.is_complete ? <Check/> : <Warning/>;
+
+		if(this.props.bankInfo.is_complete){
+			// is valid?
+			panelClass = this.props.bankInfo.is_valid ? panelClass : "panel-danger";
+			panelIcon = this.props.bankInfo.is_valid ? panelIcon : <Warning/>;
+		}
+
 		return (
-			<div className="panel panel-default">
-				<div className="panel-heading">
-					<Link to="details/bank/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link>
-					<h4 className="">Bank Info</h4>
+			<div className={"panel " + panelClass}>
+				<div className="panel-heading" onMouseEnter={() => this.setHover(true)} onMouseLeave={() => this.setHover(false)} style={pointerStyle} onClick={this.toggleExpand}>
+				{this.state.expanded || !this.props.bankInfo.is_complete || !this.props.bankInfo.is_valid ? <Link to="details/bank/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link> : null }
+					<h4>{panelIcon} Payment Details</h4>
 				</div>
+				{ this.state.expanded || !this.props.bankInfo.is_complete || !this.props.bankInfo.is_valid ?
 				<table className="table table-striped">
 					<colgroup>
 						<col style={{width:"40%"}}/>
@@ -36,16 +68,21 @@ var BankInfoPanelBase = React.createClass({
 					</tr>
 					</tbody>
 				</table>
-				{ !this.props.bankInfo.is_valid ?
+				: null }
+				{ this.props.bankInfo.is_complete && !this.props.bankInfo.is_valid ?
 					<div className="panel-footer">
 						<b className="">Payments will not be processed until valid bank details are provided.</b>
 					</div>
-					: null
+				: null }
+				{ this.props.bankInfo.is_complete ? null :
+				<div className="panel-footer">
+					<p className="text-danger"><b>Please complete your bank information.</b></p>
+				</div>
 				}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {
@@ -54,4 +91,4 @@ var mapStoreToProps = function(store){
 };
 
 export { BankInfoPanelBase };
-export default ReactRedux.connect(mapStoreToProps)(BankInfoPanelBase);
+export default connect(mapStoreToProps)(BankInfoPanelBase);
