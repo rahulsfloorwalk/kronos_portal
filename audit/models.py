@@ -1,5 +1,5 @@
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField
-from django.db.models import PROTECT
+from django.db.models import PROTECT, F, Sum
 from auditor.models import AuditApplication
 
 import audit_store
@@ -67,6 +67,12 @@ class AuditCycle(Model):
 
     def audit_count(self):
         return sum(a.count for a in self.audits.all())
+        # check if prefetched cache exists,
+        if hasattr(self, '_prefetched_objects_cache') and 'audits' in self._prefetched_objects_cache:
+            # run the summing code in python because we have already prefetched questions
+            return sum(a.count for a in self.audits.all())
+        else:
+            return self.audits.aggregate(audit_count=Sum(F('count')))["audit_count"]
 
     def completed_audit_count(self):
         return audit_store.models.AuditStore.objects.filter(

@@ -62,26 +62,30 @@ var AuditCycleDetails = React.createClass({
 					</p>
 					</div>
 
-					<div className="col-xs-6 col-md-2">
+					<div className="col-xs-6 col-md-1">
 					<p>
 						<span className="text-muted">Status</span><br/>
 						<b>{ getAuditStatus(this.props.auditCycle.status) }</b>
 					</p>
 					</div>
 
-					<div className="col-xs-6 col-md-1">
-					<p>
-						<span cl table-borderedassName="text-muted">Fees</span><br/>
-						<b>₹ { this.props.auditCycle.earnings_per_audit }</b>
-					</p>
-					</div>
+					{ this.props.auditCycle.earnings_per_audit ?
+						<div className="col-xs-6 col-md-1">
+						<p>
+							<span cl table-borderedassName="text-muted">Fees</span><br/>
+							<b>₹ { this.props.auditCycle.earnings_per_audit }</b>
+						</p>
+						</div>
+					: null }
 
-					<div className="col-xs-6 col-md-2">
-					<p>
-						<span className="text-muted">Reimbursement</span><br/>
-						<b>₹ { this.props.auditCycle.reimbursement }</b>
-					</p>
-					</div>
+					{ this.props.auditCycle.reimbursement ?
+						<div className="col-xs-6 col-md-2">
+						<p>
+							<span className="text-muted">Reimbursement</span><br/>
+							<b>₹ { this.props.auditCycle.reimbursement }</b>
+						</p>
+						</div>
+					: null }
 
 					<div className="col-xs-6 col-md-2">
 					<p>
@@ -94,6 +98,12 @@ var AuditCycleDetails = React.createClass({
 					<p>
 						<span className="text-muted">End Date</span><br/>
 						<b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b>
+					</p>
+					</div>
+					<div className="col-xs-6 col-md-2">
+					<p>
+						<span className="text-muted">Planned Audits</span><br/>
+						<b>{ this.props.auditCycle.audit_count }</b>
 					</p>
 					</div>
 				</div>

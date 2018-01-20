@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { hashHistory, Link } from 'react-router';
 
+import { truncateStyle } from "../../styles.js";
+
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
 
@@ -41,10 +43,12 @@ var AuditCycleDashBoard = React.createClass({
     let audit_cycle_blocks = this.state.active_cycles.map((value) => {
       let linkTo = `/audit_cycle/${value.id}/questionnaire`
       return (
-          <tr key={value.id} onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}}>
-	      <td className="">{value.client}</td>
-	      <td className="">{value.name}</td>
-	      <td className="">{getAuditStatus(value.status)}</td>
+          <tr key={value.id} onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}} title="Click to open Audit Cycle">
+	      <td className="">
+	      <small>
+	      <b>{value.name}</b><br/>
+	      <b>{value.client}</b> - {getAuditStatus(value.status)}</small>
+	      </td>
 	      <td className="text-right"><b>{value.stats.application.APPLIED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.application.WAITLISTED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.application.APPROVED || ""}</b></td>
@@ -53,19 +57,19 @@ var AuditCycleDashBoard = React.createClass({
 	      <td className="text-right"><b>{value.stats.audit_store.SUBMITTED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.audit_store.COMPLETED || ""}</b></td>
 	      <td className="text-right"><b>{value.stats.audit_store.ACCEPTED || ""}</b></td>
+	      <td className="text-right"><b>{value.audit_count}</b></td>
           </tr>
       );
     });
 		return (
 			<div className="table-responsive">
-			<table className="table table-hover table-striped table-bordered">
+			<table className="table table-hover table-striped table-bordered table-condensed">
 				<thead>
 					<tr>
 					      <th rowSpan="2">Client</th>
-					      <th rowSpan="2">Cycle</th>
-					      <th rowSpan="2">Status</th>
 					      <th colSpan="3" className="text-center">Application Status</th>
 					      <th colSpan="5" className="text-center">Report Status</th>
+					      <th rowSpan="2" className="text-right">Planned Audits</th>
 					</tr>
 					<tr>
 					      <th className="text-right"><ApplicationStatusLabel status={"APPLIED"}/></th>

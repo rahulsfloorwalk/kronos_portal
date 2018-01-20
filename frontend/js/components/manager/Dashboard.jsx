@@ -10,7 +10,6 @@ var Dashboard = React.createClass({
 	render: function(){
 		return (
 			<div>
-				<h1 className="page-header">Dashboard</h1>
 				<div className="row">
 					<div className="col-md-12">
 						<AuditCycleDashboard />

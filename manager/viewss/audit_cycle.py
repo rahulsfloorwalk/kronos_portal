@@ -114,19 +114,7 @@ class AuditCycleDashboard(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        audit_cycles = audit_cycle_service.get_audit_cycle_dashboard()
-        response = []
-        for audit_cycle in audit_cycles:
-            obj = {}
-            obj['id'] = audit_cycle.id
-            obj['name'] = audit_cycle.name
-            obj['status'] = audit_cycle.status
-            obj['client'] = audit_cycle.client.name
-            obj['start_date'] = audit_cycle.start_date
-            obj['end_date'] = audit_cycle.end_date
-            obj['stats'] = audit_cycle_service.get_audit_cycle_stats(audit_cycle.id)
-            response.append(obj)
-        return Response(response)
+        return Response(audit_cycle_service.get_audit_cycle_dashboard())
 
 
 class AuditCycleRejectAllApplicationsView(APIView):

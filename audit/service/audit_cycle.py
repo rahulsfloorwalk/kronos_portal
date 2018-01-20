@@ -5,8 +5,6 @@ from guardian.shortcuts import get_objects_for_user
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
-from registration.models import GROUP_NAME_CLIENT, GROUP_NAME_MODERATOR
-
 from registration.service.moderator import find_moderator_by_user_id
 from client.service.client_user import find_clientuser_by_user_id
 
@@ -85,10 +83,24 @@ def get_audit_cycle_stats(audit_cycle_id):
     return result
 
 def get_audit_cycle_dashboard():
-    auditCycles = AuditCycle.objects.filter(
-            Q(status = AuditCycle.UPCOMING) | Q(status = AuditCycle.ACTIVE) | Q(status = AuditCycle.REPORT)
-        ).all().order_by('end_date')
-    return auditCycles
+    audit_cycles = AuditCycle.objects.filter(
+        Q(status = AuditCycle.UPCOMING) | Q(status = AuditCycle.ACTIVE) | Q(status = AuditCycle.REPORT)
+    ).all().order_by('end_date')
+
+    response = []
+    for audit_cycle in audit_cycles:
+        obj = {}
+        obj['id'] = audit_cycle.id
+        obj['name'] = audit_cycle.name
+        obj['status'] = audit_cycle.status
+        obj['client'] = audit_cycle.client.name
+        obj['start_date'] = audit_cycle.start_date
+        obj['end_date'] = audit_cycle.end_date
+        obj['audit_count'] = audit_cycle.audit_count()
+        obj['stats'] = get_audit_cycle_stats(audit_cycle.id)
+        response.append(obj)
+
+    return response
 
 def find_for_moderator(user_id):
     try:
