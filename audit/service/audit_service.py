@@ -56,6 +56,7 @@ def find_audits_around_city(city_id:int, kms:int=None):
         raise ObjectNotFound from e
 
     active_audits = Audit.objects.filter(
+        count__gt = 0,
         audit_cycle__status__in=[
             AuditCycle.UPCOMING,
             AuditCycle.ACTIVE
