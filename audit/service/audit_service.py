@@ -37,6 +37,21 @@ def save(audit):
     except IntegrityError as e:
         raise AppLogicError("store is already added to this audit cycle") from e
 
+
+def hide_audit(audit_id):
+    audit = find_audit_by_id(audit_id)
+    audit.hidden = True
+    audit.save()
+    return audit
+
+
+def unhide_audit(audit_id):
+    audit = find_audit_by_id(audit_id)
+    audit.hidden = False
+    audit.save()
+    return audit
+
+
 def delete(audit_id):
     try:
         audit = find_audit_by_id(audit_id)
@@ -57,6 +72,7 @@ def find_audits_around_city(city_id:int, kms:int=None):
 
     active_audits = Audit.objects.filter(
         count__gt = 0,
+        hidden = False,
         audit_cycle__status__in=[
             AuditCycle.UPCOMING,
             AuditCycle.ACTIVE

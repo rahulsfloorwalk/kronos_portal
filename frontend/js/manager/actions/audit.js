@@ -176,6 +176,40 @@ export function setPostApprovalDescription(auditCycleId, postApprovalDescription
 
 //code for audits here
 
+export function hideAudit(audit_id){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit/${audit_id}/hidden`,
+		});
+		req.done(function(savedAudit){
+			dispatch({
+				type: types.AUDIT_ID_POST,
+				status: "success",
+				audit: savedAudit
+			});
+		});
+		return req;
+	};
+}
+
+export function unhideAudit(audit_id){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "DELETE",
+			url: url.api_base_path + `manager/audit/${audit_id}/hidden`,
+		});
+		req.done(function(savedAudit){
+			dispatch({
+				type: types.AUDIT_ID_POST,
+				status: "success",
+				audit: savedAudit
+			});
+		});
+		return req;
+	};
+}
+
 export function fetchAudits(auditCycleId){
 	return function(dispatch){
 		dispatch({

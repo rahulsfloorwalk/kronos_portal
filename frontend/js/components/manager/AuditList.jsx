@@ -11,7 +11,7 @@ import { momentDateFormat }  from '../../../config.js';
 
 import { pointerStyle }  from '../../styles.js';
 
-import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight, File } from '../Icons.jsx';
+import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight, File, EyeClose, EyeOpen, OptionVertical } from '../Icons.jsx';
 import Badge from '../Badge.jsx';
 import Panel from '../Panel.jsx';
 import Loading from '../Loading.jsx';
@@ -23,7 +23,7 @@ import ApplicationStatusSummary from './ApplicationStatusSummary.jsx';
 
 import { AuditStoreTable } from './AuditStoreList.jsx';
 
-import {fetchAudits, deleteAudit} from '../../manager/actions/audit.js';
+import {fetchAudits, deleteAudit, hideAudit, unhideAudit} from '../../manager/actions/audit.js';
 
 import { rejectAllForAudit, rejectAllForAuditCycle } from '../../manager/service/application.js';
 import { findAuditStoresByAudit } from '../../manager/service/audit_store.js';
@@ -58,7 +58,7 @@ class AuditStoreTableForAudit extends Component{
 	}
 }
 
-var AuditRow = React.createClass({
+let __AuditRow = React.createClass({
   getInitialState: function(){
 	  return {
 		  expanded: false,
@@ -73,6 +73,7 @@ var AuditRow = React.createClass({
 		});
 	},
   rejectAllForAuditClicked: function(e){
+	e.stopPropagation();
 	  if(confirm("Are you sure you want to deny all applications for this audit?")){
 		  rejectAllForAudit(this.props.audit.id).done((count)=>{
 			  Alert.success(`${count} APPLICATIONS DENIED`);
@@ -80,6 +81,14 @@ var AuditRow = React.createClass({
 		  });
 	  }
   },
+	hideAuditClicked: function(e){
+		e.stopPropagation();
+		this.props.dispatch(hideAudit(this.props.audit.id)).then(() => Alert.success("AUDIT HIDDEN"));
+	},
+	unhideAuditClicked: function(e){
+		e.stopPropagation();
+		this.props.dispatch(unhideAudit(this.props.audit.id)).then(() => Alert.success("AUDIT VISIBLE"));
+	},
   render: function(){
 	  let reportCount = this.props.audit.report_count;
 	  let validReportCount = this.props.audit.valid_report_count;
@@ -122,7 +131,8 @@ var AuditRow = React.createClass({
       <tr style={trStyle} onClick={this.viewButtonClicked} title={this.state.expanded ? "Click to Collapse" : "Click to Expand"} className={this.state.expanded ? "active" : ""}>
         <td className="text-right">{this.props.serial}</td>
         <td>
-	    {this.props.audit.store.name} {this.props.audit.store.code && " - "+this.props.audit.store.code}<br/>
+	    {this.props.audit.store.name} {this.props.audit.store.code && " - "+this.props.audit.store.code}
+	    <br/>
 	    <small className="text-muted">{this.props.audit.store.address}</small>
 	</td>
         <td>{this.props.audit.store.city.name}</td>
@@ -131,10 +141,11 @@ var AuditRow = React.createClass({
         <td className="text-right">{this.props.audit.count}</td>
         <td className="text-right">{this.props.audit.application_count}</td>
         <td className="text-right">{validReportCount} ( {reportCount})</td>
+        <td className="text-right"><big>{ this.props.audit.hidden ? <EyeClose/> : <EyeOpen/>}</big></td>
         <td className="text-right">
 	    <div className="btn-group">
 		    <button type="button" className="btn btn-default" onClick={(e)=>{e.stopPropagation();this.setState({dropdown:!this.state.dropdown});}}>
-			    Options <span className="caret"></span>
+			    <OptionVertical/>
 		    </button>
 		    { this.state.dropdown ?
 			    <ul className="dropdown-menu" style={{display:"block"}}
@@ -145,6 +156,19 @@ var AuditRow = React.createClass({
 					    <HandRight/> Fiat Assign
 					    </Link>
 				    </li>
+				{ this.props.audit.hidden ?
+				    <li>
+					    <a style={pointerStyle} onClick={this.unhideAuditClicked}>
+					    <EyeOpen/> Unhide
+					    </a>
+				    </li>
+				:
+				    <li>
+					    <a style={pointerStyle} onClick={this.hideAuditClicked}>
+					    <EyeClose/> Hide
+					    </a>
+				    </li>
+				}
 				    <li>
 					    <a style={pointerStyle} onClick={this.rejectAllForAuditClicked}>
 						    <ThumbsDown/> Deny All Applications
@@ -214,11 +238,14 @@ var AuditRow = React.createClass({
   },
 });
 
+let AuditRow = ReactRedux.connect()(__AuditRow);
+
 var AuditList = React.createClass({
 	getInitialState: function(){
 		return {
 			loading: false,
 			selectedCityId: null,
+			selectedHiddenState: "",
 		};
 	},
 	setLoading: function(loading){
@@ -237,6 +264,9 @@ var AuditList = React.createClass({
   },
   onCityChanged: function(e){
 	  this.setState({selectedCityId: e.target.value});
+  },
+  onHiddenFilterChanged: function(e){
+	  this.setState({selectedHiddenState: e.target.value});
   },
   cityComparator: function(a,b){
 	if(a.name < b.name) return -1;
@@ -279,6 +309,7 @@ var AuditList = React.createClass({
     let rows = Object.values(this.props.audits)
 		  .sort((a,b) => this.cityComparator(a.store.city, b.store.city))
 		  .filter((a) => this.state.selectedCityId ? a.store.city.id === parseInt(this.state.selectedCityId) : true)
+		  .filter((a) => this.state.selectedHiddenState !== "" ? "true" === this.state.selectedHiddenState === a.hidden : true)
 		  .map( a => <AuditRow key={a.id}
 				showAuditFees={showAuditFees}
 				showReimbursement={showReimbursement}
@@ -337,6 +368,13 @@ var AuditList = React.createClass({
               <th className="text-right">Audit Count</th>
               <th className="text-right">Applications</th>
               <th className="text-right">Reports</th>
+		<th className="text-right">
+			<select onChange={this.onHiddenFilterChanged} className="form-control">
+				<option value="">All</option>
+				<option value="true">Hidden</option>
+				<option value="false">Visible</option>
+			</select>
+		</th>
               <th>&nbsp;</th>
             </tr>
           </thead>

@@ -17,8 +17,10 @@ export const Duplicate	= () => <span className="glyphicon glyphicon-duplicate"><
 export const Lock	= () => <span className="glyphicon glyphicon-lock"></span>;
 export const Road	= () => <span className="glyphicon glyphicon-road"></span>;
 export const EyeOpen	= () => <span className="glyphicon glyphicon-eye-open"></span>;
+export const EyeClose	= () => <span className="glyphicon glyphicon-eye-close"></span>;
 export const PhoneAlt	= () => <span className="glyphicon glyphicon-phone-alt"></span>;
 export const OptionHorizontal	= () => <span className="glyphicon glyphicon-option-horizontal"></span>;
+export const OptionVertical	= () => <span className="glyphicon glyphicon-option-vertical"></span>;
 export const Briefcase	= () => <span className="glyphicon glyphicon-briefcase"></span>;
 export const Refresh	= () => <span className="glyphicon glyphicon-refresh"></span>;
 export const Repeat	= () => <span className="glyphicon glyphicon-repeat"></span>;

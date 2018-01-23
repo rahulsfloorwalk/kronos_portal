@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField
 from django.db.models import PROTECT, F, Sum
 from auditor.models import AuditApplication
 
@@ -100,6 +100,7 @@ class Audit(Model):
     store = ForeignKey('client.Store', related_name='audits', db_column='store_id', on_delete=PROTECT)
     audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
+    hidden = BooleanField(db_column='hidden', default=False)
 
     def application_count(self):
         # check if prefetched cache exists,

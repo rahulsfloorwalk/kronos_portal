@@ -93,6 +93,7 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)/application/deny_all$', audit_views.AuditRejectAllApplicationsView.as_view(), name='audit_id_reject_all_applications_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAudit.as_view(), name='audit_store_by_audit_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/application$', application_views.AuditApplicationsByAuditView.as_view(), name='applications_by_audit_id_view'),
+    url(r'audit/(?P<audit_id>[0-9]+)/hidden$', audit_views.AuditHiddenView.as_view(), name='audit_hidden_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),

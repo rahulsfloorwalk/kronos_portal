@@ -74,6 +74,20 @@ class AuditFiatAssignView(APIView):
         return Response(AuditStoreSerializer(audit_store).data)
 
 
+class AuditHiddenView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_id):
+        audit = audit_service.hide_audit(audit_id)
+        return Response(AuditSerializer(audit).data)
+    def delete(self, request, audit_id):
+        audit = audit_service.unhide_audit(audit_id)
+        return Response(AuditSerializer(audit).data)
+
+
 class AuditCopyByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

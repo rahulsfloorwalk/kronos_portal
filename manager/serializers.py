@@ -249,6 +249,7 @@ class AuditSerializer(ModelSerializer):
         fields = (
             'id',
             'count',
+            'hidden',
             'earnings_per_audit',
             'reimbursement',
             'store',
@@ -268,6 +269,7 @@ class AuditSerializerWithoutApplications(ModelSerializer):
         fields = (
             'id',
             'count',
+            'hidden',
             'earnings_per_audit',
             'reimbursement',
             'store',
