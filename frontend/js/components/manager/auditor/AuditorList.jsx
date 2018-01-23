@@ -8,7 +8,7 @@ import { getGender } from '../../../utils.js';
 import { setAuditorSearch } from '../../../manager/actions/auditor.js';
 import { searchAuditors } from '../../../manager/service/auditor.js';
 
-import { User, Search, Check, Cross } from '../../Icons.jsx';
+import { User, Search, Check, Cross, Pawn } from '../../Icons.jsx';
 import InputGroup from '../../InputGroup.jsx';
 import { InputGroupBtn } from '../../InputGroup.jsx';
 import FormInput from '../../FormInput.jsx';
@@ -115,7 +115,7 @@ var AuditorList = React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					<User/> Auditors
+					<Pawn/> Auditors
 				</h2>
 				<form className="form-group" onSubmit={this.onSubmit}>
 					<InputGroup>

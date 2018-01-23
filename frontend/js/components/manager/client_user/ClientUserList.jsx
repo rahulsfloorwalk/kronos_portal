@@ -3,7 +3,7 @@ import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
 import Loading from '../../Loading.jsx'
-import { Check, Cross, Pencil, Plus, User } from '../../Icons.jsx'
+import { Check, Cross, Pencil, Plus, Bishop } from '../../Icons.jsx'
 
 import { fetchClientUsers } from '../../../manager/service/client_user.js'
 
@@ -49,7 +49,7 @@ export default React.createClass({
 			<div>
 				<h3 className="page-header">
 					<Link to={addClientUserLink} className="btn btn-default pull-right"><Plus/> Add User</Link>
-					<User/> Client Users
+					<Bishop/> Client Users
 				</h3>
 				<table className="table table-striped">
 					<thead>

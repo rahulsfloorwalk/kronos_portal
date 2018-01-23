@@ -5,7 +5,7 @@ import { pointerStyle } from '../../styles.js';
 
 import Heartbeat from '../Heartbeat.jsx';
 import NavLink from '../NavLink.jsx';
-import { NewWindow, User, MapMarker, King, LogOut, Knight, Queen } from '../Icons.jsx';
+import { NewWindow, User, MapMarker, King, LogOut, Knight, Queen, Pawn } from '../Icons.jsx';
 
 var Header = React.createClass({
 	render: function(){
@@ -22,7 +22,7 @@ var Header = React.createClass({
 					</div>
 					<ul className="nav navbar-nav">
 						<NavLink to="/client"><King/> <span className="hidden-xs">Clients</span></NavLink>
-						<NavLink to="/auditor"><User/> <span className="hidden-xs">Auditors</span></NavLink>
+						<NavLink to="/auditor"><Pawn/> <span className="hidden-xs">Auditors</span></NavLink>
 						<NavLink to="/moderator"><Knight/> <span className="hidden-xs">Moderators</span></NavLink>
 						<NavLink to="/manager"><Queen/> <span className="hidden-xs">Managers</span></NavLink>
 					</ul>

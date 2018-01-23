@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import { fetchClient } from '../../../manager/service/client.js';
 
-import { King, Plus, Pencil, Retweet, User, Home } from '../../Icons.jsx';
+import { King, Plus, Pencil, Retweet, User, Home, Bishop } from '../../Icons.jsx';
 import Panel from '../../Panel.jsx';
 import Loading from '../../Loading.jsx';
 import NavLink from '../../NavLink.jsx';
@@ -60,7 +60,7 @@ export default React.createClass({
 				<ul className="nav nav-tabs">
 					<NavLink to={`/client/${this.props.params.clientId}/audit_cycle`}><Retweet/> Audit Cycles</NavLink>
 					<NavLink to={`/client/${this.props.params.clientId}/store`}><Home/> Stores</NavLink>
-					<NavLink to={`/client/${this.props.params.clientId}/client_user`}><User/> Users</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/client_user`}><Bishop/> Client Users</NavLink>
 				</ul>
 				{this.props.children}
 				</div>
