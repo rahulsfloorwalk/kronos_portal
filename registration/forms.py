@@ -108,6 +108,7 @@ class SignUpForm(UserCreationForm):
 
         if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
             msg.send()
+            _logger.info("verification email sent to user : %s", user.email)
         else:
             _logger.info("verification email disabled. skipping email for user : %s", user.email)
             _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
