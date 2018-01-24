@@ -8,7 +8,7 @@ from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 from audit.service import audit_service
 from audit_store import service as audit_store_service
-from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
+from auditor.models import ProfileInfo, Preferences
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
 from auditor.serializers import AttachmentSerializer
@@ -35,6 +35,8 @@ from registration.models import GROUP_NAME_AUDITOR
 from social.service import social_auditor as social_service
 from .serializers import CitySerializer
 from auditor.service import profile_info_service
+from auditor.service import additional_info_service
+from auditor.service import bank_info_service
 
 
 class ProfileInfoView(APIView):
@@ -61,11 +63,8 @@ class AdditionalInfoView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        try:
-            additional_info = AdditionalInfo.objects.get(user_id=request.user.id)
-            return Response(AdditionalInfoSerializer(additional_info).data)
-        except AdditionalInfo.DoesNotExist:
-            return Response(AdditionalInfoSerializer(AdditionalInfo()).data)
+        additional_info = additional_info_service.find_additional_info_by_user_id(request.user.id)
+        return Response(AdditionalInfoSerializer(additional_info).data)
 
     def post(self, request):
         additional_info_ds= AdditionalInfoDeSerializer(data=request.data, context={'current_user': request.user})
@@ -82,11 +81,8 @@ class BankInfoView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        try:
-            bank_info = BankInfo.objects.get(user_id=request.user.id)
-            return Response(BankInfoSerializer(bank_info).data)
-        except BankInfo.DoesNotExist:
-            return Response(BankInfoSerializer(BankInfo()).data)
+        bank_info = bank_info_service.find_bank_info_by_user_id(request.user.id)
+        return Response(BankInfoSerializer(bank_info).data)
 
     def post(self, request):
         bank_info_s = BankInfoSerializer(data=request.data, context={'current_user': request.user})
@@ -601,12 +597,12 @@ class PreferencesView(APIView):
         try:
             preferences = preferences_service.find_preferences_by_user_id(request.user.id)
             return Response(PreferencesSerializer(preferences).data)
-        except BankInfo.DoesNotExist:
-            return Response(BankInfoSerializer(BankInfo()).data)
+        except Preferences.DoesNotExist:
+            return Response(PreferencesSerializer(Preferences()).data)
 
     def post(self, request):
         preferences_s = PreferencesSerializer(data=request.data, context={'current_user': request.user})
         preferences_s.is_valid(raise_exception=True)
         preferences = preferences_s.deserialize()
-        preferences.save()
+        preferences = preferences_service.save(preferences)
         return Response(PreferencesSerializer(preferences).data)

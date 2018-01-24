@@ -29,6 +29,10 @@ class SignupAPITestCase(TestCase):
 
     @override_settings(EMAIL_SWITCH = test_email_switches)
     def test_normal_signup_flow(self):
+        # check if the form loads correctly
+        response = self.client.get(reverse('registration:signup'))
+        self.assertEqual(response.status_code, 200)
+
         # post to registration endpoint with correct data
         email = fake.email()
         pwd = fake.password()
