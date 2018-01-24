@@ -115,7 +115,6 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'registration.DisableCSRF',
-    'kronos.exceptions.KronosExceptionMiddleware',
     'kronos.middlewares.PhoebeVersionHeaderMiddleware',
 ]
 
@@ -185,7 +184,8 @@ REST_FRAMEWORK = {
         'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 50
+    'PAGE_SIZE': 50,
+    'EXCEPTION_HANDLER': 'kronos.api_utils.kronos_exception_handler',
 }
 
 AUTHENTICATION_BACKENDS = (

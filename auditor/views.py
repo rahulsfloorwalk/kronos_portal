@@ -8,7 +8,6 @@ from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 from audit.service import audit_service
 from audit_store import service as audit_store_service
-from auditor.models import ProfileInfo, Preferences
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
 from auditor.serializers import AttachmentSerializer
@@ -23,7 +22,6 @@ from auditor.serializers import FacebookSerializer, FacebookDeSerializer
 from auditor.service import application_service
 from auditor.service import preferences_service
 from auditor.service import stats as auditor_dashboard_service
-from kronos.exceptions import ObjectNotFound, AppLogicError
 from manager import states
 from manager.models import City
 from manager.service import notifications as notification_service
@@ -126,13 +124,8 @@ class AvailableAuditsView(APIView):
     }
     def get(self, request, format=None):
         kms = request.GET.get('kms')
-        try:
-            available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
-            return Response(AuditSerializer(available_audits, many=True).data)
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
+        return Response(AuditSerializer(available_audits, many=True).data)
 
 class AuditView(APIView):
     permission_classes = [HasGroupPermission]
@@ -151,13 +144,8 @@ class AuditApplicationsView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        try:
-            applications = application_service.get_applications(request.user.profileinfo.id)
-            return Response(AuditApplicationSerializer(applications, many=True).data)
-        except ProfileInfo.DoesNotExist as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        applications = application_service.get_applications(request.user.profileinfo.id)
+        return Response(AuditApplicationSerializer(applications, many=True).data)
 
 
 class AuditStoresView(APIView):
@@ -167,13 +155,8 @@ class AuditStoresView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, format=None):
-        try:
-            audit_stores = audit_store_service.find_audit_stores_for_auditor(request.user.profileinfo.id)
-            return Response(AuditStoreSerializer(audit_stores, many=True).data)
-        except ProfileInfo.DoesNotExist as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_stores = audit_store_service.find_audit_stores_for_auditor(request.user.profileinfo.id)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
 
 class AuditStoreView(APIView):
@@ -183,13 +166,8 @@ class AuditStoreView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, audit_store_id, format=None):
-        try:
-            audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, request.user.id)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except ProfileInfo.DoesNotExist as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]
@@ -198,13 +176,8 @@ class SectionView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def get(self, request, audit_store_id, format=None):
-        try:
-            sections = section_service.get_for_auditor(audit_store_id, request.user.profileinfo.id)
-            return Response(SectionSerializer(sections, many=True).data)
-        except ProfileInfo.DoesNotExist as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        sections = section_service.get_for_auditor(audit_store_id, request.user.profileinfo.id)
+        return Response(SectionSerializer(sections, many=True).data)
 
 class AuditApplicationView(APIView):
     permission_classes = [HasGroupPermission]
@@ -222,23 +195,18 @@ class AuditApplicationApplyView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def post(self, request, audit_id, format=None):
-        try:
-            request.data["audit_id"] = audit_id
-            request.data["profileinfo_id"] = request.user.profileinfo.id
+        request.data["audit_id"] = audit_id
+        request.data["profileinfo_id"] = request.user.profileinfo.id
 
-            application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
-            application_apply_ds.is_valid(raise_exception=True)
+        application_apply_ds = AuditApplicationApplyDeSerializer(data=request.data)
+        application_apply_ds.is_valid(raise_exception=True)
 
-            application = application_service.apply(
-                application_apply_ds.validated_data["audit_id"].id,
-                application_apply_ds.validated_data["profileinfo_id"].id,
-                application_apply_ds.validated_data["audit_date"]
-            )
-            return Response(AuditApplicationSerializer(application).data)
-        except (AppLogicError, ProfileInfo.DoesNotExist) as e:
-            raise ValidationError({
-                "non_field_errors": [e.__str__()]
-            }) from e
+        application = application_service.apply(
+            application_apply_ds.validated_data["audit_id"].id,
+            application_apply_ds.validated_data["profileinfo_id"].id,
+            application_apply_ds.validated_data["audit_date"]
+        )
+        return Response(AuditApplicationSerializer(application).data)
 
 class AuditApplicationCancelView(APIView):
     permission_classes = [HasGroupPermission]
@@ -246,23 +214,18 @@ class AuditApplicationCancelView(APIView):
         'POST': [GROUP_NAME_AUDITOR]
     }
     def post(self, request, audit_id, format=None):
-        try:
-            data = {}
-            data["audit_id"] = audit_id
-            data["profileinfo_id"] = request.user.profileinfo.id
+        data = {}
+        data["audit_id"] = audit_id
+        data["profileinfo_id"] = request.user.profileinfo.id
 
-            application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
-            application_cancel_ds.is_valid(raise_exception=True)
+        application_cancel_ds = AuditApplicationCancelDeSerializer(data=data)
+        application_cancel_ds.is_valid(raise_exception=True)
 
-            application = application_service.cancel(
-                application_cancel_ds.data["audit_id"],
-                application_cancel_ds.data["profileinfo_id"]
-            )
-            return Response(AuditApplicationSerializer(application).data)
-        except (AppLogicError, ProfileInfo.DoesNotExist) as e:
-            raise ValidationError({
-                "non_field_errors": [e.__str__()]
-            }) from e
+        application = application_service.cancel(
+            application_cancel_ds.data["audit_id"],
+            application_cancel_ds.data["profileinfo_id"]
+        )
+        return Response(AuditApplicationSerializer(application).data)
 
 
 class CityView(APIView):
@@ -298,12 +261,7 @@ class AnswerSubmitView(APIView):
         audit_store = ds.validated_data['audit_store']
         answer_text = ds.validated_data['answer_text']
         question = ds.validated_data['question']
-        try:
-            answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
         return Response(AnswerSerializer(answer).data)
 
 
@@ -340,13 +298,8 @@ class AuditStoreIdSubmitView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.submit(audit_store_id, request.user.profileinfo.user_id)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (AppLogicError,ProfileInfo.DoesNotExist) as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        audit_store = audit_store_service.submit(audit_store_id, request.user.profileinfo.user_id)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 
 class AuditStoreIdAcknowledgeView(APIView):
@@ -380,13 +333,8 @@ class CommentSubmitView(APIView):
         audit_store = ds.validated_data['audit_store']
         auditor_comment = ds.validated_data['auditor_comment']
         section = ds.validated_data['section']
-        try:
-            report_section = report_section_service.submit_auditor_comment(audit_store.id, section.id, request.user.id, auditor_comment)
-            return Response(ReportSectionSerializer(report_section).data)
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            }) from e
+        report_section = report_section_service.submit_auditor_comment(audit_store.id, section.id, request.user.id, auditor_comment)
+        return Response(ReportSectionSerializer(report_section).data)
 
 
 class AuditStoreAttachmentView(APIView):
@@ -413,10 +361,6 @@ class AuditStoreAttachmentView(APIView):
         except KeyError as e:
             raise ValidationError({
                 'file_name': "file name is required"
-            })
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
             })
 
 class ReportSectionAttachmentView(APIView):
@@ -445,10 +389,6 @@ class ReportSectionAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
 
 class UserIdProofAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
@@ -458,11 +398,8 @@ class UserIdProofAttachmentView(APIView):
     }
 
     def get(self, request, format=None):
-        try:
-            attachments = attachment_auditor_service.find_id_proof_for_auditor(request.user.id)
-            return Response(AttachmentSerializer(attachments, many=True).data)
-        except ObjectNotFound:
-            raise NotFound
+        attachments = attachment_auditor_service.find_id_proof_for_auditor(request.user.id)
+        return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request):
         try:
@@ -477,14 +414,6 @@ class UserIdProofAttachmentView(APIView):
             raise ValidationError({
                 'file_name': "file name is required"
             })
-        except ObjectNotFound as e:
-            raise NotFound() from e
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
-        except ObjectNotFound:
-            raise NotFound
 
 
 class AttachmentIdView(APIView):
@@ -494,13 +423,8 @@ class AttachmentIdView(APIView):
     }
 
     def delete(self, request, attachment_id):
-        try:
-            attachment_auditor_service.delete_for_auditor(attachment_id, request.user.id)
-            return Response()
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        attachment_auditor_service.delete_for_auditor(attachment_id, request.user.id)
+        return Response()
 
 class AttachmentCompleteView(APIView):
     permission_classes = [HasGroupPermission]
@@ -509,13 +433,8 @@ class AttachmentCompleteView(APIView):
     }
 
     def post(self, request, attachment_id):
-        try:
-            attachment = attachment_auditor_service.complete_for_auditor(attachment_id, request.user.id)
-            return Response(AttachmentSerializer(attachment).data)
-        except AppLogicError as e:
-            raise ValidationError({
-                'non_field_errors': [e.__str__()]
-            })
+        attachment = attachment_auditor_service.complete_for_auditor(attachment_id, request.user.id)
+        return Response(AttachmentSerializer(attachment).data)
 
 class NotificationsView(APIView):
     permission_classes = [HasGroupPermission]
@@ -594,11 +513,8 @@ class PreferencesView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        try:
-            preferences = preferences_service.find_preferences_by_user_id(request.user.id)
-            return Response(PreferencesSerializer(preferences).data)
-        except Preferences.DoesNotExist:
-            return Response(PreferencesSerializer(Preferences()).data)
+        preferences = preferences_service.find_preferences_by_user_id(request.user.id)
+        return Response(PreferencesSerializer(preferences).data)
 
     def post(self, request):
         preferences_s = PreferencesSerializer(data=request.data, context={'current_user': request.user})
