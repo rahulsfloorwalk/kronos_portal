@@ -1,28 +1,19 @@
-from datetime import date
 import string
 import random
 
-from django.test import TestCase
 from django.urls import reverse
 
 from django.contrib.auth.models import User, Group
 
-from rest_framework.test import APITestCase, APIClient
+from rest_framework.test import APITestCase
 
 from model_mommy import mommy
-from model_mommy.recipe import Recipe, foreign_key
 
 from faker import Faker
 
-from kronos.exceptions import AppLogicError, ObjectNotFound
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
 from ..models import ProfileInfo
-
-from audit.models import AuditCycle, Audit
-from auditor.models import AuditApplication
-from audit_store.models import AuditStore
-from manager.models import City
 
 fake = Faker()
 
@@ -50,7 +41,7 @@ class PreferencesAPITestCase(APITestCase):
         # check if the endpoint returns the correct defaults initially
         response = self.client.get(prefs_url)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(True, response.data.get("receive_new_opportunities_email"))
+        self.assertTrue(response.data.get("receive_new_opportunities_email"))
 
         # change the Preferences
         input_prefs = {

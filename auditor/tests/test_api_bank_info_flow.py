@@ -57,6 +57,7 @@ class BankInfoAPITestCase(APITestCase):
         } 
         response = self.client.post('/auditor/bank_info', input_data, format="json")
         self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.data.get("is_complete"))
         for k,v in input_data.items():
             self.assertEqual(v, response.data.get(k))
 
