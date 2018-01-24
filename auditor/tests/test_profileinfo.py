@@ -20,18 +20,18 @@ class ProfileInfoTestCase(TestCase):
 
     def create_complete_profile(self):
         return ProfileInfo.objects.create(
-                user = self.u, 
-                first_name = fake.first_name(), 
-                last_name = fake.last_name(), 
-                gender = random.choice(ProfileInfo.GENDER)[0],
-                marital_status = random.choice(ProfileInfo.MARITAL_STATUS)[0],
-                education = random.choice(ProfileInfo.EDUCATION)[0],
-                mobile_number = ''.join(random.choice(string.digits) for i in range(10)),
-                date_of_birth = date.today(),
-                address = fake.address(),
-                pincode = fake.zipcode(),
-                city = City.objects.get(name='Bangalore')
-            )
+            user = self.u,
+            first_name = fake.first_name(),
+            last_name = fake.last_name(),
+            gender = random.choice(ProfileInfo.GENDER)[0],
+            marital_status = random.choice(ProfileInfo.MARITAL_STATUS)[0],
+            education = random.choice(ProfileInfo.EDUCATION)[0],
+            mobile_number = ''.join(random.choice(string.digits) for i in range(10)),
+            date_of_birth = date.today(),
+            address = fake.address(),
+            pincode = fake.zipcode(),
+            city = City.objects.get(name='Bangalore')
+        )
 
     def setUp(self):
         email = fake.email()
@@ -39,14 +39,12 @@ class ProfileInfoTestCase(TestCase):
         self.u.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
         self.u.save()
 
-
     def test_profile_is_complete(self):
         """checks if ProfileInfo is complete"""
 
         p = self.create_complete_profile()
 
         self.assertTrue(p.is_complete())
-
 
     def test_profile_is_not_complete_for_first_name(self):
         """checks if ProfileInfo is not complete for first_name"""
