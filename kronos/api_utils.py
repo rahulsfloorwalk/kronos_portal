@@ -3,12 +3,18 @@ import sys
 import logging
 
 from rest_framework.response import Response
+from rest_framework.views import exception_handler
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
 _logger = logging.getLogger(__name__)
 
 def kronos_exception_handler(exc, context):
+    response = exception_handler(exc, context)
+
+    if response:
+        return response
+
     frame = traceback.extract_tb(sys.exc_info()[-1], limit=-1)[0]
     if isinstance(exc, ObjectNotFound):
         _logger.info("404 for path: %s caused by ObjectNotFound at %s, %s, %s", context['request'].path, frame.filename, frame.lineno, frame.name)
