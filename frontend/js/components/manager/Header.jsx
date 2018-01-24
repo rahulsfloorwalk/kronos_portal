@@ -44,7 +44,7 @@ var Header = React.createClass({
 							</a>
 						</li>
 					</ul>
-					<form style={{display:"none"}} action="/auth/logout" method="POST" ref={r => this._logoutForm = r}/>
+					<form style={{display:"none"}} action="/auth/manager/logout" method="POST" ref={r => this._logoutForm = r}/>
 				</div>
 			</nav>
 		);

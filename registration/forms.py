@@ -8,7 +8,7 @@ from django import forms
 from django.contrib.auth.models import User,Group
 from django.core.validators import validate_email
 from registration.models import Verification
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from auditor.models import ProfileInfo, AdditionalInfo
 from django.utils import timezone
 from django.db.models import Q
@@ -116,4 +116,41 @@ class SignUpForm(UserCreationForm):
         return user
 
 
+class GroupAuthenticationForm(AuthenticationForm):
+    def __init__(self, group_name, *args, **kwargs):
+        super(GroupAuthenticationForm, self).__init__(*args, **kwargs)
+        self.group_name = group_name
 
+    def is_valid(self):
+        valid = super(AuthenticationForm, self).is_valid()
+
+        if not valid or not self.user_cache:
+            return valid
+
+        if not self.user_cache.groups.filter(name=self.group_name).exists():
+            self.add_error(None, "username and password do not match".format())
+            valid = False
+
+        return valid
+
+
+class AuditorAuthenticationForm(GroupAuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(AuditorAuthenticationForm, self).__init__(GROUP_NAME_AUDITOR, *args, **kwargs)
+
+    def is_valid(self):
+        valid = super(AuditorAuthenticationForm, self).is_valid()
+
+        if not valid or not self.user_cache:
+            return valid
+
+        try:
+            if not self.user_cache.verification.is_verified:
+                self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+                valid = False
+        except Verification.DoesNotExist:
+            _logger.warn("User without verification found! : %s", self.user_cache)
+            self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+            valid = False
+
+        return valid

@@ -76,6 +76,8 @@ class LoginAPITestCase(TestCase):
 
         # check for a 200 on the same page
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].non_field_errors()), 1)
+        self.assertEqual(response.context["form"].non_field_errors()[0], "Please enter a correct username and password. Note that both fields may be case-sensitive.")
 
         # check if the user was not logged in correctly
         self.assertFalse(auth.get_user(self.client).is_authenticated())
@@ -91,6 +93,8 @@ class LoginAPITestCase(TestCase):
 
         # check for a 200 on the same page
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].non_field_errors()), 1)
+        self.assertEqual(response.context["form"].non_field_errors()[0], "Please enter a correct username and password. Note that both fields may be case-sensitive.")
 
         # check if the user was not logged in correctly
         self.assertFalse(auth.get_user(self.client).is_authenticated())
@@ -105,6 +109,8 @@ class LoginAPITestCase(TestCase):
 
         # check for a 200 on the same page
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].non_field_errors()), 1)
+        self.assertEqual(response.context["form"].non_field_errors()[0], "Please enter a correct username and password. Note that both fields may be case-sensitive.")
 
         # check if the user was not logged in correctly
         self.assertFalse(auth.get_user(self.client).is_authenticated())
@@ -119,6 +125,8 @@ class LoginAPITestCase(TestCase):
 
         # check for a 200 on the same page
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].non_field_errors()), 1)
+        self.assertEqual(response.context["form"].non_field_errors()[0], "Please enter a correct username and password. Note that both fields may be case-sensitive.")
 
         # check if the user was not logged in correctly
         self.assertFalse(auth.get_user(self.client).is_authenticated())
@@ -134,6 +142,8 @@ class LoginAPITestCase(TestCase):
 
         # check for a 200 on the same page
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].non_field_errors()), 1)
+        self.assertEqual(response.context["form"].non_field_errors()[0], "Your account is not verified. Please check your email for the verification link.")
 
         # check if the user was not logged in correctly
         self.assertFalse(auth.get_user(self.client).is_authenticated())
@@ -149,6 +159,8 @@ class LoginAPITestCase(TestCase):
 
         # check for a 200 on the same page
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"].non_field_errors()), 1)
+        self.assertEqual(response.context["form"].non_field_errors()[0], "Your account is not verified. Please check your email for the verification link.")
 
         # check if the user was not logged in correctly
         self.assertFalse(auth.get_user(self.client).is_authenticated())
