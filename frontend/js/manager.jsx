@@ -18,7 +18,7 @@ $(document).ajaxError(function(event, jqXHR, settings){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
 		alert("It looks like your session has expired, please click 'OK' to login again.");
-		window.location.replace("/auth/login");
+		window.location.replace("/auth/manager/login");
 	}
 });
 
