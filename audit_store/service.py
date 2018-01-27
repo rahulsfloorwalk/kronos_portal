@@ -259,7 +259,7 @@ def complete(audit_store_id, qa_rating, user_actor):
                 target=audit_store.audit
             )
             manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=audit_store.user,
@@ -268,7 +268,7 @@ def complete(audit_store_id, qa_rating, user_actor):
                 target=audit_store.audit
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_COMPLETED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be completed now")
