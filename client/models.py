@@ -64,7 +64,8 @@ class Store(Model):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
 
     def visible_to(self):
-        return get_users_with_perms(self)
+        users_with_perms = get_users_with_perms(self, attach_perms=True)
+        return [user for user, perms in users_with_perms if "clientuser_store_visible" in perms]
 
     class Meta:
         unique_together = ("client", "code")

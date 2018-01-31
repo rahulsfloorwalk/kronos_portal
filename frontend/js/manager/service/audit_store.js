@@ -41,3 +41,23 @@ export function findAuditStoresByAudit(audit_id){
 export function findAuditStoresByAuditCycle(audit_cycle_id){
 	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store`);
 };
+
+
+export function assignToModerator(auditStoreId, userId){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${auditStoreId}/moderator`,
+		method: 'POST',
+		data: JSON.stringify({
+			user_id: userId
+		}),
+		contentType: 'application/json'
+	});
+};
+
+export function revokeFromModerator(auditStoreId){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${auditStoreId}/moderator`,
+		type: "DELETE",
+	});
+};
+

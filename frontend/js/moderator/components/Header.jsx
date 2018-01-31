@@ -3,7 +3,7 @@ import { Link, hashHistory } from 'react-router';
 
 import { pointerStyle } from '../../styles.js';
 
-import { Home } from '../../components/Icons.jsx';
+import { Hourglass, Checked } from '../../components/Icons.jsx';
 import NavLink from '../../components/NavLink.jsx';
 
 import { logout } from '../service/auth.js';
@@ -27,7 +27,8 @@ export default React.createClass({
 						</a>
 					</div>
 					<ul className="nav navbar-nav">
-						<NavLink to="/"><Home/> Home</NavLink>
+						<NavLink to="/?type=qa_pending"><Hourglass/> QA Pending</NavLink>
+						<NavLink to="/?type=qa_done"><Checked/> QA Complete</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

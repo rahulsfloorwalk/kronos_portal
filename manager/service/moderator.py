@@ -5,8 +5,9 @@ from django.contrib.auth.models import User, Group
 from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from audit.models import AuditCycle
+from audit.service import audit_cycle as audit_cycle_service
 from registration.models import GROUP_NAME_MODERATOR
+from audit_store import service as audit_store_service
 
 def find_all():
     return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set
@@ -59,33 +60,44 @@ def update(user_id, email, password="", is_active=True):
 
 
 def find_by_audit_cycle(audit_cycle_id):
-    try:
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
-        return get_users_with_perms(audit_cycle)
-    except (Group.DoesNotExist, User.DoesNotExist, AuditCycle.DoesNotExist) as e:
-        raise ObjectNotFound from e
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    users_with_perms = get_users_with_perms(audit_cycle, attach_perms=True)
+    return [user for user, perms in users_with_perms.items() if "clientuser_store_visible" in perms]
 
 
 @atomic
 def assign_audit_cycle(user_id, audit_cycle_id):
-    try:
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
-        user = Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    user = find_by_id(user_id)
 
-        assign_perm('moderator_manage', user, audit_cycle)
+    assign_perm('moderator_manage', user, audit_cycle)
 
-        return user
-    except (Group.DoesNotExist, User.DoesNotExist, AuditCycle.DoesNotExist) as e:
-        raise ObjectNotFound from e
+    return user
 
 @atomic
 def revoke_audit_cycle(user_id, audit_cycle_id):
-    try:
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
-        user = Group.objects.get(name=GROUP_NAME_MODERATOR).user_set.get(pk=user_id)
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    user = find_by_id(user_id)
 
-        remove_perm('moderator_manage', user, audit_cycle)
+    remove_perm('moderator_manage', user, audit_cycle)
 
-        return user
-    except (Group.DoesNotExist, User.DoesNotExist, AuditCycle.DoesNotExist) as e:
-        raise ObjectNotFound from e
+    return user
+
+@atomic
+def assign_audit_store(user_id, audit_store_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    mod_user = find_by_id(user_id)
+
+    revoke_audit_store(audit_store_id)
+    assign_perm('moderator_manage', mod_user, audit_store)
+
+    return audit_store
+
+@atomic
+def revoke_audit_store(audit_store_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    for user, perms in get_users_with_perms(audit_store, attach_perms=True).items():
+        print("moderator_manager", "in", perms, 'moderator_manage' in perms)
+        if 'moderator_manage' in perms:
+            remove_perm('moderator_manage', user, audit_store)
+    return audit_store

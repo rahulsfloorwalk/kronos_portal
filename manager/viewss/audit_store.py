@@ -10,6 +10,7 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from audit_store import service as audit_store_service
+from ..service import moderator as moderator_service
 
 
 from client_report.service import xlsx_report as xlsx_report_service
@@ -188,3 +189,29 @@ class AuditStoreIdClientUserView(APIView):
             ds.validated_data["client_user_id"],
         )
         return Response(AuditStoreSerializer(saved_audit_store).data)
+
+
+class AuditStoreModeratorAssign(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        user_id = IntegerField()
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = moderator_service.assign_audit_store(
+            ds.validated_data["user_id"],
+            audit_store_id
+        )
+        return Response(AuditStoreSerializer(audit_store).data)
+
+    def delete(self, request, audit_store_id):
+        audit_store = moderator_service.revoke_audit_store(
+            audit_store_id
+        )
+        return Response(AuditStoreSerializer(audit_store).data)

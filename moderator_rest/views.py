@@ -51,6 +51,25 @@ class AuditStoreByAuditCycle(APIView):
         audit_stores = audit_store_service.find_by_audit_cycle_for_moderator(audit_cycle_id, request.user.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
+class AuditStoreCompletedView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+    }
+    def get(self, request):
+        audit_stores = audit_store_service.find_completed_audit_stores_for_moderator(request.user.id)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+
+class AuditStorePendingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR],
+    }
+    def get(self, request):
+        audit_stores = audit_store_service.find_pending_audit_stores_for_moderator(request.user.id)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+
+
 class AuditStoreIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

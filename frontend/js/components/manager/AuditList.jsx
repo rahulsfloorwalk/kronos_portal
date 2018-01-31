@@ -27,6 +27,7 @@ import {fetchAudits, deleteAudit, hideAudit, unhideAudit} from '../../manager/ac
 
 import { rejectAllForAudit, rejectAllForAuditCycle } from '../../manager/service/application.js';
 import { findAuditStoresByAudit } from '../../manager/service/audit_store.js';
+import { findModerators } from '../../manager/service/moderator.js'
 
 import AuditApplicationList from './AuditApplicationList.jsx';
 
@@ -36,6 +37,7 @@ class AuditStoreTableForAudit extends Component{
 		this.state = {
 			auditStores: [],
 			loading: false,
+			moderators: [],
 		};
 	}
 
@@ -48,12 +50,26 @@ class AuditStoreTableForAudit extends Component{
 		findAuditStoresByAudit(this.props.auditId).then((auditStores) => {
 			this.setState({auditStores});
 		}).always(()=>this.setLoading(false));
+
+		findModerators().then((moderators) => {
+			this.setState({ moderators });
+		});
+	}
+	auditStoreUpdated = (auditStore) => {
+		let i = this.state.auditStores.findIndex(as => as.id === auditStore.id);
+		if( i !== -1){
+			let auditStores = this.state.auditStores;
+			auditStores[i] = auditStore;
+			this.setState({
+				auditStores: auditStores,
+			});
+		}
 	}
 	render(){
 		if(this.state.loading) {
 			return <Loading/>;
 		} else {
-			return (<AuditStoreTable auditStores={this.state.auditStores}/>);
+			return (<AuditStoreTable auditStores={this.state.auditStores} moderators={this.state.moderators} onUpdate={this.auditStoreUpdated}/>);
 		}
 	}
 }

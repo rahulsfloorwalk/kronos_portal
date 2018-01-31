@@ -341,6 +341,7 @@ class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializerWithoutApplications()
     user = UserSerializer()
     visible_to = PrimaryKeyRelatedField(many=True, read_only=True)
+    assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = AuditStore
         fields = (
@@ -350,6 +351,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit',
             'user',
             'visible_to',
+            'assigned_to_moderator',
             'qa_rating',
         )
         read_only_fields = fields

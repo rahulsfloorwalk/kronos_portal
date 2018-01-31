@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
@@ -17,8 +17,35 @@ import AuditStoreStatusSummary from './AuditStoreStatusSummary.jsx'
 import { fetchClientUsers } from '../../manager/actions/client_user.js';
 import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore, updateAuditStore} from '../../manager/actions/audit_store.js';
 import { findAuditStoresByAuditCycle, assignAuditStoreToClientUser, revokeAuditStoreFromClientUser } from '../../manager/service/audit_store.js';
+import { assignToModerator, revokeFromModerator } from '../../manager/service/audit_store.js';
+import { findModerators } from '../../manager/service/moderator.js'
 import { getAuditStoreStatus } from '../../utils.js';
 import { getPaymentStatus } from '../../utils.js';
+
+class ModeratorAssignDropdown extends Component{
+	constructor(props){
+		super(props);
+		this.state = {};
+	}
+	onChange = (e) => {
+		if(e.target.value){
+			assignToModerator(this.props.auditStoreId, e.target.value).then((auditStore) => {
+				this.props.onUpdate(auditStore);
+			});
+		} else {
+			revokeFromModerator(this.props.auditStoreId).then((auditStore) => {
+				this.props.onUpdate(auditStore);
+			});
+		}
+	}
+	render(){
+		let selectedId = this.props.selectedModeratorId[0] || "";
+		return (<select className="form-control" onChange={this.onChange} value={selectedId}>
+			<option value=""></option>
+			{ this.props.moderators.map((m)=> <option key={m.id} value={m.id}>{m.email}</option>) }
+		</select>);
+	}
+}
 
 var __AuditStoreRow = React.createClass({
 	getInitialState: function(){
@@ -59,6 +86,7 @@ var __AuditStoreRow = React.createClass({
         <td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
         <td className="text-right">{acceptButton}</td>
         <td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
+        <td><ModeratorAssignDropdown moderators={this.props.moderators} selectedModeratorId={this.props.auditStore.assigned_to_moderator} auditStoreId={this.props.auditStore.id} onUpdate={this.props.onUpdate}/></td>
         <td>
           <Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
         </td>
@@ -73,10 +101,10 @@ var AuditStoreTable = React.createClass({
     for(let n in this.props.auditStores){
 	    if( this.props.selectedStatus){
 		    if( this.props.auditStores[n].status === this.props.selectedStatus){
-			    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser}/>);
+			    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser} moderators={this.props.moderators}/>);
 		    }
 	    } else {
-	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser} onUpdate={this.props.onUpdate}/>);
+	    reps.push(<AuditStoreRow auditStore={this.props.auditStores[n]} key={n} selectedClientUser={this.props.selectedClientUser} onUpdate={this.props.onUpdate} moderators={this.props.moderators}/>);
 	    }
     }
     let checkBoxHeader = null;
@@ -92,12 +120,13 @@ var AuditStoreTable = React.createClass({
 	<table className="table table-striped">
 	  <thead>
 	    <tr>
-	      {checkBoxHeader}
-	      <th>Auditor Name</th>
-	      <th>Audit Date</th>
-        <th></th>
-	      <th>Report Status</th>
-        <th></th>
+	    {checkBoxHeader}
+	    <th>Auditor Name</th>
+	    <th>Audit Date</th>
+	    <th></th>
+	    <th>Report Status</th>
+	    <th>Assigned To</th>
+	    <th></th>
 	    </tr>
 	  </thead>
 	  <tbody>
@@ -115,6 +144,7 @@ var AuditStoreList = React.createClass({
 			selectedClientUserId: null,
 			selectedStatus: null,
 			loading: false,
+			moderators: [],
 		};
 	},
 	setLoading: function(loading){
@@ -131,6 +161,9 @@ var AuditStoreList = React.createClass({
 		if(this.props.auditCycle){
 			this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
 		}
+		findModerators().then((moderators) => {
+			this.setState({ moderators });
+		});
 	},
 	componentWillReceiveProps: function(nextProps){
 		if(nextProps.auditCycle && ! this.props.auditCycle){
@@ -201,7 +234,7 @@ var AuditStoreList = React.createClass({
 			<div className="panel-heading">
 				<b>{audits[i].store.name}</b>, {audits[i].store.address}, {audits[i].store.city.name}
 			</div>
-			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus} onUpdate={this.auditStoreUpdated}/>
+			<AuditStoreTable auditStores={audits[i].reports} selectedClientUser={this.props.clientUsers[this.state.selectedClientUserId]} selectedStatus={this.state.selectedStatus} onUpdate={this.auditStoreUpdated} moderators={this.state.moderators}/>
 		    </div>
 	    );
     }

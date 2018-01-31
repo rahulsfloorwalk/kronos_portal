@@ -90,6 +90,7 @@ class AuditStore(Model):
     class Meta:
         permissions = (
             ('clientuser_visible', 'ClientUser can view this AuditStore instance'),
+            ('moderator_manage', 'Moderator can manage this AuditStore instance'),
         )
 
     def save(self, *args, **kwargs):
@@ -158,7 +159,12 @@ class AuditStore(Model):
             return False
 
     def visible_to(self):
-        return get_users_with_perms(self)
+        users_with_perms = get_users_with_perms(self, attach_perms=True)
+        return [user for user, perms in users_with_perms.items() if "clientuser_visible" in perms]
+
+    def assigned_to_moderator(self):
+        users_with_perms = get_users_with_perms(self, attach_perms=True)
+        return [user for user, perms in users_with_perms.items() if "moderator_manage" in perms]
 
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)

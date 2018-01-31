@@ -114,11 +114,13 @@ export default React.createClass({
 
 		return (
 			<div>
+			{/*
 				<ol className="breadcrumb">
 					<li><Link to="/">Audit Cycle</Link></li>
 					<li><Link to={`/audit_cycle/${this.state.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.state.auditStore.audit.audit_cycle.name}</Link></li>
 					<li className="active"><File/> {moment(this.state.auditStore.audit_date).format(momentDateFormat)}</li>
 				</ol>
+			*/}
 				<h2 className="page-header">
 					<File/> Audit Report
 				</h2>

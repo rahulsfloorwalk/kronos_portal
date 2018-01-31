@@ -1,24 +1,51 @@
 from django.db.transaction import atomic
+from guardian.shortcuts import get_objects_for_user
 
 from kronos.exceptions import ObjectNotFound
 
 from registration.service.moderator import find_moderator_by_user_id
 
+from audit.models import AuditCycle
 from .models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
 from . import service as audit_store_service
 
 
+def find_completed_audit_stores_for_moderator(user_id):
+    user = find_moderator_by_user_id(user_id)
+    query_set = AuditStore.objects.filter(
+        audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT),
+        status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED)
+    ).order_by('audit_date')
+
+    return get_objects_for_user(user, 'moderator_manage', klass=query_set)
+
+def find_pending_audit_stores_for_moderator(user_id):
+    user = find_moderator_by_user_id(user_id)
+    query_set = AuditStore.objects.filter(
+        audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT),
+        status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED)
+    ).order_by('audit_date')
+
+    return get_objects_for_user(user, 'moderator_manage', klass=query_set)
+
+
 def find_by_audit_cycle_for_moderator(audit_cycle_id, user_id):
+    user = find_moderator_by_user_id(user_id)
     audit_cycle = audit_cycle_service.find_by_id_for_moderator(audit_cycle_id, user_id)
-    return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle.id, status__in=[AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED]).order_by('-audit_date')
+    query_set = AuditStore.objects.filter(
+        audit__audit_cycle__id=audit_cycle.id,
+        status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED)
+    ).order_by('-audit_date')
+
+    return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
 
 def find_by_id_for_moderator(audit_store_id, user_id):
     try:
         user = find_moderator_by_user_id(user_id)
         audit_store = AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED])
-        if user.has_perm('moderator_manage', audit_store.audit.audit_cycle):
+        if user.has_perm('moderator_manage', audit_store):
             return audit_store
         else:
             raise ObjectNotFound

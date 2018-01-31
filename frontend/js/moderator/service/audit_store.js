@@ -1,5 +1,13 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
+
+export function findPending(){
+	return $.get(url.api_base_path + "moderator/audit_store/pending");
+}
+
+export function findCompleted(){
+	return $.get(url.api_base_path + "moderator/audit_store/completed");
+}
 
 export function findByAuditCycleId(auditCycleId){
 	return $.get(url.api_base_path + `moderator/audit_cycle/${auditCycleId}/audit_store`);
