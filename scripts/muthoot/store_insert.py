@@ -2,7 +2,7 @@ import logging
 import csv
 from django.db import transaction
 from client.models import Store, Client
-from manager.models import Location, City
+from manager.models import City
 from audit.models import AuditCycle, Audit
 
 _logger = logging.getLogger(__name__)
@@ -24,12 +24,9 @@ def insert_stores(client_id, filename):
     ALL COLUMNS MUST EXIST if they're specified
     """
 
-    extra_columns = ('ZONE', 'REGION', 'CATEGORY', 'PINCODE')
+    extra_columns = ('REGION', 'CLASSIFICATION', 'DISTRICT')
 
-    stores = Store.objects.filter(client_id=client_id)
-    if(len(stores) > 1):
-        _logger.error("%s stores already present for client with id: %s", len(stores), client_id)
-        return
+    stores = []
 
     client = Client.objects.get(pk=client_id)
     with open(filename) as csvfile:
@@ -43,24 +40,19 @@ def insert_stores(client_id, filename):
                 _logger.error("ERR: city with name %s does not exist", row['CITY'])
                 raise e
 
-            locations = Location.objects.filter(name__iexact=row['CITY'], city__name__iexact=row['CITY'])
-            if locations.count() is 0:
-                _logger.info("creating default location for city: %s", row['CITY'])
-                location = Location.objects.create(city=city, pincode="no_pin", name=row['CITY'].title())
-            else:
-                if locations.count() > 1:
-                    _logger.info("FOUND %s locations for CITY %s", locations.count(), row['CITY'])
-                location = locations.first()
-
             store.name = row['NAME']
             store.client = client
             store.code = row['CODE'] or None
-            store.type = row['TYPE']
+            # store.type = row['TYPE']
             store.address = row['ADDRESS']
-            store.phone = row['PHONE']
-            store.location = location
+            # store.phone = row['PHONE']
+            store.city = city
+            store.city = city
             store.extra_data = {col:row[col] for col in extra_columns}
             store.save()
+            stores.append(store)
+
+    return stores
 
 def insert_all_audits(audit_cycle_id):
     audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
@@ -74,3 +66,21 @@ def insert_all_audits(audit_cycle_id):
         audit.store = store
         audit.audit_cycle = audit_cycle
         audit.save()
+
+def insert_some_audits(stores, audit_cycle_id):
+    audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id)
+
+    for store in stores:
+        audit = Audit()
+        audit.count = 1
+        audit.reimbursement = None
+        audit.earnings_per_audit = audit_cycle.earnings_per_audit
+        audit.store = store
+        audit.audit_cycle = audit_cycle
+        audit.save()
+
+
+@transaction.atomic
+def feb_02_2018_import(filename, client_id, audit_cycle_id):
+    stores = insert_stores(client_id, filename)
+    insert_some_audits(stores, audit_cycle_id)
