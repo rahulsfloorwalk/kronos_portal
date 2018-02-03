@@ -228,8 +228,8 @@ class Preferences(Model):
     id = AutoField(db_column='id', primary_key=True)
     receive_new_opportunities_email = BooleanField(db_column='receive_new_opportunities_email', default=True)
     receive_transactional_email = BooleanField(db_column='receive_transactional_email', default=True)
-    # tos_accepted = BooleanField(db_column='tos_accepted', default=True)
-    # pp_accepted = BooleanField(db_column='pp_accepted', default=True)
+    agreement_accepted = BooleanField(db_column='agreement_accepted', default=False)
+    pp_accepted = BooleanField(db_column='pp_accepted', default=False)
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 

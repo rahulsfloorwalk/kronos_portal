@@ -9,6 +9,7 @@ from django.contrib.auth.models import User,Group
 from django.core.validators import validate_email
 from registration.models import Verification
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.core.exceptions import ValidationError
 from auditor.models import ProfileInfo, AdditionalInfo
 from django.utils import timezone
 from django.db.models import Q
@@ -22,44 +23,44 @@ from registration.models import GROUP_NAME_AUDITOR
 from registration.service.auditor import generate_ref_code
 from auditor.validators import numericValidator
 from registration.context import registration_context
+from auditor.models import Preferences
 
 _logger = logging.getLogger(__name__)
 
 class SignUpForm(UserCreationForm):
     phone = forms.CharField(min_length=10, max_length=10, required = True, validators=[numericValidator])
     referred_by = forms.CharField(required=False, label='Referral Code (optional)')
+    tos_accept = forms.BooleanField(required=True, label='Privacy Policy')
 
     class Meta:
         model = User
         fields = ("username", "phone", "password1", "password2")
 
-    def is_valid(self):
-        valid = super(SignUpForm, self).is_valid()
-        to_check_email = self.data["username"]
+    def clean_username(self):
+        to_check_email = self.cleaned_data["username"]
+
+        validate_email(to_check_email)
 
         if to_check_email:
             to_check_email = to_check_email.strip().lower()
 
         if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email)).exists():
-            self.add_error("username", "a user with email {} already exists".format(to_check_email))
-            valid = False
+            raise ValidationError("a user with email %(email)s already exists", params={"email": to_check_email})
 
-        if ProfileInfo.objects.filter(mobile_number=self.data["phone"]).exists():
-            self.add_error("phone", "a user with phone {} already exists".format(self.data["phone"]))
-            valid = False
+        return to_check_email
 
-        if self.data.get("referred_by"):
-            if not AdditionalInfo.objects.filter(referral_code=self.data["referred_by"].lower()).exists():
-                self.add_error("referred_by", "a user with referral code {} does not exists. Please enter valid referral code or leave blank.".format(self.data["referred_by"]))
-                valid = False
+    def clean_phone(self):
 
-        try:
-            validate_email(to_check_email)
-        except forms.ValidationError as e:
-            self.add_error("username", "your email is invalid")
-            valid = False
+        if ProfileInfo.objects.filter(mobile_number=self.cleaned_data["phone"]).exists():
+            raise ValidationError("a user with phone %(phone)s already exists", params={"phone": self.cleaned_data["phone"]})
+        return self.cleaned_data["phone"]
 
-        return valid
+    def clean_referred_by(self):
+        if self.cleaned_data.get("referred_by"):
+            if not AdditionalInfo.objects.filter(referral_code=self.cleaned_data["referred_by"].lower()).exists():
+                raise ValidationError("a user with referral code %(referred_by)s does not exist. Please enter valid referral code or leave blank.", params={"referred_by": self.cleaned_data["referred_by"]})
+
+        return self.cleaned_data["referred_by"]
 
     def save(self, commit = True):
         user = super(SignUpForm, self).save(commit = False)
@@ -76,6 +77,12 @@ class SignUpForm(UserCreationForm):
         additional_info = AdditionalInfo(user_id=user.id)
         additional_info.referred_by = self.cleaned_data["referred_by"]
         additional_info.save()
+
+        prefs = Preferences(user_id=user.id)
+        prefs.agreement_accepted = True
+        prefs.pp_accepted = True
+        prefs.save()
+
         try:
             additional_info.referral_code = generate_ref_code(user.email, profile_info.mobile_number)
             additional_info.save()

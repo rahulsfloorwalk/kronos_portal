@@ -24,6 +24,8 @@ export default React.createClass({
 		}
 		let receive_new_opportunities_email = this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>;
 		let receive_transactional_email = this.state.preferences.receive_transactional_email ? <Check/> : <Cross/>;
+		let pp_accepted = this.state.preferences.pp_accepted ? <Check/> : <Cross/>;
+		let agreement_accepted = this.state.preferences.agreement_accepted ? <Check/> : <Cross/>;
 
 		return (
 			<div className="panel panel-default">
@@ -33,6 +35,8 @@ export default React.createClass({
 				<div className="panel-body">
 					<p>Receive New Opportunities Email: { receive_new_opportunities_email }</p>
 					<p>Receive Transactional Email: { receive_transactional_email }</p>
+					<p>Privacy Policy Accepted : { pp_accepted }</p>
+					<p>Agreement Accepted: { agreement_accepted }</p>
 				</div>
 			</div>
 		);

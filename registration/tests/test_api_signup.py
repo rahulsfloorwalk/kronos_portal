@@ -6,7 +6,9 @@ from django.core import mail
 
 from faker import Faker
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from auditor.models import ProfileInfo, AdditionalInfo
+from registration.models import GROUP_NAME_AUDITOR
+from registration.service import auditor
 
 fake = Faker()
 
@@ -25,7 +27,22 @@ class SignupAPITestCase(TestCase):
 
     def setUp(self):
         self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
-        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+
+    def setup_auditor(self):
+        self.email = fake.email()
+        self.mobile = fake.numerify("##########")
+        self.password = fake.password()
+        self.referral_code = auditor.generate_ref_code(self.email, self.mobile)
+        print("referral_code", self.referral_code)
+
+        self.auditor = User.objects.create_user(username=self.email, email=self.email, password=self.password)
+        self.auditor.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
+        self.auditor.save()
+        ProfileInfo.objects.create(user=self.auditor, mobile_number=self.mobile)
+
+        additional_info = AdditionalInfo(user_id=self.auditor.id)
+        additional_info.referral_code = self.referral_code
+        additional_info.save()
 
     @override_settings(EMAIL_SWITCH = test_email_switches)
     def test_normal_signup_flow(self):
@@ -43,6 +60,7 @@ class SignupAPITestCase(TestCase):
             "password1": pwd,
             "password2": pwd,
             "referred_by": "",
+            "tos_accept": True,
         }, follow=True)
 
         # check for a redirect to signup success
@@ -79,3 +97,162 @@ class SignupAPITestCase(TestCase):
         response = self.client.post(reverse("registration:logout"))
         self.assertRedirects(response, reverse("registration:login"), status_code=302, target_status_code=200)
 
+    def test_non_matching_passwords(self):
+
+        # post to registration endpoint
+        email = fake.email()
+        pwd1 = fake.password()
+        pwd2 = fake.password()
+        phone = fake.numerify("##########")
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd1,
+            "password2": pwd2,
+            "referred_by": "",
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["password2"].errors), 1)
+
+    def test_non_accepted_tos(self):
+
+        # post to registration endpoint
+        email = fake.email()
+        pwd = fake.password()
+        phone = fake.numerify("##########")
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": "",
+            "tos_accept": False,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["tos_accept"].errors), 1)
+
+    def test_invalid_mobile_number(self):
+
+        # post to registration endpoint
+        email = fake.email()
+        pwd = fake.password()
+        phone = fake.numerify("#########")
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": "",
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        print(response.context["form"]["phone"].errors)
+        self.assertEqual(len(response.context["form"]["phone"].errors), 1)
+
+    def test_invalid_email(self):
+
+        # post to registration endpoint
+        email = fake.lexify("?????")
+        pwd = fake.password()
+        phone = fake.numerify("##########")
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": "",
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["username"].errors), 1)
+
+    def test_pre_existing_email(self):
+        # setup an existing auditor
+        self.setup_auditor()
+
+        # post to registration endpoint
+        email = self.email
+        pwd = fake.password()
+        phone = fake.numerify("##########")
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": "",
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["username"].errors), 1)
+
+    def test_pre_existing_phone(self):
+        # setup an existing auditor
+        self.setup_auditor()
+
+        # post to registration endpoint
+        email = fake.email()
+        pwd = fake.password()
+        phone = self.mobile
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": "",
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["phone"].errors), 1)
+
+    def test_valid_referral(self):
+        # setup an existing auditor
+        self.setup_auditor()
+
+        # post to registration endpoint
+        email = fake.email()
+        pwd = fake.password()
+        phone = fake.numerify("##########")
+        referred_by = self.referral_code
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": referred_by,
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a redirect to signup success
+        self.assertRedirects(response, reverse('registration:signup_success'), status_code=302, target_status_code=200)
+
+    def test_invalid_referral(self):
+        # post to registration endpoint
+        email = fake.email()
+        pwd = fake.password()
+        phone = fake.numerify("##########")
+        referred_by = fake.lexify(fake.numerify("????####"))
+        response = self.client.post(reverse('registration:signup'), {
+            "username": email,
+            "phone": phone,
+            "password1": pwd,
+            "password2": pwd,
+            "referred_by": referred_by,
+            "tos_accept": True,
+        }, follow=True)
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["referred_by"].errors), 1)

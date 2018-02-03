@@ -66,6 +66,23 @@
 						{{ form.referred_by.errors }}
 						</p>
 						</div>
+					</div>
+					<div id="tos_block" class="form-group" style="display:none;">
+						<table>
+							<tr>
+							<td style="padding:5px;">
+						<input type="checkbox" name="{{ form.tos_accept.name }}" checked
+							id="{{form.tos_accept.auto_id}}" required
+							style="width:30px;height:30px;"/>
+							</td>
+							<td style="padding:5px;">
+						<label for="{{form.tos_accept.auto_id}}">
+							I accept FloorWalk's <a href="{{ rhea_base_url }}/privacy_policy" target="_blank">Privacy Policy</a> and <a href="{{ rhea_base_url }}/contractor_agreement" target="_blank">Independent Contractor Agreement</a>.
+						</label>
+							</td>
+						</tr>
+						</table>
+					</div>
 						{% if not form.referred_by.value %}
 						<div class="pull-right">
 							<a href="#" id="show_referral" tabindex="-1">I have a referral code</a>
@@ -77,13 +94,12 @@
 								e.target.remove();
 								var input = document.getElementById("referral_block");
 								input.style.display = "block";
-								input.focus();
+								document.getElementById("{{ form.referred_by.auto_id }}").focus();
 							});
 						</script>
 						{% endif %}
-					</div>
 					<div class="form-group">
-						<button class="btn btn-primary btn-lg" type="submit">Sign Up</button>
+						<button class="btn btn-primary btn-lg" type="submit" style="">Sign Up</button>
 					</div>
 				</form>
 			</div>
@@ -221,6 +237,7 @@
 
 		document.querySelector("#id_password1").addEventListener("focus", function(e){
 			document.querySelector("#id_password2").parentNode.style.display = "block";
+			document.querySelector("#tos_block").style.display = "block";
 		});
 
 		document.querySelector("#id_password1").addEventListener("keyup", function(e){
