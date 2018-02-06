@@ -1,23 +1,28 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import Alert from 'react-s-alert';
+import Alert from "react-s-alert";
 
-import moment from 'moment';
-import { momentDateFormat, url}  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat, url}  from "../../../config.js";
 
-import Jumbotron from '../Jumbotron.jsx';
-import { File, Download } from '../Icons.jsx';
-import Panel from '../Panel.jsx';
-import Loading from '../Loading.jsx';
-import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
-import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
+import Jumbotron from "../Jumbotron.jsx";
+import { Download } from "../Icons.jsx";
+import Loading from "../Loading.jsx";
+import PaymentStatusLabel from "../PaymentStatusLabel.jsx";
 
-import { payAuditStore, unpayAuditStore} from '../../manager/actions/audit_store.js';
-import { findPaymentsByAuditCycleId, payAllPendingPaymentsForAuditCycle } from '../../manager/service/payment.js';
+import { pay, unpay} from "../../manager/service/payment.js";
+import { findPaymentsByAuditCycleId, payAllPendingPaymentsForAuditCycle } from "../../manager/service/payment.js";
 
 class __PaymentRow extends React.Component{
+
+	static propTypes = {
+		onChange: PropTypes.func,
+		payment: PropTypes.object,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -25,19 +30,13 @@ class __PaymentRow extends React.Component{
 		};
 	}
 
-	paymentChanged = (payment) => {
-		if(this.props.onChange){
-			this.props.onChange();
-		}
-	}
-
 	payButtonClicked = (e) => {
-		this.props.dispatch(payAuditStore(this.props.payment.audit_store_id)).then(() => {
+		pay(this.props.payment.id).then((payment) => {
 			Alert.success(`${this.props.payment.user.profileinfo.first_name} PAID`.toUpperCase());
 			this.setState({
 				payButtonMessage: "Marked as paid",
 			});
-			this.paymentChanged();
+			this.props.onChange && this.props.onChange(payment);
 		}, (err) => {
 			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
 			this.setState({
@@ -45,15 +44,15 @@ class __PaymentRow extends React.Component{
 			});
 			Alert.error(errInfo[0]);
 		});
-	}
+	};
 
 	unpayButtonClicked = (e) => {
-		this.props.dispatch(unpayAuditStore(this.props.payment.audit_store_id)).then(() => {
+		unpay(this.props.payment.id).then((payment) => {
 			Alert.success(`${this.props.payment.user.profileinfo.first_name} Un PAID`.toUpperCase());
 			this.setState({
 				payButtonMessage: "Marked as unpaid",
 			});
-			this.paymentChanged();
+			this.props.onChange && this.props.onChange(payment);
 		}, (err) => {
 			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
 			this.setState({
@@ -61,7 +60,7 @@ class __PaymentRow extends React.Component{
 			});
 			Alert.error(errInfo[0]);
 		});
-	}
+	};
 
 	render(){
 		let auditorUrl = `/auditor/${this.props.payment.user.id}`;
@@ -69,12 +68,11 @@ class __PaymentRow extends React.Component{
 		let auditorPhoneLink = (<a href={`tel:${this.props.payment.user.profileinfo.mobile_number}`}>{this.props.payment.user.profileinfo.mobile_number}</a>);
 		let paymentStatus = this.props.payment.status;
 		let paymentButton = null;
-		let acceptButton = null;
 
-		if(paymentStatus == 'PENDING'){
+		if(paymentStatus == "PENDING"){
 			paymentButton = (<button onClick={this.payButtonClicked} type="button" className="btn btn-default">Pay</button>);
 		}
-		else if(paymentStatus == 'PAID'){
+		else if(paymentStatus == "PAID"){
 			paymentButton = (<button onClick={this.unpayButtonClicked} type="button" className="btn btn-default">Unpay</button>);
 		}
 
@@ -104,7 +102,7 @@ class AuditCyclePaymentList extends React.Component{
 
 	setLoading = (loading) => {
 		this.setState((oldState) => Object.assign({}, oldState, { loading }));
-	}
+	};
 
 	reloadData = () => {
 		this.setLoading(true);
@@ -113,7 +111,7 @@ class AuditCyclePaymentList extends React.Component{
 				payments
 			});
 		}).always(() => this.setLoading(false));
-	}
+	};
 
 	componentDidMount(){
 		this.reloadData();
@@ -124,11 +122,22 @@ class AuditCyclePaymentList extends React.Component{
 			this.reloadData();
 			Alert.success(`${count} PAYMENTS MARKED AS PAID`);
 		});
-	}
+	};
+
+	paymentChanged = (payment) => {
+		let i = this.state.payments.findIndex(p => p.id === payment.id);
+		if( i !== -1){
+			let payments = this.state.payments;
+			payments[i] = payment;
+			this.setState({
+				payments
+			});
+		}
+	};
 
 	render(){
 
-		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.reloadData}/>));
+		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.paymentChanged}/>));
 
 		let table = this.state.loading ? <Loading/> : rows.length === 0 ? (
 			<Jumbotron key="empty" heading="no payments here" para="payments for accepted reports will appear here"/>

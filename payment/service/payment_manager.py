@@ -63,10 +63,9 @@ def clear_payment_for_audit_store(audit_store_id):
     payment.save()
 
 @atomic
-def pay_for_audit_store(audit_store_id, user_actor):
+def pay(payment_id, user_actor):
     try:
-        audit_store = audit_store_service.find_by_id(audit_store_id)
-        payment = Payment.objects.get(audit_store_id=audit_store_id)
+        payment = Payment.objects.get(pk=payment_id)
         if payment.status == Payment.PENDING:
             bi = payment.audit_store.user.bankinfo
             if not(bi.bank_name and bi.account_number and bi.ifsc_code):
@@ -99,17 +98,16 @@ def pay_for_audit_store(audit_store_id, user_actor):
             )
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
-            return audit_store
+            return payment
         else:
             raise AppLogicError("payment cannot be pending now")
     except BankInfo.DoesNotExist as e:
         raise AppLogicError("Bank details are not given") from e
 
 @atomic
-def unpay_for_audit_store(audit_store_id, user_actor):
+def unpay(payment_id, user_actor):
     try:
-        audit_store = audit_store_service.find_by_id(audit_store_id)
-        payment = Payment.objects.get(audit_store_id=audit_store_id)
+        payment = Payment.objects.get(pk=payment_id)
         if payment.status == Payment.PAID:
             payment.status = Payment.PENDING
             payment.paid_on = None
@@ -127,8 +125,8 @@ def unpay_for_audit_store(audit_store_id, user_actor):
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+            # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            # connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=payment.user,
@@ -136,9 +134,9 @@ def unpay_for_audit_store(audit_store_id, user_actor):
                 action_object=payment.audit_store,
                 target=payment.audit_store
             )
-            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
-            return audit_store
+            # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            # connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+            return payment
         else:
             raise AppLogicError("payment cannot be done now")
     except Payment.DoesNotExist as e:
@@ -301,5 +299,5 @@ def consolidate_by_user(payments):
 def pay_all_pending_for_audit_cycle(audit_cycle_id, user_actor):
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     for payment in pending_payments:
-        pay_for_audit_store(payment.audit_store_id, user_actor)
+        pay(payment.id, user_actor)
     return len(pending_payments)

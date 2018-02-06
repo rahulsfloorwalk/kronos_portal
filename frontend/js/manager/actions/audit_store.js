@@ -224,43 +224,7 @@ export function rejectAuditStore(auditStoreId){
 	};
 };
 
-export function payAuditStore(auditStoreId){
-	return function(dispatch){
-		dispatch({
-			type: types.AUDIT_STORE_ID_PAY,
-			status: 'request',
-			auditStoreId
-		});
 
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/pay`, function(auditStore){
-			dispatch({
-				type: types.AUDIT_STORE_ID_PAY,
-				status: 'success',
-				auditStore
-			});
-		});
-		//TODO: Handle error
-	};
-};
-
-export function unpayAuditStore(auditStoreId){
-	return function(dispatch){
-		dispatch({
-			type: types.AUDIT_STORE_ID_UNPAY,
-			status: 'request',
-			auditStoreId
-		});
-
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/unpay`, function(auditStore){
-			dispatch({
-				type: types.AUDIT_STORE_ID_UNPAY,
-				status: 'success',
-				auditStore
-			});
-		});
-		//TODO: Handle error
-	};
-};
 
 export function updateAuditStore(auditStore){
 	return function(dispatch){

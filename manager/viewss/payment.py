@@ -8,7 +8,7 @@ from registration.mixins import HasGroupPermission
 
 from payment.service import payment_manager as payment_service
 
-from ..serializers import PaymentUserSerializer, AuditStoreSerializerWithPayment
+from ..serializers import PaymentUserSerializer
 
 class PaymentView(APIView):
     permission_classes = [HasGroupPermission]
@@ -49,22 +49,22 @@ class PendingPaymentCsvView(APIView):
         return response
 
 
-class AuditStoreIdPayView(APIView):
+class PaymentIdPayView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
 
-    def post(self, request, audit_store_id):
-        audit_store = payment_service.pay_for_audit_store(audit_store_id, request.user)
-        return Response(AuditStoreSerializerWithPayment(audit_store).data)
+    def post(self, request, payment_id):
+        payment = payment_service.pay(payment_id, request.user)
+        return Response(PaymentUserSerializer(payment).data)
 
-class AuditStoreIdUnpayView(APIView):
+class PaymentIdUnpayView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
 
-    def post(self, request, audit_store_id):
-        audit_store = payment_service.unpay_for_audit_store(audit_store_id, request.user)
-        return Response(AuditStoreSerializerWithPayment(audit_store).data)
+    def post(self, request, payment_id):
+        payment = payment_service.unpay(payment_id, request.user)
+        return Response(PaymentUserSerializer(payment).data)

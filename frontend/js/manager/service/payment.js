@@ -12,3 +12,12 @@ export function findPaymentsByUserId(user_id){
 export function payAllPendingPaymentsForAuditCycle(audit_cycle_id){
 	return $.post( url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/payment/pending/pay`);
 };
+
+export function pay(paymentId){
+	return $.post( url.api_base_path + `manager/payment/${paymentId}/pay`);
+}
+
+export function unpay(paymentId){
+	return $.post( url.api_base_path + `manager/payment/${paymentId}/unpay`);
+}
+
