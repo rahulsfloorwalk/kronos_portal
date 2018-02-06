@@ -1,14 +1,12 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat, momentDateTimeFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat, momentDateTimeFormat }  from "../../../config.js";
 
-import { findNotifications } from '../../manager/service/notification.js';
+import { findNotifications, findActors } from "../../manager/service/notification.js";
 
-import { Bell, Refresh } from '../Icons.jsx';
-import Panel from '../Panel.jsx';
+import { Bell } from "../Icons.jsx";
 
 var NotificationItem = React.createClass({
 	getVerb: function(verb){
@@ -67,19 +65,19 @@ var NotificationItem = React.createClass({
 		var txt = type.app_label + "." + type.model;
 		switch(txt){
 			case "audit.audit":
-				return <span>
+				return (<span>
 					audit,<br/>
 					client: <b>{target.audit_cycle.client.name}</b>,
 					store: <b>{target.store.name}</b>,
 					cycle: <b>{target.audit_cycle.name}</b>
-					</span>
+				</span>);
 			default:
 				return txt;
 		}
 	},
 	getUrl: function(n){
 		if(n.verb.startsWith("AUDIT_STORE_")){
-			return `/audit_store/${n.action_object.id}/report`
+			return `/audit_store/${n.action_object.id}/report`;
 		}
 		if(n.verb.startsWith("AUDIT_APPLICATION_")){
 			return `/audit_cycle/${n.target.audit_cycle.id}/audit`;
@@ -112,19 +110,21 @@ export default React.createClass({
 	getInitialState: function(){
 		return {
 			notifications: [],
+			actors: [],
 			loading: false,
-			verb: ""
+			verb: "",
+			selectedActor: "",
 		};
 	},
-	reloadNotifications: function(){
-		findNotifications({verb: this.state.verb}).then((notifications)=> this.setState({
+	reloadNotifications: function(verb, actor=null){
+		findNotifications({verb, actor}).then((notifications)=> this.setState({
 			notifications
 		}));
 	},
-	loadMoreNotifications: function(){
+	loadMoreNotifications: function(verb, actor=null){
 		if(this.state.notifications !== []){
 			let beforeTime = this.state.notifications[this.state.notifications.length-1].timestamp;
-			findNotifications({verb: this.state.verb, before: beforeTime}).then((notifications)=> {
+			findNotifications({verb, actor, before: beforeTime}).then((notifications)=> {
 				let newNotifications = this.state.notifications;
 				for(let n of notifications){
 					newNotifications.push(n);
@@ -138,13 +138,23 @@ export default React.createClass({
 	verbChanged: function(e){
 		this.setState({
 			verb: e.target.value
-		}, this.reloadNotifications);
+		});
+		this.reloadNotifications(e.target.value, this.state.selectedActor);
+	},
+	actorChanged: function(e){
+		this.setState({
+			selectedActor: e.target.value
+		});
+		this.reloadNotifications(this.state.verb, e.target.value);
 	},
 	componentDidMount: function() {
 		this.reloadNotifications();
+		findActors().then((actors) => {
+			this.setState({actors});
+		});
 	},
 	render: function(){
-		var rows = [];
+		let rows = [];
 		for(var n of this.state.notifications) {
 			rows.push(<NotificationItem n={n} key={n.id}/>);
 		}
@@ -161,8 +171,13 @@ export default React.createClass({
 			<div className="panel panel-primary">
 				<div className="panel-heading">
 					<div className="pull-right">
-						<select className="form-control" onChange={this.verbChanged}>
-							<option value="">All Types</option>
+						<select className="form-control" onChange={this.actorChanged} value={this.state.selectedActor} style={{"display":"inline-block", "width": "200px"}}>
+							<option value="">Everybody</option>
+							{this.state.actors.map((a) => <option value={a.id} key={a.id}>{a.email}</option>)}
+						</select>
+						&nbsp;
+						<select className="form-control" onChange={this.verbChanged} value={this.state.verb} style={{"display":"inline-block", "width": "200px"}}>
+							<option value="">All Activity</option>
 							<option value="AUDIT_APPLICATION_APPLIED">Application Applied</option>
 							<option value="AUDIT_APPLICATION_CANCELED">Application Canceled</option>
 							<option value="AUDIT_APPLICATION_WAITLISTED">Application Wait Listed</option>
@@ -190,7 +205,7 @@ export default React.createClass({
 					{rows}
 				</div>
 				<div className="panel-footer text-center">
-					<button className="btn btn-default" onClick={this.loadMoreNotifications}>
+					<button className="btn btn-default" onClick={() => this.loadMoreNotifications(this.state.verb, this.state.selectedActor)}>
 						Load More
 					</button>
 				</div>

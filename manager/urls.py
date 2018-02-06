@@ -25,6 +25,7 @@ from .viewss import config as config_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
+    url(r'notifications/actors$', notification_views.NotificationActorsView.as_view(), name='notification_actors_view'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)$', report_stats_views.AuditCycleStoreSectionAverageReport.as_view(), name='audit_cycle_store_section_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city/(?P<city_id>[0-9]+)$', report_stats_views.AuditCycleCitySectionAverageReport.as_view(), name='audit_cycle_city_section_average'),
 
