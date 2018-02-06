@@ -428,7 +428,7 @@ def accept(audit_store_id, payment_amount, user_actor):
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ACCEPTED).order_by('-id')[0].id
             connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
 
-            ## add the entry to the payment row
+            # add the entry to the payment row
             payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, payment_amount, user_actor)
 
             return audit_store
@@ -453,8 +453,8 @@ def reject(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+            # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            # connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
             notify.send(
                 user_actor,
                 recipient=audit_store.user,
@@ -462,8 +462,8 @@ def reject(audit_store_id, user_actor):
                 action_object=audit_store,
                 target=audit_store.audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
-            #connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+            # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_REJECTED).order_by('-id')[0].id
+            # connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
             return audit_store
         else:
             raise AppLogicError("audit store cannot be rejected now")
@@ -495,3 +495,14 @@ def revoke_audit_store_from_client_user(audit_store_id, user_id):
 
 def get_audit_store_stats(audit_cycle_id):
     return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
+
+
+@atomic
+def accept_all_audit_stores(audit_cycle_id, user_actor):
+    completed_audit_stores = find_by_audit_cycle(audit_cycle_id).filter(status=AuditStore.COMPLETED)
+
+    for audit_store in completed_audit_stores:
+        total = (audit_store.audit.earnings_per_audit or 0) + (audit_store.audit.reimbursement or 0)
+        accept(audit_store.id, total, user_actor)
+
+    return len(completed_audit_stores)

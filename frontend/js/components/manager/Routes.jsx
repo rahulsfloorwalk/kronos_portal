@@ -112,6 +112,7 @@ const Routes = () => (
 				<Route path=":auditId/application/fiat" component={AuditFiatAssignForm}/>
 				<Route path=":auditId/application/:applicationId/approve" component={ApplicationApproveForm}/>
 				<Route path=":auditId/application/:applicationId/reject" component={ApplicationRejectForm}/>
+				<Route path="audit_store/:auditStoreId/accept" component={AuditStoreAcceptForm}/>
 			</Route>
 			<Route path="audit_store" components={AuditStoreList}>
 				<Route path=":auditStoreId/accept" component={AuditStoreAcceptForm}/>

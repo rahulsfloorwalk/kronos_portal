@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from "react-s-alert";
+
 import moment from 'moment';
 import { momentDateFormat, url}  from '../../../config.js';
 
@@ -17,7 +19,7 @@ import AuditStoreStatusSummary from './AuditStoreStatusSummary.jsx'
 import { fetchClientUsers } from '../../manager/actions/client_user.js';
 import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore, updateAuditStore} from '../../manager/actions/audit_store.js';
 import { findAuditStoresByAuditCycle, assignAuditStoreToClientUser, revokeAuditStoreFromClientUser } from '../../manager/service/audit_store.js';
-import { assignToModerator, revokeFromModerator } from '../../manager/service/audit_store.js';
+import { assignToModerator, revokeFromModerator, acceptAllReports } from '../../manager/service/audit_store.js';
 import { findModerators } from '../../manager/service/moderator.js'
 import { getAuditStoreStatus } from '../../utils.js';
 import { getPaymentStatus } from '../../utils.js';
@@ -76,7 +78,7 @@ var __AuditStoreRow = React.createClass({
     let acceptButton = null;
     if(this.props.auditStore.status == 'COMPLETED'){
       if(this.props.auditStore.audit.audit_cycle){
-	      acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-default">Accept</Link>);
+	      acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-default">Accept</Link>);
       }
     }
     return(
@@ -193,6 +195,14 @@ var AuditStoreList = React.createClass({
 			});
 		}
 	},
+	acceptAllClicked: function(){
+		if(confirm("Accept all reports with default Audit Fees and Reimbursement?")){
+			acceptAllReports(this.props.params.auditCycleId).then((count) => {
+				Alert.success(`${count} REPORTS ACCEPTED`);
+				this.reloadReports(this.props.params.auditCycleId);
+			});
+		}
+	},
   render: function(){
 	  let clientUserRows = [];
 	  for( let clientUserId in this.props.clientUsers){
@@ -265,9 +275,15 @@ var AuditStoreList = React.createClass({
 	    <option value="ACCEPTED">{getAuditStoreStatus("ACCEPTED")}</option>
 	    <option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
 	   </select>
-		  <a className="btn btn-default pull-right" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
+	    <span className="pull-right">
+		<button className="btn btn-default" onClick={this.acceptAllClicked}>
+		      Accept All
+		  </button>
+		&nbsp;
+		  <a className="btn btn-default" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
 		      <Download/> Excel Report
 		  </a>
+	    </span>
 	    </div>
 	    {rows}
         {this.props.children}
