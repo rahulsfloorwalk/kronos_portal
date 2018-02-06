@@ -88,15 +88,6 @@ class AuditCycleXlsxReport(APIView):
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
-class AuditCycleStats(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, audit_cycle_id, format=None):
-        audit_cycle_stats = audit_cycle_service.get_audit_cycle_stats(audit_cycle_id)
-        return Response(audit_cycle_stats)
-
 class ExportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

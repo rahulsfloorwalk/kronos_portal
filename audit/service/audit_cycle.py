@@ -52,12 +52,10 @@ def find_by_audit_type_for_clientuser(audit_type, user_id):
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
-def get_audit_cycle_stats(audit_cycle_id):
-
-    audits = AuditCycle.objects.get(pk=audit_cycle_id).audits.all()
+def get_audit_cycle_stats(audit_cycle):
     applications = []
     stores = []
-    for audit in audits:
+    for audit in audit_cycle.audits.all():
         applications.extend(audit.applications.all())
         stores.extend(audit.audit_stores.all())
 
@@ -85,7 +83,13 @@ def get_audit_cycle_stats(audit_cycle_id):
 def get_audit_cycle_dashboard():
     audit_cycles = AuditCycle.objects.filter(
         Q(status = AuditCycle.UPCOMING) | Q(status = AuditCycle.ACTIVE) | Q(status = AuditCycle.REPORT)
-    ).all().order_by('end_date')
+    ).order_by('end_date') \
+        .select_related('client') \
+        .prefetch_related(
+            'audits',
+            'audits__applications',
+            'audits__audit_stores',
+    )
 
     response = []
     for audit_cycle in audit_cycles:
@@ -97,7 +101,7 @@ def get_audit_cycle_dashboard():
         obj['start_date'] = audit_cycle.start_date
         obj['end_date'] = audit_cycle.end_date
         obj['audit_count'] = audit_cycle.audit_count()
-        obj['stats'] = get_audit_cycle_stats(audit_cycle.id)
+        obj['stats'] = get_audit_cycle_stats(audit_cycle)
         response.append(obj)
 
     return response

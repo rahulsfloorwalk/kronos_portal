@@ -14,7 +14,6 @@ import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
 import Loading from '../Loading.jsx';
 
-import AuditCycleSummary from './AuditCycleSummary.jsx'
 import AuditStoreStatusSummary from './AuditStoreStatusSummary.jsx'
 import { fetchClientUsers } from '../../manager/actions/client_user.js';
 import {fetchAuditStores, acceptAuditStore, payAuditStore, unpayAuditStore, updateAuditStore} from '../../manager/actions/audit_store.js';

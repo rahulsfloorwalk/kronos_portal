@@ -67,7 +67,6 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store/accept$', audit_store_views.AcceptAllCompletedForAuditCycle.as_view(), name='accept_all_completed_for_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_xlsx_report$', audit_cycle_views.AuditCycleXlsxReport.as_view(), name='audit_cycle_xlsx_report'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/stats$', audit_cycle_views.AuditCycleStats.as_view(), name='audit_cycle_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/application_stats$', audit_cycle_views.AuditCycleApplicationStats.as_view(), name='audit_cycle_application_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/application/deny_all$', audit_cycle_views.AuditCycleRejectAllApplicationsView.as_view(), name='audit_cycle_reject_all_applications_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store_stats$', audit_cycle_views.AuditCycleAuditStoreStats.as_view(), name='audit_cycle_audit_store_stats'),

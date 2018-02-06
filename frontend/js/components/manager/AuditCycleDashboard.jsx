@@ -15,7 +15,6 @@ import ApplicationStatusLabel from '../ApplicationStatusLabel.jsx';
 
 import { getAuditStatus } from '../../utils.js';
 
-import AuditCycleSummary from './AuditCycleSummary.jsx'
 import { King, Retweet, Inbox, Tasks, Pencil, File } from '../Icons.jsx';
 import NavLink from '../NavLink.jsx';
 import Panel from '../Panel.jsx';
