@@ -259,7 +259,7 @@ let AuditRow = ReactRedux.connect()(__AuditRow);
 var AuditList = React.createClass({
 	getInitialState: function(){
 		return {
-			loading: false,
+			loading: true,
 			selectedCityId: null,
 			selectedHiddenState: "",
 		};
