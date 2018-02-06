@@ -442,7 +442,7 @@ class NotificationsView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        notifications = notification_service.find_by_recipient_user_and_verb(request.user.id)
+        notifications = notification_service.find_by_recipient_user_and_verb_and_actor(request.user.id)
         return Response(NotificationSerializer(notifications, many=True).data)
 
 class UserView(APIView):
