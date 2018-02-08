@@ -42,21 +42,69 @@ class BankInfoAPITestCase(APITestCase):
 
         # fill out the bank info
         input_data = {
-            'bank_name': fake.company(),
             'account_holder_name': fake.name(),
             'account_number': fake.numerify(text="###############"),
-            'ifsc_code': fake.lexify(text="???????") + fake.numerify(text="######"),
-            'pan_number': fake.lexify(text="????") + fake.numerify(text="####"),
+            'ifsc_code': "SBIN0008238",
+            'pan_number': "HUYPR2313U",
         }
         response = self.client.post(reverse('auditor:bank_info_view'), input_data, format="json")
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.data.get("is_complete"))
+        self.assertTrue(response.data.get("is_valid"))
+        self.assertTrue(response.data.get("is_pan_card_valid"))
+        self.assertTrue(response.data.get("is_ifsc_code_valid"))
         for k,v in input_data.items():
-            self.assertEqual(v, response.data.get(k))
+            self.assertEqual(v.upper(), response.data.get(k))
 
         # re check if the GET end point is serving the data correctly
         response = self.client.get(reverse('auditor:bank_info_view'))
         self.assertEqual(response.status_code, 200)
         for k,v in input_data.items():
-            self.assertEqual(v, response.data.get(k))
+            self.assertEqual(v.upper(), response.data.get(k))
 
+    def test_invalid_ifsc_code(self):
+        # login first
+        self.client.login(username=self.email, password=self.password)
+
+        # fill out the bank info
+        input_data = {
+            'ifsc_code': "12345678901",
+        }
+        response = self.client.post(reverse('auditor:bank_info_view'), input_data, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.data.get("is_ifsc_code_valid"))
+        self.assertFalse(response.data.get("is_valid"))
+
+    def test_invalid_pan_card(self):
+        # login first
+        self.client.login(username=self.email, password=self.password)
+
+        # fill out the bank info
+        input_data = {
+            'pan_number': "aASN1232J8"
+        }
+        response = self.client.post(reverse('auditor:bank_info_view'), input_data, format="json")
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(response.data.get("is_pan_card_valid"))
+        self.assertFalse(response.data.get("is_valid"))
+
+    def test_auto_capitalization(self):
+        # login first
+        self.client.login(username=self.email, password=self.password)
+
+        acc_name = fake.name().lower()
+        acc_num = fake.numerify("###########").lower()
+        ifsc = fake.lexify(fake.numerify("????#######")).lower()
+        pan = fake.lexify(fake.numerify("?????####?")).lower()
+
+        # fill out the bank info
+        input_data = {
+            'account_holder_name': acc_name,
+            'account_number': acc_num,
+            'ifsc_code': ifsc,
+            'pan_number': pan,
+        }
+        response = self.client.post(reverse('auditor:bank_info_view'), input_data, format="json")
+        self.assertEqual(response.status_code, 200)
+        for k,v in input_data.items():
+            self.assertEqual(v.upper(), response.data.get(k))

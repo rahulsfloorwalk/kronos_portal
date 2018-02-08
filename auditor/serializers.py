@@ -19,6 +19,7 @@ from payment.models import Payment
 from referral.models import AuditorReferral
 from social.models import Facebook
 from auditor.models import Preferences
+# from kronos.utils import validate_ifsc, validate_pan
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -193,15 +194,39 @@ class BankInfoSerializer(ModelSerializer):
         model = BankInfo
         fields = (
             'id',
-            'bank_name',
+            # 'bank_name',
+            'bank_name_from_ifsc',
             'account_holder_name',
             'account_number',
             'ifsc_code',
             'pan_number',
             'user_id',
+            'is_valid',
+            'is_pan_card_valid',
+            'is_ifsc_code_valid',
             'is_complete'
         )
         read_only_fields = ('id', 'user_id')
+
+    def validate_pan_number(self, value):
+        # if value and not validate_pan(value):
+            # raise ValidationError("Please provider a valid PAN number")
+        # for now we're just converting the given string to uppercase
+        return str.upper(value)
+
+    def validate_ifsc_code(self, value):
+        # if value and not validate_ifsc(value):
+            # raise ValidationError("Please provide a valid IFSC code")
+        # for now we're just converting the given string to uppercase
+        return str.upper(value)
+
+    def validate_account_holder_name(self, value):
+        # for now we're just converting the given string to uppercase
+        return str.upper(value)
+
+    def validate_account_number(self, value):
+        # for now we're just converting the given string to uppercase
+        return str.upper(value)
 
     def deserialize(self):
         if self.context.get('current_user') is None:
@@ -213,7 +238,7 @@ class BankInfoSerializer(ModelSerializer):
             bank_info = BankInfo()
             bank_info.user_id = self.context.get('current_user').id
 
-        bank_info.bank_name = self.validated_data.get('bank_name', bank_info.bank_name)
+        # bank_info.bank_name = self.validated_data.get('bank_name', bank_info.bank_name)
         bank_info.account_holder_name = self.validated_data.get('account_holder_name', bank_info.account_holder_name)
         bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
         bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)

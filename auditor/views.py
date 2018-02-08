@@ -86,7 +86,7 @@ class BankInfoView(APIView):
         bank_info_s = BankInfoSerializer(data=request.data, context={'current_user': request.user})
         bank_info_s.is_valid(raise_exception=True)
         bank_info = bank_info_s.deserialize()
-        bank_info.save()
+        bank_info = bank_info_service.save(bank_info)
         return Response(BankInfoSerializer(bank_info).data)
 
 class MobileNumberView(APIView):
@@ -203,7 +203,7 @@ class AuditApplicationApplyView(APIView):
 
         application = application_service.apply(
             application_apply_ds.validated_data["audit_id"].id,
-            application_apply_ds.validated_data["profileinfo_id"].id,
+            request.user.id,
             application_apply_ds.validated_data["audit_date"]
         )
         return Response(AuditApplicationSerializer(application).data)
@@ -223,7 +223,7 @@ class AuditApplicationCancelView(APIView):
 
         application = application_service.cancel(
             application_cancel_ds.data["audit_id"],
-            application_cancel_ds.data["profileinfo_id"]
+            request.user.id,
         )
         return Response(AuditApplicationSerializer(application).data)
 

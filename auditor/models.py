@@ -7,6 +7,7 @@ from django.db.models import Model, CharField, AutoField, DateField, ForeignKey,
 
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
+from kronos.utils import validate_ifsc, validate_pan, get_bank_name_from_ifsc
 
 
 class ProfileInfo(Model):
@@ -216,12 +217,24 @@ class BankInfo(Model):
 
     def is_complete(self):
         complete = True
-        if self.bank_name in [None, ""]: complete = False
+        # if self.bank_name in [None, ""]: complete = False
         if self.account_holder_name in [None, ""]: complete = False
         if self.account_number in [None, ""]: complete = False
         if self.ifsc_code in [None, ""]: complete = False
         if self.pan_number in [None, ""]: complete = False
         return complete
+
+    def is_valid(self):
+        return bool(validate_pan(self.pan_number)) and bool(validate_ifsc(self.ifsc_code))
+
+    def is_pan_card_valid(self):
+        return bool(validate_pan(self.pan_number))
+
+    def is_ifsc_code_valid(self):
+        return bool(validate_ifsc(self.ifsc_code))
+
+    def bank_name_from_ifsc(self):
+        return get_bank_name_from_ifsc(self.ifsc_code)
 
 
 class Preferences(Model):

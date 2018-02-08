@@ -41,42 +41,42 @@ class AuditApplicationTestCase(TestCase):
 
     def test_apply_already_applied(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
-        application_service.apply(audit.id, self.profile.id, date(2017, 6, 5))
-        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 18))
+        application_service.apply(audit.id, self.auditor_user.id, date(2017, 6, 5))
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.auditor_user.id, date(2017, 6, 18))
 
     def test_apply_date_in_range(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
-        application = application_service.apply(audit.id, self.profile.id, date(2017, 6, 5))
+        application = application_service.apply(audit.id, self.auditor_user.id, date(2017, 6, 5))
         self.assertEqual(application.audit_date, date(2017, 6, 5))
         self.assertEqual(application.status, AuditApplication.APPLIED)
 
     def test_apply_date_out_of_range(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
-        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.auditor_user.id, date(2017, 6, 21))
 
     def test_apply_audit_cycle_status_upcoming(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.UPCOMING)
-        application = application_service.apply(audit.id, self.profile.id, date(2017, 6, 5))
+        application = application_service.apply(audit.id, self.auditor_user.id, date(2017, 6, 5))
         self.assertEqual(application.audit_date, date(2017, 6, 5))
         self.assertEqual(application.status, AuditApplication.APPLIED)
 
     def test_apply_audit_cycle_status_active(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
-        application = application_service.apply(audit.id, self.profile.id, date(2017, 6, 5))
+        application = application_service.apply(audit.id, self.auditor_user.id, date(2017, 6, 5))
         self.assertEqual(application.audit_date, date(2017, 6, 5))
         self.assertEqual(application.status, AuditApplication.APPLIED)
 
     def test_apply_audit_cycle_status_preparation(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.PREPARATION)
-        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.auditor_user.id, date(2017, 6, 21))
 
     def test_apply_audit_cycle_status_report(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.REPORT)
-        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.auditor_user.id, date(2017, 6, 21))
 
     def test_apply_audit_cycle_status_archived(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ARCHIVED)
-        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.profile.id, date(2017, 6, 21))
+        self.assertRaises(AppLogicError, application_service.apply, audit.id, self.auditor_user.id, date(2017, 6, 21))
 
     def test_cancel_audit_cycle_status_upcoming(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.UPCOMING)
@@ -84,7 +84,7 @@ class AuditApplicationTestCase(TestCase):
             audit=audit,
             status=AuditApplication.APPLIED,
         )
-        application = application_service.cancel(audit.id, self.profile.id)
+        application = application_service.cancel(audit.id, self.auditor_user.id)
         self.assertEqual(application.status, AuditApplication.NOT_APPLIED)
 
     def test_cancel_audit_cycle_status_active(self):
@@ -93,7 +93,7 @@ class AuditApplicationTestCase(TestCase):
             audit=audit,
             status=AuditApplication.APPLIED,
         )
-        application = application_service.cancel(audit.id, self.profile.id)
+        application = application_service.cancel(audit.id, self.auditor_user.id)
         self.assertEqual(application.status, AuditApplication.NOT_APPLIED)
 
     def test_already_cancelled(self):
@@ -102,11 +102,11 @@ class AuditApplicationTestCase(TestCase):
             audit=audit,
             status=AuditApplication.NOT_APPLIED,
         )
-        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.auditor_user.id)
 
     def test_cancel_without_application(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
-        self.assertRaises(ObjectNotFound, application_service.cancel, audit.id, self.profile.id)
+        self.assertRaises(ObjectNotFound, application_service.cancel, audit.id, self.auditor_user.id)
 
     def test_cancel_audit_cycle_status_preparation(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.PREPARATION)
@@ -114,7 +114,7 @@ class AuditApplicationTestCase(TestCase):
             audit=audit,
             status=AuditApplication.APPLIED,
         )
-        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.auditor_user.id)
 
     def test_cancel_audit_cycle_status_report(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.REPORT)
@@ -122,7 +122,7 @@ class AuditApplicationTestCase(TestCase):
             audit=audit,
             status=AuditApplication.APPLIED,
         )
-        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.auditor_user.id)
 
     def test_cancel_audit_cycle_status_archive(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ARCHIVED)
@@ -130,7 +130,7 @@ class AuditApplicationTestCase(TestCase):
             audit=audit,
             status=AuditApplication.APPLIED,
         )
-        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.profile.id)
+        self.assertRaises(AppLogicError, application_service.cancel, audit.id, self.auditor_user.id)
 
     def test_reject_audit_cycle_status_preparation(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.PREPARATION)

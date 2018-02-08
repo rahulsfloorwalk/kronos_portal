@@ -7,7 +7,7 @@ from django.apps import apps
 from django.db.models import ForeignKey, OneToOneField
 from django.db.models import CASCADE
 
-ignore_dirs = re.compile("^.*(__pycache__|\.git|frontend|venv|templates|fixtures|egg-info|dist|static|logs|htmlcov)$")
+ignore_dirs = re.compile("^.*(__pycache__|\.git|frontend|venv|datasets|templates|fixtures|egg-info|dist|static|logs|htmlcov)$")
 
 def check_dir(directory):
     messages = []

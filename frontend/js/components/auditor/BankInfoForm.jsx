@@ -1,59 +1,92 @@
-import React from 'react';
-import $ from 'jquery';
-import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import React from "react";
+import { connect } from "react-redux";
+import { hashHistory } from "react-router";
+import PropTypes from "prop-types";
 
-import { fetchBankInfo, saveBankInfo } from '../../auditor/actions/bank_info.js';
+import { fetchBankInfo, saveBankInfo } from "../../auditor/actions/bank_info.js";
 
-import FormInput from '../FormInput.jsx';
-import FormGroup from '../FormGroup.jsx';
-import SaveButton from '../SaveButton.jsx';
-import Modal from '../Modal.jsx';
+import FormInput from "../FormInput.jsx";
+import SaveButton from "../SaveButton.jsx";
+import Modal from "../Modal.jsx";
+import Loading from "../Loading.jsx";
 
-var BankInfoForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentWillMount: function() {
-		this.setState(this.props.bankInfo);
-	},
-	componentDidMount: function() {
-		this.props.dispatch(fetchBankInfo());
-	},
-	componentWillReceiveProps: function(nextProps) {
-		this.setState(nextProps.bankInfo);
-	},
-	inputChanged: function(e){
-		var change = {};
-		change[e.target.name] = e.target.value;
-		this.setState(change);
-	},
-	onSubmit: function(e){
+class BankInfoForm extends React.Component {
+
+	static propTypes = {
+		dispatch: PropTypes.func,
+		router: PropTypes.shape({
+			push: PropTypes.func,
+		}),
+		bankInfo: PropTypes.object,
+	};
+
+	constructor(props){
+		super(props);
+		this.state = {
+			form: {},
+			errors: {},
+			loading: true,
+			saving: false,
+		};
+	}
+
+	componentDidMount() {
+		this.setLoading(true);
+		this.props.dispatch(fetchBankInfo()).always(() => this.setLoading(false));
+	}
+
+	componentWillReceiveProps(nextProps) {
+		this.setState({form: nextProps.bankInfo});
+	}
+
+	setLoading = (loading) => this.setState((prevState) => Object.assign({}, prevState, { loading }));
+	setSaving = (saving) => this.setState((prevState) => Object.assign({}, prevState, { saving }));
+
+	inputChanged = (e) => {
+		this.setState({
+			form: Object.assign({}, this.state.form, {
+				[e.target.name] : e.target.value,
+			})
+		});
+	};
+
+	onSubmit = (e) => {
 		e.preventDefault();
-		this.props.dispatch(saveBankInfo(this.state));
-	},
-	render : function(){
+		this.setSaving(true);
+		this.props.dispatch(saveBankInfo(this.state.form)).then(() => {
+			this.props.router.push("/details");
+		}, (errors) => {
+			this.setState({
+				errors: errors.responseJSON || {},
+			});
+			this.setSaving(false);
+		});
+	};
+
+	render(){
 		return (
 			<Modal modalTitle="Edit Bank Info" onClose={hashHistory.goBack}>
 				<div className="form-group"><big><i>fields marked <b>✳</b> must be filled to apply to audits</i></big></div>
-				<form onSubmit={this.onSubmit}>
-					<FormInput label="Bank Name (✳)" maxLength="40" type="text" value={this.state.bank_name} name="bank_name" onChange={this.inputChanged} errors={this.props.errors.bank_name}/>
-					<FormInput label="Account Holder Name (✳)" maxLength="40" type="text" value={this.state.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.props.errors.account_holder_name}/>
-					<FormInput label="Account Number (✳)" maxLength="20" type="text" value={this.state.account_number} name="account_number" onChange={this.inputChanged} errors={this.props.errors.account_number}/>
-					<FormInput label="IFSC Code (✳)" maxLength="20" type="text" value={this.state.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.props.errors.ifsc_code}/>
-					<FormInput label="Pan Number (✳)" maxLength="10" type="text" value={this.state.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.props.errors.pan_number}/>
-					<SaveButton/>
-				</form>
+				{ this.state.loading ?
+					<Loading/>
+					:
+					<form onSubmit={this.onSubmit}>
+						<FormInput label="Account Holder Name (✳)" maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
+						<FormInput label="Account Number (✳)" maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
+						<FormInput label="IFSC Code (✳)" maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>
+						<FormInput label="Pan Number (✳)" maxLength="10" type="text" value={this.state.form.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.state.errors.pan_number} readOnly={this.state.saving}/>
+						<SaveButton/>
+					</form>
+				}
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {
 		bankInfo: store.bankInfo,
-		errors: store.forms.bankInfo.errors,
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(BankInfoForm);
+export default connect( mapStoreToProps)(BankInfoForm);

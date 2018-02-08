@@ -7,7 +7,7 @@ from notifications.signals import notify
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from auditor.models import AuditApplication, ProfileInfo, BankInfo, AdditionalInfo
+from auditor.models import AuditApplication, ProfileInfo
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from notify.service import mail_notify
 from notify import verbs
@@ -15,11 +15,14 @@ from registration.models import GROUP_NAME_MANAGER
 from audit.service import audit_service
 from audit.service import audit_cycle as audit_cycle_service
 
+from auditor.service import profile_info_service
+from auditor.service import bank_info_service
 
-def get_applications( profileinfo_id):
+
+def get_applications(profileinfo_id):
     return AuditApplication.objects.filter(profileinfo_id=profileinfo_id)
 
-def get_application( audit_id, profileinfo_id):
+def get_application(audit_id, profileinfo_id):
     try:
         audit = Audit.objects.get(id=audit_id)
         return audit.applications.get(profileinfo_id=profileinfo_id)
@@ -27,21 +30,28 @@ def get_application( audit_id, profileinfo_id):
         raise ObjectNotFound from e
 
 @atomic
-def apply( audit_id, profileinfo_id, audit_date):
+def apply(audit_id, user_id, audit_date):
     try:
         audit = Audit.objects.get(id=audit_id)
-        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
-        application = audit.applications.get(profileinfo_id=profileinfo_id)
-    except (Audit.DoesNotExist, ProfileInfo.DoesNotExist) as e:
+        profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+        bank_info = bank_info_service.find_bank_info_by_user_id(user_id)
+        application = audit.applications.get(profileinfo_id=profile_info.id)
+    except (Audit.DoesNotExist) as e:
         raise ObjectNotFound from e
     except AuditApplication.DoesNotExist:
         application = AuditApplication()
         application.status = AuditApplication.NOT_APPLIED
-        application.profileinfo_id = profileinfo_id
+        application.profileinfo = profile_info
         application.audit_id = audit.id
 
-    if not can_auditor_apply(profileinfo.user.id):
-        raise AppLogicError("Please complete all ✳ marked fields under Profile, Bank Info sections")
+    if not profile_info.is_complete():
+        raise AppLogicError("Please complete all required fields under PROFILE SECTION")
+
+    if not bank_info.is_complete():
+        raise AppLogicError("Please complete all required fields under BANK DETAILS Section")
+
+    # if bank_info.is_complete() and not bank_info.is_valid():
+        # raise AppLogicError("Please enter VALID INFORMATION under BANK DETAILS Section")
 
     if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
         raise AppLogicError("preferred audit date is not within range")
@@ -51,17 +61,17 @@ def apply( audit_id, profileinfo_id, audit_date):
         application.audit_date = audit_date
         application.save()
         notify.send(
-                profileinfo.user,
-                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=verbs.AUDIT_APPLICATION_APPLIED,
-                action_object=application,
-                target=audit
+            profile_info.user,
+            recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+            verb=verbs.AUDIT_APPLICATION_APPLIED,
+            action_object=application,
+            target=audit
         )
         manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
-            profileinfo.user,
-            recipient=profileinfo.user,
+            profile_info.user,
+            recipient=profile_info.user,
             verb=verbs.AUDIT_APPLICATION_APPLIED,
             action_object=application,
             target=audit
@@ -74,23 +84,23 @@ def apply( audit_id, profileinfo_id, audit_date):
 
 
 @atomic
-def cancel( audit_id, profileinfo_id):
+def cancel(audit_id, user_id):
     try:
         audit = Audit.objects.get(id=audit_id)
-        profileinfo = ProfileInfo.objects.get(pk=profileinfo_id)
-        application = audit.applications.get(profileinfo_id=profileinfo_id)
-    except (Audit.DoesNotExist, AuditApplication.DoesNotExist, ProfileInfo.DoesNotExist ) as e:
+        profileinfo = profile_info_service.find_profile_info_by_user_id(user_id)
+        application = audit.applications.get(profileinfo=profileinfo)
+    except (Audit.DoesNotExist, AuditApplication.DoesNotExist) as e:
         raise ObjectNotFound from e
 
     if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.REPORT, AuditCycle.ARCHIVED) and application.status in (AuditApplication.APPLIED, AuditApplication.WAITLISTED):
         application.status = AuditApplication.NOT_APPLIED
         application.save()
         notify.send(
-                profileinfo.user,
-                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=verbs.AUDIT_APPLICATION_CANCELED,
-                action_object=application,
-                target=audit
+            profileinfo.user,
+            recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+            verb=verbs.AUDIT_APPLICATION_CANCELED,
+            action_object=application,
+            target=audit
         )
         manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
         connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
@@ -135,11 +145,11 @@ def approve(application_id, audit_date, user_actor):
         target=application.audit
     )
     notify.send(
-            user_actor,
-            recipient=application.profileinfo.user,
-            verb=verbs.AUDIT_APPLICATION_APPROVED,
-            action_object=application,
-            target=application.audit
+        user_actor,
+        recipient=application.profileinfo.user,
+        verb=verbs.AUDIT_APPLICATION_APPROVED,
+        action_object=application,
+        target=application.audit
     )
 
     audit_store = AuditStore()
@@ -159,11 +169,11 @@ def approve(application_id, audit_date, user_actor):
     manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
-            user_actor,
-            recipient=audit_store.user,
-            verb=verbs.AUDIT_STORE_ASSIGNED,
-            action_object=audit_store,
-            target=audit_store.audit
+        user_actor,
+        recipient=audit_store.user,
+        verb=verbs.AUDIT_STORE_ASSIGNED,
+        action_object=audit_store,
+        target=audit_store.audit
     )
     auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_ASSIGNED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -173,9 +183,7 @@ def approve(application_id, audit_date, user_actor):
 def reject(application_id, user_actor):
     try:
         application = AuditApplication.objects.get(id=application_id)
-        audit = application.audit
-        audit_cycle = audit.audit_cycle
-    except (AuditApplication.DoesNotExist, Audit.DoesNotExist, AuditCycle.DoesNotExist, ProfileInfo.DoesNotExist):
+    except (AuditApplication.DoesNotExist):
         raise ObjectNotFound
 
     if application.status not in (AuditApplication.APPLIED, AuditApplication.WAITLISTED):
@@ -193,11 +201,11 @@ def reject(application_id, user_actor):
     manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
     notify.send(
-            user_actor,
-            recipient=application.profileinfo.user,
-            verb=verbs.AUDIT_APPLICATION_REJECTED,
-            action_object=application,
-            target=application.audit
+        user_actor,
+        recipient=application.profileinfo.user,
+        verb=verbs.AUDIT_APPLICATION_REJECTED,
+        action_object=application,
+        target=application.audit
     )
     auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
@@ -244,21 +252,6 @@ def find_application_by_id(application_id):
         return AuditApplication.objects.get(pk=application_id)
     except AuditApplication.DoesNotExist as e:
         raise ObjectNotFound from e
-
-def can_auditor_apply(user_id):
-    try:
-        profileInfo = ProfileInfo.objects.get(user_id=user_id)
-        bankInfo = BankInfo.objects.get(user_id=user_id)
-        additionalInfo = AdditionalInfo.objects.get(user_id=user_id)
-    except (ProfileInfo.DoesNotExist, BankInfo.DoesNotExist):
-        return False
-    except AdditionalInfo.DoesNotExist:
-        pass
-
-    if profileInfo.is_complete() and bankInfo.is_complete():
-        return True
-    else:
-        return False
 
 
 @atomic

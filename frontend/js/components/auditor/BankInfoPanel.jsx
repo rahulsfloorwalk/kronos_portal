@@ -23,13 +23,25 @@ var BankInfoPanelBase = React.createClass({
 						<col style={{width:"40%"}}/>
 					</colgroup>
 					<tbody>
-					<tr><td className="text-right text-muted" style={{"width":"40%"}}>*Bank Name:</td><th>{ this.props.bankInfo.bank_name }</th></tr>
+					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
 					<tr><td className="text-right text-muted">*Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
 					<tr><td className="text-right text-muted">*Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
-					<tr><td className="text-right text-muted">*IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
-					<tr><td className="text-right text-muted">*Pan Number:</td><th>{ this.props.bankInfo.pan_number }</th></tr>
+					<tr className={this.props.bankInfo.ifsc_code && !this.props.bankInfo.is_ifsc_code_valid ? "danger" : "" }>
+						<td className="text-right text-muted">*IFSC Code:</td>
+						<th>{ this.props.bankInfo.ifsc_code }</th>
+					</tr>
+					<tr className={this.props.bankInfo.pan_number && !this.props.bankInfo.is_pan_card_valid ? "danger" : "" }>
+						<td className="text-right text-muted">*Pan Number:</td>
+						<th>{ this.props.bankInfo.pan_number }</th>
+					</tr>
 					</tbody>
 				</table>
+				{ !this.props.bankInfo.is_valid ?
+					<div className="panel-footer">
+						<b className="">Payments will not be processed until valid bank details are provided.</b>
+					</div>
+					: null
+				}
 			</div>
 		);
 	},

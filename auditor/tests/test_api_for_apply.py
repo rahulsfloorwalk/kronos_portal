@@ -120,20 +120,19 @@ class AuditApplicationAPITestCase(APITestCase):
 
         # fill out the bank information
         input_data_bank = {
-            'bank_name': fake.company(),
             'account_holder_name': fake.name(),
             'account_number': fake.numerify(text="###############"),
-            'ifsc_code': fake.lexify(text="???????") + fake.numerify(text="######"),
-            'pan_number': fake.lexify(text="????") + fake.numerify(text="####"),
+            'ifsc_code': "SBIN0008238",
+            'pan_number': "HUYPR231U",
         }
 
         response = self.client.post(reverse('auditor:bank_info_view'), input_data_bank, format="json")
         self.assertEqual(response.status_code, 200)
         for k, v in input_data_bank.items():
             if isinstance(response.data.get(k), dict):
-                self.assertEqual(v, response.data.get(k).get("id"))
+                self.assertEqual(v.upper(), response.data.get(k).get("id"))
             else:
-                self.assertEqual(v, response.data.get(k))
+                self.assertEqual(v.upper(), response.data.get(k))
         self.assertTrue(response.data.get("is_complete"))
 
         # try applying for audits after bank info completion

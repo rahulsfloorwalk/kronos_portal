@@ -670,12 +670,14 @@ class BankInfoSerializer(ModelSerializer):
         fields = (
             'id',
             'bank_name',
+            'bank_name_from_ifsc',
             'account_holder_name',
             'account_number',
             'ifsc_code',
             'pan_number',
             'user_id',
             'is_complete',
+            'is_valid',
         )
         read_only_fields = fields
 

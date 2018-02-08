@@ -1,6 +1,10 @@
+import re
+import json
 import logging
 
 from django.utils import timezone
+
+__logger = logging.getLogger(__name__)
 
 def get_color_code_by_percentage(percentage):
     if percentage is None:
@@ -79,3 +83,26 @@ def view_log(func, method=None, *outerargs):
         return ret_val
 
     return wrapper
+
+
+with open("./datasets/IFSC-list.json","r") as ifsc_file:
+    ifsc_list = json.load(ifsc_file)
+    __logger.info("loaded %d IFSC codes", len(ifsc_list))
+
+with open("./datasets/banknames.json","r") as bank_file:
+    bank_list = json.load(bank_file)
+    __logger.info("loaded %d banks", len(bank_list))
+
+
+def validate_ifsc(ifsc_code):
+    return len(ifsc_code) is 11 and str.upper(ifsc_code) in ifsc_list
+
+
+def get_bank_name_from_ifsc(ifsc_code):
+    return bank_list.get(ifsc_code[:4])
+
+
+pan_pattern = re.compile("[A-Z]{3}[ABCFGHLJPTK][A-Z]\d{4}[A-Z]", flags=re.ASCII)
+
+def validate_pan(pan_number):
+    return pan_pattern.match(str.upper(pan_number))
