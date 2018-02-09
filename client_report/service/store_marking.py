@@ -5,6 +5,34 @@ from questionnaire.models import Question
 from answer.models import Answer
 from kronos.utils import get_color_code
 
+def get_scores_graph_for_store(store_id, client_id, audit_type):
+    all_cycles = AuditCycle.objects.filter(client_id=client_id).filter(type=audit_type).order_by('end_date')
+    all_cycle_count = all_cycles.count()
+
+    if all_cycle_count is 0:
+        return {"scores": [], "audit_cycle": []}
+
+    if all_cycle_count > 5:
+        audit_cycles = all_cycles[all_cycle_count - 5:]
+    else:
+        audit_cycles = all_cycles
+
+    scores_list = []
+    audit_cycles_list = []
+    max_scores_list = []
+    for audit_cycle in audit_cycles:
+        marks = get_question_wise_marks_for_audit_cycle(audit_cycle.id, store_id)
+        total = 0
+        max_marks = 0
+        for mark in marks:
+            score = mark.get('score', {}).get('marks', 0)
+            total += score if score is not None else 0
+            max_marks += mark.get('max_marks', 0)
+        audit_cycles_list.append(audit_cycle.name)
+        scores_list.append(total)
+        max_scores_list.append(max_marks)
+    return {"scores": scores_list, "audit_cycle": audit_cycles_list, "max_marks": max_scores_list}
+
 def get_scores_for_store(store_id, client_id, audit_type):
     all_cycles = AuditCycle.objects.filter(client_id=client_id).filter(type=audit_type).order_by('end_date')
     all_cycle_count = all_cycles.count()
@@ -53,6 +81,7 @@ def get_question_wise_marks_for_audit_cycle(audit_cycle_id, store_id):
         question_object['section_name'] = question.section.name
         question_object['section_sequence'] = question.section.sequence
         question_object['sequence'] = question.sequence
+        question_object['max_marks'] = question.max_marks
         question_object['score'] = get_average_score_for_question_in_audit_cycle(question, store_id)
         response_data.append(question_object)
     return response_data

@@ -20,3 +20,7 @@ export function fetchStore(storeId){
 export function fetchStoreMarkingTrends(storeId, audit_type){
 	return $.get( url.api_base_path + `client/report/store/${storeId}/marking`, {audit_type});
 };
+
+export function fetchStorePerformance(storeId, audit_type){
+	return $.get( url.api_base_path + `client/report/store/${storeId}/marking_graph`, {audit_type});
+};

@@ -106,6 +106,16 @@ class MarkingByStore(APIView):
         data = store_marking_service.get_scores_for_store(store_id, request.user.clientuser.client.id, audit_type)
         return Response(data)
 
+class MarkingGraphByStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, store_id, format=None):
+        audit_type = request.GET.get('audit_type', AuditCycle.WALKIN)
+        data = store_marking_service.get_scores_graph_for_store(store_id, request.user.clientuser.client.id, audit_type)
+        return Response(data)
+
 class AuditStoreByStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

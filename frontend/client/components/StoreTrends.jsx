@@ -8,6 +8,8 @@ import { momentDateFormat }  from '../../config.js';
 
 import Loading from '../../js/components/Loading.jsx';
 import Jumbotron from '../../js/components/Jumbotron.jsx';
+import StorePerformance from './StorePerformance.jsx';
+
 import { getColor, getAuditType } from '../../js/utils.js';
 import { ChevronRight, ChevronDown, ShareAlt } from '../../js/components/Icons.jsx';
 
@@ -116,17 +118,23 @@ export default class StoreTrends extends Component{
 		} else {
 			table = (<Jumbotron heading="there is no data here" para=""/>);
 		}
-		return <div>
-			<h3 className="page-header">
-				Store Trends
-				<div className="pull-right">
-				<select className="form-control input-lg" value={this.state.audit_type} onChange={this.auditTypeChanged}>
-				{this.state.types.map((type) => <option key={type} value={type}>{getAuditType(type)}</option>)}
-				</select>
-				</div>
-			</h3>
-			{table}
-		</div>;
+		return(
+			<div>
+				<h3 className="page-header">
+					Store Performance
+					<div className="pull-right">
+					<select className="form-control input-lg" value={this.state.audit_type} onChange={this.auditTypeChanged}>
+					{this.state.types.map((type) => <option key={type} value={type}>{getAuditType(type)}</option>)}
+					</select>
+					</div>
+				</h3>
+				<StorePerformance store_id={this.props.params.storeId} audit_type={this.state.audit_type}/>
+
+				<h3 className="page-header">
+					Score Performance Details
+				</h3>
+				{table}
+			</div>
+		)
 	}
 }
-
