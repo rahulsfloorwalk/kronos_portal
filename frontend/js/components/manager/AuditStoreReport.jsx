@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { } from "react-router";
 
-import { truncateStyle } from '../../styles.js';
+import { } from "../../styles.js";
 
-import Jumbotron from '../Jumbotron.jsx';
-import Panel from '../Panel.jsx';
-import { Save, Plus, Cross, Trash, Pencil, Tasks, OptionHorizontal, Checked, Unchecked, Paperclip } from '../Icons.jsx';
+import Jumbotron from "../Jumbotron.jsx";
+import { Tasks, Checked, Unchecked, Paperclip } from "../Icons.jsx";
 
-import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, completeAttachment, renameAttachment } from '../../manager/service/attachment.js';
-import { affectInputEventToComponent, orderKeys } from '../../react_utils.js'
-import { fetchSections } from '../../manager/actions/section.js'
-import { fetchAnswers, setMarks, setAnswerNotApplicable } from '../../manager/actions/answer.js'
-import { setAnswerText, setAnswerComment } from '../../manager/service/answer.js'
-import { submitAuditorComment, submitPMComment, fetchReportSections, setNotApplicable } from '../../manager/actions/report_section.js'
-import AttachmentPreview from './AttachmentPreview.jsx';
+import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment } from "../../manager/service/attachment.js";
+import { affectInputEventToComponent, orderKeys } from "../../react_utils.js";
+import { fetchSections } from "../../manager/actions/section.js";
+import { fetchAnswers, setMarks, setAnswerNotApplicable } from "../../manager/actions/answer.js";
+import { setAnswerText, setAnswerComment } from "../../manager/service/answer.js";
+import { submitAuditorComment, submitPMComment, fetchReportSections, setNotApplicable } from "../../manager/actions/report_section.js";
+import AttachmentPreview from "./AttachmentPreview.jsx";
 
-import AttachmentThumbnail from '../AttachmentThumbnail.jsx';
-import AttachmentInProgressThumbnail from '../AttachmentInProgressThumbnail.jsx';
+import AttachmentThumbnail from "../AttachmentThumbnail.jsx";
+import AttachmentInProgressThumbnail from "../AttachmentInProgressThumbnail.jsx";
 
 class AnswerComment extends Component {
 	constructor(props){
@@ -31,17 +31,17 @@ class AnswerComment extends Component {
 
 	setError = (error) => {
 		this.setState( prevState => Object.assign({}, prevState, { error }));
-	}
+	};
 
 	setSuccess = (success) => {
 		this.setState( prevState => Object.assign({}, prevState, { success }));
-	}
+	};
 
 	commentChanged = (e) => {
 		this.setState({
 			answer_comment: e.target.value,
 		});
-	}
+	};
 
 	onBlur = (e) => {
 		this.commentChanged(e);
@@ -49,10 +49,10 @@ class AnswerComment extends Component {
 			this.setSuccess(true);
 			this.setError(false);
 		}, () => {
-			this.setSuccess(false)
-			this.setError(true)
+			this.setSuccess(false);
+			this.setError(true);
 		});
-	}
+	};
 
 	render(){
 		if(this.props.editable){
@@ -228,16 +228,29 @@ var mapStoreToQuestionRowProps = function(store, ownProps){
 	};
 };
 
-var QuestionRow = ReactRedux.connect(mapStoreToQuestionRowProps)(__QuestionRow);
+var QuestionRow = connect(mapStoreToQuestionRowProps)(__QuestionRow);
 
 class SectionAttachmentBox extends React.Component{
+
+	static propTypes = {
+		auditStoreId: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.string,
+		]).isRequired,
+		sectionId: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.string,
+		]).isRequired,
+		auditStore: PropTypes.object.isRequired,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
 			attachments : [],
 			inProgress: {},
 			selectedAttachmentId: null,
-		}
+		};
 	}
 
 	reloadAttachments = (auditStoreId, sectionId) =>  {
@@ -246,7 +259,7 @@ class SectionAttachmentBox extends React.Component{
 				attachments
 			});
 		});
-	}
+	};
 
 	componentDidMount(){
 		this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
@@ -260,7 +273,7 @@ class SectionAttachmentBox extends React.Component{
 
 	uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	}
+	};
 
 	setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
@@ -270,7 +283,7 @@ class SectionAttachmentBox extends React.Component{
 				})
 			});
 		});
-	}
+	};
 
 	uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
@@ -323,19 +336,19 @@ class SectionAttachmentBox extends React.Component{
 				});
 			});
 		}
-	}
+	};
 
 	attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(()=>{
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
-	}
+	};
 
 	selectedAttachmentRenamed = (newName) => {
 		renameAttachment(this.state.selectedAttachmentId, newName).then(()=>{
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
-	}
+	};
 
 	selectAttachment = (attachmentId) => {
 		if( this.state.selectedAttachmentId === attachmentId){
@@ -347,20 +360,20 @@ class SectionAttachmentBox extends React.Component{
 				selectedAttachmentId : attachmentId
 			});
 		}
-	}
+	};
 
 	render(){
 		let uploadButton;
 		let editable = false;
 
-		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
+		if(this.props.auditStore && this.props.auditStore.status === "SUBMITTED"){
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip/> Upload</button>);
 			editable = true;
 		}
 
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let deletable= this.props.auditStore && this.props.auditStore.status === 'SUBMITTED';
+			let deletable= this.props.auditStore && this.props.auditStore.status === "SUBMITTED";
 			attachmentRows.push(
 				<AttachmentThumbnail key={a.id} attachment={a} deletable={deletable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId}/>
 			);
@@ -402,11 +415,19 @@ class SectionAttachmentBox extends React.Component{
 	}
 }
 
-var __Section = React.createClass({
-	getInitialState: function(){
-		return {
+class __Section extends React.Component{
+
+	static propTypes = {
+	};
+
+	constructor(props){
+		super(props);
+		this.state = {
 			pmCommentError: false,
 			auditorCommentError: false,
+
+			pmCommentSuccess: false,
+			auditorCommentSuccess: false,
 
 			savingPMComment: false,
 			savingAuditorComment: false,
@@ -418,8 +439,9 @@ var __Section = React.createClass({
 			// on an unmounted component
 			not_applicable: true,
 		};
-	},
-	componentDidMount: function(){
+	}
+
+	componentDidMount(){
 		if(this.props.reportSection){
 			this.setState({
 				auditor_comment: this.props.reportSection.auditor_comment,
@@ -427,8 +449,9 @@ var __Section = React.createClass({
 				not_applicable: this.props.reportSection.not_applicable,
 			});
 		}
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+	componentWillReceiveProps(nextProps){
 		if(nextProps.reportSection){
 			this.setState({
 				auditor_comment: nextProps.reportSection.auditor_comment,
@@ -436,19 +459,35 @@ var __Section = React.createClass({
 				not_applicable: nextProps.reportSection.not_applicable,
 			});
 		}
-	},
-	inputChanged: function(e){
+	}
+
+	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	saveAuditorComment: function(e){
+	};
+
+	saveAuditorComment = (e) => {
 		e.preventDefault();
 		this.setState({
 			savingAuditorComment: true,
-			auditorCommentError: false
+			auditorCommentError: false,
+			auditorCommentSuccess: false,
 		});
-		this.props.dispatch(submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment)).then(()=> this.setState({auditorCommentError: false}), () => this.setState({auditorCommentError: true})).always(() => this.setState({savingAuditorComment: false}));
-	},
-	savePMComment: function(e){
+		this.props.dispatch(submitAuditorComment(this.props.auditStoreId, this.props.section.id, this.state.auditor_comment)).then(()=> {
+			this.setState({
+				auditorCommentError: false,
+				auditorCommentSuccess: true,
+			});
+		}, () => {
+			this.setState({
+				auditorCommentSuccess: false,
+				auditorCommentError: true,
+			});
+		}).always(() => {
+			this.setState({savingAuditorComment: false});
+		});
+	}
+
+	savePMComment = (e) => {
 		e.preventDefault();
 		this.setState({
 			savingPMComment: true,
@@ -458,14 +497,28 @@ var __Section = React.createClass({
 			pm_comment: this.state.pm_comment,
 			audit_store: this.props.auditStoreId,
 		};
-		this.props.dispatch(submitPMComment(payload)).then(()=> this.setState({pmCommentError: false}), () => this.setState({pmCommentError: true})).always(() => this.setState({savingPMComment: false}));
-	},
-	notApplicableButtonClicked: function(e){
-		this.props.dispatch(setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable));
-	},
-	render: function(){
+		this.props.dispatch(submitPMComment(payload)).then(()=> {
+			this.setState({
+				pmCommentSuccess: true,
+				pmCommentError: false,
+			});
+		}, () => {
+			this.setState({
+				pmCommentSuccess: false,
+				pmCommentError: true,
+			});
+		}).always(() => {
+			this.setState({savingPMComment: false});
+		});
+	};
 
-		let editable = this.props.auditStore && this.props.auditStore.status === 'SUBMITTED';
+	notApplicableButtonClicked = (e) => {
+		this.props.dispatch(setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable));
+	};
+
+	render(){
+
+		let editable = this.props.auditStore && this.props.auditStore.status === "SUBMITTED";
 
 		/* QUESTION ROWS */
 		let questionRows = [];
@@ -497,62 +550,38 @@ var __Section = React.createClass({
 		}
 
 		if(editable){
-			let savePmCommentIcon = <Save/>;
-			if(this.state.savingPMComment){
-				savePmCommentIcon = <OptionHorizontal/>;
-			}
-			let pmClass = "";
-			if(this.state.pmCommentError){
-				pmClass = "has-error";
-			}
+			let hasPmCommentError = this.state.pmCommentError ? "has-error" : "";
+			let hasPmCommentSuccess = this.state.pmCommentSuccess ? "has-success" : "";
 			pmCommentElement = (
-					<form className={"input-group " + pmClass} onSubmit={this.savePMComment}>
-						<input
-							disabled={this.state.savingPMComment}
-							placeholder="enter PM comment here"
-							required="true"
-							className="form-control"
-							name="pm_comment"
-							value={this.state.pm_comment}
-							onBlur={this.savePMComment}
-							onChange={this.inputChanged}
-						/>
-						<span className="input-group-btn">
-							<button className="btn btn-primary"
-								disabled={this.state.savingPMComment}>
-								{savePmCommentIcon} Save
-							</button>
-						</span>
-					</form>
+				<div className={hasPmCommentError + hasPmCommentSuccess}>
+					<input
+						disabled={this.state.savingPMComment}
+						placeholder="enter PM comment here"
+						required="true"
+						className="form-control"
+						name="pm_comment"
+						value={this.state.pm_comment}
+						onBlur={this.savePMComment}
+						onChange={this.inputChanged}
+					/>
+				</div>
 			);
 
-			let saveAuditorCommentIcon = <Save/>;
-			if(this.state.savingAuditorComment){
-				saveAuditorCommentIcon = <OptionHorizontal/>;
-			}
-			let auditorClass = "";
-			if(this.state.auditorCommentError){
-				auditorClass = "has-error";
-			}
+			let hasAuditorCommentError = this.state.auditorCommentError ? "has-error" : "";
+			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
 			auditorCommentElement = (
-					<form className={"input-group " + auditorClass} onSubmit={this.saveAuditorComment}>
-						<input
-							disabled={this.state.savingAuditorComment}
-							placeholder="enter auditor comment here"
-							required="true"
-							className="form-control"
-							name="auditor_comment"
-							value={this.state.auditor_comment}
-							onBlur={this.saveAuditorComment}
-							onChange={this.inputChanged}
-						/>
-						<span className="input-group-btn">
-							<button className="btn btn-primary"
-								disabled={this.state.savingAuditorComment}>
-								{saveAuditorCommentIcon} Save
-							</button>
-						</span>
-					</form>
+				<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
+					<input
+						disabled={this.state.savingAuditorComment}
+						placeholder="enter auditor comment here"
+						required="true"
+						className="form-control"
+						name="auditor_comment"
+						value={this.state.auditor_comment}
+						onBlur={this.saveAuditorComment}
+						onChange={this.inputChanged}
+					/>
+				</div>
 			);
 
 			notApplicableElement = (<button className="btn btn-default btn-sm" onClick={this.notApplicableButtonClicked}>{notApplicableCheckboxIcon}</button>);
@@ -610,8 +639,8 @@ var __Section = React.createClass({
 				{panelBody}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToSectionProps = function(store, ownProps){
 	return {
@@ -626,15 +655,17 @@ var mapStoreToSectionProps = function(store, ownProps){
 	};
 };
 
-var Section = ReactRedux.connect(mapStoreToSectionProps)(__Section);
+var Section = connect(mapStoreToSectionProps)(__Section);
 
-var AuditStoreReport = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false
+class AuditStoreReport extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			loading: false,
 		};
-	},
-	componentDidMount: function() {
+	}
+
+	componentDidMount() {
 		this.props.dispatch(fetchAnswers(this.props.params.auditStoreId));
 		this.props.dispatch(fetchReportSections(this.props.params.auditStoreId));
 		if( this.props.auditStore && ! this.state.loading){
@@ -643,16 +674,18 @@ var AuditStoreReport = React.createClass({
 			});
 			this.props.dispatch(fetchSections(this.props.auditStore.audit.audit_cycle.id)).always(() => this.setState({loading: false}));
 		}
-	},
-	componentWillReceiveProps: function( nextProps){
+	}
+
+	componentWillReceiveProps( nextProps){
 		if( nextProps.auditStore && ! this.state.loading ){
 			this.setState({
 				loading: true
 			});
 			this.props.dispatch(fetchSections(nextProps.auditStore.audit.audit_cycle.id)).always(() => this.setState({loading: false}));
 		}
-	},
-	render: function(){
+	}
+
+	render(){
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
 		});
@@ -670,8 +703,8 @@ var AuditStoreReport = React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {
@@ -680,4 +713,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(AuditStoreReport);
+export default connect(mapStoreToProps)(AuditStoreReport);

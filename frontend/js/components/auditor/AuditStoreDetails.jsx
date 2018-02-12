@@ -16,7 +16,7 @@ import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
 import AttachmentUploadBox from './AttachmentUploadBox.jsx';
 import MarkdownViewer from '../MarkdownViewer.jsx';
 
-import SectionList from './SectionList.jsx';
+import SectionList from './questionnaire/SectionList.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 

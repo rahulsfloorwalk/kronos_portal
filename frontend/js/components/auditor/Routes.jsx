@@ -16,8 +16,6 @@ import AuditCancelForm from './AuditCancelForm.jsx';
 import AuditStoreList from './AuditStoreList.jsx';
 import AuditStoreDetails from './AuditStoreDetails.jsx';
 
-import SectionList from './SectionList.jsx';
-
 import ProfileInfoForm from './ProfileInfoForm.jsx';
 import BankInfoForm from './BankInfoForm.jsx';
 import AdditionalInfoForm from './AdditionalInfoForm.jsx';

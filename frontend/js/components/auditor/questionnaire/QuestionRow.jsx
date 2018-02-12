@@ -1,76 +1,63 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { } from "react-router";
 
-import Jumbotron from '../Jumbotron.jsx';
-import Panel from '../Panel.jsx';
-import { Plus, Cross, Pencil, Check } from '../Icons.jsx';
+import { } from "../../Icons.jsx";
 
-import { affectInputEventToComponent } from '../../react_utils.js'
+import { affectInputEventToComponent } from "../../../react_utils.js";
 
-import { submitAnswer, submitAnswerComment } from '../../auditor/actions/answer.js';
+import { submitAnswer } from "../../../auditor/actions/answer.js";
 
-class __AnswerComment extends Component {
+import AnswerComment from "./AnswerComment.jsx";
+
+class QuestionRow extends React.Component{
+	static propTypes = {
+		auditStoreId: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.string,
+		]).isRequired,
+		q: PropTypes.object.isRequired,
+		dispatch: PropTypes.func.isRequired,
+		showErrors: PropTypes.bool.isRequired,
+
+		answer: PropTypes.object,
+		auditStore: PropTypes.object,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
-			answer_comment: this.props.answer_comment || "",
-		};
-	}
-
-	commentChanged = (e) => {
-		this.setState({
-			answer_comment: e.target.value,
-		});
-	}
-
-	onBlur = (e) => {
-		this.commentChanged(e);
-		this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value));
-	}
-
-	render(){
-		if(this.props.editable){
-			return (
-				<input className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
-			);
-		} else {
-			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;
-		}
-	}
-}
-
-let AnswerComment = ReactRedux.connect()(__AnswerComment);
-
-var QuestionRow = React.createClass({
-	getInitialState: function(){
-		return {
 			answer_text: "",
 			touched: false,
 			focused: false,
 		};
-	},
-	componentDidMount: function(){
+	}
+
+	componentDidMount(){
 		if(this.props.answer){
 			this.setState({
 				answer_text: this.props.answer.answer_text
 			});
 		}
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+	componentWillReceiveProps(nextProps){
 		if(nextProps.answer){
 			this.setState({
 				answer_text: nextProps.answer.answer_text
 			});
 		}
-	},
-	onFocus: function(){
+	}
+
+	onFocus = () => {
 		this.setState({
 			touched: true,
 			focused: true,
 		});
-	},
-	submitAnswer: function(e){
+	};
+
+	submitAnswer = (e) => {
 		e.preventDefault();
 		if( this.props.answer && this.props.answer.answer_text === this.state.answer_text){
 			this.setState({
@@ -88,11 +75,13 @@ var QuestionRow = React.createClass({
 			audit_store: this.props.auditStoreId,
 		};
 		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
-	},
-	inputChanged: function(e){
+	};
+
+	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	render: function(){
+	};
+
+	render(){
 		let noAnswerText = "-";
 		let answer;
 
@@ -102,22 +91,20 @@ var QuestionRow = React.createClass({
 			answer = (<span className="text-muted">{noAnswerText}</span>);
 		}
 
-
-		let answerComment;
 		let answerElement = (<p>
 			{answer} 
 			{ this.props.q.question_type === "MUTEX" 
 				? <AnswerComment editable={false}
 					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} 
-					answer_comment={this.props.answer && this.props.answer.answer_comment ? this.props.answer.answer_comment : ""}
+					answer_comment={this.props.answer && this.props.answer.answer_comment }
 				/>
 				: ""
 			}
 		</p>);
 
-		if(this.props.auditStore && this.props.auditStore.status === 'ACKNOWLEDGED'){
+		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
 			if(this.props.q.question_type === "PLAIN"){
-			answerElement = (
+				answerElement = (
 					<form className="" onSubmit={this.submitAnswer}>
 						<input
 							className="form-control"
@@ -130,7 +117,7 @@ var QuestionRow = React.createClass({
 							ref={(input) => this.answerInput = input}
 						/>
 					</form>
-			);
+				);
 			} else if(this.props.q.question_type === "MUTEX") {
 				answerElement = (
 					<div className="row">
@@ -177,8 +164,8 @@ var QuestionRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {
@@ -193,4 +180,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(QuestionRow);
+export default connect(mapStoreToProps)(QuestionRow);
