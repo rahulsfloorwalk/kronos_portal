@@ -390,6 +390,8 @@ class ConfigView(APIView):
     }
     def get(self, request, format=None):
         return Response({
+            "USER_ID": request.user.id,
+            "USER_EMAIL": request.user.email,
             "RHEA_PROTOCOL": settings.RHEA_PROTOCOL,
             "RHEA_DOMAIN": settings.RHEA_DOMAIN,
             "RHEA_BASE_URL": settings.RHEA_BASE_URL,

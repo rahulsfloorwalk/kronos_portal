@@ -320,6 +320,7 @@ FRONTEND_CONFIG = {
         "SUPPORT_EMAIL": properties["FRONTEND"]["SUPPORT_EMAIL"],
         "SUPPORT_PHONE": properties["FRONTEND"]["SUPPORT_PHONE"],
         "PHOEBE_VERSION": PHOEBE_VERSION,
+        "SENTRY_DSN": properties["FRONTEND"]["SENTRY_DSN"],
     },
     "AUDITOR": {
         "TAWK_TO_SRC": TAWK_TO_SRC,

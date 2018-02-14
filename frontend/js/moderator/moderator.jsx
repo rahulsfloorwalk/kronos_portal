@@ -3,6 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from 'jquery';
+import Raven from "raven-js";
 
 import { hashHistory } from 'react-router';
 
@@ -34,6 +35,21 @@ $(document).ajaxComplete(function(event, jqXHR, settings){
 
 
 fetchConfig().then((config) => {
+
+	// Start Sentry logging if app is not in debug mode
+	if(config.SENTRY_DSN && process.env.NODE_ENV === "production"){
+		Raven.config(config.SENTRY_DSN, {
+			release: config.PHOEBE_VERSION,
+		}).install();
+
+		//set the user context to identify the user
+		Raven.setUserContext({
+			user_email: config.USER_EMAIL,
+			user_id: config.USER_ID,
+			phoebe_version: config.PHOEBE_VERSION,
+		});
+	}
+
 	render();
 	if(module.hot){
 		console.debug("Module is HOT HOT HOT!");
