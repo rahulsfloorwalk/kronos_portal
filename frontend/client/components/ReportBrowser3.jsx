@@ -27,7 +27,9 @@ class AuditStoreTable extends Component {
 			cities: [],
 			types: [],
 			priorities: [],
-			selectedCityId: null,
+			selectedCityId: "",
+			selectedType: "",
+			selectedPriority: "",
 		};
 	}
 	setLoading = (loading) => {

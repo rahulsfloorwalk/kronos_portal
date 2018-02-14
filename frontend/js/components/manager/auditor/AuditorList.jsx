@@ -121,7 +121,7 @@ var AuditorList = React.createClass({
 					<InputGroup>
 						<input className="form-control" placeholder="name, email, city or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
 						<InputGroupBtn>
-							<SaveButton text={<span><Search/> Search</span>}/>
+							<button type="button" className="btn btn-primary"><Search/> Search</button>
 						</InputGroupBtn>
 					</InputGroup>
 				</form>
