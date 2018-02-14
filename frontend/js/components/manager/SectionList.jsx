@@ -181,8 +181,12 @@ var SectionList = React.createClass({
 			return s1.sequence - s2.sequence;
 		});
 		var sectionRows = [];
+		let questionnaireTotal = 0;
 		for(var sectionId of orderedKeys) {
 			sectionRows.push(<Section auditCycleId={this.props.params.auditCycleId} section={this.props.sections[sectionId]} key={sectionId} onChange={() => this.reloadData(this.props.params.auditCycleId)} onDelete={this.onSectionDelete}/>);
+
+			//add up into the total
+			questionnaireTotal += this.props.sections[sectionId].max_marks;
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="start by adding a section"/>);
@@ -201,7 +205,7 @@ var SectionList = React.createClass({
               <Download/> Export
           </a>
 					</span>
-					<Tasks/> Questionnaire
+					<Tasks/> Questionnaire ( {questionnaireTotal} Marks)
 				</h3>
 				{sectionRows}
 				{this.props.children}
