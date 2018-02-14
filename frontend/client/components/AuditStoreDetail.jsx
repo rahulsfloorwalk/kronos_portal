@@ -85,10 +85,12 @@ export default React.createClass({
 									<td className="text-right">Client:</td>
 									<th>{this.state.auditStore.audit.store.client.name}</th>
 								</tr>
-								<tr>
-									<td className="text-right">Store Code:</td>
-									<th>{this.state.auditStore.audit.store.code}</th>
-								</tr>
+								{ this.state.auditStore.audit.store.code ?
+									<tr>
+										<td className="text-right">Store Code:</td>
+										<th>{this.state.auditStore.audit.store.code}</th>
+									</tr>
+									: null }
 								<tr>
 									<td className="text-right">Store:</td>
 									<th>{this.state.auditStore.audit.store.name}</th>
@@ -97,10 +99,12 @@ export default React.createClass({
 									<td className="text-right">Store Type:</td>
 									<th>{this.state.auditStore.audit.store.type}</th>
 								</tr>
-								<tr>
-									<td className="text-right">Store Priority:</td>
-									<th>{this.state.auditStore.audit.store.priority}</th>
-								</tr>
+								{ this.state.auditStore.audit.store.priority ?
+									<tr>
+										<td className="text-right">Store Priority:</td>
+										<th>{this.state.auditStore.audit.store.priority}</th>
+									</tr>
+									: null }
 								<tr>
 									<td className="text-right">Audit Type:</td>
 									<th>{getAuditType(this.state.auditStore.audit.audit_cycle.type)}</th>
