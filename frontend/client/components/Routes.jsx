@@ -12,6 +12,7 @@ import StoreDetail from './StoreDetail.jsx';
 import StoreTrends from './StoreTrends.jsx';
 import StoreList2 from './StoreList2.jsx';
 import StoreAuditStoreList from './StoreAuditStoreList.jsx';
+import WeightedBrowser from './WeightedBrowser.jsx';
 
 import AuditStoreList from './AuditStoreList.jsx'; import AuditStoreDetail from './AuditStoreDetail.jsx';
 
@@ -43,6 +44,8 @@ const Routes = () => (
 		<Route path="/browser/auditCycle/:auditCycleId/city/:cityId" component={ReportBrowser}/>
 
 		<Route path="/browser3" component={ReportBrowser3}/>
+
+		<Route path="/weighted_browser" component={WeightedBrowser}/>
 
 		<Route path="/store" component={StoreList2}/>
 		<Route path="/store/:storeId" component={StoreDetail}>

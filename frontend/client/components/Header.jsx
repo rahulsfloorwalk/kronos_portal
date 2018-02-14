@@ -69,6 +69,11 @@ export default React.createClass({
 						{/*<NavLink to="/browser"><File/> Report Browser</NavLink>*/}
 						<NavLink to="/browser3"><File/> Report Browser</NavLink>
 						{
+							this.state.clientUser.client.id === 23
+							? <NavLink to="/weighted_browser"><File/> Weighted Reports</NavLink>
+							: null
+						}
+						{
 							this.state.clientUser.is_client_admin
 							? <NavLink to="/store"><Home/> Store Browser</NavLink>
 							: null
