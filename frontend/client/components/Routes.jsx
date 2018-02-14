@@ -1,38 +1,27 @@
-import React from 'react';
-import { Router, Route, IndexRoute, hashHistory } from 'react-router';
+import React from "react";
+import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
-import App from './App.jsx';
+import App from "./App.jsx";
 
-import Dashboard from './Dashboard.jsx';
-import { TypedDashboard } from './Dashboard.jsx';
+import Dashboard from "./Dashboard.jsx";
+import { TypedDashboard } from "./Dashboard.jsx";
 
-import ReportBrowser from './ReportBrowser.jsx';
-import ReportBrowser3 from './ReportBrowser3.jsx';
-import StoreDetail from './StoreDetail.jsx';
-import StoreTrends from './StoreTrends.jsx';
-import StoreList2 from './StoreList2.jsx';
-import StoreAuditStoreList from './StoreAuditStoreList.jsx';
-import WeightedBrowser from './WeightedBrowser.jsx';
+import ReportBrowser from "./ReportBrowser.jsx";
+import ReportBrowser3 from "./ReportBrowser3.jsx";
+import StoreDetail from "./StoreDetail.jsx";
+import StoreTrends from "./StoreTrends.jsx";
+import StoreList2 from "./StoreList2.jsx";
+import StoreAuditStoreList from "./StoreAuditStoreList.jsx";
+import WeightedBrowser from "./WeightedBrowser.jsx";
 
-import AuditStoreList from './AuditStoreList.jsx'; import AuditStoreDetail from './AuditStoreDetail.jsx';
+import AuditStoreDetail from "./AuditStoreDetail.jsx";
 
-import SectionList from './SectionList.jsx';
+import UpcomingAuditStores from "./UpcomingAuditStores.jsx";
+import TwitterFeed from "./TwitterFeed.jsx";
 
-import UpcomingAuditStores from './UpcomingAuditStores.jsx';
-import TwitterFeed from './TwitterFeed.jsx';
+const IndexComponent = () => null;
 
-const IndexComponent = React.createClass({
-	componentDidMount: function(){
-		//console.debug("IndexComponent", "componentDidMount");
-		//hashHistory.push("/dashboard");
-	},
-	render: function(){
-		return null;
-	}
-});
-
-const Routes = () => (
-    <Router history={hashHistory}>
+const Routes = () => (<Router history={hashHistory}>
 	<Route path="/" component={App}>
 		<IndexRoute component={IndexComponent}/>
 
@@ -57,7 +46,6 @@ const Routes = () => (
 
 		<Route path="/twitter" component={TwitterFeed}/>
 	</Route>
-    </Router>
-);
+</Router>);
 
 export default Routes;
