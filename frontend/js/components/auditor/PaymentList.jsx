@@ -1,49 +1,66 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { findPayments } from '../../auditor/service/payment.js';
+import { findPayments } from "../../auditor/service/payment.js";
 
-import ExpandableDetails from '../ExpandableDetails.jsx';
-import { Cross, ShareAlt } from '../Icons.jsx';
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../LabelValue.jsx';
-import AuditStoreStatusLabel from '../AuditStoreStatusLabel.jsx';
-import PaymentStatusLabel from '../PaymentStatusLabel.jsx';
-import Jumbotron from '../Jumbotron.jsx';
-import MarkdownViewer from '../MarkdownViewer.jsx';
+import PaymentStatusLabel from "../PaymentStatusLabel.jsx";
 
 class PaymentRow extends React.Component{
+	static propTypes = {
+		payment: PropTypes.object.isRequired,
+	};
 
 	render(){
-		return (
-				<div className="panel panel-default" style={{minHeight:"75px"}}>
-					<div className="row">
-						<div className="col-md-2 text-right">
-							<h3><big><b>₹ {this.props.payment.amount}</b></big></h3>
-						</div>
-						<div className="col-md-2 text-right">
-							<br/>
-							<p>{moment(this.props.payment.added_on).format(momentDateFormat)}</p>
-						</div>
-						<div className="col-md-6">
-							<br/>
-							<p>{this.props.payment.comment}</p>
-						</div>
-						<div className="col-md-2">
-							<br/>
-							<p><PaymentStatusLabel status={this.props.payment.status}/></p>
-						</div>
+		return (<div className="panel panel-default">
+			<div className="panel-body">
+				<div className="row hidden-md hidden-sm hidden-lg">
+					<div className="col-xs-4">
+						<p><big style={{fontSize: "170%"}}><b>₹ {this.props.payment.amount}</b></big></p>
+						<p><PaymentStatusLabel status={this.props.payment.status}/></p>
+					</div>
+					<div className="col-xs-8">
+						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
+						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
+						<p>{this.props.payment.comment}</p>
 					</div>
 				</div>
-		);
+				<div className="row hidden-xs hidden-md hidden-lg">
+					<div className="col-sm-4">
+						<p><big style={{fontSize: "170%"}}><b>₹ {this.props.payment.amount}</b></big></p>
+						<p><PaymentStatusLabel status={this.props.payment.status}/></p>
+					</div>
+					<div className="col-sm-4">
+						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
+						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
+					</div>
+					<div className="col-sm-4">
+						<p>{this.props.payment.comment}</p>
+					</div>
+				</div>
+				<div className="row hidden-xs hidden-sm">
+					<div className="col-md-2 text-right">
+						<big style={{fontSize: "170%"}}><b>₹ {this.props.payment.amount}</b></big>
+					</div>
+					<div className="col-md-1">
+						<p><PaymentStatusLabel status={this.props.payment.status}/></p>
+					</div>
+					<div className="col-md-3 text-right">
+						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
+						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
+					</div>
+					<div className="col-md-6">
+						<p>{this.props.payment.comment}</p>
+					</div>
+				</div>
+			</div>
+		</div>);
 	}
 }
 
-class PaymentList extends React.Component{
+export default class PaymentList extends React.Component{
 
 	constructor(props){
 		super(props);
@@ -59,7 +76,7 @@ class PaymentList extends React.Component{
 				loading
 			});
 		});
-	}
+	};
 
 	componentDidMount() {
 		this.setLoading(true);
@@ -79,7 +96,6 @@ class PaymentList extends React.Component{
 						Your Payments
 					</h2>
 					{rows}
-					{this.props.children}
 				</div>
 			);
 		} else {
@@ -94,9 +110,3 @@ class PaymentList extends React.Component{
 	}
 }
 
-var mapStoreToProps = function(store){
-	return {
-	};
-};
-
-export default ReactRedux.connect(mapStoreToProps)(PaymentList); 
