@@ -51,6 +51,10 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
         else:
             raise AppLogicError("invalid answer")
 
+    # set marks_obtained to zero if max_marks is 0 so that it doesn't need to filled manually later on
+    if q.question_type == Question.PLAIN and q.max_marks is 0:
+        answer.marks_obtained = 0
+
     answer.answer_text = answer_text
     answer.answer_text_original = answer_text
     return save(answer)
