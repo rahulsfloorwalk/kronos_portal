@@ -278,10 +278,6 @@ var AuditStoreList = React.createClass({
 		<button className="btn btn-default" onClick={this.acceptAllClicked}>
 		      Accept All
 		  </button>
-		&nbsp;
-		  <a className="btn btn-default" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
-		      <Download/> Excel Report
-		  </a>
 	    </span>
 	    </div>
 	    {rows}

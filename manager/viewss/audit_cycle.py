@@ -12,8 +12,6 @@ from auditor.service import application_service
 from questionnaire.service import questionnaire as questionnaire_service
 from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
 
-from client_report.service import audit_cycle_xlsx_report as xlsx_report_service
-
 class AuditCycleViewByClient(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -76,17 +74,6 @@ class AuditCycleIdPostApprovalDescriptionView(APIView):
         saved_audit_cycle = audit_cycle_service.set_post_approval_description(audit_cycle_id, ds.validated_data["post_approval_description"])
         return Response(AuditCycleSerializer(saved_audit_cycle).data)
 
-
-class AuditCycleXlsxReport(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, audit_cycle_id, format=None):
-        report, name = xlsx_report_service.get_aggregate_report_for_manager(audit_cycle_id)
-        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
-        return response
 
 class ExportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]

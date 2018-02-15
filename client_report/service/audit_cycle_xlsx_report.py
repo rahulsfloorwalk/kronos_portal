@@ -12,37 +12,6 @@ from audit_store.models import AuditStore
 from questionnaire.models import Question
 
 
-# Get report for all stores for given client
-# ----------------------------------------
-def get_aggregate_report_for_manager(audit_cycle_id, filter_user=None):
-    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
-
-    sections = audit_cycle.sections.order_by('sequence').prefetch_related(
-        Prefetch('questions', queryset=Question.objects.order_by('section__sequence','sequence')),
-    )
-
-    questions = []
-    for section in sections.questions:
-        questions.extend(section.questions.all())
-
-    qs = AuditStore.objects.filter(audit__audit_cycle=audit_cycle).presentable()
-    if filter_user:
-        qs = qs.visible_to(filter_user)
-    qs.order_by('audit_date')
-
-    data = create_text_structure(audit_cycle.name, sections, questions, qs)
-    name = (str(audit_cycle.name) + ".xlsx").replace("-", "")
-    return write_data(data), name
-
-
-def get_aggregate_report_for_clientuser(audit_cycle_id, user_id):
-    audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
-    clientuser = find_clientuser_by_user_id(user_id)
-    return get_aggregate_report_for_manager(audit_cycle.id, clientuser)
-
-
-# ----------------------------------------
-
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)

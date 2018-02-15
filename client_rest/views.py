@@ -189,17 +189,6 @@ class AuditStoreXlsxReport(APIView):
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
-class AuditCycleXlsxReport(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_CLIENT],
-    }
-    def get(self, request, audit_cycle_id, format=None):
-        report, name = cycle_xlsx_report_service.get_aggregate_report_for_clientuser(audit_cycle_id, request.user.id)
-        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
-        return response
-
 class AuditCycleFilteredXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
