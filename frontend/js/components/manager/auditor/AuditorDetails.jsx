@@ -24,6 +24,7 @@ export default class AuditorDetails extends Component{
 				<div className="col-md-4">
 					<AdditionalInfoPanel auditorId={this.props.params.auditorId}/>
 				</div>
+				{this.props.children}
 			</div>
 		);
 	}

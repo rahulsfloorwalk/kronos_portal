@@ -265,6 +265,8 @@ class Preferences(Model):
     id = AutoField(db_column='id', primary_key=True)
     receive_new_opportunities_email = BooleanField(db_column='receive_new_opportunities_email', default=True)
     receive_transactional_email = BooleanField(db_column='receive_transactional_email', default=True)
+    receive_new_opportunities_sms = BooleanField(db_column='receive_new_opportunities_sms', default=True)
+    receive_transactional_sms = BooleanField(db_column='receive_transactional_sms', default=True)
     agreement_accepted = BooleanField(db_column='agreement_accepted', default=False)
     pp_accepted = BooleanField(db_column='pp_accepted', default=False)
 

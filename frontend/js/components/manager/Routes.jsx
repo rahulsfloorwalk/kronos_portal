@@ -26,6 +26,7 @@ import AuditorIdProof from './auditor/AuditorIdProof.jsx';
 import AuditorPayment from './auditor/AuditorPayment.jsx';
 import AuditorDetails from './auditor/AuditorDetails.jsx';
 import AuditorReferralList from './auditor/AuditorReferralList.jsx';
+import PreferencesForm from "./auditor/PreferencesForm.jsx";
 
 import StateList from './location/StateList.jsx';
 import CityList from './location/CityList.jsx';
@@ -133,7 +134,9 @@ const Routes = () => (
 
 		<Route path="auditor" component={AuditorList}/>
 		<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
-      <Route path="details" component={AuditorDetails}/>
+      <Route path="details" component={AuditorDetails}>
+	      <Route path="preferences/edit" component={PreferencesForm}/>
+	</Route>
       <Route path="applications" component={AuditorApplicationList}/>
       <Route path="reports" component={AuditorReportList}/>
 		      <Route path="email_log" component={AuditorEmailLog}/>

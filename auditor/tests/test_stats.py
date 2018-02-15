@@ -50,7 +50,7 @@ class StatsTestCase(TestCase):
 
         self.complete_profile_info()
         self.assertTrue(self.profile.is_complete())
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 0.25)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 25)
 
     def test_profile_percentage_with_profile_and_bank(self):
         """checks if ProfileInfo, BankInfo is 50%"""
@@ -61,7 +61,7 @@ class StatsTestCase(TestCase):
         self.complete_bank_info()
         self.assertTrue(self.bank_info.is_complete())
 
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 0.50)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 50)
 
     def test_profile_percentage_with_profile_and_bank_and_additional(self):
         """checks if ProfileInfo, BankInfo, AdditionalInfo is 60%"""
@@ -75,7 +75,7 @@ class StatsTestCase(TestCase):
         self.complete_additional_info()
         self.assertTrue(self.additional_info.is_complete())
 
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 0.60)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 60)
 
     def test_profile_percentage_with_profile_and_bank_and_additional_and_id_proof(self):
         """checks if ProfileInfo, BankInfo, AdditionalInfo, IdProof is 80%"""
@@ -90,7 +90,7 @@ class StatsTestCase(TestCase):
         self.assertTrue(self.additional_info.is_complete())
 
         self.complete_id_proof()
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 0.80)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 80)
 
     def test_profile_percentage_with_profile_and_bank_and_additional_and_id_proof_and_social(self):
         """checks if ProfileInfo, BankInfo, AdditionalInfo, IdProof, SocialInfo is 100%"""
@@ -107,5 +107,5 @@ class StatsTestCase(TestCase):
         self.complete_id_proof()
         self.complete_social_info()
 
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 1)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 100)
 

@@ -788,6 +788,8 @@ class PreferencesSerializer(ModelSerializer):
             'id',
             'receive_new_opportunities_email',
             'receive_transactional_email',
+            'receive_new_opportunities_sms',
+            'receive_transactional_sms',
             'pp_accepted',
             'agreement_accepted',
             'user_id',

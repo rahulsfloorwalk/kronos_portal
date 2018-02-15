@@ -619,6 +619,7 @@ class PreferencesSerializer(ModelSerializer):
         fields = (
             'id',
             'receive_new_opportunities_email',
+            'receive_new_opportunities_sms',
             'user_id',
         )
         read_only_fields = ('id', 'user_id')
@@ -634,5 +635,6 @@ class PreferencesSerializer(ModelSerializer):
             preferences.user_id = self.context.get('current_user').id
 
         preferences.receive_new_opportunities_email = self.validated_data.get('receive_new_opportunities_email', preferences.receive_new_opportunities_email)
+        preferences.receive_new_opportunities_sms = self.validated_data.get('receive_new_opportunities_sms', preferences.receive_new_opportunities_sms)
 
         return preferences

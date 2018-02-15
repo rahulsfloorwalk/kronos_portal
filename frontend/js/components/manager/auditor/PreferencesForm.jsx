@@ -1,20 +1,30 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
 
-import { fetchPreferences, savePreferences } from "../../auditor/service/preferences.js";
+import { fetchAuditorPreferences, savePreferences } from "../../../manager/service/preferences.js";
 
-import { Save } from "../Icons.jsx";
-import FormErrorList from "../FormErrorList.jsx";
-import Modal from "../Modal.jsx";
-import Loading from "../Loading.jsx";
+import { Save } from "../../Icons.jsx";
+import FormErrorList from "../../FormErrorList.jsx";
+import Modal from "../../Modal.jsx";
+import Loading from "../../Loading.jsx";
 
 export default class PreferencesForm extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditorId: PropTypes.oneOfType([
+				PropTypes.string,
+				PropTypes.number,
+			]).isRequired
+		})
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
 			loading: false,
 			errors: {},
-			preferences: null,
+			form: {},
 		};
 	}
 
@@ -22,14 +32,14 @@ export default class PreferencesForm extends React.Component{
 
 	componentDidMount() {
 		this.setLoading(true);
-		fetchPreferences().done((preferences) => {
-			this.setState({preferences});
+		fetchAuditorPreferences(this.props.params.auditorId).done((preferences) => {
+			this.setState({form: preferences});
 		}).always(() => this.setLoading(false));
 	}
 
 	inputChanged = (e) => {
 		this.setState({
-			preferences: Object.assign({}, this.state.preferences, {
+			form: Object.assign({}, this.state.form, {
 				[e.target.name]: e.target.type === "checkbox" ? e.target.checked : e.target.value,
 			})
 		});
@@ -37,7 +47,7 @@ export default class PreferencesForm extends React.Component{
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		savePreferences(this.state.preferences).done(() => {
+		savePreferences(this.props.params.auditorId, this.state.form).done(() => {
 			hashHistory.goBack();
 		}).fail((err)=>{
 			this.setState({errors: err.responseJSON || {}});
@@ -47,7 +57,7 @@ export default class PreferencesForm extends React.Component{
 	render(){
 		return (
 			<Modal modalTitle="Change Preferences" onClose={hashHistory.goBack}>
-				{ ! this.state.loading && this.state.preferences ?
+				{ ! this.state.loading ?
 					<form onSubmit={this.onSubmit}>
 						<FormErrorList errors={this.state.errors.non_field_errors}/>
 						<big><b>Receive New Opportunities:</b></big>
@@ -56,16 +66,16 @@ export default class PreferencesForm extends React.Component{
 								<input type="checkbox" name="receive_new_opportunities_email"
 									style={{"width": "30px", "height": "30px"}}
 									onChange={this.inputChanged}
-									checked={this.state.preferences.receive_new_opportunities_email}/>
+									checked={this.state.form.receive_new_opportunities_email}/>
 								&nbsp;On Email?
 							</label>
 						</div>
 						<div className="form-group">
 							<label className="control-label" style={{"display":"flex", "alignItems":"center"}}>
-								<input type="checkbox" name="receive_new_opportunities_sms"
+								<input type="checkbox" name="receive_new_opportunities_sms" 
 									style={{"width": "30px", "height": "30px"}}
 									onChange={this.inputChanged}
-									checked={this.state.preferences.receive_new_opportunities_sms} />
+									checked={this.state.form.receive_new_opportunities_sms} />
 								&nbsp;On SMS?
 							</label>
 						</div>

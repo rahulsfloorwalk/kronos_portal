@@ -42,10 +42,12 @@ class PreferencesAPITestCase(APITestCase):
         response = self.client.get(prefs_url)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(response.data.get("receive_new_opportunities_email"))
+        self.assertTrue(response.data.get("receive_new_opportunities_sms"))
 
         # change the Preferences
         input_prefs = {
             'receive_new_opportunities_email': fake.pybool(),
+            'receive_new_opportunities_sms': fake.pybool(),
         }
         response = self.client.post(prefs_url, input_prefs, format="json")
         self.assertEqual(response.status_code, 200)

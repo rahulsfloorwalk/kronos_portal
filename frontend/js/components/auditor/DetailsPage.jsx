@@ -19,7 +19,7 @@ var DetailsPage = React.createClass({
 	getInitialState: function(){
 		return {
 			loading: false,
-			preferences: null,
+			preferences: {},
 		};
 	},
 	setLoading: function(loading){
@@ -51,10 +51,12 @@ var DetailsPage = React.createClass({
 							: <Link to="/details/mobile_number/edit"><b className="text-danger">Please click here to update your Mobile Number.</b></Link> }
 						</p>
 						<p>Password: <a href="/auth/password_change">Click here</a> to change your password.</p>
-						<p>
-							{ this.state.preferences && this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>} Receive email from us about new opportunities
-							<Link to="details/preferences/edit" className=""> change </Link>
-						</p>
+						Receive New Opportunities:
+						<Link to="details/preferences/edit" className=""> change </Link>
+						<ul style={{"listStyleType":"none"}}>
+						<li>{this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>} on Email</li>
+						<li>{this.state.preferences.receive_new_opportunities_sms ? <Check/> : <Cross/>} on SMS</li>
+						</ul>
 						<p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p>
 					</Panel>
 				</div>

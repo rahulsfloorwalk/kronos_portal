@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.serializers import BooleanField, Serializer
 
 import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
@@ -189,9 +190,20 @@ class ReferralView(APIView):
 class PreferencesView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET': [GROUP_NAME_MANAGER]
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
     }
+
+    class DeSerializer(Serializer):
+        receive_new_opportunities_email = BooleanField()
+        receive_new_opportunities_sms = BooleanField()
 
     def get(self, request, auditor_id, format=None):
         preference = preferences_service.find_preferences_by_user_id(auditor_id)
+        return Response(PreferencesSerializer(preference).data)
+
+    def post(self, request, auditor_id, format=None):
+        prefs_ds = self.DeSerializer(data=request.data)
+        prefs_ds.is_valid(raise_exception=True)
+        preference = preferences_service.set_preferences(auditor_id, prefs_ds.validated_data)
         return Response(PreferencesSerializer(preference).data)
