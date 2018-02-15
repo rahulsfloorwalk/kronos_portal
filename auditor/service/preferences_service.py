@@ -1,10 +1,12 @@
 from ..models import Preferences
+from registration.service import auditor
 
 def find_preferences_by_user_id(user_id):
+    user = auditor.find_auditor_by_id(user_id)
     try:
-        return Preferences.objects.get(user_id=user_id)
+        return Preferences.objects.get(user=user)
     except Preferences.DoesNotExist as e:
-        return Preferences()
+        return Preferences(user=user)
 
 def save(preferences):
     preferences.save()
