@@ -1,41 +1,41 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function findAttachmentsByUser(){
-	return $.get(url.api_base_path + `auditor/id_proof/attachment`);
+	return $.get(url.api_base_path + "auditor/id_proof/attachment");
 }
 
 export function findAttachmentsByAuditStore(auditStoreId){
 	return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`);
-};
+}
 
 export function findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId){
 	return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/section/${sectionId}/attachment`);
-};
+}
 
 export function deleteAttachment(attachmentId){
 	return $.ajax({
 		url: url.api_base_path + `auditor/attachment/${attachmentId}`,
 		type: "DELETE"
 	});
-};
+}
 
 export function completeAttachment(attachmentId){
 	return $.ajax({
 		url: url.api_base_path + `auditor/attachment/${attachmentId}/complete`,
 		type: "POST"
 	});
-};
+}
 
 export function uploadFileForUser(file){
-	var req_url = url.api_base_path + `auditor/id_proof/attachment`;
+	var req_url = url.api_base_path + "auditor/id_proof/attachment";
 	return doAttachmentUpload(req_url, file);
-};
+}
 
 export function uploadFileForAuditStore(auditStoreId, file){
 	var req_url = url.api_base_path + `auditor/audit_store/${auditStoreId}/attachment`;
 	return doAttachmentUpload(req_url, file);
-};
+}
 
 export function uploadFileForReportSection(auditStoreId, sectionId, file){
 	var req_url = url.api_base_path + `auditor/audit_store/${auditStoreId}/section/${sectionId}/attachment`;
@@ -43,16 +43,16 @@ export function uploadFileForReportSection(auditStoreId, sectionId, file){
 }
 
 export function doAttachmentUpload(url, file){
-	var mainPromise = $.Deferred();
+	let mainPromise = $.Deferred();
 
-	var payload = {
+	let payload = {
 		"file_name": file.name,
 		"file_size": file.size,
 		"file_type": file.type
 	};
 
 	mainPromise.notify("INIT");
-	var req = $.ajax({
+	let req = $.ajax({
 		type: "POST",
 		url: url,
 		data: JSON.stringify(payload),
@@ -78,14 +78,14 @@ export function doAttachmentUpload(url, file){
 			processData: false,
 			contentType: false,
 			xhr: function() {
-				var myXhr = $.ajaxSettings.xhr();
+				let myXhr = $.ajaxSettings.xhr();
 				if(myXhr.upload){
-					myXhr.upload.addEventListener('progress',function(e){
+					myXhr.upload.addEventListener("progress",function(e){
 						if(e.lengthComputable){
-							var max = e.total;
-							var current = e.loaded;
+							let max = e.total;
+							let current = e.loaded;
 
-							var percentage = (current * 100)/max;
+							let percentage = (current * 100)/max;
 							mainPromise.notify("UPLOAD_PROGRESS", percentage);
 						}
 					}, false);
@@ -96,16 +96,20 @@ export function doAttachmentUpload(url, file){
 			completeAttachment(post_data.attachment.id).then(function(){
 				mainPromise.resolve();
 			}, function(){
-				mainPromise.reject();
+				mainPromise.reject("There was an error, please try again.");
 			});
 		}, function(){
-			mainPromise.reject();
+			mainPromise.reject("There was an error, please try again.");
 		});
 	});
 
 	req.fail(function(err){
-		mainPromise.reject(err.responseJSON.non_field_errors[0]);
+		if(err && err.responseJSON && err.responseJSON.non_field_errors){
+			mainPromise.reject(err.responseJSON.non_field_errors[0]);
+		} else {
+			mainPromise.reject("There was an error, please try again.");
+		}
 	});
 
 	return mainPromise;
-};
+}
