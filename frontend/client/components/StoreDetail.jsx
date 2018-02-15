@@ -38,7 +38,7 @@ export default React.createClass({
 							<tr>
 								{ this.state.store.code ? <td className="">Code</td> : null }
 								<td className="">Name</td>
-								<td className="">Type</td>
+								{ this.state.store.type ? <td className="">Type</td> : null }
 								{ this.state.store.priority ? <td className="">Priority</td> : null }
 								<td className="">Address</td>
 								<td className="">City</td>
@@ -46,7 +46,7 @@ export default React.createClass({
 							<tr>
 								{ this.state.store.code ? <td><b>{ this.state.store.code }</b></td> : null }
 								<td><b>{ this.state.store.name }</b></td>
-								<td><b>{ this.state.store.type }</b></td>
+								{ this.state.store.type ? <td><b>{ this.state.store.type }</b></td> : null }
 								{ this.state.store.priority ? <td><b>{ this.state.store.priority }</b></td> : null }
 								<td><b>{ this.state.store.address }</b></td>
 								<td><b>{ this.state.store.city.name }</b></td>
