@@ -187,7 +187,7 @@ var QuestionForm = React.createClass({
 				this.setState({
 					form: Object.assign({}, this.state.form, {
 						sequence: savedQuestion.sequence + 1,
-						max_marks: null,
+						max_marks: "",
 						question_type: "",
 						question_txt: "",
 					})
