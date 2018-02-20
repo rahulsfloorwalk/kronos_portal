@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from "recharts";
+import { Text } from "recharts";
 
 import Loading from "../../js/components/Loading.jsx";
 import { fetchStorePerformance } from "../service/store.js";
@@ -57,7 +58,7 @@ export default class StorePerformance extends Component{
 						<YAxis/>
 						<Tooltip/>
 						<Legend />
-						<Bar dataKey="score" barSize={40} fill="#49A2CF" label/>
+						<Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>
 					</BarChart>
 				</ResponsiveContainer>
 			);
