@@ -14,6 +14,8 @@ from celery import shared_task
 
 from .mail import send_email
 
+from registration.context import registration_context
+
 _logger = logging.getLogger(__name__)
 
 def send_notification_mail(notif_id):
@@ -36,7 +38,9 @@ def notification_email_task(notif_id):
         return notif.emailed
     elif notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
         to_email = notif.recipient.email
-        params = {}
+        params = {
+            **registration_context(),
+        }
         params['name'] = notif.recipient.profileinfo.first_name
 
         # the audit_date property may come from either an application or audit_store instance

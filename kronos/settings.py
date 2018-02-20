@@ -318,6 +318,8 @@ FRONTEND_CONFIG = {
         "TW_PAGE_URL": properties["FRONTEND"]["TW_PAGE_URL"],
         "TW_USERNAME": properties["FRONTEND"]["TW_USERNAME"],
         "SUPPORT_EMAIL": properties["FRONTEND"]["SUPPORT_EMAIL"],
+        "ACCOUNTS_EMAIL": properties["FRONTEND"]["ACCOUNTS_EMAIL"],
+        "AUDITS_EMAIL": properties["FRONTEND"]["AUDITS_EMAIL"],
         "SUPPORT_PHONE": properties["FRONTEND"]["SUPPORT_PHONE"],
         "PHOEBE_VERSION": PHOEBE_VERSION,
         "SENTRY_DSN": properties["FRONTEND"]["SENTRY_DSN"],

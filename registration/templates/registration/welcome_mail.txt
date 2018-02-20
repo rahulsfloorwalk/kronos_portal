@@ -7,7 +7,7 @@ We're looking forward to any audits that you would be interested to perform
 
 In case you're not sure on how the process works, here is a quick recap:
 
- 1. Fill your basic profile information in the portal
+ 1. Fill your basic profile information and payment details in the portal
  2. Check out and Apply to any opportunities that you're interested in
  3. If your application meets our criteria, we will contact you
  4. You will perform the audit as discussed and fill out the report
@@ -17,8 +17,8 @@ In case you're not sure on how the process works, here is a quick recap:
 If you have any other doubts or queries feel free to read our FAQs or contact us:
 
  * Shopper FAQs
- * Email: audits@floorwalk.in
- * Phone: +91-849-600-3316
+ * Email: {{ AUDITS_EMAIL }}
+ * Phone: {{ SUPPORT_PHONE }}
 
 Come take a FloorWalk with us! Let's earn and grow together
 
