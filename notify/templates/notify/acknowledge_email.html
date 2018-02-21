@@ -9,6 +9,7 @@
 		<p>Thank you for going through the instructions, questionnaire and confirming that you're going to audit at <b>{{ client }}</b> on <b>{{ audit_date }}</b>.</p>
 		<p>The audit details are as follows:</p>
 		<p><b>Store Name:</b> {{ store_name }}</p>
+		{% if store_phone %} <p><b>Store Phone:</b> {{ store_phone }}</p>{% endif %}
 		<p><b>Store Address:</b> {{ store_address }}</p>
 		<p><b>Audit Date:</b> {{ audit_date }}</p>
 		<p><b>Note: You can always view the questionnaire and other details on the portal.</b></p>
