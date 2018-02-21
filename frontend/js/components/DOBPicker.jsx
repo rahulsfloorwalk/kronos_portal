@@ -10,9 +10,9 @@ export default class DOBPicker extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			year: null,
-			month: null,
-			date: null,
+			year: "",
+			month: "",
+			date: "",
 		};
 	}
 

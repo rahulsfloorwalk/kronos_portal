@@ -121,8 +121,8 @@ var ProfileInfoForm = React.createClass({
 			this.props.dispatch(fetchCities(e.target.value));
 		} else {
 			this.setState({
-				state: null,
-				city_id: null,
+				state: "",
+				city_id: "",
 			});
 		}
 	},

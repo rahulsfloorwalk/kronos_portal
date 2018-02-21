@@ -2,9 +2,9 @@ import React from 'react';
 
 var SaveButton = React.createClass({
 	render : function(){
-		var text = this.props.text || "Save";
+		let text = this.props.text || "Save";
 		return (
-			<button type="submit" className="btn btn-primary" {...this.props}>
+			<button type="submit" className="btn btn-primary">
 				{text}
 			</button>
 		);

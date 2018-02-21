@@ -35,7 +35,7 @@ var AdditionalInfoForm = React.createClass({
 				switch(e.target.name){
 					case "has_car":
 						change["car_model"] = "";
-						change["car_cost"] = null;
+						change["car_cost"] = "";
 						break;
 					case "laptop_owned":
 						change["laptop_model"] = "";

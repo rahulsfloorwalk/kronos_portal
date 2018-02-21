@@ -10,10 +10,24 @@ var FormInput = React.createClass({
 		this._input && this._input.focus();
 	},
 	render : function(){
+		let { placeholder, onChange, maxLength, type, value, name, disabled, label } = this.props;
+
+		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
+		value = value ? value : "";
 		return (
 			<FormGroup>
-				<label>{this.props.label}</label>
-				<input className="form-control" ref={r => this._input = r} {...this.props}/>
+				<label>{label}</label>
+				<input className="form-control"
+					ref={r => this._input = r}
+					placeholder={placeholder}
+					onChange={onChange}
+					maxLength={maxLength}
+					type={type}
+					value={value}
+					name={name}
+					disabled={disabled}
+					label={label}
+				/>
 				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>
 		);
