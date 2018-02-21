@@ -1,5 +1,6 @@
 import io
 import csv
+import xlsxwriter
 import itertools
 from kronos import utils
 from django.utils import timezone
@@ -209,77 +210,124 @@ def find_pending_csv_for_audit_cycle(audit_cycle_id):
 
     return output, audit.replace(" ", "-") + "_payments.csv"
 
-def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
-    output = io.StringIO()
-    writer = csv.writer(output)
 
+def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id):
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     consilidated_payments = consolidate_by_user(pending_payments)
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     client = audit_cycle.client.name
     name = audit_cycle.name
     audit = client + "_" + name
+    filename = audit.replace(" ", "-") + "_payments.xlsx"
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    worksheet = workbook.add_worksheet()
+    worksheet.set_column('A:AZ', 20)
 
-    fieldnames = ['Record_Identifier', 'Payment_Value_Date', 'Payment_Amount', 'Debit_Account_No', 'Customer_Reference_No',
-                  'Customer_Instrument_No', 'Payment_Product_Code', 'Beneficiary_Code', 'Beneficiary_Name',
-                  'Beneficiary_Address1', 'Beneficiary_Address2', 'Beneficiary_Address3', 'Beneficiary_Address4',
-                  'Payable_Loc_Code', 'Print_Branch_Code', 'Dispatch_Address1', 'Dispatch_Address2', 'Dispatch_Mode',
-                  'Dispatch_To', 'Payment_Remarks', 'ReasonForPayment', 'Credit_Account_No', 'IFSC_Code', 'Notification_Emails',
-                  'Enrichment1', 'Debit_Narration', 'Enrichment3', 'Enrichment4', 'Enrichment5']
-    writer.writerow(fieldnames)
+    fieldnames = get_fieldnames()
+    col = 0
+    for name in fieldnames:
+        worksheet.write(0, col, name)
+        col += 1
+    row = 0
     for payment in consilidated_payments:
-        try:
-            bank_name = payment.user.bankinfo.bank_name
-            ifsc_code = payment.user.bankinfo.ifsc_code
-            account_number = payment.user.bankinfo.account_number
-        except BankInfo.DoesNotExist:
-            bank_name = ""
-            ifsc_code = ""
-            account_number = ""
+        row += 1
+        col = 0
+        row_content = get_datarow_for_payment(payment)
+        for cell in row_content:
+            worksheet.write(row, col, cell)
+            col += 1
 
-        if payment.user.profileinfo.city:
-            city_name = payment.user.profileinfo.city.name
-        else:
-            city_name = "India"
-        writer.writerow([
-            settings.PAYMENT_NEW_CSV_SETTINGS['Record_Identifier'],
-            utils.today_ist().strftime("%d/%m/%Y"),
-            payment.amount,
-            settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Account_No'],
-            "",
-            "",
-            settings.PAYMENT_NEW_CSV_SETTINGS['Payment_Product_Code'],
-            "",
-            (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or ""),
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            settings.PAYMENT_NEW_CSV_SETTINGS['ReasonForPayment'],
-            "=\"" + account_number + "\"",
-            ifsc_code,
-            payment.user.email,
-            "",
-            settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Narration'],
-            "",
-            "",
-            "",
-        ])
+    workbook.close()
+    output.seek(0)
+    return output, filename
+
+
+def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+    consolidated_payments = consolidate_by_user(pending_payments)
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    client = audit_cycle.client.name
+    name = audit_cycle.name
+    audit = client + "_" + name
+
+    fieldnames = get_fieldnames()
+    writer.writerow(fieldnames)
+    for payment in consolidated_payments:
+        datarow = get_datarow_for_payment(payment)
+        writer.writerow(datarow)
 
     output.seek(0)
 
     return output, audit.replace(" ", "-") + "_payments.csv"
 
 
+def get_datarow_for_payment(payment):
+    try:
+        bank_name = payment.user.bankinfo.bank_name
+        ifsc_code = payment.user.bankinfo.ifsc_code.upper()
+        account_number = payment.user.bankinfo.account_number
+    except BankInfo.DoesNotExist:
+        bank_name = ""
+        ifsc_code = ""
+        account_number = ""
+
+    if payment.user.profileinfo.city:
+        city_name = payment.user.profileinfo.city.name
+    else:
+        city_name = "India"
+    datarow = [
+        settings.PAYMENT_NEW_CSV_SETTINGS['Record_Identifier'],
+        utils.today_ist().strftime("%d/%m/%Y"),
+        payment.amount,
+        "'" + settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Account_No'],
+        "",
+        "",
+        settings.PAYMENT_NEW_CSV_SETTINGS['Payment_Product_Code'],
+        "",
+        (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or ""),
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        settings.PAYMENT_NEW_CSV_SETTINGS['ReasonForPayment'],
+        "'" + account_number,
+        ifsc_code,
+        payment.user.email,
+        "",
+        settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Narration'],
+        "",
+        "",
+        "",
+    ]
+    return datarow
+
+
+def get_fieldnames():
+    fieldnames = ['Record_Identifier', 'Payment_Value_Date', 'Payment_Amount', 'Debit_Account_No',
+                  'Customer_Reference_No',
+                  'Customer_Instrument_No', 'Payment_Product_Code', 'Beneficiary_Code', 'Beneficiary_Name',
+                  'Beneficiary_Address1', 'Beneficiary_Address2', 'Beneficiary_Address3', 'Beneficiary_Address4',
+                  'Payable_Loc_Code', 'Print_Branch_Code', 'Dispatch_Address1', 'Dispatch_Address2', 'Dispatch_Mode',
+                  'Dispatch_To', 'Payment_Remarks', 'ReasonForPayment', 'Credit_Account_No', 'IFSC_Code',
+                  'Notification_Emails',
+                  'Enrichment1', 'Debit_Narration', 'Enrichment3', 'Enrichment4', 'Enrichment5']
+    return fieldnames
+
+
 def find_by_user(user_id):
     return Payment.objects.filter(user_id=user_id)
+
 
 def consolidate_by_user(payments):
     sorted_payments = sorted(payments, key=lambda k: k.user.id)

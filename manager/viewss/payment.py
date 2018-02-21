@@ -49,6 +49,18 @@ class PendingPaymentCsvView(APIView):
         return response
 
 
+class PendingPaymentXlsxView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        report, name = payment_service.find_new_pending_xlsx_for_audit_cycle(audit_cycle_id)
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+
+
 class PaymentIdPayView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
