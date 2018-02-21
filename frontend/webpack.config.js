@@ -8,16 +8,16 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
 	entry: {
 		'auditor/auditor': path.resolve(__dirname, './js/auditor.jsx'),
-		'auditor/auditor_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login','raven-js'],
+		'auditor/auditor_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login','raven-js', 'babel-polyfill'],
 
 		'manager/manager': path.resolve(__dirname, './js/manager.jsx'),
 		'manager/manager_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
 
 		'client/client': path.resolve(__dirname, './client/client.jsx'),
-		'client/client_vendor': ['jquery','react','react-dom','react-router','recharts', 'raven-js'],
+		'client/client_vendor': ['jquery','react','react-dom','react-router','recharts', 'raven-js', 'babel-polyfill'],
 
 		'client/report_print': path.resolve(__dirname, './client/report_print.jsx'),
-		'client/report_print_vendor': ['jquery','react','react-dom','react-router', 'raven-js'],
+		'client/report_print_vendor': ['jquery','react','react-dom','react-router', 'raven-js', 'babel-polyfill'],
 
 		'moderator/moderator': path.resolve(__dirname, './js/moderator/moderator.jsx'),
 		'moderator/moderator_vendor': ['jquery','react','react-dom','react-router', 'raven-js'],
