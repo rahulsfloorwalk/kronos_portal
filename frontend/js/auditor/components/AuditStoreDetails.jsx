@@ -1,0 +1,163 @@
+import React from 'react';
+import * as ReactRedux from 'react-redux';
+import { Link } from 'react-router';
+
+import moment from 'moment';
+import { momentDateFormat }  from '../../../config.js';
+
+import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore } from '../actions/audit_store.js';
+
+import ExpandableDetails from '../../components/ExpandableDetails.jsx';
+import Panel from '../../components/Panel.jsx';
+import Loading from '../../components/Loading.jsx';
+import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
+import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
+
+import AttachmentUploadBox from './AttachmentUploadBox.jsx';
+import MarkdownViewer from '../../components/MarkdownViewer.jsx';
+
+import SectionList from './questionnaire/SectionList.jsx';
+
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+
+var AuditStoreDetails = React.createClass({
+	getInitialState: function(){
+		return {
+			submitMessage : "",
+			submitStatus: "",
+			showErrors: false,
+		};
+	},
+	componentDidMount: function(){
+		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
+	},
+	submitButtonClicked: function(e){
+		var promise = this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
+		promise.then(() => {
+			this.setState({
+				submitMessage : "submitted successfully",
+				submitStatus: "success",
+			});
+		},(err) => {
+			console.debug("ERRRRR:", err);
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+	},
+	acknowledgeButtonClicked: function(e){
+		var promise = this.props.dispatch(acknowledgeAuditStore(this.props.params.auditStoreId));
+		promise.then(() => {
+			this.setState({
+				submitMessage : "You have agreed to conduct the audit. Audit is now in progress.",
+				submitStatus: "success",
+			});
+		},(err) => {
+			console.debug("ERRRRR:", err);
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+	},
+	render: function(){
+		if(! this.props.auditStore){
+			return <Loading/>;
+		}
+
+		let submitAuditButton, acknowledgeButton;
+		if(this.props.auditStore.status === 'ASSIGNED'){
+			acknowledgeButton = (
+				<span>
+					<button onClick={this.acknowledgeButtonClicked} type="button" className="btn btn-primary btn-lg">
+						Agree
+					</button>
+					&nbsp;
+					&nbsp;
+					<big>I have read the <b>instructions</b>, <b>questionnaire</b> and agree to conduct the audit.</big>
+				</span>);
+		}
+		if(this.props.auditStore.status === 'ACKNOWLEDGED'){
+			submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary btn-lg">Submit Report</button>);
+		}
+
+		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
+		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
+		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
+
+		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
+
+		let buttonPanel = (
+			<div className="form-group">
+				{acknowledgeButton}{submitAuditButton}&nbsp;&nbsp;{submitMessageElement}
+		</div>);
+
+		return (
+			<div>
+				<h2 className="page-header">Audit Report - <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
+				<div className="row">
+				<div className="col-md-12">
+					<div className="panel panel-default">
+					<table className="table table-striped">
+						<tbody>
+							<tr>
+								<td className="text-right">Type:</td>
+								<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Store:</td>
+								<th>{this.props.auditStore.audit.store.name}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Phone:</td>
+								<th>{this.props.auditStore.audit.store.phone}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Address:</td>
+								<th>{this.props.auditStore.audit.store.address}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Fees:</td>
+								<th>{<span>{fees}{reimb}</span>}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Audit Date:</td>
+								<th>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</th>
+							</tr>
+							<tr>
+								<td className="text-right">Status:</td>
+								<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}</th>
+							</tr>
+						</tbody>
+					</table>
+					{ !(! this.props.auditStore.audit.post_approval_description && ! this.props.auditStore.audit.audit_cycle.post_approval_description) ?
+					<div className="panel-body">
+						<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
+						<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+					</div>
+					: null }
+					</div>
+				</div>
+				<div className="col-md-6">
+				</div>
+				</div>
+				{buttonPanel}
+				<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId}/>
+				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors}/>
+				{buttonPanel}
+			</div>
+		);
+	},
+});
+
+var mapStoreToProps = function(store, ownProps){
+	return {
+		auditStore: store.auditStores[ownProps.params.auditStoreId],
+		sections: store.sections
+	};
+};
+
+export default ReactRedux.connect(mapStoreToProps)(AuditStoreDetails);

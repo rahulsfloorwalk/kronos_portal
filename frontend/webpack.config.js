@@ -13,10 +13,10 @@ module.exports = {
 		'manager/manager': path.resolve(__dirname, './js/manager.jsx'),
 		'manager/manager_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
 
-		'client/client': path.resolve(__dirname, './client/client.jsx'),
+		'client/client': path.resolve(__dirname, './js/client/client.jsx'),
 		'client/client_vendor': ['jquery','react','react-dom','react-router','recharts', 'raven-js', 'babel-polyfill'],
 
-		'client/report_print': path.resolve(__dirname, './client/report_print.jsx'),
+		'client/report_print': path.resolve(__dirname, './js/client/report_print.jsx'),
 		'client/report_print_vendor': ['jquery','react','react-dom','react-router', 'raven-js', 'babel-polyfill'],
 
 		'moderator/moderator': path.resolve(__dirname, './js/moderator/moderator.jsx'),
@@ -87,13 +87,13 @@ module.exports = {
 			title: 'FloorWalk Client Portal',
 			filename: 'client/index.html',
 			chunks: ['client/client_vendor', 'client/client', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './client/client.ejs'),
+			template: path.resolve(__dirname, './js/client/client.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Report Print',
 			filename: 'client/report_print.html',
 			chunks: ['client/report_print_vendor', 'client/report_print', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './client/client.ejs'),
+			template: path.resolve(__dirname, './js/client/client.ejs'),
 		}),
 		new CopyWebpackPlugin([
 			{ from: path.resolve(__dirname, './bsvendor'), to: 'bsvendor/' },

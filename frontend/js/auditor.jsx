@@ -14,7 +14,7 @@ import ReduxLogger from 'redux-logger';
 
 import $ from 'jquery';
 
-import Routes from './components/auditor/Routes.jsx';
+import Routes from './auditor/components/Routes.jsx';
 import { rootReducer } from './reducers_auditor.js';
 
 import { fetchConfig } from './auditor/service/config.js';
