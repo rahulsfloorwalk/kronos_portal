@@ -1,15 +1,31 @@
-import React from 'react';
-import Datetime from 'react-datetime';
+import React from "react";
+import PropTypes from "prop-types";
+import Datetime from "react-datetime";
 
-import FormGroup from './FormGroup.jsx';
-import FormErrorList from './FormErrorList.jsx';
+import FormGroup from "./FormGroup.jsx";
+import FormErrorList from "./FormErrorList.jsx";
 
 
-var FormInput = React.createClass({
-	focus: function(){
+export default class FormInput extends React.Component{
+	static propTypes = {
+		placeholder: PropTypes.string,
+		onChange: PropTypes.func,
+		maxLength: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.number,
+		]),
+		type: PropTypes.string,
+		value: PropTypes.string,
+		name: PropTypes.string,
+		disabled: PropTypes.bool,
+		label: PropTypes.string,
+		errors: PropTypes.array,
+	};
+
+	focus(){
 		this._input && this._input.focus();
-	},
-	render : function(){
+	}
+	render(){
 		let { placeholder, onChange, maxLength, type, value, name, disabled, label } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
@@ -31,11 +47,16 @@ var FormInput = React.createClass({
 				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>
 		);
-	},
-});
+	}
+}
 
-var FormDateInput = React.createClass({
-	render: function(){
+export class FormDateInput extends React.Component{
+	static propTypes = {
+		label: PropTypes.string,
+		errors: PropTypes.array,
+	};
+
+	render(){
 		return (
 			<FormGroup>
 				<label>{this.props.label}</label>
@@ -49,7 +70,5 @@ var FormDateInput = React.createClass({
 			</FormGroup>
 		);
 	}
-});
+}
 
-export default FormInput;
-export { FormDateInput };

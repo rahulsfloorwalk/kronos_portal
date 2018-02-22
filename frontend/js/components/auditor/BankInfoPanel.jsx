@@ -71,12 +71,12 @@ class BankInfoPanelBase extends React.Component{
 				: null }
 				{ this.props.bankInfo.is_complete && !this.props.bankInfo.is_valid ?
 					<div className="panel-footer">
-						<b className="">Payments will not be processed until valid bank details are provided.</b>
+						<b className="">Payments will not be processed until valid details are provided.</b>
 					</div>
 				: null }
 				{ this.props.bankInfo.is_complete ? null :
 				<div className="panel-footer">
-					<p className="text-danger"><b>Please complete your bank information.</b></p>
+					<p className="text-danger"><b>Please complete your payment information.</b></p>
 				</div>
 				}
 			</div>

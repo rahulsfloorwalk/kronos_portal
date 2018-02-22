@@ -1,12 +1,28 @@
-import React from 'react';
+import React from "react";
+import PropTypes from "prop-types";
 
-import FormGroup from './FormGroup.jsx';
-import FormErrorList from './FormErrorList.jsx';
+import FormGroup from "./FormGroup.jsx";
+import FormErrorList from "./FormErrorList.jsx";
 
 
-var FormSelect = React.createClass({
-	render : function(){
-		let { placeholder, onChange, maxLength, type, value, name, disabled, label } = this.props;
+export default class FormSelect extends React.Component{
+	static propTypes = {
+		placeholder: PropTypes.string,
+		onChange: PropTypes.func,
+		type: PropTypes.string,
+		value: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.number,
+		]),
+		name: PropTypes.string,
+		disabled: PropTypes.bool,
+		label: PropTypes.string,
+		errors: PropTypes.array,
+		children: PropTypes.array,
+	};
+
+	render(){
+		let { placeholder, onChange, type, value, name, disabled, label } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
 		value = value ? value : "";
@@ -16,7 +32,6 @@ var FormSelect = React.createClass({
 				<select className="form-control"
 					placeholder={placeholder}
 					onChange={onChange}
-					maxLength={maxLength}
 					type={type}
 					value={value}
 					name={name}
@@ -28,7 +43,5 @@ var FormSelect = React.createClass({
 				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>
 		);
-	},
-});
-
-export default FormSelect;
+	}
+}

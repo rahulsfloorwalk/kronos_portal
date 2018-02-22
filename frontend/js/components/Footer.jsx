@@ -1,12 +1,16 @@
-import React from 'react';
+import React from "react";
+import PropTypes from "prop-types";
 
-var Footer = React.createClass({
-	getDefaultProps: function(){
-		return {
-			config: {},
-		};
-	},
-	render: function(){
+export default class Footer extends React.Component{
+	static propTypes = {
+		config: PropTypes.object.isRequired,
+	};
+
+	static defaultProps = {
+		config: {},
+	};
+
+	render(){
 		var brandStyle = {
 			height:"30px"
 		};
@@ -32,7 +36,5 @@ var Footer = React.createClass({
 				</p>
 			</div>
 		);
-	},
-});
-
-export default Footer;
+	}
+}

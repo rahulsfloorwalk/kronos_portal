@@ -1,12 +1,17 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import FormSelect from './FormSelect.jsx';
+import FormSelect from "./FormSelect.jsx";
 
 /* State Selector begins */
 
-var __StateSelector = React.createClass({
-	render : function(){
+class __StateSelector extends React.Component{
+	static propTypes = {
+		states: PropTypes.object,
+	};
+
+	render(){
 		let stateOptions = [];
 		for( let s in this.props.states){
 			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
@@ -18,7 +23,7 @@ var __StateSelector = React.createClass({
 			</FormSelect>
 		);
 	}
-});
+}
 
 var mapStoreToPropsForStateSelector = function(store){
 	return {
@@ -26,7 +31,7 @@ var mapStoreToPropsForStateSelector = function(store){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToPropsForStateSelector)(__StateSelector);
+export default connect(mapStoreToPropsForStateSelector)(__StateSelector);
 
 export { __StateSelector };
 

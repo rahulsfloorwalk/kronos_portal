@@ -1,12 +1,17 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
 
-import FormSelect from './FormSelect.jsx';
+import FormSelect from "./FormSelect.jsx";
 
 /* City Selector Starts */
 
-var __CitySelector = React.createClass({
-	render : function(){
+class __CitySelector extends React.Component{
+	static propTypes = {
+		cities: PropTypes.object,
+	};
+
+	render(){
 		let cityOptions = [];
 		for( let c of this.props.cities){
 			cityOptions.push(<option key={c.id} value={c.id}>{c.name}</option>);
@@ -18,7 +23,7 @@ var __CitySelector = React.createClass({
 			</FormSelect>
 		);
 	}
-});
+}
 
 var mapStoreToPropsForCitySelector = function(store){
 	return {
@@ -26,7 +31,7 @@ var mapStoreToPropsForCitySelector = function(store){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToPropsForCitySelector)(__CitySelector);
+export default connect(mapStoreToPropsForCitySelector)(__CitySelector);
 
 /* City Selector Ends */
 

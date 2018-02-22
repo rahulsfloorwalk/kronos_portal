@@ -1,18 +1,24 @@
-import React from 'react';
+import React from "react";
+import PropTypes from "prop-types";
 
-var FormErrorList = React.createClass({
-	render : function(){
-		var errors = this.props.errors || [];
-		var items = [];
-		for( var error of errors){
-			items.push(<li key={error} style={{"color": "red"}}>{error}</li>);
+export default class FormErrorList extends React.Component{
+	static propTypes = {
+		errors: PropTypes.array.isRequired,
+	};
+
+	static defaultProps = {
+		errors: [],
+	};
+
+	render(){
+		let items = [];
+		for( let error of this.props.errors){
+			items.push(<li key={error} style={{"color": "red"}}><b>{error}</b></li>);
 		}
 		return (
 			<ul>
 				{items}
 			</ul>
 		);
-	},
-});
-
-export default FormErrorList;
+	}
+}

@@ -1,12 +1,19 @@
-import React from 'react';
+import React from "react";
+import PropTypes from "prop-types";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../config.js';
+import moment from "moment";
 
-import FormSelect from './FormSelect.jsx';
-import FormErrorList from './FormErrorList.jsx';
+import FormErrorList from "./FormErrorList.jsx";
 
 export default class DOBPicker extends React.Component{
+
+	static propTypes = {
+		initialDate: PropTypes.object,
+		onChange: PropTypes.func,
+		errors: PropTypes.array,
+		disabled: PropTypes.bool,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -21,7 +28,7 @@ export default class DOBPicker extends React.Component{
 		initialDate: null,
 		disabled: false,
 		errors: [],
-	}
+	};
 
 	componentDidMount(){
 		if( this.props.initialDate){
@@ -56,7 +63,7 @@ export default class DOBPicker extends React.Component{
 		9: "October",
 		10: "November",
 		11: "December",
-	}
+	};
 
 	dates = {
 		0: 31,
@@ -71,29 +78,29 @@ export default class DOBPicker extends React.Component{
 		9: 31,
 		10: 30,
 		11: 31,
-	}
+	};
 
 	dateChanged = (e) => {
 		this.setState({
 			date: e.target.value,
 		}, () => this.props.onChange(this.getSelectedDate()));
-	}
+	};
 
 	monthChanged = (e) => {
 		this.setState({
 			month: e.target.value
 		}, () => this.props.onChange(this.getSelectedDate()));
-	}
+	};
 
 	yearChanged = (e) => {
 		this.setState({
 			year: e.target.value,
 		}, () => this.props.onChange(this.getSelectedDate()));
-	}
+	};
 
 	isValid = () => {
 		return !!this.getSelectedDate();
-	}
+	};
 
 	getSelectedDate = () => {
 		if( !isNaN(parseInt(this.state.year))
@@ -110,7 +117,7 @@ export default class DOBPicker extends React.Component{
 			}
 		} 
 		return null;
-	}
+	};
 
 	render(){
 		let yearOptions = [];
@@ -138,28 +145,28 @@ export default class DOBPicker extends React.Component{
 		return (
 			<div className="form-group">
 				<table>
-				<tbody>
-				<tr>
-				<td style={{width:"30%"}}>
-				<select className="form-control" value={this.state.year} onChange={this.yearChanged} disabled={this.props.disabled}>
-					<option value="">Year</option>
-					{yearOptions}
-				</select>
-				</td>
-				<td style={{width:"40%"}}>
-				<select className="form-control" value={this.state.month} onChange={this.monthChanged} disabled={this.props.disabled}>
-					<option value="">Month</option>
-					{monthOptions}
-				</select>
-				</td>
-				<td style={{width:"30%"}}>
-				<select className="form-control" value={this.state.date} onChange={this.dateChanged} disabled={this.props.disabled}>
-					<option value="">Day</option>
-					{dateOptions}
-				</select>
-				</td>
-				</tr>
-				</tbody>
+					<tbody>
+						<tr>
+							<td style={{width:"30%"}}>
+								<select className="form-control" value={this.state.year} onChange={this.yearChanged} disabled={this.props.disabled}>
+									<option value="">Year</option>
+									{yearOptions}
+								</select>
+							</td>
+							<td style={{width:"40%"}}>
+								<select className="form-control" value={this.state.month} onChange={this.monthChanged} disabled={this.props.disabled}>
+									<option value="">Month</option>
+									{monthOptions}
+								</select>
+							</td>
+							<td style={{width:"30%"}}>
+								<select className="form-control" value={this.state.date} onChange={this.dateChanged} disabled={this.props.disabled}>
+									<option value="">Day</option>
+									{dateOptions}
+								</select>
+							</td>
+						</tr>
+					</tbody>
 				</table>
 				<FormErrorList errors={this.props.errors}/>
 			</div>
