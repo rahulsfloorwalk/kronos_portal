@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet"
+			href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+			integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="icon" href="/static/img/favicon_64x64.png" type="image/png" />
+		<title>Floorwalk Agency Portal</title>
+	</head>
+	<body>
+		<div id="root">
+			<div id="loadmsg">
+			<div style="text-align:center;">
+			<img src="/static/img/ripple.svg" title="Please Wait" alt="loading..."/>
+			</div>
+			</div>
+			<div id="unsup" style="text-align:center;"></div>
+		</div>
+		<script>
+		(function(){
+			if(/Opera/.test(navigator.userAgent) || /UCBrowser/.test(navigator.userAgent)){
+				document.querySelector("#loadmsg").style.display = "none";
+				document.querySelector("#unsup").innerHTML = "<h2>Your browser is not supported.</h2><h2>Please use a supported browser such as Chrome or Firefox.</h2>";
+			}
+		})();
+		</script>
+	</body>
+</html>
+

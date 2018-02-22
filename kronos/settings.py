@@ -105,6 +105,8 @@ PROJECT_APPS = [
     'client_rest',
     'social',
     'referral',
+    'agency',
+    'agency_rest',
 ]
 
 INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS
@@ -313,6 +315,7 @@ EMAIL_SWITCH = {
     "POST_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["POST_REMINDER"] == "True",
     "WELCOME_EMAIL": properties["EMAIL_SWITCH"]["WELCOME"] == "True",
     "OPPORTUNITY_EMAIL": properties["EMAIL_SWITCH"]["OPPORTUNITY"] == "True",
+    "AGENCY_VERIFICATION_EMAIL": properties["EMAIL_SWITCH"]["AGENCY_VERIFICATION"] == "True",
 }
 
 FRONTEND_CONFIG = {
@@ -348,6 +351,9 @@ FRONTEND_CONFIG = {
     },
     "MODERATOR": {
         "LOGIN_SUCCESS_REDIRECT_URL": properties["FRONTEND"]["MODERATOR_LOGIN_SUCCESS_REDIRECT_URL"]
+    },
+    "AGENCY": {
+        "LOGIN_SUCCESS_REDIRECT_URL": properties["FRONTEND"]["AGENCY_LOGIN_SUCCESS_REDIRECT_URL"]
     }
 }
 

@@ -9,12 +9,12 @@ from django.core.validators import validate_email
 from django.db.transaction import atomic
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from registration.models import Verification
 from registration.models import GROUP_NAME_AUDITOR
 from auditor.models import ProfileInfo, AdditionalInfo
 from referral.service import referral_auditor
 from notify.service.mail_welcome import send_welcome_email
 from registration.context import registration_context
+from registration.service import verification_service
 
 _logger = logging.getLogger(__name__)
 
@@ -38,36 +38,20 @@ def activate_auditor(user_id):
     user.save()
     return user
 
-def find_verification_by_key(key):
-    try:
-        return Verification.objects.get(activation_key=key)
-    except Verification.DoesNotExist as e:
-        raise ObjectNotFound from e
-
 @atomic
 def verify_auditor(user_id):
-    try:
-        user = find_auditor_by_id(user_id)
-        if not user.verification.is_verified:
-            user.verification.is_verified = True
-            user.verification.save()
-            _logger.info("verified user %s successfully", user)
-            referral_auditor.trigger_signup_referral(user.id)
+    user = find_auditor_by_id(user_id)
+    verification = verification_service.verify_by_user_id(user.id)
+    referral_auditor.trigger_signup_referral(user.id)
 
-            if settings.EMAIL_SWITCH['WELCOME_EMAIL']:
-                send_welcome_email.delay(user.email)
+    if settings.EMAIL_SWITCH['WELCOME_EMAIL']:
+        send_welcome_email.delay(user.email)
 
-            return user
-        else:
-            _logger.info("verification is already done for user: %s", user.email)
-            raise ObjectNotFound
-    except (User.DoesNotExist, Verification.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
+    return verification.user
 
 @atomic
 def verify_auditor_by_key(key):
-    verification = find_verification_by_key(key)
+    verification = verification_service.find_verification_by_activation_key(key)
     _logger.info("found verification for key: %s", key)
     return verify_auditor(verification.user_id)
 
@@ -132,3 +116,4 @@ def check_phone_exists(phone_number):
         return True
     else:
         return False
+

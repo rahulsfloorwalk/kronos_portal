@@ -1,21 +1,18 @@
 {% extends "registration/base.html" %}
 {% load widget_tweaks %}
-{% block title %}Auditor Sign Up |{% endblock %}
+{% block title %}Agency Sign Up |{% endblock %}
 {% block content %}
-	<div class="row">
-		<div class="col-md-5">
-		</div>
-	</div>
+
 <div class="row">
 	<div class="col-md-5">
-<h1 class="page-header">
+		<h1 class="page-header">
 			<a href="{{rhea_base_url}}">
 			<img class="img-responsive" src="/static/img/logo_3_500x100.png"/>
 			</a>
-</h1>
+		</h1>
 		<div class="panel panel-primary">
 			<div class="panel-heading">
-				<h3 class="panel-title">Sign Up for a <b>new FloorWalk account</b></h3>
+				<h3 class="panel-title">Register as an <b>Agency</b> with FloorWalk</h3>
 			</div>
 			<div class="panel-body">
 				{% if x.non_field_errors %}
@@ -23,8 +20,22 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				<form action="{% url 'registration:signup' %}" method="POST" id="signup_form">
+				<form action="{% url 'registration:agency_signup' %}" method="POST" id="signup_form">
 					{% csrf_token %}
+					<div class="form-group">
+						<label>Agency Name</label>
+						{{ form.agency_name | add_class:"form-control input-lg" | attr:"placeholder:ABC Company" }}
+						<p class="help-block">
+						{{ form.agency_name.errors }}
+						</p>
+					</div>
+					<div class="form-group">
+						<label>Contact Name</label>
+						{{ form.contact_name | add_class:"form-control input-lg" | attr:"placeholder:your name" }}
+						<p class="help-block">
+						{{ form.contact_name.errors }}
+						</p>
+					</div>
 					<div class="form-group">
 						<label>Email Address</label>
 						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com" | attr:"type:email"}}
@@ -33,13 +44,13 @@
 						</p>
 					</div>
 					<div class="form-group">
-						<label class="control-label" for="{{form.phone.auto_id}}">10-digit Mobile Number:</label>
+						<label class="control-label" for="{{form.mobile_number.auto_id}}">10-digit Mobile Number:</label>
 						<div class="input-group">
 							<span class="input-group-addon">+91-</span>
-						{{ form.phone | add_class:"form-control input-lg" | attr:"placeholder:your primary contact number" | attr:"type:tel"}}
+						{{ form.mobile_number | add_class:"form-control input-lg" | attr:"placeholder:your primary contact number" | attr:"type:tel"}}
 						</div>
 						<p class="help-block">
-						{{ form.phone.errors }}
+						{{ form.mobile_number.errors }}
 						</p>
 					</div>
 					<div class="form-group has-feedback">
@@ -58,15 +69,6 @@
 						<p class="help-block">
 						</p>
 					</div>
-					<div class="form-group">
-						<div id="referral_block">
-						{{ form.referred_by.label_tag }}
-						{{ form.referred_by | add_class:"form-control input-lg" | attr:"placeholder:referral code of your friend"}}
-						<p class="help-block">
-						{{ form.referred_by.errors }}
-						</p>
-						</div>
-					</div>
 					<div id="tos_block" class="form-group" style="display:none;">
 						<table>
 							<tr>
@@ -77,34 +79,19 @@
 							</td>
 							<td style="padding:5px;">
 						<label for="{{form.tos_accept.auto_id}}">
-							I accept FloorWalk's <a href="{{ rhea_base_url }}/privacy_policy" target="_blank">Privacy Policy</a> and <a href="{{ rhea_base_url }}/contractor_agreement" target="_blank">Independent Contractor Agreement</a>.
+							I accept FloorWalk's <a href="{{ rhea_base_url }}/agency_agreement" target="_blank">Agency Contractor Agreement</a>.
 						</label>
 							</td>
 						</tr>
 						</table>
 					</div>
-						{% if not form.referred_by.value %}
-						<div class="pull-right">
-							<a href="#" id="show_referral" tabindex="-1">I have a referral code</a>
-						</div>
-						<script>
-							document.getElementById("referral_block").style.display = "none";
-							document.getElementById("show_referral").addEventListener('click', function(e){
-								e.preventDefault();
-								e.target.remove();
-								var input = document.getElementById("referral_block");
-								input.style.display = "block";
-								document.getElementById("{{ form.referred_by.auto_id }}").focus();
-							});
-						</script>
-						{% endif %}
 					<div class="form-group">
-						<button class="btn btn-primary btn-lg" type="submit" style="">Sign Up</button>
+						<button class="btn btn-primary btn-lg" type="submit" style="">Register</button>
 					</div>
 				</form>
 			</div>
 			<div class="panel-footer">
-				<p>Already have an account? <a href="{% url 'registration:login' %} ">Login here</a></p>
+				<p>Already have an <b>agency</b> account? <a href="{% url 'registration:agency_login' %} ">Login here</a></p>
 			</div>
 		</div>
 	</div>
@@ -112,29 +99,24 @@
 		<br/>
 		<br/>
 		<br/>
-		<h1 class="page-header">Here's How it Works!</h1>
-		<h4 class="">Go shopping as a Mystery Shopper. Give us your feedback and get paid. Simple!!</h4>
-		<br/>
+		<h1 class="page-header">Register as a FloorWalk agency</h1>
+		<h4 class="">Register with us and get bulk audits</h4>
 		<div class="row">
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/grab_the_deal.png" alt=""/>
-				<h3 class="text-center">1. Grab the Deal</h3>
-				<p class="text-center">Tell us your interests and we give you a shop</p>
+			<div class="col-md-12">
+				<h3 class="text-left">1. Register with us and tell us about your agency</h3>
+				<p class="text-left">Fill in the form and tell us about your areas of operation</p>
 			</div>
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/go_shopping.png" alt=""/>
-				<h3 class="text-center">2. Go Shopping</h3>
-				<p class="text-center">Keenly observe a few things while shopping</p>
+			<div class="col-md-12">
+				<h3 class="text-left">3. We will contact you with available opportunities</h3>
+				<p class="text-left">We have a high demand for bulk audits across India</p>
 			</div>
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/tell_us_your_experience.png" alt=""/>
-				<h3 class="text-center">3. Tell us your experience</h3>
-				<p class="text-center">Report your observations and experience</p>
+			<div class="col-md-12">
+				<h3 class="text-left">3. Conduct the audit and fill in the results</h3>
+				<p class="text-left">All reporting is done online on our portal.</p>
 			</div>
-			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/get_paid.jpeg" alt=""/>
-				<h3 class="text-center">4. Get Paid</h3>
-				<p class="text-center">Get reimbursed for your shopping and make some extra money</p>
+			<div class="col-md-12">
+				<h3 class="text-left">4. Get Paid</h3>
+				<p class="text-left">and finally you get paid for all your hard work</p>
 			</div>
 		</div>
 	</div>
@@ -161,8 +143,8 @@
 		var checkPasswords = function(password1, password2){
 			return isValidPassword(password1)[0] && password1 && password2 && password1 === password2;
 		};
-		var checkPhone = function(phone){
-			return /[0-9]{10}/.test(phone);
+		var checkPhone = function(mobile_number){
+			return /[0-9]{10}/.test(mobile_number);
 		};
 	(function(){
 
@@ -254,7 +236,7 @@
 
 		document.querySelector("#id_password2").addEventListener("keyup", confirmPasswordEquals);
 
-		document.querySelector("#id_phone").addEventListener("keyup", function(e){
+		document.querySelector("#id_mobile_number").addEventListener("keyup", function(e){
 			if( ! checkPhone(e.target.value)){
 				e.target.parentNode.classList.add("has-error");
 				e.target.parentNode.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>invalid mobile number</span>";
@@ -267,9 +249,9 @@
 		document.querySelector("#signup_form").addEventListener("submit", function(e){
 			var p1 = document.querySelector("#id_password1");
 			var p2 = document.querySelector("#id_password2");
-			var phone = document.querySelector("#id_phone");
+			var mobile_number = document.querySelector("#id_mobile_number");
 
-			if( ! checkPasswords(p1.value, p2.value) || ! checkPhone(phone.value)){
+			if( ! checkPasswords(p1.value, p2.value) || ! checkPhone(mobile_number.value)){
 				e.preventDefault();
 			}
 		});

@@ -15,7 +15,10 @@ export default class FormInput extends React.Component{
 			PropTypes.number,
 		]),
 		type: PropTypes.string,
-		value: PropTypes.string,
+		value: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.number,
+		]),
 		name: PropTypes.string,
 		disabled: PropTypes.bool,
 		label: PropTypes.string,

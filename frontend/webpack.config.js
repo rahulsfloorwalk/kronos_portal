@@ -10,6 +10,9 @@ module.exports = {
 		'auditor/auditor': path.resolve(__dirname, './js/auditor/index.jsx'),
 		'auditor/auditor_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login','raven-js', 'babel-polyfill'],
 
+		'agency/agency': path.resolve(__dirname, './js/agency/index.jsx'),
+		'agency/agency_vendor': ['axios','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','raven-js', 'babel-polyfill'],
+
 		'manager/manager': path.resolve(__dirname, './js/manager/index.jsx'),
 		'manager/manager_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
 
@@ -64,6 +67,7 @@ module.exports = {
 		new webpack.optimize.CommonsChunkPlugin({ name: "client/client_vendor", chunks: ['client/client']}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "manager/manager_vendor", chunks: ['manager/manager']}),
 		new webpack.optimize.CommonsChunkPlugin({ name: "moderator/moderator_vendor", chunks: ['moderator/moderator']}),
+		new webpack.optimize.CommonsChunkPlugin({ name: "agency/agency_vendor", chunks: ['agency/agency']}),
 		new ExtractTextPlugin("[name].css"),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Moderator Portal',
@@ -82,6 +86,12 @@ module.exports = {
 			filename: 'auditor/index.html',
 			chunks: ['auditor/auditor_vendor', 'auditor/auditor', 'css/react-datetime', 'css/bs_overrides'],
 			template: path.resolve(__dirname, './js/auditor/index.ejs'),
+		}),
+		new HtmlWebpackPlugin({
+			title: 'FloorWalk Agency Portal',
+			filename: 'agency/index.html',
+			chunks: ['agency/agency_vendor', 'agency/agency', 'css/react-datetime', 'css/bs_overrides'],
+			template: path.resolve(__dirname, './js/agency/index.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Client Portal',

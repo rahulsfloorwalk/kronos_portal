@@ -6,9 +6,17 @@ from . import views
 from . import client_views
 from . import moderator_views
 from . import manager_views
+from . import agency_views
 from .context import registration_context
 
 urlpatterns = ([
+    # Agency Portal Login Logout Views
+    url(r'agency/login$', agency_views.Login.as_view(), name="agency_login"),
+    url(r'agency/logout$', agency_views.Logout.as_view(), name="agency_logout"),
+    url(r'agency/signup$', agency_views.SignUp.as_view(), name="agency_signup"),
+    url(r'agency/verify_email/(?P<key>.+)$', agency_views.verify_email, name="agency_verify_email"),
+    url(r'agency/signup/success$', agency_views.signup_success, name="agency_signup_success"),
+
     # Moderator Portal Login Logout Views
     url(r'moderator/login$', moderator_views.Login.as_view(), name="moderator_login"),
     url(r'moderator/logout$', moderator_views.Logout.as_view(), name="moderator_logout"),

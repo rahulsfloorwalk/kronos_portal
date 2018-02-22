@@ -18,11 +18,12 @@ from django.template.loader import get_template
 from django.core.mail import EmailMessage
 
 import strings
-from registration.models import GROUP_NAME_AUDITOR
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_AGENCY
 from registration.service.auditor import generate_ref_code
 from auditor.validators import numericValidator
 from registration.context import registration_context
 from auditor.models import Preferences
+from registration.service import mobile_number_service
 
 _logger = logging.getLogger(__name__)
 
@@ -50,8 +51,9 @@ class SignUpForm(UserCreationForm):
 
     def clean_phone(self):
 
-        if ProfileInfo.objects.filter(mobile_number=self.cleaned_data["phone"]).exists():
+        if mobile_number_service.mobile_number_exists(self.cleaned_data["phone"]):
             raise ValidationError("a user with phone %(phone)s already exists", params={"phone": self.cleaned_data["phone"]})
+
         return self.cleaned_data["phone"]
 
     def clean_referred_by(self):
@@ -146,6 +148,28 @@ class AuditorAuthenticationForm(GroupAuthenticationForm):
 
     def is_valid(self):
         valid = super(AuditorAuthenticationForm, self).is_valid()
+
+        if not valid or not self.user_cache:
+            return valid
+
+        try:
+            if not self.user_cache.verification.is_verified:
+                self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+                valid = False
+        except Verification.DoesNotExist:
+            _logger.warn("User without verification found! : %s", self.user_cache)
+            self.add_error(None, "Your account is not verified. Please check your email for the verification link.")
+            valid = False
+
+        return valid
+
+
+class AgencyAuthenticationForm(GroupAuthenticationForm):
+    def __init__(self, *args, **kwargs):
+        super(AgencyAuthenticationForm, self).__init__(GROUP_NAME_AGENCY, *args, **kwargs)
+
+    def is_valid(self):
+        valid = super(AgencyAuthenticationForm, self).is_valid()
 
         if not valid or not self.user_cache:
             return valid

@@ -23,6 +23,7 @@ import auditor.urls as auditor_urls
 import manager.urls as manager_urls
 import client_rest.urls as client_urls
 import moderator_rest.urls as moderator_urls
+import agency_rest.urls as agency_urls
 
 admin.site.site_header = 'FloorWalk Admin Panel'
 
@@ -34,6 +35,7 @@ urlpatterns = [
     url(r'^manager/', include(manager_urls.urlpatterns)),
     url(r'^client/', include(client_urls.urlpatterns)),
     url(r'^moderator/', include(moderator_urls.urlpatterns)),
+    url(r'^agency/', include(agency_urls.urlpatterns)),
 ]
 
 if settings.DEBUG and settings.DEBUG_TOOLBAR:
