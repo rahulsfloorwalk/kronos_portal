@@ -14,12 +14,12 @@ import ReduxLogger from 'redux-logger';
 
 import $ from 'jquery';
 
-import Routes from './auditor/components/Routes.jsx';
-import { rootReducer } from './reducers_auditor.js';
+import Routes from './components/Routes.jsx';
+import { rootReducer } from './reducers.js';
 
-import { fetchConfig } from './auditor/service/config.js';
+import { fetchConfig } from './service/config.js';
 
-import { initializeTawk } from './auditor/service/tawk.js';
+import { initializeTawk } from './service/tawk.js';
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){

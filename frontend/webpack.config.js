@@ -7,19 +7,19 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
 	entry: {
-		'auditor/auditor': path.resolve(__dirname, './js/auditor.jsx'),
+		'auditor/auditor': path.resolve(__dirname, './js/auditor/index.jsx'),
 		'auditor/auditor_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-ga','react-facebook-login','raven-js', 'babel-polyfill'],
 
-		'manager/manager': path.resolve(__dirname, './js/manager.jsx'),
+		'manager/manager': path.resolve(__dirname, './js/manager/index.jsx'),
 		'manager/manager_vendor': ['jquery','react','react-dom','react-redux','redux','redux-thunk','redux-logger','react-router','react-s-alert'],
 
-		'client/client': path.resolve(__dirname, './js/client/client.jsx'),
+		'client/client': path.resolve(__dirname, './js/client/index.jsx'),
 		'client/client_vendor': ['jquery','react','react-dom','react-router','recharts', 'raven-js', 'babel-polyfill'],
 
 		'client/report_print': path.resolve(__dirname, './js/client/report_print.jsx'),
 		'client/report_print_vendor': ['jquery','react','react-dom','react-router', 'raven-js', 'babel-polyfill'],
 
-		'moderator/moderator': path.resolve(__dirname, './js/moderator/moderator.jsx'),
+		'moderator/moderator': path.resolve(__dirname, './js/moderator/index.jsx'),
 		'moderator/moderator_vendor': ['jquery','react','react-dom','react-router', 'raven-js'],
 
 		'css/react-datetime': path.resolve(__dirname, './node_modules/react-datetime/css/react-datetime.css'),
@@ -69,31 +69,31 @@ module.exports = {
 			title: 'FloorWalk Moderator Portal',
 			filename: 'moderator/index.html',
 			chunks: ['moderator/moderator_vendor', 'moderator/moderator', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './js/moderator/moderator.ejs'),
+			template: path.resolve(__dirname, './js/moderator/index.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Manager Portal',
 			filename: 'manager/index.html',
 			chunks: ['manager/manager_vendor', 'manager/manager', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './js/manager/manager.ejs'),
+			template: path.resolve(__dirname, './js/manager/index.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Auditor Portal',
 			filename: 'auditor/index.html',
 			chunks: ['auditor/auditor_vendor', 'auditor/auditor', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './js/auditor/auditor.ejs'),
+			template: path.resolve(__dirname, './js/auditor/index.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'FloorWalk Client Portal',
 			filename: 'client/index.html',
 			chunks: ['client/client_vendor', 'client/client', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './js/client/client.ejs'),
+			template: path.resolve(__dirname, './js/client/index.ejs'),
 		}),
 		new HtmlWebpackPlugin({
 			title: 'Report Print',
 			filename: 'client/report_print.html',
 			chunks: ['client/report_print_vendor', 'client/report_print', 'css/react-datetime', 'css/bs_overrides'],
-			template: path.resolve(__dirname, './js/client/client.ejs'),
+			template: path.resolve(__dirname, './js/client/index.ejs'),
 		}),
 		new CopyWebpackPlugin([
 			{ from: path.resolve(__dirname, './bsvendor'), to: 'bsvendor/' },

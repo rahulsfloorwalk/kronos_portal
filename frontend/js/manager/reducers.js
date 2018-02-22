@@ -1,4 +1,4 @@
-import types from './manager/action_types.js'
+import types from './action_types.js'
 
 var initialStore = {
 	applications: {},

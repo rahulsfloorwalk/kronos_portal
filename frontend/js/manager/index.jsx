@@ -10,8 +10,8 @@ import ReduxLogger from 'redux-logger';
 
 import $ from 'jquery';
 
-import Routes from './manager/components/Routes.jsx';
-import { rootReducer } from './reducers_manager.js';
+import Routes from './components/Routes.jsx';
+import { rootReducer } from './reducers.js';
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
