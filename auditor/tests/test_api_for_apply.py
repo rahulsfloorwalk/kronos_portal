@@ -11,7 +11,7 @@ from model_mommy.recipe import Recipe
 from rest_framework.test import APITestCase
 
 from audit.models import AuditCycle, Audit
-from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
+from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, Preferences
 from manager.models import City
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
@@ -38,6 +38,14 @@ class AuditApplicationAPITestCase(APITestCase):
             mobile_number=''.join(random.choice(string.digits) for i in range(10)),
             user=self.auditor_user
         )
+
+        self.prefs = mommy.make(
+            Preferences,
+            pp_accepted=True,
+            agreement_accepted=True,
+            user=self.auditor_user
+        )
+
         self.bank = mommy.make(BankInfo, account_number=''.join(random.choice(string.digits) for i in range(10)),
                                user=self.auditor_user)
         self.additional = mommy.make(AdditionalInfo, user=self.auditor_user)

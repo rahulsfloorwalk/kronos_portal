@@ -2,6 +2,7 @@ from django.conf import settings
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.serializers import Serializer, BooleanField
 
 import attachment.service_auditor as attachment_auditor_service
 from answer.service import answer as answer_service
@@ -532,3 +533,19 @@ class PreferencesView(APIView):
         preferences = preferences_s.deserialize()
         preferences = preferences_service.save(preferences)
         return Response(PreferencesSerializer(preferences).data)
+
+class TosAcceptView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    class DeSerializer(Serializer):
+        tos_accept = BooleanField()
+
+    def post(self, request):
+        ds = TosAcceptView.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        preferences = preferences_service.tos_accept(request.user.id, ds.validated_data.get('tos_accept'))
+        return Response(PreferencesSerializer(preferences).data)
+

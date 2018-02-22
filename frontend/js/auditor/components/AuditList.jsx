@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import { Link, hashHistory } from 'react-router';
 
 import moment from 'moment';
 import { momentDateFormat }  from '../../../config.js';
@@ -19,15 +19,29 @@ import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../u
 import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
 import Loading from '../../components/Loading.jsx';
 import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
+import { fetchPreferences } from '../service/preferences.js';
 
 
-var AuditRow = React.createClass({
-	render: function(){
+class AuditRow extends React.Component{
+	static propTypes = {
+	};
+
+	applyButtonClicked = () => {
+		fetchPreferences().then((prefs) => {
+			if(!prefs.pp_accepted || !prefs.agreement_accepted){
+				hashHistory.push(`/tos_accept?auditCycleId=${this.props.audit.audit_cycle.id}&auditId=${this.props.audit.id}`);
+			} else {
+				hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}/audit/${this.props.audit.id}/apply`);
+			}
+		});
+	};
+
+	render(){
 		let button, auditDate, textLabel;
 		if( typeof this.props.application === "undefined" || this.props.application.status === "NOT_APPLIED"){
-			let applyLink = `/audit/cycle/${this.props.audit.audit_cycle.id}/audit/${this.props.audit.id}/apply`;
-			let applyButton = <Link to={applyLink} className="btn btn-primary"><ShareAlt/> Apply</Link>;
-			button = applyButton;
+			button = <button type="button" className="btn btn-primary" onClick={this.applyButtonClicked}><ShareAlt/> Apply</button>;
+			//<Link to={applyLink} className="btn btn-primary"><ShareAlt/> Apply</Link>;
+			//button = applyButton;
 			//textLabel = <ApplicationStatusLabel status="NOT_APPLIED"/>;
 		}
 		else if( this.props.application.status === "APPLIED" || this.props.application.status === "WAITLISTED"){
@@ -77,8 +91,8 @@ var AuditRow = React.createClass({
 				<div className="col-xs-12"><hr/></div>
 			</div>
 		);
-	},
-});
+	}
+}
 
 class AuditList extends Component{
 	constructor(props){

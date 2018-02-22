@@ -17,6 +17,7 @@ from audit.service import audit_cycle as audit_cycle_service
 
 from auditor.service import profile_info_service
 from auditor.service import bank_info_service
+from auditor.service import preferences_service
 
 
 def get_applications(profileinfo_id):
@@ -35,6 +36,7 @@ def apply(audit_id, user_id, audit_date):
         audit = Audit.objects.get(id=audit_id)
         profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
         bank_info = bank_info_service.find_bank_info_by_user_id(user_id)
+        preferences = preferences_service.find_preferences_by_user_id(user_id)
         application = audit.applications.get(profileinfo_id=profile_info.id)
     except (Audit.DoesNotExist) as e:
         raise ObjectNotFound from e
@@ -44,12 +46,14 @@ def apply(audit_id, user_id, audit_date):
         application.profileinfo = profile_info
         application.audit_id = audit.id
 
+    if not preferences.pp_accepted or not preferences.agreement_accepted:
+        raise AppLogicError("Please accept the Privacy Policy and Individual Contractor Agreement before applying to audits.")
+
     if not profile_info.is_complete():
         raise AppLogicError("Please complete all required fields under PROFILE SECTION")
 
     if not bank_info.is_complete():
         raise AppLogicError("Please complete all required fields under PAYMENT DETAILS Section")
-
     # if bank_info.is_complete() and not bank_info.is_valid():
         # raise AppLogicError("Please enter VALID INFORMATION under BANK DETAILS Section")
 

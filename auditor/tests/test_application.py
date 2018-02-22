@@ -12,7 +12,7 @@ from auditor.service import application_service
 from auditor.tests.utils import additional_info_recipe
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from ..models import ProfileInfo, BankInfo
+from ..models import ProfileInfo, BankInfo, Preferences
 
 class AuditApplicationTestCase(TestCase):
     fixtures = ['groups', 'city']
@@ -25,6 +25,13 @@ class AuditApplicationTestCase(TestCase):
         self.profile = mommy.make(ProfileInfo, user=self.auditor_user, _fill_optional=True)
         self.bank_info = mommy.make(BankInfo, user=self.auditor_user, _fill_optional=True)
         self.additional_info = additional_info_recipe.make(user=self.auditor_user)
+
+        self.prefs = mommy.make(
+            Preferences,
+            pp_accepted=True,
+            agreement_accepted=True,
+            user=self.auditor_user
+        )
 
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com", groups=[self.manager_group])
 

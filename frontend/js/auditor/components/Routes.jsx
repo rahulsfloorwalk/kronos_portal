@@ -22,6 +22,8 @@ import AdditionalInfoForm from './AdditionalInfoForm.jsx';
 import PreferencesForm from './PreferencesForm.jsx';
 import MobileNumberForm from './MobileNumberForm.jsx';
 
+import ToSAcceptForm from './ToSAcceptForm.jsx';
+
 import PaymentList from './PaymentList.jsx';
 import ReferralList from './ReferralList.jsx';
 
@@ -55,6 +57,7 @@ const Routes = ({store}) => (
 		<Route path="audit_store/:auditStoreId/section" component={AuditStoreDetails}/>
 		<Route path="payment" component={PaymentList}/>
 		<Route path="referral" component={ReferralList}/>
+		<Route path="tos_accept" component={ToSAcceptForm}/>
 	</Route>
     </Router>
   </Provider>

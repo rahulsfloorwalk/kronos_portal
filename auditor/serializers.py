@@ -621,6 +621,8 @@ class PreferencesSerializer(ModelSerializer):
             'receive_new_opportunities_email',
             'receive_new_opportunities_sms',
             'user_id',
+            'pp_accepted',
+            'agreement_accepted',
         )
         read_only_fields = ('id', 'user_id')
 
