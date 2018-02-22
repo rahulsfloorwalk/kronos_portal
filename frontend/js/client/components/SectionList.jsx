@@ -12,7 +12,7 @@ import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
 
 import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
 import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
-import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
+import AttachmentPreview from '../../manager/components/AttachmentPreview.jsx';
 
 import { fetchAnswers } from '../service/answer.js';
 import { findAttachmentsByAuditStoreAndSection } from '../service/attachment.js';

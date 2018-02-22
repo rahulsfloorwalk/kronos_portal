@@ -6,7 +6,7 @@ import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from '../
 import Loading from '../../components/Loading.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 
-import AttachmentPreview from '../../components/manager/AttachmentPreview.jsx';
+import AttachmentPreview from '../../manager/components/AttachmentPreview.jsx';
 
 import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
 import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';

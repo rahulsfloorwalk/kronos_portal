@@ -2,6 +2,8 @@ import React from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
+import Alert from 'react-s-alert';
+
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from '../service/attachment.js';
 
 import { Paperclip, Plus, Cross, Record, Picture, Video, File, DownloadAlt } from '../../components/Icons.jsx';
@@ -10,14 +12,14 @@ import ProgressBar from '../../components/ProgressBar.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 import InPlaceEditable from '../../components/InPlaceEditable.jsx';
 
-import AttachmentPreview from '../../manager/components/AttachmentPreview.jsx';
+import AttachmentPreview from './AttachmentPreview.jsx';
 
 import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
 import AttachmentInProgressThumbnail from '../../components/AttachmentInProgressThumbnail.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-export default React.createClass({
+var AttachmentDisplayBox = React.createClass({
 	getInitialState: function(){
 		return {
 			attachments: [],
@@ -43,6 +45,7 @@ export default React.createClass({
 	deleteButtonClicked: function(){
 		if( this.state.selectedAttachment){
 			deleteAttachment(this.state.selectedAttachment.id).then(() => {
+				Alert.success("ATTACHMENT DELETED");
 				this.setState({
 					selectedAttachment: null,
 					attachments: this.state.attachments.filter((a) => a.id !== this.state.selectedAttachment.id)
@@ -51,7 +54,8 @@ export default React.createClass({
 		}
 	},
 	attachmentRenamed: function(file_name){
-		renameAttachment(this.state.selectedAttachment.id, file_name).done((a)=>{
+		renameAttachment(this.state.selectedAttachment.id, file_name).then((a)=>{
+			Alert.success("ATTACHMENT RENAMED");
 			this.setState({
 				selectedAttachment: a
 			});
@@ -64,6 +68,8 @@ export default React.createClass({
 					});
 				}
 			}
+		}, ()=> {
+			Alert.warning("INVALIED FILE NAME");
 		});
 	},
 	uploadButtonClicked: function(e){
@@ -128,7 +134,7 @@ export default React.createClass({
 			}, (errorMessage) => {
 				this.setProgressState(tempId, {
 					uploadMessage: errorMessage,
-					error: true,
+					error:true,
 					progress: ""
 				});
 			});
@@ -140,10 +146,10 @@ export default React.createClass({
 		}
 
 		var attachmentRows = [];
-		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)}/>);
-		}
 
+		for(let a of this.state.attachments){
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)}/>);
+		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
 				let fileName = this.state.inProgress[id].file ? this.state.inProgress[id].file.name : "";
@@ -164,16 +170,20 @@ export default React.createClass({
 
 		let uploadButton;
 		if(this.props.auditStore.status === 'SUBMITTED'){
-			attachmentRows.push(<div key="upload_input" className="hidden">
-				<input type="file" onChange={this.uploadFile} multiple
-					ref={(input)=>this.uploadInput = input}/>
-			</div>);
-			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
+			uploadButton = (
+				<span>
+					<input className="hidden" type="file" onChange={this.uploadFile} multiple
+						ref={(input)=>this.uploadInput = input}/>
+					<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default">
+						<Plus/> Upload Attachment
+					</button>
+				</span>
+			);
 		}
 
 		if( attachmentRows.length === 0){
-			return <Jumbotron heading="no attachments here" para="none uploaded"/>;
-		} else {
+			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
+		}
 
 		return (
 			<div>
@@ -190,6 +200,13 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-		}
 	},
 });
+
+var mapStoreToProps = function(store, ownProps){
+	return {
+		auditStore: store.auditStores[ownProps.auditStoreId],
+	};
+};
+
+export default ReactRedux.connect(mapStoreToProps)(AttachmentDisplayBox);

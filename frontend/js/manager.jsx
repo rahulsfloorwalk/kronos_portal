@@ -10,7 +10,7 @@ import ReduxLogger from 'redux-logger';
 
 import $ from 'jquery';
 
-import Routes from './components/manager/Routes.jsx';
+import Routes from './manager/components/Routes.jsx';
 import { rootReducer } from './reducers_manager.js';
 
 let forbiddenEncountered = false;
