@@ -1,5 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -59,3 +60,35 @@ class ClientUserIdView(APIView):
         )
         return Response(ClientUserSerializer(saved_client_user).data)
 
+class ClientUserByStoreIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+        'DELETE': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        user_id = IntegerField()
+
+    def get(self, request, store_id):
+        users = client_user_service.find_by_visible_store(store_id)
+        return Response((u.id for u in users))
+
+    def post(self, request, store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        users = client_user_service.assign_store_to_client_user(
+            store_id,
+            ds.validated_data["user_id"],
+        )
+        return Response((u.id for u in users))
+
+    def delete(self, request, store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        users = client_user_service.revoke_store_from_client_user(
+            store_id,
+            ds.validated_data["user_id"],
+        )
+        return Response((u.id for u in users))

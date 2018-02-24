@@ -2,14 +2,13 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from client.service import store as store_service
 
-from ..serializers import StoreSerializer, StoreSerializerWithoutClientUserAndClient, StoreDeSerializer
+from ..serializers import StoreSerializer, StoreDeSerializer
 
 
 class StoreViewByClient(APIView):
@@ -19,7 +18,7 @@ class StoreViewByClient(APIView):
     }
     def get(self, request, client_id, format=None):
         stores = store_service.find_stores_by_client(client_id)
-        return Response(StoreSerializerWithoutClientUserAndClient(stores, many=True).data)
+        return Response(StoreSerializer(stores, many=True).data)
 
 class StoreIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -55,30 +54,3 @@ class StoreView(APIView):
         savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
 
-
-class StoreIdClientUserView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'POST': [GROUP_NAME_MANAGER],
-    }
-
-    class DeSerializer(Serializer):
-        user_id = IntegerField()
-
-    def post(self, request, store_id):
-        ds = self.DeSerializer(data=request.data)
-        ds.is_valid(raise_exception=True)
-        saved_store = store_service.assign_store_to_client_user(
-            store_id,
-            ds.validated_data["user_id"],
-        )
-        return Response(StoreSerializer(saved_store).data)
-
-    def delete(self, request, store_id):
-        ds = self.DeSerializer(data=request.data)
-        ds.is_valid(raise_exception=True)
-        saved_store = store_service.revoke_store_from_client_user(
-            store_id,
-            ds.validated_data["user_id"],
-        )
-        return Response(StoreSerializer(saved_store).data)

@@ -18,6 +18,7 @@ var initialStore = {
 	answers: {},
 	reportSections: {},
 	clientUsers: {},
+	clientUserStoreVisibility: {},
 	errors: {},
 	forms: {
 		client: {
@@ -757,6 +758,19 @@ export function rootReducer(store = initialStore, action) {
 								errors: action.errors
 							})
 						})
+					});
+					break;
+				default:
+					console.warn("WARNING: default case encountered for action: %O", action);
+					return store;
+			}
+		case types.CLIENT_USER_STORE_VISIBILITY:
+			switch(action.status){
+				case "success":
+					return Object.assign({}, store, {
+						clientUserStoreVisibility: {
+							[action.storeId]: action.clientUsers,
+						},
 					});
 					break;
 				default:

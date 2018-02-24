@@ -1,41 +1,87 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { hashHistory } from "react-router";
 
-import Alert from 'react-s-alert';
+import { fetchClientUsers, updateClientUserStoreVisibility } from "../actions/client_user.js";
+import { fetchStore } from "../actions/store.js";
+import { fetchClientUsersForStore, assignStoreToClientUser, revokeStoreFromClientUser } from "../service/client_user.js";
 
-import { fetchClientUsers } from '../actions/client_user.js';
-import { fetchStore, updateStore } from '../actions/store.js';
-import { assignStoreToClientUser, revokeStoreFromClientUser } from '../service/store.js';
+import { Checked, Unchecked, OptionHorizontal } from "../../components/Icons.jsx";
+import Modal from "../../components/Modal.jsx";
 
-import { Checked, Unchecked } from '../../components/Icons.jsx';
-import Modal from '../../components/Modal.jsx';
+class StoreAssignForm extends React.Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			storeId: PropTypes.string.isRequired,
+			clientId: PropTypes.string.isRequired,
+		}),
+		store: PropTypes.object,
+		clientUserStoreVisibility: PropTypes.array.isRequired,
+		clientUsers: PropTypes.object.isRequired,
+	};
 
-let StoreAssignForm = React.createClass({
+	constructor(props){
+		super(props);
+		this.state = {
+			loading: {},
+		};
+	}
 
-	componentDidMount: function() {
+	setLoading = (userId, loading) => {
+		this.setState((prevState) => {
+			return Object.assign({}, prevState, {
+				loading: Object.assign({}, prevState.loading, {
+					[userId]: loading
+				})
+			});
+		});
+	};
+
+	componentDidMount() {
+		fetchClientUsersForStore(this.props.params.storeId).then(clientUsers => {
+			this.props.dispatch(updateClientUserStoreVisibility(this.props.params.storeId, clientUsers));
+		});
 		this.props.dispatch(fetchStore(this.props.params.storeId));
 		this.props.dispatch(fetchClientUsers(this.props.params.clientId));
-	},
+	}
 
-	assignStore: function(clientUser) {
-		assignStoreToClientUser(this.props.store.id, clientUser.user.id).then((store) => this.props.dispatch(updateStore(store)));
-	},
+	assignStore = (clientUser) => {
+		this.setLoading(clientUser.user.id, true);
+		assignStoreToClientUser(this.props.store.id, clientUser.user.id).then((clientUsers) => {
+			this.props.dispatch(updateClientUserStoreVisibility(this.props.params.storeId, clientUsers));
+		}).always(() => this.setLoading(clientUser.user.id, false));
+	};
 
-	revokeStore: function(clientUser) {
-		revokeStoreFromClientUser(this.props.store.id, clientUser.user.id).then((store) => this.props.dispatch(updateStore(store)));
-	},
+	revokeStore = (clientUser) => {
+		this.setLoading(clientUser.user.id, true);
+		revokeStoreFromClientUser(this.props.store.id, clientUser.user.id).then((clientUsers) => {
+			this.props.dispatch(updateClientUserStoreVisibility(this.props.params.storeId, clientUsers));
+		}).always(() => this.setLoading(clientUser.user.id, false));
+	};
 
-	render: function(){
-		console.log("stores perms:", this.props.store.visible_to);
+	render(){
 		let rows = [];
 		for( let id in this.props.clientUsers){
 			let cu = this.props.clientUsers[id];
 			let button;
-			if(this.props.store.visible_to.indexOf(cu.user.id) > -1){
-				button = <button onClick={() => this.revokeStore(cu)} className="btn btn-primary"><Checked/></button>;
+			if(this.props.clientUserStoreVisibility.indexOf(cu.user.id) > -1){
+				button = <button onClick={() => this.revokeStore(cu)} className="btn btn-primary" disabled={this.state.loading[cu.user.id]}>
+					{this.state.loading[cu.user.id] ? 
+						<OptionHorizontal/>
+						:
+						<Checked/>
+					}
+				</button>;
 			} else {
-				button = <button onClick={() => this.assignStore(cu)} className="btn btn-default"><Unchecked/></button>;
+				button = <button onClick={() => this.assignStore(cu)} className="btn btn-default" disabled={this.state.loading[cu.user.id]}>
+					{this.state.loading[cu.user.id] ? 
+						<OptionHorizontal/>
+						:
+						<Unchecked/>
+					}
+				</button>;
 			}
 			rows.push(<tr key={cu.id}>
 				<td>{button}</td>
@@ -43,11 +89,11 @@ let StoreAssignForm = React.createClass({
 			</tr>);
 		}
 		return (
-			<Modal modalTitle="Assign Store" onClose={hashHistory.goBack}>
+			<Modal modalTitle={"Assign Users to " + this.props.store.name} onClose={hashHistory.goBack}>
 				<table className="table table-striped">
 					<thead>
 						<th>Assign/Revoke</th>
-						<th>User</th>
+						<th>Client User</th>
 					</thead>
 					<tbody>
 						{rows}
@@ -56,13 +102,14 @@ let StoreAssignForm = React.createClass({
 			</Modal>
 		);
 	}
-});
+}
 
 let mapStoreToProps = function(store, ownProps){
 	return {
 		store: store.stores[ownProps.params.storeId] || {},
+		clientUserStoreVisibility: store.clientUserStoreVisibility[ownProps.params.storeId] || [],
 		clientUsers: store.clientUsers,
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(StoreAssignForm);
+export default connect( mapStoreToProps)(StoreAssignForm);

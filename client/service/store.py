@@ -1,13 +1,10 @@
 from django.db import IntegrityError
-from django.db.transaction import atomic
 from django.contrib.auth.models import User
-
-from guardian.shortcuts import assign_perm, remove_perm
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from ..models import Store
-import client.service.client_user as client_user_service
+from client.service import client_user as client_user_service
 
 
 def save(store):
@@ -54,25 +51,3 @@ def find_cities_for_clientuser(user_id):
         raise ObjectNotFound from e
 
 
-@atomic
-def assign_store_to_client_user(store_id, user_id):
-    store = find_store_by_id(store_id)
-    user = client_user_service.find_clientuser_by_user_id(user_id)
-
-    if not user.clientuser.client.id == store.client.id:
-        raise AppLogicError("cannot assign Store across client boundries")
-
-    assign_perm('clientuser_store_visible', user, store)
-    return store
-
-
-@atomic
-def revoke_store_from_client_user(store_id, user_id):
-    store = find_store_by_id(store_id)
-    user = client_user_service.find_clientuser_by_user_id(user_id)
-
-    if not user.clientuser.client.id == store.client.id:
-        raise AppLogicError("cannot revoke Store across client boundries")
-
-    remove_perm('clientuser_store_visible', user, store)
-    return store

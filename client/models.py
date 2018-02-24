@@ -1,6 +1,5 @@
 from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField
 from django.contrib.postgres.fields import JSONField
-from guardian.shortcuts import get_users_with_perms
 from django.db.models import PROTECT
 from django.conf import settings
 
@@ -62,10 +61,6 @@ class Store(Model):
 
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
-
-    def visible_to(self):
-        users_with_perms = get_users_with_perms(self, attach_perms=True)
-        return [user for user, perms in users_with_perms if "clientuser_store_visible" in perms]
 
     class Meta:
         unique_together = ("client", "code")

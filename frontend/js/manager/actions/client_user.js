@@ -153,3 +153,14 @@ export function saveClientUserEditForm(clientUser){
 		return req;
 	};
 };
+
+export function updateClientUserStoreVisibility(storeId, clientUsers){
+	return function(dispatch){
+		dispatch({
+			type: types.CLIENT_USER_STORE_VISIBILITY,
+			status: "success",
+			storeId,
+			clientUsers
+		});
+	};
+}

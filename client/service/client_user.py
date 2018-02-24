@@ -3,6 +3,7 @@ from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
 
 from guardian.shortcuts import assign_perm, remove_perm
+from guardian.shortcuts import get_users_with_perms
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_CLIENT
@@ -10,6 +11,7 @@ from registration.models import GROUP_NAME_CLIENT
 from ..models import ClientUser
 
 from . import client_service
+from . import store as store_service
 
 
 def find_clientusers_by_client_id(client_id):
@@ -87,3 +89,29 @@ def update(client_user_id, client, full_name, email, is_client_admin, password="
         raise AppLogicError("a user with this email already exists in the system") from e
 
 
+def find_by_visible_store(store_id):
+    store = store_service.find_store_by_id(store_id)
+    users_with_perms = get_users_with_perms(store, attach_perms=True)
+    return [user for user, perms in users_with_perms.items() if "clientuser_store_visible" in perms]
+
+@atomic
+def assign_store_to_client_user(store_id, user_id):
+    store = store_service.find_store_by_id(store_id)
+    user = find_clientuser_by_user_id(user_id)
+
+    if not user.clientuser.client.id == store.client.id:
+        raise AppLogicError("cannot assign Store across client boundries")
+
+    assign_perm('clientuser_store_visible', user, store)
+    return find_by_visible_store(store_id)
+
+@atomic
+def revoke_store_from_client_user(store_id, user_id):
+    store = store_service.find_store_by_id(store_id)
+    user = find_clientuser_by_user_id(user_id)
+
+    if not user.clientuser.client.id == store.client.id:
+        raise AppLogicError("cannot revoke Store across client boundries")
+
+    remove_perm('clientuser_store_visible', user, store)
+    return find_by_visible_store(store_id)
