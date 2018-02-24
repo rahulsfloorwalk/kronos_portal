@@ -1,33 +1,34 @@
-import React from 'react';
-import $ from 'jquery';
-import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { hashHistory } from "react-router";
 
-import { fetchClientUser, addClientUser, updateClientUser } from '../../service/client_user.js';
+import { fetchClientUser, addClientUser, updateClientUser } from "../../service/client_user.js";
 
-import { getAuditType, getAuditStatus } from '../../../utils.js';
-import { getInputEventChangeValue } from '../../../react_utils.js';
-import FormInput from '../../../components/FormInput.jsx';
-import { FormDateInput } from '../../../components/FormInput.jsx';
-import FormSelect from '../../../components/FormSelect.jsx';
-import FormGroup from '../../../components/FormGroup.jsx';
-import FormTextarea from '../../../components/FormTextarea.jsx';
-import SaveButton from '../../../components/SaveButton.jsx';
-import Modal from '../../../components/Modal.jsx';
-import Loading from '../../../components/Loading.jsx';
-import FormErrorList from '../../../components/FormErrorList.jsx';
+import { getInputEventChangeValue } from "../../../react_utils.js";
+import FormInput from "../../../components/FormInput.jsx";
+import SaveButton from "../../../components/SaveButton.jsx";
+import Modal from "../../../components/Modal.jsx";
+import FormErrorList from "../../../components/FormErrorList.jsx";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
+export default class ClientUserForm extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			clientId: PropTypes.string.isRequired,
+			clientUserId: PropTypes.string.isRequired,
+		})
+	};
+
+	constructor(props){
+		super(props);
+		this.state = {
 			clientUser: null,
 			errors: {},
 			form: {},
 		};
-	},
-	componentDidMount: function() {
+	}
+	componentDidMount() {
 		this.setState({
-			'client': this.props.params.clientId
+			"client": this.props.params.clientId
 		});
 		if(this.props.params.clientUserId){
 			fetchClientUser(this.props.params.clientUserId).done((clientUser)=>{
@@ -43,13 +44,15 @@ export default React.createClass({
 				});
 			});
 		}
-	},
-	fieldChanged: function(e){
+	}
+
+	fieldChanged = (e) => {
 		this.setState({
 			form: Object.assign({}, this.state.form, getInputEventChangeValue(e)),
 		});
-	},
-	onSubmit: function(e){
+	};
+
+	onSubmit = (e) => {
 		e.preventDefault();
 		let promise;
 		if(this.props.params.clientUserId){
@@ -79,9 +82,10 @@ export default React.createClass({
 				errors: err.responseJSON || {},
 			});
 		});
-	},
-	render : function(){
-		var modalTitle = this.props.params.auditId ? "Edit Client User" : "Add Client User";
+	};
+
+	render(){
+		var modalTitle = this.props.params.clientUserId ? "Edit Client User" : "Add Client User";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -95,5 +99,5 @@ export default React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
