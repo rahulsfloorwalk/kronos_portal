@@ -19,10 +19,10 @@ class Attachment(Model):
     )
 
     UPLOADING = 'UPLOADING'
-    CANCELED = 'CANCELED'
     ATTACHED = 'ATTACHED'
     DELETED = 'DELETED'
     STATUS = (
+        (UPLOADING, "Uploading"),
         (ATTACHED, "Attached"),
         (DELETED, "Deleted"),
     )
