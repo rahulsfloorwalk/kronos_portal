@@ -1,4 +1,9 @@
-import os, json, datetime
+import os
+import json
+import datetime
+
+from django.db.transaction import atomic
+
 from client.models import Client, ClientUser, Store
 from manager.models import Location, City
 from audit.models import Audit, AuditCycle
@@ -11,6 +16,8 @@ store_id_map = {}
 audit_cycle_id_map = {}
 question_id_map = {}
 section_id_map = {}
+
+@atomic
 def load_data_dump_for_client(client_id):
     with open(os.path.dirname(os.path.realpath(__file__)) + '/data/dump.json', "r") as json_data:
         data = json.load(json_data)
