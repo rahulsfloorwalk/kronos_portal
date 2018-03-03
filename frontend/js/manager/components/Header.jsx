@@ -3,11 +3,16 @@ import { Link } from 'react-router';
 
 import { pointerStyle } from '../../styles.js';
 
+import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Heartbeat from '../../components/Heartbeat.jsx';
 import NavLink from '../../components/NavLink.jsx';
-import { NewWindow, User, MapMarker, King, LogOut, Knight, Queen, Pawn } from '../../components/Icons.jsx';
+import { OptionVertical, NewWindow, User, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats } from "../../components/Icons.jsx";
 
 var Header = React.createClass({
+	getInitialState: function(){
+		return {
+		};
+	},
 	render: function(){
 		let brandStyle = {
 			height: "25px"
@@ -33,15 +38,34 @@ var Header = React.createClass({
 							</a>
 						</li>
 						<NavLink to="/state"><MapMarker/> <span className="hidden-xs">Cities</span></NavLink>
-						<li className="hidden-xs">
-							<a href="http://mbase.floorwalk.in:3000" target="_blank">
-								<NewWindow/> Metabase
-							</a>
-						</li>
 						<li>
-							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
-								<LogOut/> <span className="">Logout</span>
+							<a style={pointerStyle}
+								onClick={(e)=>{e.stopPropagation(); this.logoutDropdown && this.logoutDropdown.toggle();}}>
+								<OptionVertical/>
 							</a>
+							<DropDown ref={(d) => this.logoutDropdown=d}>
+								<li>
+									<a href="/admin" target="_blank">
+										<Wrench/> Admin
+									</a>
+								</li>
+								<li>
+									<a href="https://msg91.com/signin" target="_blank" rel="noopener noreferrer">
+										<NewWindow/> MSG91 SMS Portal
+									</a>
+								</li>
+								<li>
+									<a href="http://mbase.floorwalk.in:3000" target="_blank" rel="noopener noreferrer">
+										<Stats/> Metabase
+									</a>
+								</li>
+								<DropDownDivider/>
+								<li>
+									<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
+										<LogOut/> <span className="">Logout</span>
+									</a>
+								</li>
+							</DropDown>
 						</li>
 					</ul>
 					<form style={{display:"none"}} action="/auth/manager/logout" method="POST" ref={r => this._logoutForm = r}/>

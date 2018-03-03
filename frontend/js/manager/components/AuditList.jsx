@@ -15,6 +15,7 @@ import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsUp, ThumbsDown,
 import Badge from '../../components/Badge.jsx';
 import Panel from '../../components/Panel.jsx';
 import Loading from '../../components/Loading.jsx';
+import DropDown, { DropDownDivider } from '../../components/DropDown.jsx';
 
 import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
 import MarkdownViewer from '../../components/MarkdownViewer.jsx';
@@ -78,7 +79,6 @@ let __AuditRow = React.createClass({
   getInitialState: function(){
 	  return {
 		  expanded: false,
-		  dropdown: false,
 		  selectedTab: "applications",
 	  };
   },
@@ -160,13 +160,11 @@ let __AuditRow = React.createClass({
         <td className="text-right"><big>{ this.props.audit.hidden ? <EyeClose/> : <EyeOpen/>}</big></td>
         <td className="text-right">
 	    <div className="btn-group">
-		    <button type="button" className="btn btn-default" onClick={(e)=>{e.stopPropagation();this.setState({dropdown:!this.state.dropdown});}}>
+		    <button type="button" className="btn btn-default"
+			onClick={(e)=>{e.stopPropagation(); this.auditRowDropDown && this.auditRowDropDown.toggle();}}>
 			    <OptionVertical/>
 		    </button>
-		    { this.state.dropdown ?
-			    <ul className="dropdown-menu" style={{display:"block"}}
-			    onMouseEnter={()=>clearTimeout(this.state.dropdownId)}
-			    onMouseLeave={()=>this.setState({"dropdownId":setTimeout(()=>this.setState({dropdown:!this.state.dropdown}),500)})}>
+			<DropDown ref={(d) => this.auditRowDropDown=d}>
 				    <li>
 					  <Link to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign">
 					    <HandRight/> Fiat Assign
@@ -190,7 +188,7 @@ let __AuditRow = React.createClass({
 						    <ThumbsDown/> Deny All Applications
 					    </a>
 				    </li>
-				    <li role="separator" className="divider"></li>
+					<DropDownDivider/>
 				    <li>
 					  <Link to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/edit`} title="Edit Audit">
 					    <Pencil/> Edit
@@ -201,8 +199,7 @@ let __AuditRow = React.createClass({
 					    <Cross/> Delete
 					  </a>
 				    </li>
-			    </ul>
-		    : null}
+			</DropDown>
 	    {/*<button type="button" className="btn btn-default" onClick={this.viewButtonClicked} title="Expand Applications">
 			    View
 		    </button>
@@ -343,13 +340,11 @@ var AuditList = React.createClass({
 	  <span className="pull-right">
 	    <div className="btn-group">
 		    <Link to={addAuditLink} className="btn btn-default"> <Plus/> Add Audit </Link>
-		    <button type="button" className="btn btn-default" onClick={(e)=>{e.stopPropagation();this.setState({dropdown:!this.state.dropdown});}}>
+		    <button type="button" className="btn btn-default"
+			onClick={(e)=>{e.stopPropagation(); this.auditDropDown && this.auditDropDown.toggle();}}>
 			    <span className="caret"></span>
 		    </button>
-		    { this.state.dropdown ?
-			    <ul className="dropdown-menu" style={{display:"block"}}
-			    onMouseEnter={()=>clearTimeout(this.state.dropdownId)}
-			    onMouseLeave={()=>this.setState({"dropdownId":setTimeout(()=>this.setState({dropdown:!this.state.dropdown}),500)})}>
+			<DropDown ref={(d) => this.auditDropDown=d}>
 				    <li>
 					    <Link to={`/audit_cycle/${this.props.params.auditCycleId}/audit/copy`} title="Copy Audits">
 					      <Duplicate/> Copy Audits
@@ -360,8 +355,7 @@ var AuditList = React.createClass({
 						    <ThumbsDown/> Deny All Applications
 					    </a>
 				    </li>
-			    </ul>
-		    : null}
+			</DropDown>
 	    </div>
 	    &nbsp;
           </span>
