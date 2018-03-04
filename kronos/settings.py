@@ -79,6 +79,7 @@ DEPENDENCY_APPS = [
     'notifications',
     'guardian',
     'markdown_deux',
+    'django_nose',
 ]
 
 if DEBUG and DEBUG_TOOLBAR:
@@ -376,3 +377,5 @@ DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.redirects.RedirectsPanel',
     'debug_toolbar.panels.profiling.ProfilingPanel',
 ]
+
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
