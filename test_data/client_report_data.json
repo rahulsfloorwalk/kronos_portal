@@ -1,0 +1,20 @@
+[
+    {
+        "model": "auth.user",
+        "pk": 1,
+        "fields": {
+            "password": "!cfp51BckXDjAxaaLeSZ1xUlOGR4BNNdcvyFIwGQG",
+            "last_login": null,
+            "is_superuser": false,
+            "username": "AnonymousUser",
+            "first_name": "",
+            "last_name": "",
+            "email": "",
+            "is_staff": false,
+            "is_active": true,
+            "date_joined": "2018-03-10T09:36:36.457Z",
+            "groups": [],
+            "user_permissions": []
+        }
+    }
+]
