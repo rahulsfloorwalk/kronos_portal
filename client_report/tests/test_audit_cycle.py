@@ -1,20 +1,13 @@
-import string
-import random
-
-from django.urls import reverse
-
-from django.contrib.auth.models import User, Group
 
 from django.test import TestCase
 
-from model_mommy import mommy
-
 from faker import Faker
 
+from audit.models import AuditCycle
 from questionnaire.models import Section
 from client_report.service.audit_cycle import get_average_for_section
-from registration.models import GROUP_NAME_CLIENT
-from client.models import ClientUser, Client
+from client_report.service.audit_cycle import get_section_averages_for_audit_cycle
+from client_report.service.audit_cycle import get_audit_cycle_section_averages_for_client
 
 fake = Faker()
 
@@ -23,8 +16,22 @@ class AuditCycleTestCase(TestCase):
 
     def setUp(self):
         self.section = Section.objects.get(pk=1)
+        self.audit_cycle = AuditCycle.objects.get(pk=1)
 
     def test_get_average_for_section(self):
         section_average = get_average_for_section(self.section)
         self.assertEqual(section_average.get('value'), 36)
         self.assertEqual(section_average.get('color_code'), 1)
+
+    def test_get_section_averages_for_audit_cycle(self):
+        section_averages = get_section_averages_for_audit_cycle(self.audit_cycle)
+        self.assertEqual(len(section_averages), 5)
+        self.assertEqual(section_averages[0].get('average').get('value'), 36)
+        self.assertNotEqual(section_averages[1].get('average').get('value'), 36)
+
+    def test_get_audit_cycle_section_averages_for_client(self):
+        averages = get_audit_cycle_section_averages_for_client(1, 'WALKIN')
+        self.assertTrue(len(averages.get('section_master')), len(averages.get('values')[0]))
+        self.assertTrue(len(averages.get('audit_cycle_master')), len(averages.get('values')))
+
+
