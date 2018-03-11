@@ -37,4 +37,24 @@ class AuditSectionTestCase(TestCase):
         self.assertEqual(len(aggregate), 5)
         self.assertFalse(blank_aggregate)
 
+    def test_get_store_aggregation_list_for_manager(self):
+        aggregate = get_store_aggregation_list_for_manager(self.audit_cycle_id, self.city_id)
+        blank_aggregate = get_store_aggregation_list_for_manager(self.audit_cycle_id, self.incorrect_city_id)
+        self.assertEqual(len(aggregate), 5)
+        self.assertFalse(blank_aggregate)
+
+    def test_get_store_aggregation_list_for_client(self):
+        aggregate = get_store_aggregation_list_for_client(self.audit_cycle_id, self.city_id, self.client_id)
+        blank_aggregate = get_store_aggregation_list_for_client(self.audit_cycle_id, self.incorrect_city_id, self.client_id)
+        self.assertEqual(len(aggregate), 4)
+        self.assertFalse(blank_aggregate)
+
+    def test_get_city_aggregation_for_client(self):
+        aggregate = get_city_aggregation_for_client(self.audit_cycle_id, self.client_id)
+        self.assertEqual(len(aggregate), 7)
+
+    def test_get_audit_store_section_list_for_client(self):
+        aggregate = get_audit_store_section_list_for_client(self.audit_cycle_id, self.store_id, self.client_id)
+        self.assertEqual(len(aggregate), 1)
+
 
