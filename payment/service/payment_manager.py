@@ -69,7 +69,7 @@ def pay(payment_id, user_actor):
         payment = Payment.objects.get(pk=payment_id)
         if payment.status == Payment.PENDING:
             bi = payment.audit_store.user.bankinfo
-            if not(bi.bank_name and bi.account_number and bi.ifsc_code):
+            if not bi.is_complete():
                 raise AppLogicError("Bank Details Incomplete")
             payment.status = Payment.PAID
             payment.paid_on = timezone.now()
