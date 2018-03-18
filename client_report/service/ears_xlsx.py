@@ -216,7 +216,7 @@ def generate_xlsx_from_structure(report_data):
     output.seek(0)
     return output
 
-def generate_ears_report_for_clientuser(audit_store_id, user):
+def get_report_data_for_client_user(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     if not audit_store.is_presentable():
         raise AppLogicError("report is not presentable")
@@ -275,6 +275,10 @@ def generate_ears_report_for_clientuser(audit_store_id, user):
         if len(report_section["questions"]) is not 0:
             report_data["sections"].append(report_section)
 
+    return report_data
+
+def generate_ears_report_for_clientuser(audit_store_id, user):
+    report_data = get_report_data_for_client_user(audit_store_id, user)
     file_name = report_data["store_name"] + " " + report_data["audit_date"] + ".xlsx"
     return generate_xlsx_from_structure(report_data), file_name
 
