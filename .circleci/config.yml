@@ -4,7 +4,64 @@
 #
 version: 2
 jobs:
-  build:
+  package:
+    docker:
+      - image: datagovsg/python-node:3.6-6.10.3
+
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run:
+          name: install dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+
+      - save_cache:
+          paths:
+            - ./venv
+          key: v1-dependencies-{{ checksum "requirements.txt" }}
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-frontend-dependencies-
+
+      - run:
+          name: install the frontend dependencies
+          command: |
+            cd frontend
+            npm install
+
+      - run:
+          name: generate frontend bundles through webpack
+          command: |
+            cd frontend
+            npm run build-prod
+
+      - save_cache:
+          paths:
+            - ./frontend/node_modules
+          key: v1-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+
+      - run:
+          name: package the tar
+          command: python setup.py sdist
+
+      - store_artifacts:
+          path: dist
+
+  test:
     docker:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
@@ -69,3 +126,12 @@ jobs:
           
       - store_test_results:
           path: test-results
+
+workflows:
+  version: 2
+  build_and_test:
+    jobs:
+      - test
+      - package:
+          requires:
+            - test
