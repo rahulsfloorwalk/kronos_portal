@@ -113,13 +113,14 @@ jobs:
       # https://pytest.org
       # https://nose.readthedocs.io
       - run:
-          name: run tests
+          name: run tests and generate reports
           command: |
             . venv/bin/activate
-            python manage.py test --verbosity=2 --with-xunit --xunit-file=test-results/xunittest.xml
+            coverage run manage.py test --verbosity=2 --with-xunit --xunit-file=test-results/xunittest.xml
+            coverage html
 
       - store_artifacts:
-          path: dist
+          path: htmlcov
 
       - store_artifacts:
           path: /tmp/kronos.log
