@@ -167,7 +167,7 @@ class AuditCyclePaymentList extends React.Component{
 			<h3 className="page-header">
 			<b>₹</b> Payments
 			<span className="pull-right">
-				<a className="btn btn-default" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/csv'}>
+				<a className="btn btn-default" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/xlsx'}>
 				<Download/> Pending Payment List
 				</a>
 				<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>
@@ -185,4 +185,3 @@ var mapStoreToProps = function(store, ownProps){
 }
 
 export default ReactRedux.connect(mapStoreToProps)(AuditCyclePaymentList);
-
