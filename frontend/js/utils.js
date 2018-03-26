@@ -160,6 +160,8 @@ export function getPaymentStatus(value){
 	switch(value){
 		case "PENDING":
 			return "Pending";
+		case "FAILED":
+			return "Failed";
 		case "PAID":
 			return "Paid";
 		case "":

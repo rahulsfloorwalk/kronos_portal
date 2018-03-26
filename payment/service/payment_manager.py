@@ -29,7 +29,7 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
         payment.audit_store = audit_store
         payment.user = audit_store.user
         payment.amount = payment_amount
-        payment.comment = "pending payment for {first} {last} for audit done on {date} for {client}".format(
+        payment.comment = "Payment for {first} {last} for audit done on {date} for {client}".format(
             first=payment.audit_store.user.profileinfo.first_name,
             last=payment.audit_store.user.profileinfo.last_name,
             date=payment.audit_store.audit_date,
@@ -143,6 +143,40 @@ def unpay(payment_id, user_actor):
     except Payment.DoesNotExist as e:
         raise ObjectNotFound from e
 
+@atomic
+def fail(payment_id, user_actor):
+    try:
+        payment = Payment.objects.get(pk=payment_id)
+        if payment.status == Payment.PAID:
+            payment.status = Payment.FAILED
+            payment.paid_on = None
+            payment.save()
+            notify.send(
+                user_actor,
+                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                verb=verbs.AUDIT_STORE_PENDING,
+                action_object=payment.audit_store,
+                target=payment.audit_store
+            )
+            # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            # connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
+            notify.send(
+                user_actor,
+                recipient=payment.user,
+                verb=verbs.AUDIT_STORE_PENDING,
+                action_object=payment.audit_store,
+                target=payment.audit_store
+            )
+            # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+            # connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+
+            # Add an additional pending payment
+            add_payment_on_audit_store_accepted(payment.audit_store.id, payment.amount, user_actor)
+            return payment
+        else:
+            raise AppLogicError("Cannot fail the payment")
+    except Payment.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 def clear_payment_for_audit_cycle(audit_cycle_id):
     Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).update(status=Payment.PAID)
@@ -327,6 +361,9 @@ def get_fieldnames():
 
 def find_by_user(user_id):
     return Payment.objects.filter(user_id=user_id)
+
+def find_by_audit_store(audit_store):
+    return Payment.objects.filter(audit_store=audit_store)
 
 
 def consolidate_by_user(payments):

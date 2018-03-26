@@ -13,12 +13,13 @@ import { Download } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import PaymentStatusLabel from "../../components/PaymentStatusLabel.jsx";
 
-import { pay, unpay} from "../service/payment.js";
+import { pay, fail} from "../service/payment.js";
 import { findPaymentsByAuditCycleId, payAllPendingPaymentsForAuditCycle } from "../service/payment.js";
 
 class __PaymentRow extends React.Component{
 
 	static propTypes = {
+		onFail: PropTypes.func,
 		onChange: PropTypes.func,
 		payment: PropTypes.object,
 	};
@@ -46,13 +47,13 @@ class __PaymentRow extends React.Component{
 		});
 	};
 
-	unpayButtonClicked = (e) => {
-		unpay(this.props.payment.id).then((payment) => {
-			Alert.success(`${this.props.payment.user.profileinfo.first_name} Un PAID`.toUpperCase());
+	failButtonClicked = (e) => {
+		fail(this.props.payment.id).then((payments) => {
+			Alert.success(`${this.props.payment.user.profileinfo.first_name} Payment failed`.toUpperCase());
 			this.setState({
-				payButtonMessage: "Marked as unpaid",
+				payButtonMessage: "Marked as failed",
 			});
-			this.props.onChange && this.props.onChange(payment);
+			this.props.onFail && this.props.onFail(payments);
 		}, (err) => {
 			let errInfo = err.responseJSON && err.responseJSON.non_field_errors || {};
 			this.setState({
@@ -73,7 +74,7 @@ class __PaymentRow extends React.Component{
 			paymentButton = (<button onClick={this.payButtonClicked} type="button" className="btn btn-default">Pay</button>);
 		}
 		else if(paymentStatus == "PAID"){
-			paymentButton = (<button onClick={this.unpayButtonClicked} type="button" className="btn btn-default">Unpay</button>);
+			paymentButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-default">Fail</button>);
 		}
 
 		return(
@@ -134,10 +135,26 @@ class AuditCyclePaymentList extends React.Component{
 			});
 		}
 	};
+	paymentFailed = (newPayments) => {
+		let statePayments = this.state.payments.slice();
+		newPayments.forEach((payment) => {
+			let i = statePayments.findIndex(p => p.id === payment.id);
+			if( i !== -1){
+				statePayments[i] = payment;
+			}
+			else{
+				statePayments.unshift(payment);
+			}
+		});
+
+		this.setState({
+			payments: statePayments
+		});
+	};
 
 	render(){
 
-		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.paymentChanged}/>));
+		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.paymentChanged} onFail={this.paymentFailed}/>));
 
 		let table = this.state.loading ? <Loading/> : rows.length === 0 ? (
 			<Jumbotron key="empty" heading="no payments here" para="payments for accepted reports will appear here"/>

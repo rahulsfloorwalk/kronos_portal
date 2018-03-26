@@ -8,6 +8,8 @@ export default React.createClass({
 		switch(this.props.status){
 			case "PENDING":
 				return "danger";
+			case "FAILED":
+				return "danger2";
 			case "PAID":
 				return "success";
 			case "":

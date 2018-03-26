@@ -6,10 +6,12 @@ class Payment(Model):
 
     PENDING = 'PENDING'
     PAID = 'PAID'
+    FAILED = 'FAILED'
 
     STATUS = (
         (PENDING, "Pending"),
         (PAID, "Paid"),
+        (FAILED, "Failed"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
@@ -17,6 +19,6 @@ class Payment(Model):
     amount = IntegerField(db_column='amount',null=False)
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False, default=PENDING)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', related_name='payments', on_delete=PROTECT)
-    audit_store = OneToOneField(AuditStore, db_column='audit_store_id', related_name='payment', on_delete=PROTECT)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', related_name='payments', on_delete=PROTECT)
     added_on = DateTimeField(db_column='added_on', auto_now_add=True, null=False)
     paid_on = DateTimeField(db_column='paid_on', null=True)

@@ -17,7 +17,6 @@ export function pay(paymentId){
 	return $.post( url.api_base_path + `manager/payment/${paymentId}/pay`);
 }
 
-export function unpay(paymentId){
-	return $.post( url.api_base_path + `manager/payment/${paymentId}/unpay`);
+export function fail(paymentId){
+	return $.post( url.api_base_path + `manager/payment/${paymentId}/fail`);
 }
-

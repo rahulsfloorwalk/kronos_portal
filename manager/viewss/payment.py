@@ -71,12 +71,14 @@ class PaymentIdPayView(APIView):
         payment = payment_service.pay(payment_id, request.user)
         return Response(PaymentUserSerializer(payment).data)
 
-class PaymentIdUnpayView(APIView):
+
+class PaymentIdFailView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
 
     def post(self, request, payment_id):
-        payment = payment_service.unpay(payment_id, request.user)
-        return Response(PaymentUserSerializer(payment).data)
+        payment = payment_service.fail(payment_id, request.user)
+        payments = payment_service.find_by_audit_store(payment.audit_store)
+        return Response(PaymentUserSerializer(payments, many=True).data)
