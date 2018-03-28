@@ -6,16 +6,14 @@
 	<body>
 		<h1>Audit Assigned</h1>
 		<p>Hello <b>{{ name }},</b></p>
-    <p>We have approved you to perform an audit at <b>{{ client }}</b> on <b>{{ audit_date }}</b>.</p>
+		<p>We have approved you to perform an audit at <b>{{ client }}</b> on <b>{{ audit_date }}</b>.</p>
 		<p>The audit details are as follows:</p>
-    <p><b>Store Name:</b> {{ store_name }}</p>
-    <p><b>Store Address:</b> {{ store_address }}</p>
-    <p><b>Audit Date:</b> {{ audit_date }}</p>
-		<p><b>Note: You can view the questionnaire on the portal. It is recommended that you go through the questionnaire before conducting the audit. It is also mandatory to submit report with valid audit proofs within 24 hours of audit completion. </b></p>
-		<h2>Audit Instructions</h2>
-		{{ audit_post_approval_description | markdown }}
+		<p><b>Store Name:</b> {{ store_name }}</p>
+		<p><b>Store Address:</b> {{ store_address }}</p>
+		<p><b>Audit Date:</b> {{ audit_date }}</p>
+		<p><b>Note: It is mandatory to view the audit guidelines and questionnaire and agree to it before conducting the audit. It is also mandatory to submit report with valid audit proofs within 24 hours of audit completion. </b></p>
+		<p><b>Payment Terms</b>: Payment will be transferred into your bank account within 30-45 days from date of <b>report completion.</b> The status of the report can be seen on the portal in the audits section.</p>
 
-		{{ audit_cycle_post_approval_description | markdown }}
 		<p>--</p>
 		<p>Thanks and regards,</p>
 		<p>FloorWalk Team</p>
