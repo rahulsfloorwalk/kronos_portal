@@ -55,6 +55,7 @@ class BankInfoPanelBase extends React.Component{
 						<col style={{width:"40%"}}/>
 					</colgroup>
 					<tbody>
+					<tr><td colSpan={2}>All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.</td></tr>
 					<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
 					<tr><td className="text-right text-muted">*Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
 					<tr><td className="text-right text-muted">*Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>

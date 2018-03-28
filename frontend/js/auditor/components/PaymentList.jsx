@@ -5,6 +5,7 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
 import { findPayments } from "../service/payment.js";
+import { fetchConfig } from "../service/config.js";
 
 import PaymentStatusLabel from "../../components/PaymentStatusLabel.jsx";
 
@@ -67,6 +68,7 @@ export default class PaymentList extends React.Component{
 		this.state = {
 			loading: false,
 			payments: [],
+			config: {},
 		};
 	}
 
@@ -85,6 +87,8 @@ export default class PaymentList extends React.Component{
 				payments
 			});
 		}).always(() => this.setLoading(false));
+
+		fetchConfig().then((config) => this.setState({config}));
 	}
 
 	render(){
@@ -95,6 +99,11 @@ export default class PaymentList extends React.Component{
 					<h2 className="page-header">
 						Your Payments
 					</h2>
+					<p style={{fontSize:"150%"}}>
+						<b>Payment terms:</b> Payments will be transferred into your bank accounts within <b>30-45 days</b> from date of completion of report.
+						It might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays.
+						For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a>.
+					</p>
 					{rows}
 				</div>
 			);
