@@ -6261,16 +6261,6 @@
     },
     {
         "model": "manager.city",
-        "pk": 646,
-        "fields": {
-            "name": "Trivandrum",
-            "state": "IN-AS",
-            "lat": null,
-            "lon": null
-        }
-    },
-    {
-        "model": "manager.city",
         "pk": 650,
         "fields": {
             "name": "Delhi",
@@ -7217,6 +7207,26 @@
             "state": "IN-HP",
             "lat": "32.110900",
             "lon": "76.536300"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 751,
+        "fields": {
+            "name": "Nagercoil",
+            "state": "IN-TN",
+            "lat": "8.183300",
+            "lon": "77.411900"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 752,
+        "fields": {
+            "name": "Shillong",
+            "state": "IN-ML",
+            "lat": "25.578800",
+            "lon": "91.893300"
         }
     }
 ]
