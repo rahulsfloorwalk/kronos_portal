@@ -14,7 +14,6 @@ from auditor.models import ProfileInfo, AdditionalInfo
 from django.utils import timezone
 from django.db.models import Q
 from django.db import IntegrityError
-from django.template import Context
 from django.template.loader import get_template
 from django.core.mail import EmailMessage
 
@@ -104,11 +103,11 @@ class SignUpForm(UserCreationForm):
         verification.key_expires = timezone.now() + datetime.timedelta(days=2)
         verification.save()
 
-        message = get_template('registration/verification_mail.html').render(Context({
+        message = get_template('registration/verification_mail.html').render({
             'key': activation_key,
             'email': user.email,
             **registration_context(),
-        }))
+        })
 
         msg = EmailMessage(strings.SIGN_UP_SUBJECT, message, to=(user.email,))
         msg.content_subtype = 'html'

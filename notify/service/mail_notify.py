@@ -2,7 +2,6 @@ import logging
 
 from django.utils.html import strip_tags
 from django.conf import settings
-from django.template import Context
 from django.template.loader import get_template
 
 from notifications.models import Notification
@@ -146,9 +145,9 @@ def notification_email_task(notif_id):
 
 
 def _prepare_mail(params):
-    html_message = get_template(params.get('html_template')).render(Context(params))
+    html_message = get_template(params.get('html_template')).render(params)
     txt_message = strip_tags(html_message)
-    # txt_message = get_template(params.get('txt_template')).render(Context(params))
+    # txt_message = get_template(params.get('txt_template')).render(params)
 
     return html_message, txt_message
 

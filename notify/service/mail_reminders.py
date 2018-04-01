@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.template import Context
 from django.template.loader import get_template
 
 import audit_store.service as audit_store_service
@@ -86,7 +85,7 @@ def send_reminder_for_audit_store(audit_store_id, reminder_type):
     else:
         raise ValueError("invalid reminder_type: {}".format(reminder_type))
 
-    html_message = get_template(params["html_template"]).render(Context(params))
-    txt_message = get_template(params["txt_template"]).render(Context(params))
+    html_message = get_template(params["html_template"]).render(params)
+    txt_message = get_template(params["txt_template"]).render(params)
 
     send_email(params["to_email"], params['subject'], html_message, txt_message)

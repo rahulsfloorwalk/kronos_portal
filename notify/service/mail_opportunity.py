@@ -1,7 +1,6 @@
 import logging
 
 from django.conf import settings
-from django.template import Context
 from django.template.loader import get_template
 from django.db.models import F
 from django.db.transaction import atomic
@@ -100,8 +99,8 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
 
     # generate email from templates
     subject = "Hi {}, {} audits are available in {}!".format(params['first_name'], params['client_name'], params['city_name'])
-    html_message = get_template("notify/opportunity_email.html").render(Context(params))
-    txt_message = get_template("notify/opportunity_email.txt").render(Context(params))
+    html_message = get_template("notify/opportunity_email.html").render(params)
+    txt_message = get_template("notify/opportunity_email.txt").render(params)
 
     send_email(params['to_email'], subject, html_message, txt_message)
 

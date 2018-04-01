@@ -1,6 +1,5 @@
 import logging
 
-from django.template import Context
 from django.template.loader import get_template
 
 from celery import shared_task
@@ -19,8 +18,8 @@ def send_welcome_email(email_address):
 
     # generate email from templates
     subject = "Welcome to FloorWalk! We're excited to have you onboard!"
-    html_message = get_template("registration/welcome_mail.html").render(Context(params))
-    txt_message = get_template("registration/welcome_mail.txt").render(Context(params))
+    html_message = get_template("registration/welcome_mail.html").render(params)
+    txt_message = get_template("registration/welcome_mail.txt").render(params)
 
     _logger.info("sending welcome email to : %s", email_address)
     send_email(email_address, subject, html_message, txt_message)
