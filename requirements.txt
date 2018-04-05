@@ -33,6 +33,7 @@ psycopg2==2.6.2
 pycurl==7.43.0
 python-dateutil==2.6.0
 pytz==2016.10
+raven==6.6.0
 requests==2.11.1
 s3transfer==0.1.10
 six==1.10.0

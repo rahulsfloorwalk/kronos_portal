@@ -80,6 +80,7 @@ DEPENDENCY_APPS = [
     'guardian',
     'markdown_deux',
     'django_nose',
+    'raven.contrib.django.raven_compat',
 ]
 
 if DEBUG and DEBUG_TOOLBAR:
@@ -379,3 +380,8 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+RAVEN_CONFIG = {
+    'dsn': properties["GENERAL"]["SENTRY_DSN"],
+    'release': version,
+}
