@@ -80,11 +80,12 @@ DEPENDENCY_APPS = [
     'guardian',
     'markdown_deux',
     'django_nose',
-    'raven.contrib.django.raven_compat',
 ]
 
 if DEBUG and DEBUG_TOOLBAR:
     DEPENDENCY_APPS.append('debug_toolbar')
+else:
+    DEPENDENCY_APPS.append('raven.contrib.django.raven_compat')
 
 PROJECT_APPS = [
     'registration',
