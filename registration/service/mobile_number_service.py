@@ -1,5 +1,4 @@
 import random
-import string
 import logging
 import datetime
 
@@ -36,7 +35,7 @@ def verify_mobile_number(user_id, mobile_number, key):
         raise ObjectNotFound from e
 
 def generate_otp():
-    return ''.join(random.choices(string.digits, k=4))  # FIXME: hardcoded OTP length
+    return str(random.randint(1000, 9999))  # FIXME: hardcoded OTP length
 
 def save_mobile_number_for_user(user, mobile_number):
     if mobile_number_exists(mobile_number):
