@@ -63,6 +63,7 @@ def apply(audit_id, user_id, audit_date):
     if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status is None:
         application.status = AuditApplication.APPLIED
         application.audit_date = audit_date
+        application.report_exists = previous_report_exists(profile_info, audit, audit_date)
         application.save()
         notify.send(
             profile_info.user,
@@ -275,3 +276,9 @@ def reject_all_applications_for_audit_cycle(audit_cycle_id, user_actor):
 
 def get_application_stats(audit_cycle_id):
     return AuditApplication.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
+
+
+def previous_report_exists(profile_info, audit, audit_date):
+    if profile_info.user.auditstore_set.filter(audit__store=audit.store, audit_date__lt=audit_date).exists():
+        return True
+    return False

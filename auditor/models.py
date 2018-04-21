@@ -293,6 +293,7 @@ class AuditApplication(Model):
 
     audit = ForeignKey('audit.Audit', db_column='audit_id', related_name='applications', on_delete=PROTECT)
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications', on_delete=PROTECT)
+    report_exists = BooleanField(db_column='report_exists', default=False)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)

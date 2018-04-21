@@ -13,6 +13,7 @@ import { findByAudit, waitListApplication } from '../service/application.js';
 
 import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
 import AuditStoreRating from '../../components/AuditStoreRating.jsx';
+import ApplicationRepeat from '../../components/ApplicationRepeat.jsx';
 
 class AuditApplicationList extends Component{
 	constructor(props){
@@ -76,6 +77,7 @@ class AuditApplicationList extends Component{
 					<td><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></td>
 					<td><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</td>
 					<td>{app.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(app.avg_qa_rating)}/> : null}</td>
+					<td>{app.report_exists ?<ApplicationRepeat report_exists={app.report_exists}/>: null}</td>
 					<td>
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
 						{statusLabel}
