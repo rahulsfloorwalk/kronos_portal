@@ -221,7 +221,7 @@ var ProfileInfoForm = React.createClass({
 var mapStoreToProps = function(store){
 	return {
 		profileInfo: store.profileInfo,
-		errors: store.forms.profileInfo.errors,
+		errors: store.forms.profileInfo.errors || {},
 	};
 };
 

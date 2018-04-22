@@ -142,7 +142,7 @@ var AdditionalInfoForm = React.createClass({
 var mapStoreToProps = function(store){
 	return {
 		additionalInfo: store.additionalInfo,
-		errors: store.forms.additionalInfo.errors,
+		errors: store.forms.additionalInfo.errors || {},
 	};
 };
 
