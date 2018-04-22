@@ -17,10 +17,10 @@ import { fetchAuditTypes } from '../service/dashboard.js';
 
 let TypedDashboard = React.createClass({
 	componentDidMount: function(){
-		//console.debug("TypedDashboard","componentDidMount", this.props.params.auditType);
+		//console.log("TypedDashboard","componentDidMount", this.props.params.auditType);
 	},
 	componentWillReceiveProps: function(nextProps){
-		//console.debug("TypedDashboard","componentWillReceiveProps", nextProps.params.auditType);
+		//console.log("TypedDashboard","componentWillReceiveProps", nextProps.params.auditType);
 	},
 	render: function(){
 		return (
@@ -48,7 +48,7 @@ export default React.createClass({
 		};
 	},
 	componentWillReceiveProps: function(nextProps){
-		//console.debug("Dashboard","componentWillReceiveProps", nextProps.params.auditType);
+		//console.log("Dashboard","componentWillReceiveProps", nextProps.params.auditType);
 		fetchAuditTypes().then(types => {
 			this.setState({
 				types
@@ -63,7 +63,7 @@ export default React.createClass({
 		});
 	},
 	componentDidMount: function(){
-		//console.debug("Dashboard","componentDidMount", this.props.params.auditType);
+		//console.log("Dashboard","componentDidMount", this.props.params.auditType);
 		fetchAuditTypes().then(types => {
 			this.setState({
 				types

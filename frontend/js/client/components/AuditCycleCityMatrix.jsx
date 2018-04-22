@@ -60,11 +60,11 @@ export default React.createClass({
 		});
 	},
 	componentDidMount: function() {
-		//console.debug("AuditCycleCityMatrix","componentDidMount", this.props.auditType);
+		//console.log("AuditCycleCityMatrix","componentDidMount", this.props.auditType);
 		this.reloadData(this.props.auditType);
 	},
 	componentWillReceiveProps: function(nextProps){
-		//console.debug("AuditCycleCityMatrix","componentWillReceiveProps", nextProps.auditType);
+		//console.log("AuditCycleCityMatrix","componentWillReceiveProps", nextProps.auditType);
 		if( this.props.auditType !== nextProps.auditType) {
 			this.reloadData(nextProps.auditType);
 		}

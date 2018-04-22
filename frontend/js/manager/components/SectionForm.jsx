@@ -89,7 +89,7 @@ var SectionForm = React.createClass({
 });
 
 var mapStoreToProps = function(store, ownProps){
-	//console.debug("ownProps",ownProps);
+	//console.log("ownProps",ownProps);
 	return {
 		section: store.sections[ownProps.params.sectionId],
 		errors: store.forms.section.errors,

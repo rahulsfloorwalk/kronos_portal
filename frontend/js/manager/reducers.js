@@ -902,7 +902,7 @@ export function rootReducer(store = initialStore, action) {
 								auditlocations: (function(auditLocations){
 									for( var id in auditLocations){
 										if( auditLocations[id].id === action.auditLocation.id){
-											console.debug("found match");
+											console.log("found match");
 											auditLocations[id] = action.auditLocation;
 										}
 									}

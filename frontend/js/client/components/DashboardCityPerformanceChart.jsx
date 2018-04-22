@@ -150,11 +150,11 @@ let CityWisePerformanceChartWrapper = React.createClass({
 		}
 	},
 	componentDidMount: function(){
-		//console.debug("AuditCycleStorePerformance","componentDidMount");
+		//console.log("AuditCycleStorePerformance","componentDidMount");
 		this.reloadData(this.props.auditType);
 	},
 	componentWillReceiveProps: function(nextProps){
-		//console.debug("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
+		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
 		if( this.props.auditType !== nextProps.auditType) {
 			this.reloadData(nextProps.auditType);
 		}

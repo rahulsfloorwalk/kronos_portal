@@ -34,7 +34,7 @@ var SectionCopyForm = React.createClass({
 		});
 	},
 	render : function(){
-		console.debug("otherAuditCycles", this.props);
+		console.log("otherAuditCycles", this.props);
 		let auditCycleOptions = [];
 		for( let ac of this.props.otherAuditCycles){
 			auditCycleOptions.push(<option key={ac.id} value={ac.id}>{ac.name}</option>);
@@ -61,8 +61,8 @@ var mapStoreToProps = function(store, ownProps){
 		otherAuditCycles: (function(auditCycles){
 			let selectedCycles = [];
 			for( let id in auditCycles){
-				console.debug("auditCycles[id].id",auditCycles[id].id);
-				console.debug("ownProps.params.auditCycleId", parseInt(ownProps.params.auditCycleId));
+				console.log("auditCycles[id].id",auditCycles[id].id);
+				console.log("ownProps.params.auditCycleId", parseInt(ownProps.params.auditCycleId));
 				if( auditCycles[id].id !== parseInt(ownProps.params.auditCycleId)){
 					selectedCycles.push(auditCycles[id]);
 				}

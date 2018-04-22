@@ -48,7 +48,7 @@ var StoreForm = React.createClass({
 	myStateChanged: function(e){
 		this.inputChanged(e);
 		var stateCode = e.target.value;
-		console.debug("statecode",stateCode);
+		console.log("statecode",stateCode);
 		if( stateCode){
 			this.props.dispatch(fetchCities(e.target.value));
 		}

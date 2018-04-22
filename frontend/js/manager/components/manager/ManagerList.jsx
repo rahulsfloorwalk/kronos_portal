@@ -34,7 +34,7 @@ export default React.createClass({
 		});
 	},
 	componentWillReceiveProps: function(nextProps){
-		console.debug("componentWillReceiveProps", nextProps);
+		console.log("componentWillReceiveProps", nextProps);
 		this.componentDidMount();
 	},
 	render: function(){

@@ -39,7 +39,7 @@ let ApplicationApproveForm = React.createClass({
 	},
 	/*
 	componentWillReceiveProps: function(nextProps) {
-		console.debug("nextProps.application",nextProps.application);
+		console.log("nextProps.application",nextProps.application);
 		if(nextProps.application && ! this.state.date_set ){
 			this.setState({
 				'audit_date': nextProps.application.audit_date,
@@ -96,7 +96,7 @@ var mapStoreToProps = function(store, ownProps){
 			return app.id === Number(ownProps.params.applicationId);
 		})[0];
 	}catch(e){
-		console.debug("looks like we're still loading the application...",e);
+		console.log("looks like we're still loading the application...",e);
 	}
 	return {
 		application,

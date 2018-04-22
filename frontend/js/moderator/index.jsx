@@ -52,7 +52,7 @@ fetchConfig().then((config) => {
 
 	render();
 	if(module.hot){
-		console.debug("Module is HOT HOT HOT!");
+		console.log("Module is HOT HOT HOT!");
 		module.hot.dispose(function(){
 			render();
 		});

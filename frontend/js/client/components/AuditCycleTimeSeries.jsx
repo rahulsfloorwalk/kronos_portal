@@ -58,11 +58,11 @@ var AuditCycleTimeSeries = React.createClass({
 	},
 
 	componentDidMount: function(){
-		//console.debug("AuditCycleTimeSeries","componentDidMount");
+		//console.log("AuditCycleTimeSeries","componentDidMount");
 		this.reloadData(this.props.auditType);
 	},
 	componentWillReceiveProps: function(nextProps){
-		//console.debug("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
+		//console.log("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
 		if( this.props.auditType !== nextProps.auditType) {
 			this.reloadData(nextProps.auditType);
 		}

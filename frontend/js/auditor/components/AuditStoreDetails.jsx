@@ -39,7 +39,7 @@ var AuditStoreDetails = React.createClass({
 				submitStatus: "success",
 			});
 		},(err) => {
-			console.debug("ERRRRR:", err);
+			console.log("ERRRRR:", err);
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
@@ -55,7 +55,7 @@ var AuditStoreDetails = React.createClass({
 				submitStatus: "success",
 			});
 		},(err) => {
-			console.debug("ERRRRR:", err);
+			console.log("ERRRRR:", err);
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",

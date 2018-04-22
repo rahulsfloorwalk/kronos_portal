@@ -52,12 +52,12 @@ class SectionList extends React.Component{
 	/*componentWillReceiveProps: function(nextProps){
 		console.log("SectionList#componentWillReceiveProps");
 		if( ! this.state.loading){
-			console.debug("hello world", nextProps);
+			console.log("hello world", nextProps);
 			this.setState({
 				loading:true
 			});
 			this.props.dispatch(fetchSections(this.props.params.auditCycleId)).always(() => {
-				console.debug("bye world", nextProps);
+				console.log("bye world", nextProps);
 				this.setState({
 					loading:false
 				});

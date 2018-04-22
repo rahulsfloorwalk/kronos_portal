@@ -24,8 +24,8 @@ promiseFinally.shim();
 // add a response interceptor to check for client/server version mismatches
 // let forbiddenEncountered = false;
 axios.interceptors.response.use((response) => {
-	console.debug("LOCAL PHOEBE VERSION:", PHOEBE_VERSION);
-	console.debug("AXIOS INTERCEPTOR SUCCESS:", response);
+	console.log("LOCAL PHOEBE VERSION:", PHOEBE_VERSION);
+	console.log("AXIOS INTERCEPTOR SUCCESS:", response);
 	/*
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
@@ -44,7 +44,7 @@ $(document).ajaxComplete(function(event, jqXHR, settings){
 	*/
 	return response;
 }, (error) => {
-	console.debug("AXIOS INTERCEPTOR ERR:", error);
+	console.log("AXIOS INTERCEPTOR ERR:", error);
 	return Promise.reject(error);
 });
 

@@ -28,7 +28,7 @@ import PaymentList from './PaymentList.jsx';
 import ReferralList from './ReferralList.jsx';
 
 function logPageView() {
-	console.debug(window.location.pathname, window.location.hash);
+	console.log(window.location.pathname, window.location.hash);
 	ReactGA.set({ page: window.location.pathname });
 	ReactGA.pageview(window.location.pathname + window.location.hash);
 }
