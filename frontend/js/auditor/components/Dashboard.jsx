@@ -94,7 +94,7 @@ var mapStoreToProps = function(store){
 	return {
 		firstName: store.profileInfo.first_name,
 		lastName: store.profileInfo.last_name,
-		city: store.profileInfo.city,
+		city: store.profileInfo.city || {},
 		phone: store.profileInfo.mobile_number,
 		auditorStats: store.auditorStats,
 		auditorScore: store.auditorScore
