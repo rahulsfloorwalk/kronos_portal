@@ -29,13 +29,25 @@
 			}
 
 			var sec5 = setTimeout(function(){
-				document.querySelector("#first").innerHTML = "seems to be taking some time..";
-				document.querySelector("#second").innerHTML = ":/";
+				var first = document.querySelector("#first");
+				var second = document.querySelector("#second");
+				if(first) {
+					first.innerHTML = "seems to be taking some time..";
+				}
+				if(second) {
+					second.innerHTML = ":/";
+				}
 			}, 5000);
 
 			var sec15 = setTimeout(function(){
-				document.querySelector("#first").innerHTML = "still loading...";
-				document.querySelector("#second").innerHTML = ":(";
+				var first = document.querySelector("#first");
+				var second = document.querySelector("#second");
+				if(first) {
+					first.innerHTML = "still loading...";
+				}
+				if(second) {
+					second.innerHTML = ":(";
+				}
 			}, 15000);
 
 			window.onload = function(){
