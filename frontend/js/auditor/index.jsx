@@ -19,8 +19,6 @@ import { rootReducer } from './reducers.js';
 
 import { fetchConfig } from './service/config.js';
 
-import { initializeTawk } from './service/tawk.js';
-
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
@@ -62,8 +60,6 @@ fetchConfig().then((config) => {
 			phoebe_version: config.PHOEBE_VERSION,
 		});
 	}
-
-	config.TAWK_TO_SRC && initializeTawk(window, config.TAWK_TO_SRC);
 
 	ReactGA.initialize(config.GA_ID);
 
