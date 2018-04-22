@@ -72,7 +72,7 @@ var AuditCycleDetails = React.createClass({
 					{ this.props.auditCycle.earnings_per_audit ?
 						<div className="col-xs-6 col-md-1">
 						<p>
-							<span cl table-borderedassName="text-muted">Fees</span><br/>
+							<span className="text-muted">Fees</span><br/>
 							<b>₹ { this.props.auditCycle.earnings_per_audit }</b>
 						</p>
 						</div>
