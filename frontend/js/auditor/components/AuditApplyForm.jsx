@@ -86,7 +86,7 @@ var AuditApplyForm = React.createClass({
 var mapStoreToProps = function(store, ownProps){
 	return {
 		audit: store.audits[ownProps.params.auditId],
-		errors: store.forms.auditApply.errors,
+		errors: store.forms.auditApply.errors || {},
 	};
 };
 
