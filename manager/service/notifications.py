@@ -14,12 +14,12 @@ def find_by_recipient_user_and_verb_and_actor(user_id, verb=None, before=None, a
         qs = user.notifications.prefetch_related(
             'actor',
             'target',
-            'action_object__audit',
-            'action_object__audit__store',
-            'action_object__audit__store__city',
-            'action_object__audit__store__client',
-            'action_object__audit__audit_cycle',
-            'action_object__audit__audit_cycle__client',
+            # 'action_object__audit',
+            # 'action_object__audit__store',
+            # 'action_object__audit__store__city',
+            # 'action_object__audit__store__client',
+            # 'action_object__audit__audit_cycle',
+            # 'action_object__audit__audit_cycle__client',
         )
         # HACK: works only because 'action_object' is currently an instance of AuditStore or AuditApplication.
         # anything else and it will break

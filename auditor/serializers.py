@@ -483,6 +483,7 @@ class ContentTypeSerializer(ModelSerializer):
 class NotificationSerializer(ModelSerializer):
     class NotificationTargetField(RelatedField):
         def to_representation(self, value):
+            print("NotificationSerializer", value, type(value))
             if isinstance(value, Audit):
                 serializer = AuditSerializer(value)
             elif isinstance(value, AuditStore):
@@ -495,10 +496,13 @@ class NotificationSerializer(ModelSerializer):
 
     class NotificationActionObjectField(RelatedField):
         def to_representation(self, value):
+            print("NotificationActionObjectField", value, type(value))
             if isinstance(value, AuditApplication):
                 serializer = AuditApplicationSerializer(value)
             elif isinstance(value, AuditStore):
                 serializer = AuditStoreSerializer(value)
+            elif isinstance(value, Payment):
+                serializer = PaymentSerializer(value)
             else:
                 raise ValueError('Unexpected type of action object in notification: ', type(value))
             return serializer.data

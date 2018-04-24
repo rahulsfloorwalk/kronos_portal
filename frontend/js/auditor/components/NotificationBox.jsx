@@ -44,6 +44,8 @@ var NotificationItem = React.createClass({
 				return <span className="text-danger"> pending </span>;
 			case "AUDIT_STORE_PAID":
 				return <span className="text-success"> paid </span>;
+			case "PAYMENT_FAILED":
+				return <span className="text-danger"> failed </span>;
 			default:
 				return verb;
 		}
@@ -55,6 +57,8 @@ var NotificationItem = React.createClass({
 				return <span>application for date <b>{moment(actionObject.audit_date).format(momentDateFormat)}</b> by <b>{actionObject.profileinfo.first_name} {actionObject.profileinfo.last_name}</b></span>;
 			case "audit_store.auditstore":
 				return <span>report for date <b>{moment(actionObject.audit_date).format(momentDateFormat) }</b></span>;
+			case "payment.payment":
+				return <span>payment for date <b>{moment(actionObject.audit_date).format(momentDateFormat) }</b></span>;
 			default:
 				return txt;
 		}

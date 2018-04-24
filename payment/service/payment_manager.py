@@ -105,43 +105,6 @@ def pay(payment_id, user_actor):
     except BankInfo.DoesNotExist as e:
         raise AppLogicError("Bank details are not given") from e
 
-@atomic
-def unpay(payment_id, user_actor):
-    try:
-        payment = Payment.objects.get(pk=payment_id)
-        if payment.status == Payment.PAID:
-            payment.status = Payment.PENDING
-            payment.paid_on = None
-            payment.comment = "pending payment for {first} {last} for audit done on {date} for {client}".format(
-                first=payment.audit_store.user.profileinfo.first_name,
-                last=payment.audit_store.user.profileinfo.last_name,
-                date=payment.audit_store.audit_date,
-                client=payment.audit_store.audit.audit_cycle.client.name
-            )
-            payment.save()
-            notify.send(
-                user_actor,
-                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=verbs.AUDIT_STORE_PENDING,
-                action_object=payment.audit_store,
-                target=payment.audit_store
-            )
-            # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            # connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
-            notify.send(
-                user_actor,
-                recipient=payment.user,
-                verb=verbs.AUDIT_STORE_PENDING,
-                action_object=payment.audit_store,
-                target=payment.audit_store
-            )
-            # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            # connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
-            return payment
-        else:
-            raise AppLogicError("payment cannot be done now")
-    except Payment.DoesNotExist as e:
-        raise ObjectNotFound from e
 
 @atomic
 def fail(payment_id, user_actor):
@@ -154,8 +117,8 @@ def fail(payment_id, user_actor):
             notify.send(
                 user_actor,
                 recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=verbs.AUDIT_STORE_PENDING,
-                action_object=payment.audit_store,
+                verb=verbs.PAYMENT_FAILED,
+                action_object=payment,
                 target=payment.audit_store
             )
             # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
@@ -163,12 +126,12 @@ def fail(payment_id, user_actor):
             notify.send(
                 user_actor,
                 recipient=payment.user,
-                verb=verbs.AUDIT_STORE_PENDING,
-                action_object=payment.audit_store,
+                verb=verbs.PAYMENT_FAILED,
+                action_object=payment,
                 target=payment.audit_store
             )
-            # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            # connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+            auditor_notif_id = Notification.objects.filter(verb=verbs.PAYMENT_FAILED).order_by('-id')[0].id
+            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
 
             # Add an additional pending payment
             add_payment_on_audit_store_accepted(payment.audit_store.id, payment.amount, user_actor)

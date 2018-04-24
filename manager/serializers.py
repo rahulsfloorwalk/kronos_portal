@@ -593,6 +593,8 @@ class NotificationSerializer(ModelSerializer):
                 serializer = AuditApplicationSerializer(value)
             elif isinstance(value, AuditStore):
                 serializer = AuditStoreSerializer(value)
+            elif isinstance(value, Payment):
+                serializer = PaymentSerializer(value)
             else:
                 raise ValueError('Unexpected type of action object in notification: ', type(value))
             return serializer.data
