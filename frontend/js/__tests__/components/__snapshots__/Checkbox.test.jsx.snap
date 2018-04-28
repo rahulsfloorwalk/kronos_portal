@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Checkbox/> is checked 1`] = `
+<button
+  className="btn btn-primary"
+  disabled={false}
+  onClick={[Function]}
+>
+  <span
+    className="glyphicon glyphicon-ok"
+  />
+</button>
+`;
+
+exports[`<Checkbox/> is disabled 1`] = `
+<span
+  className="glyphicon glyphicon-ok"
+/>
+`;
+
+exports[`<Checkbox/> is unchecked 1`] = `
+<button
+  className="btn btn-default"
+  disabled={false}
+  onClick={[Function]}
+>
+  <span
+    className="glyphicon glyphicon-unchecked"
+  />
+</button>
+`;
