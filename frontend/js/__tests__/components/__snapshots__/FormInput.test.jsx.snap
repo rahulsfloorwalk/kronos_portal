@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FormInput/> renders a checked checkbox 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <input
+    checked={true}
+    className="form-control"
+    disabled={undefined}
+    label="Foobar"
+    maxLength={undefined}
+    name="foobar"
+    onChange={undefined}
+    placeholder={undefined}
+    type="checkbox"
+    value="Foobar"
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormInput/> renders a default input with basic props 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <input
+    checked={undefined}
+    className="form-control"
+    disabled={undefined}
+    label="Foobar"
+    maxLength={undefined}
+    name="foobar"
+    onChange={undefined}
+    placeholder="Foobaz"
+    type={undefined}
+    value="Foobar"
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormInput/> renders a disabled input 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <input
+    checked={undefined}
+    className="form-control"
+    disabled={true}
+    label="Foobar"
+    maxLength={undefined}
+    name="foobar"
+    onChange={undefined}
+    placeholder={undefined}
+    type={undefined}
+    value="Foobar"
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormInput/> renders an input with maxLength 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <input
+    checked={undefined}
+    className="form-control"
+    disabled={undefined}
+    label="Foobar"
+    maxLength={50}
+    name="foobar"
+    onChange={undefined}
+    placeholder="Foobaz"
+    type={undefined}
+    value="Foobar"
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormInput/> renders an unchecked checkbox 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <input
+    checked={false}
+    className="form-control"
+    disabled={undefined}
+    label="Foobar"
+    maxLength={undefined}
+    name="foobar"
+    onChange={undefined}
+    placeholder={undefined}
+    type="checkbox"
+    value="Foobar"
+  />
+  <ul />
+</div>
+`;
