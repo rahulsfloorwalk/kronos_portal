@@ -161,7 +161,7 @@ jobs:
           name: run the jest tests
           command: |
             cd frontend
-            npm jest-coverage
+            npm run jest-coverage
 
       - store_artifacts:
           path: frontend/coverage
