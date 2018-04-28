@@ -174,4 +174,5 @@ workflows:
       - jstest
       - package:
           requires:
-            - test
+            - pytest
+            - jstest
