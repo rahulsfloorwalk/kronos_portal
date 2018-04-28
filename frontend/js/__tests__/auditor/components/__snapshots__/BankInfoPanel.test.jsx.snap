@@ -1,0 +1,245 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is loading 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "cursor": "pointer",
+      }
+    }
+  >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-pencil"
+      />
+       Edit
+    </a>
+    <h4>
+      <span
+        className="glyphicon glyphicon-warning-sign"
+      />
+       Payment Details
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <colgroup>
+      <col
+        style={
+          Object {
+            "width": "40%",
+          }
+        }
+      />
+    </colgroup>
+    <tbody>
+      <tr>
+        <td
+          colSpan={2}
+        >
+          All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.
+        </td>
+      </tr>
+      <tr>
+        <td
+          className="text-right text-muted"
+          style={
+            Object {
+              "width": "40%",
+            }
+          }
+        >
+          Bank Name:
+        </td>
+        <th />
+      </tr>
+      <tr>
+        <td
+          className="text-right text-muted"
+        >
+          *Account Holder Name:
+        </td>
+        <th />
+      </tr>
+      <tr>
+        <td
+          className="text-right text-muted"
+        >
+          *Account Number:
+        </td>
+        <th />
+      </tr>
+      <tr
+        className=""
+      >
+        <td
+          className="text-right text-muted"
+        >
+          *IFSC Code:
+        </td>
+        <th />
+      </tr>
+      <tr
+        className=""
+      >
+        <td
+          className="text-right text-muted"
+        >
+          *Pan Number:
+        </td>
+        <th />
+      </tr>
+    </tbody>
+  </table>
+  <div
+    className="panel-footer"
+  >
+    <p
+      className="text-danger"
+    >
+      <b>
+        Please complete your payment information.
+      </b>
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is successfully loaded 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+    onClick={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    style={
+      Object {
+        "cursor": "pointer",
+      }
+    }
+  >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-pencil"
+      />
+       Edit
+    </a>
+    <h4>
+      <span
+        className="glyphicon glyphicon-warning-sign"
+      />
+       Payment Details
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <colgroup>
+      <col
+        style={
+          Object {
+            "width": "40%",
+          }
+        }
+      />
+    </colgroup>
+    <tbody>
+      <tr>
+        <td
+          colSpan={2}
+        >
+          All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.
+        </td>
+      </tr>
+      <tr>
+        <td
+          className="text-right text-muted"
+          style={
+            Object {
+              "width": "40%",
+            }
+          }
+        >
+          Bank Name:
+        </td>
+        <th>
+          State Bank of India
+        </th>
+      </tr>
+      <tr>
+        <td
+          className="text-right text-muted"
+        >
+          *Account Holder Name:
+        </td>
+        <th>
+          John Doe
+        </th>
+      </tr>
+      <tr>
+        <td
+          className="text-right text-muted"
+        >
+          *Account Number:
+        </td>
+        <th>
+          1234567890
+        </th>
+      </tr>
+      <tr
+        className="danger"
+      >
+        <td
+          className="text-right text-muted"
+        >
+          *IFSC Code:
+        </td>
+        <th>
+          1234567890
+        </th>
+      </tr>
+      <tr
+        className="danger"
+      >
+        <td
+          className="text-right text-muted"
+        >
+          *Pan Number:
+        </td>
+        <th>
+          1234567890
+        </th>
+      </tr>
+    </tbody>
+  </table>
+  <div
+    className="panel-footer"
+  >
+    <p
+      className="text-danger"
+    >
+      <b>
+        Please complete your payment information.
+      </b>
+    </p>
+  </div>
+</div>
+`;
