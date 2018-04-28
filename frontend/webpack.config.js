@@ -41,16 +41,6 @@ module.exports = {
 				test: /\.js$|\.jsx$/,
 				exclude: /(node_modules)/,
 				loader: 'babel-loader',
-				query: {
-					presets: [
-						['es2015', {modules: false}],
-						'react'
-					],
-					plugins: [
-						['transform-class-properties'],
-						['syntax-dynamic-import'],
-					]
-				}
 			},
 			{
 				test: /\.css$/,
