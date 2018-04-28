@@ -1,0 +1,243 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<BankInfoForm/> is rendered correctly when BankInfo is loading 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Edit Bank Info
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <div
+          className="form-group"
+        >
+          <big>
+            <i>
+              fields marked 
+              <b>
+                ✳
+              </b>
+               must be filled to apply to audits
+            </i>
+          </big>
+        </div>
+        <div
+          className="text-center text-muted"
+        >
+          <img
+            alt="loading..."
+            src="/static/img/ripple.svg"
+            title="Please Wait"
+          />
+          <p>
+            LOADING
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully returned 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Edit Bank Info
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <div
+          className="form-group"
+        >
+          <big>
+            <i>
+              fields marked 
+              <b>
+                ✳
+              </b>
+               must be filled to apply to audits
+            </i>
+          </big>
+        </div>
+        <form
+          onSubmit={[Function]}
+        >
+          <div
+            className="form-group"
+          >
+            <label>
+              Account Holder Name (✳)
+            </label>
+            <input
+              checked={undefined}
+              className="form-control"
+              disabled={undefined}
+              label="Account Holder Name (✳)"
+              maxLength="40"
+              name="account_holder_name"
+              onChange={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Account Number (✳)
+            </label>
+            <input
+              checked={undefined}
+              className="form-control"
+              disabled={undefined}
+              label="Account Number (✳)"
+              maxLength="20"
+              name="account_number"
+              onChange={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              IFSC Code (✳)
+            </label>
+            <input
+              checked={undefined}
+              className="form-control"
+              disabled={undefined}
+              label="IFSC Code (✳)"
+              maxLength="11"
+              name="ifsc_code"
+              onChange={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Pan Number (✳)
+            </label>
+            <input
+              checked={undefined}
+              className="form-control"
+              disabled={undefined}
+              label="Pan Number (✳)"
+              maxLength="10"
+              name="pan_number"
+              onChange={[Function]}
+              placeholder={undefined}
+              type="text"
+              value=""
+            />
+            <ul />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

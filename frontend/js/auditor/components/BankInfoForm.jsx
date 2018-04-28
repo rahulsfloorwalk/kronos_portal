@@ -10,7 +10,7 @@ import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
 import Loading from "../../components/Loading.jsx";
 
-class BankInfoForm extends React.Component {
+export class BankInfoForm extends React.Component {
 
 	static propTypes = {
 		dispatch: PropTypes.func,
