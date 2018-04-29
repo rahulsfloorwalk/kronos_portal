@@ -112,7 +112,6 @@ def fail(payment_id, user_actor):
         payment = Payment.objects.get(pk=payment_id)
         if payment.status == Payment.PAID:
             payment.status = Payment.FAILED
-            payment.paid_on = None
             payment.save()
             notify.send(
                 user_actor,

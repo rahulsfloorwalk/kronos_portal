@@ -483,7 +483,6 @@ class ContentTypeSerializer(ModelSerializer):
 class NotificationSerializer(ModelSerializer):
     class NotificationTargetField(RelatedField):
         def to_representation(self, value):
-            print("NotificationSerializer", value, type(value))
             if isinstance(value, Audit):
                 serializer = AuditSerializer(value)
             elif isinstance(value, AuditStore):
@@ -496,7 +495,6 @@ class NotificationSerializer(ModelSerializer):
 
     class NotificationActionObjectField(RelatedField):
         def to_representation(self, value):
-            print("NotificationActionObjectField", value, type(value))
             if isinstance(value, AuditApplication):
                 serializer = AuditApplicationSerializer(value)
             elif isinstance(value, AuditStore):

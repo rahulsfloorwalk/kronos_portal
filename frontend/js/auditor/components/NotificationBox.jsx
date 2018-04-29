@@ -84,6 +84,9 @@ var NotificationItem = React.createClass({
 		if(n.verb.startsWith("AUDIT_APPLICATION_")){
 			return `/audit/cycle/${n.target.audit_cycle.id}`;
 		}
+		if(n.verb.startsWith("PAYMENT_")){
+			return `/payment`;
+		}
 	},
 	getClient: function(n){
 		if(n.verb.startsWith("AUDIT_STORE_")){

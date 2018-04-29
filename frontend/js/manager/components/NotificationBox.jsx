@@ -45,6 +45,8 @@ var NotificationItem = React.createClass({
 				return <span className="text-danger"> payment pending </span>;
 			case "AUDIT_STORE_PAID":
 				return <span className="text-success"> paid </span>;
+			case "PAYMENT_FAILED":
+				return <span className="text-danger"> failed </span>;
 
 			default:
 				return verb;
@@ -57,6 +59,8 @@ var NotificationItem = React.createClass({
 				return <span>application dated: <b>{moment(actionObject.audit_date).format(momentDateFormat)}</b> by <b>{actionObject.profileinfo.first_name} {actionObject.profileinfo.last_name}</b></span>;
 			case "audit_store.auditstore":
 				return <span>report dated: <b>{moment(actionObject.audit_date).format(momentDateFormat) }</b></span>;
+			case "payment.payment":
+				return <span>payment dated: <b>{moment(actionObject.paid_on).format(momentDateFormat)}</b></span>;
 			default:
 				return txt;
 		}
@@ -81,6 +85,9 @@ var NotificationItem = React.createClass({
 		}
 		if(n.verb.startsWith("AUDIT_APPLICATION_")){
 			return `/audit_cycle/${n.target.audit_cycle.id}/audit`;
+		}
+		if(n.verb.startsWith("PAYMENT_")){
+			return `/audit_store/${n.target.id}/report`;
 		}
 	},
 	render: function(){
@@ -195,6 +202,7 @@ export default React.createClass({
 							<option value="AUDIT_STORE_REJECTED">Report Rejected</option>
 							<option value="AUDIT_STORE_PENDING">Payment Pending</option>
 							<option value="AUDIT_STORE_PAID">Paid</option>
+							<option value="PAYMENT_FAILED">Payment Failed</option>
 						</select>
 					</div>
 					<h4>
