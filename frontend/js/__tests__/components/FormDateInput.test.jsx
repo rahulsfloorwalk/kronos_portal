@@ -6,6 +6,13 @@ jest.mock("react-dom", () => ({
 	findDOMNode: () => {},
 }));
 
+let dateNowSpy;
+
+beforeAll(() => {
+	// Lock Time
+	dateNowSpy = jest.spyOn(Date, "now").mockImplementation(() => 1524910191000);
+});
+
 describe("<FormDateInput/>", () => {
 	const basicProps = {
 		label: "Date of Birth",
@@ -17,4 +24,10 @@ describe("<FormDateInput/>", () => {
 			.toJSON();
 		expect(tree).toMatchSnapshot();
 	});
+});
+
+afterAll(() => {
+	// Unlock Time
+	dateNowSpy.mockReset();
+	dateNowSpy.mockRestore();
 });
