@@ -1,26 +1,17 @@
-import logging
+from __future__ import absolute_import
 import os
 
 from celery import Celery
 from celery.schedules import crontab
 
-
+# set the default Django settings module for the 'celery' program.
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kronos.settings")
 
-_logger = logging.getLogger(__name__)
+app = Celery(__name__)
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
-broker_url = 'amqp://guest@localhost'
-
-imports = (
-    'notify.service.mail_notify',
-    'notify.service.mail_reminders',
-    'notify.service.mail_welcome',
-    'notify.service.mail_opportunity',
-)
-
-queue_prefix = 'fw-testing'
-
-app = Celery(__name__, broker=broker_url, include=imports)
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
 
 @app.on_after_finalize.connect
 def setup_periodic_tasks(sender, **kwargs):
