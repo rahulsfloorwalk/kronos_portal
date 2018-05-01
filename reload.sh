@@ -27,7 +27,7 @@ then
 	done
 	echo ""
 	echo "reloading celery worker pid: $CELERY_PID";
-	celery worker -A kronos.celery -l INFO -f logs/celery_worker.log --detach --pidfile=./logs/celery_worker.pid
+	celery worker -A kronos.celery -l INFO --without-mingle --without-heartbeat --without-gossip -f logs/celery_worker.log --detach --pidfile=./logs/celery_worker.pid
 	#CELERY_WORKER_PID=`cat ./logs/celery_worker.pid`;
 	#echo "celery worker pid: $CELERY_WORKER_PID"
 else
