@@ -36,6 +36,7 @@ pytz==2016.10
 raven==6.6.0
 requests==2.11.1
 s3transfer==0.1.10
+setproctitle==1.1.10
 six==1.10.0
 textblob==0.13.1
 tweepy==3.5.0
