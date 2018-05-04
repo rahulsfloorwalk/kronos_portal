@@ -27,6 +27,7 @@ class AuditStoreTable extends Component {
 			cities: [],
 			types: [],
 			priorities: [],
+			months: [],
 			selectedCityId: "",
 			selectedType: "",
 			selectedPriority: "",
@@ -45,12 +46,16 @@ class AuditStoreTable extends Component {
 			let cities = [];
 			let types = [];
 			let priorities = [];
+			let months = [];
 			reports.forEach( r => {
 				if(cities.filter(c => c.id === r.city_id).length === 0){
 					cities.push({
 						id: r.city_id,
 						name: r.city_name,
 					});
+				}
+				if(months.filter(m => m === new Date(r.audit_date).getMonth()).length === 0){
+					months.push(new Date(r.audit_date).getMonth());
 				}
 				if( ! types.find(t => t === r.store_type)){
 					types.push(r.store_type);
@@ -64,6 +69,7 @@ class AuditStoreTable extends Component {
 				cities,
 				types,
 				priorities,
+				months,
 			});
 		}).always(() => this.setLoading(false));
 	}
@@ -72,7 +78,8 @@ class AuditStoreTable extends Component {
 		let base = url.api_base_path + 'client/audit_cycle/' + this.props.auditCycleId + '/audit_cycle_filtered_xlsx_report?';
 		base += 'city=' + encodeURIComponent(this.state.selectedCityId || '') + '&';
 		base += 'priority=' + encodeURIComponent(this.state.selectedPriority || '') + '&';
-		base += 'type=' + encodeURIComponent(this.state.selectedType || '');
+		base += 'type=' + encodeURIComponent(this.state.selectedType || '') + '&';
+		base += 'month=' + encodeURIComponent(Number(this.state.selectedMonth)+1 || '');
 		return base;
 	}
 	componentDidMount(){
@@ -102,6 +109,12 @@ class AuditStoreTable extends Component {
 		});
 	}
 
+	selectMonth= (e) => {
+		this.setState({
+			selectedMonth: e.target.value,
+		});
+	}
+
 	render(){
 		if(this.state.loading){
 			return (<Loading/>);
@@ -123,6 +136,11 @@ class AuditStoreTable extends Component {
 			<option value="">All Priorities</option>
 			{this.state.priorities.filter(p=>!!p).map(p => <option key={p} value={p}>{p}</option>)}
 		</select>);
+		let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+		let monthSelect = (<select onChange={this.selectMonth} value={this.state.selectedMonth} className="form-control" style={{display:"inline-block",width:"200px"}}>
+			<option value="">All Months</option>
+			{this.state.months.filter(m=>!!m).map(m => <option key={m} value={m}>{months[m]}</option>)}
+		</select>);
 
 		let headers = [];
 		headers.push(<th key="store_code">Store Code</th>);
@@ -135,6 +153,7 @@ class AuditStoreTable extends Component {
 		this.state.reports.filter(r => {
 			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
 			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
+			&& (this.state.selectedMonth ? new Date(r.audit_date).getMonth() == this.state.selectedMonth : true)
 			&& (this.state.selectedPriority ? r.store_priority === this.state.selectedPriority : true);
 		}).forEach( r => {
 			let tds = [];
@@ -176,6 +195,7 @@ class AuditStoreTable extends Component {
 				{citySelect}&nbsp;
 				{storeTypeSelect}&nbsp;
 				{storePrioritySelect}&nbsp;
+				{monthSelect}&nbsp;
 				<span className="pull-right" style={{fontSize:"130%"}}>
 					<big><b>{trs.length}</b> Reports</big>
 					&nbsp;

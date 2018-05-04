@@ -209,6 +209,7 @@ class AuditCycleFilteredXlsxReport(APIView):
         filters['city'] = request.GET.get('city')
         filters['type'] = request.GET.get('type')
         filters['priority'] = request.GET.get('priority')
+        filters['month'] = request.GET.get('month')
         report, name = cycle_xlsx_report_service.get_aggregate_report_with_filters(audit_cycle_id, request.user.id, filters)
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'

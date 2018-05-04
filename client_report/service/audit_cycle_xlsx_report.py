@@ -1,5 +1,5 @@
 import io
-
+import calendar, datetime
 import xlsxwriter
 
 from django.db.models import Prefetch
@@ -52,9 +52,13 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     if filters.get('priority') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.priority == filters.get('priority')]
+    if filters.get('month') not in ignored_filters:
+        month_name = calendar.month_name[int(filters.get('month'))]
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit_date.month == int(filters.get('month')) and x.audit_date.year == datetime.datetime.now().year]
 
     data = create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
-    name = (str(audit_cycle.name) + city_name + filters.get('type') + filters.get('priority') + ".xlsx").replace("-", "")
+    name = (str(audit_cycle.name) + city_name + filters.get('type') + filters.get('priority') + month_name + ".xlsx").replace("-", "")
     return write_data(data), name
 
 
