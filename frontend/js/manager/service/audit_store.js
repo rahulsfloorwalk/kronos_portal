@@ -12,6 +12,17 @@ export function setAuditDate(audit_store_id, audit_date){
 	});
 };
 
+export function rate(audit_store_id, qa_rating){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/qa_rating`,
+		method: 'POST',
+		data: JSON.stringify({
+			qa_rating
+		}),
+		contentType: 'application/json'
+	});
+};
+
 export function assignAuditStoreToClientUser(audit_store_id, client_user_id){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/client_user`,
