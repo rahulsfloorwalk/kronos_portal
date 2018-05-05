@@ -42,6 +42,9 @@ class AuditStoreQuerySet(QuerySet):
         else:
             raise TypeError("user needs to be of type: django.contrib.auth.models.User")
 
+    def for_moderator(self, user):
+        query_set = self.filter(audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT))
+        return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
 class AuditStore(Model):
 
