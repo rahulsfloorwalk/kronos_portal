@@ -80,3 +80,18 @@ class AuditStoreTestCase(TestCase):
             self.assertRaises(AppLogicError, audit_store.qa_unokayed, by=self.manager_user)
             mock.assert_not_called()
 
+    def test_rate_sets_rating_correctly(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        rating = AuditStore.GOOD
+        audit_store.rate(rating)
+        self.assertEqual(audit_store.qa_rating, rating)
+
+    def test_rate_raises_when_report_is_not_submitted_or_qa_okayed(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        with self.assertRaises(AppLogicError, msg="Report status is not QA OK"):
+            audit_store.rate(AuditStore.BAD)
+
+    def test_rate_raises_when_rating_is_invalid(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        with self.assertRaises(AppLogicError, msg="Invalid Rating"):
+            audit_store.rate(5)

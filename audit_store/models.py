@@ -209,3 +209,14 @@ class AuditStore(Model):
             )
         else:
             raise AppLogicError("Report cannot be un-okayed now")
+
+    @atomic
+    def rate(self, rating):
+        if self.status not in (AuditStore.SUBMITTED, AuditStore.QA_OK):
+            raise AppLogicError("Report status is not QA OK")
+
+        if rating not in (AuditStore.BAD, AuditStore.AVERAGE, AuditStore.GOOD):
+            raise AppLogicError("Invalid Rating")
+
+        self.qa_rating = rating
+        self.save()
