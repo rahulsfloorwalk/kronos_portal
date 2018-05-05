@@ -1,13 +1,15 @@
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Serializer, DateField, CharField, IntegerField, BooleanField
+from rest_framework.serializers import Serializer, DateField, CharField, IntegerField, BooleanField, ChoiceField
 
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_MODERATOR
 
+from audit_store.models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
 import audit_store.service_moderator as audit_store_service
 import attachment.service_moderator as attachment_service
@@ -90,6 +92,22 @@ class AuditStoreIdAuditDateView(APIView):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_store = audit_store_service.set_audit_date_for_moderator(audit_store_id, ds.validated_data['audit_date'], request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+class AuditStoreIdQARatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+
+    class DeSerializer(Serializer):
+        qa_rating = ChoiceField(AuditStore.QA_RATING)
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = AuditStore.objects.for_moderator(request.user).get(pk=audit_store_id)
+        audit_store.rate(ds.validated_data['qa_rating'])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdSubmitView(APIView):

@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from .views import AuditCycleView, AuditCycleIdView, AuditStoreByAuditCycle, AuditStoreIdView
-from .views import AuditStoreIdAuditDateView, AuditStoreIdCompleteView, AuditStoreIdFailView, AuditStoreIdSubmitView, AuditStoreIdUnSubmitView
+from .views import AuditStoreIdAuditDateView, AuditStoreIdCompleteView, AuditStoreIdFailView, AuditStoreIdSubmitView, AuditStoreIdUnSubmitView, AuditStoreIdQARatingView
 from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView
 from .views import AuditStorePendingView, AuditStoreCompletedView
 from .views import SectionView, ReportSectionView, AnswerView
@@ -28,6 +28,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/qa_rating$', AuditStoreIdQARatingView.as_view(), name='audit_store_id_qa_rating_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', AuditStoreIdSubmitView.as_view(), name='audit_store_id_submit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/unsubmit$', AuditStoreIdUnSubmitView.as_view(), name='audit_store_id_unsubmit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/fail$', AuditStoreIdFailView.as_view(), name='audit_store_id_fail_view'),
@@ -40,4 +41,4 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', AuditCycleIdView.as_view(), name='audit_cycle_id_view'),
     url(r'audit_cycle$', AuditCycleView.as_view(), name='audit_cycle_view'),
     url(r'config$', ConfigView.as_view(), name='config_view'),
-], 'manager')
+], 'moderator')
