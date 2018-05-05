@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 
 from rest_framework import serializers
 from rest_framework.views import APIView
@@ -9,6 +10,7 @@ from rest_framework.serializers import Serializer, IntegerField
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from audit_store.models import AuditStore
 from audit_store import service as audit_store_service
 from ..service import moderator as moderator_service
 
@@ -67,6 +69,22 @@ class AuditStoreIdAuditDateView(APIView):
         ds = AuditStoreIdAuditDateView.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_store = audit_store_service.set_audit_date(audit_store_id, ds.validated_data['audit_date'])
+        return Response(AuditStoreSerializer(audit_store).data)
+
+class AuditStoreIdQARatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        qa_rating = serializers.ChoiceField(AuditStore.QA_RATING)
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
+        audit_store.rate(ds.validated_data['qa_rating'])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdWithdrawView(APIView):
