@@ -18,6 +18,7 @@ django-widget-tweaks==1.4.1
 djangorestframework==3.4.7
 docutils==0.13.1
 Faker==0.7.15
+flake8==3.5.0
 googlemaps==2.4.6
 gunicorn==19.6.0
 honcho==1.0.1

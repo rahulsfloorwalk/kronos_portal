@@ -1,0 +1,12 @@
+[flake8]
+ignore = E501,E225,E231,E302,E301,W391,E701,E251
+exclude =
+	venv
+	.git
+	__pycache__
+	dist
+	frontend
+	.circleci
+	htmlcov
+max-complexity = 10
+max-line-length = 100
