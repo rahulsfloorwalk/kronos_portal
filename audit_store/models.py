@@ -192,4 +192,20 @@ class AuditStore(Model):
                 user_actor=by,
             )
         else:
-            raise AppLogicError("Report cannot be completed now")
+            raise AppLogicError("Report cannot be QA okayed now")
+
+    @atomic
+    def qa_unokayed(self, *args, by):
+        if self.status == AuditStore.QA_OK:
+            self.status = AuditStore.SUBMITTED
+            self.save()
+
+            # send the change signal
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.SUBMITTED,
+                old_status=AuditStore.QA_OK,
+                user_actor=by,
+            )
+        else:
+            raise AppLogicError("Report cannot be un-okayed now")

@@ -24,12 +24,12 @@ class AuditStoreTestCase(TestCase):
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
 
-    def test_qa_ok_changes_status_to_qa_ok(self):
+    def test_qa_okayed_changes_status_to_qa_ok(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
         audit_store.qa_okayed(by=self.manager_user)
         self.assertEqual(audit_store.status, AuditStore.QA_OK)
 
-    def test_qa_ok_sends_status_change_signal(self):
+    def test_qa_okayed_sends_status_change_signal(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
 
         with catch_signal(audit_store_status_change) as mock:
@@ -42,12 +42,41 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
             )
 
-    def test_qa_ok_raises_when_status_is_not_submitted(self):
+    def test_qa_okayed_raises_when_status_is_not_submitted(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         self.assertRaises(AppLogicError, audit_store.qa_okayed, by=self.manager_user)
 
-    def test_qa_ok_does_not_send_status_change_signal_when_status_is_not_submitted(self):
+    def test_qa_okayed_does_not_send_status_change_signal_when_status_is_not_submitted(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         with catch_signal(audit_store_status_change) as mock:
             self.assertRaises(AppLogicError, audit_store.qa_okayed, by=self.manager_user)
             mock.assert_not_called()
+
+    def test_qa_unokayed_changes_status_to_submitted(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.QA_OK, user=self.auditor_user)
+        audit_store.qa_unokayed(by=self.manager_user)
+        self.assertEqual(audit_store.status, AuditStore.SUBMITTED)
+
+    def test_qa_unokayed_sends_status_change_signal(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.QA_OK, user=self.auditor_user)
+
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.qa_unokayed(by=self.manager_user)
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.SUBMITTED,
+                old_status=AuditStore.QA_OK,
+                user_actor=self.manager_user,
+            )
+
+    def test_qa_unokayed_raises_when_status_is_not_qa_ok(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        self.assertRaises(AppLogicError, audit_store.qa_unokayed, by=self.manager_user)
+
+    def test_qa_unokayed_does_not_send_status_change_signal_when_status_is_not_qa_ok(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            self.assertRaises(AppLogicError, audit_store.qa_unokayed, by=self.manager_user)
+            mock.assert_not_called()
+
