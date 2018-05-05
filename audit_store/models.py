@@ -7,8 +7,10 @@ from django.conf import settings
 from django.db.models import QuerySet
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField
 from django.db.models import PROTECT
+from django.db.transaction import atomic
 
 from kronos.utils import get_color_code_by_percentage
+from kronos.exceptions import AppLogicError
 
 from guardian.shortcuts import get_users_with_perms, get_objects_for_user
 
@@ -16,6 +18,8 @@ from client.models import Store
 from audit.models import Audit, AuditCycle
 from answer.models import Answer
 from questionnaire.models import Question
+
+from audit_store.signals import audit_store_status_change
 
 _logger = logging.getLogger(__name__)
 
@@ -46,6 +50,7 @@ class AuditStore(Model):
     ACKNOWLEDGED = 'ACKNOWLEDGED'
     SUBMITTED = 'SUBMITTED'
     WITHDRAWN = 'WITHDRAWN'
+    QA_OK = 'QA_OK'
     COMPLETED = 'COMPLETED'
     ACCEPTED = 'ACCEPTED'
     REJECTED = 'REJECTED'
@@ -55,6 +60,7 @@ class AuditStore(Model):
         (FAILED, "Failed"),
         (ACKNOWLEDGED, "Acknowledged"),
         (SUBMITTED, "Submitted"),
+        (QA_OK, "QA OK"),
         (COMPLETED, "Completed"),
         (WITHDRAWN, "Withdrawn"),
         (ACCEPTED, "Accepted"),
@@ -168,3 +174,22 @@ class AuditStore(Model):
 
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
+
+    @atomic
+    def qa_okayed(self, *args, by):
+        if not self.is_completable():
+            raise AppLogicError("Report is not complete.")
+
+        if self.status == AuditStore.SUBMITTED:
+            self.status = AuditStore.QA_OK
+            self.save()
+
+            # send the change signal
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.QA_OK,
+                old_status=AuditStore.SUBMITTED,
+                user_actor=by,
+            )
+        else:
+            raise AppLogicError("Report cannot be completed now")
