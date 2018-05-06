@@ -199,7 +199,9 @@ var AuditStoreDetails = React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">Rating:</td>
-								<th><AuditStoreRating rating={this.props.auditStore.qa_rating}/></th>
+								<th>
+									<AuditStoreRating rating={this.props.auditStore.qa_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/qa_rating`}>change</Link>)
+								</th>
 							</tr>
 						</tbody>
 					</table>

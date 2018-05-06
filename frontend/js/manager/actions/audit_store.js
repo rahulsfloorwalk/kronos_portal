@@ -227,11 +227,9 @@ export function rejectAuditStore(auditStoreId){
 
 
 export function updateAuditStore(auditStore){
-	return function(dispatch){
-		dispatch({
-			type: types.AUDIT_STORE_UPDATED,
-			status: 'success',
-			auditStore
-		});
+	return {
+		type: types.AUDIT_STORE_UPDATED,
+		status: 'success',
+		auditStore
 	};
 };
