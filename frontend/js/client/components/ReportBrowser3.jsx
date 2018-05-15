@@ -204,14 +204,16 @@ class AuditStoreTable extends Component {
 					</a>
 				</span>
 			</div>
-			<table className="table table-bordered table-hover">
-			<thead>
-				<tr>{headers}</tr>
-			</thead>
-			<tbody>
-			{trs}
-			</tbody>
-			</table>
+			<div style={{ 'width': '100%', 'overflow': 'scroll'}}>
+				<table className="table table-bordered table-hover">
+				<thead>
+					<tr>{headers}</tr>
+				</thead>
+				<tbody>
+				{trs}
+				</tbody>
+				</table>
+			</div>
 			</div>
 		);
 	}
