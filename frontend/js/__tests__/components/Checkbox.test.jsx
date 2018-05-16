@@ -23,22 +23,23 @@ describe("<Checkbox/>", () => {
 		expect(tree).toMatchSnapshot();
 	});
 
+	let onChangeCb;
+	beforeEach( () => {
+		onChangeCb = jest.fn();
+	});
 	it("calls onChange with true when checked", () => {
-		const onChangeCb = jest.fn();
 		const w = shallow(<Checkbox checked={false} onChange={onChangeCb}/>);
 		w.find("button").simulate("click");
 		expect(onChangeCb).lastCalledWith(true);
 	});
 
 	it("calls onChange with false when unchecked", () => {
-		const onChangeCb = jest.fn();
 		const w = shallow(<Checkbox checked={true} onChange={onChangeCb}/>);
 		w.find("button").simulate("click");
 		expect(onChangeCb).lastCalledWith(false);
 	});
 
 	it("does not call onChange when disabled", () => {
-		const onChangeCb = jest.fn();
 		const w = shallow(<Checkbox checked={true} onChange={onChangeCb} disabled={true}/>);
 		w.simulate("click");
 		expect(onChangeCb).not.toBeCalled();
