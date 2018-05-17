@@ -22,7 +22,7 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     )
 
     city_name = ''
-
+    month_name=''
     questions = []
     for section in sections:
         questions.extend(section.questions.all())
