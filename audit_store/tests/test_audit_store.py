@@ -95,3 +95,11 @@ class AuditStoreTestCase(TestCase):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         with self.assertRaises(AppLogicError, msg="Invalid Rating"):
             audit_store.rate(5)
+
+    def test_is_qa_rated_returns_false_when_qa_rating_is_none(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=None)
+        self.assertFalse(audit_store.is_qa_rated())
+
+    def test_is_qa_rated_returns_true_when_qa_rating_is_not_none(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.AVERAGE)
+        self.assertTrue(audit_store.is_qa_rated())

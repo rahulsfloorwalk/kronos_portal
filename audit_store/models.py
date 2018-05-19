@@ -160,6 +160,9 @@ class AuditStore(Model):
 
         return True
 
+    def is_qa_rated(self):
+        return self.qa_rating is not None
+
     def is_presentable(self):
         if self.status in (self.COMPLETED, self.ACCEPTED):
             return True
