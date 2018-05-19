@@ -95,6 +95,7 @@ class Audit(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     count = PositiveIntegerField(db_column='count', blank=False, default=1)
+    audit_date = DateField(db_column='audit_date', blank=True, null=True)
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
     store = ForeignKey('client.Store', related_name='audits', db_column='store_id', on_delete=PROTECT)
