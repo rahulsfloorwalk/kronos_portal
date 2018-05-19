@@ -178,7 +178,9 @@ export default React.createClass({
 							</tr>
 							<tr>
 								<td className="text-right">QA Rating:</td>
-								<th><AuditStoreRating rating={this.state.auditStore.qa_rating}/></th>
+								<th>
+									<AuditStoreRating rating={this.state.auditStore.qa_rating}/> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
+								</th>
 							</tr>
 						</tbody>
 					</table>

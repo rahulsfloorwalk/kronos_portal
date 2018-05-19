@@ -1,0 +1,340 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is already rated 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Rate Report
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <label
+              className="control-label"
+            >
+              Report Quality Rating:
+            </label>
+            <div
+              className="btn-group btn-group-justified"
+            >
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Bad
+                </button>
+              </div>
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default active"
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Average
+                </button>
+              </div>
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Good
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            className="btn btn-lg btn-success"
+          >
+            Save Rating
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is not rated 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Rate Report
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <label
+              className="control-label"
+            >
+              Report Quality Rating:
+            </label>
+            <div
+              className="btn-group btn-group-justified"
+            >
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Bad
+                </button>
+              </div>
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Average
+                </button>
+              </div>
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Good
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            className="btn btn-lg btn-success"
+          >
+            Save Rating
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreQARatingForm/> is rendered correctly when the AuditStore is loading 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Rate Report
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <label
+              className="control-label"
+            >
+              Report Quality Rating:
+            </label>
+            <div
+              className="btn-group btn-group-justified"
+            >
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Bad
+                </button>
+              </div>
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Average
+                </button>
+              </div>
+              <div
+                className="btn-group"
+              >
+                <button
+                  className="btn btn-lg btn-default "
+                  onClick={[Function]}
+                  type="button"
+                >
+                  Good
+                </button>
+              </div>
+            </div>
+          </div>
+          <button
+            className="btn btn-lg btn-success"
+          >
+            Save Rating
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
