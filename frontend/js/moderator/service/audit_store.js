@@ -29,16 +29,9 @@ export function fail(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`);
 };
 
-export function complete(auditStoreId, qa_rating){
-	return $.ajax({
-		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/complete`,
-		type: "POST",
-		data: JSON.stringify({
-			qa_rating,
-		}),
-		contentType: "application/json"
-	});
-};
+export function complete(auditStoreId){
+	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/complete`);
+}
 
 export function setAuditDate(auditStoreId, auditDate){
 	return $.ajax({
@@ -50,3 +43,14 @@ export function setAuditDate(auditStoreId, auditDate){
 		contentType: "application/json"
 	});
 };
+
+export function rate(auditStoreId, qa_rating){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_rating`,
+		method: "POST",
+		data: JSON.stringify({
+			qa_rating
+		}),
+		contentType: "application/json"
+	});
+}

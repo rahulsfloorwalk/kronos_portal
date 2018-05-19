@@ -105,8 +105,8 @@ class AuditStoreIdQARatingView(APIView):
 
     def post(self, request, audit_store_id):
         ds = self.DeSerializer(data=request.data)
+        audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
         ds.is_valid(raise_exception=True)
-        audit_store = AuditStore.objects.for_moderator(request.user).get(pk=audit_store_id)
         audit_store.rate(ds.validated_data['qa_rating'])
         return Response(AuditStoreSerializer(audit_store).data)
 
@@ -143,14 +143,8 @@ class AuditStoreIdCompleteView(APIView):
         'POST': [GROUP_NAME_MODERATOR],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.complete_for_moderator(audit_store_id, request.data["qa_rating"], request.user.id)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except KeyError as e:
-            raise ValidationError({
-                'non_field_errors': ["Rating is required"]
-            })
-
+        audit_store = audit_store_service.complete_for_moderator(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
