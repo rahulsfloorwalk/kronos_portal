@@ -6,9 +6,9 @@ from kronos.exceptions import ObjectNotFound
 from registration.service.moderator import find_moderator_by_user_id
 
 from audit.models import AuditCycle
-from .models import AuditStore
+from audit_store.models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
-from . import service as audit_store_service
+from audit_store import service as audit_store_service
 
 
 def find_completed_audit_stores_for_moderator(user_id):
@@ -54,10 +54,10 @@ def find_by_id_for_moderator(audit_store_id, user_id):
 
 
 @atomic
-def complete_for_moderator(audit_store_id, qa_rating, user_id):
+def complete_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    return audit_store_service.complete(audit_store.id, qa_rating, user)
+    return audit_store_service.complete(audit_store.id, user)
 
 
 @atomic

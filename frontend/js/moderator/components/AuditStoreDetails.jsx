@@ -90,7 +90,7 @@ export default React.createClass({
 		}
 		if(this.state.auditStore.status === 'SUBMITTED'){
 			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
-			completeButton = (<Link to={`/audit_store/${this.props.params.auditStoreId}/report/complete`} className="btn btn-success">Complete</Link>);
+			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
 
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";

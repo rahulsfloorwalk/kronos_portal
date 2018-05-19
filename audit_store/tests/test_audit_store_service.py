@@ -4,13 +4,11 @@ from audit_store.models import AuditStore
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
-from kronos.test_utils import catch_signal
 from kronos.exceptions import AppLogicError
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from questionnaire.models import Question
 from auditor.models import ProfileInfo
-from audit_store.signals import audit_store_status_change
 from audit_store import service
 from audit.models import AuditCycle
 

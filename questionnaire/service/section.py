@@ -3,14 +3,13 @@ from django.db.transaction import atomic
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
-from ..models import Section
+from questionnaire.models import Section
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
 import audit_store.service_client as audit_store_client_service
-from audit_store.service_moderator import find_by_id_for_moderator
 
-from . import question as question_service
+from questionnaire.service import question as question_service
 
 def save(section):
     Section.save(section)
@@ -55,6 +54,7 @@ def find_by_audit_store_for_clientuser(audit_store_id, user):
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
+    from audit_store.service_moderator import find_by_id_for_moderator
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
     return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
