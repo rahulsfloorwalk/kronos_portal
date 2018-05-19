@@ -60,7 +60,7 @@ export function withdrawAuditStore(auditStoreId){
 	};
 };
 
-export function completeAuditStore(auditStoreId, qa_rating){
+export function completeAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_COMPLETE,
@@ -71,9 +71,6 @@ export function completeAuditStore(auditStoreId, qa_rating){
 		let promise = $.ajax({
 			url: url.api_base_path + `manager/audit_store/${auditStoreId}/complete`,
 			method: 'POST',
-			data: JSON.stringify({
-				'qa_rating': qa_rating
-			}),
 			contentType: 'application/json'
 		});
 		promise.then(function(auditStore){

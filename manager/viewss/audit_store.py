@@ -4,7 +4,6 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import Serializer, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
@@ -103,13 +102,8 @@ class AuditStoreIdCompleteView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        try:
-            audit_store = audit_store_service.complete(audit_store_id, request.data["qa_rating"], request.user)
-            return Response(AuditStoreSerializer(audit_store).data)
-        except (KeyError) as e:
-            raise ValidationError({
-                'non_field_errors': ["Rating is mandatory"]
-            })
+        audit_store = audit_store_service.complete(audit_store_id, request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdUnCompleteView(APIView):
     permission_classes = [HasGroupPermission]
