@@ -102,7 +102,7 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is alre
             </div>
           </div>
           <button
-            className="btn btn-lg btn-success"
+            className="btn btn-lg btn-primary"
           >
             Save Rating
           </button>
@@ -215,7 +215,7 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is not 
             </div>
           </div>
           <button
-            className="btn btn-lg btn-success"
+            className="btn btn-lg btn-primary"
           >
             Save Rating
           </button>
@@ -328,7 +328,7 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when the AuditStore is 
             </div>
           </div>
           <button
-            className="btn btn-lg btn-success"
+            className="btn btn-lg btn-primary"
           >
             Save Rating
           </button>
