@@ -248,6 +248,7 @@ class AuditSerializer(ModelSerializer):
         fields = (
             'id',
             'count',
+            'audit_date',
             'hidden',
             'earnings_per_audit',
             'reimbursement',
@@ -268,6 +269,7 @@ class AuditSerializerWithoutApplications(ModelSerializer):
         fields = (
             'id',
             'count',
+            'audit_date'
             'hidden',
             'earnings_per_audit',
             'reimbursement',
@@ -283,6 +285,7 @@ class AuditDeSerializer(ModelSerializer):
         fields = (
             'id',
             'count',
+            'audit_date',
             'earnings_per_audit',
             'reimbursement',
             'store',
@@ -298,6 +301,7 @@ class AuditDeSerializer(ModelSerializer):
         else:
             audit = Audit()
         audit.count = self.validated_data.get('count', audit.count)
+        audit.audit_date = self.validated_data.get('audit_date', audit.audit_date)
         audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
         audit.reimbursement = self.validated_data.get('reimbursement', audit.reimbursement)
         audit.store = self.validated_data.get('store', audit.store_id)
