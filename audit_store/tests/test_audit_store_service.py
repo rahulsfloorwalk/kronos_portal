@@ -48,7 +48,7 @@ class AuditStoreServiceTestCase(TestCase):
         with self.assertRaises(AppLogicError, msg="audit store cannot be completed now"):
             service.complete(audit_store.id, self.manager_user)
 
-    def test_fail_changes_status_from_to_failed(self):
+    def test_fail_changes_status_to_failed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
         audit_store = service.fail(audit_store.id, self.manager_user)
         self.assertEqual(audit_store.status, AuditStore.FAILED)
@@ -57,3 +57,13 @@ class AuditStoreServiceTestCase(TestCase):
         audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
         with self.assertRaises(AppLogicError, msg="audit store cannot be failed now"):
             service.fail(audit_store.id, self.manager_user)
+
+    def test_uncomplete_changes_status_from_completed_to_pm_review(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        audit_store = service.uncomplete(audit_store.id, self.manager_user)
+        self.assertEqual(audit_store.status, AuditStore.PM_REVIEW)
+
+    def test_uncomplete_raises_when_status_is_not_completed(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
+        with self.assertRaises(AppLogicError, msg="audit store cannot be uncompleted now"):
+            service.uncomplete(audit_store.id, self.manager_user)

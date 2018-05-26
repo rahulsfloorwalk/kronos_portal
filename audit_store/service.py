@@ -394,7 +394,7 @@ def uncomplete(audit_store_id, user_actor):
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
         if audit_store.status == AuditStore.COMPLETED:
-            audit_store.status = AuditStore.SUBMITTED
+            audit_store.status = AuditStore.PM_REVIEW
             audit_store.save()
             return audit_store
         else:
