@@ -250,7 +250,7 @@ def complete(audit_store_id, user_actor):
         if not audit_store.is_qa_rated():
             raise AppLogicError("Report is not rated. Please rate the report before completing.")
 
-        if audit_store.status == AuditStore.SUBMITTED:
+        if audit_store.status == AuditStore.PM_REVIEW:
             audit_store.status = AuditStore.COMPLETED
             audit_store.save()
             notify.send(

@@ -25,8 +25,8 @@ class AuditStoreServiceTestCase(TestCase):
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
 
-    def test_complete_changes_status_to_completed(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, audit__audit_cycle__status=AuditCycle.ACTIVE, qa_rating=AuditStore.AVERAGE)
+    def test_complete_changes_status_from_pm_review_to_completed(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user, audit__audit_cycle__status=AuditCycle.ACTIVE, qa_rating=AuditStore.AVERAGE)
         audit_store = service.complete(audit_store.id, self.manager_user)
 
         self.assertEqual(audit_store.status, AuditStore.COMPLETED)
