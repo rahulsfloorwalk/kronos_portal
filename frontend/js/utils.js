@@ -140,9 +140,11 @@ export function getAuditStoreStatus(value){
 		case "WITHDRAWN":
 			return "Withdrawn";
 		case "SUBMITTED":
-			return "Submitted";
+			return "QA Review";
+		case "PM_REVIEW":
+			return "PM Review";
 		case "COMPLETED":
-			return "Completed";
+			return "Client Review";
 		case "ACCEPTED":
 			return "Accepted";
 		case "REJECTED":
