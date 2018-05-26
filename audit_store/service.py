@@ -282,7 +282,7 @@ def fail(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
 
-        if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.QA_OK):
+        if audit_store.status in (AuditStore.SUBMITTED, AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.PM_REVIEW):
             audit_store.status = AuditStore.FAILED
             audit_store.qa_rating = AuditStore.BAD
             audit_store.save()
