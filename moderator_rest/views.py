@@ -137,13 +137,14 @@ class AuditStoreIdFailView(APIView):
         audit_store = audit_store_service.fail_for_moderator(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
-class AuditStoreIdCompleteView(APIView):
+class AuditStoreIdQAOKView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'POST': [GROUP_NAME_MODERATOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.complete_for_moderator(audit_store_id, request.user.id)
+        audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
+        audit_store.qa_ok(by=request.user)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreAttachmentView(APIView):
