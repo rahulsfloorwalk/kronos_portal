@@ -46,7 +46,7 @@ def find_by_audit_cycle_for_moderator(audit_cycle_id, user_id):
 def find_by_id_for_moderator(audit_store_id, user_id):
     try:
         user = find_moderator_by_user_id(user_id)
-        audit_store = AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED])
+        audit_store = AuditStore.objects.get(pk=audit_store_id, status__in=[AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW])
         if user.has_perm('moderator_manage', audit_store):
             return audit_store
         else:
