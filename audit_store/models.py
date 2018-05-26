@@ -52,8 +52,8 @@ class AuditStore(Model):
     FAILED = 'FAILED'
     ACKNOWLEDGED = 'ACKNOWLEDGED'
     SUBMITTED = 'SUBMITTED'
+    PM_REVIEW = 'PM_REVIEW'
     WITHDRAWN = 'WITHDRAWN'
-    QA_OK = 'QA_OK'
     COMPLETED = 'COMPLETED'
     ACCEPTED = 'ACCEPTED'
     REJECTED = 'REJECTED'
@@ -63,7 +63,7 @@ class AuditStore(Model):
         (FAILED, "Failed"),
         (ACKNOWLEDGED, "Acknowledged"),
         (SUBMITTED, "Submitted"),
-        (QA_OK, "QA OK"),
+        (PM_REVIEW, "PM Review"),
         (COMPLETED, "Completed"),
         (WITHDRAWN, "Withdrawn"),
         (ACCEPTED, "Accepted"),
@@ -182,27 +182,30 @@ class AuditStore(Model):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
     @atomic
-    def qa_okayed(self, *args, by):
+    def qa_ok(self, *args, by):
         if not self.is_completable():
             raise AppLogicError("Report is not complete.")
 
+        if not self.is_qa_rated():
+            raise AppLogicError("Please rate report before forwarding for PM Review.")
+
         if self.status == AuditStore.SUBMITTED:
-            self.status = AuditStore.QA_OK
+            self.status = AuditStore.PM_REVIEW
             self.save()
 
             # send the change signal
             audit_store_status_change.send(
                 sender=self.__class__,
-                status=AuditStore.QA_OK,
+                status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=by,
             )
         else:
-            raise AppLogicError("Report cannot be QA okayed now")
+            raise AppLogicError("Report cannot be forwarded for PM Review now.")
 
     @atomic
-    def qa_unokayed(self, *args, by):
-        if self.status == AuditStore.QA_OK:
+    def pm_revert(self, *args, by):
+        if self.status == AuditStore.PM_REVIEW:
             self.status = AuditStore.SUBMITTED
             self.save()
 
@@ -210,16 +213,16 @@ class AuditStore(Model):
             audit_store_status_change.send(
                 sender=self.__class__,
                 status=AuditStore.SUBMITTED,
-                old_status=AuditStore.QA_OK,
+                old_status=AuditStore.PM_REVIEW,
                 user_actor=by,
             )
         else:
-            raise AppLogicError("Report cannot be un-okayed now")
+            raise AppLogicError("Report cannot be reverted to QA now.")
 
     @atomic
     def rate(self, rating):
-        if self.status not in (AuditStore.SUBMITTED, AuditStore.QA_OK):
-            raise AppLogicError("Report status is not QA OK")
+        if self.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
+            raise AppLogicError("Report status is not QA 2")
 
         if rating not in (AuditStore.BAD, AuditStore.AVERAGE, AuditStore.GOOD):
             raise AppLogicError("Invalid Rating")

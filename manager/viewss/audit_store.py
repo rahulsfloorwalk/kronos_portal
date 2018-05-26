@@ -95,6 +95,25 @@ class AuditStoreIdWithdrawView(APIView):
         audit_store = audit_store_service.withdraw(audit_store_id, request.user)
         return Response(AuditStoreSerializer(audit_store).data)
 
+class AuditStoreIdQAOKView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
+        audit_store.qa_ok(by=request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+class AuditStoreIdPMRevertView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
+        audit_store.pm_revert(by=request.user)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdCompleteView(APIView):
     permission_classes = [HasGroupPermission]
