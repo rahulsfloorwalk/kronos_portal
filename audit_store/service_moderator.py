@@ -54,13 +54,6 @@ def find_by_id_for_moderator(audit_store_id, user_id):
 
 
 @atomic
-def complete_for_moderator(audit_store_id, user_id):
-    user = find_moderator_by_user_id(user_id)
-    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    return audit_store_service.complete(audit_store.id, user)
-
-
-@atomic
 def fail_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)

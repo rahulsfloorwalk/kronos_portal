@@ -33,24 +33,3 @@ class AuditStoreModeratorServiceTestCase(TestCase):
                                          email="moderator@foobar.com",
                                          groups=[self.moderator_group])
 
-    def test_complete_for_moderator_changes_status_to_completed(self):
-        audit_store = mommy.make(AuditStore,
-                                 status=AuditStore.SUBMITTED,
-                                 audit__audit_cycle__status=AuditCycle.ACTIVE,
-                                 user=self.auditor_user,
-                                 qa_rating=AuditStore.GOOD)
-        assign_perm('moderator_manage', self.moderator_user, audit_store)
-
-        audit_store = service_moderator.complete_for_moderator(audit_store.id, self.moderator_user.id)
-        self.assertEqual(audit_store.status, AuditStore.COMPLETED)
-
-    def test_complete_for_moderator_raises_when_report_is_not_assigned(self):
-        audit_store = mommy.make(AuditStore,
-                                 status=AuditStore.SUBMITTED,
-                                 audit__audit_cycle__status=AuditCycle.ACTIVE,
-                                 user=self.auditor_user,
-                                 qa_rating=AuditStore.GOOD)
-
-        with self.assertRaises(ObjectNotFound):
-            service_moderator.complete_for_moderator(audit_store.id, self.moderator_user.id)
-
