@@ -130,7 +130,7 @@ def save(audit_store):
 def withdraw(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
-        if audit_store.status not in (AuditStore.COMPLETED, AuditStore.FAILED):
+        if audit_store.is_withdrawable():
             audit_store.status = AuditStore.WITHDRAWN
             audit_store.save()
             notify.send(

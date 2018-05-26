@@ -1,4 +1,6 @@
 from model_mommy import mommy
+from model_mommy.recipe import Recipe
+
 from audit_store.models import AuditStore
 
 from django.test import TestCase
@@ -112,3 +114,13 @@ class AuditStoreTestCase(TestCase):
     def test_is_qa_rated_returns_true_when_qa_rating_is_not_none(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.AVERAGE)
         self.assertTrue(audit_store.is_qa_rated())
+
+    def test_is_withdrawable(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_store = audit_store_recipe.make(status=status)
+            if status in AuditStore._WITHDRAWABLE_STATUSES:
+                self.assertTrue(audit_store.is_withdrawable())
+            else:
+                self.assertFalse(audit_store.is_withdrawable())

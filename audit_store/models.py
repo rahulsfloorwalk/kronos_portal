@@ -70,6 +70,8 @@ class AuditStore(Model):
         (REJECTED, "Rejected"),
     )
 
+    _WITHDRAWABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
+
     BAD = 0
     AVERAGE = 1
     GOOD = 2
@@ -125,6 +127,9 @@ class AuditStore(Model):
 
     def color(self):
         return get_color_code_by_percentage(self.percentage())
+
+    def is_withdrawable(self):
+        return self.status in self._WITHDRAWABLE_STATUSES
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()

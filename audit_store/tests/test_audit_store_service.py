@@ -67,3 +67,16 @@ class AuditStoreServiceTestCase(TestCase):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
         with self.assertRaises(AppLogicError, msg="audit store cannot be uncompleted now"):
             service.uncomplete(audit_store.id, self.manager_user)
+
+    def test_withdraw_changes_status_from_valid_state_to_withdrawn(self):
+        for status in AuditStore._WITHDRAWABLE_STATUSES:
+            audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
+            audit_store = service.withdraw(audit_store.id, self.manager_user)
+            self.assertEqual(audit_store.status, AuditStore.WITHDRAWN)
+
+    def test_withdraw_raises_when_status_is_not_valid(self):
+        invalid_statuses = set([s[0] for s in AuditStore.STATUS]) - set(AuditStore._WITHDRAWABLE_STATUSES)
+        for status in invalid_statuses:
+            audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
+            with self.assertRaises(AppLogicError, msg="audit store cannot be withdrawn now"):
+                audit_store = service.withdraw(audit_store.id, self.manager_user)
