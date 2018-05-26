@@ -1,7 +1,8 @@
 {
 	"plugins": [
 		["transform-class-properties"],
-		["syntax-dynamic-import"]
+		["syntax-dynamic-import"],
+		["dynamic-import-node"]
 	],
 	"presets": [
 		['es2015'],

@@ -40,19 +40,18 @@ describe("AUDIT_STORE_ID_QA_OK", () => {
 	});
 	it("it sets the global errors on error status", () => {
 		const initialState = {};
+		const sampleError = {
+			"non_field_errors": ["Report is not complete."],
+		};
 
 		const nextState = rootReducer(initialState, {
 			type: types.AUDIT_STORE_ID_QA_OK,
 			status: "error",
-			errors: {
-				"foo": "bar",
-			},
+			errors: sampleError,
 		});
 
 		expect(nextState).toEqual({
-			errors: {
-				"foo": "bar",
-			},
+			errors: sampleError,
 		});
 	});
 });

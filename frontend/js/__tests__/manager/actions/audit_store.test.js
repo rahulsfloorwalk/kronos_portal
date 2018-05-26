@@ -54,7 +54,7 @@ describe("qaOkAuditStore", () => {
 		const dispatch = jest.fn();
 		const thunk = qaOkAuditStore(sampleAuditStore.id);
 		const sampleServerError = {
-			"non_field_errors": ["Report is not complete"],
+			"non_field_errors": ["Report is not complete."],
 		};
 
 		$.post.mockRejectedValue({

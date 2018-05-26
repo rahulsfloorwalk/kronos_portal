@@ -1,81 +1,114 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import Alert from 'react-s-alert';
+import Alert from "react-s-alert";
 
-import Datetime from 'react-datetime';
+import Datetime from "react-datetime";
 
-import moment from 'moment';
-import { momentDateFormat, url }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat, url }  from "../../../config.js";
 
-import { fetchAuditStore, completeAuditStore, failAuditStore, withdrawAuditStore, submitAuditStore, unSubmitAuditStore, updateAuditStore, uncompleteAuditStore, acceptAuditStore, rejectAuditStore } from '../actions/audit_store.js';
-import { setAuditDate } from '../service/audit_store.js';
+import { fetchAuditStore,
+	completeAuditStore,
+	qaOkAuditStore,
+	failAuditStore,
+	withdrawAuditStore,
+	submitAuditStore,
+	unSubmitAuditStore,
+	updateAuditStore,
+	uncompleteAuditStore,
+	acceptAuditStore,
+	rejectAuditStore,
+} from "../actions/audit_store.js";
+import { setAuditDate, qaUnOk } from "../service/audit_store.js";
 
-import { FormDateInput } from '../../components/FormInput.jsx';
-import ExpandableDetails from '../../components/ExpandableDetails.jsx';
-import { Calendar, Retweet, King, File, Download } from '../../components/Icons.jsx';
-import Panel from '../../components/Panel.jsx';
-import Loading from '../../components/Loading.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import AuditStoreRating from '../../components/AuditStoreRating.jsx';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import MarkdownViewer from '../../components/MarkdownViewer.jsx';
+import { Calendar, Retweet, King, File, Download } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import AuditStoreRating from "../../components/AuditStoreRating.jsx";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import { getAuditType } from "../../utils.js";
 
-import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
+import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
 
-var AuditStoreDetails = React.createClass({
-	getInitialState: function(){
-		return {
+export class AuditStoreDetails extends React.Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string.isRequired,
+		}),
+		auditStore: PropTypes.object,
+		errors: PropTypes.shape({
+			non_field_errors: PropTypes.array,
+		}),
+		children: PropTypes.node,
+	};
+
+	constructor(props){
+		super(props);
+		this.state = {
 			auditDateLoading: false
 		};
-	},
-	componentDidMount: function(){
+	}
+
+	componentDidMount(){
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
-	},
-	withdrawButtonClicked: function(e){
+	}
+	withdrawButtonClicked = () => {
 		this.props.dispatch(withdrawAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT WITHDRAWN");
 		});
-	},
-	completeButtonClicked: function(e){
+	};
+	qaOkButtonClicked = () => {
+		this.props.dispatch(qaOkAuditStore(this.props.params.auditStoreId)).then((auditStore)=>{
+			Alert.success("REPORT MARKED QA OK");
+		});
+	};
+	qaUnOkButtonClicked = () => {
+		qaUnOk(this.props.params.auditStoreId).then((auditStore)=>{
+			this.props.dispatch(updateAuditStore(auditStore));
+			Alert.success("REPORT MOVED BACK TO QA");
+		});
+	};
+	completeButtonClicked = () => {
 		this.props.dispatch(completeAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT COMPLETED");
 		});
-	},
-	failButtonClicked: function(e){
+	};
+	failButtonClicked = () => {
 		this.props.dispatch(failAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT FAILED");
 		});
-	},
-	submitButtonClicked: function(e){
+	};
+	submitButtonClicked = () => {
 		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT SUBMITTED");
 		});
-	},
-	unSubmitButtonClicked: function(e){
+	};
+	unSubmitButtonClicked = () => {
 		this.props.dispatch(unSubmitAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT Un SUBMITTED");
 		});
-	},
-	uncompleteButtonClicked: function(e){
+	};
+	uncompleteButtonClicked = () => {
 		this.props.dispatch(uncompleteAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT Un COMPLETED");
 		});
-	},
-	acceptButtonClicked: function(e){
+	};
+	acceptButtonClicked = () => {
 		this.props.dispatch(acceptAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT ACCEPTED");
 		});
-	},
-	rejectButtonClicked: function(e){
+	};
+	rejectButtonClicked = () => {
 		this.props.dispatch(rejectAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT REJECTED");
 		});
-	},
-	auditDateChanged: function(momentDate){
+	};
+	auditDateChanged = (momentDate) => {
 		this.setState({auditDateLoading: true});
 		setAuditDate(this.props.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
 			this.props.dispatch(updateAuditStore(auditStore));
@@ -87,31 +120,40 @@ var AuditStoreDetails = React.createClass({
 		}).always(() => {
 			this.setState({auditDateLoading: false});
 		});
-	},
-	render: function(){
+	};
+	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
 
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
-		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton;
-		if (this.props.auditStore.status === 'ACKNOWLEDGED'){
+		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, qaUnOkButton;
+		if (this.props.auditStore.status === "ACKNOWLEDGED"){
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
 		}
-		if (this.props.auditStore.status === 'COMPLETED'){
+		if(this.props.auditStore.status === "SUBMITTED"){
+			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
+			qaOkButton = (<button onClick={this.qaOkButtonClicked} type="button" className="btn btn-primary">QA OK</button>);
+		}
+		if (this.props.auditStore.status === "PM_REVIEW"){
+			qaUnOkButton = (<button onClick={this.qaUnOkButtonClicked} type="button" className="btn btn-default">Move Back To QA</button>);
+			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
+		}
+		if (this.props.auditStore.status === "COMPLETED"){
 			uncompleteButton = (<button onClick={this.uncompleteButtonClicked} type="button" className="btn btn-default">Un Complete</button>);
 			acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-success">Accept</Link>);
 			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
-		if(this.props.auditStore.status === 'ASSIGNED' || this.props.auditStore.status === "ACKNOWLEDGED" || this.props.auditStore.status === 'SUBMITTED'){
+		if(this.props.auditStore.status === "ASSIGNED" || 
+			this.props.auditStore.status === "ACKNOWLEDGED" || 
+			this.props.auditStore.status === "SUBMITTED" || 
+			this.props.auditStore.status === "PM_REVIEW"
+		){
 			withdrawButton = (<button onClick={this.withdrawButtonClicked} type="button" className="btn btn-default">Withdraw</button>);
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
 		}
-		if(this.props.auditStore.status === 'SUBMITTED'){
-			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
-			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
-
+		if(this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW"){
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
 			auditDateElement = (<div className={"input-group " + hasAuditDateError + hasAuditDateSuccess}>
@@ -125,12 +167,12 @@ var AuditStoreDetails = React.createClass({
 					onChange={this.auditDateChanged}
 					value={this.props.auditStore.audit_date}
 				/>
-			</div>)
+			</div>);
 		}
 		let detailsElement = (<div className="panel-body">
 			<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
 			<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
-			</div>);
+		</div>);
 		let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
 		let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
 		let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
@@ -150,7 +192,7 @@ var AuditStoreDetails = React.createClass({
 				</ol>
 				<h2 className="page-header">
 					<File/> Audit Report
-					<a className="btn btn-default pull-right" href={url.api_base_path + 'manager/client/' + this.props.auditStore.audit.store.client.id + '/audit_store/' + this.props.auditStore.id + '/xlsx_report'}>
+					<a className="btn btn-default pull-right" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
 						<Download/> Excel Report
 					</a>
 				</h2>
@@ -208,15 +250,15 @@ var AuditStoreDetails = React.createClass({
 					{detailsElement}
 					<div className="panel-footer text-right">
 						{errorFirst}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
+						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{qaOkButton}&nbsp;{qaUnOkButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {
