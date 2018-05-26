@@ -11,16 +11,18 @@ import audit.service.audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
 
 
-def find_completed_audit_stores_for_moderator(user_id):
+def find_qa_completed_audit_stores_for_moderator(user_id):
+    # TODO: move this in to the AuditStoreQuerySet
     user = find_moderator_by_user_id(user_id)
     query_set = AuditStore.objects.filter(
         audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT),
-        status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED)
+        status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW)
     ).order_by('audit_date')
 
     return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
-def find_pending_audit_stores_for_moderator(user_id):
+def find_qa_pending_audit_stores_for_moderator(user_id):
+    # TODO: move this in to the AuditStoreQuerySet
     user = find_moderator_by_user_id(user_id)
     query_set = AuditStore.objects.filter(
         audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT),

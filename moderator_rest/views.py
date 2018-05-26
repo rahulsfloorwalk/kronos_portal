@@ -59,7 +59,7 @@ class AuditStoreCompletedView(APIView):
         'GET': [GROUP_NAME_MODERATOR],
     }
     def get(self, request):
-        audit_stores = audit_store_service.find_completed_audit_stores_for_moderator(request.user.id)
+        audit_stores = audit_store_service.find_qa_completed_audit_stores_for_moderator(request.user.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
 class AuditStorePendingView(APIView):
@@ -68,7 +68,7 @@ class AuditStorePendingView(APIView):
         'GET': [GROUP_NAME_MODERATOR],
     }
     def get(self, request):
-        audit_stores = audit_store_service.find_pending_audit_stores_for_moderator(request.user.id)
+        audit_stores = audit_store_service.find_qa_pending_audit_stores_for_moderator(request.user.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
 
