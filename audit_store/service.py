@@ -347,8 +347,8 @@ def set_audit_date(audit_store_id, audit_date):
 
         if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
             raise AppLogicError("audit date is out of range")
-        if audit_store.status != AuditStore.SUBMITTED:
-            raise AppLogicError("application cannot be approved right now")
+        if audit_store.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
+            raise AppLogicError("audit date cannot be set right now")
 
         audit_store.audit_date = audit_date
         audit_store.save()

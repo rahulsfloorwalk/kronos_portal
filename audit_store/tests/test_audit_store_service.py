@@ -1,3 +1,5 @@
+from datetime import date
+
 from model_mommy import mommy
 from audit_store.models import AuditStore
 
@@ -80,3 +82,59 @@ class AuditStoreServiceTestCase(TestCase):
             audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
             with self.assertRaises(AppLogicError, msg="audit store cannot be withdrawn now"):
                 audit_store = service.withdraw(audit_store.id, self.manager_user)
+
+    def test_set_audit_date_sets_audit_date_when_status_is_submitted(self):
+        start_date = date(2018, 5, 1)
+        end_date = date(2018, 5, 31)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.SUBMITTED,
+            user=self.auditor_user,
+            audit__audit_cycle__start_date=start_date,
+            audit__audit_cycle__end_date=end_date,
+        )
+        audit_date = date(2018, 5, 15)
+        audit_store = service.set_audit_date(audit_store.id, audit_date)
+        self.assertEqual(audit_store.audit_date, audit_date)
+
+    def test_set_audit_date_sets_audit_date_when_status_is_pm_review(self):
+        start_date = date(2018, 5, 1)
+        end_date = date(2018, 5, 31)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.PM_REVIEW,
+            user=self.auditor_user,
+            audit__audit_cycle__start_date=start_date,
+            audit__audit_cycle__end_date=end_date,
+        )
+        audit_date = date(2018, 5, 15)
+        audit_store = service.set_audit_date(audit_store.id, audit_date)
+        self.assertEqual(audit_store.audit_date, audit_date)
+
+    def test_set_audit_date_raises_when_audit_date_is_out_of_range(self):
+        start_date = date(2018, 5, 1)
+        end_date = date(2018, 5, 31)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.SUBMITTED,
+            user=self.auditor_user,
+            audit__audit_cycle__start_date=start_date,
+            audit__audit_cycle__end_date=end_date,
+        )
+        audit_date = date(2018, 6, 15)
+        with self.assertRaises(AppLogicError, msg="audit date is out of range"):
+            service.set_audit_date(audit_store.id, audit_date)
+
+    def test_set_audit_date_raises_when_status_is_not_submitted_or_pm_review(self):
+        start_date = date(2018, 5, 1)
+        end_date = date(2018, 5, 31)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle__start_date=start_date,
+            audit__audit_cycle__end_date=end_date,
+        )
+        audit_date = date(2018, 5, 15)
+        with self.assertRaises(AppLogicError, msg="audit date cannot be set right now"):
+            service.set_audit_date(audit_store.id, audit_date)
