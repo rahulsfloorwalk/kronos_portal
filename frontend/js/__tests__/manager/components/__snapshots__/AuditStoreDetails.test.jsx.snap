@@ -2054,7 +2054,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 4`] = `
         onClick={[Function]}
         type="button"
       >
-        Move Back To QA
+        Revert to QA
       </button>
        
       <button

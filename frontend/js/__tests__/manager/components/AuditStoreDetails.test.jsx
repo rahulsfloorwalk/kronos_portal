@@ -138,6 +138,23 @@ describe("<AuditStoreDetails/>", () => {
 			done();
 		});
 	});
+
+	it("dispatches the PM REVERT request action when PM REVERT button is clicked", (done) => {
+		sampleAuditStore.status = "PM_REVIEW";
+		const r = shallow(<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
+		let qaOkButton = r.find("div.panel-footer > button").at(1);
+		expect(qaOkButton.length).toEqual(1);
+		expect(qaOkButton.text()).toEqual("Revert to QA");
+		qaOkButton.simulate("click");
+		setTimeout(() => {
+			expect(store.getActions()[1]).toEqual({
+				type: types.AUDIT_STORE_ID_PM_REVERT,
+				status: "request",
+				auditStoreId: sampleParams.auditStoreId,
+			});
+			done();
+		});
+	});
 });
 
 afterAll(() => {

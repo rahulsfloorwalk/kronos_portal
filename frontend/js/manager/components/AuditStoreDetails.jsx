@@ -21,8 +21,9 @@ import { fetchAuditStore,
 	uncompleteAuditStore,
 	acceptAuditStore,
 	rejectAuditStore,
+	pmRevertAuditStore,
 } from "../actions/audit_store.js";
-import { setAuditDate, qaUnOk } from "../service/audit_store.js";
+import { setAuditDate } from "../service/audit_store.js";
 
 import { Calendar, Retweet, King, File, Download } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -64,12 +65,11 @@ export class AuditStoreDetails extends React.Component{
 	};
 	qaOkButtonClicked = () => {
 		this.props.dispatch(qaOkAuditStore(this.props.params.auditStoreId)).then((auditStore)=>{
-			Alert.success("REPORT MARKED QA OK");
+			Alert.success("REPORT FORWARDED TO PM REVIEW");
 		});
 	};
-	qaUnOkButtonClicked = () => {
-		qaUnOk(this.props.params.auditStoreId).then((auditStore)=>{
-			this.props.dispatch(updateAuditStore(auditStore));
+	pmRevertButtonClicked = () => {
+		this.props.dispatch(pmRevertAuditStore(this.props.params.auditStoreId)).then((auditStore)=>{
 			Alert.success("REPORT MOVED BACK TO QA");
 		});
 	};
@@ -128,7 +128,7 @@ export class AuditStoreDetails extends React.Component{
 
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
-		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, qaUnOkButton;
+		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, pmRevertButton;
 		if (this.props.auditStore.status === "ACKNOWLEDGED"){
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
 		}
@@ -137,7 +137,7 @@ export class AuditStoreDetails extends React.Component{
 			qaOkButton = (<button onClick={this.qaOkButtonClicked} type="button" className="btn btn-primary">QA OK</button>);
 		}
 		if (this.props.auditStore.status === "PM_REVIEW"){
-			qaUnOkButton = (<button onClick={this.qaUnOkButtonClicked} type="button" className="btn btn-default">Move Back To QA</button>);
+			pmRevertButton = (<button onClick={this.pmRevertButtonClicked} type="button" className="btn btn-default">Revert to QA</button>);
 			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
 		}
 		if (this.props.auditStore.status === "COMPLETED"){
@@ -250,7 +250,7 @@ export class AuditStoreDetails extends React.Component{
 					{detailsElement}
 					<div className="panel-footer text-right">
 						{errorFirst}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{qaOkButton}&nbsp;{qaUnOkButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
+						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{qaOkButton}&nbsp;{pmRevertButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
