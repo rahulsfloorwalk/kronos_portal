@@ -13,6 +13,13 @@ jest.mock("react-dom", () => ({
 	findDOMNode: () => {},
 }));
 
+let dateNowSpy;
+
+beforeAll(() => {
+	// Lock Time
+	dateNowSpy = jest.spyOn(Date, "now").mockImplementation(() => 1527292800000);
+});
+
 const middlewares = [ReduxThunk];
 const mockStore = configureStore(middlewares);
 
@@ -131,4 +138,10 @@ describe("<AuditStoreDetails/>", () => {
 			done();
 		});
 	});
+});
+
+afterAll(() => {
+	// Unlock Time
+	dateNowSpy.mockReset();
+	dateNowSpy.mockRestore();
 });
