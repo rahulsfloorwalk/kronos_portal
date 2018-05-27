@@ -194,7 +194,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
           </span>
            
            
-           
         </div>
       </div>
     </div>
@@ -460,7 +459,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
           <span>
             
           </span>
-           
            
            
         </div>
@@ -730,7 +728,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
           </span>
            
            
-           
         </div>
       </div>
     </div>
@@ -998,7 +995,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
           </span>
            
            
-           
         </div>
       </div>
     </div>
@@ -1262,7 +1258,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
           <span>
             
           </span>
-           
            
            
         </div>
@@ -1547,7 +1542,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           </span>
            
            
-           
         </div>
       </div>
     </div>
@@ -1626,6 +1620,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -1818,18 +1819,10 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             onClick={[Function]}
             type="button"
           >
-            Submit
+            Force Submit
           </button>
            
            
-           
-          <button
-            className="btn btn-danger"
-            onClick={[Function]}
-            type="button"
-          >
-            Fail
-          </button>
         </div>
       </div>
     </div>
@@ -1908,6 +1901,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -2097,14 +2097,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           </span>
            
            
-           
-          <button
-            className="btn btn-danger"
-            onClick={[Function]}
-            type="button"
-          >
-            Fail
-          </button>
         </div>
       </div>
     </div>
@@ -2370,7 +2362,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           <span>
             
           </span>
-           
            
            
         </div>
@@ -2640,7 +2631,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           </span>
            
            
-           
         </div>
       </div>
     </div>
@@ -2906,7 +2896,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           <span>
             
           </span>
-           
            
            
         </div>
@@ -3176,7 +3165,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           </span>
            
            
-           
         </div>
       </div>
     </div>
@@ -3255,6 +3243,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -3850,11 +3845,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           </span>
            
           <button
-            className="btn btn-warning"
+            className="btn btn-default"
             onClick={[Function]}
             type="button"
           >
-            Un Submit
+            Revert to Auditor
           </button>
            
           <button
@@ -3862,15 +3857,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             onClick={[Function]}
             type="button"
           >
-            QA OK
-          </button>
-           
-          <button
-            className="btn btn-danger"
-            onClick={[Function]}
-            type="button"
-          >
-            Fail
+            Forward to PM
           </button>
         </div>
       </div>
@@ -4169,7 +4156,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
           <span>
             
           </span>
-           
            
            
         </div>

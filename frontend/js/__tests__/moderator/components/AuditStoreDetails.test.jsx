@@ -129,9 +129,9 @@ describe("<AuditStoreDetails/>", () => {
 		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
 			r.update();
-			const qaOkButton = r.find("button").at(1);
+			const qaOkButton = r.find("div.panel-footer > button").at(1);
 			expect(qaOkButton.length).toEqual(1);
-			expect(qaOkButton.text()).toEqual("QA OK");
+			expect(qaOkButton.text()).toEqual("Forward to PM");
 			qaOkButton.simulate('click');
 			expect(qaOk).toBeCalledWith(sampleParams.auditStoreId);
 			done();
