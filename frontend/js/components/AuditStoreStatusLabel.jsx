@@ -11,6 +11,8 @@ export default React.createClass({
 			case "ACKNOWLEDGED":
 				return "warning2";
 			case "SUBMITTED":
+				return "primary1";
+			case "PM_REVIEW":
 				return "primary";
 			case "COMPLETED":
 				return "success";

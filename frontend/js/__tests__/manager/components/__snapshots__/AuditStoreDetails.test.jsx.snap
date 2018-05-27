@@ -1220,7 +1220,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 3`] = `
           </td>
           <th>
             <span
-              className="label label-primary"
+              className="label label-primary1"
               style={
                 Object {
                   "fontSize": "100%",
@@ -1972,7 +1972,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 4`] = `
           </td>
           <th>
             <span
-              className="label label-unknown status type PM_REVIEW - string"
+              className="label label-primary"
               style={
                 Object {
                   "fontSize": "100%",

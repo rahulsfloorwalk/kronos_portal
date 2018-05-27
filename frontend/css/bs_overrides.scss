@@ -4,6 +4,7 @@ $label_success_base : #5cb85c;
 $label_danger_base : #d9534f;
 $label_warning_base: #F0AD4E;
 
+.label-primary1 { background-color: lighten($label_primary_base, 20%); }
 .label-primary2 { background-color: darken($label_primary_base, 20%); }
 .label-success2 { background-color: darken($label_success_base, 20%); }
 .label-danger2 { background-color: darken($label_danger_base, 20%); }
