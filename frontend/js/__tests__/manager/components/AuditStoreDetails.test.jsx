@@ -125,9 +125,9 @@ describe("<AuditStoreDetails/>", () => {
 	it("dispatches the qa ok request action when QA OK button is clicked", (done) => {
 		sampleAuditStore.status = "SUBMITTED";
 		const r = shallow(<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
-		let qaOkButton = r.find("div.panel-footer > button").at(2);
+		let qaOkButton = r.find("div.panel-footer > button").at(1);
 		expect(qaOkButton.length).toEqual(1);
-		expect(qaOkButton.text()).toEqual("QA OK");
+		expect(qaOkButton.text()).toEqual("Forward to PM");
 		qaOkButton.simulate("click");
 		setTimeout(() => {
 			expect(store.getActions()[1]).toEqual({
@@ -142,7 +142,7 @@ describe("<AuditStoreDetails/>", () => {
 	it("dispatches the PM REVERT request action when PM REVERT button is clicked", (done) => {
 		sampleAuditStore.status = "PM_REVIEW";
 		const r = shallow(<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
-		let qaOkButton = r.find("div.panel-footer > button").at(1);
+		let qaOkButton = r.find("div.panel-footer > button").at(0);
 		expect(qaOkButton.length).toEqual(1);
 		expect(qaOkButton.text()).toEqual("Revert to QA");
 		qaOkButton.simulate("click");

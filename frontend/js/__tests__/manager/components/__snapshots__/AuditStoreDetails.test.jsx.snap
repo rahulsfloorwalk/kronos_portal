@@ -53,15 +53,31 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 1`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+      </div>
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -247,24 +263,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 1`] = `
     >
        
        
-      <button
-        className="btn btn-default"
-        onClick={[Function]}
-        type="button"
-      >
-        Withdraw
-      </button>
        
        
-       
-       
-      <button
-        className="btn btn-danger"
-        onClick={[Function]}
-        type="button"
-      >
-        Fail
-      </button>
        
        
        
@@ -367,15 +367,31 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 2`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+      </div>
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -564,28 +580,12 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 2`] = `
         onClick={[Function]}
         type="button"
       >
-        Submit
-      </button>
-       
-       
-      <button
-        className="btn btn-default"
-        onClick={[Function]}
-        type="button"
-      >
-        Withdraw
+        Force Submit
       </button>
        
        
        
        
-      <button
-        className="btn btn-danger"
-        onClick={[Function]}
-        type="button"
-      >
-        Fail
-      </button>
        
        
        
@@ -688,15 +688,31 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 3`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+      </div>
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -1288,19 +1304,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 3`] = `
     >
        
       <button
-        className="btn btn-warning"
-        onClick={[Function]}
-        type="button"
-      >
-        Un Submit
-      </button>
-       
-      <button
         className="btn btn-default"
         onClick={[Function]}
         type="button"
       >
-        Withdraw
+        Revert to Auditor
       </button>
        
       <button
@@ -1308,18 +1316,10 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 3`] = `
         onClick={[Function]}
         type="button"
       >
-        QA OK
+        Forward to PM
       </button>
        
        
-       
-      <button
-        className="btn btn-danger"
-        onClick={[Function]}
-        type="button"
-      >
-        Fail
-      </button>
        
        
        
@@ -1440,15 +1440,31 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 4`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+      </div>
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -2040,14 +2056,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 4`] = `
     >
        
        
-      <button
-        className="btn btn-default"
-        onClick={[Function]}
-        type="button"
-      >
-        Withdraw
-      </button>
-       
        
       <button
         className="btn btn-default"
@@ -2058,19 +2066,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 4`] = `
       </button>
        
       <button
-        className="btn btn-success"
+        className="btn btn-primary"
         onClick={[Function]}
         type="button"
       >
-        Complete
-      </button>
-       
-      <button
-        className="btn btn-danger"
-        onClick={[Function]}
-        type="button"
-      >
-        Fail
+        Forward to Client
       </button>
        
        
@@ -2174,15 +2174,20 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 5`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -2371,14 +2376,12 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 5`] = `
        
        
        
-       
-       
       <button
         className="btn btn-default"
         onClick={[Function]}
         type="button"
       >
-        Un Complete
+        Revert from Client
       </button>
        
       <a
@@ -2495,15 +2498,20 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 6`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -2694,8 +2702,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 6`] = `
        
        
        
-       
-       
     </div>
   </div>
   <div>
@@ -2795,15 +2801,20 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 7`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -2994,8 +3005,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 7`] = `
        
        
        
-       
-       
     </div>
   </div>
   <div>
@@ -3095,15 +3104,20 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 8`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -3294,8 +3308,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 8`] = `
        
        
        
-       
-       
     </div>
   </div>
   <div>
@@ -3395,15 +3407,20 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 9`] = `
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -3594,8 +3611,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for all the statuses 9`] = `
        
        
        
-       
-       
     </div>
   </div>
   <div>
@@ -3695,15 +3710,20 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -3894,8 +3914,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
        
        
        
-       
-       
     </div>
   </div>
   <div>
@@ -3995,15 +4013,20 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       className="glyphicon glyphicon-file"
     />
      Audit Report
-    <a
-      className="btn btn-default pull-right"
-      href="/manager/client/6/audit_store/5/xlsx_report"
+    <div
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-download"
-      />
-       Excel Report
-    </a>
+      <a
+        className="btn btn-default"
+        href="/manager/client/6/audit_store/5/xlsx_report"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Excel Report
+      </a>
+       
+    </div>
   </h2>
   <div
     className="panel panel-default"
@@ -4185,8 +4208,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     <div
       className="panel-footer text-right"
     >
-       
-       
        
        
        

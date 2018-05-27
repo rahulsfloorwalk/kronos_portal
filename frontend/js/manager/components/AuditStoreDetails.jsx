@@ -25,7 +25,8 @@ import { fetchAuditStore,
 } from "../actions/audit_store.js";
 import { setAuditDate } from "../service/audit_store.js";
 
-import { Calendar, Retweet, King, File, Download } from "../../components/Icons.jsx";
+import { Calendar, Retweet, King, File, Download, ThumbsDown } from "../../components/Icons.jsx";
+import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import AuditStoreRating from "../../components/AuditStoreRating.jsx";
@@ -128,20 +129,27 @@ export class AuditStoreDetails extends React.Component{
 
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
-		let withdrawButton, failButton, completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, pmRevertButton;
+		let moreOptionsDropdown;
+		let completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, pmRevertButton;
 		if (this.props.auditStore.status === "ACKNOWLEDGED"){
-			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
+			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">
+				Force Submit
+			</button>);
 		}
 		if(this.props.auditStore.status === "SUBMITTED"){
-			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
-			qaOkButton = (<button onClick={this.qaOkButtonClicked} type="button" className="btn btn-primary">QA OK</button>);
+			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-default">
+				Revert to Auditor
+			</button>);
+			qaOkButton = (<button onClick={this.qaOkButtonClicked} type="button" className="btn btn-primary">
+				Forward to PM
+			</button>);
 		}
 		if (this.props.auditStore.status === "PM_REVIEW"){
 			pmRevertButton = (<button onClick={this.pmRevertButtonClicked} type="button" className="btn btn-default">Revert to QA</button>);
-			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
+			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-primary">Forward to Client</button>);
 		}
 		if (this.props.auditStore.status === "COMPLETED"){
-			uncompleteButton = (<button onClick={this.uncompleteButtonClicked} type="button" className="btn btn-default">Un Complete</button>);
+			uncompleteButton = (<button onClick={this.uncompleteButtonClicked} type="button" className="btn btn-default">Revert from Client</button>);
 			acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-success">Accept</Link>);
 			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
@@ -150,8 +158,25 @@ export class AuditStoreDetails extends React.Component{
 			this.props.auditStore.status === "SUBMITTED" || 
 			this.props.auditStore.status === "PM_REVIEW"
 		){
-			withdrawButton = (<button onClick={this.withdrawButtonClicked} type="button" className="btn btn-default">Withdraw</button>);
-			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
+			moreOptionsDropdown = (<div className="btn-group">
+				<button type="button" className="btn btn-default"
+					onClick={(e)=>{e.stopPropagation(); this.moreOptionsDropdown && this.moreOptionsDropdown.toggle();}}>
+					More Options
+				</button>
+				<DropDown ref={(d) => this.moreOptionsDropdown=d}>
+					<li>
+						<a onClick={this.failButtonClicked}>
+							<ThumbsDown/> Fail Report
+						</a>
+					</li>
+					<DropDownDivider/>
+					<li>
+						<a onClick={this.withdrawButtonClicked}>
+							Withdraw Report
+						</a>
+					</li>
+				</DropDown>
+			</div>);
 		}
 		if(this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW"){
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
@@ -192,9 +217,13 @@ export class AuditStoreDetails extends React.Component{
 				</ol>
 				<h2 className="page-header">
 					<File/> Audit Report
-					<a className="btn btn-default pull-right" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
-						<Download/> Excel Report
-					</a>
+					<div className="pull-right">
+						<a className="btn btn-default" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
+							<Download/> Excel Report
+						</a>
+						&nbsp;
+						{moreOptionsDropdown}
+					</div>
 				</h2>
 				<div className="panel panel-default">
 					<div className="panel-heading">
@@ -250,7 +279,7 @@ export class AuditStoreDetails extends React.Component{
 					{detailsElement}
 					<div className="panel-footer text-right">
 						{errorFirst}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{withdrawButton}&nbsp;{qaOkButton}&nbsp;{pmRevertButton}&nbsp;{completeButton}&nbsp;{failButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
+						{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}&nbsp;{pmRevertButton}&nbsp;{completeButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
