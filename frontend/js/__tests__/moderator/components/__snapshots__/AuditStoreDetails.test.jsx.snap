@@ -1,0 +1,730 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 2`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 3`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 4`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 5`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 6`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 7`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 8`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 9`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all QA ratings 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all QA ratings 2`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly for all QA ratings 3`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already rated 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <span>
+                  not rated
+                </span>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;

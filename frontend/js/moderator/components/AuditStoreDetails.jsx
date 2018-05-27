@@ -1,69 +1,75 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router";
 
-import Datetime from 'react-datetime';
+import Datetime from "react-datetime";
 
-import moment from 'moment';
-import { momentDateFormat, url }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { findById, complete, fail, unsubmit, submit, setAuditDate } from '../service/audit_store.js';
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate } from "../service/audit_store.js";
 
-import { FormDateInput } from '../../components/FormInput.jsx';
-import ExpandableDetails from '../../components/ExpandableDetails.jsx';
-import { Calendar, Retweet, King, File, Download, Envelope, Earphone } from '../../components/Icons.jsx';
-import Panel from '../../components/Panel.jsx';
-import Loading from '../../components/Loading.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import MarkdownViewer from '../../components/MarkdownViewer.jsx';
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import AuditStoreRating from '../../components/AuditStoreRating.jsx';
+import { Calendar, File, Envelope, Earphone } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import AuditStoreRating from "../../components/AuditStoreRating.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import AttachmentBox from "./AttachmentBox.jsx";
+import AuditStoreSections from "./AuditStoreSections.jsx";
 
-import AttachmentBox from './AttachmentBox.jsx';
-import AuditStoreSections from './AuditStoreSections.jsx';
+export default class AuditStoreDetails extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string.isRequired,
+		}).isRequired,
+		children: PropTypes.node,
+		location: PropTypes.shape({
+			pathname: PropTypes.string.isRequired,
+		}).isRequired,
+	};
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
+	constructor(props){
+		super(props);
+		this.state = {
 			auditStore: null,
 			auditDateLoading: false,
 			auditDateSuccess: false,
 			auditDateError: false,
 			errorMessage: "",
 		};
-	},
-	setAuditStore: function(auditStore){
+	}
+	setAuditStore = (auditStore) => {
 		this.setState({
 			auditStore
 		});
-	},
-	componentDidMount: function(){
+	};
+	componentDidMount(){
 		findById(this.props.params.auditStoreId).then(this.setAuditStore);
-	},
-	componentWillReceiveProps: function(){
-		findById(this.props.params.auditStoreId).then(this.setAuditStore);
-	},
-	completeButtonClicked: function(e){
-		complete(this.props.params.auditStoreId).then(this.setAuditStore, (err) => {
+	}
+	componentWillReceiveProps(nextProps){
+		findById(nextProps.params.auditStoreId).then(this.setAuditStore);
+	}
+	qaOkButtonClicked = () => {
+		qaOk(this.props.params.auditStoreId).then(this.setAuditStore, (err) => {
 			if(err.responseJSON && err.responseJSON.non_field_errors){
 				this.setState({
 					errorMessage: err.responseJSON.non_field_errors[0]
 				});
 			}
 		});
-	},
-	failButtonClicked: function(e){
+	};
+	failButtonClicked = () => {
 		fail(this.props.params.auditStoreId).then(this.setAuditStore);
-	},
-	submitButtonClicked: function(e){
+	};
+	submitButtonClicked = () => {
 		submit(this.props.params.auditStoreId).then(this.setAuditStore);
-	},
-	unSubmitButtonClicked: function(e){
+	};
+	unSubmitButtonClicked = () => {
 		unsubmit(this.props.params.auditStoreId).then(this.setAuditStore);
-	},
-	auditDateChanged: function(momentDate){
+	};
+	auditDateChanged = (momentDate) => {
 		this.setState({auditDateLoading: true});
 		setAuditDate(this.state.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
 			this.setAuditStore(auditStore);
@@ -73,24 +79,24 @@ export default React.createClass({
 		}).always(() => {
 			this.setState({auditDateLoading: false});
 		});
-	},
-	render: function(){
+	};
+	render(){
 		if(! this.state.auditStore){
 			return <Loading/>;
 		}
 
 		let auditDateElement = moment(this.state.auditStore.audit_date).format(momentDateFormat);
 
-		let failButton, completeButton, unSubmitButton, submitButton;
-		if (this.state.auditStore.status === 'ACKNOWLEDGED'){
+		let failButton, qaOkButton, unSubmitButton, submitButton;
+		if (this.state.auditStore.status === "ACKNOWLEDGED"){
 			submitButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary">Submit</button>);
 		}
-		if(this.state.auditStore.status === 'ASSIGNED' || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === 'SUBMITTED'){
+		if(this.state.auditStore.status === "ASSIGNED" || this.state.auditStore.status === "ACKNOWLEDGED" || this.state.auditStore.status === "SUBMITTED"){
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-danger">Fail</button>);
 		}
-		if(this.state.auditStore.status === 'SUBMITTED'){
+		if(this.state.auditStore.status === "SUBMITTED"){
 			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-warning">Un Submit</button>);
-			completeButton = (<button onClick={this.completeButtonClicked} type="button" className="btn btn-success">Complete</button>);
+			qaOkButton = (<button onClick={this.qaOkButtonClicked} type="button" className="btn btn-primary">QA OK</button>);
 
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
@@ -105,7 +111,7 @@ export default React.createClass({
 					onChange={this.auditDateChanged}
 					value={this.state.auditStore.audit_date}
 				/>
-			</div>)
+			</div>);
 		}
 		let auditorPhoneLink = (<a href={`tel:${this.state.auditStore.user.profileinfo.mobile_number}`}>{this.state.auditStore.user.profileinfo.mobile_number}</a>);
 		let auditorEmailLink = (<a href={`mailto:${this.state.auditStore.user.email}`}>{this.state.auditStore.user.email}</a>);
@@ -186,7 +192,7 @@ export default React.createClass({
 					</table>
 					<div className="panel-footer text-right">
 						{errorMessageElement}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{completeButton}&nbsp;{failButton}
+						{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}&nbsp;{failButton}
 					</div>
 				</div>
 				</div>
@@ -204,6 +210,6 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 

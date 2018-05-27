@@ -1,0 +1,124 @@
+import React from "react";
+import { shallow } from "enzyme";
+import renderer from "react-test-renderer";
+
+import AuditStoreDetails from "../../../moderator/components/AuditStoreDetails";
+import { findById, qaOk } from "../../../moderator/service/audit_store";
+
+jest.mock("../../../moderator/service/audit_store");
+
+describe("<AuditStoreDetails/>", () => {
+	const sampleParams = {
+		auditStoreId: "5",
+	};
+
+	const sampleLocation = {
+		pathname: "foo/bar",
+	};
+
+	const sampleClient = {
+		id: 6,
+		name: "Client Name",
+	};
+
+	const sampleAuditStore = {
+		id: parseInt(sampleParams.auditStoreId),
+		user: {
+			profileinfo: {
+				first_name: "John",
+				last_name: "Doe",
+			}
+		},
+		audit_date: "2018-09-02",
+		qa_rating: null,
+		audit: {
+			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",
+			audit_cycle: {
+				post_approval_description: "Conduct an Audit - Post Approval - Audit Cycle Description",
+				client: sampleClient,
+			},
+			store: {
+				name: "Store Name",
+				client: sampleClient,
+				city: {
+					id: 1,
+					name: "Nagpur",
+				},
+			},
+		},
+	};
+
+	it("is rendered correctly when the AuditStore is loading", () => {
+		findById.mockReturnValue(new Promise(() => {}));
+		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
+
+	it("is rendered correctly when AuditStore is not rated", (done) => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		setTimeout(() => {
+			expect(r.toJSON()).toMatchSnapshot();
+			done();
+		});
+	});
+
+	it("is rendered correctly when AuditStore is already rated", (done) => {
+		sampleAuditStore.qa_rating = 1;
+		findById.mockResolvedValue(sampleAuditStore);
+		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		setTimeout(() => {
+			expect(r.toJSON()).toMatchSnapshot();
+			done();
+		});
+	});
+
+	it("is rendered correctly for all QA ratings", () => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const ratings = [ 0, 1, 2 ];
+		for( const rt of ratings){
+			sampleAuditStore.qa_rating = rt;
+			const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+			expect(r.toJSON()).toMatchSnapshot();
+		}
+	});
+
+	it("is rendered correctly for all AuditStore statuses", () => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const statuses = [
+			"ASSIGNED",
+			"ACKNOWLEDGED",
+			"SUBMITTED",
+			"PM_REVIEW",
+			"COMPLETED",
+			"ACCEPTED",
+			"REJECTED",
+			"WITHDRAWN",
+			"FAILED",
+		];
+		for( const s of statuses){
+			sampleAuditStore.status = s;
+			const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+			expect(r.toJSON()).toMatchSnapshot();
+		}
+	});
+
+	it("calls qaOk when QA OK button is clicked", (done) => {
+		sampleAuditStore.status = "SUBMITTED";
+		sampleAuditStore.qa_rating = 2;
+		findById.mockResolvedValue(sampleAuditStore);
+		qaOk.mockResolvedValue(Object.assign({}, sampleAuditStore, {
+			status: "PM_REVIEW",
+		}));
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		setTimeout(() => {
+			r.update();
+			const qaOkButton = r.find("button").at(1);
+			expect(qaOkButton.length).toEqual(1);
+			expect(qaOkButton.text()).toEqual("QA OK");
+			qaOkButton.simulate('click');
+			expect(qaOk).toBeCalledWith(sampleParams.auditStoreId);
+			done();
+		});
+	});
+});
