@@ -240,7 +240,7 @@ class AuditStore(Model):
     @atomic
     def rate(self, rating):
         if self.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
-            raise AppLogicError("Report status is not QA 2")
+            raise AppLogicError("Report cannot be rated now")
 
         if rating not in (AuditStore.BAD, AuditStore.AVERAGE, AuditStore.GOOD):
             raise AppLogicError("Invalid Rating")

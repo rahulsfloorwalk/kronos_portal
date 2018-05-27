@@ -99,7 +99,7 @@ class AuditStoreTestCase(TestCase):
 
     def test_rate_raises_when_report_is_not_submitted_or_qa_ok(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
-        with self.assertRaises(AppLogicError, msg="Report status is not QA 2"):
+        with self.assertRaises(AppLogicError, msg="Report cannot be rated now"):
             audit_store.rate(AuditStore.BAD)
 
     def test_rate_raises_when_rating_is_invalid(self):
