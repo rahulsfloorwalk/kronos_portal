@@ -92,6 +92,61 @@ export function completeAuditStore(auditStoreId){
 	};
 };
 
+export function pmRevertAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_PM_REVERT,
+			status: 'request',
+			auditStoreId
+		});
+
+		let promise = $.post(url.api_base_path + `manager/audit_store/${auditStoreId}/pm_revert`);
+		promise.then(function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_PM_REVERT,
+				status: 'success',
+				auditStore
+			});
+		}, function(err){
+			dispatch({
+				type: types.AUDIT_STORE_ID_PM_REVERT,
+				status: 'error',
+				errors: err.responseJSON || {}
+			});
+		});
+
+		return promise;
+	};
+};
+
+export function qaOkAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_QA_OK,
+			status: 'request',
+			auditStoreId
+		});
+
+		let promise = $.post(url.api_base_path + `manager/audit_store/${auditStoreId}/qa_ok`);
+		promise.then(function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_QA_OK,
+				status: 'success',
+				auditStore
+			});
+		}, function(err){
+			dispatch({
+				type: types.AUDIT_STORE_ID_QA_OK,
+				status: 'error',
+				errors: err.responseJSON || {}
+			});
+		});
+
+		return promise;
+		//TODO: Handle error
+	};
+};
+
 export function uncompleteAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
