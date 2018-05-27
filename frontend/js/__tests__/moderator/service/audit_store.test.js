@@ -1,4 +1,4 @@
-import { findById, rate, complete } from "../../../moderator/service/audit_store";
+import { findById, rate, qaOk } from "../../../moderator/service/audit_store";
 
 jest.mock("jquery", () => ({
 	ajax: jest.fn(),
@@ -25,9 +25,9 @@ describe("rate", () => {
 	});
 });
 
-describe("complete", () => {
-	it("calls the complete url", () => {
-		complete(5);
-		expect($.post).toBeCalledWith("/moderator/audit_store/5/complete");
+describe("qaOk", () => {
+	it("calls the qa_ok url", () => {
+		qaOk(5);
+		expect($.post).toBeCalledWith("/moderator/audit_store/5/qa_ok");
 	});
 });
