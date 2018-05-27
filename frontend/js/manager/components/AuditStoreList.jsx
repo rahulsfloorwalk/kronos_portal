@@ -138,26 +138,27 @@ var AuditStoreTable = React.createClass({
   },
 });
 
-var AuditStoreList = React.createClass({
-	getInitialState: function(){
-		return {
+class AuditStoreList extends Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			auditStores: [],
-			selectedClientUserId: null,
-			selectedStatus: null,
+			selectedClientUserId: "",
+			selectedStatus: "",
 			loading: false,
 			moderators: [],
 		};
-	},
-	setLoading: function(loading){
+	}
+	setLoading = (loading) => {
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
-	},
-	reloadReports: function(auditCycleId){
+	};
+	reloadReports = (auditCycleId) => {
 		this.setLoading(true);
 		findAuditStoresByAuditCycle(auditCycleId).then(auditStores => {
 			this.setState({auditStores});
 		}).always(()=>this.setLoading(false));
-	},
-	componentDidMount: function(){
+	};
+	componentDidMount(){
 		this.reloadReports(this.props.params.auditCycleId);
 		if(this.props.auditCycle){
 			this.props.dispatch(fetchClientUsers(this.props.auditCycle.client.id));
@@ -165,26 +166,26 @@ var AuditStoreList = React.createClass({
 		findModerators().then((moderators) => {
 			this.setState({ moderators });
 		});
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+	componentWillReceiveProps(nextProps){
 		if(nextProps.auditCycle && ! this.props.auditCycle){
 			this.props.dispatch(fetchClientUsers(nextProps.auditCycle.client.id));
 		}
 		if(nextProps.params.auditCycleId !== this.props.params.auditCycleId || (nextProps.location.state && nextProps.location.state.reload)){
 			this.reloadReports(nextProps.params.auditCycleId);
 		}
-	},
-	clientUserChanged: function(e){
+	}
+	clientUserChanged = (e) => {
 		this.setState({
 			selectedClientUserId: e.target.value
 		});
-	},
-	statusChanged: function(e){
+	};
+	statusChanged = (e) => {
 		this.setState({
 			selectedStatus: e.target.value
 		});
-	},
-	auditStoreUpdated: function(auditStore){
+	};
+	auditStoreUpdated = (auditStore) => {
 		let i = this.state.auditStores.findIndex(as => as.id === auditStore.id);
 		if( i !== -1){
 			let auditStores = this.state.auditStores;
@@ -193,16 +194,16 @@ var AuditStoreList = React.createClass({
 				auditStores: auditStores,
 			});
 		}
-	},
-	acceptAllClicked: function(){
+	};
+	acceptAllClicked = () => {
 		if(confirm("Accept all reports with default Audit Fees and Reimbursement?")){
 			acceptAllReports(this.props.params.auditCycleId).then((count) => {
 				Alert.success(`${count} REPORTS ACCEPTED`);
 				this.reloadReports(this.props.params.auditCycleId);
 			});
 		}
-	},
-  render: function(){
+	};
+  render(){
 	  let clientUserRows = [];
 	  for( let clientUserId in this.props.clientUsers){
 		  clientUserRows.push(<option key={this.props.clientUsers[clientUserId].id} value={this.props.clientUsers[clientUserId].id}>{this.props.clientUsers[clientUserId].full_name}</option>);
@@ -268,6 +269,7 @@ var AuditStoreList = React.createClass({
 	    <option value="ASSIGNED">{getAuditStoreStatus("ASSIGNED")}</option>
 	    <option value="ACKNOWLEDGED">{getAuditStoreStatus("ACKNOWLEDGED")}</option>
 	    <option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
+	    <option value="PM_REVIEW">{getAuditStoreStatus("PM_REVIEW")}</option>
 	    <option value="WITHDRAWN">{getAuditStoreStatus("WITHDRAWN")}</option>
 	    <option value="COMPLETED">{getAuditStoreStatus("COMPLETED")}</option>
 	    <option value="FAILED">{getAuditStoreStatus("FAILED")}</option>
@@ -284,8 +286,8 @@ var AuditStoreList = React.createClass({
         {this.props.children}
       </div>
     );
-  },
-});
+  }
+}
 
 var mapStoreToProps = function(store, ownProps){
   return{
@@ -295,4 +297,4 @@ var mapStoreToProps = function(store, ownProps){
 }
 export default ReactRedux.connect(mapStoreToProps)(AuditStoreList);
 
-export { AuditStoreTable };
+export { AuditStoreTable, AuditStoreList };
