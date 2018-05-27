@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Link } from 'react-router';
 
 import moment from 'moment';
@@ -16,14 +16,15 @@ import Loading from '../../components/Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function(){
+export default class AuditStoreStatusSummary extends Component{
+	constructor(props){
+		super(props);
+		this.state = {};
+	}
+	componentDidMount(){
 		fetchAuditStoreStats(this.props.auditCycleId).then((stats)=> this.setState({ stats }));
-	},
-	render: function(){
+	}
+	render(){
 		if(! this.state.stats){
 			return <Loading/>;
 		}
@@ -58,6 +59,6 @@ export default React.createClass({
 			</tbody>
 			</table>
 		);
-	},
-});
+	}
+}
 
