@@ -1,0 +1,279 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditCycleDashboard/> is rendered correctly when the data are loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditCycleDashboard/> is rendered correctly when the data is successfully loaded 1`] = `
+<div
+  className="table-responsive"
+>
+  <table
+    className="table table-hover table-striped table-bordered table-condensed"
+  >
+    <thead>
+      <tr>
+        <th
+          rowSpan="2"
+        >
+          Client
+        </th>
+        <th
+          className="text-center"
+          colSpan="3"
+        >
+          Application Status
+        </th>
+        <th
+          className="text-center"
+          colSpan="6"
+        >
+          Report Status
+        </th>
+        <th
+          className="text-right"
+          rowSpan="2"
+        >
+          Planned Audits
+        </th>
+      </tr>
+      <tr>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-primary"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Pending for Approval
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-warning"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Wait Listed
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-success"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Approved
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-warning"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Assigned
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-warning2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            In Progress
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-primary1"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            QA Review
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-primary"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            PM Review
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-success"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Client Review
+          </span>
+        </th>
+        <th
+          className="text-right"
+        >
+          <span
+            className="label label-success2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Accepted
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr
+        onClick={[Function]}
+        style={
+          Object {
+            "cursor": "pointer",
+          }
+        }
+        title="Click to open Audit Cycle"
+      >
+        <td
+          className=""
+        >
+          <small>
+            <b>
+              Fine Dine April 2018
+            </b>
+            <br />
+            <b>
+              Smaaash
+            </b>
+             - 
+            Report
+          </small>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            32
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            1
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            1
+          </b>
+        </td>
+        <td
+          className="text-right"
+        >
+          <b>
+            1
+          </b>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
