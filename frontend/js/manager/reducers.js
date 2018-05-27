@@ -383,6 +383,7 @@ export function rootReducer(store = initialStore, action) {
 		case types.AUDIT_STORE_ID_UN_SUBMIT:
 		case types.AUDIT_STORE_ID_SUBMIT:
 		case types.AUDIT_STORE_ID_QA_OK:
+		case types.AUDIT_STORE_ID_PM_REVERT:
 		case types.AUDIT_STORE_ID_COMPLETE:
 		case types.AUDIT_STORE_ID_UNCOMPLETE:
 		case types.AUDIT_STORE_ID_FAIL:
