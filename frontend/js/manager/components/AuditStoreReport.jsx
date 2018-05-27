@@ -233,6 +233,7 @@ var QuestionRow = connect(mapStoreToQuestionRowProps)(__QuestionRow);
 class SectionAttachmentBox extends React.Component{
 
 	static propTypes = {
+		editable: PropTypes.bool.isRequired,
 		auditStoreId: PropTypes.oneOfType([
 			PropTypes.number,
 			PropTypes.string,
@@ -364,18 +365,15 @@ class SectionAttachmentBox extends React.Component{
 
 	render(){
 		let uploadButton;
-		let editable = false;
 
-		if(this.props.auditStore && this.props.auditStore.status === "SUBMITTED"){
+		if(this.props.editable) {
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip/> Upload</button>);
-			editable = true;
 		}
 
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			let deletable= this.props.auditStore && this.props.auditStore.status === "SUBMITTED";
 			attachmentRows.push(
-				<AttachmentThumbnail key={a.id} attachment={a} deletable={deletable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId}/>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId}/>
 			);
 		}
 		for(let id in this.state.inProgress){
@@ -407,7 +405,7 @@ class SectionAttachmentBox extends React.Component{
 						ref={(input)=>this.uploadInput = input}
 						style={{"display":"none"}}/>
 				</div>
-				<AttachmentPreview attachment={selectedAttachment} editable={editable}
+				<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
 					onRename={this.selectedAttachmentRenamed}
 					onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
 			</div>
@@ -418,6 +416,7 @@ class SectionAttachmentBox extends React.Component{
 class __Section extends React.Component{
 
 	static propTypes = {
+		editable: PropTypes.bool.isRequired,
 	};
 
 	constructor(props){
@@ -517,14 +516,11 @@ class __Section extends React.Component{
 	};
 
 	render(){
-
-		let editable = this.props.auditStore && this.props.auditStore.status === "SUBMITTED";
-
 		/* QUESTION ROWS */
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
-				questionRows.push(<QuestionRow q={q} key={q.id} marking={editable} auditStoreId={this.props.auditStoreId}/>);
+				questionRows.push(<QuestionRow q={q} key={q.id} marking={this.props.editable} auditStoreId={this.props.auditStoreId}/>);
 			}
 		}
 		if(questionRows.length === 0){
@@ -549,7 +545,7 @@ class __Section extends React.Component{
 			notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 		}
 
-		if(editable){
+		if(this.props.editable){
 			let hasPmCommentError = this.state.pmCommentError ? "has-error" : "";
 			let hasPmCommentSuccess = this.state.pmCommentSuccess ? "has-success" : "";
 			pmCommentElement = (
@@ -623,7 +619,7 @@ class __Section extends React.Component{
 					<hr/>
 					<div><b>PM Comment:</b> {pmCommentElement}</div>
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable}/>
 			</div>);
 		}
 
@@ -657,7 +653,7 @@ var mapStoreToSectionProps = function(store, ownProps){
 
 var Section = connect(mapStoreToSectionProps)(__Section);
 
-class AuditStoreReport extends React.Component{
+export class AuditStoreReport extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -686,12 +682,13 @@ class AuditStoreReport extends React.Component{
 	}
 
 	render(){
+		const editable = this.props.auditStore && (this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW");
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId}/>);
+			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire"/>);
