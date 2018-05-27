@@ -7,6 +7,18 @@ import { findById, qaOk } from "../../../moderator/service/audit_store";
 
 jest.mock("../../../moderator/service/audit_store");
 
+// Mock for React Datetime component
+jest.mock("react-dom", () => ({
+	findDOMNode: () => {},
+}));
+
+let dateNowSpy;
+
+beforeAll(() => {
+	// Lock Time
+	dateNowSpy = jest.spyOn(Date, "now").mockImplementation(() => 1527292800000);
+});
+
 describe("<AuditStoreDetails/>", () => {
 	const sampleParams = {
 		auditStoreId: "5",
@@ -73,35 +85,39 @@ describe("<AuditStoreDetails/>", () => {
 		});
 	});
 
-	it("is rendered correctly for all QA ratings", () => {
-		findById.mockResolvedValue(sampleAuditStore);
-		const ratings = [ 0, 1, 2 ];
-		for( const rt of ratings){
-			sampleAuditStore.qa_rating = rt;
+	const ratings = [ 0, 1, 2 ];
+	for( const rt of ratings){
+		it(`is rendered correctly for QA rating: ${rt}`, (done) => {
+			findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { qa_rating: rt }));
 			const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
-			expect(r.toJSON()).toMatchSnapshot();
-		}
-	});
+			setTimeout(() => {
+				expect(r.toJSON()).toMatchSnapshot();
+				done();
+			});
+		});
+	}
 
-	it("is rendered correctly for all AuditStore statuses", () => {
-		findById.mockResolvedValue(sampleAuditStore);
-		const statuses = [
-			"ASSIGNED",
-			"ACKNOWLEDGED",
-			"SUBMITTED",
-			"PM_REVIEW",
-			"COMPLETED",
-			"ACCEPTED",
-			"REJECTED",
-			"WITHDRAWN",
-			"FAILED",
-		];
-		for( const s of statuses){
-			sampleAuditStore.status = s;
+	const statuses = [
+		"ASSIGNED",
+		"ACKNOWLEDGED",
+		"SUBMITTED",
+		"PM_REVIEW",
+		"COMPLETED",
+		"ACCEPTED",
+		"REJECTED",
+		"WITHDRAWN",
+		"FAILED",
+	];
+	for( const s of statuses){
+		it(`is rendered correctly wwhere AuditStore status is ${s}`, (done) => {
+			findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { status: s }));
 			const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
-			expect(r.toJSON()).toMatchSnapshot();
-		}
-	});
+			setTimeout(() => {
+				expect(r.toJSON()).toMatchSnapshot();
+				done();
+			});
+		});
+	}
 
 	it("calls qaOk when QA OK button is clicked", (done) => {
 		sampleAuditStore.status = "SUBMITTED";
@@ -121,4 +137,10 @@ describe("<AuditStoreDetails/>", () => {
 			done();
 		});
 	});
+});
+
+afterAll(() => {
+	// Unlock Time
+	dateNowSpy.mockReset();
+	dateNowSpy.mockRestore();
 });

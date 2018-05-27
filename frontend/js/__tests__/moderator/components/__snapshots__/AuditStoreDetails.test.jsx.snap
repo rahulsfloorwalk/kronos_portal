@@ -1,182 +1,806 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 1`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
+exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-danger"
+                >
+                  Bad
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 2`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
+exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 3`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 4`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 5`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 6`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 7`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 8`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all AuditStore statuses 9`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all QA ratings 1`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all QA ratings 2`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
-
-exports[`<AuditStoreDetails/> is rendered correctly for all QA ratings 3`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="/static/img/ripple.svg"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
+exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-success"
+                >
+                  Good
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -726,5 +1350,2897 @@ exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loadi
   <p>
     LOADING
   </p>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is ACCEPTED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-success2"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  Accepted
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is ACKNOWLEDGED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-warning2"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  In Progress
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+           
+           
+           
+          <button
+            className="btn btn-danger"
+            onClick={[Function]}
+            type="button"
+          >
+            Fail
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is ASSIGNED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-warning"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  Assigned
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+          <button
+            className="btn btn-danger"
+            onClick={[Function]}
+            type="button"
+          >
+            Fail
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is COMPLETED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-success"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  Client Review
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is FAILED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-danger"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  Failed
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is PM_REVIEW 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-primary"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  PM Review
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is REJECTED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-danger2"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  Rejected
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is SUBMITTED 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                <div
+                  className="input-group "
+                >
+                  <span
+                    className="input-group-addon"
+                  >
+                    <span
+                      className="glyphicon glyphicon-calendar"
+                    />
+                  </span>
+                  <div
+                    className="rdt"
+                  >
+                    <input
+                      className="form-control"
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      onFocus={[Function]}
+                      onKeyDown={[Function]}
+                      type="text"
+                      value="2018-09-02"
+                    />
+                    <div
+                      className="rdtPicker"
+                    >
+                      <div
+                        className="rdtDays"
+                      >
+                        <table>
+                          <thead>
+                            <tr>
+                              <th
+                                className="rdtPrev"
+                                onClick={[Function]}
+                              >
+                                <span>
+                                  ‹
+                                </span>
+                              </th>
+                              <th
+                                className="rdtSwitch"
+                                colSpan={5}
+                                data-value={4}
+                                onClick={[Function]}
+                              >
+                                May 2018
+                              </th>
+                              <th
+                                className="rdtNext"
+                                onClick={[Function]}
+                              >
+                                <span>
+                                  ›
+                                </span>
+                              </th>
+                            </tr>
+                            <tr>
+                              <th
+                                className="dow"
+                              >
+                                Su
+                              </th>
+                              <th
+                                className="dow"
+                              >
+                                Mo
+                              </th>
+                              <th
+                                className="dow"
+                              >
+                                Tu
+                              </th>
+                              <th
+                                className="dow"
+                              >
+                                We
+                              </th>
+                              <th
+                                className="dow"
+                              >
+                                Th
+                              </th>
+                              <th
+                                className="dow"
+                              >
+                                Fr
+                              </th>
+                              <th
+                                className="dow"
+                              >
+                                Sa
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td
+                                className="rdtDay rdtOld"
+                                data-value={29}
+                                onClick={[Function]}
+                              >
+                                29
+                              </td>
+                              <td
+                                className="rdtDay rdtOld"
+                                data-value={30}
+                                onClick={[Function]}
+                              >
+                                30
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={1}
+                                onClick={[Function]}
+                              >
+                                1
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={2}
+                                onClick={[Function]}
+                              >
+                                2
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={3}
+                                onClick={[Function]}
+                              >
+                                3
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={4}
+                                onClick={[Function]}
+                              >
+                                4
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={5}
+                                onClick={[Function]}
+                              >
+                                5
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                className="rdtDay"
+                                data-value={6}
+                                onClick={[Function]}
+                              >
+                                6
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={7}
+                                onClick={[Function]}
+                              >
+                                7
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={8}
+                                onClick={[Function]}
+                              >
+                                8
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={9}
+                                onClick={[Function]}
+                              >
+                                9
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={10}
+                                onClick={[Function]}
+                              >
+                                10
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={11}
+                                onClick={[Function]}
+                              >
+                                11
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={12}
+                                onClick={[Function]}
+                              >
+                                12
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                className="rdtDay"
+                                data-value={13}
+                                onClick={[Function]}
+                              >
+                                13
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={14}
+                                onClick={[Function]}
+                              >
+                                14
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={15}
+                                onClick={[Function]}
+                              >
+                                15
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={16}
+                                onClick={[Function]}
+                              >
+                                16
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={17}
+                                onClick={[Function]}
+                              >
+                                17
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={18}
+                                onClick={[Function]}
+                              >
+                                18
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={19}
+                                onClick={[Function]}
+                              >
+                                19
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                className="rdtDay"
+                                data-value={20}
+                                onClick={[Function]}
+                              >
+                                20
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={21}
+                                onClick={[Function]}
+                              >
+                                21
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={22}
+                                onClick={[Function]}
+                              >
+                                22
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={23}
+                                onClick={[Function]}
+                              >
+                                23
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={24}
+                                onClick={[Function]}
+                              >
+                                24
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={25}
+                                onClick={[Function]}
+                              >
+                                25
+                              </td>
+                              <td
+                                className="rdtDay rdtToday"
+                                data-value={26}
+                                onClick={[Function]}
+                              >
+                                26
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                className="rdtDay"
+                                data-value={27}
+                                onClick={[Function]}
+                              >
+                                27
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={28}
+                                onClick={[Function]}
+                              >
+                                28
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={29}
+                                onClick={[Function]}
+                              >
+                                29
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={30}
+                                onClick={[Function]}
+                              >
+                                30
+                              </td>
+                              <td
+                                className="rdtDay"
+                                data-value={31}
+                                onClick={[Function]}
+                              >
+                                31
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={1}
+                                onClick={[Function]}
+                              >
+                                1
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={2}
+                                onClick={[Function]}
+                              >
+                                2
+                              </td>
+                            </tr>
+                            <tr>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={3}
+                                onClick={[Function]}
+                              >
+                                3
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={4}
+                                onClick={[Function]}
+                              >
+                                4
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={5}
+                                onClick={[Function]}
+                              >
+                                5
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={6}
+                                onClick={[Function]}
+                              >
+                                6
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={7}
+                                onClick={[Function]}
+                              >
+                                7
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={8}
+                                onClick={[Function]}
+                              >
+                                8
+                              </td>
+                              <td
+                                className="rdtDay rdtNew"
+                                data-value={9}
+                                onClick={[Function]}
+                              >
+                                9
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-primary1"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  QA Review
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+          <button
+            className="btn btn-warning"
+            onClick={[Function]}
+            type="button"
+          >
+            Un Submit
+          </button>
+           
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            QA OK
+          </button>
+           
+          <button
+            className="btn btn-danger"
+            onClick={[Function]}
+            type="button"
+          >
+            Fail
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-paperclip"
+      />
+       Attachments 
+      <button
+        className="btn btn-default btn-sm"
+        onClick={[Function]}
+        type="button"
+      >
+        <span
+          className="glyphicon glyphicon-plus"
+        />
+         Upload Attachment
+      </button>
+    </h3>
+    <div
+      className="row"
+    >
+      <div
+        className="col-md-4"
+        style={
+          Object {
+            "maxHeight": "500px",
+            "overflowY": "auto",
+          }
+        }
+      >
+        <div
+          className="hidden"
+        >
+          <input
+            multiple={true}
+            onChange={[Function]}
+            type="file"
+          />
+        </div>
+      </div>
+      <div
+        className="col-md-8"
+      />
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is WITHDRAWN 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-heading"
+        >
+          <h4
+            className="panel-title"
+          >
+            Audit Details
+          </h4>
+        </div>
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Client:
+              </td>
+              <th>
+                Client Name
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <td>
+                <b>
+                  Store Name
+                </b>
+                <br />
+                <small />
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                undefined, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Type:
+              </td>
+              <th>
+                <span>
+                  <span
+                    className="glyphicon glyphicon-flag"
+                  />
+                   
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Fees:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Reimbursement upto:
+              </td>
+              <th>
+                ₹ 
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor:
+              </td>
+              <td>
+                <b>
+                  John
+                   
+                  Doe
+                </b>
+                <br />
+                ( 
+                <span
+                  className="glyphicon glyphicon-earphone"
+                />
+                 
+                <a
+                  href="tel:undefined"
+                />
+                ) ( 
+                <span
+                  className="glyphicon glyphicon-envelope"
+                />
+                 
+                <a
+                  href="mailto:undefined"
+                />
+                )
+              </td>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Sep 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-default"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  Withdrawn
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                QA Rating:
+              </td>
+              <th>
+                <strong
+                  className="text-warning"
+                >
+                  Average
+                </strong>
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-footer text-right"
+        >
+          <span>
+            
+          </span>
+           
+           
+           
+        </div>
+      </div>
+    </div>
+    <div
+      className="col-md-6"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <div
+          className="panel-body"
+        >
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Description</p>
+",
+              }
+            }
+          />
+          <div
+            dangerouslySetInnerHTML={
+              Object {
+                "__html": "<p>Conduct an Audit - Post Approval - Audit Cycle Description</p>
+",
+              }
+            }
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no attachments here
+      </h3>
+      <p>
+        none uploaded
+      </p>
+    </div>
+  </div>
+  <div>
+    <h3
+      className="page-header"
+    >
+      <span
+        className="glyphicon glyphicon-tasks"
+      />
+       Questionnaire
+    </h3>
+    <div
+      className="form-group"
+    >
+      <div
+        className="jumbotron text-center"
+      >
+        <h3>
+          this questionnaire is empty
+        </h3>
+        <p>
+          please add a section from the questionnaire
+        </p>
+      </div>
+    </div>
+  </div>
 </div>
 `;
