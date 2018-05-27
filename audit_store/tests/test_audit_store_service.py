@@ -1,6 +1,7 @@
 from datetime import date
 
 from model_mommy import mommy
+from model_mommy.recipe import Recipe
 from audit_store.models import AuditStore
 
 from django.test import TestCase
@@ -138,3 +139,32 @@ class AuditStoreServiceTestCase(TestCase):
         audit_date = date(2018, 5, 15)
         with self.assertRaises(AppLogicError, msg="audit date cannot be set right now"):
             service.set_audit_date(audit_store.id, audit_date)
+
+    def create_reports(self):
+        active_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        archived_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ARCHIVED)
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+
+        audit_store_recipe.make(audit__audit_cycle=active_audit_cycle, status=AuditStore.ASSIGNED)
+        audit_store_recipe.make(audit__audit_cycle=active_audit_cycle, status=AuditStore.ACKNOWLEDGED)
+        audit_store_recipe.make(audit__audit_cycle=active_audit_cycle, status=AuditStore.SUBMITTED)
+        audit_store_recipe.make(audit__audit_cycle=active_audit_cycle, status=AuditStore.PM_REVIEW)
+        audit_store_recipe.make(audit__audit_cycle=active_audit_cycle, status=AuditStore.COMPLETED)
+        audit_store_recipe.make(audit__audit_cycle=archived_audit_cycle, status=AuditStore.FAILED)
+        audit_store_recipe.make(audit__audit_cycle=archived_audit_cycle, status=AuditStore.ACCEPTED)
+        audit_store_recipe.make(audit__audit_cycle=archived_audit_cycle, status=AuditStore.REJECTED)
+
+    def test_find_audit_stores_for_auditor(self):
+        self.create_reports()
+        reports = service.find_audit_stores_for_auditor(self.auditor_profile.id)
+        self.assertEqual(reports.count(), 5)
+
+    def test_find_by_id_for_auditor(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.PM_REVIEW,
+            audit__audit_cycle__status=AuditCycle.ACTIVE,
+            user=self.auditor_user
+        )
+        fetched_audit_store = service.find_by_id_for_auditor(audit_store.id, self.auditor_user.id)
+        self.assertEqual(fetched_audit_store, audit_store)
