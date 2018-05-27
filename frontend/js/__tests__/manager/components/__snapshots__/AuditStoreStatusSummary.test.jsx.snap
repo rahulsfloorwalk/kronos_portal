@@ -1,0 +1,214 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreStatusSummary/> is rendered correctly when stats are loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<AuditStoreStatusSummary/> is rendered correctly when stats have successfully loaded 1`] = `
+<table
+  className="table table-bordered"
+>
+  <thead>
+    <tr>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-warning"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Assigned
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-warning2"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          In Progress
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-default"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Withdrawn
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-danger"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Failed
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-primary1"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          QA Review
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-primary"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          PM Review
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-success"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Client Review
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-success2"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Accepted
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-danger2"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Rejected
+        </span>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td
+        className="text-center"
+      >
+        <b>
+          6
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          6
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b />
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          4
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          3
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          1
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          3
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b />
+      </td>
+      <td
+        className="text-center"
+      >
+        <b />
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

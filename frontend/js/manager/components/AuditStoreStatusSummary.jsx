@@ -21,7 +21,7 @@ export default React.createClass({
 		return {};
 	},
 	componentDidMount: function(){
-		fetchAuditStoreStats(this.props.auditCycleId).done((stats)=> this.setState({ stats }));
+		fetchAuditStoreStats(this.props.auditCycleId).then((stats)=> this.setState({ stats }));
 	},
 	render: function(){
 		if(! this.state.stats){
@@ -32,7 +32,7 @@ export default React.createClass({
 			<thead>
 			<tr>
 			{
-				["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
+				["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
 					return (
 					<td key={status} className="text-center">
 						<AuditStoreStatusLabel status={status}/>
@@ -45,7 +45,7 @@ export default React.createClass({
 			<tbody>
 			<tr>
 			{
-				["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
+				["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
 					let item = this.state.stats.find( s => s.status === status);
 					return (
 					<td key={status} className="text-center">
