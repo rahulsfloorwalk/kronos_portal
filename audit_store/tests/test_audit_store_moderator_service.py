@@ -1,12 +1,13 @@
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
-from audit_store.models import AuditStore
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
 from guardian.shortcuts import assign_perm
 
+from kronos.exceptions import ObjectNotFound
+from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle
@@ -56,3 +57,18 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         self.create_reports()
         reports = service_moderator.find_qa_completed_audit_stores_for_moderator(self.moderator_user.id)
         self.assertEqual(reports.count(), 2)
+
+    def test_find_by_id_for_moderator_returns_audit_store(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        actual_audit_store = service_moderator.find_by_id_for_moderator(audit_store.id, self.moderator_user.id)
+        self.assertEqual(audit_store, actual_audit_store)
+
+    def test_find_by_id_for_moderator_raises_when_audit_store_is_not_assigned(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        with self.assertRaises(ObjectNotFound):
+            service_moderator.find_by_id_for_moderator(audit_store.id, self.moderator_user.id)
+
+

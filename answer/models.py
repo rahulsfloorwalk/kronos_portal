@@ -33,6 +33,10 @@ class Answer(Model):
         self.modified_at = timezone.now()
         return super(Answer, self).save(*args, **kwargs)
 
+    def set_not_applicable(self, not_applicable):
+        self.not_applicable = not_applicable
+        self.save()
+
     class Meta:
         unique_together = (('question', 'audit_store',))
 

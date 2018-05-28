@@ -111,6 +111,7 @@ def set_marks(audit_store_id, question_id, marks):
 def set_answer_text(audit_store_id, question_id, answer_text):
     audit_store = audit_store_service.find_by_id(audit_store_id)
 
+    # Add PM status here
     if audit_store.status != AuditStore.SUBMITTED:
         raise AppLogicError("Cannot set answer for unsubmitted report")
 
@@ -148,14 +149,3 @@ def set_answer_comment(audit_store_id, question_id, answer_comment):
 
     return save(answer)
 
-
-def set_not_applicable(audit_store_id, question_id, not_applicable):
-    audit_store = audit_store_service.find_by_id(audit_store_id)
-
-    if audit_store.status != AuditStore.SUBMITTED:
-        raise AppLogicError("Cannot change answer for unsubmitted report")
-
-    answer = find_by_audit_store_and_question(audit_store_id, question_id)
-    answer.not_applicable = not_applicable
-    answer.save()
-    return answer

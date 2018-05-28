@@ -1,5 +1,5 @@
-
-from ..models import Answer
+from kronos.exceptions import AppLogicError
+from answer.models import Answer
 
 from audit_store import service_moderator as audit_store_moderator_service
 from . import answer as answer_service
@@ -26,4 +26,8 @@ def set_marks_obtained_for_moderator(audit_store_id, question_id, marks_obtained
 
 def set_not_applicable_for_moderator(audit_store_id, question_id, not_applicable, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
-    return answer_service.set_not_applicable(audit_store_id, answer.question_id, not_applicable)
+    if answer.audit_store.is_editable_by_moderator():
+        answer.set_not_applicable(not_applicable)
+        return answer
+    else:
+        raise AppLogicError("Cannot set not applicable now")

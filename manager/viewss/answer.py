@@ -8,6 +8,7 @@ from registration.mixins import HasGroupPermission
 
 from ..serializers import AnswerSerializer
 from answer.service import answer as answer_service
+from answer.service import answer_manager as answer_manager_service
 
 class AnswerByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
@@ -46,7 +47,7 @@ class AnswerNotApplicableView(APIView):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         not_applicable = ds.validated_data.get('not_applicable')
-        answer = answer_service.set_not_applicable(audit_store_id, question_id, not_applicable)
+        answer = answer_manager_service.set_not_applicable_for_manager(audit_store_id, question_id, not_applicable)
         return Response(AnswerSerializer(answer).data)
 
 
