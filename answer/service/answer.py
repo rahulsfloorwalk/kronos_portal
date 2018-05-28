@@ -131,21 +131,3 @@ def set_answer_text(audit_store_id, question_id, answer_text):
     answer.answer_text = answer_text
     answer.save()
     return answer
-
-
-def set_answer_comment(audit_store_id, question_id, answer_comment):
-    audit_store = audit_store_service.find_by_id(audit_store_id)
-
-    if audit_store.status != AuditStore.SUBMITTED:
-        raise AppLogicError("Cannot set answer_comment for unsubmitted report")
-
-    answer = find_by_audit_store_and_question(audit_store_id, question_id)
-    q = question_service.find_question_by_id(question_id)
-
-    if q.question_type == Question.MUTEX:
-        answer.answer_comment = answer_comment
-    else:
-        raise AppLogicError("invalid question")
-
-    return save(answer)
-

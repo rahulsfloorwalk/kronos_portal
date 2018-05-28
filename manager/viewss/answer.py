@@ -74,7 +74,7 @@ class AnswerCommentView(APIView):
     }
     def post(self, request, audit_store_id, question_id):
         try:
-            answer = answer_service.set_answer_comment(audit_store_id, question_id, request.data["answer_comment"])
+            answer = answer_manager_service.set_answer_comment_for_manager(audit_store_id, question_id, request.data["answer_comment"])
             return Response(AnswerSerializer(answer).data)
         except KeyError as e:
             raise ValidationError({

@@ -9,6 +9,7 @@ from answer.models import Answer
 from answer.service import answer_manager as answer_manager_service
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
+from questionnaire.models import Question
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo
 
@@ -43,4 +44,31 @@ class AnswerManagerServiceTestCase(TestCase):
                         audit_store.id,
                         answer.question.id,
                         True
+                    )
+
+    def test_set_answer_comment_for_manager_sets_answer_comment(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            answer = mommy.make(
+                Answer,
+                audit_store=audit_store,
+                question__section__audit_cycle=audit_cycle,
+                question__question_type=Question.MUTEX,
+            )
+            comment = "Hello World"
+            if audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES:
+                saved_answer = answer_manager_service.set_answer_comment_for_manager(
+                    audit_store.id,
+                    answer.question.id,
+                    comment
+                )
+                self.assertEqual(comment, saved_answer.answer_comment)
+            else:
+                with self.assertRaises(AppLogicError, msg="Answer comment cannot be set now"):
+                    answer_manager_service.set_answer_comment_for_manager(
+                        audit_store.id,
+                        answer.question.id,
+                        comment
                     )

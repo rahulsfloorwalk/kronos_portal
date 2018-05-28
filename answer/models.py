@@ -5,6 +5,7 @@ from django.db.models import PROTECT, F, Value, Sum
 from django.db.models.functions import Coalesce
 
 from kronos.utils import get_color_code
+from kronos.exceptions import AppLogicError
 
 from questionnaire.models import Question
 from questionnaire.models import Section
@@ -36,6 +37,13 @@ class Answer(Model):
     def set_not_applicable(self, not_applicable):
         self.not_applicable = not_applicable
         self.save()
+
+    def set_answer_comment(self, answer_comment):
+        if self.question.question_type == Question.MUTEX:
+            self.answer_comment = answer_comment
+            self.save()
+        else:
+            raise AppLogicError("Question type must be mutex")
 
     class Meta:
         unique_together = (('question', 'audit_store',))

@@ -18,11 +18,17 @@ def set_answer_text_for_moderator(audit_store_id, question_id, answer_text, user
 
 def set_answer_comment_for_moderator(audit_store_id, question_id, answer_comment, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
-    return answer_service.set_answer_comment(audit_store_id, answer.question_id, answer_comment)
+    if answer.audit_store.is_editable_by_moderator():
+        answer.set_answer_comment(answer_comment)
+        return answer
+    else:
+        raise AppLogicError("Answer comment cannot be set now")
+
 
 def set_marks_obtained_for_moderator(audit_store_id, question_id, marks_obtained, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
     return answer_service.set_marks(audit_store_id, answer.question_id, marks_obtained)
+
 
 def set_not_applicable_for_moderator(audit_store_id, question_id, not_applicable, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
