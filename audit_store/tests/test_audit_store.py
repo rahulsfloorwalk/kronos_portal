@@ -124,3 +124,30 @@ class AuditStoreTestCase(TestCase):
                 self.assertTrue(audit_store.is_withdrawable())
             else:
                 self.assertFalse(audit_store.is_withdrawable())
+
+    def test_is_editable_by_manager_for_all_statuses(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_store = audit_store_recipe.make(status=status)
+            self.assertEqual(
+                audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES,
+                audit_store.is_editable_by_manager()
+            )
+
+    def test_is_editable_by_moderator_for_all_statuses(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_store = audit_store_recipe.make(status=status)
+            self.assertEqual(
+                audit_store.status in audit_store._MODERATOR_EDITABLE_STATUSES,
+                audit_store.is_editable_by_moderator()
+            )
+
+    def test_is_editable_by_auditor_for_all_statuses(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_store = audit_store_recipe.make(status=status)
+            self.assertEqual(
+                audit_store.status in audit_store._AUDITOR_EDITABLE_STATUSES,
+                audit_store.is_editable_by_auditor()
+            )

@@ -18,6 +18,7 @@ from client.models import Store
 from audit.models import Audit, AuditCycle
 from answer.models import Answer
 from questionnaire.models import Question
+from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 
 from audit_store.signals import audit_store_status_change
 
@@ -71,6 +72,9 @@ class AuditStore(Model):
     )
 
     _WITHDRAWABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
+    _MANAGER_EDITABLE_STATUSES = (SUBMITTED, PM_REVIEW,)
+    _MODERATOR_EDITABLE_STATUSES = (SUBMITTED,)
+    _AUDITOR_EDITABLE_STATUSES = (ACKNOWLEDGED,)
 
     BAD = 0
     AVERAGE = 1
@@ -130,6 +134,15 @@ class AuditStore(Model):
 
     def is_withdrawable(self):
         return self.status in self._WITHDRAWABLE_STATUSES
+
+    def is_editable_by_auditor(self):
+        return self.status in self._AUDITOR_EDITABLE_STATUSES
+
+    def is_editable_by_moderator(self):
+        return self.status in self._MODERATOR_EDITABLE_STATUSES
+
+    def is_editable_by_manager(self):
+        return self.status in self._MANAGER_EDITABLE_STATUSES
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()
