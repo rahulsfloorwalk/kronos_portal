@@ -117,6 +117,7 @@ class Audit(Model):
             audit_store.models.AuditStore.ACCEPTED,
             audit_store.models.AuditStore.ASSIGNED,
             audit_store.models.AuditStore.ACKNOWLEDGED,
+            audit_store.models.AuditStore.PM_REVIEW,
             audit_store.models.AuditStore.SUBMITTED,
         )
         # check if prefetched cache exists,
