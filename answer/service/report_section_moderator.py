@@ -21,9 +21,13 @@ def set_auditor_comment_for_moderator(audit_store_id, section_id, auditor_commen
         raise AppLogicError("Report Section auditor comment cannot be set now")
 
 
-def submit_pm_comment_for_moderator(audit_store_id, section_id, pm_comment, user_id):
+def set_pm_comment_for_moderator(audit_store_id, section_id, pm_comment, user_id):
     report_section = find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
-    return report_section_service.submit_pm_comment(audit_store_id, report_section.section_id, pm_comment)
+    if report_section.audit_store.is_editable_by_moderator():
+        report_section.set_pm_comment(pm_comment)
+        return report_section
+    else:
+        raise AppLogicError("Report Section pm comment cannot be set now")
 
 def set_not_applicable_for_moderator(audit_store_id, section_id, not_applicable, user_id):
     report_section = find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
