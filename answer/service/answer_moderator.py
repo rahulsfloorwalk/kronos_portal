@@ -31,7 +31,11 @@ def set_answer_comment_for_moderator(audit_store_id, question_id, answer_comment
 
 def set_marks_obtained_for_moderator(audit_store_id, question_id, marks_obtained, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
-    return answer_service.set_marks(audit_store_id, answer.question_id, marks_obtained)
+    if answer.audit_store.is_editable_by_moderator():
+        answer.set_marks_obtained(marks_obtained)
+        return answer
+    else:
+        raise AppLogicError("Answer marks obtained cannot be set now")
 
 
 def set_not_applicable_for_moderator(audit_store_id, question_id, not_applicable, user_id):
