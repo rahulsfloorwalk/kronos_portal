@@ -3,6 +3,8 @@ from faker import Faker
 
 from django.test import TestCase
 
+from kronos.exceptions import AppLogicError
+
 from answer.models import ReportSection
 
 fake = Faker()
@@ -18,4 +20,19 @@ class ReportSectionTestCase(TestCase):
         self.assertTrue(report_section.not_applicable)
         report_section.set_not_applicable(False)
         self.assertFalse(report_section.not_applicable)
+
+    def test_set_auditor_comment_sets_auditor_comment_correctly(self):
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email())
+        auditor_comment = "Foobar"
+        report_section.set_auditor_comment(auditor_comment)
+        self.assertEqual(auditor_comment, report_section.auditor_comment)
+
+    def test_set_auditor_comment_raises_when_auditor_comment_is_empty_or_none(self):
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email())
+        auditor_comment = ""
+        with self.assertRaisesRegex(AppLogicError, "auditor comment cannot be blank"):
+            report_section.set_auditor_comment(auditor_comment)
+        auditor_comment = None
+        with self.assertRaisesRegex(AppLogicError, "auditor comment cannot be blank"):
+            report_section.set_auditor_comment(auditor_comment)
 

@@ -166,5 +166,11 @@ class ReportSection(Model):
         self.not_applicable = not_applicable
         self.save()
 
+    def set_auditor_comment(self, auditor_comment):
+        if auditor_comment in (None, ""):
+            raise AppLogicError("auditor comment cannot be blank")
+        self.auditor_comment = auditor_comment
+        self.save()
+
     class Meta:
         unique_together = (("audit_store","section"))
