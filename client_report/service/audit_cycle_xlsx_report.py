@@ -14,6 +14,15 @@ from questionnaire.models import Question
 
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
+    audit_cycle_name, sections, questions, filtered_audit_stores, city_name, date_name, month_name = get_aggregate_data_with_filters(
+        audit_cycle_id, user_id, filters)
+    data = create_text_structure(audit_cycle_name, sections, questions, filtered_audit_stores)
+    name = (str(audit_cycle_name) + city_name + filters.get('type') + filters.get(
+        'priority') + date_name + month_name + ".xlsx").replace("-", "")
+    return write_data(data), name
+
+
+def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audit_date'):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
 
@@ -38,7 +47,7 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
             'audit__store__city',
             'answers',
             'report_sections',
-        )
+        ).order_by(sort)
 
     filtered_audit_stores = audit_stores
     ignored_filters = ['', 'undefined', None]
@@ -54,12 +63,20 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
                                  x.audit.store.priority == filters.get('priority')]
     if filters.get('month') not in ignored_filters:
         month_name = calendar.month_name[int(filters.get('month'))]
+    
+    if filters.get('start_date') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
-                                 x.audit_date.month == int(filters.get('month'))]
-
+                                 x.audit_date >= datetime.datetime.strptime(filters.get('start_date'), "%Y-%m-%d").date()]
+    if filters.get('end_date') not in ignored_filters:
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit_date <= datetime.datetime.strptime(filters.get('end_date'), "%Y-%m-%d").date()]
     data = create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
-    name = (str(audit_cycle.name) + city_name + filters.get('type') + filters.get('priority') + month_name + ".xlsx").replace("-", "")
-    return write_data(data), name
+    date_name = "{}{}{}".format(
+        (filters.get('start_date') if filters.get('start_date') not in ignored_filters else "").replace("-", "_"),
+        "_",
+        (filters.get('end_date') if filters.get('end_date') not in ignored_filters else "").replace("-", "_"))
+
+    return audit_cycle.name, sections, questions, filtered_audit_stores, city_name, date_name, month_name
 
 
 def create_text_structure(title, sections, questions, audit_stores):

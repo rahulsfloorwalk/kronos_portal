@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link, hashHistory } from 'react-router';
+import Datetime from 'react-datetime';
 
 import Loading from '../../components/Loading.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
@@ -31,6 +32,10 @@ class AuditStoreTable extends Component {
 			selectedCityId: "",
 			selectedType: "",
 			selectedPriority: "",
+			cycleStartDate: null,
+			cycleEndDate: null,
+			startDate: null,
+			endDate: null,
 		};
 	}
 	setLoading = (loading) => {
@@ -40,7 +45,7 @@ class AuditStoreTable extends Component {
 			});
 		});
 	}
-	reloadData = (auditCycleId) => {
+	reloadData = (auditCycleId, cycleStartDate, cycleEndDate) => {
 		this.setLoading(true);
 		findAuditStoresByAuditCycle(auditCycleId).then(reports => {
 			let cities = [];
@@ -70,6 +75,10 @@ class AuditStoreTable extends Component {
 				types,
 				priorities,
 				months,
+				cycleStartDate: cycleStartDate,
+				cycleEndDate: cycleEndDate,
+				startDate: cycleStartDate,
+				endDate: cycleEndDate,
 			});
 		}).always(() => this.setLoading(false));
 	}
@@ -78,16 +87,18 @@ class AuditStoreTable extends Component {
 		let base = url.api_base_path + 'client/audit_cycle/' + this.props.auditCycleId + '/audit_cycle_filtered_xlsx_report?';
 		base += 'city=' + encodeURIComponent(this.state.selectedCityId || '') + '&';
 		base += 'priority=' + encodeURIComponent(this.state.selectedPriority || '') + '&';
+		base += 'start_date=' + encodeURIComponent(this.state.startDate || '') + '&';
+		base += 'end_date=' + encodeURIComponent(this.state.endDate || '') + '&';
 		base += 'type=' + encodeURIComponent(this.state.selectedType || '') + '&';
 		base += 'month=' + encodeURIComponent(Number(this.state.selectedMonth)+1 || '');
 		return base;
 	}
 	componentDidMount(){
-		this.reloadData(this.props.auditCycleId);
+		this.reloadData(this.props.auditCycleId, this.props.startDate, this.props.endDate);
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props.auditCycleId !== nextProps.auditCycleId){
-			this.reloadData(nextProps.auditCycleId);
+			this.reloadData(nextProps.auditCycleId, this.props.startDate, this.props.endDate);
 		}
 	}
 
@@ -115,6 +126,26 @@ class AuditStoreTable extends Component {
 		});
 	}
 
+	setStartDate= (date) => {
+		this.setState({
+			startDate: date.format("YYYY-MM-DD"),
+		});
+	}
+
+	setEndDate= (date) => {
+		this.setState({
+			endDate: date.format("YYYY-MM-DD"),
+		});
+	}
+
+	validateStartDate= (currentDate, selectedDate) => {
+		return currentDate.isBetween(this.state.cycleStartDate, this.state.endDate, null, '[]');
+	}
+
+	validateEndDate= (currentDate, selectedDate) => {
+		return currentDate.isBetween(this.state.startDate, this.state.cycleEndDate, null, '[]');
+	}
+
 	render(){
 		if(this.state.loading){
 			return (<Loading/>);
@@ -122,6 +153,8 @@ class AuditStoreTable extends Component {
 		if(this.state.reports.length === 0) {
 			return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
 		}
+		console.log(this.state.startDate);
+		console.log(this.state.endDate);
 		let citySelect = (<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px"}}>
 			<option value="">All Cities</option>
 			{this.state.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -131,6 +164,30 @@ class AuditStoreTable extends Component {
 			<option value="">All Types</option>
 			{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
 		</select>);
+
+		let startDatePicker = (
+			<div style={{display:"inline-block",width:"200px"}}>
+				<Datetime name="start_date"
+					value={this.state.startDate}
+					onChange={this.setStartDate}
+					isValidDate={this.validateStartDate}
+					timeFormat={false}
+					dateFormat="YYYY-MM-DD"
+					closeOnSelect={true}/>
+			</div>
+		);
+
+		let endDatePicker = (
+			<div style={{display:"inline-block",width:"200px"}}>
+				<Datetime name="end_date"
+					defaultValue={this.state.endDate}
+					onChange={this.setEndDate}
+					isValidDate={this.validateEndDate}
+					timeFormat={false}
+					dateFormat="YYYY-MM-DD"
+					closeOnSelect={true}/>
+			</div>
+		);
 
 		let storePrioritySelect = (<select onChange={this.selectStorePriority} value={this.state.selectedPriority} className="form-control" style={{display:"inline-block",width:"200px"}}>
 			<option value="">All Priorities</option>
@@ -153,8 +210,7 @@ class AuditStoreTable extends Component {
 		this.state.reports.filter(r => {
 			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
 			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
-			&& (this.state.selectedMonth ? new Date(r.audit_date).getMonth() == this.state.selectedMonth : true)
-			&& (this.state.selectedPriority ? r.store_priority === this.state.selectedPriority : true);
+			&& r.audit_date >= this.state.startDate && r.audit_date <= this.state.endDate
 		}).forEach( r => {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
@@ -194,8 +250,8 @@ class AuditStoreTable extends Component {
 				<big>Filter</big>:&nbsp;
 				{citySelect}&nbsp;
 				{storeTypeSelect}&nbsp;
-				{storePrioritySelect}&nbsp;
-				{monthSelect}&nbsp;
+				{startDatePicker}&nbsp;
+				{endDatePicker}&nbsp;
 				<span className="pull-right" style={{fontSize:"130%"}}>
 					<big><b>{trs.length}</b> Reports</big>
 					&nbsp;
@@ -274,7 +330,7 @@ export default class ReportBrowser3 extends Component{
 					</select>
 					<small> {moment(auditCycle.audit__audit_cycle__start_date).format("Do MMM")} to {moment(auditCycle.audit__audit_cycle__end_date).format("Do MMM")}</small>
 				</h2>
-				<AuditStoreTable auditCycleId={this.state.selectedAuditCycleId}/>
+				<AuditStoreTable auditCycleId={this.state.selectedAuditCycleId} startDate={auditCycle.audit__audit_cycle__start_date} endDate={auditCycle.audit__audit_cycle__end_date}/>
 				{this.props.children}
 			</div>
 		);
