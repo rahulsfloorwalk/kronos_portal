@@ -162,5 +162,9 @@ class ReportSection(Model):
     def color_code(self):
         return get_color_code(self.marks_obtained(), self.max_marks())
 
+    def set_not_applicable(self, not_applicable):
+        self.not_applicable = not_applicable
+        self.save()
+
     class Meta:
         unique_together = (("audit_store","section"))
