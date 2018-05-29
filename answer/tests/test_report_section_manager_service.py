@@ -38,10 +38,32 @@ class ReportSectionManagerServiceTestCase(TestCase):
                 )
                 self.assertTrue(saved_report_section.not_applicable)
             else:
-                with self.assertRaises(AppLogicError):
+                with self.assertRaisesRegex(AppLogicError, "Report Section not applicable cannot be set now"):
                     report_section_manager_service.set_not_applicable_for_manager(
                         audit_store.id,
                         report_section.section.id,
                         True
+                    )
+
+    def test_set_auditor_comment_for_manager_sets_auditor_comment_or_raises(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            report_section = mommy.make(ReportSection, audit_store=audit_store, section__audit_cycle=audit_cycle)
+            auditor_comment = "Hello World"
+            if audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES:
+                saved_report_section = report_section_manager_service.set_auditor_comment_for_manager(
+                    audit_store.id,
+                    report_section.section.id,
+                    auditor_comment,
+                )
+                self.assertEqual(auditor_comment, saved_report_section.auditor_comment)
+            else:
+                with self.assertRaisesRegex(AppLogicError, "Report Section auditor comment cannot be set now"):
+                    report_section_manager_service.set_auditor_comment_for_manager(
+                        audit_store.id,
+                        report_section.section.id,
+                        auditor_comment,
                     )
 
