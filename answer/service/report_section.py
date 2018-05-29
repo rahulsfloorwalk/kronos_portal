@@ -104,21 +104,6 @@ def set_auditor_comment_by_manager(audit_store_id, section_id, auditor_comment):
     return report_section
 
 
-def set_not_applicable(audit_store_id, section_id, not_applicable):
-    try:
-        audit_store = AuditStore.objects.get(pk=audit_store_id)
-        if audit_store.status != AuditStore.SUBMITTED:
-            raise AppLogicError("Cannot change current audit store")
-        section = Section.objects.get(pk=section_id)
-    except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
-        raise ObjectNotFound from e
-
-    report_section = find_by_audit_store_and_section(audit_store_id, section.id)
-    report_section.not_applicable = not_applicable
-    report_section.save()
-    return report_section
-
-
 def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return ReportSection.objects.filter(audit_store_id=audit_store.id).prefetch_related('section','section__questions','section__questions__answers')

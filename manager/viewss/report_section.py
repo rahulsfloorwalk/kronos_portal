@@ -6,6 +6,7 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from answer.service import report_section as report_section_service
+from answer.service import report_section_manager as report_section_manager_service
 from ..serializers import ReportSectionSerializer, ReportSectionDeSerializer
 
 class ReportSectionByAuditStore(APIView):
@@ -60,5 +61,5 @@ class NotApplicableView(APIView):
     def post(self, request, audit_store_id, section_id, format=None):
         ds = NotApplicableView.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        report_section = report_section_service.set_not_applicable(audit_store_id, section_id, ds.validated_data["not_applicable"])
+        report_section = report_section_manager_service.set_not_applicable_for_manager(audit_store_id, section_id, ds.validated_data["not_applicable"])
         return Response(ReportSectionSerializer(report_section).data)
