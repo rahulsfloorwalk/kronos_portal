@@ -12,9 +12,13 @@ def find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, us
     return report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
 
 
-def submit_auditor_comment_for_moderator(audit_store_id, section_id, auditor_comment, user_id):
+def set_auditor_comment_for_moderator(audit_store_id, section_id, auditor_comment, user_id):
     report_section = find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
-    return report_section_service.set_auditor_comment_by_manager(audit_store_id, report_section.section_id, auditor_comment)
+    if report_section.audit_store.is_editable_by_moderator():
+        report_section.set_auditor_comment(auditor_comment)
+        return report_section
+    else:
+        raise AppLogicError("Report Section auditor comment cannot be set now")
 
 
 def submit_pm_comment_for_moderator(audit_store_id, section_id, pm_comment, user_id):

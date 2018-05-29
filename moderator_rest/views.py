@@ -293,7 +293,7 @@ class AuditorCommentView(APIView):
     def post(self, request, audit_store_id, section_id, format=None):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        report_section = report_section_moderator_service.submit_auditor_comment_for_moderator(audit_store_id, section_id, ds.validated_data["auditor_comment"], request.user.id)
+        report_section = report_section_moderator_service.set_auditor_comment_for_moderator(audit_store_id, section_id, ds.validated_data["auditor_comment"], request.user.id)
         return Response(ReportSectionSerializer(report_section).data)
 
 
