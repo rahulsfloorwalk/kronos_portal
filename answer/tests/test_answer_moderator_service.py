@@ -30,7 +30,7 @@ class AnswerModeratorServiceTestCase(TestCase):
         self.moderator_user = mommy.make(User,
                                          username="moderator@foobar.com",
                                          email="moderator@foobar.com",
-                                             groups=[self.moderator_group])
+                                         groups=[self.moderator_group])
 
     def test_set_not_applicable_for_moderator_sets_not_applicable(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
@@ -83,5 +83,35 @@ class AnswerModeratorServiceTestCase(TestCase):
                         audit_store.id,
                         answer.question.id,
                         comment,
+                        self.moderator_user.id
+                    )
+
+    def test_set_answer_text_for_moderator_sets_answer_text_or_raises_based_on_status(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
+            answer = mommy.make(
+                Answer,
+                audit_store=audit_store,
+                question__section__audit_cycle=audit_cycle,
+                question__question_type=Question.PLAIN,
+            )
+            answer_text = "Hello World"
+            if audit_store.status in audit_store._MODERATOR_EDITABLE_STATUSES:
+                saved_answer = answer_moderator_service.set_answer_text_for_moderator(
+                    audit_store.id,
+                    answer.question.id,
+                    answer_text,
+                    self.moderator_user.id
+                )
+                self.assertEqual(answer_text, saved_answer.answer_text)
+            else:
+                with self.assertRaisesRegex(AppLogicError, "Answer text cannot be set now"):
+                    answer_moderator_service.set_answer_text_for_moderator(
+                        audit_store.id,
+                        answer.question.id,
+                        answer_text,
                         self.moderator_user.id
                     )
