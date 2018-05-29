@@ -61,6 +61,15 @@ class Answer(Model):
             self.answer_text = answer_text
             self.save()
 
+    def set_marks_obtained(self, marks_obtained):
+        if marks_obtained > self.question.max_marks:
+            raise AppLogicError("Marks cannot be greater than {}".format(self.question.max_marks))
+        if marks_obtained < 0:
+            raise AppLogicError("Marks cannot be less than 0")
+
+        self.marks_obtained = marks_obtained
+        self.save()
+
     class Meta:
         unique_together = (('question', 'audit_store',))
 

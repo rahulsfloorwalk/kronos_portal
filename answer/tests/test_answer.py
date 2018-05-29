@@ -48,18 +48,30 @@ class AnswerTestCase(TestCase):
                     "marks": 1,
                     "sequence": 1,
                 },
+                {
+                    "value": "Foobaz",
+                    "marks": 2,
+                    "sequence": 1,
+                },
             ],
         }
 
     def test_set_answer_text_sets_answer_text_when_question_type_is_mutex(self):
-        question = mommy.make(Question, question_type=Question.MUTEX, question_data=self.get_sample_question_data())
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
         answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
         answer_text = "Foobar"
         answer.set_answer_text(answer_text)
         self.assertEqual(answer_text, answer.answer_text)
 
+    def test_set_answer_text_sets_marks_obtained_when_question_type_is_mutex(self):
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
+        answer_text = "Foobar"
+        answer.set_answer_text(answer_text)
+        self.assertEqual(1, answer.marks_obtained)
+
     def test_set_answer_text_raises_when_when_question_type_is_mutex_and_answer_is_not_a_valid_option(self):
-        question = mommy.make(Question, question_type=Question.MUTEX, question_data=self.get_sample_question_data())
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
         answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
         with self.assertRaises(AppLogicError, msg="invalid answer"):
             answer.set_answer_text("whatever")
@@ -70,3 +82,21 @@ class AnswerTestCase(TestCase):
             answer.set_answer_text("")
         with self.assertRaises(AppLogicError, msg="answer cannot be empty"):
             answer.set_answer_text(None)
+
+    def test_set_marks_obtained_sets_marks_obtained(self):
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
+        answer.set_marks_obtained(1)
+        self.assertEqual(1, answer.marks_obtained)
+
+    def test_set_marks_obtained_raises_when_marks_are_greater_than_max_marks(self):
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
+        with self.assertRaisesRegex(AppLogicError, "Marks cannot be greater than 2"):
+            answer.set_marks_obtained(4)
+
+    def test_set_marks_obtained_raises_when_marks_are_less_than_zero(self):
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
+        with self.assertRaisesRegex(AppLogicError, "Marks cannot be less than 0"):
+            answer.set_marks_obtained(-1)
