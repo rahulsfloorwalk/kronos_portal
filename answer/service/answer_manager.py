@@ -27,3 +27,11 @@ def set_answer_text_for_manager(audit_store_id, question_id, answer_text):
         return answer
     else:
         raise AppLogicError("Answer text cannot be set now")
+
+def set_marks_obtained_for_manager(audit_store_id, question_id, marks_obtained):
+    answer = answer_service.find_by_audit_store_and_question(audit_store_id, question_id)
+    if answer.audit_store.is_editable_by_manager():
+        answer.set_marks_obtained(marks_obtained)
+        return answer
+    else:
+        raise AppLogicError("Answer marks obtained cannot be set now")
