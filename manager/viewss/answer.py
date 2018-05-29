@@ -31,7 +31,7 @@ class MarkByQuestionAndStore(APIView):
         ds = self.MarkDeserializer(data=request.data)
         ds.is_valid(raise_exception=True)
         marks = ds.validated_data.get('marks')
-        answer = answer_service.set_marks(audit_store_id, question_id, marks)
+        answer = answer_manager_service.set_marks_obtained_for_manager(audit_store_id, question_id, marks)
         return Response(AnswerSerializer(answer).data)
 
 

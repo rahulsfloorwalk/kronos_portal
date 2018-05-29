@@ -91,18 +91,3 @@ def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
     return find_by_audit_store(audit_store.id)
 
-
-def set_marks(audit_store_id, question_id, marks):
-    audit_store = audit_store_service.find_by_id(audit_store_id)
-
-    if audit_store.status != AuditStore.SUBMITTED:
-        raise AppLogicError("Cannot set Marks for unsubmitted report")
-
-    answer = find_by_audit_store_and_question(audit_store_id, question_id)
-
-    if marks > answer.question.max_marks:
-        raise AppLogicError("Marks cannot be greater than {}".format(answer.question.max_marks))
-
-    answer.marks_obtained = marks
-    answer.save()
-    return answer
