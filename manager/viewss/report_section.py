@@ -46,7 +46,7 @@ class AuditorCommentSubmitView(APIView):
     def post(self, request, audit_store_id, section_id, format=None):
         ds = AuditorCommentSubmitView.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        report_section = report_section_service.set_auditor_comment_by_manager(audit_store_id, section_id, ds.validated_data["auditor_comment"])
+        report_section = report_section_manager_service.set_auditor_comment_for_manager(audit_store_id, section_id, ds.validated_data["auditor_comment"])
         return Response(ReportSectionSerializer(report_section).data)
 
 class NotApplicableView(APIView):
