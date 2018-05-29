@@ -31,7 +31,7 @@ class PMCommentSubmitView(APIView):
         audit_store = ds.validated_data['audit_store']
         pm_comment = ds.validated_data['pm_comment']
         section = ds.validated_data['section']
-        report_section = report_section_service.submit_pm_comment(audit_store.id, section.id, pm_comment)
+        report_section = report_section_manager_service.set_pm_comment_for_manager(audit_store.id, section.id, pm_comment)
         return Response(ReportSectionSerializer(report_section).data)
 
 class AuditorCommentSubmitView(APIView):

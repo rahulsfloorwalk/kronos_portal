@@ -63,25 +63,6 @@ def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment)
     else:
         raise ObjectNotFound()
 
-def submit_pm_comment(audit_store_id, section_id, pm_comment):
-    try:
-        if pm_comment in (None, ""):
-            raise AppLogicError("auditor comment cannot be blank")
-        audit_store = AuditStore.objects.get(pk=audit_store_id)
-        section = Section.objects.get(pk=section_id)
-    except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
-        raise ObjectNotFound() from e
-
-    try:
-        report_section = ReportSection.objects.get(audit_store_id=audit_store.id, section_id=section.id)
-    except ReportSection.DoesNotExist:
-        report_section = ReportSection()
-        report_section.section = section
-        report_section.audit_store = audit_store
-    report_section.pm_comment = pm_comment
-    report_section.save()
-    return report_section
-
 
 def find_by_audit_store_for_clientuser(audit_store_id, user):
     audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, user)
