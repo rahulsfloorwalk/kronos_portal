@@ -36,3 +36,18 @@ class ReportSectionTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "auditor comment cannot be blank"):
             report_section.set_auditor_comment(auditor_comment)
 
+    def test_set_pm_comment_sets_pm_comment_correctly(self):
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email())
+        pm_comment = "Foobar"
+        report_section.set_pm_comment(pm_comment)
+        self.assertEqual(pm_comment, report_section.pm_comment)
+
+    def test_set_pm_comment_raises_when_pm_comment_is_empty_or_none(self):
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email())
+        pm_comment = ""
+        with self.assertRaisesRegex(AppLogicError, "pm comment cannot be blank"):
+            report_section.set_pm_comment(pm_comment)
+        pm_comment = None
+        with self.assertRaisesRegex(AppLogicError, "pm comment cannot be blank"):
+            report_section.set_pm_comment(pm_comment)
+

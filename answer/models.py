@@ -172,5 +172,11 @@ class ReportSection(Model):
         self.auditor_comment = auditor_comment
         self.save()
 
+    def set_pm_comment(self, pm_comment):
+        if pm_comment in (None, ""):
+            raise AppLogicError("pm comment cannot be blank")
+        self.pm_comment = pm_comment
+        self.save()
+
     class Meta:
         unique_together = (("audit_store","section"))
