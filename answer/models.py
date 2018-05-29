@@ -45,6 +45,22 @@ class Answer(Model):
         else:
             raise AppLogicError("Question type must be mutex")
 
+    def set_answer_text(self, answer_text):
+        if answer_text in (None, ""):
+            raise AppLogicError("answer cannot be empty")
+
+        if self.question.question_type == Question.MUTEX:
+            result = [o for o in self.question.question_data["options"] if o["value"] == answer_text]
+            if len(result) == 1:
+                self.marks_obtained = result[0]["marks"]
+                self.answer_text = answer_text
+                self.save()
+            else:
+                raise AppLogicError("invalid answer")
+        elif self.question.question_type == Question.PLAIN:
+            self.answer_text = answer_text
+            self.save()
+
     class Meta:
         unique_together = (('question', 'audit_store',))
 
