@@ -67,3 +67,25 @@ class ReportSectionManagerServiceTestCase(TestCase):
                         auditor_comment,
                     )
 
+    def test_set_pm_comment_for_manager_sets_pm_comment_or_raises(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            report_section = mommy.make(ReportSection, audit_store=audit_store, section__audit_cycle=audit_cycle)
+            pm_comment = "Hello World"
+            if audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES:
+                saved_report_section = report_section_manager_service.set_pm_comment_for_manager(
+                    audit_store.id,
+                    report_section.section.id,
+                    pm_comment,
+                )
+                self.assertEqual(pm_comment, saved_report_section.pm_comment)
+            else:
+                with self.assertRaisesRegex(AppLogicError, "Report Section pm comment cannot be set now"):
+                    report_section_manager_service.set_pm_comment_for_manager(
+                        audit_store.id,
+                        report_section.section.id,
+                        pm_comment,
+                    )
+
