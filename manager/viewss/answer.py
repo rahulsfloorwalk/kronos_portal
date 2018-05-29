@@ -63,7 +63,7 @@ class AnswerByQuestionAndStore(APIView):
         ds = AnswerByQuestionAndStore.AnswerDeserializer(data=request.data)
         ds.is_valid(raise_exception=True)
         answer_text = ds.validated_data.get('answer_text')
-        answer = answer_service.set_answer_text(audit_store_id, question_id, answer_text)
+        answer = answer_manager_service.set_answer_text_for_manager(audit_store_id, question_id, answer_text)
         return Response(AnswerSerializer(answer).data)
 
 

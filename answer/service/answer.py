@@ -106,28 +106,3 @@ def set_marks(audit_store_id, question_id, marks):
     answer.marks_obtained = marks
     answer.save()
     return answer
-
-
-def set_answer_text(audit_store_id, question_id, answer_text):
-    audit_store = audit_store_service.find_by_id(audit_store_id)
-
-    # Add PM status here
-    if audit_store.status != AuditStore.SUBMITTED:
-        raise AppLogicError("Cannot set answer for unsubmitted report")
-
-    if answer_text in (None, ""):
-        raise AppLogicError("answer cannot be empty")
-
-    answer = find_by_audit_store_and_question(audit_store_id, question_id)
-    q = question_service.find_question_by_id(question_id)
-
-    if q.question_type == Question.MUTEX:
-        result = [o for o in q.question_data["options"] if o["value"] == answer_text]
-        if len(result) == 1:
-            answer.marks_obtained = result[0]["marks"]
-        else:
-            raise AppLogicError("invalid answer")
-
-    answer.answer_text = answer_text
-    answer.save()
-    return answer
