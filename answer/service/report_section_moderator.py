@@ -1,3 +1,4 @@
+from kronos.exceptions import AppLogicError
 from audit_store import service_moderator as audit_store_moderator_service
 from . import report_section as report_section_service
 
@@ -22,4 +23,8 @@ def submit_pm_comment_for_moderator(audit_store_id, section_id, pm_comment, user
 
 def set_not_applicable_for_moderator(audit_store_id, section_id, not_applicable, user_id):
     report_section = find_by_audit_store_and_section_for_moderator(audit_store_id, section_id, user_id)
-    return report_section_service.set_not_applicable(audit_store_id, report_section.section_id, not_applicable)
+    if report_section.audit_store.is_editable_by_moderator():
+        report_section.set_not_applicable(not_applicable)
+        return report_section
+    else:
+        raise AppLogicError("Report Section not applicable cannot be set now")
