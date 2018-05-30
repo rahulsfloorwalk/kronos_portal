@@ -176,3 +176,8 @@ workflows:
           requires:
             - pytest
             - jstest
+          filters:
+            branches:
+              only:
+                - development
+                - master
