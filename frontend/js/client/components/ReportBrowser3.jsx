@@ -87,8 +87,8 @@ export class AuditStoreTable extends Component {
 		let base = url.api_base_path + 'client/audit_cycle/' + this.props.auditCycleId + '/audit_cycle_filtered_xlsx_report?';
 		base += 'city=' + encodeURIComponent(this.state.selectedCityId || '') + '&';
 		base += 'priority=' + encodeURIComponent(this.state.selectedPriority || '') + '&';
-		base += 'start_date=' + encodeURIComponent(this.state.startDate || '') + '&';
-		base += 'end_date=' + encodeURIComponent(this.state.endDate || '') + '&';
+		base += 'start_date=' + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || '') + '&';
+		base += 'end_date=' + encodeURIComponent(this.state.endDate.format("YYYY-MM-DD") || '') + '&';
 		base += 'type=' + encodeURIComponent(this.state.selectedType || '') + '&';
 		base += 'month=' + encodeURIComponent(Number(this.state.selectedMonth)+1 || '');
 		return base;
