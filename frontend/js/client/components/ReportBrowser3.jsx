@@ -19,7 +19,7 @@ import { fetchAuditCycles } from '../service/audit_cycle.js';
 import { fetchCities } from '../service/city.js';
 import { findAuditStoresByAuditCycle } from '../service/audit_store.js';
 
-class AuditStoreTable extends Component {
+export class AuditStoreTable extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -153,8 +153,6 @@ class AuditStoreTable extends Component {
 		if(this.state.reports.length === 0) {
 			return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
 		}
-		console.log(this.state.startDate);
-		console.log(this.state.endDate);
 		let citySelect = (
 			<div style={{display:"inline-block",width:"200px"}}>
 				<label className="control-label">&nbsp;City:</label>
@@ -192,7 +190,7 @@ class AuditStoreTable extends Component {
 			<div style={{display:"inline-block",width:"200px"}}>
 				<label className="control-label">&nbsp;End Date:</label>
 				<Datetime name="end_date"
-					defaultValue={this.state.endDate}
+					value={this.state.endDate}
 					onChange={this.setEndDate}
 					isValidDate={this.validateEndDate}
 					timeFormat={false}
