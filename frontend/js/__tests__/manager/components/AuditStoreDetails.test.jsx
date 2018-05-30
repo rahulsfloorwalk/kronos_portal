@@ -94,37 +94,37 @@ describe("<AuditStoreDetails/>", () => {
 	});
 
 	it("is rendered correctly when AuditStore is already rated", () => {
-		sampleAuditStore.qa_rating = 1;
+		const testAuditStore = Object.assign({}, sampleAuditStore, { qa_rating: 1});
 		const r = renderer.create(<Provider store={sampleStore}>
-			<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>
+			<AuditStoreDetails auditStore={testAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>
 		</Provider>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
-	it("is rendered correctly for all the statuses", () => {
-		const statuses = [
-			"ASSIGNED",
-			"ACKNOWLEDGED",
-			"SUBMITTED",
-			"PM_REVIEW",
-			"COMPLETED",
-			"ACCEPTED",
-			"REJECTED",
-			"WITHDRAWN",
-			"FAILED",
-		];
-		for( const s of statuses){
-			sampleAuditStore.status = s;
+	const statuses = [
+		"ASSIGNED",
+		"ACKNOWLEDGED",
+		"SUBMITTED",
+		"PM_REVIEW",
+		"COMPLETED",
+		"ACCEPTED",
+		"REJECTED",
+		"WITHDRAWN",
+		"FAILED",
+	];
+	for( const s of statuses){
+		it(`is rendered correctly when status is ${s}`, () => {
+			const testAuditStore = Object.assign({}, sampleAuditStore, { status: s });
 			const r = renderer.create(<Provider store={sampleStore}>
-				<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>
+				<AuditStoreDetails auditStore={testAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>
 			</Provider>);
 			expect(r.toJSON()).toMatchSnapshot();
-		}
-	});
+		});
+	}
 
 	it("dispatches the qa ok request action when QA OK button is clicked", (done) => {
-		sampleAuditStore.status = "SUBMITTED";
-		const r = shallow(<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
+		const testAuditStore = Object.assign({}, sampleAuditStore, { status: "SUBMITTED" });
+		const r = shallow(<AuditStoreDetails auditStore={testAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
 		let qaOkButton = r.find("div.panel-footer > button").at(1);
 		expect(qaOkButton.length).toEqual(1);
 		expect(qaOkButton.text()).toEqual("Forward to PM");
@@ -140,8 +140,8 @@ describe("<AuditStoreDetails/>", () => {
 	});
 
 	it("dispatches the PM REVERT request action when PM REVERT button is clicked", (done) => {
-		sampleAuditStore.status = "PM_REVIEW";
-		const r = shallow(<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
+		const testAuditStore = Object.assign({}, sampleAuditStore, { status: "PM_REVIEW" });
+		const r = shallow(<AuditStoreDetails auditStore={testAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
 		let qaOkButton = r.find("div.panel-footer > button").at(0);
 		expect(qaOkButton.length).toEqual(1);
 		expect(qaOkButton.text()).toEqual("Revert to QA");
