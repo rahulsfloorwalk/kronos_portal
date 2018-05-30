@@ -77,8 +77,8 @@ class AuditStoreTable extends Component {
 				months,
 				cycleStartDate: cycleStartDate,
 				cycleEndDate: cycleEndDate,
-				startDate: cycleStartDate,
-				endDate: cycleEndDate,
+				startDate: moment(cycleStartDate),
+				endDate: moment(cycleEndDate),
 			});
 		}).always(() => this.setLoading(false));
 	}
@@ -128,13 +128,13 @@ class AuditStoreTable extends Component {
 
 	setStartDate= (date) => {
 		this.setState({
-			startDate: date.format("YYYY-MM-DD"),
+			startDate: date,
 		});
 	}
 
 	setEndDate= (date) => {
 		this.setState({
-			endDate: date.format("YYYY-MM-DD"),
+			endDate: date,
 		});
 	}
 
@@ -155,18 +155,29 @@ class AuditStoreTable extends Component {
 		}
 		console.log(this.state.startDate);
 		console.log(this.state.endDate);
-		let citySelect = (<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px"}}>
-			<option value="">All Cities</option>
-			{this.state.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-		</select>);
+		let citySelect = (
+			<div style={{display:"inline-block",width:"200px"}}>
+				<label className="control-label">&nbsp;City:</label>
+				<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px"}}>
+					<option value="">All Cities</option>
+					{this.state.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+				</select>
+			</div>
+		);
 
-		let storeTypeSelect = (<select onChange={this.selectStoreType} value={this.state.selectedType} className="form-control" style={{display:"inline-block",width:"200px"}}>
-			<option value="">All Types</option>
-			{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
-		</select>);
+		let storeTypeSelect = (
+			<div style={{display:"inline-block",width:"200px"}}>
+				<label className="control-label">&nbsp;Store Type:</label>
+				<select onChange={this.selectStoreType} value={this.state.selectedType} className="form-control" style={{display:"inline-block",width:"200px"}}>
+				<option value="">All Types</option>
+				{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
+				</select>
+			</div>
+		);
 
 		let startDatePicker = (
 			<div style={{display:"inline-block",width:"200px"}}>
+				<label className="control-label">&nbsp;Start Date:</label>
 				<Datetime name="start_date"
 					value={this.state.startDate}
 					onChange={this.setStartDate}
@@ -179,6 +190,7 @@ class AuditStoreTable extends Component {
 
 		let endDatePicker = (
 			<div style={{display:"inline-block",width:"200px"}}>
+				<label className="control-label">&nbsp;End Date:</label>
 				<Datetime name="end_date"
 					defaultValue={this.state.endDate}
 					onChange={this.setEndDate}
@@ -210,7 +222,7 @@ class AuditStoreTable extends Component {
 		this.state.reports.filter(r => {
 			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
 			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
-			&& r.audit_date >= this.state.startDate && r.audit_date <= this.state.endDate
+			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, '[]')
 		}).forEach( r => {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
@@ -247,7 +259,6 @@ class AuditStoreTable extends Component {
 		return (
 			<div>
 			<div className="form-group">
-				<big>Filter</big>:&nbsp;
 				{citySelect}&nbsp;
 				{storeTypeSelect}&nbsp;
 				{startDatePicker}&nbsp;
