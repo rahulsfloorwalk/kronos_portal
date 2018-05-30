@@ -1,5 +1,6 @@
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User, Group
+from django.contrib.contenttypes.models import ContentType
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
@@ -101,4 +102,41 @@ class AttachmentManagerServiceTestCase(TestCase):
                         test_mime_type,
                         self.manager_user.id,
                     )
+
+    @override_settings(AWS = test_aws_settings)
+    def test_complete_for_manager_completes_attachment_based_on_audit_store_status(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            attachment = mommy.make(
+                Attachment,
+                status=Attachment.ATTACHED,
+                content_type=ContentType.objects.get_for_model(AuditStore),
+                object_id=audit_store.id,
+            )
+            if audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES:
+                attachment = attachment_manager_service.complete_for_manager(attachment.id)
+                self.assertEqual(Attachment.ATTACHED, attachment.status)
+            else:
+                with self.assertRaisesRegex(AppLogicError, "cannot complete attachment now"):
+                    attachment_manager_service.complete_for_manager(attachment.id)
+
+    @override_settings(AWS = test_aws_settings)
+    def test_delete_for_manager_deletes_attachment_based_on_audit_store_status(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            attachment = mommy.make(
+                Attachment,
+                status=Attachment.ATTACHED,
+                content_type=ContentType.objects.get_for_model(AuditStore),
+                object_id=audit_store.id,
+            )
+            if audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES:
+                attachment_manager_service.delete_for_manager(attachment.id)
+            else:
+                with self.assertRaisesRegex(AppLogicError, "cannot delete attachment now"):
+                    attachment_manager_service.delete_for_manager(attachment.id)
 
