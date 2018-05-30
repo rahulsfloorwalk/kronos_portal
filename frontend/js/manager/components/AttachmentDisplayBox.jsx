@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import * as ReactRedux from 'react-redux';
 import { Link } from 'react-router';
 
@@ -19,30 +19,31 @@ import AttachmentInProgressThumbnail from '../../components/AttachmentInProgress
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-var AttachmentDisplayBox = React.createClass({
-	getInitialState: function(){
-		return {
+export class AttachmentDisplayBox extends Component{
+	constructor(props){
+		super(props);
+		this.state = {
 			attachments: [],
 			inProgress: {},
 			selectedAttachment: undefined
 		};
-	},
-	reloadState: function(){
+	}
+	reloadState = () => {
 		findAttachmentsByAuditStore(this.props.auditStoreId).then((attachments) => {
 			this.setState({
 				attachments
 			});
 		});
-	},
-	componentDidMount: function(){
+	}
+	componentDidMount(){
 		this.reloadState();
-	},
-	attachmentSelected: function(attachment){
+	}
+	attachmentSelected = (attachment) => {
 		this.setState({
 			selectedAttachment: attachment
 		});
-	},
-	deleteButtonClicked: function(){
+	}
+	deleteButtonClicked = () => {
 		if( this.state.selectedAttachment){
 			deleteAttachment(this.state.selectedAttachment.id).then(() => {
 				Alert.success("ATTACHMENT DELETED");
@@ -52,8 +53,8 @@ var AttachmentDisplayBox = React.createClass({
 				});
 			});
 		}
-	},
-	attachmentRenamed: function(file_name){
+	}
+	attachmentRenamed = (file_name) => {
 		renameAttachment(this.state.selectedAttachment.id, file_name).then((a)=>{
 			Alert.success("ATTACHMENT RENAMED");
 			this.setState({
@@ -71,11 +72,11 @@ var AttachmentDisplayBox = React.createClass({
 		}, ()=> {
 			Alert.warning("INVALIED FILE NAME");
 		});
-	},
-	uploadButtonClicked: function(e){
+	}
+	uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	},
-	setProgressState: function(tempId, progressState){
+	}
+	setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
@@ -83,8 +84,8 @@ var AttachmentDisplayBox = React.createClass({
 				})
 			});
 		});
-	},
-	uploadFile: function(e){
+	}
+	uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -139,8 +140,8 @@ var AttachmentDisplayBox = React.createClass({
 				});
 			});
 		}
-	},
-	render: function(){
+	}
+	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -200,8 +201,8 @@ var AttachmentDisplayBox = React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {
@@ -209,5 +210,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export { AttachmentDisplayBox };
 export default ReactRedux.connect(mapStoreToProps)(AttachmentDisplayBox);
