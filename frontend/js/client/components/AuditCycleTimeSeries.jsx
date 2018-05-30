@@ -87,20 +87,35 @@ var AuditCycleTimeSeries = React.createClass({
 			for(let i=0; i < this.state.labels.length; i++){
 				bars.push(<Bar key={i} barSize={30} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>);
 			}
-			let width = (this.state.data.length*10).toString().concat("%");
-			chart = (
-			<div style={{ 'width': '100%', 'overflow': 'scroll'}}>
-				<ResponsiveContainer width={width} height={300}>
-				<BarChart layout="horizontal" data={this.state.data} margin={{top: 25, right: 5, left: 25, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
-				<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
-				<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
-				<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
-				<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
-				{bars}
-				</BarChart>
-				</ResponsiveContainer>
-			</div>
-			);
+			if (this.state.data.length <= 5){
+				chart = (
+					<ResponsiveContainer width="100%" aspect={3 / 1}>
+				    <BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+				        <YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
+				        <XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
+				        <Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
+				        <Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
+				        {bars}
+				    </BarChart>
+					</ResponsiveContainer>
+				);
+			}
+			else{
+				let width = (this.state.data.length*20).toString().concat("%");
+				chart = (
+					<div style={{ 'width': '100%', 'overflow': 'scroll'}}>
+						<ResponsiveContainer width={width} height={300}>
+						<BarChart layout="horizontal" data={this.state.data} margin={{top: 25, right: 5, left: 25, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+						<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
+						<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
+						<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
+						<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
+						{bars}
+						</BarChart>
+						</ResponsiveContainer>
+					</div>
+				);
+			}
 		}
 		return(
 			<div>
