@@ -163,13 +163,13 @@ var AttachmentDisplayBox = React.createClass({
 			}
 		}
 
-		let editable = this.props.auditStore.status === "SUBMITTED";
+		let editable = this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
 					onRename={this.attachmentRenamed}
 					onDelete={this.deleteButtonClicked}/>
 
 		let uploadButton;
-		if(this.props.auditStore.status === 'SUBMITTED'){
+		if(editable){
 			uploadButton = (
 				<span>
 					<input className="hidden" type="file" onChange={this.uploadFile} multiple
@@ -209,4 +209,5 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
+export { AttachmentDisplayBox };
 export default ReactRedux.connect(mapStoreToProps)(AttachmentDisplayBox);
