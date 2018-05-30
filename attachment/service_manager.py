@@ -11,7 +11,7 @@ from . import service as attachment_service
 def upload_for_audit_store_for_manager(audit_store_id, file_name, file_size, mime_type):
     audit_store = audit_store_service.find_by_id(audit_store_id)
 
-    if audit_store.status != AuditStore.SUBMITTED:
+    if not audit_store.is_editable_by_manager():
         raise AppLogicError("cannot upload attachment now")
 
     return attachment_service.upload_for_audit_store(audit_store_id, file_name, file_size, mime_type)
