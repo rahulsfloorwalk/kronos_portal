@@ -20,7 +20,7 @@ def upload_for_audit_store_for_manager(audit_store_id, file_name, file_size, mim
 def upload_for_report_section_for_manager(audit_store_id, section_id, file_name, file_size, mime_type, user_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
 
-    if report_section.audit_store.status != AuditStore.SUBMITTED:
+    if not report_section.audit_store.is_editable_by_manager():
         raise AppLogicError("cannot upload attachment now")
 
     return attachment_service.upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type)

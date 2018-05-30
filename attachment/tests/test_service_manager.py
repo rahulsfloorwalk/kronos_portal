@@ -6,6 +6,7 @@ from model_mommy.recipe import Recipe
 
 from kronos.exceptions import AppLogicError
 from attachment.models import Attachment
+from questionnaire.models import Section
 from attachment import service_manager as attachment_manager_service
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
@@ -64,5 +65,40 @@ class AttachmentManagerServiceTestCase(TestCase):
                         test_file,
                         test_size,
                         test_mime_type,
+                    )
+
+    @override_settings(AWS = test_aws_settings)
+    def test_upload_for_report_section_for_manager_creates_attachment_based_on_audit_store_status(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+            section = mommy.make(Section, audit_cycle=audit_cycle)
+            audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
+            test_file = "hello_world.jpg"
+            test_mime_type = "image/jpeg"
+            test_size = 2048
+            if audit_store.status in audit_store._MANAGER_EDITABLE_STATUSES:
+                post_data, created_attachment = attachment_manager_service.upload_for_report_section_for_manager(
+                    audit_store.id,
+                    section.id,
+                    test_file,
+                    test_size,
+                    test_mime_type,
+                    self.manager_user.id,
+                )
+                self.assertEqual(test_file, created_attachment.file_name)
+                self.assertEqual(test_size, created_attachment.file_size)
+                self.assertEqual(test_mime_type, created_attachment.mime_type)
+                self.assertEqual(Attachment.PHOTO, created_attachment.proof_type)
+                self.assertEqual(Attachment.UPLOADING, created_attachment.status)
+            else:
+                with self.assertRaisesRegex(AppLogicError, "cannot upload attachment now"):
+                    attachment_manager_service.upload_for_report_section_for_manager(
+                        audit_store.id,
+                        section.id,
+                        test_file,
+                        test_size,
+                        test_mime_type,
+                        self.manager_user.id,
                     )
 
