@@ -51,4 +51,9 @@ def delete_for_manager(attachment_id):
     attachment_service.delete(attachment_id)
 
 def rename_for_manager(attachment_id, new_name):
+    audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)
+
+    if not audit_store.is_editable_by_manager():
+        raise AppLogicError("cannot rename attachment now")
+
     return attachment_service.rename(attachment_id, new_name)
