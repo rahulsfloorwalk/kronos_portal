@@ -98,7 +98,7 @@ export class AuditStoreTable extends Component {
 	}
 	componentWillReceiveProps(nextProps){
 		if(this.props.auditCycleId !== nextProps.auditCycleId){
-			this.reloadData(nextProps.auditCycleId, this.props.startDate, this.props.endDate);
+			this.reloadData(nextProps.auditCycleId, nextProps.startDate, nextProps.endDate);
 		}
 	}
 
