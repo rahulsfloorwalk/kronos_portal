@@ -404,3 +404,67 @@ class AuditStoreIdRejectTestCase(APITestCase):
         }))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], AuditStore.REJECTED)
+
+
+class AuditStoreIdReimbursementTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_post_sets_reimbursement(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        reimbursement = 2000
+        self.login()
+
+        response = self.client.post(reverse('manager:audit_store_id_reimbursement_view', kwargs = {
+            'audit_store_id': audit_store.id
+        }), {
+            "reimbursement": reimbursement
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["reimbursement"], reimbursement)
+
+
+class AuditStoreIdEarningsPerAuditView(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_post_sets_reimbursement(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        earnings_per_audit = 2000
+        self.login()
+
+        response = self.client.post(reverse('manager:audit_store_id_earnings_per_audit_view', kwargs = {
+            'audit_store_id': audit_store.id
+        }), {
+            "earnings_per_audit": earnings_per_audit
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["earnings_per_audit"], earnings_per_audit)

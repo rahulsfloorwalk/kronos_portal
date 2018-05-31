@@ -1,6 +1,26 @@
+from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import manager as manager_service
 
+def set_reimbursement(audit_store_id, reimbursement, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    manager_service.find_manager_by_user_id(user_id)
+
+    if audit_store.is_editable_by_manager():
+        audit_store.set_reimbursement(reimbursement)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set reimbursement now")
+
+def set_earnings_per_audit(audit_store_id, earnings_per_audit, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    manager_service.find_manager_by_user_id(user_id)
+
+    if audit_store.is_editable_by_manager():
+        audit_store.set_earnings_per_audit(earnings_per_audit)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set earnings per audit now")
 
 def submit_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)

@@ -8,7 +8,6 @@ from django.db.models import QuerySet
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
-from django.db.models import Q
 
 from kronos.utils import get_color_code_by_percentage
 from kronos.exceptions import AppLogicError
@@ -19,7 +18,6 @@ from client.models import Store
 from audit.models import Audit, AuditCycle
 from answer.models import Answer
 from questionnaire.models import Question
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 
 from audit_store.signals import audit_store_status_change
 
@@ -116,6 +114,9 @@ class AuditStore(Model):
 
     audit = ForeignKey(Audit, db_column='audit_id', related_name='audit_stores', on_delete=PROTECT)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+
+    earnings_per_audit = IntegerField(db_column='earnings_per_audit', null=True)
+    reimbursement = IntegerField(db_column='reimbursement', null=True)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
@@ -260,7 +261,6 @@ class AuditStore(Model):
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
-
     @atomic
     def withdraw(self, *args, by):
         if not self.is_withdrawable():
@@ -366,7 +366,6 @@ class AuditStore(Model):
         self.save()
         self._change_status(AuditStore.FAILED, by)
 
-
     @atomic
     def rate(self, rating):
         if self.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
@@ -387,6 +386,16 @@ class AuditStore(Model):
             audit_store=self
         )
         self.status = new_status
+        self.save()
+
+    @atomic
+    def set_reimbursement(self, reimbursement):
+        self.reimbursement = reimbursement
+        self.save()
+
+    @atomic
+    def set_earnings_per_audit(self, earnings_per_audit):
+        self.earnings_per_audit = earnings_per_audit
         self.save()
 
 

@@ -158,6 +158,25 @@ class AuditStoreManagerServiceTestCase(TestCase):
         modified_audit_store = service_manager.withdraw_report(audit_store.id, self.manager_user.id)
         self.assertEqual(AuditStore.WITHDRAWN, modified_audit_store.status)
 
+    def test_set_reimbursement_raises_when_report_is_not_editable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        with self.assertRaisesRegex(AppLogicError, "cannot set reimbursement now"):
+            service_manager.set_reimbursement(audit_store.id, 2000, self.manager_user.id)
+
+    def test_set_reimbursement_sets_reimbursement_when_report_is_editable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
+        audit_store = service_manager.set_reimbursement(audit_store.id, 2000, self.manager_user.id)
+        self.assertEqual(audit_store.reimbursement, 2000)
+
+    def test_set_earnings_per_audit_raises_when_report_is_not_editable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        with self.assertRaisesRegex(AppLogicError, "cannot set earnings per audit now"):
+            service_manager.set_earnings_per_audit(audit_store.id, 2000, self.manager_user.id)
+
+    def test_set_earnings_per_audit_sets_earnings_per_audit_when_report_is_editable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
+        audit_store = service_manager.set_earnings_per_audit(audit_store.id, 2000, self.manager_user.id)
+        self.assertEqual(audit_store.earnings_per_audit, 2000)
 
     # def test_complete_raises_when_user_is_not_manager(self):
     #     audit_store = self.create_completable_report()

@@ -403,6 +403,8 @@ class AuditStoreSerializer(ModelSerializer):
             'visible_to',
             'assigned_to_moderator',
             'qa_rating',
+            'earnings_per_audit',
+            'reimbursement',
         )
         read_only_fields = fields
 

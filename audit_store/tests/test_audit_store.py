@@ -9,9 +9,9 @@ from kronos.test_utils import catch_signal
 from kronos.exceptions import AppLogicError
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from audit.models import AuditCycle, Audit
+from audit.models import AuditCycle
 from auditor.models import ProfileInfo
-from audit_store.models import AuditStore, AuditStoreQuerySet
+from audit_store.models import AuditStore
 from audit_store.signals import audit_store_status_change
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
@@ -608,3 +608,13 @@ class AuditStoreTestCase(TestCase):
                 error_log.output
             )
         self.assertFalse(audit_store.is_submittable())
+
+    def test_set_reimbursement_sets_reimbursement(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        audit_store.set_reimbursement(5000)
+        self.assertEqual(audit_store.reimbursement, 5000)
+
+    def test_set_earnings_per_audit_sets_earnings_per_audit(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        audit_store.set_earnings_per_audit(5000)
+        self.assertEqual(audit_store.earnings_per_audit, 5000)
