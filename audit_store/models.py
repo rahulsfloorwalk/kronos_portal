@@ -74,6 +74,7 @@ class AuditStore(Model):
 
     _ALL_STATUSES = (ASSIGNED, ACKNOWLEDGED, PM_REVIEW, SUBMITTED, COMPLETED, ACCEPTED, FAILED, WITHDRAWN, REJECTED)
     _WITHDRAWABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
+    _FAILABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
     _MANAGER_EDITABLE_STATUSES = (SUBMITTED, PM_REVIEW,)
     _MODERATOR_EDITABLE_STATUSES = (SUBMITTED,)
     _AUDITOR_EDITABLE_STATUSES = (ACKNOWLEDGED,)
@@ -136,6 +137,9 @@ class AuditStore(Model):
 
     def is_withdrawable(self):
         return self.status in self._WITHDRAWABLE_STATUSES
+
+    def is_failable(self):
+        return self.status in self._FAILABLE_STATUSES
 
     def is_editable_by_auditor(self):
         return self.status in self._AUDITOR_EDITABLE_STATUSES
@@ -440,6 +444,26 @@ class AuditStore(Model):
 
         else:
             raise AppLogicError("Report cannot be rejected now")
+
+    @atomic
+    def fail(self, *args, by):
+        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
+            raise AppLogicError("Report cannot be failed by user")
+
+        if self.is_failable():
+            old_status = self.status
+            self.status = AuditStore.FAILED
+            self.qa_rating = AuditStore.BAD
+            self.save()
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.FAILED,
+                old_status=old_status,
+                user_actor=by,
+            )
+
+        else:
+            raise AppLogicError("Report cannot be failed now")
 
     @atomic
     def rate(self, rating):

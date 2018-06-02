@@ -460,6 +460,47 @@ class AuditStoreTestCase(TestCase):
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be rejected now"):
             audit_store.reject(by=self.manager_user)
 
+    ##########Tests for failable -> FAILED########
+
+    def test_fail_changes_status_to_failed_when_is_failable(self):
+        for status in AuditStore._FAILABLE_STATUSES:
+            audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
+            audit_store.fail(by=self.manager_user)
+
+            self.assertEqual(audit_store.status, AuditStore.FAILED)
+
+    def test_fail_changes_rating_to_bad(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
+        audit_store.fail(by=self.manager_user)
+
+        self.assertEqual(audit_store.qa_rating, AuditStore.BAD)
+
+    def test_fail_sends_status_change_signal(self):
+        for status in AuditStore._FAILABLE_STATUSES:
+            audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
+            with catch_signal(audit_store_status_change) as mock:
+                audit_store.fail(by=self.manager_user)
+
+                mock.assert_called_once_with(
+                    signal=audit_store_status_change,
+                    sender=AuditStore,
+                    status=AuditStore.FAILED,
+                    old_status=status,
+                    user_actor=self.manager_user,
+                )
+
+    def test_fail_raises_when_user_is_not_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be failed by user"):
+            audit_store.fail(by=self.auditor_user)
+
+    def test_fail_raises_when_status_is_not_failable(self):
+        for status in list(set(AuditStore._ALL_STATUSES) - set(AuditStore._FAILABLE_STATUSES)):
+            audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
+
+            with self.assertRaisesRegexp(AppLogicError, "Report cannot be failed now"):
+                audit_store.fail(by=self.manager_user)
+
     ##########Tests for boolean methods########
 
     def test_is_withdrawable(self):
