@@ -79,7 +79,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.auditor_user,
             )
 
-    def test_raises_when_assigned_to_different_user(self):
+    def test_raises_when_acknowledged_by_different_user(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user__email=fake.email())
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged by user"):
             audit_store.acknowledge(by=self.auditor_user)
@@ -92,6 +92,75 @@ class AuditStoreTestCase(TestCase):
             with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged now"):
                 audit_store.acknowledge(by=self.auditor_user)
 
+    def get_submitable_report(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
+                                 audit__audit_cycle=self.audit_cycle)
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+        report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
+        for i in range(3):
+            section = section_recipe.make()
+            report_section_recipe.make(section=section)
+            for i in range(5):
+                question = mommy.make(Question, section=section)
+                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar",
+                                    marks_obtained=1)
+
+        return audit_store
+
+    def test_status_changes_from_acknowledged_to_submitted(self):
+        audit_store = self.get_submitable_report()
+        audit_store.submit(by=self.auditor_user)
+
+        self.assertEqual(audit_store.status, AuditStore.SUBMITTED)
+
+    def test_submit_sends_status_change_signal(self):
+        audit_store = self.get_submitable_report()
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.submit(by=self.auditor_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.SUBMITTED,
+                old_status=AuditStore.ACKNOWLEDGED,
+                user_actor=self.auditor_user,
+            )
+
+    def test_raises_when_submitted_by_different_user(self):
+        audit_store = self.get_submitable_report()
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
+                                       groups=[self.auditor_group])
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted by user"):
+            audit_store.submit(by=auditor)
+
+    def test_status_changes_from_acknowledged_to_submitted_for_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        audit_store.submit_manager(by=self.manager_user)
+
+        self.assertEqual(audit_store.status, AuditStore.SUBMITTED)
+
+    def test_submit_sends_status_change_signal_for_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.submit_manager(by=self.manager_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.SUBMITTED,
+                old_status=AuditStore.ACKNOWLEDGED,
+                user_actor=self.manager_user,
+            )
+
+    def test_raises_when_submitted_for_manager_by_non_manager(self):
+        audit_store = self.get_submitable_report()
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted by user"):
+            audit_store.submit_manager(by=self.auditor_user)
+
+    def test_raises_when_status_is_not_acknowledged_by_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted now"):
+            audit_store.submit_manager(by=self.manager_user)
 
     def test_qa_ok_changes_status_to_pm_review(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.GOOD)
@@ -220,7 +289,7 @@ class AuditStoreTestCase(TestCase):
             )
 
     def test_is_submittable_returns_true(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
         report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
         for i in range(3):
@@ -231,10 +300,20 @@ class AuditStoreTestCase(TestCase):
                 answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
         self.assertTrue(audit_store.is_submitable())
 
+    def test_is_submittable_when_status_is_not_acknowledged(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
+        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
+            audit_store.is_submitable()
+            self.assertIn(
+                "DEBUG:audit_store.models:Report not acknowledged",
+                error_log.output
+            )
+        self.assertFalse(audit_store.is_submitable())
+
     def test_is_submitable_when_section_length_does_not_match_report_section(self):
         audit_store = mommy.make(
             AuditStore,
-            status=AuditStore.ASSIGNED,
+            status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle
         )
@@ -250,7 +329,7 @@ class AuditStoreTestCase(TestCase):
     def test_is_submitable_when_auditor_comment_is_blank(self):
         audit_store = mommy.make(
             AuditStore,
-            status=AuditStore.ASSIGNED,
+            status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle
         )
@@ -268,7 +347,7 @@ class AuditStoreTestCase(TestCase):
     def test_is_submitable_when_answer_length_does_not_match_questions(self):
         audit_store = mommy.make(
             AuditStore,
-            status=AuditStore.ASSIGNED,
+            status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle
         )
@@ -287,7 +366,7 @@ class AuditStoreTestCase(TestCase):
     def test_is_submitable_when_answer_text_is_empty(self):
         audit_store = mommy.make(
             AuditStore,
-            status=AuditStore.ASSIGNED,
+            status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle
         )

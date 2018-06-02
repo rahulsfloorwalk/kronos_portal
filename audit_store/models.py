@@ -8,6 +8,7 @@ from django.db.models import QuerySet
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
+from django.db.models import Q
 
 from kronos.utils import get_color_code_by_percentage
 from kronos.exceptions import AppLogicError
@@ -146,6 +147,11 @@ class AuditStore(Model):
         return self.status in self._MANAGER_EDITABLE_STATUSES
 
     def is_submitable(self):
+
+        if self.status != AuditStore.ACKNOWLEDGED:
+            _logger.debug("Report not acknowledged")
+            return False
+
         sections = self.audit.audit_cycle.sections.all()
         report_sections = self.report_sections.all()
 
@@ -263,6 +269,43 @@ class AuditStore(Model):
             )
         else:
             raise AppLogicError("Report cannot be acknowledged now")
+
+    @atomic
+    def submit(self, *args, by):
+        if by is not self.user:
+            raise AppLogicError("Report cannot be submitted by user")
+        if self.is_submitable():
+            self.status = AuditStore.SUBMITTED
+            self.save()
+
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.SUBMITTED,
+                old_status=AuditStore.ACKNOWLEDGED,
+                user_actor=by
+            )
+        else:
+            raise AppLogicError("Report cannot be acknowledged now")
+
+    @atomic
+    def submit_manager(self, *args, by):
+        if not by.groups.filter(Q(name=GROUP_NAME_MANAGER) | Q(name=GROUP_NAME_MODERATOR)).exists():
+            raise AppLogicError("Report cannot be submitted by user")
+
+        if self.status == AuditStore.ACKNOWLEDGED:
+            self.status = AuditStore.SUBMITTED
+            self.save()
+
+            # send the change signal
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.SUBMITTED,
+                old_status=AuditStore.ACKNOWLEDGED,
+                user_actor=by,
+            )
+        else:
+            raise AppLogicError("Report cannot be submitted now")
+
     @atomic
     def qa_ok(self, *args, by):
         if not self.is_completable():
