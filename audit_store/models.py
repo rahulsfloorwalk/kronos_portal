@@ -71,6 +71,7 @@ class AuditStore(Model):
         (REJECTED, "Rejected"),
     )
 
+    _ALL_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW, SUBMITTED, COMPLETED, FAILED, WITHDRAWN, REJECTED)
     _WITHDRAWABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
     _MANAGER_EDITABLE_STATUSES = (SUBMITTED, PM_REVIEW,)
     _MODERATOR_EDITABLE_STATUSES = (SUBMITTED,)
@@ -198,6 +199,22 @@ class AuditStore(Model):
 
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
+
+    @atomic
+    def withdraw(self, *args, by):
+        if not self.is_withdrawable():
+            raise AppLogicError("Audit store cannot be withdrawn now")
+
+        old_status = self.status
+        self.status = AuditStore.WITHDRAWN
+        self.save()
+
+        audit_store_status_change.send(
+            sender=self.__class__,
+            status=AuditStore.WITHDRAWN,
+            old_status=old_status,
+            user_actor=by,
+        )
 
     @atomic
     def qa_ok(self, *args, by):

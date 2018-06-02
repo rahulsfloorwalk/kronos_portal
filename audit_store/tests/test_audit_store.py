@@ -26,6 +26,36 @@ class AuditStoreTestCase(TestCase):
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
 
+    def test_withdrawable_changes_status_to_withdrawn(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in AuditStore._WITHDRAWABLE_STATUSES:
+            audit_store = audit_store_recipe.make(status=status)
+            audit_store.withdraw(by=self.manager_user)
+            self.assertEqual(audit_store.status, AuditStore.WITHDRAWN)
+
+    def test_withdraw_sends_status_change_signal(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in AuditStore._WITHDRAWABLE_STATUSES:
+            audit_store = audit_store_recipe.make(status=status)
+            with catch_signal(audit_store_status_change) as mock:
+                audit_store.withdraw(by=self.manager_user)
+
+                mock.assert_called_once_with(
+                    signal=audit_store_status_change,
+                    sender=AuditStore,
+                    status=AuditStore.WITHDRAWN,
+                    old_status=status,
+                    user_actor=self.manager_user,
+                )
+
+    def test_not_withdrawable_status_raises_exception(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        not_withdrawable_statuses = list(set(AuditStore._ALL_STATUSES) - set(AuditStore._WITHDRAWABLE_STATUSES))
+        for status in not_withdrawable_statuses:
+            audit_store = audit_store_recipe.make(status=status)
+            with self.assertRaisesRegexp(AppLogicError, "Audit store cannot be withdrawn now"):
+                audit_store.withdraw(by=self.manager_user)
+
     def test_qa_ok_changes_status_to_pm_review(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.GOOD)
         audit_store.qa_ok(by=self.manager_user)
