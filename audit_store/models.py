@@ -387,6 +387,24 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be completed now")
 
     @atomic
+    def revert_complete(self, *args, by):
+        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
+            raise AppLogicError("Report cannot be reverted to pm review by user")
+
+        if self.status == AuditStore.COMPLETED:
+            self.status = AuditStore.PM_REVIEW
+            self.save()
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.PM_REVIEW,
+                old_status=AuditStore.COMPLETED,
+                user_actor=by,
+            )
+
+        else:
+            raise AppLogicError("Report cannot be reverted to pm review now")
+
+    @atomic
     def rate(self, rating):
         if self.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
             raise AppLogicError("Report cannot be rated now")

@@ -315,7 +315,7 @@ class AuditStoreTestCase(TestCase):
 
         self.assertEqual(audit_store.status, AuditStore.COMPLETED)
 
-    def test_submit_sends_status_change_signal(self):
+    def test_complete_sends_status_change_signal(self):
         audit_store = self.get_completable_report()
         audit_store.qa_rating = AuditStore.AVERAGE
         audit_store.status = AuditStore.PM_REVIEW
@@ -357,6 +357,38 @@ class AuditStoreTestCase(TestCase):
         audit_store.qa_rating = AuditStore.AVERAGE
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be completed now"):
             audit_store.complete(by=self.manager_user)
+
+    ##########Tests for COMPLETED -> SUBMITTED########
+
+    def test_revert_complete_changes_status_from_completed_to_pm_review(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        audit_store.revert_complete(by=self.manager_user)
+
+        self.assertEqual(audit_store.status, AuditStore.PM_REVIEW)
+
+    def test_revert_complete_sends_status_change_signal(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.revert_complete(by=self.manager_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.PM_REVIEW,
+                old_status=AuditStore.COMPLETED,
+                user_actor=self.manager_user,
+            )
+
+    def test_revert_complete_raises_when_user_is_not_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be reverted to pm review by user"):
+            audit_store.revert_complete(by=self.auditor_user)
+
+    def test_revert_complete_raises_when_status_is_not_pm_review(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
+
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be reverted to pm review now"):
+            audit_store.revert_complete(by=self.manager_user)
 
     def test_is_withdrawable(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
