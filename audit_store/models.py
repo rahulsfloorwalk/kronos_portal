@@ -71,7 +71,7 @@ class AuditStore(Model):
         (REJECTED, "Rejected"),
     )
 
-    _ALL_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW, SUBMITTED, COMPLETED, FAILED, WITHDRAWN, REJECTED)
+    _ALL_STATUSES = (ASSIGNED, ACKNOWLEDGED, PM_REVIEW, SUBMITTED, COMPLETED, ACCEPTED, FAILED, WITHDRAWN, REJECTED)
     _WITHDRAWABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
     _MANAGER_EDITABLE_STATUSES = (SUBMITTED, PM_REVIEW,)
     _MODERATOR_EDITABLE_STATUSES = (SUBMITTED,)
@@ -203,7 +203,7 @@ class AuditStore(Model):
     @atomic
     def withdraw(self, *args, by):
         if not self.is_withdrawable():
-            raise AppLogicError("Audit store cannot be withdrawn now")
+            raise AppLogicError("Report cannot be withdrawn now")
 
         old_status = self.status
         self.status = AuditStore.WITHDRAWN
@@ -216,6 +216,22 @@ class AuditStore(Model):
             user_actor=by,
         )
 
+    @atomic
+    def acknowledge(self, *args, by):
+        if by is not self.user:
+            raise AppLogicError("Report cannot be acknowledged by user")
+        if self.status == AuditStore.ASSIGNED:
+            self.status = AuditStore.ACKNOWLEDGED
+            self.save()
+
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.ACKNOWLEDGED,
+                old_status=AuditStore.ASSIGNED,
+                user_actor=by
+            )
+        else:
+            raise AppLogicError("Report cannot be acknowledged now")
     @atomic
     def qa_ok(self, *args, by):
         if not self.is_completable():

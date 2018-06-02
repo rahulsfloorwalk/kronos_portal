@@ -1,5 +1,6 @@
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
+from faker import Faker
 
 from audit_store.models import AuditStore
 
@@ -14,6 +15,7 @@ from auditor.models import ProfileInfo
 from audit_store.signals import audit_store_status_change
 
 
+fake=Faker()
 class AuditStoreTestCase(TestCase):
     fixtures = ['groups', 'city']
 
@@ -53,8 +55,41 @@ class AuditStoreTestCase(TestCase):
         not_withdrawable_statuses = list(set(AuditStore._ALL_STATUSES) - set(AuditStore._WITHDRAWABLE_STATUSES))
         for status in not_withdrawable_statuses:
             audit_store = audit_store_recipe.make(status=status)
-            with self.assertRaisesRegexp(AppLogicError, "Audit store cannot be withdrawn now"):
+            with self.assertRaisesRegexp(AppLogicError, "Report cannot be withdrawn now"):
                 audit_store.withdraw(by=self.manager_user)
+
+    def test_status_changes_from_assigned_to_acknowledged(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
+        audit_store.acknowledge(by=self.auditor_user)
+
+        self.assertEqual(audit_store.status, AuditStore.ACKNOWLEDGED)
+
+    def test_acknowledge_sends_status_change_signal(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.acknowledge(by=self.auditor_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.ACKNOWLEDGED,
+                old_status=AuditStore.ASSIGNED,
+                user_actor=self.auditor_user,
+            )
+
+    def test_raises_when_assigned_to_different_user(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user__email=fake.email())
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged by user"):
+            audit_store.acknowledge(by=self.auditor_user)
+
+    def test_raises_when_audit_store_is_not_in_assigned_state(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        statuses = list(set(AuditStore._ALL_STATUSES) - {AuditStore.ASSIGNED})
+        for status in statuses:
+            audit_store = audit_store_recipe.make(status=status)
+            with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged now"):
+                audit_store.acknowledge(by=self.auditor_user)
+
 
     def test_qa_ok_changes_status_to_pm_review(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.GOOD)
