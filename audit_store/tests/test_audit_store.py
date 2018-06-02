@@ -2,8 +2,6 @@ from model_mommy import mommy
 from model_mommy.recipe import Recipe
 from faker import Faker
 
-from audit_store.models import AuditStore
-
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
@@ -11,9 +9,12 @@ from kronos.test_utils import catch_signal
 from kronos.exceptions import AppLogicError
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from audit.models import AuditCycle
 from auditor.models import ProfileInfo
+from audit_store.models import AuditStore
 from audit_store.signals import audit_store_status_change
-
+from questionnaire.models import Section, Question
+from answer.models import ReportSection, Answer
 
 fake=Faker()
 class AuditStoreTestCase(TestCase):
@@ -27,6 +28,7 @@ class AuditStoreTestCase(TestCase):
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.audit_cycle = mommy.make(AuditCycle)
 
     def test_withdrawable_changes_status_to_withdrawn(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
@@ -216,3 +218,88 @@ class AuditStoreTestCase(TestCase):
                 audit_store.status in audit_store._AUDITOR_EDITABLE_STATUSES,
                 audit_store.is_editable_by_auditor()
             )
+
+    def test_is_submittable_returns_true(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+        report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
+        for i in range(3):
+            section = section_recipe.make()
+            report_section_recipe.make(section=section)
+            for i in range(5):
+                question = mommy.make(Question, section=section)
+                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
+        self.assertTrue(audit_store.is_submitable())
+
+    def test_is_submitable_when_section_length_does_not_match_report_section(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ASSIGNED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        mommy.make(Section, audit_cycle=self.audit_cycle)
+
+        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
+            audit_store.is_submitable()
+            self.assertIn(
+                "DEBUG:audit_store.models:Report not submitable, section length does not match report section length",
+                error_log.output
+            )
+        self.assertFalse(audit_store.is_submitable())
+    def test_is_submitable_when_auditor_comment_is_blank(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ASSIGNED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        mommy.make(ReportSection, audit_store=audit_store, auditor_comment="", section=section)
+
+        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
+            audit_store.is_submitable()
+            self.assertIn(
+                "DEBUG:audit_store.models:Report not submitable, some auditor comment is incomplete",
+                error_log.output
+            )
+        self.assertFalse(audit_store.is_submitable())
+
+    def test_is_submitable_when_answer_length_does_not_match_questions(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ASSIGNED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        mommy.make(ReportSection, audit_store=audit_store, auditor_comment="foobar", section=section)
+        mommy.make(Question, section=section)
+
+        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
+            audit_store.is_submitable()
+            self.assertIn(
+                "DEBUG:audit_store.models:Report not submitable, question length does not match answer length",
+                error_log.output
+            )
+        self.assertFalse(audit_store.is_submitable())
+
+    def test_is_submitable_when_answer_text_is_empty(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ASSIGNED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        mommy.make(ReportSection, audit_store=audit_store, auditor_comment="foobar", section=section)
+        question = mommy.make(Question, section=section)
+        mommy.make(Answer, question=question, audit_store=audit_store, answer_text="", marks_obtained=1)
+
+        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
+            audit_store.is_submitable()
+            self.assertIn(
+                "DEBUG:audit_store.models:Report not submitable, some answer is incomplete",
+                error_log.output
+            )
+        self.assertFalse(audit_store.is_submitable())

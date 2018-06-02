@@ -145,6 +145,37 @@ class AuditStore(Model):
     def is_editable_by_manager(self):
         return self.status in self._MANAGER_EDITABLE_STATUSES
 
+    def is_submitable(self):
+        sections = self.audit.audit_cycle.sections.all()
+        report_sections = self.report_sections.all()
+
+        if len(sections) != len(report_sections):
+            _logger.debug("Report not submitable, section length does not match report section length")
+            return False
+
+        for report_section in report_sections:
+            if not report_section.not_applicable:
+                if report_section.auditor_comment in (None, ''):
+                    _logger.debug("Report not submitable, some auditor comment is incomplete")
+                    return False
+
+                questions = Question.objects.filter(section_id=report_section.section_id).all()
+                answers = Answer.objects.filter(
+                    audit_store__id=self.id,
+                    question__section_id=report_section.section_id
+                ).all()
+
+                if len(questions) != len(answers):
+                    _logger.debug("Report not submitable, question length does not match answer length")
+                    return False
+
+                for answer in answers:
+                    if not answer.not_applicable and (
+                            answer.answer_text in (None, '') or answer.marks_obtained is None):
+                        _logger.debug("Report not submitable, some answer is incomplete")
+                        return False
+            return True
+
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()
         report_sections = self.report_sections.all()
