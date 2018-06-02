@@ -416,11 +416,49 @@ class AuditStoreTestCase(TestCase):
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be accepted by user"):
             audit_store.accept(by=self.auditor_user)
 
-    def test_accept_raises_when_status_is_not_pm_review(self):
+    def test_accept_raises_when_status_is_not_completed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
 
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be accepted now"):
             audit_store.accept(by=self.manager_user)
+
+    ##########Tests for COMPLETED -> REJECTED########
+
+    def test_reject_changes_status_from_completed_to_rejected(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        audit_store.reject(by=self.manager_user)
+
+        self.assertEqual(audit_store.status, AuditStore.REJECTED)
+
+    def test_reject_changes_rating_to_bad(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        audit_store.reject(by=self.manager_user)
+
+        self.assertEqual(audit_store.qa_rating, AuditStore.BAD)
+
+    def test_reject_sends_status_change_signal(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.reject(by=self.manager_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.REJECTED,
+                old_status=AuditStore.COMPLETED,
+                user_actor=self.manager_user,
+            )
+
+    def test_reject_raises_when_user_is_not_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be rejected by user"):
+            audit_store.reject(by=self.auditor_user)
+
+    def test_reject_raises_when_status_is_not_completed(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be rejected now"):
+            audit_store.reject(by=self.manager_user)
 
     ##########Tests for boolean methods########
 

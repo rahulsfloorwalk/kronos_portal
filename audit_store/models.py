@@ -423,6 +423,25 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be accepted now")
 
     @atomic
+    def reject(self, *args, by):
+        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
+            raise AppLogicError("Report cannot be rejected by user")
+
+        if self.status == AuditStore.COMPLETED:
+            self.status = AuditStore.REJECTED
+            self.qa_rating = AuditStore.BAD
+            self.save()
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.REJECTED,
+                old_status=AuditStore.COMPLETED,
+                user_actor=by,
+            )
+
+        else:
+            raise AppLogicError("Report cannot be rejected now")
+
+    @atomic
     def rate(self, rating):
         if self.status not in (AuditStore.SUBMITTED, AuditStore.PM_REVIEW):
             raise AppLogicError("Report cannot be rated now")
