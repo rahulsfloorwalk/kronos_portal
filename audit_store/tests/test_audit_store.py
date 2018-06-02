@@ -30,6 +30,8 @@ class AuditStoreTestCase(TestCase):
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
         self.audit_cycle = mommy.make(AuditCycle)
 
+    ##########Tests for withdrawable -> WITHDRAWN########
+
     def test_withdrawable_changes_status_to_withdrawn(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
         for status in AuditStore._WITHDRAWABLE_STATUSES:
@@ -59,6 +61,8 @@ class AuditStoreTestCase(TestCase):
             audit_store = audit_store_recipe.make(status=status)
             with self.assertRaisesRegexp(AppLogicError, "Report cannot be withdrawn now"):
                 audit_store.withdraw(by=self.manager_user)
+
+    ##########Tests for ASSIGNED -> ACKNOWLEDGED########
 
     def test_status_changes_from_assigned_to_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
@@ -91,6 +95,8 @@ class AuditStoreTestCase(TestCase):
             audit_store = audit_store_recipe.make(status=status)
             with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged now"):
                 audit_store.acknowledge(by=self.auditor_user)
+
+    ##########Tests for ACKNOWLEDGED -> SUBMITTED########
 
     def get_submitable_report(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
@@ -161,6 +167,8 @@ class AuditStoreTestCase(TestCase):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted now"):
             audit_store.submit_manager(by=self.manager_user)
+
+    ##########Tests for SUBMITTED -> ACKNOWLEDGED########
 
     def test_revert_submit_changes_status_from_submitted_to_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
@@ -281,6 +289,74 @@ class AuditStoreTestCase(TestCase):
     def test_is_qa_rated_returns_true_when_qa_rating_is_not_none(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.AVERAGE)
         self.assertTrue(audit_store.is_qa_rated())
+
+    ##########Tests for SUBMITTED -> COMPLETED########
+
+    def get_completable_report(self):
+        audit_store = mommy.make(AuditStore, user=self.auditor_user,
+                                 audit__audit_cycle=self.audit_cycle)
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+        report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar", pm_comment="foobar")
+        for i in range(3):
+            section = section_recipe.make()
+            report_section_recipe.make(section=section, )
+            for i in range(5):
+                question = mommy.make(Question, section=section)
+                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar",
+                                    marks_obtained=1)
+
+        return audit_store
+
+    def test_status_changes_from_pm_comment_to_completed(self):
+        audit_store = self.get_completable_report()
+        audit_store.status = AuditStore.PM_REVIEW
+        audit_store.qa_rating = AuditStore.AVERAGE
+        audit_store.complete(by=self.manager_user)
+
+        self.assertEqual(audit_store.status, AuditStore.COMPLETED)
+
+    def test_submit_sends_status_change_signal(self):
+        audit_store = self.get_completable_report()
+        audit_store.qa_rating = AuditStore.AVERAGE
+        audit_store.status = AuditStore.PM_REVIEW
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.complete(by=self.manager_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.COMPLETED,
+                old_status=AuditStore.PM_REVIEW,
+                user_actor=self.manager_user,
+            )
+
+    def test_complete_raises_when_user_is_not_manager(self):
+        audit_store = self.get_completable_report()
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be completed by user"):
+            audit_store.complete(by=self.auditor_user)
+
+    def test_complete_raises_when_report_is_not_completable(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.SUBMITTED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        with self.assertRaisesRegexp(AppLogicError, "Report is not complete"):
+            audit_store.complete(by=self.manager_user)
+
+    def test_complete_raises_when_report_is_not_rated(self):
+        audit_store = self.get_completable_report()
+        with self.assertRaisesRegexp(AppLogicError, "Report is not rated"):
+            audit_store.complete(by=self.manager_user)
+
+    def test_complete_raises_when_status_is_not_pm_review(self):
+        audit_store = self.get_completable_report()
+        audit_store.status = AuditStore.SUBMITTED
+        audit_store.qa_rating = AuditStore.AVERAGE
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be completed now"):
+            audit_store.complete(by=self.manager_user)
 
     def test_is_withdrawable(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
