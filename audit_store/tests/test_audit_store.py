@@ -133,13 +133,13 @@ class AuditStoreTestCase(TestCase):
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted by user"):
             audit_store.submit(by=auditor)
 
-    def test_status_changes_from_acknowledged_to_submitted_for_manager(self):
+    def test_submit_manager_chanages_status_from_acknowledged_to_submitted(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         audit_store.submit_manager(by=self.manager_user)
 
         self.assertEqual(audit_store.status, AuditStore.SUBMITTED)
 
-    def test_submit_sends_status_change_signal_for_manager(self):
+    def test_submit_manager_sends_status_change_signal_for_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         with catch_signal(audit_store_status_change) as mock:
             audit_store.submit_manager(by=self.manager_user)
@@ -152,15 +152,46 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
             )
 
-    def test_raises_when_submitted_for_manager_by_non_manager(self):
+    def test_submit_manager_raises_when_submitted_by_non_manager(self):
         audit_store = self.get_submitable_report()
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted by user"):
             audit_store.submit_manager(by=self.auditor_user)
 
-    def test_raises_when_status_is_not_acknowledged_by_manager(self):
+    def test_submit_manager_raises_when_status_is_not_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
         with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted now"):
             audit_store.submit_manager(by=self.manager_user)
+
+    def test_revert_submit_changes_status_from_submitted_to_acknowledged(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        audit_store.revert_submit(by=self.manager_user)
+
+        self.assertEqual(audit_store.status, AuditStore.ACKNOWLEDGED)
+
+    def test_revert_submit_sends_status_change_signal_for_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.revert_submit(by=self.manager_user)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.ACKNOWLEDGED,
+                old_status=AuditStore.SUBMITTED,
+                user_actor=self.manager_user,
+            )
+
+    def test_revert_submit_raises_when_reverted_by_non_manager(self):
+        audit_store = self.get_submitable_report()
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be unsubmitted by user"):
+            audit_store.revert_submit(by=self.auditor_user)
+
+    def test_revert_submit_raises_when_status_is_not_submitted(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
+        with self.assertRaisesRegexp(AppLogicError, "Report cannot be unsubmitted now"):
+            audit_store.revert_submit(by=self.manager_user)
+
+    # TODO - write tests for submit and revert for moderator user
 
     def test_qa_ok_changes_status_to_pm_review(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.GOOD)

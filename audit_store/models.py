@@ -307,6 +307,24 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be submitted now")
 
     @atomic
+    def revert_submit(self, *args, by):
+        if not by.groups.filter(Q(name=GROUP_NAME_MANAGER) | Q(name=GROUP_NAME_MODERATOR)).exists():
+            raise AppLogicError("Report cannot be unsubmitted by user")
+
+        if self.status == AuditStore.SUBMITTED:
+            self.status = AuditStore.ACKNOWLEDGED
+            self.save()
+            audit_store_status_change.send(
+                sender=self.__class__,
+                status=AuditStore.ACKNOWLEDGED,
+                old_status=AuditStore.SUBMITTED,
+                user_actor=by,
+            )
+
+        else:
+            raise AppLogicError("Report cannot be unsubmitted now")
+
+    @atomic
     def qa_ok(self, *args, by):
         if not self.is_completable():
             raise AppLogicError("Report is not complete.")
