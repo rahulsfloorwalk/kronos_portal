@@ -181,7 +181,7 @@ describe("<AuditStoreTable/>", () => {
 		const r = shallow(<AuditStoreTable {...sampleProps}/>);
 		setTimeout(() => {
 			r.update();
-			r.find(select).at(2).simulate("change", "ONE");
+			r.find("select").at(2).simulate("change", "ONE");
 			r.update();
 			expect(r.find("tbody > tr").length).toEqual(1);
 			expect(r.find("tbody > tr > td").at(2).text()).toEqual("10th May 2018");
