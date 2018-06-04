@@ -177,16 +177,14 @@ describe("<AuditStoreTable/>", () => {
 		findAuditStoresByAuditCycle.mockReturnValue(promise);
 		promise.resolve(sampleAuditStores);
 
-		const samplePriorityEvent =  {
-			target: {
-				value: "ONE",
-			},
-		};
-
 		const r = shallow(<AuditStoreTable {...sampleProps}/>);
 		setTimeout(() => {
 			r.update();
-			r.find("select").at(2).simulate("change", samplePriorityEvent);
+			r.find("select").at(2).simulate("change", {
+				target: {
+					value: "ONE",
+				},
+			});
 			r.update();
 			expect(r.find("tbody > tr").length).toEqual(1);
 			expect(r.find("tbody > tr > td").at(2).text()).toEqual("10th May 2018");
@@ -223,6 +221,81 @@ describe("<AuditStoreTable/>", () => {
 			expect(r.find("tbody > tr").length).toEqual(1);
 			expect(r.find("tbody > tr > td").at(2).text()).toEqual("10th May 2018");
 			done();
+		});
+	});
+
+	it("resets the selected priority when props are changed", (done) => {
+		const promise = $.Deferred();
+		findAuditStoresByAuditCycle.mockReturnValue(promise);
+		promise.resolve(sampleAuditStores);
+
+		const r = shallow(<AuditStoreTable {...sampleProps}/>);
+		setTimeout(() => {
+			r.update();
+			r.find("select").at(2).simulate("change",  {
+				target: {
+					value: "ONE",
+				},
+			});
+			r.setProps({
+				auditCycleId: 45,
+				startDate: "2018-04-01",
+				endDate: "2018-04-30",
+			});
+			setTimeout(() => {
+				expect(r.state("selectedPriority")).toEqual("");
+				done();
+			});
+		});
+	});
+
+	it("resets the selected city when props are changed", (done) => {
+		const promise = $.Deferred();
+		findAuditStoresByAuditCycle.mockReturnValue(promise);
+		promise.resolve(sampleAuditStores);
+
+		const r = shallow(<AuditStoreTable {...sampleProps}/>);
+		setTimeout(() => {
+			r.update();
+			r.find("select").at(2).simulate("change",  {
+				target: {
+					value: "641",
+				},
+			});
+			r.setProps({
+				auditCycleId: 45,
+				startDate: "2018-04-01",
+				endDate: "2018-04-30",
+			});
+			setTimeout(() => {
+				expect(r.state("selectedCityId")).toEqual("");
+				done();
+			});
+		});
+	});
+
+	it("resets the selected store type when props are changed", (done) => {
+		const promise = $.Deferred();
+		findAuditStoresByAuditCycle.mockReturnValue(promise);
+		promise.resolve(sampleAuditStores);
+
+		const r = shallow(<AuditStoreTable {...sampleProps}/>);
+		setTimeout(() => {
+			r.update();
+			r.find("select").at(2).simulate("change",  {
+				target: {
+					value: "10 pairs",
+				},
+			});
+			r.setProps({
+				auditCycleId: 45,
+				startDate: "2018-04-01",
+				endDate: "2018-04-30",
+			});
+			setTimeout(() => {
+				expect(r.state("selectedType")).toEqual("");
+				done();
+			});
 		});
 	});
 });

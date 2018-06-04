@@ -79,6 +79,9 @@ export class AuditStoreTable extends Component {
 				cycleEndDate: cycleEndDate,
 				startDate: moment(cycleStartDate),
 				endDate: moment(cycleEndDate),
+				selectedCityId: "",
+				selectedType: "",
+				selectedPriority: "",
 			});
 		}).always(() => this.setLoading(false));
 	}
