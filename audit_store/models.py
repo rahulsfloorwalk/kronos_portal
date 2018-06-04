@@ -397,4 +397,5 @@ class AuditStore(Model):
             status=new_status,
             old_status=old_status,
             user_actor=user_actor,
+            id=self.id
         )
