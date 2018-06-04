@@ -76,7 +76,7 @@ describe("<AuditStoreTable/>", () => {
 
 	const sampleAuditStores = [{
 		"store_name": "ayoun the optic shop",
-		"store_priority": "",
+		"store_priority": "ONE",
 		"audit_date": "2018-05-10",
 		"city_id": 641,
 		"audit_store_id": 3075,
@@ -111,7 +111,7 @@ describe("<AuditStoreTable/>", () => {
 		"store_type": "10 pairs"
 	}, {
 		"store_name": "aneesh vision vare",
-		"store_priority": "",
+		"store_priority": "TWO",
 		"audit_date": "2018-05-20",
 		"city_id": 641,
 		"audit_store_id": 3049,
@@ -169,6 +169,22 @@ describe("<AuditStoreTable/>", () => {
 		setTimeout(() => {
 			r.update();
 			expect(r.find("tbody > tr").length).toEqual(2);
+			done();
+		});
+	});
+
+	it("filters reports based on priority filters", (done) => {
+		const promise = $.Deferred();
+		findAuditStoresByAuditCycle.mockReturnValue(promise);
+		promise.resolve(sampleAuditStores);
+
+		const r = shallow(<AuditStoreTable {...sampleProps}/>);
+		setTimeout(() => {
+			r.update();
+			r.find(select).at(2).simulate("change", "ONE");
+			r.update();
+			expect(r.find("tbody > tr").length).toEqual(1);
+			expect(r.find("tbody > tr > td").at(2).text()).toEqual("10th May 2018");
 			done();
 		});
 	});

@@ -199,10 +199,15 @@ export class AuditStoreTable extends Component {
 			</div>
 		);
 
-		let storePrioritySelect = (<select onChange={this.selectStorePriority} value={this.state.selectedPriority} className="form-control" style={{display:"inline-block",width:"200px"}}>
-			<option value="">All Priorities</option>
-			{this.state.priorities.filter(p=>!!p).map(p => <option key={p} value={p}>{p}</option>)}
-		</select>);
+		let storePrioritySelect = (
+			<div style={{display:"inline-block",width:"200px"}}>
+				<label className="control-label">&nbsp;Priority:</label>
+				<select onChange={this.selectStorePriority} value={this.state.selectedPriority} className="form-control" style={{display:"inline-block",width:"200px"}}>
+					<option value="">All Priorities</option>
+					{this.state.priorities.filter(p=>!!p).map(p => <option key={p} value={p}>{p}</option>)}
+				</select>
+			</div>
+		);
 		let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 		let monthSelect = (<select onChange={this.selectMonth} value={this.state.selectedMonth} className="form-control" style={{display:"inline-block",width:"200px"}}>
 			<option value="">All Months</option>
@@ -220,6 +225,7 @@ export class AuditStoreTable extends Component {
 		this.state.reports.filter(r => {
 			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
 			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
+			&& (this.state.selectedPriority ? r.store_priority === this.state.selectedPriority : true)
 			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, '[]')
 		}).forEach( r => {
 			let tds = [];
@@ -259,6 +265,7 @@ export class AuditStoreTable extends Component {
 			<div className="form-group">
 				{citySelect}&nbsp;
 				{storeTypeSelect}&nbsp;
+				{storePrioritySelect}&nbsp;
 				{startDatePicker}&nbsp;
 				{endDatePicker}&nbsp;
 				<span className="pull-right" style={{fontSize:"130%"}}>
