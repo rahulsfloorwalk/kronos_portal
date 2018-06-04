@@ -21,7 +21,7 @@ var App = React.createClass({
 			<div>
 				<DevelopmentMarker/>
 				<Header location={this.props.location}/>
-				<div className="container" style={contentStyle}>
+				<div className="container-fluid" style={contentStyle}>
 					{this.props.children}
 				</div>
 				<Footer config={this.state.config}/>

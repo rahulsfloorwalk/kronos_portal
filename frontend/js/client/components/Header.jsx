@@ -51,7 +51,7 @@ export default React.createClass({
 		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : "/static/img/logo_3_transparent_bg_400x51.png";
 		let clientName = this.state.clientUser ? this.state.clientUser.client.name : "FloorWalk";
 		return (
-			<div className="container">
+			<div className="container-fluid">
 				<div className="text-center">
 					<Link to="/">
 						<img style={brandStyle} alt={clientName} title={clientName} src={imgUrl}/>
