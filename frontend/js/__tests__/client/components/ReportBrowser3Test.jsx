@@ -1,20 +1,19 @@
 import React from "react";
-import Datetime from 'react-datetime';
-import moment from 'moment';
+import Datetime from "react-datetime";
+import moment from "moment";
 import { shallow } from "enzyme";
-import renderer from "react-test-renderer";
 import $ from "jquery";
 
-import ReportBrowser3, { AuditStoreTable } from '../../../client/components/ReportBrowser3';
-import { fetchAuditCycles } from '../../../client/service/audit_cycle';
+import ReportBrowser3, { AuditStoreTable } from "../../../client/components/ReportBrowser3";
+import { fetchAuditCycles } from "../../../client/service/audit_cycle";
 import { findAuditStoresByAuditCycle } from "../../../client/service/audit_store";
 
 jest.mock("react-dom", () => ({
 	findDOMNode: () => {},
 }));
 
-jest.mock('../../../client/service/audit_cycle');
-jest.mock('../../../client/service/audit_store');
+jest.mock("../../../client/service/audit_cycle");
+jest.mock("../../../client/service/audit_store");
 
 describe("<ReportBrowser3/>", () => {
 	const sampleAuditCycles = [
@@ -178,10 +177,16 @@ describe("<AuditStoreTable/>", () => {
 		findAuditStoresByAuditCycle.mockReturnValue(promise);
 		promise.resolve(sampleAuditStores);
 
+		const samplePriorityEvent =  {
+			target: {
+				value: "ONE",
+			},
+		};
+
 		const r = shallow(<AuditStoreTable {...sampleProps}/>);
 		setTimeout(() => {
 			r.update();
-			r.find("select").at(2).simulate("change", "ONE");
+			r.find("select").at(2).simulate("change", samplePriorityEvent);
 			r.update();
 			expect(r.find("tbody > tr").length).toEqual(1);
 			expect(r.find("tbody > tr > td").at(2).text()).toEqual("10th May 2018");
