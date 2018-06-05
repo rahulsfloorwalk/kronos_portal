@@ -52,6 +52,7 @@ class AuditStoreTestCase(TestCase):
                     status=AuditStore.WITHDRAWN,
                     old_status=status,
                     user_actor=self.manager_user,
+                    id=audit_store.id,
                 )
 
     def test_not_withdrawable_status_raises_exception(self):
@@ -81,6 +82,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACKNOWLEDGED,
                 old_status=AuditStore.ASSIGNED,
                 user_actor=self.auditor_user,
+                id=audit_store.id,
             )
 
     def test_raises_when_acknowledged_by_different_user(self):
@@ -130,6 +132,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.ACKNOWLEDGED,
                 user_actor=self.auditor_user,
+                id=audit_store.id,
             )
 
     def test_raises_when_submitted_by_different_user(self):
@@ -156,6 +159,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.ACKNOWLEDGED,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_submit_manager_raises_when_submitted_by_non_manager(self):
@@ -187,6 +191,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACKNOWLEDGED,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_revert_submit_raises_when_reverted_by_non_manager(self):
@@ -219,6 +224,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_qa_ok_raises_when_report_is_not_rated(self):
@@ -253,6 +259,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.PM_REVIEW,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_pm_revert_raises_when_status_is_not_pm_review(self):
@@ -328,6 +335,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.COMPLETED,
                 old_status=AuditStore.PM_REVIEW,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_complete_raises_when_user_is_not_manager(self):
@@ -377,6 +385,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_revert_complete_raises_when_user_is_not_manager(self):
@@ -409,6 +418,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACCEPTED,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_accept_raises_when_user_is_not_manager(self):
@@ -447,6 +457,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.REJECTED,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
+                id=audit_store.id,
             )
 
     def test_reject_raises_when_user_is_not_manager(self):
@@ -487,6 +498,7 @@ class AuditStoreTestCase(TestCase):
                     status=AuditStore.FAILED,
                     old_status=status,
                     user_actor=self.manager_user,
+                    id=audit_store.id,
                 )
 
     def test_fail_raises_when_user_is_not_manager(self):
