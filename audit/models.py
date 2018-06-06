@@ -17,6 +17,17 @@ class AuditCycle(Model):
     SKY_KARTING = 'SKY_KARTING'
     SMAAASH_ARENA = 'SMAAASH_ARENA'
     GENERAL = 'GENERAL'
+    SMAAASH = 'SMAAASH'
+    SMAAASH_MEGA = 'SMAAASH_MEGA'
+    SMAAASH_ZONE = 'SMAAASH_ZONE'
+    DDC = 'DDC'
+    HTC = 'HTC'
+    ASCVD = 'ASCVD'
+    SKIN_HYDRATION = 'SKIN_HYDRATION'
+    HYPER_PIGMENTATION = 'HYPER_PIGMENTATION'
+    SKIN_SENSITIVE = 'SKIN_SENSITIVE'
+    RETAIL = 'RETAIL'
+
     TYPES = (
         (WALKIN, 'Walkin'),
         (PHONE, 'Phone'),
@@ -29,6 +40,16 @@ class AuditCycle(Model):
         (SKY_KARTING, 'Sky Karting'),
         (SMAAASH_ARENA, 'Smaaash Arena'),
         (GENERAL, 'General'),
+        (SMAAASH, 'Smaaash'),
+        (SMAAASH_MEGA, 'Smaaash Mega'),
+        (SMAAASH_ZONE, 'Smaaash Zone'),
+        (DDC, 'Ddc'),
+        (HTC, 'Htc'),
+        (ASCVD, 'Ascvd'),
+        (SKIN_HYDRATION, 'Skin Hydration'),
+        (HYPER_PIGMENTATION, 'Hyper Pigmentation'),
+        (SKIN_SENSITIVE, 'Skin Sensitive'),
+        (RETAIL, 'Retail')
     )
 
     PREPARATION = 'PREPARATION'
