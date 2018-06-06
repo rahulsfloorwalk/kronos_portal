@@ -24,6 +24,26 @@ export function getAuditType(value){
 			return "Smaaash Arena";
 		case "GENERAL":
 			return "General";
+		case "SMAAASH":
+			return "Smaaash";
+		case "SMAAASH_MEGA":
+			return "Smaaash Mega";
+		case "SMAAASH_ZONE":
+			return "Smaaash Zone";
+		case "DDC":
+			return "Ddc";
+		case "HTC":
+			return "Htc";
+		case "ASCVD":
+			return "Ascvd";
+		case "SKIN_HYDRATION":
+			return "Skin Hydration";
+		case "HYPER_PIGMENTATION":
+			return "Hyper Pigmentation";
+		case "SKIN_SENSITIVE":
+			return "Skin Sensitive";
+		case "RETAIL":
+			return "Retail";
 		case "":
 		case null:
 		case undefined:

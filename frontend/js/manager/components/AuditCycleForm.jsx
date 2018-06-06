@@ -104,6 +104,16 @@ var AuditCycleForm = React.createClass({
 								<option value="FINE_DINE">{getAuditType("FINE_DINE")}</option>
 								<option value="SKY_KARTING">{getAuditType("SKY_KARTING")}</option>
 								<option value="GENERAL">{getAuditType("GENERAL")}</option>
+								<option value="SMAAASH">{getAuditType("SMAAASH")}</option>
+								<option value="SMAAASH_MEGA">{getAuditType("SMAAASH_MEGA")}</option>
+								<option value="SMAAASH_ZONE">{getAuditType("SMAAASH_ZONE")}</option>
+								<option value="DDC">{getAuditType("DDC")}</option>
+								<option value="HTC">{getAuditType("HTC")}</option>
+								<option value="ASCVD">{getAuditType("ASCVD")}</option>
+								<option value="SKIN_HYDRATION">{getAuditType("SKIN_HYDRATION")}</option>
+								<option value="HYPER_PIGMENTATION">{getAuditType("HYPER_PIGMENTATION")}</option>
+								<option value="SKIN_SENSITIVE">{getAuditType("SKIN_SENSITIVE")}</option>
+								<option value="RETAIL">{getAuditType("RETAIL")}</option>
 							</FormSelect>
 						</div>
 						<div className="col-md-6">
