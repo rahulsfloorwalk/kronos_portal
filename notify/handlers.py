@@ -12,7 +12,7 @@ from registration.models import GROUP_NAME_MANAGER
 
 
 @receiver(audit_store_status_change, sender=AuditStore, dispatch_uid="notification_receiver")
-def status_change_callback(sender, **kwargs):
+def status_change_notification_callback(sender, **kwargs):
     user_actor = kwargs.get('user_actor')
     status = kwargs.get('status')
     old_status = kwargs.get('old_status')

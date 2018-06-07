@@ -25,6 +25,7 @@ from audit_store.signals import audit_store_status_change
 
 _logger = logging.getLogger(__name__)
 
+
 class AuditStoreQuerySet(QuerySet):
     def presentable(self):
         presentable_status = (AuditStore.COMPLETED, AuditStore.ACCEPTED)
@@ -47,6 +48,7 @@ class AuditStoreQuerySet(QuerySet):
     def for_moderator(self, user):
         query_set = self.filter(audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT))
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
+
 
 class AuditStore(Model):
 
@@ -399,3 +401,11 @@ class AuditStore(Model):
             user_actor=user_actor,
             id=self.id
         )
+
+
+class ReportStatusLog(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
+    status = CharField(db_column='status', max_length=20, blank=False)
+    created_at = DateTimeField(db_column="created_at")
