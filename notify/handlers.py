@@ -18,6 +18,12 @@ def status_change_notification_callback(sender, **kwargs):
     old_status = kwargs.get('old_status')
     id = kwargs.get('id')
     audit_store = AuditStore.objects.get(pk=id)
+    if status == AuditStore.ASSIGNED and old_status == 'APPLIED':
+        send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
+        send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
+    if status == AuditStore.ASSIGNED and old_status == 'FIAT_ASSIGNED':
+        send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_FIAT_ASSIGNED, audit_store, audit_store.audit)
+        send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_FIAT_ASSIGNED, audit_store, audit_store.audit)
     if status == AuditStore.ACKNOWLEDGED and old_status == AuditStore.ASSIGNED:
         send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ACKNOWLEDGED, audit_store, audit_store.audit)
         send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ACKNOWLEDGED, audit_store, audit_store.audit)

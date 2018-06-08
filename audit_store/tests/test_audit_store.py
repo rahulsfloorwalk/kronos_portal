@@ -30,6 +30,43 @@ class AuditStoreTestCase(TestCase):
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
         self.audit_cycle = mommy.make(AuditCycle)
 
+    def test_assign_sets_status_to_assigned(self):
+        audit_store = mommy.make(AuditStore, user=self.auditor_user)
+        audit_store.assign(by=self.auditor_user)
+
+        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
+
+    def test_assign_sends_status_change_signal(self):
+        audit_store = mommy.make(AuditStore, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.assign(by=self.manager_user)
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.ASSIGNED,
+                old_status='APPLIED',
+                user_actor=self.manager_user,
+                id=audit_store.id,
+            )
+
+    def test_fiat_assign_sets_status_to_assigned(self):
+        audit_store = mommy.make(AuditStore, user=self.auditor_user)
+        audit_store.fiat_assign(by=self.auditor_user)
+
+        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
+
+    def test_fiat_assign_sends_status_change_signal(self):
+        audit_store = mommy.make(AuditStore, user=self.auditor_user)
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.fiat_assign(by=self.manager_user)
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.ASSIGNED,
+                old_status='FIAT_ASSIGNED',
+                user_actor=self.manager_user,
+                id=audit_store.id,
+            )
     ##########Tests for withdrawable -> WITHDRAWN########
 
     def test_withdrawable_changes_status_to_withdrawn(self):

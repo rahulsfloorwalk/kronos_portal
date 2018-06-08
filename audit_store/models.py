@@ -244,6 +244,14 @@ class AuditStore(Model):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
     @atomic
+    def assign(self, *args, by):
+        self.change_status("APPLIED", AuditStore.ASSIGNED, by)
+
+    @atomic
+    def fiat_assign(self, *args, by):
+        self.change_status("FIAT_ASSIGNED", AuditStore.ASSIGNED, by)
+
+    @atomic
     def withdraw(self, *args, by):
         if not self.is_withdrawable():
             raise AppLogicError("Report cannot be withdrawn now")

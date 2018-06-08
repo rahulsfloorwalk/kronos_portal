@@ -33,28 +33,8 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
     audit_store = AuditStore()
     audit_store.audit_id = audit.id
     audit_store.audit_date = audit_date
-    audit_store.status = AuditStore.ASSIGNED
     audit_store.user_id = user.id
-
-    audit_store.save()
-    notify.send(
-        user_actor,
-        recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-        verb=verbs.AUDIT_STORE_FIAT_ASSIGNED,
-        action_object=audit_store,
-        target=audit
-    )
-    manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
-    notify.send(
-        user_actor,
-        recipient=audit_store.user,
-        verb=verbs.AUDIT_STORE_FIAT_ASSIGNED,
-        action_object=audit_store,
-        target=audit
-    )
-    auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_FIAT_ASSIGNED).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+    audit_store.fiat_assign(by=user_actor)
     return audit_store
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):
