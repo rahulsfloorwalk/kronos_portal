@@ -30,11 +30,7 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
     if audit_cycle.status == AuditCycle.ARCHIVED:
         raise AppLogicError("audit_cycle is archived")
 
-    audit_store = AuditStore()
-    audit_store.audit_id = audit.id
-    audit_store.audit_date = audit_date
-    audit_store.user_id = user.id
-    audit_store.fiat_assign(by=user_actor)
+    audit_store = AuditStore.objects.assign_audit_store(audit, audit_date, user, user_actor)
     return audit_store
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):

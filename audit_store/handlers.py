@@ -5,7 +5,7 @@ from audit_store.models import AuditStore, ReportStatusLog
 from audit_store.signals import *
 
 
-@receiver(audit_store_status_change, sender=AuditStore, dispatch_uid="report_log_receiver")
+@receiver(audit_store_status_change, dispatch_uid="report_log_receiver")
 def status_change_report_log_callback(sender, **kwargs):
     user_actor = kwargs.get('user_actor')
     status = kwargs.get('status')

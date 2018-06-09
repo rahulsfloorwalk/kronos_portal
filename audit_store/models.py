@@ -49,6 +49,21 @@ class AuditStoreQuerySet(QuerySet):
         query_set = self.filter(audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT))
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
+    def assign_audit_store(self, audit, audit_date, auditor, by):
+        audit_store = AuditStore()
+        audit_store.audit = audit
+        audit_store.audit_date = audit_date
+        audit_store.user = auditor
+        audit_store.status = AuditStore.ASSIGNED
+        audit_store.save()
+        audit_store_status_change.send(
+            sender=self.__class__,
+            status=AuditStore.ASSIGNED,
+            old_status=None,
+            user_actor=by,
+            id=audit_store.id
+        )
+        return audit_store
 
 class AuditStore(Model):
 
@@ -243,13 +258,11 @@ class AuditStore(Model):
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
-    @atomic
-    def assign(self, *args, by):
-        self.change_status("APPLIED", AuditStore.ASSIGNED, by)
 
-    @atomic
-    def fiat_assign(self, *args, by):
-        self.change_status("FIAT_ASSIGNED", AuditStore.ASSIGNED, by)
+
+    # @atomic
+    # def fiat_assign(self, *args, by):
+    #     self.change_status(None, AuditStore.ASSIGNED, by)
 
     @atomic
     def withdraw(self, *args, by):

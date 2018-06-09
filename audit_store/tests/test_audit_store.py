@@ -1,3 +1,4 @@
+from datetime import datetime
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 from faker import Faker
@@ -9,9 +10,9 @@ from kronos.test_utils import catch_signal
 from kronos.exceptions import AppLogicError
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from audit.models import AuditCycle
+from audit.models import AuditCycle, Audit
 from auditor.models import ProfileInfo
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore, AuditStoreQuerySet
 from audit_store.signals import audit_store_status_change
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
@@ -30,43 +31,26 @@ class AuditStoreTestCase(TestCase):
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
         self.audit_cycle = mommy.make(AuditCycle)
 
-    def test_assign_sets_status_to_assigned(self):
-        audit_store = mommy.make(AuditStore, user=self.auditor_user)
-        audit_store.assign(by=self.auditor_user)
-
-        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
-
-    def test_assign_sends_status_change_signal(self):
-        audit_store = mommy.make(AuditStore, user=self.auditor_user)
+    def test_assign_audit_report_creates_and_assigns_audit_store(self):
+        audit = mommy.make(Audit)
         with catch_signal(audit_store_status_change) as mock:
-            audit_store.assign(by=self.manager_user)
+            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, self.manager_user)
+
             mock.assert_called_once_with(
                 signal=audit_store_status_change,
-                sender=AuditStore,
+                sender=AuditStoreQuerySet,
                 status=AuditStore.ASSIGNED,
-                old_status='APPLIED',
+                old_status=None,
                 user_actor=self.manager_user,
                 id=audit_store.id,
             )
 
-    def test_fiat_assign_sets_status_to_assigned(self):
-        audit_store = mommy.make(AuditStore, user=self.auditor_user)
-        audit_store.fiat_assign(by=self.auditor_user)
+    def test_assign_audit_report_sends_signal(self):
+        audit = mommy.make(Audit)
+        audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, self.manager_user)
+        self.assertEqual(datetime.now().date(), audit_store.audit_date)
+        self.assertEqual(self.auditor_user, audit_store.user)
 
-        self.assertEqual(audit_store.status, AuditStore.ASSIGNED)
-
-    def test_fiat_assign_sends_status_change_signal(self):
-        audit_store = mommy.make(AuditStore, user=self.auditor_user)
-        with catch_signal(audit_store_status_change) as mock:
-            audit_store.fiat_assign(by=self.manager_user)
-            mock.assert_called_once_with(
-                signal=audit_store_status_change,
-                sender=AuditStore,
-                status=AuditStore.ASSIGNED,
-                old_status='FIAT_ASSIGNED',
-                user_actor=self.manager_user,
-                id=audit_store.id,
-            )
     ##########Tests for withdrawable -> WITHDRAWN########
 
     def test_withdrawable_changes_status_to_withdrawn(self):

@@ -157,11 +157,7 @@ def approve(application_id, audit_date, user_actor):
         target=application.audit
     )
 
-    audit_store = AuditStore()
-    audit_store.audit_id = audit.id
-    audit_store.audit_date = application.audit_date
-    audit_store.user_id = application.profileinfo.user_id
-    audit_store.assign(by=user_actor)
+    AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, user_actor)
     return application
 
 @atomic
