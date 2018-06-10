@@ -61,7 +61,7 @@ class AuditStoreQuerySet(QuerySet):
             status=AuditStore.ASSIGNED,
             old_status=None,
             user_actor=by,
-            id=audit_store.id
+            audit_store=audit_store
         )
         return audit_store
 
@@ -88,8 +88,7 @@ class AuditStore(Model):
         (ACCEPTED, "Accepted"),
         (REJECTED, "Rejected"),
     )
-
-    _ALL_STATUSES = (ASSIGNED, ACKNOWLEDGED, PM_REVIEW, SUBMITTED, COMPLETED, ACCEPTED, FAILED, WITHDRAWN, REJECTED)
+    _ALL_STATUSES = [s[0] for s in STATUS]
     _WITHDRAWABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
     _FAILABLE_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW)
     _MANAGER_EDITABLE_STATUSES = (SUBMITTED, PM_REVIEW,)
@@ -167,7 +166,7 @@ class AuditStore(Model):
     def is_editable_by_manager(self):
         return self.status in self._MANAGER_EDITABLE_STATUSES
 
-    def is_submitable(self):
+    def is_submittable(self):
 
         if self.status != AuditStore.ACKNOWLEDGED:
             _logger.debug("Report not acknowledged")
@@ -177,13 +176,13 @@ class AuditStore(Model):
         report_sections = self.report_sections.all()
 
         if len(sections) != len(report_sections):
-            _logger.debug("Report not submitable, section length does not match report section length")
+            _logger.debug("Report not submittable, section length does not match report section length")
             return False
 
         for report_section in report_sections:
             if not report_section.not_applicable:
                 if report_section.auditor_comment in (None, ''):
-                    _logger.debug("Report not submitable, some auditor comment is incomplete")
+                    _logger.debug("Report not submittable, some auditor comment is incomplete")
                     return False
 
                 questions = Question.objects.filter(section_id=report_section.section_id).all()
@@ -193,13 +192,12 @@ class AuditStore(Model):
                 ).all()
 
                 if len(questions) != len(answers):
-                    _logger.debug("Report not submitable, question length does not match answer length")
+                    _logger.debug("Report not submittable, question length does not match answer length")
                     return False
 
                 for answer in answers:
-                    if not answer.not_applicable and (
-                            answer.answer_text in (None, '') or answer.marks_obtained is None):
-                        _logger.debug("Report not submitable, some answer is incomplete")
+                    if not answer.not_applicable and answer.answer_text in (None, ''):
+                        _logger.debug("Report not submittable, some answer is incomplete")
                         return False
             return True
 
@@ -259,11 +257,6 @@ class AuditStore(Model):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
 
-
-    # @atomic
-    # def fiat_assign(self, *args, by):
-    #     self.change_status(None, AuditStore.ASSIGNED, by)
-
     @atomic
     def withdraw(self, *args, by):
         if not self.is_withdrawable():
@@ -286,7 +279,7 @@ class AuditStore(Model):
     def submit(self, *args, by):
         if by is not self.user:
             raise AppLogicError("Report cannot be submitted by user")
-        if self.is_submitable():
+        if self.is_submittable():
             self.change_status(AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, by)
 
         else:
@@ -420,7 +413,7 @@ class AuditStore(Model):
             status=new_status,
             old_status=old_status,
             user_actor=user_actor,
-            id=self.id
+            audit_store=self
         )
 
 
@@ -428,5 +421,5 @@ class ReportStatusLog(Model):
     id = AutoField(db_column='id', primary_key=True)
     user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
     audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
-    status = CharField(db_column='status', max_length=20, blank=False)
+    status = CharField(db_column='status', max_length=20, choices=AuditStore.STATUS, blank=False)
     created_at = DateTimeField(db_column="created_at")

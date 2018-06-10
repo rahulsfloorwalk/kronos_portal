@@ -11,13 +11,12 @@ from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_MANAGER
 
 
-@receiver(audit_store_status_change, dispatch_uid="notification_receiver")
+@receiver(audit_store_status_change, dispatch_uid="status_change_notification_callback")
 def status_change_notification_callback(sender, **kwargs):
-    user_actor = kwargs.get('user_actor')
-    status = kwargs.get('status')
-    old_status = kwargs.get('old_status')
-    id = kwargs.get('id')
-    audit_store = AuditStore.objects.get(pk=id)
+    user_actor = kwargs['user_actor']
+    status = kwargs['status']
+    old_status = kwargs['old_status']
+    audit_store = kwargs['audit_store']
 
     if status == AuditStore.ASSIGNED:
         send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)

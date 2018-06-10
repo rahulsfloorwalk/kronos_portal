@@ -1,4 +1,3 @@
-from datetime import datetime
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 from faker import Faker
@@ -31,25 +30,6 @@ class AuditStoreTestCase(TestCase):
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
         self.audit_cycle = mommy.make(AuditCycle)
 
-    def test_assign_audit_report_creates_and_assigns_audit_store(self):
-        audit = mommy.make(Audit)
-        with catch_signal(audit_store_status_change) as mock:
-            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, self.manager_user)
-
-            mock.assert_called_once_with(
-                signal=audit_store_status_change,
-                sender=AuditStoreQuerySet,
-                status=AuditStore.ASSIGNED,
-                old_status=None,
-                user_actor=self.manager_user,
-                id=audit_store.id,
-            )
-
-    def test_assign_audit_report_sends_signal(self):
-        audit = mommy.make(Audit)
-        audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, self.manager_user)
-        self.assertEqual(datetime.now().date(), audit_store.audit_date)
-        self.assertEqual(self.auditor_user, audit_store.user)
 
     ##########Tests for withdrawable -> WITHDRAWN########
 
@@ -73,7 +53,7 @@ class AuditStoreTestCase(TestCase):
                     status=AuditStore.WITHDRAWN,
                     old_status=status,
                     user_actor=self.manager_user,
-                    id=audit_store.id,
+                    audit_store_id=audit_store.id,
                 )
 
     def test_not_withdrawable_status_raises_exception(self):
@@ -81,7 +61,7 @@ class AuditStoreTestCase(TestCase):
         not_withdrawable_statuses = list(set(AuditStore._ALL_STATUSES) - set(AuditStore._WITHDRAWABLE_STATUSES))
         for status in not_withdrawable_statuses:
             audit_store = audit_store_recipe.make(status=status)
-            with self.assertRaisesRegexp(AppLogicError, "Report cannot be withdrawn now"):
+            with self.assertRaisesRegex(AppLogicError, "Report cannot be withdrawn now"):
                 audit_store.withdraw(by=self.manager_user)
 
     ##########Tests for ASSIGNED -> ACKNOWLEDGED########
@@ -103,12 +83,12 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACKNOWLEDGED,
                 old_status=AuditStore.ASSIGNED,
                 user_actor=self.auditor_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_raises_when_acknowledged_by_different_user(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user__email=fake.email())
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged by user"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be acknowledged by user"):
             audit_store.acknowledge(by=self.auditor_user)
 
     def test_raises_when_audit_store_is_not_in_assigned_state(self):
@@ -116,12 +96,12 @@ class AuditStoreTestCase(TestCase):
         statuses = list(set(AuditStore._ALL_STATUSES) - {AuditStore.ASSIGNED})
         for status in statuses:
             audit_store = audit_store_recipe.make(status=status)
-            with self.assertRaisesRegexp(AppLogicError, "Report cannot be acknowledged now"):
+            with self.assertRaisesRegex(AppLogicError, "Report cannot be acknowledged now"):
                 audit_store.acknowledge(by=self.auditor_user)
 
     ##########Tests for ACKNOWLEDGED -> SUBMITTED########
 
-    def get_submitable_report(self):
+    def create_submittable_report(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
@@ -131,19 +111,18 @@ class AuditStoreTestCase(TestCase):
             report_section_recipe.make(section=section)
             for i in range(5):
                 question = mommy.make(Question, section=section)
-                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar",
-                                    marks_obtained=1)
+                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
 
         return audit_store
 
     def test_status_changes_from_acknowledged_to_submitted(self):
-        audit_store = self.get_submitable_report()
+        audit_store = self.create_submittable_report()
         audit_store.submit(by=self.auditor_user)
 
         self.assertEqual(audit_store.status, AuditStore.SUBMITTED)
 
     def test_submit_sends_status_change_signal(self):
-        audit_store = self.get_submitable_report()
+        audit_store = self.create_submittable_report()
         with catch_signal(audit_store_status_change) as mock:
             audit_store.submit(by=self.auditor_user)
 
@@ -153,14 +132,14 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.ACKNOWLEDGED,
                 user_actor=self.auditor_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_raises_when_submitted_by_different_user(self):
-        audit_store = self.get_submitable_report()
+        audit_store = self.create_submittable_report()
         auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
                                        groups=[self.auditor_group])
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted by user"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted by user"):
             audit_store.submit(by=auditor)
 
     def test_submit_manager_chanages_status_from_acknowledged_to_submitted(self):
@@ -180,17 +159,17 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.ACKNOWLEDGED,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_submit_manager_raises_when_submitted_by_non_manager(self):
-        audit_store = self.get_submitable_report()
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted by user"):
+        audit_store = self.create_submittable_report()
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted by user"):
             audit_store.submit_manager(by=self.auditor_user)
 
     def test_submit_manager_raises_when_status_is_not_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be submitted now"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted now"):
             audit_store.submit_manager(by=self.manager_user)
 
     ##########Tests for SUBMITTED -> ACKNOWLEDGED########
@@ -212,17 +191,17 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACKNOWLEDGED,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_revert_submit_raises_when_reverted_by_non_manager(self):
-        audit_store = self.get_submitable_report()
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be unsubmitted by user"):
+        audit_store = self.create_submittable_report()
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be unsubmitted by user"):
             audit_store.revert_submit(by=self.auditor_user)
 
     def test_revert_submit_raises_when_status_is_not_submitted(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be unsubmitted now"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be unsubmitted now"):
             audit_store.revert_submit(by=self.manager_user)
 
     # TODO - write tests for submit and revert for moderator user
@@ -245,7 +224,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_qa_ok_raises_when_report_is_not_rated(self):
@@ -280,7 +259,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.PM_REVIEW,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_pm_revert_raises_when_status_is_not_pm_review(self):
@@ -320,7 +299,7 @@ class AuditStoreTestCase(TestCase):
 
     ##########Tests for SUBMITTED -> COMPLETED########
 
-    def get_completable_report(self):
+    def create_completable_report(self):
         audit_store = mommy.make(AuditStore, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
@@ -336,7 +315,7 @@ class AuditStoreTestCase(TestCase):
         return audit_store
 
     def test_status_changes_from_pm_comment_to_completed(self):
-        audit_store = self.get_completable_report()
+        audit_store = self.create_completable_report()
         audit_store.status = AuditStore.PM_REVIEW
         audit_store.qa_rating = AuditStore.AVERAGE
         audit_store.complete(by=self.manager_user)
@@ -344,7 +323,7 @@ class AuditStoreTestCase(TestCase):
         self.assertEqual(audit_store.status, AuditStore.COMPLETED)
 
     def test_complete_sends_status_change_signal(self):
-        audit_store = self.get_completable_report()
+        audit_store = self.create_completable_report()
         audit_store.qa_rating = AuditStore.AVERAGE
         audit_store.status = AuditStore.PM_REVIEW
         with catch_signal(audit_store_status_change) as mock:
@@ -356,12 +335,12 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.COMPLETED,
                 old_status=AuditStore.PM_REVIEW,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_complete_raises_when_user_is_not_manager(self):
-        audit_store = self.get_completable_report()
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be completed by user"):
+        audit_store = self.create_completable_report()
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be completed by user"):
             audit_store.complete(by=self.auditor_user)
 
     def test_complete_raises_when_report_is_not_completable(self):
@@ -372,19 +351,19 @@ class AuditStoreTestCase(TestCase):
             audit__audit_cycle=self.audit_cycle
         )
         section = mommy.make(Section, audit_cycle=self.audit_cycle)
-        with self.assertRaisesRegexp(AppLogicError, "Report is not complete"):
+        with self.assertRaisesRegex(AppLogicError, "Report is not complete"):
             audit_store.complete(by=self.manager_user)
 
     def test_complete_raises_when_report_is_not_rated(self):
-        audit_store = self.get_completable_report()
-        with self.assertRaisesRegexp(AppLogicError, "Report is not rated"):
+        audit_store = self.create_completable_report()
+        with self.assertRaisesRegex(AppLogicError, "Report is not rated"):
             audit_store.complete(by=self.manager_user)
 
     def test_complete_raises_when_status_is_not_pm_review(self):
-        audit_store = self.get_completable_report()
+        audit_store = self.create_completable_report()
         audit_store.status = AuditStore.SUBMITTED
         audit_store.qa_rating = AuditStore.AVERAGE
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be completed now"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be completed now"):
             audit_store.complete(by=self.manager_user)
 
     ##########Tests for COMPLETED -> SUBMITTED########
@@ -406,18 +385,18 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_revert_complete_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be reverted to pm review by user"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be reverted to pm review by user"):
             audit_store.revert_complete(by=self.auditor_user)
 
     def test_revert_complete_raises_when_status_is_not_pm_review(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
 
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be reverted to pm review now"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be reverted to pm review now"):
             audit_store.revert_complete(by=self.manager_user)
 
     ##########Tests for COMPLETED -> ACCEPTED########
@@ -439,18 +418,18 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACCEPTED,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_accept_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be accepted by user"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be accepted by user"):
             audit_store.accept(by=self.auditor_user)
 
     def test_accept_raises_when_status_is_not_completed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
 
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be accepted now"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be accepted now"):
             audit_store.accept(by=self.manager_user)
 
     ##########Tests for COMPLETED -> REJECTED########
@@ -478,18 +457,18 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.REJECTED,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
-                id=audit_store.id,
+                audit_store_id=audit_store.id,
             )
 
     def test_reject_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be rejected by user"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be rejected by user"):
             audit_store.reject(by=self.auditor_user)
 
     def test_reject_raises_when_status_is_not_completed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
 
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be rejected now"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be rejected now"):
             audit_store.reject(by=self.manager_user)
 
     ##########Tests for failable -> FAILED########
@@ -519,19 +498,19 @@ class AuditStoreTestCase(TestCase):
                     status=AuditStore.FAILED,
                     old_status=status,
                     user_actor=self.manager_user,
-                    id=audit_store.id,
+                    audit_store_id=audit_store.id,
                 )
 
     def test_fail_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
-        with self.assertRaisesRegexp(AppLogicError, "Report cannot be failed by user"):
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be failed by user"):
             audit_store.fail(by=self.auditor_user)
 
     def test_fail_raises_when_status_is_not_failable(self):
         for status in list(set(AuditStore._ALL_STATUSES) - set(AuditStore._FAILABLE_STATUSES)):
             audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
 
-            with self.assertRaisesRegexp(AppLogicError, "Report cannot be failed now"):
+            with self.assertRaisesRegex(AppLogicError, "Report cannot be failed now"):
                 audit_store.fail(by=self.manager_user)
 
     ##########Tests for boolean methods########
@@ -583,19 +562,19 @@ class AuditStoreTestCase(TestCase):
             for i in range(5):
                 question = mommy.make(Question, section=section)
                 answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
-        self.assertTrue(audit_store.is_submitable())
+        self.assertTrue(audit_store.is_submittable())
 
     def test_is_submittable_when_status_is_not_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
         with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
-            audit_store.is_submitable()
+            audit_store.is_submittable()
             self.assertIn(
                 "DEBUG:audit_store.models:Report not acknowledged",
                 error_log.output
             )
-        self.assertFalse(audit_store.is_submitable())
+        self.assertFalse(audit_store.is_submittable())
 
-    def test_is_submitable_when_section_length_does_not_match_report_section(self):
+    def test_is_submittable_when_section_length_does_not_match_report_section(self):
         audit_store = mommy.make(
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
@@ -605,13 +584,13 @@ class AuditStoreTestCase(TestCase):
         mommy.make(Section, audit_cycle=self.audit_cycle)
 
         with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
-            audit_store.is_submitable()
+            audit_store.is_submittable()
             self.assertIn(
-                "DEBUG:audit_store.models:Report not submitable, section length does not match report section length",
+                "DEBUG:audit_store.models:Report not submittable, section length does not match report section length",
                 error_log.output
             )
-        self.assertFalse(audit_store.is_submitable())
-    def test_is_submitable_when_auditor_comment_is_blank(self):
+        self.assertFalse(audit_store.is_submittable())
+    def test_is_submittable_when_auditor_comment_is_blank(self):
         audit_store = mommy.make(
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
@@ -622,14 +601,14 @@ class AuditStoreTestCase(TestCase):
         mommy.make(ReportSection, audit_store=audit_store, auditor_comment="", section=section)
 
         with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
-            audit_store.is_submitable()
+            audit_store.is_submittable()
             self.assertIn(
-                "DEBUG:audit_store.models:Report not submitable, some auditor comment is incomplete",
+                "DEBUG:audit_store.models:Report not submittable, some auditor comment is incomplete",
                 error_log.output
             )
-        self.assertFalse(audit_store.is_submitable())
+        self.assertFalse(audit_store.is_submittable())
 
-    def test_is_submitable_when_answer_length_does_not_match_questions(self):
+    def test_is_submittable_when_answer_length_does_not_match_questions(self):
         audit_store = mommy.make(
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
@@ -641,14 +620,14 @@ class AuditStoreTestCase(TestCase):
         mommy.make(Question, section=section)
 
         with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
-            audit_store.is_submitable()
+            audit_store.is_submittable()
             self.assertIn(
-                "DEBUG:audit_store.models:Report not submitable, question length does not match answer length",
+                "DEBUG:audit_store.models:Report not submittable, question length does not match answer length",
                 error_log.output
             )
-        self.assertFalse(audit_store.is_submitable())
+        self.assertFalse(audit_store.is_submittable())
 
-    def test_is_submitable_when_answer_text_is_empty(self):
+    def test_is_submittable_when_answer_text_is_empty(self):
         audit_store = mommy.make(
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
@@ -661,9 +640,9 @@ class AuditStoreTestCase(TestCase):
         mommy.make(Answer, question=question, audit_store=audit_store, answer_text="", marks_obtained=1)
 
         with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
-            audit_store.is_submitable()
+            audit_store.is_submittable()
             self.assertIn(
-                "DEBUG:audit_store.models:Report not submitable, some answer is incomplete",
+                "DEBUG:audit_store.models:Report not submittable, some answer is incomplete",
                 error_log.output
             )
-        self.assertFalse(audit_store.is_submitable())
+        self.assertFalse(audit_store.is_submittable())
