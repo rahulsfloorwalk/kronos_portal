@@ -59,6 +59,7 @@ export default React.createClass({
 				<div className="col-md-8">
 				<ul className="nav nav-tabs">
 					<NavLink to={`/client/${this.props.params.clientId}/audit_cycle`}><Retweet/> Audit Cycles</NavLink>
+					<NavLink to={`/client/${this.props.params.clientId}/questionnaire_type`}>Questionnaire Types</NavLink>
 					<NavLink to={`/client/${this.props.params.clientId}/store`}><Home/> Stores</NavLink>
 					<NavLink to={`/client/${this.props.params.clientId}/client_user`}><Bishop/> Client Users</NavLink>
 				</ul>

@@ -22,6 +22,7 @@ from .viewss import social as social_views
 from .viewss import payment as payment_views
 from .viewss import application as application_views
 from .viewss import config as config_views
+from .viewss import questionnaire_type as questionnaire_type_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -32,6 +33,7 @@ urlpatterns = ([
     url(r'state$', city_views.StateView.as_view(), name='state_view'),
     url(r'city/(?P<state>[\w\-]+)$', city_views.CityView.as_view(), name='city_view'),
 
+    url(r'client/(?P<client_id>[0-9]+)/questionnaire_type$', questionnaire_type_views.QuestionnaireTypeByClientView.as_view(), name='questionnaire_type_by_client_view'),
     url(r'client/(?P<client_id>[0-9]+)/client_user$', client_user_views.ClientUserByClientView.as_view(), name='client_user_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/audit_cycle$', audit_cycle_views.AuditCycleViewByClient.as_view(), name='audit_cycle_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),

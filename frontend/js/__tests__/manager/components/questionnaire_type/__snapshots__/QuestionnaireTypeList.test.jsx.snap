@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types are empty 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    Questionnaire Types
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Questionnaire Type
+        </th>
+        <th>
+          Default
+        </th>
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+</div>
+`;
+
+exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types are loaded 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    Questionnaire Types
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Questionnaire Type
+        </th>
+        <th>
+          Default
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          Hello
+        </td>
+        <td>
+          <span
+            className="glyphicon glyphicon-ok"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          World
+        </td>
+        <td />
+      </tr>
+      <tr>
+        <td>
+          Foobar
+        </td>
+        <td />
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types are loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;

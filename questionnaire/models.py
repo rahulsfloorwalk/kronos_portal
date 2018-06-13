@@ -1,9 +1,17 @@
 from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField
+from django.db.models import BooleanField
 from django.db.models import PROTECT, F, Value, Sum
 from django.db.models.functions import Coalesce
 from django.contrib.postgres.fields import JSONField
 
 from kronos.exceptions import AppLogicError
+from client.models import Client
+
+class QuestionnaireType(Model):
+    id = AutoField(db_column = 'id', primary_key=True)
+    name = CharField(db_column='name', max_length=500)
+    is_default = BooleanField(db_column='is_default', default=False)
+    client = ForeignKey(Client, related_name='questionnaire_types', db_column='client_id', on_delete=PROTECT)
 
 class Section(Model):
 
