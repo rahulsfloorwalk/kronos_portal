@@ -5,6 +5,16 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
   <h3
     className="page-header"
   >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-plus"
+      />
+       New
+    </a>
     Questionnaire Types
   </h3>
   <table
@@ -30,6 +40,16 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
   <h3
     className="page-header"
   >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-plus"
+      />
+       New
+    </a>
     Questionnaire Types
   </h3>
   <table

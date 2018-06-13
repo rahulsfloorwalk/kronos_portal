@@ -47,4 +47,38 @@ class QuestionnaireTypeByClientViewTestCase(APITestCase):
         }))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 3)
+        for qt in response.data:
+            self.assertEqual(qt["client_id"], client.id)
 
+class QuestionnaireTypeViewTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_post_creates_new_questionnaire_type(self):
+        client = mommy.make(Client)
+        self.login()
+
+        post_data = {
+            'client': client.id,
+            'name': fake.word(),
+            'is_default': fake.pybool(),
+        }
+
+        response = self.client.post(reverse('manager:questionnaire_type_view'), post_data)
+        self.assertEqual(response.status_code, 200)
+        for k, v in post_data.items():
+            self.assertEqual(response.data[k], post_data[k])

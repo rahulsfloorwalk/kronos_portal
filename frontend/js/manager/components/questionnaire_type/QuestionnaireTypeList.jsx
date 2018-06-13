@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { } from "react-router";
+import { Link } from "react-router";
 
 import Loading from "../../../components/Loading.jsx";
-import { Check } from "../../../components/Icons.jsx";
-
+import { Check, Plus } from "../../../components/Icons.jsx";
 import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
 
 export class __QuestionnaireTypeList extends Component{
@@ -14,7 +13,10 @@ export class __QuestionnaireTypeList extends Component{
 			name: PropTypes.string.isRequired,
 			is_default: PropTypes.bool.isRequired,
 		})),
+		clientId: PropTypes.number.isRequired,
 		loading: PropTypes.bool,
+
+		children: PropTypes.node,
 	};
 
 	static defaultProps = {
@@ -36,6 +38,9 @@ export class __QuestionnaireTypeList extends Component{
 		return (
 			<div>
 				<h3 className="page-header">
+					<Link to={`/client/${this.props.clientId}/questionnaire_type/add`} className="btn btn-default pull-right">
+						<Plus/> New
+					</Link>
 					Questionnaire Types
 				</h3>
 				<table className="table table-striped">
@@ -49,17 +54,18 @@ export class __QuestionnaireTypeList extends Component{
 						{rows}
 					</tbody>
 				</table>
+				{this.props.children}
 			</div>
 		);
 	}
 }
-
 
 export default class QuestionnaireTypeList extends Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			clientId: PropTypes.string.isRequired,
 		}),
+		children: PropTypes.node,
 	};
 	state = {
 		loading: false,
@@ -75,6 +81,11 @@ export default class QuestionnaireTypeList extends Component {
 		}).always(() => this.setLoading(false));
 	}
 	render(){
-		return <__QuestionnaireTypeList loading={this.state.loading} questionnaireTypes={this.state.questionnaireTypes}/>;
+		return <__QuestionnaireTypeList
+			clientId={parseInt(this.props.params.clientId)}
+			loading={this.state.loading}
+			questionnaireTypes={this.state.questionnaireTypes}>
+			{this.props.children}
+		</__QuestionnaireTypeList>;
 	}
 }

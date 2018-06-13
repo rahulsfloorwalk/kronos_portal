@@ -8,6 +8,12 @@ import { fetchQuestionnaireTypes } from "../../../../manager/service/questionnai
 
 jest.mock("../../../../manager/service/questionnaire_type.js");
 
+const sampleParams = {
+	clientId: "5",
+};
+
+const sampleClientId = parseInt(sampleParams.clientId);
+
 const sampleQuestionnaireTypes = [
 	{
 		id: 6,
@@ -27,30 +33,27 @@ const sampleQuestionnaireTypes = [
 describe("<__QuestionnaireTypeList/>", () => {
 	it("renders correctly when questionnaire types are loading", () => {
 		const tree = renderer
-			.create(<__QuestionnaireTypeList loading={true} questionnaireTypes={[]}/>)
+			.create(<__QuestionnaireTypeList loading={true} clientId={sampleClientId} questionnaireTypes={[]}/>)
 			.toJSON();
 		expect(tree).toMatchSnapshot();
 	});
 
 	it("renders correctly when questionnaire types are loaded", () => {
 		const tree = renderer
-			.create(<__QuestionnaireTypeList loading={false} questionnaireTypes={sampleQuestionnaireTypes}/>)
+			.create(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={sampleQuestionnaireTypes}/>)
 			.toJSON();
 		expect(tree).toMatchSnapshot();
 	});
 
 	it("renders correctly when questionnaire types are empty", () => {
 		const tree = renderer
-			.create(<__QuestionnaireTypeList loading={false} questionnaireTypes={[]}/>)
+			.create(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={[]}/>)
 			.toJSON();
 		expect(tree).toMatchSnapshot();
 	});
 });
 
 describe("<QuestionnaireTypeList/>", () => {
-	const sampleParams = {
-		clientId: "5",
-	};
 
 	fetchQuestionnaireTypes.mockReturnValue($.Deferred().resolve(sampleQuestionnaireTypes).promise());
 
