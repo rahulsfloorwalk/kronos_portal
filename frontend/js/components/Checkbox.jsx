@@ -30,7 +30,7 @@ export default class Checkbox extends React.Component{
 		let btnClass = this.props.checked ? "btn-primary" : "btn-default";
 		if(!this.props.disabled) {
 			return (
-				<button className={"btn " + btnClass} onClick={this.onClick} disabled={this.props.disabled}>
+				<button type="button" className={"btn " + btnClass} onClick={this.onClick} disabled={this.props.disabled}>
 					{icon}
 				</button>
 			);

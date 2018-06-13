@@ -5,6 +5,7 @@ exports[`<Checkbox/> is checked 1`] = `
   className="btn btn-primary"
   disabled={false}
   onClick={[Function]}
+  type="button"
 >
   <span
     className="glyphicon glyphicon-ok"
@@ -23,6 +24,7 @@ exports[`<Checkbox/> is unchecked 1`] = `
   className="btn btn-default"
   disabled={false}
   onClick={[Function]}
+  type="button"
 >
   <span
     className="glyphicon glyphicon-unchecked"
