@@ -33,3 +33,19 @@ class QuestionnaireTypeView(ManagerAPIView):
         ds.save()
         return Response(ds.data)
 
+class QuestionnaireTypeIdView(ManagerAPIView):
+    def get(self, request, questionnaire_type_id):
+        questionnaire_type = get_object_or_404(QuestionnaireType, pk=questionnaire_type_id)
+        return Response(QuestionnaireTypeSerializer(questionnaire_type).data)
+
+    def post(self, request, questionnaire_type_id):
+        questionnaire_type = get_object_or_404(QuestionnaireType, pk=questionnaire_type_id)
+        ds = QuestionnaireTypeSerializer(questionnaire_type, data=request.data)
+        ds.is_valid(raise_exception=True)
+        ds.save()
+        return Response(ds.data)
+
+    def delete(self, request, questionnaire_type_id):
+        questionnaire_type = get_object_or_404(QuestionnaireType, pk=questionnaire_type_id)
+        questionnaire_type.delete()
+        return Response(status=204)

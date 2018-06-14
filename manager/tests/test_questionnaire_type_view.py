@@ -82,3 +82,64 @@ class QuestionnaireTypeViewTestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         for k, v in post_data.items():
             self.assertEqual(response.data[k], post_data[k])
+
+
+class QuestionnaireTypeIdViewTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def create_instance(self):
+        return mommy.make(QuestionnaireType)
+
+    def test_get_retrieves_the_instance(self):
+        self.login()
+        questionnaire_type = self.create_instance()
+
+        response = self.client.get(reverse('manager:questionnaire_type_id_view', kwargs={
+            "questionnaire_type_id": questionnaire_type.id
+        }))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["id"], questionnaire_type.id)
+        self.assertEqual(response.data["name"], questionnaire_type.name)
+        self.assertEqual(response.data["is_default"], questionnaire_type.is_default)
+        self.assertEqual(response.data["client_id"], questionnaire_type.client_id)
+
+    def test_post_updates_the_instance(self):
+        self.login()
+        questionnaire_type = self.create_instance()
+
+        post_data = {
+            'client': questionnaire_type.client_id,
+            'name': fake.word(),
+            'is_default': fake.pybool(),
+        }
+
+        response = self.client.post(reverse('manager:questionnaire_type_id_view', kwargs={
+            "questionnaire_type_id": questionnaire_type.id
+        }), post_data)
+        self.assertEqual(response.status_code, 200)
+        for k, v in post_data.items():
+            self.assertEqual(response.data[k], post_data[k])
+
+    def test_delete_deletes_the_instance(self):
+        self.login()
+        questionnaire_type = self.create_instance()
+
+        response = self.client.delete(reverse('manager:questionnaire_type_id_view', kwargs={
+            "questionnaire_type_id": questionnaire_type.id
+        }))
+        self.assertEqual(response.status_code, 204)

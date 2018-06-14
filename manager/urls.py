@@ -152,6 +152,7 @@ urlpatterns = ([
     url(r'email_log/(?P<to_email>[0-9a-zA-Z_@\.]+)$', email_log_views.EmailLogByEmail.as_view(), name='email_log_by_email'),
     url(r'twitter_feed/fetch', social_views.FetchTwitterFeedView.as_view(), name='fetch_twitter_feed_view'),
     url(r'config', config_views.ConfigView.as_view(), name='config_view'),
+    url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)$', questionnaire_type_views.QuestionnaireTypeIdView.as_view(), name='questionnaire_type_id_view'),
     url(r'questionnaire_type$', questionnaire_type_views.QuestionnaireTypeView.as_view(), name='questionnaire_type_view'),
 
 ], 'manager')
