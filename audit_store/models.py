@@ -267,43 +267,38 @@ class AuditStore(Model):
     def acknowledge(self, *args, by):
         if by is not self.user:
             raise AppLogicError("Report cannot be acknowledged by user")
-        if self.status == AuditStore.ASSIGNED:
-            self._change_status(AuditStore.ACKNOWLEDGED, by)
-
-        else:
+        if self.status != AuditStore.ASSIGNED:
             raise AppLogicError("Report cannot be acknowledged now")
+        self._change_status(AuditStore.ACKNOWLEDGED, by)
 
     @atomic
     def submit(self, *args, by):
         if by is not self.user:
             raise AppLogicError("Report cannot be submitted by user")
-        if self.is_submittable():
-            self._change_status(AuditStore.SUBMITTED, by)
-
-        else:
+        if not self.is_submittable():
             raise AppLogicError("Report cannot be acknowledged now")
+
+        self._change_status(AuditStore.SUBMITTED, by)
 
     @atomic
     def submit_manager(self, *args, by):
         if not by.groups.filter(Q(name=GROUP_NAME_MANAGER) | Q(name=GROUP_NAME_MODERATOR)).exists():
             raise AppLogicError("Report cannot be submitted by user")
 
-        if self.status == AuditStore.ACKNOWLEDGED:
-            self._change_status(AuditStore.SUBMITTED, by)
-
-        else:
+        if self.status != AuditStore.ACKNOWLEDGED:
             raise AppLogicError("Report cannot be submitted now")
+
+        self._change_status(AuditStore.SUBMITTED, by)
 
     @atomic
     def revert_submit(self, *args, by):
         if not by.groups.filter(Q(name=GROUP_NAME_MANAGER) | Q(name=GROUP_NAME_MODERATOR)).exists():
             raise AppLogicError("Report cannot be unsubmitted by user")
 
-        if self.status == AuditStore.SUBMITTED:
-            self._change_status(AuditStore.ACKNOWLEDGED, by)
-
-        else:
+        if self.status != AuditStore.SUBMITTED:
             raise AppLogicError("Report cannot be unsubmitted now")
+
+        self._change_status(AuditStore.ACKNOWLEDGED, by)
 
     @atomic
     def qa_ok(self, *args, by):
@@ -313,19 +308,17 @@ class AuditStore(Model):
         if not self.is_qa_rated():
             raise AppLogicError("Please rate report before forwarding for PM Review.")
 
-        if self.status == AuditStore.SUBMITTED:
-            self._change_status(AuditStore.PM_REVIEW, by)
-
-        else:
+        if self.status != AuditStore.SUBMITTED:
             raise AppLogicError("Report cannot be forwarded for PM Review now.")
+
+        self._change_status(AuditStore.PM_REVIEW, by)
 
     @atomic
     def pm_revert(self, *args, by):
-        if self.status == AuditStore.PM_REVIEW:
-            self._change_status(AuditStore.SUBMITTED, by)
-
-        else:
+        if self.status != AuditStore.PM_REVIEW:
             raise AppLogicError("Report cannot be reverted to QA now.")
+
+        self._change_status(AuditStore.SUBMITTED, by)
 
     @atomic
     def complete(self, *args, by):
@@ -338,59 +331,56 @@ class AuditStore(Model):
         if not self.is_qa_rated():
             raise AppLogicError("Report is not rated")
 
-        if self.status == AuditStore.PM_REVIEW:
-            self._change_status(AuditStore.COMPLETED, by)
-
-        else:
+        if self.status != AuditStore.PM_REVIEW:
             raise AppLogicError("Report cannot be completed now")
+
+        self._change_status(AuditStore.COMPLETED, by)
 
     @atomic
     def revert_complete(self, *args, by):
         if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
             raise AppLogicError("Report cannot be reverted to pm review by user")
 
-        if self.status == AuditStore.COMPLETED:
-            self._change_status(AuditStore.PM_REVIEW, by)
-
-        else:
+        if self.status != AuditStore.COMPLETED:
             raise AppLogicError("Report cannot be reverted to pm review now")
+
+        self._change_status(AuditStore.PM_REVIEW, by)
 
     @atomic
     def accept(self, *args, by):
         if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
             raise AppLogicError("Report cannot be accepted by user")
 
-        if self.status == AuditStore.COMPLETED:
-            self._change_status(AuditStore.ACCEPTED, by)
-
-        else:
+        if self.status != AuditStore.COMPLETED:
             raise AppLogicError("Report cannot be accepted now")
+
+        self._change_status(AuditStore.ACCEPTED, by)
 
     @atomic
     def reject(self, *args, by):
         if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
             raise AppLogicError("Report cannot be rejected by user")
 
-        if self.status == AuditStore.COMPLETED:
-            self.qa_rating = AuditStore.BAD
-            self.save()
-            self._change_status(AuditStore.REJECTED, by)
-        else:
+        if self.status != AuditStore.COMPLETED:
             raise AppLogicError("Report cannot be rejected now")
+
+        self.qa_rating = AuditStore.BAD
+        self.save()
+        self._change_status(AuditStore.REJECTED, by)
 
     @atomic
     def fail(self, *args, by):
         if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
             raise AppLogicError("Report cannot be failed by user")
 
-        if self.is_failable():
-            old_status = self.status
-            self.qa_rating = AuditStore.BAD
-            self.save()
-            self._change_status(AuditStore.FAILED, by)
-
-        else:
+        if not self.is_failable():
             raise AppLogicError("Report cannot be failed now")
+
+        old_status = self.status
+        self.qa_rating = AuditStore.BAD
+        self.save()
+        self._change_status(AuditStore.FAILED, by)
+
 
     @atomic
     def rate(self, rating):
