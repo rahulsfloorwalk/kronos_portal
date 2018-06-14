@@ -261,16 +261,14 @@ class AuditStore(Model):
     def withdraw(self, *args, by):
         if not self.is_withdrawable():
             raise AppLogicError("Report cannot be withdrawn now")
-
-        old_status = self.status
-        self.change_status(old_status, AuditStore.WITHDRAWN, by)
+        self.change_status(AuditStore.WITHDRAWN, by)
 
     @atomic
     def acknowledge(self, *args, by):
         if by is not self.user:
             raise AppLogicError("Report cannot be acknowledged by user")
         if self.status == AuditStore.ASSIGNED:
-            self.change_status(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, by)
+            self.change_status(AuditStore.ACKNOWLEDGED, by)
 
         else:
             raise AppLogicError("Report cannot be acknowledged now")
@@ -280,7 +278,7 @@ class AuditStore(Model):
         if by is not self.user:
             raise AppLogicError("Report cannot be submitted by user")
         if self.is_submittable():
-            self.change_status(AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, by)
+            self.change_status(AuditStore.SUBMITTED, by)
 
         else:
             raise AppLogicError("Report cannot be acknowledged now")
@@ -291,7 +289,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be submitted by user")
 
         if self.status == AuditStore.ACKNOWLEDGED:
-            self.change_status(AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, by)
+            self.change_status(AuditStore.SUBMITTED, by)
 
         else:
             raise AppLogicError("Report cannot be submitted now")
@@ -302,7 +300,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be unsubmitted by user")
 
         if self.status == AuditStore.SUBMITTED:
-            self.change_status(AuditStore.SUBMITTED, AuditStore.ACKNOWLEDGED, by)
+            self.change_status(AuditStore.ACKNOWLEDGED, by)
 
         else:
             raise AppLogicError("Report cannot be unsubmitted now")
@@ -316,7 +314,7 @@ class AuditStore(Model):
             raise AppLogicError("Please rate report before forwarding for PM Review.")
 
         if self.status == AuditStore.SUBMITTED:
-            self.change_status(AuditStore.SUBMITTED, AuditStore.PM_REVIEW, by)
+            self.change_status(AuditStore.PM_REVIEW, by)
 
         else:
             raise AppLogicError("Report cannot be forwarded for PM Review now.")
@@ -324,7 +322,7 @@ class AuditStore(Model):
     @atomic
     def pm_revert(self, *args, by):
         if self.status == AuditStore.PM_REVIEW:
-            self.change_status(AuditStore.PM_REVIEW, AuditStore.SUBMITTED, by)
+            self.change_status(AuditStore.SUBMITTED, by)
 
         else:
             raise AppLogicError("Report cannot be reverted to QA now.")
@@ -341,7 +339,7 @@ class AuditStore(Model):
             raise AppLogicError("Report is not rated")
 
         if self.status == AuditStore.PM_REVIEW:
-            self.change_status(AuditStore.PM_REVIEW, AuditStore.COMPLETED, by)
+            self.change_status(AuditStore.COMPLETED, by)
 
         else:
             raise AppLogicError("Report cannot be completed now")
@@ -352,7 +350,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be reverted to pm review by user")
 
         if self.status == AuditStore.COMPLETED:
-            self.change_status(AuditStore.COMPLETED, AuditStore.PM_REVIEW, by)
+            self.change_status(AuditStore.PM_REVIEW, by)
 
         else:
             raise AppLogicError("Report cannot be reverted to pm review now")
@@ -363,7 +361,7 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be accepted by user")
 
         if self.status == AuditStore.COMPLETED:
-            self.change_status(AuditStore.COMPLETED, AuditStore.ACCEPTED, by)
+            self.change_status(AuditStore.ACCEPTED, by)
 
         else:
             raise AppLogicError("Report cannot be accepted now")
@@ -376,7 +374,7 @@ class AuditStore(Model):
         if self.status == AuditStore.COMPLETED:
             self.qa_rating = AuditStore.BAD
             self.save()
-            self.change_status(AuditStore.COMPLETED, AuditStore.REJECTED, by)
+            self.change_status(AuditStore.REJECTED, by)
         else:
             raise AppLogicError("Report cannot be rejected now")
 
@@ -389,7 +387,7 @@ class AuditStore(Model):
             old_status = self.status
             self.qa_rating = AuditStore.BAD
             self.save()
-            self.change_status(old_status, AuditStore.FAILED, by)
+            self.change_status(AuditStore.FAILED, by)
 
         else:
             raise AppLogicError("Report cannot be failed now")
@@ -405,16 +403,16 @@ class AuditStore(Model):
         self.qa_rating = rating
         self.save()
 
-    def change_status(self, old_status, new_status, user_actor):
-        self.status = new_status
-        self.save()
+    def change_status(self, new_status, user_actor):
         audit_store_status_change.send(
             sender=self.__class__,
             status=new_status,
-            old_status=old_status,
+            old_status=self.status,
             user_actor=user_actor,
             audit_store=self
         )
+        self.status = new_status
+        self.save()
 
 
 class ReportStatusLog(Model):

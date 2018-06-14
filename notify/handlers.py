@@ -5,7 +5,7 @@ from notifications.signals import notify
 from notifications.models import Notification
 from notify import verbs
 from notify.service import mail_notify
-from audit_store.signals import *
+from audit_store.signals import audit_store_status_change
 from audit_store.models import AuditStore
 
 from registration.models import GROUP_NAME_MANAGER
