@@ -1,4 +1,5 @@
-from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField
+from django.utils import timezone
+from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT
 from django.conf import settings
@@ -58,6 +59,16 @@ class Store(Model):
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
     phone = CharField(db_column='phone', max_length=100, blank=True)
     extra_data = JSONField(db_column='extra_data', default=dict(), blank=False)
+
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(Store, self).save(*args, **kwargs)
 
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
