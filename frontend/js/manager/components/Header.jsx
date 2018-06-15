@@ -1,25 +1,23 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import { Link } from "react-router";
 
-import { pointerStyle } from '../../styles.js';
+import { pointerStyle } from "../../styles.js";
 
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
-import Heartbeat from '../../components/Heartbeat.jsx';
-import NavLink from '../../components/NavLink.jsx';
-import { OptionVertical, NewWindow, User, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats } from "../../components/Icons.jsx";
+import Heartbeat from "../../components/Heartbeat.jsx";
+import NavLink from "../../components/NavLink.jsx";
+import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats } from "../../components/Icons.jsx";
 
-var Header = React.createClass({
-	getInitialState: function(){
-		return {
-		};
-	},
-	render: function(){
-		let brandStyle = {
+export default class Header extends Component{
+	state = {};
+
+	render(){
+		const brandStyle = {
 			height: "25px"
 		};
 		return (
 			<nav className="navbar navbar-default navbar-static-top">
-				<div className="container">
+				<div className="container-fluid">
 					<div className="navbar-header">
 						<Link className="navbar-brand" to="/">
 							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
@@ -34,7 +32,7 @@ var Header = React.createClass({
 					<ul className="nav navbar-nav navbar-right">
 						<li>
 							<a>
-							<Heartbeat/>
+								<Heartbeat/>
 							</a>
 						</li>
 						<NavLink to="/state"><MapMarker/> <span className="hidden-xs">Cities</span></NavLink>
@@ -72,9 +70,6 @@ var Header = React.createClass({
 				</div>
 			</nav>
 		);
-	},
-});
-
-export default Header;
-
+	}
+}
 

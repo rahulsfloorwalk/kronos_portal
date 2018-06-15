@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Header/> is rendered correctly 1`] = `
+<nav
+  className="navbar navbar-default navbar-static-top"
+>
+  <div
+    className="container-fluid"
+  >
+    <div
+      className="navbar-header"
+    >
+      <a
+        className="navbar-brand"
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <img
+          alt="FloorWalk"
+          className="img-responsive"
+          src="/static/img/logo_3_transparent_bg_400x51.png"
+          style={
+            Object {
+              "height": "25px",
+            }
+          }
+          title="FloorWalk"
+        />
+      </a>
+    </div>
+    <ul
+      className="nav navbar-nav"
+    >
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          href={undefined}
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-king"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Clients
+          </span>
+        </a>
+      </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          href={undefined}
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-pawn"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Auditors
+          </span>
+        </a>
+      </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          href={undefined}
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-knight"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Moderators
+          </span>
+        </a>
+      </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          href={undefined}
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-queen"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Managers
+          </span>
+        </a>
+      </li>
+    </ul>
+    <ul
+      className="nav navbar-nav navbar-right"
+    >
+      <li>
+        <a />
+      </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          href={undefined}
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-map-marker"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Cities
+          </span>
+        </a>
+      </li>
+      <li>
+        <a
+          onClick={[Function]}
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
+        >
+          <span
+            className="glyphicon glyphicon-option-vertical"
+          />
+        </a>
+      </li>
+    </ul>
+    <form
+      action="/auth/manager/logout"
+      method="POST"
+      style={
+        Object {
+          "display": "none",
+        }
+      }
+    />
+  </div>
+</nav>
+`;
