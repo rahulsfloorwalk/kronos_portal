@@ -78,7 +78,7 @@ class AuditStoreTableForAudit extends Component{
 	}
 }
 
-class __AuditRow extends Component{
+export class __AuditRow extends Component{
 	static propTypes = {
 		audit: PropTypes.object,
 
@@ -90,6 +90,7 @@ class __AuditRow extends Component{
 		showAuditDate: PropTypes.bool,
 		showAuditFees: PropTypes.bool,
 		showReimbursement: PropTypes.bool,
+		showPriority: PropTypes.bool,
 
 		onDelete: PropTypes.func.isRequired,
 
@@ -177,6 +178,7 @@ class __AuditRow extends Component{
 						<br/>
 						<small className="text-muted">{this.props.audit.store.address}</small>
 					</td>
+					{ this.props.showPriority ? <td className="text-right">{this.props.audit.store.priority}</td> : null }
 					{ this.props.showAuditDate ? <td className="text-right">{moment(this.props.audit.audit_date).isValid() ? moment(this.props.audit.audit_date).format(momentDateFormat) : null}</td> : null }
 					<td>{this.props.audit.store.city.name}</td>
 					{ this.props.showAuditFees ? <td className="text-right">{this.props.audit.earnings_per_audit}</td> : null }
@@ -280,7 +282,7 @@ class __AuditRow extends Component{
 
 const AuditRow = ReactRedux.connect()(__AuditRow);
 
-class AuditList extends Component{
+export class AuditList extends Component{
 	static propTypes = {
 		params: PropTypes.object,
 		audits: PropTypes.object.isRequired,
@@ -296,6 +298,7 @@ class AuditList extends Component{
 			selectedCityId: null,
 			selectedHiddenState: "",
 			selectedAuditDate: "",
+			selectedPriority: "",
 		};
 	}
 
@@ -322,6 +325,10 @@ class AuditList extends Component{
 
 	onHiddenFilterChanged = (e) => {
 		this.setState({selectedHiddenState: e.target.value});
+	};
+
+	onPriorityFilterChanged = (e) => {
+		this.setState({selectedPriority: e.target.value});
 	};
 
 	onAuditDateChanged = (e) => {
@@ -372,7 +379,15 @@ class AuditList extends Component{
 			}
 		}, []).sort(this.dateComparator);
 
-		let showAuditFees = false, showReimbursement = false, showAuditDate = false;
+		const priorities = Object.keys(this.props.audits).reduce((priorities, id) => {
+			if(priorities.find( p => p === this.props.audits[id].store.priority) === undefined){
+				return priorities.concat(this.props.audits[id].store.priority);
+			} else {
+				return priorities;
+			}
+		}, []).sort();
+
+		let showAuditFees = false, showReimbursement = false, showAuditDate = false, showPriority = false;
 
 		for(let id in this.props.audits){
 			if(this.props.audits[id].earnings_per_audit){
@@ -383,6 +398,9 @@ class AuditList extends Component{
 			}
 			if(this.props.audits[id].audit_date){
 				showAuditDate = true;
+			}
+			if(this.props.audits[id].store.priority){
+				showPriority = true;
 			}
 		}
 
@@ -400,11 +418,13 @@ class AuditList extends Component{
 				}
 			})
 			.filter((a) => this.state.selectedCityId ? a.store.city.id === parseInt(this.state.selectedCityId) : true)
+			.filter((a) => this.state.selectedPriority ? a.store.priority === this.state.selectedPriority : true)
 			.filter((a) => this.state.selectedHiddenState !== "" ? "true" === this.state.selectedHiddenState === a.hidden : true)
 			.map( a => <AuditRow key={a.id}
 				showAuditDate={showAuditDate}
 				showAuditFees={showAuditFees}
 				showReimbursement={showReimbursement}
+				showPriority={showPriority}
 				serial={serial++}
 				auditCycleId={this.props.params.auditCycleId}
 				audit={a}
@@ -441,6 +461,12 @@ class AuditList extends Component{
 					<tr>
 						<th className="text-right">#</th>
 						<th>Store</th>
+						{ showPriority ? <th>
+							<select value={this.state.selectedPriority} onChange={this.onPriorityFilterChanged} className="form-control">
+								<option value="">Priority</option>
+								{priorities.map((p, i) => <option key={i} value={p}>{p}</option>)}
+							</select>
+						</th> : null }
 						{ showAuditDate ? <th>
 							<select value={this.state.selectedAuditDate} onChange={this.onAuditDateChanged} className="form-control">
 								<option value="">Audit Date</option>
