@@ -1,4 +1,4 @@
-import { fetchQuestionnaireTypes, createQuestionnaireType, saveQuestionnaireType } from "../questionnaire_type";
+import { fetchQuestionnaireType, fetchQuestionnaireTypes, createQuestionnaireType, saveQuestionnaireType } from "../questionnaire_type";
 
 import $ from "jquery";
 jest.mock("jquery");
@@ -19,6 +19,13 @@ describe("fetchQuestionnaireTypes", () => {
 	it("performs a GET to the correct URL", () => {
 		fetchQuestionnaireTypes(5);
 		expect($.get).toBeCalledWith("/manager/client/5/questionnaire_type");
+	});
+});
+
+describe("fetchQuestionnaireType", () => {
+	it("performs a GET to the correct URL", () => {
+		fetchQuestionnaireType(5);
+		expect($.get).toBeCalledWith("/manager/questionnaire_type/5");
 	});
 });
 
