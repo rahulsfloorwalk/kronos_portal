@@ -90,22 +90,6 @@ describe("<QuestionnaireTypeForm/>", () => {
 			);
 		});
 
-		it("calls createQuestionnaireType when form is submitted", () => {
-			const sampleRouter = {
-				push: jest.fn(),
-			};
-
-			const formSubmitEvent = { name: "Foobar", is_default: true, };
-
-			const r = shallow(<QuestionnaireTypeForm params={sampleParams} router={sampleRouter}/>);
-			r.find(__QuestionnaireTypeForm).simulate("submit", formSubmitEvent);
-			expect(createQuestionnaireType).toBeCalledWith(
-				formSubmitEvent.name,
-				sampleClientId,
-				formSubmitEvent.is_default,
-			);
-		});
-
 		it("closes the form and navigates to list when questionnaire type is created", (done) => {
 			const sampleRouter = {
 				push: jest.fn(),
