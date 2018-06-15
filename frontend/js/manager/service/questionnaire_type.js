@@ -7,8 +7,21 @@ export function fetchQuestionnaireTypes(clientId){
 
 export function createQuestionnaireType(name, client, is_default){
 	return $.ajax({
-		type: "POST",
+		method: "POST",
 		url: url.api_base_path + "manager/questionnaire_type",
+		data: JSON.stringify({
+			name,
+			is_default,
+			client,
+		}),
+		contentType: "application/json"
+	});
+}
+
+export function saveQuestionnaireType(questionnaireTypeId, name, client, is_default){
+	return $.ajax({
+		method: "POST",
+		url: url.api_base_path + `manager/questionnaire_type/${questionnaireTypeId}`,
 		data: JSON.stringify({
 			name,
 			is_default,
