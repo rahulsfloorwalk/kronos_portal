@@ -50,7 +50,7 @@ class Store(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     code = CharField(db_column='code', max_length=20, blank=True, null=True, default=None)
     type = CharField(db_column='type', max_length=20, blank=True, default='')
-    priority = CharField(db_column='priority', max_length=5, blank=True, default='')
+    priority = CharField(db_column='priority', max_length=50, blank=True, default='')
     name = CharField(db_column='name', max_length=500, blank=False)
     address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=True, null=True, on_delete=PROTECT)
