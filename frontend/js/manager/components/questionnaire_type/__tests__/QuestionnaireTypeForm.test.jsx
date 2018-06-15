@@ -3,10 +3,10 @@ import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 import $ from "jquery";
 
-import QuestionnaireTypeForm, { __QuestionnaireTypeForm } from "../../../../manager/components/questionnaire_type/QuestionnaireTypeForm";
-import { createQuestionnaireType } from "../../../../manager/service/questionnaire_type.js";
+import QuestionnaireTypeForm, { __QuestionnaireTypeForm } from "../QuestionnaireTypeForm";
+import { createQuestionnaireType } from "../../../service/questionnaire_type.js";
 
-jest.mock("../../../../manager/service/questionnaire_type.js");
+jest.mock("../../../service/questionnaire_type.js");
 
 const sampleParams = {
 	clientId: "5",
