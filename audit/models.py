@@ -1,4 +1,5 @@
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField
+from django.utils import timezone
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField, DateTimeField
 from django.db.models import PROTECT, F, Sum
 from auditor.models import AuditApplication
 
@@ -123,6 +124,16 @@ class Audit(Model):
     audit_cycle = ForeignKey(AuditCycle, related_name='audits', db_column='audit_cycle_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=True)
     hidden = BooleanField(db_column='hidden', default=False)
+
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(Audit, self).save(*args, **kwargs)
 
     def application_count(self):
         # check if prefetched cache exists,
