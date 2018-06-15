@@ -86,11 +86,6 @@ class AuditStoreTestCase(TestCase):
                 audit_store=audit_store,
             )
 
-    def test_raises_when_acknowledged_by_different_user(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user__email=fake.email())
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be acknowledged by user"):
-            audit_store.acknowledge(by=self.auditor_user)
-
     def test_raises_when_audit_store_is_not_in_assigned_state(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
         statuses = list(set(AuditStore._ALL_STATUSES) - {AuditStore.ASSIGNED})
@@ -135,13 +130,6 @@ class AuditStoreTestCase(TestCase):
                 audit_store=audit_store,
             )
 
-    def test_raises_when_submitted_by_different_user(self):
-        audit_store = self.create_submittable_report()
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                       groups=[self.auditor_group])
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted by user"):
-            audit_store.submit(by=auditor)
-
     def test_submit_manager_chanages_status_from_acknowledged_to_submitted(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         audit_store.submit_manager(by=self.manager_user)
@@ -161,11 +149,6 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 audit_store=audit_store,
             )
-
-    def test_submit_manager_raises_when_submitted_by_non_manager(self):
-        audit_store = self.create_submittable_report()
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted by user"):
-            audit_store.submit_manager(by=self.auditor_user)
 
     def test_submit_manager_raises_when_status_is_not_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
@@ -193,11 +176,6 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 audit_store=audit_store,
             )
-
-    def test_revert_submit_raises_when_reverted_by_non_manager(self):
-        audit_store = self.create_submittable_report()
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be unsubmitted by user"):
-            audit_store.revert_submit(by=self.auditor_user)
 
     def test_revert_submit_raises_when_status_is_not_submitted(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
@@ -338,11 +316,6 @@ class AuditStoreTestCase(TestCase):
                 audit_store=audit_store,
             )
 
-    def test_complete_raises_when_user_is_not_manager(self):
-        audit_store = self.create_completable_report()
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be completed by user"):
-            audit_store.complete(by=self.auditor_user)
-
     def test_complete_raises_when_report_is_not_completable(self):
         audit_store = mommy.make(
             AuditStore,
@@ -388,11 +361,6 @@ class AuditStoreTestCase(TestCase):
                 audit_store=audit_store,
             )
 
-    def test_revert_complete_raises_when_user_is_not_manager(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be reverted to pm review by user"):
-            audit_store.revert_complete(by=self.auditor_user)
-
     def test_revert_complete_raises_when_status_is_not_pm_review(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
 
@@ -420,11 +388,6 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 audit_store=audit_store,
             )
-
-    def test_accept_raises_when_user_is_not_manager(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be accepted by user"):
-            audit_store.accept(by=self.auditor_user)
 
     def test_accept_raises_when_status_is_not_completed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
@@ -459,11 +422,6 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 audit_store=audit_store,
             )
-
-    def test_reject_raises_when_user_is_not_manager(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be rejected by user"):
-            audit_store.reject(by=self.auditor_user)
 
     def test_reject_raises_when_status_is_not_completed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
@@ -500,11 +458,6 @@ class AuditStoreTestCase(TestCase):
                     user_actor=self.manager_user,
                     audit_store=audit_store,
                 )
-
-    def test_fail_raises_when_user_is_not_manager(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user)
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be failed by user"):
-            audit_store.fail(by=self.auditor_user)
 
     def test_fail_raises_when_status_is_not_failable(self):
         for status in list(set(AuditStore._ALL_STATUSES) - set(AuditStore._FAILABLE_STATUSES)):

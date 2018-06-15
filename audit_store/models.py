@@ -265,16 +265,12 @@ class AuditStore(Model):
 
     @atomic
     def acknowledge(self, *args, by):
-        if by is not self.user:
-            raise AppLogicError("Report cannot be acknowledged by user")
         if self.status != AuditStore.ASSIGNED:
             raise AppLogicError("Report cannot be acknowledged now")
         self._change_status(AuditStore.ACKNOWLEDGED, by)
 
     @atomic
     def submit(self, *args, by):
-        if by is not self.user:
-            raise AppLogicError("Report cannot be submitted by user")
         if not self.is_submittable():
             raise AppLogicError("Report cannot be acknowledged now")
 

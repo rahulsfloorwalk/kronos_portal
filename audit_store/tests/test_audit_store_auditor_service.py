@@ -1,0 +1,67 @@
+from model_mommy import mommy
+from model_mommy.recipe import Recipe
+
+from django.test import TestCase
+from django.contrib.auth.models import User, Group
+
+from kronos.exceptions import ObjectNotFound, AppLogicError
+from audit_store.models import AuditStore
+from registration.models import GROUP_NAME_AUDITOR
+from auditor.models import ProfileInfo
+from audit.models import AuditCycle
+from questionnaire.models import Section, Question
+from answer.models import ReportSection, Answer
+
+from audit_store import service_auditor
+
+
+class AuditStoreModeratorServiceTestCase(TestCase):
+    fixtures = ['groups', 'city']
+
+    def setUp(self):
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.audit_cycle = mommy.make(AuditCycle)
+
+    def test_acknowledge_report_raises_when_user_is_not_report_user(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user,
+                                 audit__audit_cycle=self.audit_cycle)
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
+                                           groups=[self.auditor_group])
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be acknowledged by user"):
+            service_auditor.acknowledge_report(audit_store.id, auditor.id)
+
+    def test_acknowledge_report_changes_report_status(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user,
+                                 audit__audit_cycle=self.audit_cycle)
+        acknowledged_audit_store = service_auditor.acknowledge_report(audit_store.id, self.auditor_user.id)
+        self.assertEqual(AuditStore.ACKNOWLEDGED, acknowledged_audit_store.status)
+
+    def create_submittable_report(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
+                                 audit__audit_cycle=self.audit_cycle)
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+        report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
+        for i in range(3):
+            section = section_recipe.make()
+            report_section_recipe.make(section=section)
+            for i in range(5):
+                question = mommy.make(Question, section=section)
+                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
+
+        return audit_store
+
+    def test_submit_report_raises_when_user_is_not_report_user(self):
+        audit_store = self.create_submittable_report()
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
+                                       groups=[self.auditor_group])
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted by user"):
+            service_auditor.submit_report(audit_store.id, auditor.id)
+
+    def test_submit_report_changes_report_status(self):
+        audit_store = self.create_submittable_report()
+        submitted_audit_store = service_auditor.submit_report(audit_store.id, self.auditor_user.id)
+        self.assertEqual(AuditStore.SUBMITTED, submitted_audit_store.status)
+
