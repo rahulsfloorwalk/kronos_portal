@@ -15,7 +15,7 @@ from answer.models import ReportSection, Answer
 from audit_store import service_auditor
 
 
-class AuditStoreModeratorServiceTestCase(TestCase):
+class AuditStoreAuditorServiceTestCase(TestCase):
     fixtures = ['groups', 'city']
 
     def setUp(self):
@@ -23,14 +23,14 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
-        self.audit_cycle = mommy.make(AuditCycle)
+        self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 
     def test_acknowledge_report_raises_when_user_is_not_report_user(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
         auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
                                            groups=[self.auditor_group])
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be acknowledged by user"):
+        with self.assertRaises(ObjectNotFound):
             service_auditor.acknowledge_report(audit_store.id, auditor.id)
 
     def test_acknowledge_report_changes_report_status(self):
@@ -57,8 +57,15 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         audit_store = self.create_submittable_report()
         auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
                                        groups=[self.auditor_group])
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted by user"):
+        with self.assertRaises(ObjectNotFound):
             service_auditor.submit_report(audit_store.id, auditor.id)
+
+    def test_submit_report_raise_when_report_is_not_submittable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
+                                 audit__audit_cycle=self.audit_cycle)
+
+        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted now"):
+            service_auditor.submit_report(audit_store.id, self.auditor_user.id)
 
     def test_submit_report_changes_report_status(self):
         audit_store = self.create_submittable_report()

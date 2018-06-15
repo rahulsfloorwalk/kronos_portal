@@ -271,8 +271,8 @@ class AuditStore(Model):
 
     @atomic
     def submit(self, *args, by):
-        if not self.is_submittable():
-            raise AppLogicError("Report cannot be acknowledged now")
+        if self.status != AuditStore.ACKNOWLEDGED:
+            raise AppLogicError("Report cannot be submitted now")
 
         self._change_status(AuditStore.SUBMITTED, by)
 
@@ -285,8 +285,6 @@ class AuditStore(Model):
 
     @atomic
     def revert_submit(self, *args, by):
-        if not by.groups.filter(Q(name=GROUP_NAME_MANAGER) | Q(name=GROUP_NAME_MODERATOR)).exists():
-            raise AppLogicError("Report cannot be unsubmitted by user")
 
         if self.status != AuditStore.SUBMITTED:
             raise AppLogicError("Report cannot be unsubmitted now")
@@ -315,8 +313,6 @@ class AuditStore(Model):
 
     @atomic
     def complete(self, *args, by):
-        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
-            raise AppLogicError("Report cannot be completed by user")
 
         if not self.is_completable():
             raise AppLogicError("Report is not complete")
@@ -331,8 +327,6 @@ class AuditStore(Model):
 
     @atomic
     def revert_complete(self, *args, by):
-        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
-            raise AppLogicError("Report cannot be reverted to pm review by user")
 
         if self.status != AuditStore.COMPLETED:
             raise AppLogicError("Report cannot be reverted to pm review now")
@@ -341,8 +335,6 @@ class AuditStore(Model):
 
     @atomic
     def accept(self, *args, by):
-        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
-            raise AppLogicError("Report cannot be accepted by user")
 
         if self.status != AuditStore.COMPLETED:
             raise AppLogicError("Report cannot be accepted now")
@@ -351,8 +343,6 @@ class AuditStore(Model):
 
     @atomic
     def reject(self, *args, by):
-        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
-            raise AppLogicError("Report cannot be rejected by user")
 
         if self.status != AuditStore.COMPLETED:
             raise AppLogicError("Report cannot be rejected now")
@@ -363,8 +353,6 @@ class AuditStore(Model):
 
     @atomic
     def fail(self, *args, by):
-        if not by.groups.filter(name=GROUP_NAME_MANAGER).exists():
-            raise AppLogicError("Report cannot be failed by user")
 
         if not self.is_failable():
             raise AppLogicError("Report cannot be failed now")
