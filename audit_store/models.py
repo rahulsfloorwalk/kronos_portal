@@ -278,9 +278,6 @@ class AuditStore(Model):
 
     @atomic
     def submit_manager(self, *args, by):
-        if not by.groups.filter(Q(name=GROUP_NAME_MANAGER) | Q(name=GROUP_NAME_MODERATOR)).exists():
-            raise AppLogicError("Report cannot be submitted by user")
-
         if self.status != AuditStore.ACKNOWLEDGED:
             raise AppLogicError("Report cannot be submitted now")
 
