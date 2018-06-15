@@ -11,6 +11,7 @@ from registration.mixins import HasGroupPermission
 
 from audit_store.models import AuditStore
 from audit_store import service as audit_store_service
+from audit_store import service_manager
 from ..service import moderator as moderator_service
 
 
@@ -92,7 +93,7 @@ class AuditStoreIdWithdrawView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.withdraw(audit_store_id, request.user)
+        audit_store = service_manager.withdraw_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdQAOKView(APIView):
@@ -101,8 +102,7 @@ class AuditStoreIdQAOKView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
-        audit_store.qa_ok(by=request.user)
+        audit_store = service_manager.qa_ok_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdPMRevertView(APIView):
@@ -111,8 +111,7 @@ class AuditStoreIdPMRevertView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
-        audit_store.pm_revert(by=request.user)
+        audit_store = service_manager.pm_revert_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdCompleteView(APIView):
@@ -121,7 +120,7 @@ class AuditStoreIdCompleteView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.complete(audit_store_id, request.user)
+        audit_store = service_manager.complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdUnCompleteView(APIView):
@@ -130,7 +129,7 @@ class AuditStoreIdUnCompleteView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.uncomplete(audit_store_id, request.user)
+        audit_store = service_manager.revert_complete_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 
@@ -140,7 +139,7 @@ class AuditStoreIdFailView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.fail(audit_store_id, request.user)
+        audit_store = service_manager.fail_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdSubmitView(APIView):
@@ -149,7 +148,7 @@ class AuditStoreIdSubmitView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.submit_by_manager(audit_store_id, request.user)
+        audit_store = service_manager.submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdUnSubmitView(APIView):
@@ -158,7 +157,7 @@ class AuditStoreIdUnSubmitView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.unsubmit(audit_store_id, request.user)
+        audit_store = service_manager.revert_submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdAcceptView(APIView):
@@ -180,7 +179,7 @@ class AuditStoreIdRejectView(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.reject(audit_store_id, request.user)
+        audit_store = service_manager.reject_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreXlsxReport(APIView):
