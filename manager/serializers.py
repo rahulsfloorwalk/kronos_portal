@@ -17,6 +17,7 @@ from social.models import Facebook
 from referral.models import AuditorReferral
 from .models import City
 from notify.models import OpportunityEmailRecord
+from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
 class ClientSerializer(ModelSerializer):
     class Meta:
@@ -61,6 +62,7 @@ class CitySerializer(ModelSerializer):
 
 class AuditCycleSerializer(ModelSerializer):
     client = ClientSerializer()
+    questionnaire_type = QuestionnaireTypeSerializer()
     class Meta:
         model = AuditCycle
         fields = (
@@ -76,6 +78,7 @@ class AuditCycleSerializer(ModelSerializer):
             'post_approval_description',
             'client',
             'audit_count',
+            'questionnaire_type',
         )
         read_only_fields = fields
 
@@ -94,6 +97,7 @@ class AuditCycleDeSerializer(ModelSerializer):
             'reimbursement',
             'description',
             'client',
+            'questionnaire_type',
         )
         read_only_fields = ('id',)
 
@@ -111,6 +115,7 @@ class AuditCycleDeSerializer(ModelSerializer):
         audit_cycle.reimbursement = self.validated_data.get('reimbursement', audit_cycle.reimbursement)
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
+        audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
         return audit_cycle
 
 

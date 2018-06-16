@@ -55,7 +55,7 @@ class AuditCycleIdView(APIView):
     def delete(self, request, audit_cycle_id):
         audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
         audit_cycle.delete()
-        return Response(AuditCycleSerializer(audit_cycle).data)
+        return Response(status=204)
 
 
 class AuditCycleIdPostApprovalDescriptionView(APIView):
