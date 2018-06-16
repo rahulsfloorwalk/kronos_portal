@@ -9,6 +9,7 @@ from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 from audit.service import audit_service
 from audit_store import service as audit_store_service
+from audit_store import service_auditor
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
 from auditor.serializers import AttachmentSerializer
@@ -299,7 +300,7 @@ class AuditStoreIdSubmitView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.submit(audit_store_id, request.user.profileinfo.user_id)
+        audit_store = service_auditor.submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 
@@ -309,7 +310,7 @@ class AuditStoreIdAcknowledgeView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.acknowledge(audit_store_id, request.user.id)
+        audit_store = service_auditor.acknowledge_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 
