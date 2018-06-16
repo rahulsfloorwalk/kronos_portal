@@ -1,0 +1,319 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded correctly 1`] = `
+<div>
+  <ol
+    className="breadcrumb"
+  >
+    <li>
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Clients
+      </a>
+    </li>
+    <li>
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-king"
+        />
+         
+        Amazon
+      </a>
+    </li>
+    <li
+      className="active"
+    >
+      <span
+        className="glyphicon glyphicon-retweet"
+      />
+       
+      Pilot December 2017
+    </li>
+  </ol>
+  <h3
+    className="page-header"
+  >
+    <a
+      className="btn btn-default pull-right"
+      href={undefined}
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-pencil"
+      />
+    </a>
+    <span
+      className="glyphicon glyphicon-retweet"
+    />
+     
+    Amazon
+     - 
+    Pilot December 2017
+     
+    <small>
+      ( 
+      <span>
+        <a
+          onClick={[Function]}
+          style={
+            Object {
+              "cursor": "pointer",
+            }
+          }
+        >
+          View Details
+        </a>
+      </span>
+      ) (
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Post Approval Desc.
+      </a>
+      )
+    </small>
+  </h3>
+  <div
+    className="row"
+    style={
+      Object {
+        "fontSize": "110%",
+      }
+    }
+  >
+    <div
+      className="col-xs-6 col-md-2"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Type
+        </span>
+        <br />
+        <b>
+          <span>
+            <span
+              className="glyphicon glyphicon-road"
+            />
+             
+            Walk In
+          </span>
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-2"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Questionnaire Type
+        </span>
+        <br />
+        <b>
+          Seriously? Though.
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-1"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Status
+        </span>
+        <br />
+        <b>
+          Archived
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-1"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Fees
+        </span>
+        <br />
+        <b>
+          ₹ 
+          300
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-2"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Reimbursement
+        </span>
+        <br />
+        <b>
+          ₹ 
+          200
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-2"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Start Date
+        </span>
+        <br />
+        <b>
+          19th Dec 2017
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-2"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          End Date
+        </span>
+        <br />
+        <b>
+          31st Dec 2017
+        </b>
+      </p>
+    </div>
+    <div
+      className="col-xs-6 col-md-2"
+    >
+      <p>
+        <span
+          className="text-muted"
+        >
+          Planned Audits
+        </span>
+        <br />
+        <b>
+          310
+        </b>
+      </p>
+    </div>
+  </div>
+  <br />
+  <ul
+    className="nav nav-tabs"
+  >
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-tasks"
+        />
+         Questionnaire
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-inbox"
+        />
+         Audits
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-file"
+        />
+         Reports
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <b>
+          ₹
+        </b>
+         Payments
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        href={undefined}
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-envelope"
+        />
+         Email
+      </a>
+    </li>
+  </ul>
+</div>
+`;
+
+exports[`<AuditCycleDetails/> renders correctly when audit cycle is loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;

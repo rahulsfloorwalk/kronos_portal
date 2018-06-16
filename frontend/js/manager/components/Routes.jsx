@@ -37,7 +37,7 @@ import CityList from './location/CityList.jsx';
 
 import AuditCycleList from './AuditCycleList.jsx';
 import AuditCycleForm from './AuditCycleForm.jsx';
-import AuditCycleDetails from './AuditCycleDetails.jsx';
+import AuditCycleDetails from './audit_cycle/AuditCycleDetails.jsx';
 import AuditCyclePaymentList from './AuditCyclePaymentList.jsx';
 import PostApprovalDescriptionForm from './PostApprovalDescriptionForm.jsx';
 import OpportunityEmailRecordList from './OpportunityEmailRecordList.jsx';

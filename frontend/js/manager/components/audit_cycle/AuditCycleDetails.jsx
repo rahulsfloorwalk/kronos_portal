@@ -4,21 +4,20 @@ import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
 import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import { momentDateFormat }  from "../../../../config.js";
 
-import { fetchAuditCycle } from "../actions/audit.js";
+import { fetchAuditCycle } from "../../actions/audit.js";
 
-import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
-import ExpandableDetails from "../../components/ExpandableDetails.jsx";
-import MarkdownViewer from "../../components/MarkdownViewer.jsx";
-import { Envelope, King, Retweet, Inbox, Tasks, Pencil, File } from "../../components/Icons.jsx";
-import NavLink from "../../components/NavLink.jsx";
-import Loading from "../../components/Loading.jsx";
+import AuditTypeLabel from "../../../components/AuditTypeLabel.jsx";
+import ExpandableDetails from "../../../components/ExpandableDetails.jsx";
+import MarkdownViewer from "../../../components/MarkdownViewer.jsx";
+import { Envelope, King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
+import NavLink from "../../../components/NavLink.jsx";
+import Loading from "../../../components/Loading.jsx";
 
-import { getAuditStatus } from "../../utils.js";
+import { getAuditStatus } from "../../../utils.js";
 
-
-class AuditCycleDetails extends React.Component{
+export class AuditCycleDetails extends React.Component{
 	static propTypes = {
 		params: PropTypes.shape({
 			auditCycleId: PropTypes.string,
