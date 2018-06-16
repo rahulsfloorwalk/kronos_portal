@@ -7,6 +7,7 @@ from rest_framework.serializers import PrimaryKeyRelatedField
 from questionnaire.models import QuestionnaireType
 from manager.views import ManagerAPIView
 from client.models import Client
+from questionnaire.service import questionnaire_type_service
 
 class QuestionnaireTypeSerializer(ModelSerializer):
     client = PrimaryKeyRelatedField(queryset=Client.objects.all())
@@ -46,6 +47,5 @@ class QuestionnaireTypeIdView(ManagerAPIView):
         return Response(ds.data)
 
     def delete(self, request, questionnaire_type_id):
-        questionnaire_type = get_object_or_404(QuestionnaireType, pk=questionnaire_type_id)
-        questionnaire_type.delete()
+        questionnaire_type_service.delete_questionnaire_type_by_id(questionnaire_type_id)
         return Response(status=204)
