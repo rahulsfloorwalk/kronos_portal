@@ -1,39 +1,51 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { fetchAuditCycle } from '../actions/audit.js';
+import { fetchAuditCycle } from "../actions/audit.js";
 
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import ExpandableDetails from '../../components/ExpandableDetails.jsx';
-import MarkdownViewer from '../../components/MarkdownViewer.jsx';
-import { Envelope, Knight, King, Retweet, Inbox, Tasks, Pencil, File } from '../../components/Icons.jsx';
-import NavLink from '../../components/NavLink.jsx';
-import Panel from '../../components/Panel.jsx';
-import Loading from '../../components/Loading.jsx';
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import ExpandableDetails from "../../components/ExpandableDetails.jsx";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import { Envelope, King, Retweet, Inbox, Tasks, Pencil, File } from "../../components/Icons.jsx";
+import NavLink from "../../components/NavLink.jsx";
+import Loading from "../../components/Loading.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import { getAuditStatus } from "../../utils.js";
 
 
-var AuditCycleDetails = React.createClass({
-	childContextTypes: {
-		auditCycleId: React.PropTypes.number
-	},
-	getChildContext: function() {
+class AuditCycleDetails extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditCycleId: PropTypes.string,
+		}).isRequired,
+
+		auditCycle: PropTypes.object,
+
+		children: PropTypes.node,
+
+		dispatch: PropTypes.func.isRequired,
+	};
+
+	static childContextTypes = {
+		auditCycleId: PropTypes.number
+	};
+
+	getChildContext() {
 		return {
 			auditCycleId: Number(this.props.params.auditCycleId)
 		};
-	},
-	componentDidMount: function(){
+	}
+
+	componentDidMount(){
 		this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId));
-	},
-	componentWillReceiveProps(nextProps){
-		console.log("AuditCycleDetails#componentWillReceiveProps#nextProps", nextProps);
-	},
-	render: function(){
+	}
+
+	render(){
 		if(! this.props.auditCycle){
 			return <Loading/>;
 		}
@@ -56,55 +68,63 @@ var AuditCycleDetails = React.createClass({
 				</h3>
 				<div className="row" style={{fontSize:"110%"}}>
 					<div className="col-xs-6 col-md-2">
-					<p>
-						<span className="text-muted">Type</span><br/>
-						<b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b>
-					</p>
+						<p>
+							<span className="text-muted">Type</span><br/>
+							<b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b>
+						</p>
 					</div>
+					{ this.props.auditCycle.questionnaire_type ?
+						<div className="col-xs-6 col-md-2">
+							<p>
+								<span className="text-muted">Questionnaire Type</span><br/>
+								<b>{this.props.auditCycle.questionnaire_type.name}</b>
+							</p>
+						</div>
+						: null }
 
 					<div className="col-xs-6 col-md-1">
-					<p>
-						<span className="text-muted">Status</span><br/>
-						<b>{ getAuditStatus(this.props.auditCycle.status) }</b>
-					</p>
+						<p>
+							<span className="text-muted">Status</span><br/>
+							<b>{ getAuditStatus(this.props.auditCycle.status) }</b>
+						</p>
 					</div>
 
 					{ this.props.auditCycle.earnings_per_audit ?
 						<div className="col-xs-6 col-md-1">
-						<p>
-							<span className="text-muted">Fees</span><br/>
-							<b>₹ { this.props.auditCycle.earnings_per_audit }</b>
-						</p>
+							<p>
+								<span className="text-muted">Fees</span><br/>
+								<b>₹ { this.props.auditCycle.earnings_per_audit }</b>
+							</p>
 						</div>
-					: null }
+						: null }
 
 					{ this.props.auditCycle.reimbursement ?
 						<div className="col-xs-6 col-md-2">
-						<p>
-							<span className="text-muted">Reimbursement</span><br/>
-							<b>₹ { this.props.auditCycle.reimbursement }</b>
-						</p>
+							<p>
+								<span className="text-muted">Reimbursement</span><br/>
+								<b>₹ { this.props.auditCycle.reimbursement }</b>
+							</p>
 						</div>
-					: null }
+						: null }
 
 					<div className="col-xs-6 col-md-2">
-					<p>
-						<span className="text-muted">Start Date</span><br/>
-						<b>{ moment(this.props.auditCycle.start_date).format(momentDateFormat) }</b>
-					</p>
+						<p>
+							<span className="text-muted">Start Date</span><br/>
+							<b>{ moment(this.props.auditCycle.start_date).format(momentDateFormat) }</b>
+						</p>
 					</div>
 
 					<div className="col-xs-6 col-md-2">
-					<p>
-						<span className="text-muted">End Date</span><br/>
-						<b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b>
-					</p>
+						<p>
+							<span className="text-muted">End Date</span><br/>
+							<b>{ moment(this.props.auditCycle.end_date).format(momentDateFormat) }</b>
+						</p>
 					</div>
 					<div className="col-xs-6 col-md-2">
-					<p>
-						<span className="text-muted">Planned Audits</span><br/>
-						<b>{ this.props.auditCycle.audit_count }</b>
-					</p>
+						<p>
+							<span className="text-muted">Planned Audits</span><br/>
+							<b>{ this.props.auditCycle.audit_count }</b>
+						</p>
 					</div>
 				</div>
 				<br/>
@@ -121,8 +141,8 @@ var AuditCycleDetails = React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {
