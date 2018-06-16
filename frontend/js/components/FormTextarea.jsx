@@ -1,19 +1,37 @@
-import React from 'react';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import FormGroup from './FormGroup.jsx';
-import FormErrorList from './FormErrorList.jsx';
+import FormGroup from "./FormGroup.jsx";
+import FormErrorList from "./FormErrorList.jsx";
 
 
-var FormTextarea = React.createClass({
-	render : function(){
+export default class FormTextarea extends Component {
+	static propTypes = {
+		placeholder: PropTypes.string,
+		onChange: PropTypes.func,
+		maxLength: PropTypes.number,
+		name: PropTypes.string,
+		disabled: PropTypes.bool,
+		label: PropTypes.string,
+		value: PropTypes.string,
+		errors: PropTypes.object,
+	};
+	render(){
+		const { placeholder, onChange, maxLength, value, name, disabled, label, errors } = this.props;
 		return (
 			<FormGroup>
-				<label>{this.props.label}</label>
-				<textarea className="form-control" {...this.props}/>
-				<FormErrorList errors={this.props.errors}/>
+				<label>{label}</label>
+				<textarea className="form-control"
+					placeholder={placeholder}
+					onChange={onChange}
+					maxLength={maxLength}
+					value={value}
+					name={name}
+					disabled={disabled}
+				/>
+				<FormErrorList errors={errors}/>
 			</FormGroup>
 		);
-	},
-});
+	}
+}
 
-export default FormTextarea;

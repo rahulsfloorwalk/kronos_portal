@@ -1,67 +1,106 @@
-import React from 'react';
-import $ from 'jquery';
-import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { hashHistory } from "react-router";
+import PropTypes from "prop-types";
 
-import Alert from 'react-s-alert';
+import Alert from "react-s-alert";
 
-import {  loadAuditCycleAddForm, loadAuditCycleEditForm, saveAuditCycleAddForm, saveAuditCycleEditForm } from '../actions/audit.js';
+import {  loadAuditCycleAddForm, loadAuditCycleEditForm, saveAuditCycleAddForm, saveAuditCycleEditForm } from "../actions/audit.js";
 
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { affectInputEventToComponent } from '../../react_utils.js';
-import FormInput from '../../components/FormInput.jsx';
-import { FormDateInput } from '../../components/FormInput.jsx';
-import FormSelect from '../../components/FormSelect.jsx';
-import FormGroup from '../../components/FormGroup.jsx';
-import FormTextarea from '../../components/FormTextarea.jsx';
-import SaveButton from '../../components/SaveButton.jsx';
-import Modal from '../../components/Modal.jsx';
-import Loading from '../../components/Loading.jsx';
-import MarkdownViewer from '../../components/MarkdownViewer.jsx';
+import { getAuditType, getAuditStatus } from "../../utils.js";
+import { affectInputEventToComponent } from "../../react_utils.js";
+import FormInput from "../../components/FormInput.jsx";
+import { FormDateInput } from "../../components/FormInput.jsx";
+import FormSelect from "../../components/FormSelect.jsx";
+import FormTextarea from "../../components/FormTextarea.jsx";
+import SaveButton from "../../components/SaveButton.jsx";
+import Modal from "../../components/Modal.jsx";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
-var AuditCycleForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+const FieldErrors = PropTypes.arrayOf(PropTypes.string);
+
+class AuditCycleForm extends Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			clientId: PropTypes.string,
+			auditCycleId: PropTypes.string,
+		}).isRequired,
+
+		auditCycle: PropTypes.shape({
+			name: PropTypes.string,
+			start_date: PropTypes.string,
+			end_date: PropTypes.string,
+			type: PropTypes.string,
+			status: PropTypes.string,
+			earnings_per_audit: PropTypes.number,
+			reimbursement: PropTypes.number,
+			description: PropTypes.string,
+			client: PropTypes.shape({
+				id: PropTypes.number.isRequired,
+				name: PropTypes.string.isRequired,
+			}),
+		}),
+
+		errors: PropTypes.shape({
+			name: FieldErrors,
+			start_date: FieldErrors,
+			end_date: FieldErrors,
+			type: FieldErrors,
+			status: FieldErrors,
+			reimbursement: FieldErrors,
+			earnings_per_audit: FieldErrors,
+			description: FieldErrors,
+		}),
+
+		dispatch: PropTypes.func.isRequired,
+	};
+
+	state = {};
+
+	componentDidMount() {
 		this.setState({
-			'client': this.props.params.clientId
+			"client": this.props.params.clientId
 		});
 		if(this.props.params.auditCycleId){
 			this.props.dispatch(loadAuditCycleEditForm(this.props.params.auditCycleId));
 		} else {
 			this.props.dispatch(loadAuditCycleAddForm());
 		}
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+	componentWillReceiveProps(nextProps) {
 		if(nextProps.auditCycle && nextProps.auditCycle.client){
 			this.setState(nextProps.auditCycle);
 			this.setState({
-				'client': nextProps.auditCycle.client.id
+				"client": nextProps.auditCycle.client.id
 			});
 		} else {
 			this.setState({
-				'client': nextProps.params.clientId
+				"client": nextProps.params.clientId
 			});
 		}
-	},
-	fieldChanged: function(e){
+	}
+
+	fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	dateChanged: function(name, date){
+	};
+
+	dateChanged = (name, date) => {
 		if( typeof date !== "string"){
 			this.setState({
 				[name]: date.format("YYYY-MM-DD")
 			});
 		}
-	},
-	startDateChanged: function(date){
+	};
+
+	startDateChanged = (date) => {
 		this.dateChanged("start_date",date);
-	},
-	endDateChanged: function(date){
+	};
+
+	endDateChanged = (date) => {
 		this.dateChanged("end_date",date);
-	},
-	onSubmit: function(e){
+	};
+
+	onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
 		if(this.props.params.auditCycleId){
@@ -73,10 +112,10 @@ var AuditCycleForm = React.createClass({
 			hashHistory.push(`/audit_cycle/${savedAuditCycle.id}/questionnaire`);
 			Alert.success("AUDIT CYCLE SAVED");
 		});
-	},
-	render : function(){
-		var clientRows = [];
-		var modalTitle = this.props.params.auditId ? "Edit Audit Cycle" : "Add Audit Cycle";
+	};
+
+	render(){
+		var modalTitle = this.props.params.auditCycleId ? "Edit Audit Cycle" : "Add Audit Cycle";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -144,8 +183,8 @@ var AuditCycleForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {
