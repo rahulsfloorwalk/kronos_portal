@@ -5,21 +5,22 @@ import PropTypes from "prop-types";
 
 import Alert from "react-s-alert";
 
-import {  loadAuditCycleAddForm, loadAuditCycleEditForm, saveAuditCycleAddForm, saveAuditCycleEditForm } from "../actions/audit.js";
+import {  loadAuditCycleAddForm, loadAuditCycleEditForm, saveAuditCycleAddForm, saveAuditCycleEditForm } from "../../actions/audit.js";
+import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
 
-import { getAuditType, getAuditStatus } from "../../utils.js";
-import { affectInputEventToComponent } from "../../react_utils.js";
-import FormInput from "../../components/FormInput.jsx";
-import { FormDateInput } from "../../components/FormInput.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import FormTextarea from "../../components/FormTextarea.jsx";
-import SaveButton from "../../components/SaveButton.jsx";
-import Modal from "../../components/Modal.jsx";
-import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import { getAuditType, getAuditStatus } from "../../../utils.js";
+import { affectInputEventToComponent } from "../../../react_utils.js";
+import FormInput from "../../../components/FormInput.jsx";
+import { FormDateInput } from "../../../components/FormInput.jsx";
+import FormSelect from "../../../components/FormSelect.jsx";
+import FormTextarea from "../../../components/FormTextarea.jsx";
+import SaveButton from "../../../components/SaveButton.jsx";
+import Modal from "../../../components/Modal.jsx";
+import MarkdownViewer from "../../../components/MarkdownViewer.jsx";
 
 const FieldErrors = PropTypes.arrayOf(PropTypes.string);
 
-class AuditCycleForm extends Component{
+export class AuditCycleForm extends Component{
 	static propTypes = {
 		params: PropTypes.shape({
 			clientId: PropTypes.string,
@@ -39,6 +40,11 @@ class AuditCycleForm extends Component{
 				id: PropTypes.number.isRequired,
 				name: PropTypes.string.isRequired,
 			}),
+			questionnaire_type: PropTypes.shape({
+				id: PropTypes.number.isRequired,
+				name: PropTypes.string.isRequired,
+				is_default: PropTypes.bool.isRequired,
+			}),
 		}),
 
 		errors: PropTypes.shape({
@@ -50,35 +56,54 @@ class AuditCycleForm extends Component{
 			reimbursement: FieldErrors,
 			earnings_per_audit: FieldErrors,
 			description: FieldErrors,
-		}),
+			questionnaire_type: FieldErrors,
+		}).isRequired,
 
 		dispatch: PropTypes.func.isRequired,
 	};
 
-	state = {};
+	state = {
+		questionnaireTypes: [],
+	};
 
 	componentDidMount() {
-		this.setState({
-			"client": this.props.params.clientId
-		});
 		if(this.props.params.auditCycleId){
 			this.props.dispatch(loadAuditCycleEditForm(this.props.params.auditCycleId));
 		} else {
+			this.setState({
+				"client": this.props.params.clientId
+			});
+			this.loadQuestionnaireTypes(this.props.params.clientId);
 			this.props.dispatch(loadAuditCycleAddForm());
 		}
 	}
 	componentWillReceiveProps(nextProps) {
-		if(nextProps.auditCycle && nextProps.auditCycle.client){
+		if(nextProps.auditCycle){
 			this.setState(nextProps.auditCycle);
-			this.setState({
-				"client": nextProps.auditCycle.client.id
-			});
+			if(nextProps.auditCycle.client){
+				this.setState({
+					"client": nextProps.auditCycle.client.id,
+				});
+				this.loadQuestionnaireTypes(nextProps.auditCycle.client.id);
+			}
+			if(nextProps.auditCycle.questionnaire_type){
+				this.setState({
+					"questionnaire_type": nextProps.auditCycle.questionnaire_type.id,
+				});
+			}
 		} else {
 			this.setState({
 				"client": nextProps.params.clientId
 			});
+			this.loadQuestionnaireTypes(nextProps.params.clientId);
 		}
 	}
+
+	loadQuestionnaireTypes = (clientId) => {
+		fetchQuestionnaireTypes(clientId).then((questionnaireTypes) => {
+			this.setState({questionnaireTypes});
+		});
+	};
 
 	fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
@@ -119,7 +144,17 @@ class AuditCycleForm extends Component{
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormInput label="Cycle Name" type="text" value={this.state.name} name="name" onChange={this.fieldChanged} errors={this.props.errors.name}/>
+					<div className="row">
+						<div className="col-md-6">
+							<FormInput label="Audit Cycle Name" type="text" value={this.state.name} name="name" onChange={this.fieldChanged} errors={this.props.errors.name}/>
+						</div>
+						<div className="col-md-6">
+							<FormSelect label="Questionnaire Type" name="questionnaire_type" value={this.state.questionnaire_type} onChange={this.fieldChanged} errors={this.props.errors.questionnaire_type}>
+								<option value=""></option>
+								{this.state.questionnaireTypes.map(qt => <option key={qt.id} value={qt.id}>{qt.name}</option>)};
+							</FormSelect>
+						</div>
+					</div>
 					<div className="row">
 						<div className="col-md-6">
 							<FormDateInput label="Start Date" value={this.state.start_date} name="start_date" onChange={this.startDateChanged} errors={this.props.errors.start_date}/>
