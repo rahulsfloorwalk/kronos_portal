@@ -1,17 +1,30 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../../config.js";
 
-import { Plus, Retweet } from '../../../components/Icons.jsx';
-import AuditTypeLabel from '../../../components/AuditTypeLabel.jsx';
-import { fetchAuditCyclesByClient } from '../../service/audit_cycle.js'
-import { getAuditType, getAuditStatus } from '../../../utils.js';
+import { Plus, Retweet } from "../../../components/Icons.jsx";
+import AuditTypeLabel from "../../../components/AuditTypeLabel.jsx";
+import { fetchAuditCyclesByClient } from "../../service/audit_cycle.js";
+import { getAuditStatus } from "../../../utils.js";
 
-var AuditCycleRow = React.createClass({
-	render: function(){
+class AuditCycleRow extends React.Component{
+	static propTypes = {
+		auditCycle: PropTypes.shape({
+			id: PropTypes.number,
+			name: PropTypes.string,
+			start_date: PropTypes.string,
+			end_date: PropTypes.string,
+			status: PropTypes.string,
+			type: PropTypes.string,
+
+			questionnaire_type: PropTypes.object,
+		}).isRequired,
+	};
+
+	render(){
 		var linkTo = `/audit_cycle/${this.props.auditCycle.id}/questionnaire`;
 		return (
 			<tr>
@@ -26,21 +39,29 @@ var AuditCycleRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			auditCycles: [],
-		};
-	},
-	componentDidMount: function() {
+export default class AuditCycleList extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			clientId: PropTypes.string.isRequired,
+		}).isRequired,
+
+		children: PropTypes.node,
+	};
+
+	state = {
+		auditCycles: [],
+	};
+
+	componentDidMount() {
 		fetchAuditCyclesByClient(this.props.params.clientId).then((auditCycles) => {
 			this.setState({auditCycles});
 		});
-	},
-	render: function(){
+	}
+
+	render(){
 		let rows = [];
 		for(let ac of this.state.auditCycles) {
 			rows.push(<AuditCycleRow auditCycle={ac} key={ac.id}/>);
@@ -71,5 +92,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
