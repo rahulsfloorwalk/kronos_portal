@@ -10,7 +10,7 @@ import Loading from '../../../components/Loading.jsx';
 import NavLink from '../../../components/NavLink.jsx';
 
 import StoreList from './../StoreList.jsx';
-import AuditCycleList from './../AuditCycleList.jsx';
+import AuditCycleList from '../audit_cycle/AuditCycleList.jsx';
 
 export default React.createClass({
 	getInitialState: function(){

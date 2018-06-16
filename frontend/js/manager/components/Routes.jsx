@@ -35,7 +35,7 @@ import PreferencesForm from "./auditor/PreferencesForm.jsx";
 import StateList from './location/StateList.jsx';
 import CityList from './location/CityList.jsx';
 
-import AuditCycleList from './AuditCycleList.jsx';
+import AuditCycleList from './audit_cycle/AuditCycleList.jsx';
 import AuditCycleForm from './audit_cycle/AuditCycleForm.jsx';
 import AuditCycleDetails from './audit_cycle/AuditCycleDetails.jsx';
 import AuditCyclePaymentList from './AuditCyclePaymentList.jsx';
