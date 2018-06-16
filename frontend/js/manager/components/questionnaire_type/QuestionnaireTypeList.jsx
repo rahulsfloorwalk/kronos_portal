@@ -68,7 +68,7 @@ export default class QuestionnaireTypeList extends Component {
 		children: PropTypes.node,
 	};
 	state = {
-		loading: false,
+		loading: true,
 		questionnaireTypes: [],
 	};
 
@@ -84,8 +84,7 @@ export default class QuestionnaireTypeList extends Component {
 		return <__QuestionnaireTypeList
 			clientId={parseInt(this.props.params.clientId)}
 			loading={this.state.loading}
-			questionnaireTypes={this.state.questionnaireTypes}>
-			{this.props.children}
-		</__QuestionnaireTypeList>;
+			questionnaireTypes={this.state.questionnaireTypes}
+			children={this.props.children}/>
 	}
 }

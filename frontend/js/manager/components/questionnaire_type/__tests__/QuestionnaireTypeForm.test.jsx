@@ -32,6 +32,18 @@ describe("<__QuestionnaireTypeForm/>", () => {
 		expect(tree).toMatchSnapshot();
 	});
 
+	it("renders initial values correctly", () => {
+		const initialValues = {
+			name: "Foobar",
+			is_default: true,
+		};
+
+		const tree = renderer
+			.create(<__QuestionnaireTypeForm initialValues={initialValues}/>)
+			.toJSON();
+		expect(tree).toMatchSnapshot();
+	});
+
 	it("calls onSubmit prop when save button is clicked", () => {
 		const onSubmitCallback = jest.fn();
 		const formSubmitEvent = { preventDefault: jest.fn() };
@@ -44,17 +56,19 @@ describe("<__QuestionnaireTypeForm/>", () => {
 
 	it("calls onSubmit prop with correct name and is_default", () => {
 		const inputChangeEvent = { target: { name: "name", value: "Foobar", }, };
+		const checkboxChangeEvent = true;
 		const formSubmitEvent = { preventDefault: jest.fn() };
 
 		const onSubmitCallback = jest.fn();
 		const r = shallow(<__QuestionnaireTypeForm onSubmit={onSubmitCallback}/>);
 		r.find("FormInput").simulate("change", inputChangeEvent);
+		r.find("Checkbox").simulate("change", checkboxChangeEvent);
 		r.find("form").simulate("submit", formSubmitEvent);
 
 		expect(formSubmitEvent.preventDefault).toBeCalled();
 		expect(onSubmitCallback).toBeCalledWith({
 			name: "Foobar",
-			is_default: false,
+			is_default: checkboxChangeEvent,
 		});
 	});
 

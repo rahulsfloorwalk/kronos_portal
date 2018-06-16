@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Alert from "react-s-alert";
 
-import { affectInputEventToComponent } from "../../../react_utils.js";
+import { getInputEventChangeValue } from "../../../react_utils.js";
 import FormInput from "../../../components/FormInput.jsx";
 import FormErrorList from "../../../components/FormErrorList.jsx";
 import SaveButton from "../../../components/SaveButton.jsx";
@@ -19,32 +19,47 @@ export class __QuestionnaireTypeForm extends Component{
 		onClose: PropTypes.func.isRequired,
 
 		errors: PropTypes.object.isRequired,
+
+		initialValues: PropTypes.shape({
+			name: PropTypes.string,
+			is_default: PropTypes.bool,
+		}),
 	};
 
 	static defaultProps = {
 		onSubmit: () => {},
 		onClose: () => {},
 		errors: {},
+		initialValues: {
+			name: "",
+			is_default: false,
+		},
 	};
 
-	state = {
-		name: "",
-		is_default: false,
-	};
+	constructor(props){
+		super(props);
+		this.state = {
+			values: props.initialValues,
+		};
+	}
 
 	inputChanged = (e) => {
-		affectInputEventToComponent(e, this);
+		this.setState({
+			values: Object.assign({}, this.state.values, getInputEventChangeValue(e)),
+		});
 	};
 
 	setIsDefault = (is_default) => {
-		this.setState({ is_default });
+		this.setState(prevState => Object.assign({}, prevState, {
+			values: Object.assign({}, this.state.values, { is_default }),
+		}));
 	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.props.onSubmit({
-			name: this.state.name,
-			is_default: this.state.is_default,
+			name: this.state.values.name,
+			is_default: this.state.values.is_default,
 		});
 	};
 
@@ -55,10 +70,10 @@ export class __QuestionnaireTypeForm extends Component{
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<div className="form-group">
-						<FormInput label="Name" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
+						<FormInput label="Name" type="text" value={this.state.values.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
 					</div>
 					<div className="form-group">
-						<Checkbox checked={this.state.is_default} name="is_default" onChange={this.setIsDefault}/>
+						<Checkbox checked={this.state.values.is_default} name="is_default" onChange={this.setIsDefault}/>
 						&nbsp;
 						<label>Default</label>
 					</div>

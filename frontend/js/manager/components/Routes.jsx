@@ -14,6 +14,7 @@ import ClientUserForm from './client_user/ClientUserForm.jsx';
 
 import QuestionnaireTypeList from './questionnaire_type/QuestionnaireTypeList.jsx';
 import QuestionnaireTypeForm from './questionnaire_type/QuestionnaireTypeForm.jsx';
+import QuestionnaireTypeEditForm from './questionnaire_type/QuestionnaireTypeEditForm.jsx';
 
 import StoreList from './StoreList.jsx';
 import StoreForm from './StoreForm.jsx';
@@ -97,6 +98,7 @@ const Routes = () => (
 			</Route>
 			<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 				<Route path="add" component={QuestionnaireTypeForm}/>
+				<Route path=":questionnaireTypeId/edit" component={QuestionnaireTypeEditForm}/>
 			</Route>
 		</Route>
 
