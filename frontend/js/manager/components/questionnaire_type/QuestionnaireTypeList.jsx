@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import Loading from "../../../components/Loading.jsx";
-import { Check, Plus } from "../../../components/Icons.jsx";
+import { Check, Plus, Pencil } from "../../../components/Icons.jsx";
 import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
 
 export class __QuestionnaireTypeList extends Component{
@@ -33,6 +33,7 @@ export class __QuestionnaireTypeList extends Component{
 			rows.push(<tr key={qt.id}>
 				<td>{qt.name}</td>
 				<td>{qt.is_default ? <Check/> : null}</td>
+				<td><Link className="btn btn-default" to={`/client/${this.props.clientId}/questionnaire_type/${qt.id}/edit`}><Pencil/></Link></td>
 			</tr>);
 		}
 		return (
@@ -48,6 +49,7 @@ export class __QuestionnaireTypeList extends Component{
 						<tr>
 							<th>Questionnaire Type</th>
 							<th>Default</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -74,12 +76,21 @@ export default class QuestionnaireTypeList extends Component {
 
 	setLoading = loading => this.setState(prevState => Object.assign({}, prevState, { loading }));
 
-	componentDidMount(){
+	reload = clientId => {
 		this.setLoading(true);
-		fetchQuestionnaireTypes(this.props.params.clientId).then(questionnaireTypes => {
+		fetchQuestionnaireTypes(clientId).then(questionnaireTypes => {
 			this.setState({ questionnaireTypes });
 		}).always(() => this.setLoading(false));
+	};
+
+	componentDidMount(){
+		this.reload(this.props.params.clientId);
 	}
+
+	componentWillReceiveProps(nextProps){
+		this.reload(nextProps.params.clientId);
+	}
+
 	render(){
 		return <__QuestionnaireTypeList
 			clientId={parseInt(this.props.params.clientId)}

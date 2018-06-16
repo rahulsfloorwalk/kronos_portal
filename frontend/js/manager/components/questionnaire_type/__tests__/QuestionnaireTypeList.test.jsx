@@ -55,11 +55,24 @@ describe("<__QuestionnaireTypeList/>", () => {
 
 describe("<QuestionnaireTypeList/>", () => {
 
-	fetchQuestionnaireTypes.mockReturnValue($.Deferred().resolve(sampleQuestionnaireTypes).promise());
+	beforeEach(() => {
+		fetchQuestionnaireTypes.mockReturnValue($.Deferred().resolve(sampleQuestionnaireTypes).promise());
+	});
 
 	it("calls fetchQuestionnaireTypes", () => {
 		shallow(<QuestionnaireTypeList params={sampleParams}/>);
 		expect(fetchQuestionnaireTypes).toBeCalledWith(sampleParams.clientId);
+	});
+
+	it("calls fetchQuestionnaireTypes when props are changed", () => {
+		const nextProps = {
+			params: {
+				clientId: "7",
+			},
+		};
+		const r = shallow(<QuestionnaireTypeList params={sampleParams}/>);
+		r.setProps(nextProps);
+		expect(fetchQuestionnaireTypes).lastCalledWith(nextProps.params.clientId);
 	});
 
 	it("passes loading to true while data is loading", () => {
