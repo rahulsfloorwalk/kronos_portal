@@ -63,6 +63,9 @@ class AuditStoreAuditorServiceTestCase(TestCase):
     def test_submit_report_raise_when_report_is_not_submittable(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+        for i in range(3):
+            section_recipe.make()
 
         with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted now"):
             service_auditor.submit_report(audit_store.id, self.auditor_user.id)

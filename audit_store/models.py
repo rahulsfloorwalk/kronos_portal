@@ -174,7 +174,6 @@ class AuditStore(Model):
 
         sections = self.audit.audit_cycle.sections.all()
         report_sections = self.report_sections.all()
-
         if len(sections) != len(report_sections):
             _logger.debug("Report not submittable, section length does not match report section length")
             return False
@@ -190,7 +189,6 @@ class AuditStore(Model):
                     audit_store__id=self.id,
                     question__section_id=report_section.section_id
                 ).all()
-
                 if len(questions) != len(answers):
                     _logger.debug("Report not submittable, question length does not match answer length")
                     return False
@@ -199,7 +197,7 @@ class AuditStore(Model):
                     if not answer.not_applicable and answer.answer_text in (None, ''):
                         _logger.debug("Report not submittable, some answer is incomplete")
                         return False
-            return True
+        return True
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()
