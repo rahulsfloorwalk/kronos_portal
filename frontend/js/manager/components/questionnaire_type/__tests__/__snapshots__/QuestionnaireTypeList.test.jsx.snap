@@ -77,7 +77,9 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
             className="glyphicon glyphicon-ok"
           />
         </td>
-        <td>
+        <td
+          className="text-right"
+        >
           <a
             className="btn btn-default"
             onClick={[Function]}
@@ -86,7 +88,18 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
             <span
               className="glyphicon glyphicon-pencil"
             />
+             Edit
           </a>
+           
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+             Delete
+          </button>
         </td>
       </tr>
       <tr>
@@ -94,7 +107,9 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
           World
         </td>
         <td />
-        <td>
+        <td
+          className="text-right"
+        >
           <a
             className="btn btn-default"
             onClick={[Function]}
@@ -103,7 +118,18 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
             <span
               className="glyphicon glyphicon-pencil"
             />
+             Edit
           </a>
+           
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+             Delete
+          </button>
         </td>
       </tr>
       <tr>
@@ -111,7 +137,9 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
           Foobar
         </td>
         <td />
-        <td>
+        <td
+          className="text-right"
+        >
           <a
             className="btn btn-default"
             onClick={[Function]}
@@ -120,7 +148,18 @@ exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types a
             <span
               className="glyphicon glyphicon-pencil"
             />
+             Edit
           </a>
+           
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+             Delete
+          </button>
         </td>
       </tr>
     </tbody>

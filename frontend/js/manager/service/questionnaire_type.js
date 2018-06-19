@@ -34,3 +34,10 @@ export function saveQuestionnaireType(questionnaireTypeId, name, client, is_defa
 		contentType: "application/json"
 	});
 }
+
+export function deleteQuestionnaireType(questionnaireTypeId){
+	return $.ajax({
+		method: "DELETE",
+		url: url.api_base_path + `manager/questionnaire_type/${questionnaireTypeId}`,
+	});
+}

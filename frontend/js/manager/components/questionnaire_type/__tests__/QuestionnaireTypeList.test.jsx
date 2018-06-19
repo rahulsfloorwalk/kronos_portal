@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 import $ from "jquery";
 
 import QuestionnaireTypeList, { __QuestionnaireTypeList } from "../../../../manager/components/questionnaire_type/QuestionnaireTypeList";
-import { fetchQuestionnaireTypes } from "../../../../manager/service/questionnaire_type.js";
+import { fetchQuestionnaireTypes, deleteQuestionnaireType } from "../../../../manager/service/questionnaire_type.js";
 
 jest.mock("../../../../manager/service/questionnaire_type.js");
 
@@ -32,24 +32,34 @@ const sampleQuestionnaireTypes = [
 
 describe("<__QuestionnaireTypeList/>", () => {
 	it("renders correctly when questionnaire types are loading", () => {
+		const onDelete = jest.fn();
 		const tree = renderer
-			.create(<__QuestionnaireTypeList loading={true} clientId={sampleClientId} questionnaireTypes={[]}/>)
+			.create(<__QuestionnaireTypeList loading={true} clientId={sampleClientId} questionnaireTypes={[]} onDelete={onDelete}/>)
 			.toJSON();
 		expect(tree).toMatchSnapshot();
 	});
 
 	it("renders correctly when questionnaire types are loaded", () => {
+		const onDelete = jest.fn();
 		const tree = renderer
-			.create(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={sampleQuestionnaireTypes}/>)
+			.create(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={sampleQuestionnaireTypes} onDelete={onDelete}/>)
 			.toJSON();
 		expect(tree).toMatchSnapshot();
 	});
 
 	it("renders correctly when questionnaire types are empty", () => {
+		const onDelete = jest.fn();
 		const tree = renderer
-			.create(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={[]}/>)
+			.create(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={[]} onDelete={onDelete}/>)
 			.toJSON();
 		expect(tree).toMatchSnapshot();
+	});
+
+	it("calls onDelete prop when the delete button is clicked", () => {
+		const onDelete = jest.fn();
+		const r = shallow(<__QuestionnaireTypeList loading={false} clientId={sampleClientId} questionnaireTypes={sampleQuestionnaireTypes} onDelete={onDelete}/>);
+		r.find("button").at(1).simulate("click");
+		expect(onDelete).toBeCalledWith(sampleQuestionnaireTypes[1]);
 	});
 });
 
@@ -95,6 +105,31 @@ describe("<QuestionnaireTypeList/>", () => {
 			r.update();
 			expect(r.find(__QuestionnaireTypeList).prop("questionnaireTypes")).toEqual(sampleQuestionnaireTypes);
 			done();
+		});
+	});
+
+	it("calls deleteQuestionnaireType with the correct id", (done) => {
+		deleteQuestionnaireType.mockResolvedValue(null);
+		const r = shallow(<QuestionnaireTypeList params={sampleParams}/>);
+		setTimeout(() => {
+			r.update();
+			r.find(__QuestionnaireTypeList).simulate("delete", sampleQuestionnaireTypes[0]);
+			expect(deleteQuestionnaireType).toBeCalledWith(sampleQuestionnaireTypes[0].id);
+			done();
+		});
+	});
+
+	it("calls fetchQuestionnaireTypes after deleting an item", (done) => {
+		deleteQuestionnaireType.mockResolvedValue(null);
+		const r = shallow(<QuestionnaireTypeList params={sampleParams}/>);
+		setTimeout(() => {
+			r.update();
+			r.find(__QuestionnaireTypeList).simulate("delete", sampleQuestionnaireTypes[0]);
+			setTimeout(() => {
+				expect(fetchQuestionnaireTypes).toHaveBeenCalledTimes(2);
+				expect(fetchQuestionnaireTypes).lastCalledWith(sampleParams.clientId);
+				done();
+			});
 		});
 	});
 });

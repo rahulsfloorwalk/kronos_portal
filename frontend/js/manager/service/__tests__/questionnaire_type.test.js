@@ -1,4 +1,4 @@
-import { fetchQuestionnaireType, fetchQuestionnaireTypes, createQuestionnaireType, saveQuestionnaireType } from "../questionnaire_type";
+import { fetchQuestionnaireType, fetchQuestionnaireTypes, createQuestionnaireType, saveQuestionnaireType, deleteQuestionnaireType } from "../questionnaire_type";
 
 import $ from "jquery";
 jest.mock("jquery");
@@ -35,7 +35,7 @@ describe("createQuestionnaireType", () => {
 			sampleQuestionnaireType.name,
 			sampleQuestionnaireType.client_id,
 			sampleQuestionnaireType.is_default,
-		)
+		);
 		expect($.ajax.mock.calls[0][0].method).toEqual("POST");
 		expect($.ajax.mock.calls[0][0].contentType).toEqual("application/json");
 		expect($.ajax.mock.calls[0][0].url).toEqual("/manager/questionnaire_type");
@@ -54,7 +54,7 @@ describe("saveQuestionnaireType", () => {
 			sampleQuestionnaireType.name,
 			sampleQuestionnaireType.client_id,
 			sampleQuestionnaireType.is_default,
-		)
+		);
 		expect($.ajax.mock.calls[0][0].method).toEqual("POST");
 		expect($.ajax.mock.calls[0][0].contentType).toEqual("application/json");
 		expect($.ajax.mock.calls[0][0].url).toEqual("/manager/questionnaire_type/" + sampleQuestionnaireType.id);
@@ -63,5 +63,13 @@ describe("saveQuestionnaireType", () => {
 			is_default: sampleQuestionnaireType.is_default,
 			client: sampleQuestionnaireType.client_id,
 		}));
+	});
+});
+
+describe("deleteQuestionnaireType", () => {
+	it("performs a DELETE to the correct URL", () => {
+		deleteQuestionnaireType(sampleQuestionnaireType.id);
+		expect($.ajax.mock.calls[0][0].method).toEqual("DELETE");
+		expect($.ajax.mock.calls[0][0].url).toEqual("/manager/questionnaire_type/" + sampleQuestionnaireType.id);
 	});
 });

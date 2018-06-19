@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
+import Alert from "react-s-alert";
 
 import Loading from "../../../components/Loading.jsx";
-import { Check, Plus, Pencil } from "../../../components/Icons.jsx";
-import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
+import { Cross, Check, Plus, Pencil } from "../../../components/Icons.jsx";
+import { fetchQuestionnaireTypes, deleteQuestionnaireType } from "../../service/questionnaire_type.js";
 
 export class __QuestionnaireTypeList extends Component{
 	static propTypes = {
@@ -15,6 +16,8 @@ export class __QuestionnaireTypeList extends Component{
 		})),
 		clientId: PropTypes.number.isRequired,
 		loading: PropTypes.bool,
+
+		onDelete: PropTypes.func.isRequired,
 
 		children: PropTypes.node,
 	};
@@ -33,7 +36,11 @@ export class __QuestionnaireTypeList extends Component{
 			rows.push(<tr key={qt.id}>
 				<td>{qt.name}</td>
 				<td>{qt.is_default ? <Check/> : null}</td>
-				<td><Link className="btn btn-default" to={`/client/${this.props.clientId}/questionnaire_type/${qt.id}/edit`}><Pencil/></Link></td>
+				<td className="text-right">
+					<Link className="btn btn-default" to={`/client/${this.props.clientId}/questionnaire_type/${qt.id}/edit`}><Pencil/> Edit</Link>
+					&nbsp;
+					<button onClick={()=>this.props.onDelete(qt)} className="btn btn-default"><Cross/> Delete</button>
+				</td>
 			</tr>);
 		}
 		return (
@@ -83,6 +90,15 @@ export default class QuestionnaireTypeList extends Component {
 		}).always(() => this.setLoading(false));
 	};
 
+	onDelete = (questionnaireType) => {
+		deleteQuestionnaireType(questionnaireType.id).then(() => {
+			this.reload(this.props.params.clientId);
+			Alert.success("QUESTIONNAIRE TYPE DELETED");
+		}, () => {
+			Alert.warning("QUESTIONNAIRE TYPE COULD NOT BE DELETED");
+		});
+	};
+
 	componentDidMount(){
 		this.reload(this.props.params.clientId);
 	}
@@ -96,6 +112,8 @@ export default class QuestionnaireTypeList extends Component {
 			clientId={parseInt(this.props.params.clientId)}
 			loading={this.state.loading}
 			questionnaireTypes={this.state.questionnaireTypes}
-			children={this.props.children}/>
+			onDelete={this.onDelete}>
+			{this.props.children}
+		</__QuestionnaireTypeList>;
 	}
 }

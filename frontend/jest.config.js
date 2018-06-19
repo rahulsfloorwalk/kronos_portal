@@ -10,4 +10,5 @@ module.exports = {
 		"text",
 		"html",
 	],
+	clearMocks: true,
 };
