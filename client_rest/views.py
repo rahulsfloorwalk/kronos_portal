@@ -14,6 +14,7 @@ from audit_store import service as audit_store_service
 from audit_store import service_client as audit_store_client_service
 
 from questionnaire.service import section as section_service
+from questionnaire.service import questionnaire_type_client_service
 
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
@@ -36,6 +37,7 @@ from social.service import twitter_client
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
+from client_rest.serializers import QuestionnaireTypeSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -422,3 +424,13 @@ class TwitterFeedView(APIView):
     def get(self, request, twitter_handle_id, format=None):
         twitter_feeds = twitter_client.get_feeds_for_client_and_handle(request.user.clientuser.client_id, twitter_handle_id)
         return Response(TwitterFeedSerializer(twitter_feeds, many=True).data)
+
+class QuestionnaireTypesByClient(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request):
+        types = questionnaire_type_client_service.find_questionnaire_types_for_client_by_user(request.user)
+        return Response(QuestionnaireTypeSerializer(types, many=True).data)
+

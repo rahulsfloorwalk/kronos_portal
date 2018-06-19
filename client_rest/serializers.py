@@ -10,6 +10,7 @@ from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from social.models import TwitterFeed, TwitterHandle
+from questionnaire.models import QuestionnaireType
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -213,3 +214,13 @@ class TwitterFeedSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class QuestionnaireTypeSerializer(ModelSerializer):
+    class Meta:
+        model = QuestionnaireType
+        fields = (
+            'id',
+            'name',
+            'is_default',
+            'client_id',
+        )
+        read_only_fields = ('id',)
