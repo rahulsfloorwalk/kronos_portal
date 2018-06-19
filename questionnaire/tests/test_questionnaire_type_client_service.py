@@ -3,34 +3,32 @@ from model_mommy import mommy
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_CLIENT
+from registration.models import GROUP_NAME_MANAGER
 from questionnaire.service import questionnaire_type_client_service
 from questionnaire.models import QuestionnaireType
-from auditor.models import ProfileInfo
 from client.models import Client
+from client.models import ClientUser
 
 class QuestionnaireTypeClientServiceTestCase(TestCase):
     fixtures = ['groups']
 
     def setUp(self):
-        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.client_group = Group.objects.get(name=GROUP_NAME_CLIENT)
         self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com",
                                        groups=[self.manager_group])
-        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
-                                       groups=[self.auditor_group])
-        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.client = mommy.make(Client)
+        self.client_user = mommy.make(User, username="clientuser@foobar.com", email="clientuser@foobar.com",
+                                      groups=[self.client_group])
+        self.client_profile = mommy.make(ClientUser, client=self.client, user=self.client_user)
 
-    def test_find_questionnaire_types_by_client_id_returns_questionnaire_types(self):
-        client = mommy.make(Client)
-        mommy.make(QuestionnaireType, client=client)
-        mommy.make(QuestionnaireType, client=client)
+    def test_find_questionnaire_types_for_client_by_user_returns_questionnaire_types(self):
+        mommy.make(QuestionnaireType, client=self.client, _quantity=4)
         mommy.make(QuestionnaireType)
-        mommy.make(QuestionnaireType, client=client)
-        mommy.make(QuestionnaireType, client=client)
 
-        types = questionnaire_type_client_service.find_questionnaire_types_by_client_id(client.id)
-        self.assertEqual(4, len(types))
+        types = questionnaire_type_client_service.find_questionnaire_types_for_client_by_user(self.client_user)
+        self.assertEqual(len(types), 4)
         for qt in types:
-            self.assertEqual(client, qt.client)
+            self.assertEqual(qt.client, self.client)
 

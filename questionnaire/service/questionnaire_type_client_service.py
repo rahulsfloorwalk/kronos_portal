@@ -1,5 +1,5 @@
 from questionnaire.models import QuestionnaireType
 
-def find_questionnaire_types_by_client_id(client_id):
-    return QuestionnaireType.objects.filter(client_id=client_id)
+def find_questionnaire_types_for_client_by_user(user):
+    return QuestionnaireType.objects.filter(client_id=user.clientuser.client_id)
 
