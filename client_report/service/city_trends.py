@@ -1,6 +1,7 @@
 from django.db.models import Prefetch
 
-import audit.service.audit_cycle as audit_cycle_service
+from audit.service import audit_cycle_client_service
+
 from audit_store.models import AuditStore
 from kronos.utils import get_color_code_by_percentage
 
@@ -49,8 +50,8 @@ def get_performing_cities(audit_cycle):
         return sorted(averages, key=lambda s: s[1].get('value'), reverse=True)
 
 
-def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
-    qs = audit_cycle_service.find_by_audit_type_for_clientuser(audit_type, user_id).order_by('end_date')
+def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id):
+    qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id).order_by('end_date')
     qs = qs.prefetch_related(
         'audits',
         'audits__store',
@@ -112,7 +113,8 @@ def get_performing_cities_by_type_for_clientuser(audit_type, user_id):
 
     # print("data_1",data_1)
     return {
-        'type': audit_type,
+        'type': questionnaire_type_id,
+        'questionnaire_type': questionnaire_type_id,
         'columns': audit_cycle_names,
         'data': data_1
     }
