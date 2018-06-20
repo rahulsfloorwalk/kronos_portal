@@ -326,8 +326,8 @@ class DashboardStoreTrends(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, format=None):
-        data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+    def get(self, request, questionnaire_type_id, format=None):
+        data = store_trends.get_performing_stores_by_type_for_clientuser(questionnaire_type_id, request.user.id)
         return Response(data)
 
 class DashboardCityWiseTrends(APIView):
@@ -335,8 +335,8 @@ class DashboardCityWiseTrends(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, format=None):
-        data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+    def get(self, request, questionnaire_type_id, format=None):
+        data = city_trends.get_performing_cities_by_type_for_clientuser(questionnaire_type_id, request.user.id)
         return Response(data)
 
 class DashboardStoreTrendsXlsx(APIView):
@@ -344,8 +344,8 @@ class DashboardStoreTrendsXlsx(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, format=None):
-        data = store_trends.get_performing_stores_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+    def get(self, request, questionnaire_type_id, format=None):
+        data = store_trends.get_performing_stores_by_type_for_clientuser(questionnaire_type_id, request.user.id)
         response_data=store_trends.get_excel_report(data)
         return Response(response_data)
 
@@ -354,8 +354,8 @@ class DashboardCityWiseTrendsXlsx(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, format=None):
-        data = city_trends.get_performing_cities_by_type_for_clientuser(request.GET.get('audit_type',AuditCycle.WALKIN), request.user.id)
+    def get(self, request, questionnaire_type_id, format=None):
+        data = city_trends.get_performing_cities_by_type_for_clientuser(questionnaire_type_id, request.user.id)
         response_data = city_trends.get_excel_report(data)
         return Response(response_data)
 
