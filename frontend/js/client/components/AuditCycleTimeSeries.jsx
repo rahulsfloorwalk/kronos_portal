@@ -1,80 +1,93 @@
-import React from 'react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Text} from 'recharts';
+import React from "react";
+import PropTypes from "prop-types";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend, Text} from "recharts";
 
-import {demo} from '../../../config.js';
+import {demo} from "../../../config.js";
 
-import { ThList } from '../../components/Icons.jsx';
-import Loading from '../../components/Loading.jsx';
-import Modal from '../../components/Modal.jsx';
-import { getColor } from '../../utils.js';
+import { ThList } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
+import Modal from "../../components/Modal.jsx";
+import { getColor } from "../../utils.js";
 
-import {fetchAuditCyclesTimeSeries} from '../service/dashboard.js';
+import {fetchAuditCyclesTimeSeries} from "../service/dashboard.js";
 
-var AuditCycleTimeSeries = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-			dataPopup: false,
-			labels: [],
-			data: [],
-			title: ""
-		};
-	},
-	setLoading: function(loading){
+export default class AuditCycleTimeSeries extends React.Component{
+	static propTypes = {
+		questionnaireType: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			is_default: PropTypes.bool.isRequired,
+			client_id: PropTypes.number.isRequired,
+		}).isRequired,
+	};
+
+	state = {
+		loading: false,
+		dataPopup: false,
+		labels: [],
+		data: [],
+		title: ""
+	};
+
+	setLoading = (loading) => {
 		this.setState( prevState => {
 			return Object.assign({}, prevState, {
 				loading
 			});
 		});
-	},
-	toggleModal: function(){
+	};
+
+	toggleModal = () => {
 		this.setState( prevState => Object.assign({}, prevState, { dataPopup: !this.state.dataPopup }));
-	},
-	create_structure: function(ts){
+	};
+
+	create_structure = (ts) => {
 		let data = [];
 		for(let i=0; i < ts.section_master.length; i++){
 			let obj = {};
-			obj['name'] = ts.section_master[i];
+			obj["name"] = ts.section_master[i];
 			for(let j=0; j < ts.audit_cycle_master.length; j++){
 				obj[ts.audit_cycle_master[j]] = ts.values[j][i] ? ts.values[j][i].value : null;
 			}
 			data.push(obj);
 		}
 		return data;
-	},
-	reloadData: function(questionnaireTypeId){
+	};
+
+	reloadData = (questionnaireTypeId) => {
 		if(!demo){
 			this.setLoading(true);
-			let ts = fetchAuditCyclesTimeSeries(questionnaireTypeId).then((reportData) => {
+			fetchAuditCyclesTimeSeries(questionnaireTypeId).then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
 				this.setState({
 					reportData,
-					'data': ts_structure,
-					'labels': reportData.audit_cycle_master,
-					'title': reportData.title
+					"data": ts_structure,
+					"labels": reportData.audit_cycle_master,
+					"title": reportData.title
 				});
 			}).always( () => this.setLoading(false));
 		}
-	},
+	};
 
-	componentDidMount: function(){
+	componentDidMount(){
 		//console.log("AuditCycleTimeSeries","componentDidMount");
 		this.reloadData(this.props.questionnaireType.id);
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+	componentWillReceiveProps(nextProps){
 		//console.log("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
 		if( this.props.questionnaireType !== nextProps.questionnaireType) {
 			this.reloadData(nextProps.questionnaireType.id);
 		}
-	},
+	}
 
-	tickFunction: function( values){
+	tickFunction = ( values) => {
 		// lol hack
 		let count = this.state.data && this.state.data.length > 0 ? this.state.data.length : 1;
 		return (<Text {...values} width={values.width / count}>{values.payload.value}</Text>);
-	},
+	};
 
-	render : function(){
+	render(){
 		let chart;
 		if(this.state.loading){
 			chart = <Loading/>;
@@ -85,33 +98,33 @@ var AuditCycleTimeSeries = React.createClass({
 			let colors = ["#4ca9d7", "#0085c6", "#005d8a", "#3C00F5"];
 			let bars = [];
 			for(let i=0; i < this.state.labels.length; i++){
-				bars.push(<Bar key={i} barSize={30} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v} children={v.value === null ? "N/A" : v.value+"%"}/>}/>);
+				bars.push(<Bar key={i} barSize={30} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>);
 			}
 			if (this.state.data.length <= 5){
 				chart = (
 					<ResponsiveContainer width="100%" aspect={3 / 1}>
-				    <BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
-				        <YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
-				        <XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
-				        <Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
-				        <Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
-				        {bars}
-				    </BarChart>
+						<BarChart data={this.state.data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+							<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
+							<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
+							<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
+							<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
+							{bars}
+						</BarChart>
 					</ResponsiveContainer>
 				);
 			}
 			else{
 				let width = (this.state.data.length*20).toString().concat("%");
 				chart = (
-					<div style={{ 'width': '100%', 'overflow': 'scroll'}}>
+					<div style={{ "width": "100%", "overflow": "scroll"}}>
 						<ResponsiveContainer width={width} height={300}>
-						<BarChart layout="horizontal" data={this.state.data} margin={{top: 25, right: 5, left: 25, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
-						<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
-						<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
-						<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
-						<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
-						{bars}
-						</BarChart>
+							<BarChart layout="horizontal" data={this.state.data} margin={{top: 25, right: 5, left: 25, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+								<YAxis label="Score" type="number" domain={[0,100]} tickFormatter={f => f + "%"}/>
+								<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}/>
+								<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
+								<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
+								{bars}
+							</BarChart>
 						</ResponsiveContainer>
 					</div>
 				);
@@ -119,7 +132,7 @@ var AuditCycleTimeSeries = React.createClass({
 		}
 		return(
 			<div>
-			{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button> : null }
+				{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button> : null }
 				<h3 className="text-center">{this.state.title}</h3>
 				{chart}
 				{ this.state.dataPopup ?
@@ -127,8 +140,8 @@ var AuditCycleTimeSeries = React.createClass({
 						<table className="table table-striped ">
 							<thead>
 								<tr>
-								<th>Section</th>
-								{this.state.labels.map((l) => <th key={l} className="text-right">{l}</th>)}
+									<th>Section</th>
+									{this.state.labels.map((l) => <th key={l} className="text-right">{l}</th>)}
 								</tr>
 							</thead>
 							<tbody>
@@ -151,10 +164,9 @@ var AuditCycleTimeSeries = React.createClass({
 							</tbody>
 						</table>
 					</Modal>
-				: null }
+					: null }
 			</div>
 		);
-	},
-});
+	}
+}
 
-export default AuditCycleTimeSeries;
