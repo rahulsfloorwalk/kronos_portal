@@ -17,6 +17,8 @@ class AuditCycleTestCase(TestCase):
     def setUp(self):
         self.section = Section.objects.get(pk=1)
         self.audit_cycle = AuditCycle.objects.get(pk=1)
+        self.questionnaire_type_id = 1
+        self.client_id = 1
 
     def test_get_average_for_section(self):
         section_average = get_average_for_section(self.section)
@@ -30,7 +32,7 @@ class AuditCycleTestCase(TestCase):
         self.assertNotEqual(section_averages[1].get('average').get('value'), 36)
 
     def test_get_audit_cycle_section_averages_for_client(self):
-        averages = get_audit_cycle_section_averages_for_client(1, AuditCycle.WALKIN)
+        averages = get_audit_cycle_section_averages_for_client(self.client_id, self.questionnaire_type_id)
         self.assertTrue(len(averages.get('section_master')), len(averages.get('values')[0]))
         self.assertTrue(len(averages.get('audit_cycle_master')), len(averages.get('values')))
 

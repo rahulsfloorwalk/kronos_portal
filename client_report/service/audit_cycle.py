@@ -35,8 +35,8 @@ def get_section_averages_for_audit_cycle(audit_cycle):
     section_averages = sorted(section_averages, key=lambda sec: sec['section'].sequence)
     return section_averages
 
-def get_audit_cycle_section_averages_for_client(client_id, audit_type):
-    qs = AuditCycle.objects.filter(client__id=client_id).filter(type=audit_type).order_by('end_date')
+def get_audit_cycle_section_averages_for_client(client_id, questionnaire_type_id):
+    qs = AuditCycle.objects.filter(client__id=client_id).filter(questionnaire_type_id=questionnaire_type_id).order_by('end_date')
     # prefetch related sections, report_sections, questions and answers
     qs = qs.prefetch_related(
         'sections',
