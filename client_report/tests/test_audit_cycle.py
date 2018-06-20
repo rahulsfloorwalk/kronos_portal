@@ -33,7 +33,9 @@ class AuditCycleTestCase(TestCase):
 
     def test_get_audit_cycle_section_averages_for_client(self):
         averages = get_audit_cycle_section_averages_for_client(self.client_id, self.questionnaire_type_id)
-        self.assertTrue(len(averages.get('section_master')), len(averages.get('values')[0]))
-        self.assertTrue(len(averages.get('audit_cycle_master')), len(averages.get('values')))
+        self.assertTrue(len(averages.get('section_master')), 5)
+        self.assertTrue(len(averages.get('values')[0]), 5)
+        self.assertTrue(len(averages.get('audit_cycle_master')), 3)
+        self.assertTrue(len(averages.get('values')), 3)
 
 

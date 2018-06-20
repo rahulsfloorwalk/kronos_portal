@@ -373,8 +373,8 @@ class AuditCycleTimeSeriesReport(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, format=None):
-        audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, request.GET.get('audit_type',AuditCycle.WALKIN))
+    def get(self, request, questionnaire_type_id, format=None):
+        audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, questionnaire_type_id)
         return Response(audit_cycle_time_series)
 
 class AuditCycleTimeSeriesReportXlsx(APIView):
@@ -382,8 +382,8 @@ class AuditCycleTimeSeriesReportXlsx(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, format=None):
-        data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, request.GET.get('audit_type',AuditCycle.WALKIN))
+    def get(self, request, questionnaire_type_id, format=None):
+        data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, questionnaire_type_id)
         audit_cycle_time_series = audit_cycle.get_excel_report(data)
         return Response(audit_cycle_time_series)
 
