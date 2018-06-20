@@ -1,50 +1,49 @@
-import React from 'react';
-import { hashHistory } from 'react-router';
+import React from "react";
 import { pointerStyle } from "../../styles.js";
 
-import LatestAuditStore from './LatestAuditStore.jsx';
-import AuditCycleCityMatrix from './AuditCycleCityMatrix.jsx';
-import AuditCycleTimeSeries from './AuditCycleTimeSeries.jsx';
-import AuditCycleStorePerformance from './AuditCycleStorePerformance.jsx';
-import DashboardCityPerformanceChart from './DashboardCityPerformanceChart.jsx';
+import AuditCycleTimeSeries from "./AuditCycleTimeSeries.jsx";
+import AuditCycleStorePerformance from "./AuditCycleStorePerformance.jsx";
+import DashboardCityPerformanceChart from "./DashboardCityPerformanceChart.jsx";
 
-import { Dashboard } from '../../components/Icons.jsx';
+import { Dashboard as DashboardIcon } from "../../components/Icons.jsx";
 
-import Loading from '../../components/Loading.jsx';
-import NavLink from '../../components/NavLink.jsx';
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
+import Loading from "../../components/Loading.jsx";
 
-import { fetchQuestionnaireTypes } from '../service/dashboard.js';
+import { fetchQuestionnaireTypes } from "../service/dashboard.js";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			questionnaireTypes: [],
-			selectedQuestionnaireTypeId: null,
-		};
-	},
-	componentDidMount: function(){
+export default class Dashboard extends React.Component{
+	state =  {
+		questionnaireTypes: [],
+		selectedQuestionnaireTypeId: null,
+	};
+
+	componentDidMount(){
 		fetchQuestionnaireTypes().then(questionnaireTypes => {
 			this.setState({
 				questionnaireTypes,
 			});
 		});
-	},
-	selectQuestionnaireType: function(questionnaireType){
+	}
+
+	selectQuestionnaireType = (questionnaireType) => {
 		this.setState({
 			selectedQuestionnaireTypeId: questionnaireType.id,
 		});
-	},
-	getSelectedQuestionnaireType: function(){
+	};
+
+	getSelectedQuestionnaireType = () => {
 		return this.state.questionnaireTypes.find(qt => qt.id === this.state.selectedQuestionnaireTypeId);
-	},
-	getDefaultQuestionnaireType: function(){
+	};
+
+	getDefaultQuestionnaireType = () => {
 		return this.state.questionnaireTypes.find(qt => qt.is_default);
-	},
-	getFirstQuestionnaireType: function(){
+	};
+
+	getFirstQuestionnaireType = () => {
 		return this.state.questionnaireTypes[0];
-	},
-	render: function(){
+	};
+
+	render(){
 		if(this.state.questionnaireTypes.length === 0){
 			return <Loading/>;
 		}
@@ -54,7 +53,7 @@ export default React.createClass({
 
 		return (
 			<div>
-				<h2 className="page-header"><Dashboard/> Dashboard</h2>
+				<h2 className="page-header"><DashboardIcon/> Dashboard</h2>
 				{ this.state.questionnaireTypes.length > 1 ?
 					<ul className="nav nav-tabs nav-justified">
 						{this.state.questionnaireTypes.map( qt => {
@@ -80,5 +79,5 @@ export default React.createClass({
 				</div>*/}
 			</div>
 		);
-	},
-});
+	}
+}
