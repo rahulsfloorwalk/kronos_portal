@@ -25,9 +25,7 @@ const Routes = () => (<Router history={hashHistory}>
 	<Route path="/" component={App}>
 		<IndexRoute component={IndexComponent}/>
 
-		<Route path="/dashboard" component={Dashboard}>
-			<Route path=":auditType" component={TypedDashboard}/>
-		</Route>
+		<Route path="/dashboard" component={Dashboard}/>
 
 		<Route path="/browser" component={ReportBrowser}/>
 		<Route path="/browser/auditCycle/:auditCycleId/city/:cityId" component={ReportBrowser}/>
