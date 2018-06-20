@@ -1,0 +1,400 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditCycleTimeSeries/> renders the chart correctly 1`] = `
+<div>
+  <button
+    className="btn btn-default pull-right"
+    onClick={[Function]}
+    title="View Data"
+  >
+    <span
+      className="glyphicon glyphicon-th-list"
+    />
+  </button>
+  <h3
+    className="text-center"
+  >
+    Audit Cycle Summary
+  </h3>
+  <div
+    className="recharts-responsive-container"
+    style={
+      Object {
+        "height": "100%",
+        "maxHeight": undefined,
+        "minHeight": undefined,
+        "minWidth": undefined,
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "overflow": "scroll",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "visibility": "hidden",
+          "zIndex": -1,
+        }
+      }
+    >
+      <div
+        onScroll={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "overflow": "scroll",
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "visibility": "hidden",
+            "zIndex": -1,
+          }
+        }
+      >
+        <div
+          style={
+            Object {
+              "height": NaN,
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": NaN,
+            }
+          }
+        />
+      </div>
+      <div
+        onScroll={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "overflow": "scroll",
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "visibility": "hidden",
+            "zIndex": -1,
+          }
+        }
+      >
+        <div
+          style={
+            Object {
+              "height": "200%",
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": "200%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the button is clicked 1`] = `
+<div>
+  <button
+    className="btn btn-default pull-right"
+    onClick={[Function]}
+    title="View Data"
+  >
+    <span
+      className="glyphicon glyphicon-th-list"
+    />
+  </button>
+  <h3
+    className="text-center"
+  >
+    Audit Cycle Summary
+  </h3>
+  <div
+    className="recharts-responsive-container"
+    style={
+      Object {
+        "height": "100%",
+        "maxHeight": undefined,
+        "minHeight": undefined,
+        "minWidth": undefined,
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "overflow": "scroll",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "visibility": "hidden",
+          "zIndex": -1,
+        }
+      }
+    >
+      <div
+        onScroll={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "overflow": "scroll",
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "visibility": "hidden",
+            "zIndex": -1,
+          }
+        }
+      >
+        <div
+          style={
+            Object {
+              "height": NaN,
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": NaN,
+            }
+          }
+        />
+      </div>
+      <div
+        onScroll={[Function]}
+        style={
+          Object {
+            "bottom": 0,
+            "left": 0,
+            "overflow": "scroll",
+            "position": "absolute",
+            "right": 0,
+            "top": 0,
+            "visibility": "hidden",
+            "zIndex": -1,
+          }
+        }
+      >
+        <div
+          style={
+            Object {
+              "height": "200%",
+              "left": 0,
+              "position": "absolute",
+              "top": 0,
+              "width": "200%",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "block",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog "
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Section Improvement over time
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          <table
+            className="table table-striped "
+          >
+            <thead>
+              <tr>
+                <th>
+                  Section
+                </th>
+                <th
+                  className="text-right"
+                >
+                  January 2017
+                </th>
+                <th
+                  className="text-right"
+                >
+                  February 2017
+                </th>
+                <th
+                  className="text-right"
+                >
+                  March 2017
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  Entrance
+                </td>
+                <td
+                  className="text-right danger"
+                >
+                  36
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  45
+                  %
+                </td>
+                <td
+                  className="text-right info"
+                >
+                  68
+                  %
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Need Analysis
+                </td>
+                <td
+                  className="text-right danger"
+                >
+                  32
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  49
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  60
+                  %
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Staff Analysis
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  47
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  56
+                  %
+                </td>
+                <td
+                  className="text-right info"
+                >
+                  66
+                  %
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Selling and Recommendation skills
+                </td>
+                <td
+                  className="text-right danger"
+                >
+                  30
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  43
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  46
+                  %
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Outlet analysis
+                </td>
+                <td
+                  className="text-right info"
+                >
+                  61
+                  %
+                </td>
+                <td
+                  className="text-right warning"
+                >
+                  52
+                  %
+                </td>
+                <td
+                  className="text-right info"
+                >
+                  70
+                  %
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

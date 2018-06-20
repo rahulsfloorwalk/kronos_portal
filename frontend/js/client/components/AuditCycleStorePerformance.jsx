@@ -5,7 +5,7 @@ import { Text } from 'recharts';
 
 import {demo} from '../../../config.js';
 
-import {fetchAuditCycleStorePerformance} from '../service/audit_cycle.js';
+import {fetchStoreWisePerformance} from '../service/dashboard.js';
 
 import { getColor } from '../../utils.js';
 import { ThList } from '../../components/Icons.jsx';
@@ -144,10 +144,10 @@ let AuditCycleStorePerformanceWrapper = React.createClass({
 			});
 		});
 	},
-	reloadData: function(auditType){
+	reloadData: function(questionnaireTypeId){
 		if(!demo){
 			this.setLoading(true);
-			let ts = fetchAuditCycleStorePerformance(auditType).then((reportData) => {
+			let ts = fetchStoreWisePerformance(questionnaireTypeId).then((reportData) => {
 				this.setState({
 					'reportData': reportData
 				});
@@ -156,12 +156,12 @@ let AuditCycleStorePerformanceWrapper = React.createClass({
 	},
 	componentDidMount: function(){
 		//console.log("AuditCycleStorePerformance","componentDidMount");
-		this.reloadData(this.props.auditType);
+		this.reloadData(this.props.questionnaireType.id);
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
-		if( this.props.auditType !== nextProps.auditType) {
-			this.reloadData(nextProps.auditType);
+		if( this.props.questionnaireType !== nextProps.questionnaireType) {
+			this.reloadData(nextProps.questionnaireType.id);
 		}
 	},
 	render: function(){

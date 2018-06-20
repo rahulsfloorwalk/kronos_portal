@@ -8,7 +8,7 @@ import Loading from '../../components/Loading.jsx';
 import Modal from '../../components/Modal.jsx';
 import { getColor } from '../../utils.js';
 
-import {fetchAuditCyclesTimeSeries} from '../service/audit_cycle.js';
+import {fetchAuditCyclesTimeSeries} from '../service/dashboard.js';
 
 var AuditCycleTimeSeries = React.createClass({
 	getInitialState: function(){
@@ -42,10 +42,10 @@ var AuditCycleTimeSeries = React.createClass({
 		}
 		return data;
 	},
-	reloadData: function(auditType){
+	reloadData: function(questionnaireTypeId){
 		if(!demo){
 			this.setLoading(true);
-			let ts = fetchAuditCyclesTimeSeries(auditType).then((reportData) => {
+			let ts = fetchAuditCyclesTimeSeries(questionnaireTypeId).then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
 				this.setState({
 					reportData,
@@ -59,12 +59,12 @@ var AuditCycleTimeSeries = React.createClass({
 
 	componentDidMount: function(){
 		//console.log("AuditCycleTimeSeries","componentDidMount");
-		this.reloadData(this.props.auditType);
+		this.reloadData(this.props.questionnaireType.id);
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.log("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
-		if( this.props.auditType !== nextProps.auditType) {
-			this.reloadData(nextProps.auditType);
+		if( this.props.questionnaireType !== nextProps.questionnaireType) {
+			this.reloadData(nextProps.questionnaireType.id);
 		}
 	},
 

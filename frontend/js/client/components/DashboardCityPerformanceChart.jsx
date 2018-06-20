@@ -139,10 +139,10 @@ let CityWisePerformanceChartWrapper = React.createClass({
 			});
 		});
 	},
-	reloadData: function(auditType){
+	reloadData: function(questionnaireTypeId){
 		if(!demo){
 			this.setLoading(true);
-			let ts = fetchCityWisePerformance(auditType).then((reportData) => {
+			let ts = fetchCityWisePerformance(questionnaireTypeId).then((reportData) => {
 				this.setState({
 					'reportData': reportData
 				});
@@ -151,12 +151,12 @@ let CityWisePerformanceChartWrapper = React.createClass({
 	},
 	componentDidMount: function(){
 		//console.log("AuditCycleStorePerformance","componentDidMount");
-		this.reloadData(this.props.auditType);
+		this.reloadData(this.props.questionnaireType.id);
 	},
 	componentWillReceiveProps: function(nextProps){
 		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
-		if( this.props.auditType !== nextProps.auditType) {
-			this.reloadData(nextProps.auditType);
+		if( this.props.questionnaireType !== nextProps.questionnaireType) {
+			this.reloadData(nextProps.questionnaireType.id);
 		}
 	},
 	render: function(){
