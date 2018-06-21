@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link, hashHistory } from "react-router";
 
 import { pointerStyle } from "../../styles.js";
@@ -8,13 +9,18 @@ import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/I
 
 import { fetchUser } from "../service/user.js";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			clientUser: null
-		};
-	},
-	componentDidMount: function(){
+export default class Header extends React.Component {
+	static propTypes = {
+		location: PropTypes.shape({
+			pathname: PropTypes.string.isRequired,
+		}).isRequired,
+	};
+
+	state = {
+		clientUser: null
+	};
+
+	componentDidMount() {
 		fetchUser().then((clientUser)=>{
 			this.setState({
 				clientUser
@@ -27,8 +33,9 @@ export default React.createClass({
 				}
 			}
 		});
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+	componentWillReceiveProps(nextProps) {
 		if( this.state.clientUser && nextProps.location.pathname === "/"){
 			if(this.state.clientUser.is_client_admin){
 				hashHistory.push("/dashboard");
@@ -36,8 +43,9 @@ export default React.createClass({
 				hashHistory.push("/browser3");
 			}
 		}
-	},
-	render: function(){
+	}
+
+	render() {
 		if(! this.state.clientUser){
 			return null;
 		}
@@ -61,33 +69,23 @@ export default React.createClass({
 					<div className="navbar-header">
 					</div>
 					<ul className="nav navbar-nav">
-						{
-							this.state.clientUser.is_client_admin
-							? <NavLink to="/dashboard"><Dashboard/> Dashboard</NavLink>
-							: ""
-						}
+						{ this.state.clientUser.is_client_admin ?
+							<NavLink to="/dashboard"><Dashboard/> Dashboard</NavLink>
+							: "" }
 						{/*<NavLink to="/browser"><File/> Report Browser</NavLink>*/}
 						<NavLink to="/browser3"><File/> Report Browser</NavLink>
-						{
-							this.state.clientUser.client.id === 23
-							? <NavLink to="/weighted_browser"><File/> Weighted Reports</NavLink>
-							: null
-						}
-						{
-							this.state.clientUser.is_client_admin
-							? <NavLink to="/store"><Home/> Store Browser</NavLink>
-							: null
-						}
-						{
-							this.state.clientUser.is_client_admin
-							? <NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
-							: ""
-						}
-						{
-							this.state.clientUser.is_client_admin
-							? <NavLink to="/twitter"><Retweet/> Twitter</NavLink>
-							: null
-						}
+						{ this.state.clientUser.client.id === 23 ?
+							<NavLink to="/weighted_browser"><File/> Weighted Reports</NavLink>
+							: null }
+						{ this.state.clientUser.is_client_admin ?
+							<NavLink to="/store"><Home/> Store Browser</NavLink>
+							: null }
+						{ this.state.clientUser.is_client_admin ?
+							<NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
+							: "" }
+						{ this.state.clientUser.is_client_admin ?
+							<NavLink to="/twitter"><Retweet/> Twitter</NavLink>
+							: null }
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
@@ -102,8 +100,8 @@ export default React.createClass({
 				</nav>
 			</div>
 		);
-	},
-});
+	}
+}
 
 
 
