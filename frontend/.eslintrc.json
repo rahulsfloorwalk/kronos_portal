@@ -37,6 +37,7 @@
             "error",
             "always"
         ],
+        "no-extra-semi": 1,
 	"react/jsx-uses-vars": 2,
 	"babel/semi": 1
     }
