@@ -1,19 +1,13 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { } from "react-router";
-
-import { } from "../../styles.js";
 
 import Loading from "../../components/Loading.jsx";
 
 import QuestionnaireTrends from "./QuestionnaireTrends.jsx";
 import StorePerformance from "./StorePerformance.jsx";
 
-import { getAuditType } from "../../utils.js";
-import { } from "../../components/Icons.jsx";
-
 import { fetchStore } from "../service/store.js";
-import { fetchAuditTypes } from "../service/dashboard.js";
+import { fetchQuestionnaireTypes } from "../service/dashboard.js";
 
 export default class StoreTrends extends Component{
 	static propTypes = {
@@ -24,70 +18,48 @@ export default class StoreTrends extends Component{
 
 	state = {};
 
-	reloadReport = (storeId, audit_type=undefined) => {
-		fetchStore(storeId).then((store)=>{
-			if(!audit_type){
-				switch(store.type){
-				case "Fine Dine":
-					audit_type = "FINE_DINE";
-					break;
-				case "Sky Karting":
-					audit_type = "SKY_KARTING";
-					break;
-				case "Arena":
-				case "":
-				case undefined:
-				case null:
-				default:
-					audit_type = "WALKIN";
-					break;
-				}
-			}
-
-			this.setState({
-				audit_type,
-			});
-		});
-	};
-
 	componentDidMount() {
-		fetchAuditTypes().then(types => {
-			//let audit_type = types.indexOf("WALKIN") > -1 ? "WALKIN" : types[0];
+		Promise.all([
+			fetchStore(this.props.params.storeId),
+			fetchQuestionnaireTypes(),
+		]).then(([store, questionnaireTypes]) => {
+			const firstQT = questionnaireTypes[0] || {};
+			const defaultQT = questionnaireTypes.find(qt => qt.name === store.type);
 
 			this.setState({
-				types,
-				//audit_type,
+				store,
+				questionnaireTypes,
+				selectedQuestionnaireTypeId: defaultQT ? String(defaultQT.id) : String(firstQT.id),
 			});
-
-			this.reloadReport(this.props.params.storeId);
 		});
 	}
 
-	auditTypeChanged = (e) => {
-		this.reloadReport(this.props.params.storeId, e.target.value);
+	selectQuestionnaireType = (e) => {
 		this.setState({
-			audit_type: e.target.value,
+			selectedQuestionnaireTypeId: e.target.value,
 		});
 	};
 
 	render(){
-		if(!this.state.types){
+		if(!this.state.questionnaireTypes){
 			return <Loading/>;
 		}
+
+		const selectedQuestionnaireType = this.state.questionnaireTypes.find(qt => qt.id === parseInt(this.state.selectedQuestionnaireTypeId));
 
 		return(<div>
 			<h3 className="page-header">
 				Store Performance
 				<div className="pull-right">
-					<select className="form-control input-lg" value={this.state.audit_type} onChange={this.auditTypeChanged}>
-						{this.state.types.map((type) => <option key={type} value={type}>{getAuditType(type)}</option>)}
+					<select className="form-control input-lg" value={this.state.selectedQuestionnaireTypeId} onChange={this.selectQuestionnaireType}>
+						{this.state.questionnaireTypes.map(qt => <option key={qt.id} value={qt.id}>{qt.name}</option>)}
 					</select>
 				</div>
 			</h3>
-			{ this.state.audit_type ?
+			{ selectedQuestionnaireType ?
 				<div>
-					<StorePerformance store_id={this.props.params.storeId} audit_type={this.state.audit_type}/>
-					<QuestionnaireTrends storeId={parseInt(this.props.params.storeId)} audit_type={this.state.audit_type}/>
+					<StorePerformance store_id={this.props.params.storeId} questionnaireType={selectedQuestionnaireType}/>
+					<QuestionnaireTrends storeId={parseInt(this.props.params.storeId)} questionnaireType={selectedQuestionnaireType}/>
 				</div>
 				: null }
 		</div>);
