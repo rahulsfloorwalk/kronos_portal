@@ -1,27 +1,27 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function findAttachmentsByAuditStore(auditStoreId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/attachment`);
-};
+}
 
 export function findAttachmentsByAuditStoreAndSection(auditStoreId, sectionId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment`);
-};
+}
 
 export function deleteAttachment(attachmentId){
 	return $.ajax({
 		url: url.api_base_path + `moderator/attachment/${attachmentId}`,
 		type: "DELETE"
 	});
-};
+}
 
 export function completeAttachment(attachmentId){
 	return $.ajax({
 		url: url.api_base_path + `moderator/attachment/${attachmentId}/complete`,
 		type: "POST"
 	});
-};
+}
 
 export function renameAttachment(attachmentId, fileName){
 	return $.ajax({
@@ -30,7 +30,7 @@ export function renameAttachment(attachmentId, fileName){
 		data: JSON.stringify({file_name: fileName}),
 		contentType: "application/json"
 	});
-};
+}
 
 export function uploadFileForReportSection(auditStoreId, sectionId, file){
 	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/attachment`;
@@ -40,7 +40,7 @@ export function uploadFileForReportSection(auditStoreId, sectionId, file){
 export function uploadFileForAuditStore(auditStoreId, file){
 	var req_url = url.api_base_path + `moderator/audit_store/${auditStoreId}/attachment`;
 	return doAttachmentUpload(req_url, file);
-};
+}
 
 export function doAttachmentUpload(req_url, file){
 	var mainPromise = $.Deferred();
@@ -80,7 +80,7 @@ export function doAttachmentUpload(req_url, file){
 			xhr: function() {
 				var myXhr = $.ajaxSettings.xhr();
 				if(myXhr.upload){
-					myXhr.upload.addEventListener('progress',function(e){
+					myXhr.upload.addEventListener("progress",function(e){
 						if(e.lengthComputable){
 							var max = e.total;
 							var current = e.loaded;
@@ -112,5 +112,5 @@ export function doAttachmentUpload(req_url, file){
 	});
 
 	return mainPromise;
-};
+}
 

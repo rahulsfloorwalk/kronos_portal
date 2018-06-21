@@ -1,13 +1,13 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function fetchSections(auditCycleId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditCycleId}/section`);
-};
+}
 
 export function fetchReportSections(auditStoreId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/report_section`);
-};
+}
 
 export function submitPMComment(auditStoreId, sectionId, pmComment){
 	return $.ajax({
@@ -18,7 +18,7 @@ export function submitPMComment(auditStoreId, sectionId, pmComment){
 		}),
 		contentType: "application/json"
 	});
-};
+}
 
 export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 	return $.ajax({
@@ -29,7 +29,7 @@ export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 		}),
 		contentType: "application/json"
 	});
-};
+}
 
 export function setNotApplicable(auditStoreId, sectionId, notApplicable){
 	return $.ajax({
@@ -40,5 +40,5 @@ export function setNotApplicable(auditStoreId, sectionId, notApplicable){
 		}),
 		contentType: "application/json"
 	});
-};
+}
 

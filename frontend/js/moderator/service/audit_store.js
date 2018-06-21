@@ -11,23 +11,23 @@ export function findCompleted(){
 
 export function findByAuditCycleId(auditCycleId){
 	return $.get(url.api_base_path + `moderator/audit_cycle/${auditCycleId}/audit_store`);
-};
+}
 
 export function findById(auditStoreId){
 	return $.get(url.api_base_path + `moderator/audit_store/${auditStoreId}`);
-};
+}
 
 export function submit(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/submit`);
-};
+}
 
 export function unsubmit(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/unsubmit`);
-};
+}
 
 export function fail(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/fail`);
-};
+}
 
 export function qaOk(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/qa_ok`);
@@ -42,7 +42,7 @@ export function setAuditDate(auditStoreId, auditDate){
 		}),
 		contentType: "application/json"
 	});
-};
+}
 
 export function rate(auditStoreId, qa_rating){
 	return $.ajax({
