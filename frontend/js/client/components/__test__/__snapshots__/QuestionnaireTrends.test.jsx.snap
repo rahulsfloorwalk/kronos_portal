@@ -1,0 +1,99 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<QuestionnaireTrends/> renders the QuestionnaireTrends table correctly 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    Score Performance Details
+  </h3>
+  <table
+    className="table table-striped table-bordered table-hover"
+  >
+    <thead>
+      <tr>
+        <th
+          className="text-right"
+        >
+          #
+        </th>
+        <th>
+          Section
+        </th>
+        <th>
+          Question
+        </th>
+        <th
+          className="text-right"
+        >
+          Arena audits- September 2017
+        </th>
+        <th
+          className="text-right"
+        >
+          Arena- October 2017
+        </th>
+        <th
+          className="text-right"
+        >
+          Max. Marks
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          className="text-right"
+        >
+          1
+        </td>
+        <td>
+          Visit details
+        </td>
+        <td>
+          Visit Time in
+        </td>
+        <td
+          className=" text-right"
+        >
+          1.00
+        </td>
+        <td
+          className=" text-right"
+        >
+          0
+        </td>
+        <td
+          className="text-right"
+        >
+          1
+        </td>
+      </tr>
+      <tr>
+        <td
+          className="text-right"
+        />
+        <td />
+        <td>
+          Visit Time out
+        </td>
+        <td
+          className=" text-right"
+        >
+          2.00
+        </td>
+        <td
+          className=" text-right"
+        >
+          1.00
+        </td>
+        <td
+          className="text-right"
+        >
+          2
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

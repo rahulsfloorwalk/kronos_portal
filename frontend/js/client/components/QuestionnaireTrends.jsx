@@ -11,26 +11,30 @@ import { fetchStoreMarkingTrends } from "../service/store.js";
 export default class QuestionnaireTrends extends Component{
 	static propTypes = {
 		storeId: PropTypes.number.isRequired,
-		audit_type: PropTypes.string.isRequired,
+		questionnaireType: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			is_default: PropTypes.bool.isRequired,
+			client_id: PropTypes.number.isRequired,
+		}).isRequired,
 	};
 
 	state = {};
 
-	reloadReport = (storeId, audit_type) => {
-		fetchStoreMarkingTrends(storeId, audit_type).then((data)=>{
+	reloadReport = (storeId, questionnaireTypeId) => {
+		fetchStoreMarkingTrends(storeId, questionnaireTypeId).then((data)=>{
 			this.setState({
 				data,
-				audit_type,
 			});
 		});
 	};
 
 	componentDidMount() {
-		this.reloadReport(this.props.storeId, this.props.audit_type);
+		this.reloadReport(this.props.storeId, this.props.questionnaireType.id);
 	}
 
 	componentWillReceiveProps(nextProps) {
-		this.reloadReport(nextProps.storeId, nextProps.audit_type);
+		this.reloadReport(nextProps.storeId, nextProps.questionnaireType.id);
 	}
 
 	render(){
