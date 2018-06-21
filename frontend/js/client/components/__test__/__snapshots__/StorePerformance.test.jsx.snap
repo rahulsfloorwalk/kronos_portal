@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<StorePerformance/> renders the StorePerformance chart correctly 1`] = `
+<div
+  className="recharts-responsive-container"
+  style={
+    Object {
+      "height": "100%",
+      "maxHeight": undefined,
+      "minHeight": undefined,
+      "minWidth": undefined,
+      "width": "100%",
+    }
+  }
+>
+  <div
+    style={
+      Object {
+        "bottom": 0,
+        "left": 0,
+        "overflow": "scroll",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "visibility": "hidden",
+        "zIndex": -1,
+      }
+    }
+  >
+    <div
+      onScroll={[Function]}
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "overflow": "scroll",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "visibility": "hidden",
+          "zIndex": -1,
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "height": NaN,
+            "left": 0,
+            "position": "absolute",
+            "top": 0,
+            "width": NaN,
+          }
+        }
+      />
+    </div>
+    <div
+      onScroll={[Function]}
+      style={
+        Object {
+          "bottom": 0,
+          "left": 0,
+          "overflow": "scroll",
+          "position": "absolute",
+          "right": 0,
+          "top": 0,
+          "visibility": "hidden",
+          "zIndex": -1,
+        }
+      }
+    >
+      <div
+        style={
+          Object {
+            "height": "200%",
+            "left": 0,
+            "position": "absolute",
+            "top": 0,
+            "width": "200%",
+          }
+        }
+      />
+    </div>
+  </div>
+</div>
+`;

@@ -5,34 +5,37 @@ import { Text } from "recharts";
 
 import Loading from "../../components/Loading.jsx";
 import { fetchStorePerformance } from "../service/store.js";
+
 export default class StorePerformance extends Component{
 	static propTypes = {
 		store_id: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.number,
 		]).isRequired,
-		audit_type: PropTypes.oneOfType([
-			PropTypes.string,
-		]).isRequired,
+		questionnaireType: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			is_default: PropTypes.bool.isRequired,
+			client_id: PropTypes.number.isRequired,
+		}).isRequired,
 	};
-	constructor(props){
-		super(props);
-		this.state = {};
-	}
+
+	state = {};
+
 	componentDidMount(){
-		if(this.props.store_id != null && this.props.audit_type != null){
-			this.reloadData(this.props.store_id, this.props.audit_type);
+		if(this.props.store_id != null && this.props.questionnaireType != null){
+			this.reloadData(this.props.store_id, this.props.questionnaireType.id);
 		}
 	}
 
 	componentWillReceiveProps(nextProps){
-		if(this.props.store_id != nextProps.store_id || this.props.audit_type != nextProps.audit_type){
-			this.reloadData(nextProps.store_id, nextProps.audit_type);
+		if(this.props.store_id != nextProps.store_id || this.props.questionnaireType != nextProps.questionnaireType){
+			this.reloadData(nextProps.store_id, nextProps.questionnaireType.id);
 		}
 	}
 
-	reloadData(store_id, audit_type){
-		fetchStorePerformance(store_id, audit_type).then((data) =>{
+	reloadData(store_id, questionnaireTypeId){
+		fetchStorePerformance(store_id, questionnaireTypeId).then((data) =>{
 			let chartData = [];
 			let scoresLength = data.audit_cycle.length;
 			for(let i = 0; i < scoresLength; i++){
