@@ -22,8 +22,6 @@ import attachment.service_client as attachment_client_service
 
 import audit.service.audit_cycle as audit_cycle_service
 
-from audit.models import AuditCycle
-
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
 from client_report.service import audit_cycle_xlsx_report as cycle_xlsx_report_service
@@ -103,9 +101,8 @@ class MarkingByStore(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, store_id, format=None):
-        audit_type = request.GET.get('audit_type', AuditCycle.WALKIN)
-        data = store_marking_service.get_scores_for_store(store_id, request.user.clientuser.client.id, audit_type)
+    def get(self, request, questionnaire_type_id, store_id, format=None):
+        data = store_marking_service.get_scores_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
         return Response(data)
 
 class MarkingGraphByStore(APIView):
@@ -113,9 +110,8 @@ class MarkingGraphByStore(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, store_id, format=None):
-        audit_type = request.GET.get('audit_type', AuditCycle.WALKIN)
-        data = store_marking_service.get_scores_graph_for_store(store_id, request.user.clientuser.client.id, audit_type)
+    def get(self, request, questionnaire_type_id, store_id, format=None):
+        data = store_marking_service.get_scores_graph_for_store_by_questionnaire_type(store_id, request.user.clientuser.client.id, questionnaire_type_id)
         return Response(data)
 
 class AuditStoreByStore(APIView):

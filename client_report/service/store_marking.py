@@ -5,8 +5,12 @@ from questionnaire.models import Question
 from answer.models import Answer
 from kronos.utils import get_color_code
 
-def get_scores_graph_for_store(store_id, client_id, audit_type):
-    all_cycles = AuditCycle.objects.filter(client_id=client_id).filter(type=audit_type).order_by('end_date')
+def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
+    all_cycles = AuditCycle.objects.filter(
+        client_id=client_id,
+        questionnaire_type_id=questionnaire_type_id,
+    ).order_by('end_date')
+
     all_cycle_count = all_cycles.count()
 
     if all_cycle_count is 0:
@@ -33,8 +37,12 @@ def get_scores_graph_for_store(store_id, client_id, audit_type):
         max_scores_list.append(max_marks)
     return {"scores": scores_list, "audit_cycle": audit_cycles_list, "max_marks": max_scores_list}
 
-def get_scores_for_store(store_id, client_id, audit_type):
-    all_cycles = AuditCycle.objects.filter(client_id=client_id).filter(type=audit_type).order_by('end_date')
+def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
+    all_cycles = AuditCycle.objects.filter(
+        client_id=client_id,
+        questionnaire_type_id=questionnaire_type_id,
+    ).order_by('end_date')
+
     all_cycle_count = all_cycles.count()
 
     if all_cycle_count is 0:
