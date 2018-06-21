@@ -1,5 +1,5 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function fetchAllStores(){
 	return $.get( url.api_base_path + `client/store`);
@@ -17,10 +17,10 @@ export function fetchStore(storeId){
 	return $.get( url.api_base_path + `client/store/${storeId}`);
 };
 
-export function fetchStoreMarkingTrends(storeId, audit_type){
-	return $.get( url.api_base_path + `client/report/store/${storeId}/marking`, {audit_type});
-};
+export function fetchStoreMarkingTrends(storeId, questionnaireTypeId){
+	return $.get( url.api_base_path + `client/report/questionnaire_type/${questionnaireTypeId}/store/${storeId}/marking`);
+}
 
-export function fetchStorePerformance(storeId, audit_type){
-	return $.get( url.api_base_path + `client/report/store/${storeId}/marking_graph`, {audit_type});
-};
+export function fetchStorePerformance(storeId, questionnaireTypeId){
+	return $.get( url.api_base_path + `client/report/questionnaire_type/${questionnaireTypeId}/store/${storeId}/marking_graph`);
+}
