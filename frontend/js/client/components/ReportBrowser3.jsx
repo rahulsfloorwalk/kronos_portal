@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import { Link, hashHistory } from 'react-router';
-import Datetime from 'react-datetime';
+import React, { Component } from "react";
+import { Link, hashHistory } from "react-router";
+import Datetime from "react-datetime";
 
-import Loading from '../../components/Loading.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
-import { Plus, File, Download } from '../../components/Icons.jsx';
+import Loading from "../../components/Loading.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
+import { Plus, File, Download } from "../../components/Icons.jsx";
 
-import { pointerStyle }  from '../../styles.js';
+import { pointerStyle }  from "../../styles.js";
 
-import moment from 'moment';
-import { momentDateFormat , url}  from '../../../config.js';
-import { getAuditType, getColor } from '../../utils.js';
+import moment from "moment";
+import { momentDateFormat , url}  from "../../../config.js";
+import { getAuditType, getColor } from "../../utils.js";
 
-import StoreList from './StoreList.jsx';
-import { AuditTypeIcon } from '../../components/AuditTypeLabel.jsx';
+import StoreList from "./StoreList.jsx";
+import { AuditTypeIcon } from "../../components/AuditTypeLabel.jsx";
 
-import { fetchAuditCycles } from '../service/audit_cycle.js';
-import { fetchCities } from '../service/city.js';
-import { findAuditStoresByAuditCycle } from '../service/audit_store.js';
+import { fetchAuditCycles } from "../service/audit_cycle.js";
+import { fetchCities } from "../service/city.js";
+import { findAuditStoresByAuditCycle } from "../service/audit_store.js";
 
 export class AuditStoreTable extends Component {
 	constructor(props){
@@ -87,13 +87,13 @@ export class AuditStoreTable extends Component {
 	}
 
 	createFilterUrl(){
-		let base = url.api_base_path + 'client/audit_cycle/' + this.props.auditCycleId + '/audit_cycle_filtered_xlsx_report?';
-		base += 'city=' + encodeURIComponent(this.state.selectedCityId || '') + '&';
-		base += 'priority=' + encodeURIComponent(this.state.selectedPriority || '') + '&';
-		base += 'start_date=' + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || '') + '&';
-		base += 'end_date=' + encodeURIComponent(this.state.endDate.format("YYYY-MM-DD") || '') + '&';
-		base += 'type=' + encodeURIComponent(this.state.selectedType || '') + '&';
-		base += 'month=' + encodeURIComponent(Number(this.state.selectedMonth)+1 || '');
+		let base = url.api_base_path + "client/audit_cycle/" + this.props.auditCycleId + "/audit_cycle_filtered_xlsx_report?";
+		base += "city=" + encodeURIComponent(this.state.selectedCityId || "") + "&";
+		base += "priority=" + encodeURIComponent(this.state.selectedPriority || "") + "&";
+		base += "start_date=" + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || "") + "&";
+		base += "end_date=" + encodeURIComponent(this.state.endDate.format("YYYY-MM-DD") || "") + "&";
+		base += "type=" + encodeURIComponent(this.state.selectedType || "") + "&";
+		base += "month=" + encodeURIComponent(Number(this.state.selectedMonth)+1 || "");
 		return base;
 	}
 	componentDidMount(){
@@ -142,11 +142,11 @@ export class AuditStoreTable extends Component {
 	}
 
 	validateStartDate= (currentDate, selectedDate) => {
-		return currentDate.isBetween(this.state.cycleStartDate, this.state.endDate, null, '[]');
+		return currentDate.isBetween(this.state.cycleStartDate, this.state.endDate, null, "[]");
 	}
 
 	validateEndDate= (currentDate, selectedDate) => {
-		return currentDate.isBetween(this.state.startDate, this.state.cycleEndDate, null, '[]');
+		return currentDate.isBetween(this.state.startDate, this.state.cycleEndDate, null, "[]");
 	}
 
 	render(){
@@ -229,7 +229,7 @@ export class AuditStoreTable extends Component {
 			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
 			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
 			&& (this.state.selectedPriority ? r.store_priority === this.state.selectedPriority : true)
-			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, '[]')
+			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, "[]")
 		}).forEach( r => {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
@@ -279,7 +279,7 @@ export class AuditStoreTable extends Component {
 					</a>
 				</span>
 			</div>
-			<div style={{ 'width': '100%', 'overflow': 'scroll'}}>
+			<div style={{ "width": "100%", "overflow": "scroll"}}>
 				<table className="table table-bordered table-hover">
 				<thead>
 					<tr>{headers}</tr>

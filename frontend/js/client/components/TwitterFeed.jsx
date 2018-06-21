@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router';
-import $ from 'jquery'
+import React, { Component } from "react";
+import { Link } from "react-router";
+import $ from "jquery"
 
-import { ResponsiveContainer, PieChart, Pie, Legend, Cell, Tooltip } from 'recharts';
+import { ResponsiveContainer, PieChart, Pie, Legend, Cell, Tooltip } from "recharts";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { Tweet } from 'react-twitter-widgets';
+import { Tweet } from "react-twitter-widgets";
 
-import { fetchUser } from '../service/user.js';
-import { fetchClientHandles, fetchClientTwitterFeedByHandle } from '../service/twitter.js'
+import { fetchUser } from "../service/user.js";
+import { fetchClientHandles, fetchClientTwitterFeedByHandle } from "../service/twitter.js"
 
-import Loading from '../../components/Loading.jsx';
-import { Time } from '../../components/Icons.jsx';
-import { ArrowUp, ArrowDown, CircleArrowUp, CircleArrowDown, Minus } from '../../components/Icons.jsx';
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
+import Loading from "../../components/Loading.jsx";
+import { Time } from "../../components/Icons.jsx";
+import { ArrowUp, ArrowDown, CircleArrowUp, CircleArrowDown, Minus } from "../../components/Icons.jsx";
+import { getAuditType, getAuditStatus } from "../../utils.js";
+import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
 
 export default class TwitterFeed extends Component{
 	constructor(props){

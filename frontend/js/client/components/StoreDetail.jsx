@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import { fetchStore } from '../service/store.js';
+import { fetchStore } from "../service/store.js";
 
-import { File, Stats } from '../../components/Icons.jsx';
-import Panel from '../../components/Panel.jsx';
-import Loading from '../../components/Loading.jsx';
-import NavLink from '../../components/NavLink.jsx';
+import { File, Stats } from "../../components/Icons.jsx";
+import Panel from "../../components/Panel.jsx";
+import Loading from "../../components/Loading.jsx";
+import NavLink from "../../components/NavLink.jsx";
 
 export default React.createClass({
 	getInitialState: function(){

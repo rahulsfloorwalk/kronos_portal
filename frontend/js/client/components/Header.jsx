@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link, hashHistory } from 'react-router';
+import React from "react";
+import { Link, hashHistory } from "react-router";
 
-import { pointerStyle } from '../../styles.js';
+import { pointerStyle } from "../../styles.js";
 
-import NavLink from '../../components/NavLink.jsx';
-import { Dashboard, File, LogOut, Time, Retweet, Home } from '../../components/Icons.jsx';
+import NavLink from "../../components/NavLink.jsx";
+import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/Icons.jsx";
 
-import { fetchUser } from '../service/user.js';
+import { fetchUser } from "../service/user.js";
 
 export default React.createClass({
 	getInitialState: function(){

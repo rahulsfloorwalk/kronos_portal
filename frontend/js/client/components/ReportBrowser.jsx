@@ -1,18 +1,18 @@
-import React from 'react';
-import { Link, hashHistory } from 'react-router';
+import React from "react";
+import { Link, hashHistory } from "react-router";
 
-import Jumbotron from '../../components/Jumbotron.jsx';
-import { Plus, File, Download } from '../../components/Icons.jsx';
+import Jumbotron from "../../components/Jumbotron.jsx";
+import { Plus, File, Download } from "../../components/Icons.jsx";
 
-import moment from 'moment';
-import { momentDateFormat , url}  from '../../../config.js';
-import { getAuditType, getColor } from '../../utils.js';
+import moment from "moment";
+import { momentDateFormat , url}  from "../../../config.js";
+import { getAuditType, getColor } from "../../utils.js";
 
-import StoreList from './StoreList.jsx';
+import StoreList from "./StoreList.jsx";
 
-import { fetchAuditCycles } from '../service/audit_cycle.js';
-import { fetchCities } from '../service/city.js';
-import { fetchCitySectionAverageByAuditCycle } from '../service/report.js';
+import { fetchAuditCycles } from "../service/audit_cycle.js";
+import { fetchCities } from "../service/city.js";
+import { fetchCitySectionAverageByAuditCycle } from "../service/report.js";
 
 export default React.createClass({
 	getInitialState: function(){
@@ -160,7 +160,7 @@ export default React.createClass({
 									<tr>
 										<td className="text-right">Report Summary</td>
 										<td>
-											<a className="btn btn-default" href={url.api_base_path + 'client/audit_cycle/' + this.props.params.auditCycleId + '/audit_cycle_xlsx_report'}>
+											<a className="btn btn-default" href={url.api_base_path + "client/audit_cycle/" + this.props.params.auditCycleId + "/audit_cycle_xlsx_report"}>
 												<Download/> Download Excel
 											</a>
 										</td>

@@ -1,15 +1,15 @@
-import React from 'react';
-import { Link, hashHistory } from 'react-router';
+import React from "react";
+import { Link, hashHistory } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import Jumbotron from '../../components/Jumbotron.jsx';
-import { getColor } from '../../utils.js';
-import { ChevronRight, ChevronDown, ShareAlt } from '../../components/Icons.jsx';
+import Jumbotron from "../../components/Jumbotron.jsx";
+import { getColor } from "../../utils.js";
+import { ChevronRight, ChevronDown, ShareAlt } from "../../components/Icons.jsx";
 
-import { fetchStoresByAuditCycleAndCity } from '../service/store.js';
-import { fetchAuditStoreByAuditCycleAndStore } from '../service/audit_store.js';
+import { fetchStoresByAuditCycleAndCity } from "../service/store.js";
+import { fetchAuditStoreByAuditCycleAndStore } from "../service/audit_store.js";
 
 var StoreRow = React.createClass({
 	getInitialState: function(){
@@ -64,7 +64,7 @@ var StoreRow = React.createClass({
 						</td>);
 					}
 				}
-				auditStoreTrs.push(<tr key={as.audit_store_id} onClick={()=> hashHistory.push(`/audit_store/${as.audit_store_id}`)} style={{cursor:'pointer'}} title="Click to view report">
+				auditStoreTrs.push(<tr key={as.audit_store_id} onClick={()=> hashHistory.push(`/audit_store/${as.audit_store_id}`)} style={{cursor:"pointer"}} title="Click to view report">
 					<td className="text-right">
 						<b>{moment(as.audit_date).format(momentDateFormat)}</b>
 					</td>
@@ -83,7 +83,7 @@ var StoreRow = React.createClass({
 
 		return (
 			<tbody style={tbodyStyle}>
-			<tr onClick={this.toggleExpandClicked} style={{cursor:'pointer'}} title="Click to Expand view">
+			<tr onClick={this.toggleExpandClicked} style={{cursor:"pointer"}} title="Click to Expand view">
 				<td>
 					<b>{this.props.store.store_name}</b><br/>
 					<small>{this.props.store.address}</small>

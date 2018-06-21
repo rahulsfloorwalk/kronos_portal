@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { fetchAuditStoresByStore } from '../service/audit_store.js';
+import { fetchAuditStoresByStore } from "../service/audit_store.js";
 
-import { File } from '../../components/Icons.jsx';
-import { getColor } from '../../utils.js';
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
-import Loading from '../../components/Loading.jsx';
+import { File } from "../../components/Icons.jsx";
+import { getColor } from "../../utils.js";
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
+import Loading from "../../components/Loading.jsx";
 
 export default class StoreAuditStoreList extends Component{
 	constructor(props){

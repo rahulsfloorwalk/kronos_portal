@@ -1,21 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat, url}  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat, url}  from "../../../config.js";
 
-import { fetchAuditStore } from '../service/audit_store.js';
-import { fetchSections } from '../service/section.js';
-import { fetchReportSections } from '../service/report_section.js';
+import { fetchAuditStore } from "../service/audit_store.js";
+import { fetchSections } from "../service/section.js";
+import { fetchReportSections } from "../service/report_section.js";
 
-import { File, Print, Download } from '../../components/Icons.jsx';
-import Loading from '../../components/Loading.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
+import { File, Print, Download } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 
-import SectionList from './SectionList.jsx';
-import SectionTotalsBox from './SectionTotalsBox.jsx';
+import SectionList from "./SectionList.jsx";
+import SectionTotalsBox from "./SectionTotalsBox.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
 
 export default React.createClass({
 	getInitialState: function(){
@@ -65,10 +65,10 @@ export default React.createClass({
 							<Print/> Print Report
 						</a>
 					}
-					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/ears_report'}>
+					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/ears_report"}>
 					<Download/> E.A.R.S Report
 					</a> : ""}
-					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + 'client/audit_store/' + this.state.auditStore.id + '/xlsx_report'}>
+					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/xlsx_report"}>
 					<Download/> Excel Report
 					</a> : ""}
 					<File/> Audit Report

@@ -1,10 +1,10 @@
-import React from 'react';
+import React from "react";
 
-import Header from './Header.jsx';
-import Footer from '../../components/Footer.jsx';
-import DevelopmentMarker from '../../components/DevelopmentMarker.jsx';
+import Header from "./Header.jsx";
+import Footer from "../../components/Footer.jsx";
+import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
 
-import { fetchConfig } from '../service/config.js';
+import { fetchConfig } from "../service/config.js";
 
 var App = React.createClass({
 	getInitialState: function(){
@@ -15,7 +15,7 @@ var App = React.createClass({
 	},
 	render: function(){
 		var contentStyle = {
-			'minHeight': "600px"
+			"minHeight": "600px"
 		};
 		return (
 			<div>

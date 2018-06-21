@@ -1,17 +1,17 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { fetchLatestAuditStores } from '../service/audit_store.js';
+import { fetchLatestAuditStores } from "../service/audit_store.js";
 
-import { File } from '../../components/Icons.jsx';
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
+import { File } from "../../components/Icons.jsx";
+import { getAuditType, getAuditStatus } from "../../utils.js";
+import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
 
 var AuditStoreRow = React.createClass({
 	render: function(){

@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
-import { getColor } from '../../utils.js';
+import { getColor } from "../../utils.js";
 
-import { Paperclip } from '../../components/Icons.jsx';
+import { Paperclip } from "../../components/Icons.jsx";
 
 export default React.createClass({
 	render: function(){

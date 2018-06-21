@@ -1,16 +1,16 @@
-import React from 'react';
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Text} from 'recharts';
+import React from "react";
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Text} from "recharts";
 
-import {demo} from '../../../config.js';
+import {demo} from "../../../config.js";
 
-import Loading from '../../components/Loading.jsx';
+import Loading from "../../components/Loading.jsx";
 
-import { fetchConfig } from '../service/config.js';
-import { fetchUser } from '../service/user.js';
+import { fetchConfig } from "../service/config.js";
+import { fetchUser } from "../service/user.js";
 
 /*-----------------*/
 
-import $ from 'jquery'
+import $ from "jquery"
 
 let fetchImpactFactorData = () => {
 	return fetchConfig().then((config) => {

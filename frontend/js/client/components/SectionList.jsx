@@ -1,21 +1,21 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import { truncateStyle } from '../../styles.js';
-import { getColor } from '../../utils.js';
+import { truncateStyle } from "../../styles.js";
+import { getColor } from "../../utils.js";
 
-import Jumbotron from '../../components/Jumbotron.jsx';
-import Panel from '../../components/Panel.jsx';
-import { Paperclip, Tasks, Plus, Cross, Pencil } from '../../components/Icons.jsx';
+import Jumbotron from "../../components/Jumbotron.jsx";
+import Panel from "../../components/Panel.jsx";
+import { Paperclip, Tasks, Plus, Cross, Pencil } from "../../components/Icons.jsx";
 
-import AttachmentDisplayBox from './AttachmentDisplayBox.jsx';
+import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
 
-import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
-import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
-import AttachmentPreview from '../../manager/components/AttachmentPreview.jsx';
+import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
+import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
+import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
-import { fetchAnswers } from '../service/answer.js';
-import { findAttachmentsByAuditStoreAndSection } from '../service/attachment.js';
+import { fetchAnswers } from "../service/answer.js";
+import { findAttachmentsByAuditStoreAndSection } from "../service/attachment.js";
 
 var QuestionRow = React.createClass({
 	render: function(){

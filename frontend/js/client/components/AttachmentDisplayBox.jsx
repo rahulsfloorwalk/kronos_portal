@@ -1,17 +1,17 @@
-import React from 'react';
+import React from "react";
 
-import { findAttachmentsByAuditStore } from '../service/attachment.js';
+import { findAttachmentsByAuditStore } from "../service/attachment.js";
 
-import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from '../../components/Icons.jsx';
-import Loading from '../../components/Loading.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
+import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
 
-import AttachmentPreview from '../../manager/components/AttachmentPreview.jsx';
+import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
-import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
-import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
+import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
+import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
 
 export default React.createClass({
 	getInitialState: function(){

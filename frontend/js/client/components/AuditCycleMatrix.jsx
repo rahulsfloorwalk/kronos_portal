@@ -1,16 +1,16 @@
-import React from 'react';
-import { Link, hashHistory } from 'react-router';
+import React from "react";
+import { Link, hashHistory } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { fetchLatestAuditCycleMatrix } from '../service/dashboard.js';
+import { fetchLatestAuditCycleMatrix } from "../service/dashboard.js";
 
-import { File } from '../../components/Icons.jsx';
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
+import { File } from "../../components/Icons.jsx";
+import { getAuditType, getAuditStatus } from "../../utils.js";
+import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
 
 export default React.createClass({
 	getInitialState: function(){

@@ -1,18 +1,18 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { fetchUpcomingAuditStores } from '../service/audit_store.js';
+import { fetchUpcomingAuditStores } from "../service/audit_store.js";
 
-import Loading from '../../components/Loading.jsx';
-import { Time } from '../../components/Icons.jsx';
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
+import Loading from "../../components/Loading.jsx";
+import { Time } from "../../components/Icons.jsx";
+import { getAuditType, getAuditStatus } from "../../utils.js";
+import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
 
 export default React.createClass({
 	getInitialState: function(){

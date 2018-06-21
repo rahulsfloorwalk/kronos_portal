@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
-import { Link, hashHistory } from 'react-router';
+import React, { Component } from "react";
+import { Link, hashHistory } from "react-router";
 
-import { pointerStyle } from '../../styles.js';
+import { pointerStyle } from "../../styles.js";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import Jumbotron from '../../components/Jumbotron.jsx';
-import { getColor } from '../../utils.js';
-import { ChevronRight, ChevronDown, ShareAlt } from '../../components/Icons.jsx';
+import Jumbotron from "../../components/Jumbotron.jsx";
+import { getColor } from "../../utils.js";
+import { ChevronRight, ChevronDown, ShareAlt } from "../../components/Icons.jsx";
 
-import { fetchAllStores } from '../service/store.js';
+import { fetchAllStores } from "../service/store.js";
 
 export default class StoreList2 extends Component{
 	constructor(props){
