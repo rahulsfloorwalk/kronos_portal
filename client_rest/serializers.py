@@ -35,6 +35,17 @@ class ClientSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class QuestionnaireTypeSerializer(ModelSerializer):
+    class Meta:
+        model = QuestionnaireType
+        fields = (
+            'id',
+            'name',
+            'is_default',
+            'client_id',
+        )
+        read_only_fields = ('id',)
+
 class PlainUserSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -60,6 +71,7 @@ class ClientUserSerializer(ModelSerializer):
 
 class AuditCycleSerializer(ModelSerializer):
     client = ClientSerializer()
+    questionnaire_type = QuestionnaireTypeSerializer()
     class Meta:
         model = AuditCycle
         fields = (
@@ -69,6 +81,7 @@ class AuditCycleSerializer(ModelSerializer):
             'start_date',
             'end_date',
             'client',
+            'questionnaire_type',
         )
         read_only_fields = fields
 
@@ -213,14 +226,3 @@ class TwitterFeedSerializer(ModelSerializer):
             'sentiment_text'
         )
         read_only_fields = fields
-
-class QuestionnaireTypeSerializer(ModelSerializer):
-    class Meta:
-        model = QuestionnaireType
-        fields = (
-            'id',
-            'name',
-            'is_default',
-            'client_id',
-        )
-        read_only_fields = ('id',)
