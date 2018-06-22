@@ -1,27 +1,38 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-import { getColor } from "../../utils.js";
+import { getColor } from "../../../utils.js";
 
-import { Paperclip } from "../../components/Icons.jsx";
+export default class SectionTotalsBox extends React.Component {
+	static propTypes = {
+		sections: PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			max_marks: PropTypes.number.isRequired,
+			sequence: PropTypes.number.isRequired,
+		})),
+		reportSections: PropTypes.arrayOf(PropTypes.shape({
+			section: PropTypes.number.isRequired,
+			marks_percentage: PropTypes.number.isRequired,
+			color_code: PropTypes.number.isRequired,
+			not_applicable: PropTypes.bool.isRequired,
+		})),
+	};
+	render() {
+		const rows = [];
 
-export default React.createClass({
-	render: function(){
-		var rows = [];
-
-		for( let s of this.props.sections){
+		for(const s of this.props.sections){
 			if( parseInt(s.max_marks) === 0){
 				continue;
 			}
-			var reportSection = this.props.reportSections.filter((rs)=>rs.section === s.id)[0];
+			const reportSection = this.props.reportSections.filter((rs)=>rs.section === s.id)[0];
 
-			var classes = "";
-			var marks_obtained = "";
+			let classes = "";
 			let percent_marks;
 			let notApplicable = false;
 
 			if( reportSection){
 				notApplicable = reportSection.not_applicable;
-				marks_obtained = reportSection.marks_obtained;
 				percent_marks = parseInt(reportSection.marks_percentage);
 				classes = getColor(reportSection.color_code);
 			}
@@ -34,11 +45,11 @@ export default React.createClass({
 			} else {
 				markingElement = `${percent_marks}%`;
 				progressBarElement = (
-						<div className="progress">
-							<div className={"progress-bar " + "progress-bar-" + classes } role="progressbar" aria-valuenow={percent_marks} aria-valuemin="0" aria-valuemax="100" style={{width: percent_marks + "%"}}>
+					<div className="progress">
+						<div className={"progress-bar " + "progress-bar-" + classes } role="progressbar" aria-valuenow={percent_marks} aria-valuemin="0" aria-valuemax="100" style={{width: percent_marks + "%"}}>
 							{percent_marks}%
-							</div>
 						</div>
+					</div>
 				);
 			}
 
@@ -73,6 +84,6 @@ export default React.createClass({
 				</table>
 			</div>
 		);
-	},
-});
+	}
+}
 

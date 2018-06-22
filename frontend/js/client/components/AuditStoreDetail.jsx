@@ -14,7 +14,7 @@ import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 
 import AuditStoreDetailsBox from "./audit_store/AuditStoreDetailsBox.jsx";
 import SectionList from "./SectionList.jsx";
-import SectionTotalsBox from "./SectionTotalsBox.jsx";
+import SectionTotalsBox from "./audit_store/SectionTotalsBox.jsx";
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
 
