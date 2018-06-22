@@ -1,25 +1,31 @@
 import React, { Component } from "react";
-import { Link, hashHistory } from "react-router";
+import PropTypes from "prop-types";
+import { hashHistory } from "react-router";
 import Datetime from "react-datetime";
 
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
-import { Plus, File, Download } from "../../components/Icons.jsx";
+import { Download } from "../../components/Icons.jsx";
 
 import { pointerStyle }  from "../../styles.js";
 
 import moment from "moment";
 import { momentDateFormat , url}  from "../../../config.js";
-import { getAuditType, getColor } from "../../utils.js";
-
-import StoreList from "./StoreList.jsx";
-import { AuditTypeIcon } from "../../components/AuditTypeLabel.jsx";
+import { getColor } from "../../utils.js";
 
 import { fetchAuditCycles } from "../service/audit_cycle.js";
-import { fetchCities } from "../service/city.js";
 import { findAuditStoresByAuditCycle } from "../service/audit_store.js";
 
 export class AuditStoreTable extends Component {
+	static propTypes = {
+		auditCycleId: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.number,
+		]).isRequired,
+		startDate: PropTypes.string.isRequired,
+		endDate: PropTypes.string.isRequired,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -38,13 +44,15 @@ export class AuditStoreTable extends Component {
 			endDate: null,
 		};
 	}
+
 	setLoading = (loading) => {
 		this.setState( prevState => {
 			return Object.assign({}, prevState, {
 				loading
 			});
 		});
-	}
+	};
+
 	reloadData = (auditCycleId, cycleStartDate, cycleEndDate) => {
 		this.setLoading(true);
 		findAuditStoresByAuditCycle(auditCycleId).then(reports => {
@@ -84,7 +92,7 @@ export class AuditStoreTable extends Component {
 				selectedPriority: "",
 			});
 		}).always(() => this.setLoading(false));
-	}
+	};
 
 	createFilterUrl(){
 		let base = url.api_base_path + "client/audit_cycle/" + this.props.auditCycleId + "/audit_cycle_filtered_xlsx_report?";
@@ -109,45 +117,45 @@ export class AuditStoreTable extends Component {
 		this.setState({
 			selectedCityId: e.target.value,
 		});
-	}
+	};
 
 	selectStorePriority = (e) => {
 		this.setState({
 			selectedPriority: e.target.value,
 		});
-	}
+	};
 
 	selectStoreType = (e) => {
 		this.setState({
 			selectedType: e.target.value,
 		});
-	}
+	};
 
 	selectMonth= (e) => {
 		this.setState({
 			selectedMonth: e.target.value,
 		});
-	}
+	};
 
 	setStartDate= (date) => {
 		this.setState({
 			startDate: date,
 		});
-	}
+	};
 
 	setEndDate= (date) => {
 		this.setState({
 			endDate: date,
 		});
-	}
+	};
 
 	validateStartDate= (currentDate, selectedDate) => {
 		return currentDate.isBetween(this.state.cycleStartDate, this.state.endDate, null, "[]");
-	}
+	};
 
 	validateEndDate= (currentDate, selectedDate) => {
 		return currentDate.isBetween(this.state.startDate, this.state.cycleEndDate, null, "[]");
-	}
+	};
 
 	render(){
 		if(this.state.loading){
@@ -170,8 +178,8 @@ export class AuditStoreTable extends Component {
 			<div style={{display:"inline-block",width:"200px"}}>
 				<label className="control-label">&nbsp;Store Type:</label>
 				<select onChange={this.selectStoreType} value={this.state.selectedType} className="form-control" style={{display:"inline-block",width:"200px"}}>
-				<option value="">All Types</option>
-				{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
+					<option value="">All Types</option>
+					{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
 				</select>
 			</div>
 		);
@@ -229,7 +237,7 @@ export class AuditStoreTable extends Component {
 			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
 			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
 			&& (this.state.selectedPriority ? r.store_priority === this.state.selectedPriority : true)
-			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, "[]")
+			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, "[]");
 		}).forEach( r => {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
@@ -251,50 +259,54 @@ export class AuditStoreTable extends Component {
 			}
 			trs.push(
 				<tr key={r.audit_store_id} style={pointerStyle} onClick={()=> hashHistory.push(`/audit_store/${r.audit_store_id}`)}>
-				<td className="">{storeCode}</td>
-				<td style={tdStyle}>
-					<b>{storeName}</b><br/>
-					<small>{cityName}</small>
-				</td>
-				<td className="text-right" style={tdStyle}>{moment(r.audit_date).format(momentDateFormat)}</td>
-				{tds}
+					<td className="">{storeCode}</td>
+					<td style={tdStyle}>
+						<b>{storeName}</b><br/>
+						<small>{cityName}</small>
+					</td>
+					<td className="text-right" style={tdStyle}>{moment(r.audit_date).format(momentDateFormat)}</td>
+					{tds}
 				</tr>
 			);
 			previousStore = r.store_id;
 		});
-		var filteredUrl = this.createFilterUrl()
+		var filteredUrl = this.createFilterUrl();
 		return (
 			<div>
-			<div className="form-group">
-				{citySelect}&nbsp;
-				{storeTypeSelect}&nbsp;
-				{storePrioritySelect}&nbsp;
-				{startDatePicker}&nbsp;
-				{endDatePicker}&nbsp;
-				<span className="pull-right" style={{fontSize:"130%"}}>
-					<big><b>{trs.length}</b> Reports</big>
+				<div className="form-group">
+					{citySelect}&nbsp;
+					{storeTypeSelect}&nbsp;
+					{storePrioritySelect}&nbsp;
+					{startDatePicker}&nbsp;
+					{endDatePicker}&nbsp;
+					<span className="pull-right" style={{fontSize:"130%"}}>
+						<big><b>{trs.length}</b> Reports</big>
 					&nbsp;
-					<a className="btn btn-default" href={filteredUrl}>
-						<Download/> Download Excel
-					</a>
-				</span>
-			</div>
-			<div style={{ "width": "100%", "overflow": "scroll"}}>
-				<table className="table table-bordered table-hover">
-				<thead>
-					<tr>{headers}</tr>
-				</thead>
-				<tbody>
-				{trs}
-				</tbody>
-				</table>
-			</div>
+						<a className="btn btn-default" href={filteredUrl}>
+							<Download/> Download Excel
+						</a>
+					</span>
+				</div>
+				<div style={{ "width": "100%", "overflow": "scroll"}}>
+					<table className="table table-bordered table-hover">
+						<thead>
+							<tr>{headers}</tr>
+						</thead>
+						<tbody>
+							{trs}
+						</tbody>
+					</table>
+				</div>
 			</div>
 		);
 	}
 }
 
 export default class ReportBrowser3 extends Component{
+	static propTypes = {
+		children: PropTypes.node,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -308,12 +320,13 @@ export default class ReportBrowser3 extends Component{
 				loading
 			});
 		});
-	}
+	};
+
 	componentDidMount() {
 		fetchAuditCycles().then((auditCycles)=>{
 			this.setState({
 				auditCycles,
-			})
+			});
 			if( auditCycles.length > 0){
 				this.auditCycleChanged(auditCycles[0].audit__audit_cycle__id);
 			}
@@ -325,25 +338,24 @@ export default class ReportBrowser3 extends Component{
 				selectedAuditCycleId: auditCycleId,
 			});
 		});
-	}
+	};
 
 	render(){
 		if(this.state.auditCycles.length === 0){
 			return (<Jumbotron heading="there are no reports here" para="yet"/>);
 		}
 		if(! this.state.selectedAuditCycleId){
-			return <Loading/>
+			return <Loading/>;
 		}
 		var auditCycleRows = [];
 		for(let ac of this.state.auditCycles) {
-			auditCycleRows.push(<option value={ac.audit__audit_cycle__id} key={ac.audit__audit_cycle__id}>{ac.audit__audit_cycle__name}, {getAuditType(ac.audit__audit_cycle__type)}</option>);
+			auditCycleRows.push(<option value={ac.audit__audit_cycle__id} key={ac.audit__audit_cycle__id}>{ac.audit__audit_cycle__name}, {ac.audit__audit_cycle__questionnaire_type__name}</option>);
 		}
 
 		let auditCycle = this.state.auditCycles.filter( ac => ac.audit__audit_cycle__id === parseInt(this.state.selectedAuditCycleId))[0] || {};
 		return (
 			<div>
 				<h2 className="page-header">
-					<AuditTypeIcon type={auditCycle.audit__audit_cycle__type}/> &nbsp;
 					<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="audit_cycle" value={this.state.selectedAuditCycleId} onChange={(e) => this.auditCycleChanged(parseInt(e.target.value))}>
 						{auditCycleRows}
 					</select>
