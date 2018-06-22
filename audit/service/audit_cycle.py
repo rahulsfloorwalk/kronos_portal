@@ -23,19 +23,6 @@ def find_distinct_types_for_clientuser(user_id):
             status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)
     ).distinct('type').values_list('type', flat=True)
 
-def find_for_clientuser(user_id):
-    user = find_clientuser_by_user_id(user_id)
-    return AuditStore.objects.presentable().visible_to(user).filter(
-            audit__audit_cycle__client__id=user.clientuser.client_id,
-    ).distinct('audit__audit_cycle_id').order_by('-audit__audit_cycle_id').values(
-            'audit__audit_cycle__id',
-            'audit__audit_cycle__name',
-            'audit__audit_cycle__start_date',
-            'audit__audit_cycle__end_date',
-            'audit__audit_cycle__type',
-    )
-
-
 def find_by_id_for_clientuser(audit_cycle_id, user_id):
     try:
         user = find_clientuser_by_user_id(user_id)

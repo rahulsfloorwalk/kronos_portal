@@ -21,6 +21,7 @@ from answer.service import report_section as report_section_service
 import attachment.service_client as attachment_client_service
 
 import audit.service.audit_cycle as audit_cycle_service
+from audit.service import audit_cycle_client_service
 
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
@@ -232,7 +233,7 @@ class AuditCycleView(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
-        audit_cycles = audit_cycle_service.find_for_clientuser(request.user.id)
+        audit_cycles = audit_cycle_client_service.find_all_for_clientuser(request.user.id)
         return Response(audit_cycles)
 
 class AuditCycleByTypeView(APIView):
