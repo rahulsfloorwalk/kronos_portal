@@ -12,6 +12,7 @@ import { File, Print, Download } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 
+import AuditStoreDetailsBox from "./audit_store/AuditStoreDetailsBox.jsx";
 import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
 
@@ -75,61 +76,7 @@ export default React.createClass({
 				</h2>
 				<div className="row">
 				<div className="col-md-6">
-					<div className="panel panel-primary">
-						<div className="panel-heading">
-							<h4 className="panel-title"><File/> Audit Details</h4>
-						</div>
-						<table className="table table-striped">
-							<tbody>
-								<tr>
-									<td className="text-right">Client:</td>
-									<th>{this.state.auditStore.audit.store.client.name}</th>
-								</tr>
-								{ this.state.auditStore.audit.store.code ?
-									<tr>
-										<td className="text-right">Store Code:</td>
-										<th>{this.state.auditStore.audit.store.code}</th>
-									</tr>
-									: null }
-								<tr>
-									<td className="text-right">Store:</td>
-									<th>{this.state.auditStore.audit.store.name}</th>
-								</tr>
-								<tr>
-									<td className="text-right">Store Type:</td>
-									<th>{this.state.auditStore.audit.store.type}</th>
-								</tr>
-								{ this.state.auditStore.audit.store.priority ?
-									<tr>
-										<td className="text-right">Store Priority:</td>
-										<th>{this.state.auditStore.audit.store.priority}</th>
-									</tr>
-									: null }
-								<tr>
-									<td className="text-right">Audit Type:</td>
-									<th>{getAuditType(this.state.auditStore.audit.audit_cycle.type)}</th>
-								</tr>
-								<tr>
-									<td className="text-right">Address:</td>
-									<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
-								</tr>
-								<tr>
-									<td className="text-right">Audit Date:</td>
-									<th>{moment(this.state.auditStore.audit_date).format(momentDateFormat)}</th>
-								</tr>
-								<tr>
-									<td className="text-right">Total Score:</td>
-									<th>
-						<div className="progress">
-							<div className={"progress-bar"} role="progressbar" aria-valuenow={this.state.auditStore.percentage} aria-valuemin="0" aria-valuemax="100" style={{width: this.state.auditStore.percentage + "%"}}>
-							{this.state.auditStore.percentage}%
-							</div>
-						</div>
-									</th>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
 				</div>
 				<div className="col-md-6">
 					<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
