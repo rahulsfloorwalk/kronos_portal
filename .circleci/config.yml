@@ -8,7 +8,6 @@ jobs:
     docker:
       - image: circleci/python:3.5.4-node
 
-    working_directory: ~/repo
     steps:
       - checkout
       # Download and cache dependencies
@@ -75,8 +74,6 @@ jobs:
         - POSTGRES_USER=postgres
         - POSTGRES_DB=kronos_db_test
       
-    working_directory: ~/repo
-
     steps:
       - checkout
 
@@ -133,8 +130,6 @@ jobs:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.5.4-node
-
-    working_directory: ~/repo
 
     steps:
       - checkout
