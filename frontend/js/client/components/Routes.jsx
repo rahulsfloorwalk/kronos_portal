@@ -4,14 +4,13 @@ import { Router, Route, IndexRoute, hashHistory } from "react-router";
 import App from "./App.jsx";
 
 import Dashboard from "./Dashboard.jsx";
-import { TypedDashboard } from "./Dashboard.jsx";
 
 import ReportBrowser from "./ReportBrowser.jsx";
 import ReportBrowser3 from "./ReportBrowser3.jsx";
 import StoreDetail from "./StoreDetail.jsx";
 import StoreTrends from "./StoreTrends.jsx";
 import StoreList2 from "./StoreList2.jsx";
-import StoreAuditStoreList from "./StoreAuditStoreList.jsx";
+import StoreAuditStoreList from "./store/StoreAuditStoreList.jsx";
 import WeightedBrowser from "./WeightedBrowser.jsx";
 
 import AuditStoreDetail from "./audit_store/AuditStoreDetail.jsx";

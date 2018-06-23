@@ -1,28 +1,32 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import { momentDateFormat }  from "../../../../config.js";
 
-import { fetchAuditStoresByStore } from "../service/audit_store.js";
+import { fetchAuditStoresByStore } from "../../service/audit_store.js";
 
-import { File } from "../../components/Icons.jsx";
-import { getColor } from "../../utils.js";
-import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
-import Jumbotron from "../../components/Jumbotron.jsx";
-import Loading from "../../components/Loading.jsx";
+import { getColor } from "../../../utils.js";
+import Jumbotron from "../../../components/Jumbotron.jsx";
+import Loading from "../../../components/Loading.jsx";
 
 export default class StoreAuditStoreList extends Component{
-	constructor(props){
-		super(props);
-		this.state = {
-			loading: false,
-			auditStores: []
-		};
-	}
+	static propTypes = {
+		params: PropTypes.shape({
+			storeId: PropTypes.string.isRequired,
+		}).isRequired,
+		children: PropTypes.node,
+	};
+
+	state = {
+		loading: false,
+		auditStores: []
+	};
+
 	setLoading = (loading) => {
 		this.setState((prevState) => Object.assign({}, prevState, { loading }));
-	}
+	};
 	componentDidMount() {
 		this.setLoading(true);
 		fetchAuditStoresByStore(this.props.params.storeId).then((auditStores) => {
@@ -37,16 +41,16 @@ export default class StoreAuditStoreList extends Component{
 		let prevAC;
 		let rows = this.state.auditStores.map((as) => {
 			let ac_name = prevAC === as.audit.audit_cycle.id ? "": as.audit.audit_cycle.name;
-			let ac_type = prevAC === as.audit.audit_cycle.id ? "": <AuditTypeLabel auditType={as.audit.audit_cycle.type}/>;
+			let q_type = prevAC === as.audit.audit_cycle.id ? "": as.audit.audit_cycle.questionnaire_type.name;
 			prevAC = as.audit.audit_cycle.id;
 			return (
-			<tr key={as.id}>
-				<td><big><b>{ac_name}</b></big></td>
-				<td>{ac_type}</td>
-				<td className={"text-right "+getColor(as.color)}>{moment(as.audit_date).format(momentDateFormat)}</td>
-				<td className={"text-right "+getColor(as.color)}>{as.percentage}%</td>
-				<td className={"text-right "+getColor(as.color)}><Link to={`/audit_store/${as.id}`} className="btn btn-sm btn-default">View</Link></td>
-			</tr>);
+				<tr key={as.id}>
+					<td><big><b>{ac_name}</b></big></td>
+					<td>{q_type}</td>
+					<td className={"text-right "+getColor(as.color)}>{moment(as.audit_date).format(momentDateFormat)}</td>
+					<td className={"text-right "+getColor(as.color)}>{as.percentage}%</td>
+					<td className={"text-right "+getColor(as.color)}><Link to={`/audit_store/${as.id}`} className="btn btn-sm btn-default">View</Link></td>
+				</tr>);
 		});
 		if(rows.length > 0){
 			return (

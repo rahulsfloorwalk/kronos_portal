@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<StoreAuditStoreList/> renders the table correctly 1`] = `
+<div>
+  <table
+    className="table table-hover table-striped table-condensed"
+  >
+    <thead>
+      <tr>
+        <th>
+          Audit Cycle
+        </th>
+        <th>
+          Type
+        </th>
+        <th
+          className="text-right"
+        >
+          Audit Date
+        </th>
+        <th
+          className="text-right"
+        >
+          Score
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <big>
+            <b>
+              Arena February 2018
+            </b>
+          </big>
+        </td>
+        <td>
+          Walkin
+        </td>
+        <td
+          className="text-right success"
+        >
+          11th Feb 2018
+        </td>
+        <td
+          className="text-right success"
+        >
+          81
+          %
+        </td>
+        <td
+          className="text-right success"
+        >
+          <a
+            className="btn btn-sm btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            View
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <big>
+            <b>
+              Arena March 2018
+            </b>
+          </big>
+        </td>
+        <td>
+          Walkin
+        </td>
+        <td
+          className="text-right info"
+        >
+          17th Mar 2018
+        </td>
+        <td
+          className="text-right info"
+        >
+          72
+          %
+        </td>
+        <td
+          className="text-right info"
+        >
+          <a
+            className="btn btn-sm btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            View
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
