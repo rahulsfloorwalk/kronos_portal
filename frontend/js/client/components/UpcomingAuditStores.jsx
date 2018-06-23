@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router";
+import PropTypes from "prop-types";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
@@ -8,27 +8,27 @@ import { fetchUpcomingAuditStores } from "../service/audit_store.js";
 
 import Loading from "../../components/Loading.jsx";
 import { Time } from "../../components/Icons.jsx";
-import { getAuditType, getAuditStatus } from "../../utils.js";
-import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
-import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
-import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-			groupedAuditStores: {}
-		};
-	},
-	setLoading: function(loading){
+export default class UpcomingAuditStores extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
+
+	state = {
+		loading: false,
+		groupedAuditStores: {}
+	};
+
+	setLoading = (loading) => {
 		this.setState( prevState => {
 			return Object.assign({}, prevState, {
 				loading
 			});
 		});
-	},
-	componentDidMount: function() {
+	};
+
+	componentDidMount() {
 		this.setLoading(true);
 		fetchUpcomingAuditStores().then((auditStores) => {
 			let groupedAuditStores = {};
@@ -42,8 +42,9 @@ export default React.createClass({
 				groupedAuditStores
 			});
 		}).always(() => this.setLoading(false));
-	},
-	render: function(){
+	}
+
+	render() {
 		if(this.state.loading){
 			return <Loading/>;
 		}
@@ -53,16 +54,18 @@ export default React.createClass({
 
 			for( let as of this.state.groupedAuditStores[key]){
 				innerRows.push(
-				<div className="row" key={as.id}>
-					<div className="col-md-12"><br/></div>
-					<div className="col-md-3">{as.audit.audit_cycle.name}</div>
-					<div className="col-md-2">{as.audit.store.city.name}</div>
-					<div className="col-md-5">
-						{as.audit.store.name}<br/>
-						<small className="text-muted">{as.audit.store.address}</small>
+					<div className="row" key={as.id}>
+						<div className="col-md-12"><br/></div>
+						<div className="col-md-3">{as.audit.audit_cycle.name}</div>
+						<div className="col-md-2">{as.audit.store.city.name}</div>
+						<div className="col-md-5">
+							{as.audit.store.name}<br/>
+							<small className="text-muted">{as.audit.store.address}</small>
+						</div>
+						<div className="col-md-2">
+							{as.audit.audit_cycle.questionnaire_type && as.audit.audit_cycle.questionnaire_type.name}
+						</div>
 					</div>
-					<div className="col-md-2"><AuditTypeLabel auditType={as.audit.audit_cycle.type}/></div>
-				</div>
 				);
 			}
 
@@ -70,9 +73,9 @@ export default React.createClass({
 				<div className="row" key={key}>
 					<div className="col-md-12"><hr/></div>
 					<div className="col-md-3">
-					<h3>
-						{moment(key).format(momentDateFormat)}
-					</h3>
+						<h3>
+							{moment(key).format(momentDateFormat)}
+						</h3>
 					</div>
 					<div className="col-md-9">
 						{innerRows}
@@ -86,7 +89,7 @@ export default React.createClass({
 				<div>
 					<div className="row">
 						<div className="col-md-3">
-						<h3><Time/> Upcoming Audits</h3>
+							<h3><Time/> Upcoming Audits</h3>
 						</div>
 						<div className="col-md-9">
 							<div className="row">
@@ -104,6 +107,5 @@ export default React.createClass({
 		} else {
 			return (<Jumbotron heading="there are no upcoming audits right now" para=""/>);
 		}
-	},
-});
-
+	}
+}
