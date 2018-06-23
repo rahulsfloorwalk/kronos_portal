@@ -15,9 +15,7 @@ import { fetchClientHandles, fetchClientTwitterFeedByHandle } from "../service/t
 import Loading from "../../components/Loading.jsx";
 import { Time } from "../../components/Icons.jsx";
 import { ArrowUp, ArrowDown, CircleArrowUp, CircleArrowDown, Minus } from "../../components/Icons.jsx";
-import { getAuditType, getAuditStatus } from "../../utils.js";
 import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
-import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 

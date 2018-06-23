@@ -75,7 +75,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 	}
 
 	componentWillReceiveProps(nextProps){
-		//console.log("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.auditType);
+		//console.log("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.questionnaireType);
 		if( this.props.questionnaireType !== nextProps.questionnaireType) {
 			this.reloadData(nextProps.questionnaireType.id);
 		}

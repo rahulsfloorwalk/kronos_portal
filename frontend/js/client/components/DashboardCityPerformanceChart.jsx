@@ -174,7 +174,7 @@ export default class CityWisePerformanceChartWrapper extends React.Component{
 	}
 
 	componentWillReceiveProps(nextProps){
-		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.auditType);
+		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.questionnaireType);
 		if( this.props.questionnaireType !== nextProps.questionnaireType) {
 			this.reloadData(nextProps.questionnaireType.id);
 		}

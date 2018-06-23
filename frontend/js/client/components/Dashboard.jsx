@@ -72,11 +72,6 @@ export default class Dashboard extends React.Component{
 				<hr/>
 				<DashboardCityPerformanceChart questionnaireType={selectedQuestionnaireType}/>
 				<hr/>
-				{/*<div className="row">
-					<div className="col-md-12">
-						<AuditCycleCityMatrix auditType={this.props.params.auditType}/>
-					</div>
-				</div>*/}
 			</div>
 		);
 	}

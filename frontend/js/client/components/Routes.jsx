@@ -5,7 +5,6 @@ import App from "./App.jsx";
 
 import Dashboard from "./Dashboard.jsx";
 
-import ReportBrowser from "./ReportBrowser.jsx";
 import ReportBrowser3 from "./ReportBrowser3.jsx";
 import StoreDetail from "./StoreDetail.jsx";
 import StoreTrends from "./StoreTrends.jsx";
@@ -25,9 +24,6 @@ const Routes = () => (<Router history={hashHistory}>
 		<IndexRoute component={IndexComponent}/>
 
 		<Route path="/dashboard" component={Dashboard}/>
-
-		<Route path="/browser" component={ReportBrowser}/>
-		<Route path="/browser/auditCycle/:auditCycleId/city/:cityId" component={ReportBrowser}/>
 
 		<Route path="/browser3" component={ReportBrowser3}/>
 

@@ -11,8 +11,6 @@ import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
-
 export default React.createClass({
 	getInitialState: function(){
 		return {
