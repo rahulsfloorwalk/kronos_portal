@@ -14,7 +14,7 @@ import StoreList2 from "./StoreList2.jsx";
 import StoreAuditStoreList from "./StoreAuditStoreList.jsx";
 import WeightedBrowser from "./WeightedBrowser.jsx";
 
-import AuditStoreDetail from "./AuditStoreDetail.jsx";
+import AuditStoreDetail from "./audit_store/AuditStoreDetail.jsx";
 
 import UpcomingAuditStores from "./UpcomingAuditStores.jsx";
 import TwitterFeed from "./TwitterFeed.jsx";

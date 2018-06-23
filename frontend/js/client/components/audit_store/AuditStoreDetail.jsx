@@ -1,37 +1,45 @@
 import React from "react";
-import { Link } from "react-router";
+import PropTypes from "prop-types";
+import { } from "react-router";
 
-import moment from "moment";
-import { momentDateFormat, url}  from "../../../config.js";
+import { url }  from "../../../../config.js";
 
-import { fetchAuditStore } from "../service/audit_store.js";
-import { fetchSections } from "../service/section.js";
-import { fetchReportSections } from "../service/report_section.js";
+import { fetchAuditStore } from "../../service/audit_store.js";
+import { fetchSections } from "../../service/section.js";
+import { fetchReportSections } from "../../service/report_section.js";
 
-import { File, Print, Download } from "../../components/Icons.jsx";
-import Loading from "../../components/Loading.jsx";
-import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import { File, Print, Download } from "../../../components/Icons.jsx";
+import Loading from "../../../components/Loading.jsx";
 
-import AuditStoreDetailsBox from "./audit_store/AuditStoreDetailsBox.jsx";
-import SectionList from "./SectionList.jsx";
-import SectionTotalsBox from "./audit_store/SectionTotalsBox.jsx";
+import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
+import SectionList from "../SectionList.jsx";
+import SectionTotalsBox from "./SectionTotalsBox.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
+export default class AuditStoreDetail extends React.Component {
+	static propTypes = {
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string.isRequired,
+		}),
+		printMode: PropTypes.bool,
+		route: PropTypes.shape({
+			printMode: PropTypes.bool,
+		}),
+	};
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			auditStore: null,
-			sections: [],
-			reportSections: [],
-		};
-	},
-	getDefaultProps: function(){
-		return {
+	static defaultProps = {
+		printMode: false,
+		route: {
 			printMode: false,
-		};
-	},
-	componentDidMount: function(){
+		},
+	};
+
+	state = {
+		auditStore: null,
+		sections: [],
+		reportSections: [],
+	};
+
+	componentDidMount() {
 		fetchAuditStore(this.props.params.auditStoreId).then((auditStore) => {
 			this.setState({
 				auditStore
@@ -47,8 +55,9 @@ export default React.createClass({
 				reportSections
 			});
 		});
-	},
-	render: function(){
+	}
+
+	render() {
 		if(! this.state.auditStore){
 			return <Loading/>;
 		}
@@ -57,33 +66,33 @@ export default React.createClass({
 		return (
 			<div>
 				<h2 className="page-header">
-					{ printMode ? 
+					{ printMode ?
 						<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
 							<Print/> Print Report
 						</button>
-					 : 
+						:
 						<a className="btn btn-default pull-right hidden-print" href={`report_print.html#/${this.props.params.auditStoreId}`} target="_blank">
 							<Print/> Print Report
 						</a>
 					}
 					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/ears_report"}>
-					<Download/> E.A.R.S Report
+						<Download/> E.A.R.S Report
 					</a> : ""}
 					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/xlsx_report"}>
-					<Download/> Excel Report
+						<Download/> Excel Report
 					</a> : ""}
 					<File/> Audit Report
 				</h2>
 				<div className="row">
-				<div className="col-md-6">
-					<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
-				</div>
-				<div className="col-md-6">
-					<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
-				</div>
+					<div className="col-md-6">
+						<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
+					</div>
+					<div className="col-md-6">
+						<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
+					</div>
 				</div>
 				<SectionList auditStoreId={this.props.params.auditStoreId} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
 			</div>
 		);
-	},
-});
+	}
+}
