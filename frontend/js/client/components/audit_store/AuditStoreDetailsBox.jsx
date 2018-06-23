@@ -39,7 +39,9 @@ const AuditStoreDetailsBox = (props) => {
 					: null }
 				<tr>
 					<td className="text-right">Audit Type:</td>
-					<th>{props.auditStore.audit.audit_cycle.questionnaire_type.name}</th>
+					<th>
+						{props.auditStore.audit.audit_cycle.questionnaire_type && props.auditStore.audit.audit_cycle.questionnaire_type.name}
+					</th>
 				</tr>
 				<tr>
 					<td className="text-right">Address:</td>

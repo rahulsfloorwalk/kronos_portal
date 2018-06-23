@@ -41,7 +41,7 @@ export default class StoreAuditStoreList extends Component{
 		let prevAC;
 		let rows = this.state.auditStores.map((as) => {
 			let ac_name = prevAC === as.audit.audit_cycle.id ? "": as.audit.audit_cycle.name;
-			let q_type = prevAC === as.audit.audit_cycle.id ? "": as.audit.audit_cycle.questionnaire_type.name;
+			let q_type = prevAC === as.audit.audit_cycle.id ? "": as.audit.audit_cycle.questionnaire_type && as.audit.audit_cycle.questionnaire_type.name;
 			prevAC = as.audit.audit_cycle.id;
 			return (
 				<tr key={as.id}>
