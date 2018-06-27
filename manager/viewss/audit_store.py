@@ -238,13 +238,13 @@ class AuditStoreModeratorAssign(APIView):
             ds.validated_data["user_id"],
             audit_store_id
         )
-        return Response(AuditStoreSerializer(audit_store).data)
+        return Response(AuditStoreSerializerWithoutAudit(audit_store).data)
 
     def delete(self, request, audit_store_id):
         audit_store = moderator_service.revoke_audit_store(
             audit_store_id
         )
-        return Response(AuditStoreSerializer(audit_store).data)
+        return Response(AuditStoreSerializerWithoutAudit(audit_store).data)
 
 
 class AcceptAllCompletedForAuditCycle(APIView):
