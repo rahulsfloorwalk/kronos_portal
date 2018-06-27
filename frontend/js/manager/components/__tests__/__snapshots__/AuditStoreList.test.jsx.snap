@@ -1,0 +1,291 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreList/> renders the list of audit stores correctly 1`] = `
+<div>
+  <br />
+  <div
+    className="text-center text-muted"
+  >
+    <img
+      alt="loading..."
+      src="/static/img/ripple.svg"
+      title="Please Wait"
+    />
+    <p>
+      LOADING
+    </p>
+  </div>
+  <div
+    className="form-group"
+  >
+    <select
+      className="form-control"
+      onChange={[Function]}
+      style={
+        Object {
+          "display": "inline-block",
+          "width": "200px",
+        }
+      }
+      value=""
+    >
+      <option
+        value=""
+      >
+        All Status
+      </option>
+      <option
+        value="ASSIGNED"
+      >
+        Assigned
+      </option>
+      <option
+        value="ACKNOWLEDGED"
+      >
+        In Progress
+      </option>
+      <option
+        value="SUBMITTED"
+      >
+        QA Review
+      </option>
+      <option
+        value="PM_REVIEW"
+      >
+        PM Review
+      </option>
+      <option
+        value="WITHDRAWN"
+      >
+        Withdrawn
+      </option>
+      <option
+        value="COMPLETED"
+      >
+        Client Review
+      </option>
+      <option
+        value="FAILED"
+      >
+        Failed
+      </option>
+      <option
+        value="ACCEPTED"
+      >
+        Accepted
+      </option>
+      <option
+        value="REJECTED"
+      >
+        Rejected
+      </option>
+    </select>
+    <span
+      className="pull-right"
+    >
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+      >
+        Accept All
+      </button>
+    </span>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <div
+      className="panel-heading"
+    >
+      <b>
+        Smaaash Bhopal
+      </b>
+      , 
+      3rd Floor, DP City Mall, Arera Hills, Opp Zone-1 MP Nagar
+      , 
+      Bhopal
+    </div>
+    <table
+      className="table table-striped"
+    >
+      <thead>
+        <tr>
+          <th>
+            Auditor Name
+          </th>
+          <th>
+            Audit Date
+          </th>
+          <th />
+          <th>
+            Report Status
+          </th>
+          <th>
+            Assigned To
+          </th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <b>
+              <a
+                onClick={[Function]}
+                style={Object {}}
+              >
+                Supriya
+                 
+                Baral
+              </a>
+            </b>
+             ( 
+            <a
+              href="tel:7400619309"
+            >
+              7400619309
+            </a>
+            )
+          </td>
+          <td>
+            9th Jun 2018
+          </td>
+          <td
+            className="text-right"
+          />
+          <td>
+            <span
+              className="label label-primary"
+              style={
+                Object {
+                  "fontSize": "100%",
+                }
+              }
+            >
+              PM Review
+            </span>
+          </td>
+          <td>
+            <select
+              className="form-control"
+              onChange={[Function]}
+              value={5744}
+            >
+              <option
+                value=""
+              />
+            </select>
+          </td>
+          <td>
+            <a
+              className="btn btn-default"
+              onClick={[Function]}
+              style={Object {}}
+            >
+              View
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <div
+      className="panel-heading"
+    >
+      <b>
+        LEPL Centro Mall
+      </b>
+      , 
+      LEPL CENTRO MALL, 2nd FLOOR, 40-01-46/A, MG ROAD, LABBIPET, VIJAYAWADA, KRISHNA DIST.
+      , 
+      Vijayawada
+    </div>
+    <table
+      className="table table-striped"
+    >
+      <thead>
+        <tr>
+          <th>
+            Auditor Name
+          </th>
+          <th>
+            Audit Date
+          </th>
+          <th />
+          <th>
+            Report Status
+          </th>
+          <th>
+            Assigned To
+          </th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <b>
+              <a
+                onClick={[Function]}
+                style={Object {}}
+              >
+                Ali
+                 
+                Khan
+              </a>
+            </b>
+             ( 
+            <a
+              href="tel:9966334024"
+            >
+              9966334024
+            </a>
+            )
+          </td>
+          <td>
+            9th Jun 2018
+          </td>
+          <td
+            className="text-right"
+          />
+          <td>
+            <span
+              className="label label-primary1"
+              style={
+                Object {
+                  "fontSize": "100%",
+                }
+              }
+            >
+              QA Review
+            </span>
+          </td>
+          <td>
+            <select
+              className="form-control"
+              onChange={[Function]}
+              value={5315}
+            >
+              <option
+                value=""
+              />
+            </select>
+          </td>
+          <td>
+            <a
+              className="btn btn-default"
+              onClick={[Function]}
+              style={Object {}}
+            >
+              View
+            </a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

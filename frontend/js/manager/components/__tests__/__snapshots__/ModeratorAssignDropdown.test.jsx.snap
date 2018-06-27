@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ModeratorAssignDropdown/> renders the dropdown of moderators when a moderator is selected 1`] = `
+<select
+  className="form-control"
+  onChange={[Function]}
+  value={1}
+>
+  <option
+    value=""
+  />
+  <option
+    value={1}
+  >
+    alize@canberra.com
+  </option>
+  <option
+    value={2}
+  >
+    bob@petersburg.ru
+  </option>
+</select>
+`;
+
+exports[`<ModeratorAssignDropdown/> renders the dropdown of moderators when no moderator is selected 1`] = `
+<select
+  className="form-control"
+  onChange={[Function]}
+  value=""
+>
+  <option
+    value=""
+  />
+  <option
+    value={1}
+  >
+    alize@canberra.com
+  </option>
+  <option
+    value={2}
+  >
+    bob@petersburg.ru
+  </option>
+</select>
+`;

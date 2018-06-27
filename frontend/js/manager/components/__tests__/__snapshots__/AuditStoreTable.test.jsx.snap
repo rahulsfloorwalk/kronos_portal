@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
+<table
+  className="table table-striped"
+>
+  <thead>
+    <tr>
+      <th>
+        Auditor Name
+      </th>
+      <th>
+        Audit Date
+      </th>
+      <th />
+      <th>
+        Report Status
+      </th>
+      <th>
+        Assigned To
+      </th>
+      <th />
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <b>
+          <a
+            onClick={[Function]}
+            style={Object {}}
+          >
+            Supriya
+             
+            Baral
+          </a>
+        </b>
+         ( 
+        <a
+          href="tel:7400619309"
+        >
+          7400619309
+        </a>
+        )
+      </td>
+      <td>
+        9th Jun 2018
+      </td>
+      <td
+        className="text-right"
+      />
+      <td>
+        <span
+          className="label label-primary"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          PM Review
+        </span>
+      </td>
+      <td>
+        <select
+          className="form-control"
+          onChange={[Function]}
+          value={5744}
+        >
+          <option
+            value=""
+          />
+          <option
+            value={5744}
+          >
+            alize@canberra.com
+          </option>
+          <option
+            value={5315}
+          >
+            bob@petersburg.ru
+          </option>
+        </select>
+      </td>
+      <td>
+        <a
+          className="btn btn-default"
+          onClick={[Function]}
+          style={Object {}}
+        >
+          View
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <b>
+          <a
+            onClick={[Function]}
+            style={Object {}}
+          >
+            Ali
+             
+            Khan
+          </a>
+        </b>
+         ( 
+        <a
+          href="tel:9966334024"
+        >
+          9966334024
+        </a>
+        )
+      </td>
+      <td>
+        9th Jun 2018
+      </td>
+      <td
+        className="text-right"
+      />
+      <td>
+        <span
+          className="label label-primary1"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          QA Review
+        </span>
+      </td>
+      <td>
+        <select
+          className="form-control"
+          onChange={[Function]}
+          value={5315}
+        >
+          <option
+            value=""
+          />
+          <option
+            value={5744}
+          >
+            alize@canberra.com
+          </option>
+          <option
+            value={5315}
+          >
+            bob@petersburg.ru
+          </option>
+        </select>
+      </td>
+      <td>
+        <a
+          className="btn btn-default"
+          onClick={[Function]}
+          style={Object {}}
+        >
+          View
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
