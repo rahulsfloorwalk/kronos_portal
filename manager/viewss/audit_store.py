@@ -17,7 +17,7 @@ from ..service import moderator as moderator_service
 
 from client_report.service import xlsx_report as xlsx_report_service
 
-from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer
+from ..serializers import AuditStoreSerializer, AuditStoreDeSerializer, AuditStoreSerializerWithoutAudit
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -26,7 +26,7 @@ class AuditStoreByAuditCycle(APIView):
     }
     def get(self, request, audit_cycle_id, format=None):
         audit_stores = audit_store_service.find_by_audit_cycle(audit_cycle_id)
-        serial_audit_stores = AuditStoreSerializer(audit_stores, many=True).data
+        serial_audit_stores = AuditStoreSerializerWithoutAudit(audit_stores, many=True).data
         return Response(serial_audit_stores)
 
 class AuditStoreByAudit(APIView):
@@ -36,7 +36,7 @@ class AuditStoreByAudit(APIView):
     }
     def get(self, request, audit_id, format=None):
         audit_stores = audit_store_service.find_by_audit(audit_id)
-        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+        return Response(AuditStoreSerializerWithoutAudit(audit_stores, many=True).data)
 
 class AuditStoreIdView(APIView):
     permission_classes = [HasGroupPermission]

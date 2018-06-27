@@ -9,11 +9,76 @@ from model_mommy import mommy
 
 from faker import Faker
 
+from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
 fake = Faker()
+
+
+class AuditStoreByAuditCycleTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_get_retrieves_all_audit_stores(self):
+        audit_cycle = mommy.make(AuditCycle)
+        mommy.make(AuditStore, user=self.auditor_user, audit__audit_cycle=audit_cycle, _quantity=5)
+        self.login()
+
+        response = self.client.get(reverse('manager:audit_store_by_audit_cycle_view', kwargs = {
+            'audit_cycle_id': audit_cycle.id,
+        }))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 5)
+        for report in response.data:
+            self.assertEqual(Audit.objects.get(pk=report["audit"]).audit_cycle_id, audit_cycle.id)
+
+
+class AuditStoreByAuditTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_get_retrieves_all_audit_stores(self):
+        audit = mommy.make(Audit)
+        mommy.make(AuditStore, user=self.auditor_user, audit=audit, _quantity=5)
+        self.login()
+
+        response = self.client.get(reverse('manager:audit_store_by_audit_id_view', kwargs = {
+            'audit_id': audit.id,
+        }))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 5)
+        for report in response.data:
+            self.assertEqual(report["audit"], audit.id)
 
 
 class AuditStoreIdQARatingTestCase(APITestCase):

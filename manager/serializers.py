@@ -234,6 +234,7 @@ class UserSerializer(ModelSerializer):
 
 class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()
+    assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = AuditStore
         fields = (
@@ -243,6 +244,7 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             'audit',
             'user',
             'qa_rating',
+            'assigned_to_moderator',
         )
         read_only_fields = fields
 
@@ -263,24 +265,6 @@ class AuditSerializer(ModelSerializer):
             'application_count',
             'report_count',
             'valid_report_count',
-        )
-        read_only_fields = fields
-
-class AuditSerializerWithoutApplications(ModelSerializer):
-    store = StoreSerializer()
-    audit_cycle = AuditCycleSerializer()
-    class Meta:
-        model = Audit
-        fields = (
-            'id',
-            'count',
-            'audit_date',
-            'hidden',
-            'earnings_per_audit',
-            'reimbursement',
-            'store',
-            'audit_cycle',
-            'post_approval_description',
         )
         read_only_fields = fields
 
@@ -346,7 +330,7 @@ class PaymentUserSerializer(ModelSerializer):
         read_only_fields = fields
 
 class AuditStoreSerializer(ModelSerializer):
-    audit = AuditSerializerWithoutApplications()
+    audit = AuditSerializer()
     user = UserSerializer()
     visible_to = PrimaryKeyRelatedField(many=True, read_only=True)
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
@@ -365,7 +349,7 @@ class AuditStoreSerializer(ModelSerializer):
         read_only_fields = fields
 
 class AuditStoreSerializerWithPayment(ModelSerializer):
-    audit = AuditSerializerWithoutApplications()
+    audit = AuditSerializer()
     user = UserSerializer()
     payment = PaymentSerializer()
     class Meta:
@@ -587,7 +571,7 @@ class NotificationSerializer(ModelSerializer):
     class NotificationTargetField(RelatedField):
         def to_representation(self, value):
             if isinstance(value, Audit):
-                serializer = AuditSerializerWithoutApplications(value)
+                serializer = AuditSerializer(value)
             elif isinstance(value, AuditStore):
                 serializer = AuditStoreSerializer(value)
             elif isinstance(value, AuditApplication):
