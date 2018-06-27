@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -17,6 +18,9 @@ from agency_rest.serializers import AgencySerializer
 from agency_rest.serializers import AgencyPresenceSerializer
 from agency_rest.serializers import CitySerializer
 from agency_rest.serializers import UserSerializer
+from agency_rest.serializers import AnswerSerializer, AnswerDeSerializer
+
+from answer.service import answer_agency as answer_service
 
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
@@ -104,3 +108,50 @@ class ConfigView(APIView):
             **settings.FRONTEND_CONFIG["AGENCY"],
             **settings.FRONTEND_CONFIG["COMMON"],
         })
+
+
+class AnswerSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY]
+    }
+
+    def post(self, request, question_id, format=None):
+        request.data['question'] = question_id
+        ds = AnswerDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = ds.validated_data['audit_store']
+        answer_text = ds.validated_data['answer_text']
+        question = ds.validated_data['question']
+        answer = answer_service.submit_answer_by_agency(audit_store.id, question.id, request.user.id, answer_text)
+        return Response(AnswerSerializer(answer).data)
+
+
+class AnswerCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY]
+    }
+
+    def post(self, request, question_id, format=None):
+        try:
+            audit_store_id = request.data['audit_store_id']
+            answer_comment = request.data['answer_comment']
+            answer = answer_service.set_answer_comment_by_agency(audit_store_id, question_id, answer_comment, request.user.id)
+            return Response(AnswerSerializer(answer).data)
+        except KeyError as e:
+            raise ValidationError({
+                e.args[0]: "{} is required".format(e.args[0])
+            })
+
+
+class AnswerListView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY]
+    }
+
+    def get(self, request, audit_store_id, format=None):
+        answers = answer_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
+        return Response(AnswerSerializer(answers, many=True).data)
+

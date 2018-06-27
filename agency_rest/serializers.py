@@ -10,6 +10,9 @@ from agency.models import Agency
 from agency.models import AgencyUser
 from agency.models import AgencyPresence
 
+from answer.models import Answer
+
+
 class AgencySerializer(ModelSerializer):
     class Meta:
         model = Agency
@@ -78,3 +81,26 @@ class AgencyPresenceSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+
+class AnswerDeSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'question',
+            'audit_store',
+            'answer_text'
+        )
+        validators=[]
+
+
+class AnswerSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'id',
+            'question_id',
+            'audit_store_id',
+            'answer_text',
+            'answer_comment',
+        )
+        read_only_fields = fields

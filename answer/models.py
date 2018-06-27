@@ -45,6 +45,10 @@ class Answer(Model):
         else:
             raise AppLogicError("Question type must be mutex")
 
+    def set_answer_text_original(self):
+        self.answer_text_original = self.answer_text
+        self.save()
+
     def set_answer_text(self, answer_text):
         if answer_text in (None, ""):
             raise AppLogicError("answer cannot be empty")
