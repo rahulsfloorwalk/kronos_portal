@@ -89,7 +89,6 @@ class AuditCycle(Model):
         return sum(s.max_marks() for s in self.sections.all())
 
     def audit_count(self):
-        return sum(a.count for a in self.audits.all())
         # check if prefetched cache exists,
         if hasattr(self, '_prefetched_objects_cache') and 'audits' in self._prefetched_objects_cache:
             # run the summing code in python because we have already prefetched questions
@@ -139,7 +138,7 @@ class Audit(Model):
     def application_count(self):
         # check if prefetched cache exists,
         if hasattr(self, '_prefetched_objects_cache') and 'applications' in self._prefetched_objects_cache:
-            # run the summing code in python because we have already prefetched questions
+            # run the summing code in python because we have already prefetched applications
             return len([a for a in self.applications.all() if a.status != AuditApplication.NOT_APPLIED])
         else:
             return self.applications.exclude(status=AuditApplication.NOT_APPLIED).count()
@@ -155,13 +154,18 @@ class Audit(Model):
         )
         # check if prefetched cache exists,
         if hasattr(self, '_prefetched_objects_cache') and 'audit_stores' in self._prefetched_objects_cache:
-            # run the summing code in python because we have already prefetched questions
+            # run the summing code in python because we have already prefetched reports
             return len([a for a in self.audit_stores.all() if a.status in valid_status])
         else:
             return self.audit_stores.filter(status__in=valid_status).count()
 
     def report_count(self):
-        return self.audit_stores.count()
+        # check if prefetched cache exists,
+        if hasattr(self, '_prefetched_objects_cache') and 'audit_stores' in self._prefetched_objects_cache:
+            # run the summing code in python because we have already prefetched reports
+            return len(self.audit_stores.all())
+        else:
+            return self.audit_stores.count()
 
     def __str__(self):
         return "Audit({}): audit_cycle: {}, store: {}, count: {}".format(self.id, self.audit_cycle, self.store, self.count)
