@@ -13,7 +13,7 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from questionnaire.models import Question
 from auditor.models import ProfileInfo
 from audit_store import service
-from audit.models import AuditCycle
+from audit.models import AuditCycle, Audit
 
 
 class AuditStoreServiceTestCase(TestCase):
@@ -168,3 +168,21 @@ class AuditStoreServiceTestCase(TestCase):
         )
         fetched_audit_store = service.find_by_id_for_auditor(audit_store.id, self.auditor_user.id)
         self.assertEqual(fetched_audit_store, audit_store)
+
+    def test_find_by_audit_cycle_returns_the_right_reports(self):
+        audit_cycle = mommy.make(AuditCycle)
+        mommy.make(AuditStore, user=self.auditor_user, audit__audit_cycle=audit_cycle, _quantity=5)
+
+        audit_stores = service.find_by_audit_cycle(audit_cycle.id)
+        self.assertEqual(len(audit_stores), 5)
+        for report in audit_stores:
+            self.assertEqual(report.audit.audit_cycle, audit_cycle)
+
+    def test_find_by_audit_returns_the_right_reports(self):
+        audit = mommy.make(Audit)
+        mommy.make(AuditStore, user=self.auditor_user, audit=audit, _quantity=5)
+
+        audit_stores = service.find_by_audit(audit.id)
+        self.assertEqual(len(audit_stores), 5)
+        for report in audit_stores:
+            self.assertEqual(report.audit, audit)

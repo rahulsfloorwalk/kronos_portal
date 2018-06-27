@@ -61,12 +61,6 @@ def find_by_audit_cycle(audit_cycle_id):
     return AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id).prefetch_related(
         'user',
         'user__profileinfo',
-        'audit',
-        'audit__audit_cycle',
-        'audit__audit_cycle__client',
-        'audit__store',
-        'audit__store__city',
-        'audit__store__client',
     )
 
 def find_by_id_for_auditor(audit_store_id, user_id):
