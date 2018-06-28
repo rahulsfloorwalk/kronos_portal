@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer
 from rest_framework.views import APIView
 
 from registration.models import GROUP_NAME_AGENCY
@@ -116,15 +117,15 @@ class AnswerSubmitView(APIView):
         'POST': [GROUP_NAME_AGENCY]
     }
 
-    def post(self, request, question_id, format=None):
-        request.data['question'] = question_id
-        ds = AnswerDeSerializer(data=request.data)
-        ds.is_valid(raise_exception=True)
-        audit_store = ds.validated_data['audit_store']
-        answer_text = ds.validated_data['answer_text']
-        question = ds.validated_data['question']
-        answer = answer_service.submit_answer_by_agency(audit_store.id, question.id, request.user.id, answer_text)
-        return Response(AnswerSerializer(answer).data)
+    def post(self, request, audit_store_id, question_id, format=None):
+        try:
+            answer_text = request.data['answer_text']
+            answer = answer_service.submit_answer_by_agency(audit_store_id, question_id, request.user.id, answer_text)
+            return Response(AnswerSerializer(answer).data)
+        except KeyError as e:
+            raise ValidationError({
+                e.args[0]: "{} is required".format(e.args[0])
+            })
 
 
 class AnswerCommentView(APIView):
@@ -133,11 +134,10 @@ class AnswerCommentView(APIView):
         'POST': [GROUP_NAME_AGENCY]
     }
 
-    def post(self, request, question_id, format=None):
+    def post(self, request, audit_store_id, question_id, format=None):
         try:
-            audit_store_id = request.data['audit_store_id']
             answer_comment = request.data['answer_comment']
-            answer = answer_service.set_answer_comment_by_agency(audit_store_id, question_id, answer_comment, request.user.id)
+            answer = answer_service.set_answer_comment_by_agency(audit_store_id, question_id, request.user.id, answer_comment)
             return Response(AnswerSerializer(answer).data)
         except KeyError as e:
             raise ValidationError({

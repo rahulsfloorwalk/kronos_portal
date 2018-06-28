@@ -50,7 +50,7 @@ def send_agency_verification_email(user_id):
         _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
 
 
-def find_agency_by_id(user_id):
+def find_agency_by_user_id(user_id):
     try:
         return Group.objects.filter(name=GROUP_NAME_AGENCY).user_set.get(pk=user_id)
     except(Group.DoesNotExist, User.DoesNotExist) as e:

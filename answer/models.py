@@ -45,7 +45,7 @@ class Answer(Model):
         else:
             raise AppLogicError("Question type must be mutex")
 
-    def set_answer_text_original(self):
+    def copy_answer_text_original(self):
         self.answer_text_original = self.answer_text
         self.save()
 
