@@ -249,7 +249,8 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
         read_only_fields = fields
 
 class AuditSerializer(ModelSerializer):
-    store = StoreSerializerWithoutClientUserAndClient()
+    store = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
     class Meta:
         model = Audit
         fields = (

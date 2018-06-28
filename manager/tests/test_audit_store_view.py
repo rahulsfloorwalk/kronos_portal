@@ -17,6 +17,38 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 fake = Faker()
 
 
+class AuditStoreIdViewTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_get_retrieves_the_audit_store(self):
+        audit_store = mommy.make(AuditStore, user=self.auditor_user)
+        self.login()
+
+        response = self.client.get(reverse('manager:audit_store_id_view', kwargs = {
+            'audit_store_id': audit_store.id,
+        }))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["audit"]["id"], audit_store.audit.id)
+        self.assertEqual(response.data["audit"]["store"]["id"], audit_store.audit.store.id)
+        self.assertEqual(response.data["audit"]["store"]["client"]["id"], audit_store.audit.store.client.id)
+        self.assertEqual(response.data["audit"]["audit_cycle"]["client"]["id"], audit_store.audit.audit_cycle.client.id)
+
+
 class AuditStoreByAuditCycleTestCase(APITestCase):
     fixtures = ['groups']
 
