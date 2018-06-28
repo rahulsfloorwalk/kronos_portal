@@ -163,18 +163,10 @@ jobs:
 
 workflows:
   version: 2
-  build_and_test:
+  test-and-package:
     jobs:
-      - pytest:
-          filters:
-            tags:
-              only:
-                - /^v.*/
-      - jstest:
-          filters:
-            tags:
-              only:
-                - /^v.*/
+      - pytest
+      - jstest
       - package:
           requires:
             - pytest
@@ -184,6 +176,3 @@ workflows:
               only:
                 - development
                 - master
-            tags:
-              only:
-                - /^v.*/
