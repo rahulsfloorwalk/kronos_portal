@@ -2,6 +2,7 @@ include manage.py requirements.txt strings.py
 include *.sh
 include properties.sample.ini
 exclude properties.ini
+recursive-include *.csv
 recursive-include **/fixtures *.json
 recursive-include **/templates *
 recursive-include frontend/img *
