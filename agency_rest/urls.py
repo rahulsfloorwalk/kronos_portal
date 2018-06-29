@@ -10,6 +10,6 @@ urlpatterns = ([
     url(r'states$', views.StateView.as_view(), name='state_view'),
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', views.AnswerListView.as_view(), name="agency_answer_list_view"),
-    url(r'audit_store/(?P<audit_store_id>[0-9]+)/question_id/(?P<audit_store_id>[0-9]+)/answer$', views.AnswerSubmitView.as_view(), name='agency_answer_submit_view'),
-    url(r'audit_store/(?P<audit_store_id>[0-9]+)/question_id/(?P<audit_store_id>[0-9]+)/answer_comment$', views.AnswerCommentView.as_view(), name='agency_answer_comment_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer$', views.AnswerSubmitView.as_view(), name='agency_answer_submit_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_comment$', views.AnswerCommentView.as_view(), name='agency_answer_comment_view'),
 ], 'agency_rest')

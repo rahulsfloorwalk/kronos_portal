@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer
+from rest_framework.serializers import Serializer, CharField
 from rest_framework.views import APIView
 
 from registration.models import GROUP_NAME_AGENCY
@@ -19,7 +19,7 @@ from agency_rest.serializers import AgencySerializer
 from agency_rest.serializers import AgencyPresenceSerializer
 from agency_rest.serializers import CitySerializer
 from agency_rest.serializers import UserSerializer
-from agency_rest.serializers import AnswerSerializer, AnswerDeSerializer
+from agency_rest.serializers import AnswerSerializer
 
 from answer.service import answer_agency as answer_service
 
@@ -117,15 +117,15 @@ class AnswerSubmitView(APIView):
         'POST': [GROUP_NAME_AGENCY]
     }
 
+    class AnswerDeserializer(Serializer):
+        answer_text = CharField()
+
     def post(self, request, audit_store_id, question_id, format=None):
-        try:
-            answer_text = request.data['answer_text']
-            answer = answer_service.submit_answer_by_agency(audit_store_id, question_id, request.user.id, answer_text)
-            return Response(AnswerSerializer(answer).data)
-        except KeyError as e:
-            raise ValidationError({
-                e.args[0]: "{} is required".format(e.args[0])
-            })
+        ds = self.AnswerDeserializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        answer_text = ds.validated_data.get('answer_text')
+        answer = answer_service.submit_answer_by_agency(audit_store_id, question_id, request.user.id, answer_text)
+        return Response(AnswerSerializer(answer).data)
 
 
 class AnswerCommentView(APIView):
@@ -134,15 +134,16 @@ class AnswerCommentView(APIView):
         'POST': [GROUP_NAME_AGENCY]
     }
 
+    class AnswerDeserializer(Serializer):
+        answer_comment = CharField()
+
     def post(self, request, audit_store_id, question_id, format=None):
-        try:
-            answer_comment = request.data['answer_comment']
-            answer = answer_service.set_answer_comment_by_agency(audit_store_id, question_id, request.user.id, answer_comment)
-            return Response(AnswerSerializer(answer).data)
-        except KeyError as e:
-            raise ValidationError({
-                e.args[0]: "{} is required".format(e.args[0])
-            })
+        ds = self.AnswerDeserializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        answer_comment = ds.validated_data.get('answer_comment')
+        answer = answer_service.set_answer_comment_by_agency(audit_store_id, question_id, request.user.id,
+                                                             answer_comment)
+        return Response(AnswerSerializer(answer).data)
 
 
 class AnswerListView(APIView):

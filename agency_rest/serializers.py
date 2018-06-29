@@ -82,17 +82,6 @@ class AgencyPresenceSerializer(ModelSerializer):
         read_only_fields = fields
 
 
-class AnswerDeSerializer(ModelSerializer):
-    class Meta:
-        model = Answer
-        fields = (
-            'question',
-            'audit_store',
-            'answer_text'
-        )
-        validators=[]
-
-
 class AnswerSerializer(ModelSerializer):
     class Meta:
         model = Answer

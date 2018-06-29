@@ -19,7 +19,6 @@ from auditor.models import ProfileInfo
 from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
 import answer.service.report_section as report_section_service
-import answer.service.answer as answer_service
 import questionnaire.service.question as question_service
 import questionnaire.service.section as section_service
 import payment.service.payment_manager as payment_manager_service
