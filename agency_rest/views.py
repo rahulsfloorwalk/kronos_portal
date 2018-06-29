@@ -19,9 +19,10 @@ from agency_rest.serializers import AgencySerializer
 from agency_rest.serializers import AgencyPresenceSerializer
 from agency_rest.serializers import CitySerializer
 from agency_rest.serializers import UserSerializer
-from agency_rest.serializers import AnswerSerializer
+from agency_rest.serializers import AnswerSerializer, ReportSectionSerializer
 
 from answer.service import answer_agency as answer_service
+from answer.service import report_section_agency as report_section_service
 
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
@@ -155,4 +156,13 @@ class AnswerListView(APIView):
     def get(self, request, audit_store_id, format=None):
         answers = answer_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
         return Response(AnswerSerializer(answers, many=True).data)
+
+class ReportSectionListView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY]
+    }
+    def get(self, request, audit_store_id, format=None):
+        report_sections = report_section_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
+        return Response(ReportSectionSerializer(report_sections, many=True).data)
 
