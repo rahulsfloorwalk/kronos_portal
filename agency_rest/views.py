@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField, IntegerField
+from rest_framework.serializers import Serializer, CharField, IntegerField, PrimaryKeyRelatedField
 from rest_framework.views import APIView
 
 from registration.models import GROUP_NAME_AGENCY
@@ -22,11 +22,15 @@ from agency_rest.serializers import UserSerializer
 from agency_rest.serializers import AnswerSerializer, ReportSectionSerializer, SectionSerializer
 from agency_rest.serializers import AttachmentSerializer
 
+from audit_store.models import AuditStore
+
 from answer.service import answer_agency as answer_service
 from answer.service import report_section_agency as report_section_service
 from attachment import service_agency as attachment_agency_service
 
 from questionnaire.service import section as section_service
+from questionnaire.models import Section
+
 
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
@@ -180,6 +184,28 @@ class ReportSectionListView(APIView):
     def get(self, request, audit_store_id, format=None):
         report_sections = report_section_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
         return Response(ReportSectionSerializer(report_sections, many=True).data)
+
+
+class CommentSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY]
+    }
+
+    class ReportSectionDeSerializer(Serializer):
+        audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
+        section = PrimaryKeyRelatedField(queryset=Section.objects.all())
+        auditor_comment = CharField(max_length=2048, allow_blank=True)
+
+    def post(self, request, section_id, format=None):
+        request.data['section'] = section_id
+        ds = self.ReportSectionDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = ds.validated_data['audit_store']
+        auditor_comment = ds.validated_data['auditor_comment']
+        section = ds.validated_data['section']
+        report_section = report_section_service.submit_auditor_comment_for_agency(audit_store.id, section.id, request.user.id, auditor_comment)
+        return Response(ReportSectionSerializer(report_section).data)
 
 
 class AuditStoreAttachmentView(APIView):

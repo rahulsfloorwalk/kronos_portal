@@ -18,4 +18,5 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', views.ReportSectionAttachmentView.as_view(), name="agency_report_section_attachment_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="agency_attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="agency_attachment_id_view"),
+    url(r'section/(?P<section_id>[0-9]+)/comment$', views.CommentSubmitView.as_view(), name="agency_comment_submit_view"),
 ], 'agency_rest')
