@@ -11,6 +11,7 @@ from agency.models import AgencyUser
 from agency.models import AgencyPresence
 
 from answer.models import Answer, ReportSection
+from attachment.models import Attachment
 from questionnaire.models import Question, Section
 
 
@@ -132,5 +133,23 @@ class ReportSectionSerializer(ModelSerializer):
             'audit_store',
             'section',
             'auditor_comment'
+        )
+        read_only_fields = fields
+
+
+class AttachmentSerializer(ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = (
+            'id',
+            'file_slug',
+            'proof_type',
+            'mime_type',
+            'file_name',
+            'status',
+            'content_type',
+            'object_id',
+            'direct_url',
+            'extra',
         )
         read_only_fields = fields

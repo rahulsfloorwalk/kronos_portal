@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.serializers import Serializer, CharField, IntegerField
 from rest_framework.views import APIView
 
 from registration.models import GROUP_NAME_AGENCY
@@ -20,9 +20,11 @@ from agency_rest.serializers import AgencyPresenceSerializer
 from agency_rest.serializers import CitySerializer
 from agency_rest.serializers import UserSerializer
 from agency_rest.serializers import AnswerSerializer, ReportSectionSerializer, SectionSerializer
+from agency_rest.serializers import AttachmentSerializer
 
 from answer.service import answer_agency as answer_service
 from answer.service import report_section_agency as report_section_service
+from attachment import service_agency as attachment_agency_service
 
 from questionnaire.service import section as section_service
 
@@ -169,6 +171,7 @@ class AnswerListView(APIView):
         answers = answer_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
         return Response(AnswerSerializer(answers, many=True).data)
 
+
 class ReportSectionListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -177,4 +180,91 @@ class ReportSectionListView(APIView):
     def get(self, request, audit_store_id, format=None):
         report_sections = report_section_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
         return Response(ReportSectionSerializer(report_sections, many=True).data)
+
+
+class AuditStoreAttachmentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY],
+        'POST': [GROUP_NAME_AGENCY]
+    }
+
+    class AttachmentDeserializer(Serializer):
+        file_name = CharField()
+        file_size = IntegerField()
+        file_type = CharField()
+
+    def get(self, request, audit_store_id, format=None):
+            attachments = attachment_agency_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
+            return Response(AttachmentSerializer(attachments, many=True).data)
+
+    def post(self, request, audit_store_id):
+        ds = self.AttachmentDeserializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        file_name = ds.validated_data.get('file_name')
+        file_size = ds.validated_data.get('file_size')
+        file_type = ds.validated_data.get('file_type')
+        post_data, attachment = attachment_agency_service.upload_for_audit_store_by_auditor(
+            audit_store_id,
+            file_name,
+            file_size,
+            file_type,
+            request.user.id)
+        post_data["attachment"] = AttachmentSerializer(attachment).data
+        return Response(post_data)
+
+
+class ReportSectionAttachmentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY],
+        'POST': [GROUP_NAME_AGENCY]
+    }
+
+    class AttachmentDeserializer(Serializer):
+        file_name = CharField()
+        file_size = IntegerField()
+        file_type = CharField()
+
+    def get(self, request, audit_store_id, section_id, format=None):
+        attachments = attachment_agency_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, request.user.id)
+        return Response(AttachmentSerializer(attachments, many=True).data)
+
+    def post(self, request, audit_store_id, section_id):
+        ds = self.AttachmentDeserializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        file_name = ds.validated_data.get('file_name')
+        file_size = ds.validated_data.get('file_size')
+        file_type = ds.validated_data.get('file_type')
+        post_data, attachment = attachment_agency_service.upload_for_report_section_by_auditor(
+            audit_store_id,
+            section_id,
+            file_name,
+            file_size,
+            file_type,
+            request.user.id)
+        post_data["attachment"] = AttachmentSerializer(attachment).data
+        return Response(post_data)
+
+
+class AttachmentIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'DELETE': [GROUP_NAME_AGENCY],
+    }
+
+    def delete(self, request, attachment_id):
+        attachment_agency_service.delete_for_agency(attachment_id, request.user.id)
+        return Response()
+
+
+class AttachmentCompleteView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY],
+    }
+
+    def post(self, request, attachment_id):
+        attachment = attachment_agency_service.complete_for_agency(attachment_id, request.user.id)
+        return Response(AttachmentSerializer(attachment).data)
 
