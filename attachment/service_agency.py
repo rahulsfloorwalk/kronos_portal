@@ -6,22 +6,22 @@ from audit_store.models import AuditStore
 from answer.models import ReportSection
 
 
-def upload_for_audit_store_by_auditor(audit_store_id, file_name, file_size, mime_type, user_id):
+def upload_for_audit_store_by_agency(audit_store_id, file_name, file_size, mime_type, user_id):
     audit_store = audit_store_service.find_by_user_id_for_agency_user(audit_store_id, user_id)
     return attachment_service.upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
 
 
-def upload_for_report_section_by_auditor(audit_store_id, section_id, file_name, file_size, mime_type, user_id):
+def upload_for_report_section_by_agency(audit_store_id, section_id, file_name, file_size, mime_type, user_id):
     report_section = report_section_agency_service.find_by_audit_store_and_section_for_agency(audit_store_id, section_id, user_id)
     return attachment_service.upload_for_report_section(audit_store_id, report_section.section_id, file_name, file_size, mime_type)
 
 
-def find_by_audit_store_for_auditor(audit_store_id, user_id):
-    audit_store = report_section_agency_service.find_by_user_id_for_agency_user(audit_store_id, user_id)
+def find_by_audit_store_for_agency(audit_store_id, user_id):
+    audit_store = audit_store_service.find_by_user_id_for_agency_user(audit_store_id, user_id)
     return attachment_service.find_by_audit_store(audit_store.id)
 
 
-def find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user_id):
+def find_by_audit_store_and_section_for_agency(audit_store_id, section_id, user_id):
     report_section = report_section_agency_service.find_by_audit_store_and_section_for_agency(audit_store_id, section_id, user_id)
     return attachment_service.find_by_audit_store_and_section(audit_store_id, report_section.section_id)
 
@@ -37,7 +37,7 @@ def complete_for_agency(attachment_id, user_id):
             raise ObjectNotFound
 
         if audit_store.status != AuditStore.ACKNOWLEDGED:
-            raise AppLogicError("cannot complete attachment now")
+            raise AppLogicError("Cannot complete attachment now")
     else:
         raise AppLogicError("Invalid Attachment Content Type detected")
 

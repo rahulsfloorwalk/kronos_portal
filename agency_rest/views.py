@@ -245,7 +245,7 @@ class AuditStoreAttachmentView(APIView):
         file_type = CharField()
 
     def get(self, request, audit_store_id, format=None):
-            attachments = attachment_agency_service.find_by_audit_store_for_auditor(audit_store_id, request.user.id)
+            attachments = attachment_agency_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
             return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id):
@@ -254,7 +254,7 @@ class AuditStoreAttachmentView(APIView):
         file_name = ds.validated_data.get('file_name')
         file_size = ds.validated_data.get('file_size')
         file_type = ds.validated_data.get('file_type')
-        post_data, attachment = attachment_agency_service.upload_for_audit_store_by_auditor(
+        post_data, attachment = attachment_agency_service.upload_for_audit_store_by_agency(
             audit_store_id,
             file_name,
             file_size,
@@ -277,7 +277,7 @@ class ReportSectionAttachmentView(APIView):
         file_type = CharField()
 
     def get(self, request, audit_store_id, section_id, format=None):
-        attachments = attachment_agency_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, request.user.id)
+        attachments = attachment_agency_service.find_by_audit_store_and_section_for_agency(audit_store_id, section_id, request.user.id)
         return Response(AttachmentSerializer(attachments, many=True).data)
 
     def post(self, request, audit_store_id, section_id):
@@ -286,7 +286,7 @@ class ReportSectionAttachmentView(APIView):
         file_name = ds.validated_data.get('file_name')
         file_size = ds.validated_data.get('file_size')
         file_type = ds.validated_data.get('file_type')
-        post_data, attachment = attachment_agency_service.upload_for_report_section_by_auditor(
+        post_data, attachment = attachment_agency_service.upload_for_report_section_by_agency(
             audit_store_id,
             section_id,
             file_name,
