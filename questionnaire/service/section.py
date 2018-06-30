@@ -8,6 +8,7 @@ from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
 import audit_store.service_client as audit_store_client_service
+from audit_store import service_agency as audit_store_agency_service
 
 from questionnaire.service import question as question_service
 
@@ -47,6 +48,11 @@ def get_for_auditor(audit_store_id, profile_info_id):
         return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
     else:
         raise ObjectNotFound()
+
+
+def find_by_audit_store_for_agency(audit_store_id, user_id):
+    audit_store = audit_store_agency_service.find_by_user_id_for_agency_user(audit_store_id, user_id)
+    return Section.objects.filter(audit_cycle_id=audit_store.audit.audit_cycle.id)
 
 
 def find_by_audit_store_for_clientuser(audit_store_id, user):

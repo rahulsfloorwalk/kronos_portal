@@ -11,6 +11,7 @@ from agency.models import AgencyUser
 from agency.models import AgencyPresence
 
 from answer.models import Answer, ReportSection
+from questionnaire.models import Question, Section
 
 
 class AgencySerializer(ModelSerializer):
@@ -78,6 +79,34 @@ class AgencyPresenceSerializer(ModelSerializer):
             'present',
             'agency_id',
             'city_id',
+        )
+        read_only_fields = fields
+
+
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'question_type',
+            'question_data',
+            'section',
+        )
+        read_only_fields = fields
+
+
+class SectionSerializer(ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'audit_cycle',
+            'sequence',
+            'questions'
         )
         read_only_fields = fields
 
