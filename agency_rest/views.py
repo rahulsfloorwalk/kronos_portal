@@ -19,10 +19,14 @@ from agency_rest.serializers import AgencySerializer
 from agency_rest.serializers import AgencyPresenceSerializer
 from agency_rest.serializers import CitySerializer
 from agency_rest.serializers import UserSerializer
-from agency_rest.serializers import AnswerSerializer, ReportSectionSerializer, SectionSerializer
+from agency_rest.serializers import AnswerSerializer
+from agency_rest.serializers import ReportSectionSerializer
+from agency_rest.serializers import SectionSerializer
 from agency_rest.serializers import AttachmentSerializer
+from agency_rest.serializers import AuditStoreSerializer
 
 from audit_store.models import AuditStore
+from audit_store import service_agency as audit_store_service
 
 from answer.service import answer_agency as answer_service
 from answer.service import report_section_agency as report_section_service
@@ -184,6 +188,26 @@ class ReportSectionListView(APIView):
     def get(self, request, audit_store_id, format=None):
         report_sections = report_section_service.find_by_audit_store_for_agency(audit_store_id, request.user.id)
         return Response(ReportSectionSerializer(report_sections, many=True).data)
+
+
+class AuditStoreIdSubmitView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_service.submit_report(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreIdAcknowledgeView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_service.acknowledge_report(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 
 class CommentSubmitView(APIView):

@@ -1,6 +1,8 @@
+from django.db.transaction import atomic
+
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 
 
 def find_audit_stores_for_agency_user(agency_user_id):
@@ -21,3 +23,19 @@ def find_by_user_id_for_agency_user(audit_store_id, user_id):
         )
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+
+@atomic
+def acknowledge_report(audit_store_id, user_id):
+    audit_store = find_by_user_id_for_agency_user(audit_store_id, user_id)
+    audit_store.acknowledge(by=audit_store.user)
+    return audit_store
+
+
+@atomic
+def submit_report(audit_store_id, user_id):
+    audit_store = find_by_user_id_for_agency_user(audit_store_id, user_id)
+    if not audit_store.is_submittable():
+        raise AppLogicError("Report cannot be submitted now")
+    audit_store.submit(by=audit_store.user)
+    return audit_store

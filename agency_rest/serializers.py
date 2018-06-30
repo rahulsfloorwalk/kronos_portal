@@ -11,7 +11,10 @@ from agency.models import AgencyUser
 from agency.models import AgencyPresence
 
 from answer.models import Answer, ReportSection
+from audit_store.models import AuditStore
+from audit.models import AuditCycle, Audit
 from attachment.models import Attachment
+from client.models import Client, Store
 from questionnaire.models import Question, Section
 
 
@@ -63,6 +66,7 @@ class UserSerializer(ModelSerializer):
             'mobile_numbers',
         )
 
+
 class CitySerializer(ModelSerializer):
     class Meta:
         model = City
@@ -70,7 +74,11 @@ class CitySerializer(ModelSerializer):
             'id',
             'name',
             'state',
+            'lat',
+            'lon',
         )
+        read_only_fields = fields
+
 
 class AgencyPresenceSerializer(ModelSerializer):
     class Meta:
@@ -80,6 +88,76 @@ class AgencyPresenceSerializer(ModelSerializer):
             'present',
             'agency_id',
             'city_id',
+        )
+        read_only_fields = fields
+
+
+class ClientSerializer(ModelSerializer):
+    class Meta:
+        model = Client
+        fields = (
+            'auditor_logo_url',
+            'auditor_display_name',
+        )
+        read_only_fields = fields
+
+
+class AuditCycleSerializer(ModelSerializer):
+    client = ClientSerializer()
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'type',
+            'status',
+            'start_date',
+            'end_date',
+            'description',
+            'post_approval_description',
+            'client',
+        )
+        read_only_fields = fields
+
+
+class StoreSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = Store
+        fields = (
+            'name',
+            'address',
+            'city',
+            'phone',
+        )
+        read_only_fields = fields
+
+
+class AuditSerializer(ModelSerializer):
+    store = StoreSerializer()
+    audit_cycle = AuditCycleSerializer()
+    class Meta:
+        model = Audit
+        fields = (
+            'id',
+            'store',
+            'earnings_per_audit',
+            'reimbursement',
+            'audit_cycle',
+            'post_approval_description',
+        )
+        read_only_fields = fields
+
+
+class AuditStoreSerializer(ModelSerializer):
+    audit = AuditSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
         )
         read_only_fields = fields
 
