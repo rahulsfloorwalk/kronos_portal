@@ -217,18 +217,13 @@ class CommentSubmitView(APIView):
     }
 
     class ReportSectionDeSerializer(Serializer):
-        audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
-        section = PrimaryKeyRelatedField(queryset=Section.objects.all())
         auditor_comment = CharField(max_length=2048, allow_blank=True)
 
-    def post(self, request, section_id, format=None):
-        request.data['section'] = section_id
+    def post(self, request, audit_store_id,  section_id, format=None):
         ds = self.ReportSectionDeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        audit_store = ds.validated_data['audit_store']
         auditor_comment = ds.validated_data['auditor_comment']
-        section = ds.validated_data['section']
-        report_section = report_section_service.submit_auditor_comment_for_agency(audit_store.id, section.id, request.user.id, auditor_comment)
+        report_section = report_section_service.submit_auditor_comment_for_agency(audit_store_id, section_id, request.user.id, auditor_comment)
         return Response(ReportSectionSerializer(report_section).data)
 
 
