@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 
 from model_mommy import mommy
 
+from kronos.exceptions import AppLogicError
 from answer.models import ReportSection
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
@@ -39,3 +40,31 @@ class AnswerAgencyServiceTestCase(TestCase):
         report_section = agency_report_section_service.find_by_audit_store_and_section_for_agency(mock_audit_store.id, mock_section.id, self.agency_user.id)
         self.assertEqual(mock_audit_store, report_section.audit_store)
         self.assertEqual(mock_section, report_section.section)
+
+    def test_submit_auditor_comment_for_agency_raises_exeption(self):
+        # audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
+        mock_section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        mommy.make(ReportSection, audit_store=mock_audit_store, section=mock_section)
+        auditor_comment = "foobar"
+        with self.assertRaisesRegex(AppLogicError, "Cannot submit auditor comment to current audit store"):
+            agency_report_section_service.submit_auditor_comment_for_agency(mock_audit_store.id, mock_section.id,
+                                                                            self.agency_user.id, auditor_comment)
+
+    def test_submit_auditor_comment_for_agency_for_existing_report_section(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user, audit__audit_cycle=audit_cycle)
+        mock_section = mommy.make(Section, audit_cycle=audit_cycle)
+        mommy.make(ReportSection, audit_store=mock_audit_store, section=mock_section)
+        auditor_comment = "foobar"
+        report_section = agency_report_section_service.submit_auditor_comment_for_agency(mock_audit_store.id, mock_section.id, self.agency_user.id, auditor_comment)
+        self.assertEqual(auditor_comment, report_section.auditor_comment)
+
+    def test_submit_auditor_comment_for_agency_for_new_report_section(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+                                      audit__audit_cycle=audit_cycle)
+        mock_section = mommy.make(Section, audit_cycle=audit_cycle)
+        auditor_comment = "foobar"
+        report_section = agency_report_section_service.submit_auditor_comment_for_agency(mock_audit_store.id, mock_section.id, self.agency_user.id, auditor_comment)
+        self.assertEqual(auditor_comment, report_section.auditor_comment)
