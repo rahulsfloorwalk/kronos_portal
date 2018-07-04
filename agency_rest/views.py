@@ -1,9 +1,8 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 
-from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField, IntegerField, PrimaryKeyRelatedField
+from rest_framework.serializers import Serializer, CharField, IntegerField
 from rest_framework.views import APIView
 
 from registration.models import GROUP_NAME_AGENCY
@@ -25,7 +24,6 @@ from agency_rest.serializers import SectionSerializer
 from agency_rest.serializers import AttachmentSerializer
 from agency_rest.serializers import AuditStoreSerializer
 
-from audit_store.models import AuditStore
 from audit_store import service_agency as audit_store_service
 
 from answer.service import answer_agency as answer_service
@@ -33,7 +31,6 @@ from answer.service import report_section_agency as report_section_service
 from attachment import service_agency as attachment_agency_service
 
 from questionnaire.service import section as section_service
-from questionnaire.models import Section
 
 
 class StateView(APIView):
@@ -219,7 +216,7 @@ class CommentSubmitView(APIView):
     class ReportSectionDeSerializer(Serializer):
         auditor_comment = CharField(max_length=2048, allow_blank=True)
 
-    def post(self, request, audit_store_id,  section_id, format=None):
+    def post(self, request, audit_store_id, section_id, format=None):
         ds = self.ReportSectionDeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         auditor_comment = ds.validated_data['auditor_comment']
@@ -312,4 +309,15 @@ class AttachmentCompleteView(APIView):
     def post(self, request, attachment_id):
         attachment = attachment_agency_service.complete_for_agency(attachment_id, request.user.id)
         return Response(AttachmentSerializer(attachment).data)
+
+
+class AuditStoreListView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY]
+    }
+
+    def get(self, request, format=None):
+        audit_stores = audit_store_service.find_audit_stores_for_agency_user(request.user.id)
+        return Response(AuditStoreSerializer(audit_stores, many=True).data)
 

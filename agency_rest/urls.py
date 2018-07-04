@@ -19,6 +19,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/acknowledge$', views.AuditStoreIdAcknowledgeView.as_view(), name="agency_audit_store_id_acknowledge_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', views.AuditStoreIdSubmitView.as_view(), name="agency_audit_store_id_submit_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/comment$', views.CommentSubmitView.as_view(), name="agency_comment_submit_view"),
+    url(r'audit_store$', views.AuditStoreListView.as_view(), name="audit_store_list_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="agency_attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="agency_attachment_id_view"),
 ], 'agency_rest')
