@@ -24,13 +24,13 @@ class AnswerAgencyServiceTestCase(TestCase):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 
     def test_find_by_audit_store_for_agency(self):
-        mock_audit_store = mommy.make(AuditStore, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
         mommy.make(Answer, audit_store=mock_audit_store, _quantity=5)
         answers = agency_answer_service.find_by_audit_store_for_agency(mock_audit_store.id, self.agency_user.id)
         self.assertEqual(5, len(answers))
 
     def test_find_by_audit_store_and_question_for_agency(self):
-        mock_audit_store = mommy.make(AuditStore, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
         mock_question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer = agency_answer_service.find_by_audit_store_and_question_for_agency(mock_audit_store.id, mock_question.id, self.agency_user.id)
