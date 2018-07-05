@@ -5,6 +5,7 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../../config.js";
 
 import AuditStoreStatusLabel from "../../../components/AuditStoreStatusLabel.jsx";
+import { File } from "../../../components/Icons.jsx";
 
 import PostApprovalDescriptionRenderer from "./PostApprovalDescriptionRenderer.jsx";
 
@@ -21,7 +22,7 @@ export default class AuditStoreDetails extends React.Component {
 
 		return (
 			<div>
-				<h2 className="page-header">Audit Report - <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
+				<h2 className="page-header"><File/> Audit Report - <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
 				<div className="row">
 					<div className="col-md-12">
 						<div className="panel panel-default">
@@ -49,7 +50,7 @@ export default class AuditStoreDetails extends React.Component {
 									</tr>
 									<tr>
 										<td className="text-right">Status:</td>
-										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}</th>
+										<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
 									</tr>
 								</tbody>
 							</table>

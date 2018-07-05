@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: ACCEPTED 1`] = `
+<span
+  className="label label-success2"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Accepted
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: ACKNOWLEDGED 1`] = `
+<span
+  className="label label-warning2"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  In Progress
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: ASSIGNED 1`] = `
+<span
+  className="label label-warning"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Assigned
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: COMPLETED 1`] = `
+<span
+  className="label label-success"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Client Review
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: FAILED 1`] = `
+<span
+  className="label label-danger"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Failed
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: PM_REVIEW 1`] = `
+<span
+  className="label label-primary"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  PM Review
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: REJECTED 1`] = `
+<span
+  className="label label-danger2"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Rejected
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: SUBMITTED 1`] = `
+<span
+  className="label label-primary1"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  QA Review
+</span>
+`;
+
+exports[`<AuditStoreStatusLabel/> renders correctly for status: WITHDRAWN 1`] = `
+<span
+  className="label label-default"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Withdrawn
+</span>
+`;

@@ -5,7 +5,10 @@ exports[`<AuditStoreDetails/> renders the details section for the audit store 1`
   <h2
     className="page-header"
   >
-    Audit Report - 
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report - 
     <b>
       Ravi
     </b>
