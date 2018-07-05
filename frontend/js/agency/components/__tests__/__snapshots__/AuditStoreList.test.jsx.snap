@@ -1,0 +1,330 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__AuditStoreList/> is renders a list of audit stores correctly 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    Your Audits
+  </h2>
+  <div
+    className="panel panel-default"
+  >
+    <div
+      className="panel-body"
+    >
+      <h3
+        className=""
+      >
+        <b>
+          Ravi
+        </b>
+         - 
+        Factory Outlet
+      </h3>
+      <div>
+        <span
+          className="label label-warning2"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          In Progress
+        </span>
+          •  
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <b>
+            2nd Feb 2018
+          </b>
+            •  
+        </div>
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <span>
+            <b>
+              Fees: ₹ 
+              500
+              , 
+            </b>
+            <span>
+              Reimbursement upto: 
+              <b>
+                ₹ 
+                400
+              </b>
+            </span>
+          </span>
+            •  
+        </div>
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <span>
+            <a
+              onClick={[Function]}
+              style={
+                Object {
+                  "cursor": "pointer",
+                }
+              }
+            >
+              View Details
+            </a>
+          </span>
+        </div>
+      </div>
+      <p>
+        <b>
+          Address:
+        </b>
+         
+        Shankar Nagar, Dharampeth, Nagpur
+      </p>
+      <a
+        className="btn btn-default"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        View
+      </a>
+    </div>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <div
+      className="panel-body"
+    >
+      <h3
+        className=""
+      >
+        <b>
+          Ravi
+        </b>
+         - 
+        Factory Outlet
+      </h3>
+      <div>
+        <span
+          className="label label-warning"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Assigned
+        </span>
+          •  
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <b>
+            2nd Feb 2018
+          </b>
+            •  
+        </div>
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <span>
+            <b>
+              Fees: ₹ 
+              500
+              , 
+            </b>
+            <span>
+              Reimbursement upto: 
+              <b>
+                ₹ 
+                400
+              </b>
+            </span>
+          </span>
+            •  
+        </div>
+        <div
+          style={
+            Object {
+              "display": "inline-block",
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <span>
+            <a
+              onClick={[Function]}
+              style={
+                Object {
+                  "cursor": "pointer",
+                }
+              }
+            >
+              View Details
+            </a>
+          </span>
+        </div>
+      </div>
+      <p>
+        <b>
+          Address:
+        </b>
+         
+        Shankar Nagar, Dharampeth, Nagpur
+      </p>
+      <a
+        className="btn btn-default"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        View
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<__AuditStoreList/> renders an empty list correctly 1`] = `
+<div
+  className="jumbotron text-center"
+>
+  <h2>
+    There are no audits approved for you.
+  </h2>
+</div>
+`;
+
+exports[`<AuditStoreRow/> renders a single auditStore list item correctly 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-body"
+  >
+    <h3
+      className=""
+    >
+      <b>
+        Ravi
+      </b>
+       - 
+      Factory Outlet
+    </h3>
+    <div>
+      <span
+        className="label label-warning2"
+        style={
+          Object {
+            "fontSize": "100%",
+          }
+        }
+      >
+        In Progress
+      </span>
+        •  
+      <div
+        style={
+          Object {
+            "display": "inline-block",
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <b>
+          2nd Feb 2018
+        </b>
+          •  
+      </div>
+      <div
+        style={
+          Object {
+            "display": "inline-block",
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <span>
+          <b>
+            Fees: ₹ 
+            500
+            , 
+          </b>
+          <span>
+            Reimbursement upto: 
+            <b>
+              ₹ 
+              400
+            </b>
+          </span>
+        </span>
+          •  
+      </div>
+      <div
+        style={
+          Object {
+            "display": "inline-block",
+            "marginBottom": "10px",
+          }
+        }
+      >
+        <span>
+          <a
+            onClick={[Function]}
+            style={
+              Object {
+                "cursor": "pointer",
+              }
+            }
+          >
+            View Details
+          </a>
+        </span>
+      </div>
+    </div>
+    <p>
+      <b>
+        Address:
+      </b>
+       
+      Shankar Nagar, Dharampeth, Nagpur
+    </p>
+    <a
+      className="btn btn-default"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      View
+    </a>
+  </div>
+</div>
+`;

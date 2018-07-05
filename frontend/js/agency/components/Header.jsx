@@ -5,7 +5,7 @@ import { pointerStyle } from "../../styles.js";
 
 import NavLink from "../../components/NavLink.jsx";
 
-import { Home, LogOut } from "../../components/Icons.jsx";
+import { Home, File, LogOut } from "../../components/Icons.jsx";
 
 export default class Header extends React.Component{
 	render(){
@@ -22,6 +22,8 @@ export default class Header extends React.Component{
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">
+						<NavLink to="/"><Home/> Home</NavLink>
+						<NavLink to="/reports"><File/> Reports</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
