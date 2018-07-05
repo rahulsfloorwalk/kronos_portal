@@ -321,3 +321,14 @@ class AuditStoreListView(APIView):
         audit_stores = audit_store_service.find_audit_stores_for_agency_user(request.user.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
+
+class AuditStoreIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY]
+    }
+
+    def get(self, request, audit_store_id, format=None):
+        audit_store = audit_store_service.find_by_id_for_agency_user(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+

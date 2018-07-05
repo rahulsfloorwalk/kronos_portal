@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
 from model_mommy import mommy
-from model_mommy.recipe import Recipe
 
 from answer.models import Answer
 from audit_store.models import AuditStore
@@ -21,20 +20,17 @@ class AnswerAgencyServiceTestCase(TestCase):
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com",
                                        groups=[self.manager_group])
         self.agency_user = mommy.make(User, username="agency@foobar.com", email="agency@foobar.com",
-                                       groups=[self.agency_group])
+                                      groups=[self.agency_group])
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 
     def test_find_by_audit_store_for_agency(self):
-        mock_audit_store = mommy.make(AuditStore, user=self.agency_user,
-                                      audit__audit_cycle__status=AuditCycle.ACTIVE)
-        for i in range(5):
-            mommy.make(Answer, audit_store=mock_audit_store)
+        mock_audit_store = mommy.make(AuditStore, user=self.agency_user, audit__audit_cycle__status=AuditCycle.ACTIVE)
+        mommy.make(Answer, audit_store=mock_audit_store, _quantity=5)
         answers = agency_answer_service.find_by_audit_store_for_agency(mock_audit_store.id, self.agency_user.id)
         self.assertEqual(5, len(answers))
 
     def test_find_by_audit_store_and_question_for_agency(self):
-        mock_audit_store = mommy.make(AuditStore, user=self.agency_user,
-                                      audit__audit_cycle=self.audit_cycle)
+        mock_audit_store = mommy.make(AuditStore, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
         mock_question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer = agency_answer_service.find_by_audit_store_and_question_for_agency(mock_audit_store.id, mock_question.id, self.agency_user.id)

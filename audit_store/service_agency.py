@@ -13,7 +13,7 @@ def find_audit_stores_for_agency_user(agency_user_id):
     ).order_by('-audit_date')
 
 
-def find_by_user_id_for_agency_user(audit_store_id, user_id):
+def find_by_id_for_agency_user(audit_store_id, user_id):
     try:
         return AuditStore.objects.get(
             pk=audit_store_id,
@@ -27,14 +27,14 @@ def find_by_user_id_for_agency_user(audit_store_id, user_id):
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
-    audit_store = find_by_user_id_for_agency_user(audit_store_id, user_id)
+    audit_store = find_by_id_for_agency_user(audit_store_id, user_id)
     audit_store.acknowledge(by=audit_store.user)
     return audit_store
 
 
 @atomic
 def submit_report(audit_store_id, user_id):
-    audit_store = find_by_user_id_for_agency_user(audit_store_id, user_id)
+    audit_store = find_by_id_for_agency_user(audit_store_id, user_id)
     if not audit_store.is_submittable():
         raise AppLogicError("Report cannot be submitted now")
     audit_store.submit(by=audit_store.user)

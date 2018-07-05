@@ -7,7 +7,7 @@ from answer.models import ReportSection
 
 
 def upload_for_audit_store_by_agency(audit_store_id, file_name, file_size, mime_type, user_id):
-    audit_store = audit_store_service.find_by_user_id_for_agency_user(audit_store_id, user_id)
+    audit_store = audit_store_service.find_by_id_for_agency_user(audit_store_id, user_id)
     return attachment_service.upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
 
 
@@ -17,7 +17,7 @@ def upload_for_report_section_by_agency(audit_store_id, section_id, file_name, f
 
 
 def find_by_audit_store_for_agency(audit_store_id, user_id):
-    audit_store = audit_store_service.find_by_user_id_for_agency_user(audit_store_id, user_id)
+    audit_store = audit_store_service.find_by_id_for_agency_user(audit_store_id, user_id)
     return attachment_service.find_by_audit_store(audit_store.id)
 
 
