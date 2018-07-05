@@ -21,20 +21,17 @@ class AnswerAgencyServiceTestCase(TestCase):
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com",
                                        groups=[self.manager_group])
         self.agency_user = mommy.make(User, username="agency@foobar.com", email="agency@foobar.com",
-                                       groups=[self.agency_group])
+                                      groups=[self.agency_group])
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 
     def test_find_by_audit_store_for_agency(self):
-        mock_audit_store = mommy.make(AuditStore, user=self.agency_user,
-                                      audit__audit_cycle__status=AuditCycle.ACTIVE)
-        for i in range(5):
-            mommy.make(ReportSection, audit_store=mock_audit_store, section__audit_cycle=self.audit_cycle)
+        mock_audit_store = mommy.make(AuditStore, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
+        mommy.make(ReportSection, audit_store=mock_audit_store, section__audit_cycle=self.audit_cycle, _quantity=5)
         report_sections = agency_report_section_service.find_by_audit_store_for_agency(mock_audit_store.id, self.agency_user.id)
         self.assertEqual(5, len(report_sections))
 
     def test_find_by_audit_store_and_section_for_agency(self):
-        mock_audit_store = mommy.make(AuditStore, user=self.agency_user,
-                                      audit__audit_cycle=self.audit_cycle)
+        mock_audit_store = mommy.make(AuditStore, user=self.agency_user, audit__audit_cycle=self.audit_cycle)
         mock_section = mommy.make(Section, audit_cycle=self.audit_cycle)
         mommy.make(ReportSection, audit_store=mock_audit_store, section=mock_section)
         report_section = agency_report_section_service.find_by_audit_store_and_section_for_agency(mock_audit_store.id, mock_section.id, self.agency_user.id)
