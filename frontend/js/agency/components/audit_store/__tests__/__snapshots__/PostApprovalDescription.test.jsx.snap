@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PostApprovalDescriptionRenderer/> renders the loading icons while loading the markdown libs 1`] = `
+<div
+  className="panel-body"
+>
+  <div
+    className="text-center text-muted"
+  >
+    <img
+      alt="loading..."
+      src="/static/img/ripple.svg"
+      title="Please Wait"
+    />
+    <p>
+      LOADING
+    </p>
+  </div>
+  <div
+    className="text-center text-muted"
+  >
+    <img
+      alt="loading..."
+      src="/static/img/ripple.svg"
+      title="Please Wait"
+    />
+    <p>
+      LOADING
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<PostApprovalDescriptionRenderer/> renders the post approval description 1`] = `
+<div
+  className="panel-body"
+>
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "<p>Hello <em>World</em></p>
+",
+      }
+    }
+  />
+  <div
+    dangerouslySetInnerHTML={
+      Object {
+        "__html": "<p>This is some <em>markdown</em> text.</p>
+",
+      }
+    }
+  />
+</div>
+`;

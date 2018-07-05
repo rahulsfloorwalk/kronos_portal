@@ -7,13 +7,15 @@ import Dashboard from "./Dashboard.jsx";
 import AgencyDetailsForm from "./AgencyDetailsForm.jsx";
 
 import AuditStoreList from "./AuditStoreList.jsx";
+import AuditStoreReport from "./audit_store/AuditStoreReport.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
 			<IndexRoute component={Dashboard} />
 			<Route path="agency/edit" component={AgencyDetailsForm} />
-			<Route path="reports" component={AuditStoreList} />
+			<Route path="reports" component={AuditStoreList}/>
+			<Route path="reports/:auditStoreId" component={AuditStoreReport}/>
 		</Route>
 	</Router>
 );

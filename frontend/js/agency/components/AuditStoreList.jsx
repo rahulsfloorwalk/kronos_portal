@@ -11,27 +11,7 @@ import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
-const auditStorePropType = PropTypes.shape({
-	id: PropTypes.number.isRequired,
-	status: PropTypes.string.isRequired,
-	audit_date: PropTypes.string.isRequired,
-	audit: PropTypes.shape({
-		earnings_per_audit: PropTypes.number,
-		reimbursement: PropTypes.number,
-		post_approval_description: PropTypes.string,
-		audit_cycle: PropTypes.shape({
-			type: PropTypes.string.isRequired,
-			client: PropTypes.shape({
-				auditor_display_name: PropTypes.string.isRequired,
-			}),
-			post_approval_description: PropTypes.string,
-		}).isRequired,
-		store: PropTypes.shape({
-			name: PropTypes.string.isRequired,
-			address: PropTypes.string,
-		}).isRequired,
-	}).isRequired,
-});
+import { auditStorePropType } from "../prop_types.js";
 
 export class AuditStoreRow extends React.Component {
 	static propTypes = {
@@ -72,7 +52,7 @@ export class AuditStoreRow extends React.Component {
 						</div>
 					</div>
 					<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
-					<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link>
+					<Link to={`/reports/${this.props.auditStore.id}`} className="btn btn-default">View</Link>
 				</div>
 			</div>
 		);
