@@ -3,11 +3,8 @@ from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.models import ContentType
 
 from model_mommy import mommy
-from model_mommy.recipe import Recipe
 
-from guardian.shortcuts import assign_perm
-
-from kronos.exceptions import AppLogicError
+from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
 from questionnaire.models import Section
 from answer.models import ReportSection
@@ -15,8 +12,8 @@ from attachment import service as attachment_service
 from attachment import service_agency as attachment_agency_service
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
-from registration.models import GROUP_NAME_MODERATOR, GROUP_NAME_AGENCY
-from auditor.models import ProfileInfo
+from registration.models import GROUP_NAME_AGENCY
+
 
 class AttachmentAgencyServiceTestCase(TestCase):
     fixtures = ['groups']
@@ -36,6 +33,8 @@ class AttachmentAgencyServiceTestCase(TestCase):
     def setUp(self):
         self.agency_group = Group.objects.get(name=GROUP_NAME_AGENCY)
         self.agency_user = mommy.make(User, username="agency@foobar.com", email="agency@foobar.com",
+                                       groups=[self.agency_group])
+        self.another_agency_user = mommy.make(User, username="another@foobar.com", email="another@foobar.com",
                                        groups=[self.agency_group])
 
 
@@ -168,7 +167,57 @@ class AttachmentAgencyServiceTestCase(TestCase):
         self.assertEqual(Attachment.ATTACHED, completed_attachment.status)
 
     @override_settings(AWS=test_aws_settings)
-    def test_complete_for_agency_raises_exception(self):
+    def test_complete_for_agency_raises_exception_when_user_is_different(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
+                                 audit__audit_cycle=audit_cycle)
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        test_file = "hello_world.jpg"
+        test_mime_type = "image/jpeg"
+        test_size = 2048
+        attachment = mommy.make(
+            Attachment,
+            status=Attachment.UPLOADING,
+            file_name=test_file,
+            file_size=test_size,
+            mime_type=test_mime_type,
+            content_type=ContentType.objects.get_for_model(ReportSection),
+            object_id=report_section.id,
+        )
+        with self.assertRaises(ObjectNotFound):
+            attachment_agency_service.complete_for_agency(
+                attachment.id,
+                self.another_agency_user.id,
+            )
+
+    @override_settings(AWS=test_aws_settings)
+    def test_complete_for_agency_raises_exception_when_contenttype_is_different(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
+                                 audit__audit_cycle=audit_cycle)
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        test_file = "hello_world.jpg"
+        test_mime_type = "image/jpeg"
+        test_size = 2048
+        attachment = mommy.make(
+            Attachment,
+            status=Attachment.UPLOADING,
+            file_name=test_file,
+            file_size=test_size,
+            mime_type=test_mime_type,
+            content_type=ContentType.objects.get_for_model(Section),
+            object_id=report_section.id,
+        )
+        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type detected"):
+            attachment_agency_service.complete_for_agency(
+                attachment.id,
+                self.another_agency_user.id,
+            )
+
+    @override_settings(AWS=test_aws_settings)
+    def test_complete_for_agency_raises_exception_when_audit_store_not_acknowledged(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
                                  audit__audit_cycle=audit_cycle)
