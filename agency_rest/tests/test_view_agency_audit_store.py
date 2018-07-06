@@ -54,7 +54,7 @@ class AuditStoreIdAcknowledgeTestCase(APITestCase):
         self.setup_audit_store()
         self.login()
 
-        url = reverse("agency_rest:agency_audit_store_id_acknowledge_view", kwargs={
+        url = reverse("agency_rest:audit_store_id_acknowledge_view", kwargs={
             "audit_store_id": self.audit_store.id
         })
 
@@ -97,7 +97,7 @@ class AuditStoreIdSubmitTestCase(APITestCase):
         self.setup_audit_store()
         self.login()
 
-        url = reverse("agency_rest:agency_audit_store_id_submit_view", kwargs={
+        url = reverse("agency_rest:audit_store_id_submit_view", kwargs={
             "audit_store_id": self.audit_store.id
         })
 

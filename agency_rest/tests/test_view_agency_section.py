@@ -60,7 +60,7 @@ class SectionViewTestCase(APITestCase):
 
         answer_text = "foobar"
 
-        url = reverse("agency_rest:agency_section_view", kwargs={
+        url = reverse("agency_rest:section_view", kwargs={
             "audit_store_id": self.audit_store.id
         })
 

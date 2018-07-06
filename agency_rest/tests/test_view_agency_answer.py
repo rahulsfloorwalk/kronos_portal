@@ -60,7 +60,7 @@ class AnswerSubmitViewTestCase(APITestCase):
 
         answer_text = "foobar"
 
-        url = reverse("agency_rest:agency_answer_submit_view", kwargs={
+        url = reverse("agency_rest:answer_submit_view", kwargs={
             "audit_store_id": self.audit_store.id,
             "question_id": self.plain_question.id
         })
@@ -114,7 +114,7 @@ class AnswerCommentViewTestCase(APITestCase):
 
         answer_comment = "foobar"
 
-        url = reverse("agency_rest:agency_answer_comment_view", kwargs={
+        url = reverse("agency_rest:answer_comment_view", kwargs={
             "audit_store_id": self.audit_store.id,
             "question_id": self.mutex_question.id
         })
@@ -166,7 +166,7 @@ class AnswerListViewTestCase(APITestCase):
         self.setup_answer()
         self.login()
 
-        url = reverse("agency_rest:agency_answer_list_view", kwargs={
+        url = reverse("agency_rest:answer_list_view", kwargs={
             "audit_store_id": self.audit_store.id
         })
 

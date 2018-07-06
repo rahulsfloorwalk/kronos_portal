@@ -55,7 +55,7 @@ class ReportSectionListViewTestCase(APITestCase):
         self.setup_report_section()
         self.login()
 
-        url = reverse("agency_rest:agency_report_section_list_view", kwargs={
+        url = reverse("agency_rest:report_section_list_view", kwargs={
             "audit_store_id": self.audit_store.id
         })
 
@@ -102,7 +102,7 @@ class SectionCommentViewTestCase(APITestCase):
 
         auditor_comment = "foobar"
 
-        url = reverse("agency_rest:agency_comment_submit_view", kwargs={
+        url = reverse("agency_rest:comment_submit_view", kwargs={
             "audit_store_id": self.audit_store.id,
             "section_id": self.section.id,
         })
