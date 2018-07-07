@@ -285,3 +285,13 @@ class AuditApplicationTestCase(TestCase):
 
         application_service.approve(application.id, application.audit_date, self.manager_user)
         self.assertRaises(AppLogicError, application_service.approve, application.id, application.audit_date, self.manager_user)
+
+    def test_avg_qa_rating_returns_rating(self):
+        audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
+        mommy.make(AuditStore, user=self.auditor_user, status=AuditStore.COMPLETED, qa_rating=AuditStore.GOOD)
+        mommy.make(AuditStore, user=self.auditor_user, status=AuditStore.COMPLETED, qa_rating=AuditStore.BAD)
+        application = self.application_recipe.make(
+            audit=audit,
+            status=AuditApplication.APPLIED,
+        )
+        self.assertAlmostEqual(1.0, application.avg_qa_rating())

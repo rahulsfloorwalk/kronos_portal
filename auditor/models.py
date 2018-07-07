@@ -100,6 +100,10 @@ class ProfileInfo(Model, CompletableMixin):
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='profile_infos')
 
+    def average_rating(self):
+        from audit_store.service import average_rating_for_auditor
+        return average_rating_for_auditor(self.user_id)
+
     is_complete_attrs = [
         "first_name",
         "last_name",
@@ -306,8 +310,7 @@ class AuditApplication(Model):
         return super(AuditApplication, self).save(*args, **kwargs)
 
     def avg_qa_rating(self):
-        from audit_store.service import average_rating_for_auditor
-        return average_rating_for_auditor(self.profileinfo.user_id)
+        return self.profileinfo.average_rating()
 
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)

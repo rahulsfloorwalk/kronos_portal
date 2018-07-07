@@ -655,6 +655,7 @@ class ProfileInfoSerializer(ModelSerializer):
             'city',
             'user_id',
             'is_complete',
+            'average_rating',
         )
         read_only_fields = fields
 

@@ -1,7 +1,7 @@
 from datetime import date
 import random
 import string
-
+from model_mommy import mommy
 from faker import Faker
 
 from django.test import TestCase
@@ -11,7 +11,8 @@ from django.contrib.auth.models import User, Group
 from registration.models import GROUP_NAME_AUDITOR
 from manager.models import City
 
-from ..models import ProfileInfo
+from auditor.models import ProfileInfo
+from audit_store.models import AuditStore
 
 fake = Faker()
 
@@ -93,3 +94,12 @@ class ProfileInfoTestCase(TestCase):
         p.first_name = fake.first_name()
         self.assertEqual(p.completed_field_count(), p.field_count() - 3)
 
+    def test_average_rating_returns_null_when_profile_is_created(self):
+        p = self.create_complete_profile()
+        self.assertEqual(None, p.average_rating())
+
+    def test_average_rating_returns_number_when_reports_are_rated(self):
+        p = self.create_complete_profile()
+        mommy.make(AuditStore, user=self.u, status=AuditStore.COMPLETED, qa_rating=AuditStore.GOOD)
+        mommy.make(AuditStore, user=self.u, status=AuditStore.COMPLETED, qa_rating=AuditStore.BAD)
+        self.assertAlmostEqual(1.0, p.average_rating())
