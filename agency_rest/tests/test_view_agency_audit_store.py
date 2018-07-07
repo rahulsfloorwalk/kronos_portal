@@ -91,7 +91,7 @@ class AuditStoreIdSubmitTestCase(APITestCase):
         # login first
         self.client.login(username=self.email, password=self.password)
 
-    def test_subit_audit_store_sets_status_to_submitted(self):
+    def test_submit_audit_store_sets_status_to_submitted(self):
         self.setup_agency()
         self.setup_agency_user()
         self.setup_audit_store()
