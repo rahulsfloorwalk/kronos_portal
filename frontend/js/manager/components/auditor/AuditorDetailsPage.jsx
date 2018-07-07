@@ -8,49 +8,52 @@ import moment from 'moment';
 import { momentDateFormat, url }  from '../../../../config.js';
 
 import { fetchAuditor, activateAuditor, deactivateAuditor, verifyAuditor, setEmail, setMobileNumber, sendPasswordResetEmail } from '../../service/auditor.js';
-
 import { Lock, Check, Envelope } from '../../../components/Icons.jsx';
 import NavLink from '../../../components/NavLink.jsx';
 import Panel from '../../../components/Panel.jsx';
 import Loading from '../../../components/Loading.jsx';
 import InPlaceEditable from '../../../components/InPlaceEditable.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	goToFirstTab: function(props){
+export default class AuditorDetailsPage extends React.Component {
+    state = {};
+
+    goToFirstTab = (props) => {
 		if(props.route && props.route.path === "auditor/:auditorId"){
 			hashHistory.push(`/auditor/${props.params.auditorId}/details`);
 		}
-	},
-	componentDidMount: function(){
+	};
+
+    componentDidMount() {
 		fetchAuditor(this.props.params.auditorId).done((auditor)=>this.setState({auditor}));
 		this.goToFirstTab(this.props);
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		if( this.props.params.auditorId !== nextProps.params.auditorId){
 			fetchAuditor(nextProps.params.auditorId).done((auditor)=>this.setState({auditor}));
 			this.goToFirstTab(nextProps);
 		}
-	},
-	emailChanged: function(newEmail){
+	}
+
+    emailChanged = (newEmail) => {
 		setEmail(this.props.params.auditorId, newEmail).then((auditor) =>{
 			this.setState({auditor});
 			Alert.success("EMAIL CHANGED");
 		}, ()=>{
 			Alert.warning("EMAIL INVALID");
 		});
-	},
-	mobileNumberChanged: function(newMobileNumber){
+	};
+
+    mobileNumberChanged = (newMobileNumber) => {
 		setMobileNumber(this.props.params.auditorId, newMobileNumber).then((auditor)=>{
 			this.setState({auditor});
 			Alert.success("MOBILE NUMBER CHANGED");
 		},()=>{
 			Alert.warning("MOBILE NUMBER INVALID");
 		});
-	},
-	sendPasswordResetEmail: function(){
+	};
+
+    sendPasswordResetEmail = () => {
 		this.setState({passwordResetEmailLoading: true});
 		sendPasswordResetEmail(this.props.params.auditorId).then((auditor)=>{
 			this.setState({auditor});
@@ -60,8 +63,9 @@ export default React.createClass({
 		}).always(() => {
 			this.setState({passwordResetEmailLoading: false});
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		if(! this.state.auditor){
 			return <Loading/>;
 		}
@@ -124,7 +128,7 @@ export default React.createClass({
 								<td>
 								<InPlaceEditable inputText={this.state.auditor.profileinfo.mobile_number} onSave={this.mobileNumberChanged}>
 								<b>{ this.state.auditor.profileinfo.mobile_number ?
-									this.state.auditor.profileinfo.mobile_number 
+									this.state.auditor.profileinfo.mobile_number
 									: <span className="text-muted">update mobile number</span>
 								}</b>
 								</InPlaceEditable>
@@ -154,5 +158,5 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}

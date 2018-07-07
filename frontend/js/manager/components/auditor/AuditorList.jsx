@@ -1,23 +1,33 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import moment from "moment";
+import * as ReactRedux from "react-redux";
+import {Link} from "react-router";
 
-import { affectInputEventToComponent } from '../../../react_utils.js';
-import { getGender } from '../../../utils.js';
+import {affectInputEventToComponent} from "../../../react_utils.js";
+import {getGender} from "../../../utils.js";
 
-import { setAuditorSearch } from '../../actions/auditor.js';
-import { searchAuditors } from '../../service/auditor.js';
+import {setAuditorSearch} from "../../actions/auditor.js";
+import {searchAuditors} from "../../service/auditor.js";
 
-import { User, Search, Check, Cross, Pawn } from '../../../components/Icons.jsx';
-import InputGroup from '../../../components/InputGroup.jsx';
-import { InputGroupBtn } from '../../../components/InputGroup.jsx';
-import FormInput from '../../../components/FormInput.jsx';
-import FormGroup from '../../../components/FormGroup.jsx';
-import SaveButton from '../../../components/SaveButton.jsx';
-import Loading from '../../../components/Loading.jsx';
+import {Search, Check, Cross, Pawn} from "../../../components/Icons.jsx";
+import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
+import {momentDateTimeFormat} from "../../../../config.js";
+import InputGroup from "../../../components/InputGroup.jsx";
+import {InputGroupBtn} from "../../../components/InputGroup.jsx";
+import Loading from "../../../components/Loading.jsx";
+import PropTypes from "prop-types";
 
-var AuditorRow = React.createClass({
-	render: function(){
+export class AuditorRow extends React.Component {
+	static propTypes = {
+		auditor: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			is_active: PropTypes.bool.isRequired,
+			email: PropTypes.string.isRequired,
+			last_login: PropTypes.string.isRequired,
+			profileinfo: PropTypes.object.isRequired
+		}),
+	};
+	render() {
 		var linkTo = `/auditor/${this.props.auditor.id}`;
 		var prof = this.props.auditor.profileinfo || {};
 		prof.city = prof.city || {};
@@ -30,74 +40,88 @@ var AuditorRow = React.createClass({
 				<td>{getGender(prof.gender)}</td>
 				<td>{prof.mobile_number}</td>
 				<td>{prof.city.name}</td>
+				<td>{prof.average_rating !== null ?
+					<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</td>
+				<td>{moment(this.props.auditor.last_login).format(momentDateTimeFormat)}</td>
 				<td>{activeIcon}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-var AuditorList = React.createClass({
-	getInitialState: function() {
-		return {
-			auditors: [],
-			loading: false,
-			search: ""
-		};
-	},
-	setLoading: function(loading){
+export class AuditorList extends React.Component {
+
+	static propTypes = {
+		search: PropTypes.string,
+	};
+
+	state = {
+		auditors: [],
+		loading: false,
+		search: ""
+	};
+
+	setLoading = (loading) => {
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
-	},
-	searchAuditors: function(search){
+	};
+
+	searchAuditors = (search) => {
 		this.setLoading(true);
 		searchAuditors(search).done((page) => {
 			this.setState({
 				auditors: page.results,
 			});
-		}).always(()=>this.setLoading(false));
-	},
-	componentDidMount: function() {
+		}).always(() => this.setLoading(false));
+	};
+
+	componentDidMount() {
 		this.setState({
 			search: this.props.search
 		});
-		if( this.props.search && this.props.search !== ""){
+		if (this.props.search && this.props.search !== "") {
 			this.searchAuditors(this.props.search);
 		}
-	},
-	onSubmit: function(e) {
+	}
+
+	onSubmit = (e) => {
 		e.preventDefault();
 		this.props.dispatch(setAuditorSearch(this.state.search));
 		this.searchAuditors(this.state.search);
-	},
-	inputChanged: function(e){
+	};
+
+	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	render: function(){
+	};
+
+	render() {
 		let rows = [];
-		for(let a of this.state.auditors) {
+		for (let a of this.state.auditors) {
 			rows.push(<AuditorRow auditor={a} key={a.id}/>);
 		}
-		if(rows.length > 0){
+		if (rows.length > 0) {
 			var table = (
 				<div className="table-responsive">
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>Full Name</th>
-							<th>Email</th>
-							<th>Gender</th>
-							<th>Mobile Number</th>
-							<th>City</th>
-							<th>Active</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
+					<table className="table table-striped">
+						<thead>
+							<tr>
+								<th>Full Name</th>
+								<th>Email</th>
+								<th>Gender</th>
+								<th>Mobile Number</th>
+								<th>City</th>
+								<th>Rating</th>
+								<th>Last Login</th>
+								<th>Active</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{rows}
+						</tbody>
+					</table>
 				</div>
 			);
 		} else {
@@ -108,7 +132,7 @@ var AuditorList = React.createClass({
 				</div>
 			);
 		}
-		if(this.state.loading){
+		if (this.state.loading) {
 			var table = <Loading/>;
 		}
 
@@ -129,10 +153,10 @@ var AuditorList = React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
-var mapStoreToProps = function(store){
+var mapStoreToProps = function (store) {
 	return {
 		search: store.forms.auditorSearch.search
 	};

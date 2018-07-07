@@ -1,0 +1,100 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditorList />  renders jumbotron by default 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-pawn"
+    />
+     Auditors
+  </h2>
+  <form
+    className="form-group"
+    onSubmit={[Function]}
+  >
+    <div
+      className="input-group"
+    >
+      <input
+        className="form-control"
+        name="search"
+        onChange={[Function]}
+        placeholder="name, email, city or mobile number"
+        required={true}
+        value={undefined}
+      />
+      <span
+        className="input-group-btn"
+      >
+        <button
+          className="btn btn-primary"
+          type="submit"
+        >
+          <span
+            className="glyphicon glyphicon-search"
+          />
+           Search
+        </button>
+      </span>
+    </div>
+  </form>
+  <div
+    className="jumbotron text-center"
+  >
+    <h2>
+      no results found
+    </h2>
+    <p>
+      try modifying your search terms a bit..
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
+<tr>
+  <td>
+    Asdfgh
+     
+    Hgfdsa
+  </td>
+  <td>
+    abcdef@gmail.com
+  </td>
+  <td>
+    female
+  </td>
+  <td>
+    0987654321
+  </td>
+  <td>
+    Nagpur
+  </td>
+  <td>
+    <strong
+      className="text-success"
+    >
+      Good
+    </strong>
+  </td>
+  <td>
+    18:43 14th Jul 2018
+  </td>
+  <td>
+    <span
+      className="glyphicon glyphicon-ok"
+    />
+  </td>
+  <td>
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      View
+    </a>
+  </td>
+</tr>
+`;

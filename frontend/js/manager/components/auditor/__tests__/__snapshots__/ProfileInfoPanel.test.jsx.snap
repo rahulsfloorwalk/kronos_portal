@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not null 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h3
+      className="panel-title"
+    >
+      Profile Info
+    </h3>
+  </div>
+  <div
+    className="panel-body"
+  >
+    <p>
+      First Name: 
+    </p>
+    <p>
+      Last Name: 
+    </p>
+    <p>
+      Gender: 
+      
+    </p>
+    <p>
+      Education: 
+      
+    </p>
+    <p>
+      Date of Birth: 
+      5th Aug 2018
+    </p>
+    <p>
+      Marital Status: 
+      
+    </p>
+    <p>
+      Address: 
+    </p>
+    <p>
+      City: 
+    </p>
+    <p>
+      State: 
+    </p>
+    <p>
+      Pincode: 
+    </p>
+    <p>
+      Rating: 
+      <strong>
+        unknown rating
+      </strong>
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h3
+      className="panel-title"
+    >
+      Profile Info
+    </h3>
+  </div>
+  <div
+    className="panel-body"
+  >
+    <p>
+      First Name: 
+    </p>
+    <p>
+      Last Name: 
+    </p>
+    <p>
+      Gender: 
+      
+    </p>
+    <p>
+      Education: 
+      
+    </p>
+    <p>
+      Date of Birth: 
+      5th Aug 2018
+    </p>
+    <p>
+      Marital Status: 
+      
+    </p>
+    <p>
+      Address: 
+    </p>
+    <p>
+      City: 
+    </p>
+    <p>
+      State: 
+    </p>
+    <p>
+      Pincode: 
+    </p>
+    <p>
+      Rating: 
+      <strong>
+        unknown rating
+      </strong>
+    </p>
+  </div>
+</div>
+`;
