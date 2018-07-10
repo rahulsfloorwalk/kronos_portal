@@ -71,6 +71,7 @@ export default class AuditStoreDetails extends React.Component{
 	};
 	auditDateChanged = (momentDate) => {
 		this.setState({auditDateLoading: true});
+		//FIXME: momentDate#format is not a function
 		setAuditDate(this.state.auditStore.id, momentDate.format("YYYY-MM-DD")).then((auditStore) => {
 			this.setAuditStore(auditStore);
 			this.setState({auditDateSuccess: true, auditDateError: false});

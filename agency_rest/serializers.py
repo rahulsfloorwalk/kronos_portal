@@ -158,6 +158,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'user',
+            'is_editable_by_auditor',
         )
         read_only_fields = fields
 
@@ -209,7 +210,9 @@ class ReportSectionSerializer(ModelSerializer):
         fields = (
             'id',
             'audit_store',
+            'audit_store_id',
             'section',
+            'section_id',
             'auditor_comment'
         )
         read_only_fields = fields

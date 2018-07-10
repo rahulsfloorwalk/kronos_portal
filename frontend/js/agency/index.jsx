@@ -5,19 +5,21 @@ import promiseFinally from "promise.prototype.finally";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import { hashHistory } from "react-router";
-import Raven from "raven-js";
-
-import ReactGA from "react-ga";
-
-import * as Redux from "redux";
+import { combineReducers, createStore, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
-
+import { } from "react-router";
+import Raven from "raven-js";
+import ReactGA from "react-ga";
 import axios from "axios";
 
 import Routes from "./components/Routes.jsx";
 
 import { fetchConfig } from "./service/config.js";
+
+import auditStoreReducer from "./reducers/audit_store.js";
+import reportSectionReducer from "./reducers/report_section.js";
+import answerReducer from "./reducers/answer.js";
+import sectionReducer from "./reducers/section.js";
 
 promiseFinally.shim();
 
@@ -58,9 +60,16 @@ let render = store => {
 	);
 };
 
-let store = Redux.createStore(
-	s => s,
-	Redux.applyMiddleware(
+const reducers = combineReducers({
+	auditStores: auditStoreReducer,
+	reportSections: reportSectionReducer,
+	answers: answerReducer,
+	sections: sectionReducer,
+});
+
+let store = createStore(
+	reducers,
+	applyMiddleware(
 		ReduxThunk,
 	)
 );

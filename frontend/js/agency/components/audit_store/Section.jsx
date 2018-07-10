@@ -1,0 +1,104 @@
+import React from "react";
+import { connect } from "react-redux";
+import PropTypes from "prop-types";
+import { } from "react-router";
+
+//import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
+import QuestionRow from "./QuestionRow.jsx";
+import AuditorComment from "./AuditorComment.jsx";
+
+import { auditStorePropType } from "../../prop_types.js";
+
+export class __Section extends React.Component{
+	static propTypes = {
+		section: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			sequence: PropTypes.number.isRequired,
+			questions: PropTypes.arrayOf(PropTypes.shape({
+				id: PropTypes.number.isRequired,
+				sequence: PropTypes.number.isRequired,
+				question_txt: PropTypes.string.isRequired,
+				question_type: PropTypes.string.isRequired,
+			})),
+		}),
+
+		auditStore: auditStorePropType,
+		showErrors: PropTypes.bool,
+	};
+
+	state = {};
+
+	render(){
+		if(this.props.auditStore && this.props.section){
+		const questionRows = [];
+		//if( this.props.section.questions){
+		//	for(let q of this.props.section.questions){
+		//		questionRows.push(<QuestionRow question={q} key={q.id} showErrors={this.props.showErrors}/>);
+		//	}
+		//}
+		if(questionRows.length === 0){
+			questionRows.push(<tr key="empty"><td className="text-center text-muted">no questions here</td></tr>);
+		}
+
+		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment ? "" : "success";
+		let badClass = this.props.showErrors && !this.state.auditor_comment ? "danger" : "";
+
+		return (
+			<div className="panel panel-default">
+				<div className="panel-heading">
+					<h4 className="panel-title">
+						{this.props.section.sequence} - <b>{this.props.section.name}</b>
+					</h4>
+				</div>
+				<table className="table table-striped">
+					<thead>
+						<tr>
+							<th>
+								<div className="row">
+									<div className="col-xs-1 text-right">#</div>
+									<div className="col-xs-10 col-md-5">Question</div>
+									<div className="col-xs-12 col-md-6 hidden-xs hidden-sm">Answer</div>
+								</div>
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{questionRows}
+						<tr className={goodClass || badClass}>
+							<td>
+								<div className="row">
+									<div className="col-xs-offset-1 col-md-11">
+										<AuditorComment auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id}/>
+									</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				{/*<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id}/>*/}
+			</div>
+		);
+		} else {
+			return null;
+		}
+	}
+}
+
+const findAuditStore = (store, auditStoreId) => {
+	return store.auditStores.find((as) => as.id === auditStoreId);
+};
+
+const findSection = (store, sectionId) => {
+	return store.sections.find((s) => s.id === sectionId);
+};
+
+const mapStateToProps = (store, ownProps) => {
+	return {
+		auditStore: findAuditStore( store, ownProps.auditStoreId),
+		section: findSection(store, ownProps.sectionId),
+		showErrors: ownProps.showErrors,
+	};
+};
+
+export default connect(mapStateToProps)(__Section);
