@@ -1,7 +1,18 @@
 import axios from "axios";
-import { url } from "../../../config";
 
 export function fetchAnswers(auditStoreId){
-	return axios.get( url.api_base_path + `agency/audit_store/${auditStoreId}/answer`).then( r => r.data);
+	return axios.get(`/agency/audit_store/${auditStoreId}/answer`).then( r => r.data);
+}
+
+export function setAnswerText(auditStoreId, questionId, answerText){
+	return axios.post(`/agency/audit_store/${auditStoreId}/question/${questionId}/answer`, {
+		answer_text: answerText,
+	}).then( r => r.data);
+}
+
+export function setAnswerComment(auditStoreId, questionId, answerComment){
+	return axios.post(`/agency/audit_store/${auditStoreId}/question/${questionId}/answer_comment`, {
+		answer_comment: answerComment,
+	}).then( r => r.data);
 }
 

@@ -41,7 +41,7 @@ export class __AuditStoreReport extends React.Component {
 			return (<div>
 				<AuditStoreDetails auditStore={this.props.auditStore}/>
 				<AuditStoreButtonPanel auditStoreId={this.props.auditStore.id}/>
-				<SectionList auditStoreId={this.props.auditStore.id}/>
+				<SectionList auditStoreId={this.props.auditStore.id} showErrors={false}/>
 				<AuditStoreButtonPanel auditStoreId={this.props.auditStore.id}/>
 			</div>);
 		} else {

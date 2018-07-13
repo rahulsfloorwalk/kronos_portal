@@ -18,6 +18,20 @@ class __AuditStoreButtonPanel extends React.Component {
 		submitStatus: "",
 	};
 
+	resetState = () => this.setState((prevState) => Object.assign({}, prevState, { submitMessage: "", submitStatus: "", }));
+
+	submitAuditStore = () => {
+		this.resetState();
+		this.props.submitAuditStore().catch((err) => {
+			if(err.response){
+				this.setState({
+					submitMessage: err.response.data["non_field_errors"][0],
+					submitStatus: "danger",
+				});
+			}
+		});
+	};
+
 	render(){
 		if(this.props.status === "ASSIGNED"){
 			return <div className="form-group">
@@ -30,7 +44,7 @@ class __AuditStoreButtonPanel extends React.Component {
 			</div>;
 		} else if(this.props.status === "ACKNOWLEDGED"){
 			return <div className="form-group">
-				<button onClick={this.props.submitAuditStore} type="button" className="btn btn-primary btn-lg">
+				<button onClick={this.submitAuditStore} type="button" className="btn btn-primary btn-lg">
 					Submit Report
 				</button>
 				&nbsp;

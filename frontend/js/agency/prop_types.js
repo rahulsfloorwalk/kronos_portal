@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 
+import { QuestionType } from "../constants.js";
+
 export const auditStorePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
 	status: PropTypes.string.isRequired,
@@ -20,4 +22,12 @@ export const auditStorePropType = PropTypes.shape({
 			address: PropTypes.string,
 		}).isRequired,
 	}).isRequired,
+});
+
+export const questionPropType = PropTypes.shape({
+	id: PropTypes.number.isRequired,
+	sequence: PropTypes.number.isRequired,
+	question_txt: PropTypes.string.isRequired,
+	question_type: PropTypes.oneOf(QuestionType).isRequired,
+	question_data: PropTypes.object.isRequired,
 });

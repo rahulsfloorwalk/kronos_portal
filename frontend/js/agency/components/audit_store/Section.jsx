@@ -32,11 +32,11 @@ export class __Section extends React.Component{
 	render(){
 		if(this.props.auditStore && this.props.section){
 		const questionRows = [];
-		//if( this.props.section.questions){
-		//	for(let q of this.props.section.questions){
-		//		questionRows.push(<QuestionRow question={q} key={q.id} showErrors={this.props.showErrors}/>);
-		//	}
-		//}
+		if( this.props.section.questions){
+			for(let q of this.props.section.questions){
+				questionRows.push(<QuestionRow auditStoreId={this.props.auditStore.id} question={q} key={q.id} showErrors={this.props.showErrors}/>);
+			}
+		}
 		if(questionRows.length === 0){
 			questionRows.push(<tr key="empty"><td className="text-center text-muted">no questions here</td></tr>);
 		}

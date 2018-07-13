@@ -10,3 +10,8 @@ export const AuditStoreStatus = [
 	"REJECTED",
 	"WITHDRAWN",
 ];
+
+export const QuestionType = [
+	"PLAIN",
+	"MUTEX",
+];
