@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { } from "react-router";
 
-//import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
+import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
 import QuestionRow from "./QuestionRow.jsx";
 import AuditorComment from "./AuditorComment.jsx";
 
@@ -76,7 +76,7 @@ export class __Section extends React.Component{
 						</tr>
 					</tbody>
 				</table>
-				{/*<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id}/>*/}
+				<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
 			</div>
 		);
 		} else {
