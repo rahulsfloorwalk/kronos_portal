@@ -53,7 +53,7 @@ class Answer(Model):
         if answer_text is None:
             raise AppLogicError("answer cannot be none")
 
-        if self.question.question_type == Question.MUTEX:
+        if answer_text and self.question.question_type == Question.MUTEX:
             result = [o for o in self.question.question_data["options"] if o["value"] == answer_text]
             if len(result) == 1:
                 self.marks_obtained = result[0]["marks"]
@@ -64,6 +64,10 @@ class Answer(Model):
         elif self.question.question_type == Question.PLAIN:
             self.answer_text = answer_text
             self.save()
+
+        self.answer_text = answer_text
+        self.answer_text_original = answer_text
+        self.save()
 
     def set_marks_obtained(self, marks_obtained):
         if marks_obtained > self.question.max_marks:

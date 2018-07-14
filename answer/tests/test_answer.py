@@ -62,6 +62,13 @@ class AnswerTestCase(TestCase):
             ],
         }
 
+    def test_set_answer_text_allows_blank_answer_when_question_type_is_mutex(self):
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
+        answer_text = ""
+        answer.set_answer_text(answer_text)
+        self.assertEqual(answer_text, answer.answer_text)
+
     def test_set_answer_text_sets_answer_text_when_question_type_is_mutex(self):
         question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
         answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)

@@ -90,17 +90,30 @@ class AnswerModeratorServiceTestCase(TestCase):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user=self.auditor_user, status=AuditStore.PM_REVIEW)
         assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
-        answer = mommy.make(
+        plain_answer = mommy.make(
             Answer,
             audit_store=audit_store,
             question__section__audit_cycle=audit_cycle,
             question__question_type=Question.PLAIN,
         )
+        mutex_answer = mommy.make(
+            Answer,
+            audit_store=audit_store,
+            question__section__audit_cycle=audit_cycle,
+            question__question_type=Question.MUTEX,
+        )
         answer_text = ""
         with self.assertRaisesRegex(AppLogicError, "answer text cannot be blank"):
             answer_moderator_service.set_answer_text_for_moderator(
                 audit_store.id,
-                answer.question.id,
+                plain_answer.question.id,
+                answer_text,
+                self.moderator_user.id
+            )
+        with self.assertRaisesRegex(AppLogicError, "answer text cannot be blank"):
+            answer_moderator_service.set_answer_text_for_moderator(
+                audit_store.id,
+                mutex_answer.question.id,
                 answer_text,
                 self.moderator_user.id
             )
