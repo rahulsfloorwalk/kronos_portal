@@ -46,14 +46,22 @@ class AuditStoreRow extends React.Component {
 	static propTypes = {
 		auditStore: auditStorePropShape.isRequired,
 		moderators: PropTypes.arrayOf(moderatorPropShape),
-
 		onUpdate: PropTypes.func.isRequired,
 	};
 	state = {};
 	render() {
 		const auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
-		const auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
-		const auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
+		const agencyUrl = `/agency/${this.props.auditStore.user.id}`
+		let userLink = null;
+		let auditorPhoneLink = null;
+		if(this.props.auditStore.user.profileinfo == null){
+			userLink = (<Link to={agencyUrl}>{this.props.auditStore.user.agencyuser.full_name} {this.props.auditStore.user.agencyuser.full_name}</Link>);
+			auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.mobile_numbers[0].mobile_number}`}>{this.props.auditStore.user.mobile_numbers[0].mobile_number}</a>);
+		}
+		else{
+			userLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
+			auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
+		}
 		let acceptButton = null;
 		if(this.props.auditStore.status == "COMPLETED"){
 			if(this.props.auditStore.audit.audit_cycle){
@@ -62,7 +70,7 @@ class AuditStoreRow extends React.Component {
 		}
 		return(
 			<tr>
-				<td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
+				<td><b>{userLink}</b> ( {auditorPhoneLink})</td>
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				<td className="text-right">{acceptButton}</td>
 				<td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>

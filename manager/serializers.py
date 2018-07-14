@@ -4,6 +4,7 @@ from notifications.models import Notification
 from rest_framework.serializers import CharField, EmailField, BooleanField
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField, RelatedField
 
+from agency.models import AgencyUser, Agency
 from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from audit.models import Audit, AuditCycle
@@ -12,7 +13,7 @@ from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalIn
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
 from questionnaire.models import Section, Question
-from registration.models import Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
+from registration.models import MobileNumber, Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
 from social.models import Facebook
 from referral.models import AuditorReferral
 from .models import City
@@ -205,6 +206,40 @@ class ProfileInfoSmallSerializer(ModelSerializer):
         read_only_fields = fields
 
 
+class MobileNumberSerializer(ModelSerializer):
+    class Meta:
+        model = MobileNumber
+        fields = (
+            'mobile_number',
+            'is_verified',
+        )
+        read_only_fields = fields
+
+
+class AgencySmallSerializer(ModelSerializer):
+    class Meta:
+        model = Agency
+        fields = (
+            'id',
+            'name'
+        )
+        read_only_fields = fields
+
+
+class AgencyUserInfoSerializer(ModelSerializer):
+    agency = AgencySmallSerializer()
+
+    class Meta:
+        model = AgencyUser
+        fields = (
+            'id',
+            'full_name',
+            'agency',
+            'user_id',
+        )
+        read_only_fields = fields
+
+
 class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
     class Meta:
@@ -223,12 +258,17 @@ class AuditApplicationSerializer(ModelSerializer):
 
 class UserSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
+    agencyuser = AgencyUserInfoSerializer()
+    mobile_numbers = MobileNumberSerializer(many=True)
+
     class Meta:
         model = User
         fields = (
             'id',
             'email',
+            'mobile_numbers',
             'profileinfo',
+            'agencyuser',
         )
         read_only_fields = fields
 
