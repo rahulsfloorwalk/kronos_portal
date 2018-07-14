@@ -13,6 +13,7 @@ import { auditStorePropType } from "../../prop_types.js";
 
 import AuditStoreDetails from "./AuditStoreDetails.jsx";
 import AuditStoreButtonPanel from "./AuditStoreButtonPanel.jsx";
+import AttachmentUploadBox from "./AttachmentUploadBox.jsx";
 import SectionList from "./SectionList.jsx";
 
 export class __AuditStoreReport extends React.Component {
@@ -41,6 +42,7 @@ export class __AuditStoreReport extends React.Component {
 			return (<div>
 				<AuditStoreDetails auditStore={this.props.auditStore}/>
 				<AuditStoreButtonPanel auditStoreId={this.props.auditStore.id}/>
+				<AttachmentUploadBox auditStoreId={this.props.auditStore.id}/>
 				<SectionList auditStoreId={this.props.auditStore.id} showErrors={false}/>
 				<AuditStoreButtonPanel auditStoreId={this.props.auditStore.id}/>
 			</div>);
