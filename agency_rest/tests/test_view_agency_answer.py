@@ -74,6 +74,27 @@ class AnswerSubmitViewTestCase(APITestCase):
         self.assertEqual(self.audit_store.id, response.data['audit_store_id'])
         self.assertEqual(answer_text, response.data['answer_text'])
 
+    def test_answer_submit_view_allows_blank_answers(self):
+        self.setup_agency()
+        self.setup_agency_user()
+        self.setup_answer()
+        self.login()
+
+        answer_text = ""
+
+        url = reverse("agency_rest:answer_submit_view", kwargs={
+            "audit_store_id": self.audit_store.id,
+            "question_id": self.plain_question.id
+        })
+        payload = {
+            'answer_text': answer_text
+        }
+
+        response = self.client.post(url, payload, format="json")
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(self.plain_question.id, response.data['question_id'])
+        self.assertEqual(self.audit_store.id, response.data['audit_store_id'])
+        self.assertEqual(answer_text, response.data['answer_text'])
 
 class AnswerCommentViewTestCase(APITestCase):
     fixtures = ['groups']
@@ -106,13 +127,35 @@ class AnswerCommentViewTestCase(APITestCase):
         # login first
         self.client.login(username=self.email, password=self.password)
 
-    def test_answer_submit_view_submits_answer(self):
+    def test_answer_comment_view_saves_answer_comment(self):
         self.setup_agency()
         self.setup_agency_user()
         self.setup_answer()
         self.login()
 
         answer_comment = "foobar"
+
+        url = reverse("agency_rest:answer_comment_view", kwargs={
+            "audit_store_id": self.audit_store.id,
+            "question_id": self.mutex_question.id
+        })
+        payload = {
+            'answer_comment': answer_comment
+        }
+
+        response = self.client.post(url, payload, format="json")
+        self.assertEqual(200, response.status_code)
+        self.assertEqual(self.mutex_question.id, response.data['question_id'])
+        self.assertEqual(self.audit_store.id, response.data['audit_store_id'])
+        self.assertEqual(answer_comment, response.data['answer_comment'])
+
+    def test_answer_comment_view_allows_blank_comments(self):
+        self.setup_agency()
+        self.setup_agency_user()
+        self.setup_answer()
+        self.login()
+
+        answer_comment = ""
 
         url = reverse("agency_rest:answer_comment_view", kwargs={
             "audit_store_id": self.audit_store.id,
@@ -160,7 +203,7 @@ class AnswerListViewTestCase(APITestCase):
         # login first
         self.client.login(username=self.email, password=self.password)
 
-    def test_answer_submit_view_submits_answer(self):
+    def test_answer_list_view_retrieves_answers(self):
         self.setup_agency()
         self.setup_agency_user()
         self.setup_answer()

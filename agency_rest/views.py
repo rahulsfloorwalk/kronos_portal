@@ -138,7 +138,7 @@ class AnswerSubmitView(APIView):
     }
 
     class AnswerDeserializer(Serializer):
-        answer_text = CharField()
+        answer_text = CharField(allow_blank=True)
 
     def post(self, request, audit_store_id, question_id, format=None):
         ds = self.AnswerDeserializer(data=request.data)
@@ -155,7 +155,7 @@ class AnswerCommentView(APIView):
     }
 
     class AnswerDeserializer(Serializer):
-        answer_comment = CharField()
+        answer_comment = CharField(allow_blank=True)
 
     def post(self, request, audit_store_id, question_id, format=None):
         ds = self.AnswerDeserializer(data=request.data)
