@@ -50,8 +50,8 @@ class Answer(Model):
         self.save()
 
     def set_answer_text(self, answer_text):
-        if answer_text in (None, ""):
-            raise AppLogicError("answer cannot be empty")
+        if answer_text is None:
+            raise AppLogicError("answer cannot be none")
 
         if self.question.question_type == Question.MUTEX:
             result = [o for o in self.question.question_data["options"] if o["value"] == answer_text]

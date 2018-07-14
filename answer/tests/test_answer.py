@@ -39,6 +39,12 @@ class AnswerTestCase(TestCase):
         answer.set_answer_text(answer_text)
         self.assertEqual(answer_text, answer.answer_text)
 
+    def test_set_answer_text_allows_blank_answer(self):
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question__question_type=Question.PLAIN)
+        answer_text = ""
+        answer.set_answer_text(answer_text)
+        self.assertEqual(answer_text, answer.answer_text)
+
     def get_sample_question_data(self):
         return {
             "version": Question.QUESTION_DATA_V1,
@@ -76,11 +82,9 @@ class AnswerTestCase(TestCase):
         with self.assertRaises(AppLogicError, msg="invalid answer"):
             answer.set_answer_text("whatever")
 
-    def test_set_answer_text_raises_when_answer_is_blank_or_none(self):
+    def test_set_answer_text_raises_when_answer_is_none(self):
         answer = mommy.make(Answer, audit_store__user__email=fake.email(), question__question_type=Question.PLAIN)
-        with self.assertRaises(AppLogicError, msg="answer cannot be empty"):
-            answer.set_answer_text("")
-        with self.assertRaises(AppLogicError, msg="answer cannot be empty"):
+        with self.assertRaises(AppLogicError, msg="answer cannot be none"):
             answer.set_answer_text(None)
 
     def test_set_marks_obtained_sets_marks_obtained(self):
