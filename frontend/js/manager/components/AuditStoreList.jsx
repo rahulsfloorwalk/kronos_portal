@@ -20,6 +20,8 @@ import { findModerators } from "../service/moderator.js";
 import { getAuditStoreStatus } from "../../utils.js";
 import { fetchAudits } from "../actions/audit.js";
 
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+
 const moderatorPropShape = PropTypes.shape({
 	id: PropTypes.number.isRequired,
 	email: PropTypes.string.isRequired,
@@ -51,17 +53,6 @@ class AuditStoreRow extends React.Component {
 	state = {};
 	render() {
 		const auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
-		const agencyUrl = `/agency/${this.props.auditStore.user.id}`
-		let userLink = null;
-		let auditorPhoneLink = null;
-		if(this.props.auditStore.user.profileinfo == null){
-			userLink = (<Link to={agencyUrl}>{this.props.auditStore.user.agencyuser.full_name} {this.props.auditStore.user.agencyuser.full_name}</Link>);
-			auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.mobile_numbers[0].mobile_number}`}>{this.props.auditStore.user.mobile_numbers[0].mobile_number}</a>);
-		}
-		else{
-			userLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
-			auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
-		}
 		let acceptButton = null;
 		if(this.props.auditStore.status == "COMPLETED"){
 			if(this.props.auditStore.audit.audit_cycle){
@@ -70,7 +61,7 @@ class AuditStoreRow extends React.Component {
 		}
 		return(
 			<tr>
-				<td><b>{userLink}</b> ( {auditorPhoneLink})</td>
+				<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				<td className="text-right">{acceptButton}</td>
 				<td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>

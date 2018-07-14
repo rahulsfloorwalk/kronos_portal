@@ -15,6 +15,8 @@ import { findByAuditCycleId } from '../service/audit_store.js';
 
 import { getAuditStoreStatus } from '../../utils.js';
 
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+
 var AuditStoreRow = React.createClass({
   render: function(){
     let auditorPhoneLink = null;
@@ -29,7 +31,7 @@ var AuditStoreRow = React.createClass({
     }
     return(
       <tr style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${this.props.auditStore.id}/report`)}>
-        <td><b>{auditor_name}</b> ( {auditorPhoneLink})</td>
+        <td><AuditorNameDisplay user={as.user}/></td>
         <td className="text-right">{this.props.auditStore.audit.earnings_per_audit}</td>
         <td className="text-right">{this.props.auditStore.audit.reimbursement}</td>
         <td>{this.props.auditStore.audit.store.city.name}</td>

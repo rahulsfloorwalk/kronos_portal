@@ -14,6 +14,8 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 
 import { findPending, findCompleted } from "../service/audit_store.js";
 
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+
 class AuditStoreList2 extends Component{
 	static propTypes = {
 		auditStores: PropTypes.array,
@@ -28,20 +30,10 @@ class AuditStoreList2 extends Component{
 	render(){
 		let reps = [];
 		for(let as of this.props.auditStores){
-			let auditorPhoneLink = null;
-	    let auditor_name = "";
-	    if(as.user.profileinfo == null){
-	      auditorPhoneLink = (<a href={`tel:${as.user.mobile_numbers[0].mobile_number}`}>{as.user.mobile_numbers[0].mobile_number}</a>);
-	      auditor_name = as.user.agencyuser.full_name;
-	    }
-	    else{
-	      auditorPhoneLink = (<a href={`tel:${as.user.profileinfo.mobile_number}`}>{as.user.profileinfo.mobile_number}</a>);
-	      auditor_name = as.user.profileinfo.first_name + " " + as.user.profileinfo.last_name;
-	    }
 			reps.push( <tr style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}>
 				<td>{as.audit.audit_cycle.client.name}</td>
 				<td>{as.audit.store.name}, {as.audit.store.city.name}</td>
-				<td>{auditor_name} ( {auditorPhoneLink})</td>
+				<td><AuditorNameDisplay user={as.user}/></td>
 				<td className="text-right">{as.audit.earnings_per_audit}</td>
 				<td className="text-right">{as.audit.reimbursement}</td>
 				<td>{as.audit.store.city.name}</td>

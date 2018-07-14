@@ -18,6 +18,7 @@ import AuditStoreRating from "../../components/AuditStoreRating.jsx";
 
 import AttachmentBox from "./AttachmentBox.jsx";
 import AuditStoreSections from "./AuditStoreSections.jsx";
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 
 export default class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -114,7 +115,6 @@ export default class AuditStoreDetails extends React.Component{
 				/>
 			</div>);
 		}
-		let auditorPhoneLink = (<a href={`tel:${this.state.auditStore.user.profileinfo.mobile_number}`}>{this.state.auditStore.user.profileinfo.mobile_number}</a>);
 		let auditorEmailLink = (<a href={`mailto:${this.state.auditStore.user.email}`}>{this.state.auditStore.user.email}</a>);
 
 		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
@@ -171,8 +171,7 @@ export default class AuditStoreDetails extends React.Component{
 							<tr>
 								<td className="text-right">Auditor:</td>
 								<td>
-									<b>{this.state.auditStore.user.profileinfo.first_name} {this.state.auditStore.user.profileinfo.last_name}</b><br/>
-									( <Earphone/> {auditorPhoneLink})
+									<AuditorNameDisplay user={this.state.auditStore.user}/>
 									( <Envelope/> {auditorEmailLink})
 								</td>
 							</tr>
@@ -214,4 +213,3 @@ export default class AuditStoreDetails extends React.Component{
 		);
 	}
 }
-

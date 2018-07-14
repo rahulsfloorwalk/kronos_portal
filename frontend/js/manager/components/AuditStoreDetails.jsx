@@ -35,6 +35,7 @@ import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import { getAuditType } from "../../utils.js";
 
 import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx"
 
 export class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -153,9 +154,9 @@ export class AuditStoreDetails extends React.Component{
 			acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-success">Accept</Link>);
 			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
-		if(this.props.auditStore.status === "ASSIGNED" || 
-			this.props.auditStore.status === "ACKNOWLEDGED" || 
-			this.props.auditStore.status === "SUBMITTED" || 
+		if(this.props.auditStore.status === "ASSIGNED" ||
+			this.props.auditStore.status === "ACKNOWLEDGED" ||
+			this.props.auditStore.status === "SUBMITTED" ||
 			this.props.auditStore.status === "PM_REVIEW"
 		){
 			moreOptionsDropdown = (<div className="btn-group">
@@ -199,8 +200,6 @@ export class AuditStoreDetails extends React.Component{
 			<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
 		</div>);
 		let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
-		let auditorLink = (<Link to={auditorUrl}>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</Link>);
-		let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
 
 		let errorFirst;
 		if(this.props.errors && this.props.errors.non_field_errors){
@@ -258,7 +257,7 @@ export class AuditStoreDetails extends React.Component{
 							</tr>
 							<tr>
 								<td className="text-right">Auditor:</td>
-								<td><b>{auditorLink}</b> ( {auditorPhoneLink})</td>
+								<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 							</tr>
 							<tr>
 								<td className="text-right">Audit Date:</td>
