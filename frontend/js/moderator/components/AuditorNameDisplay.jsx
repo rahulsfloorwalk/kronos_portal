@@ -1,26 +1,36 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Envelope, Earphone } from "../../components/Icons.jsx";
 export default class AuditorNameDisplay extends Component{
+  static propTypes = {
+		user: PropTypes.shape({
+			profileinfo: PropTypes.shape({
+        first_name: PropTypes.string,
+        last_name: PropTypes.string,
+        mobile_number: PropTypes.string
+      }),
+      agencyuser: PropTypes.shape({
+        full_name: PropTypes.string,
+      }),
+      mobile_numbers: PropTypes.array
+		}).isRequired,
+	};
 
-  constructor(props){
-		super(props);
-		this.state = {
-		};
-  }
+  state = {};
 
   render(){
     let auditorPhoneLink = null;
-    let auditor_name = "";
+    let auditorName = "";
     if(this.props.user.profileinfo == null){
       auditorPhoneLink = (<a href={`tel:${this.props.user.mobile_numbers[0].mobile_number}`}>{this.props.user.mobile_numbers[0].mobile_number}</a>);
-      auditor_name = this.props.user.agencyuser.full_name;
+      auditorName = this.props.user.agencyuser.full_name;
     }
     else{
       auditorPhoneLink = (<a href={`tel:${this.props.user.profileinfo.mobile_number}`}>{this.props.user.profileinfo.mobile_number}</a>);
-      auditor_name = this.props.user.profileinfo.first_name + " " + this.props.user.profileinfo.last_name;
+      auditorName = this.props.user.profileinfo.first_name + " " + this.props.user.profileinfo.last_name;
     }
     return(
-      <div><b>{auditor_name}</b> ({auditorPhoneLink})</div>
+      <div><b>{auditorName}</b> ({auditorPhoneLink})</div>
     );
   }
 }

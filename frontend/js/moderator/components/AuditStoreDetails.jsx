@@ -115,7 +115,7 @@ export default class AuditStoreDetails extends React.Component{
 				/>
 			</div>);
 		}
-		let auditorEmailLink = (<a href={`mailto:${this.state.auditStore.user.email}`}>{this.state.auditStore.user.email}</a>);
+		const auditorEmailLink = (<a href={`mailto:${this.state.auditStore.user.email}`}>{this.state.auditStore.user.email}</a>);
 
 		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
 
