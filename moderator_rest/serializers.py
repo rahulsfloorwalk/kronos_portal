@@ -2,6 +2,8 @@ from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRe
 from rest_framework.serializers import CharField, EmailField
 from django.contrib.auth.models import User
 
+from registration.models import MobileNumber
+from agency.models import Agency, AgencyUser
 from client.models import Client, Store
 from manager.models import City
 from audit.models import AuditCycle, Audit
@@ -81,15 +83,52 @@ class ProfileInfoSmallSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class MobileNumberSerializer(ModelSerializer):
+    class Meta:
+        model = MobileNumber
+        fields = (
+            'mobile_number',
+            'is_verified',
+        )
+        read_only_fields = fields
+
+
+class AgencySmallSerializer(ModelSerializer):
+    class Meta:
+        model = Agency
+        fields = (
+            'id',
+            'name'
+        )
+        read_only_fields = fields
+
+
+class AgencyUserInfoSerializer(ModelSerializer):
+    agency = AgencySmallSerializer()
+
+    class Meta:
+        model = AgencyUser
+        fields = (
+            'id',
+            'full_name',
+            'agency',
+            'user_id',
+        )
+        read_only_fields = fields
+
 
 class UserSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
+    agencyuser = AgencyUserInfoSerializer()
+    mobile_numbers = MobileNumberSerializer(many=True)
     class Meta:
         model = User
         fields = (
             'id',
             'email',
+            'mobile_numbers',
             'profileinfo',
+            'agencyuser',
         )
         read_only_fields = fields
 

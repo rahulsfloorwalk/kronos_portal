@@ -17,10 +17,19 @@ import { getAuditStoreStatus } from '../../utils.js';
 
 var AuditStoreRow = React.createClass({
   render: function(){
-    let auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
+    let auditorPhoneLink = null;
+    let auditor_name = "";
+    if(this.props.auditStore.user.profileinfo == null){
+      auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.mobile_numbers[0].mobile_number}`}>{this.props.auditStore.user.mobile_numbers[0].mobile_number}</a>);
+      auditor_name = this.props.auditStore.user.agencyuser.full_name;
+    }
+    else{
+      auditorPhoneLink = (<a href={`tel:${this.props.auditStore.user.profileinfo.mobile_number}`}>{this.props.auditStore.user.profileinfo.mobile_number}</a>);
+      auditor_name = this.props.auditStore.user.profileinfo.first_name + " " + this.props.auditStore.user.profileinfo.last_name;
+    }
     return(
       <tr style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${this.props.auditStore.id}/report`)}>
-        <td><b>{this.props.auditStore.user.profileinfo.first_name} {this.props.auditStore.user.profileinfo.last_name}</b> ( {auditorPhoneLink})</td>
+        <td><b>{auditor_name}</b> ( {auditorPhoneLink})</td>
         <td className="text-right">{this.props.auditStore.audit.earnings_per_audit}</td>
         <td className="text-right">{this.props.auditStore.audit.reimbursement}</td>
         <td>{this.props.auditStore.audit.store.city.name}</td>
@@ -73,4 +82,3 @@ export default React.createClass({
 		);
 	},
 });
-
