@@ -21,6 +21,12 @@ class __PlainAnswerElement extends React.Component {
 		onFocus: PropTypes.func.isRequired,
 		onBlur: PropTypes.func.isRequired,
 	};
+
+	submitAnswer = (e) => {
+		e.preventDefault();
+		this.props.onBlur();
+	};
+
 	render(){
 		if(this.props.editable){
 			return <form className="" onSubmit={this.submitAnswer}>
@@ -165,7 +171,7 @@ class __AnswerElement extends React.Component{
 				onChange={this.answerChanged}
 
 				onFocus={this.onFocus}
-				onBlur={this.saveAnswerText}
+				onBlur={this.onBlur}
 
 				questionId={this.props.question.id}
 				auditStoreId={this.props.auditStore.id}

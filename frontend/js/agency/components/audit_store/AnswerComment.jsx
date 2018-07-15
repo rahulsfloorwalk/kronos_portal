@@ -38,7 +38,9 @@ class __AnswerComment extends Component {
 
 	onBlur = (e) => {
 		this.commentChanged(e);
-		this.props.onChange(e.target.value);
+		if( this.props.answerComment !== this.state.answerComment){
+			this.props.onChange(e.target.value);
+		}
 	};
 
 	render(){
