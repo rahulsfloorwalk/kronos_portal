@@ -47,7 +47,6 @@ const mapStateToProps = (store, ownProps) => {
 	return {
 		auditStore: findAuditStore( store, ownProps.auditStoreId),
 		sections: store.sections,
-		showErrors: ownProps.showErrors,
 	};
 };
 

@@ -130,8 +130,7 @@ class __AnswerElement extends React.Component{
 	}
 
 	onFocus = () => {
-		this.setState({
-		});
+		this.props.onFocus();
 	};
 
 	answerChanged = (e) => {
@@ -140,10 +139,11 @@ class __AnswerElement extends React.Component{
 		});
 	};
 
-	saveAnswerText = () => {
+	onBlur = () => {
 		if( this.props.answerText !== this.state.answerText){
 			this.props.setAnswerText(this.state.answerText);
 		}
+		this.props.onBlur();
 	};
 
 	render(){
@@ -155,7 +155,7 @@ class __AnswerElement extends React.Component{
 				onChange={this.answerChanged}
 
 				onFocus={this.onFocus}
-				onBlur={this.saveAnswerText}
+				onBlur={this.onBlur}
 			/>;
 		} else if(this.props.question.question_type === "MUTEX") {
 			return <__MutexAnswerElement

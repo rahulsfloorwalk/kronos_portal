@@ -70,7 +70,10 @@ const mapStoreToProps = (store, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		submitAuditStore : () => dispatch(submitAuditStore(ownProps.auditStoreId)),
+		submitAuditStore : () => {
+			ownProps.onSubmit();
+			return dispatch(submitAuditStore(ownProps.auditStoreId));
+		},
 		acknowledgeAuditStore: () => dispatch(acknowledgeAuditStore(ownProps.auditStoreId)),
 	};
 };
@@ -79,6 +82,7 @@ const AuditStoreButtonPanel = connect(mapStoreToProps, mapDispatchToProps)(__Aud
 
 AuditStoreButtonPanel.propTypes = {
 	auditStoreId: PropTypes.number.isRequired,
+	onSubmit: PropTypes.func.isRequired,
 };
 
 export default AuditStoreButtonPanel;

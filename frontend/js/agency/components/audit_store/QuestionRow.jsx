@@ -17,7 +17,7 @@ class __QuestionRow extends React.Component{
 
 		showErrors: PropTypes.bool,
 
-		answer: PropTypes.object,
+		answerText: PropTypes.string,
 		auditStore: PropTypes.object,
 	};
 
@@ -44,8 +44,8 @@ class __QuestionRow extends React.Component{
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
-		const goodClass = this.props.answer && this.props.answer.answer_text ? "success" : "";
-		const badClass = this.props.showErrors && !this.state.answer_text ? "danger" : "";
+		const goodClass = this.props.answerText ? "success" : "";
+		const badClass = this.props.showErrors && (this.props.answerText ? "" : "danger");
 		return (
 			<tr className={goodClass || badClass}>
 				<td>
@@ -80,8 +80,9 @@ const findAuditStore = (store, auditStoreId) => {
 };
 
 const mapStoreToProps = (store, ownProps) => {
+	const answer = findAnswer(store, ownProps.auditStoreId, ownProps.question.id);
 	return {
-		answer: findAnswer(store, ownProps.auditStoreId, ownProps.question.id),
+		answerText: answer && answer.answer_text,
 		auditStore : findAuditStore(store, ownProps.auditStoreId),
 	};
 };

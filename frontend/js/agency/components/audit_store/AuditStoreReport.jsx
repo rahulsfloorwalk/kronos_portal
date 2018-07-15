@@ -30,6 +30,8 @@ export class __AuditStoreReport extends React.Component {
 		showErrors: false,
 	};
 
+	setShowErrors = () => this.setState((prevState) => Object.assign({}, prevState, { showErrors: true }));
+
 	componentDidMount() {
 		this.props.fetchAuditStore();
 		this.props.fetchSections();
@@ -39,12 +41,13 @@ export class __AuditStoreReport extends React.Component {
 
 	render(){
 		if(this.props.auditStore) {
+			const buttonPanel = <AuditStoreButtonPanel auditStoreId={this.props.auditStore.id} onSubmit={this.setShowErrors}/>;
 			return (<div>
 				<AuditStoreDetails auditStore={this.props.auditStore}/>
-				<AuditStoreButtonPanel auditStoreId={this.props.auditStore.id}/>
+				{buttonPanel}
 				<AttachmentUploadBox auditStoreId={this.props.auditStore.id}/>
-				<SectionList auditStoreId={this.props.auditStore.id} showErrors={false}/>
-				<AuditStoreButtonPanel auditStoreId={this.props.auditStore.id}/>
+				<SectionList auditStoreId={this.props.auditStore.id} showErrors={this.state.showErrors}/>
+				{buttonPanel}
 			</div>);
 		} else {
 			return <Loading/>;
