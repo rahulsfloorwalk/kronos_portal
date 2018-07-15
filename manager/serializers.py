@@ -13,7 +13,8 @@ from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalIn
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
 from questionnaire.models import Section, Question
-from registration.models import MobileNumber, Verification, GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR
+from registration.models import MobileNumber, Verification
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR, GROUP_NAME_AGENCY
 from social.models import Facebook
 from referral.models import AuditorReferral
 from .models import City
@@ -641,6 +642,8 @@ class NotificationSerializer(ModelSerializer):
                 serializer = UserSerializer(value)
             elif value.groups.filter(name=GROUP_NAME_MODERATOR).exists():
                 serializer = PlainUserSerializer(value)
+            elif value.groups.filter(name=GROUP_NAME_AGENCY).exists():
+                serializer = UserSerializer(value)
             else:
                 raise ValueError("Cannot serialize user with unknown user groups:{}".format(value.groups.all()))
             return serializer.data
