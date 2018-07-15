@@ -158,7 +158,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'user',
-            'is_editable_by_auditor',
+            'is_editable_by_agency',
         )
         read_only_fields = fields
 

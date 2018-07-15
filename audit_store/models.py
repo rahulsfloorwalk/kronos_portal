@@ -94,6 +94,7 @@ class AuditStore(Model):
     _MANAGER_EDITABLE_STATUSES = (SUBMITTED, PM_REVIEW,)
     _MODERATOR_EDITABLE_STATUSES = (SUBMITTED,)
     _AUDITOR_EDITABLE_STATUSES = (ACKNOWLEDGED,)
+    _AGENCY_EDITABLE_STATUSES = (ACKNOWLEDGED,)
 
     AGENCY_VISIBILITY_STATUSES = (ASSIGNED, ACKNOWLEDGED, SUBMITTED, PM_REVIEW, COMPLETED, ACCEPTED, FAILED, REJECTED)
 
@@ -161,6 +162,9 @@ class AuditStore(Model):
 
     def is_editable_by_auditor(self):
         return self.status in self._AUDITOR_EDITABLE_STATUSES
+
+    def is_editable_by_agency(self):
+        return self.status in self._AGENCY_EDITABLE_STATUSES
 
     def is_editable_by_moderator(self):
         return self.status in self._MODERATOR_EDITABLE_STATUSES

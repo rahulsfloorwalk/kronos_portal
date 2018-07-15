@@ -197,7 +197,7 @@ const mapStoreToProps = (store, ownProps) => {
 		answer: answer,
 		answerText: answer && answer.answer_text,
 		auditStore: auditStore,
-		editable: auditStore && auditStore.is_editable_by_auditor,
+		editable: auditStore && auditStore.is_editable_by_agency,
 	};
 };
 

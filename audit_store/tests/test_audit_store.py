@@ -505,6 +505,15 @@ class AuditStoreTestCase(TestCase):
                 audit_store.is_editable_by_auditor()
             )
 
+    def test_is_editable_by_agency_for_all_statuses(self):
+        audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
+        for status in [s[0] for s in AuditStore.STATUS]:
+            audit_store = audit_store_recipe.make(status=status)
+            self.assertEqual(
+                audit_store.status in audit_store._AGENCY_EDITABLE_STATUSES,
+                audit_store.is_editable_by_agency()
+            )
+
     def test_is_submittable_returns_true(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)

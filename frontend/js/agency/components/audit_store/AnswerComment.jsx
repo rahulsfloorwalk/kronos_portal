@@ -67,7 +67,7 @@ const mapStoreToProps = (store, ownProps) => {
 	const auditStore = findAuditStore(store, ownProps.auditStoreId);
 	return {
 		answerComment: answer && answer.answer_comment,
-		editable: auditStore && auditStore.is_editable_by_auditor,
+		editable: auditStore && auditStore.is_editable_by_agency,
 	};
 };
 
@@ -85,4 +85,3 @@ AnswerComment.propTypes = {
 };
 
 export default AnswerComment;
-

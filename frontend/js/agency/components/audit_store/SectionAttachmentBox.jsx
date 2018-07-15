@@ -120,14 +120,14 @@ export default class SectionAttachmentBox extends React.Component{
 
 	render(){
 		let uploadButton;
-		if(this.props.auditStore && this.props.auditStore.is_editable_by_auditor){
+		if(this.props.auditStore && this.props.auditStore.is_editable_by_agency){
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm" style={{
 			}}><Paperclip/> Upload</button>);
 		}
 
 		const attachmentRows = [];
 		for(const a of this.state.attachments){
-			const deletable = this.props.auditStore && this.props.auditStore.is_editable_by_auditor;
+			const deletable = this.props.auditStore && this.props.auditStore.is_editable_by_agency;
 			attachmentRows.push(<AttachmentThumbnail
 				key={a.id}
 				attachment={a}

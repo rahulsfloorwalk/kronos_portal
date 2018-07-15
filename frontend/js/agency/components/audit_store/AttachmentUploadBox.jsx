@@ -116,8 +116,8 @@ class __AttachmentUploadBox extends React.Component {
 		}
 
 		let uploadButton;
-		const deletable = this.props.auditStore.is_editable_by_auditor;
-		if(this.props.auditStore.is_editable_by_auditor){
+		const deletable = this.props.auditStore.is_editable_by_agency;
+		if(this.props.auditStore.is_editable_by_agency){
 			uploadButton = (
 				<span>
 					<input type="file" multiple
