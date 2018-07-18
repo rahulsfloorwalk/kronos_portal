@@ -1,10 +1,13 @@
 
 from django.test import TestCase
 
+from model_mommy import mommy
+
 from faker import Faker
 
 from audit.models import AuditCycle
 from client_report.service import city_trends
+from questionnaire.models import QuestionnaireType
 
 fake = Faker()
 
@@ -16,6 +19,7 @@ class CityTrendsTestCase(TestCase):
         self.client_user_id = 4
         self.client_admin_id = 5
         self.questionnaire_type_id = 1
+        self.client_id = 1
 
     def test_get_performing_cities(self):
         audit_cycle = AuditCycle.objects.get(pk=self.audit_cycle_id)
@@ -29,7 +33,16 @@ class CityTrendsTestCase(TestCase):
         self.assertEqual(len(performing_cities['columns']), 3)
         self.assertEqual(len(performing_cities['data']), 7)
 
+    def test_get_performing_cities_by_type_for_clientuser_returns_dict_when_no_audit_cycles_exist_for_questionnaire_type(self):
+        qtype = mommy.make(QuestionnaireType, client_id=self.client_id)
+        performing_cities = city_trends.get_performing_cities_by_type_for_clientuser(qtype.id, self.client_admin_id)
 
+        self.assertIn('type', performing_cities)
+        self.assertEqual(performing_cities['type'], qtype.id)
 
+        self.assertIn('columns', performing_cities)
+        self.assertEqual(len(performing_cities['columns']), 0)
 
+        self.assertIn('data', performing_cities)
+        self.assertEqual(len(performing_cities['data']), 0)
 

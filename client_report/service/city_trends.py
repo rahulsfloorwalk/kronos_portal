@@ -65,7 +65,12 @@ def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id)
 
     audit_cycle_count = qs.count()
     if audit_cycle_count is 0:
-        return []
+        return {
+            'type': questionnaire_type_id,
+            'questionnaire_type': questionnaire_type_id,
+            'columns': [],
+            'data': [],
+        }
 
     if audit_cycle_count > 3:
         audit_cycles = qs[audit_cycle_count - 3:]
