@@ -17,3 +17,7 @@ export default (reportSections=[], action) => {
 		return reportSections;
 	}
 };
+
+export const findReportSection = (store, auditStoreId, sectionId) => {
+	return store.reportSections.find((rs) => rs.audit_store_id === auditStoreId && rs.section_id === sectionId);
+};

@@ -16,6 +16,8 @@ import AuditStoreButtonPanel from "./AuditStoreButtonPanel.jsx";
 import AttachmentUploadBox from "./AttachmentUploadBox.jsx";
 import SectionList from "./SectionList.jsx";
 
+import { findAuditStore } from "../../reducers/audit_store.js";
+
 export class __AuditStoreReport extends React.Component {
 	static propTypes = {
 		fetchAuditStore: PropTypes.func.isRequired,
@@ -54,10 +56,6 @@ export class __AuditStoreReport extends React.Component {
 		}
 	}
 }
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStoreToProps = (store, ownProps) => {
 	return {

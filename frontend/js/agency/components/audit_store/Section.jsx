@@ -7,6 +7,9 @@ import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
 import QuestionRow from "./QuestionRow.jsx";
 import AuditorComment from "./AuditorComment.jsx";
 
+import { findAuditStore } from "../../reducers/audit_store.js";
+import { findReportSection } from "../../reducers/report_section.js";
+
 import { auditStorePropType } from "../../prop_types.js";
 
 export class __Section extends React.Component{
@@ -86,16 +89,8 @@ export class __Section extends React.Component{
 	}
 }
 
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
-
 const findSection = (store, sectionId) => {
 	return store.sections.find((s) => s.id === sectionId);
-};
-
-const findReportSection = (store, auditStoreId, sectionId) => {
-	return store.reportSections.find((rs) => rs.audit_store_id === auditStoreId && rs.section_id === sectionId);
 };
 
 const mapStateToProps = (store, ownProps) => {

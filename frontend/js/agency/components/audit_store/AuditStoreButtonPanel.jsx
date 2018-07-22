@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 
 import { submitAuditStore, acknowledgeAuditStore } from "../../actions/audit_store.js";
 import { AuditStoreStatus } from "../../../constants.js";
+import { findAuditStore } from "../../reducers/audit_store.js";
 
 class __AuditStoreButtonPanel extends React.Component {
 	static propTypes = {
@@ -56,10 +57,6 @@ class __AuditStoreButtonPanel extends React.Component {
 		}
 	}
 }
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStoreToProps = (store, ownProps) => {
 	const auditStore = findAuditStore( store, parseInt(ownProps.auditStoreId));

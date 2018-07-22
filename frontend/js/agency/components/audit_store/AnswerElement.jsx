@@ -6,6 +6,8 @@ import { } from "react-router";
 import { } from "../../../components/Icons.jsx";
 
 import { setAnswerText } from "../../actions/answer.js";
+import { findAnswer } from "../../reducers/answer.js";
+import { findAuditStore } from "../../reducers/audit_store.js";
 
 import { questionPropType } from "../../prop_types.js";
 
@@ -181,14 +183,6 @@ class __AnswerElement extends React.Component{
 		}
 	}
 }
-
-const findAnswer = (store, auditStoreId, questionId) => {
-	return store.answers.find((a) => a.audit_store_id === auditStoreId && a.question_id === questionId);
-};
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStoreToProps = (store, ownProps) => {
 	const auditStore = findAuditStore(store, ownProps.auditStoreId);

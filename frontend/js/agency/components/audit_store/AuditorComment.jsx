@@ -2,6 +2,8 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { setAuditorComment } from "../../actions/report_section.js";
+import { findAuditStore } from "../../reducers/audit_store.js";
+import { findReportSection } from "../../reducers/report_section.js";
 
 export class __AuditorComment extends React.Component {
 	static propTypes = {
@@ -69,14 +71,6 @@ export class __AuditorComment extends React.Component {
 		</div>);
 	}
 }
-
-const findReportSection = (store, auditStoreId, sectionId) => {
-	return store.reportSections.find((rs) => rs.audit_store_id === auditStoreId && rs.section_id === sectionId);
-};
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStoreToProps = (store, ownProps) => {
 	const reportSection = findReportSection(store, ownProps.auditStoreId, ownProps.sectionId);

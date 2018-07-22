@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { setAnswerComment } from "../../actions/answer.js";
+import { findAnswer } from "../../reducers/answer.js";
+import { findAuditStore } from "../../reducers/audit_store.js";
 
 export class __AnswerComment extends Component {
 
@@ -53,14 +55,6 @@ export class __AnswerComment extends Component {
 		}
 	}
 }
-
-const findAnswer = (store, auditStoreId, questionId) => {
-	return store.answers.find((a) => a.audit_store_id === auditStoreId && a.question_id === questionId);
-};
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStoreToProps = (store, ownProps) => {
 	const answer = findAnswer(store, ownProps.auditStoreId, ownProps.questionId);

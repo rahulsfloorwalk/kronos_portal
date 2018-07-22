@@ -11,6 +11,7 @@ import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgressThumbnail.jsx";
 
 import { auditStorePropType } from "../../prop_types.js";
+import { findAuditStore } from "../../reducers/audit_store.js";
 
 class __AttachmentUploadBox extends React.Component {
 	static propTypes = {
@@ -170,11 +171,6 @@ class __AttachmentUploadBox extends React.Component {
 		);
 	}
 }
-
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStoreToProps = (store, ownProps) => {
 	return {

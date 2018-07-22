@@ -10,6 +10,8 @@ import Jumbotron from "../../../components/Jumbotron.jsx";
 import { Tasks } from "../../../components/Icons.jsx";
 import { auditStorePropType } from "../../prop_types.js";
 
+import { findAuditStore } from "../../reducers/audit_store.js";
+
 export class __SectionList extends React.Component {
 	static propTypes = {
 		sections: PropTypes.arrayOf(PropTypes.shape({
@@ -38,10 +40,6 @@ export class __SectionList extends React.Component {
 		</div>);
 	}
 }
-
-const findAuditStore = (store, auditStoreId) => {
-	return store.auditStores.find((as) => as.id === auditStoreId);
-};
 
 const mapStateToProps = (store, ownProps) => {
 	return {

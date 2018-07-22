@@ -16,3 +16,7 @@ export default (answers=[], action) => {
 		return answers;
 	}
 };
+
+export const findAnswer = (store, auditStoreId, questionId) => {
+	return store.answers.find((a) => a.audit_store_id === auditStoreId && a.question_id === questionId);
+};

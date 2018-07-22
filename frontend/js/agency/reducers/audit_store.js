@@ -14,3 +14,7 @@ export default (auditStores=[], action) => {
 		return auditStores;
 	}
 };
+
+export const findAuditStore = (store, auditStoreId) => {
+	return store.auditStores.find((as) => as.id === auditStoreId);
+};
