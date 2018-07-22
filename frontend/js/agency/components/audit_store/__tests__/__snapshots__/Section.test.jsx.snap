@@ -1,0 +1,540 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__Section/> renders correctly when a section has no questions 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h4
+      className="panel-title"
+    >
+      1
+       - 
+      <b>
+        Personal Details
+      </b>
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-1 text-right"
+            >
+              #
+            </div>
+            <div
+              className="col-xs-10 col-md-5"
+            >
+              Question
+            </div>
+            <div
+              className="col-xs-12 col-md-6 hidden-xs hidden-sm"
+            >
+              Answer
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          className="text-center text-muted"
+        >
+          no questions here
+        </td>
+      </tr>
+      <tr
+        className=""
+      >
+        <td>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-offset-1 col-md-11"
+            >
+              <Connect(__AuditorComment)
+                auditStoreId={2}
+                sectionId={1}
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <SectionAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "auditor_display_name": "Ravi",
+            },
+            "post_approval_description": "Hello World",
+            "type": "WALKIN",
+          },
+          "earnings_per_audit": 500,
+          "post_approval_description": "Hello World",
+          "reimbursement": 400,
+          "store": Object {
+            "address": "Shankar Nagar, Dharampeth, Nagpur",
+            "name": "Factory Outlet",
+          },
+        },
+        "audit_date": "2018-02-02",
+        "id": 2,
+        "status": "ACKNOWLEDGED",
+      }
+    }
+    auditStoreId={2}
+    sectionId={1}
+  />
+</div>
+`;
+
+exports[`<__Section/> when showErrors is false and auditorComment is '': 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h4
+      className="panel-title"
+    >
+      1
+       - 
+      <b>
+        Personal Details
+      </b>
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-1 text-right"
+            >
+              #
+            </div>
+            <div
+              className="col-xs-10 col-md-5"
+            >
+              Question
+            </div>
+            <div
+              className="col-xs-12 col-md-6 hidden-xs hidden-sm"
+            >
+              Answer
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <Connect(__QuestionRow)
+        auditStoreId={2}
+        question={
+          Object {
+            "id": 1,
+            "question_data": Object {},
+            "question_txt": "How are you feeling today?",
+            "question_type": "PLAIN",
+            "sequence": 1,
+          }
+        }
+        showErrors={false}
+      />
+      <tr
+        className=""
+      >
+        <td>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-offset-1 col-md-11"
+            >
+              <Connect(__AuditorComment)
+                auditStoreId={2}
+                sectionId={1}
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <SectionAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "auditor_display_name": "Ravi",
+            },
+            "post_approval_description": "Hello World",
+            "type": "WALKIN",
+          },
+          "earnings_per_audit": 500,
+          "post_approval_description": "Hello World",
+          "reimbursement": 400,
+          "store": Object {
+            "address": "Shankar Nagar, Dharampeth, Nagpur",
+            "name": "Factory Outlet",
+          },
+        },
+        "audit_date": "2018-02-02",
+        "id": 2,
+        "status": "ACKNOWLEDGED",
+      }
+    }
+    auditStoreId={2}
+    sectionId={1}
+  />
+</div>
+`;
+
+exports[`<__Section/> when showErrors is false and auditorComment is 'Hello World': 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h4
+      className="panel-title"
+    >
+      1
+       - 
+      <b>
+        Personal Details
+      </b>
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-1 text-right"
+            >
+              #
+            </div>
+            <div
+              className="col-xs-10 col-md-5"
+            >
+              Question
+            </div>
+            <div
+              className="col-xs-12 col-md-6 hidden-xs hidden-sm"
+            >
+              Answer
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <Connect(__QuestionRow)
+        auditStoreId={2}
+        question={
+          Object {
+            "id": 1,
+            "question_data": Object {},
+            "question_txt": "How are you feeling today?",
+            "question_type": "PLAIN",
+            "sequence": 1,
+          }
+        }
+        showErrors={false}
+      />
+      <tr
+        className="success"
+      >
+        <td>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-offset-1 col-md-11"
+            >
+              <Connect(__AuditorComment)
+                auditStoreId={2}
+                sectionId={1}
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <SectionAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "auditor_display_name": "Ravi",
+            },
+            "post_approval_description": "Hello World",
+            "type": "WALKIN",
+          },
+          "earnings_per_audit": 500,
+          "post_approval_description": "Hello World",
+          "reimbursement": 400,
+          "store": Object {
+            "address": "Shankar Nagar, Dharampeth, Nagpur",
+            "name": "Factory Outlet",
+          },
+        },
+        "audit_date": "2018-02-02",
+        "id": 2,
+        "status": "ACKNOWLEDGED",
+      }
+    }
+    auditStoreId={2}
+    sectionId={1}
+  />
+</div>
+`;
+
+exports[`<__Section/> when showErrors is true and auditorComment is '': 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h4
+      className="panel-title"
+    >
+      1
+       - 
+      <b>
+        Personal Details
+      </b>
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-1 text-right"
+            >
+              #
+            </div>
+            <div
+              className="col-xs-10 col-md-5"
+            >
+              Question
+            </div>
+            <div
+              className="col-xs-12 col-md-6 hidden-xs hidden-sm"
+            >
+              Answer
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <Connect(__QuestionRow)
+        auditStoreId={2}
+        question={
+          Object {
+            "id": 1,
+            "question_data": Object {},
+            "question_txt": "How are you feeling today?",
+            "question_type": "PLAIN",
+            "sequence": 1,
+          }
+        }
+        showErrors={true}
+      />
+      <tr
+        className="danger"
+      >
+        <td>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-offset-1 col-md-11"
+            >
+              <Connect(__AuditorComment)
+                auditStoreId={2}
+                sectionId={1}
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <SectionAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "auditor_display_name": "Ravi",
+            },
+            "post_approval_description": "Hello World",
+            "type": "WALKIN",
+          },
+          "earnings_per_audit": 500,
+          "post_approval_description": "Hello World",
+          "reimbursement": 400,
+          "store": Object {
+            "address": "Shankar Nagar, Dharampeth, Nagpur",
+            "name": "Factory Outlet",
+          },
+        },
+        "audit_date": "2018-02-02",
+        "id": 2,
+        "status": "ACKNOWLEDGED",
+      }
+    }
+    auditStoreId={2}
+    sectionId={1}
+  />
+</div>
+`;
+
+exports[`<__Section/> when showErrors is true and auditorComment is 'Hello World': 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <h4
+      className="panel-title"
+    >
+      1
+       - 
+      <b>
+        Personal Details
+      </b>
+    </h4>
+  </div>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-1 text-right"
+            >
+              #
+            </div>
+            <div
+              className="col-xs-10 col-md-5"
+            >
+              Question
+            </div>
+            <div
+              className="col-xs-12 col-md-6 hidden-xs hidden-sm"
+            >
+              Answer
+            </div>
+          </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <Connect(__QuestionRow)
+        auditStoreId={2}
+        question={
+          Object {
+            "id": 1,
+            "question_data": Object {},
+            "question_txt": "How are you feeling today?",
+            "question_type": "PLAIN",
+            "sequence": 1,
+          }
+        }
+        showErrors={true}
+      />
+      <tr
+        className="success"
+      >
+        <td>
+          <div
+            className="row"
+          >
+            <div
+              className="col-xs-offset-1 col-md-11"
+            >
+              <Connect(__AuditorComment)
+                auditStoreId={2}
+                sectionId={1}
+              />
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <SectionAttachmentBox
+    auditStore={
+      Object {
+        "audit": Object {
+          "audit_cycle": Object {
+            "client": Object {
+              "auditor_display_name": "Ravi",
+            },
+            "post_approval_description": "Hello World",
+            "type": "WALKIN",
+          },
+          "earnings_per_audit": 500,
+          "post_approval_description": "Hello World",
+          "reimbursement": 400,
+          "store": Object {
+            "address": "Shankar Nagar, Dharampeth, Nagpur",
+            "name": "Factory Outlet",
+          },
+        },
+        "audit_date": "2018-02-02",
+        "id": 2,
+        "status": "ACKNOWLEDGED",
+      }
+    }
+    auditStoreId={2}
+    sectionId={1}
+  />
+</div>
+`;
