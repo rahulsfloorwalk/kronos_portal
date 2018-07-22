@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__AuditorComment/> when auditor comment is editable renders a comment correctly 1`] = `
+<div>
+  <p>
+    <b>
+      Section Summary:
+    </b>
+     
+  </p>
+  <input
+    className="form-control"
+    name="auditorComment"
+    onBlur={[Function]}
+    onChange={[Function]}
+    placeholder="type out your relevant experience here in a few sentences"
+    value="Hello World"
+  />
+</div>
+`;
+
+exports[`<__AuditorComment/> when auditor comment is not editable renders a comment correctly 1`] = `
+<div>
+  <p>
+    <b>
+      Section Summary:
+    </b>
+     
+  </p>
+  <p>
+    Hello World
+  </p>
+</div>
+`;
