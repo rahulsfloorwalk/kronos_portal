@@ -17,7 +17,7 @@ import MutexAnswerElement from "./MutexAnswerElement.jsx";
 export class __AnswerElement extends React.Component{
 	static propTypes = {
 		question: questionPropType.isRequired,
-		auditStore: PropTypes.object,
+		auditStoreId: PropTypes.number.isRequired,
 
 		answerText: PropTypes.string.isRequired,
 		setAnswerText: PropTypes.func.isRequired,
@@ -25,13 +25,11 @@ export class __AnswerElement extends React.Component{
 		onFocus: PropTypes.func.isRequired,
 		onBlur: PropTypes.func.isRequired,
 
-		showErrors: PropTypes.bool.isRequired,
 		editable: PropTypes.bool.isRequired,
 	};
 
 	static defaultProps = {
 		answerText: "",
-		showErrors: false,
 	};
 
 	state = {
@@ -89,7 +87,7 @@ export class __AnswerElement extends React.Component{
 				onBlur={this.onBlur}
 
 				questionId={this.props.question.id}
-				auditStoreId={this.props.auditStore.id}
+				auditStoreId={this.props.auditStoreId}
 
 				options={this.props.question.question_data.options}
 			/>;
@@ -103,7 +101,6 @@ const mapStoreToProps = (store, ownProps) => {
 	return {
 		answer: answer,
 		answerText: answer && answer.answer_text,
-		auditStore: auditStore,
 		editable: auditStore && auditStore.is_editable_by_agency,
 	};
 };
