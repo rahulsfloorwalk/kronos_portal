@@ -1,0 +1,181 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__QuestionRow/> when showErrors is false and answerText is '': 1`] = `
+<tr
+  className={false}
+>
+  <td>
+    <div
+      className="row"
+    >
+      <div
+        className="col-xs-1 text-right"
+      >
+        1
+      </div>
+      <div
+        className="col-xs-10 col-md-5"
+      >
+        <p>
+          <b>
+            How are you feeling today?
+          </b>
+        </p>
+      </div>
+      <div
+        className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6"
+      >
+        <Connect(__AnswerElement)
+          auditStoreId={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          question={
+            Object {
+              "id": 1,
+              "question_data": Object {},
+              "question_txt": "How are you feeling today?",
+              "question_type": "PLAIN",
+              "sequence": 1,
+            }
+          }
+        />
+      </div>
+    </div>
+  </td>
+</tr>
+`;
+
+exports[`<__QuestionRow/> when showErrors is false and answerText is 'Hello World': 1`] = `
+<tr
+  className="success"
+>
+  <td>
+    <div
+      className="row"
+    >
+      <div
+        className="col-xs-1 text-right"
+      >
+        1
+      </div>
+      <div
+        className="col-xs-10 col-md-5"
+      >
+        <p>
+          <b>
+            How are you feeling today?
+          </b>
+        </p>
+      </div>
+      <div
+        className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6"
+      >
+        <Connect(__AnswerElement)
+          auditStoreId={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          question={
+            Object {
+              "id": 1,
+              "question_data": Object {},
+              "question_txt": "How are you feeling today?",
+              "question_type": "PLAIN",
+              "sequence": 1,
+            }
+          }
+        />
+      </div>
+    </div>
+  </td>
+</tr>
+`;
+
+exports[`<__QuestionRow/> when showErrors is true and answerText is '': 1`] = `
+<tr
+  className="danger"
+>
+  <td>
+    <div
+      className="row"
+    >
+      <div
+        className="col-xs-1 text-right"
+      >
+        1
+      </div>
+      <div
+        className="col-xs-10 col-md-5"
+      >
+        <p>
+          <b>
+            How are you feeling today?
+          </b>
+        </p>
+      </div>
+      <div
+        className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6"
+      >
+        <Connect(__AnswerElement)
+          auditStoreId={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          question={
+            Object {
+              "id": 1,
+              "question_data": Object {},
+              "question_txt": "How are you feeling today?",
+              "question_type": "PLAIN",
+              "sequence": 1,
+            }
+          }
+        />
+      </div>
+    </div>
+  </td>
+</tr>
+`;
+
+exports[`<__QuestionRow/> when showErrors is true and answerText is 'Hello World': 1`] = `
+<tr
+  className="success"
+>
+  <td>
+    <div
+      className="row"
+    >
+      <div
+        className="col-xs-1 text-right"
+      >
+        1
+      </div>
+      <div
+        className="col-xs-10 col-md-5"
+      >
+        <p>
+          <b>
+            How are you feeling today?
+          </b>
+        </p>
+      </div>
+      <div
+        className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6"
+      >
+        <Connect(__AnswerElement)
+          auditStoreId={1}
+          onBlur={[Function]}
+          onFocus={[Function]}
+          question={
+            Object {
+              "id": 1,
+              "question_data": Object {},
+              "question_txt": "How are you feeling today?",
+              "question_type": "PLAIN",
+              "sequence": 1,
+            }
+          }
+        />
+      </div>
+    </div>
+  </td>
+</tr>
+`;

@@ -1,19 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { } from "react-router";
 
-import { } from "../../../components/Icons.jsx";
-
-import { } from "../../actions/answer.js";
 import AnswerElement from "./answer/AnswerElement.jsx";
 import { findAnswer } from "../../reducers/answer.js";
 
-import { findAuditStore } from "../../reducers/audit_store.js";
-
 import { questionPropType } from "../../prop_types.js";
 
-class __QuestionRow extends React.Component{
+export class __QuestionRow extends React.Component{
 	static propTypes = {
 		auditStoreId: PropTypes.number.isRequired,
 		question: questionPropType.isRequired,
@@ -21,7 +15,6 @@ class __QuestionRow extends React.Component{
 		showErrors: PropTypes.bool,
 
 		answerText: PropTypes.string,
-		auditStore: PropTypes.object,
 	};
 
 	state = {
@@ -64,7 +57,7 @@ class __QuestionRow extends React.Component{
 								onFocus={this.onFocus}
 								onBlur={this.onBlur}
 								question={this.props.question}
-								auditStoreId={this.props.auditStore.id}
+								auditStoreId={this.props.auditStoreId}
 							/>
 						</div>
 					</div>
@@ -78,7 +71,6 @@ const mapStoreToProps = (store, ownProps) => {
 	const answer = findAnswer(store, ownProps.auditStoreId, ownProps.question.id);
 	return {
 		answerText: answer && answer.answer_text,
-		auditStore : findAuditStore(store, ownProps.auditStoreId),
 	};
 };
 
