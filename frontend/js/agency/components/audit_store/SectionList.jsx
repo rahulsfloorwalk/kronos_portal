@@ -8,9 +8,6 @@ import Section from "./Section.jsx";
 
 import Jumbotron from "../../../components/Jumbotron.jsx";
 import { Tasks } from "../../../components/Icons.jsx";
-import { auditStorePropType } from "../../prop_types.js";
-
-import { findAuditStore } from "../../reducers/audit_store.js";
 
 export class __SectionList extends React.Component {
 	static propTypes = {
@@ -19,14 +16,14 @@ export class __SectionList extends React.Component {
 			name: PropTypes.string.isRequired,
 			sequence: PropTypes.number.isRequired,
 		})),
-		auditStore: auditStorePropType.isRequired,
+		auditStoreId: PropTypes.number.isRequired,
 		showErrors: PropTypes.bool,
 	};
 
 	render(){
 		const sectionRows = this.props.sections.map(section => {
 			return <Section
-				auditStoreId={this.props.auditStore.id}
+				auditStoreId={this.props.auditStoreId}
 				sectionId={section.id}
 				key={section.id}
 				showErrors={this.props.showErrors}/>;
@@ -41,9 +38,8 @@ export class __SectionList extends React.Component {
 	}
 }
 
-const mapStateToProps = (store, ownProps) => {
+const mapStateToProps = (store) => {
 	return {
-		auditStore: findAuditStore( store, ownProps.auditStoreId),
 		sections: store.sections,
 	};
 };
