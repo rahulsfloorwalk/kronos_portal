@@ -29,23 +29,3 @@ exports[`<__AnswerComment/> when answer comment is not editable renders a prefil
   )
 </span>
 `;
-
-exports[`<AnswerComment/> when answer comment is editable renders a blank answer comment correctly 1`] = `
-<input
-  className="form-control"
-  onBlur={[Function]}
-  onChange={[Function]}
-  placeholder="optional comment"
-  value=""
-/>
-`;
-
-exports[`<AnswerComment/> when answer comment is editable renders a prefilled answer comment correctly 1`] = `
-<input
-  className="form-control"
-  onBlur={[Function]}
-  onChange={[Function]}
-  placeholder="optional comment"
-  value="hello world"
-/>
-`;

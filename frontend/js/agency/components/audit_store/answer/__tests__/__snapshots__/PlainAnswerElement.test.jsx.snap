@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PlainAnswerElement/> when answer is editable renders a blank answer text correctly 1`] = `
+<form
+  className=""
+  onSubmit={[Function]}
+>
+  <input
+    className="form-control"
+    name="answerText"
+    onBlur={[MockFunction]}
+    onChange={[MockFunction]}
+    onFocus={[MockFunction]}
+    placeholder="type your answer here"
+    value=""
+  />
+</form>
+`;
+
+exports[`<PlainAnswerElement/> when answer is editable renders a prefilled answer text correctly 1`] = `
+<form
+  className=""
+  onSubmit={[Function]}
+>
+  <input
+    className="form-control"
+    name="answerText"
+    onBlur={[MockFunction]}
+    onChange={[MockFunction]}
+    onFocus={[MockFunction]}
+    placeholder="type your answer here"
+    value="Hello World"
+  />
+</form>
+`;
+
+exports[`<PlainAnswerElement/> when answer is not editable renders a blank answer text correctly 1`] = `
+<p>
+  
+</p>
+`;
+
+exports[`<PlainAnswerElement/> when answer is not editable renders a prefilled answer text correctly 1`] = `
+<p>
+  Hello World
+</p>
+`;

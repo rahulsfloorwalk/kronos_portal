@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MutexAnswerElement/> when answer is editable renders a selected option correctly 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col-xs-5"
+  >
+    <select
+      className="form-control"
+      name="answerText"
+      onBlur={[MockFunction]}
+      onChange={[MockFunction]}
+      onFocus={[MockFunction]}
+      value="Yes"
+    >
+      <option
+        value=""
+      >
+        select answer
+      </option>
+      <option
+        value="Yes"
+      >
+        Yes
+      </option>
+      <option
+        value="No"
+      >
+        No
+      </option>
+    </select>
+  </div>
+  <div
+    className="col-xs-7"
+  >
+    <Connect(__AnswerComment)
+      auditStoreId={1}
+      questionId={1}
+    />
+  </div>
+</div>
+`;
+
+exports[`<MutexAnswerElement/> when answer is editable renders no selection correctly 1`] = `
+<div
+  className="row"
+>
+  <div
+    className="col-xs-5"
+  >
+    <select
+      className="form-control"
+      name="answerText"
+      onBlur={[MockFunction]}
+      onChange={[MockFunction]}
+      onFocus={[MockFunction]}
+      value=""
+    >
+      <option
+        value=""
+      >
+        select answer
+      </option>
+      <option
+        value="Yes"
+      >
+        Yes
+      </option>
+      <option
+        value="No"
+      >
+        No
+      </option>
+    </select>
+  </div>
+  <div
+    className="col-xs-7"
+  >
+    <Connect(__AnswerComment)
+      auditStoreId={1}
+      questionId={1}
+    />
+  </div>
+</div>
+`;
+
+exports[`<MutexAnswerElement/> when answer is not editable renders a selected option correctly 1`] = `
+<p>
+  Yes
+  <Connect(__AnswerComment)
+    auditStoreId={1}
+    questionId={1}
+  />
+</p>
+`;
+
+exports[`<MutexAnswerElement/> when answer is not editable renders no selection correctly 1`] = `
+<p>
+  
+  <Connect(__AnswerComment)
+    auditStoreId={1}
+    questionId={1}
+  />
+</p>
+`;

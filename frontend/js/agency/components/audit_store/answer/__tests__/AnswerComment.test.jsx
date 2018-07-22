@@ -48,16 +48,3 @@ describe("<__AnswerComment/>", () => {
 	});
 });
 
-describe("<AnswerComment/>", () => {
-
-	describe("when answer comment is editable", () => {
-		it("renders a blank answer comment correctly", () => {
-			const tree = renderer.create(<__AnswerComment answerComment="" editable={true} onChange={() => {}}/>).toJSON();
-			expect(tree).toMatchSnapshot();
-		});
-		it("renders a prefilled answer comment correctly", () => {
-			const tree = renderer.create(<__AnswerComment answerComment="hello world" editable={true} onChange={() => {}}/>).toJSON();
-			expect(tree).toMatchSnapshot();
-		});
-	});
-});

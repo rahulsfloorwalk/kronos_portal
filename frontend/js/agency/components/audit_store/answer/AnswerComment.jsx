@@ -3,9 +3,9 @@ import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
 
-import { setAnswerComment } from "../../actions/answer.js";
-import { findAnswer } from "../../reducers/answer.js";
-import { findAuditStore } from "../../reducers/audit_store.js";
+import { setAnswerComment } from "../../../actions/answer.js";
+import { findAnswer } from "../../../reducers/answer.js";
+import { findAuditStore } from "../../../reducers/audit_store.js";
 
 export class __AnswerComment extends Component {
 

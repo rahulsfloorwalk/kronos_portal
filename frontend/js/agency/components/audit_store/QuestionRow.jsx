@@ -6,7 +6,7 @@ import { } from "react-router";
 import { } from "../../../components/Icons.jsx";
 
 import { } from "../../actions/answer.js";
-import AnswerElement from "./AnswerElement.jsx";
+import AnswerElement from "./answer/AnswerElement.jsx";
 import { findAnswer } from "../../reducers/answer.js";
 
 import { findAuditStore } from "../../reducers/audit_store.js";
