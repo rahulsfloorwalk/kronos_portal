@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__AnswerComment/> when answer comment is editable renders a blank answer comment correctly 1`] = `
+<input
+  className="form-control"
+  onBlur={[Function]}
+  onChange={[Function]}
+  placeholder="optional comment"
+  value=""
+/>
+`;
+
+exports[`<__AnswerComment/> when answer comment is editable renders a prefilled answer comment correctly 1`] = `
+<input
+  className="form-control"
+  onBlur={[Function]}
+  onChange={[Function]}
+  placeholder="optional comment"
+  value="hello world"
+/>
+`;
+
+exports[`<__AnswerComment/> when answer comment is not editable renders a blank answer comment correctly 1`] = `null`;
+
+exports[`<__AnswerComment/> when answer comment is not editable renders a prefilled answer comment correctly 1`] = `
+<span>
+   ( 
+  hello world
+  )
+</span>
+`;
+
+exports[`<AnswerComment/> when answer comment is editable renders a blank answer comment correctly 1`] = `
+<input
+  className="form-control"
+  onBlur={[Function]}
+  onChange={[Function]}
+  placeholder="optional comment"
+  value=""
+/>
+`;
+
+exports[`<AnswerComment/> when answer comment is editable renders a prefilled answer comment correctly 1`] = `
+<input
+  className="form-control"
+  onBlur={[Function]}
+  onChange={[Function]}
+  placeholder="optional comment"
+  value="hello world"
+/>
+`;

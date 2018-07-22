@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 
 import { setAnswerComment } from "../../actions/answer.js";
 
-class __AnswerComment extends Component {
+export class __AnswerComment extends Component {
 
 	static propTypes = {
 		answerComment: PropTypes.string.isRequired,
