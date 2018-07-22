@@ -8,3 +8,7 @@ export default (sections=[], action) => {
 		return sections;
 	}
 };
+
+export const findSection = (store, sectionId) => {
+	return store.sections.find((s) => s.id === sectionId);
+};

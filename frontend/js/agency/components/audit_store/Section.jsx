@@ -8,6 +8,7 @@ import AuditorComment from "./AuditorComment.jsx";
 
 import { findAuditStore } from "../../reducers/audit_store.js";
 import { findReportSection } from "../../reducers/report_section.js";
+import { findSection } from "../../reducers/section.js";
 
 import { auditStorePropType } from "../../prop_types.js";
 
@@ -87,10 +88,6 @@ export class __Section extends React.Component{
 		}
 	}
 }
-
-const findSection = (store, sectionId) => {
-	return store.sections.find((s) => s.id === sectionId);
-};
 
 const mapStateToProps = (store, ownProps) => {
 	const reportSection = findReportSection(store, ownProps.auditStoreId, ownProps.sectionId);
