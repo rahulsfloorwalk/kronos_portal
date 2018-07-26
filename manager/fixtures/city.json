@@ -7238,5 +7238,45 @@
             "lat": "23.242000",
             "lon": "69.666932"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 754,
+        "fields": {
+            "name": "Thodupuzha",
+            "state": "IN-KL",
+            "lat": "9.892980",
+            "lon": "76.722108"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 755,
+        "fields": {
+            "name": "Koothattukulam",
+            "state": "IN-KL",
+            "lat": "9.862708",
+            "lon": "76.594218"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 756,
+        "fields": {
+            "name": "Pala",
+            "state": "IN-KL",
+            "lat": "9.713753",
+            "lon": "76.682928"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 757,
+        "fields": {
+            "name": "Thiruvalla",
+            "state": "IN-KL",
+            "lat": "9.383452",
+            "lon": "76.574057"
+        }
     }
 ]
