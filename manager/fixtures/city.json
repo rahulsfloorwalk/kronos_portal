@@ -7278,5 +7278,235 @@
             "lat": "9.383452",
             "lon": "76.574057"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 758,
+        "fields": {
+            "name": "Asansol",
+            "state": "IN-WB",
+            "lat": "23.673945",
+            "lon": "86.952395"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 759,
+        "fields": {
+            "name": "Bavla",
+            "state": "IN-GJ",
+            "lat": "22.829793",
+            "lon": "72.363781"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 760,
+        "fields": {
+            "name": "Burdwan",
+            "state": "IN-WB",
+            "lat": "23.232421",
+            "lon": "87.861479"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 761,
+        "fields": {
+            "name": "Durgapur",
+            "state": "IN-WB",
+            "lat": "23.520444",
+            "lon": "87.311923"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 762,
+        "fields": {
+            "name": "Farukhabad",
+            "state": "IN-UP",
+            "lat": "27.382613",
+            "lon": "79.594054"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 763,
+        "fields": {
+            "name": "Godhra",
+            "state": "IN-GJ",
+            "lat": "22.778804",
+            "lon": "73.614279"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 764,
+        "fields": {
+            "name": "Kharagpur",
+            "state": "IN-WB",
+            "lat": "22.346010",
+            "lon": "87.231975"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 765,
+        "fields": {
+            "name": "Malegaon",
+            "state": "IN-MH",
+            "lat": "20.554750",
+            "lon": "74.510029"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 766,
+        "fields": {
+            "name": "Modasa",
+            "state": "IN-GJ",
+            "lat": "23.462869",
+            "lon": "73.299938"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 767,
+        "fields": {
+            "name": "Morbi",
+            "state": "IN-GJ",
+            "lat": "22.811989",
+            "lon": "70.823619"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 768,
+        "fields": {
+            "name": "Muvattupuzha",
+            "state": "IN-KL",
+            "lat": "9.989423",
+            "lon": "76.578975"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 769,
+        "fields": {
+            "name": "Nadiad",
+            "state": "IN-GJ",
+            "lat": "22.691585",
+            "lon": "72.863363"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 770,
+        "fields": {
+            "name": "Narnaul",
+            "state": "IN-HR",
+            "lat": "28.065796",
+            "lon": "76.101478"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 771,
+        "fields": {
+            "name": "Ooty",
+            "state": "IN-TN",
+            "lat": "11.406414",
+            "lon": "76.693244"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 772,
+        "fields": {
+            "name": "Rourkela",
+            "state": "IN-OR",
+            "lat": "22.260423",
+            "lon": "84.853584"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 773,
+        "fields": {
+            "name": "Silchar",
+            "state": "IN-AS",
+            "lat": "24.833271",
+            "lon": "92.778905"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 774,
+        "fields": {
+            "name": "Tezpur",
+            "state": "IN-AS",
+            "lat": "26.652849",
+            "lon": "92.792559"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 775,
+        "fields": {
+            "name": "Wadkhal",
+            "state": "IN-MH",
+            "lat": "18.711193",
+            "lon": "73.050120"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 776,
+        "fields": {
+            "name": "Vapi",
+            "state": "IN-GJ",
+            "lat": "20.389315",
+            "lon": "72.910620"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 777,
+        "fields": {
+            "name": "Tenkasi",
+            "state": "IN-TN",
+            "lat": "8.959021",
+            "lon": "77.312938"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 778,
+        "fields": {
+            "name": "Sangamner",
+            "state": "IN-MH",
+            "lat": "19.577139",
+            "lon": "74.207965"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 780,
+        "fields": {
+            "name": "Karad",
+            "state": "IN-MH",
+            "lat": "17.275984",
+            "lon": "74.200323"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 781,
+        "fields": {
+            "name": "Thirupputtur",
+            "state": "IN-TN",
+            "lat": "12.508070",
+            "lon": "78.570175"
+        }
     }
 ]
