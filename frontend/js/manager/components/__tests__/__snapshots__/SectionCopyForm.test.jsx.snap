@@ -76,11 +76,14 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
                 value={2}
               >
                 Audit Cycle 2
+                 - 
+                Q Type 2
               </option>
               <option
                 value={3}
               >
                 Audit Cycle 3
+                 - 
               </option>
             </select>
             <ul />

@@ -14,6 +14,10 @@ const sampleAuditCycle = {
 		id: 2,
 		name: "Foobar Client",
 	},
+	questionnaire_type: {
+		id: 1,
+		name: "Q Type 1",
+	},
 };
 
 const sampleAuditCycles = [
@@ -24,6 +28,10 @@ const sampleAuditCycles = [
 			id: 2,
 			name: "Foobar Client",
 		},
+		questionnaire_type: {
+			id: 2,
+			name: "Q Type 2",
+		},
 	},
 	{
 		id: 3,
@@ -32,6 +40,7 @@ const sampleAuditCycles = [
 			id: 2,
 			name: "Foobar Client",
 		},
+		questionnaire_type: null,
 	},
 ];
 

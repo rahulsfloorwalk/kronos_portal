@@ -19,6 +19,10 @@ const auditCycleProp = PropTypes.shape({
 		id: PropTypes.number.isRequired,
 		name: PropTypes.string.isRequired,
 	}).isRequired,
+	questionnaire_type: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		name: PropTypes.string.isRequired,
+	}),
 });
 
 
@@ -51,7 +55,7 @@ export class __SectionCopyForm extends React.Component {
 	};
 
 	render() {
-		const auditCycleOptions = this.props.otherAuditCycles.map(ac => <option key={ac.id} value={ac.id}>{ac.name}</option>);
+		const auditCycleOptions = this.props.otherAuditCycles.map(ac => <option key={ac.id} value={ac.id}>{ac.name} - {ac.questionnaire_type && ac.questionnaire_type.name}</option>);
 		return (
 			<Modal modalTitle="Copy Sections" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
