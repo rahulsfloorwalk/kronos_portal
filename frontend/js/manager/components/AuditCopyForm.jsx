@@ -1,52 +1,72 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import React from "react";
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { hashHistory } from "react-router";
 
-import Alert from 'react-s-alert';
+import Alert from "react-s-alert";
 
-import { fetchAuditCycles } from '../actions/audit.js';
+import { fetchAuditCycles } from "../actions/audit.js";
 
-import { copyAuditsFromTo } from '../service/audit.js';
+import { copyAuditsFromTo } from "../service/audit.js";
 
-import { affectInputEventToComponent } from '../../react_utils.js';
-import FormSelect from '../../components/FormSelect.jsx';
-import FormGroup from '../../components/FormGroup.jsx';
-import SaveButton from '../../components/SaveButton.jsx';
-import Modal from '../../components/Modal.jsx';
-import FormErrorList from '../../components/FormErrorList.jsx';
-import { Duplicate } from '../../components/Icons.jsx';
+import { affectInputEventToComponent } from "../../react_utils.js";
+import FormSelect from "../../components/FormSelect.jsx";
+import Modal from "../../components/Modal.jsx";
+import FormErrorList from "../../components/FormErrorList.jsx";
+import { Duplicate } from "../../components/Icons.jsx";
 
-let AuditCopyForm = React.createClass({
-	getInitialState: function(){
-		return {
-			errors:{},
-			selectedAuditCycleId: null
-		};
-	},
-	componentDidMount: function() {
+const auditCycleProp = PropTypes.shape({
+	id: PropTypes.number.isRequired,
+	name: PropTypes.string.isRequired,
+	client: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		name: PropTypes.string.isRequired,
+	}).isRequired,
+	questionnaire_type: PropTypes.shape({
+		id: PropTypes.number.isRequired,
+		name: PropTypes.string.isRequired,
+	}),
+});
+
+
+export class __AuditCopyForm extends React.Component {
+	static propTypes = {
+		auditCycle: auditCycleProp,
+		otherAuditCycles: PropTypes.arrayOf(auditCycleProp),
+		fetchAuditCycles: PropTypes.func.isRequired,
+	};
+
+
+	state = {
+		errors:{},
+		selectedAuditCycleId: null
+	};
+
+	componentDidMount() {
 		if(this.props.auditCycle){
-			this.props.dispatch(fetchAuditCycles(this.props.auditCycle.client.id));
+			this.props.fetchAuditCycles(this.props.auditCycle.client.id);
 		}
-	},
-	inputChanged: function(e){
+	}
+
+	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	onSubmit: function(e){
+	};
+
+	onSubmit = (e) => {
 		e.preventDefault();
-		copyAuditsFromTo(this.state.selectedAuditCycleId, this.props.params.auditCycleId).done((audits) => {
+		copyAuditsFromTo(this.state.selectedAuditCycleId, this.props.auditCycle.id).then((audits) => {
 			Alert.success(`${audits.length} AUDITS COPIED`);
-			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
-		}).fail(err => {
+			hashHistory.push(`/audit_cycle/${this.props.auditCycle.id}/audit`);
+		}, (err) => {
 			this.setState({
-				errors: err && err.responseJSON && err.responseJSON,
+				errors: err && err.responseJSON,
 			});
 		});
-	},
-	render : function(){
-		let auditCycleOptions = [];
-		for( let ac of this.props.otherAuditCycles){
-			auditCycleOptions.push(<option key={ac.id} value={ac.id}>{ac.name}</option>);
-		}
+	};
+
+	render() {
+		const auditCycleOptions = this.props.otherAuditCycles.map(ac => <option key={ac.id} value={ac.id}>{ac.name} - {ac.questionnaire_type && ac.questionnaire_type.name}</option>);
+
 		return (
 			<Modal modalTitle="Copy Audits" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -61,10 +81,10 @@ let AuditCopyForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
-var mapStoreToProps = function(store, ownProps){
+const mapStoreToProps = (store, ownProps) => {
 	return {
 		auditCycle: store.auditCycles[ownProps.params.auditCycleId],
 		otherAuditCycles: (function(auditCycles){
@@ -79,4 +99,12 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect( mapStoreToProps)(AuditCopyForm);
+const mapDispatchToProps = (dispatch) => {
+	return {
+		fetchAuditCycles: (clientId) => {
+			dispatch(fetchAuditCycles(clientId));
+		},
+	};
+};
+
+export default connect(mapStoreToProps, mapDispatchToProps)(__AuditCopyForm);
