@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Copy Sections
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <div
+            className="form-group"
+          >
+            <label>
+              Audit Cycle
+            </label>
+            <select
+              className="form-control"
+              label="Audit Cycle"
+              name="selectedAuditCycleId"
+              onChange={[Function]}
+              value=""
+            >
+              <option
+                value=""
+              >
+                Select Audit Cycle
+              </option>
+              <option
+                value={2}
+              >
+                Audit Cycle 2
+              </option>
+              <option
+                value={3}
+              >
+                Audit Cycle 3
+              </option>
+            </select>
+            <ul />
+          </div>
+          <button
+            className="btn btn-primary btn-lg"
+          >
+            <span
+              className="glyphicon glyphicon-duplicate"
+            />
+             Copy
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
