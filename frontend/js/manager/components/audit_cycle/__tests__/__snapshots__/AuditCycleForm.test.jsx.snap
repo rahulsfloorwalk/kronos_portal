@@ -67,14 +67,10 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                   Audit Cycle Name
                 </label>
                 <input
-                  checked={undefined}
                   className="form-control"
-                  disabled={undefined}
                   label="Audit Cycle Name"
-                  maxLength={undefined}
                   name="name"
                   onChange={[Function]}
-                  placeholder={undefined}
                   type="text"
                   value=""
                 />
@@ -92,12 +88,9 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                 </label>
                 <select
                   className="form-control"
-                  disabled={undefined}
                   label="Questionnaire Type"
                   name="questionnaire_type"
                   onChange={[Function]}
-                  placeholder={undefined}
-                  type={undefined}
                   value=""
                 >
                   <option
@@ -943,12 +936,9 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                 </label>
                 <select
                   className="form-control"
-                  disabled={undefined}
                   label="Audit Type"
                   name="type"
                   onChange={[Function]}
-                  placeholder={undefined}
-                  type={undefined}
                   value=""
                 >
                   <option
@@ -1074,12 +1064,9 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                 </label>
                 <select
                   className="form-control"
-                  disabled={undefined}
                   label="Audit Status"
                   name="status"
                   onChange={[Function]}
-                  placeholder={undefined}
-                  type={undefined}
                   value=""
                 >
                   <option
@@ -1128,14 +1115,10 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                   Earnings Per Audit (₹)
                 </label>
                 <input
-                  checked={undefined}
                   className="form-control"
-                  disabled={undefined}
                   label="Earnings Per Audit (₹)"
-                  maxLength={undefined}
                   name="earnings_per_audit"
                   onChange={[Function]}
-                  placeholder={undefined}
                   type="number"
                   value=""
                 />
@@ -1152,14 +1135,10 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                   Reimbursement upto (₹)
                 </label>
                 <input
-                  checked={undefined}
                   className="form-control"
-                  disabled={undefined}
                   label="Reimbursement upto (₹)"
-                  maxLength={undefined}
                   name="reimbursement"
                   onChange={[Function]}
-                  placeholder={undefined}
                   type="number"
                   value=""
                 />
@@ -1175,12 +1154,8 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
             </label>
             <textarea
               className="form-control"
-              disabled={undefined}
-              maxLength={undefined}
               name="description"
               onChange={[Function]}
-              placeholder={undefined}
-              value={undefined}
             />
             <ul />
           </div>
@@ -1281,14 +1256,10 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                   Audit Cycle Name
                 </label>
                 <input
-                  checked={undefined}
                   className="form-control"
-                  disabled={undefined}
                   label="Audit Cycle Name"
-                  maxLength={undefined}
                   name="name"
                   onChange={[Function]}
-                  placeholder={undefined}
                   type="text"
                   value="Pilot December 2017"
                 />
@@ -1306,12 +1277,9 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                 </label>
                 <select
                   className="form-control"
-                  disabled={undefined}
                   label="Questionnaire Type"
                   name="questionnaire_type"
                   onChange={[Function]}
-                  placeholder={undefined}
-                  type={undefined}
                   value={18}
                 >
                   <option
@@ -2157,12 +2125,9 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                 </label>
                 <select
                   className="form-control"
-                  disabled={undefined}
                   label="Audit Type"
                   name="type"
                   onChange={[Function]}
-                  placeholder={undefined}
-                  type={undefined}
                   value="WALKIN"
                 >
                   <option
@@ -2288,12 +2253,9 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                 </label>
                 <select
                   className="form-control"
-                  disabled={undefined}
                   label="Audit Status"
                   name="status"
                   onChange={[Function]}
-                  placeholder={undefined}
-                  type={undefined}
                   value="ARCHIVED"
                 >
                   <option
@@ -2342,14 +2304,10 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                   Earnings Per Audit (₹)
                 </label>
                 <input
-                  checked={undefined}
                   className="form-control"
-                  disabled={undefined}
                   label="Earnings Per Audit (₹)"
-                  maxLength={undefined}
                   name="earnings_per_audit"
                   onChange={[Function]}
-                  placeholder={undefined}
                   type="number"
                   value={300}
                 />
@@ -2366,14 +2324,10 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                   Reimbursement upto (₹)
                 </label>
                 <input
-                  checked={undefined}
                   className="form-control"
-                  disabled={undefined}
                   label="Reimbursement upto (₹)"
-                  maxLength={undefined}
                   name="reimbursement"
                   onChange={[Function]}
-                  placeholder={undefined}
                   type="number"
                   value={200}
                 />
@@ -2389,11 +2343,8 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
             </label>
             <textarea
               className="form-control"
-              disabled={undefined}
-              maxLength={undefined}
               name="description"
               onChange={[Function]}
-              placeholder={undefined}
               value="This is a disclosed survey."
             />
             <ul />

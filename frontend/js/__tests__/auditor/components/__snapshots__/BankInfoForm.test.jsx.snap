@@ -156,14 +156,11 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
               Account Holder Name (✳)
             </label>
             <input
-              checked={undefined}
               className="form-control"
-              disabled={undefined}
               label="Account Holder Name (✳)"
               maxLength="40"
               name="account_holder_name"
               onChange={[Function]}
-              placeholder={undefined}
               type="text"
               value=""
             />
@@ -176,14 +173,11 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
               Account Number (✳)
             </label>
             <input
-              checked={undefined}
               className="form-control"
-              disabled={undefined}
               label="Account Number (✳)"
               maxLength="20"
               name="account_number"
               onChange={[Function]}
-              placeholder={undefined}
               type="text"
               value=""
             />
@@ -196,14 +190,11 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
               IFSC Code (✳)
             </label>
             <input
-              checked={undefined}
               className="form-control"
-              disabled={undefined}
               label="IFSC Code (✳)"
               maxLength="11"
               name="ifsc_code"
               onChange={[Function]}
-              placeholder={undefined}
               type="text"
               value=""
             />
@@ -216,14 +207,11 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
               Pan Number (✳)
             </label>
             <input
-              checked={undefined}
               className="form-control"
-              disabled={undefined}
               label="Pan Number (✳)"
               maxLength="10"
               name="pan_number"
               onChange={[Function]}
-              placeholder={undefined}
               type="text"
               value=""
             />

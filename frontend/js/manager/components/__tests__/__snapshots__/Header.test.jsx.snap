@@ -12,7 +12,6 @@ exports[`<Header/> is rendered correctly 1`] = `
     >
       <a
         className="navbar-brand"
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -37,7 +36,6 @@ exports[`<Header/> is rendered correctly 1`] = `
         role="presentation"
       >
         <a
-          href={undefined}
           onClick={[Function]}
           style={Object {}}
         >
@@ -57,7 +55,6 @@ exports[`<Header/> is rendered correctly 1`] = `
         role="presentation"
       >
         <a
-          href={undefined}
           onClick={[Function]}
           style={Object {}}
         >
@@ -77,7 +74,6 @@ exports[`<Header/> is rendered correctly 1`] = `
         role="presentation"
       >
         <a
-          href={undefined}
           onClick={[Function]}
           style={Object {}}
         >
@@ -97,7 +93,6 @@ exports[`<Header/> is rendered correctly 1`] = `
         role="presentation"
       >
         <a
-          href={undefined}
           onClick={[Function]}
           style={Object {}}
         >
@@ -124,7 +119,6 @@ exports[`<Header/> is rendered correctly 1`] = `
         role="presentation"
       >
         <a
-          href={undefined}
           onClick={[Function]}
           style={Object {}}
         >
