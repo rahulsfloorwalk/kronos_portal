@@ -14,7 +14,7 @@ export default class AuditorDetails extends Component{
 		return (
 			<div className="row">
 				<div className="col-md-4">
-					<ProfileInfoPanel auditorId={this.props.params.auditorId}/>
+					<ProfileInfoPanel auditorId={parseInt(this.props.params.auditorId)}/>
 				</div>
 				<div className="col-md-4">
 					<BankInfoPanel auditorId={this.props.params.auditorId}/>
