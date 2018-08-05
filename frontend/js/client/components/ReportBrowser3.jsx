@@ -229,6 +229,7 @@ export class AuditStoreTable extends Component {
 		headers.push(<th key="store_code">Store Code</th>);
 		headers.push(<th key="store_name">Name</th>);
 		headers.push(<th key="date" className="text-right">Date</th>);
+		headers.push(<th key="total_score">Total Score</th>);
 		headers = headers.concat(this.state.reports[0].sections.filter(s => s.max_marks > 0).map(s => <th key={s.sequence} className="text-right">{s.section}</th>));
 
 		let trs = [];
@@ -265,6 +266,7 @@ export class AuditStoreTable extends Component {
 						<small>{cityName}</small>
 					</td>
 					<td className="text-right" style={tdStyle}>{moment(r.audit_date).format(momentDateFormat)}</td>
+					<td className={getColor(r.total_score.color) + " text-right"} style={tdStyle}>{r.total_score.percentage === null ? "N/A" : r.total_score.percentage+"%" }</td>
 					{tds}
 				</tr>
 			);

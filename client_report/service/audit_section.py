@@ -192,6 +192,7 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
         )
 
     for audit_store in qs:
+        total_pct = audit_store.percentage()
         audit_stores.append({
             'audit_store_id': audit_store.id,
             'audit_date': audit_store.audit_date,
@@ -202,7 +203,12 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
             'store_code': audit_store.audit.store.code,
             'store_type': audit_store.audit.store.type,
             'store_priority': audit_store.audit.store.priority,
-            'sections': __get_mean_for_sections(sections, (audit_store,))
+            'sections': __get_mean_for_sections(sections, (audit_store,)),
+            'total_score': {
+                'percentage': total_pct,
+                'max_marks': audit_store.max_marks(),  # this call is inefficient right now
+                'color': get_color_code_by_percentage(total_pct),
+            },
         })
 
     audit_stores.sort(key=lambda a_s: (a_s['city_name'], a_s['store_id'], a_s['audit_date']))

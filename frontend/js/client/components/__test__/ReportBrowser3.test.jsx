@@ -107,7 +107,12 @@ describe("<AuditStoreTable/>", () => {
 			"percentage": 0
 		}],
 		"store_code": null,
-		"store_type": "10 pairs"
+		"store_type": "10 pairs",
+		"total_score": {
+			"percentage": 73,
+			"max_marks": 56,
+			"color": 3,
+		},
 	}, {
 		"store_name": "aneesh vision vare",
 		"store_priority": "TWO",
@@ -142,7 +147,12 @@ describe("<AuditStoreTable/>", () => {
 			"percentage": 0
 		}],
 		"store_code": null,
-		"store_type": "5 pairs"
+		"store_type": "5 pairs",
+		"total_score": {
+			"percentage": 73,
+			"max_marks": 56,
+			"color": 3,
+		},
 	}];
 
 	it("sets startDate and endDate filters based on props", (done) => {
