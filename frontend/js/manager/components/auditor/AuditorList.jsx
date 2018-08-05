@@ -11,7 +11,7 @@ import {searchAuditors} from "../../service/auditor.js";
 
 import {Search, Check, Cross, Pawn} from "../../../components/Icons.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
-import {momentDateTimeFormat} from "../../../../config.js";
+import {momentDateFormat} from "../../../../config.js";
 import InputGroup from "../../../components/InputGroup.jsx";
 import {InputGroupBtn} from "../../../components/InputGroup.jsx";
 import Loading from "../../../components/Loading.jsx";
@@ -42,7 +42,7 @@ export class AuditorRow extends React.Component {
 				<td>{prof.city.name}</td>
 				<td>{prof.average_rating !== null ?
 					<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</td>
-				<td>{moment(this.props.auditor.last_login).format(momentDateTimeFormat)}</td>
+				<td>{moment(this.props.auditor.last_login).format(momentDateFormat)}</td>
 				<td>{activeIcon}</td>
 				<td>
 					<Link to={linkTo} className="btn btn-default pull-right">View</Link>
