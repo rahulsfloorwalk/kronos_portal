@@ -1,42 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AuditorNameDislay/> renders the auditor name and phone correctly 1`] = `
-<div>
-  <b>
-    <a
-      onClick={[Function]}
-      style={Object {}}
-    >
-      Raghava
-       
-      Sowrya
-    </a>
-  </b>
-   (
-  <a
-    href="tel:8123450516"
-  >
-    8123450516
-  </a>
-  )
-</div>
-`;
-
-exports[`<AuditorNameDisplay/> renders the agency name and phone correctly 1`] = `
-<div>
-  <b>
-    GAIKI
-  </b>
-   (
-  <a
-    href="tel:1234567898"
-  >
-    1234567898
-  </a>
-  )
-</div>
-`;
-
 exports[`<AuditorNameDisplay/> renders the agency name and phone correctly for manager 1`] = `
 <div>
   <b>
@@ -47,28 +10,6 @@ exports[`<AuditorNameDisplay/> renders the agency name and phone correctly for m
     href="tel:1234567898"
   >
     1234567898
-  </a>
-  )
-</div>
-`;
-
-exports[`<AuditorNameDisplay/> renders the auditor name and phone correctly 1`] = `
-<div>
-  <b>
-    <a
-      onClick={[Function]}
-      style={Object {}}
-    >
-      Raghava
-       
-      Sowrya
-    </a>
-  </b>
-   (
-  <a
-    href="tel:8123450516"
-  >
-    8123450516
   </a>
   )
 </div>

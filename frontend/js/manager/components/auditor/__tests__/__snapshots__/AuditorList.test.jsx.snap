@@ -23,7 +23,6 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
         onChange={[Function]}
         placeholder="name, email, city or mobile number"
         required={true}
-        value={undefined}
       />
       <span
         className="input-group-btn"

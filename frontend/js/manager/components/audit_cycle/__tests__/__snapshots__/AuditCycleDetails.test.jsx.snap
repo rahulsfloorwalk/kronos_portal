@@ -7,7 +7,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
   >
     <li>
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -16,7 +15,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
     </li>
     <li>
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -42,7 +40,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
   >
     <a
       className="btn btn-default pull-right"
-      href={undefined}
       onClick={[Function]}
       style={Object {}}
     >
@@ -74,7 +71,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       </span>
       ) (
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -229,7 +225,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       role="presentation"
     >
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -244,7 +239,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       role="presentation"
     >
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -259,7 +253,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       role="presentation"
     >
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -274,7 +267,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       role="presentation"
     >
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >
@@ -289,7 +281,6 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       role="presentation"
     >
       <a
-        href={undefined}
         onClick={[Function]}
         style={Object {}}
       >

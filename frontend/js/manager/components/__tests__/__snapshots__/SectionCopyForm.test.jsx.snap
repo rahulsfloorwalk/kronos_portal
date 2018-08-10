@@ -62,12 +62,9 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
             </label>
             <select
               className="form-control"
-              disabled={undefined}
               label="Audit Cycle"
               name="selectedAuditCycleId"
               onChange={[Function]}
-              placeholder={undefined}
-              type={undefined}
               value=""
             >
               <option

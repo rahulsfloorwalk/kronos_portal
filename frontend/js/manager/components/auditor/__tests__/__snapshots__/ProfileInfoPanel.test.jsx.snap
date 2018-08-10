@@ -32,7 +32,7 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not 
     </p>
     <p>
       Date of Birth: 
-      5th Aug 2018
+      11th Aug 2018
     </p>
     <p>
       Marital Status: 
@@ -92,7 +92,7 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null
     </p>
     <p>
       Date of Birth: 
-      5th Aug 2018
+      11th Aug 2018
     </p>
     <p>
       Marital Status: 
