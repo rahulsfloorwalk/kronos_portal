@@ -24,12 +24,53 @@ class PaymentManagerTestCase(TestCase):
                                        groups=[self.manager_group])
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
-        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user, first_name='foo', last_name='bar')
         self.audit_store_recipe = Recipe(
             AuditStore,
             audit_date=date(2017, 6, 5),
             user=self.auditor_user
         )
+
+    def test_get_payment_comment_for_pending_for_auditor_user(self):
+        audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321",
+                   ifsc_code="SBIN0001", bank_name='SBI', pan_number="ADSFB780Y")
+        expected_comment = "Payment for foo bar for audit done on {date} for {client}"
+        payment_comment = payment_service.get_payment_comment_for_pending(audit_store)
+        self.assertEqual(1, 1)
+
+    def test_get_payment_comment_for_pending_for_agency_user(self):
+        pass
+
+    def test_get_payment_comment_for_paid_for_auditor_user(self):
+        audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321",
+                   ifsc_code="SBIN0001", bank_name='SBI', pan_number = "ADSFB780Y")
+        expected_comment = "payment done for foo bar in bank - SBI (SBIN0001) for account number - 123454321"
+        payment_comment = payment_service.get_payment_comment_for_paid(audit_store)
+        self.assertEqual(expected_comment, payment_comment)
+
+    def test_get_payment_comment_for_paid_for_auditor_user_raises_for_incomplete_bankinfo(self):
+        audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321",
+                   ifsc_code="SBIN0001", bank_name='SBI')
+        with self.assertRaisesRegex(AppLogicError, "Bank Details Incomplete"):
+            payment_service.get_payment_comment_for_paid(audit_store)
+
+    def test_get_payment_comment_for_paid_for_agency_user(self):
+        pass
+
+    def test_get_user_details_for_payment_for_auditor_user(self):
+        audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321", ifsc_code="SBIN0001")
+        payment = mommy.make(Payment, audit_store=audit_store, status=Payment.PENDING, user=self.auditor_user)
+        user_details = payment_service.get_user_details_for_payment(payment)
+        self.assertEqual('foo bar', user_details['name'])
+        self.assertEqual('123454321', user_details['account_number'])
+        self.assertEqual('SBIN0001', user_details['ifsc'])
+
+    def test_get_user_details_for_payment_for_agency_user(self):
+        pass
 
     def test_add_payment_on_audit_store_accepted(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)

@@ -19,7 +19,72 @@ from django.conf import settings
 from notify.service import mail_notify
 from audit.service import audit_cycle as audit_cycle_service
 from kronos.exceptions import ObjectNotFound, AppLogicError
-from registration.models import GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_AGENCY
+
+
+def get_payment_comment_for_pending(audit_store):
+    user = audit_store.user
+    if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+        payment_comment = "Payment for {first} {last} for audit done on {date} for {client}".format(
+            first=user.profileinfo.first_name,
+            last=user.profileinfo.last_name,
+            date=audit_store.audit_date,
+            client=audit_store.audit.audit_cycle.client.name
+        )
+    elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
+        payment_comment = "Payment for {agency_name} for audit done on {date} for {client}".format(
+            agency_name=user.agency_user.agency.name,
+            date=audit_store.audit_date,
+            client=audit_store.audit.audit_cycle.client.name
+        )
+    else:
+        raise AppLogicError('Payment user is not auditor or agency')
+    return payment_comment
+
+
+def get_payment_comment_for_paid(audit_store):
+    user = audit_store.user
+    if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+        bi = user.bankinfo
+        if not bi.is_complete():
+            raise AppLogicError("Bank Details Incomplete")
+
+        payment_comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
+            first=user.profileinfo.first_name,
+            last=user.profileinfo.last_name,
+            bank=bi.bank_name,
+            ifsc=bi.ifsc_code,
+            account=bi.account_number
+        )
+    elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
+        payment_comment = "payment done for {name} in account number - {account}".format(
+            name=user.agency_user.agency.account_holder_name,
+            account=user.agency_user.agency.account
+        )
+    else:
+        raise AppLogicError('Payment user is not auditor or agency')
+    return payment_comment
+
+
+def get_user_details_for_payment(payment):
+    user = payment.user
+    user_details = {}
+
+    if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+        user_details['name'] = (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or "")
+        try:
+            user_details['ifsc'] = payment.user.bankinfo.ifsc_code.upper()
+            user_details['account_number'] = payment.user.bankinfo.account_number
+        except BankInfo.DoesNotExist:
+            user_details['ifsc'] = ''
+            user_details['account_number'] = ''
+    elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
+        user_details['name'] = payment.user.agency_user.agency.account_holder_name
+        user_details['ifsc'] = payment.user.agency_user.agency.ifsc
+        user_details['account_number'] = payment.user.agency_user.agency.account_number
+    else:
+        raise AppLogicError('Payment user is not auditor or agency')
+    return user_details
 
 
 def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor):
@@ -29,12 +94,7 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
         payment.audit_store = audit_store
         payment.user = audit_store.user
         payment.amount = payment_amount
-        payment.comment = "Payment for {first} {last} for audit done on {date} for {client}".format(
-            first=payment.audit_store.user.profileinfo.first_name,
-            last=payment.audit_store.user.profileinfo.last_name,
-            date=payment.audit_store.audit_date,
-            client=payment.audit_store.audit.audit_cycle.client.name
-        )
+        payment.comment = get_payment_comment_for_pending(audit_store)
         payment.save()
         notify.send(
             user_actor,
@@ -68,18 +128,9 @@ def pay(payment_id, user_actor):
     try:
         payment = Payment.objects.get(pk=payment_id)
         if payment.status == Payment.PENDING:
-            bi = payment.audit_store.user.bankinfo
-            if not bi.is_complete():
-                raise AppLogicError("Bank Details Incomplete")
             payment.status = Payment.PAID
             payment.paid_on = timezone.now()
-            payment.comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
-                first = payment.audit_store.user.profileinfo.first_name,
-                last = payment.audit_store.user.profileinfo.last_name,
-                bank = bi.bank_name,
-                ifsc = bi.ifsc_code,
-                account = bi.account_number
-            )
+            payment.comment = get_payment_comment_for_paid(payment.audit_store)
             payment.save()
             notify.send(
                 user_actor,
@@ -140,12 +191,15 @@ def fail(payment_id, user_actor):
     except Payment.DoesNotExist as e:
         raise ObjectNotFound from e
 
+
 def clear_payment_for_audit_cycle(audit_cycle_id):
     Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).update(status=Payment.PAID)
+
 
 def get_pending_payments():
     payments = Payment.objects.filter(status=Payment.PENDING)
     return payments
+
 
 def find_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).prefetch_related(
@@ -153,58 +207,9 @@ def find_by_audit_cycle(audit_cycle_id):
         'user__profileinfo',
     )
 
+
 def find_pending_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)
-
-def find_pending_csv_for_audit_cycle(audit_cycle_id):
-    output = io.StringIO()
-    writer = csv.writer(output)
-
-    pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
-    consilidated_payments = consolidate_by_user(pending_payments)
-    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
-    client = audit_cycle.client.name
-    name = audit_cycle.name
-    audit = client + "_" + name
-
-    fieldnames = ['ORDERINGACCNO', 'REMITTER_NAME', 'IFSCCODE', 'BENEACCNO', 'BENENAME',
-                  'BENEADD1', 'TXNREFNO', 'DATE', 'AMOUNT', 'SENTTORECVINFO', 'INDICATOR',
-                  'DETAIL', 'ORIGINAL_REMITTER']
-    writer.writerow(fieldnames)
-    for payment in consilidated_payments:
-        try:
-            bank_name = payment.user.bankinfo.bank_name
-            ifsc_code = payment.user.bankinfo.ifsc_code
-            account_number = payment.user.bankinfo.account_number
-        except BankInfo.DoesNotExist:
-            bank_name = ""
-            ifsc_code = ""
-            account_number = ""
-
-        if payment.user.profileinfo.city:
-            city_name = payment.user.profileinfo.city.name
-        else:
-            city_name = "India"
-
-        writer.writerow([
-            settings.PAYMENT_CSV_SETTINGS['ORDERINGACCNO'],
-            settings.PAYMENT_CSV_SETTINGS['REMITTER_NAME'],
-            ifsc_code,
-            "=\"" + account_number + "\"",
-            (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or ""),
-            city_name,
-            "",
-            utils.today_ist().strftime("%d/%m/%Y"),
-            payment.amount,
-            settings.PAYMENT_CSV_SETTINGS['SENTTORECVINFO'],
-            settings.PAYMENT_CSV_SETTINGS['INDICATOR'],
-            payment.user.email,
-            settings.PAYMENT_CSV_SETTINGS['ORIGINAL_REMITTER'],
-        ])
-
-    output.seek(0)
-
-    return output, audit.replace(" ", "-") + "_payments.csv"
 
 
 def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id):
@@ -262,19 +267,7 @@ def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
 
 
 def get_datarow_for_payment(payment):
-    try:
-        bank_name = payment.user.bankinfo.bank_name
-        ifsc_code = payment.user.bankinfo.ifsc_code.upper()
-        account_number = payment.user.bankinfo.account_number
-    except BankInfo.DoesNotExist:
-        bank_name = ""
-        ifsc_code = ""
-        account_number = ""
-
-    if payment.user.profileinfo.city:
-        city_name = payment.user.profileinfo.city.name
-    else:
-        city_name = "India"
+    user_details = get_user_details_for_payment(payment)
     datarow = [
         settings.PAYMENT_NEW_CSV_SETTINGS['Record_Identifier'],
         utils.today_ist().strftime("%d/%m/%Y"),
@@ -284,7 +277,7 @@ def get_datarow_for_payment(payment):
         "",
         settings.PAYMENT_NEW_CSV_SETTINGS['Payment_Product_Code'],
         "",
-        (payment.user.profileinfo.first_name or "") + " " + (payment.user.profileinfo.last_name or ""),
+        user_details['name'],
         "",
         "",
         "",
@@ -297,8 +290,8 @@ def get_datarow_for_payment(payment):
         "",
         "",
         settings.PAYMENT_NEW_CSV_SETTINGS['ReasonForPayment'],
-        "'" + account_number,
-        ifsc_code,
+        "'" + user_details['account_number'],
+        user_details['ifsc'],
         payment.user.email,
         "",
         settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Narration'],
