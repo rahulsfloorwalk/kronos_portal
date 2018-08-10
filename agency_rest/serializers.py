@@ -28,6 +28,11 @@ class AgencySerializer(ModelSerializer):
             'gstin',
             'cin',
             'strength',
+            'account_holder_name',
+            'account_number',
+            'ifsc_code',
+            'bank_name_from_ifsc',
+            'is_ifsc_code_valid',
         )
         read_only_fields = ('id',)
 

@@ -25,7 +25,7 @@ export default class UserDetailsBox extends React.Component{
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">
-					<h4>Account Details</h4>
+					<h4>Contact Details</h4>
 				</div>
 				<table className="table table-striped">
 					<tbody>

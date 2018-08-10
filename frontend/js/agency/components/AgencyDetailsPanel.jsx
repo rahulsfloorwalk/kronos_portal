@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { } from "react-redux";
 import { Link } from "react-router";
 
@@ -39,13 +38,17 @@ export default class AgencyDetailsPanel extends React.Component{
 			<div className="panel panel-default">
 				<div className="panel-heading">
 					<Link to="agency/edit" className="btn btn-default pull-right"><Pencil/> Edit</Link>
-					<h4>Agency Details</h4>
+					<h4>Company Details</h4>
 				</div>
 				<table className="table table-striped">
 					<colgroup>
 						<col style={{width:"40%"}}/>
 					</colgroup>
 					<tbody>
+						<tr>
+							<th className="text-right">General Details</th>
+							<th className=""></th>
+						</tr>
 						<tr>
 							<td className="text-right text-muted">Agency Name:</td>
 							<th>{ this.state.details.name }</th>
@@ -55,16 +58,38 @@ export default class AgencyDetailsPanel extends React.Component{
 							<th>{ this.state.details.formed_in_year }</th>
 						</tr>
 						<tr>
-							<td className="text-right text-muted">GSTIN:</td>
-							<th>{ this.state.details.gstin }</th>
-						</tr>
-						<tr>
 							<td className="text-right text-muted">CIN:</td>
 							<th>{ this.state.details.cin }</th>
 						</tr>
 						<tr>
 							<td className="text-right text-muted">Company Workforce Strength:</td>
 							<th>{ this.state.details.strength }</th>
+						</tr>
+						<tr>
+							<th className="text-right">Financial Details</th>
+							<th className=""></th>
+						</tr>
+						<tr>
+							<td className="text-right text-muted">GSTIN:</td>
+							<th>{ this.state.details.gstin }</th>
+						</tr>
+						{ this.state.details.is_ifsc_code_valid ?
+							<tr>
+								<td className="text-right text-muted">Bank Name:</td>
+								<th>{ this.state.details.bank_name_from_ifsc }</th>
+							</tr>
+							: null }
+						<tr className={this.state.details.is_ifsc_code_valid ? "" : "danger"}>
+							<td className="text-right text-muted">IFSC Code:</td>
+							<th>{ this.state.details.ifsc_code }</th>
+						</tr>
+						<tr>
+							<td className="text-right text-muted">Bank Account Name:</td>
+							<th>{ this.state.details.account_holder_name }</th>
+						</tr>
+						<tr>
+							<td className="text-right text-muted">Account Number:</td>
+							<th>{ this.state.details.account_number }</th>
 						</tr>
 					</tbody>
 				</table>
