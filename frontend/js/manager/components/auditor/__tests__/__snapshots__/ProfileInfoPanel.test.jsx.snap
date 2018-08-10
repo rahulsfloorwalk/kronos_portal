@@ -2,7 +2,7 @@
 
 exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not null 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-success"
 >
   <div
     className="panel-heading"
@@ -18,42 +18,50 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not 
   >
     <p>
       First Name: 
+      Abc
     </p>
     <p>
       Last Name: 
+      Def
     </p>
     <p>
       Gender: 
-      
+      male
     </p>
     <p>
       Education: 
-      
+      Graduate
     </p>
     <p>
       Date of Birth: 
-      11th Aug 2018
+      10th Jun 1990
     </p>
     <p>
       Marital Status: 
-      
+      Single
     </p>
     <p>
       Address: 
+      119,bajiprabhunagar,Nagpur
     </p>
     <p>
       City: 
+      Nagpur
     </p>
     <p>
       State: 
+      IN-MH
     </p>
     <p>
       Pincode: 
+      440033
     </p>
     <p>
       Rating: 
-      <strong>
-        unknown rating
+      <strong
+        className="text-success"
+      >
+        Good
       </strong>
     </p>
   </div>
@@ -62,7 +70,7 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not 
 
 exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-success"
 >
   <div
     className="panel-heading"
@@ -78,43 +86,46 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null
   >
     <p>
       First Name: 
+      Abc
     </p>
     <p>
       Last Name: 
+      Def
     </p>
     <p>
       Gender: 
-      
+      male
     </p>
     <p>
       Education: 
-      
+      Graduate
     </p>
     <p>
       Date of Birth: 
-      11th Aug 2018
+      10th Jun 1990
     </p>
     <p>
       Marital Status: 
-      
+      Single
     </p>
     <p>
       Address: 
+      119,bajiprabhunagar,Nagpur
     </p>
     <p>
       City: 
+      Nagpur
     </p>
     <p>
       State: 
+      IN-MH
     </p>
     <p>
       Pincode: 
+      440033
     </p>
     <p>
       Rating: 
-      <strong>
-        unknown rating
-      </strong>
     </p>
   </div>
 </div>

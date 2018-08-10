@@ -18,7 +18,7 @@ export default class ProfileInfoPanel extends React.Component {
 	state = {};
 
 	componentDidMount() {
-		fetchProfileInfoForAuditor(this.props.auditorId).done((profileInfo) => this.setState({profileInfo}));
+		fetchProfileInfoForAuditor(this.props.auditorId).then((profileInfo) => this.setState({profileInfo}));
 	}
 
 	render() {
