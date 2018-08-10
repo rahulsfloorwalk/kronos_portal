@@ -108,21 +108,17 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -375,21 +371,17 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -642,21 +634,17 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -909,21 +897,17 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -1176,21 +1160,17 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -1456,21 +1436,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -1730,21 +1706,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -2011,21 +1983,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -2278,21 +2246,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -2545,21 +2509,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -2812,21 +2772,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -3079,21 +3035,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -3353,21 +3305,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />
@@ -4072,21 +4020,17 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor:
               </td>
               <td>
-                <b>
-                  John
-                   
-                  Doe
-                </b>
-                <br />
+                <div>
+                  <b>
+                    John Doe
+                  </b>
+                   (
+                  <a
+                    href="tel:undefined"
+                  />
+                  )
+                </div>
                 ( 
-                <span
-                  className="glyphicon glyphicon-earphone"
-                />
-                 
-                <a
-                  href="tel:undefined"
-                />
-                ) ( 
                 <span
                   className="glyphicon glyphicon-envelope"
                 />

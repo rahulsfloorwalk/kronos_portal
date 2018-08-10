@@ -129,23 +129,25 @@ exports[`<AuditStoreList/> renders the list of audit stores correctly 1`] = `
       <tbody>
         <tr>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  Supriya
+                   
+                  Baral
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
+                href="tel:7400619309"
               >
-                Supriya
-                 
-                Baral
+                7400619309
               </a>
-            </b>
-             ( 
-            <a
-              href="tel:7400619309"
-            >
-              7400619309
-            </a>
-            )
+              )
+            </div>
           </td>
           <td>
             9th Jun 2018
@@ -227,23 +229,25 @@ exports[`<AuditStoreList/> renders the list of audit stores correctly 1`] = `
       <tbody>
         <tr>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  Ali
+                   
+                  Khan
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
+                href="tel:9966334024"
               >
-                Ali
-                 
-                Khan
+                9966334024
               </a>
-            </b>
-             ( 
-            <a
-              href="tel:9966334024"
-            >
-              9966334024
-            </a>
-            )
+              )
+            </div>
           </td>
           <td>
             9th Jun 2018

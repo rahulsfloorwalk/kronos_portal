@@ -18,6 +18,8 @@ import { } from "../../components/FormInput.jsx";
 import Modal from "../../components/Modal.jsx";
 import Loading from "../../components/Loading.jsx";
 
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+
 export class AuditStoreQARatingForm extends Component{
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
@@ -75,7 +77,7 @@ export class AuditStoreQARatingForm extends Component{
 		return ( <Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 			<form onSubmit={this.onSubmit}>
 				<FormErrorList errors={this.state.errors.non_field_errors}/>
-				<p><label>Auditor:</label> { this.props.auditStore.user.profileinfo.first_name } { this.props.auditStore.user.profileinfo.last_name }</p>
+				<div><label>Auditor:</label><AuditorNameDisplay user={this.props.auditStore.user}/></div>
 				<p><label>Report Date:</label> { moment(this.props.auditStore.audit_date).format(momentDateFormat) }</p>
 				<div className="form-group">
 					<label className="control-label">Report Quality Rating:</label>

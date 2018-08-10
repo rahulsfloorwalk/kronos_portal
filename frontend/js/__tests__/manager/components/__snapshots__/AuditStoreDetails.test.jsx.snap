@@ -149,21 +149,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -452,21 +454,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -753,21 +757,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -1065,21 +1071,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -1384,21 +1392,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -1685,21 +1695,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -2007,21 +2019,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -2319,21 +2333,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -3040,21 +3056,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -3352,21 +3370,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>
@@ -4073,21 +4093,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
             Auditor:
           </td>
           <td>
-            <b>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
               <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                John
-                 
-                Doe
-              </a>
-            </b>
-             ( 
-            <a
-              href="tel:undefined"
-            />
-            )
+                href="tel:undefined"
+              />
+              )
+            </div>
           </td>
         </tr>
         <tr>

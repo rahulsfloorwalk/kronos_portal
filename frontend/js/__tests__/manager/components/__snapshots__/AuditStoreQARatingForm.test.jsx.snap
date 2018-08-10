@@ -55,15 +55,28 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is alre
           onSubmit={[Function]}
         >
           <ul />
-          <p>
+          <div>
             <label>
               Auditor:
             </label>
-             
-            John
-             
-            Doe
-          </p>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
+              <a
+                href="tel:undefined"
+              />
+              )
+            </div>
+          </div>
           <p>
             <label>
               Report Date:
@@ -184,15 +197,28 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is not 
           onSubmit={[Function]}
         >
           <ul />
-          <p>
+          <div>
             <label>
               Auditor:
             </label>
-             
-            John
-             
-            Doe
-          </p>
+            <div>
+              <b>
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  John
+                   
+                  Doe
+                </a>
+              </b>
+               (
+              <a
+                href="tel:undefined"
+              />
+              )
+            </div>
+          </div>
           <p>
             <label>
               Report Date:
