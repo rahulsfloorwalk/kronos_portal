@@ -48,7 +48,6 @@ def get_payment_comment_for_paid_status(audit_store):
         bi = user.bankinfo
         if not bi.is_complete():
             raise AppLogicError("Bank Details Incomplete")
-
         payment_comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
             first=user.profileinfo.first_name,
             last=user.profileinfo.last_name,
@@ -85,6 +84,23 @@ def get_user_details_for_payment(payment):
     else:
         raise AppLogicError('Payment user is not auditor or agency')
     return user_details
+
+
+def is_payment_payable(payment):
+    user = payment.user
+    if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+        try:
+            bi = user.bankinfo
+            if not bi.is_complete():
+                return False
+        except BankInfo.DoesNotExist:
+            return False
+    elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
+        if not user.agencyuser.agency.is_bank_details_complete():
+            return False
+    else:
+        return False
+    return True
 
 
 def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor):
@@ -125,8 +141,8 @@ def clear_payment_for_audit_store(audit_store_id):
 
 @atomic
 def pay(payment_id, user_actor):
-    try:
-        payment = Payment.objects.get(pk=payment_id)
+    payment = Payment.objects.get(pk=payment_id)
+    if is_payment_payable(payment):
         if payment.status == Payment.PENDING:
             payment.status = Payment.PAID
             payment.paid_on = timezone.now()
@@ -153,9 +169,8 @@ def pay(payment_id, user_actor):
             return payment
         else:
             raise AppLogicError("payment cannot be pending now")
-    except BankInfo.DoesNotExist as e:
-        raise AppLogicError("Bank details are not given") from e
-
+    else:
+        raise AppLogicError("Bank Details Incomplete")
 
 @atomic
 def fail(payment_id, user_actor):

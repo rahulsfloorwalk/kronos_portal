@@ -34,6 +34,13 @@ class Agency(Model):
     def __str__(self):
         return 'Agency({}): {}'.format(self.id, self.name)
 
+    def is_bank_details_complete(self):
+        incomplete_fields = [None, '']
+        account_number_valid = self.account_number not in incomplete_fields
+        ifsc_valid = self.ifsc_code not in incomplete_fields and self.is_ifsc_code_valid()
+        bank_holder_name_valid = self.account_holder_name not in incomplete_fields
+        return account_number_valid and ifsc_valid and bank_holder_name_valid
+
     class Meta:
         ordering = ['name']
 
