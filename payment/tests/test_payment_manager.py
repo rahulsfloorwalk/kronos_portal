@@ -136,7 +136,7 @@ class PaymentManagerTestCase(TestCase):
         payment = mommy.make(Payment, audit_store=audit_store, status=Payment.PENDING, user=self.auditor_user)
         self.assertRaises(AppLogicError, payment_service.fail, payment.id, self.manager_user)
 
-    def test_consolidate_by_user(self):
+    def test_consolidate_by_user_for_auditors(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
         p1 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.auditor_user)
         p2 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.auditor_user)
@@ -144,4 +144,26 @@ class PaymentManagerTestCase(TestCase):
         consolidated_payments = payment_service.consolidate_by_user([p1, p2, p3])
         self.assertEqual(1, len(consolidated_payments))
         self.assertEqual(1500, consolidated_payments[0].amount)
+
+    def test_consolidate_by_user_for_agency(self):
+        audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
+        p1 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.agency_user)
+        p2 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.agency_user)
+        p3 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.agency_user)
+        consolidated_payments = payment_service.consolidate_by_user([p1, p2, p3])
+        self.assertEqual(1, len(consolidated_payments))
+        self.assertEqual(1500, consolidated_payments[0].amount)
+
+    def test_consolidate_by_user_for_agency_and_auditors(self):
+        audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
+        p1 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.agency_user)
+        p2 = mommy.make(Payment, audit_store=audit_store, amount=500, status=Payment.PENDING, user=self.agency_user)
+        p3 = mommy.make(Payment, audit_store=audit_store, amount=600, status=Payment.PENDING, user=self.auditor_user)
+        p4 = mommy.make(Payment, audit_store=audit_store, amount=600, status=Payment.PENDING, user=self.auditor_user)
+        # payments are sorted by user id. Here, auditor_user is created before agency
+        # hence consolidated payments will have auditor payment before agency payment in the response array
+        consolidated_payments = payment_service.consolidate_by_user([p1, p2, p3, p4])
+        self.assertEqual(2, len(consolidated_payments))
+        self.assertEqual(1200, consolidated_payments[0].amount)
+        self.assertEqual(1000, consolidated_payments[1].amount)
 
