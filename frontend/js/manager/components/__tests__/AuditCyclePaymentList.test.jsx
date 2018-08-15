@@ -43,15 +43,16 @@ const samplePayments = [
 			"id": 1038,
 			"email": "barbarfoo@gmail.com",
 			"mobile_numbers": [],
-			"profileinfo": {
-				"id": 904,
-				"first_name": "Doo",
-				"last_name": "Baz",
-				"mobile_number": "3434843934",
-				"city": 650,
-				"user_id": 1038
-			},
-			"agencyuser": null
+			"profileinfo": null,
+			"agencyuser": {
+				"id": 2,
+				"full_name": "Amit Gaiki",
+				"agency": {
+					"id": 3,
+					"name": "Gaiki and Gaiki"
+				},
+				"user_id": 6805
+			}
 		},
 		"audit_store_id": 638,
 		"added_on": "2017-10-14T07:16:17.223871Z",

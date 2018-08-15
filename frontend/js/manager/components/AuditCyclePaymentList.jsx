@@ -32,7 +32,7 @@ export class PaymentRow extends React.Component{
 
 	payButtonClicked = () => {
 		pay(this.props.payment.id).then((payment) => {
-			Alert.success(`${this.props.payment.user.profileinfo.first_name} PAID`.toUpperCase());
+			Alert.success("PAYMENT MARKED AS PAID");
 			this.setState({
 				payButtonMessage: "Marked as paid",
 			});
@@ -48,7 +48,7 @@ export class PaymentRow extends React.Component{
 
 	failButtonClicked = () => {
 		fail(this.props.payment.id).then((payments) => {
-			Alert.success(`${this.props.payment.user.profileinfo.first_name} Payment failed`.toUpperCase());
+			Alert.success("PAYMENT MARKED AS FAILED");
 			this.setState({
 				payButtonMessage: "Marked as failed",
 			});
