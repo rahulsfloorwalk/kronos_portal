@@ -21,7 +21,7 @@ class AgencyViewTestCase(APITestCase):
         self.agency_group = Group.objects.get(name=GROUP_NAME_AGENCY)
 
     def setup_agency(self):
-        self.agency = mommy.make(Agency)
+        self.agency = mommy.make(Agency, ifsc_code = "SBIN0008238")
 
     def setup_agency_user(self):
         self.email = fake.email()
@@ -55,6 +55,8 @@ class AgencyViewTestCase(APITestCase):
             'ifsc_code': self.agency.ifsc_code,
             'account_number': self.agency.account_number,
             'account_holder_name': self.agency.account_holder_name,
+            'bank_name_from_ifsc': "State Bank of India",
+            'is_ifsc_code_valid': True,
         }
         for k, v in expected_response.items():
             self.assertEqual(response.data[k], v)
