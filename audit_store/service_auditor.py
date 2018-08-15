@@ -22,7 +22,7 @@ def submit_report(audit_store_id, user_id):
     if user != audit_store.user:
         raise AppLogicError("Report cannot be acknowledged by user")
     if not audit_store.is_submittable():
-        raise AppLogicError("Report cannot be submitted now")
+        raise AppLogicError("Please complete all answers and all section summaries before submitting")
 
     audit_store.submit(by=user)
     return audit_store

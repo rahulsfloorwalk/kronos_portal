@@ -67,7 +67,7 @@ class AuditStoreAuditorServiceTestCase(TestCase):
         for i in range(3):
             section_recipe.make()
 
-        with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted now"):
+        with self.assertRaisesRegex(AppLogicError, "Please complete all answers and all section summaries before submitting"):
             service_auditor.submit_report(audit_store.id, self.auditor_user.id)
 
     def test_submit_report_changes_report_status(self):
