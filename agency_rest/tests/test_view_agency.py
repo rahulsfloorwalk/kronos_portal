@@ -45,7 +45,7 @@ class AgencyViewTestCase(APITestCase):
         # check if the endpoint returns success initially
         response = self.client.get(reverse('agency_rest:agency_view'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {
+        expected_response = {
             "id": self.agency.id,
             "name": self.agency.name,
             "formed_in_year": self.agency.formed_in_year,
@@ -55,7 +55,9 @@ class AgencyViewTestCase(APITestCase):
             'ifsc_code': self.agency.ifsc_code,
             'account_number': self.agency.account_number,
             'account_holder_name': self.agency.account_holder_name,
-        })
+        }
+        for k, v in expected_response.items():
+            self.assertEqual(response.data[k], v)
 
     def test_post_saves_agency_object(self):
         self.setup_agency()
