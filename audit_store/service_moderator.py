@@ -71,25 +71,29 @@ def find_by_id_for_moderator(audit_store_id, user_id):
 def fail_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    return audit_store.fail(by=user)
+    audit_store.fail(by=user)
+    return audit_store
 
 
 @atomic
 def submit_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    return audit_store.submit(by=user)
+    audit_store.submit(by=user)
+    return audit_store
 
 
 @atomic
 def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user.id)
-    return audit_store_service.set_audit_date(audit_store.id, audit_date)
+    audit_store_service.set_audit_date(audit_store.id, audit_date)
+    return audit_store
 
 
 @atomic
 def unsubmit_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    return audit_store.revert_submit(by=user)
+    audit_store.revert_submit(by=user)
+    return audit_store

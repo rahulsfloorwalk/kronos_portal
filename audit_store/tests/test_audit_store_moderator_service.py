@@ -1,3 +1,4 @@
+from datetime import date
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 
@@ -71,4 +72,35 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         with self.assertRaises(ObjectNotFound):
             service_moderator.find_by_id_for_moderator(audit_store.id, self.moderator_user.id)
 
+    def test_fail_for_moderator_returns_audit_store_with_fail_status(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED,
+                                 user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        report = service_moderator.fail_for_moderator(audit_store.id, self.moderator_user.id)
+        self.assertEqual(AuditStore.FAILED, report.status)
+
+    def test_submit_for_moderator_returns_audit_store_with_submitted_status(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.ACKNOWLEDGED,
+                                 user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        report = service_moderator.submit_for_moderator(audit_store.id, self.moderator_user.id)
+        self.assertEqual(AuditStore.SUBMITTED, report.status)
+
+    def test_unsubmit_for_moderator_returns_audit_store_with_acknowledged_status(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED,
+                                 user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        report = service_moderator.unsubmit_for_moderator(audit_store.id, self.moderator_user.id)
+        self.assertEqual(AuditStore.ACKNOWLEDGED, report.status)
+
+    def test_set_audit_date_for_moderator_sets_date_correctly(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED,
+                                 user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        report = service_moderator.set_audit_date_for_moderator(audit_store.id, date(2018, 8, 15), self.moderator_user.id)
+        self.assertEqual(date(2018, 8, 15), report.audit_date)
 
