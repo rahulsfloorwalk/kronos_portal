@@ -203,11 +203,13 @@ class ReportSectionAttachmentViewTestCase(APITestCase):
         }
 
         response = self.client.post(url, payload, format="json")
+        content_type = ContentType.objects.get(pk=int(response.data['attachment']['content_type']))
         self.assertEqual(200, response.status_code)
         self.assertEqual('PHOTO', response.data['attachment']['proof_type'])
         self.assertEqual('image/jpeg', response.data['attachment']['mime_type'])
         self.assertEqual('hello_world.jpg', response.data['attachment']['file_name'])
-        self.assertEqual(29, response.data['attachment']['content_type'])
+        self.assertEqual('answer', content_type.app_label)
+        self.assertEqual('reportsection', content_type.model)
         self.assertEqual('UPLOADING', response.data['attachment']['status'])
 
 
@@ -344,9 +346,11 @@ class AttachmentCompleteViewTestCase(APITestCase):
 
         payload = {}
         response = self.client.post(url, payload, format="json")
+        content_type = ContentType.objects.get(pk=int(response.data['content_type']))
         self.assertEqual(200, response.status_code)
         self.assertEqual('PHOTO', response.data['proof_type'])
         self.assertEqual('image/jpeg', response.data['mime_type'])
         self.assertEqual('hello_world.jpg', response.data['file_name'])
-        self.assertEqual(27, response.data['content_type'])
+        self.assertEqual('audit_store', content_type.app_label)
+        self.assertEqual('auditstore', content_type.model)
         self.assertEqual('ATTACHED', response.data['status'])
