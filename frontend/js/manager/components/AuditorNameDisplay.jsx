@@ -14,7 +14,10 @@ export default class AuditorNameDisplay extends Component{
 			agencyuser: PropTypes.shape({
 				full_name: PropTypes.string,
 			}),
-			mobile_numbers: PropTypes.array
+			mobile_numbers: PropTypes.arrayOf(PropTypes.shape({
+				mobile_number: PropTypes.string.isRequired,
+				is_verified: PropTypes.bool.isRequired,
+			})),
 		}).isRequired,
 	};
 

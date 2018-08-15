@@ -42,7 +42,6 @@ const samplePayments = [
 		"user": {
 			"id": 1038,
 			"email": "barbarfoo@gmail.com",
-			"mobile_numbers": [],
 			"profileinfo": null,
 			"agencyuser": {
 				"id": 2,
@@ -52,7 +51,13 @@ const samplePayments = [
 					"name": "Gaiki and Gaiki"
 				},
 				"user_id": 6805
-			}
+			},
+			"mobile_numbers": [
+				{
+					"mobile_number": "1234567890",
+					"is_verified": false,
+				},
+			],
 		},
 		"audit_store_id": 638,
 		"added_on": "2017-10-14T07:16:17.223871Z",
@@ -81,6 +86,12 @@ describe("<AuditCyclePaymentList/>", () => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();
 		});
+	});
+
+	it("it calls findPaymentsByAuditCycleId with the correct id", () => {
+		findPaymentsByAuditCycleId.mockReturnValue($.Deferred().resolve([]));
+		shallow(<AuditCyclePaymentList params={sampleParams}/>);
+		expect(findPaymentsByAuditCycleId).toBeCalledWith(sampleParams.auditCycleId);
 	});
 
 	it("it renders the correct number of rows when a payment is paid", (done) => {

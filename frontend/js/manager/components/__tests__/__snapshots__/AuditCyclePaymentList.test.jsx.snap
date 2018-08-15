@@ -165,20 +165,13 @@ exports[`<AuditCyclePaymentList/> it renders the list of payments correctly 1`] 
         <td>
           <div>
             <b>
-              <a
-                onClick={[Function]}
-                style={Object {}}
-              >
-                Doo
-                 
-                Baz
-              </a>
+              Amit Gaiki
             </b>
              (
             <a
-              href="tel:3434843934"
+              href="tel:1234567890"
             >
-              3434843934
+              1234567890
             </a>
             )
           </div>
