@@ -1,0 +1,409 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditCyclePaymentList/> it renders the correct message when there are no payments 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <b>
+      ₹
+    </b>
+     Payments
+    <span
+      className="pull-right"
+    >
+      <a
+        className="btn btn-default"
+        href="/manager/audit_cycle/5/payment/pending/xlsx"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Pending Payment List
+      </a>
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+      >
+        Pay All Pending
+      </button>
+    </span>
+  </h3>
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no payments here
+      </h3>
+      <p>
+        payments for accepted reports will appear here
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditCyclePaymentList/> it renders the list of payments correctly 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <b>
+      ₹
+    </b>
+     Payments
+    <span
+      className="pull-right"
+    >
+      <a
+        className="btn btn-default"
+        href="/manager/audit_cycle/5/payment/pending/xlsx"
+      >
+        <span
+          className="glyphicon glyphicon-download"
+        />
+         Pending Payment List
+      </a>
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+      >
+        Pay All Pending
+      </button>
+    </span>
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Auditor Name
+        </th>
+        <th>
+          Added Date
+        </th>
+        <th>
+          Paid Date
+        </th>
+        <th
+          className="text-right"
+        >
+          Amount
+        </th>
+        <th>
+          Payment Status
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div>
+            <b>
+              <a
+                onClick={[Function]}
+                style={Object {}}
+              >
+                Foo
+                 
+                Bar
+              </a>
+            </b>
+             (
+            <a
+              href="tel:3434343434"
+            >
+              3434343434
+            </a>
+            )
+          </div>
+        </td>
+        <td>
+          14th Oct 2017
+        </td>
+        <td>
+          14th Oct 2017
+        </td>
+        <td
+          className="text-right"
+        >
+          <big>
+            ₹ 
+            400
+          </big>
+        </td>
+        <td>
+          <span
+            className="label label-success"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Paid
+          </span>
+        </td>
+        <td>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Fail
+          </button>
+           
+          
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div>
+            <b>
+              <a
+                onClick={[Function]}
+                style={Object {}}
+              >
+                Doo
+                 
+                Baz
+              </a>
+            </b>
+             (
+            <a
+              href="tel:3434843934"
+            >
+              3434843934
+            </a>
+            )
+          </div>
+        </td>
+        <td>
+          14th Oct 2017
+        </td>
+        <td>
+          Invalid date
+        </td>
+        <td
+          className="text-right"
+        >
+          <big>
+            ₹ 
+            800
+          </big>
+        </td>
+        <td>
+          <span
+            className="label label-danger"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Pending
+          </span>
+        </td>
+        <td>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Pay
+          </button>
+           
+          
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`<PaymentRow/> renders the row correctly for status FAILED 1`] = `
+<tr>
+  <td>
+    <div>
+      <b>
+        <a
+          onClick={[Function]}
+          style={Object {}}
+        >
+          Foo
+           
+          Bar
+        </a>
+      </b>
+       (
+      <a
+        href="tel:3434343434"
+      >
+        3434343434
+      </a>
+      )
+    </div>
+  </td>
+  <td>
+    14th Oct 2017
+  </td>
+  <td>
+    14th Oct 2017
+  </td>
+  <td
+    className="text-right"
+  >
+    <big>
+      ₹ 
+      400
+    </big>
+  </td>
+  <td>
+    <span
+      className="label label-danger2"
+      style={
+        Object {
+          "fontSize": "100%",
+        }
+      }
+    >
+      Failed
+    </span>
+  </td>
+  <td>
+     
+    
+  </td>
+</tr>
+`;
+
+exports[`<PaymentRow/> renders the row correctly for status PAID 1`] = `
+<tr>
+  <td>
+    <div>
+      <b>
+        <a
+          onClick={[Function]}
+          style={Object {}}
+        >
+          Foo
+           
+          Bar
+        </a>
+      </b>
+       (
+      <a
+        href="tel:3434343434"
+      >
+        3434343434
+      </a>
+      )
+    </div>
+  </td>
+  <td>
+    14th Oct 2017
+  </td>
+  <td>
+    14th Oct 2017
+  </td>
+  <td
+    className="text-right"
+  >
+    <big>
+      ₹ 
+      400
+    </big>
+  </td>
+  <td>
+    <span
+      className="label label-success"
+      style={
+        Object {
+          "fontSize": "100%",
+        }
+      }
+    >
+      Paid
+    </span>
+  </td>
+  <td>
+    <button
+      className="btn btn-default"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
+     
+    
+  </td>
+</tr>
+`;
+
+exports[`<PaymentRow/> renders the row correctly for status PENDING 1`] = `
+<tr>
+  <td>
+    <div>
+      <b>
+        <a
+          onClick={[Function]}
+          style={Object {}}
+        >
+          Foo
+           
+          Bar
+        </a>
+      </b>
+       (
+      <a
+        href="tel:3434343434"
+      >
+        3434343434
+      </a>
+      )
+    </div>
+  </td>
+  <td>
+    14th Oct 2017
+  </td>
+  <td>
+    14th Oct 2017
+  </td>
+  <td
+    className="text-right"
+  >
+    <big>
+      ₹ 
+      400
+    </big>
+  </td>
+  <td>
+    <span
+      className="label label-danger"
+      style={
+        Object {
+          "fontSize": "100%",
+        }
+      }
+    >
+      Pending
+    </span>
+  </td>
+  <td>
+    <button
+      className="btn btn-default"
+      onClick={[Function]}
+      type="button"
+    >
+      Pay
+    </button>
+     
+    
+  </td>
+</tr>
+`;

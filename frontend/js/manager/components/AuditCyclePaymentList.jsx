@@ -1,7 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
 
 import Alert from "react-s-alert";
 
@@ -12,11 +10,12 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 import { Download } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import PaymentStatusLabel from "../../components/PaymentStatusLabel.jsx";
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 
 import { pay, fail} from "../service/payment.js";
 import { findPaymentsByAuditCycleId, payAllPendingPaymentsForAuditCycle } from "../service/payment.js";
 
-class __PaymentRow extends React.Component{
+export class PaymentRow extends React.Component{
 
 	static propTypes = {
 		onFail: PropTypes.func,
@@ -31,7 +30,7 @@ class __PaymentRow extends React.Component{
 		};
 	}
 
-	payButtonClicked = (e) => {
+	payButtonClicked = () => {
 		pay(this.props.payment.id).then((payment) => {
 			Alert.success(`${this.props.payment.user.profileinfo.first_name} PAID`.toUpperCase());
 			this.setState({
@@ -47,7 +46,7 @@ class __PaymentRow extends React.Component{
 		});
 	};
 
-	failButtonClicked = (e) => {
+	failButtonClicked = () => {
 		fail(this.props.payment.id).then((payments) => {
 			Alert.success(`${this.props.payment.user.profileinfo.first_name} Payment failed`.toUpperCase());
 			this.setState({
@@ -64,9 +63,6 @@ class __PaymentRow extends React.Component{
 	};
 
 	render(){
-		let auditorUrl = `/auditor/${this.props.payment.user.id}`;
-		let auditorLink = (<Link to={auditorUrl}>{this.props.payment.user.profileinfo.first_name} {this.props.payment.user.profileinfo.last_name}</Link>);
-		let auditorPhoneLink = (<a href={`tel:${this.props.payment.user.profileinfo.mobile_number}`}>{this.props.payment.user.profileinfo.mobile_number}</a>);
 		let paymentStatus = this.props.payment.status;
 		let paymentButton = null;
 
@@ -79,7 +75,7 @@ class __PaymentRow extends React.Component{
 
 		return(
 			<tr>
-				<td><b>{auditorLink}</b> <br/>( {auditorPhoneLink})</td>
+				<td><AuditorNameDisplay user={this.props.payment.user} /></td>
 				<td>{moment(this.props.payment.added_on).format(momentDateFormat)}</td>
 				<td>{moment(this.props.payment.paid_on).format(momentDateFormat)}</td>
 				<td className="text-right"><big>₹ {this.props.payment.amount}</big></td>
@@ -90,9 +86,14 @@ class __PaymentRow extends React.Component{
 	}
 }
 
-let PaymentRow = ReactRedux.connect()(__PaymentRow);
+export default class AuditCyclePaymentList extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditCycleId: PropTypes.string.isRequired,
+		}).isRequired,
+		children: PropTypes.node,
+	};
 
-class AuditCyclePaymentList extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -158,47 +159,39 @@ class AuditCyclePaymentList extends React.Component{
 
 		let table = this.state.loading ? <Loading/> : rows.length === 0 ? (
 			<Jumbotron key="empty" heading="no payments here" para="payments for accepted reports will appear here"/>
-			) : (
+		) : (
 			<table className="table table-striped">
-			<thead>
-			<tr>
-				<th>Auditor Name</th>
-				<th>Added Date</th>
-				<th>Paid Date</th>
-				<th className="text-right">Amount</th>
-				<th>Payment Status</th>
-				<th></th>
-			</tr>
-			</thead>
-			<tbody>
-				{rows}
-			</tbody>
+				<thead>
+					<tr>
+						<th>Auditor Name</th>
+						<th>Added Date</th>
+						<th>Paid Date</th>
+						<th className="text-right">Amount</th>
+						<th>Payment Status</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{rows}
+				</tbody>
 			</table>
 		);
 
-		if( rows.length === 0){
-		}
-
 		return(
 			<div>
-			<h3 className="page-header">
-			<b>₹</b> Payments
-			<span className="pull-right">
-				<a className="btn btn-default" href={url.api_base_path + 'manager/audit_cycle/' + this.props.params.auditCycleId + '/payment/pending/xlsx'}>
-				<Download/> Pending Payment List
-				</a>
-				<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>
-			</span>
-			</h3>
-			{table}
-			{this.props.children}
+				<h3 className="page-header">
+					<b>₹</b> Payments
+					<span className="pull-right">
+						<a className="btn btn-default" href={url.api_base_path + `manager/audit_cycle/${this.props.params.auditCycleId}/payment/pending/xlsx`}>
+							<Download/> Pending Payment List
+						</a>
+						<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>
+					</span>
+				</h3>
+				{table}
+				{this.props.children}
 			</div>
 		);
 	}
 }
 
-var mapStoreToProps = function(store, ownProps){
-	return {};
-}
-
-export default ReactRedux.connect(mapStoreToProps)(AuditCyclePaymentList);

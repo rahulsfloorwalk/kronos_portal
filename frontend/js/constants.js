@@ -15,3 +15,9 @@ export const QuestionType = [
 	"PLAIN",
 	"MUTEX",
 ];
+
+export const PaymentStatus = [
+	"PENDING",
+	"PAID",
+	"FAILED",
+];
