@@ -9,7 +9,7 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { findById, qaOk, fail, unsubmit, submit, setAuditDate } from "../service/audit_store.js";
 
-import { Calendar, File, Envelope, Earphone } from "../../components/Icons.jsx";
+import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
@@ -121,93 +121,93 @@ export default class AuditStoreDetails extends React.Component{
 
 		return (
 			<div>
-			{/*
-				<ol className="breadcrumb">
-					<li><Link to="/">Audit Cycle</Link></li>
-					<li><Link to={`/audit_cycle/${this.state.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.state.auditStore.audit.audit_cycle.name}</Link></li>
-					<li className="active"><File/> {moment(this.state.auditStore.audit_date).format(momentDateFormat)}</li>
-				</ol>
-			*/}
+				{/*
+					<ol className="breadcrumb">
+						<li><Link to="/">Audit Cycle</Link></li>
+						<li><Link to={`/audit_cycle/${this.state.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.state.auditStore.audit.audit_cycle.name}</Link></li>
+						<li className="active"><File/> {moment(this.state.auditStore.audit_date).format(momentDateFormat)}</li>
+					</ol>
+				*/}
 				<h2 className="page-header">
 					{failButton}
 					<File/> Audit Report
 				</h2>
 				<div className="row">
-				<div className="col-md-6">
-				<div className="panel panel-default">
-					<div className="panel-heading">
-						<h4 className="panel-title">Audit Details</h4>
-					</div>
-					<table className="table table-striped">
-						<tbody>
-							<tr>
-								<td className="text-right">Client:</td>
-								<th>{this.state.auditStore.audit.audit_cycle.client.name}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Store:</td>
-								<td>
-									<b>{this.state.auditStore.audit.store.name}</b><br/>
-									<small>{this.state.auditStore.audit.store.address}</small>
-								</td>
-							</tr>
-							<tr>
+					<div className="col-md-6">
+						<div className="panel panel-default">
+							<div className="panel-heading">
+								<h4 className="panel-title">Audit Details</h4>
+							</div>
+							<table className="table table-striped">
+								<tbody>
+									<tr>
+										<td className="text-right">Client:</td>
+										<th>{this.state.auditStore.audit.audit_cycle.client.name}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Store:</td>
+										<td>
+											<b>{this.state.auditStore.audit.store.name}</b><br/>
+											<small>{this.state.auditStore.audit.store.address}</small>
+										</td>
+									</tr>
+									<tr>
 
-								<td className="text-right">Address:</td>
-								<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Type:</td>
-								<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type}/></th>
-							</tr>
-							<tr>
-								<td className="text-right">Audit Fees:</td>
-								<th>₹ {this.state.auditStore.audit.earnings_per_audit}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Reimbursement upto:</td>
-								<th>₹ {this.state.auditStore.audit.reimbursement}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Auditor:</td>
-								<td>
-									<AuditorNameDisplay user={this.state.auditStore.user}/>
-									( <Envelope/> {auditorEmailLink})
-								</td>
-							</tr>
-							<tr>
-								<td className="text-right">Audit Date:</td>
-								<th>{auditDateElement}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Status:</td>
-								<th><AuditStoreStatusLabel status={this.state.auditStore.status}/></th>
-							</tr>
-							<tr>
-								<td className="text-right">QA Rating:</td>
-								<th>
-									<AuditStoreRating rating={this.state.auditStore.qa_rating}/> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
-								</th>
-							</tr>
-						</tbody>
-					</table>
-					<div className="panel-footer text-right">
-						{errorMessageElement}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}
+										<td className="text-right">Address:</td>
+										<th>{`${this.state.auditStore.audit.store.address}, ${this.state.auditStore.audit.store.city.name}`}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Type:</td>
+										<th><AuditTypeLabel auditType={this.state.auditStore.audit.audit_cycle.type}/></th>
+									</tr>
+									<tr>
+										<td className="text-right">Audit Fees:</td>
+										<th>₹ {this.state.auditStore.audit.earnings_per_audit}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Reimbursement upto:</td>
+										<th>₹ {this.state.auditStore.audit.reimbursement}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Auditor:</td>
+										<td>
+											<AuditorNameDisplay user={this.state.auditStore.user}/>
+											( <Envelope/> {auditorEmailLink})
+										</td>
+									</tr>
+									<tr>
+										<td className="text-right">Audit Date:</td>
+										<th>{auditDateElement}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Status:</td>
+										<th><AuditStoreStatusLabel status={this.state.auditStore.status}/></th>
+									</tr>
+									<tr>
+										<td className="text-right">QA Rating:</td>
+										<th>
+											<AuditStoreRating rating={this.state.auditStore.qa_rating}/> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
+										</th>
+									</tr>
+								</tbody>
+							</table>
+							<div className="panel-footer text-right">
+								{errorMessageElement}
+								{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}
+							</div>
+						</div>
 					</div>
-				</div>
-				</div>
-				<div className="col-md-6">
-					<div className="panel panel-default">
-						<div className="panel-body">
-							<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""}/>
-							<MarkdownViewer markdown={this.state.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+					<div className="col-md-6">
+						<div className="panel panel-default">
+							<div className="panel-body">
+								<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""}/>
+								<MarkdownViewer markdown={this.state.auditStore.audit.audit_cycle.post_approval_description || ""}/>
+							</div>
 						</div>
 					</div>
 				</div>
-				</div>
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore}/>
-				<AuditStoreSections auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore}/>
+				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>
 				{this.props.children}
 			</div>
 		);

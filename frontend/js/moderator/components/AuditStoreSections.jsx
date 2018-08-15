@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { } from "react-router";
 
 import { } from "../../styles.js";
@@ -16,6 +17,14 @@ import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachme
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
 class AnswerComment extends Component {
+
+	static propTypes = {
+		answer_comment: PropTypes.string,
+		audit_store_id: PropTypes.number,
+		question_id: PropTypes.number,
+		editable: PropTypes.bool,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -65,28 +74,51 @@ class AnswerComment extends Component {
 	}
 }
 
-let QuestionRow = React.createClass({
-	getDefaultProps: function(){
-		return {
-			marking: false
-		};
-	},
-	getInitialState: function(){
-		return {
-			answer: {},
-			error: false,
-			marksObtainedSuccess: false,
-			answerError: false,
-			answerSuccess: false
-		};
-	},
-	componentDidMount: function(){
+class QuestionRow extends React.Component{
+	static propTypes = {
+		q: PropTypes.shape({
+			id: PropTypes.number,
+			max_marks: PropTypes.number,
+			question_type: PropTypes.string,
+			question_txt: PropTypes.string,
+			sequence: PropTypes.number,
+			question_data: PropTypes.shape({
+				options: PropTypes.arrayOf(PropTypes.shape({
+					sequence: PropTypes.number,
+					value: PropTypes.string,
+				})),
+			}),
+		}),
+		answer: PropTypes.shape({
+			answer_comment: PropTypes.string,
+		}),
+		marking: PropTypes.bool,
+
+		auditStoreId: PropTypes.number,
+		auditStore: PropTypes.shape({
+			status: PropTypes.string,
+		}),
+	};
+
+	static defaultProps = {
+		marking: false
+	};
+
+	state = {
+		answer: {},
+		error: false,
+		marksObtainedSuccess: false,
+		answerError: false,
+		answerSuccess: false
+	};
+
+	componentDidMount(){
 		if(this.props.answer){
 			this.setState({
 				answer: this.props.answer
 			});
 		}
-	},
+	}
 	/*
 	componentWillReceiveProps: function(nextProps){
 		if(nextProps.answer){
@@ -96,47 +128,47 @@ let QuestionRow = React.createClass({
 		}
 	},
 	*/
-	answerChanged: function(e){
+	answerChanged = (e) => {
 		this.setState({
 			answer: Object.assign({}, this.state.answer, {
 				answer_text: e.target.value
 			})
 		});
-	},
-	saveAnswer: function(e){
+	};
+	saveAnswer = (e) => {
 		this.answerChanged(e);
 		setAnswerText( this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text).then((answer)=> this.setState({answer, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
-	},
-	marksChanged: function(e){
+	};
+	marksChanged = (e) => {
 		this.setState({
 			answer: Object.assign({}, this.state.answer, {
 				marks_obtained: e.target.value
 			})
 		});
-	},
-	saveMarks: function(e){
+	};
+	saveMarks = (e) => {
 		this.marksChanged(e);
 		setMarks( this.props.auditStoreId, this.props.q.id, this.state.answer.marks_obtained).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
-	},
-	notApplicableClicked: function(e){
+	};
+	notApplicableClicked = () => {
 		setAnswerNotApplicable(this.props.auditStoreId, this.props.q.id, !this.state.answer.not_applicable).then(answer => {
 			this.setState({
 				answer
 			});
 		});
-	},
-	render: function(){
+	};
+	render(){
 		let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
 
 		let notApplicableElement = (notApplicableIcon);
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (
 			<span>
-			<big>{this.state.answer.answer_text}</big>
-			{ this.props.q.question_type === "MUTEX"
-				?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
-				: null
-			}
+				<big>{this.state.answer.answer_text}</big>
+				{ this.props.q.question_type === "MUTEX"
+					?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+					: null
+				}
 			</span>
 		);
 		if( this.props.marking){
@@ -147,7 +179,7 @@ let QuestionRow = React.createClass({
 					<input className="form-control text-right"
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
-						value={this.state.answer.marks_obtained}/>
+						value={this.state.answer.marks_obtained || ""}/>
 					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
 				</div>
 			);
@@ -166,20 +198,20 @@ let QuestionRow = React.createClass({
 			} else if(this.props.q.question_type === "MUTEX") {
 				answerElement = (
 					<div className="row">
-					<div className="col-xs-5">
-					<div className={hasAnswerError + hasAnswerSuccess}>
-						<select className="form-control"
-							onChange={this.answerChanged}
-							onBlur={this.saveAnswer}
-							value={this.state.answer.answer_text}>
-							<option value=""></option>
-							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
-						</select>
-					</div>
-					</div>
-					<div className="col-xs-7">
-						<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
-					</div>
+						<div className="col-xs-5">
+							<div className={hasAnswerError + hasAnswerSuccess}>
+								<select className="form-control"
+									onChange={this.answerChanged}
+									onBlur={this.saveAnswer}
+									value={this.state.answer.answer_text}>
+									<option value=""></option>
+									{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
+								</select>
+							</div>
+						</div>
+						<div className="col-xs-7">
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+						</div>
 					</div>
 				);
 			}
@@ -189,7 +221,7 @@ let QuestionRow = React.createClass({
 					{notApplicableIcon}
 				</button>
 			);
-		} 
+		}
 
 		if( this.state.answer.not_applicable){
 			markElement = (<span className="text-muted">&nbsp;</span>);
@@ -205,11 +237,19 @@ let QuestionRow = React.createClass({
 				<td className="">{notApplicableElement}</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
 
 class SectionAttachmentBox extends React.Component{
+	static propTypes = {
+		sectionId: PropTypes.number,
+		auditStoreId: PropTypes.number,
+		auditStore: PropTypes.shape({
+			status: PropTypes.string,
+		}),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -237,7 +277,7 @@ class SectionAttachmentBox extends React.Component{
 		}
 	}
 
-	uploadButtonClicked = (e) => {
+	uploadButtonClicked = () => {
 		this.uploadInput.click();
 	};
 
@@ -251,7 +291,7 @@ class SectionAttachmentBox extends React.Component{
 		});
 	};
 
-	uploadFile = (e) => {
+	uploadFile = () => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -332,7 +372,7 @@ class SectionAttachmentBox extends React.Component{
 		let uploadButton;
 		let editable = false;
 
-		if(this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'){
+		if(this.props.auditStore && this.props.auditStore.status === "SUBMITTED"){
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Paperclip/> Upload</button>);
 			editable = true;
 		}
@@ -344,7 +384,7 @@ class SectionAttachmentBox extends React.Component{
 				attachment={a}
 				onSelect={() => this.selectAttachment(a.id)}
 				onDelete={() => this.attachmentDeleteClicked(a)}
-				deletable={this.props.auditStore && this.props.auditStore.status === 'SUBMITTED'}
+				deletable={this.props.auditStore && this.props.auditStore.status === "SUBMITTED"}
 				selected={a.id === this.state.selectedAttachmentId}
 			/>);
 		}
@@ -388,27 +428,48 @@ class SectionAttachmentBox extends React.Component{
 
 
 
-let Section = React.createClass({
-	getInitialState: function(){
-		return {
-			pmCommentError: false,
-			auditorCommentError: false,
+class Section extends React.Component{
+	static propTypes = {
+		reportSection: PropTypes.shape({
+			auditor_comment: PropTypes.string,
+			pm_comment: PropTypes.string,
+			not_applicable: PropTypes.bool,
+			marks_obtained: PropTypes.number,
+			max_marks: PropTypes.number,
+		}),
+		auditStoreId: PropTypes.number,
+		section: PropTypes.shape({
+			id: PropTypes.number,
+			sequence: PropTypes.number,
+			name: PropTypes.string,
+			max_marks: PropTypes.number,
+			questions: PropTypes.array,
+		}),
+		auditStore: PropTypes.shape({
+			status: PropTypes.string,
+		}),
+		answers: PropTypes.array,
+	};
 
-			pmCommentSuccess: false,
-			auditorCommentSuccess: false,
+	state = {
+		pmCommentError: false,
+		auditorCommentError: false,
 
-			savingPMComment: false,
-			savingAuditorComment: false,
+		pmCommentSuccess: false,
+		auditorCommentSuccess: false,
 
-			auditor_comment: "",
-			pm_comment: "",
+		savingPMComment: false,
+		savingAuditorComment: false,
 
-			//set initial state to true so that you don't get setState() calls
-			// on an unmounted component
-			not_applicable: true,
-		};
-	},
-	componentDidMount: function(){
+		auditor_comment: "",
+		pm_comment: "",
+
+		//set initial state to true so that you don't get setState() calls
+		// on an unmounted component
+		not_applicable: true,
+	};
+
+	componentDidMount(){
 		if(this.props.reportSection){
 			this.setState({
 				auditor_comment: this.props.reportSection.auditor_comment,
@@ -416,8 +477,8 @@ let Section = React.createClass({
 				not_applicable: this.props.reportSection.not_applicable,
 			});
 		}
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+	componentWillReceiveProps(nextProps){
 		if(nextProps.reportSection){
 			this.setState({
 				auditor_comment: nextProps.reportSection.auditor_comment,
@@ -425,11 +486,11 @@ let Section = React.createClass({
 				not_applicable: nextProps.reportSection.not_applicable
 			});
 		}
-	},
-	inputChanged: function(e){
+	}
+	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	saveAuditorComment: function(e){
+	};
+	saveAuditorComment = (e) => {
 		e.preventDefault();
 		if(this.props.reportSection && this.props.reportSection.auditor_comment === this.state.auditor_comment){
 			return;
@@ -452,8 +513,8 @@ let Section = React.createClass({
 		}).always(() => {
 			this.setState({savingAuditorComment: false});
 		});
-	},
-	savePMComment: function(e){
+	};
+	savePMComment = (e) => {
 		e.preventDefault();
 		if(this.props.reportSection && this.props.reportSection.pm_comment === this.state.pm_comment){
 			return;
@@ -476,16 +537,16 @@ let Section = React.createClass({
 		}).always(() => {
 			this.setState({savingPMComment: false});
 		});
-	},
-	notApplicableButtonClicked: function(e){
+	};
+	notApplicableButtonClicked = () => {
 		this.setState({
 			not_applicable: !this.state.not_applicable,
 		});
 		setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable);
-	},
-	render: function(){
+	};
+	render(){
 
-		let editable = this.props.auditStore && this.props.auditStore.status === 'SUBMITTED';
+		let editable = this.props.auditStore && this.props.auditStore.status === "SUBMITTED";
 
 		/* QUESTION ROWS */
 		let questionRows = [];
@@ -521,35 +582,35 @@ let Section = React.createClass({
 			let hasPmCommentError = this.state.pmCommentError ? "has-error" : "";
 			let hasPmCommentSuccess = this.state.pmCommentSuccess ? "has-success" : "";
 			pmCommentElement = (
-			<div className={hasPmCommentError + hasPmCommentSuccess}>
-				<input
-					disabled={this.state.savingPMComment}
-					placeholder="enter PM comment here"
-					required="true"
-					className="form-control"
-					name="pm_comment"
-					value={this.state.pm_comment}
-					onBlur={this.savePMComment}
-					onChange={this.inputChanged}
-				/>
-			</div>
+				<div className={hasPmCommentError + hasPmCommentSuccess}>
+					<input
+						disabled={this.state.savingPMComment}
+						placeholder="enter PM comment here"
+						required="true"
+						className="form-control"
+						name="pm_comment"
+						value={this.state.pm_comment}
+						onBlur={this.savePMComment}
+						onChange={this.inputChanged}
+					/>
+				</div>
 			);
 
 			let hasAuditorCommentError = this.state.auditorCommentError ? "has-error" : "";
 			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
 			auditorCommentElement = (
-			<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
-				<input
-					disabled={this.state.savingAuditorComment}
-					placeholder="enter auditor comment here"
-					required="true"
-					className="form-control"
-					name="auditor_comment"
-					value={this.state.auditor_comment}
-					onBlur={this.saveAuditorComment}
-					onChange={this.inputChanged}
-				/>
-			</div>
+				<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
+					<input
+						disabled={this.state.savingAuditorComment}
+						placeholder="enter auditor comment here"
+						required="true"
+						className="form-control"
+						name="auditor_comment"
+						value={this.state.auditor_comment}
+						onBlur={this.saveAuditorComment}
+						onChange={this.inputChanged}
+					/>
+				</div>
 			);
 
 			notApplicableElement = (<button className="btn btn-default btn-sm" onClick={this.notApplicableButtonClicked}>{notApplicableCheckboxIcon}</button>);
@@ -597,25 +658,32 @@ let Section = React.createClass({
 				<span className="pull-right"><b>N/A:</b> {notApplicableElement}</span>
 				<div className="panel-heading">
 					<h4 className="panel-title">
-					{this.props.section.sequence} - {this.props.section.name}
+						{this.props.section.sequence} - {this.props.section.name}
 					</h4>
 				</div>
 				{panelBody}
 			</div>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			sections: [],
-			reportSections: [],
-			answers: [],
-			loading: false
-		};
-	},
-	componentDidMount: function() {
+export default class AuditStoreSections extends React.Component{
+	static propTypes = {
+		auditStoreId: PropTypes.number,
+		auditStore: PropTypes.shape({
+			status: PropTypes.string,
+		}),
+		children: PropTypes.node,
+	};
+
+	state = {
+		sections: [],
+		reportSections: [],
+		answers: [],
+		loading: false
+	};
+
+	componentDidMount() {
 		fetchSections(this.props.auditStoreId).then((sections) => {
 			this.setState({
 				sections
@@ -631,8 +699,8 @@ export default React.createClass({
 				reportSections
 			});
 		});
-	},
-	render: function(){
+	}
+	render(){
 		//var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 		//	return s1.sequence - s2.sequence;
 		//});
@@ -640,12 +708,12 @@ export default React.createClass({
 		for(var section of this.state.sections) {
 			let reportSection = this.state.reportSections.filter(rs => rs.section === section.id)[0];
 			sectionRows.push(<Section key={section.id}
-				auditStoreId={this.props.auditStoreId} 
-				auditStore={this.props.auditStore} 
+				auditStoreId={this.props.auditStoreId}
+				auditStore={this.props.auditStore}
 				section={section}
 				reportSection={reportSection}
 				answers={this.state.answers}
-				/>);
+			/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire"/>);
@@ -657,6 +725,6 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
