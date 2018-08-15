@@ -22,7 +22,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_AGENCY
 
 
-def get_payment_comment_for_pending(audit_store):
+def get_payment_comment_for_pending_status(audit_store):
     user = audit_store.user
     if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         payment_comment = "Payment for {first} {last} for audit done on {date} for {client}".format(
@@ -33,7 +33,7 @@ def get_payment_comment_for_pending(audit_store):
         )
     elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
         payment_comment = "Payment for {agency_name} for audit done on {date} for {client}".format(
-            agency_name=user.agency_user.agency.name,
+            agency_name=user.agencyuser.agency.account_holder_name,
             date=audit_store.audit_date,
             client=audit_store.audit.audit_cycle.client.name
         )
@@ -42,7 +42,7 @@ def get_payment_comment_for_pending(audit_store):
     return payment_comment
 
 
-def get_payment_comment_for_paid(audit_store):
+def get_payment_comment_for_paid_status(audit_store):
     user = audit_store.user
     if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         bi = user.bankinfo
@@ -58,8 +58,8 @@ def get_payment_comment_for_paid(audit_store):
         )
     elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
         payment_comment = "payment done for {name} in account number - {account}".format(
-            name=user.agency_user.agency.account_holder_name,
-            account=user.agency_user.agency.account
+            name=user.agencyuser.agency.account_holder_name,
+            account=user.agencyuser.agency.account_number
         )
     else:
         raise AppLogicError('Payment user is not auditor or agency')
@@ -79,9 +79,9 @@ def get_user_details_for_payment(payment):
             user_details['ifsc'] = ''
             user_details['account_number'] = ''
     elif user.groups.filter(name=GROUP_NAME_AGENCY).exists():
-        user_details['name'] = payment.user.agency_user.agency.account_holder_name
-        user_details['ifsc'] = payment.user.agency_user.agency.ifsc
-        user_details['account_number'] = payment.user.agency_user.agency.account_number
+        user_details['name'] = payment.user.agencyuser.agency.account_holder_name
+        user_details['ifsc'] = payment.user.agencyuser.agency.ifsc_code.upper()
+        user_details['account_number'] = payment.user.agencyuser.agency.account_number
     else:
         raise AppLogicError('Payment user is not auditor or agency')
     return user_details
@@ -94,7 +94,7 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
         payment.audit_store = audit_store
         payment.user = audit_store.user
         payment.amount = payment_amount
-        payment.comment = get_payment_comment_for_pending(audit_store)
+        payment.comment = get_payment_comment_for_pending_status(audit_store)
         payment.save()
         notify.send(
             user_actor,
@@ -130,7 +130,7 @@ def pay(payment_id, user_actor):
         if payment.status == Payment.PENDING:
             payment.status = Payment.PAID
             payment.paid_on = timezone.now()
-            payment.comment = get_payment_comment_for_paid(payment.audit_store)
+            payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
             payment.save()
             notify.send(
                 user_actor,
