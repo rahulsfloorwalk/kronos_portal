@@ -97,10 +97,10 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         self.assertEqual(AuditStore.ACKNOWLEDGED, report.status)
 
     def test_set_audit_date_for_moderator_sets_date_correctly(self):
-        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE, start_date=date(2018, 8, 10), end_date=date(2018, 8, 20))
         audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED,
                                  user=self.auditor_user)
         assign_perm('moderator_manage', self.moderator_user, audit_store)
-        report = service_moderator.set_audit_date_for_moderator(audit_store.id, date(2018, 8, 15), self.moderator_user.id)
-        self.assertEqual(date(2018, 8, 15), report.audit_date)
+        report = service_moderator.set_audit_date_for_moderator(audit_store.id, date(2018, 8, 13), self.moderator_user.id)
+        self.assertEqual(date(2018, 8, 13), report.audit_date)
 
