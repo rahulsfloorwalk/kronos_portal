@@ -179,7 +179,7 @@ class QuestionRow extends React.Component{
 					<input className="form-control text-right"
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
-						value={this.state.answer.marks_obtained || ""}/>
+						value={this.state.answer.marks_obtained}/>
 					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
 				</div>
 			);
