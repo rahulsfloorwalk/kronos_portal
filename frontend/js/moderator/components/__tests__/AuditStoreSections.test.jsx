@@ -21,6 +21,16 @@ const sampleAnswer = {
 	"answer_comment": '',
 	"marks_obtained": 0,
 	"not_applicable": false
+};
+
+const sampleAnswerWithMarks = {
+	"id": 120036,
+	"question": 10928,
+	"audit_store": 5384,
+	"answer_text": 'We were 4; two adults and two kids.',
+	"answer_comment": '',
+	"marks_obtained": 1,
+	"not_applicable": false
 }
 
 const sampleAuditStore = {
@@ -87,6 +97,14 @@ describe("<QuestionRow/>", () => {
 
 	it("renders the question row correctly when answer has 0 marks", (done) => {
 		const r = renderer.create(<QuestionRow q={sampleQuestion} key={sampleQuestion.id} answer={sampleAnswer} marking={true} auditStore={sampleAuditStore} auditStoreId={sampleAuditStore.id}/>);
+		setTimeout(() => {
+			expect(r.toJSON()).toMatchSnapshot();
+			done();
+		});
+	});
+
+	it("renders the question row correctly when answer has non 0 marks", (done) => {
+		const r = renderer.create(<QuestionRow q={sampleQuestion} key={sampleQuestion.id} answer={sampleAnswerWithMarks} marking={true} auditStore={sampleAuditStore} auditStoreId={sampleAuditStore.id}/>);
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();
