@@ -74,7 +74,7 @@ class AnswerComment extends Component {
 	}
 }
 
-class QuestionRow extends React.Component{
+export class QuestionRow extends React.Component{
 	static propTypes = {
 		q: PropTypes.shape({
 			id: PropTypes.number,
