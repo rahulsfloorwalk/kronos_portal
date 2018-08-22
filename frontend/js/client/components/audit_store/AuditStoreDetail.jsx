@@ -12,7 +12,7 @@ import { File, Print, Download } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
-import SectionList from "../SectionList.jsx";
+import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
 
 export default class AuditStoreDetail extends React.Component {

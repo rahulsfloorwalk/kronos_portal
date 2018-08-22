@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Jumbotron from "../../components/Jumbotron.jsx";
-import { Paperclip, Tasks } from "../../components/Icons.jsx";
+import Jumbotron from "../../../components/Jumbotron.jsx";
+import { Paperclip, Tasks } from "../../../components/Icons.jsx";
 
 import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
-import Section from "./audit_store/Section.jsx";
+import Section from "./Section.jsx";
 
-import { fetchAnswers } from "../service/answer.js";
+import { fetchAnswers } from "../../service/answer.js";
 
 export default class SectionList extends React.Component {
 	static propTypes = {
