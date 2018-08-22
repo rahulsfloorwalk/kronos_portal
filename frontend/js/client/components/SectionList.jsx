@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { } from "react-router";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Paperclip, Tasks } from "../../components/Icons.jsx";
@@ -25,7 +24,7 @@ export default class SectionList extends React.Component {
 			id: PropTypes.number.isRequired,
 			auditor_comment: PropTypes.string,
 			pm_comment: PropTypes.string,
-			not_applicable: PropTypes.string,
+			not_applicable: PropTypes.bool,
 			color_code: PropTypes.number,
 			marks_obtained: PropTypes.number,
 			max_marks: PropTypes.number,

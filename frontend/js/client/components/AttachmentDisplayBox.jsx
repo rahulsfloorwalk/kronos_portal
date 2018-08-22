@@ -1,48 +1,51 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { findAttachmentsByAuditStore } from "../service/attachment.js";
 
-import { Paperclip, Cross, Record, Picture, Video, File, DownloadAlt } from "../../components/Icons.jsx";
-import Loading from "../../components/Loading.jsx";
+import { Paperclip } from "../../components/Icons.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
-import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			attachments: [],
-			selectedAttachment: undefined,
-			selectedAttachmentId: null,
-		};
-	},
-	getDefaultProps: function(){
-		return {
-			printMode: false,
-		};
-	},
-	reloadState: function(){
+export default class AttachmentDisplayBox extends React.Component {
+	static propTypes = {
+		auditStoreId: PropTypes.number.isRequired,
+		printMode: PropTypes.bool,
+	};
+
+	static defaultProps = {
+		printMode: false,
+	};
+
+	state = {
+		attachments: [],
+		selectedAttachment: undefined,
+		selectedAttachmentId: null,
+	};
+
+	reloadState = () => {
 		findAttachmentsByAuditStore(this.props.auditStoreId).then((attachments) => {
 			this.setState({
 				attachments
 			});
 		});
-	},
-	componentDidMount: function(){
+	};
+
+	componentDidMount() {
 		this.reloadState();
-	},
-	attachmentSelected: function(attachment){
+	}
+
+	attachmentSelected = (attachment) => {
 		this.setState({
 			selectedAttachment: attachment,
 			selectedAttachmentId: attachment.id,
 		});
-	},
-	render: function(){
+	};
 
-		var uploadButton;
+	render() {
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
 			attachmentRows.push(<AttachmentThumbnail
@@ -55,11 +58,6 @@ export default React.createClass({
 
 		let attachmentElement;
 		if(this.state.selectedAttachment){
-			let downloadButton = (
-			<a className="btn btn-default" href={this.state.selectedAttachment.direct_url}>
-				<DownloadAlt/> Download File
-			</a>
-			);
 			attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={false}/>;
 		} else {
 			attachmentElement = (<Jumbotron heading={<div><br/><br/><br/><Paperclip/></div>} para={<span>select an attachment from the list<br/><br/><br/><br/></span>}/>);
@@ -68,26 +66,25 @@ export default React.createClass({
 		if( attachmentRows.length === 0){
 			return null;
 		} else {
-
-
-		if(this.props.printMode){
-			return (<div className="row"><div className="col-xs-offset-1 col-xs-10">
-				{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
-			</div>
-			</div>);
-		} else {
-			return (
-				<div className="row">
-					<div className="col-md-4 hidden-print">
-						{attachmentRows}
+			if(this.props.printMode){
+				return (<div className="row">
+					<div className="col-xs-offset-1 col-xs-10">
+						{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
 					</div>
-					<div className="col-md-8 hidden-print">
-						{attachmentElement}
+				</div>);
+			} else {
+				return (
+					<div className="row">
+						<div className="col-md-4 hidden-print">
+							{attachmentRows}
+						</div>
+						<div className="col-md-8 hidden-print">
+							{attachmentElement}
+						</div>
 					</div>
-				</div>
-			);
+				);
+			}
 		}
-		}
-	},
-});
+	}
+}
 

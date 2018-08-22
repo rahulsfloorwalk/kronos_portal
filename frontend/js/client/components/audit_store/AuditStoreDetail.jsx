@@ -91,7 +91,7 @@ export default class AuditStoreDetail extends React.Component {
 						<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 					</div>
 				</div>
-				<SectionList auditStoreId={this.props.params.auditStoreId} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
+				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
 			</div>
 		);
 	}

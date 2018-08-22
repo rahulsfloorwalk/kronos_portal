@@ -29,7 +29,7 @@ export default class Section extends React.Component {
 			id: PropTypes.number.isRequired,
 			auditor_comment: PropTypes.string,
 			pm_comment: PropTypes.string,
-			not_applicable: PropTypes.string,
+			not_applicable: PropTypes.bool,
 			color_code: PropTypes.number,
 			marks_obtained: PropTypes.number,
 			max_marks: PropTypes.number,
