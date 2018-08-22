@@ -37,6 +37,10 @@ export default class AttachmentPrintRenderer extends React.Component {
 		this.reloadState();
 	}
 
+	componentWillReceiveProps() {
+		this.reloadState();
+	}
+
 	render() {
 		if( this.state.attachments.length === 0){
 			return null;
