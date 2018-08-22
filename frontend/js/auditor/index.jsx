@@ -1,23 +1,23 @@
 /* global PHOEBE_VERSION:false */
 
-import 'babel-polyfill';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import "babel-polyfill";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import Raven from "raven-js";
 
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga";
 
-import * as Redux from 'redux';
-import ReduxThunk from 'redux-thunk';
-import ReduxLogger from 'redux-logger';
+import * as Redux from "redux";
+import ReduxThunk from "redux-thunk";
+import ReduxLogger from "redux-logger";
 
-import $ from 'jquery';
+import $ from "jquery";
 
-import Routes from './components/Routes.jsx';
-import { rootReducer } from './reducers.js';
+import Routes from "./components/Routes.jsx";
+import { rootReducer } from "./reducers.js";
 
-import { fetchConfig } from './service/config.js';
+import { fetchConfig } from "./service/config.js";
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
@@ -41,9 +41,9 @@ let render = store => {
 		<Provider store={store}>
 			<Routes store={store}/>
 		</Provider>,
-		document.getElementById('root')
+		document.getElementById("root")
 	);
-}
+};
 
 fetchConfig().then((config) => {
 

@@ -1,78 +1,78 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import types from '../action_types.js'
+import $ from "jquery";
+import { url } from "../../../config";
+import types from "../action_types.js";
 
 export function fetchAuditStores(){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_GET,
-			status: 'request',
+			status: "request",
 		});
 
 		return $.get( url.api_base_path + "auditor/audit_store", function(auditStores){
 			dispatch({
 				type: types.AUDIT_STORE_GET,
-				status: 'success',
+				status: "success",
 				auditStores
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_GET,
-			status: 'request',
+			status: "request",
 			auditStoreId
 		});
 
 		return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}`, function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_GET,
-				status: 'success',
+				status: "success",
 				auditStore
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function acknowledgeAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_ACKNOWLEDGE,
-			status: 'request',
+			status: "request",
 			auditStoreId
 		});
 
 		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/acknowledge`, function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_ACKNOWLEDGE,
-				status: 'success',
+				status: "success",
 				auditStore
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function submitAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_SUBMIT,
-			status: 'request',
+			status: "request",
 			auditStoreId
 		});
 
 		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/submit`, function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_SUBMIT,
-				status: 'success',
+				status: "success",
 				auditStore
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}

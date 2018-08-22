@@ -1,23 +1,23 @@
-import React from 'react';
+import React from "react";
 
-import { Record, Picture, Video, File } from './Icons.jsx';
+import { Record, Picture, Video, File } from "./Icons.jsx";
 
 export default class extends React.Component {
     static defaultProps = {
-        proofType: "OTHER"
+    	proofType: "OTHER"
     };
 
     render() {
-		switch(this.props.proofType){
-			case "AUDIO":
-				return <Record/>;
-			case "PHOTO":
-				return <Picture/>;
-			case "VIDEO":
-				return <Video/>;
-			case "OTHER":
-			default:
-				return <File/>;
-		}
-	}
+    	switch(this.props.proofType){
+    	case "AUDIO":
+    		return <Record/>;
+    	case "PHOTO":
+    		return <Picture/>;
+    	case "VIDEO":
+    		return <Video/>;
+    	case "OTHER":
+    	default:
+    		return <File/>;
+    	}
+    }
 }

@@ -1,17 +1,17 @@
 /* global PHOEBE_VERSION:false */
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 
-import * as Redux from 'redux';
-import ReduxThunk from 'redux-thunk';
-import ReduxLogger from 'redux-logger';
+import * as Redux from "redux";
+import ReduxThunk from "redux-thunk";
+import ReduxLogger from "redux-logger";
 
-import $ from 'jquery';
+import $ from "jquery";
 
-import Routes from './components/Routes.jsx';
-import { rootReducer } from './reducers.js';
+import Routes from "./components/Routes.jsx";
+import { rootReducer } from "./reducers.js";
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
@@ -42,9 +42,9 @@ let render = store => {
 		<Provider store={store}>
 			<Routes store={store}/>
 		</Provider>,
-		document.getElementById('root')
+		document.getElementById("root")
 	);
-}
+};
 render(store);
 if(module.hot){
 	console.log("module is HOT HOT HOT!", module);

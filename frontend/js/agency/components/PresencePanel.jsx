@@ -147,7 +147,7 @@ export default class PresencePanel extends React.Component{
 					<div style={{display: "inline-block",width:"200px"}}><StateSelector onChange={this.stateChanged}/></div>
 					&nbsp;Please select all the cities that you can conduct audits in.
 				</h4>
-				{ this.state.loading ? <Loading/> : 
+				{ this.state.loading ? <Loading/> :
 					<div className="row">
 						{cityItems.length === 0 ? <Jumbotron heading="Select a State to begin"/> : cityItems}
 					</div>

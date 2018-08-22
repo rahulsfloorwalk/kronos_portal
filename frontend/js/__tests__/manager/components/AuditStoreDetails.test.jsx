@@ -87,8 +87,8 @@ describe("<AuditStoreDetails/>", () => {
 
 	it("is rendered correctly when AuditStore is not rated", () => {
 		const r = renderer.create(<Provider store={sampleStore}>
-				<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>
-			</Provider>);
+			<AuditStoreDetails auditStore={sampleAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>
+		</Provider>);
 
 		expect(r.toJSON()).toMatchSnapshot();
 	});

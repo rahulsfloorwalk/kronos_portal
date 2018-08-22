@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import Loading from './Loading.jsx';
+import Loading from "./Loading.jsx";
 
 export default class MarkdownViewer extends React.Component
 {
@@ -12,7 +12,7 @@ export default class MarkdownViewer extends React.Component
 	}
 
 	componentDidMount(){
-		import('marked').then((marked) => {
+		import("marked").then((marked) => {
 			this.marked = marked;
 			this.setState({
 				loading: false

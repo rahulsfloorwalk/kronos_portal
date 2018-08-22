@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 export default class extends React.Component {
-    render() {
+	render() {
 		return (
 			<span className="badge">{this.props.children}</span>
 		);

@@ -1,7 +1,7 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import { hashHistory } from 'react-router';
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config";
+import { hashHistory } from "react-router";
+import types from "../action_types.js";
 /**
  * These are the action creators as mentioned here: http://redux.js.org/docs/basics/ExampleTodoList.html#action-creators
  * Call them with arguments (if any) to create action objects that you can pass to dispatch(...)
@@ -9,37 +9,37 @@ import types from '../action_types.js';
 function profileInfoGetReq(){
 	return {
 		type: types.PROFILE_INFO_GET,
-		status: 'request',
+		status: "request",
 	};
-};
+}
 function profileInfoGetSuccess(profileInfo){
 	return {
 		type: types.PROFILE_INFO_GET,
-		status: 'success',
+		status: "success",
 		profileInfo: profileInfo
 	};
-};
+}
 function profileInfoPostReq(profileInfo){
 	return {
 		type: types.PROFILE_INFO_POST,
-		status: 'request',
+		status: "request",
 		profileInfo: profileInfo
 	};
-};
+}
 function profileInfoPostSuccess(profileInfo){
 	return {
 		type: types.PROFILE_INFO_POST,
-		status: 'success',
+		status: "success",
 		profileInfo: profileInfo
 	};
-};
+}
 function profileInfoPostError(errors){
 	return {
 		type: types.PROFILE_INFO_POST,
-		status: 'error',
+		status: "error",
 		errors: errors
 	};
-};
+}
 
 /**
  * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
@@ -59,7 +59,7 @@ export function fetchProfileInfo(){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function saveProfileInfo(profileInfo){
 	return function(dispatch){
@@ -82,7 +82,7 @@ export function saveProfileInfo(profileInfo){
 
 		return req;
 	};
-};
+}
 
 export function setMobileNumber(mobile_number){
 	return function(dispatch){

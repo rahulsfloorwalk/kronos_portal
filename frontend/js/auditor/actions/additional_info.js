@@ -1,7 +1,7 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import { hashHistory } from 'react-router';
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config";
+import { hashHistory } from "react-router";
+import types from "../action_types.js";
 
 /**
  * These are the action creators as mentioned here: http://redux.js.org/docs/basics/ExampleTodoList.html#action-creators
@@ -11,37 +11,37 @@ import types from '../action_types.js';
 function additionalInfoGetReq(){
 	return {
 		type: types.ADDITIONAL_INFO_GET,
-		status: 'request',
+		status: "request",
 	};
-};
+}
 function additionalInfoGetSuccess(additionalInfo){
 	return {
 		type: types.ADDITIONAL_INFO_GET,
-		status: 'success',
+		status: "success",
 		additionalInfo: additionalInfo
 	};
-};
+}
 function additionalInfoPostReq(additionalInfo){
 	return {
 		type: types.ADDITIONAL_INFO_POST,
-		status: 'request',
+		status: "request",
 		additionalInfo: additionalInfo
 	};
-};
+}
 function additionalInfoPostSuccess(additionalInfo){
 	return {
 		type: types.ADDITIONAL_INFO_POST,
-		status: 'success',
+		status: "success",
 		additionalInfo: additionalInfo
 	};
-};
+}
 function additionalInfoPostError(errors){
 	return {
 		type: types.ADDITIONAL_INFO_POST,
-		status: 'error',
+		status: "error",
 		errors: errors
 	};
-};
+}
 
 /**
  * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
@@ -57,7 +57,7 @@ export function fetchAdditionalInfo(){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function saveAdditionalInfo(additionalInfo){
 	return function(dispatch){
@@ -80,4 +80,4 @@ export function saveAdditionalInfo(additionalInfo){
 
 		return req;
 	};
-};
+}

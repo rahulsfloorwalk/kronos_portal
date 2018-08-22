@@ -2,23 +2,23 @@ import React from "react";
 import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 
-import {QuestionRow} from '../AuditStoreSections';
+import {QuestionRow} from "../AuditStoreSections";
 
 const sampleQuestion = {
 	"id":10928,
 	"sequence": 1,
-	"question_txt": 'Visit Time in',
+	"question_txt": "Visit Time in",
 	"max_marks": 0,
 	"section": 1617,
-	"question_type": 'PLAIN',
+	"question_type": "PLAIN",
 	"question_data": {}
 };
 const sampleAnswer = {
 	"id": 120036,
 	"question": 10928,
 	"audit_store": 5384,
-	"answer_text": 'We were 4; two adults and two kids.',
-	"answer_comment": '',
+	"answer_text": "We were 4; two adults and two kids.",
+	"answer_comment": "",
 	"marks_obtained": 0,
 	"not_applicable": false
 };
@@ -27,11 +27,11 @@ const sampleAnswerWithMarks = {
 	"id": 120036,
 	"question": 10928,
 	"audit_store": 5384,
-	"answer_text": 'We were 4; two adults and two kids.',
-	"answer_comment": '',
+	"answer_text": "We were 4; two adults and two kids.",
+	"answer_comment": "",
 	"marks_obtained": 1,
 	"not_applicable": false
-}
+};
 
 const sampleAuditStore = {
 	"id": 5384,
@@ -92,7 +92,7 @@ const sampleAuditStore = {
 		"agencyuser": null
 	},
 	"qa_rating": null
-}
+};
 describe("<QuestionRow/>", () => {
 
 	it("renders the question row correctly when answer has 0 marks", (done) => {

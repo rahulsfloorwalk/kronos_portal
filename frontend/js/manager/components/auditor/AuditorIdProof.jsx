@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { hashHistory, Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { hashHistory, Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateTimeFormat }  from '../../../../config.js';
+import moment from "moment";
+import { momentDateTimeFormat }  from "../../../../config.js";
 
-import { findIdProofsForUser } from '../../service/id_proofs.js';
+import { findIdProofsForUser } from "../../service/id_proofs.js";
 
-import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../../components/Icons.jsx';
-import Loading from '../../../components/Loading.jsx';
+import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
+import Loading from "../../../components/Loading.jsx";
 
 
 export default class AuditorIdProof extends Component{
@@ -26,20 +26,20 @@ export default class AuditorIdProof extends Component{
 				loading
 			});
 		});
-	}
+	};
 
 	reloadData = (user_id) => {
 		this.setLoading(true);
 		findIdProofsForUser(user_id).then((id_proofs)=> this.setState({ id_proofs })).always(() => this.setLoading(false));
-	}
+	};
 
 	componentDidMount(){
-			this.reloadData(this.props.params.auditorId);
+		this.reloadData(this.props.params.auditorId);
 	}
 
 	componentWillReceiveProps = (nextProps) => {
 		this.reloadData(nextProps.params.auditorId);
-	}
+	};
 
 	render(){
 		if(this.state.loading){
@@ -54,18 +54,18 @@ export default class AuditorIdProof extends Component{
 
 		return (
 			<div className="panel panel-default">
-			<div className="panel-heading">
-			<h4 className="panel-title">ID Proofs</h4>
-			</div>
-			<table className="table table-striped table-hover">
-			<tbody>
-			<tr>
-			<th>File name</th>
-			<th>File Location</th>
-			</tr>
-			{idProofRows}
-			</tbody>
-			</table>
+				<div className="panel-heading">
+					<h4 className="panel-title">ID Proofs</h4>
+				</div>
+				<table className="table table-striped table-hover">
+					<tbody>
+						<tr>
+							<th>File name</th>
+							<th>File Location</th>
+						</tr>
+						{idProofRows}
+					</tbody>
+				</table>
 			</div>
 		);
 	}

@@ -1,7 +1,7 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import { hashHistory } from 'react-router';
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config";
+import { hashHistory } from "react-router";
+import types from "../action_types.js";
 
 /**
  * These are the action creators as mentioned here: http://redux.js.org/docs/basics/ExampleTodoList.html#action-creators
@@ -11,44 +11,44 @@ import types from '../action_types.js';
 function socialInfoGetReq(){
 	return {
 		type: types.SOCIAL_INFO_GET,
-		status: 'request',
+		status: "request",
 	};
-};
+}
 function socialInfoGetSuccess(socialInfo){
 	return {
 		type: types.SOCIAL_INFO_GET,
-		status: 'success',
+		status: "success",
 		socialInfo: socialInfo
 	};
-};
+}
 function socialInfoGetError(errors){
 	return {
 		type: types.SOCIAL_INFO_GET,
-		status: 'error',
+		status: "error",
 		errors: errors
 	};
-};
+}
 function socialInfoPostReq(socialInfo){
 	return {
 		type: types.SOCIAL_INFO_POST,
-		status: 'request',
+		status: "request",
 		socialInfo: socialInfo
 	};
-};
+}
 function socialInfoPostSuccess(socialInfo){
 	return {
 		type: types.SOCIAL_INFO_POST,
-		status: 'success',
+		status: "success",
 		socialInfo: socialInfo
 	};
-};
+}
 function socialInfoPostError(errors){
 	return {
 		type: types.SOCIAL_INFO_POST,
-		status: 'error',
+		status: "error",
 		errors: errors
 	};
-};
+}
 /**
  * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
  * This allows you to configure the returned function with parameters ala factories.
@@ -63,7 +63,7 @@ export function fetchFacebookInfo(){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function saveFacebookInfo(fbResponse, accessToken){
 	return function(dispatch){
@@ -88,4 +88,4 @@ export function saveFacebookInfo(fbResponse, accessToken){
 
 		return req;
 	};
-};
+}

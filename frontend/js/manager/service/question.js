@@ -1,9 +1,9 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function findQuestionById(questionId){
 	return $.get( url.api_base_path + `manager/question/${questionId}`);
-};
+}
 
 export function saveQuestion(question){
 	var req_url = url.api_base_path + "manager/question";
@@ -17,7 +17,7 @@ export function saveQuestion(question){
 		contentType: "application/json"
 	});
 	return req;
-};
+}
 
 export function deleteQuestion(questionId){
 	return $.ajax({

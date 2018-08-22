@@ -1,23 +1,23 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import Alert from 'react-s-alert';
+import Alert from "react-s-alert";
 
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from '../service/attachment.js';
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from "../service/attachment.js";
 
-import { Paperclip, Plus, Cross, Record, Picture, Video, File, DownloadAlt } from '../../components/Icons.jsx';
-import Loading from '../../components/Loading.jsx';
-import ProgressBar from '../../components/ProgressBar.jsx';
-import Jumbotron from '../../components/Jumbotron.jsx';
-import InPlaceEditable from '../../components/InPlaceEditable.jsx';
+import { Paperclip, Plus, Cross, Record, Picture, Video, File, DownloadAlt } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
+import ProgressBar from "../../components/ProgressBar.jsx";
+import Jumbotron from "../../components/Jumbotron.jsx";
+import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 
-import AttachmentPreview from './AttachmentPreview.jsx';
+import AttachmentPreview from "./AttachmentPreview.jsx";
 
-import AttachmentThumbnail from '../../components/AttachmentThumbnail.jsx';
-import AttachmentInProgressThumbnail from '../../components/AttachmentInProgressThumbnail.jsx';
+import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
+import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
 
 export class AttachmentDisplayBox extends Component{
 	constructor(props){
@@ -34,7 +34,7 @@ export class AttachmentDisplayBox extends Component{
 				attachments
 			});
 		});
-	}
+	};
 	componentDidMount(){
 		this.reloadState();
 	}
@@ -42,7 +42,7 @@ export class AttachmentDisplayBox extends Component{
 		this.setState({
 			selectedAttachment: attachment
 		});
-	}
+	};
 	deleteButtonClicked = () => {
 		if( this.state.selectedAttachment){
 			deleteAttachment(this.state.selectedAttachment.id).then(() => {
@@ -53,7 +53,7 @@ export class AttachmentDisplayBox extends Component{
 				});
 			});
 		}
-	}
+	};
 	attachmentRenamed = (file_name) => {
 		renameAttachment(this.state.selectedAttachment.id, file_name).then((a)=>{
 			Alert.success("ATTACHMENT RENAMED");
@@ -72,10 +72,10 @@ export class AttachmentDisplayBox extends Component{
 		}, ()=> {
 			Alert.warning("INVALIED FILE NAME");
 		});
-	}
+	};
 	uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	}
+	};
 	setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
 			return Object.assign({}, prevState, {
@@ -84,7 +84,7 @@ export class AttachmentDisplayBox extends Component{
 				})
 			});
 		});
-	}
+	};
 	uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
@@ -100,24 +100,24 @@ export class AttachmentDisplayBox extends Component{
 			let promise = uploadFileForAuditStore(this.props.auditStoreId, toUploadFile);
 			promise.progress((type, percent)=>{
 				switch(type){
-					case "INIT":
-						this.setProgressState(tempId, {
-							uploadMessage :"initializing upload",
-							active: false,
-						});
-						break;
-					case "STARTING_UPLOAD":
-						this.setProgressState(tempId, {
-							uploadMessage :"starting upload",
-							active: true,
-						});
-						break;
-					case "UPLOAD_PROGRESS":
-						this.setProgressState(tempId, {
-							uploadMessage :"",
-							progress: Math.floor(percent)
-						});
-						break;
+				case "INIT":
+					this.setProgressState(tempId, {
+						uploadMessage :"initializing upload",
+						active: false,
+					});
+					break;
+				case "STARTING_UPLOAD":
+					this.setProgressState(tempId, {
+						uploadMessage :"starting upload",
+						active: true,
+					});
+					break;
+				case "UPLOAD_PROGRESS":
+					this.setProgressState(tempId, {
+						uploadMessage :"",
+						progress: Math.floor(percent)
+					});
+					break;
 				}
 			});
 			promise.always(()=>{
@@ -140,7 +140,7 @@ export class AttachmentDisplayBox extends Component{
 				});
 			});
 		}
-	}
+	};
 	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -166,8 +166,8 @@ export class AttachmentDisplayBox extends Component{
 
 		let editable = this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
-					onRename={this.attachmentRenamed}
-					onDelete={this.deleteButtonClicked}/>
+			onRename={this.attachmentRenamed}
+			onDelete={this.deleteButtonClicked}/>;
 
 		let uploadButton;
 		if(editable){

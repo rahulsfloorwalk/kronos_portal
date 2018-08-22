@@ -105,7 +105,7 @@ class WeightedAuditStoreTable extends Component {
 				if(s.max_marks > 0){
 					let w = this.state.weights[this.props.clientId][s.section];
 					tds.push(
-						<td key={s.sequence} className={getColor(s.color) + " text-right"} 
+						<td key={s.sequence} className={getColor(s.color) + " text-right"}
 							style={tdStyle}>
 							{s.percentage === null ? "N/A" : Math.floor(s.percentage * w / 100)  +"%" }
 						</td>);

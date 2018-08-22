@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import Header from './Header.jsx';
-import Footer from '../../components/Footer.jsx';
+import Header from "./Header.jsx";
+import Footer from "../../components/Footer.jsx";
 
-import NotificationBox from './NotificationBox.jsx';
-import AuditCycleDashboard from './AuditCycleDashboard.jsx';
+import NotificationBox from "./NotificationBox.jsx";
+import AuditCycleDashboard from "./AuditCycleDashboard.jsx";
 
 class Dashboard extends React.Component {
-    render() {
+	render() {
 		return (
 			<div>
 				<div className="row">

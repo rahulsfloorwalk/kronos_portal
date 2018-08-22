@@ -1,120 +1,120 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config.js";
+import types from "../action_types.js";
 
 export function fetchSections(auditCycleId){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_GET,
-			status: 'request',
+			status: "request",
 			auditCycleId
 		});
 
 		return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/section`, function(sections){
 			dispatch({
 				type: types.SECTION_GET,
-				status: 'success',
+				status: "success",
 				sections
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchSection(sectionId){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_ID_GET,
-			status: 'request',
+			status: "request",
 			sectionId
 		});
 
 		return $.get( url.api_base_path + `manager/section/${sectionId}`, function(section){
 			dispatch({
 				type: types.SECTION_ID_GET,
-				status: 'success',
+				status: "success",
 				section
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function loadSectionAddForm(){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_FORM_LOAD,
-			status: 'success'
+			status: "success"
 		});
 	};
-};
+}
 
 export function loadSectionEditForm(sectionId){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_FORM_LOAD,
-			status: 'request',
+			status: "request",
 			sectionId
 		});
 		return dispatch(fetchSection(sectionId));
 	};
-};
+}
 
 export function saveSectionAddForm(section){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_FORM_SUB,
-			status: 'request',
+			status: "request",
 			section
 
 		});
 		dispatch({
 			type: types.SECTION_POST,
-			status: 'request',
+			status: "request",
 			section
 		});
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + `manager/section`,
+			url: url.api_base_path + "manager/section",
 			data: JSON.stringify(section),
 			contentType: "application/json"
 		});
 		req.done(function(savedSection){
 			dispatch({
 				type: types.SECTION_POST,
-				status: 'success',
+				status: "success",
 				section: savedSection
 			});
 			dispatch({
 				type: types.SECTION_FORM_SUB,
-				status: 'success',
+				status: "success",
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.SECTION_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 			dispatch({
 				type: types.SECTION_FORM_SUB,
-				status: 'error',
+				status: "error",
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function saveSectionEditForm(section){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_FORM_SUB,
-			status: 'request'
+			status: "request"
 		});
 		dispatch({
 			type: types.SECTION_ID_POST,
-			status: 'request',
+			status: "request",
 			section
 		});
 
@@ -127,34 +127,34 @@ export function saveSectionEditForm(section){
 		req.done(function(savedSection){
 			dispatch({
 				type: types.SECTION_ID_POST,
-				status: 'success',
+				status: "success",
 				section: savedSection
 			});
 			dispatch({
 				type: types.SECTION_FORM_SUB,
-				status: 'success'
+				status: "success"
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.SECTION_ID_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 			dispatch({
 				type: types.SECTION_FORM_SUB,
-				status: 'error',
+				status: "error",
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function deleteSection(sectionId){
 	return function(dispatch){
 		dispatch({
 			type: types.SECTION_ID_DELETE,
-			status: 'request',
+			status: "request",
 			sectionId,
 		});
 		let req = $.ajax({
@@ -164,18 +164,18 @@ export function deleteSection(sectionId){
 		req.done(function(){
 			dispatch({
 				type: types.SECTION_ID_DELETE,
-				status: 'success',
+				status: "success",
 				sectionId,
 			});
 		});
 		req.fail(function(){
 			dispatch({
 				type: types.SECTION_ID_DELETE,
-				status: 'error',
+				status: "error",
 				sectionId,
 			});
 		});
 		return req;
 	};
-};
+}
 

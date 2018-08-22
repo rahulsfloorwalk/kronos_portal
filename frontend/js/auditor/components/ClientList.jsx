@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
-import { affectInputEventToComponent } from '../../react_utils.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
+import { affectInputEventToComponent } from "../../react_utils.js";
 
-import { truncateStyle } from '../../styles.js';
+import { truncateStyle } from "../../styles.js";
 
-import { fetchApplications } from '../actions/application.js';
-import { fetchAudits } from '../actions/audit.js';
-import { fetchProfileInfo } from '../actions/profile_info.js';
+import { fetchApplications } from "../actions/application.js";
+import { fetchAudits } from "../actions/audit.js";
+import { fetchProfileInfo } from "../actions/profile_info.js";
 
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import FormSelect from '../../components/FormSelect.jsx';
-import ExpandableDetails from '../../components/ExpandableDetails.jsx';
-import { Cross, ShareAlt } from '../../components/Icons.jsx';
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import Loading from '../../components/Loading.jsx';
-import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import FormSelect from "../../components/FormSelect.jsx";
+import ExpandableDetails from "../../components/ExpandableDetails.jsx";
+import { Cross, ShareAlt } from "../../components/Icons.jsx";
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
+import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
+import Loading from "../../components/Loading.jsx";
+import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
 
 class AuditCycleRow extends Component{
 	constructor(props){
@@ -89,7 +89,7 @@ class ClientList extends Component{
 	}
 	setLoading = (loading) => {
 		this.setState(oldState => Object.assign({}, oldState, { loading }));
-	}
+	};
 	reloadAudits = (kms) => {
 		this.setLoading(true);
 		this.props.dispatch(fetchAudits({
@@ -97,16 +97,16 @@ class ClientList extends Component{
 		})).always(()=>{
 			this.setLoading(false);
 		});
-	}
+	};
 	componentDidMount() {
-		this.reloadAudits(this.state.kms)
+		this.reloadAudits(this.state.kms);
 		this.props.dispatch(fetchProfileInfo());
 		this.props.dispatch(fetchApplications());
 	}
 	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
 		this.reloadAudits(e.target.value);
-	}
+	};
 	render(){
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
 			if( this.props.profileInfo.mobile_number){
@@ -152,9 +152,9 @@ class ClientList extends Component{
 		let auditCycleRows = [];
 		for(let ac of auditCycles){
 			auditCycleRows.push(<div className="col-sm-6 col-md-4" key={ac.id}>
-				<AuditCycleRow audit_cycle={ac} 
-					count={auditCycleExtra[ac.id].count} 
-					fees={auditCycleExtra[ac.id].fees} 
+				<AuditCycleRow audit_cycle={ac}
+					count={auditCycleExtra[ac.id].count}
+					fees={auditCycleExtra[ac.id].fees}
 					reimbursement={auditCycleExtra[ac.id].reimbursement}
 				/>
 			</div>);
@@ -176,14 +176,14 @@ class ClientList extends Component{
 				<h2 className="page-header">
 					Available Audits within &nbsp;
 					<div style={{width: "100px", display: "inline-block"}}>
-					<FormSelect label="" value={this.state.kms} name="kms" onChange={this.inputChanged}>
-						<option value="1"> 1 km</option>
-						<option value="5"> 5 km</option>
-						<option value="10"> 10 km</option>
-						<option value="20"> 20 km</option>
-						<option value="50"> 50 km</option>
-						<option value="100"> 100 km</option>
-					</FormSelect>
+						<FormSelect label="" value={this.state.kms} name="kms" onChange={this.inputChanged}>
+							<option value="1"> 1 km</option>
+							<option value="5"> 5 km</option>
+							<option value="10"> 10 km</option>
+							<option value="20"> 20 km</option>
+							<option value="50"> 50 km</option>
+							<option value="100"> 100 km</option>
+						</FormSelect>
 					</div>
 				</h2>
 				{auditCycleRows}
@@ -201,4 +201,4 @@ var mapStoreToProps = function(store){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(ClientList); 
+export default ReactRedux.connect(mapStoreToProps)(ClientList);

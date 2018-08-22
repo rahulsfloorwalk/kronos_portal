@@ -1,31 +1,31 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import types from '../action_types.js'
+import $ from "jquery";
+import { url } from "../../../config";
+import types from "../action_types.js";
 
 export function fetchReportSections(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.REPORT_SECTION_GET,
-			status: 'request',
+			status: "request",
 			auditStoreId
 		});
 
 		return $.get( url.api_base_path + `manager/audit_store/${auditStoreId}/report_section`, function(reportSections){
 			dispatch({
 				type: types.REPORT_SECTION_GET,
-				status: 'success',
+				status: "success",
 				reportSections
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function submitPMComment(reportSection){
 	return function(dispatch){
 		dispatch({
 			type: types.REPORT_SECTION_PM_COMMENT,
-			status: 'request',
+			status: "request",
 			reportSection
 		});
 
@@ -41,20 +41,20 @@ export function submitPMComment(reportSection){
 		req.done(function(reportSection){
 			dispatch({
 				type: types.REPORT_SECTION_PM_COMMENT,
-				status: 'success',
+				status: "success",
 				reportSection
 			});
 		});
 		//TODO: Handle error
 		return req;
 	};
-};
+}
 
 export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 	return function(dispatch){
 		dispatch({
 			type: types.REPORT_SECTION_AUDITOR_COMMENT,
-			status: 'request',
+			status: "request",
 			auditStoreId,
 			sectionId,
 			auditorComment,
@@ -71,20 +71,20 @@ export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 		req.done(function(reportSection){
 			dispatch({
 				type: types.REPORT_SECTION_AUDITOR_COMMENT,
-				status: 'success',
+				status: "success",
 				reportSection
 			});
 		});
 		//TODO: Handle error
 		return req;
 	};
-};
+}
 
 export function setNotApplicable(auditStoreId, sectionId, notApplicable){
 	return function(dispatch){
 		dispatch({
 			type: types.REPORT_SECTION_NOT_APPLICABLE,
-			status: 'request',
+			status: "request",
 			auditStoreId,
 			sectionId,
 			notApplicable,
@@ -101,11 +101,11 @@ export function setNotApplicable(auditStoreId, sectionId, notApplicable){
 		req.done(function(reportSection){
 			dispatch({
 				type: types.REPORT_SECTION_NOT_APPLICABLE,
-				status: 'success',
+				status: "success",
 				reportSection
 			});
 		});
 		//TODO: Handle error
 		return req;
 	};
-};
+}

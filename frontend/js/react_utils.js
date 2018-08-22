@@ -8,7 +8,7 @@ export function affectInputEventToComponent(e, component){
 	}
 	component.setState(change);
 	console.log(e.target.name,"changed to", change);
-};
+}
 
 export function getInputEventChangeValue(e){
 	var change = {};
@@ -19,7 +19,7 @@ export function getInputEventChangeValue(e){
 	}
 	console.log(e.target.name,"changed to", change);
 	return change;
-};
+}
 
 export function orderKeys(o, f) {
 	var os=[], ks=[], i;
@@ -31,4 +31,4 @@ export function orderKeys(o, f) {
 		ks.push(os[i][0]);
 	}
 	return ks;
-};
+}

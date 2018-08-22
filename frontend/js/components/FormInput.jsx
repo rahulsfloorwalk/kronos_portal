@@ -65,10 +65,10 @@ export class FormDateInput extends React.Component{
 		return (
 			<FormGroup>
 				<label>{this.props.label}</label>
-				<Datetime 
-					timeFormat={false} 
+				<Datetime
+					timeFormat={false}
 					dateFormat="YYYY-MM-DD"
-					closeOnSelect={true} 
+					closeOnSelect={true}
 					{...this.props}
 				/>
 				<FormErrorList errors={this.props.errors}/>

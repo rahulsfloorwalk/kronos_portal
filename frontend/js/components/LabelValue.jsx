@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 class LabelValue extends React.Component {
-    render() {
+	render() {
 		return (
 			<div className="form-group">
 				<div className="col-xs-4 text-right">{this.props.label}</div>
@@ -12,7 +12,7 @@ class LabelValue extends React.Component {
 }
 
 class LabelValue_2_10 extends React.Component {
-    render() {
+	render() {
 		return (
 			<div className="form-group">
 				<div className="col-xs-3 text-right">{this.props.label}</div>

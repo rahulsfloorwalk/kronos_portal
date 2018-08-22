@@ -1,13 +1,13 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function fetchClients(){
 	return $.get( url.api_base_path + "manager/client");
-};
+}
 
 export function fetchClient(clientId){
 	return $.get( url.api_base_path + `manager/client/${clientId}`);
-};
+}
 
 export function updateClient(client){
 	return $.ajax({
@@ -16,7 +16,7 @@ export function updateClient(client){
 		data: JSON.stringify(client),
 		contentType: "application/json"
 	});
-};
+}
 
 export function addClient(client){
 	return $.ajax({
@@ -25,4 +25,4 @@ export function addClient(client){
 		data: JSON.stringify(client),
 		contentType: "application/json"
 	});
-};
+}

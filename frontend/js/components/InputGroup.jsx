@@ -1,8 +1,8 @@
-import React from 'react';
-import Datetime from 'react-datetime';
+import React from "react";
+import Datetime from "react-datetime";
 
 class InputGroup extends React.Component {
-    render() {
+	render() {
 		return (
 			<div className="input-group">
 				{this.props.children}
@@ -12,7 +12,7 @@ class InputGroup extends React.Component {
 }
 
 class InputGroupBtn extends React.Component {
-    render() {
+	render() {
 		return (
 			<span className="input-group-btn">
 				{this.props.children}

@@ -1,19 +1,19 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import Alert from 'react-s-alert';
+import Alert from "react-s-alert";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { Link, withRouter } from 'react-router';
+import { Link, withRouter } from "react-router";
 
-import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from '../../components/Icons.jsx';
+import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from "../../components/Icons.jsx";
 
-import { findByAudit, waitListApplication } from '../service/application.js';
+import { findByAudit, waitListApplication } from "../service/application.js";
 
-import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
-import AuditStoreRating from '../../components/AuditStoreRating.jsx';
-import ApplicationRepeat from '../../components/ApplicationRepeat.jsx';
+import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
+import AuditStoreRating from "../../components/AuditStoreRating.jsx";
+import ApplicationRepeat from "../../components/ApplicationRepeat.jsx";
 
 class AuditApplicationList extends Component{
 	constructor(props){
@@ -25,13 +25,13 @@ class AuditApplicationList extends Component{
 	}
 	setLoading = (loading) => {
 		this.setState(prevState => Object.assign({}, prevState, { loading }));
-	}
+	};
 	reloadApplications = (auditId) => {
 		this.setLoading(true);
 		findByAudit(auditId).then((applications) => {
 			this.setState({applications});
 		}).always(()=>this.setLoading(false));
-	}
+	};
 	componentDidMount(){
 		this.reloadApplications(this.props.auditId);
 	}
@@ -91,7 +91,7 @@ class AuditApplicationList extends Component{
 		return (
 			<table className="table">
 				<tbody>
-				{rows}
+					{rows}
 				</tbody>
 			</table>
 		);
@@ -101,6 +101,6 @@ class AuditApplicationList extends Component{
 AuditApplicationList.contextTypes = {
 	auditCycleId: React.PropTypes.number,
 	router: React.PropTypes.object,
-}
+};
 
 export default withRouter(AuditApplicationList);

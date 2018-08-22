@@ -1,32 +1,32 @@
-import $ from 'jquery';
-import { url } from '../../../config';
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config";
+import types from "../action_types.js";
 
-import { fetchAudit } from './audit.js';
+import { fetchAudit } from "./audit.js";
 
 export function fetchApplications(){
 	return function(dispatch){
 		dispatch({
 			type: types.APPLICATION_GET,
-			status: 'request',
+			status: "request",
 		});
 
-		$.get( url.api_base_path + `auditor/application`, function(applications){
+		$.get( url.api_base_path + "auditor/application", function(applications){
 			dispatch({
 				type: types.APPLICATION_GET,
-				status: 'success',
+				status: "success",
 				applications: applications,
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function loadAuditApplyForm( auditId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_APPLY_FORM_LOAD,
-			status: 'request',
+			status: "request",
 			auditId
 		});
 
@@ -35,20 +35,20 @@ export function loadAuditApplyForm( auditId){
 		auditPromise.done(function(audit){
 			dispatch({
 				type: types.AUDIT_APPLY_FORM_LOAD,
-				status: 'success',
+				status: "success",
 				auditId,
 				audit
 			});
 		});
 		return auditPromise;
 	};
-};
+}
 
 export function submitAuditApplyForm( auditApplication){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_APPLY_FORM_SUB,
-			status: 'request',
+			status: "request",
 			auditApplication: auditApplication
 		});
 
@@ -62,27 +62,27 @@ export function submitAuditApplyForm( auditApplication){
 			console.log("success",savedApplication);
 			dispatch({
 				type: types.AUDIT_APPLY_FORM_SUB,
-				status: 'success',
+				status: "success",
 				auditApplication: savedApplication
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.AUDIT_APPLY_FORM_SUB,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 		});
 
 		return req;
 	};
-};
+}
 
 export function loadAuditCancelForm( auditId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_CANCEL_FORM_LOAD,
-			status: 'request',
+			status: "request",
 			auditId
 		});
 
@@ -91,18 +91,18 @@ export function loadAuditCancelForm( auditId){
 		auditPromise.done(function(audit){
 			dispatch({
 				type: types.AUDIT_CANCEL_FORM_LOAD,
-				status: 'success',
+				status: "success",
 				auditId
 			});
 		});
 	};
-};
+}
 
 export function submitAuditCancelForm( auditId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_CANCEL_FORM_SUB,
-			status: 'request',
+			status: "request",
 			auditId: auditId,
 		});
 
@@ -115,18 +115,18 @@ export function submitAuditCancelForm( auditId){
 			console.log("success",savedApplication);
 			dispatch({
 				type: types.AUDIT_CANCEL_FORM_SUB,
-				status: 'success',
+				status: "success",
 				auditApplication: savedApplication
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.AUDIT_CANCEL_FORM_SUB,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON || { }
 			});
 		});
 
 		return req;
 	};
-};
+}

@@ -1,75 +1,75 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config.js";
+import types from "../action_types.js";
 
 export function fetchClientUsers(clientId){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_USER_GET,
-			status: 'request',
+			status: "request",
 			clientId
 		});
 
 		return $.get( url.api_base_path + `manager/client/${clientId}/client_user`, function(clientUsers){
 			dispatch({
 				type: types.CLIENT_USER_GET,
-				status: 'success',
+				status: "success",
 				clientUsers
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchClientUser(clientUserId){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_USER_ID_GET,
-			status: 'request',
+			status: "request",
 			clientUserId
 		});
 
 		return $.get( url.api_base_path + `manager/client_user/${clientUserId}`, function(clientUser){
 			dispatch({
 				type: types.CLIENT_USER_ID_GET,
-				status: 'success',
+				status: "success",
 				clientUser
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function loadClientUserAddForm(){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_USER_FORM_LOAD,
-			status: 'success'
+			status: "success"
 		});
 	};
-};
+}
 
 export function loadClientUserEditForm(clientUserId){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_USER_FORM_LOAD,
-			status: 'request',
+			status: "request",
 			clientUserId
 		});
 		return dispatch(fetchClientUser(clientUserId));
 	};
-};
+}
 
 export function saveClientUserAddForm(clientUser){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_USER_FORM_SUB,
-			status: 'request',
+			status: "request",
 			clientUser
 		});
 		dispatch({
 			type: types.CLIENT_USER_POST,
-			status: 'request',
+			status: "request",
 			clientUser
 		});
 
@@ -82,41 +82,41 @@ export function saveClientUserAddForm(clientUser){
 		req.done(function(savedClientUser){
 			dispatch({
 				type: types.CLIENT_USER_POST,
-				status: 'success',
+				status: "success",
 				clientUser: savedClientUser
 			});
 			dispatch({
 				type: types.CLIENT_USER_FORM_SUB,
-				status: 'success',
+				status: "success",
 				clientUser: savedClientUser
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.CLIENT_USER_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON || {}
 			});
 			dispatch({
 				type: types.CLIENT_USER_FORM_SUB,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON || {}
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function saveClientUserEditForm(clientUser){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_USER_FORM_SUB,
-			status: 'request',
+			status: "request",
 			clientUser
 		});
 		dispatch({
 			type: types.CLIENT_USER_ID_POST,
-			status: 'request',
+			status: "request",
 			clientUser
 		});
 
@@ -129,30 +129,30 @@ export function saveClientUserEditForm(clientUser){
 		req.done(function(savedClientUser){
 			dispatch({
 				type: types.CLIENT_USER_ID_POST,
-				status: 'success',
+				status: "success",
 				clientUser: savedClientUser
 			});
 			dispatch({
 				type: types.CLIENT_USER_FORM_SUB,
-				status: 'success',
+				status: "success",
 				clientUser: savedClientUser
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.CLIENT_USER_FORM_SUB,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON || {}
 			});
 			dispatch({
 				type: types.CLIENT_USER_ID_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON || {}
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function updateClientUserStoreVisibility(storeId, clientUsers){
 	return function(dispatch){

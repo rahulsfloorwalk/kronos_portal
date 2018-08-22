@@ -35,7 +35,7 @@ import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import { getAuditType } from "../../utils.js";
 
 import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
-import AuditorNameDisplay from "./AuditorNameDisplay.jsx"
+import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 
 export class AuditStoreDetails extends React.Component{
 	static propTypes = {

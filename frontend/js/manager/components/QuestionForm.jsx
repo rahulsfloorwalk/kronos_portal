@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { hashHistory } from 'react-router';
+import React, { Component } from "react";
+import { hashHistory } from "react-router";
 
-import { findQuestionById, saveQuestion } from '../service/question.js';
+import { findQuestionById, saveQuestion } from "../service/question.js";
 
-import { getQuestionType } from '../../utils.js';
-import { getInputEventChangeValue } from '../../react_utils.js';
-import FormInput from '../../components/FormInput.jsx';
-import FormGroup from '../../components/FormGroup.jsx';
-import FormSelect from '../../components/FormSelect.jsx';
-import FormErrorList from '../../components/FormErrorList.jsx';
-import SaveButton from '../../components/SaveButton.jsx';
-import Modal from '../../components/Modal.jsx';
-import { Plus, Cross } from '../../components/Icons.jsx';
+import { getQuestionType } from "../../utils.js";
+import { getInputEventChangeValue } from "../../react_utils.js";
+import FormInput from "../../components/FormInput.jsx";
+import FormGroup from "../../components/FormGroup.jsx";
+import FormSelect from "../../components/FormSelect.jsx";
+import FormErrorList from "../../components/FormErrorList.jsx";
+import SaveButton from "../../components/SaveButton.jsx";
+import Modal from "../../components/Modal.jsx";
+import { Plus, Cross } from "../../components/Icons.jsx";
 
 class OptionBuilder extends Component{
 	constructor(props){
@@ -46,7 +46,7 @@ class OptionBuilder extends Component{
 		if(this.props.onChange){
 			this.props.onChange(this.state.question_data);
 		}
-	}
+	};
 
 	setOptions = (newOptions) => {
 		this.setState((prevState) => {
@@ -56,7 +56,7 @@ class OptionBuilder extends Component{
 				})
 			});
 		}, this.notifyOptionsChanged);
-	}
+	};
 
 	addOption = () => {
 		let lastItem = this.state.question_data.options[this.state.question_data.options.length - 1];
@@ -66,12 +66,12 @@ class OptionBuilder extends Component{
 			marks: 0,
 		});
 		this.setOptions(newOptions);
-	}
+	};
 
 	deleteOption = (index) => {
 		let newOptions = this.state.question_data.options.filter((o,i) => i !== index);
 		this.setOptions(newOptions);
-	}
+	};
 
 	setData = (index, key, data) => {
 		let newOptions = this.state.question_data.options.map((o, i) => {
@@ -81,7 +81,7 @@ class OptionBuilder extends Component{
 			return o;
 		});
 		this.setOptions(newOptions);
-	}
+	};
 
 	render(){
 		let rows = this.state.question_data.options.map((o, i) => {
@@ -89,19 +89,19 @@ class OptionBuilder extends Component{
 				<tr key={i}>
 					<td>
 						<input className="form-control" type="number" name="sequence" value={o.sequence}
-						onChange={(e) => this.setData(i, e.target.name, parseInt(e.target.value))}/>
+							onChange={(e) => this.setData(i, e.target.name, parseInt(e.target.value))}/>
 					</td>
 					<td>
 						<input className="form-control" type="text" name="value" value={o.value}
-						onChange={(e) => this.setData(i, e.target.name, e.target.value)}/>
+							onChange={(e) => this.setData(i, e.target.name, e.target.value)}/>
 					</td>
 					<td>
 						<input className="form-control" type="number" name="marks" value={o.marks}
-						onChange={(e) => this.setData(i, e.target.name, parseInt(e.target.value))}/>
+							onChange={(e) => this.setData(i, e.target.name, parseInt(e.target.value))}/>
 					</td>
 					<td>
-						<button className="btn btn-default pull-right" type="button" 
-						onClick={(e) => this.deleteOption(i)}>
+						<button className="btn btn-default pull-right" type="button"
+							onClick={(e) => this.deleteOption(i)}>
 							<Cross/>
 						</button>
 					</td>
@@ -129,8 +129,8 @@ class OptionBuilder extends Component{
 							<th>Marks</th>
 							<th>
 								<button type="button" className="btn btn-default pull-right" onClick={this.addOption}>
-			<Plus/>
-			</button>
+									<Plus/>
+								</button>
 							</th>
 						</tr>
 					</thead>
@@ -140,121 +140,121 @@ class OptionBuilder extends Component{
 				</table>
 			</div>
 		);
-	};
+	}
 }
 
 class QuestionForm extends React.Component {
     state = {
-        form: {},
-        errors: {}
+    	form: {},
+    	errors: {}
     };
 
     componentDidMount() {
-		if(this.props.params.questionId){
-			findQuestionById(this.props.params.questionId).then(question => this.setState({ 'form': question }));
-		} 
-		this.setState({
-			form: Object.assign({}, this.state.form, {
-				section: this.props.params.sectionId
-			})
-		});
-	}
+    	if(this.props.params.questionId){
+    		findQuestionById(this.props.params.questionId).then(question => this.setState({ "form": question }));
+    	}
+    	this.setState({
+    		form: Object.assign({}, this.state.form, {
+    			section: this.props.params.sectionId
+    		})
+    	});
+    }
 
     inputChanged = (e) => {
-		this.setState({
-			form: Object.assign({}, this.state.form, getInputEventChangeValue(e))
-		});
-	};
+    	this.setState({
+    		form: Object.assign({}, this.state.form, getInputEventChangeValue(e))
+    	});
+    };
 
     onSubmit = (e) => {
-		e.preventDefault();
-		saveQuestion(this.state.form).then(
-			savedQuestion => {
-				hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`);
-			},
-			err => {
-				if( err.responseJSON){
+    	e.preventDefault();
+    	saveQuestion(this.state.form).then(
+    		savedQuestion => {
+    			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`);
+    		},
+    		err => {
+    			if( err.responseJSON){
 				       	this.setState({
-						errors: err.responseJSON
-					});
-				}
-			}
-		);
-	};
+    					errors: err.responseJSON
+    				});
+    			}
+    		}
+    	);
+    };
 
     saveAndNext = (e) => {
-		e.preventDefault();
-		saveQuestion(this.state.form).then(
-			(savedQuestion) => {
-				this.setState({
-					form: Object.assign({}, this.state.form, {
-						sequence: savedQuestion.sequence + 1,
-						max_marks: "",
-						question_type: "",
-						question_txt: "",
-					})
-				});
-				hashHistory.push(this.props.location.pathname);
-			},
-			(err) => {
-				if( err.responseJSON){
-					this.setState({
-						errors: err.responseJSON
-					});
-				}
-			}
-		);
-	};
+    	e.preventDefault();
+    	saveQuestion(this.state.form).then(
+    		(savedQuestion) => {
+    			this.setState({
+    				form: Object.assign({}, this.state.form, {
+    					sequence: savedQuestion.sequence + 1,
+    					max_marks: "",
+    					question_type: "",
+    					question_txt: "",
+    				})
+    			});
+    			hashHistory.push(this.props.location.pathname);
+    		},
+    		(err) => {
+    			if( err.responseJSON){
+    				this.setState({
+    					errors: err.responseJSON
+    				});
+    			}
+    		}
+    	);
+    };
 
     questionDataChanged = (questionData) => {
-		this.setState({
-			form: Object.assign({}, this.state.form, {
-				question_data: questionData
-			})
-		});
-	};
+    	this.setState({
+    		form: Object.assign({}, this.state.form, {
+    			question_data: questionData
+    		})
+    	});
+    };
 
     render() {
-		var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
+    	var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
 
-		let optionBuilder;
-		if(this.state.form.question_type === "MUTEX"){
-			optionBuilder = <OptionBuilder question_data={this.state.form.question_data} onChange={this.questionDataChanged}/>
-		}
+    	let optionBuilder;
+    	if(this.state.form.question_type === "MUTEX"){
+    		optionBuilder = <OptionBuilder question_data={this.state.form.question_data} onChange={this.questionDataChanged}/>;
+    	}
 
-		return (
-			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
-				<form onSubmit={this.onSubmit} className="row">
-					<FormErrorList errors={this.state.errors.non_field_errors}/>
-					<div className="col-md-4">
-						<FormInput label="Sequence" min="1" type="number" value={this.state.form.sequence} name="sequence" onChange={this.inputChanged} errors={this.state.errors.sequence}/>
-					</div>
-					<div className="col-md-4">
-						<FormInput label="Max. Marks" min="0" type="number" value={this.state.form.max_marks} name="max_marks" onChange={this.inputChanged} errors={this.state.errors.max_marks}/>
-					</div>
-					<div className="col-md-4">
-						<FormSelect label="Question Type" value={this.state.form.question_type} name="question_type" onChange={this.inputChanged} errors={this.state.errors.question_type}>
-							<option value=""></option>
-							<option value="PLAIN">{getQuestionType("PLAIN")}</option>
-							<option value="MUTEX">{getQuestionType("MUTEX")}</option>
-						</FormSelect>
-					</div>
-					<div className="col-md-12">
-						<FormInput label="Question" maxLength="1024" type="text" value={this.state.form.question_txt} name="question_txt" onChange={this.inputChanged} errors={this.state.errors.question_txt}/>
-					</div>
-					<div className="col-md-12">
-						{optionBuilder}
-					</div>
-					<div className="col-md-12">
-						<SaveButton/>&nbsp;
-						{ ! this.props.params.questionId ?
-						<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>
-						: null }
-					</div>
-				</form>
-			</Modal>
-		);
-	}
+    	return (
+    		<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
+    			<form onSubmit={this.onSubmit} className="row">
+    				<FormErrorList errors={this.state.errors.non_field_errors}/>
+    				<div className="col-md-4">
+    					<FormInput label="Sequence" min="1" type="number" value={this.state.form.sequence} name="sequence" onChange={this.inputChanged} errors={this.state.errors.sequence}/>
+    				</div>
+    				<div className="col-md-4">
+    					<FormInput label="Max. Marks" min="0" type="number" value={this.state.form.max_marks} name="max_marks" onChange={this.inputChanged} errors={this.state.errors.max_marks}/>
+    				</div>
+    				<div className="col-md-4">
+    					<FormSelect label="Question Type" value={this.state.form.question_type} name="question_type" onChange={this.inputChanged} errors={this.state.errors.question_type}>
+    						<option value=""></option>
+    						<option value="PLAIN">{getQuestionType("PLAIN")}</option>
+    						<option value="MUTEX">{getQuestionType("MUTEX")}</option>
+    					</FormSelect>
+    				</div>
+    				<div className="col-md-12">
+    					<FormInput label="Question" maxLength="1024" type="text" value={this.state.form.question_txt} name="question_txt" onChange={this.inputChanged} errors={this.state.errors.question_txt}/>
+    				</div>
+    				<div className="col-md-12">
+    					{optionBuilder}
+    				</div>
+    				<div className="col-md-12">
+    					<SaveButton/>&nbsp;
+    					{ ! this.props.params.questionId ?
+    						<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>
+    						: null }
+    				</div>
+    			</form>
+    		</Modal>
+    	);
+    }
 }
 
 export default QuestionForm;

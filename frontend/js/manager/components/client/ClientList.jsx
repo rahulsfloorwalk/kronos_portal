@@ -1,14 +1,14 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import Loading from '../../../components/Loading.jsx';
-import { Plus, King } from '../../../components/Icons.jsx';
+import Loading from "../../../components/Loading.jsx";
+import { Plus, King } from "../../../components/Icons.jsx";
 
-import { fetchClients } from '../../service/client.js';
+import { fetchClients } from "../../service/client.js";
 
 class ClientRow extends React.Component {
-    render() {
+	render() {
 		var linkTo = `/client/${this.props.client.id}/audit_cycle`;
 		let style = {
 			height: "250px",
@@ -17,12 +17,12 @@ class ClientRow extends React.Component {
 		return (
 			<div className="col-sm-6 col-md-3">
 				<div className="panel panel-default" style={style}>
-				<div className="panel-body text-center">
-				<h4>{this.props.client.name}</h4>
-				<Link to={linkTo} className="">
-				<img style={{"padding":"10px", "maxHeight":"200px", "maxWidth":"100%"}} className="" src={logoUrl}/>
-				</Link>
-				</div>
+					<div className="panel-body text-center">
+						<h4>{this.props.client.name}</h4>
+						<Link to={linkTo} className="">
+							<img style={{"padding":"10px", "maxHeight":"200px", "maxWidth":"100%"}} className="" src={logoUrl}/>
+						</Link>
+					</div>
 				</div>
 			</div>
 		);
@@ -33,29 +33,29 @@ export default class extends React.Component {
     state = {};
 
     componentDidMount() {
-		fetchClients().done((clients)=>this.setState({clients}));
-	}
+    	fetchClients().done((clients)=>this.setState({clients}));
+    }
 
     render() {
-		if(! this.state.clients){
-			return <Loading/>;
-		}
+    	if(! this.state.clients){
+    		return <Loading/>;
+    	}
 
-		let rows = [];
-		for(let c of this.state.clients) {
-			rows.push(<ClientRow client={c} key={c.id}/>);
-		}
-		return (
-			<div>
-				<h2 className="page-header">
-					<Link to="/client/add" className="btn btn-default pull-right"><Plus/> Add Client</Link>
-					<King/> Client List
-				</h2>
-				<div className="row">
-				{rows}
-				</div>
-				{this.props.children}
-			</div>
-		);
-	}
+    	let rows = [];
+    	for(let c of this.state.clients) {
+    		rows.push(<ClientRow client={c} key={c.id}/>);
+    	}
+    	return (
+    		<div>
+    			<h2 className="page-header">
+    				<Link to="/client/add" className="btn btn-default pull-right"><Plus/> Add Client</Link>
+    				<King/> Client List
+    			</h2>
+    			<div className="row">
+    				{rows}
+    			</div>
+    			{this.props.children}
+    		</div>
+    	);
+    }
 }

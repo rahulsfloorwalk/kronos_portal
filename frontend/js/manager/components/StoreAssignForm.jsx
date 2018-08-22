@@ -68,7 +68,7 @@ class StoreAssignForm extends React.Component{
 			let button;
 			if(this.props.clientUserStoreVisibility.indexOf(cu.user.id) > -1){
 				button = <button onClick={() => this.revokeStore(cu)} className="btn btn-primary" disabled={this.state.loading[cu.user.id]}>
-					{this.state.loading[cu.user.id] ? 
+					{this.state.loading[cu.user.id] ?
 						<OptionHorizontal/>
 						:
 						<Checked/>
@@ -76,7 +76,7 @@ class StoreAssignForm extends React.Component{
 				</button>;
 			} else {
 				button = <button onClick={() => this.assignStore(cu)} className="btn btn-default" disabled={this.state.loading[cu.user.id]}>
-					{this.state.loading[cu.user.id] ? 
+					{this.state.loading[cu.user.id] ?
 						<OptionHorizontal/>
 						:
 						<Unchecked/>

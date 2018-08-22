@@ -1,31 +1,31 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import types from '../action_types.js'
+import $ from "jquery";
+import { url } from "../../../config";
+import types from "../action_types.js";
 
 export function fetchAnswers(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.ANSWER_GET,
-			status: 'request',
+			status: "request",
 			auditStoreId
 		});
 
 		return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/answer`, function(answers){
 			dispatch({
 				type: types.ANSWER_GET,
-				status: 'success',
+				status: "success",
 				answers
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function submitAnswer(answer){
 	return function(dispatch){
 		dispatch({
 			type: types.ANSWER_POST,
-			status: 'request',
+			status: "request",
 			answer
 		});
 
@@ -42,14 +42,14 @@ export function submitAnswer(answer){
 		req.done(function(newAnswer){
 			dispatch({
 				type: types.ANSWER_POST,
-				status: 'success',
+				status: "success",
 				answer: newAnswer,
 			});
 		});
 		//TODO: Handle error
 		return req;
 	};
-};
+}
 
 
 export function submitAnswerComment(audit_store_id, question_id, answer_comment){
@@ -67,12 +67,12 @@ export function submitAnswerComment(audit_store_id, question_id, answer_comment)
 		req.done(function(newAnswer){
 			dispatch({
 				type: types.ANSWER_POST,
-				status: 'success',
+				status: "success",
 				answer: newAnswer,
 			});
 		});
 		//TODO: Handle error
 		return req;
 	};
-};
+}
 

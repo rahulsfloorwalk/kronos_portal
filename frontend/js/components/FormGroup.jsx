@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 class FormGroup extends React.Component {
-    render() {
+	render() {
 		return (
 			<div className="form-group">
 				{this.props.children}

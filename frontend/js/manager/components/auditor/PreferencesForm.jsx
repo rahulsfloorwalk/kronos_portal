@@ -72,7 +72,7 @@ export default class PreferencesForm extends React.Component{
 						</div>
 						<div className="form-group">
 							<label className="control-label" style={{"display":"flex", "alignItems":"center"}}>
-								<input type="checkbox" name="receive_new_opportunities_sms" 
+								<input type="checkbox" name="receive_new_opportunities_sms"
 									style={{"width": "30px", "height": "30px"}}
 									onChange={this.inputChanged}
 									checked={this.state.form.receive_new_opportunities_sms} />

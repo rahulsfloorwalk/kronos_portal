@@ -48,8 +48,8 @@ class MobileNumberForm extends Component{
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<FormInput label="Mobile Number (10-digit)" placeholder="__________"
 						maxLength="10" type="text" required={true}
-						value={this.state.mobile_number} 
-						name="mobile_number" onChange={this.inputChanged} 
+						value={this.state.mobile_number}
+						name="mobile_number" onChange={this.inputChanged}
 						errors={this.state.errors.mobile_number}
 						disabled={this.state.submitting}/>
 					<div className="form-group">

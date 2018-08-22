@@ -1,7 +1,7 @@
-import React from 'react';
+import React from "react";
 
 class Panel extends React.Component {
-    render() {
+	render() {
 		var type = this.props.type || "default";
 		var panelClass = "panel panel-" + type;
 		var noBody = this.props.noBody || false;

@@ -1,90 +1,90 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config.js";
+import types from "../action_types.js";
 
 export function fetchApplications(auditId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_APPLICATION_GET,
-			status: 'request',
+			status: "request",
 			auditId,
 		});
 
 		$.get( url.api_base_path + `manager/audit/${auditId}/application`, function(applications){
 			dispatch({
 				type: types.AUDIT_APPLICATION_GET,
-				status: 'success',
+				status: "success",
 				auditId,
 				applications
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function submitApplicationApproveForm(obj){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_APPLICATION_APPROVE,
-			status: 'request',
+			status: "request",
 			applicationId: obj.application_id
 		});
 
 		var promise = $.ajax({
 			url: url.api_base_path + `manager/application/${obj.application_id}/approve`,
-			method: 'POST',
+			method: "POST",
 			data: JSON.stringify({
-				'audit_date': obj.audit_date
+				"audit_date": obj.audit_date
 			}),
-			contentType: 'application/json'
+			contentType: "application/json"
 		});
 		promise.done(function(application){
 			dispatch({
 				type: types.AUDIT_APPLICATION_APPROVE,
-				status: 'success',
+				status: "success",
 				application: application
 			});
 		});
 		promise.fail(function(error){
 			dispatch({
 				type: types.AUDIT_APPLICATION_APPROVE,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 		});
 		return promise;
 		//TODO: Handle error
 	};
-};
+}
 
 export function submitApplicationRejectForm(application_id){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_APPLICATION_REJECT,
-			status: 'request',
+			status: "request",
 			applicationId: application_id
 		});
 
 		var promise = $.ajax({
 			url: url.api_base_path + `manager/application/${application_id}/reject`,
-			method: 'POST',
+			method: "POST",
 		});
 		promise.done(function(application){
 			dispatch({
 				type: types.AUDIT_APPLICATION_REJECT,
-				status: 'success',
+				status: "success",
 				application: application
 			});
 		});
 		promise.fail(function(error){
 			dispatch({
 				type: types.AUDIT_APPLICATION_REJECT,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 		});
 		return promise;
 		//TODO: Handle error
 	};
-};
+}
 

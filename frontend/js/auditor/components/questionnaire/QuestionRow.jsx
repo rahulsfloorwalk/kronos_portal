@@ -92,10 +92,10 @@ class QuestionRow extends React.Component{
 		}
 
 		let answerElement = (<p>
-			{answer} 
-			{ this.props.q.question_type === "MUTEX" 
+			{answer}
+			{ this.props.q.question_type === "MUTEX"
 				? <AnswerComment editable={false}
-					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} 
+					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id}
 					answer_comment={this.props.answer && this.props.answer.answer_comment }
 				/>
 				: ""
@@ -122,15 +122,15 @@ class QuestionRow extends React.Component{
 				answerElement = (
 					<div className="row">
 						<div className="col-xs-5">
-						<select className="form-control"
-							name="answer_text"
-							onChange={this.inputChanged}
-							onFocus={this.onFocus}
-							onBlur={this.submitAnswer}
-							value={this.state.answer_text}>
-							<option value="">select answer</option>
-							{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
-						</select>
+							<select className="form-control"
+								name="answer_text"
+								onChange={this.inputChanged}
+								onFocus={this.onFocus}
+								onBlur={this.submitAnswer}
+								value={this.state.answer_text}>
+								<option value="">select answer</option>
+								{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
+							</select>
 						</div>
 						<div className="col-xs-7">
 							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
@@ -151,15 +151,15 @@ class QuestionRow extends React.Component{
 			<tr className={goodClass || badClass}>
 				<td>
 					<div className="row">
-					<div className="col-xs-1 text-right">
-					{this.props.q.sequence}
-					</div>
-					<div className="col-xs-10 col-md-5">
-					<p><b>{this.props.q.question_txt}</b>{savingMessage}</p>
-					</div>
-					<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
-					{answerElement}
-					</div>
+						<div className="col-xs-1 text-right">
+							{this.props.q.sequence}
+						</div>
+						<div className="col-xs-10 col-md-5">
+							<p><b>{this.props.q.question_txt}</b>{savingMessage}</p>
+						</div>
+						<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
+							{answerElement}
+						</div>
 					</div>
 				</td>
 			</tr>

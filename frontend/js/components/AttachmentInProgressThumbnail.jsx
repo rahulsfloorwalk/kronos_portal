@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import { truncateStyle, pointerStyle } from '../styles.js';
+import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Plus, Cross, Pencil, Paperclip } from './Icons.jsx';
+import { Plus, Cross, Pencil, Paperclip } from "./Icons.jsx";
 
-import AttachmentProofIcon from './AttachmentProofIcon.jsx';
+import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
 
 export default class AttachmentInProgressThumbnail extends Component{
 	constructor(props){
@@ -42,7 +42,7 @@ export default class AttachmentInProgressThumbnail extends Component{
 		});
 
 		let displayDivStyle = {
-			position:'absolute',
+			position:"absolute",
 			top:"0px",
 			left:"0px",
 			textAlign: "center",

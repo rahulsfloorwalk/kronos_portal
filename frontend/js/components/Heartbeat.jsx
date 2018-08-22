@@ -1,47 +1,47 @@
-import React from 'react';
+import React from "react";
 
-import { Alert } from './Icons.jsx';
+import { Alert } from "./Icons.jsx";
 
-import { lubdub } from '../manager/service/heartbeat.js';
+import { lubdub } from "../manager/service/heartbeat.js";
 
 export default class extends React.Component {
     state = {
-        alive: true,
-        intervalId: null
+    	alive: true,
+    	intervalId: null
     };
 
     check = () => {
-		lubdub().then(()=>{
-			this.setState({
-				alive: true
-			});
-		}, () => {
-			this.setState({
-				alive: false
-			});
-		});
-	};
+    	lubdub().then(()=>{
+    		this.setState({
+    			alive: true
+    		});
+    	}, () => {
+    		this.setState({
+    			alive: false
+    		});
+    	});
+    };
 
     componentDidMount() {
-		this.setState({
-			intervalId: setInterval( this.check, 5000)
-		});
-	}
+    	this.setState({
+    		intervalId: setInterval( this.check, 5000)
+    	});
+    }
 
     componentWillUnmount() {
-		clearInterval(this.state.intervalId);
-	}
+    	clearInterval(this.state.intervalId);
+    }
 
     render() {
-		if( ! this.state.alive){
-			return (
-				<span className="label label-warning">
-					<Alert/> No Connection
-				</span>
-			);
-		} else {
-			return null;
-		}
-	}
+    	if( ! this.state.alive){
+    		return (
+    			<span className="label label-warning">
+    				<Alert/> No Connection
+    			</span>
+    		);
+    	} else {
+    		return null;
+    	}
+    }
 }
 

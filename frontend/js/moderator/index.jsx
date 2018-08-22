@@ -1,29 +1,29 @@
 /* global PHOEBE_VERSION:false */
 
-import 'babel-polyfill';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import $ from 'jquery';
+import "babel-polyfill";
+import React from "react";
+import ReactDOM from "react-dom";
+import $ from "jquery";
 import Raven from "raven-js";
 
-import { hashHistory } from 'react-router';
+import { hashHistory } from "react-router";
 
 import { fetchConfig } from "./service/config.js";
 
-import Routes from './components/Routes.jsx';
+import Routes from "./components/Routes.jsx";
 
 const render = () => {
 	ReactDOM.render(
 		<Routes/>,
-		document.getElementById('root')
+		document.getElementById("root")
 	);
-}
+};
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
-		hashHistory.push('/login');
+		hashHistory.push("/login");
 	}
 });
 

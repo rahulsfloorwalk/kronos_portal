@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { hashHistory, Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { hashHistory, Link } from "react-router";
 
 import { truncateStyle } from "../../styles.js";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { fetchAuditCycle } from '../actions/audit.js';
-import { getDashboardAuditCycles } from '../service/dashboard_audit_cycles.js';
+import { fetchAuditCycle } from "../actions/audit.js";
+import { getDashboardAuditCycles } from "../service/dashboard_audit_cycles.js";
 
-import AuditStoreStatusLabel from '../../components/AuditStoreStatusLabel.jsx';
-import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
+import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
 
-import { getAuditStatus } from '../../utils.js';
+import { getAuditStatus } from "../../utils.js";
 
-import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../components/Icons.jsx';
-import NavLink from '../../components/NavLink.jsx';
-import Panel from '../../components/Panel.jsx';
+import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../components/Icons.jsx";
+import NavLink from "../../components/NavLink.jsx";
+import Panel from "../../components/Panel.jsx";
 // import Jumbotron from '../Jumbotron.jsx'
-import Loading from '../../components/Loading.jsx';
+import Loading from "../../components/Loading.jsx";
 
 export default class AuditCycleDashBoard extends Component{
 	constructor(props){
@@ -39,13 +39,13 @@ export default class AuditCycleDashBoard extends Component{
 			return <Loading/>;
 		}
 		let audit_cycle_blocks = this.state.active_cycles.map((value) => {
-			let linkTo = `/audit_cycle/${value.id}/questionnaire`
+			let linkTo = `/audit_cycle/${value.id}/questionnaire`;
 			return (
-				<tr key={value.id} onClick={()=> hashHistory.push(linkTo)} style={{cursor:'pointer'}} title="Click to open Audit Cycle">
+				<tr key={value.id} onClick={()=> hashHistory.push(linkTo)} style={{cursor:"pointer"}} title="Click to open Audit Cycle">
 					<td className="">
-					<small>
-					<b>{value.name}</b><br/>
-					<b>{value.client}</b> - {getAuditStatus(value.status)}</small>
+						<small>
+							<b>{value.name}</b><br/>
+							<b>{value.client}</b> - {getAuditStatus(value.status)}</small>
 					</td>
 					<td className="text-right"><b>{value.stats.application.APPLIED || ""}</b></td>
 					<td className="text-right"><b>{value.stats.application.WAITLISTED || ""}</b></td>
@@ -62,15 +62,15 @@ export default class AuditCycleDashBoard extends Component{
 		});
 		return (
 			<div className="table-responsive">
-			<table className="table table-hover table-striped table-bordered table-condensed">
-				<thead>
-					<tr>
+				<table className="table table-hover table-striped table-bordered table-condensed">
+					<thead>
+						<tr>
 					      <th rowSpan="2">Client</th>
 					      <th colSpan="3" className="text-center">Application Status</th>
 					      <th colSpan="6" className="text-center">Report Status</th>
 					      <th rowSpan="2" className="text-right">Planned Audits</th>
-					</tr>
-					<tr>
+						</tr>
+						<tr>
 					      <th className="text-right"><ApplicationStatusLabel status={"APPLIED"}/></th>
 					      <th className="text-right"><ApplicationStatusLabel status={"WAITLISTED"}/></th>
 					      <th className="text-right"><ApplicationStatusLabel status={"APPROVED"}/></th>
@@ -80,12 +80,12 @@ export default class AuditCycleDashBoard extends Component{
 					      <th className="text-right"><AuditStoreStatusLabel status={"PM_REVIEW"}/></th>
 					      <th className="text-right"><AuditStoreStatusLabel status={"COMPLETED"}/></th>
 					      <th className="text-right"><AuditStoreStatusLabel status={"ACCEPTED"}/></th>
-					</tr>
-				</thead>
-				<tbody>
+						</tr>
+					</thead>
+					<tbody>
 				  {audit_cycle_blocks}
-				</tbody>
-			</table>
+					</tbody>
+				</table>
 			</div>
 		);
 	}

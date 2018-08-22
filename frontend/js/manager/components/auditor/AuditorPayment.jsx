@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { hashHistory, Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { hashHistory, Link } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat, momentDateTimeFormat }  from '../../../../config.js';
+import moment from "moment";
+import { momentDateFormat, momentDateTimeFormat }  from "../../../../config.js";
 
-import { findPaymentsByUserId } from '../../service/payment.js';
+import { findPaymentsByUserId } from "../../service/payment.js";
 
-import { King, Retweet, Inbox, Tasks, Pencil, File } from '../../../components/Icons.jsx';
-import Loading from '../../../components/Loading.jsx';
-import PaymentStatusLabel from '../../../components/PaymentStatusLabel.jsx';
+import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
+import Loading from "../../../components/Loading.jsx";
+import PaymentStatusLabel from "../../../components/PaymentStatusLabel.jsx";
 
 export default class AuditorPayment extends Component{
 	constructor(props){
@@ -26,12 +26,12 @@ export default class AuditorPayment extends Component{
 				loading
 			});
 		});
-	}
+	};
 
 	reloadData = (userId) => {
 		this.setLoading(true);
 		findPaymentsByUserId(userId).then((payments)=> this.setState({ payments })).always(() => this.setLoading(false));
-	}
+	};
 
 	componentDidMount(){
 		this.reloadData(this.props.params.auditorId);
@@ -41,7 +41,7 @@ export default class AuditorPayment extends Component{
 		if( this.props.params.auditorId !== nextProps.params.auditorId){
 			this.reloadData(nextProps.params.auditorId);
 		}
-	}
+	};
 
 	render(){
 		if( this.state.loading){
@@ -60,22 +60,22 @@ export default class AuditorPayment extends Component{
 
 		return (
 			<div className="panel panel-default">
-			<div className="panel-heading">
-			<h4 className="panel-title">Payments</h4>
-			</div>
-			<table className="table table-striped table-hover">
-			<tbody>
-			<tr>
-			<th>Added On</th>
-			<th>Amount</th>
-			<th>Status</th>
-			<th>Paid On</th>
-			<th>Comment</th>
-			<th>Report</th>
-			</tr>
-			{paymentRows}
-			</tbody>
-			</table>
+				<div className="panel-heading">
+					<h4 className="panel-title">Payments</h4>
+				</div>
+				<table className="table table-striped table-hover">
+					<tbody>
+						<tr>
+							<th>Added On</th>
+							<th>Amount</th>
+							<th>Status</th>
+							<th>Paid On</th>
+							<th>Comment</th>
+							<th>Report</th>
+						</tr>
+						{paymentRows}
+					</tbody>
+				</table>
 			</div>
 		);
 	}

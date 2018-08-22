@@ -1,50 +1,50 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config.js";
+import types from "../action_types.js";
 
 export function fetchStores(clientId){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_GET,
-			status: 'request',
+			status: "request",
 			clientId: clientId
 		});
 
 		return $.get( url.api_base_path + `manager/client/${clientId}/store`, function(stores){
 			dispatch({
 				type: types.STORE_GET,
-				status: 'success',
+				status: "success",
 				stores: stores
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchStore(storeId){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_ID_GET,
-			status: 'request',
+			status: "request",
 			storeId: storeId
 		});
 
 		return $.get( url.api_base_path + `manager/store/${storeId}`, function(store){
 			dispatch({
 				type: types.STORE_ID_GET,
-				status: 'success',
+				status: "success",
 				store: store
 			});
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function deleteStore(storeId){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_ID_DELETE,
-			status: 'request',
+			status: "request",
 			storeId,
 		});
 		let req = $.ajax({
@@ -54,96 +54,96 @@ export function deleteStore(storeId){
 		req.done(function(){
 			dispatch({
 				type: types.STORE_ID_DELETE,
-				status: 'success',
+				status: "success",
 				storeId,
 			});
 		});
 		req.fail(function(){
 			dispatch({
 				type: types.STORE_ID_DELETE,
-				status: 'error',
+				status: "error",
 				storeId,
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function loadStoreAddForm(){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_FORM_LOAD,
-			status: 'success'
+			status: "success"
 		});
 	};
-};
+}
 
 export function loadStoreEditForm(storeId){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_FORM_LOAD,
-			status: 'request',
+			status: "request",
 			storeId: storeId
 		});
 		return dispatch(fetchStore(storeId));
 	};
-};
+}
 
 export function saveStoreAddForm(store){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_FORM_SUB,
-			status: 'request',
+			status: "request",
 			store: store
 
 		});
 		dispatch({
 			type: types.STORE_POST,
-			status: 'request',
+			status: "request",
 			store: store
 		});
 
 		var req = $.ajax({
 			type: "POST",
-			url: url.api_base_path + `manager/store`,
+			url: url.api_base_path + "manager/store",
 			data: JSON.stringify(store),
 			contentType: "application/json"
 		});
 		req.done(function(savedStore){
 			dispatch({
 				type: types.STORE_POST,
-				status: 'success',
+				status: "success",
 				store: savedStore
 			});
 			dispatch({
 				type: types.STORE_FORM_SUB,
-				status: 'success',
+				status: "success",
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.STORE_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 			dispatch({
 				type: types.STORE_FORM_SUB,
-				status: 'error',
+				status: "error",
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function saveStoreEditForm(store){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_FORM_SUB,
-			status: 'request'
+			status: "request"
 		});
 		dispatch({
 			type: types.STORE_ID_POST,
-			status: 'request',
+			status: "request",
 			store: store
 		});
 
@@ -156,35 +156,35 @@ export function saveStoreEditForm(store){
 		req.done(function(savedStore){
 			dispatch({
 				type: types.STORE_ID_POST,
-				status: 'success',
+				status: "success",
 				store: savedStore
 			});
 			dispatch({
 				type: types.STORE_FORM_SUB,
-				status: 'success'
+				status: "success"
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.STORE_ID_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 			dispatch({
 				type: types.STORE_FORM_SUB,
-				status: 'error',
+				status: "error",
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function updateStore(store){
 	return function(dispatch){
 		dispatch({
 			type: types.STORE_UPDATED,
-			status: 'success',
+			status: "success",
 			store
 		});
 	};
-};
+}

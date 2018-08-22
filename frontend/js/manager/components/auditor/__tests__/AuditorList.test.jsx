@@ -1,7 +1,7 @@
 import React from "react";
 import { AuditorList } from "../AuditorList";
 import { AuditorRow } from "../AuditorList";
-import { searchAuditors } from '../../../service/auditor';
+import { searchAuditors } from "../../../service/auditor";
 import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
 import $ from "jquery";

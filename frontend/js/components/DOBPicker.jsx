@@ -115,7 +115,7 @@ export default class DOBPicker extends React.Component{
 			if(d.isValid()){
 				return d;
 			}
-		} 
+		}
 		return null;
 	};
 

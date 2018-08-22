@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
-import { truncateStyle, pointerStyle } from '../styles.js';
+import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Plus, Cross, Pencil, Paperclip } from './Icons.jsx';
+import { Plus, Cross, Pencil, Paperclip } from "./Icons.jsx";
 
-import AttachmentProofIcon from './AttachmentProofIcon.jsx';
-import { loadingImageUrl } from './Loading.jsx';
+import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
+import { loadingImageUrl } from "./Loading.jsx";
 
 export default class AttachmentThumbnail extends Component{
 	constructor(props){
@@ -20,26 +20,26 @@ export default class AttachmentThumbnail extends Component{
 	}
 	setHover = (hover) => {
 		this.setState((prevState) => Object.assign({}, prevState, { hover }));
-	}
+	};
 	onMouseEnter = (e) => {
 		this.setHover(true);
-	}
+	};
 	onMouseLeave = (e) => {
 		this.setHover(false);
-	}
+	};
 	setLoading = (loading) => {
 		this.setState((prevState) => Object.assign({}, prevState, { loading }));
-	}
+	};
 	setError = (error) => {
 		this.setState((prevState) => Object.assign({}, prevState, { error }));
-	}
+	};
 	onImageLoad = (e) => {
 		this.setLoading(false);
-	}
+	};
 	onImageError = (e) => {
 		this.setLoading(false);
 		this.setError(true);
-	}
+	};
 	componentDidMount(){
 		if(this.props.attachment && this.props.attachment.proof_type === "PHOTO"){
 			this.setLoading(true);
@@ -108,29 +108,29 @@ export default class AttachmentThumbnail extends Component{
 
 		let imageSrc;
 		switch(a.proof_type){
-			case "PHOTO":
-				if( this.state.loading){
-					imageSrc = loadingImageUrl;
-					divStyle.backgroundSize = "30px 30px";
-				} else if( this.state.error) {
-					imageSrc = "/static/img/error_100.png";
-					divStyle.backgroundSize = "30px 30px";
-				} else {
-					imageSrc = a.extra.thumbnail_url;
-				}
-				break;
-			case "AUDIO":
-				imageSrc = "/static/img/microphone_100.png";
+		case "PHOTO":
+			if( this.state.loading){
+				imageSrc = loadingImageUrl;
 				divStyle.backgroundSize = "30px 30px";
-				break;
-			case "VIDEO":
-				imageSrc = "/static/img/film_100.png";
+			} else if( this.state.error) {
+				imageSrc = "/static/img/error_100.png";
 				divStyle.backgroundSize = "30px 30px";
-				break;
-			case "OTHER":
-				imageSrc = "/static/img/file_100.png";
-				divStyle.backgroundSize = "30px 30px";
-				break;
+			} else {
+				imageSrc = a.extra.thumbnail_url;
+			}
+			break;
+		case "AUDIO":
+			imageSrc = "/static/img/microphone_100.png";
+			divStyle.backgroundSize = "30px 30px";
+			break;
+		case "VIDEO":
+			imageSrc = "/static/img/film_100.png";
+			divStyle.backgroundSize = "30px 30px";
+			break;
+		case "OTHER":
+			imageSrc = "/static/img/file_100.png";
+			divStyle.backgroundSize = "30px 30px";
+			break;
 		}
 		divStyle.backgroundImage = `url(${imageSrc})`;
 		return (

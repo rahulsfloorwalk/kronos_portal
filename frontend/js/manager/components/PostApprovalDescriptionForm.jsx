@@ -1,21 +1,21 @@
-import React from 'react';
-import $ from 'jquery';
-import * as ReactRedux from 'react-redux';
-import { hashHistory } from 'react-router';
+import React from "react";
+import $ from "jquery";
+import * as ReactRedux from "react-redux";
+import { hashHistory } from "react-router";
 
-import { fetchAuditCycle, setPostApprovalDescription } from '../actions/audit.js';
+import { fetchAuditCycle, setPostApprovalDescription } from "../actions/audit.js";
 
-import { getAuditType, getAuditStatus } from '../../utils.js';
-import { affectInputEventToComponent } from '../../react_utils.js';
-import FormInput from '../../components/FormInput.jsx';
-import { FormDateInput } from '../../components/FormInput.jsx';
-import FormSelect from '../../components/FormSelect.jsx';
-import FormGroup from '../../components/FormGroup.jsx';
-import FormTextarea from '../../components/FormTextarea.jsx';
-import SaveButton from '../../components/SaveButton.jsx';
-import Modal from '../../components/Modal.jsx';
-import Loading from '../../components/Loading.jsx';
-import MarkdownViewer from '../../components/MarkdownViewer.jsx';
+import { getAuditType, getAuditStatus } from "../../utils.js";
+import { affectInputEventToComponent } from "../../react_utils.js";
+import FormInput from "../../components/FormInput.jsx";
+import { FormDateInput } from "../../components/FormInput.jsx";
+import FormSelect from "../../components/FormSelect.jsx";
+import FormGroup from "../../components/FormGroup.jsx";
+import FormTextarea from "../../components/FormTextarea.jsx";
+import SaveButton from "../../components/SaveButton.jsx";
+import Modal from "../../components/Modal.jsx";
+import Loading from "../../components/Loading.jsx";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 class PostApprovalDescriptionForm extends React.Component{
 	constructor(props){
@@ -30,7 +30,7 @@ class PostApprovalDescriptionForm extends React.Component{
 
 		if(this.props.auditCycle){
 			this.setState({
-				post_approval_description: this.props.auditCycle.post_approval_description 
+				post_approval_description: this.props.auditCycle.post_approval_description
 			});
 		}
 	}
@@ -38,14 +38,14 @@ class PostApprovalDescriptionForm extends React.Component{
 	componentWillReceiveProps(nextProps){
 		if(nextProps.auditCycle){
 			this.setState({
-				post_approval_description: nextProps.auditCycle.post_approval_description 
+				post_approval_description: nextProps.auditCycle.post_approval_description
 			});
 		}
 	}
 
 	fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	}
+	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
@@ -53,7 +53,7 @@ class PostApprovalDescriptionForm extends React.Component{
 		this.props.dispatch(setPostApprovalDescription(this.props.params.auditCycleId, this.state.post_approval_description)).then((savedAuditCycle) => {
 			hashHistory.push(`/audit_cycle/${savedAuditCycle.id}/questionnaire`);
 		});
-	}
+	};
 
 	render(){
 		var clientRows = [];

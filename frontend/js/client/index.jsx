@@ -1,12 +1,12 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import $ from 'jquery';
-import 'babel-polyfill';
+import React from "react";
+import ReactDOM from "react-dom";
+import $ from "jquery";
+import "babel-polyfill";
 import Raven from "raven-js";
 
-import Routes from './components/Routes.jsx';
+import Routes from "./components/Routes.jsx";
 
-import { fetchConfig } from './service/config.js';
+import { fetchConfig } from "./service/config.js";
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR, settings){
@@ -37,6 +37,6 @@ fetchConfig().done((config) => {
 
 	ReactDOM.render(
 		<Routes/>,
-		document.getElementById('root')
+		document.getElementById("root")
 	);
 });

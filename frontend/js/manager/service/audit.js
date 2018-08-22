@@ -1,5 +1,5 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function copyAuditsFromTo(fromAuditCycleId, toAuditCycleId){
 	return $.ajax({
@@ -10,5 +10,5 @@ export function copyAuditsFromTo(fromAuditCycleId, toAuditCycleId){
 		}),
 		contentType: "application/json"
 	});
-};
+}
 

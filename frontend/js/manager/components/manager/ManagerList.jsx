@@ -1,12 +1,12 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import { Check, Cross, Pencil, Plus, Queen } from '../../../components/Icons.jsx'
+import { Check, Cross, Pencil, Plus, Queen } from "../../../components/Icons.jsx";
 
-import { findManagers } from '../../service/manager.js'
+import { findManagers } from "../../service/manager.js";
 
 class ManagerRow extends React.Component {
-    render() {
+	render() {
 		var is_active = this.props.manager.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
@@ -22,48 +22,48 @@ class ManagerRow extends React.Component {
 
 export default class extends React.Component {
     state = {
-        managers: [],
+    	managers: [],
     };
 
     componentDidMount() {
-		findManagers().then((managers) => {
-			this.setState({
-				managers
-			});
-		});
-	}
+    	findManagers().then((managers) => {
+    		this.setState({
+    			managers
+    		});
+    	});
+    }
 
     componentWillReceiveProps(nextProps) {
-		console.log("componentWillReceiveProps", nextProps);
-		this.componentDidMount();
-	}
+    	console.log("componentWillReceiveProps", nextProps);
+    	this.componentDidMount();
+    }
 
     render() {
-		let rows = [];
-		for(let manager of this.state.managers) {
-			rows.push(<ManagerRow manager={manager} key={manager.id}/>);
-		}
-		var addManagerLink = `/manager/add`;
-		return (
-			<div>
-				<h2 className="page-header">
-					<Link to={addManagerLink} className="btn btn-default pull-right"><Plus/> Add Manager</Link>
-					<Queen/> Manager
-				</h2>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th>Email Address</th>
-							<th>Active</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
-				{this.props.children}
-			</div>
-		);
-	}
+    	let rows = [];
+    	for(let manager of this.state.managers) {
+    		rows.push(<ManagerRow manager={manager} key={manager.id}/>);
+    	}
+    	var addManagerLink = "/manager/add";
+    	return (
+    		<div>
+    			<h2 className="page-header">
+    				<Link to={addManagerLink} className="btn btn-default pull-right"><Plus/> Add Manager</Link>
+    				<Queen/> Manager
+    			</h2>
+    			<table className="table table-striped">
+    				<thead>
+    					<tr>
+    						<th>Email Address</th>
+    						<th>Active</th>
+    						<th></th>
+    					</tr>
+    				</thead>
+    				<tbody>
+    					{rows}
+    				</tbody>
+    			</table>
+    			{this.props.children}
+    		</div>
+    	);
+    }
 }

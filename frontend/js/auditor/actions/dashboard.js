@@ -1,7 +1,7 @@
-import $ from 'jquery'
-import { url } from '../../../config'
-import { hashHistory } from 'react-router';
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config";
+import { hashHistory } from "react-router";
+import types from "../action_types.js";
 
 /**
  * These are the action creators as mentioned here: http://redux.js.org/docs/basics/ExampleTodoList.html#action-creators
@@ -10,44 +10,44 @@ import types from '../action_types.js';
 function profileInfoGetReq(){
 	return {
 		type: types.PROFILE_INFO_GET,
-		status: 'request',
+		status: "request",
 	};
-};
+}
 function profileInfoGetSuccess(profileInfo){
 	return {
 		type: types.PROFILE_INFO_GET,
-		status: 'success',
+		status: "success",
 		profileInfo: profileInfo
 	};
-};
+}
 
 function auditorStatsGetReq(){
 	return {
 		type: types.AUDITOR_STATS_GET,
-		status: 'request',
+		status: "request",
 	};
-};
+}
 function auditorStatsGetSuccess(auditorStats){
 	return {
 		type: types.AUDITOR_STATS_GET,
-		status: 'success',
+		status: "success",
 		auditorStats: auditorStats
 	};
-};
+}
 
 function auditorScoreGetReq(){
 	return {
 		type: types.AUDITOR_SCORE_GET,
-		status: 'request',
+		status: "request",
 	};
-};
+}
 function auditorScoreGetSuccess(auditorScore){
 	return {
 		type: types.AUDITOR_SCORE_GET,
-		status: 'success',
+		status: "success",
 		auditorScore: auditorScore
 	};
-};
+}
 
 /**
  * These are also action creators which employ redux-thunk so that we can return a function(dispatch) instead of a plain action.
@@ -62,10 +62,10 @@ export function fetchProfileInfo(){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchAuditorStats(){
-  return function(dispatch){
+	return function(dispatch){
 		dispatch(auditorStatsGetReq());
 
 		return $.get( url.api_base_path + "auditor/dashboard/stats", function(auditorStats){
@@ -73,10 +73,10 @@ export function fetchAuditorStats(){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchAuditorScore(){
-  return function(dispatch){
+	return function(dispatch){
 		dispatch(auditorScoreGetReq());
 
 		return $.get( url.api_base_path + "auditor/dashboard/score", function(score){
@@ -84,4 +84,4 @@ export function fetchAuditorScore(){
 		});
 		//TODO: Handle error
 	};
-};
+}

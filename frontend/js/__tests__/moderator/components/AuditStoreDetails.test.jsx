@@ -132,7 +132,7 @@ describe("<AuditStoreDetails/>", () => {
 			const qaOkButton = r.find("div.panel-footer > button").at(1);
 			expect(qaOkButton.length).toEqual(1);
 			expect(qaOkButton.text()).toEqual("Forward to PM");
-			qaOkButton.simulate('click');
+			qaOkButton.simulate("click");
 			expect(qaOk).toBeCalledWith(sampleParams.auditStoreId);
 			done();
 		});

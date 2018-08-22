@@ -59,7 +59,7 @@ export default class StoreList2 extends Component{
 						</tr>
 					</thead>
 					<tbody>
-					{storeRows}
+						{storeRows}
 					</tbody>
 				</table>
 			);

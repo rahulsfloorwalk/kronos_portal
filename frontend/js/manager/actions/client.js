@@ -1,6 +1,6 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
-import types from '../action_types.js';
+import $ from "jquery";
+import { url } from "../../../config.js";
+import types from "../action_types.js";
 
 /**
  * These are the action creators as mentioned here: http://redux.js.org/docs/basics/ExampleTodoList.html#action-creators
@@ -10,20 +10,20 @@ import types from '../action_types.js';
 function clientGetReq(){
 	return {
 		type: types.CLIENT_GET,
-		status: 'request',
+		status: "request",
 	};
 }
 function clientGetSuccess(clients){
 	return {
 		type: types.CLIENT_GET,
-		status: 'success',
+		status: "success",
 		clients: clients
 	};
 }
 function clientGetError(errors){
 	return {
 		type: types.CLIENT_GET,
-		status: 'error',
+		status: "error",
 		errors: errors
 	};
 }
@@ -31,21 +31,21 @@ function clientGetError(errors){
 function clientIdGetRequest(id){
 	return {
 		type: types.CLIENT_ID_GET,
-		status: 'request',
+		status: "request",
 		id: id
 	};
 }
 function clientIdGetSuccess(client){
 	return {
 		type: types.CLIENT_ID_GET,
-		status: 'success',
+		status: "success",
 		client: client
 	};
 }
 function clientIdGetError(){
 	return {
 		type: types.CLIENT_ID_GET,
-		status: 'error',
+		status: "error",
 		errors: errors
 	};
 }
@@ -64,7 +64,7 @@ export function fetchClients(){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function fetchClient(clientId){
 	return function(dispatch){
@@ -75,37 +75,37 @@ export function fetchClient(clientId){
 		});
 		//TODO: Handle error
 	};
-};
+}
 
 export function loadClientAddForm(){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_FORM_LOAD,
-			status: 'success',
+			status: "success",
 		});
 	};
-};
+}
 
 export function loadClientEditForm(clientId){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_FORM_LOAD,
-			status: 'request',
+			status: "request",
 			clientId: clientId
 		});
 		dispatch(fetchClient(clientId));
 	};
-};
+}
 
 export function saveClientEditForm(client){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_FORM_SUB,
-			status: 'request',
+			status: "request",
 		});
 		dispatch({
 			type: types.CLIENT_ID_POST,
-			status: 'request',
+			status: "request",
 			client: client
 		});
 
@@ -118,38 +118,38 @@ export function saveClientEditForm(client){
 		req.done(function(savedClient){
 			dispatch({
 				type: types.CLIENT_ID_POST,
-				status: 'success',
+				status: "success",
 				client: savedClient
 			});
 			dispatch({
 				type: types.CLIENT_FORM_SUB,
-				status: 'success',
+				status: "success",
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.CLIENT_ID_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 			dispatch({
 				type: types.CLIENT_FORM_SUB,
-				status: 'error',
+				status: "error",
 			});
 		});
 		return req;
 	};
-};
+}
 
 export function saveClientAddForm(client){
 	return function(dispatch){
 		dispatch({
 			type: types.CLIENT_FORM_SUB,
-			status: 'request',
+			status: "request",
 		});
 		dispatch({
 			type: types.CLIENT_POST,
-			status: 'request',
+			status: "request",
 			client: client
 		});
 
@@ -162,25 +162,25 @@ export function saveClientAddForm(client){
 		req.done(function(savedClient){
 			dispatch({
 				type: types.CLIENT_POST,
-				status: 'success',
+				status: "success",
 				client: savedClient
 			});
 			dispatch({
 				type: types.CLIENT_FORM_SUB,
-				status: 'success',
+				status: "success",
 			});
 		});
 		req.fail(function(error){
 			dispatch({
 				type: types.CLIENT_POST,
-				status: 'error',
+				status: "error",
 				errors: error.responseJSON
 			});
 			dispatch({
 				type: types.CLIENT_FORM_SUB,
-				status: 'error',
+				status: "error",
 			});
 		});
 		return req;
 	};
-};
+}

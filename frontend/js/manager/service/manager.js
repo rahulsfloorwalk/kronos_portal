@@ -1,38 +1,38 @@
-import $ from 'jquery'
-import { url } from '../../../config.js'
+import $ from "jquery";
+import { url } from "../../../config.js";
 
 export function findManagers(){
-	return $.get( url.api_base_path + `manager/manager`);
-};
+	return $.get( url.api_base_path + "manager/manager");
+}
 
 
 export function findById(managerId){
 	return $.get( url.api_base_path + `manager/manager/${managerId}`);
-};
+}
 
 
 export function insert( email, password, is_active){
 	return $.ajax({
-		url: url.api_base_path + `manager/manager`,
-		method: 'POST',
+		url: url.api_base_path + "manager/manager",
+		method: "POST",
 		data: JSON.stringify({
 			email,
 			password,
 			is_active
 		}),
-		contentType: 'application/json'
+		contentType: "application/json"
 	});
-};
+}
 
 export function update(managerId, email, password, is_active){
 	return $.ajax({
 		url: url.api_base_path + `manager/manager/${managerId}`,
-		method: 'POST',
+		method: "POST",
 		data: JSON.stringify({
 			email,
 			password,
 			is_active
 		}),
-		contentType: 'application/json'
+		contentType: "application/json"
 	});
-};
+}

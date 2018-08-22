@@ -1,33 +1,33 @@
-import React from 'react';
+import React from "react";
 
-import Header from './Header.jsx';
-import Footer from '../../components/Footer.jsx';
-import DevelopmentMarker from '../../components/DevelopmentMarker.jsx';
+import Header from "./Header.jsx";
+import Footer from "../../components/Footer.jsx";
+import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
 
-import { fetchConfig } from '../service/config.js';
+import { fetchConfig } from "../service/config.js";
 
 class App extends React.Component {
     state = {};
 
     componentDidMount() {
-		fetchConfig().then((config) => this.setState({config}));
-	}
+    	fetchConfig().then((config) => this.setState({config}));
+    }
 
     render() {
-		var contentStyle = {
-			'minHeight': "600px"
-		};
-		return (
-			<div>
-				<DevelopmentMarker/>
-				<Header/>
-				<div className="container" style={contentStyle}>
-					{this.props.children}
-				</div>
-				<Footer config={this.state.config}/>
-			</div>
-		);
-	}
+    	var contentStyle = {
+    		"minHeight": "600px"
+    	};
+    	return (
+    		<div>
+    			<DevelopmentMarker/>
+    			<Header/>
+    			<div className="container" style={contentStyle}>
+    				{this.props.children}
+    			</div>
+    			<Footer config={this.state.config}/>
+    		</div>
+    	);
+    }
 }
 
 export default App;

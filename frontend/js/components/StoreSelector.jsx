@@ -1,12 +1,12 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
+import React from "react";
+import * as ReactRedux from "react-redux";
 
-import FormSelect from './FormSelect.jsx';
+import FormSelect from "./FormSelect.jsx";
 
 /* Store Selector Starts */
 
 class StoreSelector extends React.Component {
-    render() {
+	render() {
 		let storeOptions = [];
 		for( let s in this.props.stores){
 			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].city.name} -- {this.props.stores[s].name}</option>);

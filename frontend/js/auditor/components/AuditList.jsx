@@ -1,25 +1,25 @@
-import React, { Component } from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link, hashHistory } from 'react-router';
+import React, { Component } from "react";
+import * as ReactRedux from "react-redux";
+import { Link, hashHistory } from "react-router";
 
-import moment from 'moment';
-import { momentDateFormat }  from '../../../config.js';
+import moment from "moment";
+import { momentDateFormat }  from "../../../config.js";
 
-import { affectInputEventToComponent } from '../../react_utils.js';
+import { affectInputEventToComponent } from "../../react_utils.js";
 
-import { fetchApplications } from '../actions/application.js';
-import { fetchAudits } from '../actions/audit.js';
-import { fetchProfileInfo } from '../actions/profile_info.js';
+import { fetchApplications } from "../actions/application.js";
+import { fetchAudits } from "../actions/audit.js";
+import { fetchProfileInfo } from "../actions/profile_info.js";
 
-import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
-import FormSelect from '../../components/FormSelect.jsx';
-import ExpandableDetails from '../../components/ExpandableDetails.jsx';
-import { Cross, ShareAlt } from '../../components/Icons.jsx';
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
-import { LabelValue_2_10 } from '../../components/LabelValue.jsx';
-import Loading from '../../components/Loading.jsx';
-import ApplicationStatusLabel from '../../components/ApplicationStatusLabel.jsx';
-import { fetchPreferences } from '../service/preferences.js';
+import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
+import FormSelect from "../../components/FormSelect.jsx";
+import ExpandableDetails from "../../components/ExpandableDetails.jsx";
+import { Cross, ShareAlt } from "../../components/Icons.jsx";
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
+import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
+import Loading from "../../components/Loading.jsx";
+import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
+import { fetchPreferences } from "../service/preferences.js";
 
 
 class AuditRow extends React.Component{
@@ -57,7 +57,7 @@ class AuditRow extends React.Component{
 
 			button = cancelButton;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
-		} 
+		}
 		else if( this.props.application.status === "APPROVED"){
 			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don't forget to conduct the audit!</span>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
@@ -87,7 +87,7 @@ class AuditRow extends React.Component{
 					<div className="col-xs-12 col-sm-4 col-sm-offset-8">
 						{auditDate}
 					</div>
-				: null}
+					: null}
 				<div className="col-xs-12"><hr/></div>
 			</div>
 		);
@@ -103,7 +103,7 @@ class AuditList extends Component{
 	}
 	setLoading = (loading) => {
 		this.setState(oldState => Object.assign({}, oldState, { loading }));
-	}
+	};
 	reloadAudits = (kms) => {
 		this.setLoading(true);
 		this.props.dispatch(fetchAudits({
@@ -111,7 +111,7 @@ class AuditList extends Component{
 		})).always(()=>{
 			this.setLoading(false);
 		});
-	}
+	};
 	componentDidMount() {
 		this.reloadAudits(100);
 		this.props.dispatch(fetchProfileInfo());
@@ -145,29 +145,29 @@ class AuditList extends Component{
 				</h2>
 				<div className="row">
 					<div className="col-sm-3" style={flexCenter}>
-						<img style={{boxSizing: "border-box",maxWidth:"100%",maxHeight:"100%",padding:"10px"}} 
-							src={this.props.auditCycle.client.auditor_logo_url} alt="client logo" 
+						<img style={{boxSizing: "border-box",maxWidth:"100%",maxHeight:"100%",padding:"10px"}}
+							src={this.props.auditCycle.client.auditor_logo_url} alt="client logo"
 							title={this.props.auditCycle.client.auditor_display_name}/>
 					</div>
 					<div className="col-sm-9">
-					<div className="row">
-					<div className="col-sm-4">
-						<p>
-						<span className="text-muted" style={labelStyle}>Type</span><br/>
-						<span style={valueStyle}><b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b></span>
-						</p>
-					</div>
-					<div className="col-sm-4">
-						<p>
-						<span className="text-muted" style={labelStyle}>Start Date</span><br/>
-						<span style={valueStyle}><b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b></span>
-						</p>
-					</div>
-					<div className="col-sm-4">
-						<p>
-						<span style={labelStyle} className="text-muted">End Date</span><br/>
-						<span style={valueStyle}><b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></span>
-			{/*
+						<div className="row">
+							<div className="col-sm-4">
+								<p>
+									<span className="text-muted" style={labelStyle}>Type</span><br/>
+									<span style={valueStyle}><b><AuditTypeLabel auditType={this.props.auditCycle.type}/></b></span>
+								</p>
+							</div>
+							<div className="col-sm-4">
+								<p>
+									<span className="text-muted" style={labelStyle}>Start Date</span><br/>
+									<span style={valueStyle}><b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b></span>
+								</p>
+							</div>
+							<div className="col-sm-4">
+								<p>
+									<span style={labelStyle} className="text-muted">End Date</span><br/>
+									<span style={valueStyle}><b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></span>
+									{/*
 						<table className="table table-bordered">
 							<tbody>
 								<tr>
@@ -189,12 +189,12 @@ class AuditList extends Component{
 							</tbody>
 						</table>
 						*/}
-						</p>
-					</div>
-					<div className="col-sm-12">
-						<p style={{fontSize:"1.2em"}}>{this.props.auditCycle.description}</p>
-					</div>
-					</div>
+								</p>
+							</div>
+							<div className="col-sm-12">
+								<p style={{fontSize:"1.2em"}}>{this.props.auditCycle.description}</p>
+							</div>
+						</div>
 					</div>
 				</div>
 				<h3 className="page-header hidden-sm hidden-md hidden-lg">Audit Locations</h3>
@@ -234,4 +234,4 @@ var mapStoreToProps = function(store, ownProps){
 	};
 };
 
-export default ReactRedux.connect(mapStoreToProps)(AuditList); 
+export default ReactRedux.connect(mapStoreToProps)(AuditList);

@@ -1,21 +1,21 @@
-import React from 'react';
-import * as ReactRedux from 'react-redux';
-import { Link } from 'react-router';
+import React from "react";
+import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
 // import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
 class StatCard extends React.Component {
-    componentWillMount() {
+	componentWillMount() {
 		// this.props.dispatch(fetchProfileInfo());
 	}
 
-    render() {
+	render() {
 		return (
-	<div className="text-center">
-          <h3 className="page-header">{this.props.title}</h3>
-          <img src={this.props.image} style={{display:"inline-block", width:"70px",height:"70px", marginRight:"20px"}} />
-          <h2 style={{display:"inline-block"}}>{this.props.count}</h2>
-	</div>
+			<div className="text-center">
+				<h3 className="page-header">{this.props.title}</h3>
+				<img src={this.props.image} style={{display:"inline-block", width:"70px",height:"70px", marginRight:"20px"}} />
+				<h2 style={{display:"inline-block"}}>{this.props.count}</h2>
+			</div>
 		);
 	}
 }

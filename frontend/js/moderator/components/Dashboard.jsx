@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-import AuditCycleList from './AuditCycleList.jsx';
+import AuditCycleList from "./AuditCycleList.jsx";
 
 
 export default () => {

@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 const loadingImageUrl = "/static/img/ripple.svg";
 
 class Loading extends React.Component {
-    render() {
+	render() {
 		return (
 			<div className="text-center text-muted">
 				<img src={loadingImageUrl} title="Please Wait" alt="loading..."/>

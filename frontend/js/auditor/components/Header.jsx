@@ -1,15 +1,15 @@
-import React from 'react';
-import { Link } from 'react-router';
+import React from "react";
+import { Link } from "react-router";
 
-import { pointerStyle } from '../../styles.js';
+import { pointerStyle } from "../../styles.js";
 
-import NavLink from '../../components/NavLink.jsx';
+import NavLink from "../../components/NavLink.jsx";
 
-import { File, User, Inbox, LogOut } from '../../components/Icons.jsx';
+import { File, User, Inbox, LogOut } from "../../components/Icons.jsx";
 
 
 class Header extends React.Component {
-    render() {
+	render() {
 		let brandStyle = {
 			height: "25px"
 		};
