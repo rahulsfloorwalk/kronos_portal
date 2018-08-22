@@ -60,10 +60,15 @@ export default class SectionList extends React.Component {
 		}
 		return (
 			<div>
-				<h3 className="page-header">
-					<Paperclip/> Attachments
-				</h3>
-				<AttachmentDisplayBox auditStoreId={this.props.auditStoreId} printMode={this.props.printMode}/>
+				{ this.props.printMode ? null
+					:
+					<div>
+						<h3 className="page-header">
+							<Paperclip/> Attachments
+						</h3>
+						<AttachmentDisplayBox auditStoreId={this.props.auditStoreId} printMode={this.props.printMode}/>
+					</div>
+				}
 				<h3 className="page-header">
 					<Tasks/> Questionnaire
 				</h3>

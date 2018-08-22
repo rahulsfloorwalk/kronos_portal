@@ -8,7 +8,6 @@ import { findAttachmentsByAuditStoreAndSection } from "../../service/attachment.
 
 export default class SectionAttachmentBox extends React.Component{
 	static propTypes = {
-		printMode: PropTypes.bool,
 		auditStoreId: PropTypes.number.isRequired,
 		sectionId: PropTypes.number.isRequired,
 	};
@@ -63,28 +62,17 @@ export default class SectionAttachmentBox extends React.Component{
 			return null;
 		}
 
-
-		if(this.props.printMode){
-			return (
-				<div className="panel-body">
-					<div className="col-xs-offset-1 col-xs-10">
-						{this.state.attachments.filter(a=>a.proof_type === "PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
-					</div>
+		const selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
+		return (
+			<div className="panel-body">
+				<div className="hidden-print">
+					<h4>Attachments:</h4>
+					{attachmentRows}
 				</div>
-			);
-		} else {
-			const selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
-			return (
-				<div className="panel-body">
-					<div className="hidden-print">
-						<h4>Attachments:</h4>
-						{attachmentRows}
-					</div>
-					<div className="hidden-print">
-						<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
-					</div>
+				<div className="hidden-print">
+					<AttachmentPreview attachment={selectedAttachment} editable={editable}/>
 				</div>
-			);
-		}
+			</div>
+		);
 	}
 }

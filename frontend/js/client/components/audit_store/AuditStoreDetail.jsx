@@ -1,6 +1,5 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { } from "react-router";
 
 import { url }  from "../../../../config.js";
 
@@ -14,6 +13,7 @@ import Loading from "../../../components/Loading.jsx";
 import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
 import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
+import AttachmentPrintRenderer from "./AttachmentPrintRenderer.jsx";
 
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
@@ -61,7 +61,7 @@ export default class AuditStoreDetail extends React.Component {
 		if(! this.state.auditStore){
 			return <Loading/>;
 		}
-		let printMode = this.props.printMode || this.props.route.printMode || false;
+		const printMode = this.props.printMode || this.props.route.printMode || false;
 
 		return (
 			<div>
@@ -92,6 +92,9 @@ export default class AuditStoreDetail extends React.Component {
 					</div>
 				</div>
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
+				{ printMode ?
+					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
+					: null }
 			</div>
 		);
 	}

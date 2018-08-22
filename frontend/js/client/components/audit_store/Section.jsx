@@ -109,7 +109,8 @@ export default class Section extends React.Component {
 						<hr/>
 						<p><b>PM Comment:</b> {pm_comment}</p>
 					</div>
-					<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} printMode={this.props.printMode}/>
+					{ this.props.printMode ? null
+						: <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/> }
 				</div>
 			);
 		}

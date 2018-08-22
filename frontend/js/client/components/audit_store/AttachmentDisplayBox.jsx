@@ -13,11 +13,6 @@ import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 export default class AttachmentDisplayBox extends React.Component {
 	static propTypes = {
 		auditStoreId: PropTypes.number.isRequired,
-		printMode: PropTypes.bool,
-	};
-
-	static defaultProps = {
-		printMode: false,
 	};
 
 	state = {
@@ -66,24 +61,16 @@ export default class AttachmentDisplayBox extends React.Component {
 		if( attachmentRows.length === 0){
 			return null;
 		} else {
-			if(this.props.printMode){
-				return (<div className="row">
-					<div className="col-xs-offset-1 col-xs-10">
-						{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
+			return (
+				<div className="row">
+					<div className="col-md-4 hidden-print">
+						{attachmentRows}
 					</div>
-				</div>);
-			} else {
-				return (
-					<div className="row">
-						<div className="col-md-4 hidden-print">
-							{attachmentRows}
-						</div>
-						<div className="col-md-8 hidden-print">
-							{attachmentElement}
-						</div>
+					<div className="col-md-8 hidden-print">
+						{attachmentElement}
 					</div>
-				);
-			}
+				</div>
+			);
 		}
 	}
 }
