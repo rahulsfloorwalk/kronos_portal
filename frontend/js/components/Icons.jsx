@@ -58,6 +58,8 @@ export const Queen	= () => <span className="glyphicon glyphicon-queen"></span>;
 export const Knight	= () => <span className="glyphicon glyphicon-knight"></span>;
 export const Bishop	= () => <span className="glyphicon glyphicon-bishop"></span>;
 export const Pawn	= () => <span className="glyphicon glyphicon-pawn"></span>;
+export const Rook	= () => <span className="glyphicon glyphicon-tower"></span>;
+export const Tower	= () => <span className="glyphicon glyphicon-tower"></span>;
 export const Heart	= () => <span className="glyphicon glyphicon-heart"></span>;
 export const Print	= () => <span className="glyphicon glyphicon-print"></span>;
 export const Music	= () => <span className="glyphicon glyphicon-music"></span>;

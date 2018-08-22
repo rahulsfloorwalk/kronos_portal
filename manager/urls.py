@@ -23,6 +23,7 @@ from .viewss import payment as payment_views
 from .viewss import application as application_views
 from .viewss import config as config_views
 from .viewss import questionnaire_type as questionnaire_type_views
+from .viewss import agency_user as agency_user_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -123,6 +124,8 @@ urlpatterns = ([
     url(r'auditor/(?P<auditor_id>[0-9]+)/attachment$', auditor_views.IdProofAttachmentView.as_view(), name='id_proof_attachment_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/referral$', auditor_views.ReferralView.as_view(), name='auditor_id_referral_view'),
     url(r'auditor$', auditor_views.AuditorView.as_view(), name='auditor_view'),
+    url(r'agency_user/(?P<user_id>[0-9]+)$', agency_user_views.AgencyUserIdView.as_view(), name='agency_user_id_view'),
+    url(r'agency_user$', agency_user_views.AgencyUserSearchView.as_view(), name='agency_user_search_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', section_views.SectionViewByAuditCycle.as_view(), name='section_by_audit_cycle'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/section/copy$', section_views.SectionCopyByAuditCycle.as_view(), name='section_copy_by_audit_cycle'),

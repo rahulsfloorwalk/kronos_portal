@@ -32,6 +32,9 @@ import AuditorDetails from "./auditor/AuditorDetails.jsx";
 import AuditorReferralList from "./auditor/AuditorReferralList.jsx";
 import PreferencesForm from "./auditor/PreferencesForm.jsx";
 
+import AgencyUserSearch from "./agency_user/AgencyUserSearch.jsx";
+import AgencyUserDetails from "./agency_user/AgencyUserDetails.jsx";
+
 import StateList from "./location/StateList.jsx";
 import CityList from "./location/CityList.jsx";
 
@@ -144,15 +147,18 @@ const Routes = () => (
 			<Route path="auditor" component={AuditorList}/>
 			<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
 				<Route path="details" component={AuditorDetails}>
-	      <Route path="preferences/edit" component={PreferencesForm}/>
+					<Route path="preferences/edit" component={PreferencesForm}/>
+					<Route path="applications" component={AuditorApplicationList}/>
+					<Route path="reports" component={AuditorReportList}/>
+					<Route path="email_log" component={AuditorEmailLog}/>
+					<Route path="id_proof" component={AuditorIdProof}/>
+					<Route path="payment" component={AuditorPayment}/>
+					<Route path="referral" component={AuditorReferralList}/>
 				</Route>
-				<Route path="applications" component={AuditorApplicationList}/>
-				<Route path="reports" component={AuditorReportList}/>
-		      <Route path="email_log" component={AuditorEmailLog}/>
-				<Route path="id_proof" component={AuditorIdProof}/>
-				<Route path="payment" component={AuditorPayment}/>
-				<Route path="referral" component={AuditorReferralList}/>
 			</Route>
+
+			<Route path="agency_user" component={AgencyUserSearch}/>
+			<Route path="agency_user/:userId" component={AgencyUserDetails}/>
 
 			<Route path="state" component={StateList}>
 				<Route path=":stateId" component={CityList}/>

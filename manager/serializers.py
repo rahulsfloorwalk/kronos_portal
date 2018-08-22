@@ -217,6 +217,24 @@ class MobileNumberSerializer(ModelSerializer):
         read_only_fields = fields
 
 
+class AgencySerializer(ModelSerializer):
+    class Meta:
+        model = Agency
+        fields = (
+            'id',
+            'name',
+            'formed_in_year',
+            'gstin',
+            'cin',
+            'agreement_accepted',
+            'strength'
+            'account_holder_name',
+            'account_number',
+            'ifsc_code',
+        )
+        read_only_fields = fields
+
+
 class AgencySmallSerializer(ModelSerializer):
     class Meta:
         model = Agency
@@ -267,6 +285,7 @@ class UserSerializer(ModelSerializer):
         fields = (
             'id',
             'email',
+            'is_active',
             'mobile_numbers',
             'profileinfo',
             'agencyuser',
