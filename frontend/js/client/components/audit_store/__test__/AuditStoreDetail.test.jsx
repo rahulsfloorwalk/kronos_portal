@@ -3,7 +3,7 @@ import { shallow } from "enzyme";
 
 import AuditStoreDetail from "../AuditStoreDetail";
 
-import SectionList from "../../SectionList";
+import SectionList from "../SectionList";
 import AuditStoreDetailsBox from "../AuditStoreDetailsBox";
 import SectionTotalsBox from "../SectionTotalsBox";
 
