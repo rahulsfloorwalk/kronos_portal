@@ -2,13 +2,12 @@ import React from 'react';
 
 import { Record, Picture, Video, File } from './Icons.jsx';
 
-export default React.createClass({
-	getDefaultProps: function(){
-		return {
-			proofType: "OTHER"
-		};
-	},
-	render : function(){
+export default class extends React.Component {
+    static defaultProps = {
+        proofType: "OTHER"
+    };
+
+    render() {
 		switch(this.props.proofType){
 			case "AUDIO":
 				return <Record/>;
@@ -21,4 +20,4 @@ export default React.createClass({
 				return <File/>;
 		}
 	}
-});
+}

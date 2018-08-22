@@ -20,18 +20,18 @@ import SectionList from './questionnaire/SectionList.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-var AuditStoreDetails = React.createClass({
-	getInitialState: function(){
-		return {
-			submitMessage : "",
-			submitStatus: "",
-			showErrors: false,
-		};
-	},
-	componentDidMount: function(){
+class AuditStoreDetails extends React.Component {
+    state = {
+        submitMessage : "",
+        submitStatus: "",
+        showErrors: false,
+    };
+
+    componentDidMount() {
 		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
-	},
-	submitButtonClicked: function(e){
+	}
+
+    submitButtonClicked = (e) => {
 		var promise = this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
 		promise.then(() => {
 			this.setState({
@@ -46,8 +46,9 @@ var AuditStoreDetails = React.createClass({
 				showErrors: true,
 			});
 		});
-	},
-	acknowledgeButtonClicked: function(e){
+	};
+
+    acknowledgeButtonClicked = (e) => {
 		var promise = this.props.dispatch(acknowledgeAuditStore(this.props.params.auditStoreId));
 		promise.then(() => {
 			this.setState({
@@ -62,8 +63,9 @@ var AuditStoreDetails = React.createClass({
 				showErrors: true,
 			});
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -150,8 +152,8 @@ var AuditStoreDetails = React.createClass({
 				{buttonPanel}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

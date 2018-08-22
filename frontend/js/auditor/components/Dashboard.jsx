@@ -11,24 +11,25 @@ import Loading from '../../components/Loading.jsx';
 
 import { fetchProfileInfo, fetchAuditorStats, fetchAuditorScore } from '../actions/dashboard.js';
 
-var Dashboard = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-		};
-	},
-	setLoading: function(loading){
+class Dashboard extends React.Component {
+    state = {
+        loading: false,
+    };
+
+    setLoading = (loading) => {
 		this.setState((prevState) => Object.assign({}, prevState, { loading }));
-	},
-	componentWillMount: function(){
+	};
+
+    componentWillMount() {
 		this.setLoading(true);
 		Promise.all([
 			this.props.dispatch(fetchProfileInfo()),
 			this.props.dispatch(fetchAuditorStats()),
 			this.props.dispatch(fetchAuditorScore()),
 		]).then(()=>this.setLoading(false));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(this.state.loading){
 			return <Loading/>;
 		}
@@ -87,8 +88,8 @@ var Dashboard = React.createClass({
 				<p>We need to know more about you before we can assign audits to you.</p>
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

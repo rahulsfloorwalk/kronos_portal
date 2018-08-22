@@ -7,8 +7,8 @@ import { Check, Cross, Pencil, Plus, Bishop } from '../../../components/Icons.js
 
 import { fetchClientUsers } from '../../service/client_user.js'
 
-var ClientUserRow = React.createClass({
-	render: function(){
+class ClientUserRow extends React.Component {
+    render() {
 		let is_active = this.props.clientUser.user.is_active ? <Check/> : <Cross/>;
 		let isClientAdmin = this.props.clientUser.is_client_admin ? <Check/> : <Cross/>;
 		return (
@@ -22,20 +22,21 @@ var ClientUserRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchClientUsers(this.props.params.clientId).done((clientUsers)=>this.setState({clientUsers}));
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+
+    componentWillReceiveProps(nextProps) {
 		fetchClientUsers(nextProps.params.clientId).done((clientUsers)=>this.setState({clientUsers}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.clientUsers){
 			return <Loading/>;
 		}
@@ -68,5 +69,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

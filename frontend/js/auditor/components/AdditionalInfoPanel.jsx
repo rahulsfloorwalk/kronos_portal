@@ -10,19 +10,20 @@ import { getHairColor, getCameraResolution, getOccupation } from '../../utils.js
 import { fetchAdditionalInfo } from '../actions/additional_info.js'
 import LabelValue from '../../components/LabelValue.jsx';
 
-var AdditionalInfoPanelBase = React.createClass({
-	getInitialState: function() {
-		return {
-			expanded: false,
-		};
-	},
-	toggleExpand: function(){
+class AdditionalInfoPanelBase extends React.Component {
+    state = {
+        expanded: false,
+    };
+
+    toggleExpand = () => {
 		this.setState({expanded: !this.state.expanded});
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.props.dispatch(fetchAdditionalInfo());
-	},
-	render: function(){
+	}
+
+    render() {
 		var has_car = this.props.additionalInfo.has_car ? <Check/> : <Cross/>;
 		var weekend_audit = this.props.additionalInfo.weekend_audit ? <Check/> : <Cross/>;
 		var camera_owned = this.props.additionalInfo.camera_owned ? <Check/> : <Cross/>;
@@ -63,8 +64,8 @@ var AdditionalInfoPanelBase = React.createClass({
 				: null }
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

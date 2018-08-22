@@ -20,22 +20,24 @@ import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 import Loading from '../../components/Loading.jsx';
 
-var AuditCancelForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+class AuditCancelForm extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		this.props.dispatch(loadAuditCancelForm(this.props.params.auditId));
-	},
-	fieldChanged: function(e){
+	}
+
+    fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var promise = this.props.dispatch(submitAuditCancelForm( this.props.audit.id));
 		promise.then(() => hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`));
-	},
-	render : function(){
+	};
+
+    render() {
 		return (
 			<Modal modalTitle="Cancel Audit" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -53,8 +55,8 @@ var AuditCancelForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

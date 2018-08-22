@@ -143,14 +143,13 @@ class OptionBuilder extends Component{
 	};
 }
 
-var QuestionForm = React.createClass({
-	getInitialState: function(){
-		return {
-			form: {},
-			errors: {}
-		};
-	},
-	componentDidMount: function() {
+class QuestionForm extends React.Component {
+    state = {
+        form: {},
+        errors: {}
+    };
+
+    componentDidMount() {
 		if(this.props.params.questionId){
 			findQuestionById(this.props.params.questionId).then(question => this.setState({ 'form': question }));
 		} 
@@ -159,13 +158,15 @@ var QuestionForm = React.createClass({
 				section: this.props.params.sectionId
 			})
 		});
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		this.setState({
 			form: Object.assign({}, this.state.form, getInputEventChangeValue(e))
 		});
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		saveQuestion(this.state.form).then(
 			savedQuestion => {
@@ -179,8 +180,9 @@ var QuestionForm = React.createClass({
 				}
 			}
 		);
-	},
-	saveAndNext: function(e){
+	};
+
+    saveAndNext = (e) => {
 		e.preventDefault();
 		saveQuestion(this.state.form).then(
 			(savedQuestion) => {
@@ -202,15 +204,17 @@ var QuestionForm = React.createClass({
 				}
 			}
 		);
-	},
-	questionDataChanged: function(questionData){
+	};
+
+    questionDataChanged = (questionData) => {
 		this.setState({
 			form: Object.assign({}, this.state.form, {
 				question_data: questionData
 			})
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
 
 		let optionBuilder;
@@ -250,7 +254,7 @@ var QuestionForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 export default QuestionForm;

@@ -3,8 +3,8 @@ import React from 'react';
 import Label from './Label.jsx';
 import { getReferralType } from '../utils.js';
 
-export default React.createClass({
-	getLabelType : function(type){
+export default class extends React.Component {
+    getLabelType = (type) => {
 		switch(this.props.type){
 			case "SIGNUP":
 				return "warning";
@@ -19,10 +19,11 @@ export default React.createClass({
 			default:
 				return `unknown type ${this.props.type} - ${typeof this.props.type}`;
 		}
-	},
-	render : function(){
+	};
+
+    render() {
 		return (
 			<Label type={this.getLabelType(this.props.type)}>{getReferralType(this.props.type)}</Label>
 		);
-	},
-});
+	}
+}

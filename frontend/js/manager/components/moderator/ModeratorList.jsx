@@ -5,8 +5,8 @@ import { Check, Cross, Pencil, Plus, Knight } from '../../../components/Icons.js
 
 import { findModerators } from '../../service/moderator.js'
 
-var ModeratorRow = React.createClass({
-	render: function(){
+class ModeratorRow extends React.Component {
+    render() {
 		var is_active = this.props.moderator.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
@@ -17,27 +17,28 @@ var ModeratorRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			moderators: [],
-		};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {
+        moderators: [],
+    };
+
+    componentDidMount() {
 		findModerators().then((moderators) => {
 			this.setState({
 				moderators
 			});
 		});
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		console.log("componentWillReceiveProps", nextProps);
 		this.componentDidMount();
-	},
-	render: function(){
+	}
+
+    render() {
 		let rows = [];
 		for(let moderator of this.state.moderators) {
 			rows.push(<ModeratorRow moderator={moderator} key={moderator.id}/>);
@@ -64,5 +65,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

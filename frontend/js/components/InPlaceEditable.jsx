@@ -2,22 +2,20 @@ import React from 'react';
 
 import { affectInputEventToComponent } from '../react_utils.js';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			editing: false,
-			inputText: "",
-			hover: false
-		};
-	},
-	getDefaultProps: function(){
-		return {
-			editing: false,
-			emptyString: "click here to edit",
-			inputText: "",
-		};
-	},
-	componentDidMount: function(){
+export default class extends React.Component {
+    static defaultProps = {
+        editing: false,
+        emptyString: "click here to edit",
+        inputText: "",
+    };
+
+    state = {
+        editing: false,
+        inputText: "",
+        hover: false
+    };
+
+    componentDidMount() {
 		if( ! this.props.inputText){
 			if(this.props.editing){
 				this.setState({
@@ -35,30 +33,35 @@ export default React.createClass({
 				editing: this.props.editing
 			});
 		}
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		if(nextProps.inputText){
 			this.setState({
 				inputText: nextProps.inputText
 			});
 		}
-	},
-	componentDidUpdate: function(prevProps,prevState){
+	}
+
+    componentDidUpdate(prevProps, prevState) {
 		if(this.answerInput && prevState.editing === false){
 			this.answerInput.focus();
 			let l = this.answerInput.value.length;
 			this.answerInput.setSelectionRange(l,l);
 		}
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	hover: function(){
+	};
+
+    hover = () => {
 		this.setState({
 			hover: !this.state.hover
 		});
-	},
-	startEdit: function(){
+	};
+
+    startEdit = () => {
 		if(this.props.inputText){
 			this.setState({
 				editing: !this.state.editing,
@@ -71,8 +74,9 @@ export default React.createClass({
 				hover: false
 			});
 		}
-	},
-	save: function(e){
+	};
+
+    save = (e) => {
 		e.preventDefault();
 		this.props.onSave(this.state.inputText);
 		this.setState({
@@ -87,8 +91,9 @@ export default React.createClass({
 				inputText: this.props.inputText,
 			});
 		}
-	},
-	render: function(){
+	};
+
+    render() {
 		let pointerStyle = {
 			cursor: 'pointer'
 		};
@@ -115,4 +120,4 @@ export default React.createClass({
 			return (<div style={pointerStyle} onMouseOver={this.hover} onMouseOut={this.hover} onClick={this.startEdit}>{this.props.children}</div>);
 		}
 	}
-});
+}

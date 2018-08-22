@@ -19,36 +19,39 @@ import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 import Loading from '../../components/Loading.jsx';
 
-var AuditFiatAssignForm = React.createClass({
-	getInitialState: function(){
-		return {
-			errors: {}
-		};
-	},
-	componentDidMount: function(){
+class AuditFiatAssignForm extends React.Component {
+    state = {
+        errors: {}
+    };
+
+    componentDidMount() {
 		if(this.props.audit){
 			this.setState({
 				'audit': this.props.params.auditId
 			});
 		}
-	},
-	dateChanged: function(date){
+	}
+
+    dateChanged = (date) => {
 		if( typeof date !== "string"){
 			this.setState({
 				audit_date: date.format("YYYY-MM-DD")
 			});
 		}
-	},
-	inputChanged: function(e){
+	};
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var promise = fiatAssignAudit(this.props.params.auditId, this.state.email, this.state.audit_date);
 		promise.done(() => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`));
 		promise.fail((error) => this.setState({errors: error.responseJSON || {}}));
-	},
-	render : function(){
+	};
+
+    render() {
 		if( ! this.props.audit){
 			return <Loading/>;
 		}
@@ -64,8 +67,8 @@ var AuditFiatAssignForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
   console.log(ownProps);

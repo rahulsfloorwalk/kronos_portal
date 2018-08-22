@@ -22,39 +22,43 @@ import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 import Loading from '../../components/Loading.jsx';
 
-var AuditApplyForm = React.createClass({
-	getInitialState: function(){
-		return {
-			submitting: false,
-		};
-	},
-	setSubmitting: function(submitting){
+class AuditApplyForm extends React.Component {
+    state = {
+        submitting: false,
+    };
+
+    setSubmitting = (submitting) => {
 		this.setState((prevState) => Object.assign({}, prevState, { submitting }));
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.props.dispatch(loadAuditApplyForm(this.props.params.auditId));
-	},
-	dateChanged: function(date){
+	}
+
+    dateChanged = (date) => {
 		if( typeof date !== "string"){
 			this.setState({
 				audit_date: date
 			});
 		}
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		this.setSubmitting(true);
 		let promise = this.props.dispatch(submitAuditApplyForm({
 			audit_id: this.props.audit.id,
 			audit_date: this.state.audit_date ? this.state.audit_date.format("YYYY-MM-DD") : "",
 		})).done(() => hashHistory.push(`/audit/cycle/${this.props.audit.audit_cycle.id}`)).always(() => this.setSubmitting(false));
-	},
-	isValidDate: function(currentDate, selectedDate){
+	};
+
+    isValidDate = (currentDate, selectedDate) => {
 		let startDate = moment(this.props.audit.audit_cycle.start_date);
 		let endDate = moment(this.props.audit.audit_cycle.end_date);
 		return currentDate.isBetween(startDate, endDate, null, '[]'); //inclusive
-	},
-	render : function(){
+	};
+
+    render() {
 		return (
 			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -80,8 +84,8 @@ var AuditApplyForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

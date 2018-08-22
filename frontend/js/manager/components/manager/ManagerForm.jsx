@@ -12,27 +12,27 @@ import Modal from '../../../components/Modal.jsx';
 import Loading from '../../../components/Loading.jsx';
 import FormErrorList from '../../../components/FormErrorList.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-			manager: {
-				email: "",
-				password: "",
-				is_active: true
-			},
-			errors: {
-			}
-		};
-	},
-	setLoading: function(loadingState){
+export default class extends React.Component {
+    state = {
+        loading: false,
+        manager: {
+            email: "",
+            password: "",
+            is_active: true
+        },
+        errors: {
+        }
+    };
+
+    setLoading = (loadingState) => {
 		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				loading: loadingState
 			});
 		});
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		if(this.props.params.userId){
 			this.setLoading(true);
 			findById(this.props.params.userId).then( (manager) => {
@@ -43,13 +43,15 @@ export default React.createClass({
 				});
 			}).always(() => this.setLoading(false));
 		}
-	},
-	fieldChanged: function(e){
+	}
+
+    fieldChanged = (e) => {
 		this.setState({
 			manager: Object.assign({}, this.state.manager, getInputEventChangeValue(e))
 		});
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
 		if(this.props.params.userId){
@@ -73,8 +75,9 @@ export default React.createClass({
 				});
 			}
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		if(this.state.loading){
 			return (<Loading/>);
 		}
@@ -91,5 +94,5 @@ export default React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}

@@ -17,8 +17,8 @@ import Jumbotron from '../../components/Jumbotron.jsx';
 import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
 import MarkdownViewer from '../../components/MarkdownViewer.jsx';
 
-var AuditStoreRow = React.createClass({
-	render: function(){
+class AuditStoreRow extends React.Component {
+    render() {
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
 		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
 		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
@@ -61,22 +61,22 @@ var AuditStoreRow = React.createClass({
 					</div>
 				</div>
 		);
-	},
-});
+	}
+}
 
-var AuditStoreList = React.createClass({
-	getInitialState: function(){
-		return {
-			auditStores: [],
-		};
-	},
-	componentDidMount: function() {
+class AuditStoreList extends React.Component {
+    state = {
+        auditStores: [],
+    };
+
+    componentDidMount() {
 		//FIXME we're using BOTH internal component state and the redux store to contain the list of audit stores.
 		//ideally only one should exist.
 		this.props.dispatch(fetchAuditStores()).then( auditStores => this.setState({auditStores}));
 		this.props.dispatch(fetchProfileInfo());
-	},
-	render: function(){
+	}
+
+    render() {
 		let rows = this.state.auditStores.map(as => <AuditStoreRow auditStore={as} key={as.id}/>);
 		if(rows.length > 0){
 			return (
@@ -97,8 +97,8 @@ var AuditStoreList = React.createClass({
 				</div>
 			);
 		}
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

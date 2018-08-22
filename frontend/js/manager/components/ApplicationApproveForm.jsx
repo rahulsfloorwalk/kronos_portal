@@ -19,25 +19,26 @@ import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 import Loading from '../../components/Loading.jsx';
 
-let ApplicationApproveForm = React.createClass({
-	getInitialState: function(){
-		return {
-			application: null,
-			errors: {},
-		};
-	},
-	contextTypes: {
+class ApplicationApproveForm extends React.Component {
+    static contextTypes = {
 		auditCycleId: React.PropTypes.number
-	},
-	componentDidMount: function(){
+	};
+
+    state = {
+        application: null,
+        errors: {},
+    };
+
+    componentDidMount() {
 		findById(this.props.params.applicationId).then(application => {
 			this.setState({
 				application,
 				'audit_date': application.audit_date
 			});
 		});
-	},
-	/*
+	}
+
+    /*
 	componentWillReceiveProps: function(nextProps) {
 		console.log("nextProps.application",nextProps.application);
 		if(nextProps.application && ! this.state.date_set ){
@@ -48,14 +49,15 @@ let ApplicationApproveForm = React.createClass({
 		};
 	},
 	*/
-	dateChanged: function(date){
+    dateChanged = (date) => {
 		if( typeof date !== "string"){
 			this.setState({
 				audit_date: date.format("YYYY-MM-DD")
 			});
 		}
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var obj = {
 			application_id: this.state.application.id,
@@ -71,8 +73,9 @@ let ApplicationApproveForm = React.createClass({
 		}, (err) => {
 			this.setState({ errors: err && err.responseJSON });
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		if( ! this.state.application){
 			return <Loading/>;
 		}
@@ -86,8 +89,8 @@ let ApplicationApproveForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	var application;

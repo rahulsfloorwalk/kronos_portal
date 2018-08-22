@@ -4,11 +4,12 @@ import { Link } from 'react-router';
 
 // import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
-var StatCard = React.createClass({
-	componentWillMount: function(){
+class StatCard extends React.Component {
+    componentWillMount() {
 		// this.props.dispatch(fetchProfileInfo());
-	},
-	render: function(){
+	}
+
+    render() {
 		return (
 	<div className="text-center">
           <h3 className="page-header">{this.props.title}</h3>
@@ -16,8 +17,8 @@ var StatCard = React.createClass({
           <h2 style={{display:"inline-block"}}>{this.props.count}</h2>
 	</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

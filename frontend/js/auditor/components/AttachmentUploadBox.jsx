@@ -14,30 +14,32 @@ import AttachmentInProgressThumbnail from '../../components/AttachmentInProgress
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-var AttachmentUploadBox = React.createClass({
-	getInitialState: function(){
-		return {
-			uploadMessage : "",
-			attachments: [],
-			inProgress: {},
-			progress: "",
-			uploading: false
-		};
-	},
-	reloadState: function(){
+class AttachmentUploadBox extends React.Component {
+    state = {
+        uploadMessage : "",
+        attachments: [],
+        inProgress: {},
+        progress: "",
+        uploading: false
+    };
+
+    reloadState = () => {
 		findAttachmentsByAuditStore(this.props.auditStoreId).then((attachments) => {
 			this.setState({
 				attachments
 			});
 		});
-	},
-	componentDidMount: function(){
+	};
+
+    componentDidMount() {
 		this.reloadState();
-	},
-	uploadButtonClicked: function(e){
+	}
+
+    uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	},
-	setProgressState: function(tempId, progressState){
+	};
+
+    setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
@@ -45,8 +47,9 @@ var AttachmentUploadBox = React.createClass({
 				})
 			});
 		});
-	},
-	uploadFile: function(e){
+	};
+
+    uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -97,13 +100,15 @@ var AttachmentUploadBox = React.createClass({
 				});
 			});
 		}
-	},
-	attachmentDeleteClicked: function(attachment){
+	};
+
+    attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(()=>{
 			this.reloadState();
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -162,8 +167,8 @@ var AttachmentUploadBox = React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

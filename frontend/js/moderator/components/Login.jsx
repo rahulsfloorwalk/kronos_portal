@@ -8,27 +8,28 @@ import FormInput from '../../components/FormInput.jsx';
 import { login } from '../service/auth.js';
 import { affectInputEventToComponent } from '../../react_utils.js';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			username: "",
-			password: "",
-			failed: false,
-			errors: []
-		};
-	},
-	inputChanged: function(e){
+export default class extends React.Component {
+    state = {
+        username: "",
+        password: "",
+        failed: false,
+        errors: []
+    };
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	loginFormSubmit: function(e){
+	};
+
+    loginFormSubmit = (e) => {
 		e.preventDefault();
 		login(this.state.username, this.state.password).then(() => {
 			hashHistory.push('/');
 		}, (err) => {
 			this.setState({failed: true});
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		let failedBox;
 		if( this.state.failed){
 			failedBox = (<div className="alert alert-warning">Login Failed</div>);
@@ -74,5 +75,5 @@ export default React.createClass({
 </div>
 </div>);
 	}
-});
+}
 

@@ -18,11 +18,10 @@ import Modal from '../../components/Modal.jsx';
 import StateSelector from '../../components/StateSelector.jsx';
 import CitySelector from '../../components/CitySelector.jsx';
 
-var StoreForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+class StoreForm extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		this.props.dispatch(fetchStates());
 
 		if(this.props.params.storeId){
@@ -30,8 +29,9 @@ var StoreForm = React.createClass({
 		} else {
 			this.props.dispatch(loadStoreAddForm());
 		}
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+
+    componentWillReceiveProps(nextProps) {
 		console.log("nextProps",nextProps);
 		this.setState(nextProps.store);
 		if(nextProps.store && nextProps.store.city){
@@ -41,23 +41,27 @@ var StoreForm = React.createClass({
 			});
 			this.props.dispatch(fetchCities(nextProps.store.city.state));
 		}
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	myStateChanged: function(e){
+	};
+
+    myStateChanged = (e) => {
 		this.inputChanged(e);
 		var stateCode = e.target.value;
 		console.log("statecode",stateCode);
 		if( stateCode){
 			this.props.dispatch(fetchCities(e.target.value));
 		}
-	},
-	myCityChanged: function(e){
+	};
+
+    myCityChanged = (e) => {
 		this.inputChanged(e);
 		var cityId = e.target.value;
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var submitPromise;
 		if(this.props.params.storeId){
@@ -93,8 +97,9 @@ var StoreForm = React.createClass({
 			hashHistory.push(`/client/${savedStore.client.id}/store`);
 			Alert.success("STORE SAVED");
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		var modalTitle = this.props.params.storeId ? "Edit Store" : "Add Store";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
@@ -138,8 +143,8 @@ var StoreForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

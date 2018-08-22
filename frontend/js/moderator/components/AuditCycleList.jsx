@@ -14,20 +14,20 @@ import { File } from '../../components/Icons.jsx';
 import Jumbotron from '../../components/Jumbotron.jsx';
 import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			auditCycles: []
-		};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {
+        auditCycles: []
+    };
+
+    componentDidMount() {
 		findAuditCycles().then((auditCycles) => {
 			this.setState({
 				auditCycles
 			});
 		});
-	},
-	render: function(){
+	}
+
+    render() {
 		let trs = [];
 		for(let ac of this.state.auditCycles) {
 			trs.push(<tr key={ac.id}
@@ -69,6 +69,6 @@ export default React.createClass({
 		} else {
 			return (<Jumbotron heading="no data here" para="assigned audit cycles will show up here"/>);
 		}
-	},
-});
+	}
+}
 

@@ -7,14 +7,14 @@ import { fetchAdditionalInfoForAuditor } from '../../service/auditor.js'
 import { Check, Cross } from '../../../components/Icons.jsx';
 import Loading from '../../../components/Loading.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchAdditionalInfoForAuditor(this.props.auditorId).done((additionalInfo)=>this.setState({additionalInfo}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.additionalInfo){
 			return <Loading/>;
 		}
@@ -47,5 +47,5 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}

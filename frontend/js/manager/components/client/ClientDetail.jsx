@@ -12,17 +12,18 @@ import NavLink from '../../../components/NavLink.jsx';
 import StoreList from './../StoreList.jsx';
 import AuditCycleList from '../audit_cycle/AuditCycleList.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function(){
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchClient(this.props.params.clientId).done((client)=> this.setState({client}));
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		fetchClient(nextProps.params.clientId).done((client)=> this.setState({client}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.client){
 			return <Loading/>;
 		}
@@ -68,5 +69,5 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}

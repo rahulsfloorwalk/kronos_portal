@@ -3,8 +3,8 @@ import React from 'react';
 import Label from './Label.jsx';
 import { getPaymentStatus } from '../utils.js';
 
-export default React.createClass({
-	getLabelType : function(status){
+export default class extends React.Component {
+    getLabelType = (status) => {
 		switch(this.props.status){
 			case "PENDING":
 				return "danger";
@@ -19,10 +19,11 @@ export default React.createClass({
 			default:
 				return `unknown status type ${this.props.status} - ${typeof this.props.status}`;
 		}
-	},
-	render : function(){
+	};
+
+    render() {
 		return (
 			<Label type={this.getLabelType(this.props.status)}>{getPaymentStatus(this.props.status)}</Label>
 		);
-	},
-});
+	}
+}

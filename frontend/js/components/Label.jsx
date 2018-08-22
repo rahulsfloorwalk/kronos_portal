@@ -1,12 +1,11 @@
 import React from 'react';
 
-export default React.createClass({
-	getDefaultProps: function(){
-		return {
-			type: 'default'
-		};
-	},
-	render : function(){
+export default class extends React.Component {
+    static defaultProps = {
+        type: 'default'
+    };
+
+    render() {
 		var labelStyle = {
 			fontSize: '100%'
 		};
@@ -15,5 +14,5 @@ export default React.createClass({
 				{this.props.children}
 			</span>
 		);
-	},
-});
+	}
+}

@@ -18,27 +18,29 @@ import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 import Loading from '../../components/Loading.jsx';
 
-var ApplicationRejectForm = React.createClass({
-	getInitialState: function(){
-		return {
-			application: null,
-			errors: {},
-		};
-	},
-	contextTypes: {
+class ApplicationRejectForm extends React.Component {
+    static contextTypes = {
 		auditCycleId: React.PropTypes.number
-	},
-	componentDidMount: function(){
+	};
+
+    state = {
+        application: null,
+        errors: {},
+    };
+
+    componentDidMount() {
 		findById(this.props.params.applicationId).then(application => {
 			this.setState({
 				application,
 			});
 		});
-	},
-	fieldChanged: function(e){
+	}
+
+    fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var promise = this.props.dispatch(submitApplicationRejectForm(this.props.params.applicationId));
 		promise.then(() => {
@@ -48,8 +50,9 @@ var ApplicationRejectForm = React.createClass({
 			});
 			Alert.success("APPLICATION DENIED");
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		if( ! this.state.application){
 			return <Loading/>;
 		}
@@ -63,8 +66,8 @@ var ApplicationRejectForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	var application;

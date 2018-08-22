@@ -6,16 +6,16 @@ import DevelopmentMarker from '../../components/DevelopmentMarker.jsx';
 
 import { fetchConfig } from "../service/config.js";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			config: {},
-		};
-	},
-	componentDidMount: function(){
+export default class extends React.Component {
+    state = {
+        config: {},
+    };
+
+    componentDidMount() {
 		fetchConfig().then((config) => this.setState({config}));
-	},
-	render: function(){
+	}
+
+    render() {
 		var contentStyle = {
 			'minHeight': "600px"
 		};
@@ -29,6 +29,6 @@ export default React.createClass({
 				<Footer config={this.state.config}/>
 			</div>
 		);
-	},
-});
+	}
+}
 

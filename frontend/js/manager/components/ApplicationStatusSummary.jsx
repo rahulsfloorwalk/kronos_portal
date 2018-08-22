@@ -17,17 +17,18 @@ import Loading from '../../components/Loading.jsx';
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function(){
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		this._promise = fetchApplicationStats(this.props.auditCycleId).done((stats) => this.setState({ stats }));
-	},
-	componentWillUnmount: function(){
+	}
+
+    componentWillUnmount() {
 		this._promise && this._promise.readyState !== 4 && this._promise.abort();
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.stats){
 			return <Loading/>;
 		}
@@ -62,6 +63,6 @@ export default React.createClass({
 			</tbody>
 			</table>
 		);
-	},
-});
+	}
+}
 

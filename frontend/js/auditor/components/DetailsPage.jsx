@@ -15,30 +15,32 @@ import ProfilePercentage from "./ProfilePercentage.jsx";
 import Panel from '../../components/Panel.jsx';
 import { Pencil, Cross, Check } from '../../components/Icons.jsx';
 
-var DetailsPage = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-			preferences: {},
-		};
-	},
-	setLoading: function(loading){
+class DetailsPage extends React.Component {
+    state = {
+        loading: false,
+        preferences: {},
+    };
+
+    setLoading = (loading) => {
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
-	},
-	componentDidMount: function(){
+	};
+
+    componentDidMount() {
 		this.setLoading(true);
 		this.props.dispatch(fetchUser());
 		fetchPreferences().done((preferences) => {
 			this.setState({preferences});
 		}).always(() => this.setLoading(false));
-	},
-	componentWillReceiveProps: function(){
+	}
+
+    componentWillReceiveProps() {
 		this.setLoading(true);
 		fetchPreferences().done((preferences) => {
 			this.setState({preferences});
 		}).always(() => this.setLoading(false));
-	},
-	render: function(){
+	}
+
+    render() {
 		return (
 			<div>
 			<div className="row">
@@ -72,8 +74,8 @@ var DetailsPage = React.createClass({
 			</div>
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

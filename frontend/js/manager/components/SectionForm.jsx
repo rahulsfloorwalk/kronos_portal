@@ -13,11 +13,10 @@ import FormGroup from '../../components/FormGroup.jsx';
 import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 
-var SectionForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+class SectionForm extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		//console.log("componentDidMount(...) called with props.params as", this.props.params);
 		if(this.props.params.sectionId){
 			this.props.dispatch(loadSectionEditForm(this.props.params.sectionId));
@@ -27,8 +26,9 @@ var SectionForm = React.createClass({
 		this.setState({
 			audit_cycle: this.props.params.auditCycleId
 		});
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+
+    componentWillReceiveProps(nextProps) {
 		//console.log("componentWillReceiveProps(...) called with",nextProps);
 		if( nextProps.section){
 			this.setState(nextProps.section);
@@ -36,11 +36,13 @@ var SectionForm = React.createClass({
 		this.setState({
 			audit_cycle: nextProps.params.auditCycleId
 		});
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var submitPromise;
 		if(this.props.params.sectionId){
@@ -52,8 +54,9 @@ var SectionForm = React.createClass({
 			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`);
 			Alert.success("SECTION SAVED");
 		});
-	},
-	saveAndNext: function(e){
+	};
+
+    saveAndNext = (e) => {
 		e.preventDefault();
 		let submitPromise;
 		if(this.props.params.sectionId){
@@ -70,8 +73,9 @@ var SectionForm = React.createClass({
 			Alert.success("SECTION SAVED");
 			this._nameInput && this._nameInput.focus();
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		var modalTitle = this.props.params.auditCycleId ? "Edit Section" : "Add Section";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
@@ -85,8 +89,8 @@ var SectionForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	//console.log("ownProps",ownProps);

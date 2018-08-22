@@ -5,14 +5,14 @@ import { Link } from 'react-router';
 
 import Loading from '../../../components/Loading.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchFacebookInfoForAuditor(this.props.auditorId).done((socialInfo)=>this.setState({socialInfo}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.socialInfo){
 			return <Loading/>;
 		}
@@ -29,5 +29,5 @@ export default React.createClass({
 			</div>
 			</div>
 		);
-	},
-});
+	}
+}

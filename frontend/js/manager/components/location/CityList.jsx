@@ -6,20 +6,21 @@ import Loading from '../../../components/Loading.jsx';
 import { ShareAlt, MapMarker } from '../../../components/Icons.jsx';
 import { fetchStates, fetchCities } from '../../service/location.js'
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchStates().done((states) => this.setState({states}));
 		fetchCities(this.props.params.stateId).done((cities) => this.setState({cities}));
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		if(this.props.params.stateId !== nextProps.params.stateId){
 			fetchCities(nextProps.params.stateId).done((cities) => this.setState({cities}));
 		}
-	},
-	render: function(){
+	}
+
+    render() {
 		if( ! this.state.states || !this.state.cities){
 			return <Loading/>;
 		}
@@ -47,5 +48,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

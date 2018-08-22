@@ -17,30 +17,32 @@ import AttachmentInProgressThumbnail from '../../components/AttachmentInProgress
 
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			attachments: [],
-			inProgress: {},
-			selectedAttachment: undefined
-		};
-	},
-	reloadState: function(){
+export default class extends React.Component {
+    state = {
+        attachments: [],
+        inProgress: {},
+        selectedAttachment: undefined
+    };
+
+    reloadState = () => {
 		findAttachmentsByAuditStore(this.props.auditStoreId).then((attachments) => {
 			this.setState({
 				attachments
 			});
 		});
-	},
-	componentDidMount: function(){
+	};
+
+    componentDidMount() {
 		this.reloadState();
-	},
-	attachmentSelected: function(attachment){
+	}
+
+    attachmentSelected = (attachment) => {
 		this.setState({
 			selectedAttachment: attachment
 		});
-	},
-	deleteButtonClicked: function(){
+	};
+
+    deleteButtonClicked = () => {
 		if( this.state.selectedAttachment){
 			deleteAttachment(this.state.selectedAttachment.id).then(() => {
 				this.setState({
@@ -49,8 +51,9 @@ export default React.createClass({
 				});
 			});
 		}
-	},
-	attachmentRenamed: function(file_name){
+	};
+
+    attachmentRenamed = (file_name) => {
 		renameAttachment(this.state.selectedAttachment.id, file_name).done((a)=>{
 			this.setState({
 				selectedAttachment: a
@@ -65,11 +68,13 @@ export default React.createClass({
 				}
 			}
 		});
-	},
-	uploadButtonClicked: function(e){
+	};
+
+    uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	},
-	setProgressState: function(tempId, progressState){
+	};
+
+    setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
@@ -77,8 +82,9 @@ export default React.createClass({
 				})
 			});
 		});
-	},
-	uploadFile: function(e){
+	};
+
+    uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -133,8 +139,9 @@ export default React.createClass({
 				});
 			});
 		}
-	},
-	render: function(){
+	};
+
+    render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -191,5 +198,5 @@ export default React.createClass({
 			</div>
 		);
 		}
-	},
-});
+	}
+}

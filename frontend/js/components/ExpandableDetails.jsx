@@ -2,18 +2,18 @@ import React from 'react';
 
 import Modal from './Modal.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			expanded: false
-		};
-	},
-	buttonClicked : function(){
+export default class extends React.Component {
+    state = {
+        expanded: false
+    };
+
+    buttonClicked = () => {
 		this.setState({
 			expanded: ! this.state.expanded
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		let pointerStyle = {cursor: 'pointer'};
 		var buttonText = this.state.expanded ? "Hide Details" : "View Details";
 		var details = this.state.expanded ? 
@@ -30,4 +30,4 @@ export default React.createClass({
 			</span>
 		);
 	}
-});
+}

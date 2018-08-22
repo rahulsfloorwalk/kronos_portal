@@ -12,20 +12,22 @@ import FormGroup from '../../components/FormGroup.jsx';
 import SaveButton from '../../components/SaveButton.jsx';
 import Modal from '../../components/Modal.jsx';
 
-var AdditionalInfoForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentWillMount: function() {
+class AdditionalInfoForm extends React.Component {
+    state = {};
+
+    componentWillMount() {
 		this.setState(this.props.additionalInfo);
-	},
-	componentDidMount: function() {
+	}
+
+    componentDidMount() {
 		this.props.dispatch(fetchAdditionalInfo());
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+
+    componentWillReceiveProps(nextProps) {
 		this.setState(nextProps.additionalInfo);
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		var change = {};
 		if( e.target.type !== "checkbox"){
 			change[e.target.name] = e.target.value;
@@ -46,12 +48,14 @@ var AdditionalInfoForm = React.createClass({
 			}
 		}
 		this.setState(change);
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		this.props.dispatch(saveAdditionalInfo(this.state));
-	},
-	render : function(){
+	};
+
+    render() {
 		var laptop_option = {};
 		var car_option = {};
 		return (
@@ -136,8 +140,8 @@ var AdditionalInfoForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

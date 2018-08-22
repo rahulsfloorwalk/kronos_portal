@@ -20,31 +20,33 @@ import Loading from '../../components/Loading.jsx';
 import { __StateSelector } from '../../components/StateSelector.jsx';
 import { __CitySelector } from '../../components/CitySelector.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			errors: {},
-			form: {},
-			cities: [],
-			states: {},
-		};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {
+        errors: {},
+        form: {},
+        cities: [],
+        states: {},
+    };
+
+    componentDidMount() {
 		fetchStates().done((states)=>this.setState({states}));
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		let change = getInputEventChangeValue(e);
 		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				form: Object.assign({}, prevState.form, change),
 			});
 		});
-	},
-	stateChanged: function(e){
+	};
+
+    stateChanged = (e) => {
 		this.inputChanged(e);
 		fetchCities(e.target.value).done((cities)=>this.setState({cities}));
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		let promise = saveOpportunityEmailRecord(this.props.params.auditCycleId, this.state.form.city).done((opp) => {
 			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`);
@@ -54,8 +56,9 @@ export default React.createClass({
 				errors: err.responseJSON || {},
 			});
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		if( ! (this.state.states)){
 			return <Loading/>;
 		}
@@ -76,5 +79,5 @@ export default React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}

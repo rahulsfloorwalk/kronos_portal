@@ -13,15 +13,14 @@ import Jumbotron from '../../components/Jumbotron.jsx';
 import AttachmentProofIcon from '../../components/AttachmentProofIcon.jsx';
 
 
-var AttachmentItem = React.createClass({
-	getDefaultProps: function(){
-		return {
-			deletable: false,
-			onDelete: () => {},
-			attachment: {}
-		};
-	},
-	render: function(){
+class AttachmentItem extends React.Component {
+    static defaultProps = {
+        deletable: false,
+        onDelete: () => {},
+        attachment: {}
+    };
+
+    render() {
 		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
 		if(this.props.deletable){
 			var deleteButton = <button onClick={()=>this.props.onDelete(this.props.attachment)}
@@ -38,36 +37,39 @@ var AttachmentItem = React.createClass({
 			</div>
 		);
 	}
-});
+}
 
-var IdProofAttachmentUploadBox = React.createClass({
-	getInitialState: function(){
-		return {
-			uploadMessage : "",
-			attachments: [],
-			inProgress: {},
-			progress: "",
-			expanded: false,
-			uploading: false
-		};
-	},
-	toggleExpand: function(){
+class IdProofAttachmentUploadBox extends React.Component {
+    state = {
+        uploadMessage : "",
+        attachments: [],
+        inProgress: {},
+        progress: "",
+        expanded: false,
+        uploading: false
+    };
+
+    toggleExpand = () => {
 		this.setState({expanded: !this.state.expanded});
-	},
-	reloadState: function(){
+	};
+
+    reloadState = () => {
 		findAttachmentsByUser().then((attachments) => {
 			this.setState({
 				attachments
 			});
 		});
-	},
-	componentDidMount: function(){
+	};
+
+    componentDidMount() {
 		this.reloadState();
-	},
-	uploadButtonClicked: function(e){
+	}
+
+    uploadButtonClicked = (e) => {
 		this.uploadInput.click();
-	},
-	setProgressState: function(tempId, progressState){
+	};
+
+    setProgressState = (tempId, progressState) => {
 		this.setState((prevState)=>{
 			return Object.assign({}, prevState, {
 				inProgress: Object.assign({}, prevState.inProgress, {
@@ -75,8 +77,9 @@ var IdProofAttachmentUploadBox = React.createClass({
 				})
 			});
 		});
-	},
-	uploadFile: function(e){
+	};
+
+    uploadFile = (e) => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -127,13 +130,15 @@ var IdProofAttachmentUploadBox = React.createClass({
 				});
 			});
 		}
-	},
-	attachmentDeleteClicked: function(attachment){
+	};
+
+    attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(()=>{
 			this.reloadState();
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 
 		let uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default pull-right"><Paperclip/> Upload</button>);
 		let deletable = true;
@@ -202,8 +207,8 @@ var IdProofAttachmentUploadBox = React.createClass({
 				: null }
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

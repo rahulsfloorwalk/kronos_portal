@@ -1,25 +1,25 @@
 import React from 'react';
 import Datetime from 'react-datetime';
 
-var InputGroup = React.createClass({
-	render : function(){
+class InputGroup extends React.Component {
+    render() {
 		return (
 			<div className="input-group">
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
-var InputGroupBtn = React.createClass({
-	render : function(){
+class InputGroupBtn extends React.Component {
+    render() {
 		return (
 			<span className="input-group-btn">
 				{this.props.children}
 			</span>
 		);
-	},
-});
+	}
+}
 
 export default InputGroup;
 export { InputGroupBtn };

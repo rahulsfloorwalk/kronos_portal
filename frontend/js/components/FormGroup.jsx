@@ -1,13 +1,13 @@
 import React from 'react';
 
-var FormGroup = React.createClass({
-	render : function(){
+class FormGroup extends React.Component {
+    render() {
 		return (
 			<div className="form-group">
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 export default FormGroup;

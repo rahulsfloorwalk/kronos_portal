@@ -19,8 +19,8 @@ import { getQuestionType } from '../../utils.js';
 import { fetchSections, deleteSection } from '../actions/section.js'
 import { deleteQuestion } from '../service/question.js';
 
-var QuestionRow = React.createClass({
-	render: function(){
+class QuestionRow extends React.Component {
+    render() {
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
@@ -40,29 +40,31 @@ var QuestionRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-					//<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/delete`} className="btn btn-default"><Cross/></Link>
-});
-var Section = React.createClass({
-	getInitialState: function(){
-		return {
-			expanded: false,
-		};
-	},
-	toggleExpanded: function(){
+	}
+    //<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.q.section}/question/${this.props.q.id}/delete`} className="btn btn-default"><Cross/></Link>
+}
+
+class Section extends React.Component {
+    state = {
+        expanded: false,
+    };
+
+    toggleExpanded = () => {
 		this.setState({
 			expanded: !this.state.expanded,
 		});
-	},
-	onQuestionDelete: function(question){
+	};
+
+    onQuestionDelete = (question) => {
 		deleteQuestion(question.id).then(() => {
 			this.props.onChange && this.props.onChange();
 			Alert.success("QUESTION DELETED");
 		}, () => {
 			Alert.warning("QUESTION CANNOT BE DELETED");
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		let questionRows = [];
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
@@ -142,16 +144,15 @@ var Section = React.createClass({
 				</CSSTransitionGroup>
 			</div>
 		);
-	},
-});
+	}
+}
 
-var SectionList = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false
-		};
-	},
-	reloadData: function(auditCycleId){
+class SectionList extends React.Component {
+    state = {
+        loading: false
+    };
+
+    reloadData = (auditCycleId) => {
 		this.setState({
 			loading:true
 		});
@@ -160,23 +161,27 @@ var SectionList = React.createClass({
 				loading:false
 			});
 		});
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.reloadData(this.props.params.auditCycleId);
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		if( ! this.state.loading){
 			this.reloadData(nextProps.params.auditCycleId);
 		}
-	},
-	onSectionDelete: function(section){
+	}
+
+    onSectionDelete = (section) => {
 		this.props.dispatch(deleteSection(section.id)).then(() => {
 			Alert.success("Section deleted");
 		}, () => {
 			Alert.warning("SECTION CANNOT BE DELETED");
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
 		});
@@ -211,8 +216,8 @@ var SectionList = React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

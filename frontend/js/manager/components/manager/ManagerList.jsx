@@ -5,8 +5,8 @@ import { Check, Cross, Pencil, Plus, Queen } from '../../../components/Icons.jsx
 
 import { findManagers } from '../../service/manager.js'
 
-var ManagerRow = React.createClass({
-	render: function(){
+class ManagerRow extends React.Component {
+    render() {
 		var is_active = this.props.manager.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
@@ -17,27 +17,28 @@ var ManagerRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			managers: [],
-		};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {
+        managers: [],
+    };
+
+    componentDidMount() {
 		findManagers().then((managers) => {
 			this.setState({
 				managers
 			});
 		});
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		console.log("componentWillReceiveProps", nextProps);
 		this.componentDidMount();
-	},
-	render: function(){
+	}
+
+    render() {
 		let rows = [];
 		for(let manager of this.state.managers) {
 			rows.push(<ManagerRow manager={manager} key={manager.id}/>);
@@ -64,5 +65,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

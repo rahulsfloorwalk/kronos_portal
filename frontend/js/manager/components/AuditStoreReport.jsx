@@ -69,69 +69,74 @@ class AnswerComment extends Component {
 	}
 }
 
-var __QuestionRow = React.createClass({
-	getDefaultProps: function(){
-		return {
-			marking: false
-		};
-	},
-	getInitialState: function(){
-		return {
-			answer: {},
-			error: false,
-			marksObtainedSuccess: false,
-			answerError: false,
-			answerSuccess: false
-		};
-	},
-	componentDidMount: function(){
+class __QuestionRow extends React.Component {
+    static defaultProps = {
+        marking: false
+    };
+
+    state = {
+        answer: {},
+        error: false,
+        marksObtainedSuccess: false,
+        answerError: false,
+        answerSuccess: false
+    };
+
+    componentDidMount() {
 		if(this.props.answer){
 			this.setState({
 				answer: this.props.answer
 			});
 		}
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		if(nextProps.answer){
 			this.setState({
 				answer: nextProps.answer
 			});
 		}
-	},
-	answerChanged: function(e){
+	}
+
+    answerChanged = (e) => {
 		this.setState({
 			answer: Object.assign({}, this.state.answer, {
 				answer_text: e.target.value
 			})
 		});
-	},
-	saveAnswer: function(e){
+	};
+
+    saveAnswer = (e) => {
 		this.answerChanged(e);
 		setAnswerText(
 			this.props.auditStoreId,
 			this.props.q.id,
 			this.state.answer.answer_text,
 		).then((a)=> this.setState({answer: a, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
-	},
-	marksChanged: function(e){
+	};
+
+    marksChanged = (e) => {
 		this.setState({
 			answer: Object.assign({}, this.state.answer, {
 				marks_obtained: e.target.value
 			})
 		});
-	},
-	saveMarks: function(e){
+	};
+
+    saveMarks = (e) => {
 		this.marksChanged(e);
 		this.props.dispatch(setMarks({
 			auditStoreId: this.props.auditStoreId,
 			questionId: this.props.q.id,
 			marks: this.state.answer.marks_obtained,
 		})).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
-	},
-	notApplicableClicked: function(e){
+	};
+
+    notApplicableClicked = (e) => {
 		this.props.dispatch(setAnswerNotApplicable(this.props.auditStoreId, this.props.q.id, !this.state.answer.not_applicable));
-	},
-	render: function(){
+	};
+
+    render() {
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (
 			<span>
@@ -213,8 +218,8 @@ var __QuestionRow = React.createClass({
 				<td className="">{notApplicableElement}</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToQuestionRowProps = function(store, ownProps){
 	return {

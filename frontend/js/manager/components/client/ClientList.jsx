@@ -7,8 +7,8 @@ import { Plus, King } from '../../../components/Icons.jsx';
 
 import { fetchClients } from '../../service/client.js';
 
-var ClientRow = React.createClass({
-	render: function(){
+class ClientRow extends React.Component {
+    render() {
 		var linkTo = `/client/${this.props.client.id}/audit_cycle`;
 		let style = {
 			height: "250px",
@@ -26,17 +26,17 @@ var ClientRow = React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchClients().done((clients)=>this.setState({clients}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.clients){
 			return <Loading/>;
 		}
@@ -57,5 +57,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

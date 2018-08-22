@@ -8,8 +8,8 @@ import { findNotifications, findActors } from "../service/notification.js";
 
 import { Bell } from "../../components/Icons.jsx";
 
-var NotificationItem = React.createClass({
-	getVerb: function(verb){
+class NotificationItem extends React.Component {
+    getVerb = (verb) => {
 		switch(verb){
 			case "AUDIT_APPLICATION_CANCELED":
 				return <span className="text-default"> canceled </span>;
@@ -51,8 +51,9 @@ var NotificationItem = React.createClass({
 			default:
 				return verb;
 		}
-	},
-	getActionObjectText: function(actionObject, type){
+	};
+
+    getActionObjectText = (actionObject, type) => {
 		var txt = type.app_label + "." + type.model;
 		switch(txt){
 			case "auditor.auditapplication":
@@ -64,8 +65,9 @@ var NotificationItem = React.createClass({
 			default:
 				return txt;
 		}
-	},
-	getTargetText: function(target, type){
+	};
+
+    getTargetText = (target, type) => {
 		var txt = type.app_label + "." + type.model;
 		switch(txt){
 			case "audit.audit":
@@ -78,8 +80,9 @@ var NotificationItem = React.createClass({
 			default:
 				return txt;
 		}
-	},
-	getUrl: function(n){
+	};
+
+    getUrl = (n) => {
 		if(n.verb.startsWith("AUDIT_STORE_")){
 			return `/audit_store/${n.action_object.id}/report`;
 		}
@@ -89,8 +92,9 @@ var NotificationItem = React.createClass({
 		if(n.verb.startsWith("PAYMENT_")){
 			return `/audit_store/${n.target.id}/report`;
 		}
-	},
-	render: function(){
+	};
+
+    render() {
 		let userName;
 		if (this.props.n.actor.profileinfo){
 			userName = <b>{this.props.n.actor.profileinfo.first_name} {this.props.n.actor.profileinfo.last_name}</b>;
@@ -111,24 +115,24 @@ var NotificationItem = React.createClass({
 			</Link>
 		);
 	}
-});
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			notifications: [],
-			actors: [],
-			loading: false,
-			verb: "",
-			selectedActor: "",
-		};
-	},
-	reloadNotifications: function(verb, actor=null){
+export default class extends React.Component {
+    state = {
+        notifications: [],
+        actors: [],
+        loading: false,
+        verb: "",
+        selectedActor: "",
+    };
+
+    reloadNotifications = (verb, actor=null) => {
 		findNotifications({verb, actor}).then((notifications)=> this.setState({
 			notifications
 		}));
-	},
-	loadMoreNotifications: function(verb, actor=null){
+	};
+
+    loadMoreNotifications = (verb, actor=null) => {
 		if(this.state.notifications !== []){
 			let beforeTime = this.state.notifications[this.state.notifications.length-1].timestamp;
 			findNotifications({verb, actor, before: beforeTime}).then((notifications)=> {
@@ -141,26 +145,30 @@ export default React.createClass({
 				});
 			});
 		}
-	},
-	verbChanged: function(e){
+	};
+
+    verbChanged = (e) => {
 		this.setState({
 			verb: e.target.value
 		});
 		this.reloadNotifications(e.target.value, this.state.selectedActor);
-	},
-	actorChanged: function(e){
+	};
+
+    actorChanged = (e) => {
 		this.setState({
 			selectedActor: e.target.value
 		});
 		this.reloadNotifications(this.state.verb, e.target.value);
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.reloadNotifications();
 		findActors().then((actors) => {
 			this.setState({actors});
 		});
-	},
-	render: function(){
+	}
+
+    render() {
 		let rows = [];
 		for(var n of this.state.notifications) {
 			rows.push(<NotificationItem n={n} key={n.id}/>);
@@ -219,5 +227,5 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}

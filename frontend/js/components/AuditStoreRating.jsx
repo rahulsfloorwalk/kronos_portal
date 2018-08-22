@@ -3,8 +3,8 @@ import React from 'react';
 import Label from './Label.jsx';
 import { getAuditStoreStatus } from '../utils.js';
 
-export default React.createClass({
-	render : function(){
+export default class extends React.Component {
+    render() {
 		switch(this.props.rating){
 			case 0:
 				return <strong className="text-danger">Bad</strong>;
@@ -17,5 +17,5 @@ export default React.createClass({
 			default:
 				return <strong>unknown rating</strong>;
 		}
-	},
-});
+	}
+}

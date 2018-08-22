@@ -4,14 +4,13 @@ import { Alert } from './Icons.jsx';
 
 import { lubdub } from '../manager/service/heartbeat.js';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			alive: true,
-			intervalId: null
-		};
-	},
-	check: function(){
+export default class extends React.Component {
+    state = {
+        alive: true,
+        intervalId: null
+    };
+
+    check = () => {
 		lubdub().then(()=>{
 			this.setState({
 				alive: true
@@ -21,16 +20,19 @@ export default React.createClass({
 				alive: false
 			});
 		});
-	},
-	componentDidMount: function(){
+	};
+
+    componentDidMount() {
 		this.setState({
 			intervalId: setInterval( this.check, 5000)
 		});
-	},
-	componentWillUnmount: function(){
+	}
+
+    componentWillUnmount() {
 		clearInterval(this.state.intervalId);
-	},
-	render : function(){
+	}
+
+    render() {
 		if( ! this.state.alive){
 			return (
 				<span className="label label-warning">
@@ -40,6 +42,6 @@ export default React.createClass({
 		} else {
 			return null;
 		}
-	},
-});
+	}
+}
 

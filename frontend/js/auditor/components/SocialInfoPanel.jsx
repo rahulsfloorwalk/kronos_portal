@@ -18,21 +18,21 @@ import Loading from '../../components/Loading.jsx'
 
 import { fetchConfig } from '../service/config.js';
 
-var SocialInfoPanelBase = React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-			expanded: false,
-		};
-	},
-	toggleExpand: function(){
-		this.setState({expanded: !this.state.expanded});
-	},
-	setLoading: function(loading){
-		this.setState((prevState) => Object.assign({}, prevState, { loading }));
-	},
+class SocialInfoPanelBase extends React.Component {
+    state = {
+        loading: false,
+        expanded: false,
+    };
 
-	facebookResponse: function(response){
+    toggleExpand = () => {
+		this.setState({expanded: !this.state.expanded});
+	};
+
+    setLoading = (loading) => {
+		this.setState((prevState) => Object.assign({}, prevState, { loading }));
+	};
+
+    facebookResponse = (response) => {
 		if(response.accessToken){
 			let fbapi = new FBGraph(response.accessToken);
 			this.setLoading(true);
@@ -42,9 +42,9 @@ var SocialInfoPanelBase = React.createClass({
 				.then(() => this.props.dispatch(fetchProfileInfo()))
 				.then(() =>this.setLoading(false));
 		}
-	},
+	};
 
-	componentDidMount: function() {
+    componentDidMount() {
 		this.setLoading(true);
 		Promise.all([
 			this.props.dispatch(fetchFacebookInfo()),
@@ -54,8 +54,9 @@ var SocialInfoPanelBase = React.createClass({
 				FB_CLIENT_ID: config.FB_CLIENT_ID,
 			})),
 		]).then(() => this.setLoading(false))
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.props.socialInfo || this.state.loading || !this.state.FB_CLIENT_ID){
 			return <Loading/>;
 		}
@@ -93,8 +94,8 @@ var SocialInfoPanelBase = React.createClass({
 				: null }
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

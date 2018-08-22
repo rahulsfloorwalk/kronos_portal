@@ -1,16 +1,15 @@
 
 import React from 'react';
 
-export default React.createClass({
-	getDefaultProps: function(){
-		return {
-			percentage: 0,
-			type: "",
-			active: false,
-			striped: false
-		};
-	},
-	render: function(){
+export default class extends React.Component {
+    static defaultProps = {
+        percentage: 0,
+        type: "",
+        active: false,
+        striped: false
+    };
+
+    render() {
 		let typeClass = this.props.type ? `progress-bar-${this.props.type}` : "";
 		let activeClass = this.props.active ? "active" : "";
 		let stripedClass = this.props.striped ? "progress-bar-striped" : "";
@@ -25,5 +24,5 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}

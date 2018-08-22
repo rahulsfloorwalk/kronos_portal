@@ -6,8 +6,8 @@ import { Check, Cross, Pencil, Plus, Knight, HandRight } from '../../components/
 
 import { findByAuditCycle, revoke } from '../service/moderator.js'
 
-var ModeratorRow = React.createClass({
-	render: function(){
+class ModeratorRow extends React.Component {
+    render() {
 		var is_active = this.props.moderator.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
@@ -18,31 +18,33 @@ var ModeratorRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			moderators: [],
-		};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {
+        moderators: [],
+    };
+
+    componentDidMount() {
 		findByAuditCycle(this.props.params.auditCycleId).then((moderators) => {
 			this.setState({
 				moderators
 			});
 		});
-	},
-	componentWillReceiveProps: function(nextProps){
+	}
+
+    componentWillReceiveProps(nextProps) {
 		this.componentDidMount();
-	},
-	revokeClicked: function(moderator){
+	}
+
+    revokeClicked = (moderator) => {
 		revoke(this.props.params.auditCycleId, moderator.id).then(() => {
 			this.componentDidMount();
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		let rows = [];
 		for(let moderator of this.state.moderators) {
 			rows.push(<ModeratorRow moderator={moderator} key={moderator.id} onRevoke={this.revokeClicked}/>);
@@ -72,5 +74,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

@@ -1,7 +1,7 @@
 import React from 'react';
 
-var Panel = React.createClass({
-	render : function(){
+class Panel extends React.Component {
+    render() {
 		var type = this.props.type || "default";
 		var panelClass = "panel panel-" + type;
 		var noBody = this.props.noBody || false;
@@ -27,7 +27,7 @@ var Panel = React.createClass({
 				</div>
 			);
 		}
-	},
-});
+	}
+}
 
 export default Panel;

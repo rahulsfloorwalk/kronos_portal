@@ -10,8 +10,8 @@ import { findNotifications } from '../service/notification.js';
 import { Bell, Refresh } from '../../components/Icons.jsx';
 import Panel from '../../components/Panel.jsx';
 
-var NotificationItem = React.createClass({
-	getVerb: function(verb){
+class NotificationItem extends React.Component {
+    getVerb = (verb) => {
 		switch(verb){
 			case "AUDIT_APPLICATION_CANCELED":
 				return <span className="text-default"> canceled </span>;
@@ -49,8 +49,9 @@ var NotificationItem = React.createClass({
 			default:
 				return verb;
 		}
-	},
-	getActionObjectText: function(actionObject, type){
+	};
+
+    getActionObjectText = (actionObject, type) => {
 		var txt = type.app_label + "." + type.model;
 		switch(txt){
 			case "auditor.auditapplication":
@@ -62,8 +63,9 @@ var NotificationItem = React.createClass({
 			default:
 				return txt;
 		}
-	},
-	getTargetText: function(target, type){
+	};
+
+    getTargetText = (target, type) => {
 		var txt = type.app_label + "." + type.model;
 		switch(txt){
 			case "audit.audit":
@@ -76,8 +78,9 @@ var NotificationItem = React.createClass({
 			default:
 				return txt;
 		}
-	},
-	getUrl: function(n){
+	};
+
+    getUrl = (n) => {
 		if(n.verb.startsWith("AUDIT_STORE_")){
 			return `/audit_store/${n.action_object.id}/section`
 		}
@@ -87,16 +90,18 @@ var NotificationItem = React.createClass({
 		if(n.verb.startsWith("PAYMENT_")){
 			return `/payment`;
 		}
-	},
-	getClient: function(n){
+	};
+
+    getClient = (n) => {
 		if(n.verb.startsWith("AUDIT_STORE_")){
 			return n.action_object.audit.audit_cycle.client.name;
 		}
 		if(n.verb.startsWith("AUDIT_APPLICATION_")){
 			return n.target.audit_cycle.client.name;
 		}
-	},
-	render: function(){
+	};
+
+    render() {
 		let userName = "Your";
 		let linkUrl = this.getUrl(this.props.n);
 		let verbText = this.getVerb(this.props.n.verb);
@@ -111,21 +116,21 @@ var NotificationItem = React.createClass({
 			</Link>
 		);
 	}
-});
+}
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			notifications: [],
-			loading: false,
-		};
-	},
-	reloadNotifications: function(){
+export default class extends React.Component {
+    state = {
+        notifications: [],
+        loading: false,
+    };
+
+    reloadNotifications = () => {
 		findNotifications({}).then((notifications)=> this.setState({
 			notifications
 		}));
-	},
-	loadMoreNotifications: function(){
+	};
+
+    loadMoreNotifications = () => {
 		if(this.state.notifications !== []){
 			let beforeTime = this.state.notifications[this.state.notifications.length-1].timestamp;
 			findNotifications({before: beforeTime}).then((notifications)=> {
@@ -138,11 +143,13 @@ export default React.createClass({
 				});
 			});
 		}
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.reloadNotifications();
-	},
-	render: function(){
+	}
+
+    render() {
 		var rows = [];
 		for(var n of this.state.notifications) {
 			rows.push(<NotificationItem n={n} key={n.id}/>);
@@ -168,5 +175,5 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}

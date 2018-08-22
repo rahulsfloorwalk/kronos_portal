@@ -8,8 +8,8 @@ import NavLink from '../../components/NavLink.jsx';
 import { File, User, Inbox, LogOut } from '../../components/Icons.jsx';
 
 
-var Header = React.createClass({
-	render: function(){
+class Header extends React.Component {
+    render() {
 		let brandStyle = {
 			height: "25px"
 		};
@@ -39,7 +39,7 @@ var Header = React.createClass({
 				</div>
 			</nav>
 		);
-	},
-});
+	}
+}
 
 export default Header;

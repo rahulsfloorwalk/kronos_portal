@@ -5,8 +5,8 @@ import { Link } from 'react-router';
 import { Cross, Plus, Home, Pencil, HandRight } from '../../components/Icons.jsx';
 import { fetchStores, deleteStore } from '../actions/store.js'
 
-var StoreRow = React.createClass({
-	render: function(){
+class StoreRow extends React.Component {
+    render() {
 		let linkTo = `/client/${this.props.store.client_id}/store/${this.props.store.id}/edit`;
 		let assignLink = `/client/${this.props.store.client_id}/store/${this.props.store.id}/assign`;
 		return (
@@ -27,18 +27,20 @@ var StoreRow = React.createClass({
 				</td>
 			</tr>
 		);
-	},
-});
+	}
+}
 
-var StoreList = React.createClass({
-	componentDidMount: function() {
+class StoreList extends React.Component {
+    componentDidMount() {
 		this.props.dispatch(fetchStores(this.props.params.clientId));
-	},
-	onDelete: function(store){
+	}
+
+    onDelete = (store) => {
 		console.log("StoreList#onDelete", store);
 		this.props.dispatch(deleteStore(store.id));
-	},
-	render: function(){
+	};
+
+    render() {
 		var rows = [];
 		let serial = 1;
 		for(var id in this.props.stores) {
@@ -78,8 +80,8 @@ var StoreList = React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

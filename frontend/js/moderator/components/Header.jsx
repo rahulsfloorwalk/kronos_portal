@@ -8,13 +8,14 @@ import NavLink from '../../components/NavLink.jsx';
 
 import { logout } from '../service/auth.js';
 
-export default React.createClass({
-	performLogout: function(){
+export default class extends React.Component {
+    performLogout = () => {
 		logout().then(() => {
 			hashHistory.push("/login?logout=true");
 		});
-	},
-	render: function(){
+	};
+
+    render() {
 		let brandStyle = {
 			height: "25px"
 		};
@@ -38,6 +39,6 @@ export default React.createClass({
 				</div>
 			</nav>
 		);
-	},
-});
+	}
+}
 

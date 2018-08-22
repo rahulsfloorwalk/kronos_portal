@@ -16,20 +16,21 @@ import { getGender, getEducationStatus, getMaritalStatus } from '../../utils.js'
 import LabelValue from '../../components/LabelValue.jsx';
 import Loading from '../../components/Loading.jsx'
 
-var ProfileInfoPanelBase = React.createClass({
-	getInitialState: function(){
-		return {
-			expanded: false,
-		};
-	},
-	toggleExpand: function(){
+class ProfileInfoPanelBase extends React.Component {
+    state = {
+        expanded: false,
+    };
+
+    toggleExpand = () => {
 		this.setState({expanded: !this.state.expanded});
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.props.dispatch(fetchProfileInfo());
 		this.props.dispatch(fetchStates());
-	},
-	render: function(){
+	}
+
+    render() {
 		if(!this.props.profileInfo.id){
 			return <Loading/>;
 		}
@@ -83,8 +84,8 @@ var ProfileInfoPanelBase = React.createClass({
 				{completeWarning}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

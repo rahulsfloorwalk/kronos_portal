@@ -17,20 +17,20 @@ import AuditTypeLabel from '../../components/AuditTypeLabel.jsx';
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from '../../utils.js';
 
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			auditCycle: null
-		};
-	},
-	componentDidMount: function(){
+export default class extends React.Component {
+    state = {
+        auditCycle: null
+    };
+
+    componentDidMount() {
 		findAuditCycleById(this.props.params.auditCycleId).then((auditCycle) => {
 			this.setState({
 				auditCycle
 			});
 		});
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.auditCycle){
 			return <Loading/>;
 		}
@@ -65,6 +65,6 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 

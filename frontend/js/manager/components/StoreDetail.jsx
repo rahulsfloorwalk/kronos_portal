@@ -8,11 +8,12 @@ import { Pencil, Home, King } from '../../components/Icons.jsx';
 import Panel from '../../components/Panel.jsx';
 import Loading from '../../components/Loading.jsx';
 
-var StoreDetail = React.createClass({
-	componentDidMount: function(){
+class StoreDetail extends React.Component {
+    componentDidMount() {
 		this.props.dispatch(fetchStore(this.props.params.storeId));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.props.store){
 			return <Loading/>;
 		}
@@ -47,8 +48,8 @@ var StoreDetail = React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
 	return {

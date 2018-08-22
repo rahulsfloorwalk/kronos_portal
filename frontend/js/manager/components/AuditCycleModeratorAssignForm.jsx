@@ -12,37 +12,39 @@ import Modal from '../../components/Modal.jsx';
 import Loading from '../../components/Loading.jsx';
 import FormErrorList from '../../components/FormErrorList.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			loading: false,
-			moderators: [],
-			selectedModerator: {
-			},
-			errors: {
-			}
-		};
-	},
-	setLoading: function(loadingState){
+export default class extends React.Component {
+    state = {
+        loading: false,
+        moderators: [],
+        selectedModerator: {
+        },
+        errors: {
+        }
+    };
+
+    setLoading = (loadingState) => {
 		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				loading: loadingState
 			});
 		});
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		findModerators().then( (moderators) => {
 			this.setState({
 				moderators
 			});
 		});
-	},
-	fieldChanged: function(e){
+	}
+
+    fieldChanged = (e) => {
 		this.setState({
 			moderator: Object.assign({}, this.state.moderator, getInputEventChangeValue(e))
 		});
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		assign( this.props.params.auditCycleId,
 			this.state.selectedModerator.id
@@ -55,13 +57,15 @@ export default React.createClass({
 				});
 			}
 		});
-	},
-	selectModerator: function(e){
+	};
+
+    selectModerator = (e) => {
 		this.setState({
 			selectedModerator: this.state.moderators.filter( m => m.id === parseInt(e.target.value))[0]
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		if(this.state.loading){
 			return (<Loading/>);
 		}
@@ -81,5 +85,5 @@ export default React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}

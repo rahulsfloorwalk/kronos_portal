@@ -6,8 +6,8 @@ import Footer from '../../components/Footer.jsx';
 import NotificationBox from './NotificationBox.jsx';
 import AuditCycleDashboard from './AuditCycleDashboard.jsx';
 
-var Dashboard = React.createClass({
-	render: function(){
+class Dashboard extends React.Component {
+    render() {
 		return (
 			<div>
 				<div className="row">
@@ -18,7 +18,7 @@ var Dashboard = React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 
 export default Dashboard;

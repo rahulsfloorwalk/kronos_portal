@@ -1,14 +1,13 @@
 import React from 'react';
 
-export default React.createClass({
-	getDefaultProps: function(){
-		return {
-			align: 'center',
-			heading: '',
-			para: ''
-		};
-	},
-	render : function(){
+export default class extends React.Component {
+    static defaultProps = {
+        align: 'center',
+        heading: '',
+        para: ''
+    };
+
+    render() {
 		return (
 			<div className="form-group">
 			<div className={`jumbotron text-${this.props.align}`}>
@@ -17,5 +16,5 @@ export default React.createClass({
 			</div>
 			</div>
 		);
-	},
-});
+	}
+}

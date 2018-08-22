@@ -13,15 +13,14 @@ import FormGroup from '../../../components/FormGroup.jsx';
 import SaveButton from '../../../components/SaveButton.jsx';
 import Modal from '../../../components/Modal.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {
-			client: null,
-			errors: {},
-			form: {},
-		};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {
+        client: null,
+        errors: {},
+        form: {},
+    };
+
+    componentDidMount() {
 		if(this.props.params.clientId){
 			fetchClient(this.props.params.clientId).done((client)=>{
 				this.setState({
@@ -37,13 +36,15 @@ export default React.createClass({
 				});
 			});
 		}
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		this.setState({
 			form: Object.assign({}, this.state.form, getInputEventChangeValue(e)),
 		});
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		let submitPromise;
 		if(this.props.params.clientId){
@@ -74,8 +75,9 @@ export default React.createClass({
 				errors: err.responseJSON || {},
 			});
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		var modalTitle = this.props.params.clientId ? "Edit Client" : "Add Client";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
@@ -90,5 +92,5 @@ export default React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}

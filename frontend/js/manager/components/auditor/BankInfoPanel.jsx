@@ -5,14 +5,14 @@ import { Link } from 'react-router';
 
 import Loading from '../../../components/Loading.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchBankInfoForAuditor(this.props.auditorId).done((bankInfo)=>this.setState({bankInfo}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.bankInfo){
 			return <Loading/>;
 		}
@@ -41,5 +41,5 @@ export default React.createClass({
 				}
 			</div>
 		);
-	},
-});
+	}
+}

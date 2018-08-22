@@ -18,11 +18,10 @@ import StoreSelector from '../../components/StoreSelector.jsx';
 import FormErrorList from '../../components/FormErrorList.jsx';
 import MarkdownViewer from '../../components/MarkdownViewer.jsx';
 
-var AuditForm = React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+class AuditForm extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		console.log("componentDidMount(...) called with props.params as", this.props.params);
 		this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId)).then( auditCycle => {
 			this.props.dispatch(fetchStores(auditCycle.client.id));
@@ -35,8 +34,9 @@ var AuditForm = React.createClass({
 		this.setState({
 			audit_cycle: this.props.params.auditCycleId
 		});
-	},
-	componentWillReceiveProps: function(nextProps) {
+	}
+
+    componentWillReceiveProps(nextProps) {
 		console.log("componentWillReceiveProps(...) called with",nextProps);
 		if( nextProps.audit){
 			this.setState(nextProps.audit);
@@ -53,11 +53,13 @@ var AuditForm = React.createClass({
 				reimbursement: nextProps.auditCycle.reimbursement,
 			});
 		}
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		var submitPromise;
 		console.log(this.state);
@@ -70,8 +72,9 @@ var AuditForm = React.createClass({
 			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
 			Alert.success("AUDIT SAVED");
 		});
-	},
-	render : function(){
+	};
+
+    render() {
 		var modalTitle = this.props.params.auditId ? "Edit Audit" : "Add Audit";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
@@ -96,8 +99,8 @@ var AuditForm = React.createClass({
 				</form>
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store, ownProps){
   console.log(ownProps);

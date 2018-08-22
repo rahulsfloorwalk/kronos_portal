@@ -5,8 +5,8 @@ import FormSelect from './FormSelect.jsx';
 
 /* Store Selector Starts */
 
-var StoreSelector = React.createClass({
-	render : function(){
+class StoreSelector extends React.Component {
+    render() {
 		let storeOptions = [];
 		for( let s in this.props.stores){
 			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].city.name} -- {this.props.stores[s].name}</option>);
@@ -18,7 +18,7 @@ var StoreSelector = React.createClass({
 			</FormSelect>
 		);
 	}
-});
+}
 
 var mapStoreToPropsForStoreSelector = function(store){
 	return {

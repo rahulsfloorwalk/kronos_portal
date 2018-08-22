@@ -22,8 +22,8 @@ import Loading from '../../components/Loading.jsx';
 
 /* State Selector begins */
 
-var __StateSelector = React.createClass({
-	render : function(){
+class __StateSelector extends React.Component {
+    render() {
 		let stateOptions = [];
 		for( let s in this.props.states){
 			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
@@ -35,7 +35,7 @@ var __StateSelector = React.createClass({
 			</FormSelect>
 		);
 	}
-});
+}
 
 var mapStoreToPropsForStateSelector = function(store){
 	return {
@@ -49,13 +49,12 @@ var StateSelector = ReactRedux.connect(mapStoreToPropsForStateSelector)(__StateS
 
 /* City Selector Starts */
 
-var __CitySelector = React.createClass({
-	getDefaultProps: function(){
-		return {
-			state: null,
-		};
-	},
-	render : function(){
+class __CitySelector extends React.Component {
+    static defaultProps = {
+        state: null,
+    };
+
+    render() {
 		let cityOptions = [];
 		for( let c of this.props.cities){
 			if( c.state === this.props.state){
@@ -69,7 +68,7 @@ var __CitySelector = React.createClass({
 			</FormSelect>
 		);
 	}
-});
+}
 
 var mapStoreToPropsForCitySelector = function(store){
 	return {
@@ -81,22 +80,23 @@ var CitySelector = ReactRedux.connect(mapStoreToPropsForCitySelector)(__CitySele
 
 /* City Selector Ends */
 
-var ProfileInfoForm = React.createClass({
-	getInitialState: function(){
-		return {
-			profileInfo: {},
-			loading: false,
-			submitting: false,
-			errors: {},
-		};
-	},
-	setLoading: function(loading){
+class ProfileInfoForm extends React.Component {
+    state = {
+        profileInfo: {},
+        loading: false,
+        submitting: false,
+        errors: {},
+    };
+
+    setLoading = (loading) => {
 		this.setState((prevState) => Object.assign({}, prevState, { loading }));
-	},
-	setSubmitting: function(submitting){
+	};
+
+    setSubmitting = (submitting) => {
 		this.setState((prevState) => Object.assign({}, prevState, { submitting }));
-	},
-	componentDidMount: function() {
+	};
+
+    componentDidMount() {
 		this.setLoading(true);
 		Promise.all([
 			this.props.dispatch(fetchProfileInfo()),
@@ -111,11 +111,13 @@ var ProfileInfoForm = React.createClass({
 				this.props.dispatch(fetchCities(profileInfo.city.state));
 			}
 		});
-	},
-	inputChanged: function(e){
+	}
+
+    inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
-	},
-	myStateChanged: function(e){
+	};
+
+    myStateChanged = (e) => {
 		this.inputChanged(e);
 		if(e.target.value){
 			this.props.dispatch(fetchCities(e.target.value));
@@ -125,8 +127,9 @@ var ProfileInfoForm = React.createClass({
 				city_id: "",
 			});
 		}
-	},
-	dateChanged: function(date){
+	};
+
+    dateChanged = (date) => {
 		if( date && typeof date !== "string"){
 			this.setState({
 				date_of_birth: date.format("YYYY-MM-DD")
@@ -136,13 +139,15 @@ var ProfileInfoForm = React.createClass({
 				date_of_birth: null,
 			});
 		}
-	},
-	onSubmit: function(e){
+	};
+
+    onSubmit = (e) => {
 		e.preventDefault();
 		this.setSubmitting(true);
 		this.props.dispatch(saveProfileInfo(this.state)).always(() => this.setSubmitting(false));
-	},
-	render : function(){
+	};
+
+    render() {
 		return (
 			<Modal modalTitle="Edit Personal Information" onClose={hashHistory.goBack}>
 				<div className="form-group"><big><i>fields marked <b>✳</b> must be filled to view available audits</i></big></div>
@@ -215,8 +220,8 @@ var ProfileInfoForm = React.createClass({
 				}
 			</Modal>
 		);
-	},
-});
+	}
+}
 
 var mapStoreToProps = function(store){
 	return {

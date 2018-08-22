@@ -8,18 +8,18 @@ import Panel from "../../components/Panel.jsx";
 import Loading from "../../components/Loading.jsx";
 import NavLink from "../../components/NavLink.jsx";
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function(){
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchStore(this.props.params.storeId).then((store) => {
 			this.setState({
 				store
 			});
 		});
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.store){
 			return <Loading/>;
 		}
@@ -63,5 +63,5 @@ export default React.createClass({
 				{this.props.children}
 			</div>
 		);
-	},
-});
+	}
+}

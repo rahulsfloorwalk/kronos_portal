@@ -9,14 +9,14 @@ import { fetchStates } from '../../service/location.js';
 import { MapMarker } from '../../../components/Icons.jsx';
 import Loading from '../../../components/Loading.jsx';
 
-export default React.createClass({
-	getInitialState: function(){
-		return {};
-	},
-	componentDidMount: function() {
+export default class extends React.Component {
+    state = {};
+
+    componentDidMount() {
 		fetchStates().done((states) => this.setState({states}));
-	},
-	render: function(){
+	}
+
+    render() {
 		if(! this.state.states){
 			return <Loading/>;
 		}
@@ -47,6 +47,6 @@ export default React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 

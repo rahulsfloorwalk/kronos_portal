@@ -1,12 +1,11 @@
 import React from 'react';
 
-var Modal = React.createClass({
-	getDefaultProps: function(){
-		return {
-			size: ""
-		};
-	},
-	render : function(){
+class Modal extends React.Component {
+    static defaultProps = {
+        size: ""
+    };
+
+    render() {
 		var modalStyle = {
 			display: 'block',
 			overflow: 'scroll'
@@ -34,7 +33,7 @@ var Modal = React.createClass({
 				</div>
 			</div>
 		);
-	},
-});
+	}
+}
 
 export default Modal;
