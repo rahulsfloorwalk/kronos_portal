@@ -25,3 +25,6 @@ def find_presentable_for_client(client_id):
     return AuditStore.objects.presentable().filter(
         audit__audit_cycle__client_id=client_id,
     ).order_by('-audit_date')
+
+def find_visible_to_client_user(user):
+    return AuditStore.objects.presentable().visible_to(user)

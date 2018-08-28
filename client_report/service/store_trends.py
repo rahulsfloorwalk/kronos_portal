@@ -5,13 +5,20 @@ from kronos.utils import get_color_code_by_percentage
 from audit.service import audit_cycle_client_service
 
 from audit_store.models import AuditStore
+from audit_store import service_client as client_service
+from client.service import client_user as client_user_service
 
-def get_performing_stores(audit_cycle):
+
+def get_performing_stores(audit_cycle, user_id):
+    user = client_user_service.find_clientuser_by_user_id(user_id)
     stores = []
     for audit in audit_cycle.audits.all():
         obtained = 0
         count = 0
-        for audit_store in audit.audit_stores.all():
+        audit_stores = audit.audit_stores.all()
+        visible_audit_stores = client_service.find_visible_to_client_user(user)
+        filtered_audit_stores = [audit_store for audit_store in audit_stores if audit_store in visible_audit_stores]
+        for audit_store in filtered_audit_stores:
             obtained += audit_store.percentage()
             count += 1
         if count > 0:
@@ -39,6 +46,7 @@ def get_performing_stores(audit_cycle):
 
 
 def get_performing_stores_by_type_for_clientuser(questionnaire_type_id, user_id):
+
     qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id).order_by('end_date')
     qs = qs.prefetch_related(
         'audits',
@@ -72,7 +80,7 @@ def get_performing_stores_by_type_for_clientuser(questionnaire_type_id, user_id)
     for audit_cycle in audit_cycles:
         audit_cycle_names.append(audit_cycle.name)
 
-        data.append((audit_cycle, get_performing_stores(audit_cycle)))
+        data.append((audit_cycle, get_performing_stores(audit_cycle, user_id)))
 
     # print("data", data)
 
@@ -112,6 +120,9 @@ def get_performing_stores_by_type_for_clientuser(questionnaire_type_id, user_id)
         'columns': audit_cycle_names,
         'data': data_1
     }
+
+def get_audit_stores_for_user(user):
+    return client_service.find_visible_to_client_user(user)
 
 def get_excel_report(data):
     return data
