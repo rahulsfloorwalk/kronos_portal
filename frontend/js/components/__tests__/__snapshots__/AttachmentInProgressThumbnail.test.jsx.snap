@@ -1,0 +1,225 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AttachmentInProgressThumbnail/> when upload has an error 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "LightGray",
+      "border": "solid #EBCCD1 1px",
+      "borderRadius": "3px",
+      "cursor": "pointer",
+      "display": "inline-block",
+      "height": "100px",
+      "margin": "5px",
+      "position": "relative",
+      "width": "150px",
+    }
+  }
+  title="sample_file.jpg"
+>
+  <div
+    style={
+      Object {
+        "fontSize": "1.2em",
+        "height": "100%",
+        "left": "0px",
+        "position": "absolute",
+        "textAlign": "center",
+        "top": "0px",
+        "width": "100%",
+      }
+    }
+  >
+    <br />
+    there was an error
+  </div>
+  <div
+    style={
+      Object {
+        "backgroundColor": "rgb(242,222,222)",
+        "borderBottomLeftRadius": "3px",
+        "borderBottomRightRadius": "3px",
+        "bottom": "0px",
+        "color": "#A94442",
+        "overflow": "hidden",
+        "padding": "2px",
+        "paddingLeft": "5px",
+        "position": "absolute",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "width": "100%",
+      }
+    }
+  >
+    sample_file.jpg
+  </div>
+</div>
+`;
+
+exports[`<AttachmentInProgressThumbnail/> when upload is in progress 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "LightGray",
+      "border": "solid LightGray 1px",
+      "borderRadius": "3px",
+      "cursor": "pointer",
+      "display": "inline-block",
+      "height": "100px",
+      "margin": "5px",
+      "position": "relative",
+      "width": "150px",
+    }
+  }
+  title="sample_file.jpg"
+>
+  <div
+    style={
+      Object {
+        "fontSize": "1.2em",
+        "height": "100%",
+        "left": "0px",
+        "position": "absolute",
+        "textAlign": "center",
+        "top": "0px",
+        "width": "100%",
+      }
+    }
+  >
+    <br />
+    54%
+  </div>
+  <div
+    style={
+      Object {
+        "backgroundColor": "rgb(255,255,255)",
+        "borderBottomLeftRadius": "3px",
+        "borderBottomRightRadius": "3px",
+        "bottom": "0px",
+        "color": "Black",
+        "overflow": "hidden",
+        "padding": "2px",
+        "paddingLeft": "5px",
+        "position": "absolute",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "width": "100%",
+      }
+    }
+  >
+    sample_file.jpg
+  </div>
+</div>
+`;
+
+exports[`<AttachmentInProgressThumbnail/> when upload is in progress and there is no fileName 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "LightGray",
+      "border": "solid LightGray 1px",
+      "borderRadius": "3px",
+      "cursor": "pointer",
+      "display": "inline-block",
+      "height": "100px",
+      "margin": "5px",
+      "position": "relative",
+      "width": "150px",
+    }
+  }
+  title="uploading..."
+>
+  <div
+    style={
+      Object {
+        "fontSize": "1.2em",
+        "height": "100%",
+        "left": "0px",
+        "position": "absolute",
+        "textAlign": "center",
+        "top": "0px",
+        "width": "100%",
+      }
+    }
+  >
+    <br />
+    54%
+  </div>
+  <div
+    style={
+      Object {
+        "backgroundColor": "rgb(255,255,255)",
+        "borderBottomLeftRadius": "3px",
+        "borderBottomRightRadius": "3px",
+        "bottom": "0px",
+        "color": "Black",
+        "overflow": "hidden",
+        "padding": "2px",
+        "paddingLeft": "5px",
+        "position": "absolute",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "width": "100%",
+      }
+    }
+  >
+    uploading...
+  </div>
+</div>
+`;
+
+exports[`<AttachmentInProgressThumbnail/> when upload is initializing 1`] = `
+<div
+  style={
+    Object {
+      "backgroundColor": "LightGray",
+      "border": "solid LightGray 1px",
+      "borderRadius": "3px",
+      "cursor": "pointer",
+      "display": "inline-block",
+      "height": "100px",
+      "margin": "5px",
+      "position": "relative",
+      "width": "150px",
+    }
+  }
+  title="sample_file.jpg"
+>
+  <div
+    style={
+      Object {
+        "fontSize": "1.2em",
+        "height": "100%",
+        "left": "0px",
+        "position": "absolute",
+        "textAlign": "center",
+        "top": "0px",
+        "width": "100%",
+      }
+    }
+  >
+    <br />
+    initializing
+  </div>
+  <div
+    style={
+      Object {
+        "backgroundColor": "rgb(255,255,255)",
+        "borderBottomLeftRadius": "3px",
+        "borderBottomRightRadius": "3px",
+        "bottom": "0px",
+        "color": "Black",
+        "overflow": "hidden",
+        "padding": "2px",
+        "paddingLeft": "5px",
+        "position": "absolute",
+        "textOverflow": "ellipsis",
+        "whiteSpace": "nowrap",
+        "width": "100%",
+      }
+    }
+  >
+    sample_file.jpg
+  </div>
+</div>
+`;

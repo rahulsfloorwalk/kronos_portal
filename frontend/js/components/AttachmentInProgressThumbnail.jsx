@@ -1,24 +1,22 @@
 import React, { Component } from "react";
-import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
-
+import PropTypes from "prop-types";
 import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Plus, Cross, Pencil, Paperclip } from "./Icons.jsx";
-
-import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
-
 export default class AttachmentInProgressThumbnail extends Component{
-	constructor(props){
-		super(props);
-	}
-	render(){
-		let error = !!this.props.error;
-		let fileName = this.props.fileName || "uploading...";
-		let myProgress = this.props.progress ? this.props.progress + "%" : this.props.progress;
-		let displayMessage = this.props.uploadMessage || myProgress || "in progress";
+	static propTypes = {
+		error: PropTypes.any,
+		progress: PropTypes.number,
+		fileName: PropTypes.string,
+		uploadMessage: PropTypes.string,
+	};
 
-		let divStyle= Object.assign({}, pointerStyle, {
+	render(){
+		const error = !!this.props.error;
+		const fileName = this.props.fileName || "uploading...";
+		const myProgress = this.props.progress ? this.props.progress + "%" : this.props.progress;
+		const displayMessage = this.props.uploadMessage || myProgress || "in progress";
+
+		const divStyle= Object.assign({}, pointerStyle, {
 			display: "inline-block",
 			position: "relative",
 			width: "150px",
@@ -29,7 +27,7 @@ export default class AttachmentInProgressThumbnail extends Component{
 			margin: "5px",
 		});
 
-		let fileNameStyle=Object.assign({}, truncateStyle, {
+		const fileNameStyle=Object.assign({}, truncateStyle, {
 			color: error ? "#A94442" : "Black",
 			backgroundColor: error ? "rgb(242,222,222)" : "rgb(255,255,255)",
 			width: "100%",
@@ -41,7 +39,7 @@ export default class AttachmentInProgressThumbnail extends Component{
 			borderBottomRightRadius: "3px",
 		});
 
-		let displayDivStyle = {
+		const displayDivStyle = {
 			position:"absolute",
 			top:"0px",
 			left:"0px",
