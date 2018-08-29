@@ -1,7 +1,7 @@
 
 import React from "react";
 
-export default class extends React.Component {
+export default class ProgressBar extends React.Component {
     static defaultProps = {
     	percentage: 0,
     	type: "",

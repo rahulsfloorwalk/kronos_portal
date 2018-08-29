@@ -3,7 +3,7 @@ import React from "react";
 import Label from "./Label.jsx";
 import { getPaymentStatus } from "../utils.js";
 
-export default class extends React.Component {
+export default class PaymentStatusLabel extends React.Component {
     getLabelType = (status) => {
     	switch(this.props.status){
     	case "PENDING":

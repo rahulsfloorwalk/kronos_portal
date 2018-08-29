@@ -3,7 +3,7 @@ import React from "react";
 import Label from "./Label.jsx";
 import { getReferralType } from "../utils.js";
 
-export default class extends React.Component {
+export default class ReferralTypeLabel extends React.Component {
     getLabelType = (type) => {
     	switch(this.props.type){
     	case "SIGNUP":

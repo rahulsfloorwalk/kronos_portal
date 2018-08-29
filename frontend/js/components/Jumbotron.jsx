@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class extends React.Component {
+export default class Jumbotron extends React.Component {
     static defaultProps = {
     	align: "center",
     	heading: "",

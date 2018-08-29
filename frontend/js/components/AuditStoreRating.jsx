@@ -3,7 +3,7 @@ import React from "react";
 import Label from "./Label.jsx";
 import { getAuditStoreStatus } from "../utils.js";
 
-export default class extends React.Component {
+export default class AuditStoreRating extends React.Component {
 	render() {
 		switch(this.props.rating){
 		case 0:

@@ -4,7 +4,7 @@ import { Alert } from "./Icons.jsx";
 
 import { lubdub } from "../manager/service/heartbeat.js";
 
-export default class extends React.Component {
+export default class Heartbeat extends React.Component {
     state = {
     	alive: true,
     	intervalId: null

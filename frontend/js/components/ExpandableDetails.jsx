@@ -2,7 +2,7 @@ import React from "react";
 
 import Modal from "./Modal.jsx";
 
-export default class extends React.Component {
+export default class ExpandableDetails extends React.Component {
     state = {
     	expanded: false
     };

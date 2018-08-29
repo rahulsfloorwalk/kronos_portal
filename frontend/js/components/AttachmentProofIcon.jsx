@@ -2,7 +2,7 @@ import React from "react";
 
 import { Record, Picture, Video, File } from "./Icons.jsx";
 
-export default class extends React.Component {
+export default class AttachmentProofIcon extends React.Component {
     static defaultProps = {
     	proofType: "OTHER"
     };

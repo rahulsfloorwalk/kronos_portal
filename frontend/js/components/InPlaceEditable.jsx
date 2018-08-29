@@ -2,7 +2,7 @@ import React from "react";
 
 import { affectInputEventToComponent } from "../react_utils.js";
 
-export default class extends React.Component {
+export default class InPlaceEditable extends React.Component {
     static defaultProps = {
     	editing: false,
     	emptyString: "click here to edit",

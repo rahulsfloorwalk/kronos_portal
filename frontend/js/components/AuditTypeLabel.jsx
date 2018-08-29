@@ -28,7 +28,7 @@ let AuditTypeIcon = (props) => {
 	}
 };
 
-export default class extends React.Component {
+export default class AuditTypeLabel extends React.Component {
 	render() {
 		let at = getAuditType(this.props.auditType);
 		return (<span><AuditTypeIcon type={this.props.auditType}/> {at}</span>);

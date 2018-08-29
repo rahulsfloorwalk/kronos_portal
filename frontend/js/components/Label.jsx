@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class extends React.Component {
+export default class Label extends React.Component {
     static defaultProps = {
     	type: "default"
     };
