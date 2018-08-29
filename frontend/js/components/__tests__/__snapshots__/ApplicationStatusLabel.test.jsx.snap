@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ApplicationStatusLabel/> renders correctly for status: APPLIED 1`] = `
+<span
+  className="label label-primary"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Pending for Approval
+</span>
+`;
+
+exports[`<ApplicationStatusLabel/> renders correctly for status: APPROVED 1`] = `
+<span
+  className="label label-success"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Approved
+</span>
+`;
+
+exports[`<ApplicationStatusLabel/> renders correctly for status: NOT_APPLIED 1`] = `
+<span
+  className="label label-default"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Not Applied
+</span>
+`;
+
+exports[`<ApplicationStatusLabel/> renders correctly for status: REJECTED 1`] = `
+<span
+  className="label label-danger"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Denied
+</span>
+`;
+
+exports[`<ApplicationStatusLabel/> renders correctly for status: WAITLISTED 1`] = `
+<span
+  className="label label-warning"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Wait Listed
+</span>
+`;

@@ -1,4 +1,12 @@
 
+export const ApplicationStatus = [
+	"APPLIED",
+	"NOT_APPLIED",
+	"WAITLISTED",
+	"APPROVED",
+	"REJECTED",
+];
+
 export const AuditStoreStatus = [
 	"ASSIGNED",
 	"ACKNOWLEDGED",
