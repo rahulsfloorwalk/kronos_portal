@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow } from "enzyme";
-import Checkbox from "../../components/Checkbox.jsx";
+import Checkbox from "../Checkbox.jsx";
 import renderer from "react-test-renderer";
 
 describe("<Checkbox/>", () => {

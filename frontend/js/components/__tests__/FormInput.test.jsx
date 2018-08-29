@@ -1,6 +1,6 @@
 import React from "react";
 import { shallow, mount } from "enzyme";
-import FormInput from "../../components/FormInput.jsx";
+import FormInput from "../FormInput.jsx";
 import renderer from "react-test-renderer";
 
 describe("<FormInput/>", () => {

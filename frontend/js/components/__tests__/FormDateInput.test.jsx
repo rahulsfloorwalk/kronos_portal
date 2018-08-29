@@ -1,5 +1,5 @@
 import React from "react";
-import { FormDateInput } from "../../components/FormInput.jsx";
+import { FormDateInput } from "../FormInput.jsx";
 import renderer from "react-test-renderer";
 
 jest.mock("react-dom", () => ({
