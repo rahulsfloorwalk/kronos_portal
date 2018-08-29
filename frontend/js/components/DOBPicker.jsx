@@ -8,7 +8,7 @@ import FormErrorList from "./FormErrorList.jsx";
 export default class DOBPicker extends React.Component{
 
 	static propTypes = {
-		initialDate: PropTypes.object,
+		initialDate: PropTypes.instanceOf(Date),
 		onChange: PropTypes.func,
 		errors: PropTypes.array,
 		disabled: PropTypes.bool,
