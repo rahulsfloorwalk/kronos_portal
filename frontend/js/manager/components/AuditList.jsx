@@ -12,7 +12,7 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { pointerStyle }  from "../../styles.js";
 
-import { Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsDown, File, EyeClose, EyeOpen, OptionVertical } from "../../components/Icons.jsx";
+import { Rook, Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsDown, File, EyeClose, EyeOpen, OptionVertical } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 
@@ -29,6 +29,7 @@ import { findAuditStoresByAudit } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 
 import AuditApplicationList from "./AuditApplicationList.jsx";
+import AgencyListForAudit from "./audit/AgencyListForAudit.jsx";
 
 class AuditStoreTableForAudit extends Component{
 	static propTypes = {
@@ -167,6 +168,9 @@ export class __AuditRow extends Component{
 		case "reports":
 			currentTab = <AuditStoreTableForAudit auditId={this.props.audit.id}/>;
 			break;
+		case "agencies":
+			currentTab = <AgencyListForAudit auditId={this.props.audit.id}/>;
+			break;
 		}
 
 		return(
@@ -261,6 +265,9 @@ export class __AuditRow extends Component{
 							<ul className="nav nav-tabs">
 								<li className={this.state.selectedTab === "applications" ? "active" : ""} style={pointerStyle} role="presentation">
 									<a onClick={() => this.setState({selectedTab:"applications"})}><Inbox/> Applications</a>
+								</li>
+								<li className={this.state.selectedTab === "agencies" ? "active" : ""} style={pointerStyle} role="presentation">
+									<a onClick={() => this.setState({selectedTab:"agencies"})}><Rook/> Agencies</a>
 								</li>
 								<li className={this.state.selectedTab === "reports" ? "active" : ""} style={pointerStyle} role="presentation">
 									<a onClick={() => this.setState({selectedTab:"reports"})}><File/> Reports</a>

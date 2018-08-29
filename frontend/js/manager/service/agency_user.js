@@ -17,3 +17,7 @@ export function fetchAgencyPresence(userId){
 	return $.get( url.api_base_path + `manager/agency_user/${userId}/presence`);
 }
 
+export function findAgencyUserByPresenceInCityId(cityId){
+	return $.get( url.api_base_path + `manager/agency_user/city_id/${cityId}`);
+}
+

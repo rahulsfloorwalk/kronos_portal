@@ -245,20 +245,6 @@ class AgencySmallSerializer(ModelSerializer):
         read_only_fields = fields
 
 
-class AgencyUserInfoSerializer(ModelSerializer):
-    agency = AgencySerializer()
-
-    class Meta:
-        model = AgencyUser
-        fields = (
-            'id',
-            'full_name',
-            'agency',
-            'user_id',
-        )
-        read_only_fields = fields
-
-
 class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
     class Meta:
@@ -274,39 +260,6 @@ class AuditApplicationSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
-class UserSerializer(ModelSerializer):
-    profileinfo = ProfileInfoSmallSerializer()
-    agencyuser = AgencyUserInfoSerializer()
-    mobile_numbers = MobileNumberSerializer(many=True)
-
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email',
-            'is_active',
-            'mobile_numbers',
-            'profileinfo',
-            'agencyuser',
-        )
-        read_only_fields = fields
-
-class AuditStoreSerializerWithoutAudit(ModelSerializer):
-    user = UserSerializer()
-    assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
-    class Meta:
-        model = AuditStore
-        fields = (
-            'id',
-            'status',
-            'audit_date',
-            'audit',
-            'user',
-            'qa_rating',
-            'assigned_to_moderator',
-        )
-        read_only_fields = fields
 
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
@@ -374,6 +327,50 @@ class PaymentSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class PlainUserSerializer(ModelSerializer):
+    mobile_numbers = MobileNumberSerializer(many=True)
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+            'mobile_numbers',
+        )
+        read_only_fields = fields
+
+class AgencyUserInfoSerializer(ModelSerializer):
+    agency = AgencySerializer()
+    user = PlainUserSerializer()
+
+    class Meta:
+        model = AgencyUser
+        fields = (
+            'id',
+            'full_name',
+            'agency',
+            'user',
+            'user_id',
+        )
+        read_only_fields = fields
+
+class UserSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSmallSerializer()
+    agencyuser = AgencyUserInfoSerializer()
+    mobile_numbers = MobileNumberSerializer(many=True)
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+            'mobile_numbers',
+            'profileinfo',
+            'agencyuser',
+        )
+        read_only_fields = fields
+
 class PaymentUserSerializer(ModelSerializer):
     user = UserSerializer()
     class Meta:
@@ -406,6 +403,43 @@ class AuditStoreSerializer(ModelSerializer):
             'visible_to',
             'assigned_to_moderator',
             'qa_rating',
+        )
+        read_only_fields = fields
+
+class ClientUserSerializer(ModelSerializer):
+    user = PlainUserSerializer()
+    class Meta:
+        model = ClientUser
+        fields = (
+            'id',
+            'full_name',
+            'client',
+            'user',
+            'is_client_admin',
+        )
+        read_only_fields = fields
+
+class ClientUserDeSerializer(Serializer):
+    client = PrimaryKeyRelatedField(queryset=Client.objects.all())
+    full_name = CharField(max_length=50)
+    email = EmailField()
+    password = CharField(min_length=8, max_length=128, allow_blank=True)
+    is_active = BooleanField()
+    is_client_admin = BooleanField()
+
+class AuditStoreSerializerWithoutAudit(ModelSerializer):
+    user = UserSerializer()
+    assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
+            'qa_rating',
+            'assigned_to_moderator',
         )
         read_only_fields = fields
 
@@ -545,37 +579,6 @@ class AnswerSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
-class PlainUserSerializer(ModelSerializer):
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'email',
-            'is_active',
-        )
-        read_only_fields = fields
-
-class ClientUserSerializer(ModelSerializer):
-    user = PlainUserSerializer()
-    class Meta:
-        model = ClientUser
-        fields = (
-            'id',
-            'full_name',
-            'client',
-            'user',
-            'is_client_admin',
-        )
-        read_only_fields = fields
-
-class ClientUserDeSerializer(Serializer):
-    client = PrimaryKeyRelatedField(queryset=Client.objects.all())
-    full_name = CharField(max_length=50)
-    email = EmailField()
-    password = CharField(min_length=8, max_length=128, allow_blank=True)
-    is_active = BooleanField()
-    is_client_admin = BooleanField()
 
 class ReportSectionSerializer(ModelSerializer):
     class Meta:

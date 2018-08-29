@@ -10,7 +10,10 @@ from registration.models import GROUP_NAME_AGENCY
 
 class AgencyUserQuerySet(QuerySet):
     def find_by_user_id(self, user_id):
-        return AgencyUser.objects.get(user_id=user_id)
+        return self.get(user_id=user_id)
+
+    def find_by_presence_in_city_id(self, city_id):
+        return self.filter(agency__presences__city_id=city_id)
 
     @atomic
     def create_agency_user(self, email, password, agency, full_name):
