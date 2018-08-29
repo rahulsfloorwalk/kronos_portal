@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ApplicationRepeat/> renders correctly when report_exists is: false 1`] = `
+<strong
+  className="text-success"
+>
+  New
+</strong>
+`;
+
+exports[`<ApplicationRepeat/> renders correctly when report_exists is: true 1`] = `
+<strong
+  className="text-danger"
+>
+  Repeat
+</strong>
+`;
+
+exports[`<ApplicationRepeat/> renders correctly when report_exists is: undefined 1`] = `
+<strong>
+  unknown
+</strong>
+`;
