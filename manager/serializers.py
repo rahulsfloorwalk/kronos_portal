@@ -227,7 +227,7 @@ class AgencySerializer(ModelSerializer):
             'gstin',
             'cin',
             'agreement_accepted',
-            'strength'
+            'strength',
             'account_holder_name',
             'account_number',
             'ifsc_code',
@@ -246,7 +246,7 @@ class AgencySmallSerializer(ModelSerializer):
 
 
 class AgencyUserInfoSerializer(ModelSerializer):
-    agency = AgencySmallSerializer()
+    agency = AgencySerializer()
 
     class Meta:
         model = AgencyUser

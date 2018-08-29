@@ -23,7 +23,7 @@ export class AuditorRow extends React.Component {
 			id: PropTypes.number.isRequired,
 			is_active: PropTypes.bool.isRequired,
 			email: PropTypes.string.isRequired,
-			last_login: PropTypes.string.isRequired,
+			last_login: PropTypes.string,
 			profileinfo: PropTypes.object.isRequired
 		}),
 	};
