@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AttachmentProofIcon/> renders correctly for proof type: AUDIO 1`] = `
+<span
+  className="glyphicon glyphicon-record"
+/>
+`;
+
+exports[`<AttachmentProofIcon/> renders correctly for proof type: OTHER 1`] = `
+<span
+  className="glyphicon glyphicon-file"
+/>
+`;
+
+exports[`<AttachmentProofIcon/> renders correctly for proof type: PHOTO 1`] = `
+<span
+  className="glyphicon glyphicon-picture"
+/>
+`;
+
+exports[`<AttachmentProofIcon/> renders correctly for proof type: VIDEO 1`] = `
+<span
+  className="glyphicon glyphicon-facetime-video"
+/>
+`;

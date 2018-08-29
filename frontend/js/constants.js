@@ -29,3 +29,10 @@ export const PaymentStatus = [
 	"PAID",
 	"FAILED",
 ];
+
+export const AttachmentProofType = [
+	"AUDIO",
+	"PHOTO",
+	"VIDEO",
+	"OTHER",
+];
