@@ -36,3 +36,10 @@ export const AttachmentProofType = [
 	"VIDEO",
 	"OTHER",
 ];
+
+export const AuditStoreRatings = [
+	0,
+	1,
+	2,
+	null,
+];

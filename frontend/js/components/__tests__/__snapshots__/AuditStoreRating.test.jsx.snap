@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreRating/> renders correctly for rating: 0 1`] = `
+<strong
+  className="text-danger"
+>
+  Bad
+</strong>
+`;
+
+exports[`<AuditStoreRating/> renders correctly for rating: 1 1`] = `
+<strong
+  className="text-warning"
+>
+  Average
+</strong>
+`;
+
+exports[`<AuditStoreRating/> renders correctly for rating: 2 1`] = `
+<strong
+  className="text-success"
+>
+  Good
+</strong>
+`;
+
+exports[`<AuditStoreRating/> renders correctly for rating: null 1`] = `
+<span>
+  not rated
+</span>
+`;

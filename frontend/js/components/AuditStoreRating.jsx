@@ -1,9 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-import Label from "./Label.jsx";
-import { getAuditStoreStatus } from "../utils.js";
+import { AuditStoreRatings } from "../constants.js";
 
 export default class AuditStoreRating extends React.Component {
+	static propTypes = {
+		rating: PropTypes.oneOf(AuditStoreRatings),
+	};
+
 	render() {
 		switch(this.props.rating){
 		case 0:
