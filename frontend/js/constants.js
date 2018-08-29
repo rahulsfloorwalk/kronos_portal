@@ -43,3 +43,27 @@ export const AuditStoreRatings = [
 	2,
 	null,
 ];
+
+export const AuditType = [
+	"WALKIN",
+	"PHONE",
+	"WEB",
+	"VISIBILITY",
+	"COMPETITION",
+	"SERVICE",
+	"SALES",
+	"FINE_DINE",
+	"SKY_KARTING",
+	"SMAAASH_ARENA",
+	"GENERAL",
+	"SMAAASH",
+	"SMAAASH_MEGA",
+	"SMAAASH_ZONE",
+	"DDC",
+	"HTC",
+	"ASCVD",
+	"SKIN_HYDRATION",
+	"HYPER_PIGMENTATION",
+	"SKIN_SENSITIVE",
+	"RETAIL",
+];

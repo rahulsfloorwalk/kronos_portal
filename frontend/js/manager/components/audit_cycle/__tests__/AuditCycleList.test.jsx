@@ -44,7 +44,7 @@ const sampleAuditCycles = [
 	{
 		"id": 106,
 		"name": "February 2018",
-		"type": "Walk In",
+		"type": "WALKIN",
 		"status": "ARCHIVED",
 		"start_date": "2018-02-23",
 		"end_date": "2018-02-28",

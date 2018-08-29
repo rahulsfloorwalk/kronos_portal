@@ -1,10 +1,12 @@
-import React, { Component } from "react";
+import React from "react";
+import PropTypes from "prop-types";
 
 import { Globe, PhoneAlt, EyeOpen, Briefcase, Road, Flag, Asterisk } from "./Icons.jsx";
 
 import { getAuditType } from "../utils.js";
+import { AuditType } from "../constants.js";
 
-let AuditTypeIcon = (props) => {
+const AuditTypeIcon = (props) => {
 	switch(props.type){
 	case "WALKIN":
 	case "SALES":
@@ -29,6 +31,10 @@ let AuditTypeIcon = (props) => {
 };
 
 export default class AuditTypeLabel extends React.Component {
+	static propTypes = {
+		auditType: PropTypes.oneOf(AuditType),
+	};
+
 	render() {
 		let at = getAuditType(this.props.auditType);
 		return (<span><AuditTypeIcon type={this.props.auditType}/> {at}</span>);

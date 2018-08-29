@@ -1,0 +1,211 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: ASCVD 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Ascvd
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: COMPETITION 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-briefcase"
+  />
+   
+  Competition
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: DDC 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Ddc
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: FINE_DINE 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Fine Dine
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: GENERAL 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-asterisk"
+  />
+   
+  General
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: HTC 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Htc
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: HYPER_PIGMENTATION 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Hyper Pigmentation
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: PHONE 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-phone-alt"
+  />
+   
+  Phone
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: RETAIL 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Retail
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SALES 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-road"
+  />
+   
+  Sales
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SERVICE 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-road"
+  />
+   
+  Service
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SKIN_HYDRATION 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Skin Hydration
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SKIN_SENSITIVE 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Skin Sensitive
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SKY_KARTING 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Sky Karting
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SMAAASH 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Smaaash
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SMAAASH_ARENA 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Smaaash Arena
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SMAAASH_MEGA 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Smaaash Mega
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: SMAAASH_ZONE 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-flag"
+  />
+   
+  Smaaash Zone
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: VISIBILITY 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-eye-open"
+  />
+   
+  Visibility
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: WALKIN 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-road"
+  />
+   
+  Walk In
+</span>
+`;
+
+exports[`<AuditTypeLabel/> renders correctly for audit type: WEB 1`] = `
+<span>
+  <span
+    className="glyphicon glyphicon-globe"
+  />
+   
+  Web
+</span>
+`;

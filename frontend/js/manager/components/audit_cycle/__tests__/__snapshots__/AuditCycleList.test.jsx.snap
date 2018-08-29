@@ -95,7 +95,7 @@ exports[`<AuditCycleList/> renders a list of audit cycles 1`] = `
         <td>
           <span>
             <span
-              className="glyphicon glyphicon-flag"
+              className="glyphicon glyphicon-road"
             />
              
             Walk In
