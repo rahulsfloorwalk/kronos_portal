@@ -10,5 +10,9 @@ module.exports = {
 		"text",
 		"html",
 	],
+	reporters: [
+		"default",
+		["jest-junit", { output: "test_results/junit.xml"}],
+	],
 	clearMocks: true,
 };

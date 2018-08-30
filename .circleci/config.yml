@@ -193,6 +193,9 @@ jobs:
       - store_artifacts:
           path: frontend/coverage
 
+      - store_test_results:
+          path: frontend/test_results
+
   jslint:
     docker:
       # specify the version you desire here

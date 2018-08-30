@@ -6,6 +6,7 @@ properties.py
 properties.ini
 frontend/node_modules/
 frontend/dist/
+frontend/test_results/
 kronos.egg-info/
 dist/
 celerybeat-schedule
