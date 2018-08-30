@@ -42,12 +42,8 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				user: action.user
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
-
 		}
+		break;
 		/*Dashboard Reducers */
 	case types.AUDITOR_STATS_GET:
 		switch (action.status) {
@@ -55,41 +51,32 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				loadingAuditorStats: true
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				loadingAuditorStats: false,
 				auditorStats: Object.assign({}, store.auditorStats, action.auditorStats)
 			});
-			break;
 		case "error":
 			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 
 		}
+		break;
 	case types.AUDITOR_SCORE_GET:
 		switch (action.status) {
 		case "request":
 			return Object.assign({}, store, {
 				loadingAuditorScore: true
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				loadingAuditorScore: false,
 				auditorScore: Object.assign({}, store.auditorScore, action.auditorScore)
 			});
-			break;
 		case "error":
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 
 		}
 
+		break;
 		/*Profile Info Reducers */
 	case types.PROFILE_INFO_GET:
 		switch (action.status) {
@@ -97,21 +84,17 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				loadingProfileInfo: true
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				loadingProfileInfo: false,
 				profileInfo: Object.assign({}, store.profileInfo, action.profileInfo)
 			});
-			break;
 		case "error":
 			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 
 		}
 
+		break;
 	case types.PROFILE_INFO_POST:
 		switch (action.status) {
 		case "request":
@@ -122,7 +105,6 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				profileInfo: action.profileInfo,
@@ -132,7 +114,6 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
 		case "error":
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
@@ -141,12 +122,9 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 		/*Bank Info Reducers */
 	case types.BANK_INFO_GET:
 		switch (action.status) {
@@ -154,20 +132,16 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				loadingBankInfo: true
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				loadingBankInfo: false,
 				bankInfo: Object.assign({}, store.bankInfo, action.bankInfo)
 			});
-			break;
 		case "error":
 			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 	case types.BANK_INFO_POST:
 		switch (action.status) {
 		case "request":
@@ -178,7 +152,6 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				bankInfo: action.bankInfo,
@@ -188,7 +161,6 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
 		case "error":
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
@@ -197,12 +169,9 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 		/*Additional Info Reducers */
 	case types.ADDITIONAL_INFO_GET:
 		switch (action.status) {
@@ -210,20 +179,16 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				loadingAdditionalInfo: true
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				loadingAdditionalInfo: false,
 				additionalInfo: Object.assign({}, store.additionalInfo, action.additionalInfo)
 			});
-			break;
 		case "error":
 			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 	case types.ADDITIONAL_INFO_POST:
 		switch (action.status) {
 		case "request":
@@ -234,7 +199,6 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				additionalInfo: action.additionalInfo,
@@ -244,7 +208,6 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
 		case "error":
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
@@ -253,34 +216,26 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 		/*Social Info Reducers */
-
 	case types.SOCIAL_INFO_GET:
 		switch (action.status) {
 		case "request":
 			return Object.assign({}, store, {
 				loadingSocialInfo: true
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				loadingSocialInfo: false,
 				socialInfo: Object.assign({}, store.socialInfo, action.socialInfo)
 			});
-			break;
 		case "error":
 			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 	case types.SOCIAL_INFO_POST:
 		switch (action.status) {
 		case "request":
@@ -291,7 +246,6 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
 		case "success":
 			return Object.assign({}, store, {
 				socialInfo: action.socialInfo,
@@ -301,7 +255,6 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
 		case "error":
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
@@ -310,12 +263,9 @@ export function rootReducer(store = initialStore, action) {
 					})
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
 
+		break;
 	case types.AUDIT_GET:
 		switch(action.status){
 		case "success":
@@ -328,11 +278,8 @@ export function rootReducer(store = initialStore, action) {
 					return obj;
 				}(action.audits))
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_ID_GET:
 		switch(action.status){
 		case "success":
@@ -341,11 +288,8 @@ export function rootReducer(store = initialStore, action) {
 					[action.audit.id]: action.audit
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_APPLY_FORM_LOAD:
 		switch(action.status){
 		case "request":
@@ -356,11 +300,8 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_APPLY_FORM_SUB:
 		switch(action.status){
 		case "success":
@@ -369,7 +310,6 @@ export function rootReducer(store = initialStore, action) {
 					[action.auditApplication.id]: action.auditApplication
 				})
 			});
-			break;
 		case "error":
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
@@ -378,11 +318,8 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.APPLICATION_GET:
 		switch(action.status){
 		case "success":
@@ -395,11 +332,8 @@ export function rootReducer(store = initialStore, action) {
 					return obj;
 				}(action.applications))
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_CANCEL_FORM_LOAD:
 		switch(action.status){
 		case "request":
@@ -410,11 +344,8 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_CANCEL_FORM_SUB:
 		switch(action.status){
 		case "success":
@@ -423,7 +354,6 @@ export function rootReducer(store = initialStore, action) {
 					[action.auditApplication.id]: action.auditApplication
 				})
 			});
-			break;
 		case "error":
 			return Object.assign({}, store, {
 				forms: Object.assign({}, store.forms, {
@@ -432,11 +362,8 @@ export function rootReducer(store = initialStore, action) {
 					}
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_STORE_GET:
 		switch(action.status){
 		case "success":
@@ -449,11 +376,8 @@ export function rootReducer(store = initialStore, action) {
 					return obj;
 				}(action.auditStores))
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.AUDIT_STORE_ID_GET:
 	case types.AUDIT_STORE_ID_SUBMIT:
 	case types.AUDIT_STORE_ID_ACKNOWLEDGE:
@@ -464,22 +388,16 @@ export function rootReducer(store = initialStore, action) {
 					[action.auditStore.id]: action.auditStore
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.STATE_GET:
 		switch(action.status){
 		case "success":
 			return Object.assign({}, store, {
 				states: action.states
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.SECTION_GET:
 		switch(action.status){
 		case "request":
@@ -496,11 +414,8 @@ export function rootReducer(store = initialStore, action) {
 					return obj;
 				}(action.sections))
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.ANSWER_GET:
 		switch(action.status){
 		case "request":
@@ -517,11 +432,8 @@ export function rootReducer(store = initialStore, action) {
 					return obj;
 				}(action.answers))
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.ANSWER_POST:
 		switch(action.status){
 		case "success":
@@ -530,11 +442,8 @@ export function rootReducer(store = initialStore, action) {
 					[action.answer.id]: action.answer
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.REPORT_SECTION_GET:
 		switch(action.status){
 		case "request":
@@ -551,11 +460,8 @@ export function rootReducer(store = initialStore, action) {
 					return obj;
 				}(action.reportSections))
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.REPORT_SECTION_COMMENT:
 		switch(action.status){
 		case "success":
@@ -564,11 +470,8 @@ export function rootReducer(store = initialStore, action) {
 					[action.reportSection.id]: action.reportSection
 				})
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
+		break;
 	case types.CITY_GET:
 		switch(action.status){
 		case "request":
@@ -579,13 +482,8 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				cities: action.cities
 			});
-			break;
-		default:
-			console.warn("WARNING: default case encountered for action: %O", action);
-			return store;
 		}
-	default:
-		console.warn("WARNING: default case encountered for action: %O", action);
-		return store;
 	}
+	console.warn("WARNING: default case encountered for action: %O", action);
+	return store;
 }
