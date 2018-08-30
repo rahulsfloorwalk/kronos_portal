@@ -1156,6 +1156,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
               className="form-control"
               name="description"
               onChange={[Function]}
+              value=""
             />
             <ul />
           </div>

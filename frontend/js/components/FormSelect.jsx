@@ -9,7 +9,6 @@ export default class FormSelect extends React.Component{
 	static propTypes = {
 		placeholder: PropTypes.string,
 		onChange: PropTypes.func,
-		type: PropTypes.string,
 		value: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.number,
@@ -22,17 +21,16 @@ export default class FormSelect extends React.Component{
 	};
 
 	render(){
-		let { placeholder, onChange, type, value, name, disabled, label } = this.props;
+		const { placeholder, onChange, name, disabled, label } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
-		value = value ? value : "";
+		const value = (this.props.value === null || this.props.value === undefined) ? "" : this.props.value;
 		return (
 			<FormGroup>
 				<label>{this.props.label}</label>
 				<select className="form-control"
 					placeholder={placeholder}
 					onChange={onChange}
-					type={type}
 					value={value}
 					name={name}
 					disabled={disabled}

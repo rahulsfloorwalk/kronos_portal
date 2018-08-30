@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FormSelect/> renders a blank select 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <select
+    className="form-control"
+    label="Foobar"
+    name="foobar"
+    placeholder="Foobaz"
+    value=""
+  >
+    <option
+      value="one"
+    >
+      one
+    </option>
+    <option
+      value="two"
+    >
+      two
+    </option>
+    <option
+      value="three"
+    >
+      three
+    </option>
+  </select>
+  <ul />
+</div>
+`;
+
+exports[`<FormSelect/> renders a disabled select 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <select
+    className="form-control"
+    disabled={true}
+    label="Foobar"
+    name="foobar"
+    placeholder="Foobaz"
+    value="two"
+  >
+    <option
+      value="one"
+    >
+      one
+    </option>
+    <option
+      value="two"
+    >
+      two
+    </option>
+    <option
+      value="three"
+    >
+      three
+    </option>
+  </select>
+  <ul />
+</div>
+`;
+
+exports[`<FormSelect/> renders a select with an option selected 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <select
+    className="form-control"
+    label="Foobar"
+    name="foobar"
+    placeholder="Foobaz"
+    value="two"
+  >
+    <option
+      value="one"
+    >
+      one
+    </option>
+    <option
+      value="two"
+    >
+      two
+    </option>
+    <option
+      value="three"
+    >
+      three
+    </option>
+  </select>
+  <ul />
+</div>
+`;
+
+exports[`<FormSelect/> renders a select with errors 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <select
+    className="form-control"
+    label="Foobar"
+    name="foobar"
+    placeholder="Foobaz"
+    value="two"
+  >
+    <option
+      value="one"
+    >
+      one
+    </option>
+    <option
+      value="two"
+    >
+      two
+    </option>
+    <option
+      value="three"
+    >
+      three
+    </option>
+  </select>
+  <ul>
+    <li
+      style={
+        Object {
+          "color": "red",
+        }
+      }
+    >
+      <b>
+        This field cannot be blank
+      </b>
+    </li>
+  </ul>
+</div>
+`;
