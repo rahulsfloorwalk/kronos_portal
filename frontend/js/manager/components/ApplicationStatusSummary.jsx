@@ -9,7 +9,6 @@ import { fetchApplicationStats } from "../service/audit_cycle_stats.js";
 
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
-import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../components/Icons.jsx";
 import NavLink from "../../components/NavLink.jsx";
 import Panel from "../../components/Panel.jsx";

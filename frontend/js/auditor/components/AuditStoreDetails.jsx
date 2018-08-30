@@ -7,7 +7,6 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore } from "../actions/audit_store.js";
 
-import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import Panel from "../../components/Panel.jsx";
 import Loading from "../../components/Loading.jsx";
 import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
@@ -88,7 +87,6 @@ class AuditStoreDetails extends React.Component {
 
     	let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
     	let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
-    	let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
 
     	let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 

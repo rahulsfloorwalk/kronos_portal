@@ -14,7 +14,6 @@ import { fetchProfileInfo } from "../actions/profile_info.js";
 
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import FormSelect from "../../components/FormSelect.jsx";
-import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import { Cross, ShareAlt } from "../../components/Icons.jsx";
 import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
 import { LabelValue_2_10 } from "../../components/LabelValue.jsx";

@@ -21,7 +21,6 @@ class AuditStoreRow extends React.Component {
 	render() {
 		let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
 		let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
-		let detailsElement = <ExpandableDetails details={this.props.auditStore.audit.audit_cycle.description}/>;
 
 		let inlineBlockStyle = {
 			display: "inline-block",
