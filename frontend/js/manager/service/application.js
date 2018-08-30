@@ -1,6 +1,5 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
-import types from "../action_types.js";
 
 export function fiatAssignAudit(audit_id, email, audit_date){
 	var promise = $.ajax({
@@ -29,7 +28,6 @@ export function rejectAllForAudit(audit_id){
 		method: "POST",
 		contentType: "application/json"
 	});
-	return promise;
 }
 
 export function rejectAllForAuditCycle(audit_cycle_id){

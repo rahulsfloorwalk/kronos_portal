@@ -72,7 +72,6 @@ export function saveProfileInfo(profileInfo){
 			contentType: "application/json"
 		});
 		req.done(function(profileInfo){
-			console.log("success",profileInfo);
 			dispatch(profileInfoPostSuccess(profileInfo));
 			hashHistory.push("/details");
 		});

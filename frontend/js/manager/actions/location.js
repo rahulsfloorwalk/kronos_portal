@@ -1,5 +1,3 @@
-import $ from "jquery";
-import { url } from "../../../config.js";
 import types from "../action_types.js";
 import { fetchStates as _fetchStates } from "../service/location.js";
 import { fetchCities as _fetchCities } from "../service/location.js";

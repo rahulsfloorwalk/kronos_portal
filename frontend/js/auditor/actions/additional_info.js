@@ -70,7 +70,6 @@ export function saveAdditionalInfo(additionalInfo){
 			contentType: "application/json"
 		});
 		req.done(function(additionalInfo){
-			console.log("success",additionalInfo);
 			dispatch(additionalInfoPostSuccess(additionalInfo));
 			hashHistory.push("/details");
 		});

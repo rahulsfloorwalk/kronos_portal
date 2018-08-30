@@ -124,7 +124,7 @@ export function saveSectionEditForm(section){
 			data: JSON.stringify(section),
 			contentType: "application/json"
 		});
-		req.done(function(savedsection){
+		req.done(function(savedSection){
 			dispatch({
 				type: types.SECTION_ID_POST,
 				status: "success",

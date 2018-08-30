@@ -1,7 +1,6 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 import types from "../action_types.js";
-import { hashHistory } from "react-router";
 
 import { fetchAuditCyclesByClient } from "../service/audit_cycle.js";
 

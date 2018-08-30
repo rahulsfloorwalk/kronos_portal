@@ -59,7 +59,6 @@ export function submitAuditApplyForm( auditApplication){
 			contentType: "application/json"
 		});
 		req.done(function(savedApplication){
-			console.log("success",savedApplication);
 			dispatch({
 				type: types.AUDIT_APPLY_FORM_SUB,
 				status: "success",
@@ -92,7 +91,8 @@ export function loadAuditCancelForm( auditId){
 			dispatch({
 				type: types.AUDIT_CANCEL_FORM_LOAD,
 				status: "success",
-				auditId
+				auditId,
+				audit,
 			});
 		});
 	};
@@ -112,7 +112,6 @@ export function submitAuditCancelForm( auditId){
 			contentType: "application/json"
 		});
 		req.done(function(savedApplication){
-			console.log("success",savedApplication);
 			dispatch({
 				type: types.AUDIT_CANCEL_FORM_SUB,
 				status: "success",

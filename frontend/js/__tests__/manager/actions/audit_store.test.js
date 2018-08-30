@@ -61,7 +61,7 @@ describe("qaOkAuditStore", () => {
 			responseJSON: sampleServerError,
 		});
 
-		const promise = thunk(dispatch);
+		thunk(dispatch);
 		setTimeout(() => {
 			expect(dispatch).lastCalledWith({
 				type: types.AUDIT_STORE_ID_QA_OK,
@@ -126,7 +126,7 @@ describe("pmRevertAuditStore", () => {
 			responseJSON: sampleServerError,
 		});
 
-		const promise = thunk(dispatch);
+		thunk(dispatch);
 		setTimeout(() => {
 			expect(dispatch).lastCalledWith({
 				type: types.AUDIT_STORE_ID_PM_REVERT,

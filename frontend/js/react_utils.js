@@ -7,7 +7,7 @@ export function affectInputEventToComponent(e, component){
 		change[e.target.name] = e.target.checked;
 	}
 	component.setState(change);
-	console.log(e.target.name,"changed to", change);
+	// console.log(e.target.name,"changed to", change);
 }
 
 export function getInputEventChangeValue(e){
@@ -17,7 +17,7 @@ export function getInputEventChangeValue(e){
 	} else if(e.target.type === "checkbox"){
 		change[e.target.name] = e.target.checked;
 	}
-	console.log(e.target.name,"changed to", change);
+	// console.log(e.target.name,"changed to", change);
 	return change;
 }
 

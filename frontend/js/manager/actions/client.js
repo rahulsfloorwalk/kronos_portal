@@ -20,13 +20,6 @@ function clientGetSuccess(clients){
 		clients: clients
 	};
 }
-function clientGetError(errors){
-	return {
-		type: types.CLIENT_GET,
-		status: "error",
-		errors: errors
-	};
-}
 
 function clientIdGetRequest(id){
 	return {
@@ -40,13 +33,6 @@ function clientIdGetSuccess(client){
 		type: types.CLIENT_ID_GET,
 		status: "success",
 		client: client
-	};
-}
-function clientIdGetError(){
-	return {
-		type: types.CLIENT_ID_GET,
-		status: "error",
-		errors: errors
 	};
 }
 

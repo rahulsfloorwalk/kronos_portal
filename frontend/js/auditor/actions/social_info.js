@@ -1,6 +1,5 @@
 import $ from "jquery";
 import { url } from "../../../config";
-import { hashHistory } from "react-router";
 import types from "../action_types.js";
 
 /**
@@ -19,13 +18,6 @@ function socialInfoGetSuccess(socialInfo){
 		type: types.SOCIAL_INFO_GET,
 		status: "success",
 		socialInfo: socialInfo
-	};
-}
-function socialInfoGetError(errors){
-	return {
-		type: types.SOCIAL_INFO_GET,
-		status: "error",
-		errors: errors
 	};
 }
 function socialInfoPostReq(socialInfo){
