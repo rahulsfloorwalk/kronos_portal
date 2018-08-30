@@ -17,7 +17,8 @@ export default class FormTextarea extends Component {
 		errors: PropTypes.arrayOf(PropTypes.string),
 	};
 	render(){
-		const { placeholder, onChange, maxLength, value, name, disabled, label, errors } = this.props;
+		const { placeholder, onChange, maxLength, name, disabled, label, errors } = this.props;
+		const value = (this.props.value === null || this.props.value === undefined) ? "" : this.props.value;
 		return (
 			<FormGroup>
 				<label>{label}</label>

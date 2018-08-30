@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FormTextarea/> renders a blank textarea 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <textarea
+    className="form-control"
+    maxLength={80}
+    name="foobar"
+    placeholder="Foobaz"
+    value=""
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormTextarea/> renders a disabled textarea 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <textarea
+    className="form-control"
+    disabled={true}
+    maxLength={80}
+    name="foobar"
+    placeholder="Foobaz"
+    value="Hello World!"
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormTextarea/> renders a textarea with a prefilled value 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <textarea
+    className="form-control"
+    maxLength={80}
+    name="foobar"
+    placeholder="Foobaz"
+    value="Hello World!"
+  />
+  <ul />
+</div>
+`;
+
+exports[`<FormTextarea/> renders a textarea with errors 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Foobar
+  </label>
+  <textarea
+    className="form-control"
+    maxLength={80}
+    name="foobar"
+    placeholder="Foobaz"
+    value=""
+  />
+  <ul>
+    <li
+      style={
+        Object {
+          "color": "red",
+        }
+      }
+    >
+      <b>
+        This field cannot be blank
+      </b>
+    </li>
+  </ul>
+</div>
+`;
