@@ -235,14 +235,15 @@ workflows:
     jobs:
       - pytest
       - jstest
+      - jslint
       - package:
           requires:
             - pytest
             - jstest
+            - jslint
           filters:
             branches:
               only:
                 - development
                 - master
-      - jslint
       - pylint
