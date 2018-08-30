@@ -3,7 +3,16 @@ import PropTypes from "prop-types";
 
 export default class Footer extends React.Component{
 	static propTypes = {
-		config: PropTypes.object.isRequired,
+		config: PropTypes.shape({
+			RHEA_BASE_URL: PropTypes.string,
+			RHEA_DOMAIN: PropTypes.string,
+			SUPPORT_EMAIL: PropTypes.string,
+			SUPPORT_PHONE: PropTypes.string,
+			TW_PAGE_URL: PropTypes.string,
+			TW_USERNAME: PropTypes.string,
+			PHOEBE_VERSION: PropTypes.string,
+			BRAND_NAME: PropTypes.string,
+		}).isRequired,
 	};
 
 	static defaultProps = {
@@ -11,7 +20,7 @@ export default class Footer extends React.Component{
 	};
 
 	render(){
-		var brandStyle = {
+		const brandStyle = {
 			height:"30px"
 		};
 		return (

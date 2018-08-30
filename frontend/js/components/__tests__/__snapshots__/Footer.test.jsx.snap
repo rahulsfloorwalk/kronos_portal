@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Footer/> renders the footer 1`] = `
+<div
+  className="col-xs-12"
+>
+  <hr />
+  <p
+    className="text-center"
+  >
+    <img
+      src="/static/img/logo_3_500x100.png"
+      style={
+        Object {
+          "height": "30px",
+        }
+      }
+    />
+  </p>
+  <p
+    className="text-center text-muted small"
+  >
+    <a
+      href="https://floorwalk.in"
+    >
+      floorwalk.in
+    </a>
+     | 
+    <a
+      href="mailto:support@floorwalk.in"
+    >
+      support@floorwalk.in
+    </a>
+     | 
+    <a
+      href="tel:+91-1234567890"
+    >
+      +91-1234567890
+    </a>
+     | 
+    <a
+      href="https://twitter.com/kronos"
+    >
+      @
+      KronosIndia
+    </a>
+     |  v
+    1.0.0
+  </p>
+  <p
+    className="text-center text-muted small"
+  >
+    Kronos
+     © 2014 to Present
+  </p>
+</div>
+`;
