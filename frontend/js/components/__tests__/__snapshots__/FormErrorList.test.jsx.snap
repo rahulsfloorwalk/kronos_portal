@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FormErrorList/> renders an array of errors correctly 1`] = `
+<ul>
+  <li
+    style={
+      Object {
+        "color": "red",
+      }
+    }
+  >
+    <b>
+      This field cannot be blank!
+    </b>
+  </li>
+  <li
+    style={
+      Object {
+        "color": "red",
+      }
+    }
+  >
+    <b>
+      This date is out of range!
+    </b>
+  </li>
+</ul>
+`;
+
+exports[`<FormErrorList/> renders nothing when there are no errors 1`] = `<ul />`;
