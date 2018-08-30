@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FormGroup/> renders a group of form elements 1`] = `
+<div
+  className="form-group"
+>
+  <label>
+    Label
+  </label>
+  <input />
+</div>
+`;

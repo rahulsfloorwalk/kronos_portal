@@ -1,6 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-class FormGroup extends React.Component {
+export default class FormGroup extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
+
 	render() {
 		return (
 			<div className="form-group">
@@ -10,4 +15,3 @@ class FormGroup extends React.Component {
 	}
 }
 
-export default FormGroup;
