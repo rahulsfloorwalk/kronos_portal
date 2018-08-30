@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<InPlaceEditable/> renders a value in editable mode 1`] = `
+<form
+  className="input-group"
+  onSubmit={[Function]}
+>
+  <input
+    className="form-control"
+    onBlur={[Function]}
+    onChange={[Function]}
+    value="Hello World!"
+  />
+  <span
+    className="input-group-btn"
+  >
+    <button
+      className="btn btn-primary"
+    >
+      Save
+    </button>
+  </span>
+</form>
+`;
+
+exports[`<InPlaceEditable/> renders a value in view mode 1`] = `
+<div
+  onClick={[Function]}
+  onMouseOut={[Function]}
+  onMouseOver={[Function]}
+  style={
+    Object {
+      "cursor": "pointer",
+    }
+  }
+>
+  Hello World!
+</div>
+`;
+
+exports[`<InPlaceEditable/> renders a value in view mode in hover state 1`] = `
+<div
+  onClick={[Function]}
+  onMouseOut={[Function]}
+  onMouseOver={[Function]}
+  style={
+    Object {
+      "backgroundColor": "Yellow",
+      "cursor": "pointer",
+    }
+  }
+>
+  Hello World!
+</div>
+`;
