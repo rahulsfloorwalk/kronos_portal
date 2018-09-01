@@ -1,15 +1,20 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import Loading from "./Loading.jsx";
 
-export default class MarkdownViewer extends React.Component
-{
-	constructor(props){
-		super(props);
-		this.state = {
-			loading: true
-		};
-	}
+export default class MarkdownViewer extends React.Component {
+	static propTypes = {
+		markdown: PropTypes.string,
+	};
+
+	static defaultProps = {
+		markdown: "",
+	};
+
+	state = {
+		loading: true
+	};
 
 	componentDidMount(){
 		import("marked").then((marked) => {
@@ -25,8 +30,8 @@ export default class MarkdownViewer extends React.Component
 		if(this.state.loading){
 			return <Loading/>;
 		} else {
-			let markdown = {
-				__html: this.marked(this.props.markdown || "")
+			const markdown = {
+				__html: this.marked(this.props.markdown),
 			};
 			return <div dangerouslySetInnerHTML={markdown } />;
 		}

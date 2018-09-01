@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<MarkdownViewer/> renders a blank when markdown is not given 1`] = `
+<div
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "",
+    }
+  }
+/>
+`;
+
+exports[`<MarkdownViewer/> renders a loading widget when the Markdown module is loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`<MarkdownViewer/> renders sample transformed markdown content 1`] = `
+<div
+  dangerouslySetInnerHTML={
+    Object {
+      "__html": "<h1 id=\\"the-fountainhead\\">The Fountainhead</h1>
+<h2 id=\\"roark\\">Roark</h2>
+<blockquote>
+<p>I could die for you. But I <strong>couldn&#39;t</strong>, and <strong>wouldn&#39;t</strong>, live for you.</p>
+<p>But I don&#39;t think of you.</p>
+</blockquote>
+<h2 id=\\"toohey\\">Toohey</h2>
+<blockquote>
+<p>One loses everything when one loses one&#39;s sense of humor.</p>
+</blockquote>
+<h2 id=\\"dominique\\">Dominique</h2>
+<blockquote>
+<p>To ask nothing. To expect nothing. To depend on nothing.</p>
+</blockquote>
+",
+    }
+  }
+/>
+`;
