@@ -1,7 +1,10 @@
 import React from "react";
-import Datetime from "react-datetime";
+import PropTypes from "prop-types";
 
-class InputGroup extends React.Component {
+export default class InputGroup extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
 	render() {
 		return (
 			<div className="input-group">
@@ -11,7 +14,10 @@ class InputGroup extends React.Component {
 	}
 }
 
-class InputGroupBtn extends React.Component {
+export class InputGroupBtn extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
 	render() {
 		return (
 			<span className="input-group-btn">
@@ -21,5 +27,3 @@ class InputGroupBtn extends React.Component {
 	}
 }
 
-export default InputGroup;
-export { InputGroupBtn };

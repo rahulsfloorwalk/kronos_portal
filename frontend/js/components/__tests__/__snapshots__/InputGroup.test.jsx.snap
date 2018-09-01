@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<InputGroup/> renders a group of input elements 1`] = `
+<div
+  className="input-group"
+>
+  <input />
+  <button
+    className="btn btn-default"
+  >
+    Search
+  </button>
+</div>
+`;

@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<InputGroupBtn/> renders a group of buttons 1`] = `
+<span
+  className="input-group-btn"
+>
+  <button
+    className="btn btn-success"
+  >
+    Add
+  </button>
+  <button
+    className="btn btn-warning"
+  >
+    Edit
+  </button>
+  <button
+    className="btn btn-danger"
+  >
+    Delete
+  </button>
+</span>
+`;
