@@ -1,0 +1,52 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Jumbotron/> renders a Jumbotron 1`] = `
+<div
+  className="form-group"
+>
+  <div
+    className="jumbotron text-center"
+  >
+    <h3>
+      Chimichanga!
+    </h3>
+    <p>
+      These are not the headings you're looking for.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<Jumbotron/> renders a left aligned Jumbotron 1`] = `
+<div
+  className="form-group"
+>
+  <div
+    className="jumbotron text-left"
+  >
+    <h3>
+      Chimichanga!
+    </h3>
+    <p>
+      These are not the headings you're looking for.
+    </p>
+  </div>
+</div>
+`;
+
+exports[`<Jumbotron/> renders a right aligned Jumbotron 1`] = `
+<div
+  className="form-group"
+>
+  <div
+    className="jumbotron text-right"
+  >
+    <h3>
+      Chimichanga!
+    </h3>
+    <p>
+      These are not the headings you're looking for.
+    </p>
+  </div>
+</div>
+`;
