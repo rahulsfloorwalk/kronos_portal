@@ -1,8 +1,8 @@
 import React from "react";
 
-const loadingImageUrl = "/static/img/ripple.svg";
+export const loadingImageUrl = "/static/img/ripple.svg";
 
-class Loading extends React.Component {
+export default class Loading extends React.Component {
 	render() {
 		return (
 			<div className="text-center text-muted">
@@ -12,7 +12,3 @@ class Loading extends React.Component {
 		);
 	}
 }
-
-export default Loading;
-
-export { loadingImageUrl };

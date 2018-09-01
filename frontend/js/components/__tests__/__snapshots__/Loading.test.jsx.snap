@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Loading/> renders a Loading widget 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
