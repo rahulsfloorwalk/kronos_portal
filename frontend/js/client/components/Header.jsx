@@ -26,22 +26,14 @@ export default class Header extends React.Component {
 				clientUser
 			});
 			if( this.props.location.pathname === "/"){
-				if(clientUser.is_client_admin){
-					hashHistory.push("/dashboard");
-				} else {
-					hashHistory.push("/browser3");
-				}
+				hashHistory.push("/dashboard");
 			}
 		});
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if( this.state.clientUser && nextProps.location.pathname === "/"){
-			if(this.state.clientUser.is_client_admin){
-				hashHistory.push("/dashboard");
-			} else {
-				hashHistory.push("/browser3");
-			}
+			hashHistory.push("/dashboard");
 		}
 	}
 
