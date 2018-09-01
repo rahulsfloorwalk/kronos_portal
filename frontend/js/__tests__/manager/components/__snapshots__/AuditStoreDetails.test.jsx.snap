@@ -66,6 +66,17 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
          Excel Report
       </a>
        
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+      </div>
     </div>
   </h2>
   <div
@@ -186,14 +197,14 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
           </td>
           <th>
             <span
-              className="label label-"
+              className="label label-warning"
               style={
                 Object {
                   "fontSize": "100%",
                 }
               }
             >
-              
+              Assigned
             </span>
           </th>
         </tr>
@@ -371,6 +382,17 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
          Excel Report
       </a>
        
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+      </div>
     </div>
   </h2>
   <div
@@ -491,14 +513,14 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
           </td>
           <th>
             <span
-              className="label label-"
+              className="label label-warning"
               style={
                 Object {
                   "fontSize": "100%",
                 }
               }
             >
-              
+              Assigned
             </span>
           </th>
         </tr>

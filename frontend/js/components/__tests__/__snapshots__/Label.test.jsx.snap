@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Label/> renders Label with the danger style 1`] = `
+<span
+  className="label label-danger"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the danger2 style 1`] = `
+<span
+  className="label label-danger2"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the default style 1`] = `
+<span
+  className="label label-default"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the info style 1`] = `
+<span
+  className="label label-info"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the primary style 1`] = `
+<span
+  className="label label-primary"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the primary1 style 1`] = `
+<span
+  className="label label-primary1"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the success style 1`] = `
+<span
+  className="label label-success"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the success2 style 1`] = `
+<span
+  className="label label-success2"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the warning style 1`] = `
+<span
+  className="label label-warning"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders Label with the warning2 style 1`] = `
+<span
+  className="label label-warning2"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;
+
+exports[`<Label/> renders a Label 1`] = `
+<span
+  className="label label-default"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+/>
+`;

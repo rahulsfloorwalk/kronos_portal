@@ -5,6 +5,13 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -147,14 +154,14 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
               </td>
               <th>
                 <span
-                  className="label label-"
+                  className="label label-warning"
                   style={
                     Object {
                       "fontSize": "100%",
                     }
                   }
                 >
-                  
+                  Assigned
                 </span>
               </th>
             </tr>
@@ -268,6 +275,13 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -410,14 +424,14 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
               </td>
               <th>
                 <span
-                  className="label label-"
+                  className="label label-warning"
                   style={
                     Object {
                       "fontSize": "100%",
                     }
                   }
                 >
-                  
+                  Assigned
                 </span>
               </th>
             </tr>
@@ -531,6 +545,13 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -673,14 +694,14 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
               </td>
               <th>
                 <span
-                  className="label label-"
+                  className="label label-warning"
                   style={
                     Object {
                       "fontSize": "100%",
                     }
                   }
                 >
-                  
+                  Assigned
                 </span>
               </th>
             </tr>
@@ -794,6 +815,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -936,14 +964,14 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               </td>
               <th>
                 <span
-                  className="label label-"
+                  className="label label-warning"
                   style={
                     Object {
                       "fontSize": "100%",
                     }
                   }
                 >
-                  
+                  Assigned
                 </span>
               </th>
             </tr>
@@ -1057,6 +1085,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
   <h2
     className="page-header"
   >
+    <button
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      type="button"
+    >
+      Fail
+    </button>
     <span
       className="glyphicon glyphicon-file"
     />
@@ -1199,14 +1234,14 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               </td>
               <th>
                 <span
-                  className="label label-"
+                  className="label label-warning"
                   style={
                     Object {
                       "fontSize": "100%",
                     }
                   }
                 >
-                  
+                  Assigned
                 </span>
               </th>
             </tr>

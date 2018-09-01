@@ -53,6 +53,7 @@ describe("<AuditStoreDetails/>", () => {
 		},
 		audit_date: "2018-09-02",
 		qa_rating: null,
+		status: "ASSIGNED",
 		audit: {
 			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",
 			audit_cycle: {
