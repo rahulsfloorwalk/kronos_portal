@@ -1,7 +1,7 @@
 from django.urls import reverse
 
 from django.contrib.auth.models import User
-
+from guardian.shortcuts import assign_perm
 from rest_framework.test import APITestCase
 
 from client.models import Client
@@ -19,6 +19,7 @@ class StoreTrendsViewTestCase(APITestCase):
 
         self.client_object = Client.objects.get(pk=self.client_id)
         self.client_user = User.objects.get(pk=self.client_admin_id)
+        assign_perm('client.clientuser_admin', self.client_user)
         self.client_profile = self.client_user.clientuser
 
     def login(self):

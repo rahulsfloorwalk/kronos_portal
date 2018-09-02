@@ -1,3 +1,4 @@
+import itertools
 from django.db.models import Prefetch
 
 from kronos.utils import get_color_code_by_percentage
@@ -11,28 +12,35 @@ from client.service import client_user as client_user_service
 
 def get_performing_stores(audit_cycle, user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
+    visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
+        .filter(audit__audit_cycle=audit_cycle) \
+        .prefetch_related(
+        'audit__store__city',
+        'report_sections',
+        'report_sections__section',
+        'report_sections__section__questions',
+        'report_sections__section__questions__answers',
+    )
     stores = []
-    for audit in audit_cycle.audits.all():
+    for k, g in itertools.groupby(visible_audit_stores_in_cycle, lambda x: x.audit.store):
         obtained = 0
         count = 0
-        audit_stores = audit.audit_stores.all()
-        visible_audit_stores = client_service.find_visible_to_client_user(user)
-        filtered_audit_stores = [audit_store for audit_store in audit_stores if audit_store in visible_audit_stores]
-        for audit_store in filtered_audit_stores:
+        for audit_store in list(g):
             obtained += audit_store.percentage()
             count += 1
-        if count > 0:
+        if count > 0 :
+            # stores[k] = obtained / count
             stores.append(({
-                "id": audit.store.id,
-                "name": audit.store.name,
-                "address": audit.store.address,
-                "type": audit.store.type,
-                "code": audit.store.code,
-                "priority": audit.store.priority,
+                "id": k.id,
+                "name": k.name,
+                "address": k.address,
+                "type": k.type,
+                "code": k.code,
+                "priority": k.priority,
                 "city": {
-                    "id": audit.store.city.id,
-                    "name": audit.store.city.name,
-                }
+                    "id": k.city.id,
+                    "name": k.city.name,
+               }
             }, {
                 "color_code": get_color_code_by_percentage(int(obtained / count)),
                 "value": int(obtained / count)

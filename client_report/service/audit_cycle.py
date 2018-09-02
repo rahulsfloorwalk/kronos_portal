@@ -64,18 +64,23 @@ def get_audit_cycle_section_averages(qs, user_id):
 
 def get_averages_for_sections_for_client_user(sections, user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
+    visible_audit_stores = client_service.find_visible_to_client_user(user)
     section_averages = []
     for section in sections:
-        sec = {}
-        sec['section'] = section
-        report_sections = section.report_sections.all()
-        visible_audit_stores = client_service.find_visible_to_client_user(user)
-        filtered_report_sections = [rs for rs in report_sections if rs.audit_store in visible_audit_stores]
-        sec['average'] = get_average_for_report_sections(filtered_report_sections)
         if section.max_marks() > 0:
+            sec = {}
+            sec['section'] = section
+            filtered_report_sections = ReportSection.objects\
+                .filter(audit_store__in=visible_audit_stores)\
+                .filter(section=section)\
+                .prefetch_related(
+                    'section',
+                    'section__questions',
+                    'section__questions__answers'
+                )
+            sec['average'] = get_average_for_report_sections(filtered_report_sections)
+        # if section.max_marks() > 0:
             section_averages.append(sec)
-
-    section_averages = sorted(section_averages, key=lambda sec: sec['section'].sequence)
     return section_averages
 
 
@@ -93,11 +98,15 @@ def get_average_for_report_sections(report_sections):
             'color_code': get_color_code_by_percentage(int(total / counter)),
             'value': int(total / counter)
         }
-
+    return None
 
 # def get_audit_stores_for_user(user):
 #     return client_service.find_visible_to_client_user(user)
 
+def get_section_wise_report_sections(report_sections):
+    bucketed_report_sections = {}
+    for report_section in report_sections:
+        bucketed_report_sections.get(report_section.section, []).append(report_sections)
 
 def get_excel_report(data):
     return data

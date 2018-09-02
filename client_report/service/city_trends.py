@@ -1,3 +1,4 @@
+import itertools
 from django.db.models import Prefetch
 
 from audit.service import audit_cycle_client_service
@@ -11,17 +12,22 @@ from client.service import client_user as client_user_service
 def get_performing_cities(audit_cycle, user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
     stores = {}
-    for audit in audit_cycle.audits.all():
+    visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
+        .filter(audit__audit_cycle=audit_cycle) \
+        .prefetch_related(
+        'audit__store__city',
+        'report_sections',
+        'report_sections__section',
+        'report_sections__section__questions',
+        'report_sections__section__questions__answers',
+    )
+    for k, g in itertools.groupby(visible_audit_stores_in_cycle, lambda x: x.audit.store):
         obtained = 0
         count = 0
-        audit_stores = audit.audit_stores.all()
-        visible_audit_stores = client_service.find_visible_to_client_user(user)
-        filtered_audit_stores = [audit_store for audit_store in audit_stores if audit_store in visible_audit_stores]
-        for audit_store in filtered_audit_stores:
+        for audit_store in list(g):
             obtained += audit_store.percentage()
             count += 1
-        if count > 0: stores[audit.store] = obtained / count
-
+        if count > 0: stores[k] = obtained / count
     cities = {}
     for store, avg in stores.items():
         if cities.get(store.city) is None:
