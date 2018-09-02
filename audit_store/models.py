@@ -53,6 +53,8 @@ class AuditStoreQuerySet(QuerySet):
         audit_store.audit_date = audit_date
         audit_store.user = auditor
         audit_store.status = AuditStore.ASSIGNED
+        audit_store.reimbursement = audit.reimbursement
+        audit_store.earnings_per_audit = audit.earnings_per_audit
         audit_store.save()
         audit_store_status_change.send(
             sender=self.__class__,
