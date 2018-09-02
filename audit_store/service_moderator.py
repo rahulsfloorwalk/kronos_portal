@@ -1,7 +1,7 @@
 from django.db.transaction import atomic
 from guardian.shortcuts import get_objects_for_user
 
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from registration.service.moderator import find_moderator_by_user_id
 
@@ -9,7 +9,6 @@ from audit.models import AuditCycle
 from audit_store.models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
-
 
 def find_qa_completed_audit_stores_for_moderator(user_id):
     # TODO: move this in to the AuditStoreQuerySet
@@ -96,3 +95,21 @@ def unsubmit_for_moderator(audit_store_id, user_id):
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
     audit_store.revert_submit(by=user)
     return audit_store
+
+def set_reimbursement_for_moderator(audit_store_id, reimbursement, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+
+    if audit_store.is_editable_by_moderator():
+        audit_store.set_reimbursement(reimbursement)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set reimbursement now")
+
+def set_earnings_per_audit_for_moderator(audit_store_id, earnings_per_audit, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+
+    if audit_store.is_editable_by_moderator():
+        audit_store.set_earnings_per_audit(earnings_per_audit)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set earnings per audit now")

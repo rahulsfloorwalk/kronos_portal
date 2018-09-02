@@ -5,6 +5,7 @@ from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, Attach
 from .views import AuditStorePendingView, AuditStoreCompletedView
 from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView
+from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView
 from .views import ConfigView
 
 urlpatterns = ([
@@ -28,6 +29,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/earnings_per_audit$', AuditStoreIdEarningsPerAuditView.as_view(), name='audit_store_id_earnings_per_audit_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/reimbursement$', AuditStoreIdReimbursementView.as_view(), name='audit_store_id_reimbursement_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/qa_rating$', AuditStoreIdQARatingView.as_view(), name='audit_store_id_qa_rating_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', AuditStoreIdSubmitView.as_view(), name='audit_store_id_submit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/unsubmit$', AuditStoreIdUnSubmitView.as_view(), name='audit_store_id_unsubmit_view'),

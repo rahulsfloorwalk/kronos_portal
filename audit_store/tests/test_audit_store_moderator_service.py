@@ -104,3 +104,14 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         report = service_moderator.set_audit_date_for_moderator(audit_store.id, date(2018, 8, 13), self.moderator_user.id)
         self.assertEqual(date(2018, 8, 13), report.audit_date)
 
+    def test_set_reimbursement_for_moderator_sets_date_correctly(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        report = service_moderator.set_reimbursement_for_moderator(audit_store.id, 2000, self.moderator_user.id)
+        self.assertEqual(2000, report.reimbursement)
+
+    def test_set_earnings_per_audit_for_moderator_sets_date_correctly(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        report = service_moderator.set_earnings_per_audit_for_moderator(audit_store.id, 2000, self.moderator_user.id)
+        self.assertEqual(2000, report.earnings_per_audit)

@@ -94,6 +94,32 @@ class AuditStoreIdAuditDateView(APIView):
         audit_store = audit_store_service.set_audit_date_for_moderator(audit_store_id, ds.validated_data['audit_date'], request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+class AuditStoreIdEarningsPerAuditView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    class DeSerializer(Serializer):
+        earnings_per_audit = IntegerField()
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = audit_store_service.set_earnings_per_audit_for_moderator(audit_store_id, ds.validated_data['earnings_per_audit'], request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+class AuditStoreIdReimbursementView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+    class DeSerializer(Serializer):
+        reimbursement = IntegerField()
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = audit_store_service.set_reimbursement_for_moderator(audit_store_id, ds.validated_data['reimbursement'], request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
 class AuditStoreIdQARatingView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
