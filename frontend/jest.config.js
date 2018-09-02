@@ -1,5 +1,5 @@
 module.exports = {
-	setupTestFrameworkScriptFile: "./js/__tests__/setup.js",
+	setupTestFrameworkScriptFile: "./js/test_setup.js",
 	testPathIgnorePatterns: [
 		"./js/__tests__/setup.js",
 	],
