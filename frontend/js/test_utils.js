@@ -27,3 +27,32 @@ export class RouterContextProvider extends React.Component {
 		return this.props.children;
 	}
 }
+
+export const createRouterContextProvider = (mocks) => {
+	return class RouterContextProvider extends React.Component {
+		static propTypes = {
+			children: PropTypes.node,
+		};
+
+		static childContextTypes = {
+			router: PropTypes.object,
+		};
+
+		getChildContext = () => ({
+			router: {
+				isActive: mocks.isActive || jest.fn(),
+				push: mocks.push || jest.fn(),
+				replace: mocks.replace || jest.fn(),
+				go: mocks.go || jest.fn(),
+				goBack: mocks.goBack || jest.fn(),
+				goForward: mocks.goForward || jest.fn(),
+				setRouteLeaveHook: mocks.setRouteLeaveHook || jest.fn(),
+				createHref: mocks.createHref || jest.fn(),
+			},
+		});
+
+		render() {
+			return this.props.children;
+		}
+	};
+};

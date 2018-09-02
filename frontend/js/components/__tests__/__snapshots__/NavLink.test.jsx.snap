@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<NavLink/> renders content within an active nav link 1`] = `
+<li
+  className="active"
+  role="presentation"
+>
+  <a
+    onClick={[Function]}
+    style={Object {}}
+  >
+    View
+  </a>
+</li>
+`;
+
+exports[`<NavLink/> renders content within an inactive nav link 1`] = `
+<li
+  className=""
+  role="presentation"
+>
+  <a
+    onClick={[Function]}
+    style={Object {}}
+  >
+    View
+  </a>
+</li>
+`;
