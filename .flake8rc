@@ -1,5 +1,5 @@
 [flake8]
-ignore = E501,E225,E231,E302,E301,W391,E701,E251
+ignore = E501,E225,E231,E302,E301,W391,E701,E251,E265,E303
 exclude =
 	venv
 	.git
