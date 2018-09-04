@@ -57,11 +57,11 @@ import AuditCopyForm from "./AuditCopyForm.jsx";
 import AuditForm from "./AuditForm.jsx";
 
 import AuditStoreList from "./AuditStoreList.jsx";
-import AuditStoreAcceptForm from "./AuditStoreAcceptForm.jsx";
 import AuditStoreCompleteForm from "./AuditStoreCompleteForm.jsx";
 import AuditStoreQARatingForm from "./AuditStoreQARatingForm.jsx";
 import AuditStoreDetails from "./AuditStoreDetails.jsx";
 import AuditStoreReport from "./AuditStoreReport.jsx";
+import AuditStoreEarningsPerAuditForm from "./audit_store/AuditStoreEarningsPerAuditForm.jsx";
 
 import AuditFiatAssignForm from "./AuditFiatAssignForm.jsx";
 
@@ -125,11 +125,8 @@ const Routes = () => (
 					<Route path=":auditId/application/fiat" component={AuditFiatAssignForm}/>
 					<Route path=":auditId/application/:applicationId/approve" component={ApplicationApproveForm}/>
 					<Route path=":auditId/application/:applicationId/reject" component={ApplicationRejectForm}/>
-					<Route path="audit_store/:auditStoreId/accept" component={AuditStoreAcceptForm}/>
 				</Route>
-				<Route path="audit_store" components={AuditStoreList}>
-					<Route path=":auditStoreId/accept" component={AuditStoreAcceptForm}/>
-				</Route>
+				<Route path="audit_store" components={AuditStoreList}/>
 				<Route path="payment" components={AuditCyclePaymentList}/>
 				<Route path="moderator" components={AuditCycleModeratorList}>
 					<Route path="assign" component={AuditCycleModeratorAssignForm}/>
@@ -142,6 +139,7 @@ const Routes = () => (
 			<Route path="audit_store/:auditStoreId" components={AuditStoreDetails}>
 				<Route path="report" components={AuditStoreReport}/>
 				<Route path="qa_rating" components={AuditStoreQARatingForm}/>
+				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm}/>
 			</Route>
 
 			<Route path="auditor" component={AuditorList}/>

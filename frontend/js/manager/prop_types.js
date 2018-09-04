@@ -13,7 +13,6 @@ export const auditStorePropType = PropTypes.shape({
 		audit_cycle: PropTypes.shape({
 			type: PropTypes.string.isRequired,
 			client: PropTypes.shape({
-				auditor_display_name: PropTypes.string.isRequired,
 			}),
 			post_approval_description: PropTypes.string,
 		}).isRequired,

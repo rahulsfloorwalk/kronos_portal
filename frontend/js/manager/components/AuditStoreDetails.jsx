@@ -248,7 +248,9 @@ export class AuditStoreDetails extends React.Component{
 							</tr>
 							<tr>
 								<td className="text-right">Fees:</td>
-								<th>₹ {this.props.auditStore.audit.earnings_per_audit}</th>
+								<th>
+									₹ {this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit} (<Link to={`/audit_store/${this.props.auditStore.id}/earnings_per_audit`}>change</Link>)
+								</th>
 							</tr>
 							<tr>
 								<td className="text-right">Reimbursement upto:</td>
