@@ -2,7 +2,7 @@ from datetime import date
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
-from audit_store.models import AuditStore
+from expects import expect, equal
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
@@ -14,6 +14,7 @@ from questionnaire.models import Question
 from auditor.models import ProfileInfo
 from audit_store import service
 from audit.models import AuditCycle, Audit
+from audit_store.models import AuditStore
 
 
 class AuditStoreServiceTestCase(TestCase):
@@ -186,3 +187,13 @@ class AuditStoreServiceTestCase(TestCase):
         self.assertEqual(len(audit_stores), 5)
         for report in audit_stores:
             self.assertEqual(report.audit, audit)
+
+    def test_accept_accepts_report_and_adds_payment(self):
+        audit = mommy.make(Audit, reimbursement=5000, earnings_per_audit=2000)
+        audit_store = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+
+        audit_store = service.accept(audit_store.id, 7000, self.manager_user)
+        expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
+        expect(audit_store.payments.count()).to(equal(1))
+        expect(audit_store.payments.first().amount).to(equal(7000))
+
