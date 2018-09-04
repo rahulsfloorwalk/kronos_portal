@@ -2,10 +2,12 @@ import logging
 
 from django.conf import settings
 from django.template.loader import get_template
+from django.contrib.auth.models import Group
 
 import audit_store.service as audit_store_service
 
 from kronos.celery import app
+from registration.models import GROUP_NAME_AGENCY
 
 from .mail import send_email
 
@@ -57,9 +59,11 @@ def send_post_audit_reminders():
 @app.task(ignore_result=True)
 def send_reminder_for_audit_store(audit_store_id, reminder_type):
     audit_store = audit_store_service.find_by_id(audit_store_id)
+    if audit_store.user.groups.filter(name=GROUP_NAME_AGENCY).exists():
+        _logger.info("skipping reminder email for agency with user id %s", audit_store.user.id)
+        return
 
     params = {}
-
     params['to_email'] = audit_store.user.email
     params['first_name'] = audit_store.user.profileinfo.first_name
     params['last_name'] = audit_store.user.profileinfo.last_name
