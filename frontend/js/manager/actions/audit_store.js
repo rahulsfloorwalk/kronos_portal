@@ -229,30 +229,28 @@ export function unSubmitAuditStore(auditStoreId){
 	};
 }
 
-export function acceptAuditStore(auditStoreId, payment_amount){
+export function acceptAuditStore(auditStoreId){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_ACCEPT,
 			status: "request",
-			auditStoreId
+			auditStoreId,
 		});
 
-		let promise = $.ajax({
-			url: url.api_base_path + `manager/audit_store/${auditStoreId}/accept`,
-			method: "POST",
-			data: JSON.stringify({
-				"payment_amount": payment_amount,
-			}),
-			contentType: "application/json",
-		});
-		promise.done(function(auditStore){
+		const promise = $.post(url.api_base_path + `manager/audit_store/${auditStoreId}/accept`);
+		promise.then((auditStore) => {
 			dispatch({
 				type: types.AUDIT_STORE_ID_ACCEPT,
 				status: "success",
-				auditStore
+				auditStore,
+			});
+		}, (error) => {
+			dispatch({
+				type: types.AUDIT_STORE_ID_ACCEPT,
+				status: "error",
+				errors: error.responseJSON,
 			});
 		});
-		//TODO: Handle error
 		return promise;
 	};
 }
