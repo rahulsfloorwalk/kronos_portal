@@ -23,6 +23,28 @@ export function rate(audit_store_id, qa_rating){
 	});
 }
 
+export function setReimbursement(audit_store_id, reimbursement){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/reimbursement`,
+		method: "POST",
+		data: JSON.stringify({
+			reimbursement
+		}),
+		contentType: "application/json"
+	});
+}
+
+export function setEarningsPerAudit(audit_store_id, earnings_per_audit){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/earnings_per_audit`,
+		method: "POST",
+		data: JSON.stringify({
+			earnings_per_audit
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function assignAuditStoreToClientUser(audit_store_id, client_user_id){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/client_user`,
