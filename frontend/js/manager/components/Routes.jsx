@@ -146,15 +146,14 @@ const Routes = () => (
 
 			<Route path="auditor" component={AuditorList}/>
 			<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
-				<Route path="details" component={AuditorDetails}>
-					<Route path="preferences/edit" component={PreferencesForm}/>
-					<Route path="applications" component={AuditorApplicationList}/>
-					<Route path="reports" component={AuditorReportList}/>
-					<Route path="email_log" component={AuditorEmailLog}/>
-					<Route path="id_proof" component={AuditorIdProof}/>
-					<Route path="payment" component={AuditorPayment}/>
-					<Route path="referral" component={AuditorReferralList}/>
-				</Route>
+				<Route path="details" component={AuditorDetails}/>
+				<Route path="preferences/edit" component={PreferencesForm}/>
+				<Route path="applications" component={AuditorApplicationList}/>
+				<Route path="reports" component={AuditorReportList}/>
+				<Route path="email_log" component={AuditorEmailLog}/>
+				<Route path="id_proof" component={AuditorIdProof}/>
+				<Route path="payment" component={AuditorPayment}/>
+				<Route path="referral" component={AuditorReferralList}/>
 			</Route>
 
 			<Route path="agency_user" component={AgencyUserSearch}/>
