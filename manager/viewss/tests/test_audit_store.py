@@ -6,6 +6,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.test import APITestCase
 
 from model_mommy import mommy
+from expects import expect, equal
 
 from faker import Faker
 
@@ -468,3 +469,63 @@ class AuditStoreIdEarningsPerAuditView(APITestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["earnings_per_audit"], earnings_per_audit)
+
+class AuditStoreIdAcceptTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_post_changes_status_to_accepted(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user, reimbursement=5000, earnings_per_audit=2000)
+        self.login()
+
+        response = self.client.post(reverse('manager:audit_store_id_accept_view', kwargs = {
+            'audit_store_id': audit_store.id
+        }))
+        expect(response.status_code).to(equal(200))
+        expect(response.data["status"]).to(equal(AuditStore.ACCEPTED))
+
+
+class AcceptAllCompletedForAuditCycleTestCase(APITestCase):
+    fixtures = ['groups']
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_post_returns_the_correct_count(self):
+        audit = mommy.make(Audit, reimbursement=5000, earnings_per_audit=2000)
+        mommy.make(AuditStore, status=AuditStore.COMPLETED, audit=audit, user=self.auditor_user, _quantity=5)
+        mommy.make(AuditStore, status=AuditStore.ASSIGNED, audit=audit, user=self.auditor_user, _quantity=2)
+        self.login()
+
+        response = self.client.post(reverse('manager:accept_all_completed_for_audit_cycle', kwargs = {
+            'audit_cycle_id': audit.audit_cycle_id
+        }))
+        expect(response.status_code).to(equal(200))
+        expect(response.data).to(equal(5))
+
