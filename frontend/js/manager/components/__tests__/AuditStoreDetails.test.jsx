@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { Provider } from "react-redux";
 import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
@@ -150,6 +149,23 @@ describe("<AuditStoreDetails/>", () => {
 		setTimeout(() => {
 			expect(store.getActions()[1]).toEqual({
 				type: types.AUDIT_STORE_ID_PM_REVERT,
+				status: "request",
+				auditStoreId: sampleParams.auditStoreId,
+			});
+			done();
+		});
+	});
+
+	it("dispatches the ACCEPT request action when ACCEPT button is clicked", (done) => {
+		const testAuditStore = Object.assign({}, sampleAuditStore, { status: "COMPLETED" });
+		const r = shallow(<AuditStoreDetails auditStore={testAuditStore} params={sampleParams} dispatch={store.dispatch} router={mockRouter}/>);
+		const acceptButton = r.find("div.panel-footer > button").at(1);
+		expect(acceptButton.length).toEqual(1);
+		expect(acceptButton.text()).toEqual("Accept");
+		acceptButton.simulate("click");
+		setTimeout(() => {
+			expect(store.getActions()[1]).toEqual({
+				type: types.AUDIT_STORE_ID_ACCEPT,
 				status: "request",
 				auditStoreId: sampleParams.auditStoreId,
 			});

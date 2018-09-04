@@ -1831,13 +1831,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
         Revert from Client
       </button>
        
-      <a
+      <button
         className="btn btn-success"
         onClick={[Function]}
-        style={Object {}}
+        type="button"
       >
         Accept
-      </a>
+      </button>
        
       <button
         className="btn btn-danger"

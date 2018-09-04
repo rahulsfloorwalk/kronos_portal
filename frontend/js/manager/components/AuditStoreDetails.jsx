@@ -66,18 +66,18 @@ export class AuditStoreDetails extends React.Component{
 		});
 	};
 	qaOkButtonClicked = () => {
-		this.props.dispatch(qaOkAuditStore(this.props.params.auditStoreId)).then((auditStore)=>{
+		this.props.dispatch(qaOkAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT FORWARDED TO PM REVIEW");
 		});
 	};
 	pmRevertButtonClicked = () => {
-		this.props.dispatch(pmRevertAuditStore(this.props.params.auditStoreId)).then((auditStore)=>{
+		this.props.dispatch(pmRevertAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT MOVED BACK TO QA");
 		});
 	};
 	completeButtonClicked = () => {
 		this.props.dispatch(completeAuditStore(this.props.params.auditStoreId)).then(()=>{
-			Alert.success("REPORT COMPLETED");
+			Alert.success("REPORT IN CLIENT REVIEW");
 		});
 	};
 	failButtonClicked = () => {
@@ -151,7 +151,7 @@ export class AuditStoreDetails extends React.Component{
 		}
 		if (this.props.auditStore.status === "COMPLETED"){
 			uncompleteButton = (<button onClick={this.uncompleteButtonClicked} type="button" className="btn btn-default">Revert from Client</button>);
-			acceptButton = (<Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store/${this.props.auditStore.id}/accept`} className="btn btn-success">Accept</Link>);
+			acceptButton = (<button onClick={this.acceptButtonClicked} type="button" className="btn btn-success">Accept</button>);
 			rejectButton = (<button onClick={this.rejectButtonClicked} type="button" className="btn btn-danger">Reject</button>);
 		}
 		if(this.props.auditStore.status === "ASSIGNED" ||
@@ -199,7 +199,6 @@ export class AuditStoreDetails extends React.Component{
 			<MarkdownViewer markdown={this.props.auditStore.audit.post_approval_description || ""}/>
 			<MarkdownViewer markdown={this.props.auditStore.audit.audit_cycle.post_approval_description || ""}/>
 		</div>);
-		let auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
 
 		let errorFirst;
 		if(this.props.errors && this.props.errors.non_field_errors){
