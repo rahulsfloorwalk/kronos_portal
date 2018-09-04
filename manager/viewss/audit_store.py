@@ -186,12 +186,8 @@ class AuditStoreIdAcceptView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
-    class DeSerializer(Serializer):
-        payment_amount = IntegerField()
     def post(self, request, audit_store_id):
-        ds = self.DeSerializer(data=request.data)
-        ds.is_valid(raise_exception=True)
-        audit_store = audit_store_service.accept(audit_store_id, ds.validated_data['payment_amount'], request.user)
+        audit_store = audit_store_service.accept(audit_store_id, request.user)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdRejectView(APIView):

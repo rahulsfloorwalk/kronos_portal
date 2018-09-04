@@ -210,10 +210,13 @@ def uncomplete(audit_store_id, user_actor):
         raise ObjectNotFound from e
 
 @atomic
-def accept(audit_store_id, payment_amount, user_actor):
+def accept(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
         audit_store.accept(by=user_actor)
+        earnings_per_audit = audit_store.earnings_per_audit or audit_store.audit.earnings_per_audit
+        reimbursement = audit_store.reimbursement or audit_store.audit.reimbursement
+        payment_amount = earnings_per_audit + reimbursement
         # add the entry to the payment row
         payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, payment_amount, user_actor)
         return audit_store
@@ -261,7 +264,6 @@ def accept_all_audit_stores(audit_cycle_id, user_actor):
     completed_audit_stores = find_by_audit_cycle(audit_cycle_id).filter(status=AuditStore.COMPLETED)
 
     for audit_store in completed_audit_stores:
-        total = (audit_store.audit.earnings_per_audit or 0) + (audit_store.audit.reimbursement or 0)
-        accept(audit_store.id, total, user_actor)
+        accept(audit_store.id, user_actor)
 
     return len(completed_audit_stores)

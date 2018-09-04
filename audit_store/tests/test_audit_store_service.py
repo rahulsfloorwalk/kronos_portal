@@ -189,11 +189,30 @@ class AuditStoreServiceTestCase(TestCase):
             self.assertEqual(report.audit, audit)
 
     def test_accept_accepts_report_and_adds_payment(self):
-        audit = mommy.make(Audit, reimbursement=5000, earnings_per_audit=2000)
-        audit_store = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+        audit_store = mommy.make(AuditStore, user=self.auditor_user, earnings_per_audit=2000, reimbursement=5000, status=AuditStore.COMPLETED)
 
-        audit_store = service.accept(audit_store.id, 7000, self.manager_user)
+        audit_store = service.accept(audit_store.id, self.manager_user)
         expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
         expect(audit_store.payments.count()).to(equal(1))
         expect(audit_store.payments.first().amount).to(equal(7000))
 
+    def test_accept_accepts_report_and_defaults_to_audit_values(self):
+        audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
+        audit_store = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+
+        audit_store = service.accept(audit_store.id, self.manager_user)
+        expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
+        expect(audit_store.payments.count()).to(equal(1))
+        expect(audit_store.payments.first().amount).to(equal(7000))
+
+    def test_accept_all_accepts_all_reports(self):
+        audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
+        audit_stores = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED, _quantity=5)
+
+        count = service.accept_all_audit_stores(audit.audit_cycle_id, self.manager_user)
+        expect(count).to(equal(len(audit_stores)))
+        for audit_store in audit_stores:
+            audit_store.refresh_from_db()
+            expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
+            expect(audit_store.payments.count()).to(equal(1))
+            expect(audit_store.payments.first().amount).to(equal(7000))
