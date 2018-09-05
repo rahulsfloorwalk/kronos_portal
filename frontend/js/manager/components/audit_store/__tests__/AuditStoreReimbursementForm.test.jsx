@@ -3,15 +3,15 @@ import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 
 import FormInput from "../../../../components/FormInput.jsx";
-import { AuditStoreEarningsPerAuditForm } from "../AuditStoreEarningsPerAuditForm.jsx";
+import { AuditStoreReimbursementForm } from "../AuditStoreReimbursementForm.jsx";
 
-describe("<AuditStoreEarningsPerAuditForm/>", () => {
+describe("<AuditStoreReimbursementForm/>", () => {
 	const sampleParams = {
 		auditStoreId: "5",
 	};
 
 	const sampleErrors = {
-		earnings_per_audit: ["This field is required"],
+		reimbursement: ["This field is required"],
 	};
 
 	const sampleAuditStore = {
@@ -58,7 +58,7 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 	});
 
 	it("is rendered correctly when the AuditStore is loading", () => {
-		const r = renderer.create(<AuditStoreEarningsPerAuditForm
+		const r = renderer.create(<AuditStoreReimbursementForm
 			auditStore={undefined}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
@@ -69,7 +69,7 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 	});
 
 	it("renders the earnings per audit pre-filled", () => {
-		const r = renderer.create(<AuditStoreEarningsPerAuditForm
+		const r = renderer.create(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
@@ -81,7 +81,7 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 
 	it("prevents default form action when the form is submitted", () => {
 		onSubmit.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreEarningsPerAuditForm
+		const r = shallow(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
@@ -95,34 +95,34 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 
 	it("calls onSubmit when the form is submitted", () => {
 		onSubmit.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreEarningsPerAuditForm
+		const r = shallow(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
 			router={mockRouter}
 			params={sampleParams}
 		/>);
-		r.find(FormInput).simulate("change", { target: { name: "earnings_per_audit", value: "1000" }});
+		r.find(FormInput).simulate("change", { target: { name: "reimbursement", value: "1000" }});
 		r.find("form").simulate("submit", formSubmitEvent);
 		expect(onSubmit).toBeCalledWith(sampleParams.auditStoreId, "1000");
 	});
 
 	it("updates the form when the amount is changed", () => {
 		onSubmit.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreEarningsPerAuditForm
+		const r = shallow(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
 			router={mockRouter}
 			params={sampleParams}
 		/>);
-		r.find(FormInput).simulate("change", { target: { name: "earnings_per_audit", value: "1000" }});
+		r.find(FormInput).simulate("change", { target: { name: "reimbursement", value: "1000" }});
 		expect(r.find(FormInput).prop("value")).toEqual("1000");
 	});
 
 	it("closes modal and redirects when the save is successful", (done) => {
 		onSubmit.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreEarningsPerAuditForm
+		const r = shallow(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
@@ -141,7 +141,7 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 		onSubmit.mockRejectedValue({
 			responseJSON: sampleErrors,
 		});
-		const r = shallow(<AuditStoreEarningsPerAuditForm
+		const r = shallow(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}
@@ -152,7 +152,7 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 		r.find("form").simulate("submit", formSubmitEvent);
 		setTimeout(() => {
 			r.update();
-			expect(r.find(FormInput).prop("errors")).toEqual(sampleErrors.earnings_per_audit);
+			expect(r.find(FormInput).prop("errors")).toEqual(sampleErrors.reimbursement);
 			done();
 		});
 	});
@@ -161,7 +161,7 @@ describe("<AuditStoreEarningsPerAuditForm/>", () => {
 		onSubmit.mockRejectedValue({
 			responseJSON: sampleErrors,
 		});
-		const r = shallow(<AuditStoreEarningsPerAuditForm
+		const r = shallow(<AuditStoreReimbursementForm
 			auditStore={sampleAuditStore}
 			loadAuditStore={loadAuditStore}
 			onSubmit={onSubmit}

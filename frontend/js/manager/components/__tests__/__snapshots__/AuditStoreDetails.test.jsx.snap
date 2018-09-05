@@ -160,6 +160,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -485,6 +494,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -797,6 +815,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -1120,6 +1147,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -1450,6 +1486,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -1762,6 +1807,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -2095,6 +2149,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -2418,6 +2481,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -3150,6 +3222,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -3473,6 +3554,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
@@ -4205,6 +4295,15 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
           </td>
           <th>
             ₹ 
+            700
+             (
+            <a
+              onClick={[Function]}
+              style={Object {}}
+            >
+              change
+            </a>
+            )
           </th>
         </tr>
         <tr>
