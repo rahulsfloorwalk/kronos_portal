@@ -36,9 +36,31 @@ export function qaOk(auditStoreId){
 export function setAuditDate(auditStoreId, auditDate){
 	return $.ajax({
 		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/audit_date`,
-		type: "POST",
+		method: "POST",
 		data: JSON.stringify({
 			audit_date: auditDate
+		}),
+		contentType: "application/json"
+	});
+}
+
+export function setEarningsPerAudit(auditStoreId, earnings_per_audit){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/earnings_per_audit`,
+		method: "POST",
+		data: JSON.stringify({
+			earnings_per_audit,
+		}),
+		contentType: "application/json"
+	});
+}
+
+export function setReimbursement(auditStoreId, reimbursement){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/reimbursement`,
+		method: "POST",
+		data: JSON.stringify({
+			reimbursement,
 		}),
 		contentType: "application/json"
 	});
