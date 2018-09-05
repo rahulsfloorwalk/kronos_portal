@@ -88,7 +88,6 @@ def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
     audit_store = find_by_id_for_moderator(audit_store_id, user.id)
     return audit_store_service.set_audit_date(audit_store.id, audit_date)
 
-
 @atomic
 def unsubmit_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)

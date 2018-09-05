@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 
 from guardian.shortcuts import assign_perm
 
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NAME_MODERATOR
 from auditor.models import ProfileInfo
@@ -104,14 +104,26 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         report = service_moderator.set_audit_date_for_moderator(audit_store.id, date(2018, 8, 13), self.moderator_user.id)
         self.assertEqual(date(2018, 8, 13), report.audit_date)
 
-    def test_set_reimbursement_for_moderator_sets_date_correctly(self):
+    def test_set_reimbursement_for_moderator_sets_reimbursement_correctly(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
         assign_perm('moderator_manage', self.moderator_user, audit_store)
         report = service_moderator.set_reimbursement_for_moderator(audit_store.id, 2000, self.moderator_user.id)
         self.assertEqual(2000, report.reimbursement)
 
-    def test_set_earnings_per_audit_for_moderator_sets_date_correctly(self):
+    def test_set_reimbursement_raises_when_report_is_not_editable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        with self.assertRaisesRegex(AppLogicError, "cannot set reimbursement now"):
+            service_moderator.set_reimbursement_for_moderator(audit_store.id, 2000, self.moderator_user.id)
+
+    def test_set_earnings_per_audit_for_moderator_sets_earnings_pera_audit_correctly(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
         assign_perm('moderator_manage', self.moderator_user, audit_store)
         report = service_moderator.set_earnings_per_audit_for_moderator(audit_store.id, 2000, self.moderator_user.id)
         self.assertEqual(2000, report.earnings_per_audit)
+
+    def test_set_earnings_per_audit_raises_when_report_is_not_editable(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        assign_perm('moderator_manage', self.moderator_user, audit_store)
+        with self.assertRaisesRegex(AppLogicError, "cannot set earnings per audit now"):
+            service_moderator.set_earnings_per_audit_for_moderator(audit_store.id, 2000, self.moderator_user.id)
