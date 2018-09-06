@@ -17,8 +17,10 @@ export default class AuditStoreDetails extends React.Component {
 	};
 
 	render() {
-		const fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
-		const reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
+		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
+		const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
+		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
+		const reimb = reimbursement ? <span>Reimbursement upto: <b>₹ {reimbursement}</b></span> : "";
 
 		return (
 			<div>

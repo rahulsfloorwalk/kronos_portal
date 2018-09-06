@@ -161,6 +161,8 @@ class AuditStoreSerializer(ModelSerializer):
             'id',
             'status',
             'audit_date',
+            'earnings_per_audit',
+            'reimbursement',
             'audit',
             'user',
             'is_editable_by_agency',

@@ -32,10 +32,18 @@ describe("<AuditStoreRow/>", () => {
 
 
 	it("renders a single auditStore list item correctly", () => {
-		const r = renderer.create(<AuditStoreRow auditStore={sampleAuditStore}/>);
+		const auditStore = Object.assign({}, sampleAuditStore, {
+			earnings_per_audit: 600,
+			reimbursement: 500,
+		});
+		const r = renderer.create(<AuditStoreRow auditStore={auditStore}/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
+	it("renders a single auditStore list item correctly with amounts from the audit", () => {
+		const r = renderer.create(<AuditStoreRow auditStore={sampleAuditStore}/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
 });
 
 describe("<__AuditStoreList/>", () => {
@@ -44,6 +52,8 @@ describe("<__AuditStoreList/>", () => {
 			id: 2,
 			status: "ACKNOWLEDGED",
 			audit_date: "2018-02-02",
+			earnings_per_audit: 600,
+			reimbursement: 500,
 			audit: {
 				earnings_per_audit: 500,
 				reimbursement: 400,

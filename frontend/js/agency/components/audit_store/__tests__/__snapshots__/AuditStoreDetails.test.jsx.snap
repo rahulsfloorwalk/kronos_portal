@@ -63,6 +63,146 @@ exports[`<AuditStoreDetails/> renders the details section for the audit store 1`
               <th>
                 <b>
                   Fees: ₹ 
+                  600
+                  , 
+                </b>
+                <span>
+                  Reimbursement upto: 
+                  <b>
+                    ₹ 
+                    500
+                  </b>
+                </span>
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Audit Date:
+              </td>
+              <th>
+                2nd Feb 2018
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Status:
+              </td>
+              <th>
+                <span
+                  className="label label-warning2"
+                  style={
+                    Object {
+                      "fontSize": "100%",
+                    }
+                  }
+                >
+                  In Progress
+                </span>
+              </th>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          className="panel-body"
+        >
+          <div
+            className="text-center text-muted"
+          >
+            <img
+              alt="loading..."
+              src="/static/img/ripple.svg"
+              title="Please Wait"
+            />
+            <p>
+              LOADING
+            </p>
+          </div>
+          <div
+            className="text-center text-muted"
+          >
+            <img
+              alt="loading..."
+              src="/static/img/ripple.svg"
+              title="Please Wait"
+            />
+            <p>
+              LOADING
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<AuditStoreDetails/> renders the details section for the audit store with amounts from the audit 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-file"
+    />
+     Audit Report - 
+    <b>
+      Ravi
+    </b>
+  </h2>
+  <div
+    className="row"
+  >
+    <div
+      className="col-md-12"
+    >
+      <div
+        className="panel panel-default"
+      >
+        <table
+          className="table table-striped"
+        >
+          <tbody>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Store:
+              </td>
+              <th>
+                Factory Outlet
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Phone:
+              </td>
+              <th />
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Address:
+              </td>
+              <th>
+                Shankar Nagar, Dharampeth, Nagpur
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Fees:
+              </td>
+              <th>
+                <b>
+                  Fees: ₹ 
                   500
                   , 
                 </b>

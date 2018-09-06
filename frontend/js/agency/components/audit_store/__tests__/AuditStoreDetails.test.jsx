@@ -27,6 +27,15 @@ describe("<AuditStoreDetails/>", () => {
 	};
 
 	it("renders the details section for the audit store", () => {
+		const auditStore = Object.assign({}, sampleAuditStore, {
+			earnings_per_audit: 600,
+			reimbursement: 500,
+		});
+		const tree = renderer.create(<AuditStoreDetails auditStore={auditStore}/>).toJSON();
+		expect(tree).toMatchSnapshot();
+	});
+
+	it("renders the details section for the audit store with amounts from the audit", () => {
 		const tree = renderer.create(<AuditStoreDetails auditStore={sampleAuditStore}/>).toJSON();
 		expect(tree).toMatchSnapshot();
 	});
