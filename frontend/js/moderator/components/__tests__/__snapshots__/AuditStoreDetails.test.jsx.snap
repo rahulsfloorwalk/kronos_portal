@@ -96,6 +96,14 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -366,6 +374,14 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -636,6 +652,14 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -906,6 +930,14 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -1176,6 +1208,14 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -1452,6 +1492,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -1722,6 +1770,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -1999,6 +2055,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -2262,6 +2326,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -2525,6 +2597,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -2788,6 +2868,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -3051,6 +3139,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -3321,6 +3417,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>
@@ -4036,6 +4140,14 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               </td>
               <th>
                 ₹ 
+                 (
+                <a
+                  onClick={[Function]}
+                  style={Object {}}
+                >
+                  change
+                </a>
+                )
               </th>
             </tr>
             <tr>

@@ -162,7 +162,9 @@ export default class AuditStoreDetails extends React.Component{
 									</tr>
 									<tr>
 										<td className="text-right">Audit Fees:</td>
-										<th>₹ {this.state.auditStore.audit.earnings_per_audit}</th>
+										<th>
+											₹ {this.state.auditStore.earnings_per_audit} (<Link to={`${this.props.location.pathname}/earnings_per_audit`}>change</Link>)
+										</th>
 									</tr>
 									<tr>
 										<td className="text-right">Reimbursement upto:</td>
