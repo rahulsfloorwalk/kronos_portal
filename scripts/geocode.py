@@ -1,18 +1,14 @@
-import os
 import googlemaps
-from datetime import datetime
 from decimal import Decimal
 
 #os.environ.setdefault("DJANGO_SETTINGS_MODULE", "kronos.settings")
-
-from django.conf import settings
 
 from manager.models import City
 from manager.states import states
 
 gmaps = googlemaps.Client(key='INSERT_KEY_HERE')
 
-def get_lat_long( search_str):
+def get_lat_long(search_str):
     print("searching by str: ", search_str)
 
     # Geocoding an address

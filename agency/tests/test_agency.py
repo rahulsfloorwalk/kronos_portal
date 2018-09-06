@@ -6,7 +6,6 @@ from django.test import TestCase
 
 from agency.models import Agency
 from model_mommy import mommy
-from model_mommy.recipe import Recipe
 
 fake = Faker()
 logger = logging.getLogger(__name__)

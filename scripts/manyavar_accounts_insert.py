@@ -1,12 +1,9 @@
 import csv
-from django.db import IntegrityError, transaction
-from django.contrib.auth.models import User, Group
+from django.db import transaction
+from django.contrib.auth.models import User
 
-from registration.models import GROUP_NAME_CLIENT
-
-from client.models import Client, ClientUser, Store
+from client.models import Client, Store
 from client.service import client_user as client_user_service
-from manager.models import City, Location
 
 from client.service import store as store_service
 

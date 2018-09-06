@@ -1,7 +1,5 @@
 from kronos.exceptions import AppLogicError
-from audit_store import service
 from answer.service import report_section as report_section_service
-
 
 def set_not_applicable_for_manager(audit_store_id, section_id, not_applicable):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)

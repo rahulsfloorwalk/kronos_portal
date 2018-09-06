@@ -4,13 +4,11 @@ import datetime
 
 from django.db.transaction import atomic
 
-from client.models import Client, ClientUser, Store
-from manager.models import Location, City
+from client.models import Store
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from questionnaire.models import Question, Section
-from pprint import pprint
 
 store_id_map = {}
 audit_cycle_id_map = {}

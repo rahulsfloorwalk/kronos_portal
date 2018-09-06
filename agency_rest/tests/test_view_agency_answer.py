@@ -10,11 +10,10 @@ from faker import Faker
 
 from registration.models import GROUP_NAME_AGENCY
 
-from agency.models import Agency, AgencyUser, AgencyPresence
+from agency.models import Agency, AgencyUser
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from answer.models import Answer
-from manager.models import City
 from questionnaire.models import Question
 
 fake = Faker()
@@ -42,7 +41,7 @@ class AnswerSubmitViewTestCase(APITestCase):
     def setup_answer(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
         self.plain_question = mommy.make(Question, question_type=Question.PLAIN, section__audit_cycle=self.audit_cycle)
         self.answer = mommy.make(Answer, audit_store=self.audit_store, question=self.plain_question)
 
@@ -118,7 +117,7 @@ class AnswerCommentViewTestCase(APITestCase):
     def setup_answer(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
         self.mutex_question = mommy.make(Question, question_type=Question.MUTEX, section__audit_cycle=self.audit_cycle)
         self.answer = mommy.make(Answer, audit_store=self.audit_store, question=self.mutex_question)
 
@@ -194,7 +193,7 @@ class AnswerListViewTestCase(APITestCase):
     def setup_answer(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
         for i in range(5):
             mommy.make(Answer, audit_store=self.audit_store)
 

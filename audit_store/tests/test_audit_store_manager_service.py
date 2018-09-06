@@ -1,16 +1,13 @@
 from model_mommy import mommy
-from model_mommy.recipe import Recipe
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
+from kronos.exceptions import ObjectNotFound
 from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle
-from questionnaire.models import Section, Question
-from answer.models import ReportSection, Answer
 
 from audit_store import service_manager
 
@@ -31,8 +28,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_submit_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.submit_report(audit_store.id, auditor.id)
 
@@ -44,8 +40,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_revert_submit_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.revert_submit_report(audit_store.id, auditor.id)
 
@@ -57,21 +52,19 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_qa_ok_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.qa_ok_report(audit_store.id, auditor.id)
 
     def test_qa_ok_report_changes_report_status(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.AVERAGE  )
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, qa_rating=AuditStore.AVERAGE)
         modified_audit_store = service_manager.qa_ok_report(audit_store.id, self.manager_user.id)
         self.assertEqual(AuditStore.PM_REVIEW, modified_audit_store.status)
 
     def test_pm_revert_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.pm_revert_report(audit_store.id, auditor.id)
 
@@ -83,8 +76,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_complete_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.complete_report(audit_store.id, auditor.id)
 
@@ -96,8 +88,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_revert_complete_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.revert_complete_report(audit_store.id, auditor.id)
 
@@ -109,8 +100,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_accept_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.accept_report(audit_store.id, auditor.id)
 
@@ -122,8 +112,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_reject_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.reject_report(audit_store.id, auditor.id)
 
@@ -135,8 +124,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_fail_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.fail_report(audit_store.id, auditor.id)
 
@@ -148,8 +136,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
     def test_withdraw_report_raises_when_user_is_not_manager(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_manager.withdraw_report(audit_store.id, auditor.id)
 

@@ -3,7 +3,14 @@ from django.test import TestCase
 
 from faker import Faker
 
-from client_report.service.audit_section import *
+from client_report.service.audit_section import get_audit_store_section_list_for_client
+from client_report.service.audit_section import get_city_aggregation_for_client
+from client_report.service.audit_section import get_city_section_aggregation_for_client
+from client_report.service.audit_section import get_city_section_aggregation_for_manager
+from client_report.service.audit_section import get_store_aggregation_list_for_client
+from client_report.service.audit_section import get_store_aggregation_list_for_manager
+from client_report.service.audit_section import get_store_section_aggregation_for_client
+from client_report.service.audit_section import get_store_section_aggregation_for_manager
 
 fake = Faker()
 

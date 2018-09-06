@@ -1,22 +1,9 @@
 
-from model_mommy import mommy
-from model_mommy.recipe import Recipe
-
 from django.test import TestCase
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
-from kronos.exceptions import ObjectNotFound, AppLogicError
-from audit_store.models import AuditStore
-from registration.models import GROUP_NAME_AUDITOR
-from auditor.models import ProfileInfo
-from audit.models import AuditCycle
-from questionnaire.models import Section, Question
-from answer.models import ReportSection, Answer
-
-from audit_store import service_auditor
 from audit_store import service_client as client_service
 from client.models import Store
-from client.service import client_user as client_user_service
 from guardian.shortcuts import assign_perm
 
 class AuditStoreClientServiceTestCase(TestCase):

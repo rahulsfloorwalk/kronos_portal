@@ -24,7 +24,6 @@ def generate_xlsx_from_structure(report_data):
         'bottom':1,
         'left':1,
         'right':1,
-        'bg_color': "#FFFFFF",
         'valign': 'vcenter',
         'bg_color': '#C6D9F0',
     }
@@ -113,7 +112,7 @@ def generate_xlsx_from_structure(report_data):
                 'x_scale': scale_factor,
                 'y_scale': scale_factor,
             })
-    except HTTPError as e:
+    except HTTPError:
         pass
 
     row += 1

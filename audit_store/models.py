@@ -363,7 +363,6 @@ class AuditStore(Model):
         if not self.is_failable():
             raise AppLogicError("Report cannot be failed now")
 
-        old_status = self.status
         self.qa_rating = AuditStore.BAD
         self.save()
         self._change_status(AuditStore.FAILED, by)

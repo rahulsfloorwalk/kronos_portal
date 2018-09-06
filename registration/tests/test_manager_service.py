@@ -1,6 +1,4 @@
 import logging
-import random
-import string
 
 from faker import Faker
 
@@ -8,10 +6,7 @@ from django.test import TestCase
 
 from django.contrib.auth.models import User, Group
 
-from kronos.exceptions import ObjectNotFound
-
-from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from auditor.models import ProfileInfo
+from registration.models import GROUP_NAME_MANAGER
 from registration.service import manager
 
 fake = Faker()

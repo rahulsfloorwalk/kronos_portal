@@ -33,10 +33,9 @@ class AttachmentAgencyServiceTestCase(TestCase):
     def setUp(self):
         self.agency_group = Group.objects.get(name=GROUP_NAME_AGENCY)
         self.agency_user = mommy.make(User, username="agency@foobar.com", email="agency@foobar.com",
-                                       groups=[self.agency_group])
+                                      groups=[self.agency_group])
         self.another_agency_user = mommy.make(User, username="another@foobar.com", email="another@foobar.com",
-                                       groups=[self.agency_group])
-
+                                              groups=[self.agency_group])
 
     @override_settings(AWS = test_aws_settings)
     def test_upload_for_audit_store_for_agency_creates_attachment(self):

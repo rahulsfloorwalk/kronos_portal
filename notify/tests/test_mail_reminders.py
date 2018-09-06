@@ -1,5 +1,4 @@
 from model_mommy import mommy
-from model_mommy.recipe import Recipe
 
 from django.contrib.auth.models import Group, User
 from django.test import TestCase
@@ -14,7 +13,7 @@ class MailRemindersTestCase(TestCase):
         self.agency_group = Group.objects.get(name=GROUP_NAME_AGENCY)
 
         self.agency_user = mommy.make(User, username="agency@foobar.com", email="agency@foobar.com",
-                                       groups=[self.agency_group])
+                                      groups=[self.agency_group])
 
     def test_send_reminder_for_audit_store_returns_without_sending_mail(self):
         audit_store = mommy.make(AuditStore, user=self.agency_user, status=AuditStore.ACKNOWLEDGED)

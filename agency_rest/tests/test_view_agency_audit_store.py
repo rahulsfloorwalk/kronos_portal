@@ -10,11 +10,9 @@ from faker import Faker
 
 from registration.models import GROUP_NAME_AGENCY
 
-from agency.models import Agency, AgencyUser, AgencyPresence
+from agency.models import Agency, AgencyUser
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
-from answer.models import Answer
-from questionnaire.models import Question
 
 fake = Faker()
 
@@ -41,7 +39,7 @@ class AuditStoreIdAcknowledgeTestCase(APITestCase):
     def setup_audit_store(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
 
 
     def login(self):

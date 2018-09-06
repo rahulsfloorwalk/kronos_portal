@@ -1,7 +1,7 @@
 from django.dispatch import receiver
 from django.utils import timezone
 
-from audit_store.models import AuditStore, ReportStatusLog
+from audit_store.models import ReportStatusLog
 from audit_store.signals import audit_store_status_change
 
 

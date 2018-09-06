@@ -10,10 +10,9 @@ from faker import Faker
 
 from registration.models import GROUP_NAME_AGENCY
 
-from agency.models import Agency, AgencyUser, AgencyPresence
+from agency.models import Agency, AgencyUser
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
-from answer.models import Answer
 from questionnaire.models import Section, Question
 
 fake = Faker()
@@ -41,7 +40,7 @@ class SectionViewTestCase(APITestCase):
     def setup_section(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
         self.section = mommy.make(Section, audit_cycle=self.audit_cycle)
         for i in range(5):
             mommy.make(Question, section=self.section)
@@ -56,9 +55,6 @@ class SectionViewTestCase(APITestCase):
         self.setup_agency_user()
         self.setup_section()
         self.login()
-
-
-        answer_text = "foobar"
 
         url = reverse("agency_rest:section_view", kwargs={
             "audit_store_id": self.audit_store.id

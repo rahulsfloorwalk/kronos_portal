@@ -1,9 +1,8 @@
 
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.utils import DataError, IntegrityError
 
-import hashlib, datetime
+import datetime
 
 import csv
 
@@ -11,7 +10,7 @@ from manager.states import states
 
 from manager.models import City
 from auditor.models import ProfileInfo
-from registration.models import Verification, GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
+from registration.models import Verification, GROUP_NAME_AUDITOR
 
 i = 0
 v = 0
@@ -66,7 +65,7 @@ for u in User.objects.all():
     if u.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         try:
             ProfileInfo.objects.get(user_id=u.id)
-        except ProfileInfo.DoesNotExist as e:
+        except ProfileInfo.DoesNotExist:
             i = i + 1
             with open('final_data.csv') as data:
                 datar = csv.DictReader(data)
@@ -94,19 +93,19 @@ for u in User.objects.all():
                             else:
                                 try:
                                     pi = ProfileInfo(
-                                            user_id=u.id,
-                                            date_of_birth=dob,
-                                            mobile_number=mobile,
-                                            first_name=row['fname'],
-                                            last_name=row['lname'],
-                                            gender=row['gender'],
-                                            marital_status=row['marital_status'],
-                                            education=row['highest_education'],
-                                            household_income=income,
-                                            address=row['address_1'],
-                                            pincode=row['postal_code'],
-                                            city=cities[0],
-                                            state=state
+                                        user_id=u.id,
+                                        date_of_birth=dob,
+                                        mobile_number=mobile,
+                                        first_name=row['fname'],
+                                        last_name=row['lname'],
+                                        gender=row['gender'],
+                                        marital_status=row['marital_status'],
+                                        education=row['highest_education'],
+                                        household_income=income,
+                                        address=row['address_1'],
+                                        pincode=row['postal_code'],
+                                        city=cities[0],
+                                        state=state
                                     )
                                     pi.save()
                                     pi_succ = pi_succ + 1
@@ -128,7 +127,7 @@ for u in User.objects.all():
 
         try:
             Verification.objects.get(user_id=u.id)
-        except Verification.DoesNotExist as e:
+        except Verification.DoesNotExist:
             v = v + 1
 
 print("found {} unknown emails".format(u_emails))

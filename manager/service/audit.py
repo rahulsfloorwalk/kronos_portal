@@ -1,18 +1,9 @@
-from django.db import connection
 from django.db.transaction import atomic
-from django.contrib.auth.models import User, Group
-
-from notifications.signals import notify
-from notifications.models import Notification
-
-from registration.models import GROUP_NAME_MANAGER
-from notify.service import mail_notify
+from django.contrib.auth.models import User
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from notify import verbs
-
 
 @atomic
 def fiat_assign(audit_id, email, audit_date, user_actor):
@@ -38,9 +29,9 @@ def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):
         try:
             return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')[0]
         except IndexError as e:
-            raise ObjectNotFound('Audit cycle not available')
+            raise ObjectNotFound('Audit cycle not available') from e
     else:
         try:
             return AuditCycle.objects.filter(client_id=client_id, type=audit_cycle_type).order_by('-end_date')[0]
         except IndexError as e:
-            raise ObjectNotFound('Audit cycle not available')
+            raise ObjectNotFound('Audit cycle not available') from e

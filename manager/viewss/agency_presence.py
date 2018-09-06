@@ -1,12 +1,8 @@
-from django.contrib.auth.models import User
-
-from rest_framework.generics import ListAPIView
-from rest_framework.filters import SearchFilter
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from registration.mixins import HasGroupPermission
-from registration.models import GROUP_NAME_AGENCY, GROUP_NAME_MANAGER
+from registration.models import GROUP_NAME_MANAGER
 from registration.service.agency import find_agency_user_by_user_id
 
 from manager.serializers import UserSerializer

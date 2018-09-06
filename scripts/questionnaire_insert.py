@@ -1,5 +1,5 @@
 import csv
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from questionnaire.models import Question
 
 @transaction.atomic

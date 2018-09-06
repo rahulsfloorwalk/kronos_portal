@@ -59,7 +59,6 @@ class Attachment(Model):
             subdomain = settings.IMGIX_SUBDOMAIN
             thumbnail_width = 150
             thumbnail_height = 100
-            preview_width = 750
             preview_height = 500
             return {
                 "thumbnail_url": "https://{}/{}?fit=crop&auto=enhance,compress&crop=entropy&w={}&h={}".format(subdomain,self.file_slug,thumbnail_width,thumbnail_height),

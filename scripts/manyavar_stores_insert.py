@@ -1,5 +1,5 @@
 import csv
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from client.models import Store, Client
 from manager.models import City, Location
 

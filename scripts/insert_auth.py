@@ -2,7 +2,8 @@ from django.contrib.auth.models import User, Group
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo
 from django.db.utils import DataError, IntegrityError
 from registration.models import Verification
-import hashlib, datetime
+import hashlib
+import datetime
 from os import urandom
 import csv
 with open('final_data.csv') as data:
@@ -19,7 +20,7 @@ with open('final_data.csv') as data:
             print("dataerror at user")
         try:
             dob = datetime.datetime.fromtimestamp(int(row['dob'])).strftime('%Y-%m-%d')
-            pi = ProfileInfo(user_id=user.id, date_of_birth=dob, mobile_number=row['phone_mobile'], first_name=row['fname'], last_name=row['lname'], gender=row['gender'], marital_status=row	['marital_status'], education=row['highest_education'], household_income=row['annual_house_hold_income'], address=row['address_1'], pincode=row['postal_code'], city=row['city'], state=row['state'])
+            pi = ProfileInfo(user_id=user.id, date_of_birth=dob, mobile_number=row['phone_mobile'], first_name=row['fname'], last_name=row['lname'], gender=row['gender'], marital_status=row['marital_status'], education=row['highest_education'], household_income=row['annual_house_hold_income'], address=row['address_1'], pincode=row['postal_code'], city=row['city'], state=row['state'])
             pi.save()
         except AttributeError:
             print("attriberror at profile")

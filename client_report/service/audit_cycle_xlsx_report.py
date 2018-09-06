@@ -1,5 +1,6 @@
 import io
-import calendar, datetime
+import calendar
+import datetime
 import xlsxwriter
 
 from django.db.models import Prefetch
@@ -63,14 +64,14 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                                  x.audit.store.priority == filters.get('priority')]
     if filters.get('month') not in ignored_filters:
         month_name = calendar.month_name[int(filters.get('month'))]
-    
+
     if filters.get('start_date') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit_date >= datetime.datetime.strptime(filters.get('start_date'), "%Y-%m-%d").date()]
     if filters.get('end_date') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit_date <= datetime.datetime.strptime(filters.get('end_date'), "%Y-%m-%d").date()]
-    data = create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
+    create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
     date_name = "{}{}{}".format(
         (filters.get('start_date') if filters.get('start_date') not in ignored_filters else "").replace("-", "_"),
         "_",

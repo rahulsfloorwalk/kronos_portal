@@ -1,5 +1,5 @@
 import datetime
-from django.db import IntegrityError, transaction
+from django.db import transaction
 from audit.models import AuditCycle, Audit
 from client.models import Client, Store
 

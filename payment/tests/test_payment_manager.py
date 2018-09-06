@@ -11,7 +11,6 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NA
 from auditor.models import ProfileInfo, BankInfo
 from agency.models import AgencyUser, Agency
 from payment.models import Payment
-from audit_store import service as audit_store_service
 from payment.service import payment_manager as payment_service
 
 
@@ -27,10 +26,9 @@ class PaymentManagerTestCase(TestCase):
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
         self.agency_user = mommy.make(User, username="agency@foobar.com", email="agency@foobar.com",
-                                       groups=[self.agency_group])
+                                      groups=[self.agency_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user, first_name='foo', last_name='bar')
-        self.agency = mommy.make(Agency, account_holder_name='foobar', account_number="987656789",
-                   ifsc_code="SBIN0008238")
+        self.agency = mommy.make(Agency, account_holder_name='foobar', account_number="987656789", ifsc_code="SBIN0008238")
         self.agency_user_agencyuser = mommy.make(AgencyUser, user=self.agency_user, agency=self.agency, full_name='foobar agency')
         self.audit_store_recipe = Recipe(
             AuditStore,
@@ -106,7 +104,7 @@ class PaymentManagerTestCase(TestCase):
 
     def test_pay_payment(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
-        auditor_bank_info = mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name = "foobar", account_number = "123454321", ifsc_code = "SBIN0001", pan_number = "ADSFB780Y")
         payment = mommy.make(Payment, audit_store=audit_store, status=Payment.PENDING, user=self.auditor_user)
         paid_payment = payment_service.pay(payment.id, self.manager_user)
         self.assertEqual(paid_payment.status, Payment.PAID)
@@ -186,10 +184,8 @@ class PaymentManagerTestCase(TestCase):
     def test_is_payment_payable_returns_false_for_agency(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
         agency = mommy.make(Agency)
-        agency_user = mommy.make(User, username="agency2@foobar.com", email="agency2@foobar.com",
-                                       groups=[self.agency_group])
-        mommy.make(AgencyUser, user=agency_user, agency=agency,
-                                                 full_name='foobar agency')
+        agency_user = mommy.make(User, username="agency2@foobar.com", email="agency2@foobar.com", groups=[self.agency_group])
+        mommy.make(AgencyUser, user=agency_user, agency=agency, full_name='foobar agency')
         payment = mommy.make(Payment, audit_store=audit_store, status=Payment.PAID, user=agency_user)
         self.assertFalse(payment_service.is_payment_payable(payment))
 

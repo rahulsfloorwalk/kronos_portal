@@ -55,7 +55,7 @@ class AuditStoreAttachmentViewTestCase(APITestCase):
     def setup_attachment(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                                 audit__audit_cycle=audit_cycle)
+                                      audit__audit_cycle=audit_cycle)
         test_file = "hello_world.jpg"
         test_mime_type = "image/jpeg"
         test_size = 2048
@@ -150,7 +150,7 @@ class ReportSectionAttachmentViewTestCase(APITestCase):
     def setup_attachment(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                                 audit__audit_cycle=audit_cycle)
+                                      audit__audit_cycle=audit_cycle)
         self.section = mommy.make(Section, audit_cycle=audit_cycle)
         report_section = mommy.make(ReportSection, audit_store=self.audit_store, section=self.section)
         test_file = "hello_world.jpg"

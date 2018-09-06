@@ -3,7 +3,6 @@ import csv
 from django.db.transaction import atomic
 from kronos.exceptions import AppLogicError
 from questionnaire.models import Section, Question
-from audit_store import service
 from questionnaire.service import question as question_service
 from questionnaire.service import section as section_service
 from audit.models import AuditCycle
@@ -17,8 +16,8 @@ def upload_questionnaire(filename, audit_cycle_id):
     with open(filename) as csvfile:
         reader = csv.reader(csvfile)
         questions = list(reader)
-        to_save_questions = []
-        to_save_sections = []
+        # to_save_questions = []
+        # to_save_sections = []
         for question_row in questions:
             if question_row[0] != '':
                 section = create_section(section_sequence, question_row[0], audit_cycle)
@@ -33,7 +32,7 @@ def upload_questionnaire(filename, audit_cycle_id):
                 question_type = Question.MUTEX if len(question_data.keys()) > 0 else Question.PLAIN
                 question = create_question(question_sequence, question_row[1], question_row[2], saved_section, question_type, question_data)
                 # to_save_questions.append(question)
-                saved_question = question_service.save(question)
+                question_service.save(question)
                 question_sequence += 1
             else:
                 raise AppLogicError("Question text and Max Marks is Mandatory")

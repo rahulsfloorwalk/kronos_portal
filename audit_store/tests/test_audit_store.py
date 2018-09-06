@@ -106,7 +106,7 @@ class AuditStoreTestCase(TestCase):
             report_section_recipe.make(section=section)
             for i in range(5):
                 question = mommy.make(Question, section=section)
-                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
+                mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
 
         return audit_store
 
@@ -287,8 +287,7 @@ class AuditStoreTestCase(TestCase):
             report_section_recipe.make(section=section, )
             for i in range(5):
                 question = mommy.make(Question, section=section)
-                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar",
-                                    marks_obtained=1)
+                mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
 
         return audit_store
 
@@ -323,7 +322,7 @@ class AuditStoreTestCase(TestCase):
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle
         )
-        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        mommy.make(Section, audit_cycle=self.audit_cycle)
         with self.assertRaisesRegex(AppLogicError, "Report is not complete"):
             audit_store.complete(by=self.manager_user)
 
@@ -523,7 +522,7 @@ class AuditStoreTestCase(TestCase):
             report_section_recipe.make(section=section)
             for i in range(5):
                 question = mommy.make(Question, section=section)
-                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
+                mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
         self.assertTrue(audit_store.is_submittable())
 
     def test_is_submittable_when_status_is_not_acknowledged(self):

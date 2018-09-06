@@ -71,7 +71,7 @@ class AuditStoreIdSubmitTestCase(APITestCase):
             report_section_recipe.make(section=section)
             for i in range(5):
                 question = mommy.make(Question, section=section)
-                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
+                mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
 
         return audit_store
 

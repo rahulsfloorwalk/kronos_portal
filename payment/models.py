@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import Model, AutoField, CharField, IntegerField, ForeignKey, OneToOneField, DateTimeField, PROTECT
+from django.db.models import Model, AutoField, CharField, IntegerField, ForeignKey, DateTimeField, PROTECT
 from audit_store.models import AuditStore
 
 class Payment(Model):

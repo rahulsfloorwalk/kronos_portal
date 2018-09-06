@@ -29,7 +29,7 @@ def get_performing_stores(audit_cycle, user_id):
         for audit_store in list(g):
             obtained += audit_store.percentage()
             count += 1
-        if count > 0 :
+        if count > 0:
             # stores[k] = obtained / count
             stores.append(({
                 "id": k.id,
@@ -41,7 +41,7 @@ def get_performing_stores(audit_cycle, user_id):
                 "city": {
                     "id": k.city.id,
                     "name": k.city.name,
-               }
+                }
             }, {
                 "color_code": get_color_code_by_percentage(int(obtained / count)),
                 "value": int(obtained / count)

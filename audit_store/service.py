@@ -1,16 +1,9 @@
 from datetime import timedelta
 
-from django.db import connection
 from django.db.transaction import atomic
 from django.db.models import Count, Avg
-from django.contrib.auth.models import Group
 
 from guardian.shortcuts import assign_perm, remove_perm
-
-from notifications.signals import notify
-from notifications.models import Notification
-
-from notify.service import mail_notify
 
 from kronos.utils import today_ist
 
@@ -18,13 +11,8 @@ from .models import AuditStore
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
-import questionnaire.service.question as question_service
-import questionnaire.service.section as section_service
 import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
-from notify import verbs
-
-from registration.models import GROUP_NAME_MANAGER
 
 def find_by_id(audit_store_id):
     try:

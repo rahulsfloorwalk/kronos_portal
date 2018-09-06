@@ -28,8 +28,7 @@ class AuditStoreAuditorServiceTestCase(TestCase):
     def test_acknowledge_report_raises_when_user_is_not_report_user(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                           groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_auditor.acknowledge_report(audit_store.id, auditor.id)
 
@@ -49,14 +48,13 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             report_section_recipe.make(section=section)
             for i in range(5):
                 question = mommy.make(Question, section=section)
-                answer = mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
+                mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar")
 
         return audit_store
 
     def test_submit_report_raises_when_user_is_not_report_user(self):
         audit_store = self.create_submittable_report()
-        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com",
-                                       groups=[self.auditor_group])
+        auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
             service_auditor.submit_report(audit_store.id, auditor.id)
 

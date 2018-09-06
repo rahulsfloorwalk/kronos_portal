@@ -2,7 +2,6 @@ from django.test import TestCase
 
 from faker import Faker
 
-from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from audit_store.service import assign_audit_store_to_client_user
 from client_report.service import audit_cycle_xlsx_report as xlsx_report_service

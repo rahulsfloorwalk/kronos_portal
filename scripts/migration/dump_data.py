@@ -1,6 +1,6 @@
-import os, json
-from client.models import Client, ClientUser, Store
-from manager.models import Location, City
+import os
+import json
+from client.models import Client, Store
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
@@ -24,7 +24,7 @@ def get_data_dump_for_client(client_id):
 
     data['client'] = client_dict
     with open(os.path.dirname(os.path.realpath(__file__)) + '/data/dump.json', "w") as outfile:
-    # with open('./data/dump.json', 'w') as outfile:
+        # with open('./data/dump.json', 'w') as outfile:
         outfile.write(json.dumps(data, indent=4))
     pprint(data)
     return data

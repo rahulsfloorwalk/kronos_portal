@@ -1,4 +1,4 @@
-from social.models import TwitterHandle, TwitterFeed
+from social.models import TwitterHandle
 from social.service import twitter_client
 
 def get_tweets():

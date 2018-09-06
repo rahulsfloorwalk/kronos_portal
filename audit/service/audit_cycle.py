@@ -19,8 +19,8 @@ def save(audit):
 def find_distinct_types_for_clientuser(user_id):
     user = find_clientuser_by_user_id(user_id)
     return AuditCycle.objects.filter(
-            client_id=user.clientuser.client_id,
-            status__in=AuditCycle.LIVE_REPORTING_STATUSES
+        client_id=user.clientuser.client_id,
+        status__in=AuditCycle.LIVE_REPORTING_STATUSES
     ).distinct('type').values_list('type', flat=True)
 
 def find_by_id_for_clientuser(audit_cycle_id, user_id):

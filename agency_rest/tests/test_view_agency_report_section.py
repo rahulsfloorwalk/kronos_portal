@@ -41,7 +41,7 @@ class ReportSectionListViewTestCase(APITestCase):
     def setup_report_section(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
         for i in range(5):
             mommy.make(ReportSection, audit_store=self.audit_store, section__audit_cycle=self.audit_cycle)
 
@@ -85,7 +85,7 @@ class SectionCommentViewTestCase(APITestCase):
     def setup_report_section(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                   audit__audit_cycle=self.audit_cycle)
+                                      audit__audit_cycle=self.audit_cycle)
         self.section = mommy.make(Section, audit_cycle=self.audit_cycle)
         self.report_section = mommy.make(ReportSection, audit_store=self.audit_store, section=self.section)
 

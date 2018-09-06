@@ -24,7 +24,7 @@ class SectionTestCase(TestCase):
     def test_find_by_audit_store_for_agency_returns_section_list(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                                      audit__audit_cycle=audit_cycle)
+                                 audit__audit_cycle=audit_cycle)
         for i in range(5):
             mommy.make(Section, audit_cycle=audit_cycle)
         sections = section_service.find_by_audit_store_for_agency(audit_store.id, self.agency_user.id)

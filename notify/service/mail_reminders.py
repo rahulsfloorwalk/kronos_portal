@@ -2,8 +2,6 @@ import logging
 
 from django.conf import settings
 from django.template.loader import get_template
-from django.contrib.auth.models import Group
-
 import audit_store.service as audit_store_service
 
 from kronos.celery import app
