@@ -356,6 +356,8 @@ class AuditStoreSerializer(ModelSerializer):
         fields = (
             'id',
             'status',
+            'earnings_per_audit',
+            'reimbursement',
             'audit_date',
             'audit',
             'user',

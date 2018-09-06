@@ -85,8 +85,10 @@ class AuditStoreDetails extends React.Component {
     		submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary btn-lg">Submit Report</button>);
     	}
 
-    	let fees = this.props.auditStore.audit.earnings_per_audit ? <b>Fees: ₹ {this.props.auditStore.audit.earnings_per_audit}, </b> : "";
-    	let reimb = this.props.auditStore.audit.reimbursement ? <span>Reimbursement upto: <b>₹ {this.props.auditStore.audit.reimbursement}</b></span> : "";
+	    const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
+	    const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
+	    const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
+	    const reimb = reimbursement ? <span>Reimbursement upto: <b>₹ {reimbursement}</b></span> : "";
 
     	let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
