@@ -66,7 +66,7 @@ class AuditCycleIdPostApprovalDescriptionView(APIView):
         'DELETE': [GROUP_NAME_MANAGER]
     }
     class DeSerializer(Serializer):
-        post_approval_description = CharField(allow_blank=True, max_length=4096)
+        post_approval_description = CharField(allow_blank=True, max_length=16384)
 
     def post(self, request, audit_cycle_id):
         ds = self.DeSerializer(data=request.data)
