@@ -1,0 +1,262 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ReimbursementForm/> is rendered correctly when the form is loading 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Set Reimbursement
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <div
+          className="text-center text-muted"
+        >
+          <img
+            alt="loading..."
+            src="/static/img/ripple.svg"
+            title="Please Wait"
+          />
+          <p>
+            LOADING
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<ReimbursementForm/> renders the earnings per audit pre-filled 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Set Reimbursement
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <label>
+              Reimbursement
+            </label>
+            <input
+              className="form-control"
+              label="Reimbursement"
+              name="reimbursement"
+              onChange={[Function]}
+              type="number"
+              value={6000}
+            />
+            <ul />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save Amount
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<ReimbursementForm/> renders the errors correctly 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Set Reimbursement
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul>
+            <li
+              style={
+                Object {
+                  "color": "red",
+                }
+              }
+            >
+              <b>
+                I don't think these are the droids you're looking for.
+              </b>
+            </li>
+          </ul>
+          <div
+            className="form-group"
+          >
+            <label>
+              Reimbursement
+            </label>
+            <input
+              className="form-control"
+              label="Reimbursement"
+              name="reimbursement"
+              onChange={[Function]}
+              type="number"
+              value={6000}
+            />
+            <ul>
+              <li
+                style={
+                  Object {
+                    "color": "red",
+                  }
+                }
+              >
+                <b>
+                  This field is required
+                </b>
+              </li>
+            </ul>
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save Amount
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
