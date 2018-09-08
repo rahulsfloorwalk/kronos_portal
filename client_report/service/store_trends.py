@@ -3,6 +3,7 @@ from django.db.models import Prefetch
 
 from kronos.utils import get_color_code_by_percentage
 
+from audit.models import AuditCycle
 from audit.service import audit_cycle_client_service
 
 from audit_store.models import AuditStore
@@ -55,7 +56,8 @@ def get_performing_stores(audit_cycle, user_id):
 
 def get_performing_stores_by_type_for_clientuser(questionnaire_type_id, user_id):
 
-    qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id).order_by('end_date')
+    qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id) \
+        .filter(status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
     qs = qs.prefetch_related(
         'audits',
         'audits__store',

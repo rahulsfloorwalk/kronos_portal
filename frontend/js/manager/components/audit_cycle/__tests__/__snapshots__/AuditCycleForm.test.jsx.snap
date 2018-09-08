@@ -1093,6 +1093,11 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
                     Report
                   </option>
                   <option
+                    value="CLEARING"
+                  >
+                    Clearing
+                  </option>
+                  <option
                     value="ARCHIVED"
                   >
                     Archived
@@ -2281,6 +2286,11 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
                     value="REPORT"
                   >
                     Report
+                  </option>
+                  <option
+                    value="CLEARING"
+                  >
+                    Clearing
                   </option>
                   <option
                     value="ARCHIVED"

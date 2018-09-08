@@ -197,6 +197,7 @@ export class AuditCycleForm extends Component{
 								<option value="UPCOMING">{getAuditStatus("UPCOMING")}</option>
 								<option value="ACTIVE">{getAuditStatus("ACTIVE")}</option>
 								<option value="REPORT">{getAuditStatus("REPORT")}</option>
+								<option value="CLEARING">{getAuditStatus("CLEARING")}</option>
 								<option value="ARCHIVED">{getAuditStatus("ARCHIVED")}</option>
 							</FormSelect>
 						</div>

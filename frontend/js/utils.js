@@ -62,6 +62,8 @@ export function getAuditStatus(value){
 		return "Active";
 	case "REPORT":
 		return "Report";
+	case "CLEARING":
+		return "Clearing";
 	case "ARCHIVED":
 		return "Archived";
 	case "":

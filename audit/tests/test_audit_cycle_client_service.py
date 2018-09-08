@@ -43,12 +43,13 @@ class AuditCycleClientServiceTestCase(TestCase):
         audit_cycle_recipe.make(status=AuditCycle.UPCOMING)
         audit_cycle_recipe.make(status=AuditCycle.ACTIVE)
         audit_cycle_recipe.make(status=AuditCycle.REPORT)
+        audit_cycle_recipe.make(status=AuditCycle.CLEARING)
         audit_cycle_recipe.make(status=AuditCycle.ARCHIVED)
 
         audit_cycles = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type.id, self.client_admin.id)
-        self.assertEqual(len(audit_cycles), 3)
+        self.assertEqual(2, len(audit_cycles))
         for ac in audit_cycles:
-            self.assertIn(ac.status, (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.ARCHIVED))
+            self.assertIn(ac.status, (AuditCycle.CLEARING, AuditCycle.ARCHIVED))
 
     def test_find_all_for_clientuser_when_clientuser_is_admin(self):
         questionnaire_type = mommy.make(QuestionnaireType, client=self.client)

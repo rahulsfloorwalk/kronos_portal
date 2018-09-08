@@ -1,6 +1,7 @@
 import itertools
 from django.db.models import Prefetch
 
+from audit.models import AuditCycle
 from audit.service import audit_cycle_client_service
 
 from audit_store.models import AuditStore
@@ -62,7 +63,8 @@ def get_performing_cities(audit_cycle, user_id):
 
 
 def get_performing_cities_by_type_for_clientuser(questionnaire_type_id, user_id):
-    qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id).order_by('end_date')
+    qs = audit_cycle_client_service.find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id) \
+        .filter(status__in=AuditCycle.TRENDABLE_STATUSES).order_by('end_date')
     qs = qs.prefetch_related(
         'audits',
         'audits__store',

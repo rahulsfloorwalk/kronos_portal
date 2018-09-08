@@ -57,14 +57,18 @@ class AuditCycle(Model):
     UPCOMING = 'UPCOMING'
     ACTIVE = 'ACTIVE'
     REPORT = 'REPORT'
+    CLEARING = 'CLEARING'
     ARCHIVED = 'ARCHIVED'
     STATUS = (
         (PREPARATION, 'Preparation'),
         (UPCOMING, 'Upcoming'),
         (ACTIVE, 'Active'),
         (REPORT, 'Report'),
+        (CLEARING, "Clearing"),
         (ARCHIVED, 'Archived'),
     )
+
+    TRENDABLE_STATUSES = [CLEARING, ARCHIVED]
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)

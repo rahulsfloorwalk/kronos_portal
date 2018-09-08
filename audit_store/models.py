@@ -27,7 +27,7 @@ _logger = logging.getLogger(__name__)
 class AuditStoreQuerySet(QuerySet):
     def presentable(self):
         presentable_status = (AuditStore.COMPLETED, AuditStore.ACCEPTED)
-        presentable_audit_cycle_status = (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.ARCHIVED)
+        presentable_audit_cycle_status = (AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.CLEARING, AuditCycle.ARCHIVED)
         return self.filter(
             audit__audit_cycle__status__in=presentable_audit_cycle_status,
             status__in=presentable_status,

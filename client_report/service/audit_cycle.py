@@ -11,7 +11,11 @@ from client.service import client_user as client_user_service
 
 
 def get_audit_cycle_section_averages_for_client(client_id, questionnaire_type_id, user_id):
-    qs = AuditCycle.objects.filter(client__id=client_id).filter(questionnaire_type_id=questionnaire_type_id).order_by('end_date')
+    # qs = AuditCycle.objects.filter(client__id=client_id).filter(questionnaire_type_id=questionnaire_type_id).order_by('end_date')
+    qs = AuditCycle.objects.filter(client__id=client_id) \
+        .filter(questionnaire_type_id=questionnaire_type_id) \
+        .filter(status__in=AuditCycle.TRENDABLE_STATUSES) \
+        .order_by('end_date')
     # prefetch related sections, report_sections, questions and answers
     qs = qs.prefetch_related(
         'sections',
