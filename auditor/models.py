@@ -252,6 +252,12 @@ class BankInfo(Model, CompletableMixin):
         "pan_number",
     ]
 
+    def is_payable(self):
+        invalid_fields = ["", None]
+        return self.account_holder_name not in invalid_fields \
+            and self.ifsc_code not in invalid_fields \
+            and self.account_number not in invalid_fields
+
     def is_valid(self):
         return bool(validate_pan(self.pan_number)) and bool(validate_ifsc(self.ifsc_code))
 

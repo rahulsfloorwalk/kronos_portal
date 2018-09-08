@@ -63,9 +63,8 @@ class PaymentManagerTestCase(TestCase):
 
     def test_get_payment_comment_for_paid_for_auditor_user_raises_for_incomplete_bankinfo(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ACCEPTED)
-        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321",
-                   ifsc_code="SBIN0001", bank_name='SBI')
-        with self.assertRaisesRegex(AppLogicError, "Bank Details Incomplete"):
+        mommy.make(BankInfo, user=self.auditor_user, account_holder_name="foobar", account_number="123454321")
+        with self.assertRaisesRegex(AppLogicError, "Payment not payable due to incomplete fields"):
             payment_service.get_payment_comment_for_paid_status(audit_store)
 
     def test_get_payment_comment_for_paid_status_for_agency_user(self):

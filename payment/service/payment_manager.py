@@ -46,8 +46,8 @@ def get_payment_comment_for_paid_status(audit_store):
     user = audit_store.user
     if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         bi = user.bankinfo
-        if not bi.is_complete():
-            raise AppLogicError("Bank Details Incomplete")
+        if not bi.is_payable():
+            raise AppLogicError("Payment not payable due to incomplete fields")
         payment_comment = "payment done for {first} {last} in bank - {bank} ({ifsc}) for account number - {account}".format(
             first=user.profileinfo.first_name,
             last=user.profileinfo.last_name,
@@ -91,7 +91,7 @@ def is_payment_payable(payment):
     if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         try:
             bi = user.bankinfo
-            if not bi.is_complete():
+            if not bi.is_payable():
                 return False
         except BankInfo.DoesNotExist:
             return False
