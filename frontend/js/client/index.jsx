@@ -1,10 +1,15 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
+import { combineReducers, createStore, applyMiddleware } from "redux";
+import ReduxThunk from "redux-thunk";
 import $ from "jquery";
 import "babel-polyfill";
 import Raven from "raven-js";
 
 import Routes from "./components/Routes.jsx";
+
+import questionnaireTypeReducer from "./reducers/questionnaire_type";
 
 import { fetchConfig } from "./service/config.js";
 
@@ -17,6 +22,16 @@ $(document).ajaxError(function(event, jqXHR, settings){
 	}
 });
 
+const reducers = combineReducers({
+	questionnaireType: questionnaireTypeReducer,
+});
+
+const store = createStore(
+	reducers,
+	applyMiddleware(
+		ReduxThunk,
+	)
+);
 
 fetchConfig().done((config) => {
 
@@ -34,9 +49,10 @@ fetchConfig().done((config) => {
 		});
 	}
 
-
 	ReactDOM.render(
-		<Routes/>,
+		<Provider store={store}>
+			<Routes/>
+		</Provider>,
 		document.getElementById("root")
 	);
 });

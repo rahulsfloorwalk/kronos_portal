@@ -4,7 +4,8 @@ import moment from "moment";
 import { shallow } from "enzyme";
 import $ from "jquery";
 
-import ReportBrowser3, { AuditStoreTable } from "../ReportBrowser3";
+import ReportBrowser3 from "../ReportBrowser3";
+import AuditStoreTable from "../AuditStoreTable";
 import { fetchAuditCycles } from "../../service/audit_cycle";
 import { findAuditStoresByAuditCycle } from "../../service/audit_store";
 

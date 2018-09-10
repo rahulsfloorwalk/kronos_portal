@@ -7,7 +7,7 @@ import QuestionnaireTrends from "./QuestionnaireTrends.jsx";
 import StorePerformance from "./StorePerformance.jsx";
 
 import { fetchStore } from "../service/store.js";
-import { fetchQuestionnaireTypes } from "../service/dashboard.js";
+import { fetchQuestionnaireTypes } from "../service/questionnaire_type.js";
 
 export default class StoreTrends extends Component{
 	static propTypes = {

@@ -7,8 +7,8 @@ import AuditCycleStorePerformance from "../AuditCycleStorePerformance.jsx";
 import DashboardCityPerformanceChart from "../DashboardCityPerformanceChart.jsx";
 
 import Dashboard from "../Dashboard.jsx";
-import { fetchQuestionnaireTypes } from "../../service/dashboard.js";
-jest.mock("../../service/dashboard.js");
+import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
+jest.mock("../../service/questionnaire_type.js");
 
 const sampleQuestionnaireTypes = [
 	{

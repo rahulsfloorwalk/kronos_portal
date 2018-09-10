@@ -5,8 +5,8 @@ import StorePerformance from "../StorePerformance.jsx";
 import QuestionnaireTrends from "../QuestionnaireTrends.jsx";
 
 import StoreTrends from "../StoreTrends.jsx";
-import { fetchQuestionnaireTypes } from "../../service/dashboard.js";
-jest.mock("../../service/dashboard.js");
+import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
+jest.mock("../../service/questionnaire_type.js");
 import { fetchStore } from "../../service/store.js";
 jest.mock("../../service/store.js");
 
