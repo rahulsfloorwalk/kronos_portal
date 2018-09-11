@@ -20,13 +20,13 @@ def find_distinct_types_for_clientuser(user_id):
     user = find_clientuser_by_user_id(user_id)
     return AuditCycle.objects.filter(
             client_id=user.clientuser.client_id,
-            status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED)
+            status__in=AuditCycle.LIVE_REPORTING_STATUSES
     ).distinct('type').values_list('type', flat=True)
 
 def find_by_id_for_clientuser(audit_cycle_id, user_id):
     try:
         user = find_clientuser_by_user_id(user_id)
-        return AuditCycle.objects.get(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED), pk=audit_cycle_id)
+        return AuditCycle.objects.get(client_id=user.clientuser.client_id, status__in=AuditCycle.LIVE_REPORTING_STATUSES, pk=audit_cycle_id)
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
@@ -35,7 +35,7 @@ def find_by_audit_type_for_clientuser(audit_type, user_id):
         raise AppLogicError("Invalid Audit Type")
     try:
         user = find_clientuser_by_user_id(user_id)
-        return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.ARCHIVED), type=audit_type).order_by('-end_date')
+        return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=AuditCycle.LIVE_REPORTING_STATUSES, type=audit_type).order_by('-end_date')
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
 
