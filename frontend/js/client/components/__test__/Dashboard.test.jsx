@@ -6,7 +6,7 @@ import AuditCycleTimeSeries from "../AuditCycleTimeSeries.jsx";
 import AuditCycleStorePerformance from "../AuditCycleStorePerformance.jsx";
 import DashboardCityPerformanceChart from "../DashboardCityPerformanceChart.jsx";
 
-import Dashboard from "../Dashboard.jsx";
+import { Dashboard } from "../Dashboard.jsx";
 import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
 jest.mock("../../service/questionnaire_type.js");
 

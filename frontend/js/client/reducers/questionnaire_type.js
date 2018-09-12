@@ -20,22 +20,30 @@ export default (state=initialState, action) => {
 	}
 };
 
-export const findQuestionnaireTypes = (store) => {
-	return store.questionnaireType.questionnaireTypes;
-};
+export class QuestionnaireTypeSelectors {
+	constructor(namespace){
+		this.namespace = namespace;
+	}
 
-export const findSelectedQuestionnaireTypeId = (store) => {
-	return store.questionnaireType.selectedQuestionnaireTypeId;
-};
+	getNamespacedStore = (store) => store[this.namespace];
 
-export const findSelectedQuestionnaireType = (store) => {
-	return store.questionnaireType.questionnaireTypes.find(qt => qt.id === store.questionnaireType.selectedQuestionnaireTypeId);
-};
+	findQuestionnaireTypes = (store) => {
+		return this.getNamespacedStore(store).questionnaireTypes;
+	};
 
-export const findDefaultQuestionnaireType = (store) => {
-	return store.questionnaireType.questionnaireTypes.find(qt => qt.is_default);
-};
+	findSelectedQuestionnaireTypeId = (store) => {
+		return this.getNamespacedStore(store).selectedQuestionnaireTypeId;
+	};
 
-export const findFirstQuesionnaireType = (store) => {
-	return store.questionnaireType.questionnaireTypes[0];
-};
+	findSelectedQuestionnaireType = (store) => {
+		return this.getNamespacedStore(store).questionnaireTypes.find(qt => qt.id === store.questionnaireType.selectedQuestionnaireTypeId);
+	};
+
+	findDefaultQuestionnaireType = (store) => {
+		return this.getNamespacedStore(store).questionnaireTypes.find(qt => qt.is_default);
+	};
+
+	findFirstQuesionnaireType = (store) => {
+		return this.getNamespacedStore(store).questionnaireTypes[0];
+	};
+}

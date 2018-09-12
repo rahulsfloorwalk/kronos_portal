@@ -11,7 +11,7 @@ import { Dashboard as DashboardIcon } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 
-import { findSelectedQuestionnaireType, findDefaultQuestionnaireType, findFirstQuesionnaireType } from "../reducers/questionnaire_type";
+import { questionnaireTypeSelectors } from "../selectors";
 
 const questionnaireTypePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -47,9 +47,9 @@ export class Dashboard extends React.Component{
 
 const mapStateToProps = (state) => {
 	return {
-		selectedQuestionnaireType: findSelectedQuestionnaireType(state),
-		defaultQuestionnaireType: findDefaultQuestionnaireType(state),
-		firstQuestionnaireType: findFirstQuesionnaireType(state),
+		selectedQuestionnaireType: questionnaireTypeSelectors.findSelectedQuestionnaireType(state),
+		defaultQuestionnaireType: questionnaireTypeSelectors.findDefaultQuestionnaireType(state),
+		firstQuestionnaireType: questionnaireTypeSelectors.findFirstQuesionnaireType(state),
 	};
 };
 

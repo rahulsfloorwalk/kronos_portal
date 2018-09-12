@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import { pointerStyle } from "../../styles.js";
 
 import Loading from "../../components/Loading.jsx";
-import { findQuestionnaireTypes, findSelectedQuestionnaireType, findDefaultQuestionnaireType } from "../reducers/questionnaire_type";
+// import { findQuestionnaireTypes, findSelectedQuestionnaireType, findDefaultQuestionnaireType } from "../reducers/questionnaire_type";
 import { fetchQuestionnaireTypes, selectQuestionnaireType } from "../actions/questionnaire_type";
+import { questionnaireTypeSelectors } from "../selectors";
 
 const questionnaireTypePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -56,9 +57,9 @@ export class QuestionnaireTypeTabs extends React.Component{
 
 const mapStateToProps = (state) => {
 	return {
-		questionnaireTypes: findQuestionnaireTypes(state),
-		selectedQuestionnaireType: findSelectedQuestionnaireType(state),
-		defaultQuestionnaireType: findDefaultQuestionnaireType(state),
+		questionnaireTypes: questionnaireTypeSelectors.findQuestionnaireTypes(state),
+		selectedQuestionnaireType: questionnaireTypeSelectors.findSelectedQuestionnaireType(state),
+		defaultQuestionnaireType: questionnaireTypeSelectors.findDefaultQuestionnaireType(state),
 	};
 };
 
