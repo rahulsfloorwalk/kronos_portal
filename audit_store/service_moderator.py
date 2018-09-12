@@ -14,7 +14,7 @@ def find_qa_completed_audit_stores_for_moderator(user_id):
     # TODO: move this in to the AuditStoreQuerySet
     user = find_moderator_by_user_id(user_id)
     query_set = AuditStore.objects.filter(
-        audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT),
+        audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
         status__in=(AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.PM_REVIEW)
     ).order_by('audit_date')
 
@@ -24,7 +24,7 @@ def find_qa_pending_audit_stores_for_moderator(user_id):
     # TODO: move this in to the AuditStoreQuerySet
     user = find_moderator_by_user_id(user_id)
     query_set = AuditStore.objects.filter(
-        audit__audit_cycle__status__in=(AuditCycle.ACTIVE, AuditCycle.REPORT),
+        audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES,
         status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED)
     ).order_by('audit_date')
 

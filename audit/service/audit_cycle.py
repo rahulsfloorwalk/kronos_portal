@@ -96,7 +96,7 @@ def get_audit_cycle_dashboard():
 def find_for_moderator(user_id):
     try:
         user = find_moderator_by_user_id(user_id)
-        query_set = AuditCycle.objects.filter(status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.UPCOMING)).order_by('-end_date')
+        query_set = AuditCycle.objects.filter(status__in=AuditCycle.MODERATOR_VISIBLE_STATUSES).order_by('-end_date')
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
     except (User.DoesNotExist, ) as e:
         raise ObjectNotFound from e
@@ -105,7 +105,7 @@ def find_for_moderator(user_id):
 def find_by_id_for_moderator(audit_cycle_id, user_id):
     try:
         user = find_moderator_by_user_id(user_id)
-        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id, status__in=(AuditCycle.REPORT,AuditCycle.ACTIVE, AuditCycle.UPCOMING))
+        audit_cycle = AuditCycle.objects.get(pk=audit_cycle_id, status__in=AuditCycle.MODERATOR_VISIBLE_STATUSES)
 
         if user.has_perm('moderator_manage', audit_cycle):
             return audit_cycle

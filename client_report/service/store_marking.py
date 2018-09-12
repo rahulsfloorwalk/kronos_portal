@@ -5,9 +5,11 @@ from questionnaire.models import Question
 from answer.models import Answer
 from kronos.utils import get_color_code
 
+
 def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
     all_cycles = AuditCycle.objects.filter(
         client_id=client_id,
+        status__in=AuditCycle.TRENDABLE_STATUSES,
         questionnaire_type_id=questionnaire_type_id,
     ).order_by('end_date')
 
@@ -40,6 +42,7 @@ def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questi
 def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
     all_cycles = AuditCycle.objects.filter(
         client_id=client_id,
+        status__in=AuditCycle.TRENDABLE_STATUSES,
         questionnaire_type_id=questionnaire_type_id,
     ).order_by('end_date')
 

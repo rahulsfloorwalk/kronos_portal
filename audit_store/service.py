@@ -26,7 +26,7 @@ def find_audit_stores_for_auditor(profileinfo_id):
         return AuditStore.objects.filter(
             user_id=profile_info.user_id,
             status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
-            audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+            audit__audit_cycle__status__in=AuditCycle.AUDITOR_VISIBLE_STATUSES
         ).order_by('-audit_date')
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
@@ -55,7 +55,7 @@ def find_by_id_for_auditor(audit_store_id, user_id):
             pk=audit_store_id,
             user_id=user_id,
             status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
-            audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+            audit__audit_cycle__status__in=AuditCycle.AUDITOR_VISIBLE_STATUSES
         )
     except (AuditStore.DoesNotExist) as e:
         raise ObjectNotFound from e

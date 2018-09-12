@@ -9,7 +9,7 @@ def find_audit_stores_for_agency_user(agency_user_id):
     return AuditStore.objects.filter(
         user_id=agency_user_id,
         status__in=AuditStore.AGENCY_VISIBILITY_STATUSES,
-        audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+        audit__audit_cycle__status__in=AuditCycle.AGENCY_VISIBLE_STATUSES
     ).order_by('-audit_date')
 
 
@@ -19,7 +19,7 @@ def find_by_id_for_agency_user(audit_store_id, user_id):
             pk=audit_store_id,
             user_id=user_id,
             status__in=AuditStore.AGENCY_VISIBILITY_STATUSES,
-            audit__audit_cycle__status__in=(AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT)
+            audit__audit_cycle__status__in=AuditCycle.AGENCY_VISIBLE_STATUSES
         )
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
