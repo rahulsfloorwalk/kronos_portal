@@ -75,6 +75,7 @@ class AuditCycle(Model):
     MODERATOR_MODIFIABLE_STATUSES = [ACTIVE, REPORT]
     AUDITOR_VISIBLE_STATUSES = [UPCOMING, ACTIVE, REPORT, CLEARING]
     AGENCY_VISIBLE_STATUSES = [UPCOMING, ACTIVE, REPORT, CLEARING]
+    MANAGER_DASHBOARD_STATUSES = [UPCOMING, ACTIVE, REPORT, CLEARING]
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)

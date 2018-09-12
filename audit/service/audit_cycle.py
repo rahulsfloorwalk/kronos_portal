@@ -69,7 +69,7 @@ def get_audit_cycle_stats(audit_cycle):
 
 def get_audit_cycle_dashboard():
     audit_cycles = AuditCycle.objects.filter(
-        Q(status = AuditCycle.UPCOMING) | Q(status = AuditCycle.ACTIVE) | Q(status = AuditCycle.REPORT)
+        status__in=AuditCycle.MANAGER_DASHBOARD_STATUSES
     ).order_by('end_date') \
         .select_related('client') \
         .prefetch_related(
