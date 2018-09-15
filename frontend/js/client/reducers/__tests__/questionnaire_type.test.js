@@ -97,7 +97,7 @@ describe(QuestionnaireTypeSelectors, () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the first questionnaire type", () => {
 			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, null, null);
-			expect(selectors.findFirstQuesionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[0].id);
+			expect(selectors.findFirstQuestionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[0].id);
 		});
 	});
 });

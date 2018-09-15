@@ -35,10 +35,10 @@ export class AuditCycleSelectors {
 		return this.getNamespacedStore(store)
 			.auditCycles
 			.find(ac => ac.id === this.getNamespacedStore(store).selectedAuditCycleId)
-			|| this.findFirstQuesionnaireType(store);
+			|| this.findFirstAuditCycle(store);
 	};
 
-	findFirstQuesionnaireType = (store) => {
+	findFirstAuditCycle = (store) => {
 		return this.getNamespacedStore(store).auditCycles[0];
 	};
 }

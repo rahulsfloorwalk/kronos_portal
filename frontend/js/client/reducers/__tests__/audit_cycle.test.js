@@ -82,7 +82,7 @@ describe(AuditCycleSelectors, () => {
 		const selectors = new AuditCycleSelectors(namespace);
 		it("should fetch the first audit cycle", () => {
 			const sampleStore = createSampleStore(namespace, sampleAuditCycles, null, null);
-			expect(selectors.findFirstQuesionnaireType(sampleStore).id).toEqual(sampleAuditCycles[0].id);
+			expect(selectors.findFirstAuditCycle(sampleStore).id).toEqual(sampleAuditCycles[0].id);
 		});
 	});
 });

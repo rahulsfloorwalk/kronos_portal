@@ -36,14 +36,14 @@ export class QuestionnaireTypeSelectors {
 			.questionnaireTypes
 			.find(qt => qt.id === this.getNamespacedStore(store).selectedQuestionnaireTypeId)
 			|| this.findDefaultQuestionnaireType(store)
-			|| this.findFirstQuesionnaireType(store);
+			|| this.findFirstQuestionnaireType(store);
 	};
 
 	findDefaultQuestionnaireType = (store) => {
 		return this.getNamespacedStore(store).questionnaireTypes.find(qt => qt.is_default);
 	};
 
-	findFirstQuesionnaireType = (store) => {
+	findFirstQuestionnaireType = (store) => {
 		return this.getNamespacedStore(store).questionnaireTypes[0];
 	};
 }
