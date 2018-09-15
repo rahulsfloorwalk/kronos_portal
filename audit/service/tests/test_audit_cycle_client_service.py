@@ -6,7 +6,7 @@ from guardian.shortcuts import assign_perm
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
-
+from expects import expect, have_length, be_empty, contain_only
 from faker import Faker
 
 from registration.models import GROUP_NAME_CLIENT
@@ -65,7 +65,7 @@ class AuditCycleClientServiceTestCase(TestCase):
         audit_store_recipe.make(audit__audit_cycle=ac3)
 
         audit_cycles = audit_cycle_client_service.find_all_for_clientuser(self.client_admin.id)
-        self.assertEqual(len(audit_cycles), 3)
+        expect(audit_cycles).to(have_length(3))
 
     def test_find_all_for_clientuser_when_clientuser_is_not_admin(self):
         store = mommy.make(Store, client=self.client)
@@ -82,10 +82,12 @@ class AuditCycleClientServiceTestCase(TestCase):
         audit_store_recipe.make(audit__audit_cycle=ac3)
 
         audit_cycles = audit_cycle_client_service.find_all_for_clientuser(self.client_user.id)
-        self.assertEqual(len(audit_cycles), 0)
+        expect(audit_cycles).to(be_empty)
 
         assign_perm("audit_store.clientuser_visible", self.client_user, as1)
         assign_perm("client.clientuser_store_visible", self.client_user, store)
 
-        audit_cycles = audit_cycle_client_service.find_all_for_clientuser(self.client_user.id)
-        self.assertEqual(len(audit_cycles), 2)
+        audit_cycles = list(audit_cycle_client_service.find_all_for_clientuser(self.client_user.id))
+
+        expect(audit_cycles).to(have_length(2))
+        expect([ac["id"] for ac in audit_cycles]).to(contain_only(ac1.id, ac2.id))

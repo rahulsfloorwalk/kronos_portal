@@ -15,14 +15,35 @@ def find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id):
 
 def find_all_for_clientuser(user_id):
     user = find_clientuser_by_user_id(user_id)
-    return AuditStore.objects.presentable().visible_to(user).filter(
-        audit__audit_cycle__client__id=user.clientuser.client_id,
-    ).distinct('audit__audit_cycle_id').order_by('-audit__audit_cycle_id').values(
-        'audit__audit_cycle__id',
-        'audit__audit_cycle__name',
-        'audit__audit_cycle__start_date',
-        'audit__audit_cycle__end_date',
-        'audit__audit_cycle__questionnaire_type__id',
-        'audit__audit_cycle__questionnaire_type__name',
-        'audit__audit_cycle__questionnaire_type__is_default',
-    )
+    rows = AuditStore.objects \
+        .presentable() \
+        .visible_to(user) \
+        .filter(
+            audit__audit_cycle__client__id=user.clientuser.client_id,
+        ) \
+        .distinct('audit__audit_cycle_id') \
+        .order_by('-audit__audit_cycle_id') \
+        .values(
+            'audit__audit_cycle__id',
+            'audit__audit_cycle__name',
+            'audit__audit_cycle__start_date',
+            'audit__audit_cycle__end_date',
+            'audit__audit_cycle__questionnaire_type__id',
+            'audit__audit_cycle__questionnaire_type__name',
+            'audit__audit_cycle__questionnaire_type__is_default',
+        )
+
+    def map_audit_cycle_values(values):
+        return {
+            "id": values["audit__audit_cycle__id"],
+            "name": values["audit__audit_cycle__name"],
+            "start_date": values["audit__audit_cycle__start_date"],
+            "end_date": values["audit__audit_cycle__end_date"],
+            "questionnaire_type": {
+                "id": values["audit__audit_cycle__questionnaire_type__id"],
+                "name": values["audit__audit_cycle__questionnaire_type__name"],
+                "is_default": values["audit__audit_cycle__questionnaire_type__is_default"],
+            },
+        }
+
+    return map(map_audit_cycle_values, rows)
