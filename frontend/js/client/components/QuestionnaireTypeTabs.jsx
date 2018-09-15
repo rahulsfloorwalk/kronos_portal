@@ -18,7 +18,6 @@ export class QuestionnaireTypeTabs extends React.Component{
 	static propTypes =  {
 		questionnaireTypes: PropTypes.arrayOf(questionnaireTypePropType),
 		selectedQuestionnaireType: questionnaireTypePropType,
-		defaultQuestionnaireType: questionnaireTypePropType,
 
 		onMount: PropTypes.func.isRequired,
 		onSelect: PropTypes.func.isRequired,
@@ -27,22 +26,16 @@ export class QuestionnaireTypeTabs extends React.Component{
 		this.props.onMount();
 	}
 
-	getFirstQuestionnaireType = () => {
-		return this.props.questionnaireTypes[0];
-	};
-
 	render(){
 		if(this.props.questionnaireTypes.length === 0){
 			return <Loading/>;
 		}
 
-		const selectedQuestionnaireType = this.props.selectedQuestionnaireType || this.props.defaultQuestionnaireType || this.getFirstQuestionnaireType();
-
 
 		if(this.props.questionnaireTypes.length > 1) {
 			return (<ul className="nav nav-tabs nav-justified">
 				{this.props.questionnaireTypes.map( qt => {
-					const activeClass = selectedQuestionnaireType.id === qt.id ? "active" : "";
+					const activeClass = this.props.selectedQuestionnaireType.id === qt.id ? "active" : "";
 					return <li className={activeClass} key={qt.id} style={pointerStyle}>
 						<a onClick={() => this.props.onSelect(qt.id)}>
 							<b>{qt.name}</b>
@@ -59,7 +52,6 @@ const mapStateToProps = (state) => {
 	return {
 		questionnaireTypes: questionnaireTypeSelectors.findQuestionnaireTypes(state),
 		selectedQuestionnaireType: questionnaireTypeSelectors.findSelectedQuestionnaireType(state),
-		defaultQuestionnaireType: questionnaireTypeSelectors.findDefaultQuestionnaireType(state),
 	};
 };
 

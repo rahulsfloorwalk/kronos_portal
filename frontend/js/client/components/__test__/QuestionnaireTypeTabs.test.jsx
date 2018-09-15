@@ -4,7 +4,7 @@ import renderer from "react-test-renderer";
 
 import { QuestionnaireTypeTabs } from "../QuestionnaireTypeTabs";
 
-describe("<QuestionnaireTypeTabs/>", () => {
+describe(QuestionnaireTypeTabs, () => {
 	const sampleQuestionnaireTypes = [
 		{
 			id: 1,
@@ -46,41 +46,18 @@ describe("<QuestionnaireTypeTabs/>", () => {
 			onMount={onMount}
 			onSelect={onSelect}
 			questionnaireTypes={[sampleQuestionnaireTypes[1]]}
+			selectedQuestionnaireType={sampleQuestionnaireTypes[1]}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
-	it("renders the tabs with the first selected", () => {
+	it("renders the tabs with selected questionnaire type", () => {
 		const onMount = jest.fn();
 		const onSelect = jest.fn();
 		const r = renderer.create(<QuestionnaireTypeTabs
 			onMount={onMount}
 			onSelect={onSelect}
 			questionnaireTypes={sampleQuestionnaireTypes}
-		/>);
-		expect(r.toJSON()).toMatchSnapshot();
-	});
-
-	it("renders the tabs default one selected", () => {
-		const onMount = jest.fn();
-		const onSelect = jest.fn();
-		const r = renderer.create(<QuestionnaireTypeTabs
-			onMount={onMount}
-			onSelect={onSelect}
-			questionnaireTypes={sampleQuestionnaireTypes}
-			defaultQuestionnaireType={sampleQuestionnaireTypes[3]}
-		/>);
-		expect(r.toJSON()).toMatchSnapshot();
-	});
-
-	it("renders the tabs with selected one", () => {
-		const onMount = jest.fn();
-		const onSelect = jest.fn();
-		const r = renderer.create(<QuestionnaireTypeTabs
-			onMount={onMount}
-			onSelect={onSelect}
-			questionnaireTypes={sampleQuestionnaireTypes}
-			defaultQuestionnaireType={sampleQuestionnaireTypes[3]}
 			selectedQuestionnaireType={sampleQuestionnaireTypes[1]}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
@@ -93,6 +70,7 @@ describe("<QuestionnaireTypeTabs/>", () => {
 			onMount={onMount}
 			onSelect={onSelect}
 			questionnaireTypes={sampleQuestionnaireTypes}
+			selectedQuestionnaireType={sampleQuestionnaireTypes[1]}
 		/>);
 		expect(onMount).toHaveBeenCalled();
 	});
@@ -104,6 +82,7 @@ describe("<QuestionnaireTypeTabs/>", () => {
 			onMount={onMount}
 			onSelect={onSelect}
 			questionnaireTypes={sampleQuestionnaireTypes}
+			selectedQuestionnaireType={sampleQuestionnaireTypes[1]}
 		/>);
 
 		r.find("a").at(1).simulate("click");

@@ -1,17 +1,20 @@
 import { FETCH_QUESTIONNAIRE_TYPES, SELECT_QUESTIONNAIRE_TYPE } from "../../action_types";
 import questionnaireTypeReducer, { QuestionnaireTypeSelectors } from "../questionnaire_type";
 
+const sampleQuestionnaireTypes = [
+	{
+		id: 1,
+		name: "Monty",
+		is_default: false,
+	},
+	{
+		id: 2,
+		name: "Python",
+		is_default: false,
+	},
+];
+
 describe("questionnaireTypeReducer", () => {
-	const sampleQuestionnaireTypes = [
-		{
-			id: 1,
-			name: "Monty",
-		},
-		{
-			id: 2,
-			name: "Python",
-		},
-	];
 
 	it("gets the initial state", () => {
 		const questionnaireTypes = questionnaireTypeReducer(undefined, {});
@@ -42,62 +45,59 @@ describe("questionnaireTypeReducer", () => {
 	});
 });
 
-describe(QuestionnaireTypeSelectors, () => {
-	const namespace = "questionnaireType";
-	const sampleQuestionnaireTypes = [
-		{
-			id: 1,
-			name: "Monty",
-			is_default: false,
-		},
-		{
-			id: 2,
-			name: "Python",
-			is_default: true,
-		},
-	];
-
-	const selectedQuestionnaireTypeId = 1;
-
-	const sampleStore = {
-		questionnaireType: {
-			questionnaireTypes: sampleQuestionnaireTypes,
-			selectedQuestionnaireTypeId,
+const createSampleStore = (namespace, questionnaireTypes, defaultIdx, selectedIdx) => {
+	return {
+		[namespace]: {
+			questionnaireTypes: questionnaireTypes.map((qt, idx) => idx === defaultIdx ? Object.assign({}, qt, {
+				is_default: true,
+			}) : qt),
+			selectedQuestionnaireTypeId: questionnaireTypes[selectedIdx] ? questionnaireTypes[selectedIdx].id : null,
 		},
 	};
+};
 
-	describe("findQuestionnaireTypes", () => {
+describe(QuestionnaireTypeSelectors, () => {
+	const namespace = "foobar";
+
+	describe(QuestionnaireTypeSelectors.findQuestionnaireTypes, () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the questionnaire types", () => {
+			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, null, null);
 			expect(selectors.findQuestionnaireTypes(sampleStore)).toEqual(sampleQuestionnaireTypes);
 		});
 	});
 
-	describe("findSelectedQuestionnaireTypeId", () => {
+	describe(QuestionnaireTypeSelectors.findSelectedQuestionnaireType, () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
-		it("should fetch the selected questionnaireType id", () => {
-			expect(selectors.findSelectedQuestionnaireTypeId(sampleStore)).toEqual(selectedQuestionnaireTypeId);
+		it("should fetch the selected questionnaire type when it is selected", () => {
+			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, 1, 0);
+			expect(selectors.findSelectedQuestionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[0].id);
+		});
+
+		it("should fetch the default questionnaire type when nothing is selected", () => {
+			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, 1, null);
+			expect(selectors.findSelectedQuestionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[1].id);
+		});
+
+		it("should fetch the first questionnaire type when there is no default", () => {
+			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, null, null);
+			expect(selectors.findSelectedQuestionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[0].id);
 		});
 	});
 
-	describe("findSelectedQuestionnaireType", () => {
-		const selectors = new QuestionnaireTypeSelectors(namespace);
-		it("should fetch the selected questionnaire type", () => {
-			expect(selectors.findSelectedQuestionnaireType(sampleStore)).toEqual(sampleQuestionnaireTypes[0]);
-		});
-	});
-
-	describe("findDefaultQuestionnaireType", () => {
+	describe(QuestionnaireTypeSelectors.findDefaultQuestionnaireType, () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the default questionnaire type", () => {
-			expect(selectors.findDefaultQuestionnaireType(sampleStore)).toEqual(sampleQuestionnaireTypes[1]);
+			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, 1, null);
+			expect(selectors.findDefaultQuestionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[1].id);
 		});
 	});
 
-	describe("findFirstQuesionnaireType", () => {
+	describe(QuestionnaireTypeSelectors.findFirstQuestionnaireType, () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the first questionnaire type", () => {
-			expect(selectors.findFirstQuesionnaireType(sampleStore)).toEqual(sampleQuestionnaireTypes[0]);
+			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, null, null);
+			expect(selectors.findFirstQuesionnaireType(sampleStore).id).toEqual(sampleQuestionnaireTypes[0].id);
 		});
 	});
 });

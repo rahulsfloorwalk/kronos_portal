@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Dashboard renders the tab strip and a loading sign when no questionnaire type is selected 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <Dashboard />
+     Dashboard
+  </h2>
+  <Connect(QuestionnaireTypeTabs) />
+  <Loading />
+</div>
+`;
+
+exports[`Dashboard renders the tab strip and charts with the selected questionnaire type 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <Dashboard />
+     Dashboard
+  </h2>
+  <Connect(QuestionnaireTypeTabs) />
+  <div>
+    <AuditCycleTimeSeries
+      questionnaireType={
+        Object {
+          "client_id": 9,
+          "id": 213,
+          "is_default": true,
+          "name": "Walk In",
+        }
+      }
+    />
+    <hr />
+    <AuditCycleStorePerformanceWrapper
+      questionnaireType={
+        Object {
+          "client_id": 9,
+          "id": 213,
+          "is_default": true,
+          "name": "Walk In",
+        }
+      }
+    />
+    <hr />
+    <CityWisePerformanceChartWrapper
+      questionnaireType={
+        Object {
+          "client_id": 9,
+          "id": 213,
+          "is_default": true,
+          "name": "Walk In",
+        }
+      }
+    />
+    <hr />
+  </div>
+</div>
+`;

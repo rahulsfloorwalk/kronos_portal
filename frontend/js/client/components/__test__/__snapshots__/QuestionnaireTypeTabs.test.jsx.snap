@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<QuestionnaireTypeTabs/> renders a loading sign when there are no questionnaire types 1`] = `
+exports[`QuestionnaireTypeTabs renders a loading sign when there are no questionnaire types 1`] = `
 <div
   className="text-center text-muted"
 >
@@ -15,80 +15,9 @@ exports[`<QuestionnaireTypeTabs/> renders a loading sign when there are no quest
 </div>
 `;
 
-exports[`<QuestionnaireTypeTabs/> renders nothing when only one questionnaire type exists 1`] = `null`;
+exports[`QuestionnaireTypeTabs renders nothing when only one questionnaire type exists 1`] = `null`;
 
-exports[`<QuestionnaireTypeTabs/> renders the tabs default one selected 1`] = `
-<ul
-  className="nav nav-tabs nav-justified"
->
-  <li
-    className=""
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Monty
-      </b>
-    </a>
-  </li>
-  <li
-    className=""
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Python
-      </b>
-    </a>
-  </li>
-  <li
-    className=""
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Flying
-      </b>
-    </a>
-  </li>
-  <li
-    className="active"
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Circus
-      </b>
-    </a>
-  </li>
-</ul>
-`;
-
-exports[`<QuestionnaireTypeTabs/> renders the tabs with selected one 1`] = `
+exports[`QuestionnaireTypeTabs renders the tabs with selected questionnaire type 1`] = `
 <ul
   className="nav nav-tabs nav-justified"
 >
@@ -110,77 +39,6 @@ exports[`<QuestionnaireTypeTabs/> renders the tabs with selected one 1`] = `
   </li>
   <li
     className="active"
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Python
-      </b>
-    </a>
-  </li>
-  <li
-    className=""
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Flying
-      </b>
-    </a>
-  </li>
-  <li
-    className=""
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Circus
-      </b>
-    </a>
-  </li>
-</ul>
-`;
-
-exports[`<QuestionnaireTypeTabs/> renders the tabs with the first selected 1`] = `
-<ul
-  className="nav nav-tabs nav-justified"
->
-  <li
-    className="active"
-    style={
-      Object {
-        "cursor": "pointer",
-      }
-    }
-  >
-    <a
-      onClick={[Function]}
-    >
-      <b>
-        Monty
-      </b>
-    </a>
-  </li>
-  <li
-    className=""
     style={
       Object {
         "cursor": "pointer",

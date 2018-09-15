@@ -21,23 +21,19 @@ const questionnaireTypePropType = PropTypes.shape({
 export class Dashboard extends React.Component{
 	static propTypes = {
 		selectedQuestionnaireType: questionnaireTypePropType,
-		defaultQuestionnaireType: questionnaireTypePropType,
-		firstQuestionnaireType: questionnaireTypePropType,
 	};
 
 	render(){
-		const selectedQuestionnaireType = this.props.selectedQuestionnaireType || this.props.defaultQuestionnaireType || this.props.firstQuestionnaireType;
-
 		return (
 			<div>
 				<h2 className="page-header"><DashboardIcon/> Dashboard</h2>
 				<QuestionnaireTypeTabs />
-				{ selectedQuestionnaireType ? <div>
-					<AuditCycleTimeSeries questionnaireType={selectedQuestionnaireType}/>
+				{ this.props.selectedQuestionnaireType ? <div>
+					<AuditCycleTimeSeries questionnaireType={this.props.selectedQuestionnaireType}/>
 					<hr/>
-					<AuditCycleStorePerformance questionnaireType={selectedQuestionnaireType}/>
+					<AuditCycleStorePerformance questionnaireType={this.props.selectedQuestionnaireType}/>
 					<hr/>
-					<DashboardCityPerformanceChart questionnaireType={selectedQuestionnaireType}/>
+					<DashboardCityPerformanceChart questionnaireType={this.props.selectedQuestionnaireType}/>
 					<hr/>
 				</div> : <Loading/> }
 			</div>
@@ -48,8 +44,6 @@ export class Dashboard extends React.Component{
 const mapStateToProps = (state) => {
 	return {
 		selectedQuestionnaireType: questionnaireTypeSelectors.findSelectedQuestionnaireType(state),
-		defaultQuestionnaireType: questionnaireTypeSelectors.findDefaultQuestionnaireType(state),
-		firstQuestionnaireType: questionnaireTypeSelectors.findFirstQuesionnaireType(state),
 	};
 };
 

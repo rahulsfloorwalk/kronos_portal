@@ -8,11 +8,11 @@ const initialState = {
 export default (state=initialState, action) => {
 	switch(action.type){
 	case FETCH_QUESTIONNAIRE_TYPES:
-		return Object.assign({}, state, { 
+		return Object.assign({}, state, {
 			questionnaireTypes: action.questionnaireTypes,
 		});
 	case SELECT_QUESTIONNAIRE_TYPE:
-		return Object.assign({}, state, { 
+		return Object.assign({}, state, {
 			selectedQuestionnaireTypeId: action.selectedQuestionnaireTypeId,
 		});
 	default:
@@ -31,12 +31,12 @@ export class QuestionnaireTypeSelectors {
 		return this.getNamespacedStore(store).questionnaireTypes;
 	};
 
-	findSelectedQuestionnaireTypeId = (store) => {
-		return this.getNamespacedStore(store).selectedQuestionnaireTypeId;
-	};
-
 	findSelectedQuestionnaireType = (store) => {
-		return this.getNamespacedStore(store).questionnaireTypes.find(qt => qt.id === store.questionnaireType.selectedQuestionnaireTypeId);
+		return this.getNamespacedStore(store)
+			.questionnaireTypes
+			.find(qt => qt.id === this.getNamespacedStore(store).selectedQuestionnaireTypeId)
+			|| this.findDefaultQuestionnaireType(store)
+			|| this.findFirstQuesionnaireType(store);
 	};
 
 	findDefaultQuestionnaireType = (store) => {

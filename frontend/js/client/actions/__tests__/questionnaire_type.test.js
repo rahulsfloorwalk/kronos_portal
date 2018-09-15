@@ -5,7 +5,7 @@ import * as questionnaireType from "../../service/questionnaire_type.js";
 
 jest.mock("../../service/questionnaire_type.js");
 
-describe("fetchQuestionnaireTypes", () => {
+describe(fetchQuestionnaireTypes, () => {
 	const sampleQuestionnaireTypes = [
 		{
 			id: 1,
@@ -34,7 +34,7 @@ describe("fetchQuestionnaireTypes", () => {
 	});
 });
 
-describe("selectQuestionnaireType", () => {
+describe(selectQuestionnaireType, () => {
 	it("it dispatches an action to set the selected questionnaire type", () => {
 		const questionnaireTypeId = 5;
 		const action = selectQuestionnaireType(questionnaireTypeId);
