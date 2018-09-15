@@ -2,72 +2,56 @@ import React from "react";
 import Datetime from "react-datetime";
 import moment from "moment";
 import { shallow } from "enzyme";
+import ShallowRenderer from "react-test-renderer/shallow";
 import $ from "jquery";
 
-import ReportBrowser3 from "../ReportBrowser3";
+import { ReportBrowser3 } from "../ReportBrowser3";
 import AuditStoreTable from "../AuditStoreTable";
-import { fetchAuditCycles } from "../../service/audit_cycle";
 import { findAuditStoresByAuditCycle } from "../../service/audit_store";
 
 jest.mock("react-dom", () => ({
 	findDOMNode: () => {},
 }));
 
-jest.mock("../../../client/service/audit_cycle");
 jest.mock("../../../client/service/audit_store");
 
-describe("<ReportBrowser3/>", () => {
-	const sampleAuditCycles = [
-		{
-			"audit__audit_cycle__id":109,
-			"audit__audit_cycle__start_date":"2018-03-12",
-			"audit__audit_cycle__end_date":"2018-05-31",
-			"audit__audit_cycle__name":"Wave-1- 2018",
-			"audit__audit_cycle__type":"WALKIN",
-		},
-		{
-			"audit__audit_cycle__id":129,
-			"audit__audit_cycle__start_date":"2018-03-12",
-			"audit__audit_cycle__end_date":"2018-05-31",
-			"audit__audit_cycle__name":"Wave-1- 2018",
-			"audit__audit_cycle__type":"WALKIN",
-		},
-	];
+const sampleAuditCycles = [
+	{
+		"id":109,
+		"start_date":"2018-03-12",
+		"end_date":"2018-05-31",
+		"name":"Wave-1- 2018",
+		"type":"WALKIN",
+	},
+	{
+		"id":129,
+		"start_date":"2018-03-12",
+		"end_date":"2018-05-31",
+		"name":"Wave-1- 2018",
+		"type":"WALKIN",
+	},
+];
 
-	it("selects first audit cycle on successfully loading audit cycle list", (done) => {
-		fetchAuditCycles.mockResolvedValue(sampleAuditCycles);
-		const r = shallow(<ReportBrowser3/>);
-		setTimeout(() => {
-			r.update();
-			expect(r.find("select > option").length).toEqual(2);
-			expect(r.find("select").prop("value")).toEqual(sampleAuditCycles[0].audit__audit_cycle__id);
-			done();
-		});
+describe(ReportBrowser3, () => {
+	const renderer = new ShallowRenderer();
+
+	it("renders the audit store table with correct props", () => {
+		const tree = renderer.render(<ReportBrowser3 auditCycles={sampleAuditCycles} selectedAuditCycle={sampleAuditCycles[1]}/>);
+		expect(tree).toMatchSnapshot();
 	});
 
-	it("passes the id, startDate and endDate of the selected audit cycle to AuditStoreTable", (done) => {
-		fetchAuditCycles.mockResolvedValue(sampleAuditCycles);
-		const r = shallow(<ReportBrowser3/>);
-		setTimeout(() => {
-			r.update();
-			expect(r.find("AuditStoreTable").prop("auditCycleId")).toEqual(sampleAuditCycles[0].audit__audit_cycle__id);
-			expect(r.find("AuditStoreTable").prop("startDate")).toEqual(sampleAuditCycles[0].audit__audit_cycle__start_date);
-			expect(r.find("AuditStoreTable").prop("endDate")).toEqual(sampleAuditCycles[0].audit__audit_cycle__end_date);
-			r.find("select").simulate("change", {
-				target: {
-					value: r.find("option").at(1).prop("value"),
-				},
-			});
-			r.update();
-			expect(r.find("AuditStoreTable").prop("auditCycleId")).toEqual(sampleAuditCycles[1].audit__audit_cycle__id);
-			expect(r.find("AuditStoreTable").prop("startDate")).toEqual(sampleAuditCycles[1].audit__audit_cycle__start_date);
-			expect(r.find("AuditStoreTable").prop("endDate")).toEqual(sampleAuditCycles[1].audit__audit_cycle__end_date);
-			done();
-		});
+	it("renders a message when there are no audit cycles", () => {
+		const tree = renderer.render(<ReportBrowser3 auditCycles={[]} selectedAuditCycle={undefined}/>);
+		expect(tree).toMatchSnapshot();
+	});
+
+	it("renders a loading widget when no cycle is selected", () => {
+		const tree = renderer.render(<ReportBrowser3 auditCycles={sampleAuditCycles} selectedAuditCycle={undefined}/>);
+		expect(tree).toMatchSnapshot();
 	});
 });
 
-describe("<AuditStoreTable/>", () => {
+describe(AuditStoreTable, () => {
 	const sampleProps = {
 		"auditCycleId":129,
 		"startDate":"2018-05-01",

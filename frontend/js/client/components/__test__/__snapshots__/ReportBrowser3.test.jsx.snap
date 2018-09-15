@@ -1,0 +1,45 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] = `
+<div>
+  <Connect(QuestionnaireTypeTabs) />
+  <h2
+    className="page-header"
+  >
+    <Connect(AuditCycleSelector) />
+  </h2>
+  <Loading />
+</div>
+`;
+
+exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
+<div>
+  <Connect(QuestionnaireTypeTabs) />
+  <h2
+    className="page-header"
+  >
+    <Connect(AuditCycleSelector) />
+  </h2>
+  <Jumbotron
+    align="center"
+    heading="there are no reports here"
+    para="yet"
+  />
+</div>
+`;
+
+exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
+<div>
+  <Connect(QuestionnaireTypeTabs) />
+  <h2
+    className="page-header"
+  >
+    <Connect(AuditCycleSelector) />
+  </h2>
+  <AuditStoreTable
+    auditCycleId={129}
+    endDate="2018-05-31"
+    startDate="2018-03-12"
+  />
+</div>
+`;

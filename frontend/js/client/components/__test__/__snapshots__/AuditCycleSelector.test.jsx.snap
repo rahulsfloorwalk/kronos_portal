@@ -1,0 +1,46 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AuditCycleSelector renders nothing when nothing is selected 1`] = `null`;
+
+exports[`AuditCycleSelector renders the selector with selected audit cycle 1`] = `
+<div>
+  <select
+    className="form-control input-lg"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "400px",
+      }
+    }
+    value={2}
+  >
+    <option
+      value={1}
+    >
+      Monty
+    </option>
+    <option
+      value={2}
+    >
+      Python
+    </option>
+    <option
+      value={3}
+    >
+      Flying
+    </option>
+    <option
+      value={4}
+    >
+      Circus
+    </option>
+  </select>
+  <small>
+     
+    1st Aug
+     to 
+    1st Sep
+  </small>
+</div>
+`;
