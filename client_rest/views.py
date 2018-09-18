@@ -36,7 +36,6 @@ from social.service import twitter_client
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
-from client_rest.serializers import QuestionnaireTypeSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -429,5 +428,5 @@ class QuestionnaireTypesByClient(APIView):
     }
     def get(self, request):
         types = questionnaire_type_client_service.find_questionnaire_types_for_client_by_user(request.user)
-        return Response(QuestionnaireTypeSerializer(types, many=True).data)
+        return Response(types)
 

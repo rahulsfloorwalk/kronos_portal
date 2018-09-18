@@ -3,7 +3,7 @@ from model_mommy import mommy
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
-from kronos.exceptions import ObjectNotFound
+from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo
