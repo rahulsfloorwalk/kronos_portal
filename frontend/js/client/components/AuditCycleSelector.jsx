@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 
 import { fetchAuditCycles, selectAuditCycle } from "../actions/audit_cycle";
-import { auditCycleSelectors } from "../selectors";
+import { auditCycleSelectors, questionnaireTypeSelectors } from "../selectors";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -42,10 +42,17 @@ export class AuditCycleSelector extends React.Component {
 }
 
 const mapStateToProps = (state) => {
-	return {
-		auditCycles: auditCycleSelectors.findAuditCycles(state),
-		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycle(state),
-	};
+	const selectedQuestionnaireType = questionnaireTypeSelectors.findSelectedQuestionnaireType(state);
+	if(selectedQuestionnaireType) {
+		return {
+			auditCycles: auditCycleSelectors.findAuditCyclesByQuestionnaireType(state, selectedQuestionnaireType.id),
+			selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycle(state, selectedQuestionnaireType.id),
+		};
+	} else {
+		return {
+			auditCycles: [],
+		};
+	}
 };
 
 export default connect(mapStateToProps, {

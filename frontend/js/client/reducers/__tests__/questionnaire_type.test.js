@@ -59,7 +59,7 @@ const createSampleStore = (namespace, questionnaireTypes, defaultIdx, selectedId
 describe(QuestionnaireTypeSelectors, () => {
 	const namespace = "foobar";
 
-	describe(QuestionnaireTypeSelectors.findQuestionnaireTypes, () => {
+	describe("findQuestionnaireTypes", () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the questionnaire types", () => {
 			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, null, null);
@@ -67,7 +67,7 @@ describe(QuestionnaireTypeSelectors, () => {
 		});
 	});
 
-	describe(QuestionnaireTypeSelectors.findSelectedQuestionnaireType, () => {
+	describe("findSelectedQuestionnaireType", () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the selected questionnaire type when it is selected", () => {
 			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, 1, 0);
@@ -85,7 +85,7 @@ describe(QuestionnaireTypeSelectors, () => {
 		});
 	});
 
-	describe(QuestionnaireTypeSelectors.findDefaultQuestionnaireType, () => {
+	describe("findDefaultQuestionnaireType", () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the default questionnaire type", () => {
 			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, 1, null);
@@ -93,7 +93,7 @@ describe(QuestionnaireTypeSelectors, () => {
 		});
 	});
 
-	describe(QuestionnaireTypeSelectors.findFirstQuestionnaireType, () => {
+	describe("findFirstQuestionnaireType", () => {
 		const selectors = new QuestionnaireTypeSelectors(namespace);
 		it("should fetch the first questionnaire type", () => {
 			const sampleStore = createSampleStore(namespace, sampleQuestionnaireTypes, null, null);

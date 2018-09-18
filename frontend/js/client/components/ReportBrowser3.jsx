@@ -9,7 +9,7 @@ import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 import AuditStoreTable from "./AuditStoreTable.jsx";
 import AuditCycleSelector from "./AuditCycleSelector.jsx";
 
-import { auditCycleSelectors } from "../selectors";
+import { auditCycleSelectors, questionnaireTypeSelectors } from "../selectors";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -24,24 +24,14 @@ export class ReportBrowser3 extends Component{
 		selectedAuditCycle: auditCyclePropType,
 	};
 
-	constructor(props){
-		super(props);
-		this.state = {
-			loading: false,
-		};
-	}
+	state = {
+		loading: false,
+	};
+
 	setLoading = (loading) => {
 		this.setState( prevState => {
 			return Object.assign({}, prevState, {
 				loading
-			});
-		});
-	};
-
-	auditCycleChanged = (auditCycleId) => {
-		this.setState((prevState)=> {
-			return Object.assign({}, prevState, {
-				selectedAuditCycleId: auditCycleId,
 			});
 		});
 	};
@@ -68,12 +58,18 @@ export class ReportBrowser3 extends Component{
 	}
 }
 
-
 const mapStateToProps = (state) => {
-	return {
-		auditCycles: auditCycleSelectors.findAuditCycles(state),
-		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycle(state),
-	};
+	const selectedQuestionnaireType = questionnaireTypeSelectors.findSelectedQuestionnaireType(state);
+	if(selectedQuestionnaireType) {
+		return {
+			auditCycles: auditCycleSelectors.findAuditCyclesByQuestionnaireType(state, selectedQuestionnaireType.id),
+			selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycle(state, selectedQuestionnaireType.id),
+		};
+	} else {
+		return {
+			auditCycles: [],
+		};
+	}
 };
 
 export default connect(mapStateToProps)(ReportBrowser3);

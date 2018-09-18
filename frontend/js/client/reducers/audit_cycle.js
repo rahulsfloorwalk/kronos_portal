@@ -31,14 +31,22 @@ export class AuditCycleSelectors {
 		return this.getNamespacedStore(store).auditCycles;
 	};
 
-	findSelectedAuditCycle = (store) => {
-		return this.getNamespacedStore(store)
-			.auditCycles
+	findSelectedAuditCycle = (store, selectedQuestionnaireTypeId) => {
+		return this.findAuditCyclesByQuestionnaireType(store, selectedQuestionnaireTypeId)
 			.find(ac => ac.id === this.getNamespacedStore(store).selectedAuditCycleId)
-			|| this.findFirstAuditCycle(store);
+			|| this.findFirstAuditCycleByQuestionnaireType(store, selectedQuestionnaireTypeId);
 	};
 
 	findFirstAuditCycle = (store) => {
 		return this.getNamespacedStore(store).auditCycles[0];
+	};
+
+	findFirstAuditCycleByQuestionnaireType = (store, questionnaireTypeId) => {
+		const cycles = this.findAuditCyclesByQuestionnaireType(store, questionnaireTypeId);
+		return cycles.length > 0 ? cycles[0] : null;
+	};
+
+	findAuditCyclesByQuestionnaireType = (store, questionnaireTypeId) => {
+		return this.findAuditCycles(store).filter(ac => ac.questionnaire_type.id === questionnaireTypeId);
 	};
 }
