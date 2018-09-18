@@ -6,8 +6,6 @@ import AuditCycleTimeSeries from "./AuditCycleTimeSeries.jsx";
 import AuditCycleStorePerformance from "./AuditCycleStorePerformance.jsx";
 import DashboardCityPerformanceChart from "./DashboardCityPerformanceChart.jsx";
 
-import { Dashboard as DashboardIcon } from "../../components/Icons.jsx";
-
 import Loading from "../../components/Loading.jsx";
 import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 
@@ -26,7 +24,6 @@ export class Dashboard extends React.Component{
 	render(){
 		return (
 			<div>
-				<h2 className="page-header"><DashboardIcon/> Dashboard</h2>
 				<QuestionnaireTypeTabs />
 				{ this.props.selectedQuestionnaireType ? <div>
 					<AuditCycleTimeSeries questionnaireType={this.props.selectedQuestionnaireType}/>
