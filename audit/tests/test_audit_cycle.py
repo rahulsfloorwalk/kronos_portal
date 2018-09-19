@@ -55,7 +55,7 @@ class AuditCycleTestCase(TestCase):
         
     def test_manager_dashboard_status_matches_snapshot(self):
         all_statuses = set(AuditCycle.ALL_STATUSES)
-        agency_visible_statuses = set(AuditCycle.AGENCY_VISIBLE_STATUSES)
+        manager_dashboard_statuses = set(AuditCycle.MANAGER_DASHBOARD_STATUSES)
         expected_difference = {AuditCycle.PREPARATION, AuditCycle.ARCHIVED}
-        self.assertEqual(expected_difference, all_statuses - agency_visible_statuses)
+        self.assertEqual(expected_difference, all_statuses - manager_dashboard_statuses)
 
