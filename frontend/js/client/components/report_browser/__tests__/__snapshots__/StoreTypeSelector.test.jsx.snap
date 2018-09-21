@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StoreTypeSelector renders the selector with nothing selected 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+  <label
+    className="control-label"
+  >
+     Store Type:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+  >
+    <option
+      value=""
+    >
+      All Types
+    </option>
+    <option
+      value="Factory Outlet"
+    >
+      Factory Outlet
+    </option>
+    <option
+      value="Express Store"
+    >
+      Express Store
+    </option>
+    <option
+      value="Retail Outlet"
+    >
+      Retail Outlet
+    </option>
+  </select>
+</div>
+`;
+
+exports[`StoreTypeSelector renders the selector with selected store_type 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+  <label
+    className="control-label"
+  >
+     Store Type:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value="Factory Outlet"
+  >
+    <option
+      value=""
+    >
+      All Types
+    </option>
+    <option
+      value="Factory Outlet"
+    >
+      Factory Outlet
+    </option>
+    <option
+      value="Express Store"
+    >
+      Express Store
+    </option>
+    <option
+      value="Retail Outlet"
+    >
+      Retail Outlet
+    </option>
+  </select>
+</div>
+`;

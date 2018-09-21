@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StorePrioritySelector renders the selector with nothing selected 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+  <label
+    className="control-label"
+  >
+     Store Priority:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+  >
+    <option
+      value=""
+    >
+      All Types
+    </option>
+    <option
+      value="HIGH"
+    >
+      HIGH
+    </option>
+    <option
+      value="MEDIUM"
+    >
+      MEDIUM
+    </option>
+    <option
+      value="LOW"
+    >
+      LOW
+    </option>
+  </select>
+</div>
+`;
+
+exports[`StorePrioritySelector renders the selector with selected store_priority 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+  <label
+    className="control-label"
+  >
+     Store Priority:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value="HIGH"
+  >
+    <option
+      value=""
+    >
+      All Types
+    </option>
+    <option
+      value="HIGH"
+    >
+      HIGH
+    </option>
+    <option
+      value="MEDIUM"
+    >
+      MEDIUM
+    </option>
+    <option
+      value="LOW"
+    >
+      LOW
+    </option>
+  </select>
+</div>
+`;

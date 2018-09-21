@@ -1,0 +1,98 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CitySelector renders the selector with nothing selected 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+  <label
+    className="control-label"
+  >
+     City:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+  >
+    <option
+      value=""
+    >
+      All Cities
+    </option>
+    <option
+      value={1}
+    >
+      Mumbai
+    </option>
+    <option
+      value={2}
+    >
+      Nagpur
+    </option>
+    <option
+      value={3}
+    >
+      Bangalore
+    </option>
+  </select>
+</div>
+`;
+
+exports[`CitySelector renders the selector with selected city 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+  <label
+    className="control-label"
+  >
+     City:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value={1}
+  >
+    <option
+      value=""
+    >
+      All Cities
+    </option>
+    <option
+      value={1}
+    >
+      Mumbai
+    </option>
+    <option
+      value={2}
+    >
+      Nagpur
+    </option>
+    <option
+      value={3}
+    >
+      Bangalore
+    </option>
+  </select>
+</div>
+`;
