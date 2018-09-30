@@ -23,7 +23,7 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
     return write_data(data), name
 
 
-def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audit_date'):
+def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audit__store__city__name'):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
 
@@ -50,7 +50,7 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
             'report_sections__section',
             'report_sections__section__questions',
             'report_sections__section__questions__answers',
-        ).order_by(sort)
+        ).order_by(sort, "audit__store__name")
 
     filtered_audit_stores = audit_stores
     ignored_filters = ['', 'undefined', None]
@@ -97,7 +97,7 @@ def create_text_structure(title, sections, audit_stores):
         section_cells.append({
             'value': section.name,
         })
-    cells = [{'value': "SECTIONS", 'colspan': 3}, {'value': "Total Score"}] + section_cells
+    cells = [{'value': "Store Code"}, {'value': "Store Name"}, {'value': "Audit Date"}, {'value': "Total Score"}] + section_cells
     row = {'type': 'sections', 'content': cells}
     rows.append(row)
 
@@ -198,7 +198,7 @@ def write_data(data):
 
     start_row = 0
     start_col = 0
-    worksheet.set_column(0, 512, 30)
+    worksheet.set_column(0, 512, 15)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col
