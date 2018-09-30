@@ -27,11 +27,12 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
     clientuser = find_clientuser_by_user_id(user_id)
 
-    sections = audit_cycle.sections.all().prefetch_related(
-        'report_sections',
-        'questions__answers',
-        'audit_cycle__audits__audit_stores'
-    )
+    sections = []
+    sections_qs = audit_cycle.sections.all()
+    for section in sections_qs:
+        if section.max_marks() > 0:
+            sections.append(section)
+
 
     city_name = ''
     month_name=''
