@@ -93,8 +93,18 @@ export default class AuditStoreTable extends Component {
 		}).always(() => this.setLoading(false));
 	};
 
-	createFilterUrl(){
+	createDetailsFilterUrl(){
 		let base = url.api_base_path + "client/audit_cycle/" + this.props.auditCycleId + "/audit_cycle_filtered_xlsx_report?";
+		base += "city=" + encodeURIComponent(this.state.selectedCityId || "") + "&";
+		base += "priority=" + encodeURIComponent(this.state.selectedPriority || "") + "&";
+		base += "start_date=" + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || "") + "&";
+		base += "end_date=" + encodeURIComponent(this.state.endDate.format("YYYY-MM-DD") || "") + "&";
+		base += "type=" + encodeURIComponent(this.state.selectedType || "") + "&";
+		base += "month=" + encodeURIComponent(Number(this.state.selectedMonth)+1 || "");
+		return base;
+	}
+	createSummaryFilterUrl(){
+		let base = url.api_base_path + "client/audit_cycle/" + this.props.auditCycleId + "/report_browser_filtered_xlsx_report?";
 		base += "city=" + encodeURIComponent(this.state.selectedCityId || "") + "&";
 		base += "priority=" + encodeURIComponent(this.state.selectedPriority || "") + "&";
 		base += "start_date=" + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || "") + "&";
@@ -271,7 +281,8 @@ export default class AuditStoreTable extends Component {
 			);
 			previousStore = r.store_id;
 		});
-		var filteredUrl = this.createFilterUrl();
+		var detailsFilteredUrl = this.createDetailsFilterUrl();
+		var summaryFilteredUrl = this.createSummaryFilterUrl();
 		return (
 			<div>
 				<div className="form-group">
@@ -283,8 +294,12 @@ export default class AuditStoreTable extends Component {
 					<span className="pull-right" style={{fontSize:"130%"}}>
 						<big><b>{trs.length}</b> Reports</big>
 					&nbsp;
-						<a className="btn btn-default" href={filteredUrl}>
-							<Download/> Download Excel
+						<a className="btn btn-default" href={summaryFilteredUrl}>
+							<Download/> Download Summary
+						</a>
+					&nbsp;
+						<a className="btn btn-default" href={detailsFilteredUrl}>
+							<Download/> Download Details
 						</a>
 					</span>
 				</div>

@@ -26,6 +26,7 @@ from audit.service import audit_cycle_client_service
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
 from client_report.service import audit_cycle_xlsx_report as cycle_xlsx_report_service
+from client_report.service import report_browser_xlsx as report_browser_xlsx_service
 from client_report.service import audit_section
 from client_report.service import city_trends
 from client_report.service import store_trends
@@ -211,6 +212,24 @@ class AuditCycleFilteredXlsxReport(APIView):
         filters['start_date'] = request.GET.get('start_date')
         filters['end_date'] = request.GET.get('end_date')
         report, name = cycle_xlsx_report_service.get_aggregate_report_with_filters(audit_cycle_id, request.user.id, filters)
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+
+class ReportBrowserFilteredXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        filters = {}
+        filters['city'] = request.GET.get('city')
+        filters['type'] = request.GET.get('type')
+        filters['priority'] = request.GET.get('priority')
+        filters['month'] = request.GET.get('month')
+        filters['start_date'] = request.GET.get('start_date')
+        filters['end_date'] = request.GET.get('end_date')
+        report, name = report_browser_xlsx_service.get_aggregate_report_with_filters(audit_cycle_id, request.user.id, filters)
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response

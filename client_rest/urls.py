@@ -20,6 +20,7 @@ urlpatterns = ([
     url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/marking_graph', views.MarkingGraphByStore.as_view(), name='marking_graph_by_store'),
     url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/marking', views.MarkingByStore.as_view(), name='marking_by_store'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_cycle_filtered_xlsx_report$', views.AuditCycleFilteredXlsxReport.as_view(), name='audit_cycle_filtered_xlsx_report'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_browser_filtered_xlsx_report$', views.ReportBrowserFilteredXlsxReport.as_view(), name='report_browser_filtered_xlsx_report'),
 
     url(r'audit_store/latest$', views.AuditStoreLatest.as_view(), name='audit_store_latest'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', views.AttachmentByAuditStore.as_view(), name='attachment_by_audit_store'),
