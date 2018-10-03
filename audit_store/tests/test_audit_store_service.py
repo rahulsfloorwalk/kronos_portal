@@ -196,9 +196,27 @@ class AuditStoreServiceTestCase(TestCase):
         expect(audit_store.payments.count()).to(equal(1))
         expect(audit_store.payments.first().amount).to(equal(7000))
 
+    def test_accept_accepts_report_and_defaults_to_zero_for_earnings_per_audit(self):
+        audit = mommy.make(Audit, earnings_per_audit=None, reimbursement=2000)
+        audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+
+        audit_store = service.accept(audit_store.id, self.manager_user)
+        expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
+        expect(audit_store.payments.count()).to(equal(1))
+        expect(audit_store.payments.first().amount).to(equal(2000))
+
+    def test_accept_accepts_report_and_defaults_to_zero_for_reimbursement(self):
+        audit = mommy.make(Audit, earnings_per_audit=5000, reimbursement=None)
+        audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+
+        audit_store = service.accept(audit_store.id, self.manager_user)
+        expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
+        expect(audit_store.payments.count()).to(equal(1))
+        expect(audit_store.payments.first().amount).to(equal(5000))
+
     def test_accept_accepts_report_and_defaults_to_audit_values(self):
         audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
-        audit_store = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
+        audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED)
 
         audit_store = service.accept(audit_store.id, self.manager_user)
         expect(audit_store.status).to(equal(AuditStore.ACCEPTED))

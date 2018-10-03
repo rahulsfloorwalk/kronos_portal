@@ -202,8 +202,8 @@ def accept(audit_store_id, user_actor):
     try:
         audit_store = AuditStore.objects.get(id=audit_store_id)
         audit_store.accept(by=user_actor)
-        earnings_per_audit = audit_store.earnings_per_audit or audit_store.audit.earnings_per_audit
-        reimbursement = audit_store.reimbursement or audit_store.audit.reimbursement
+        earnings_per_audit = audit_store.earnings_per_audit or audit_store.audit.earnings_per_audit or 0
+        reimbursement = audit_store.reimbursement or audit_store.audit.reimbursement or 0
         payment_amount = earnings_per_audit + reimbursement
         # add the entry to the payment row
         payment_manager_service.add_payment_on_audit_store_accepted(audit_store.id, payment_amount, user_actor)
