@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import generics
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,14 +25,20 @@ from referral.service import referral_auditor as referral_service
 
 
 class AuditorView(generics.ListAPIView):
+    class AuditorViewPaginationClass(PageNumberPagination):
+        page_size = 200
+        page_size_query_param = 'page_size'
+        max_page_size = 1000
+
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER]
     }
-    queryset = User.objects.filter(groups__name=GROUP_NAME_AUDITOR)
+    queryset = User.objects.filter(groups__name=GROUP_NAME_AUDITOR).order_by('-date_joined')
     serializer_class = AuditorSerializer
     filter_backends = (SearchFilter,)
+    pagination_class = AuditorViewPaginationClass
     search_fields = ('email','profileinfo__first_name','profileinfo__last_name','profileinfo__mobile_number','profileinfo__city__name')
 
 
