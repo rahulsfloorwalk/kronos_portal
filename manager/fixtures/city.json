@@ -7508,5 +7508,25 @@
             "lat": "12.508070",
             "lon": "78.570175"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 782,
+        "fields": {
+            "name": "Bhiwandi",
+            "state": "IN-MH",
+            "lat": "19.281255",
+            "lon": "73.048291"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 783,
+        "fields": {
+            "name": "Ankleshwar",
+            "state": "IN-GJ",
+            "lat": "21.626424",
+            "lon": "73.015198"
+        }
     }
 ]
