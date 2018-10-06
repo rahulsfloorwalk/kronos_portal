@@ -10,6 +10,7 @@
     "jest": "./node_modules/.bin/jest",
     "jest-watch": "./node_modules/.bin/jest --watch",
     "jest-coverage": "./node_modules/.bin/jest --coverage",
+    "jest-coverage-ci": "./node_modules/.bin/jest --coverage --runInBand",
     "jest-update-snapshot": "./node_modules/.bin/jest -u",
     "eslint": "./node_modules/.bin/eslint"
   },
