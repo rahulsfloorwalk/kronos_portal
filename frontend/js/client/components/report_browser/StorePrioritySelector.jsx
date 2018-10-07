@@ -22,7 +22,7 @@ export class StorePrioritySelector extends React.Component {
 		return (
 			<div style={selectStyle}>
 				<label className="control-label">&nbsp;Store Priority:</label>
-				<select onChange={e => this.props.onSelect(e.target.value)} value={this.props.selectedStorePriority} className="form-control" style={selectStyle}>
+				<select onChange={e => this.props.onSelect(e.target.value)} value={this.props.selectedStorePriority || ""} className="form-control" style={selectStyle}>
 					<option value="">All Types</option>
 					{this.props.storePriorities.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
 				</select>
@@ -32,7 +32,7 @@ export class StorePrioritySelector extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
-	storePriorities: reportBrowserSelectors.findStorePriorities(state),
+	storePriorities: reportBrowserSelectors.findStorePrioritiesBySelectedAuditCycle(state),
 	selectedPriority: reportBrowserSelectors.findSelectedStorePriority(state),
 });
 

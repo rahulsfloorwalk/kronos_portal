@@ -1,18 +1,19 @@
-import { findAuditStoresByAuditCycle } from "../service/audit_store";
 import {
-	FETCH_REPORTS,
 	SELECT_CITY,
 	SELECT_STORE_TYPE,
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
 	SELECT_END_DATE,
+	FETCH_REPORTS,
 } from "../action_types";
+import { findAuditStoresByAuditCycle } from "../service/audit_store";
 
-export function fetchReportsByAuditCycle(auditCycleId){
-	return function(dispatch){
+export function fetchReportsByAuditCycleId(auditCycleId){
+	return (dispatch) => {
 		return findAuditStoresByAuditCycle(auditCycleId).then((reports) => {
 			dispatch({
 				type: FETCH_REPORTS,
+				auditCycleId,
 				reports,
 			});
 		});

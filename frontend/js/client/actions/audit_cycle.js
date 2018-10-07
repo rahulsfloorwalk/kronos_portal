@@ -13,9 +13,11 @@ export function fetchAuditCycles(){
 }
 
 export function selectAuditCycle(selectedAuditCycleId){
-	return {
-		type: SELECT_AUDIT_CYCLE,
-		selectedAuditCycleId,
+	return function(dispatch){
+		dispatch({
+			type: SELECT_AUDIT_CYCLE,
+			selectedAuditCycleId,
+		});
 	};
 }
 

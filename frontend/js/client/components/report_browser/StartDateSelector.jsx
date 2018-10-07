@@ -15,38 +15,46 @@ const selectStyle = {
 
 export class StartDateSelector extends React.Component {
 	static propTypes = {
-		min: PropTypes.string.isRequired,
-		max: PropTypes.string.isRequired,
-		selectedStartDate: PropTypes.string.isRequired,
+		min: PropTypes.string,
+		max: PropTypes.string,
+		selectedStartDate: PropTypes.string,
 
 		onSelect: PropTypes.func.isRequired,
 	};
 
-	validateStartDate = (currentDate, selectedDate) => {
-		return currentDate.isBetween(moment(this.props.min), moment(this.props.max), null, "[]");
+	validateStartDate = (currentDate) => {
+		if(this.props.min && this.props.max) {
+			return currentDate.isBetween(moment(this.props.min), moment(this.props.max), null, "[]");
+		} else {
+			return true;
+		}
 	};
 
 	render(){
-		return (
-			<div style={selectStyle}>
-				<label className="control-label">&nbsp;Start Date:</label>
-				<Datetime name="end_date"
-					value={moment(this.props.selectedStartDate)}
-					onChange={date => this.props.onSelect(date.format("YYYY-MM-DD"))}
-					isValidDate={this.validateStartDate}
-					timeFormat={false}
-					dateFormat="YYYY-MM-DD"
-					closeOnSelect={true}/>
-			</div>
-		);
+		if(this.props.selectedStartDate){
+			return (
+				<div style={selectStyle}>
+					<label className="control-label">&nbsp;Start Date:</label>
+					<Datetime name="end_date"
+						value={moment(this.props.selectedStartDate)}
+						onChange={date => this.props.onSelect(date.format("YYYY-MM-DD"))}
+						isValidDate={this.validateStartDate}
+						timeFormat={false}
+						dateFormat="YYYY-MM-DD"
+						closeOnSelect={true}/>
+				</div>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-		min: reportBrowserSelectors.findMinimumDate(state),
-		max: reportBrowserSelectors.findMaximumDate(state),
-		selectedStartDate: reportBrowserSelectors.findSelectedStartDate(state),
+		min: reportBrowserSelectors.findMinimumStartDateBySelectedAuditCycle(state),
+		max: reportBrowserSelectors.findMaximumStartDateBySelectedAuditCycle(state),
+		selectedStartDate: reportBrowserSelectors.findSelectedStartDateBySelectedAuditCycle(state),
 	};
 };
 

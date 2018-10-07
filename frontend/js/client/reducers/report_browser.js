@@ -50,14 +50,15 @@ export default (state=initialState, action) => {
 };
 
 export class ReportBrowserSelectors {
-	constructor(namespace){
+	constructor(namespace, auditCycleSelectors){
 		this.namespace = namespace;
+		this.auditCycleSelectors = auditCycleSelectors;
 	}
 
 	getNamespacedStore = (store) => store[this.namespace];
 
 	findReportsByAuditCycleId = (store, auditCycleId) => {
-		return this.getNamespacedStore(store).reports[auditCycleId];
+		return this.getNamespacedStore(store).reports[auditCycleId] || [];
 	};
 
 	findSelectedCityId = (store) => {
@@ -79,6 +80,30 @@ export class ReportBrowserSelectors {
 			}, []);
 	};
 
+	findStoreTypesByAuditCycleId = (store, auditCycleId) => {
+		return this.findReportsByAuditCycleId(store, auditCycleId)
+			.reduce((storeTypes, report) => {
+				const storeType = storeTypes.find((t) => t === report.store_type);
+				if(!storeType){
+					return storeTypes.concat(report.store_type);
+				} else {
+					return storeTypes;
+				}
+			}, []);
+	};
+
+	findStorePrioritiesByAuditCycleId = (store, auditCycleId) => {
+		return this.findReportsByAuditCycleId(store, auditCycleId)
+			.reduce((storePriorities, report) => {
+				const storePriority = storePriorities.find((p) => p === report.store_priority);
+				if(!storePriority){
+					return storePriorities.concat(report.store_priority);
+				} else {
+					return storePriorities;
+				}
+			}, []);
+	};
+
 	findSelectedStoreType = (store) => {
 		return this.getNamespacedStore(store).selectedStoreType;
 	};
@@ -93,5 +118,75 @@ export class ReportBrowserSelectors {
 
 	findSelectedEndDate = (store) => {
 		return this.getNamespacedStore(store).selectedEndDate;
+	};
+
+	findCitiesBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			return this.findCitiesByAuditCycleId(state, selectedAuditCycle.id);
+		} else {
+			return [];
+		}
+	};
+
+	findStoreTypesBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			return this.findStoreTypesByAuditCycleId(state, selectedAuditCycle.id);
+		} else {
+			return [];
+		}
+	};
+
+	findStorePrioritiesBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			return this.findStorePrioritiesByAuditCycleId(state, selectedAuditCycle.id);
+		} else {
+			return [];
+		}
+	};
+
+	findSelectedStartDateBySelectedAuditCycle = (store) => {
+		return this.findSelectedStartDate(store) || this.findStartDateBySelectedAuditCycle(store);
+	};
+
+	findSelectedEndDateBySelectedAuditCycle = (store) => {
+		return this.findSelectedEndDate(store) || this.findEndDateBySelectedAuditCycle(store);
+	};
+
+	findMinimumStartDateBySelectedAuditCycle = (store) => {
+		return this.findStartDateBySelectedAuditCycle(store);
+	};
+
+	findMaximumStartDateBySelectedAuditCycle = (store) => {
+		return this.findSelectedEndDateBySelectedAuditCycle(store);
+	};
+
+	findMinimumEndDateBySelectedAuditCycle = (store) => {
+		return this.findSelectedStartDateBySelectedAuditCycle(store);
+	};
+
+	findMaximumEndDateBySelectedAuditCycle = (store) => {
+		return this.findEndDateBySelectedAuditCycle(store);
+	};
+
+
+	findStartDateBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			return selectedAuditCycle.start_date;
+		} else {
+			return null;
+		}
+	};
+
+	findEndDateBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			return selectedAuditCycle.end_date;
+		} else {
+			return null;
+		}
 	};
 }

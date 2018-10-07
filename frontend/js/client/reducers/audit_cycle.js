@@ -21,8 +21,9 @@ export default (state=initialState, action) => {
 };
 
 export class AuditCycleSelectors {
-	constructor(namespace){
+	constructor(namespace, questionnaireTypeSelectors){
 		this.namespace = namespace;
+		this.questionnaireTypeSelectors = questionnaireTypeSelectors;
 	}
 
 	getNamespacedStore = (store) => store[this.namespace];
@@ -48,5 +49,23 @@ export class AuditCycleSelectors {
 
 	findAuditCyclesByQuestionnaireType = (store, questionnaireTypeId) => {
 		return this.findAuditCycles(store).filter(ac => ac.questionnaire_type.id === questionnaireTypeId);
+	};
+
+	findAuditCyclesBySelectedQuestionnaireType = (state) => {
+		const selectedQuestionnaireType = this.questionnaireTypeSelectors.findSelectedQuestionnaireType(state);
+		if(selectedQuestionnaireType) {
+			return this.findAuditCyclesByQuestionnaireType(state, selectedQuestionnaireType.id);
+		} else {
+			return [];
+		}
+	};
+
+	findSelectedAuditCycleBySelectedQuestionnaireType = (state) => {
+		const selectedQuestionnaireType = this.questionnaireTypeSelectors.findSelectedQuestionnaireType(state);
+		if(selectedQuestionnaireType) {
+			return this.findSelectedAuditCycle(state, selectedQuestionnaireType.id);
+		} else {
+			return null;
+		}
 	};
 }

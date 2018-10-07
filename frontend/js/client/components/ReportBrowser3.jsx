@@ -9,7 +9,14 @@ import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 import AuditStoreTable from "./AuditStoreTable.jsx";
 import AuditCycleSelector from "./AuditCycleSelector.jsx";
 
-import { auditCycleSelectors, questionnaireTypeSelectors } from "../selectors";
+import CitySelector from  "./report_browser/CitySelector.jsx";
+import EndDateSelector from  "./report_browser/EndDateSelector.jsx";
+import StartDateSelector from  "./report_browser/StartDateSelector.jsx";
+import StorePrioritySelector from  "./report_browser/StorePrioritySelector.jsx";
+import StoreTypeSelector from  "./report_browser/StoreTypeSelector.jsx";
+
+import { auditCycleSelectors } from "../selectors";
+import { fetchReportsByAuditCycleId } from "../actions/report_browser";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -22,6 +29,8 @@ export class ReportBrowser3 extends Component{
 	static propTypes = {
 		auditCycles: PropTypes.arrayOf(auditCyclePropType),
 		selectedAuditCycle: auditCyclePropType,
+
+		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
 	};
 
 	state = {
@@ -36,6 +45,18 @@ export class ReportBrowser3 extends Component{
 		});
 	};
 
+	componentDidMount() {
+		if(this.props.selectedAuditCycle){
+			this.props.fetchReportsByAuditCycleId(this.props.selectedAuditCycle.id);
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.selectedAuditCycle !== this.props.selectedAuditCycle){
+			this.props.fetchReportsByAuditCycleId(nextProps.selectedAuditCycle.id);
+		}
+	}
+
 	render(){
 		let table;
 		if(this.props.selectedAuditCycle){
@@ -47,9 +68,14 @@ export class ReportBrowser3 extends Component{
 		return (
 			<div>
 				<QuestionnaireTypeTabs />
-				<h2 className="page-header">
-					<AuditCycleSelector />
-				</h2>
+				<div className="form-group" style={{"marginTop":"0px"}}>
+					<AuditCycleSelector />&nbsp;
+					<CitySelector/>&nbsp;
+					<StoreTypeSelector/>&nbsp;
+					<StorePrioritySelector/>&nbsp;
+					<StartDateSelector/>&nbsp;
+					<EndDateSelector/>&nbsp;
+				</div>
 				{ this.props.auditCycles.length === 0 ?  <Jumbotron heading="there are no reports here" para="yet"/>
 					: table
 				}
@@ -59,17 +85,12 @@ export class ReportBrowser3 extends Component{
 }
 
 const mapStateToProps = (state) => {
-	const selectedQuestionnaireType = questionnaireTypeSelectors.findSelectedQuestionnaireType(state);
-	if(selectedQuestionnaireType) {
-		return {
-			auditCycles: auditCycleSelectors.findAuditCyclesByQuestionnaireType(state, selectedQuestionnaireType.id),
-			selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycle(state, selectedQuestionnaireType.id),
-		};
-	} else {
-		return {
-			auditCycles: [],
-		};
-	}
+	return {
+		auditCycles: auditCycleSelectors.findAuditCyclesBySelectedQuestionnaireType(state),
+		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
+	};
 };
 
-export default connect(mapStateToProps)(ReportBrowser3);
+export default connect(mapStateToProps, {
+	fetchReportsByAuditCycleId,
+})(ReportBrowser3);

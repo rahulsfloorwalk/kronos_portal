@@ -24,7 +24,7 @@ export class CitySelector extends React.Component {
 	render(){
 		return (<div style={selectStyle}>
 			<label className="control-label">&nbsp;City:</label>
-			<select onChange={e => this.props.onSelect(parseInt(e.target.value))} value={this.props.selectedCityId} className="form-control" style={selectStyle}>
+			<select onChange={e => this.props.onSelect(parseInt(e.target.value))} value={this.props.selectedCityId || ""} className="form-control" style={selectStyle}>
 				<option value="">All Cities</option>
 				{this.props.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
 			</select>
@@ -34,7 +34,7 @@ export class CitySelector extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		cities: reportBrowserSelectors.findCities(state),
+		cities: reportBrowserSelectors.findCitiesBySelectedAuditCycle(state),
 		selectedCityId: reportBrowserSelectors.findSelectedCityId(state),
 	};
 };

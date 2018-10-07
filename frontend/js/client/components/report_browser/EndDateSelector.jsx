@@ -15,38 +15,46 @@ const selectStyle = {
 
 export class EndDateSelector extends React.Component {
 	static propTypes = {
-		min: PropTypes.string.isRequired,
-		max: PropTypes.string.isRequired,
-		selectedEndDate: PropTypes.string.isRequired,
+		min: PropTypes.string,
+		max: PropTypes.string,
+		selectedEndDate: PropTypes.string,
 
 		onSelect: PropTypes.func.isRequired,
 	};
 
-	validateEndDate = (currentDate, selectedDate) => {
-		return currentDate.isBetween(moment(this.props.min), moment(this.props.max), null, "[]");
+	validateEndDate = (currentDate) => {
+		if(this.props.min && this.props.max) {
+			return currentDate.isBetween(moment(this.props.min), moment(this.props.max), null, "[]");
+		} else {
+			return true;
+		}
 	};
 
 	render(){
-		return (
-			<div style={selectStyle}>
-				<label className="control-label">&nbsp;End Date:</label>
-				<Datetime name="end_date"
-					value={moment(this.props.selectedEndDate)}
-					onChange={date => this.props.onSelect(date.format("YYYY-MM-DD"))}
-					isValidDate={this.validateEndDate}
-					timeFormat={false}
-					dateFormat="YYYY-MM-DD"
-					closeOnSelect={true}/>
-			</div>
-		);
+		if(this.props.selectedEndDate){
+			return (
+				<div style={selectStyle}>
+					<label className="control-label">&nbsp;End Date:</label>
+					<Datetime name="end_date"
+						value={moment(this.props.selectedEndDate)}
+						onChange={date => this.props.onSelect(date.format("YYYY-MM-DD"))}
+						isValidDate={this.validateEndDate}
+						timeFormat={false}
+						dateFormat="YYYY-MM-DD"
+						closeOnSelect={true}/>
+				</div>
+			);
+		} else {
+			return null;
+		}
 	}
 }
 
 const mapStateToProps = (state) => {
 	return {
-		min: reportBrowserSelectors.findMinimumDate(state),
-		max: reportBrowserSelectors.findMaximumDate(state),
-		selectedStartDate: reportBrowserSelectors.findSelectedStartDate(state),
+		min: reportBrowserSelectors.findMinimumEndDateBySelectedAuditCycle(state),
+		max: reportBrowserSelectors.findMaximumEndDateBySelectedAuditCycle(state),
+		selectedEndDate: reportBrowserSelectors.findSelectedEndDateBySelectedAuditCycle(state),
 	};
 };
 
