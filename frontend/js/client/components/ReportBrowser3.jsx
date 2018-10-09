@@ -18,7 +18,7 @@ import StoreTypeSelector from  "./report_browser/StoreTypeSelector.jsx";
 import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
 import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
 
-import { auditCycleSelectors } from "../selectors";
+import { auditCycleSelectors, reportBrowserSelectors } from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
 
 const auditCyclePropType = PropTypes.shape({
@@ -32,6 +32,7 @@ export class ReportBrowser3 extends Component{
 	static propTypes = {
 		auditCycles: PropTypes.arrayOf(auditCyclePropType),
 		selectedAuditCycle: auditCyclePropType,
+		reports: PropTypes.array,
 
 		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
 	};
@@ -71,15 +72,16 @@ export class ReportBrowser3 extends Component{
 		return (
 			<div>
 				<QuestionnaireTypeTabs />
-				<div className="form-group">
+				<div className="form-group" style={{marginTop: "10px"}}>
 					<AuditCycleSelector/>&nbsp;
 					<CitySelector/>&nbsp;
 					<StoreTypeSelector/>&nbsp;
 					<StorePrioritySelector/>&nbsp;
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
-					<DownloadSummaryButton/>
+					<DownloadSummaryButton/>&nbsp;
 					<DownloadDetailsButton/>
+					<big className="pull-right" style={{fontSize:"130%", marginLeft: "50px", marginRight: "10px"}}><b>{this.props.reports.length}</b> Reports</big>
 				</div>
 				{ this.props.auditCycles.length === 0 ?  <Jumbotron heading="there are no reports here" para="yet"/>
 					: table
@@ -93,6 +95,7 @@ const mapStateToProps = (state) => {
 	return {
 		auditCycles: auditCycleSelectors.findAuditCyclesBySelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
+		reports: reportBrowserSelectors.filterReports(state),
 	};
 };
 

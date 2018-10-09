@@ -87,32 +87,15 @@ export class AuditStoreTable extends Component {
 			previousStore = r.store_id;
 		});
 		return (
-			<div>
-				<div className="form-group">
-					{/*
-					<span className="pull-right" style={{fontSize:"130%"}}>
-						<big><b>{trs.length}</b> Reports</big>
-					&nbsp;
-						<a className="btn btn-default" href={summaryFilteredUrl}>
-							<Download/> Download Summary
-						</a>
-					&nbsp;
-						<a className="btn btn-default" href={detailsFilteredUrl}>
-							<Download/> Download Details
-						</a>
-					</span>
-					*/}
-				</div>
-				<div style={{ "width": "100%", "overflow": "scroll"}}>
-					<table className="table table-bordered table-hover">
-						<thead>
-							<tr>{headers}</tr>
-						</thead>
-						<tbody>
-							{trs}
-						</tbody>
-					</table>
-				</div>
+			<div style={{ "width": "100%", "overflow": "auto"}}>
+				<table className="table table-bordered table-hover">
+					<thead>
+						<tr>{headers}</tr>
+					</thead>
+					<tbody>
+						{trs}
+					</tbody>
+				</table>
 			</div>
 		);
 	}

@@ -201,10 +201,14 @@ export class ReportBrowserSelectors {
 		const selectedStartDate = this.findSelectedStartDateBySelectedAuditCycle(store);
 		const selectedEndDate = this.findSelectedEndDateBySelectedAuditCycle(store);
 
-		return this.findReportsByAuditCycleId(store, selectedAuditCycle.id)
-			.filter(r => selectedCityId ? r.city_id === selectedCityId : true)
-			.filter(r => selectedStoreType ? r.store_type === selectedStoreType : true)
-			.filter(r => selectedStorePriority ? r.store_priority === selectedStorePriority : true)
-			.filter(r => moment(r.audit_date).isBetween(selectedStartDate, selectedEndDate, null, "[]"));
+		if(selectedAuditCycle) {
+			return this.findReportsByAuditCycleId(store, selectedAuditCycle.id)
+				.filter(r => selectedCityId ? r.city_id === selectedCityId : true)
+				.filter(r => selectedStoreType ? r.store_type === selectedStoreType : true)
+				.filter(r => selectedStorePriority ? r.store_priority === selectedStorePriority : true)
+				.filter(r => moment(r.audit_date).isBetween(selectedStartDate, selectedEndDate, null, "[]"));
+		} else {
+			return [];
+		}
 	};
 }
