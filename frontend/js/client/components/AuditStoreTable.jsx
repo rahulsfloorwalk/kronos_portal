@@ -1,46 +1,30 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import { hashHistory } from "react-router";
-import Datetime from "react-datetime";
 
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
-import { Download } from "../../components/Icons.jsx";
+import { } from "../../components/Icons.jsx";
 
 import { pointerStyle }  from "../../styles.js";
 
 import moment from "moment";
-import { momentDateFormat , url}  from "../../../config.js";
+import { momentDateFormat }  from "../../../config.js";
 import { getColor } from "../../utils.js";
 
-import { findAuditStoresByAuditCycle } from "../service/audit_store.js";
+import { reportBrowserSelectors } from "../selectors";
 
-export default class AuditStoreTable extends Component {
+export class AuditStoreTable extends Component {
 	static propTypes = {
-		auditCycleId: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.number,
-		]).isRequired,
-		startDate: PropTypes.string.isRequired,
-		endDate: PropTypes.string.isRequired,
+		reports: PropTypes.arrayOf(PropTypes.shape({
+		})).isRequired,
 	};
 
 	constructor(props){
 		super(props);
 		this.state = {
 			loading: false,
-			reports: [],
-			cities: [],
-			types: [],
-			priorities: [],
-			months: [],
-			selectedCityId: "",
-			selectedType: "",
-			selectedPriority: "",
-			cycleStartDate: null,
-			cycleEndDate: null,
-			startDate: null,
-			endDate: null,
 		};
 	}
 
@@ -52,203 +36,24 @@ export default class AuditStoreTable extends Component {
 		});
 	};
 
-	reloadData = (auditCycleId, cycleStartDate, cycleEndDate) => {
-		this.setLoading(true);
-		findAuditStoresByAuditCycle(auditCycleId).then(reports => {
-			let cities = [];
-			let types = [];
-			let priorities = [];
-			let months = [];
-			reports.forEach( r => {
-				if(cities.filter(c => c.id === r.city_id).length === 0){
-					cities.push({
-						id: r.city_id,
-						name: r.city_name,
-					});
-				}
-				if(months.filter(m => m === new Date(r.audit_date).getMonth()).length === 0){
-					months.push(new Date(r.audit_date).getMonth());
-				}
-				if( ! types.find(t => t === r.store_type)){
-					types.push(r.store_type);
-				}
-				if( ! priorities.find(p => p === r.store_priority)){
-					priorities.push(r.store_priority);
-				}
-			});
-			this.setState({
-				reports,
-				cities,
-				types,
-				priorities,
-				months,
-				cycleStartDate: cycleStartDate,
-				cycleEndDate: cycleEndDate,
-				startDate: moment(cycleStartDate),
-				endDate: moment(cycleEndDate),
-				selectedCityId: "",
-				selectedType: "",
-				selectedPriority: "",
-			});
-		}).always(() => this.setLoading(false));
-	};
-
-	createDetailsFilterUrl(){
-		let base = url.api_base_path + "client/audit_cycle/" + this.props.auditCycleId + "/audit_cycle_filtered_xlsx_report?";
-		base += "city=" + encodeURIComponent(this.state.selectedCityId || "") + "&";
-		base += "priority=" + encodeURIComponent(this.state.selectedPriority || "") + "&";
-		base += "start_date=" + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || "") + "&";
-		base += "end_date=" + encodeURIComponent(this.state.endDate.format("YYYY-MM-DD") || "") + "&";
-		base += "type=" + encodeURIComponent(this.state.selectedType || "") + "&";
-		base += "month=" + encodeURIComponent(Number(this.state.selectedMonth)+1 || "");
-		return base;
-	}
-	createSummaryFilterUrl(){
-		let base = url.api_base_path + "client/audit_cycle/" + this.props.auditCycleId + "/report_browser_filtered_xlsx_report?";
-		base += "city=" + encodeURIComponent(this.state.selectedCityId || "") + "&";
-		base += "priority=" + encodeURIComponent(this.state.selectedPriority || "") + "&";
-		base += "start_date=" + encodeURIComponent(this.state.startDate.format("YYYY-MM-DD") || "") + "&";
-		base += "end_date=" + encodeURIComponent(this.state.endDate.format("YYYY-MM-DD") || "") + "&";
-		base += "type=" + encodeURIComponent(this.state.selectedType || "") + "&";
-		base += "month=" + encodeURIComponent(Number(this.state.selectedMonth)+1 || "");
-		return base;
-	}
-	componentDidMount(){
-		this.reloadData(this.props.auditCycleId, this.props.startDate, this.props.endDate);
-	}
-	componentWillReceiveProps(nextProps){
-		if(this.props.auditCycleId !== nextProps.auditCycleId){
-			this.reloadData(nextProps.auditCycleId, nextProps.startDate, nextProps.endDate);
-		}
-	}
-
-	selectCity = (e) => {
-		this.setState({
-			selectedCityId: e.target.value,
-		});
-	};
-
-	selectStorePriority = (e) => {
-		this.setState({
-			selectedPriority: e.target.value,
-		});
-	};
-
-	selectStoreType = (e) => {
-		this.setState({
-			selectedType: e.target.value,
-		});
-	};
-
-	selectMonth= (e) => {
-		this.setState({
-			selectedMonth: e.target.value,
-		});
-	};
-
-	setStartDate= (date) => {
-		this.setState({
-			startDate: date,
-		});
-	};
-
-	setEndDate= (date) => {
-		this.setState({
-			endDate: date,
-		});
-	};
-
-	validateStartDate= (currentDate, selectedDate) => {
-		return currentDate.isBetween(this.state.cycleStartDate, this.state.endDate, null, "[]");
-	};
-
-	validateEndDate= (currentDate, selectedDate) => {
-		return currentDate.isBetween(this.state.startDate, this.state.cycleEndDate, null, "[]");
-	};
-
 	render(){
 		if(this.state.loading){
 			return (<Loading/>);
 		}
-		if(this.state.reports.length === 0) {
+		if(this.props.reports.length === 0) {
 			return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
 		}
-		let citySelect = (
-			<div style={{display:"inline-block",width:"200px"}}>
-				<label className="control-label">&nbsp;City:</label>
-				<select onChange={this.selectCity} value={this.state.selectedCityId} className="form-control" style={{display:"inline-block",width:"200px"}}>
-					<option value="">All Cities</option>
-					{this.state.cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-				</select>
-			</div>
-		);
-
-		let storeTypeSelect = (
-			<div style={{display:"inline-block",width:"200px"}}>
-				<label className="control-label">&nbsp;Store Type:</label>
-				<select onChange={this.selectStoreType} value={this.state.selectedType} className="form-control" style={{display:"inline-block",width:"200px"}}>
-					<option value="">All Types</option>
-					{this.state.types.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}
-				</select>
-			</div>
-		);
-
-		let startDatePicker = (
-			<div style={{display:"inline-block",width:"200px"}}>
-				<label className="control-label">&nbsp;Start Date:</label>
-				<Datetime name="start_date"
-					value={this.state.startDate}
-					onChange={this.setStartDate}
-					isValidDate={this.validateStartDate}
-					timeFormat={false}
-					dateFormat="YYYY-MM-DD"
-					closeOnSelect={true}/>
-			</div>
-		);
-
-		let endDatePicker = (
-			<div style={{display:"inline-block",width:"200px"}}>
-				<label className="control-label">&nbsp;End Date:</label>
-				<Datetime name="end_date"
-					value={this.state.endDate}
-					onChange={this.setEndDate}
-					isValidDate={this.validateEndDate}
-					timeFormat={false}
-					dateFormat="YYYY-MM-DD"
-					closeOnSelect={true}/>
-			</div>
-		);
-
-		let storePrioritySelect = (
-			<div style={{display:"inline-block",width:"200px"}}>
-				<label className="control-label">&nbsp;Priority:</label>
-				<select onChange={this.selectStorePriority} value={this.state.selectedPriority} className="form-control" style={{display:"inline-block",width:"200px"}}>
-					<option value="">All Priorities</option>
-					{this.state.priorities.filter(p=>!!p).map(p => <option key={p} value={p}>{p}</option>)}
-				</select>
-			</div>
-		);
-		let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-		let monthSelect = (<select onChange={this.selectMonth} value={this.state.selectedMonth} className="form-control" style={{display:"inline-block",width:"200px"}}>
-			<option value="">All Months</option>
-			{this.state.months.filter(m=>!!m).map(m => <option key={m} value={m}>{months[m]}</option>)}
-		</select>);
 
 		let headers = [];
 		headers.push(<th key="store_code">Store Code</th>);
 		headers.push(<th key="store_name">Name</th>);
 		headers.push(<th key="date" className="text-right">Date</th>);
 		headers.push(<th key="total_score">Total Score</th>);
-		headers = headers.concat(this.state.reports[0].sections.filter(s => s.max_marks > 0).map(s => <th key={s.sequence} className="text-right">{s.section}</th>));
+		headers = headers.concat(this.props.reports[0].sections.filter(s => s.max_marks > 0).map(s => <th key={s.sequence} className="text-right">{s.section}</th>));
 
-		let trs = [];
+		const trs = [];
 		let previousStore;
-		this.state.reports.filter(r => {
-			return (this.state.selectedCityId ? r.city_id === parseInt(this.state.selectedCityId) : true)
-			&& (this.state.selectedType ? r.store_type === this.state.selectedType : true)
-			&& (this.state.selectedPriority ? r.store_priority === this.state.selectedPriority : true)
-			&& moment(r.audit_date).isBetween(this.state.startDate, this.state.endDate, null, "[]");
-		}).forEach( r => {
+		this.props.reports.forEach( r => {
 			let tds = [];
 			let storeName = previousStore === r.store_id ? "" : r.store_name;
 			let cityName = previousStore === r.store_id ? "" : r.city_name;
@@ -281,16 +86,10 @@ export default class AuditStoreTable extends Component {
 			);
 			previousStore = r.store_id;
 		});
-		var detailsFilteredUrl = this.createDetailsFilterUrl();
-		var summaryFilteredUrl = this.createSummaryFilterUrl();
 		return (
 			<div>
 				<div className="form-group">
-					{citySelect}&nbsp;
-					{storeTypeSelect}&nbsp;
-					{storePrioritySelect}&nbsp;
-					{startDatePicker}&nbsp;
-					{endDatePicker}&nbsp;
+					{/*
 					<span className="pull-right" style={{fontSize:"130%"}}>
 						<big><b>{trs.length}</b> Reports</big>
 					&nbsp;
@@ -302,6 +101,7 @@ export default class AuditStoreTable extends Component {
 							<Download/> Download Details
 						</a>
 					</span>
+					*/}
 				</div>
 				<div style={{ "width": "100%", "overflow": "scroll"}}>
 					<table className="table table-bordered table-hover">
@@ -317,3 +117,11 @@ export default class AuditStoreTable extends Component {
 		);
 	}
 }
+
+const mapStateToProps = (state) => {
+	return {
+		reports: reportBrowserSelectors.filterReports(state),
+	};
+};
+
+export default connect(mapStateToProps, {})(AuditStoreTable);

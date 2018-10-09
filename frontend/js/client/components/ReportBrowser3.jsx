@@ -15,6 +15,9 @@ import StartDateSelector from  "./report_browser/StartDateSelector.jsx";
 import StorePrioritySelector from  "./report_browser/StorePrioritySelector.jsx";
 import StoreTypeSelector from  "./report_browser/StoreTypeSelector.jsx";
 
+import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
+import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
+
 import { auditCycleSelectors } from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
 
@@ -68,13 +71,15 @@ export class ReportBrowser3 extends Component{
 		return (
 			<div>
 				<QuestionnaireTypeTabs />
-				<div className="form-group" style={{"marginTop":"0px"}}>
-					<AuditCycleSelector />&nbsp;
+				<div className="form-group">
+					<AuditCycleSelector/>&nbsp;
 					<CitySelector/>&nbsp;
 					<StoreTypeSelector/>&nbsp;
 					<StorePrioritySelector/>&nbsp;
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
+					<DownloadSummaryButton/>
+					<DownloadDetailsButton/>
 				</div>
 				{ this.props.auditCycles.length === 0 ?  <Jumbotron heading="there are no reports here" para="yet"/>
 					: table

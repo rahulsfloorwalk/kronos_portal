@@ -7,6 +7,8 @@ import {
 	SELECT_END_DATE,
 } from "../action_types";
 
+import moment from "moment";
+
 const initialState = {
 	reports: {},
 	selectedCityId: null,
@@ -188,5 +190,21 @@ export class ReportBrowserSelectors {
 		} else {
 			return null;
 		}
+	};
+
+	filterReports = (store) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(store);
+
+		const selectedCityId = this.findSelectedCityId(store);
+		const selectedStoreType = this.findSelectedStoreType(store);
+		const selectedStorePriority = this.findSelectedStorePriority(store);
+		const selectedStartDate = this.findSelectedStartDateBySelectedAuditCycle(store);
+		const selectedEndDate = this.findSelectedEndDateBySelectedAuditCycle(store);
+
+		return this.findReportsByAuditCycleId(store, selectedAuditCycle.id)
+			.filter(r => selectedCityId ? r.city_id === selectedCityId : true)
+			.filter(r => selectedStoreType ? r.store_type === selectedStoreType : true)
+			.filter(r => selectedStorePriority ? r.store_priority === selectedStorePriority : true)
+			.filter(r => moment(r.audit_date).isBetween(selectedStartDate, selectedEndDate, null, "[]"));
 	};
 }
