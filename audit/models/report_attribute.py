@@ -47,3 +47,6 @@ class ReportAttribute(Model):
             validate(self.attribute_data, self.ATTRIBUTE_DATA_SCHEMA_V1)
         except ValidationError as v:
             raise AppLogicError(v.message) from v
+
+    class Meta:
+        unique_together = ('audit_cycle', 'json_id')

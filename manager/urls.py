@@ -24,6 +24,7 @@ from .viewss import application as application_views
 from .viewss import config as config_views
 from .viewss import questionnaire_type as questionnaire_type_views
 from .viewss import agency_user as agency_user_views
+from .viewss import report_attribute as report_attribute_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -86,6 +87,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending$', payment_views.PendingPaymentView.as_view(), name='audit_cycle_pending_payment_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment$', payment_views.PaymentView.as_view(), name='audit_cycle_payment_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_email$', opportunity_email_views.OpportunityEmailRecordView.as_view(), name='audit_cycle_opportunity_email_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', report_attribute_views.ReportAttributeView.as_view(), name='report_attribute_by_audit_cycle_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
 
