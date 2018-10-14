@@ -6,7 +6,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.test import APITestCase
 
 from model_mommy import mommy
-from expects import expect, equal, have_length, have_key, have_property
+from expects import expect, equal, have_length, have_key, contain_only
 
 from faker import Faker
 
@@ -46,6 +46,7 @@ class ReportAttributeViewGetTestCase(APITestCase):
         for qt in response.data:
             expect(qt).to(have_key("audit_cycle_id", audit_cycle.id))
 
+
 class ReportAttributeViewPostTestCase(APITestCase):
     fixtures = ['groups']
 
@@ -66,26 +67,14 @@ class ReportAttributeViewPostTestCase(APITestCase):
 
         post_data = {
             'label': "MyLabel",
-            'attribute_data': {
-                "version": 1,
-                "options": [
-                    {
-                        "option_id": "1",
-                        "option_label": "label1"
-                    },
-                    {
-                        "option_id": "2",
-                        "option_label": "label2"
-                    },
-                ],
-            },
+            'option_labels': ["Label One", "Label Two"],
         }
 
         response = self.client.post(reverse('manager:report_attribute_by_audit_cycle_view', kwargs={
             'audit_cycle_id': audit_cycle.id
         }), post_data, format="json")
         expect(response.status_code).to(equal(200))
-        for key, val in post_data.items():
-            expect(response.data).to(have_key(key, val))
-
         expect(response.data).to(have_key('audit_cycle_id', audit_cycle.id))
+        expect(response.data).to(have_key('label', post_data["label"]))
+        expect([o["option_label"] for o in response.data["attribute_data"]["options"]]).to(contain_only(*post_data["option_labels"]))
+    

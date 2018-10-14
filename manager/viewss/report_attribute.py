@@ -35,12 +35,12 @@ class ReportAttributeView(APIView):
 
     class DeSerializer(Serializer):
         label = CharField()
-        attribute_data = JSONField()
+        option_labels = JSONField()
 
     def post(self, request, audit_cycle_id):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         label = ds.validated_data["label"]
-        attribute_data = ds.validated_data["attribute_data"]
-        report_attribute = report_attribute_service.create_report_attribute(int(audit_cycle_id), label, attribute_data)
+        option_labels = ds.validated_data["option_labels"]
+        report_attribute = report_attribute_service.create_report_attribute(int(audit_cycle_id), label, option_labels)
         return Response(ReportAttributeSerializer(report_attribute).data)

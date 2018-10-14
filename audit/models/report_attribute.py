@@ -9,6 +9,8 @@ from kronos.exceptions import AppLogicError
 
 
 class ReportAttribute(Model):
+    ATTRIBUTE_DATA_VERSION_1 = 1
+
     ATTRIBUTE_DATA_SCHEMA_V1 = {
         "type": "object",
         "required": ["version", "options"],
