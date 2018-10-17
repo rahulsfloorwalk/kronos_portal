@@ -9,6 +9,8 @@ import Section from "./Section.jsx";
 import Jumbotron from "../../../components/Jumbotron.jsx";
 import { Tasks } from "../../../components/Icons.jsx";
 
+import { findSectionsByAuditStoreId } from "../../reducers/section.js";
+
 export class __SectionList extends React.Component {
 	static propTypes = {
 		sections: PropTypes.arrayOf(PropTypes.shape({
@@ -38,9 +40,9 @@ export class __SectionList extends React.Component {
 	}
 }
 
-const mapStateToProps = (store) => {
+const mapStateToProps = (store, ownProps) => {
 	return {
-		sections: store.sections,
+		sections: findSectionsByAuditStoreId(store, ownProps.auditStoreId),
 	};
 };
 

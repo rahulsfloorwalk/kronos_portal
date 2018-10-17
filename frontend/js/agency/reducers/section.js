@@ -1,14 +1,22 @@
 import { FETCH_SECTIONS } from "../action_types.js";
 
-export default (sections=[], action) => {
+const initialState = {};
+
+export default (state=initialState, action) => {
 	switch(action.type){
 	case FETCH_SECTIONS:
-		return sections.concat(action.sections);
+		return Object.assign({}, state, {
+			[action.auditStoreId]: action.sections,
+		});
 	default:
-		return sections;
+		return state;
 	}
 };
 
-export const findSection = (store, sectionId) => {
-	return store.sections.find((s) => s.id === sectionId);
+export const findSection = (store, auditStoreId, sectionId) => {
+	return findSectionsByAuditStoreId(store, auditStoreId).find((s) => s.id === sectionId);
+};
+
+export const findSectionsByAuditStoreId = (store, auditStoreId) => {
+	return store.sections[auditStoreId] || [];
 };

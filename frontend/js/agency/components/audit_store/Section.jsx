@@ -93,7 +93,7 @@ const mapStateToProps = (store, ownProps) => {
 	const reportSection = findReportSection(store, ownProps.auditStoreId, ownProps.sectionId);
 	return {
 		auditStore: findAuditStore( store, ownProps.auditStoreId),
-		section: findSection(store, ownProps.sectionId),
+		section: findSection(store, ownProps.auditStoreId, ownProps.sectionId),
 		auditorComment: reportSection && reportSection.auditor_comment,
 	};
 };
