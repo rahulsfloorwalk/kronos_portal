@@ -42,7 +42,7 @@ def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questi
 def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
     all_cycles = AuditCycle.objects.filter(
         client_id=client_id,
-        status__in=AuditCycle.TRENDABLE_STATUSES,
+        status__in=AuditCycle.LIVE_REPORTING_STATUSES,
         questionnaire_type_id=questionnaire_type_id,
     ).order_by('end_date')
 
