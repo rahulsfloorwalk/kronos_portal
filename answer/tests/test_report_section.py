@@ -1,5 +1,6 @@
 from model_mommy import mommy
 from faker import Faker
+from expects import expect, equal
 
 from django.test import TestCase
 
@@ -51,3 +52,8 @@ class ReportSectionTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "pm comment cannot be blank"):
             report_section.set_pm_comment(pm_comment)
 
+    def test_copy_auditor_comment_original_copies_auditor_comment(self):
+        auditor_comment = fake.name()
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email(), auditor_comment=auditor_comment, auditor_comment_original="")
+        report_section.copy_auditor_comment_original()
+        expect(report_section.auditor_comment_original).to(equal(auditor_comment))

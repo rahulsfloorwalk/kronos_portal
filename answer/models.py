@@ -174,6 +174,10 @@ class ReportSection(Model):
         self.not_applicable = not_applicable
         self.save()
 
+    def copy_auditor_comment_original(self):
+        self.auditor_comment_original = self.auditor_comment
+        self.save()
+
     def set_auditor_comment(self, auditor_comment):
         if auditor_comment in (None, ""):
             raise AppLogicError("auditor comment cannot be blank")

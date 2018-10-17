@@ -1,5 +1,6 @@
 from model_mommy import mommy
 from faker import Faker
+from expects import expect, equal
 
 from django.test import TestCase
 
@@ -111,3 +112,10 @@ class AnswerTestCase(TestCase):
         answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question)
         with self.assertRaisesRegex(AppLogicError, "Marks cannot be less than 0"):
             answer.set_marks_obtained(-1)
+
+    def test_copy_answer_text_original_copies_answer_text(self):
+        question = mommy.make(Question, question_type=Question.MUTEX, max_marks=2, question_data=self.get_sample_question_data())
+        answer_text = fake.name()
+        answer = mommy.make(Answer, audit_store__user__email=fake.email(), question=question, answer_text=answer_text, answer_text_original="")
+        answer.copy_answer_text_original()
+        expect(answer.answer_text_original).to(equal(answer_text))

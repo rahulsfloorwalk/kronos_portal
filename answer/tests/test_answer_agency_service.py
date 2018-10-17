@@ -3,6 +3,7 @@ from django.contrib.auth.models import User, Group
 
 from model_mommy import mommy
 
+from kronos.exceptions import AppLogicError, ObjectNotFound
 from answer.models import Answer
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
@@ -37,6 +38,24 @@ class AnswerAgencyServiceTestCase(TestCase):
         self.assertEqual(answer.audit_store, mock_audit_store)
         self.assertEqual(answer.question, mock_question)
 
+    def test_set_answer_comment_by_agency_raises_when_report_is_not_acknowledged(self):
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
+                                      audit__audit_cycle=self.audit_cycle)
+        mock_question = mommy.make(Question, question_type=Question.MUTEX, section__audit_cycle=self.audit_cycle)
+        mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
+        answer_comment = "foobar"
+        with self.assertRaisesRegex(AppLogicError, "Cannot submit answer comment to current audit store"):
+            agency_answer_service.set_answer_comment_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_comment)
+
+    def test_set_answer_comment_by_agency_raises_when_report_and_answer_do_not_belong_to_the_same_audit_cycle(self):
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+                                      audit__audit_cycle=self.audit_cycle)
+        mock_question = mommy.make(Question, question_type=Question.MUTEX)
+        mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
+        answer_comment = "foobar"
+        with self.assertRaises(ObjectNotFound):
+            agency_answer_service.set_answer_comment_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_comment)
+
     def test_set_answer_comment_by_agency(self):
         mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
                                       audit__audit_cycle=self.audit_cycle)
@@ -46,6 +65,24 @@ class AnswerAgencyServiceTestCase(TestCase):
         answer = agency_answer_service.set_answer_comment_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_comment)
         self.assertEqual(answer_comment, answer.answer_comment)
 
+    def test_submit_answer_by_agency_raises_when_report_is_not_acknowledged(self):
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
+                                      audit__audit_cycle=self.audit_cycle)
+        mock_question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
+        mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
+        answer_text = "foobar"
+        with self.assertRaisesRegex(AppLogicError, "Cannot submit answer to current audit store"):
+            agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+
+    def test_submit_answer_by_agency_raises_when_report_and_answer_do_not_belong_to_the_same_audit_cycle(self):
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+                                      audit__audit_cycle=self.audit_cycle)
+        mock_question = mommy.make(Question)
+        mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
+        answer_text = "foobar"
+        with self.assertRaises(ObjectNotFound):
+            agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+
     def test_submit_answer_by_agency(self):
         mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
                                       audit__audit_cycle=self.audit_cycle)
@@ -53,8 +90,13 @@ class AnswerAgencyServiceTestCase(TestCase):
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer_text = "foobar"
         answer = agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
-        self.assertEqual(answer_text, answer.answer_text)
         self.assertEqual(answer_text, answer.answer_text_original)
 
-
-
+    def test_submit_answer_by_agency_copies_to_answer_text_original(self):
+        mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+                                      audit__audit_cycle=self.audit_cycle)
+        mock_question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
+        mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
+        answer_text = "foobar"
+        answer = agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+        self.assertEqual(answer_text, answer.answer_text_original)
