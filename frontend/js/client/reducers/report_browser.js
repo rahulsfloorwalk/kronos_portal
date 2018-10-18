@@ -5,6 +5,7 @@ import {
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
 	SELECT_END_DATE,
+	RESET_FILTERS,
 } from "../action_types";
 
 const initialState = {
@@ -44,8 +45,64 @@ export default (state=initialState, action) => {
 		return Object.assign({}, state, {
 			selectedEndDate: action.selectedEndDate,
 		});
+	case RESET_FILTERS:
+		return Object.assign({}, state, {
+			selectedCityId: null,
+			selectedStoreType: null,
+			selectedStorePriority: null,
+			selectedEndDate: null,
+			selectedStartDate: null,
+		});
 	default:
 		return state;
 	}
 };
 
+export function fetchReportsByAuditCycleId(auditCycleId, reports){
+	return {
+		type: FETCH_REPORTS,
+		auditCycleId,
+		reports,
+	};
+}
+
+export function resetDependentFilters(){
+	return {
+		type: RESET_FILTERS,
+	};
+}
+
+export function selectCity(selectedCityId){
+	return {
+		type: SELECT_CITY,
+		selectedCityId,
+	};
+}
+
+export function selectStoreType(selectedStoreType){
+	return {
+		type: SELECT_STORE_TYPE,
+		selectedStoreType,
+	};
+}
+
+export function selectPriority(selectedPriority){
+	return {
+		type: SELECT_PRIORITY,
+		selectedPriority,
+	};
+}
+
+export function selectStartDate(selectedStartDate){
+	return {
+		type: SELECT_START_DATE,
+		selectedStartDate,
+	};
+}
+
+export function selectEndDate(selectedEndDate){
+	return {
+		type: SELECT_END_DATE,
+		selectedEndDate,
+	};
+}

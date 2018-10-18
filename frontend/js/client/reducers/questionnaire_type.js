@@ -20,3 +20,19 @@ export default (state=initialState, action) => {
 	}
 };
 
+// Action Creators
+
+export function selectQuestionnaireType(selectedQuestionnaireTypeId){
+	return {
+		type: SELECT_QUESTIONNAIRE_TYPE,
+		selectedQuestionnaireTypeId,
+	};
+}
+
+export function fetchQuestionnaireTypes(questionnaireTypes){
+	return {
+		type: FETCH_QUESTIONNAIRE_TYPES,
+		questionnaireTypes
+	};
+}
+

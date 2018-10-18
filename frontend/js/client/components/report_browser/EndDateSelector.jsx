@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import moment from "moment";
 import Datetime from "react-datetime";
 
-import { selectEndDate } from "../../actions/report_browser";
+import { selectEndDate } from "../../reducers/report_browser";
 import { reportBrowserSelectors } from "../../selectors";
 
 const selectStyle = {

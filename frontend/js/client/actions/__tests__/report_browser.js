@@ -1,9 +1,4 @@
 import {
-	SELECT_CITY,
-	SELECT_STORE_TYPE,
-	SELECT_PRIORITY,
-	SELECT_START_DATE,
-	SELECT_END_DATE,
 	FETCH_REPORTS,
 } from "../../action_types";
 
@@ -67,62 +62,3 @@ describe(fetchReportsByAuditCycleId, () => {
 	});
 });
 
-describe(selectCity, () => {
-	it("returns an action to select the city", () => {
-		const cityId = 5;
-		const action = selectCity(cityId);
-
-		expect(action).toEqual({
-			type: SELECT_CITY,
-			selectedCityId: cityId,
-		});
-	});
-});
-
-describe(selectStoreType, () => {
-	it("returns an action to select the store type", () => {
-		const storeType = "FOO";
-		const action = selectStoreType(storeType);
-
-		expect(action).toEqual({
-			type: SELECT_STORE_TYPE,
-			selectedStoreType: storeType,
-		});
-	});
-});
-
-describe(selectPriority, () => {
-	it("returns an action to select the priority", () => {
-		const priority = "HIGH";
-		const action = selectPriority(priority);
-
-		expect(action).toEqual({
-			type: SELECT_PRIORITY,
-			selectedPriority: priority,
-		});
-	});
-});
-
-describe(selectStartDate, () => {
-	it("returns an action to select the start date", () => {
-		const startDate = "2017-08-01";
-		const action = selectStartDate(startDate);
-
-		expect(action).toEqual({
-			type: SELECT_START_DATE,
-			selectedStartDate: startDate,
-		});
-	});
-});
-
-describe(selectEndDate, () => {
-	it("returns an action to select the end date", () => {
-		const endDate = "2017-08-30";
-		const action = selectEndDate(endDate);
-
-		expect(action).toEqual({
-			type: SELECT_END_DATE,
-			selectedEndDate: endDate,
-		});
-	});
-});

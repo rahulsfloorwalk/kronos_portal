@@ -1,22 +1,22 @@
 
 import { fetchQuestionnaireTypes, selectQuestionnaireType } from "../questionnaire_type";
-import { FETCH_QUESTIONNAIRE_TYPES, SELECT_QUESTIONNAIRE_TYPE } from "../../action_types.js";
+import { FETCH_QUESTIONNAIRE_TYPES, SELECT_QUESTIONNAIRE_TYPE, RESET_FILTERS } from "../../action_types.js";
 import * as questionnaireType from "../../service/questionnaire_type.js";
 
 jest.mock("../../service/questionnaire_type.js");
 
-describe(fetchQuestionnaireTypes, () => {
-	const sampleQuestionnaireTypes = [
-		{
-			id: 1,
-			name: "Monty",
-		},
-		{
-			id: 2,
-			name: "Python",
-		},
-	];
+const sampleQuestionnaireTypes = [
+	{
+		id: 1,
+		name: "Monty",
+	},
+	{
+		id: 2,
+		name: "Python",
+	},
+];
 
+describe(fetchQuestionnaireTypes, () => {
 	it("it calls fetchQuestionnaireTypes on the questionnaireType service", () => {
 		questionnaireType.fetchQuestionnaireTypes.mockResolvedValue(sampleQuestionnaireTypes);
 		const dispatch = jest.fn();
@@ -43,13 +43,27 @@ describe(fetchQuestionnaireTypes, () => {
 });
 
 describe(selectQuestionnaireType, () => {
-	it("it dispatches an action to set the selected questionnaire type", () => {
+	it("it dispatches an action to select the given questionnaire type", () => {
 		const questionnaireTypeId = 5;
-		const action = selectQuestionnaireType(questionnaireTypeId);
+		const dispatch = jest.fn();
+		const thunk = selectQuestionnaireType(questionnaireTypeId);
 
-		expect(action).toEqual({
+		thunk(dispatch);
+		expect(dispatch).toBeCalledWith({
 			type: SELECT_QUESTIONNAIRE_TYPE,
 			selectedQuestionnaireTypeId: questionnaireTypeId,
 		});
 	});
+
+	it("it dispatches an action to reset the filters", () => {
+		const questionnaireTypeId = 5;
+		const dispatch = jest.fn();
+		const thunk = selectQuestionnaireType(questionnaireTypeId);
+
+		thunk(dispatch);
+		expect(dispatch).lastCalledWith({
+			type: RESET_FILTERS,
+		});
+	});
 });
+

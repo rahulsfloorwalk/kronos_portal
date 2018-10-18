@@ -20,3 +20,20 @@ export default (state=initialState, action) => {
 	}
 };
 
+// Action Creators
+
+export function fetchAuditCycles(auditCycles){
+	return {
+		type: FETCH_AUDIT_CYCLES,
+		auditCycles,
+	};
+}
+
+
+export function selectAuditCycle(selectedAuditCycleId){
+	return {
+		type: SELECT_AUDIT_CYCLE,
+		selectedAuditCycleId,
+	};
+}
+

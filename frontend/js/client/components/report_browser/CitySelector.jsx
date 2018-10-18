@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { selectCity } from "../../actions/report_browser";
+import { selectCity } from "../../reducers/report_browser";
 import { reportBrowserSelectors } from "../../selectors";
 
 const selectStyle = {

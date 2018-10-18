@@ -5,8 +5,17 @@ import {
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
 	SELECT_END_DATE,
+	RESET_FILTERS,
 } from "../../action_types";
 import reportBrowserReducer from "../report_browser";
+import {
+	selectCity,
+	selectStoreType,
+	selectPriority,
+	selectStartDate,
+	selectEndDate,
+	resetDependentFilters,
+} from "../report_browser";
 
 const sampleReports = [
 	{
@@ -107,6 +116,77 @@ describe("reportBrowserReducer", () => {
 				selectedEndDate: "2018-07-30",
 			});
 			expect(reports.selectedEndDate).toEqual("2018-07-30");
+		});
+	});
+});
+
+describe(resetDependentFilters, () => {
+	it("returns an action to reset the dependent filters", () => {
+		const cityId = 5;
+		const action = resetDependentFilters();
+
+		expect(action).toEqual({
+			type: RESET_FILTERS,
+		});
+	});
+});
+
+describe(selectCity, () => {
+	it("returns an action to select the city", () => {
+		const cityId = 5;
+		const action = selectCity(cityId);
+
+		expect(action).toEqual({
+			type: SELECT_CITY,
+			selectedCityId: cityId,
+		});
+	});
+});
+
+describe(selectStoreType, () => {
+	it("returns an action to select the store type", () => {
+		const storeType = "FOO";
+		const action = selectStoreType(storeType);
+
+		expect(action).toEqual({
+			type: SELECT_STORE_TYPE,
+			selectedStoreType: storeType,
+		});
+	});
+});
+
+describe(selectPriority, () => {
+	it("returns an action to select the priority", () => {
+		const priority = "HIGH";
+		const action = selectPriority(priority);
+
+		expect(action).toEqual({
+			type: SELECT_PRIORITY,
+			selectedPriority: priority,
+		});
+	});
+});
+
+describe(selectStartDate, () => {
+	it("returns an action to select the start date", () => {
+		const startDate = "2017-08-01";
+		const action = selectStartDate(startDate);
+
+		expect(action).toEqual({
+			type: SELECT_START_DATE,
+			selectedStartDate: startDate,
+		});
+	});
+});
+
+describe(selectEndDate, () => {
+	it("returns an action to select the end date", () => {
+		const endDate = "2017-08-30";
+		const action = selectEndDate(endDate);
+
+		expect(action).toEqual({
+			type: SELECT_END_DATE,
+			selectedEndDate: endDate,
 		});
 	});
 });
