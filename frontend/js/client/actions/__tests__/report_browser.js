@@ -8,11 +8,6 @@ import {
 } from "../../reducers/loading";
 
 import {
-	selectCity,
-	selectStoreType,
-	selectPriority,
-	selectStartDate,
-	selectEndDate,
 	fetchReportsByAuditCycleId,
 } from "../report_browser";
 

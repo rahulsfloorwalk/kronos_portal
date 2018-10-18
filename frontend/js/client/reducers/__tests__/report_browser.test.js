@@ -122,7 +122,6 @@ describe("reportBrowserReducer", () => {
 
 describe(resetDependentFilters, () => {
 	it("returns an action to reset the dependent filters", () => {
-		const cityId = 5;
 		const action = resetDependentFilters();
 
 		expect(action).toEqual({

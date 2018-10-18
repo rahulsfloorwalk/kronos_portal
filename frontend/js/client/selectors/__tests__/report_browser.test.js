@@ -141,7 +141,7 @@ describe(ReportBrowserSelectors, () => {
 			]);
 		});
 	});
-	
+
 	describe("findStoreTypesBySelectedAuditCycle", () => {
 		it("returns distinct store types for the selected audit cycle", () => {
 			const auditCycleId = 5;

@@ -62,7 +62,6 @@ describe("auditCycleReducer", () => {
 
 describe(selectAuditCycle, () => {
 	it("it returns an action to select the audit cycle", () => {
-		const dispatch = jest.fn();
 		const auditCycleId = 5;
 		const action = selectAuditCycle(auditCycleId);
 
@@ -75,8 +74,6 @@ describe(selectAuditCycle, () => {
 
 describe(fetchAuditCycles, () => {
 	it("it returns an action to fetch audit cycles", () => {
-		const dispatch = jest.fn();
-		const auditCycleId = 5;
 		const action = fetchAuditCycles(sampleAuditCycles);
 
 		expect(action).toEqual({

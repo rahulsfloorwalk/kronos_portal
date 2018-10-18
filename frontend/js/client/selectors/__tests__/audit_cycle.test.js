@@ -84,7 +84,7 @@ describe(AuditCycleSelectors, () => {
 			const sampleStore = createSampleStore(namespace, sampleAuditCycles, null, null);
 			expect(selectors.findFirstAuditCycle(sampleStore).id).toEqual(sampleAuditCycles[0].id);
 		});
-		
+
 		it("should return undefined if there are no audit cycles", () => {
 			const sampleStore = createSampleStore(namespace, [], null, null);
 			expect(selectors.findFirstAuditCycle(sampleStore)).toBeUndefined();
