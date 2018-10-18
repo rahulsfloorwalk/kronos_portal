@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DownloadSummaryButton renders nothing when auditCyle is not provided 1`] = `null`;
+
+exports[`DownloadSummaryButton renders the button with the generated link 1`] = `
+<a
+  className="btn btn-default"
+  href="/client/audit_cycle/1/report_browser_filtered_xlsx_report?city=2&priority=BAR&start_date=2018-06-01&end_date=2018-06-30&type=FOO"
+>
+  <span
+    className="glyphicon glyphicon-download"
+  />
+   Download Summary
+</a>
+`;

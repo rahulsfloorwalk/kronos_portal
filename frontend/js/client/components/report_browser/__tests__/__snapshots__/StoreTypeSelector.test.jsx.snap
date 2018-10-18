@@ -23,6 +23,7 @@ exports[`StoreTypeSelector renders the selector with nothing selected 1`] = `
         "width": "200px",
       }
     }
+    value=""
   >
     <option
       value=""

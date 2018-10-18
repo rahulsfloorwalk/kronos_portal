@@ -3,16 +3,22 @@
 exports[`AuditCycleSelector renders nothing when nothing is selected 1`] = `null`;
 
 exports[`AuditCycleSelector renders the selector with selected audit cycle 1`] = `
-<div>
-  <select
-    className="form-control input-lg"
-    onChange={[Function]}
-    style={
-      Object {
-        "display": "inline-block",
-        "width": "400px",
-      }
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
     }
+  }
+>
+  <label
+    className="control-label"
+  >
+     Audit Cycle:
+  </label>
+  <select
+    className="form-control"
+    onChange={[Function]}
     value={2}
   >
     <option
@@ -36,11 +42,5 @@ exports[`AuditCycleSelector renders the selector with selected audit cycle 1`] =
       Circus
     </option>
   </select>
-  <small>
-     
-    1st Aug
-     to 
-    1st Sep
-  </small>
 </div>
 `;

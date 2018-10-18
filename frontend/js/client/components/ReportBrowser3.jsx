@@ -37,18 +37,6 @@ export class ReportBrowser3 extends Component{
 		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
 	};
 
-	state = {
-		loading: false,
-	};
-
-	setLoading = (loading) => {
-		this.setState( prevState => {
-			return Object.assign({}, prevState, {
-				loading
-			});
-		});
-	};
-
 	componentDidMount() {
 		if(this.props.selectedAuditCycle){
 			this.props.fetchReportsByAuditCycleId(this.props.selectedAuditCycle.id);
@@ -63,8 +51,10 @@ export class ReportBrowser3 extends Component{
 
 	render(){
 		let table;
-		if(this.props.selectedAuditCycle){
-			table = <AuditStoreTable auditCycleId={this.props.selectedAuditCycle.id} startDate={this.props.selectedAuditCycle.start_date} endDate={this.props.selectedAuditCycle.end_date}/>;
+		if(this.props.auditCycles.length === 0){
+			table = <Jumbotron heading="there are no reports here" para="yet"/>;
+		} else if(this.props.selectedAuditCycle){
+			table = <AuditStoreTable/>;
 		} else {
 			table = <Loading/>;
 		}
@@ -83,9 +73,7 @@ export class ReportBrowser3 extends Component{
 					<DownloadDetailsButton/>
 					<big className="pull-right" style={{fontSize:"130%", marginLeft: "50px", marginRight: "10px"}}><b>{this.props.reports.length}</b> Reports</big>
 				</div>
-				{ this.props.auditCycles.length === 0 ?  <Jumbotron heading="there are no reports here" para="yet"/>
-					: table
-				}
+				{ table }
 			</div>
 		);
 	}

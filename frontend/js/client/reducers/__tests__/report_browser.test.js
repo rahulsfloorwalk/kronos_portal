@@ -6,7 +6,7 @@ import {
 	SELECT_START_DATE,
 	SELECT_END_DATE,
 } from "../../action_types";
-import reportBrowserReducer, { ReportBrowserSelectors } from "../report_browser";
+import reportBrowserReducer from "../report_browser";
 
 const sampleReports = [
 	{
@@ -107,86 +107,6 @@ describe("reportBrowserReducer", () => {
 				selectedEndDate: "2018-07-30",
 			});
 			expect(reports.selectedEndDate).toEqual("2018-07-30");
-		});
-	});
-});
-
-const createSampleStore = (namespace, selectedCityId, selectedStoreType, selectedStorePriority, selectedStartDate, selectedEndDate, auditCycleId) => {
-	return {
-		[namespace]: {
-			reports: {
-				[auditCycleId]: sampleReports,
-			},
-			selectedCityId,
-			selectedStoreType,
-			selectedStorePriority,
-			selectedStartDate,
-			selectedEndDate,
-		},
-	};
-};
-
-describe(ReportBrowserSelectors, () => {
-	const namespace = "foobar";
-
-	describe("findReportsByAuditCycleId", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("returns reports by audit cycle id", () => {
-			const auditCycleId = 5;
-			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId);
-			expect(selectors.findReportsByAuditCycleId(sampleStore, auditCycleId)).toEqual(sampleReports);
-		});
-	});
-
-	describe("findSelectedCityId", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("gets the selected City ID", () => {
-			const sampleStore = createSampleStore( namespace, 2, null, null, null, null);
-			expect(selectors.findSelectedCityId(sampleStore)).toEqual(2);
-		});
-	});
-
-	describe("findCitiesByAuditCycleId", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("fetches distinct cities from reports", () => {
-			const auditCycleId = 5;
-			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId);
-			expect(selectors.findCitiesByAuditCycleId(sampleStore, auditCycleId)).toEqual([
-				{ id: 1, name: "Nagpur", },
-				{ id: 2, name: "Mumbai", },
-			]);
-		});
-	});
-
-	describe("findSelectedStoreType", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("gets the selected store type", () => {
-			const sampleStore = createSampleStore( namespace, null, "FOO", null, null, null);
-			expect(selectors.findSelectedStoreType(sampleStore)).toEqual("FOO");
-		});
-	});
-
-	describe("findSelectedStorePriority", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("gets the selected priority", () => {
-			const sampleStore = createSampleStore( namespace, null, null, "HIGH", null, null);
-			expect(selectors.findSelectedStorePriority(sampleStore)).toEqual("HIGH");
-		});
-	});
-
-	describe("findSelectedStartDate", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("gets the selected start date", () => {
-			const sampleStore = createSampleStore( namespace, null, null, null, "2017-08-01", null);
-			expect(selectors.findSelectedStartDate(sampleStore)).toEqual("2017-08-01");
-		});
-	});
-
-	describe("findSelectedEndDate", () => {
-		const selectors = new ReportBrowserSelectors(namespace);
-		it("gets the selected end date", () => {
-			const sampleStore = createSampleStore( namespace, null, null, null, null, "2017-08-30");
-			expect(selectors.findSelectedEndDate(sampleStore)).toEqual("2017-08-30");
 		});
 	});
 });

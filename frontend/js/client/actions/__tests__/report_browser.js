@@ -1,10 +1,10 @@
-import { fetchAuditCycles, selectAuditCycle } from "../audit_cycle";
 import {
 	SELECT_CITY,
 	SELECT_STORE_TYPE,
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
 	SELECT_END_DATE,
+	FETCH_REPORTS,
 } from "../../action_types";
 
 import {
@@ -13,7 +13,7 @@ import {
 	selectPriority,
 	selectStartDate,
 	selectEndDate,
-	fetchReportsByAuditCycle,
+	fetchReportsByAuditCycleId,
 } from "../report_browser";
 
 import { findAuditStoresByAuditCycle } from "../../service/audit_store";
@@ -38,19 +38,29 @@ const sampleReports = [
 	},
 ];
 
-describe(fetchReportsByAuditCycle, () => {
-	it("it dispatches an action when the request is successful", () => {
+describe(fetchReportsByAuditCycleId, () => {
+	it("calls findAuditStoresByAuditCycle", () => {
 		findAuditStoresByAuditCycle.mockResolvedValue(sampleReports);
 		const auditCycleId = 5;
 		const dispatch = jest.fn();
-		const thunk = fetchReportsByAuditCycle(auditCycleId);
+		const thunk = fetchReportsByAuditCycleId(auditCycleId);
 
 		thunk(dispatch);
 		expect(findAuditStoresByAuditCycle).toHaveBeenCalledWith(auditCycleId);
+	});
+
+	it("dispatches an action when the request is successful", (done) => {
+		findAuditStoresByAuditCycle.mockResolvedValue(sampleReports);
+		const auditCycleId = 5;
+		const dispatch = jest.fn();
+		const thunk = fetchReportsByAuditCycleId(auditCycleId);
+
+		thunk(dispatch);
 		setTimeout(() => {
 			expect(dispatch).toBeCalledWith({
 				type: FETCH_REPORTS,
 				reports: sampleReports,
+				auditCycleId,
 			});
 			done();
 		});
@@ -58,7 +68,7 @@ describe(fetchReportsByAuditCycle, () => {
 });
 
 describe(selectCity, () => {
-	it("it returns an action to select the city", () => {
+	it("returns an action to select the city", () => {
 		const cityId = 5;
 		const action = selectCity(cityId);
 
@@ -70,7 +80,7 @@ describe(selectCity, () => {
 });
 
 describe(selectStoreType, () => {
-	it("it returns an action to select the store type", () => {
+	it("returns an action to select the store type", () => {
 		const storeType = "FOO";
 		const action = selectStoreType(storeType);
 
@@ -82,7 +92,7 @@ describe(selectStoreType, () => {
 });
 
 describe(selectPriority, () => {
-	it("it returns an action to select the priority", () => {
+	it("returns an action to select the priority", () => {
 		const priority = "HIGH";
 		const action = selectPriority(priority);
 
@@ -94,7 +104,7 @@ describe(selectPriority, () => {
 });
 
 describe(selectStartDate, () => {
-	it("it returns an action to select the start date", () => {
+	it("returns an action to select the start date", () => {
 		const startDate = "2017-08-01";
 		const action = selectStartDate(startDate);
 
@@ -106,7 +116,7 @@ describe(selectStartDate, () => {
 });
 
 describe(selectEndDate, () => {
-	it("it returns an action to select the end date", () => {
+	it("returns an action to select the end date", () => {
 		const endDate = "2017-08-30";
 		const action = selectEndDate(endDate);
 

@@ -17,13 +17,21 @@ describe(fetchQuestionnaireTypes, () => {
 		},
 	];
 
-	it("it dispatches an action when the request is successful", (done) => {
+	it("it calls fetchQuestionnaireTypes on the questionnaireType service", () => {
 		questionnaireType.fetchQuestionnaireTypes.mockResolvedValue(sampleQuestionnaireTypes);
 		const dispatch = jest.fn();
 		const thunk = fetchQuestionnaireTypes();
 
 		thunk(dispatch);
 		expect(questionnaireType.fetchQuestionnaireTypes).toHaveBeenCalled();
+	});
+
+	it("it dispatches an action when the request is successful", (done) => {
+		questionnaireType.fetchQuestionnaireTypes.mockResolvedValue(sampleQuestionnaireTypes);
+		const dispatch = jest.fn();
+		const thunk = fetchQuestionnaireTypes();
+
+		thunk(dispatch);
 		setTimeout(() => {
 			expect(dispatch).toBeCalledWith({
 				type: FETCH_QUESTIONNAIRE_TYPES,

@@ -22,12 +22,12 @@ export class DownloadDetailsButton extends React.Component {
 
 	createDetailsFilterUrl(){
 		let base = url.api_base_path + `client/audit_cycle/${this.props.auditCycle.id}/audit_cycle_filtered_xlsx_report?`;
-		base += "city=" + encodeURIComponent(this.props.cityId || "") + "&";
-		base += "priority=" + encodeURIComponent(this.props.storePriority || "") + "&";
-		base += "start_date=" + encodeURIComponent(moment(this.props.startDate).format("YYYY-MM-DD") || "") + "&";
-		base += "end_date=" + encodeURIComponent(moment(this.props.endDate).format("YYYY-MM-DD") || "") + "&";
-		base += "type=" + encodeURIComponent(this.props.storeType || "") + "&";
-		//base += "month=" + encodeURIComponent(Number(this.props.selectedMonth)+1 || "");
+		base += "city=" + encodeURIComponent(this.props.cityId || "");
+		base += "&priority=" + encodeURIComponent(this.props.storePriority || "");
+		base += "&start_date=" + encodeURIComponent(moment(this.props.startDate).format("YYYY-MM-DD") || "");
+		base += "&end_date=" + encodeURIComponent(moment(this.props.endDate).format("YYYY-MM-DD") || "");
+		base += "&type=" + encodeURIComponent(this.props.storeType || "");
+		//base += "&month=" + encodeURIComponent(Number(this.props.selectedMonth)+1 || "");
 		return base;
 	}
 	render(){

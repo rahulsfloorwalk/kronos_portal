@@ -3,11 +3,45 @@
 exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabs) />
-  <h2
-    className="page-header"
+  <div
+    className="form-group"
+    style={
+      Object {
+        "marginTop": "10px",
+      }
+    }
   >
     <Connect(AuditCycleSelector) />
-  </h2>
+     
+    <Connect(CitySelector) />
+     
+    <Connect(StoreTypeSelector) />
+     
+    <Connect(StorePrioritySelector) />
+     
+    <Connect(StartDateSelector) />
+     
+    <Connect(EndDateSelector) />
+     
+    <Connect(DownloadSummaryButton) />
+     
+    <Connect(DownloadDetailsButton) />
+    <big
+      className="pull-right"
+      style={
+        Object {
+          "fontSize": "130%",
+          "marginLeft": "50px",
+          "marginRight": "10px",
+        }
+      }
+    >
+      <b>
+        0
+      </b>
+       Reports
+    </big>
+  </div>
   <Loading />
 </div>
 `;
@@ -15,11 +49,45 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
 exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabs) />
-  <h2
-    className="page-header"
+  <div
+    className="form-group"
+    style={
+      Object {
+        "marginTop": "10px",
+      }
+    }
   >
     <Connect(AuditCycleSelector) />
-  </h2>
+     
+    <Connect(CitySelector) />
+     
+    <Connect(StoreTypeSelector) />
+     
+    <Connect(StorePrioritySelector) />
+     
+    <Connect(StartDateSelector) />
+     
+    <Connect(EndDateSelector) />
+     
+    <Connect(DownloadSummaryButton) />
+     
+    <Connect(DownloadDetailsButton) />
+    <big
+      className="pull-right"
+      style={
+        Object {
+          "fontSize": "130%",
+          "marginLeft": "50px",
+          "marginRight": "10px",
+        }
+      }
+    >
+      <b>
+        0
+      </b>
+       Reports
+    </big>
+  </div>
   <Jumbotron
     align="center"
     heading="there are no reports here"
@@ -31,15 +99,45 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
 exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabs) />
-  <h2
-    className="page-header"
+  <div
+    className="form-group"
+    style={
+      Object {
+        "marginTop": "10px",
+      }
+    }
   >
     <Connect(AuditCycleSelector) />
-  </h2>
-  <AuditStoreTable
-    auditCycleId={129}
-    endDate="2018-05-31"
-    startDate="2018-03-12"
-  />
+     
+    <Connect(CitySelector) />
+     
+    <Connect(StoreTypeSelector) />
+     
+    <Connect(StorePrioritySelector) />
+     
+    <Connect(StartDateSelector) />
+     
+    <Connect(EndDateSelector) />
+     
+    <Connect(DownloadSummaryButton) />
+     
+    <Connect(DownloadDetailsButton) />
+    <big
+      className="pull-right"
+      style={
+        Object {
+          "fontSize": "130%",
+          "marginLeft": "50px",
+          "marginRight": "10px",
+        }
+      }
+    >
+      <b>
+        2
+      </b>
+       Reports
+    </big>
+  </div>
+  <Connect(AuditStoreTable) />
 </div>
 `;

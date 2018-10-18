@@ -16,13 +16,21 @@ const sampleAuditCycles = [
 ];
 
 describe(fetchAuditCycles, () => {
-	it("it dispatches an action when the request is successful", (done) => {
+	it("it calls fetchAuditCycles on the auditCycleService", () => {
 		auditCycleService.fetchAuditCycles.mockResolvedValue(sampleAuditCycles);
 		const dispatch = jest.fn();
 		const thunk = fetchAuditCycles();
 
 		thunk(dispatch);
 		expect(auditCycleService.fetchAuditCycles).toHaveBeenCalled();
+	});
+
+	it("it dispatches an action when the request is successful", (done) => {
+		auditCycleService.fetchAuditCycles.mockResolvedValue(sampleAuditCycles);
+		const dispatch = jest.fn();
+		const thunk = fetchAuditCycles();
+
+		thunk(dispatch);
 		setTimeout(() => {
 			expect(dispatch).toBeCalledWith({
 				type: FETCH_AUDIT_CYCLES,
@@ -35,10 +43,12 @@ describe(fetchAuditCycles, () => {
 
 describe(selectAuditCycle, () => {
 	it("it returns an action to select the audit cycle", () => {
+		const dispatch = jest.fn();
 		const auditCycleId = 5;
-		const action = selectAuditCycle(auditCycleId);
+		const thunk = selectAuditCycle(auditCycleId);
 
-		expect(action).toEqual({
+		thunk(dispatch);
+		expect(dispatch).toBeCalledWith({
 			type: SELECT_AUDIT_CYCLE,
 			selectedAuditCycleId: auditCycleId,
 		});
