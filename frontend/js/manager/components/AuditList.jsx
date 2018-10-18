@@ -192,7 +192,7 @@ export class __AuditRow extends Component{
 					<td className="text-right">{validReportCount} ( {reportCount})</td>
 					<td className="text-right"><big>{ this.props.audit.hidden ? <EyeClose/> : <EyeOpen/>}</big></td>
 					<td className="text-right">
-						<div className="btn-group">
+						<div className="btn-group pull-right">
 							<button type="button" className="btn btn-default"
 								onClick={(e)=>{e.stopPropagation(); this.auditRowDropDown && this.auditRowDropDown.toggle();}}>
 								<OptionVertical/>

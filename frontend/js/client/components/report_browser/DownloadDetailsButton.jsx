@@ -34,8 +34,9 @@ export class DownloadDetailsButton extends React.Component {
 		if(this.props.auditCycle){
 			const detailsFilteredUrl = this.createDetailsFilterUrl();
 			return (
-				<a className="btn btn-default" href={detailsFilteredUrl}>
-					<Download/> Download Details
+				<a href={detailsFilteredUrl}>
+					<h5><b>Detailed Excel</b></h5>
+					<p className="text-muted">Download all reports with complete answers and commentary.</p>
 				</a>
 			);
 		} else {

@@ -30,9 +30,11 @@ export class AuditCycleSelector extends React.Component {
 			const auditCycleRows = this.props.auditCycles.map((ac) => <option value={ac.id} key={ac.id}>{ac.name}</option>);
 			return (<div style={{width: "200px", display: "inline-block"}}>
 				<label className="control-label">&nbsp;Audit Cycle:</label>
+				<b>
 				<select className="form-control" value={this.props.selectedAuditCycle.id} onChange={(e) => this.props.onSelect(parseInt(e.target.value))}>
 					{auditCycleRows}
 				</select>
+				</b>
 			</div>);
 		} else {
 			return null;

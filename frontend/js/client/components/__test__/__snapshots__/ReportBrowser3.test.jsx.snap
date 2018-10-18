@@ -8,6 +8,7 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
     style={
       Object {
         "marginTop": "10px",
+        "verticalAlign": "middle",
       }
     }
   >
@@ -23,24 +24,33 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
      
     <Connect(EndDateSelector) />
      
-    <Connect(DownloadSummaryButton) />
-     
-    <Connect(DownloadDetailsButton) />
-    <big
-      className="pull-right"
-      style={
-        Object {
-          "fontSize": "130%",
-          "marginLeft": "50px",
-          "marginRight": "10px",
-        }
-      }
+    <div
+      className="btn-group pull-right"
     >
-      <b>
+       Download:
+      <br />
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        title="Download Reports"
+      >
+        <Download />
+         
         0
-      </b>
-       Reports
-    </big>
+         Reports  
+        <span
+          className="caret"
+        />
+      </button>
+      <DropDown>
+        <li>
+          <Connect(DownloadSummaryButton) />
+        </li>
+        <li>
+          <Connect(DownloadDetailsButton) />
+        </li>
+      </DropDown>
+    </div>
   </div>
   <Loading />
 </div>
@@ -54,6 +64,7 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
     style={
       Object {
         "marginTop": "10px",
+        "verticalAlign": "middle",
       }
     }
   >
@@ -69,24 +80,33 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
      
     <Connect(EndDateSelector) />
      
-    <Connect(DownloadSummaryButton) />
-     
-    <Connect(DownloadDetailsButton) />
-    <big
-      className="pull-right"
-      style={
-        Object {
-          "fontSize": "130%",
-          "marginLeft": "50px",
-          "marginRight": "10px",
-        }
-      }
+    <div
+      className="btn-group pull-right"
     >
-      <b>
+       Download:
+      <br />
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        title="Download Reports"
+      >
+        <Download />
+         
         0
-      </b>
-       Reports
-    </big>
+         Reports  
+        <span
+          className="caret"
+        />
+      </button>
+      <DropDown>
+        <li>
+          <Connect(DownloadSummaryButton) />
+        </li>
+        <li>
+          <Connect(DownloadDetailsButton) />
+        </li>
+      </DropDown>
+    </div>
   </div>
   <Jumbotron
     align="center"
@@ -104,6 +124,7 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
     style={
       Object {
         "marginTop": "10px",
+        "verticalAlign": "middle",
       }
     }
   >
@@ -119,24 +140,33 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
      
     <Connect(EndDateSelector) />
      
-    <Connect(DownloadSummaryButton) />
-     
-    <Connect(DownloadDetailsButton) />
-    <big
-      className="pull-right"
-      style={
-        Object {
-          "fontSize": "130%",
-          "marginLeft": "50px",
-          "marginRight": "10px",
-        }
-      }
+    <div
+      className="btn-group pull-right"
     >
-      <b>
+       Download:
+      <br />
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        title="Download Reports"
+      >
+        <Download />
+         
         2
-      </b>
-       Reports
-    </big>
+         Reports  
+        <span
+          className="caret"
+        />
+      </button>
+      <DropDown>
+        <li>
+          <Connect(DownloadSummaryButton) />
+        </li>
+        <li>
+          <Connect(DownloadDetailsButton) />
+        </li>
+      </DropDown>
+    </div>
   </div>
   <Connect(AuditStoreTable) />
 </div>

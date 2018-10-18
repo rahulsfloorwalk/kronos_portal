@@ -10,7 +10,7 @@ import { reportBrowserSelectors } from "../../selectors";
 
 const selectStyle = {
 	display: "inline-block",
-	width: "200px",
+	width: "150px",
 };
 
 export class StartDateSelector extends React.Component {
@@ -34,7 +34,7 @@ export class StartDateSelector extends React.Component {
 		if(this.props.selectedStartDate){
 			return (
 				<div style={selectStyle}>
-					<label className="control-label">&nbsp;Start Date:</label>
+					&nbsp;Start Date:
 					<Datetime name="end_date"
 						value={moment(this.props.selectedStartDate)}
 						onChange={date => this.props.onSelect(date.format("YYYY-MM-DD"))}

@@ -21,7 +21,7 @@ export class StorePrioritySelector extends React.Component {
 	render(){
 		return (
 			<div style={selectStyle}>
-				<label className="control-label">&nbsp;Store Priority:</label>
+				&nbsp;Store Priority:
 				<select onChange={e => this.props.onSelect(e.target.value)} value={this.props.selectedStorePriority || ""} className="form-control" style={selectStyle}>
 					<option value="">All Types</option>
 					{this.props.storePriorities.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}

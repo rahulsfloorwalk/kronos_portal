@@ -9,11 +9,7 @@ exports[`CitySelector renders the selector with nothing selected 1`] = `
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     City:
-  </label>
+   City:
   <select
     className="form-control"
     onChange={[Function]}
@@ -58,11 +54,7 @@ exports[`CitySelector renders the selector with selected city 1`] = `
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     City:
-  </label>
+   City:
   <select
     className="form-control"
     onChange={[Function]}

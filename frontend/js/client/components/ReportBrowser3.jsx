@@ -4,6 +4,8 @@ import PropTypes from "prop-types";
 
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
+import DropDown from "../../components/DropDown.jsx";
+import { Download, ChevronDown } from "../../components/Icons.jsx";
 
 import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 import AuditStoreTable from "./AuditStoreTable.jsx";
@@ -62,16 +64,26 @@ export class ReportBrowser3 extends Component{
 		return (
 			<div>
 				<QuestionnaireTypeTabs />
-				<div className="form-group" style={{marginTop: "10px"}}>
+				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
 					<AuditCycleSelector/>&nbsp;
 					<CitySelector/>&nbsp;
 					<StoreTypeSelector/>&nbsp;
 					<StorePrioritySelector/>&nbsp;
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
-					<DownloadSummaryButton/>&nbsp;
-					<DownloadDetailsButton/>
-					<big className="pull-right" style={{fontSize:"130%", marginLeft: "50px", marginRight: "10px"}}><b>{this.props.reports.length}</b> Reports</big>
+					<div className="btn-group pull-right">
+						&nbsp;Download:<br/>
+						<button className="btn btn-default"
+							title="Download Reports"
+							onClick={() => this.reportDropdown && this.reportDropdown.toggle()}>
+							<Download/> {this.props.reports.length} Reports &nbsp;
+							<span className="caret"/>
+						</button>
+						<DropDown ref={(e) => this.reportDropdown = e}>
+							<li><DownloadSummaryButton/></li>
+							<li><DownloadDetailsButton/></li>
+						</DropDown>
+					</div>
 				</div>
 				{ table }
 			</div>

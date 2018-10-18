@@ -5,15 +5,11 @@ exports[`StartDateSelector renders the selector with a given start_date 1`] = `
   style={
     Object {
       "display": "inline-block",
-      "width": "200px",
+      "width": "150px",
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     Start Date:
-  </label>
+   Start Date:
   <div
     className="rdt"
   >

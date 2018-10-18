@@ -21,7 +21,7 @@ export class StoreTypeSelector extends React.Component {
 	render(){
 		return (
 			<div style={selectStyle}>
-				<label className="control-label">&nbsp;Store Type:</label>
+				&nbsp;Store Type:
 				<select onChange={e => this.props.onSelect(e.target.value)} value={this.props.selectedStoreType || ""} className="form-control" style={selectStyle}>
 					<option value="">All Types</option>
 					{this.props.storeTypes.filter(t=>!!t).map(t => <option key={t} value={t}>{t}</option>)}

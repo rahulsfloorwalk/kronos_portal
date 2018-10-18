@@ -16,31 +16,33 @@ exports[`AuditCycleSelector renders the selector with selected audit cycle 1`] =
   >
      Audit Cycle:
   </label>
-  <select
-    className="form-control"
-    onChange={[Function]}
-    value={2}
-  >
-    <option
-      value={1}
-    >
-      Monty
-    </option>
-    <option
+  <b>
+    <select
+      className="form-control"
+      onChange={[Function]}
       value={2}
     >
-      Python
-    </option>
-    <option
-      value={3}
-    >
-      Flying
-    </option>
-    <option
-      value={4}
-    >
-      Circus
-    </option>
-  </select>
+      <option
+        value={1}
+      >
+        Monty
+      </option>
+      <option
+        value={2}
+      >
+        Python
+      </option>
+      <option
+        value={3}
+      >
+        Flying
+      </option>
+      <option
+        value={4}
+      >
+        Circus
+      </option>
+    </select>
+  </b>
 </div>
 `;

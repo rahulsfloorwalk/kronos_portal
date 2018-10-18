@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 export default class DropDown extends React.Component{
 	static propTypes = {
-		children: PropTypes.arrayOf(PropTypes.node),
+		children: PropTypes.node,
 	};
 
 	constructor(props){
@@ -31,7 +31,7 @@ export default class DropDown extends React.Component{
 
 	render(){
 		if(this.state.dropdown){
-			return (<ul className="dropdown-menu" style={{display:"block", left: "auto", right: "0"}}
+			return (<ul className="dropdown-menu" style={{display:"block", left: "auto"}}
 				onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
 				{ this.props.children }
 			</ul>);

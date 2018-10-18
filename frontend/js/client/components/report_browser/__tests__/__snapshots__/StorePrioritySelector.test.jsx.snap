@@ -9,11 +9,7 @@ exports[`StorePrioritySelector renders the selector with nothing selected 1`] = 
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     Store Priority:
-  </label>
+   Store Priority:
   <select
     className="form-control"
     onChange={[Function]}
@@ -58,11 +54,7 @@ exports[`StorePrioritySelector renders the selector with selected store_priority
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     Store Priority:
-  </label>
+   Store Priority:
   <select
     className="form-control"
     onChange={[Function]}

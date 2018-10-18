@@ -10,7 +10,7 @@ import { reportBrowserSelectors } from "../../selectors";
 
 const selectStyle = {
 	display: "inline-block",
-	width: "200px",
+	width: "150px",
 };
 
 export class EndDateSelector extends React.Component {
@@ -34,7 +34,7 @@ export class EndDateSelector extends React.Component {
 		if(this.props.selectedEndDate){
 			return (
 				<div style={selectStyle}>
-					<label className="control-label">&nbsp;End Date:</label>
+					&nbsp;End Date:
 					<Datetime name="end_date"
 						value={moment(this.props.selectedEndDate)}
 						onChange={date => this.props.onSelect(date.format("YYYY-MM-DD"))}

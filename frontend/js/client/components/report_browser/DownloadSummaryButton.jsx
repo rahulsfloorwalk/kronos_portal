@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
 
-import { Download } from "../../../components/Icons.jsx";
+import { Download, Excel } from "../../../components/Icons.jsx";
 import { url } from "../../../../config.js";
 
 import { auditCycleSelectors, reportBrowserSelectors } from "../../selectors";
@@ -34,8 +34,9 @@ export class DownloadSummaryButton extends React.Component {
 		if(this.props.auditCycle){
 			const summaryFilteredUrl = this.createSummaryFilterUrl();
 			return (
-				<a className="btn btn-default" href={summaryFilteredUrl}>
-					<Download/> Download Summary
+				<a href={summaryFilteredUrl}>
+					<h5><b>Summary Excel</b></h5>
+					<p className="text-muted">Download summary of all reports with section based scores.</p>
 				</a>
 			);
 		} else {

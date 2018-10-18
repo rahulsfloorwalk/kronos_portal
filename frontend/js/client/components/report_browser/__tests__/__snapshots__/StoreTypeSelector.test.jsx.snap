@@ -9,11 +9,7 @@ exports[`StoreTypeSelector renders the selector with nothing selected 1`] = `
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     Store Type:
-  </label>
+   Store Type:
   <select
     className="form-control"
     onChange={[Function]}
@@ -58,11 +54,7 @@ exports[`StoreTypeSelector renders the selector with selected store_type 1`] = `
     }
   }
 >
-  <label
-    className="control-label"
-  >
-     Store Type:
-  </label>
+   Store Type:
   <select
     className="form-control"
     onChange={[Function]}
