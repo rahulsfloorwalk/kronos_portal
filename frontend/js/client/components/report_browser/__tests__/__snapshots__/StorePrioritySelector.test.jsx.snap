@@ -24,7 +24,7 @@ exports[`StorePrioritySelector renders the selector with nothing selected 1`] = 
     <option
       value=""
     >
-      All Types
+      All Priorities
     </option>
     <option
       value="HIGH"
@@ -69,7 +69,7 @@ exports[`StorePrioritySelector renders the selector with selected store_priority
     <option
       value=""
     >
-      All Types
+      All Priorities
     </option>
     <option
       value="HIGH"
