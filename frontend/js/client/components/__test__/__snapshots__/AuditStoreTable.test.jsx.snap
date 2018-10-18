@@ -1,5 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`AuditStoreTable renders a loading widget when the reports are loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="/static/img/ripple.svg"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`AuditStoreTable renders a message when there are no reports 1`] = `
+<div
+  className="form-group"
+>
+  <div
+    className="jumbotron text-center"
+  >
+    <h3>
+      there are no audits here
+    </h3>
+    <p>
+      try changing audit cycle
+    </p>
+  </div>
+</div>
+`;
+
 exports[`AuditStoreTable renders the reports 1`] = `
 <div
   style={
@@ -202,22 +234,5 @@ exports[`AuditStoreTable renders the reports 1`] = `
       </tr>
     </tbody>
   </table>
-</div>
-`;
-
-exports[`AuditStoreTable renders when there are no reports 1`] = `
-<div
-  className="form-group"
->
-  <div
-    className="jumbotron text-center"
-  >
-    <h3>
-      there are no audits here
-    </h3>
-    <p>
-      try changing audit cycle
-    </p>
-  </div>
 </div>
 `;

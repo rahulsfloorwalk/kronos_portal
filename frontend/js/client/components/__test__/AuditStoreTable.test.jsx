@@ -90,12 +90,17 @@ describe(AuditStoreTable, () => {
 	}];
 
 	it("renders the reports", () => {
-		const r = renderer.create(<AuditStoreTable reports={sampleAuditStores}/>);
+		const r = renderer.create(<AuditStoreTable reports={sampleAuditStores} isLoading={false}/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
-	it("renders when there are no reports", () => {
-		const r = renderer.create(<AuditStoreTable reports={[]}/>);
+	it("renders a message when there are no reports", () => {
+		const r = renderer.create(<AuditStoreTable reports={[]} isLoading={false}/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
+
+	it("renders a loading widget when the reports are loading", () => {
+		const r = renderer.create(<AuditStoreTable reports={[]} isLoading={true}/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 });

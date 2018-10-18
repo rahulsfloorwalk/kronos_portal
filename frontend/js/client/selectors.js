@@ -9,6 +9,9 @@ import AuditCycleSelectors from "./selectors/audit_cycle";
 import reportBrowserReducer from "./reducers/report_browser";
 import ReportBrowserSelectors from "./selectors/report_browser";
 
+import loadingReducer from "./reducers/loading";
+import LoadingSelectors from "./selectors/loading";
+
 const reducerMap = {};
 
 reducerMap["questionnaireType"] = questionnaireTypeReducer;
@@ -19,5 +22,8 @@ export const auditCycleSelectors = new AuditCycleSelectors("auditCycle", questio
 
 reducerMap["reportBrowser"] = reportBrowserReducer;
 export const reportBrowserSelectors = new ReportBrowserSelectors("reportBrowser", auditCycleSelectors);
+
+reducerMap["loading"] = loadingReducer;
+export const loadingSelectors = new LoadingSelectors("loading");
 
 export default combineReducers(reducerMap);

@@ -13,35 +13,27 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 import { getColor } from "../../utils.js";
 
-import { reportBrowserSelectors } from "../selectors";
+import { reportBrowserSelectors, loadingSelectors } from "../selectors";
+import apiNames from "../api_names";
 
 export class AuditStoreTable extends Component {
 	static propTypes = {
 		reports: PropTypes.arrayOf(PropTypes.shape({
 		})).isRequired,
+		isLoading: PropTypes.bool,
 	};
 
 	constructor(props){
 		super(props);
-		this.state = {
-			loading: false,
-		};
 	}
 
-	setLoading = (loading) => {
-		this.setState( prevState => {
-			return Object.assign({}, prevState, {
-				loading
-			});
-		});
-	};
-
 	render(){
-		if(this.state.loading){
-			return (<Loading/>);
-		}
 		if(this.props.reports.length === 0) {
-			return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
+			if(this.props.isLoading){
+				return (<Loading/>);
+			} else {
+				return (<Jumbotron heading="there are no audits here" para="try changing audit cycle"/>);
+			}
 		}
 
 		let headers = [];
@@ -104,6 +96,7 @@ export class AuditStoreTable extends Component {
 const mapStateToProps = (state) => {
 	return {
 		reports: reportBrowserSelectors.filterReports(state),
+		isLoading: loadingSelectors.isLoading(state, apiNames.report.findByAuditCycleId),
 	};
 };
 

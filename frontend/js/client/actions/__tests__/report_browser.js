@@ -3,6 +3,11 @@ import {
 } from "../../action_types";
 
 import {
+	REQUEST,
+	SUCCESS,
+} from "../../reducers/loading";
+
+import {
 	selectCity,
 	selectStoreType,
 	selectPriority,
@@ -10,6 +15,8 @@ import {
 	selectEndDate,
 	fetchReportsByAuditCycleId,
 } from "../report_browser";
+
+import apiNames from "../../api_names";
 
 import { findAuditStoresByAuditCycle } from "../../service/audit_store";
 jest.mock("../../service/audit_store");
@@ -42,6 +49,10 @@ describe(fetchReportsByAuditCycleId, () => {
 
 		thunk(dispatch);
 		expect(findAuditStoresByAuditCycle).toHaveBeenCalledWith(auditCycleId);
+		expect(dispatch).toHaveBeenNthCalledWith(1, {
+			type: REQUEST,
+			apiName: apiNames.report.findByAuditCycleId,
+		});
 	});
 
 	it("dispatches an action when the request is successful", (done) => {
@@ -52,10 +63,14 @@ describe(fetchReportsByAuditCycleId, () => {
 
 		thunk(dispatch);
 		setTimeout(() => {
-			expect(dispatch).toBeCalledWith({
+			expect(dispatch).toHaveBeenNthCalledWith(2, {
 				type: FETCH_REPORTS,
 				reports: sampleReports,
 				auditCycleId,
+			});
+			expect(dispatch).toHaveBeenNthCalledWith(3, {
+				type: SUCCESS,
+				apiName: apiNames.report.findByAuditCycleId,
 			});
 			done();
 		});
