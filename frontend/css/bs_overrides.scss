@@ -39,6 +39,10 @@ $darken_percentage: 5%;
     }
 }
 
+body{
+	-webkit-print-color-adjust:exact;
+}
+
 /*Progress Bar min Style */
 .progress-bar {
 	min-width:2em;
