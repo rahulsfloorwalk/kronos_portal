@@ -14,6 +14,7 @@ import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
 import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
 import AttachmentPrintRenderer from "./AttachmentPrintRenderer.jsx";
+import OverallExperienceGauge from "./OverallExperienceGauge.jsx";
 
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
@@ -88,9 +89,10 @@ export default class AuditStoreDetail extends React.Component {
 						<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
 					</div>
 					<div className="col-md-6">
-						<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
+						<OverallExperienceGauge color={this.state.auditStore.color} value={this.state.auditStore.percentage}/>
 					</div>
 				</div>
+				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
 				{ printMode ?
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
