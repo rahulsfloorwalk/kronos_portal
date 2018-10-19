@@ -65,13 +65,13 @@ export default class OverallExperienceGauge extends React.Component {
 					<Gauge
 						value={this.props.value}
 						width={500}
-						height={320}
+						height={300}
 						min={0}
 						max={100}
 						label=""
 						color={gaugeProps.progressColor}
 						backgroundColor={gaugeProps.dialColor}
-						valueFormatter={v => v+"%"}
+						valueFormatter={v => v+"﹪"}
 					/>
 				</div>
 			</div>
