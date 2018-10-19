@@ -1,0 +1,661 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 1 1`] = `
+<div
+  className="panel panel-danger"
+>
+  <div
+    className="panel-heading"
+  >
+    Overall Experience
+  </div>
+  <div
+    className="panel-body text-center"
+  >
+    <svg
+      height="100%"
+      style={
+        Object {
+          "height": 300,
+          "left": 0,
+          "overflow": "hidden",
+          "position": "relative",
+          "top": 0,
+          "width": 500,
+        }
+      }
+      version="1.1"
+      width="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id="filter_0"
+        >
+          <feOffset
+            dx="0"
+            dy="3"
+          />
+          <feGaussianBlur
+            result="offset-blur"
+            stdDeviation="5"
+          />
+          <feComposite
+            in="SourceGraphic"
+            in2="offset-blur"
+            operator="out"
+            result="inverse"
+          />
+          <feFlood
+            floodColor="black"
+            floodOpacity="0.2"
+            result="color"
+          />
+          <feComposite
+            in="color"
+            in2="inverse"
+            operator="in"
+            result="shadow"
+          />
+          <feComposite
+            in="shadow"
+            in2="SourceGraphic"
+            operator="over"
+          />
+        </filter>
+      </defs>
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+        fill="#edebeb"
+        filter="url(#filter_0)"
+        stroke="none"
+      />
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+        fill="#fe0400"
+        filter="url(#filter_0)"
+        stroke="none"
+      />
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 50,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={37.5}
+      >
+        
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#010101",
+            "fillOpacity": 1,
+            "fontSize": 100,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={240}
+      >
+        64﹪
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={87.5}
+        y={265}
+      >
+        0
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={412.5}
+        y={265}
+      >
+        100
+      </text>
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 2 1`] = `
+<div
+  className="panel panel-warning"
+>
+  <div
+    className="panel-heading"
+  >
+    Overall Experience
+  </div>
+  <div
+    className="panel-body text-center"
+  >
+    <svg
+      height="100%"
+      style={
+        Object {
+          "height": 300,
+          "left": 0,
+          "overflow": "hidden",
+          "position": "relative",
+          "top": 0,
+          "width": 500,
+        }
+      }
+      version="1.1"
+      width="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id="filter_1"
+        >
+          <feOffset
+            dx="0"
+            dy="3"
+          />
+          <feGaussianBlur
+            result="offset-blur"
+            stdDeviation="5"
+          />
+          <feComposite
+            in="SourceGraphic"
+            in2="offset-blur"
+            operator="out"
+            result="inverse"
+          />
+          <feFlood
+            floodColor="black"
+            floodOpacity="0.2"
+            result="color"
+          />
+          <feComposite
+            in="color"
+            in2="inverse"
+            operator="in"
+            result="shadow"
+          />
+          <feComposite
+            in="shadow"
+            in2="SourceGraphic"
+            operator="over"
+          />
+        </filter>
+      </defs>
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+        fill="#edebeb"
+        filter="url(#filter_1)"
+        stroke="none"
+      />
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+        fill="#fe0400"
+        filter="url(#filter_1)"
+        stroke="none"
+      />
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 50,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={37.5}
+      >
+        
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#010101",
+            "fillOpacity": 1,
+            "fontSize": 100,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={240}
+      >
+        64﹪
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={87.5}
+        y={265}
+      >
+        0
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={412.5}
+        y={265}
+      >
+        100
+      </text>
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 3 1`] = `
+<div
+  className="panel panel-info"
+>
+  <div
+    className="panel-heading"
+  >
+    Overall Experience
+  </div>
+  <div
+    className="panel-body text-center"
+  >
+    <svg
+      height="100%"
+      style={
+        Object {
+          "height": 300,
+          "left": 0,
+          "overflow": "hidden",
+          "position": "relative",
+          "top": 0,
+          "width": 500,
+        }
+      }
+      version="1.1"
+      width="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id="filter_2"
+        >
+          <feOffset
+            dx="0"
+            dy="3"
+          />
+          <feGaussianBlur
+            result="offset-blur"
+            stdDeviation="5"
+          />
+          <feComposite
+            in="SourceGraphic"
+            in2="offset-blur"
+            operator="out"
+            result="inverse"
+          />
+          <feFlood
+            floodColor="black"
+            floodOpacity="0.2"
+            result="color"
+          />
+          <feComposite
+            in="color"
+            in2="inverse"
+            operator="in"
+            result="shadow"
+          />
+          <feComposite
+            in="shadow"
+            in2="SourceGraphic"
+            operator="over"
+          />
+        </filter>
+      </defs>
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+        fill="#edebeb"
+        filter="url(#filter_2)"
+        stroke="none"
+      />
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+        fill="#fe0400"
+        filter="url(#filter_2)"
+        stroke="none"
+      />
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 50,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={37.5}
+      >
+        
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#010101",
+            "fillOpacity": 1,
+            "fontSize": 100,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={240}
+      >
+        64﹪
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={87.5}
+        y={265}
+      >
+        0
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={412.5}
+        y={265}
+      >
+        100
+      </text>
+    </svg>
+  </div>
+</div>
+`;
+
+exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 4 1`] = `
+<div
+  className="panel panel-success"
+>
+  <div
+    className="panel-heading"
+  >
+    Overall Experience
+  </div>
+  <div
+    className="panel-body text-center"
+  >
+    <svg
+      height="100%"
+      style={
+        Object {
+          "height": 300,
+          "left": 0,
+          "overflow": "hidden",
+          "position": "relative",
+          "top": 0,
+          "width": 500,
+        }
+      }
+      version="1.1"
+      width="100%"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id="filter_3"
+        >
+          <feOffset
+            dx="0"
+            dy="3"
+          />
+          <feGaussianBlur
+            result="offset-blur"
+            stdDeviation="5"
+          />
+          <feComposite
+            in="SourceGraphic"
+            in2="offset-blur"
+            operator="out"
+            result="inverse"
+          />
+          <feFlood
+            floodColor="black"
+            floodOpacity="0.2"
+            result="color"
+          />
+          <feComposite
+            in="color"
+            in2="inverse"
+            operator="in"
+            result="shadow"
+          />
+          <feComposite
+            in="shadow"
+            in2="SourceGraphic"
+            operator="over"
+          />
+        </filter>
+      </defs>
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+        fill="#edebeb"
+        filter="url(#filter_3)"
+        stroke="none"
+      />
+      <path
+        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+        fill="#fe0400"
+        filter="url(#filter_3)"
+        stroke="none"
+      />
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 50,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={37.5}
+      >
+        
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#010101",
+            "fillOpacity": 1,
+            "fontSize": 100,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "bold",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={250}
+        y={240}
+      >
+        64﹪
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={87.5}
+        y={265}
+      >
+        0
+      </text>
+      <text
+        style={
+          Object {
+            "fill": "#999999",
+            "fillOpacity": 1,
+            "fontSize": 20,
+            "fontStretch": "normal",
+            "fontStyle": "normal",
+            "fontVariant": "normal",
+            "fontWeight": "normal",
+            "lineHeight": "normal",
+            "stroke": "none",
+            "textAnchor": "middle",
+          }
+        }
+        textAnchor="middle"
+        x={412.5}
+        y={265}
+      >
+        100
+      </text>
+    </svg>
+  </div>
+</div>
+`;

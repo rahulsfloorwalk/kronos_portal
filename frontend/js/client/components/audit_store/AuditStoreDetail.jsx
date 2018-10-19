@@ -89,7 +89,7 @@ export default class AuditStoreDetail extends React.Component {
 						<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
 					</div>
 					<div className="col-md-6">
-						<OverallExperienceGauge color={this.state.auditStore.color} value={this.state.auditStore.percentage}/>
+						<OverallExperienceGauge colorCode={this.state.auditStore.color} value={this.state.auditStore.percentage}/>
 					</div>
 				</div>
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
