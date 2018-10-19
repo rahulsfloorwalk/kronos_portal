@@ -52,14 +52,8 @@ const AuditStoreDetailsBox = (props) => {
 					<th>{moment(props.auditStore.audit_date).format(momentDateFormat)}</th>
 				</tr>
 				<tr>
-					<td className="text-right">Total Score:</td>
-					<th>
-						<div className="progress">
-							<div className={"progress-bar"} role="progressbar" aria-valuenow={props.auditStore.percentage} aria-valuemin="0" aria-valuemax="100" style={{width: props.auditStore.percentage + "%"}}>
-								{props.auditStore.percentage}%
-							</div>
-						</div>
-					</th>
+					<td className="text-right">Overall Experience:</td>
+					<th>{props.auditStore.percentage}%</th>
 				</tr>
 			</tbody>
 		</table>

@@ -74,14 +74,14 @@ export default class OverallExperienceGauge extends React.Component {
 						dialColor="#D1E8EE"
 						dialWidth={10}
 
-						needle={false}
-						needleSharp={false}
-						needleWidth={4}
+						needleSharp={true}
+						needleWidth={10}
 						needleColor="#D3191A"
 
-						needleBaseSize={8}
+						needleBaseSize={10}
 						//needleBaseColor="#078BC4"
-						needleBaseColor="#D3191A"
+						//needleBaseColor="#D3191A"
+						needleBaseColor="#000"
 
 						progressColor="#3498DB"
 						progressWidth={12}

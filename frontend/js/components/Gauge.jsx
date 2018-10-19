@@ -60,9 +60,6 @@ const Needle = (props) => {
 
 	return (
 		<g className="needle">
-			<g transform={`rotate(${needleAngle} ${props.cX} ${props.cY})`}>
-				{needleElm}
-			</g>
 			<circle
 				cx={props.cX}
 				cy={props.cY}
@@ -70,6 +67,9 @@ const Needle = (props) => {
 				fill={props.needleBaseColor}
 			>
 			</circle>
+			<g transform={`rotate(${needleAngle} ${props.cX} ${props.cY})`}>
+				{needleElm}
+			</g>
 		</g>
 	);
 
