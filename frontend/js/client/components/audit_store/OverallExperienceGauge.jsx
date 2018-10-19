@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import Gauge from "../../../components/Gauge.jsx";
+import Gauge from "react-svg-gauge";
 
 import { getColor } from "../../../utils";
 
@@ -55,6 +55,7 @@ export default class OverallExperienceGauge extends React.Component {
 	};
 
 	render(){
+		const gaugeProps = getGaugeProps(this.props.color);
 		return (
 			<div className={"panel panel-" + getColor(this.props.color)}>
 				<div className="panel-heading">
@@ -62,33 +63,15 @@ export default class OverallExperienceGauge extends React.Component {
 				</div>
 				<div className="panel-body text-center">
 					<Gauge
-						label={this.props.value + "%"}
-						currentValue={this.props.value}
-						size={300}
-
-						tickLength={10}
-						tickWidth={2}
-						tickColor="#3498DB"
-						tickInterval={36}
-
-						dialColor="#D1E8EE"
-						dialWidth={10}
-
-						needleSharp={true}
-						needleWidth={10}
-						needleColor="#D3191A"
-
-						needleBaseSize={10}
-						//needleBaseColor="#078BC4"
-						//needleBaseColor="#D3191A"
-						needleBaseColor="#000"
-
-						progressColor="#3498DB"
-						progressWidth={12}
-						progressRoundedEdge={true}
-						progressFont="sans-serif"
-
-						{...getGaugeProps(this.props.color)}
+						value={this.props.value}
+						width={500}
+						height={320}
+						min={0}
+						max={100}
+						label=""
+						color={gaugeProps.progressColor}
+						backgroundColor={gaugeProps.dialColor}
+						valueFormatter={v => v+"%"}
 					/>
 				</div>
 			</div>
