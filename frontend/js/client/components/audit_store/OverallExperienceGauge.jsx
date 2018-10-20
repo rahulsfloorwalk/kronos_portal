@@ -34,7 +34,6 @@ export default class OverallExperienceGauge extends React.Component {
 
 	render(){
 		const { backgroundColor, foregroudColor } = getGaugeProps(this.props.colorCode);
-		console.log(backgroundColor, foregroudColor);
 		return (
 			<div className={"panel panel-" + getColor(this.props.colorCode)}>
 				<div className="panel-heading">
