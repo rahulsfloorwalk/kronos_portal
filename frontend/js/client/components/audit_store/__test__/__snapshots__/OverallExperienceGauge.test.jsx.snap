@@ -66,13 +66,13 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
       </defs>
       <path
         d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#edebeb"
+        fill="#F2DEDE"
         filter="url(#filter_0)"
         stroke="none"
       />
       <path
         d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#fe0400"
+        fill="#D9534F"
         filter="url(#filter_0)"
         stroke="none"
       />
@@ -231,13 +231,13 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
       </defs>
       <path
         d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#edebeb"
+        fill="#FCF8E3"
         filter="url(#filter_1)"
         stroke="none"
       />
       <path
         d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#fe0400"
+        fill="#F0AD4E"
         filter="url(#filter_1)"
         stroke="none"
       />
@@ -396,13 +396,13 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
       </defs>
       <path
         d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#edebeb"
+        fill="#D9EDF7"
         filter="url(#filter_2)"
         stroke="none"
       />
       <path
         d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#fe0400"
+        fill="#5BC0DE"
         filter="url(#filter_2)"
         stroke="none"
       />
@@ -561,13 +561,13 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
       </defs>
       <path
         d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#edebeb"
+        fill="#DFF0D8"
         filter="url(#filter_3)"
         stroke="none"
       />
       <path
         d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#fe0400"
+        fill="#5CB85C"
         filter="url(#filter_3)"
         stroke="none"
       />
