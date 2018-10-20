@@ -1,5 +1,7 @@
 from django.test import TestCase
 
+from expects import expect, be_true, be_false
+
 from model_mommy import mommy
 
 from kronos.exceptions import AppLogicError
@@ -103,3 +105,37 @@ class ReportAttributeTestCase(TestCase):
         report_attribute.attribute_data = valid_attribute_data
         with self.assertRaisesRegex(AppLogicError, "'option_id' is a required property"):
             report_attribute.clean()
+
+    def test_option_exists_returns_true_when_given_option_id_exists(self):
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": "opt1",
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "opt2",
+                    "option_label": "label2"
+                },
+            ],
+        }
+        report_attribute = ReportAttribute(attribute_data=attribute_data)
+        expect(report_attribute.option_exists("opt1")).to(be_true)
+
+    def test_option_exists_returns_false_when_given_option_id_does_not_exist(self):
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": "opt1",
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "opt2",
+                    "option_label": "label2"
+                },
+            ],
+        }
+        report_attribute = ReportAttribute(attribute_data=attribute_data)
+        expect(report_attribute.option_exists("opt3")).to(be_false)
