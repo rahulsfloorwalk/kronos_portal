@@ -1,11 +1,19 @@
 import random
 import string
 
+from kronos.exceptions import ObjectNotFound
 from audit.models import ReportAttribute
 
 
 def find_report_attributes_by_audit_cycle_id(audit_cycle_id):
     return ReportAttribute.objects.filter(audit_cycle_id=audit_cycle_id)
+
+
+def find_report_attribute_by_audit_cycle_id_and_json_id(audit_cycle_id, json_id):
+    try:
+        return ReportAttribute.objects.get(audit_cycle_id=audit_cycle_id, json_id=json_id)
+    except ReportAttribute.DoesNotExist as e:
+        raise ObjectNotFound from e
 
 
 def create_report_attribute(audit_cycle_id, label, option_labels):

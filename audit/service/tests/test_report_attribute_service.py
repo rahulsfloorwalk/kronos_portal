@@ -9,6 +9,7 @@ from expects import expect, equal, have_length, have_property, be_none, have_key
 
 from faker import Faker
 
+from kronos.exceptions import ObjectNotFound
 from audit.models import AuditCycle
 from audit.models import ReportAttribute
 from audit.service import report_attribute_service
@@ -27,6 +28,18 @@ class ReportAttributeServiceTestCase(APITestCase):
         expect(response).to(have_length(3))
         for ra in response:
             expect(ra).to(have_property("audit_cycle_id", audit_cycle.id))
+
+    def test_find_by_audit_cycle_id_and_json_id_returns_the_report_attribute(self):
+        audit_cycle = mommy.make(AuditCycle)
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_cycle)
+
+        response = report_attribute_service.find_report_attribute_by_audit_cycle_id_and_json_id(audit_cycle.id, report_attribute.json_id)
+        expect(response).to(equal(report_attribute))
+
+
+    def test_find_by_audit_cycle_id_and_json_id_raises_when_report_attribute_does_not_exist(self):
+        with self.assertRaises(ObjectNotFound):
+            report_attribute_service.find_report_attribute_by_audit_cycle_id_and_json_id(1, "foo")
 
 
     def test_create_report_attribute_creates_report_attribute(self):
