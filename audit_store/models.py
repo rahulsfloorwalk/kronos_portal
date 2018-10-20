@@ -20,6 +20,7 @@ from answer.models import Answer
 from questionnaire.models import Question
 
 from audit_store.signals import audit_store_status_change
+from django.contrib.postgres.fields import JSONField
 
 _logger = logging.getLogger(__name__)
 
@@ -124,6 +125,8 @@ class AuditStore(Model):
     modified_at = DateTimeField(db_column="modified_at", null=True)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
+
+    attribute_data = JSONField(db_column='attribute_data', default=dict, blank=False)
 
     objects = AuditStoreQuerySet.as_manager()
 
@@ -397,6 +400,11 @@ class AuditStore(Model):
     @atomic
     def set_earnings_per_audit(self, earnings_per_audit):
         self.earnings_per_audit = earnings_per_audit
+        self.save()
+
+    @atomic
+    def set_attribute_data(self, attribute_json_id, attribute_option_id):
+        self.attribute_data[attribute_json_id] = attribute_option_id
         self.save()
 
 

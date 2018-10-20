@@ -1,6 +1,7 @@
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 from faker import Faker
+from expects import expect, have_key
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
@@ -617,3 +618,20 @@ class AuditStoreTestCase(TestCase):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
         audit_store.set_earnings_per_audit(5000)
         self.assertEqual(audit_store.earnings_per_audit, 5000)
+
+    def test_set_attribute_data_sets_a_new_value(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        attribute_json_id = "attr1"
+        attribute_option_id = "opt1"
+        audit_store.set_attribute_data(attribute_json_id, attribute_option_id)
+        expect(audit_store.attribute_data).to(have_key(attribute_json_id, attribute_option_id))
+
+    def test_set_attribute_data_sets_updates_an_existing_value(self):
+        attribute_json_id = "attr1"
+        attribute_option_id = "opt1"
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user, attribute_data={
+            attribute_json_id: attribute_option_id,
+        })
+        updated_option_id = "opt2"
+        audit_store.set_attribute_data(attribute_json_id, updated_option_id)
+        expect(audit_store.attribute_data).to(have_key(attribute_json_id, updated_option_id))
