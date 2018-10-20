@@ -13,6 +13,7 @@ from audit.models import AuditCycle
 from kronos.exceptions import ObjectNotFound, AppLogicError
 import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
+from audit.service import report_attribute_service
 
 def find_by_id(audit_store_id):
     try:
@@ -101,6 +102,16 @@ def find_for_post_reminder():
         status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
 
+
+def set_report_attribute_value(audit_store_id, report_attribute_json_id, report_attribute_option_id):
+    audit_store = find_by_id(audit_store_id)
+    report_attribute = report_attribute_service.find_report_attribute_by_audit_cycle_id_and_json_id(audit_store.audit.audit_cycle.id, report_attribute_json_id)
+
+    if report_attribute.option_exists(report_attribute_option_id):
+        audit_store.set_attribute_data(report_attribute.json_id, report_attribute_option_id)
+        return audit_store
+    else:
+        raise AppLogicError("invalid report_attribute option id")
 
 def save(audit_store):
     AuditStore.save(audit_store)

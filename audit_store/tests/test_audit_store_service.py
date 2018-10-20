@@ -2,18 +2,18 @@ from datetime import date
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
-from expects import expect, equal
+from expects import expect, equal, have_key
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
-from kronos.exceptions import AppLogicError
+from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from questionnaire.models import Question
 from auditor.models import ProfileInfo
 from audit_store import service
-from audit.models import AuditCycle, Audit
+from audit.models import AuditCycle, Audit, ReportAttribute
 from audit_store.models import AuditStore
 
 
@@ -234,3 +234,70 @@ class AuditStoreServiceTestCase(TestCase):
             expect(audit_store.status).to(equal(AuditStore.ACCEPTED))
             expect(audit_store.payments.count()).to(equal(1))
             expect(audit_store.payments.first().amount).to(equal(7000))
+
+    def test_set_report_attribute_value_sets_attribute_value(self):
+        audit_cycle = mommy.make(AuditCycle)
+        selected_option_id = "one"
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": selected_option_id,
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "two",
+                    "option_label": "label2"
+                },
+            ],
+        }
+
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_cycle, attribute_data=attribute_data)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user=self.auditor_user, status=AuditStore.SUBMITTED)
+        report = service.set_report_attribute_value(audit_store.id, report_attribute.json_id, selected_option_id)
+        expect(report.attribute_data).to(have_key(report_attribute.json_id, selected_option_id))
+
+    def test_set_report_attribute_value_raises_when_json_id_is_not_in_the_audit_cycle(self):
+        audit_cycle = mommy.make(AuditCycle)
+        selected_option_id = "one"
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": selected_option_id,
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "two",
+                    "option_label": "label2"
+                },
+            ],
+        }
+
+        report_attribute = mommy.make(ReportAttribute, attribute_data=attribute_data)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user=self.auditor_user, status=AuditStore.SUBMITTED)
+        with self.assertRaises(ObjectNotFound):
+            service.set_report_attribute_value(audit_store.id, report_attribute.json_id, selected_option_id)
+
+    def test_set_report_attribute_value_raises_when_option_id_is_not_valid(self):
+        audit_cycle = mommy.make(AuditCycle)
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": "one",
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "two",
+                    "option_label": "label2"
+                },
+            ],
+        }
+
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_cycle, attribute_data=attribute_data)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user=self.auditor_user,
+                                 status=AuditStore.SUBMITTED)
+        with self.assertRaisesRegex(AppLogicError, "invalid report_attribute option id"):
+            service.set_report_attribute_value(audit_store.id, report_attribute.json_id, "foobar")
+
