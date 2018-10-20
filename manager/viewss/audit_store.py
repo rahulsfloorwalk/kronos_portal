@@ -108,6 +108,27 @@ class AuditStoreIdQARatingView(APIView):
         audit_store.rate(ds.validated_data['qa_rating'])
         return Response(AuditStoreSerializer(audit_store).data)
 
+class AuditStoreIdReportAttributeView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        json_id = serializers.CharField()
+        option_id = serializers.CharField()
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = service_manager.set_report_attribute_value(
+            audit_store_id,
+            ds.validated_data["json_id"],
+            ds.validated_data["option_id"],
+            request.user.id,
+        )
+        return Response(AuditStoreSerializer(audit_store).data)
+
 class AuditStoreIdWithdrawView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

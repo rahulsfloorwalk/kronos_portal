@@ -6,11 +6,11 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.test import APITestCase
 
 from model_mommy import mommy
-from expects import expect, equal
+from expects import expect, equal, have_key, have_property
 
 from faker import Faker
 
-from audit.models import Audit, AuditCycle
+from audit.models import Audit, AuditCycle, ReportAttribute
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
@@ -529,3 +529,85 @@ class AcceptAllCompletedForAuditCycleTestCase(APITestCase):
         expect(response.status_code).to(equal(200))
         expect(response.data).to(equal(5))
 
+class AuditStoreIdReportAttributeViewTestCase(APITestCase):
+    fixtures = ['groups']
+
+    url_name = 'manager:audit_store_id_report_attribute_view'
+
+    def setUp(self):
+        self.email = fake.email()
+        self.password = fake.password()
+
+        self.auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
+                                       groups=[self.manager_group])
+        self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
+                                       groups=[self.auditor_group])
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+
+        self.attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": "one",
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "two",
+                    "option_label": "label2"
+                },
+            ],
+        }
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_post_sets_report_attribute_value(self):
+        selected_option_id = self.attribute_data["options"][0]["option_id"]
+
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle, attribute_data=self.attribute_data)
+        self.login()
+
+        response = self.client.post(reverse(self.url_name, kwargs={
+            'audit_store_id': audit_store.id
+        }), {
+            "json_id": report_attribute.json_id,
+            "option_id": selected_option_id,
+        })
+
+        expect(response).to(have_property("status_code", 200))
+        expect(response.data).to(have_key("attribute_data", {
+            report_attribute.json_id: selected_option_id,
+        }))
+
+    def test_post_returns_400_when_option_id_is_not_valid(self):
+
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle, attribute_data=self.attribute_data)
+        self.login()
+
+        response = self.client.post(reverse(self.url_name, kwargs={
+            'audit_store_id': audit_store.id
+        }), {
+            "json_id": report_attribute.json_id,
+            "option_id": "foobar",
+        })
+
+        expect(response).to(have_property("status_code", 400))
+
+    def test_post_returns_404_when_json_id_does_not_exist(self):
+
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle, attribute_data=self.attribute_data)
+        self.login()
+
+        response = self.client.post(reverse(self.url_name, kwargs={
+            'audit_store_id': audit_store.id
+        }), {
+            "json_id": "foobar",
+            "option_id": "foobazz",
+        })
+
+        expect(response).to(have_property("status_code", 404))
