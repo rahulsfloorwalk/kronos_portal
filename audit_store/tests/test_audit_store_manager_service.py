@@ -1,4 +1,5 @@
 from model_mommy import mommy
+from expects import expect, have_key
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
@@ -7,7 +8,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo
-from audit.models import AuditCycle
+from audit.models import AuditCycle, ReportAttribute
 
 from audit_store import service_manager
 
@@ -165,3 +166,45 @@ class AuditStoreManagerServiceTestCase(TestCase):
         audit_store = service_manager.set_earnings_per_audit(audit_store.id, 2000, self.manager_user.id)
         self.assertEqual(audit_store.earnings_per_audit, 2000)
 
+    def test_set_report_attribute_value_sets_attribute_option_when_report_is_editable(self):
+        selected_option_id = "opt1"
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": selected_option_id,
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "opt2",
+                    "option_label": "label2"
+                },
+            ],
+        }
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle,
+                                      attribute_data=attribute_data)
+
+        saved_audit_store = service_manager.set_report_attribute_value(audit_store.id, report_attribute.json_id, selected_option_id,
+                                                       self.manager_user.id)
+        expect(saved_audit_store.attribute_data).to(have_key(report_attribute.json_id, selected_option_id))
+
+    def test_set_report_attribute_value_raises_when_report_is_not_editable(self):
+        selected_option_id = "opt1"
+        attribute_data = {
+            "version": 1,
+            "options": [
+                {
+                    "option_id": selected_option_id,
+                    "option_label": "label1"
+                },
+                {
+                    "option_id": "opt2",
+                    "option_label": "label2"
+                },
+            ],
+        }
+        audit_store = mommy.make(AuditStore, status=AuditStore.COMPLETED, user=self.auditor_user)
+        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle, attribute_data=attribute_data)
+        with self.assertRaisesRegex(AppLogicError, "cannot set report attribute now"):
+            service_manager.set_report_attribute_value(audit_store.id, report_attribute.json_id, selected_option_id, self.manager_user.id)

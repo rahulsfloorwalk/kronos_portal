@@ -2,6 +2,17 @@ from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import manager as manager_service
 
+
+def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    manager_service.find_manager_by_user_id(user_id)
+
+    if audit_store.is_editable_by_manager():
+        return audit_store_service.set_report_attribute_value(audit_store.id, json_id, option_id)
+    else:
+        raise AppLogicError("cannot set report attribute now")
+
+
 def set_reimbursement(audit_store_id, reimbursement, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     manager_service.find_manager_by_user_id(user_id)
