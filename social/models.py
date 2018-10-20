@@ -10,7 +10,7 @@ class Facebook(Model):
     id = AutoField(db_column='id', primary_key=True)
     facebook_id = CharField(db_column="facebook_id", max_length=64, blank=True, null=True)
     access_token = CharField(db_column="access_token", max_length=1024, blank=True, null=True)
-    profile_data = JSONField(db_column='profile_data', default=dict(), blank=True, null=True)
+    profile_data = JSONField(db_column='profile_data', default=dict, blank=True, null=True)
     created_date = DateTimeField(auto_now_add=True)
     modified_date = DateTimeField(auto_now=True)
     is_verified = BooleanField(db_column='is_verified', default=False, null=False, blank=False)
@@ -36,7 +36,7 @@ class TwitterFeed(Model):
     tweet_created_on = DateTimeField(auto_now=False)
     sentiment_score = FloatField(db_column="sentiment_score")
     sentiment_text = CharField(db_column="sentiment_text", max_length=100, blank=False, null=False)
-    tweet_data = JSONField(db_column='tweet_data', default=dict(), blank=False)
+    tweet_data = JSONField(db_column='tweet_data', default=dict, blank=False)
     twitter_handle = ForeignKey(TwitterHandle, related_name='twitter_feeds', db_column='twitter_handle_id', blank=False, on_delete=PROTECT)
 
     def __str__(self):

@@ -58,7 +58,7 @@ class Store(Model):
     city = ForeignKey('manager.City', db_column='city_id', null=True, on_delete=PROTECT)
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
     phone = CharField(db_column='phone', max_length=100, blank=True)
-    extra_data = JSONField(db_column='extra_data', default=dict(), blank=False)
+    extra_data = JSONField(db_column='extra_data', default=dict, blank=False)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)

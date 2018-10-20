@@ -61,7 +61,7 @@ class Question(Model):
     section = ForeignKey(Section, related_name='questions', db_column='section_id', blank=False, on_delete=PROTECT)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
     question_type = CharField(db_column='question_type', max_length=20, choices=QUESTION_TYPE, default=PLAIN, blank=False)
-    question_data = JSONField(db_column='question_data', default=dict(), blank=False)
+    question_data = JSONField(db_column='question_data', default=dict, blank=False)
 
     def clean(self):
         if self.question_type == self.MUTEX:
