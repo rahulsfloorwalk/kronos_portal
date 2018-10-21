@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreReportAttributeRow/> renders blank option label when option id is not selected 1`] = `
+<tr>
+  <td>
+    Label 1
+  </td>
+  <td>
+    
+  </td>
+</tr>
+`;
+
+exports[`<AuditStoreReportAttributeRow/> renders the selected option label correctly 1`] = `
+<tr>
+  <td>
+    Label 1
+  </td>
+  <td>
+    Option Label 1
+  </td>
+</tr>
+`;
