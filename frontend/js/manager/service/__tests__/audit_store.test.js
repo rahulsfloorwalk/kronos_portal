@@ -1,4 +1,4 @@
-import { rate, setReimbursement, setEarningsPerAudit } from "../../../manager/service/audit_store";
+import { rate, setReimbursement, setEarningsPerAudit, setReportAttributeValue } from "../../../manager/service/audit_store";
 
 jest.mock("jquery", () => ({
 	ajax: jest.fn(),
@@ -34,5 +34,15 @@ describe("setEarningsPerAudit", () => {
 		expect($.ajax.mock.calls[0][0].contentType).toBe("application/json");
 		expect($.ajax.mock.calls[0][0].url).toBe("/manager/audit_store/5/earnings_per_audit");
 		expect($.ajax.mock.calls[0][0].data).toBe("{\"earnings_per_audit\":2000}");
+	});
+});
+
+describe("setReportAttributeValue", () => {
+	it("calls the url to set attribute option value for a report", () => {
+		setReportAttributeValue(5, "attr1", "opt1");
+		expect($.ajax.mock.calls[0][0].method).toBe("POST");
+		expect($.ajax.mock.calls[0][0].contentType).toBe("application/json");
+		expect($.ajax.mock.calls[0][0].url).toBe("/manager/audit_store/5/report_attribute");
+		expect($.ajax.mock.calls[0][0].data).toBe("{\"json_id\":\"attr1\",\"option_id\":\"opt1\"}");
 	});
 });

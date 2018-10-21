@@ -34,6 +34,18 @@ export function setReimbursement(audit_store_id, reimbursement){
 	});
 }
 
+export function setReportAttributeValue(audit_store_id, attribute_json_id, attribute_option_id){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/report_attribute`,
+		method: "POST",
+		data: JSON.stringify({
+			json_id: attribute_json_id,
+			option_id: attribute_option_id,
+		}),
+		contentType: "application/json",
+	});
+}
+
 export function setEarningsPerAudit(audit_store_id, earnings_per_audit){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/earnings_per_audit`,
