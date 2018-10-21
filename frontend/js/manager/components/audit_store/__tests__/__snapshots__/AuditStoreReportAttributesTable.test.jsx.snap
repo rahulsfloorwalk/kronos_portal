@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditStoreReportAttributesTable/> renders the report attributes in a table 1`] = `
+<tbody>
+  <tr>
+    <td>
+      Label One
+    </td>
+    <td>
+      Option Label 1
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Label Two
+    </td>
+    <td>
+      
+    </td>
+  </tr>
+</tbody>
+`;
