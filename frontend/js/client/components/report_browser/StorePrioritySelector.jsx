@@ -33,7 +33,7 @@ export class StorePrioritySelector extends React.Component {
 
 const mapStateToProps = (state) => ({
 	storePriorities: reportBrowserSelectors.findStorePrioritiesBySelectedAuditCycle(state),
-	selectedPriority: reportBrowserSelectors.findSelectedStorePriority(state),
+	selectedStorePriority: reportBrowserSelectors.findSelectedStorePriority(state),
 });
 
 export default connect(mapStateToProps, {

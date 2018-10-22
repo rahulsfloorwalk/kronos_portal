@@ -35,7 +35,7 @@ export default (state=initialState, action) => {
 		});
 	case SELECT_PRIORITY:
 		return Object.assign({}, state, {
-			selectedPriority: action.selectedStorePriority,
+			selectedStorePriority: action.selectedStorePriority,
 		});
 	case SELECT_START_DATE:
 		return Object.assign({}, state, {
@@ -86,10 +86,10 @@ export function selectStoreType(selectedStoreType){
 	};
 }
 
-export function selectPriority(selectedPriority){
+export function selectPriority(selectedStorePriority){
 	return {
 		type: SELECT_PRIORITY,
-		selectedPriority,
+		selectedStorePriority,
 	};
 }
 

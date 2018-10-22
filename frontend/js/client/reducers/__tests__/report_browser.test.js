@@ -95,7 +95,7 @@ describe("reportBrowserReducer", () => {
 				type: SELECT_PRIORITY,
 				selectedStorePriority: "HIGH",
 			});
-			expect(reports.selectedPriority).toEqual("HIGH");
+			expect(reports.selectedStorePriority).toEqual("HIGH");
 		});
 	});
 
@@ -161,7 +161,7 @@ describe(selectPriority, () => {
 
 		expect(action).toEqual({
 			type: SELECT_PRIORITY,
-			selectedPriority: priority,
+			selectedStorePriority: priority,
 		});
 	});
 });
