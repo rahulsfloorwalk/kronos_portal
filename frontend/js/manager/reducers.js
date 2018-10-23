@@ -19,6 +19,7 @@ var initialStore = {
 	reportSections: {},
 	clientUsers: {},
 	clientUserStoreVisibility: {},
+	reportAttributes: {},
 	errors: {},
 	forms: {
 		client: {
@@ -743,6 +744,13 @@ export function rootReducer(store = initialStore, action) {
 				errors: action.errors
 			});
 		}
+		break;
+	case types.REPORT_ATTRIBUTE_GET:
+		return Object.assign({}, store, {
+			reportAttributes: Object.assign({}, store.reportAttributes, {
+				[action.auditCycleId]: action.reportAttributes,
+			}),
+		});
 	}
 	console.warn("WARNING: default case encountered for action: %O", action);
 	return store;
