@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 from django.forms import Textarea
 
-from .models import AuditCycle, Audit
+from .models import AuditCycle, Audit, ReportAttribute
 
 
 class AuditCycleAdmin(ModelAdmin):
@@ -19,6 +19,11 @@ class AuditAdmin(ModelAdmin):
     list_filter = ('audit_cycle',)
 
 
+class ReportAttributeAdmin(ModelAdmin):
+    list_filter = ('audit_cycle',)
+
+
 # Register your models here.
 admin.site.register(AuditCycle, AuditCycleAdmin)
 admin.site.register(Audit, AuditAdmin)
+admin.site.register(ReportAttribute, ReportAttributeAdmin)
