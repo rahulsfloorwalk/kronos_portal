@@ -18,7 +18,7 @@ export default class AuditStoreReportAttributeRow extends React.Component {
 
 		return(
 			<tr>
-				<td>{this.props.reportAttribute.label}</td>
+				<td className="text-right">{this.props.reportAttribute.label}:</td>
 				<td>{optionLabel}</td>
 			</tr>
 		);

@@ -2,8 +2,11 @@
 
 exports[`<AuditStoreReportAttributeRow/> renders blank option label when option id is not selected 1`] = `
 <tr>
-  <td>
+  <td
+    className="text-right"
+  >
     Label 1
+    :
   </td>
   <td>
     
@@ -13,8 +16,11 @@ exports[`<AuditStoreReportAttributeRow/> renders blank option label when option 
 
 exports[`<AuditStoreReportAttributeRow/> renders the selected option label correctly 1`] = `
 <tr>
-  <td>
+  <td
+    className="text-right"
+  >
     Label 1
+    :
   </td>
   <td>
     Option Label 1
