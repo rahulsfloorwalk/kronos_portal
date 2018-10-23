@@ -131,7 +131,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -249,6 +251,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -465,7 +468,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -581,6 +586,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -786,7 +792,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -902,6 +910,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -1118,7 +1127,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -1234,6 +1245,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -1457,7 +1469,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -1573,6 +1587,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -1778,7 +1793,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -1894,6 +1911,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -2120,7 +2138,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -2236,6 +2256,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -2452,7 +2473,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -2974,6 +2997,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -3193,7 +3217,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -3309,6 +3335,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -3525,7 +3552,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -4047,6 +4076,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"
@@ -4266,7 +4296,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
           >
             Type:
           </td>
-          <th />
+          <th>
+            Walk In
+          </th>
         </tr>
         <tr>
           <td
@@ -4382,6 +4414,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
           </th>
         </tr>
       </tbody>
+      <tbody />
     </table>
     <div
       className="panel-body"

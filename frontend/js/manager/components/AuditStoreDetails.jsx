@@ -36,6 +36,7 @@ import { getAuditType } from "../../utils.js";
 
 import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttributesTable.jsx";
 
 export class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -277,6 +278,7 @@ export class AuditStoreDetails extends React.Component{
 								</th>
 							</tr>
 						</tbody>
+						<AuditStoreReportAttributesTable auditStoreId={this.props.auditStore.id}/>
 					</table>
 					{detailsElement}
 					<div className="panel-footer text-right">

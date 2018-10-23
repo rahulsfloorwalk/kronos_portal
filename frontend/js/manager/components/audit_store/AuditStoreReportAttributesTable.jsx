@@ -1,9 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 
 import AuditStoreReportAttributeRow from "./AuditStoreReportAttributeRow.jsx";
 
 import {auditStorePropType, reportAttributePropType} from "../../prop_types";
+
+import { findAuditStoreById } from "../../selectors/audit_store";
+import { findReportAttributesByAuditStoreId } from "../../selectors/report_attribute";
+import { fetchReportAttributes } from "../../actions/report_attribute";
 
 
 export class AuditStoreReportAttributesTable extends React.Component {
@@ -38,3 +43,14 @@ export class AuditStoreReportAttributesTable extends React.Component {
 		);
 	}
 }
+
+const mapStateToProps = (state, ownProps) => {
+	return {
+		auditStore: findAuditStoreById(state, ownProps.auditStoreId),
+		reportAttributes: findReportAttributesByAuditStoreId(state, ownProps.auditStoreId),
+	};
+};
+
+export default connect(mapStateToProps, {
+	fetchReportAttributesByAuditCycleId: fetchReportAttributes,
+})(AuditStoreReportAttributesTable);

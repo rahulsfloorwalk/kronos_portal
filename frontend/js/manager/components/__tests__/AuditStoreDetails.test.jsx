@@ -38,6 +38,9 @@ describe("<AuditStoreDetails/>", () => {
 				auditStores: {
 					[sampleAuditStore.id]: sampleAuditStore,
 				},
+				reportAttributes: {
+					[sampleAuditStore.audit.audit_cycle.id]: [],
+				},
 			};
 		}),
 	};
@@ -58,8 +61,10 @@ describe("<AuditStoreDetails/>", () => {
 		audit: {
 			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",
 			audit_cycle: {
+				id: 453,
 				post_approval_description: "Conduct an Audit - Post Approval - Audit Cycle Description",
 				client: sampleClient,
+				type: "WALKIN",
 			},
 			store: {
 				name: "Store Name",
