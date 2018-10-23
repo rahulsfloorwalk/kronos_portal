@@ -11,7 +11,22 @@ export class AuditStoreReportAttributesTable extends React.Component {
 		auditStoreId: PropTypes.number.isRequired,
 		auditStore: auditStorePropType,
 		reportAttributes: PropTypes.arrayOf(reportAttributePropType),
+
+		fetchReportAttributesByAuditCycleId: PropTypes.func.isRequired,
 	};
+
+	componentDidMount() {
+		if(this.props.auditStore){
+			this.props.fetchReportAttributesByAuditCycleId(this.props.auditStore.audit.audit_cycle.id);
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.auditStore !== this.props.auditStore){
+			nextProps.fetchReportAttributesByAuditCycleId(nextProps.auditStore.audit.audit_cycle.id);
+		}
+	}
+
 	render(){
 		const reportAttributeRows = this.props.reportAttributes.map(ra => <AuditStoreReportAttributeRow
 			key={ra.id} reportAttribute={ra} selectedOptionId={this.props.auditStore.attribute_data[ra.json_id]}
