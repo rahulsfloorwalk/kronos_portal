@@ -1,5 +1,9 @@
 
-import { findReportAttributesByAuditCycleId, findReportAttributesByAuditStoreId } from "../report_attribute";
+import {
+	findReportAttributesByAuditCycleId,
+	findReportAttributesByAuditStoreId,
+	findReportAttributeByAuditStoreIdAndJsonId,
+} from "../report_attribute";
 
 const sampleAuditCycle = {
 	id: 7,
@@ -18,14 +22,17 @@ const sampleReportAttributes = [
 	{
 		id: 7,
 		label: "Kururugi",
+		json_id: "foobar1",
 	},
 	{
 		id: 8,
 		label: "Shirley",
+		json_id: "foobar2",
 	},
 	{
 		id: 9,
 		label: "Euphemia",
+		json_id: "foobar3",
 	},
 ];
 
@@ -70,3 +77,40 @@ describe(findReportAttributesByAuditStoreId, () => {
 		expect(findReportAttributesByAuditStoreId(sampleStore, 5)).toEqual([]);
 	});
 });
+
+describe(findReportAttributeByAuditStoreIdAndJsonId, () => {
+	it("should return the report attribute with the given audit store id and json id", () => {
+		const sampleStore = {
+			auditStores: {
+				[sampleAuditStore.id]: sampleAuditStore,
+			},
+			reportAttributes: {
+				[sampleAuditCycle.id]: sampleReportAttributes,
+			},
+		};
+		expect(findReportAttributeByAuditStoreIdAndJsonId(sampleStore, sampleAuditStore.id, "foobar1")).toEqual(sampleReportAttributes[0]);
+	});
+
+	it("should return undefined when there is no report attribute with the given audit store id and json id", () => {
+		const sampleStore = {
+			auditStores: {
+				[sampleAuditStore.id]: sampleAuditStore,
+			},
+			reportAttributes: {
+				[sampleAuditCycle.id]: sampleReportAttributes,
+			},
+		};
+		expect(findReportAttributeByAuditStoreIdAndJsonId(sampleStore, sampleAuditStore.id, "foobar4")).toEqual(undefined);
+	});
+
+	it("should return undefined when there is no audit store with the given id", () => {
+		const sampleStore = {
+			auditStores: {},
+			reportAttributes: {
+				[sampleAuditCycle.id]: sampleReportAttributes,
+			},
+		};
+		expect(findReportAttributeByAuditStoreIdAndJsonId(sampleStore, 4, "foobar4")).toEqual(undefined);
+	});
+});
+
