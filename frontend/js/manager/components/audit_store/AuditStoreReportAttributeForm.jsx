@@ -35,12 +35,12 @@ export class AuditStoreReportAttributeForm extends React.Component {
 		this.setState({
 			optionId: e.target.value,
 		});
-	}
+	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.props.onSubmit(this.props.auditStore.id, this.props.reportAttribute.json_id, this.state.optionId).then(this.props.onClose);
-	}
+	};
 
 	render(){
 		const modalTitle = `Set ${this.props.reportAttribute.label}`;
