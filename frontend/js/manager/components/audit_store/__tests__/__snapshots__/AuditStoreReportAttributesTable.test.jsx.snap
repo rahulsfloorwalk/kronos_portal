@@ -11,6 +11,14 @@ exports[`<AuditStoreReportAttributesTable/> renders the report attributes in a t
     </td>
     <td>
       Option Label 1
+       (
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        change
+      </a>
+      )
     </td>
   </tr>
   <tr>
@@ -22,6 +30,14 @@ exports[`<AuditStoreReportAttributesTable/> renders the report attributes in a t
     </td>
     <td>
       
+       (
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        change
+      </a>
+      )
     </td>
   </tr>
 </tbody>

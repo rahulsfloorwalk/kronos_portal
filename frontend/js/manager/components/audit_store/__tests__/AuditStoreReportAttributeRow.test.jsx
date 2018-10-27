@@ -27,6 +27,7 @@ describe("<AuditStoreReportAttributeRow/>", () => {
 		const r = renderer.create(<AuditStoreReportAttributeRow
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={sampleReportAttribute.attribute_data.options[0].option_id}
+			auditStoreId={1}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
@@ -35,6 +36,7 @@ describe("<AuditStoreReportAttributeRow/>", () => {
 		const r = renderer.create(<AuditStoreReportAttributeRow
 			selectedOptionId={undefined}
 			reportAttribute={sampleReportAttribute}
+			auditStoreId={1}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});

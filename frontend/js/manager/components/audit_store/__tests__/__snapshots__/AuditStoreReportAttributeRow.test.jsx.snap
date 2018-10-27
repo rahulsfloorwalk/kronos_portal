@@ -10,6 +10,14 @@ exports[`<AuditStoreReportAttributeRow/> renders blank option label when option 
   </td>
   <td>
     
+     (
+    <a
+      onClick={[Function]}
+      style={Object {}}
+    >
+      change
+    </a>
+    )
   </td>
 </tr>
 `;
@@ -24,6 +32,14 @@ exports[`<AuditStoreReportAttributeRow/> renders the selected option label corre
   </td>
   <td>
     Option Label 1
+     (
+    <a
+      onClick={[Function]}
+      style={Object {}}
+    >
+      change
+    </a>
+    )
   </td>
 </tr>
 `;
