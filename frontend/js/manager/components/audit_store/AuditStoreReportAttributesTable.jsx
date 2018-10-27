@@ -35,6 +35,7 @@ export class AuditStoreReportAttributesTable extends React.Component {
 	render(){
 		const reportAttributeRows = this.props.reportAttributes.map(ra => <AuditStoreReportAttributeRow
 			key={ra.id} reportAttribute={ra} selectedOptionId={this.props.auditStore.attribute_data[ra.json_id]}
+			auditStoreId={this.props.auditStoreId}
 		/>);
 		return(
 			<tbody>
