@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 import types from "../action_types.js";
-import { findAuditStoresByAuditCycle } from "../service/audit_store.js";
+import * as service from "../service/audit_store.js";
 
 export function fetchAuditStores(auditCycleId){
 	return function(dispatch){
@@ -11,7 +11,7 @@ export function fetchAuditStores(auditCycleId){
 			auditCycleId
 		});
 
-		return findAuditStoresByAuditCycle(auditCycleId).then(function(auditStores){
+		return service.findAuditStoresByAuditCycle(auditCycleId).then(function(auditStores){
 			dispatch({
 				type: types.AUDIT_STORE_GET,
 				status: "success",
@@ -281,5 +281,14 @@ export function updateAuditStore(auditStore){
 		type: types.AUDIT_STORE_UPDATED,
 		status: "success",
 		auditStore
+	};
+}
+
+
+export function setReportAttributeValue(auditStoreId, reportAttributeJsonId, optionId){
+	return (dispatch) => {
+		return service.setReportAttributeValue(auditStoreId, reportAttributeJsonId, optionId).then((auditStore) => {
+			dispatch(updateAuditStore(auditStore));
+		});
 	};
 }

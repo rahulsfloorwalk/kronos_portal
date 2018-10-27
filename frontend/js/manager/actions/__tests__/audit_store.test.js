@@ -1,5 +1,8 @@
-import { qaOkAuditStore, pmRevertAuditStore, acceptAuditStore } from "../../../manager/actions/audit_store";
+import { qaOkAuditStore, pmRevertAuditStore, acceptAuditStore, setReportAttributeValue } from "../../../manager/actions/audit_store";
 import types from "../../../manager/action_types";
+import * as service from "../../service/audit_store";
+
+jest.mock("../../service/audit_store");
 
 jest.mock("jquery", () => ({
 	ajax: jest.fn(),
@@ -197,6 +200,41 @@ describe("acceptAuditStore", () => {
 				type: types.AUDIT_STORE_ID_ACCEPT,
 				status: "error",
 				errors: sampleServerError,
+			});
+			done();
+		});
+	});
+});
+
+describe(setReportAttributeValue, () => {
+	const sampleAuditStore = {
+		id: 5,
+		audit_date: "2018-07-02",
+	};
+	it("returns a thunk that calls the service with the audit store id, json id and option id", () => {
+		service.setReportAttributeValue.mockResolvedValue(sampleAuditStore);
+		const dispatch = jest.fn();
+		const sampleJsonId = "foobar1";
+		const sampleOptionId = "opt1";
+
+		const thunk = setReportAttributeValue(sampleAuditStore.id, sampleJsonId, sampleOptionId);
+		thunk(dispatch);
+
+		expect(service.setReportAttributeValue).toBeCalledWith(sampleAuditStore.id, sampleJsonId, sampleOptionId);
+	});
+	it("dispatches an action when server returns an updated audit store successfully", (done) => {
+		service.setReportAttributeValue.mockResolvedValue(sampleAuditStore);
+		const dispatch = jest.fn();
+		const sampleJsonId = "foobar1";
+		const sampleOptionId = "opt1";
+
+		const thunk = setReportAttributeValue(sampleAuditStore.id, sampleJsonId, sampleOptionId);
+		thunk(dispatch);
+		setTimeout(() => {
+			expect(dispatch).lastCalledWith({
+				type: types.AUDIT_STORE_UPDATED,
+				status: "success",
+				auditStore: sampleAuditStore,
 			});
 			done();
 		});
