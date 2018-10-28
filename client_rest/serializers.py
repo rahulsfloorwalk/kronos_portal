@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
 
-from audit.models import Audit, AuditCycle
+from audit.models import Audit, AuditCycle, ReportAttribute
 from audit_store.models import AuditStore
 from client.models import Client, Store, ClientUser
 from manager.models import City
@@ -224,5 +224,18 @@ class TwitterFeedSerializer(ModelSerializer):
             'tweet_created_on',
             'sentiment_score',
             'sentiment_text'
+        )
+        read_only_fields = fields
+
+
+class ReportAttributeSerializer(ModelSerializer):
+    class Meta:
+        model = ReportAttribute
+        fields = (
+            'id',
+            'json_id',
+            'label',
+            'audit_cycle_id',
+            'attribute_data',
         )
         read_only_fields = fields

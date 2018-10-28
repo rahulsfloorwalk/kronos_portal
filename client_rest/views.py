@@ -22,6 +22,7 @@ import attachment.service_client as attachment_client_service
 
 import audit.service.audit_cycle as audit_cycle_service
 from audit.service import audit_cycle_client_service
+from audit.service import report_attribute_client_service
 
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
@@ -37,6 +38,7 @@ from social.service import twitter_client
 from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
+from .serializers import ReportAttributeSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -253,6 +255,15 @@ class AuditCycleView(APIView):
     def get(self, request, format=None):
         audit_cycles = audit_cycle_client_service.find_all_for_clientuser(request.user.id)
         return Response(audit_cycles)
+
+class ReportAttributeByAuditCycleView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        report_attributes = report_attribute_client_service.find_report_attributes_by_audit_cycle_id_for_client(audit_cycle_id, request.user.id)
+        return Response(ReportAttributeSerializer(report_attributes, many=True).data)
 
 class AuditCycleByTypeView(APIView):
     permission_classes = [HasGroupPermission]

@@ -1,3 +1,5 @@
+from kronos.exceptions import ObjectNotFound
+
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 
@@ -12,6 +14,15 @@ def find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id):
             questionnaire_type_id=questionnaire_type_id
         ) \
         .order_by('-end_date')
+
+
+def find_audit_cycle_by_id_for_clientuser(audit_cycle_id, user_id):
+    user = find_clientuser_by_user_id(user_id)
+    try:
+        return AuditCycle.objects.get(pk=audit_cycle_id, client=user.clientuser.client)
+    except AuditCycle.DoesNotExist as e:
+        raise ObjectNotFound from e
+
 
 def find_all_for_clientuser(user_id):
     user = find_clientuser_by_user_id(user_id)

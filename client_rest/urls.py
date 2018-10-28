@@ -38,6 +38,7 @@ urlpatterns = ([
     url(r'user$', views.ClientUserView.as_view(), name='client_user_view'),
     url(r'audit_cycle$', views.AuditCycleView.as_view(), name='audit_cycle_view'),
     url(r'audit_cycle/(?P<audit_type>[A-Z_]+)$', views.AuditCycleByTypeView.as_view(), name='audit_cycle_by_type_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', views.ReportAttributeByAuditCycleView.as_view(), name='report_attributes_by_audit_cycle_view'),
     url(r'audit_cycle/aggregation$', views.AuditCycleAggregate.as_view(), name='audit_cycle_aggregation'),
     url(r'questionnaire_types$', views.QuestionnaireTypesByClient.as_view(), name='questionnaire_types_by_client_view'),
     url(r'types$', views.AuditTypesByClient.as_view(), name='audit_types_by_client'),

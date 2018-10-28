@@ -12,6 +12,9 @@ import ReportBrowserSelectors from "./selectors/report_browser";
 import loadingReducer from "./reducers/loading";
 import LoadingSelectors from "./selectors/loading";
 
+import reportAttributeReducer from "./reducers/report_attribute";
+import ReportAttributeSelectors from "./selectors/report_attribute";
+
 const reducerMap = {};
 
 reducerMap["questionnaireType"] = questionnaireTypeReducer;
@@ -25,5 +28,8 @@ export const reportBrowserSelectors = new ReportBrowserSelectors("reportBrowser"
 
 reducerMap["loading"] = loadingReducer;
 export const loadingSelectors = new LoadingSelectors("loading");
+
+reducerMap["reportAttribute"] = reportAttributeReducer;
+export const reportAttributeSelectors = new ReportAttributeSelectors("reportAttribute");
 
 export default combineReducers(reducerMap);
