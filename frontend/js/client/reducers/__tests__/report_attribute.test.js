@@ -1,5 +1,8 @@
 import {FETCH_REPORT_ATTRIBUTES, SELECT_REPORT_ATTRIBUTE_OPTION} from "../../action_types";
-import reportAttributeReducer, { fetchReportAttributesByAuditCycleId } from "../report_attribute";
+import reportAttributeReducer, {
+	fetchReportAttributesByAuditCycleId,
+	selectReportAttributeOption
+} from "../report_attribute";
 
 const sampleAuditCycleId = 1;
 const sampleReportAttributes = [
@@ -99,6 +102,21 @@ describe("fetchReportAttributesByAuditCycleId", () => {
 			type: FETCH_REPORT_ATTRIBUTES,
 			reportAttributes: sampleReportAttributes,
 			auditCycleId: sampleAuditCycleId,
+		});
+	});
+});
+
+describe("selectReportAttributeOption", () => {
+	it("it returns an action to select a report attribute option by audit cycle id and json id", () => {
+		const sampleJsonId = "43j5hb4j35bh";
+		const sampleOptionId = "345jbkn453jbk";
+		const action = selectReportAttributeOption(sampleAuditCycleId, sampleJsonId, sampleOptionId);
+
+		expect(action).toEqual({
+			type: SELECT_REPORT_ATTRIBUTE_OPTION,
+			auditCycleId: sampleAuditCycleId,
+			jsonId: sampleJsonId,
+			optionId: sampleOptionId,
 		});
 	});
 });

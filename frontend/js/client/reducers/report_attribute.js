@@ -37,3 +37,12 @@ export function fetchReportAttributesByAuditCycleId(auditCycleId, reportAttribut
 	};
 }
 
+export function selectReportAttributeOption(auditCycleId, jsonId, optionId){
+	return {
+		type: SELECT_REPORT_ATTRIBUTE_OPTION,
+		auditCycleId,
+		jsonId,
+		optionId,
+	};
+}
+
