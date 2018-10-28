@@ -1,0 +1,85 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ReportAttributeFilter renders the selector with nothing selected 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+   
+  Label One
+  :
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value=""
+  >
+    <option
+      value=""
+    >
+      All Types
+    </option>
+    <option
+      value="option1"
+    >
+      Option Label 1
+    </option>
+    <option
+      value="option2"
+    >
+      Option Label 2
+    </option>
+  </select>
+</div>
+`;
+
+exports[`ReportAttributeFilter renders the selector with selected option_id 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+   
+  Label One
+  :
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value="option1"
+  >
+    <option
+      value=""
+    >
+      All Types
+    </option>
+    <option
+      value="option1"
+    >
+      Option Label 1
+    </option>
+    <option
+      value="option2"
+    >
+      Option Label 2
+    </option>
+  </select>
+</div>
+`;
