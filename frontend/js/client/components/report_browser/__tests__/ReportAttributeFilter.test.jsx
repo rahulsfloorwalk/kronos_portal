@@ -4,6 +4,7 @@ import renderer from "react-test-renderer";
 
 import { ReportAttributeFilter } from "../ReportAttributeFilter";
 
+const sampleAuditCycleId = 1;
 const sampleReportAttribute = {
 	id: 1,
 	json_id: "attribute1",
@@ -25,35 +26,38 @@ const sampleReportAttribute = {
 
 describe("ReportAttributeFilter", () => {
 	it("renders the selector with nothing selected", () => {
-		const onSelect = jest.fn();
+		const selectReportAttributeOption = jest.fn();
 		const r = renderer.create(<ReportAttributeFilter
-			onSelect={onSelect}
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={undefined}
+			auditCycleId={sampleAuditCycleId}
+			selectReportAttributeOption={selectReportAttributeOption}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
 	it("renders the selector with selected option_id", () => {
-		const onSelect = jest.fn();
+		const selectReportAttributeOption = jest.fn();
 		const r = renderer.create(<ReportAttributeFilter
-			onSelect={onSelect}
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={sampleReportAttribute.attribute_data.options[0].option_id}
+			auditCycleId={sampleAuditCycleId}
+			selectReportAttributeOption={selectReportAttributeOption}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
 	it("calls onSelect with the option_id when an option is selected", () => {
-		const onSelect = jest.fn();
+		const selectReportAttributeOption = jest.fn();
 		const r = shallow(<ReportAttributeFilter
-			onSelect={onSelect}
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={sampleReportAttribute.attribute_data.options[0].option_id}
+			auditCycleId={sampleAuditCycleId}
+			selectReportAttributeOption={selectReportAttributeOption}
 		/>);
 
 		const updatedOptionId = sampleReportAttribute.attribute_data.options[0].option_id;
 		r.find("select").simulate("change", { target: { value: updatedOptionId }});
-		expect(onSelect).toHaveBeenCalledWith(updatedOptionId);
+		expect(selectReportAttributeOption).toHaveBeenCalledWith(sampleAuditCycleId, sampleReportAttribute.json_id, updatedOptionId);
 	});
 });
