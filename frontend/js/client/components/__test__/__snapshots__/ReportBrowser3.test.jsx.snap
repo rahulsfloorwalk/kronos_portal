@@ -140,6 +140,52 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
      
     <Connect(EndDateSelector) />
      
+    <Connect(ReportAttributeFilter)
+      auditCycleId={129}
+      reportAttribute={
+        Object {
+          "attribute_data": Object {
+            "options": Array [
+              Object {
+                "option_id": "option1",
+                "option_label": "Option Label 1",
+              },
+              Object {
+                "option_id": "option2",
+                "option_label": "Option Label 2",
+              },
+            ],
+            "version": 1,
+          },
+          "id": 1,
+          "json_id": "attribute1",
+          "label": "Label One",
+        }
+      }
+    />
+    <Connect(ReportAttributeFilter)
+      auditCycleId={129}
+      reportAttribute={
+        Object {
+          "attribute_data": Object {
+            "options": Array [
+              Object {
+                "option_id": "option1",
+                "option_label": "Option Label 1",
+              },
+              Object {
+                "option_id": "option2",
+                "option_label": "Option Label 2",
+              },
+            ],
+            "version": 1,
+          },
+          "id": 2,
+          "json_id": "attribute2",
+          "label": "Label Two",
+        }
+      }
+    />
     <div
       className="btn-group pull-right"
     >

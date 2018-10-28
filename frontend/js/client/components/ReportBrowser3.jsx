@@ -20,8 +20,10 @@ import StoreTypeSelector from  "./report_browser/StoreTypeSelector.jsx";
 import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
 import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
 
-import { auditCycleSelectors, reportBrowserSelectors } from "../selectors";
+import { reportAttributePropType } from "../prop_types";
+import {auditCycleSelectors, reportAttributeSelectors, reportBrowserSelectors} from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
+import ReportAttributeFilter from "./report_browser/ReportAttributeFilter.jsx";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -35,6 +37,7 @@ export class ReportBrowser3 extends Component{
 		auditCycles: PropTypes.arrayOf(auditCyclePropType),
 		selectedAuditCycle: auditCyclePropType,
 		reports: PropTypes.array,
+		reportAttributes: PropTypes.arrayOf(reportAttributePropType),
 
 		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
 	};
@@ -52,11 +55,16 @@ export class ReportBrowser3 extends Component{
 	}
 
 	render(){
-		let table;
+		let table, reportAttributeFilters;
 		if(this.props.auditCycles.length === 0){
 			table = <Jumbotron heading="there are no reports here" para="yet"/>;
 		} else if(this.props.selectedAuditCycle){
 			table = <AuditStoreTable/>;
+			reportAttributeFilters = this.props.reportAttributes.map((ra) => <ReportAttributeFilter
+				key={ra.id}
+				auditCycleId={this.props.selectedAuditCycle.id}
+				reportAttribute={ra} />
+			);
 		} else {
 			table = <Loading/>;
 		}
@@ -71,6 +79,7 @@ export class ReportBrowser3 extends Component{
 					<StorePrioritySelector/>&nbsp;
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
+					{reportAttributeFilters}
 					<div className="btn-group pull-right">
 						&nbsp;Download:<br/>
 						<button className="btn btn-default"
@@ -96,6 +105,7 @@ const mapStateToProps = (state) => {
 		auditCycles: auditCycleSelectors.findAuditCyclesBySelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
 		reports: reportBrowserSelectors.filterReports(state),
+		reportAttributes: reportAttributeSelectors.findReportAttributesBySelectedAuditCycle(state),
 	};
 };
 

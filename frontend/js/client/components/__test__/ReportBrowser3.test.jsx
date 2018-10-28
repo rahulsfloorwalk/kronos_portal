@@ -39,7 +39,46 @@ const sampleReports = [
 	},
 ];
 
-describe(ReportBrowser3, () => {
+const sampleReportAttributes = [
+	{
+		id: 1,
+		json_id: "attribute1",
+		label: "Label One",
+		attribute_data: {
+			version: 1,
+			options: [
+				{
+					option_id: "option1",
+					option_label: "Option Label 1",
+				},
+				{
+					option_id: "option2",
+					option_label: "Option Label 2",
+				},
+			],
+		},
+	},
+	{
+		id: 2,
+		json_id: "attribute2",
+		label: "Label Two",
+		attribute_data: {
+			version: 1,
+			options: [
+				{
+					option_id: "option1",
+					option_label: "Option Label 1",
+				},
+				{
+					option_id: "option2",
+					option_label: "Option Label 2",
+				},
+			],
+		},
+	},
+];
+
+describe("ReportBrowser3", () => {
 	var renderer;
 	beforeEach(() => {
 		renderer = new ShallowRenderer();
@@ -51,6 +90,7 @@ describe(ReportBrowser3, () => {
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
+			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(fetchReportsByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
 	});
@@ -61,6 +101,7 @@ describe(ReportBrowser3, () => {
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
+			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(fetchReportsByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
 		r.setProps({
@@ -75,6 +116,7 @@ describe(ReportBrowser3, () => {
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
+			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(tree).toMatchSnapshot();
 	});
@@ -85,6 +127,7 @@ describe(ReportBrowser3, () => {
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={[]}
 			reports={[]}
+			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={undefined}/>);
 		expect(tree).toMatchSnapshot();
 	});
@@ -95,6 +138,7 @@ describe(ReportBrowser3, () => {
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={[]}
+			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={undefined}/>);
 		expect(tree).toMatchSnapshot();
 	});
