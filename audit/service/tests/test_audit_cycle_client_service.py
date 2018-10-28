@@ -6,9 +6,10 @@ from guardian.shortcuts import assign_perm
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
-from expects import expect, have_length, be_empty, contain_only
+from expects import expect, have_length, be_empty, contain_only, equal
 from faker import Faker
 
+from kronos.exceptions import ObjectNotFound
 from registration.models import GROUP_NAME_CLIENT
 from audit.models import AuditCycle
 from audit.service import audit_cycle_client_service
@@ -91,3 +92,14 @@ class AuditCycleClientServiceTestCase(TestCase):
 
         expect(audit_cycles).to(have_length(2))
         expect([ac["id"] for ac in audit_cycles]).to(contain_only(ac1.id, ac2.id))
+
+
+    def test_find_audit_cycle_by_id_for_clientuser_returns_audit_cycle_for_client(self):
+        expected_audit_cycle = mommy.make(AuditCycle, client=self.client)
+        actual_audit_cycle = audit_cycle_client_service.find_audit_cycle_by_id_for_clientuser(expected_audit_cycle.id, self.client_user.id)
+        expect(actual_audit_cycle).to(equal(expected_audit_cycle))
+
+    def test_find_by_audit_cyle_id_for_client_raises_when_audit_cycle_does_not_exist(self):
+        audit_cycle = mommy.make(AuditCycle)
+        with self.assertRaises(ObjectNotFound):
+            audit_cycle_client_service.find_audit_cycle_by_id_for_clientuser(audit_cycle.id, self.client_user.id)
