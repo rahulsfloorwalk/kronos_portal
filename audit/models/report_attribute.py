@@ -53,5 +53,8 @@ class ReportAttribute(Model):
     def option_exists(self, option_id):
         return option_id in [opt["option_id"] for opt in self.attribute_data["options"]]
 
+    def __str__(self):
+        return "id: {}".format(self.id)
+
     class Meta:
         unique_together = ('audit_cycle', 'json_id')
