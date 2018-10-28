@@ -1,7 +1,8 @@
 import { fetchAuditCycles, selectAuditCycle } from "../audit_cycle";
 import { FETCH_AUDIT_CYCLES, SELECT_AUDIT_CYCLE, RESET_FILTERS } from "../../action_types.js";
 import * as auditCycleService from "../../service/audit_cycle";
-
+import {fetchReportAttributesByAuditCycleId} from "../report_attribute";
+jest.mock("../report_attribute");
 jest.mock("../../service/audit_cycle");
 
 const sampleAuditCycles = [
@@ -41,7 +42,7 @@ describe(fetchAuditCycles, () => {
 	});
 });
 
-describe(selectAuditCycle, () => {
+describe("selectAuditCycle", () => {
 	it("it dispatches an action to select the given audit cycle", () => {
 		const auditCycleId = 5;
 		const dispatch = jest.fn();
@@ -60,9 +61,21 @@ describe(selectAuditCycle, () => {
 		const thunk = selectAuditCycle(auditCycleId);
 
 		thunk(dispatch);
-		expect(dispatch).lastCalledWith({
+		expect(dispatch).toBeCalledWith({
 			type: RESET_FILTERS,
 		});
+	});
+
+	it("it dispatches an action to fetch report attributes by audit cycle id", () => {
+		const expectedThunk = "foobar";
+		fetchReportAttributesByAuditCycleId.mockReturnValue(expectedThunk);
+		const auditCycleId = 5;
+		const dispatch = jest.fn();
+		const thunk = selectAuditCycle(auditCycleId);
+
+		thunk(dispatch);
+		expect(dispatch).lastCalledWith(expectedThunk);
+		expect(fetchReportAttributesByAuditCycleId).toBeCalledWith(auditCycleId);
 	});
 });
 
