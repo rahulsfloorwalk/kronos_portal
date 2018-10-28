@@ -1,5 +1,5 @@
-import { FETCH_REPORT_ATTRIBUTES } from "../../action_types";
-import { fetchReportAttributesByAuditCycleId } from "../report_attribute";
+import {FETCH_REPORT_ATTRIBUTES} from "../../action_types";
+import reportAttributeReducer, { fetchReportAttributesByAuditCycleId } from "../report_attribute";
 
 const sampleAuditCycleId = 1;
 const sampleReportAttributes = [
@@ -40,6 +40,31 @@ const sampleReportAttributes = [
 		},
 	},
 ];
+
+describe("reportAttributeReducer", () => {
+
+	it("gets the initial state", () => {
+		const reportAttributes = reportAttributeReducer(undefined, {});
+		expect(reportAttributes).toEqual({
+			reportAttributes: {},
+		});
+	});
+
+	describe(FETCH_REPORT_ATTRIBUTES, () => {
+		it("sets the reportAttributes", () => {
+			const reportAttributes = reportAttributeReducer(undefined, {
+				type: FETCH_REPORT_ATTRIBUTES,
+				reportAttributes: sampleReportAttributes,
+				auditCycleId: sampleAuditCycleId,
+			});
+			expect(reportAttributes).toEqual({
+				reportAttributes: {
+					[sampleAuditCycleId]: sampleReportAttributes
+				},
+			});
+		});
+	});
+});
 
 describe("fetchReportAttributesByAuditCycleId", () => {
 	it("it returns an action to fetch report attributes by audit cycle id", () => {
