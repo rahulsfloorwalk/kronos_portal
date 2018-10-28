@@ -93,4 +93,35 @@ describe("ReportAttributeSelectors", () => {
 			expect(selectors.findSelectedOptionIdByAuditCycleIdAndJsonId(sampleStore, sampleAuditCycleId, "3465dsf345")).toBeUndefined();
 		});
 	});
+
+	describe("findReportAttributesBySelectedAuditCycle", () => {
+		let auditCycleSelectors;
+
+		beforeEach(() => {
+			auditCycleSelectors = {
+				findSelectedAuditCycleBySelectedQuestionnaireType: jest.fn(),
+			};
+		});
+		const sampleJsonId = "4h43345kjj43n5n";
+		const sampleOptionId = "87v4v3nbhjvhbf";
+		const selectedOptionIds = {
+			[sampleAuditCycleId]: {
+				[sampleJsonId]: sampleOptionId,
+			}
+		};
+
+		it("should return the report attributes for the selected audit cycle", () => {
+			auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType.mockReturnValue({id: sampleAuditCycleId});
+			const selectors = new ReportAttributeSelectors(namespace, auditCycleSelectors);
+			const sampleStore = createSampleStore(namespace, sampleAuditCycleId, sampleReportAttributes, selectedOptionIds);
+			expect(selectors.findReportAttributesBySelectedAuditCycle(sampleStore)).toEqual(sampleReportAttributes);
+		});
+
+		it("should return empty array if there are no report attributes for the selected audit cycle", () => {
+			auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType.mockReturnValue({id: 50});
+			const selectors = new ReportAttributeSelectors(namespace, auditCycleSelectors);
+			const sampleStore = createSampleStore(namespace, sampleAuditCycleId, sampleReportAttributes, sampleReportAttributes);
+			expect(selectors.findReportAttributesBySelectedAuditCycle(sampleStore)).toEqual([]);
+		});
+	});
 });

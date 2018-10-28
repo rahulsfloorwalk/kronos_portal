@@ -30,6 +30,6 @@ reducerMap["loading"] = loadingReducer;
 export const loadingSelectors = new LoadingSelectors("loading");
 
 reducerMap["reportAttribute"] = reportAttributeReducer;
-export const reportAttributeSelectors = new ReportAttributeSelectors("reportAttribute");
+export const reportAttributeSelectors = new ReportAttributeSelectors("reportAttribute", auditCycleSelectors);
 
 export default combineReducers(reducerMap);
