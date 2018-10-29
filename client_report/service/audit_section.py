@@ -203,6 +203,7 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
             'store_code': audit_store.audit.store.code,
             'store_type': audit_store.audit.store.type,
             'store_priority': audit_store.audit.store.priority,
+            'attribute_data': audit_store.attribute_data,
             'sections': __get_mean_for_sections(sections, (audit_store,)),
             'total_score': {
                 'percentage': total_pct,

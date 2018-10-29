@@ -13,7 +13,7 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 import { getColor } from "../../utils.js";
 
-import { reportBrowserSelectors, loadingSelectors } from "../selectors";
+import { filterSelectors, loadingSelectors } from "../selectors";
 import apiNames from "../api_names";
 
 export class AuditStoreTable extends Component {
@@ -95,7 +95,7 @@ export class AuditStoreTable extends Component {
 
 const mapStateToProps = (state) => {
 	return {
-		reports: reportBrowserSelectors.filterReports(state),
+		reports: filterSelectors.filterReports(state),
 		isLoading: loadingSelectors.isLoading(state, apiNames.report.findByAuditCycleId),
 	};
 };

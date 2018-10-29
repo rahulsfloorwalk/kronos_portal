@@ -15,6 +15,8 @@ import LoadingSelectors from "./selectors/loading";
 import reportAttributeReducer from "./reducers/report_attribute";
 import ReportAttributeSelectors from "./selectors/report_attribute";
 
+import FilterSelectors from "./selectors/filter";
+
 const reducerMap = {};
 
 reducerMap["questionnaireType"] = questionnaireTypeReducer;
@@ -31,5 +33,7 @@ export const loadingSelectors = new LoadingSelectors("loading");
 
 reducerMap["reportAttribute"] = reportAttributeReducer;
 export const reportAttributeSelectors = new ReportAttributeSelectors("reportAttribute", auditCycleSelectors);
+
+export const filterSelectors = new FilterSelectors("filters", reportBrowserSelectors, reportAttributeSelectors, auditCycleSelectors);
 
 export default combineReducers(reducerMap);
