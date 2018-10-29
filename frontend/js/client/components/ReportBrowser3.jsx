@@ -24,6 +24,7 @@ import { reportAttributePropType } from "../prop_types";
 import {auditCycleSelectors, reportAttributeSelectors, reportBrowserSelectors} from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
 import ReportAttributeFilter from "./report_browser/ReportAttributeFilter.jsx";
+import { fetchReportAttributesByAuditCycleId } from "../actions/report_attribute";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -40,17 +41,20 @@ export class ReportBrowser3 extends Component{
 		reportAttributes: PropTypes.arrayOf(reportAttributePropType),
 
 		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
+		fetchReportAttributesByAuditCycleId: PropTypes.func.isRequired,
 	};
 
 	componentDidMount() {
 		if(this.props.selectedAuditCycle){
 			this.props.fetchReportsByAuditCycleId(this.props.selectedAuditCycle.id);
+			this.props.fetchReportAttributesByAuditCycleId(this.props.selectedAuditCycle.id);
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.selectedAuditCycle !== this.props.selectedAuditCycle){
-			this.props.fetchReportsByAuditCycleId(nextProps.selectedAuditCycle.id);
+			nextProps.fetchReportsByAuditCycleId(nextProps.selectedAuditCycle.id);
+			nextProps.fetchReportAttributesByAuditCycleId(nextProps.selectedAuditCycle.id);
 		}
 	}
 
@@ -111,4 +115,5 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
 	fetchReportsByAuditCycleId,
+	fetchReportAttributesByAuditCycleId,
 })(ReportBrowser3);
