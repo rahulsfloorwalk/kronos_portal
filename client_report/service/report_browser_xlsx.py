@@ -73,6 +73,13 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     if filters.get('end_date') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit_date <= datetime.datetime.strptime(filters.get('end_date'), "%Y-%m-%d").date()]
+    if filters.get('attribute') not in ignored_filters:
+        attributes = filters.get('attribute')
+        for attribute in attributes:
+            pair = attribute.split(":")
+            key = pair[0]
+            value = pair[1]
+            filtered_audit_stores = [x for x in filtered_audit_stores if x.attribute_data.get(key, "") == value]
     date_name = "{}{}{}".format(
         (filters.get('start_date') if filters.get('start_date') not in ignored_filters else "").replace("-", "_"),
         "_",
