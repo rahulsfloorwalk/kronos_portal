@@ -19,6 +19,7 @@ describe(DownloadDetailsButton, () => {
 			storePriority="BAR"
 			startDate="2018-06-01"
 			endDate="2018-06-30"
+			reportAttributes={{"foo" : "bar"}}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
@@ -31,6 +32,7 @@ describe(DownloadDetailsButton, () => {
 			storePriority="BAR"
 			startDate="2018-06-01"
 			endDate="2018-06-30"
+			reportAttributes={{"foo" : "bar"}}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});

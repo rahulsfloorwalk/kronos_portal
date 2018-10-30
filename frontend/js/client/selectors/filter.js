@@ -27,15 +27,4 @@ export default class FilterSelectors {
 			return filterState.reduce((filteredIn, [jsonId, optionId]) => filteredIn && r.attribute_data[jsonId] === optionId, true);
 		});
 	};
-
-	getFilterState = (store) => {
-		let filterState = {};
-		this.reportAttributeSelectors.findReportAttributesBySelectedAuditCycle(store).map((ra) => {
-			let selected_option_id = this.reportBrowserSelectors.findSelectedOptionIdByJsonId(store, ra.json_id);
-			if(selected_option_id){
-				filterState[ra.json_id] = selected_option_id;
-			}
-		});
-		return filterState;
-	};
 }

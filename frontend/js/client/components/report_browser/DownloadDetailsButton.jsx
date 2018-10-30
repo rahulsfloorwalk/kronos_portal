@@ -6,7 +6,7 @@ import moment from "moment";
 import { Download } from "../../../components/Icons.jsx";
 import { url } from "../../../../config.js";
 
-import { auditCycleSelectors, reportBrowserSelectors, filterSelectors } from "../../selectors";
+import { auditCycleSelectors, reportBrowserSelectors } from "../../selectors";
 
 export class DownloadDetailsButton extends React.Component {
 	static propTypes = {
@@ -56,7 +56,7 @@ const mapStateToProps = (store) => {
 		storePriority: reportBrowserSelectors.findSelectedStorePriority(store),
 		startDate: reportBrowserSelectors.findSelectedStartDateBySelectedAuditCycle(store),
 		endDate: reportBrowserSelectors.findSelectedEndDateBySelectedAuditCycle(store),
-		reportAttributes: filterSelectors.getFilterState(store),
+		reportAttributes: reportBrowserSelectors.findReportAttributeSelectedOptionIds(store),
 	};
 };
 

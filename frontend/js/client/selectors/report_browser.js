@@ -75,6 +75,12 @@ export default class ReportBrowserSelectors {
 		return this.getNamespacedStore(store).selectedOptionIds[jsonId];
 	};
 
+	findReportAttributeSelectedOptionIds(store){
+		let attributes = this.getNamespacedStore(store).selectedOptionIds;
+		Object.keys(attributes).forEach(key => attributes[key] === undefined ? delete attributes[key] : "");
+		return attributes;
+	}
+
 	findCitiesBySelectedAuditCycle = (state) => {
 		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
 		if(selectedAuditCycle){
