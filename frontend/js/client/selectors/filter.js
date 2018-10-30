@@ -18,10 +18,10 @@ export default class FilterSelectors {
 			.map((ra) => [
 				ra.json_id,
 				this.reportBrowserSelectors.findSelectedOptionIdByJsonId(
-					store, 
+					store,
 					ra.json_id
 				)
-			]).filter(([jsonId, selectedOptionId]) => !!selectedOptionId);
+			]).filter((tuple) => tuple[1] !== undefined);
 
 		return this.reportBrowserSelectors.filterReports(store).filter((r) => {
 			return filterState.reduce((filteredIn, [jsonId, optionId]) => filteredIn && r.attribute_data[jsonId] === optionId, true);
