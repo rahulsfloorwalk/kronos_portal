@@ -32,7 +32,7 @@ export class ReportAttributeFilter extends React.Component {
 			<div style={selectStyle}>
 				&nbsp;{this.props.reportAttribute.label}:
 				<select onChange={this.onSelect} value={this.props.selectedOptionId || ""} className="form-control" style={selectStyle}>
-					<option value="">All Types</option>
+					<option value="">————</option>
 					{options}
 				</select>
 			</div>

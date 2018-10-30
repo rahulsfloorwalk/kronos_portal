@@ -26,7 +26,7 @@ exports[`ReportAttributeFilter renders the selector with nothing selected 1`] = 
     <option
       value=""
     >
-      All Types
+      ————
     </option>
     <option
       value="option1"
@@ -68,7 +68,7 @@ exports[`ReportAttributeFilter renders the selector with selected option_id 1`] 
     <option
       value=""
     >
-      All Types
+      ————
     </option>
     <option
       value="option1"
