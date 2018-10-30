@@ -17,6 +17,16 @@ describe(StorePrioritySelector, () => {
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
+	it("renders nothing when there are no priorities", () => {
+		const onSelect = jest.fn();
+		const r = renderer.create(<StorePrioritySelector
+			onSelect={onSelect}
+			storePriorities={[]}
+			selectedStorePriority={undefined}
+		/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
+
 	it("renders the selector with selected store_priority", () => {
 		const onSelect = jest.fn();
 		const r = renderer.create(<StorePrioritySelector

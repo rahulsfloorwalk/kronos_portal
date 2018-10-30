@@ -19,6 +19,9 @@ export class StorePrioritySelector extends React.Component {
 	};
 
 	render(){
+		if(this.props.storePriorities.length < 2){
+			return null;
+		}
 		return (
 			<div style={selectStyle}>
 				&nbsp;Store Priority:
