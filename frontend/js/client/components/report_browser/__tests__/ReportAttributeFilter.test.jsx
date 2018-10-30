@@ -4,7 +4,6 @@ import renderer from "react-test-renderer";
 
 import { ReportAttributeFilter } from "../ReportAttributeFilter";
 
-const sampleAuditCycleId = 1;
 const sampleReportAttribute = {
 	id: 1,
 	json_id: "attribute1",
@@ -30,7 +29,6 @@ describe("ReportAttributeFilter", () => {
 		const r = renderer.create(<ReportAttributeFilter
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={undefined}
-			auditCycleId={sampleAuditCycleId}
 			selectReportAttributeOption={selectReportAttributeOption}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
@@ -41,7 +39,6 @@ describe("ReportAttributeFilter", () => {
 		const r = renderer.create(<ReportAttributeFilter
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={sampleReportAttribute.attribute_data.options[0].option_id}
-			auditCycleId={sampleAuditCycleId}
 			selectReportAttributeOption={selectReportAttributeOption}
 		/>);
 		expect(r.toJSON()).toMatchSnapshot();
@@ -52,12 +49,11 @@ describe("ReportAttributeFilter", () => {
 		const r = shallow(<ReportAttributeFilter
 			reportAttribute={sampleReportAttribute}
 			selectedOptionId={sampleReportAttribute.attribute_data.options[0].option_id}
-			auditCycleId={sampleAuditCycleId}
 			selectReportAttributeOption={selectReportAttributeOption}
 		/>);
 
 		const updatedOptionId = sampleReportAttribute.attribute_data.options[0].option_id;
 		r.find("select").simulate("change", { target: { value: updatedOptionId }});
-		expect(selectReportAttributeOption).toHaveBeenCalledWith(sampleAuditCycleId, sampleReportAttribute.json_id, updatedOptionId);
+		expect(selectReportAttributeOption).toHaveBeenCalledWith(sampleReportAttribute.json_id, updatedOptionId);
 	});
 });

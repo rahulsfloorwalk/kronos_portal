@@ -68,32 +68,6 @@ describe("ReportAttributeSelectors", () => {
 		});
 	});
 
-	describe("findSelectedOptionIdByAuditCycleIdAndJsonId", () => {
-		const selectors = new ReportAttributeSelectors(namespace);
-		const sampleJsonId = "4h43345kjj43n5n";
-		const sampleOptionId = "87v4v3nbhjvhbf";
-		const selectedOptionIds = {
-			[sampleAuditCycleId]: {
-				[sampleJsonId]: sampleOptionId,
-			}
-		};
-
-		it("should return the selected option id for given audit cycle id and json id", () => {
-			const sampleStore = createSampleStore(namespace, sampleAuditCycleId, sampleReportAttributes, selectedOptionIds);
-			expect(selectors.findSelectedOptionIdByAuditCycleIdAndJsonId(sampleStore, sampleAuditCycleId, sampleJsonId)).toEqual(sampleOptionId);
-		});
-
-		it("should return undefined if there are no selected option for given audit cycle id", () => {
-			const sampleStore = createSampleStore(namespace, sampleAuditCycleId, sampleReportAttributes, selectedOptionIds);
-			expect(selectors.findSelectedOptionIdByAuditCycleIdAndJsonId(sampleStore, 56, "3465dsf345")).toBeUndefined();
-		});
-
-		it("should return undefined if there is no selected option for given audit cycle id and json id", () => {
-			const sampleStore = createSampleStore(namespace, sampleAuditCycleId, sampleReportAttributes, selectedOptionIds);
-			expect(selectors.findSelectedOptionIdByAuditCycleIdAndJsonId(sampleStore, sampleAuditCycleId, "3465dsf345")).toBeUndefined();
-		});
-	});
-
 	describe("findReportAttributesBySelectedAuditCycle", () => {
 		let auditCycleSelectors;
 

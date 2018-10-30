@@ -109,10 +109,10 @@ describe(FilterSelectors, () => {
 	beforeEach(() => {
 		reportBrowserSelectors = {
 			filterReports: jest.fn(),
+			findSelectedOptionIdByJsonId: jest.fn(),
 		};
 		reportAttributeSelectors = {
 			findReportAttributesBySelectedAuditCycle: jest.fn(),
-			findSelectedOptionIdByAuditCycleIdAndJsonId: jest.fn(),
 		};
 		auditCycleSelectors = {
 			findSelectedAuditCycleBySelectedQuestionnaireType: jest.fn(),
@@ -126,7 +126,7 @@ describe(FilterSelectors, () => {
 			reportBrowserSelectors.filterReports.mockReturnValue(sampleReports);
 			reportAttributeSelectors.findReportAttributesBySelectedAuditCycle.mockReturnValue(sampleReportAttributes);
 
-			reportAttributeSelectors.findSelectedOptionIdByAuditCycleIdAndJsonId
+			reportBrowserSelectors.findSelectedOptionIdByJsonId
 				.mockReturnValueOnce("option1")
 				.mockReturnValueOnce(undefined);
 

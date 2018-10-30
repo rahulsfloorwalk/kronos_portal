@@ -71,6 +71,10 @@ export default class ReportBrowserSelectors {
 		return this.getNamespacedStore(store).selectedEndDate;
 	};
 
+	findSelectedOptionIdByJsonId = (store, jsonId) => {
+		return this.getNamespacedStore(store).selectedOptionIds[jsonId];
+	};
+
 	findCitiesBySelectedAuditCycle = (state) => {
 		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
 		if(selectedAuditCycle){

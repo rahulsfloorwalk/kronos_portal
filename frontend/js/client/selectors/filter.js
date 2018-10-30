@@ -17,9 +17,8 @@ export default class FilterSelectors {
 		const filterState = this.reportAttributeSelectors.findReportAttributesBySelectedAuditCycle(store)
 			.map((ra) => [
 				ra.json_id,
-				this.reportAttributeSelectors.findSelectedOptionIdByAuditCycleIdAndJsonId(
+				this.reportBrowserSelectors.findSelectedOptionIdByJsonId(
 					store, 
-					selectedAuditCycle.id, 
 					ra.json_id
 				)
 			]).filter(([jsonId, selectedOptionId]) => !!selectedOptionId);

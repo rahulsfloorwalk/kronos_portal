@@ -66,7 +66,6 @@ export class ReportBrowser3 extends Component{
 			table = <AuditStoreTable/>;
 			reportAttributeFilters = this.props.reportAttributes.map((ra) => <ReportAttributeFilter
 				key={ra.id}
-				auditCycleId={this.props.selectedAuditCycle.id}
 				reportAttribute={ra} />
 			);
 		} else {

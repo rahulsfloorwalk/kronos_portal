@@ -6,6 +6,7 @@ import {
 	SELECT_START_DATE,
 	SELECT_END_DATE,
 	RESET_FILTERS,
+	SELECT_REPORT_ATTRIBUTE_OPTION,
 } from "../action_types";
 
 const initialState = {
@@ -15,6 +16,7 @@ const initialState = {
 	selectedStorePriority: null,
 	selectedEndDate: null,
 	selectedStartDate: null,
+	selectedOptionIds: {},
 };
 
 export default (state=initialState, action) => {
@@ -45,6 +47,12 @@ export default (state=initialState, action) => {
 		return Object.assign({}, state, {
 			selectedEndDate: action.selectedEndDate,
 		});
+	case SELECT_REPORT_ATTRIBUTE_OPTION:
+		return Object.assign({}, state, {
+			selectedOptionIds: Object.assign({}, state.selectedOptionIds, {
+				[action.jsonId]: action.optionId,
+			}),
+		});
 	case RESET_FILTERS:
 		return Object.assign({}, state, {
 			selectedCityId: null,
@@ -52,6 +60,7 @@ export default (state=initialState, action) => {
 			selectedStorePriority: null,
 			selectedEndDate: null,
 			selectedStartDate: null,
+			selectedOptionIds: {},
 		});
 	default:
 		return state;
@@ -106,3 +115,12 @@ export function selectEndDate(selectedEndDate){
 		selectedEndDate,
 	};
 }
+
+export function selectReportAttributeOption(jsonId, optionId){
+	return {
+		type: SELECT_REPORT_ATTRIBUTE_OPTION,
+		jsonId,
+		optionId,
+	};
+}
+

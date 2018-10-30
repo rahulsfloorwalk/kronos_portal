@@ -11,11 +11,6 @@ export default class ReportAttributeSelectors {
 		return this.getNamespacedStore(store).reportAttributes[auditCycleId] || [];
 	};
 
-	findSelectedOptionIdByAuditCycleIdAndJsonId = (store, auditCycleId, jsonId) => {
-		const selectedOptionsByAuditCycle = this.getNamespacedStore(store).selectedOptionIds[auditCycleId];
-		return selectedOptionsByAuditCycle ? selectedOptionsByAuditCycle[jsonId] : undefined;
-	};
-
 	findReportAttributesBySelectedAuditCycle = (store) => {
 		const selectedAuditCycle = this.auditCycleSelector.findSelectedAuditCycleBySelectedQuestionnaireType(store);
 		return selectedAuditCycle ? this.findReportAttributesByAuditCycleId(store, selectedAuditCycle.id) : [];

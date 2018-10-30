@@ -141,7 +141,6 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
     <Connect(EndDateSelector) />
      
     <Connect(ReportAttributeFilter)
-      auditCycleId={129}
       reportAttribute={
         Object {
           "attribute_data": Object {
@@ -164,7 +163,6 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
       }
     />
     <Connect(ReportAttributeFilter)
-      auditCycleId={129}
       reportAttribute={
         Object {
           "attribute_data": Object {

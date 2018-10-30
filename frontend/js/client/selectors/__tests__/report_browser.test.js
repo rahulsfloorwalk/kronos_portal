@@ -29,7 +29,7 @@ const sampleReports = [
 ];
 
 
-const createSampleStore = (namespace, selectedCityId, selectedStoreType, selectedStorePriority, selectedStartDate, selectedEndDate, auditCycleId) => {
+const createSampleStore = (namespace, selectedCityId, selectedStoreType, selectedStorePriority, selectedStartDate, selectedEndDate, auditCycleId, selectedOptionIds) => {
 	return {
 		[namespace]: {
 			reports: {
@@ -40,6 +40,7 @@ const createSampleStore = (namespace, selectedCityId, selectedStoreType, selecte
 			selectedStorePriority,
 			selectedStartDate,
 			selectedEndDate,
+			selectedOptionIds,
 		},
 	};
 };
@@ -127,6 +128,22 @@ describe(ReportBrowserSelectors, () => {
 		it("gets the selected end date", () => {
 			const sampleStore = createSampleStore( namespace, null, null, null, null, "2017-08-30");
 			expect(selectors.findSelectedEndDate(sampleStore)).toEqual("2017-08-30");
+		});
+	});
+
+	describe("findSelectedOptionIdByJsonId", () => {
+		it("returns the selected option id for the given json ID", () => {
+			const sampleJsonId = "FOOBAR";
+			const sampleOptionId = "OPT1";
+			const sampleStore = createSampleStore( namespace, null, null, null, null, null, null, {
+				[sampleJsonId]: sampleOptionId,
+			});
+			expect(selectors.findSelectedOptionIdByJsonId(sampleStore, sampleJsonId)).toEqual(sampleOptionId);
+		});
+
+		it("should return undefined if there are no selected option for given json id", () => {
+			const sampleStore = createSampleStore( namespace, null, null, null, null, null, null, {});
+			expect(selectors.findSelectedOptionIdByJsonId(sampleStore, "3465dsf345")).toBeUndefined();
 		});
 	});
 

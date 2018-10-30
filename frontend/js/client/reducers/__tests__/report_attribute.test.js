@@ -50,7 +50,6 @@ describe("reportAttributeReducer", () => {
 		const reportAttributes = reportAttributeReducer(undefined, {});
 		expect(reportAttributes).toEqual({
 			reportAttributes: {},
-			selectedOptionIds: {},
 		});
 	});
 
@@ -64,30 +63,6 @@ describe("reportAttributeReducer", () => {
 			expect(store).toEqual({
 				reportAttributes: {
 					[sampleAuditCycleId]: sampleReportAttributes
-				},
-				selectedOptionIds: {},
-			});
-		});
-	});
-
-	describe(SELECT_REPORT_ATTRIBUTE_OPTION, () => {
-		it("selects the given option id the given audit cycle id and json id", () => {
-			const sampleJsonId = sampleReportAttributes[1].json_id;
-			const selectedOptionId = sampleReportAttributes[1].attribute_data.options[1].option_id;
-
-			const store = reportAttributeReducer(undefined, {
-				type: SELECT_REPORT_ATTRIBUTE_OPTION,
-				auditCycleId: sampleAuditCycleId,
-				jsonId: sampleJsonId,
-				optionId: selectedOptionId,
-			});
-
-			expect(store).toEqual({
-				reportAttributes: {},
-				selectedOptionIds: {
-					[sampleAuditCycleId]: {
-						[sampleJsonId]: selectedOptionId,
-					},
 				},
 			});
 		});
@@ -106,17 +81,3 @@ describe("fetchReportAttributesByAuditCycleId", () => {
 	});
 });
 
-describe("selectReportAttributeOption", () => {
-	it("it returns an action to select a report attribute option by audit cycle id and json id", () => {
-		const sampleJsonId = "43j5hb4j35bh";
-		const sampleOptionId = "345jbkn453jbk";
-		const action = selectReportAttributeOption(sampleAuditCycleId, sampleJsonId, sampleOptionId);
-
-		expect(action).toEqual({
-			type: SELECT_REPORT_ATTRIBUTE_OPTION,
-			auditCycleId: sampleAuditCycleId,
-			jsonId: sampleJsonId,
-			optionId: sampleOptionId,
-		});
-	});
-});

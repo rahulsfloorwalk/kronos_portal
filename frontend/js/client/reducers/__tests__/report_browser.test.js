@@ -5,6 +5,7 @@ import {
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
 	SELECT_END_DATE,
+	SELECT_REPORT_ATTRIBUTE_OPTION,
 	RESET_FILTERS,
 } from "../../action_types";
 import reportBrowserReducer from "../report_browser";
@@ -14,6 +15,7 @@ import {
 	selectPriority,
 	selectStartDate,
 	selectEndDate,
+	selectReportAttributeOption,
 	resetDependentFilters,
 } from "../report_browser";
 
@@ -55,6 +57,35 @@ describe("reportBrowserReducer", () => {
 			selectedStorePriority: null,
 			selectedEndDate: null,
 			selectedStartDate: null,
+			selectedOptionIds: {},
+		});
+	});
+
+	describe(RESET_FILTERS, () => {
+		it("resets the filter state to defaults", () => {
+			const state = reportBrowserReducer({
+				reports: {},
+				selectedCityId: 4,
+				selectedStoreType: "FOO",
+				selectedStorePriority: "HIGH",
+				selectedEndDate: "20170-08-01",
+				selectedStartDate: "20170-08-15",
+				selectedOptionIds: {
+					"FOOBAR": "FOOOPT1",
+					"FOOBAZ": "FOOOPT2",
+				},
+			}, {
+				type: RESET_FILTERS,
+			});
+			expect(state).toEqual({
+				reports: {},
+				selectedCityId: null,
+				selectedStoreType: null,
+				selectedStorePriority: null,
+				selectedEndDate: null,
+				selectedStartDate: null,
+				selectedOptionIds: {},
+			});
 		});
 	});
 
@@ -116,6 +147,23 @@ describe("reportBrowserReducer", () => {
 				selectedEndDate: "2018-07-30",
 			});
 			expect(reports.selectedEndDate).toEqual("2018-07-30");
+		});
+	});
+
+	describe(SELECT_REPORT_ATTRIBUTE_OPTION, () => {
+		it("selects the given option id the given audit cycle id and json id", () => {
+			const sampleJsonId = "FOOBAR";
+			const selectedOptionId = "FOOOPT1";
+
+			const store = reportBrowserReducer(undefined, {
+				type: SELECT_REPORT_ATTRIBUTE_OPTION,
+				jsonId: sampleJsonId,
+				optionId: selectedOptionId,
+			});
+
+			expect(store.selectedOptionIds).toEqual({
+				[sampleJsonId]: selectedOptionId,
+			});
 		});
 	});
 });
@@ -186,6 +234,20 @@ describe(selectEndDate, () => {
 		expect(action).toEqual({
 			type: SELECT_END_DATE,
 			selectedEndDate: endDate,
+		});
+	});
+});
+
+describe(selectReportAttributeOption, () => {
+	it("it returns an action to select a report attribute option by json id", () => {
+		const sampleJsonId = "43j5hb4j35bh";
+		const sampleOptionId = "345jbkn453jbk";
+		const action = selectReportAttributeOption(sampleJsonId, sampleOptionId);
+
+		expect(action).toEqual({
+			type: SELECT_REPORT_ATTRIBUTE_OPTION,
+			jsonId: sampleJsonId,
+			optionId: sampleOptionId,
 		});
 	});
 });

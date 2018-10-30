@@ -3,8 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { reportAttributePropType } from "../../prop_types";
 
-import { reportAttributeSelectors } from "../../selectors";
-import { selectReportAttributeOption } from "../../reducers/report_attribute";
+import { reportBrowserSelectors } from "../../selectors";
+import { selectReportAttributeOption } from "../../reducers/report_browser";
 
 const selectStyle = {
 	display: "inline-block",
@@ -13,7 +13,6 @@ const selectStyle = {
 
 export class ReportAttributeFilter extends React.Component {
 	static propTypes = {
-		auditCycleId: PropTypes.number.isRequired,
 		reportAttribute: reportAttributePropType.isRequired,
 		selectedOptionId: PropTypes.string,
 
@@ -21,7 +20,7 @@ export class ReportAttributeFilter extends React.Component {
 	};
 
 	onSelect = (e) => {
-		this.props.selectReportAttributeOption(this.props.auditCycleId, this.props.reportAttribute.json_id, e.target.value);
+		this.props.selectReportAttributeOption(this.props.reportAttribute.json_id, e.target.value);
 	};
 
 	render(){
@@ -43,7 +42,7 @@ export class ReportAttributeFilter extends React.Component {
 
 const mapStateToProps = (store, ownProps) => {
 	return {
-		selectedOptionId: reportAttributeSelectors.findSelectedOptionIdByAuditCycleIdAndJsonId(store, ownProps.auditCycleId, ownProps.reportAttribute.json_id),
+		selectedOptionId: reportBrowserSelectors.findSelectedOptionIdByJsonId(store, ownProps.reportAttribute.json_id),
 	};
 };
 
