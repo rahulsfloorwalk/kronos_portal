@@ -20,7 +20,7 @@ export default class ReportBrowserSelectors {
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((cities, report) => {
 				const city = cities.find((c) => c.id === report.city_id);
-				if(!city){
+				if(city === undefined){
 					return cities.concat({
 						id: report.city_id,
 						name: report.city_name,
@@ -35,7 +35,7 @@ export default class ReportBrowserSelectors {
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((storeTypes, report) => {
 				const storeType = storeTypes.find((t) => t === report.store_type);
-				if(!storeType){
+				if(storeType === undefined && report.store_type !== ""){
 					return storeTypes.concat(report.store_type);
 				} else {
 					return storeTypes;
@@ -47,7 +47,7 @@ export default class ReportBrowserSelectors {
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((storePriorities, report) => {
 				const storePriority = storePriorities.find((p) => p === report.store_priority);
-				if(!storePriority){
+				if(storePriority === undefined && report.store_priority !== ""){
 					return storePriorities.concat(report.store_priority);
 				} else {
 					return storePriorities;

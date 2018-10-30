@@ -26,6 +26,22 @@ const sampleReports = [
 		store_type: "Slowmo",
 		store_priority: "MEDIUM",
 	},
+	{
+		id: 4,
+		audit_date: "2018-08-28",
+		city_id: 2,
+		city_name: "Mumbai",
+		store_type: "",
+		store_priority: "",
+	},
+	{
+		id: 5,
+		audit_date: "2018-08-29",
+		city_id: 2,
+		city_name: "Mumbai",
+		store_type: "",
+		store_priority: "",
+	},
 ];
 
 
