@@ -1,5 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`StoreTypeSelector renders nothing when the types are less than two 1`] = `null`;
+
 exports[`StoreTypeSelector renders the selector with nothing selected 1`] = `
 <div
   style={

@@ -19,6 +19,9 @@ export class StoreTypeSelector extends React.Component {
 	};
 
 	render(){
+		if(this.props.storeTypes.length < 2){
+			return null;
+		}
 		return (
 			<div style={selectStyle}>
 				&nbsp;Store Type:

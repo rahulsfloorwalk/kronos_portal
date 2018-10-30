@@ -17,6 +17,16 @@ describe(StoreTypeSelector, () => {
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
+	it("renders nothing when the types are less than two", () => {
+		const onSelect = jest.fn();
+		const r = renderer.create(<StoreTypeSelector
+			onSelect={onSelect}
+			storeTypes={[]}
+			selectedStoreType={undefined}
+		/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
+
 	it("renders the selector with selected store_type", () => {
 		const onSelect = jest.fn();
 		const r = renderer.create(<StoreTypeSelector
