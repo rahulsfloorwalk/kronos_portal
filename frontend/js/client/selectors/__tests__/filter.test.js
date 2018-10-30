@@ -88,7 +88,7 @@ const sampleReports = [
 	},
 ];
 
-describe(FilterSelectors, () => {
+describe("FilterSelectors", () => {
 	const namespace = "foobar";
 	let reportBrowserSelectors;
 	let reportAttributeSelectors;
@@ -131,6 +131,17 @@ describe(FilterSelectors, () => {
 				.mockReturnValueOnce("option2")
 				.mockReturnValueOnce(undefined);
 			let expectedValue = {"attribute1": "option1", "attribute2": "option2"};
+
+			expect(selectors.getFilterState({})).toEqual(expectedValue);
+		});
+		it("should return empty object", () => {
+			auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType.mockReturnValue(sampleAuditCycle);
+			reportBrowserSelectors.filterReports.mockReturnValue(sampleReports);
+			reportAttributeSelectors.findReportAttributesBySelectedAuditCycle.mockReturnValue(sampleReportAttributes);
+
+			reportBrowserSelectors.findSelectedOptionIdByJsonId
+				.mockReturnValueOnce(undefined);
+			let expectedValue = {};
 
 			expect(selectors.getFilterState({})).toEqual(expectedValue);
 		});
