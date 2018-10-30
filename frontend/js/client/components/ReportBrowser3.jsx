@@ -21,7 +21,7 @@ import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
 import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
 
 import { reportAttributePropType } from "../prop_types";
-import {auditCycleSelectors, reportAttributeSelectors, reportBrowserSelectors} from "../selectors";
+import {auditCycleSelectors, reportAttributeSelectors, filterSelectors } from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
 import ReportAttributeFilter from "./report_browser/ReportAttributeFilter.jsx";
 import { fetchReportAttributesByAuditCycleId } from "../actions/report_attribute";
@@ -107,7 +107,7 @@ const mapStateToProps = (state) => {
 	return {
 		auditCycles: auditCycleSelectors.findAuditCyclesBySelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
-		reports: reportBrowserSelectors.filterReports(state),
+		reports: filterSelectors.filterReports(state),
 		reportAttributes: reportAttributeSelectors.findReportAttributesBySelectedAuditCycle(state),
 	};
 };
