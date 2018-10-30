@@ -6,7 +6,7 @@ import moment from "moment";
 import { Download } from "../../../components/Icons.jsx";
 import { url } from "../../../../config.js";
 
-import { auditCycleSelectors, reportBrowserSelectors } from "../../selectors";
+import { auditCycleSelectors, reportBrowserSelectors, filterSelectors } from "../../selectors";
 
 export class DownloadDetailsButton extends React.Component {
 	static propTypes = {
@@ -18,6 +18,7 @@ export class DownloadDetailsButton extends React.Component {
 		storePriority: PropTypes.string,
 		startDate: PropTypes.string,
 		endDate: PropTypes.string,
+		reportAttributes: PropTypes.object,
 	};
 
 	createDetailsFilterUrl(){
@@ -27,7 +28,9 @@ export class DownloadDetailsButton extends React.Component {
 		base += "&start_date=" + encodeURIComponent(moment(this.props.startDate).format("YYYY-MM-DD") || "");
 		base += "&end_date=" + encodeURIComponent(moment(this.props.endDate).format("YYYY-MM-DD") || "");
 		base += "&type=" + encodeURIComponent(this.props.storeType || "");
-		//base += "&month=" + encodeURIComponent(Number(this.props.selectedMonth)+1 || "");
+		for(let jsonId in this.props.reportAttributes){
+			base += "&attribute=" + encodeURIComponent(jsonId + ":" + this.props.reportAttributes[jsonId]);
+		}
 		return base;
 	}
 	render(){
@@ -53,6 +56,7 @@ const mapStateToProps = (store) => {
 		storePriority: reportBrowserSelectors.findSelectedStorePriority(store),
 		startDate: reportBrowserSelectors.findSelectedStartDateBySelectedAuditCycle(store),
 		endDate: reportBrowserSelectors.findSelectedEndDateBySelectedAuditCycle(store),
+		reportAttributes: filterSelectors.getFilterState(store),
 	};
 };
 
