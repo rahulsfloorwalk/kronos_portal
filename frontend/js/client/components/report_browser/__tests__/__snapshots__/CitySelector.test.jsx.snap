@@ -1,5 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`CitySelector renders nothing when there are no cities 1`] = `null`;
+
+exports[`CitySelector renders nothing when there is only one city 1`] = `null`;
+
 exports[`CitySelector renders the selector with nothing selected 1`] = `
 <div
   style={

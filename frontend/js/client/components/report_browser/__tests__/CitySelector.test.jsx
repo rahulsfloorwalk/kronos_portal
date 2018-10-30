@@ -30,6 +30,26 @@ describe(CitySelector, () => {
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
+	it("renders nothing when there is only one city", () => {
+		const onSelect = jest.fn();
+		const r = renderer.create(<CitySelector
+			onSelect={onSelect}
+			cities={[...sampleCities[0]]}
+			selectedCityId={undefined}
+		/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
+
+	it("renders nothing when there are no cities", () => {
+		const onSelect = jest.fn();
+		const r = renderer.create(<CitySelector
+			onSelect={onSelect}
+			cities={[]}
+			selectedCityId={undefined}
+		/>);
+		expect(r.toJSON()).toMatchSnapshot();
+	});
+
 	it("renders the selector with selected city", () => {
 		const onSelect = jest.fn();
 		const r = renderer.create(<CitySelector

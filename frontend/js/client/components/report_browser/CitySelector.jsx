@@ -22,6 +22,9 @@ export class CitySelector extends React.Component {
 	};
 
 	render(){
+		if(this.props.cities.length < 2) {
+			return null;
+		}
 		return (<div style={selectStyle}>
 			&nbsp;City:
 			<select onChange={e => this.props.onSelect(parseInt(e.target.value))} value={this.props.selectedCityId || ""} className="form-control" style={selectStyle}>
