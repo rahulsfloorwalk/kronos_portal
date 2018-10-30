@@ -20,7 +20,7 @@ export class ReportAttributeFilter extends React.Component {
 	};
 
 	onSelect = (e) => {
-		this.props.selectReportAttributeOption(this.props.reportAttribute.json_id, e.target.value);
+		this.props.selectReportAttributeOption(this.props.reportAttribute.json_id, e.target.value || undefined);
 	};
 
 	render(){

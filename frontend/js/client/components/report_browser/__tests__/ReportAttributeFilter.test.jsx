@@ -56,4 +56,16 @@ describe("ReportAttributeFilter", () => {
 		r.find("select").simulate("change", { target: { value: updatedOptionId }});
 		expect(selectReportAttributeOption).toHaveBeenCalledWith(sampleReportAttribute.json_id, updatedOptionId);
 	});
+
+	it("calls onSelect with undefined when the default blank option is selected", () => {
+		const selectReportAttributeOption = jest.fn();
+		const r = shallow(<ReportAttributeFilter
+			reportAttribute={sampleReportAttribute}
+			selectedOptionId={sampleReportAttribute.attribute_data.options[0].option_id}
+			selectReportAttributeOption={selectReportAttributeOption}
+		/>);
+
+		r.find("select").simulate("change", { target: { value: "" }});
+		expect(selectReportAttributeOption).toHaveBeenCalledWith(sampleReportAttribute.json_id, undefined);
+	});
 });
