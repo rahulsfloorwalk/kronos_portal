@@ -88,17 +88,6 @@ const sampleReports = [
 	},
 ];
 
-const createSampleStore = (namespace, auditCycles, defaultIdx, selectedIdx) => {
-	return {
-		[namespace]: {
-			auditCycles: auditCycles.map((qt, idx) => idx === defaultIdx ? Object.assign({}, qt, {
-				is_default: true,
-			}) : qt),
-			selectedAuditCycleId: auditCycles[selectedIdx] ? auditCycles[selectedIdx].id : null,
-		},
-	};
-};
-
 describe(FilterSelectors, () => {
 	const namespace = "foobar";
 	let reportBrowserSelectors;
@@ -116,7 +105,7 @@ describe(FilterSelectors, () => {
 		};
 		auditCycleSelectors = {
 			findSelectedAuditCycleBySelectedQuestionnaireType: jest.fn(),
-	 	};
+		};
 		selectors = new FilterSelectors(namespace, reportBrowserSelectors, reportAttributeSelectors, auditCycleSelectors);
 	});
 

@@ -1,8 +1,5 @@
-import {FETCH_REPORT_ATTRIBUTES, SELECT_REPORT_ATTRIBUTE_OPTION} from "../../action_types";
-import reportAttributeReducer, {
-	fetchReportAttributesByAuditCycleId,
-	selectReportAttributeOption
-} from "../report_attribute";
+import {FETCH_REPORT_ATTRIBUTES} from "../../action_types";
+import reportAttributeReducer, { fetchReportAttributesByAuditCycleId } from "../report_attribute";
 
 const sampleAuditCycleId = 1;
 const sampleReportAttributes = [
