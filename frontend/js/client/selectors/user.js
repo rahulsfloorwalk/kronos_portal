@@ -11,7 +11,7 @@ export default class UserSelectors {
 	};
 
 	isClientAdmin = (store) => {
-		const user = this.findCurrentUser(store)
+		const user = this.findCurrentUser(store);
 		if(user){
 			return user.is_client_admin;
 		} else {
