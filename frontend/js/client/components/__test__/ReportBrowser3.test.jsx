@@ -11,7 +11,6 @@ jest.mock("react-dom", () => ({
 	findDOMNode: () => {},
 }));
 
-
 const sampleAuditCycles = [
 	{
 		"id":109,
@@ -45,22 +44,26 @@ describe("ReportBrowser3", () => {
 
 	it("calls fetchReportsByAuditCycleId when it is mounted", () => {
 		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
+		const fetchUser = jest.fn();
 		shallow(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
+			isClientAdmin={true}
+			fetchUser={fetchUser}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(fetchReportsByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
 	});
 
 	it("calls fetchReportsByAuditCycleId when selected cycle changes", () => {
 		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
+		const fetchUser = jest.fn();
 		const r = shallow(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
+			isClientAdmin={true}
+			fetchUser={fetchUser}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(fetchReportsByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
 		r.setProps({
@@ -71,33 +74,52 @@ describe("ReportBrowser3", () => {
 
 	it("renders the audit store table with correct props", () => {
 		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
+		const fetchUser = jest.fn();
 		const tree = renderer.render(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
+			isClientAdmin={true}
+			fetchUser={fetchUser}
+			selectedAuditCycle={sampleAuditCycles[1]}/>);
+		expect(tree).toMatchSnapshot();
+	});
+
+	it("does not render the report attribute filters when the user is not a client admin", () => {
+		const fetchReportsByAuditCycleId = jest.fn();
+		const fetchUser = jest.fn();
+		const tree = renderer.render(<ReportBrowser3
+			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
+			auditCycles={sampleAuditCycles}
+			reports={sampleReports}
+			isClientAdmin={false}
+			fetchUser={fetchUser}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(tree).toMatchSnapshot();
 	});
 
 	it("renders a message when there are no audit cycles", () => {
 		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
+		const fetchUser = jest.fn();
 		const tree = renderer.render(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={[]}
 			reports={[]}
+			isClientAdmin={true}
+			fetchUser={fetchUser}
 			selectedAuditCycle={undefined}/>);
 		expect(tree).toMatchSnapshot();
 	});
 
 	it("renders a loading widget when no cycle is selected", () => {
 		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
+		const fetchUser = jest.fn();
 		const tree = renderer.render(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={[]}
+			isClientAdmin={true}
+			fetchUser={fetchUser}
 			selectedAuditCycle={undefined}/>);
 		expect(tree).toMatchSnapshot();
 	});

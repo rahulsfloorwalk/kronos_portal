@@ -21,9 +21,9 @@ import ReportAttributeFilters from  "./report_browser/ReportAttributeFilters.jsx
 import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
 import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
 
-
-import {auditCycleSelectors, reportAttributeSelectors, filterSelectors } from "../selectors";
+import { auditCycleSelectors, reportAttributeSelectors, filterSelectors, userSelectors } from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
+import { fetchUser } from "../actions/user";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -37,11 +37,14 @@ export class ReportBrowser3 extends Component{
 		auditCycles: PropTypes.arrayOf(auditCyclePropType),
 		selectedAuditCycle: auditCyclePropType,
 		reports: PropTypes.array,
+		isClientAdmin: PropTypes.bool.isRequired,
 
 		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
+		fetchUser: PropTypes.func.isRequired,
 	};
 
 	componentDidMount() {
+		this.props.fetchUser();
 		if(this.props.selectedAuditCycle){
 			this.props.fetchReportsByAuditCycleId(this.props.selectedAuditCycle.id);
 		}
@@ -73,7 +76,7 @@ export class ReportBrowser3 extends Component{
 					<StorePrioritySelector/>&nbsp;
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
-					<ReportAttributeFilters/>
+					{ this.props.isClientAdmin && <ReportAttributeFilters/> }
 					<div className="btn-group pull-right">
 						&nbsp;Download:<br/>
 						<button className="btn btn-default"
@@ -99,9 +102,11 @@ const mapStateToProps = (state) => {
 		auditCycles: auditCycleSelectors.findAuditCyclesBySelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
 		reports: filterSelectors.filterReports(state),
+		isClientAdmin: userSelectors.isClientAdmin(state),
 	};
 };
 
 export default connect(mapStateToProps, {
 	fetchReportsByAuditCycleId,
+	fetchUser,
 })(ReportBrowser3);

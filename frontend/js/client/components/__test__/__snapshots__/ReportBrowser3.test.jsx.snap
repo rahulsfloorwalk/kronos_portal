@@ -1,5 +1,61 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`ReportBrowser3 does not render the report attribute filters when the user is not a client admin 1`] = `
+<div>
+  <Connect(QuestionnaireTypeTabs) />
+  <div
+    className="form-group"
+    style={
+      Object {
+        "marginTop": "10px",
+        "verticalAlign": "middle",
+      }
+    }
+  >
+    <Connect(AuditCycleSelector) />
+     
+    <Connect(CitySelector) />
+     
+    <Connect(StoreTypeSelector) />
+     
+    <Connect(StorePrioritySelector) />
+     
+    <Connect(StartDateSelector) />
+     
+    <Connect(EndDateSelector) />
+     
+    <div
+      className="btn-group pull-right"
+    >
+       Download:
+      <br />
+      <button
+        className="btn btn-default"
+        onClick={[Function]}
+        title="Download Reports"
+      >
+        <Download />
+         
+        2
+         Reports  
+        <span
+          className="caret"
+        />
+      </button>
+      <DropDown>
+        <li>
+          <Connect(DownloadSummaryButton) />
+        </li>
+        <li>
+          <Connect(DownloadDetailsButton) />
+        </li>
+      </DropDown>
+    </div>
+  </div>
+  <Connect(AuditStoreTable) />
+</div>
+`;
+
 exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabs) />
