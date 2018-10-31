@@ -61,7 +61,7 @@ const createSampleStore = (namespace, selectedCityId, selectedStoreType, selecte
 	};
 };
 
-describe(ReportBrowserSelectors, () => {
+describe("ReportBrowserSelectors", () => {
 	const namespace = "foobar";
 	let auditCycleSelectors;
 	let selectors;
@@ -173,13 +173,8 @@ describe(ReportBrowserSelectors, () => {
 				[sampleJsonId]: sampleOptionId,
 				[sampleJsonId2]: sampleOptionId2,
 			});
-			let expectedValue = {"FOOBAR1": "OPT1", "FOOBAR2": "OPT2"};
+			const expectedValue = {"FOOBAR1": "OPT1", "FOOBAR2": "OPT2"};
 			expect(selectors.findReportAttributeSelectedOptionIds(sampleStore)).toEqual(expectedValue);
-		});
-
-		it("should return undefined if there are no selected option for given json id", () => {
-			const sampleStore = createSampleStore( namespace, null, null, null, null, null, null, {});
-			expect(selectors.findSelectedOptionIdByJsonId(sampleStore, "3465dsf345")).toBeUndefined();
 		});
 
 		it("returns empty object when no option is selected", () => {
@@ -188,13 +183,8 @@ describe(ReportBrowserSelectors, () => {
 			const sampleStore = createSampleStore( namespace, null, null, null, null, null, null, {
 				[sampleJsonId]: sampleOptionId,
 			});
-			let expectedValue = {};
+			const expectedValue = {};
 			expect(selectors.findReportAttributeSelectedOptionIds(sampleStore)).toEqual(expectedValue);
-		});
-
-		it("should return undefined if there are no selected option for given json id", () => {
-			const sampleStore = createSampleStore( namespace, null, null, null, null, null, null, {});
-			expect(selectors.findSelectedOptionIdByJsonId(sampleStore, "3465dsf345")).toBeUndefined();
 		});
 	});
 
