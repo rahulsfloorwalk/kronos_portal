@@ -15,6 +15,9 @@ import LoadingSelectors from "./selectors/loading";
 import reportAttributeReducer from "./reducers/report_attribute";
 import ReportAttributeSelectors from "./selectors/report_attribute";
 
+import userReducer from "./reducers/user";
+import UserSelectors from "./selectors/user";
+
 import FilterSelectors from "./selectors/filter";
 
 const reducerMap = {};
@@ -30,6 +33,9 @@ export const reportBrowserSelectors = new ReportBrowserSelectors("reportBrowser"
 
 reducerMap["loading"] = loadingReducer;
 export const loadingSelectors = new LoadingSelectors("loading");
+
+reducerMap["user"] = userReducer;
+export const userSelectors = new UserSelectors("user");
 
 reducerMap["reportAttribute"] = reportAttributeReducer;
 export const reportAttributeSelectors = new ReportAttributeSelectors("reportAttribute", auditCycleSelectors);
