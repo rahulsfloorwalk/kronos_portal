@@ -16,15 +16,14 @@ import EndDateSelector from  "./report_browser/EndDateSelector.jsx";
 import StartDateSelector from  "./report_browser/StartDateSelector.jsx";
 import StorePrioritySelector from  "./report_browser/StorePrioritySelector.jsx";
 import StoreTypeSelector from  "./report_browser/StoreTypeSelector.jsx";
+import ReportAttributeFilters from  "./report_browser/ReportAttributeFilters.jsx";
 
 import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
 import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
 
-import { reportAttributePropType } from "../prop_types";
+
 import {auditCycleSelectors, reportAttributeSelectors, filterSelectors } from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
-import ReportAttributeFilter from "./report_browser/ReportAttributeFilter.jsx";
-import { fetchReportAttributesByAuditCycleId } from "../actions/report_attribute";
 
 const auditCyclePropType = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -38,23 +37,19 @@ export class ReportBrowser3 extends Component{
 		auditCycles: PropTypes.arrayOf(auditCyclePropType),
 		selectedAuditCycle: auditCyclePropType,
 		reports: PropTypes.array,
-		reportAttributes: PropTypes.arrayOf(reportAttributePropType),
 
 		fetchReportsByAuditCycleId: PropTypes.func.isRequired,
-		fetchReportAttributesByAuditCycleId: PropTypes.func.isRequired,
 	};
 
 	componentDidMount() {
 		if(this.props.selectedAuditCycle){
 			this.props.fetchReportsByAuditCycleId(this.props.selectedAuditCycle.id);
-			this.props.fetchReportAttributesByAuditCycleId(this.props.selectedAuditCycle.id);
 		}
 	}
 
 	componentWillReceiveProps(nextProps) {
 		if(nextProps.selectedAuditCycle !== this.props.selectedAuditCycle){
 			nextProps.fetchReportsByAuditCycleId(nextProps.selectedAuditCycle.id);
-			nextProps.fetchReportAttributesByAuditCycleId(nextProps.selectedAuditCycle.id);
 		}
 	}
 
@@ -64,10 +59,6 @@ export class ReportBrowser3 extends Component{
 			table = <Jumbotron heading="there are no reports here" para="yet"/>;
 		} else if(this.props.selectedAuditCycle){
 			table = <AuditStoreTable/>;
-			reportAttributeFilters = this.props.reportAttributes.map((ra) => <ReportAttributeFilter
-				key={ra.id}
-				reportAttribute={ra} />
-			);
 		} else {
 			table = <Loading/>;
 		}
@@ -82,7 +73,7 @@ export class ReportBrowser3 extends Component{
 					<StorePrioritySelector/>&nbsp;
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
-					{reportAttributeFilters}
+					<ReportAttributeFilters/>
 					<div className="btn-group pull-right">
 						&nbsp;Download:<br/>
 						<button className="btn btn-default"
@@ -108,11 +99,9 @@ const mapStateToProps = (state) => {
 		auditCycles: auditCycleSelectors.findAuditCyclesBySelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
 		reports: filterSelectors.filterReports(state),
-		reportAttributes: reportAttributeSelectors.findReportAttributesBySelectedAuditCycle(state),
 	};
 };
 
 export default connect(mapStateToProps, {
 	fetchReportsByAuditCycleId,
-	fetchReportAttributesByAuditCycleId,
 })(ReportBrowser3);

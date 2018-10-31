@@ -37,45 +37,6 @@ const sampleReports = [
 	},
 ];
 
-const sampleReportAttributes = [
-	{
-		id: 1,
-		json_id: "attribute1",
-		label: "Label One",
-		attribute_data: {
-			version: 1,
-			options: [
-				{
-					option_id: "option1",
-					option_label: "Option Label 1",
-				},
-				{
-					option_id: "option2",
-					option_label: "Option Label 2",
-				},
-			],
-		},
-	},
-	{
-		id: 2,
-		json_id: "attribute2",
-		label: "Label Two",
-		attribute_data: {
-			version: 1,
-			options: [
-				{
-					option_id: "option1",
-					option_label: "Option Label 1",
-				},
-				{
-					option_id: "option2",
-					option_label: "Option Label 2",
-				},
-			],
-		},
-	},
-];
-
 describe("ReportBrowser3", () => {
 	var renderer;
 	beforeEach(() => {
@@ -87,25 +48,10 @@ describe("ReportBrowser3", () => {
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 		shallow(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
-			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(fetchReportsByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
-	});
-
-	it("calls fetchReportAttributesByAuditCycleId when it is mounted", () => {
-		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
-		shallow(<ReportBrowser3
-			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
-			auditCycles={sampleAuditCycles}
-			reports={sampleReports}
-			reportAttributes={sampleReportAttributes}
-			selectedAuditCycle={sampleAuditCycles[1]}/>);
-		expect(fetchReportAttributesByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
 	});
 
 	it("calls fetchReportsByAuditCycleId when selected cycle changes", () => {
@@ -113,10 +59,8 @@ describe("ReportBrowser3", () => {
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 		const r = shallow(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
-			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(fetchReportsByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
 		r.setProps({
@@ -125,32 +69,13 @@ describe("ReportBrowser3", () => {
 		expect(fetchReportsByAuditCycleId).lastCalledWith(sampleAuditCycles[0].id);
 	});
 
-	it("calls fetchReportAttributesByAuditCycleId when selected cycle changes", () => {
-		const fetchReportsByAuditCycleId = jest.fn();
-		const fetchReportAttributesByAuditCycleId = jest.fn();
-		const r = shallow(<ReportBrowser3
-			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
-			auditCycles={sampleAuditCycles}
-			reports={sampleReports}
-			reportAttributes={sampleReportAttributes}
-			selectedAuditCycle={sampleAuditCycles[1]}/>);
-		expect(fetchReportAttributesByAuditCycleId).toBeCalledWith(sampleAuditCycles[1].id);
-		r.setProps({
-			selectedAuditCycle: sampleAuditCycles[0],
-		});
-		expect(fetchReportAttributesByAuditCycleId).lastCalledWith(sampleAuditCycles[0].id);
-	});
-
 	it("renders the audit store table with correct props", () => {
 		const fetchReportsByAuditCycleId = jest.fn();
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 		const tree = renderer.render(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={sampleReports}
-			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={sampleAuditCycles[1]}/>);
 		expect(tree).toMatchSnapshot();
 	});
@@ -160,10 +85,8 @@ describe("ReportBrowser3", () => {
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 		const tree = renderer.render(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
 			auditCycles={[]}
 			reports={[]}
-			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={undefined}/>);
 		expect(tree).toMatchSnapshot();
 	});
@@ -173,10 +96,8 @@ describe("ReportBrowser3", () => {
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 		const tree = renderer.render(<ReportBrowser3
 			fetchReportsByAuditCycleId={fetchReportsByAuditCycleId}
-			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}
 			auditCycles={sampleAuditCycles}
 			reports={[]}
-			reportAttributes={sampleReportAttributes}
 			selectedAuditCycle={undefined}/>);
 		expect(tree).toMatchSnapshot();
 	});
