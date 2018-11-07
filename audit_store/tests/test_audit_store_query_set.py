@@ -6,6 +6,7 @@ from guardian.shortcuts import assign_perm
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
+from expects import expect, equal
 
 from kronos.test_utils import catch_signal
 from audit.models import AuditCycle, Audit
@@ -34,7 +35,7 @@ class AuditStoreQuerySetTestCase(TestCase):
     def test_assign_audit_report_sends_signal(self):
         audit = mommy.make(Audit)
         with catch_signal(audit_store_status_change) as mock:
-            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, self.manager_user)
+            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, 3000, 4000, self.manager_user)
 
             mock.assert_called_once_with(
                 signal=audit_store_status_change,
@@ -46,13 +47,20 @@ class AuditStoreQuerySetTestCase(TestCase):
             )
 
     def test_assign_audit_report_creates_and_assigns_audit_store(self):
-        audit = mommy.make(Audit, reimbursement=2000, earnings_per_audit=2000)
-        audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, self.manager_user)
+        audit = mommy.make(Audit, reimbursement=2000, earnings_per_audit=3000)
+        audit_store = AuditStore.objects.assign_audit_store(
+            audit,
+            datetime.now().date(),
+            self.auditor_user,
+            3000,
+            4000,
+            self.manager_user,
+        )
         self.assertEqual(datetime.now().date(), audit_store.audit_date)
         self.assertEqual(self.auditor_user, audit_store.user)
         self.assertEqual(audit, audit_store.audit)
-        self.assertEqual(audit.reimbursement, audit_store.reimbursement)
-        self.assertEqual(audit.earnings_per_audit, audit_store.earnings_per_audit)
+        expect(audit_store.reimbursement).to(equal(3000))
+        expect(audit_store.earnings_per_audit).to(equal(4000))
 
     def test_presentable(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)

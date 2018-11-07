@@ -124,7 +124,7 @@ def cancel(audit_id, user_id):
 
 
 @atomic
-def approve(application_id, audit_date, user_actor):
+def approve(application_id, audit_date, reimbursement, earnings_per_audit, user_actor):
     try:
         application = AuditApplication.objects.get(id=application_id)
         audit = application.audit
@@ -157,7 +157,7 @@ def approve(application_id, audit_date, user_actor):
         target=application.audit
     )
 
-    AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, user_actor)
+    AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, user_actor)
     return application
 
 @atomic

@@ -48,14 +48,14 @@ class AuditStoreQuerySet(QuerySet):
         query_set = self.filter(audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES)
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
-    def assign_audit_store(self, audit, audit_date, auditor, by):
+    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, by):
         audit_store = AuditStore()
         audit_store.audit = audit
         audit_store.audit_date = audit_date
         audit_store.user = auditor
         audit_store.status = AuditStore.ASSIGNED
-        audit_store.reimbursement = audit.reimbursement
-        audit_store.earnings_per_audit = audit.earnings_per_audit
+        audit_store.reimbursement = reimbursement
+        audit_store.earnings_per_audit = earnings_per_audit
         audit_store.save()
         audit_store_status_change.send(
             sender=self.__class__,

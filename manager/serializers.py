@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from notifications.models import Notification
-from rest_framework.serializers import CharField, EmailField, BooleanField
+from rest_framework.serializers import CharField, EmailField, BooleanField, IntegerField
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField, RelatedField
 
 from agency.models import AgencyUser, Agency
@@ -627,6 +627,8 @@ class AuditFiatAssignDeSerializer(Serializer):
     audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
     email = EmailField()
     audit_date = DateField()
+    earnings_per_audit = IntegerField()
+    reimbursement = IntegerField()
 
 class ContentTypeSerializer(ModelSerializer):
     class Meta:

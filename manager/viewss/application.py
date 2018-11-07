@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, DateField
+from rest_framework.serializers import Serializer, DateField, IntegerField
 
 from ..serializers import AuditApplicationSerializer
 
@@ -36,11 +36,19 @@ class AuditApplicationApproveView(APIView):
     }
     class DeSerializer(Serializer):
         audit_date = DateField()
+        reimbursement = IntegerField()
+        earnings_per_audit = IntegerField()
 
     def post(self, request, application_id, format=None):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
-        application = application_service.approve(application_id, ds.validated_data['audit_date'], request.user)
+        application = application_service.approve(
+            application_id,
+            ds.validated_data['audit_date'],
+            ds.validated_data["reimbursement"],
+            ds.validated_data["earnings_per_audit"],
+            request.user,
+        )
         return Response(AuditApplicationSerializer(application).data)
 
 

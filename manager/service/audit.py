@@ -6,7 +6,7 @@ from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
 
 @atomic
-def fiat_assign(audit_id, email, audit_date, user_actor):
+def fiat_assign(audit_id, email, audit_date, reimbursement, earnings_per_audit, user_actor):
     try:
         user = User.objects.get(email__iexact=email)
         audit = Audit.objects.get(pk=audit_id)
@@ -21,8 +21,7 @@ def fiat_assign(audit_id, email, audit_date, user_actor):
     if audit_cycle.status == AuditCycle.ARCHIVED:
         raise AppLogicError("audit_cycle is archived")
 
-    audit_store = AuditStore.objects.assign_audit_store(audit, audit_date, user, user_actor)
-    return audit_store
+    return AuditStore.objects.assign_audit_store(audit, audit_date, user, reimbursement, earnings_per_audit, user_actor)
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):
     if audit_cycle_type is None:

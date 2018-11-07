@@ -69,6 +69,8 @@ class AuditFiatAssignView(APIView):
             audit_f_assign_ds.validated_data["audit"].id,
             audit_f_assign_ds.validated_data["email"],
             audit_f_assign_ds.validated_data["audit_date"],
+            audit_f_assign_ds.validated_data["reimbursement"],
+            audit_f_assign_ds.validated_data["earnings_per_audit"],
             request.user
         )
         return Response(AuditStoreSerializer(audit_store).data)
