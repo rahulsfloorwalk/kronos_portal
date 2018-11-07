@@ -4,20 +4,20 @@ import * as ReactRedux from "react-redux";
 
 import Alert from "react-s-alert";
 
-import { submitApplicationApproveForm } from "../actions/application.js";
-import { findById } from "../service/application.js";
+import { submitApplicationApproveForm } from "../../actions/application.js";
+import { findById } from "../../service/application.js";
 
-import { getAuditType, getAuditStatus } from "../../utils.js";
-import { affectInputEventToComponent } from "../../react_utils.js";
-import FormErrorList from "../../components/FormErrorList.jsx";
-import { FormDateInput } from "../../components/FormInput.jsx";
-import FormInput from "../../components/FormInput.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import FormGroup from "../../components/FormGroup.jsx";
-import FormTextarea from "../../components/FormTextarea.jsx";
-import SaveButton from "../../components/SaveButton.jsx";
-import Modal from "../../components/Modal.jsx";
-import Loading from "../../components/Loading.jsx";
+import { getAuditType, getAuditStatus } from "../../../utils.js";
+import { affectInputEventToComponent } from "../../../react_utils.js";
+import FormErrorList from "../../../components/FormErrorList.jsx";
+import { FormDateInput } from "../../../components/FormInput.jsx";
+import FormInput from "../../../components/FormInput.jsx";
+import FormSelect from "../../../components/FormSelect.jsx";
+import FormGroup from "../../../components/FormGroup.jsx";
+import FormTextarea from "../../../components/FormTextarea.jsx";
+import SaveButton from "../../../components/SaveButton.jsx";
+import Modal from "../../../components/Modal.jsx";
+import Loading from "../../../components/Loading.jsx";
 
 class ApplicationApproveForm extends React.Component {
     static contextTypes = {
@@ -59,11 +59,11 @@ class ApplicationApproveForm extends React.Component {
 
     onSubmit = (e) => {
     	e.preventDefault();
-    	var obj = {
+    	const obj = {
     		application_id: this.state.application.id,
     		audit_date: this.state.audit_date
     	};
-    	var promise = this.props.dispatch(submitApplicationApproveForm(obj));
+    	const promise = this.props.dispatch(submitApplicationApproveForm(obj));
     	promise.then(() => {
     		this.props.router.push({
     			pathname: `/audit_cycle/${this.context.auditCycleId}/audit`,
@@ -92,8 +92,8 @@ class ApplicationApproveForm extends React.Component {
     }
 }
 
-var mapStoreToProps = function(store, ownProps){
-	var application;
+const mapStoreToProps = (store, ownProps) => {
+	let application;
 	try{
 		application = store.audits[ownProps.params.auditId].applications.filter(function(app){
 			return app.id === Number(ownProps.params.applicationId);

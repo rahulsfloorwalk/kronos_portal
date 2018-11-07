@@ -2,19 +2,19 @@ import React from "react";
 import { Link } from "react-router";
 
 import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import { momentDateFormat }  from "../../../../config.js";
 
-import { fetchAuditCycle } from "../actions/audit.js";
-import { fetchApplicationStats } from "../service/audit_cycle_stats.js";
+import { fetchAuditCycle } from "../../actions/audit.js";
+import { fetchApplicationStats } from "../../service/audit_cycle_stats.js";
 
-import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
-import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
-import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../components/Icons.jsx";
-import NavLink from "../../components/NavLink.jsx";
-import Panel from "../../components/Panel.jsx";
-import Loading from "../../components/Loading.jsx";
+import AuditStoreStatusLabel from "../../../components/AuditStoreStatusLabel.jsx";
+import ApplicationStatusLabel from "../../../components/ApplicationStatusLabel.jsx";
+import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
+import NavLink from "../../../components/NavLink.jsx";
+import Panel from "../../../components/Panel.jsx";
+import Loading from "../../../components/Loading.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
+import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../../utils.js";
 
 export default class extends React.Component {
     state = {};

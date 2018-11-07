@@ -3,17 +3,17 @@ import React, { Component } from "react";
 import Alert from "react-s-alert";
 
 import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import { momentDateFormat }  from "../../../../config.js";
 
 import { Link, withRouter } from "react-router";
 
-import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from "../../components/Icons.jsx";
+import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from "../../../components/Icons.jsx";
 
-import { findByAudit, waitListApplication } from "../service/application.js";
+import { findByAudit, waitListApplication } from "../../service/application.js";
 
-import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
-import AuditStoreRating from "../../components/AuditStoreRating.jsx";
-import ApplicationRepeat from "../../components/ApplicationRepeat.jsx";
+import ApplicationStatusLabel from "../../../components/ApplicationStatusLabel.jsx";
+import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
+import ApplicationRepeat from "../../../components/ApplicationRepeat.jsx";
 
 class AuditApplicationList extends Component{
 	constructor(props){

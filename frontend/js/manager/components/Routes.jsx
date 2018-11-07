@@ -67,8 +67,8 @@ import AuditStoreReportAttributeForm from "./audit_store/AuditStoreReportAttribu
 
 import AuditFiatAssignForm from "./AuditFiatAssignForm.jsx";
 
-import ApplicationApproveForm from "./ApplicationApproveForm.jsx";
-import ApplicationRejectForm from "./ApplicationRejectForm.jsx";
+import ApplicationApproveForm from "./application/ApplicationApproveForm.jsx";
+import ApplicationRejectForm from "./application/ApplicationRejectForm.jsx";
 
 import ModeratorList from "./moderator/ModeratorList.jsx";
 import ModeratorForm from "./moderator/ModeratorForm.jsx";

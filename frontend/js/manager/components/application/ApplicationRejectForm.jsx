@@ -4,19 +4,19 @@ import * as ReactRedux from "react-redux";
 
 import Alert from "react-s-alert";
 
-import { submitApplicationRejectForm } from "../actions/application.js";
-import { findById } from "../service/application.js";
+import { submitApplicationRejectForm } from "../../actions/application.js";
+import { findById } from "../../service/application.js";
 
-import { getAuditType, getAuditStatus } from "../../utils.js";
-import { affectInputEventToComponent } from "../../react_utils.js";
-import FormErrorList from "../../components/FormErrorList.jsx";
-import FormInput from "../../components/FormInput.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import FormGroup from "../../components/FormGroup.jsx";
-import FormTextarea from "../../components/FormTextarea.jsx";
-import SaveButton from "../../components/SaveButton.jsx";
-import Modal from "../../components/Modal.jsx";
-import Loading from "../../components/Loading.jsx";
+import { getAuditType, getAuditStatus } from "../../../utils.js";
+import { affectInputEventToComponent } from "../../../react_utils.js";
+import FormErrorList from "../../../components/FormErrorList.jsx";
+import FormInput from "../../../components/FormInput.jsx";
+import FormSelect from "../../../components/FormSelect.jsx";
+import FormGroup from "../../../components/FormGroup.jsx";
+import FormTextarea from "../../../components/FormTextarea.jsx";
+import SaveButton from "../../../components/SaveButton.jsx";
+import Modal from "../../../components/Modal.jsx";
+import Loading from "../../../components/Loading.jsx";
 
 class ApplicationRejectForm extends React.Component {
     static contextTypes = {

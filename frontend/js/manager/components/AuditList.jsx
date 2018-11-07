@@ -18,7 +18,7 @@ import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
-import ApplicationStatusSummary from "./ApplicationStatusSummary.jsx";
+import ApplicationStatusSummary from "./application/ApplicationStatusSummary.jsx";
 
 import { AuditStoreTable } from "./AuditStoreList.jsx";
 
@@ -28,7 +28,7 @@ import { rejectAllForAudit, rejectAllForAuditCycle } from "../service/applicatio
 import { findAuditStoresByAudit } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 
-import AuditApplicationList from "./AuditApplicationList.jsx";
+import AuditApplicationList from "./application/AuditApplicationList.jsx";
 import AgencyListForAudit from "./audit/AgencyListForAudit.jsx";
 
 class AuditStoreTableForAudit extends Component{
