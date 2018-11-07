@@ -2,8 +2,8 @@ import React from "react";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
-import { Cross, Plus, Home, Pencil, HandRight } from "../../components/Icons.jsx";
-import { fetchStores, deleteStore } from "../actions/store.js";
+import { Cross, Plus, Home, Pencil, HandRight } from "../../../components/Icons.jsx";
+import { fetchStores, deleteStore } from "../../actions/store.js";
 
 class StoreRow extends React.Component {
 	render() {

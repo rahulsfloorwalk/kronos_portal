@@ -16,10 +16,10 @@ import QuestionnaireTypeList from "./questionnaire_type/QuestionnaireTypeList.js
 import QuestionnaireTypeForm from "./questionnaire_type/QuestionnaireTypeForm.jsx";
 import QuestionnaireTypeEditForm from "./questionnaire_type/QuestionnaireTypeEditForm.jsx";
 
-import StoreList from "./StoreList.jsx";
-import StoreForm from "./StoreForm.jsx";
-import StoreDetail from "./StoreDetail.jsx";
-import StoreAssignForm from "./StoreAssignForm.jsx";
+import StoreList from "./store/StoreList.jsx";
+import StoreForm from "./store/StoreForm.jsx";
+import StoreDetail from "./store/StoreDetail.jsx";
+import StoreAssignForm from "./store/StoreAssignForm.jsx";
 
 import AuditorList from "./auditor/AuditorList.jsx";
 import AuditorDetailsPage from "./auditor/AuditorDetailsPage.jsx";

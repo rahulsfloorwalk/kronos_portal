@@ -3,12 +3,12 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 
-import { fetchClientUsers, updateClientUserStoreVisibility } from "../actions/client_user.js";
-import { fetchStore } from "../actions/store.js";
-import { fetchClientUsersForStore, assignStoreToClientUser, revokeStoreFromClientUser } from "../service/client_user.js";
+import { fetchClientUsers, updateClientUserStoreVisibility } from "../../actions/client_user.js";
+import { fetchStore } from "../../actions/store.js";
+import { fetchClientUsersForStore, assignStoreToClientUser, revokeStoreFromClientUser } from "../../service/client_user.js";
 
-import { Checked, Unchecked, OptionHorizontal } from "../../components/Icons.jsx";
-import Modal from "../../components/Modal.jsx";
+import { Checked, Unchecked, OptionHorizontal } from "../../../components/Icons.jsx";
+import Modal from "../../../components/Modal.jsx";
 
 class StoreAssignForm extends React.Component{
 	static propTypes = {

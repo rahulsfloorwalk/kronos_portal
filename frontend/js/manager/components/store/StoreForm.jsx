@@ -4,19 +4,19 @@ import { hashHistory } from "react-router";
 
 import Alert from "react-s-alert";
 
-import { fetchStates, fetchCities } from "../actions/location.js";
-import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from "../actions/store.js";
+import { fetchStates, fetchCities } from "../../actions/location.js";
+import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from "../../actions/store.js";
 
-import { affectInputEventToComponent } from "../../react_utils.js";
-import FormInput from "../../components/FormInput.jsx";
-import FormGroup from "../../components/FormGroup.jsx";
-import FormErrorList from "../../components/FormErrorList.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import SaveButton from "../../components/SaveButton.jsx";
-import Modal from "../../components/Modal.jsx";
+import { affectInputEventToComponent } from "../../../react_utils.js";
+import FormInput from "../../../components/FormInput.jsx";
+import FormGroup from "../../../components/FormGroup.jsx";
+import FormErrorList from "../../../components/FormErrorList.jsx";
+import FormSelect from "../../../components/FormSelect.jsx";
+import SaveButton from "../../../components/SaveButton.jsx";
+import Modal from "../../../components/Modal.jsx";
 
-import StateSelector from "../../components/StateSelector.jsx";
-import CitySelector from "../../components/CitySelector.jsx";
+import StateSelector from "../../../components/StateSelector.jsx";
+import CitySelector from "../../../components/CitySelector.jsx";
 
 class StoreForm extends React.Component {
     state = {};

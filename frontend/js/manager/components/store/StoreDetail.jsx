@@ -2,11 +2,11 @@ import React from "react";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
-import { fetchStore } from "../actions/store.js";
+import { fetchStore } from "../../actions/store.js";
 
-import { Pencil, Home, King } from "../../components/Icons.jsx";
-import Panel from "../../components/Panel.jsx";
-import Loading from "../../components/Loading.jsx";
+import { Pencil, Home, King } from "../../../components/Icons.jsx";
+import Panel from "../../../components/Panel.jsx";
+import Loading from "../../../components/Loading.jsx";
 
 class StoreDetail extends React.Component {
 	componentDidMount() {

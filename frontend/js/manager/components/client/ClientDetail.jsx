@@ -9,7 +9,7 @@ import Panel from "../../../components/Panel.jsx";
 import Loading from "../../../components/Loading.jsx";
 import NavLink from "../../../components/NavLink.jsx";
 
-import StoreList from "./../StoreList.jsx";
+import StoreList from "../store/StoreList.jsx";
 import AuditCycleList from "../audit_cycle/AuditCycleList.jsx";
 
 export default class extends React.Component {
