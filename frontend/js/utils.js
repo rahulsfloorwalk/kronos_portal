@@ -275,6 +275,9 @@ export function getColor(value){
 	case "4":
 	case 4:
 		return "success";
+	case "5":
+	case 5:
+		return "success";
 	case "":
 	case null:
 	case undefined:

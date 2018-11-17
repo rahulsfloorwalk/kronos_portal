@@ -10,11 +10,13 @@ def get_color_code_by_percentage(percentage):
     if percentage is None:
         return 0
 
-    if percentage > 80:
+    if percentage > 90:
+        return 5
+    elif percentage > 84:
         return 4
-    elif percentage > 60:
+    elif percentage > 74:
         return 3
-    elif percentage > 40:
+    elif percentage > 65:
         return 2
     elif percentage >= 0:
         return 1
@@ -34,7 +36,7 @@ def get_color_code(marks_obtained, max_marks):
 
 
 def get_color_hex_from_code(color_code):
-    colors = ("#FFFFFF", "#F2DEDE", "#FCF8E3", "#D9EDF7", "#DFF0D8")
+    colors = ("#FFFFFF", "#F2DEDE", "#F2E7DE", "#FCF8E3", "#D9EDF7", "#DFF0D8")
     return colors[color_code]
 
 
