@@ -1,5 +1,5 @@
 import types from "../../manager/action_types";
-import { rootReducer } from "../../manager/reducers";
+import rootReducer from "../../manager/reducers";
 
 describe(types.AUDIT_STORE_ID_QA_OK, () => {
 	const sampleAuditStore = {
@@ -19,9 +19,7 @@ describe(types.AUDIT_STORE_ID_QA_OK, () => {
 			auditStoreId: 5,
 		});
 
-		expect(nextState).toEqual({
-			errors: {},
-		});
+		expect(nextState.errors).toEqual({});
 	});
 	it("it sets the auditStore on success status", () => {
 		const initialState = {};
@@ -32,11 +30,7 @@ describe(types.AUDIT_STORE_ID_QA_OK, () => {
 			auditStore: sampleAuditStore,
 		});
 
-		expect(nextState).toEqual({
-			auditStores: {
-				[sampleAuditStore.id]: sampleAuditStore,
-			},
-		});
+		expect(nextState.auditStores[sampleAuditStore.id]).toEqual(sampleAuditStore);
 	});
 	it("it sets the global errors on error status", () => {
 		const initialState = {};
@@ -50,9 +44,7 @@ describe(types.AUDIT_STORE_ID_QA_OK, () => {
 			errors: sampleError,
 		});
 
-		expect(nextState).toEqual({
-			errors: sampleError,
-		});
+		expect(nextState.errors).toEqual(sampleError);
 	});
 });
 
@@ -74,9 +66,7 @@ describe(types.AUDIT_STORE_ID_PM_REVERT, () => {
 			auditStoreId: 5,
 		});
 
-		expect(nextState).toEqual({
-			errors: {},
-		});
+		expect(nextState.errors).toEqual({});
 	});
 	it("it sets the auditStore on success status", () => {
 		const initialState = {};
@@ -87,11 +77,7 @@ describe(types.AUDIT_STORE_ID_PM_REVERT, () => {
 			auditStore: sampleAuditStore,
 		});
 
-		expect(nextState).toEqual({
-			auditStores: {
-				[sampleAuditStore.id]: sampleAuditStore,
-			},
-		});
+		expect(nextState.auditStores[sampleAuditStore.id]).toEqual(sampleAuditStore);
 	});
 	it("it sets the global errors on error status", () => {
 		const initialState = {};
@@ -105,9 +91,7 @@ describe(types.AUDIT_STORE_ID_PM_REVERT, () => {
 			errors: sampleError,
 		});
 
-		expect(nextState).toEqual({
-			errors: sampleError,
-		});
+		expect(nextState.errors).toEqual(sampleError);
 	});
 });
 

@@ -1,4 +1,4 @@
-import { rootReducer } from "../../reducers.js";
+import rootReducer from "../../reducers.js";
 
 import { fetchReportAttributesByAuditCycleId } from "../report_attribute";
 import types from "../../action_types";
@@ -22,10 +22,8 @@ describe(types.REPORT_ATTRIBUTE_GET, () => {
 		const reportAttributes = [];
 		const nextState = rootReducer({}, fetchReportAttributesByAuditCycleId(auditCycleId, reportAttributes));
 
-		expect(nextState).toEqual({
-			reportAttributes: {
-				[auditCycleId]: reportAttributes,
-			},
+		expect(nextState.reportAttributes).toEqual({
+			[auditCycleId]: reportAttributes,
 		});
 	});
 });
