@@ -185,6 +185,9 @@ $table_lighten_percentage: 30%;
 	thead >, tbody >, tfoot > {
 		tr {
 			&, > td, > th {
+				&.rating-na {
+					background-color: #F1F1F1;
+				}
 				&.rating-bad {
 					background-color: lighten($rating_bad_color, $table_lighten_percentage);
 				}

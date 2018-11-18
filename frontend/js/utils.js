@@ -263,6 +263,9 @@ export function getCameraResolution(value){
 
 export function getColor(value){
 	switch(value){
+	case "0":
+	case 0:
+		return "rating-na";
 	case "1":
 	case 1:
 		return "rating-bad";
