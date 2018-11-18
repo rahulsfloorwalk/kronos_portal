@@ -23,7 +23,7 @@ class StoreMarkingTestCase(TestCase):
 
     def test_get_scores_graph_for_store(self):
         scores = get_scores_graph_for_store_by_questionnaire_type(self.store_id, self.client_id, self.questionnaire_type_id)
-        self.assertEqual(len(scores), 3)
+        self.assertEqual(len(scores), 4)
 
     def test_get_scores_for_store(self):
         scores = get_scores_for_store_by_questionnaire_type(self.store_id, self.client_id, self.questionnaire_type_id)

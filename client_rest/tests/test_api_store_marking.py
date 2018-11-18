@@ -34,7 +34,7 @@ class StoreMarkingViewTestCase(APITestCase):
             "store_id": self.store_id,
         }))
 
-        self.assertEqual(len(response.data), 3)
+        self.assertEqual(len(response.data), 4)
 
     def test_get_scores_for_store(self):
         self.login()
