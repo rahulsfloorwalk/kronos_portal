@@ -54,12 +54,12 @@ exports[`<QuestionnaireTrends/> renders the QuestionnaireTrends table correctly 
           Visit Time in
         </td>
         <td
-          className=" text-right"
+          className="rating-na text-right"
         >
           1.00
         </td>
         <td
-          className=" text-right"
+          className="rating-na text-right"
         >
           0
         </td>
@@ -78,12 +78,12 @@ exports[`<QuestionnaireTrends/> renders the QuestionnaireTrends table correctly 
           Visit Time out
         </td>
         <td
-          className=" text-right"
+          className="rating-na text-right"
         >
           2.00
         </td>
         <td
-          className=" text-right"
+          className="rating-na text-right"
         >
           1.00
         </td>
