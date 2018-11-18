@@ -36,7 +36,7 @@ def get_color_code(marks_obtained, max_marks):
 
 
 def get_color_hex_from_code(color_code):
-    colors = ("#FFFFFF", "#F2DEDE", "#F2E7DE", "#FCF8E3", "#D9EDF7", "#DFF0D8")
+    colors = ("#FFFFFF", "#FFC299", "#FFEB99", "#FFFF99", "#EAFF99", "#C1FF99")
     return colors[color_code]
 
 
