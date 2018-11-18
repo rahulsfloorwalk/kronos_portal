@@ -43,9 +43,17 @@ const sampleChartData = {
 		166,
 		165,
 		165
+	],
+	"color_codes": [
+		5,
+		4,
+		3,
+		2,
+		3
 	]
 };
 
+//TODO - fix snapshot test. Snapshot does not contain chart
 describe("<StorePerformance/>", () => {
 	beforeEach(() => {
 		fetchStorePerformance.mockReturnValue($.Deferred().resolve(sampleChartData).promise());

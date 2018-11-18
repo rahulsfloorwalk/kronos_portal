@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from "recharts";
 import { Text } from "recharts";
 
+import { getRatingText } from "../../utils";
 import Loading from "../../components/Loading.jsx";
 import { fetchStorePerformance } from "../service/store.js";
 
@@ -40,7 +41,7 @@ export default class StorePerformance extends Component{
 			let scoresLength = data.audit_cycle.length;
 			for(let i = 0; i < scoresLength; i++){
 				let percentage = Math.round((data.scores[i]*100)/data.max_marks[i]);
-				chartData.push({name: data.audit_cycle[i], score: percentage});
+				chartData.push({name: data.audit_cycle[i], score: percentage, color_code: data.color_codes[i]});
 			}
 			this.setState({
 				data: chartData
@@ -54,6 +55,7 @@ export default class StorePerformance extends Component{
 		}
 
 		else{
+			console.log(this.state.data);
 			return (
 				<ResponsiveContainer width="100%" aspect={3 / 1}>
 					<BarChart data={this.state.data} margin={{top: 5, right: 30, left: 20, bottom: 5}}>
@@ -61,7 +63,7 @@ export default class StorePerformance extends Component{
 						<YAxis/>
 						<Tooltip/>
 						<Legend />
-						<Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>
+						<Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : "("+getRatingText(v.color_code)+")\n"+v.value+"%"}</Text>}/>
 					</BarChart>
 				</ResponsiveContainer>
 			);

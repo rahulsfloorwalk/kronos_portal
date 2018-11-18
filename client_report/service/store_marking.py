@@ -26,6 +26,7 @@ def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questi
     scores_list = []
     audit_cycles_list = []
     max_scores_list = []
+    color_codes = []
     for audit_cycle in audit_cycles:
         marks = get_question_wise_marks_for_audit_cycle(audit_cycle.id, store_id)
         total = 0
@@ -37,7 +38,8 @@ def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questi
         audit_cycles_list.append(audit_cycle.name)
         scores_list.append(total)
         max_scores_list.append(max_marks)
-    return {"scores": scores_list, "audit_cycle": audit_cycles_list, "max_marks": max_scores_list}
+        color_codes.append(get_color_code(total, max_marks))
+    return {"scores": scores_list, "audit_cycle": audit_cycles_list, "max_marks": max_scores_list, "color_codes": color_codes}
 
 def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
     all_cycles = AuditCycle.objects.filter(
