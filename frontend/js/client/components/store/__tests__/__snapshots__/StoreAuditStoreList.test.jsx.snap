@@ -39,18 +39,18 @@ exports[`<StoreAuditStoreList/> renders the table correctly 1`] = `
           Walkin
         </td>
         <td
-          className="text-right success"
+          className="text-right rating-good"
         >
           11th Feb 2018
         </td>
         <td
-          className="text-right success"
+          className="text-right rating-good"
         >
           81
           %
         </td>
         <td
-          className="text-right success"
+          className="text-right rating-good"
         >
           <a
             className="btn btn-sm btn-default"
@@ -73,18 +73,18 @@ exports[`<StoreAuditStoreList/> renders the table correctly 1`] = `
           Walkin
         </td>
         <td
-          className="text-right info"
+          className="text-right rating-average"
         >
           17th Mar 2018
         </td>
         <td
-          className="text-right info"
+          className="text-right rating-average"
         >
           72
           %
         </td>
         <td
-          className="text-right info"
+          className="text-right rating-average"
         >
           <a
             className="btn btn-sm btn-default"

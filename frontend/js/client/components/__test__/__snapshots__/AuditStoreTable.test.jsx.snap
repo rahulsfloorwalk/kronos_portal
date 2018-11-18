@@ -115,7 +115,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           10th May 2018
         </td>
         <td
-          className="info text-right"
+          className="rating-average text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -125,7 +125,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           73%
         </td>
         <td
-          className="warning text-right"
+          className="rating-poor text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -135,7 +135,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           50%
         </td>
         <td
-          className="success text-right"
+          className="rating-good text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -145,7 +145,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           100%
         </td>
         <td
-          className="danger text-right"
+          className="rating-bad text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -192,7 +192,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           20th May 2018
         </td>
         <td
-          className="info text-right"
+          className="rating-average text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -202,7 +202,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           73%
         </td>
         <td
-          className="warning text-right"
+          className="rating-poor text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -212,7 +212,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           50%
         </td>
         <td
-          className="danger text-right"
+          className="rating-bad text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",
@@ -222,7 +222,7 @@ exports[`AuditStoreTable renders the reports 1`] = `
           0%
         </td>
         <td
-          className="danger text-right"
+          className="rating-bad text-right"
           style={
             Object {
               "borderTop": "solid lightgray 2px",

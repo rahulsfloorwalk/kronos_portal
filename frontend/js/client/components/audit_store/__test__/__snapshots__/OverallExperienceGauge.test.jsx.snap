@@ -2,660 +2,1550 @@
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 1 1`] = `
 <div
-  className="panel panel-danger"
+  className="panel panel-default"
 >
   <div
     className="panel-heading"
   >
     Overall Experience
   </div>
-  <div
-    className="panel-body text-center"
+  <table
+    className="table"
   >
-    <svg
-      height="100%"
-      style={
-        Object {
-          "height": 300,
-          "left": 0,
-          "overflow": "hidden",
-          "position": "relative",
-          "top": 0,
-          "width": 500,
-        }
-      }
-      version="1.1"
-      width="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <filter
-          id="filter_0"
+    <tbody>
+      <tr>
+        <td
+          className="text-center"
+          rowSpan={5}
         >
-          <feOffset
-            dx="0"
-            dy="3"
-          />
-          <feGaussianBlur
-            result="offset-blur"
-            stdDeviation="5"
-          />
-          <feComposite
-            in="SourceGraphic"
-            in2="offset-blur"
-            operator="out"
-            result="inverse"
-          />
-          <feFlood
-            floodColor="black"
-            floodOpacity="0.2"
-            result="color"
-          />
-          <feComposite
-            in="color"
-            in2="inverse"
-            operator="in"
-            result="shadow"
-          />
-          <feComposite
-            in="shadow"
-            in2="SourceGraphic"
-            operator="over"
-          />
-        </filter>
-      </defs>
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#F2DEDE"
-        filter="url(#filter_0)"
-        stroke="none"
-      />
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#D9534F"
-        filter="url(#filter_0)"
-        stroke="none"
-      />
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 50,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+          <svg
+            height="100%"
+            style={
+              Object {
+                "height": 300,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "relative",
+                "top": 0,
+                "width": 500,
+              }
+            }
+            version="1.1"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter
+                id="filter_0"
+              >
+                <feOffset
+                  dx="0"
+                  dy="3"
+                />
+                <feGaussianBlur
+                  result="offset-blur"
+                  stdDeviation="5"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="offset-blur"
+                  operator="out"
+                  result="inverse"
+                />
+                <feFlood
+                  floodColor="black"
+                  floodOpacity="0.2"
+                  result="color"
+                />
+                <feComposite
+                  in="color"
+                  in2="inverse"
+                  operator="in"
+                  result="shadow"
+                />
+                <feComposite
+                  in="shadow"
+                  in2="SourceGraphic"
+                  operator="over"
+                />
+              </filter>
+            </defs>
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+              fill="#F8F8F8"
+              filter="url(#filter_0)"
+              stroke="none"
+            />
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+              fill="#FFC299"
+              filter="url(#filter_0)"
+              stroke="none"
+            />
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 50,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={37.5}
+            >
+              
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#010101",
+                  "fillOpacity": 1,
+                  "fontSize": 100,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={240}
+            >
+              64﹪
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={87.5}
+              y={265}
+            >
+              0
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={412.5}
+              y={265}
+            >
+              100
+            </text>
+          </svg>
+          <span
+            style={
+              Object {
+                "bottom": "10%",
+                "fontSize": "1.6em",
+                "fontWeight": "bold",
+                "left": "37%",
+                "position": "absolute",
+                "transform": "translateX(-50%)",
+              }
+            }
+          >
+            Bad
+          </span>
+        </td>
+        <td
+          className="text-right rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={37.5}
-      >
-        
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#010101",
-            "fillOpacity": 1,
-            "fontSize": 100,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Excellent
+          </b>
+        </td>
+        <td
+          className="rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={240}
+        >
+          90% and above
+        </td>
+      </tr>
+      <tr
+        className="rating-good"
       >
-        64﹪
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={87.5}
-        y={265}
-      >
-        0
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Good
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={412.5}
-        y={265}
+        >
+          85% - 89%
+        </td>
+      </tr>
+      <tr
+        className="rating-average"
       >
-        100
-      </text>
-    </svg>
-  </div>
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Average
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          75% - 84%
+        </td>
+      </tr>
+      <tr
+        className="rating-poor"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Poor
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          66% - 74% 
+        </td>
+      </tr>
+      <tr
+        className="rating-bad"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Bad
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          0% - 65%
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 2 1`] = `
 <div
-  className="panel panel-warning"
+  className="panel panel-default"
 >
   <div
     className="panel-heading"
   >
     Overall Experience
   </div>
-  <div
-    className="panel-body text-center"
+  <table
+    className="table"
   >
-    <svg
-      height="100%"
-      style={
-        Object {
-          "height": 300,
-          "left": 0,
-          "overflow": "hidden",
-          "position": "relative",
-          "top": 0,
-          "width": 500,
-        }
-      }
-      version="1.1"
-      width="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <filter
-          id="filter_1"
+    <tbody>
+      <tr>
+        <td
+          className="text-center"
+          rowSpan={5}
         >
-          <feOffset
-            dx="0"
-            dy="3"
-          />
-          <feGaussianBlur
-            result="offset-blur"
-            stdDeviation="5"
-          />
-          <feComposite
-            in="SourceGraphic"
-            in2="offset-blur"
-            operator="out"
-            result="inverse"
-          />
-          <feFlood
-            floodColor="black"
-            floodOpacity="0.2"
-            result="color"
-          />
-          <feComposite
-            in="color"
-            in2="inverse"
-            operator="in"
-            result="shadow"
-          />
-          <feComposite
-            in="shadow"
-            in2="SourceGraphic"
-            operator="over"
-          />
-        </filter>
-      </defs>
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#FCF8E3"
-        filter="url(#filter_1)"
-        stroke="none"
-      />
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#F0AD4E"
-        filter="url(#filter_1)"
-        stroke="none"
-      />
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 50,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+          <svg
+            height="100%"
+            style={
+              Object {
+                "height": 300,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "relative",
+                "top": 0,
+                "width": 500,
+              }
+            }
+            version="1.1"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter
+                id="filter_1"
+              >
+                <feOffset
+                  dx="0"
+                  dy="3"
+                />
+                <feGaussianBlur
+                  result="offset-blur"
+                  stdDeviation="5"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="offset-blur"
+                  operator="out"
+                  result="inverse"
+                />
+                <feFlood
+                  floodColor="black"
+                  floodOpacity="0.2"
+                  result="color"
+                />
+                <feComposite
+                  in="color"
+                  in2="inverse"
+                  operator="in"
+                  result="shadow"
+                />
+                <feComposite
+                  in="shadow"
+                  in2="SourceGraphic"
+                  operator="over"
+                />
+              </filter>
+            </defs>
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+              fill="#F8F8F8"
+              filter="url(#filter_1)"
+              stroke="none"
+            />
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+              fill="#FFEB99"
+              filter="url(#filter_1)"
+              stroke="none"
+            />
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 50,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={37.5}
+            >
+              
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#010101",
+                  "fillOpacity": 1,
+                  "fontSize": 100,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={240}
+            >
+              64﹪
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={87.5}
+              y={265}
+            >
+              0
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={412.5}
+              y={265}
+            >
+              100
+            </text>
+          </svg>
+          <span
+            style={
+              Object {
+                "bottom": "10%",
+                "fontSize": "1.6em",
+                "fontWeight": "bold",
+                "left": "37%",
+                "position": "absolute",
+                "transform": "translateX(-50%)",
+              }
+            }
+          >
+            Poor
+          </span>
+        </td>
+        <td
+          className="text-right rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={37.5}
-      >
-        
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#010101",
-            "fillOpacity": 1,
-            "fontSize": 100,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Excellent
+          </b>
+        </td>
+        <td
+          className="rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={240}
+        >
+          90% and above
+        </td>
+      </tr>
+      <tr
+        className="rating-good"
       >
-        64﹪
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={87.5}
-        y={265}
-      >
-        0
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Good
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={412.5}
-        y={265}
+        >
+          85% - 89%
+        </td>
+      </tr>
+      <tr
+        className="rating-average"
       >
-        100
-      </text>
-    </svg>
-  </div>
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Average
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          75% - 84%
+        </td>
+      </tr>
+      <tr
+        className="rating-poor"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Poor
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          66% - 74% 
+        </td>
+      </tr>
+      <tr
+        className="rating-bad"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Bad
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          0% - 65%
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 3 1`] = `
 <div
-  className="panel panel-info"
+  className="panel panel-default"
 >
   <div
     className="panel-heading"
   >
     Overall Experience
   </div>
-  <div
-    className="panel-body text-center"
+  <table
+    className="table"
   >
-    <svg
-      height="100%"
-      style={
-        Object {
-          "height": 300,
-          "left": 0,
-          "overflow": "hidden",
-          "position": "relative",
-          "top": 0,
-          "width": 500,
-        }
-      }
-      version="1.1"
-      width="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <filter
-          id="filter_2"
+    <tbody>
+      <tr>
+        <td
+          className="text-center"
+          rowSpan={5}
         >
-          <feOffset
-            dx="0"
-            dy="3"
-          />
-          <feGaussianBlur
-            result="offset-blur"
-            stdDeviation="5"
-          />
-          <feComposite
-            in="SourceGraphic"
-            in2="offset-blur"
-            operator="out"
-            result="inverse"
-          />
-          <feFlood
-            floodColor="black"
-            floodOpacity="0.2"
-            result="color"
-          />
-          <feComposite
-            in="color"
-            in2="inverse"
-            operator="in"
-            result="shadow"
-          />
-          <feComposite
-            in="shadow"
-            in2="SourceGraphic"
-            operator="over"
-          />
-        </filter>
-      </defs>
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#D9EDF7"
-        filter="url(#filter_2)"
-        stroke="none"
-      />
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#5BC0DE"
-        filter="url(#filter_2)"
-        stroke="none"
-      />
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 50,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+          <svg
+            height="100%"
+            style={
+              Object {
+                "height": 300,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "relative",
+                "top": 0,
+                "width": 500,
+              }
+            }
+            version="1.1"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter
+                id="filter_2"
+              >
+                <feOffset
+                  dx="0"
+                  dy="3"
+                />
+                <feGaussianBlur
+                  result="offset-blur"
+                  stdDeviation="5"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="offset-blur"
+                  operator="out"
+                  result="inverse"
+                />
+                <feFlood
+                  floodColor="black"
+                  floodOpacity="0.2"
+                  result="color"
+                />
+                <feComposite
+                  in="color"
+                  in2="inverse"
+                  operator="in"
+                  result="shadow"
+                />
+                <feComposite
+                  in="shadow"
+                  in2="SourceGraphic"
+                  operator="over"
+                />
+              </filter>
+            </defs>
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+              fill="#F8F8F8"
+              filter="url(#filter_2)"
+              stroke="none"
+            />
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+              fill="#FFFF99"
+              filter="url(#filter_2)"
+              stroke="none"
+            />
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 50,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={37.5}
+            >
+              
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#010101",
+                  "fillOpacity": 1,
+                  "fontSize": 100,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={240}
+            >
+              64﹪
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={87.5}
+              y={265}
+            >
+              0
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={412.5}
+              y={265}
+            >
+              100
+            </text>
+          </svg>
+          <span
+            style={
+              Object {
+                "bottom": "10%",
+                "fontSize": "1.6em",
+                "fontWeight": "bold",
+                "left": "37%",
+                "position": "absolute",
+                "transform": "translateX(-50%)",
+              }
+            }
+          >
+            Average
+          </span>
+        </td>
+        <td
+          className="text-right rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={37.5}
-      >
-        
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#010101",
-            "fillOpacity": 1,
-            "fontSize": 100,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Excellent
+          </b>
+        </td>
+        <td
+          className="rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={240}
+        >
+          90% and above
+        </td>
+      </tr>
+      <tr
+        className="rating-good"
       >
-        64﹪
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={87.5}
-        y={265}
-      >
-        0
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Good
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={412.5}
-        y={265}
+        >
+          85% - 89%
+        </td>
+      </tr>
+      <tr
+        className="rating-average"
       >
-        100
-      </text>
-    </svg>
-  </div>
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Average
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          75% - 84%
+        </td>
+      </tr>
+      <tr
+        className="rating-poor"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Poor
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          66% - 74% 
+        </td>
+      </tr>
+      <tr
+        className="rating-bad"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Bad
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          0% - 65%
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 4 1`] = `
 <div
-  className="panel panel-success"
+  className="panel panel-default"
 >
   <div
     className="panel-heading"
   >
     Overall Experience
   </div>
-  <div
-    className="panel-body text-center"
+  <table
+    className="table"
   >
-    <svg
-      height="100%"
-      style={
-        Object {
-          "height": 300,
-          "left": 0,
-          "overflow": "hidden",
-          "position": "relative",
-          "top": 0,
-          "width": 500,
-        }
-      }
-      version="1.1"
-      width="100%"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <defs>
-        <filter
-          id="filter_3"
+    <tbody>
+      <tr>
+        <td
+          className="text-center"
+          rowSpan={5}
         >
-          <feOffset
-            dx="0"
-            dy="3"
-          />
-          <feGaussianBlur
-            result="offset-blur"
-            stdDeviation="5"
-          />
-          <feComposite
-            in="SourceGraphic"
-            in2="offset-blur"
-            operator="out"
-            result="inverse"
-          />
-          <feFlood
-            floodColor="black"
-            floodOpacity="0.2"
-            result="color"
-          />
-          <feComposite
-            in="color"
-            in2="inverse"
-            operator="in"
-            result="shadow"
-          />
-          <feComposite
-            in="shadow"
-            in2="SourceGraphic"
-            operator="over"
-          />
-        </filter>
-      </defs>
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
-        fill="#DFF0D8"
-        filter="url(#filter_3)"
-        stroke="none"
-      />
-      <path
-        d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
-        fill="#5CB85C"
-        filter="url(#filter_3)"
-        stroke="none"
-      />
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 50,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+          <svg
+            height="100%"
+            style={
+              Object {
+                "height": 300,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "relative",
+                "top": 0,
+                "width": 500,
+              }
+            }
+            version="1.1"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter
+                id="filter_3"
+              >
+                <feOffset
+                  dx="0"
+                  dy="3"
+                />
+                <feGaussianBlur
+                  result="offset-blur"
+                  stdDeviation="5"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="offset-blur"
+                  operator="out"
+                  result="inverse"
+                />
+                <feFlood
+                  floodColor="black"
+                  floodOpacity="0.2"
+                  result="color"
+                />
+                <feComposite
+                  in="color"
+                  in2="inverse"
+                  operator="in"
+                  result="shadow"
+                />
+                <feComposite
+                  in="shadow"
+                  in2="SourceGraphic"
+                  operator="over"
+                />
+              </filter>
+            </defs>
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+              fill="#F8F8F8"
+              filter="url(#filter_3)"
+              stroke="none"
+            />
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+              fill="#EAFF99"
+              filter="url(#filter_3)"
+              stroke="none"
+            />
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 50,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={37.5}
+            >
+              
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#010101",
+                  "fillOpacity": 1,
+                  "fontSize": 100,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={240}
+            >
+              64﹪
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={87.5}
+              y={265}
+            >
+              0
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={412.5}
+              y={265}
+            >
+              100
+            </text>
+          </svg>
+          <span
+            style={
+              Object {
+                "bottom": "10%",
+                "fontSize": "1.6em",
+                "fontWeight": "bold",
+                "left": "37%",
+                "position": "absolute",
+                "transform": "translateX(-50%)",
+              }
+            }
+          >
+            Good
+          </span>
+        </td>
+        <td
+          className="text-right rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={37.5}
-      >
-        
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#010101",
-            "fillOpacity": 1,
-            "fontSize": 100,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "bold",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Excellent
+          </b>
+        </td>
+        <td
+          className="rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={250}
-        y={240}
+        >
+          90% and above
+        </td>
+      </tr>
+      <tr
+        className="rating-good"
       >
-        64﹪
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={87.5}
-        y={265}
-      >
-        0
-      </text>
-      <text
-        style={
-          Object {
-            "fill": "#999999",
-            "fillOpacity": 1,
-            "fontSize": 20,
-            "fontStretch": "normal",
-            "fontStyle": "normal",
-            "fontVariant": "normal",
-            "fontWeight": "normal",
-            "lineHeight": "normal",
-            "stroke": "none",
-            "textAnchor": "middle",
+        >
+          <b>
+            Good
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
           }
-        }
-        textAnchor="middle"
-        x={412.5}
-        y={265}
+        >
+          85% - 89%
+        </td>
+      </tr>
+      <tr
+        className="rating-average"
       >
-        100
-      </text>
-    </svg>
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Average
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          75% - 84%
+        </td>
+      </tr>
+      <tr
+        className="rating-poor"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Poor
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          66% - 74% 
+        </td>
+      </tr>
+      <tr
+        className="rating-bad"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Bad
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          0% - 65%
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 5 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    Overall Experience
   </div>
+  <table
+    className="table"
+  >
+    <tbody>
+      <tr>
+        <td
+          className="text-center"
+          rowSpan={5}
+        >
+          <svg
+            height="100%"
+            style={
+              Object {
+                "height": 300,
+                "left": 0,
+                "overflow": "hidden",
+                "position": "relative",
+                "top": 0,
+                "width": 500,
+              }
+            }
+            version="1.1"
+            width="100%"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <filter
+                id="filter_4"
+              >
+                <feOffset
+                  dx="0"
+                  dy="3"
+                />
+                <feGaussianBlur
+                  result="offset-blur"
+                  stdDeviation="5"
+                />
+                <feComposite
+                  in="SourceGraphic"
+                  in2="offset-blur"
+                  operator="out"
+                  result="inverse"
+                />
+                <feFlood
+                  floodColor="black"
+                  floodOpacity="0.2"
+                  result="color"
+                />
+                <feComposite
+                  in="color"
+                  in2="inverse"
+                  operator="in"
+                  result="shadow"
+                />
+                <feComposite
+                  in="shadow"
+                  in2="SourceGraphic"
+                  operator="over"
+                />
+              </filter>
+            </defs>
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 450,240 L375,240 A125,125 0 0 0 125,240 Z "
+              fill="#F8F8F8"
+              filter="url(#filter_4)"
+              stroke="none"
+            />
+            <path
+              d="M125,240 L50,240 A200,200 0 0 1 335.1558583130145,59.034589506796095 L303.22241144563407,126.89661844174755 A125,125 0 0 0 125,240 Z "
+              fill="#C1FF99"
+              filter="url(#filter_4)"
+              stroke="none"
+            />
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 50,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={37.5}
+            >
+              
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#010101",
+                  "fillOpacity": 1,
+                  "fontSize": 100,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "bold",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={250}
+              y={240}
+            >
+              64﹪
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={87.5}
+              y={265}
+            >
+              0
+            </text>
+            <text
+              style={
+                Object {
+                  "fill": "#999999",
+                  "fillOpacity": 1,
+                  "fontSize": 20,
+                  "fontStretch": "normal",
+                  "fontStyle": "normal",
+                  "fontVariant": "normal",
+                  "fontWeight": "normal",
+                  "lineHeight": "normal",
+                  "stroke": "none",
+                  "textAnchor": "middle",
+                }
+              }
+              textAnchor="middle"
+              x={412.5}
+              y={265}
+            >
+              100
+            </text>
+          </svg>
+          <span
+            style={
+              Object {
+                "bottom": "10%",
+                "fontSize": "1.6em",
+                "fontWeight": "bold",
+                "left": "37%",
+                "position": "absolute",
+                "transform": "translateX(-50%)",
+              }
+            }
+          >
+            Excellent
+          </span>
+        </td>
+        <td
+          className="text-right rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Excellent
+          </b>
+        </td>
+        <td
+          className="rating-excellent"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          90% and above
+        </td>
+      </tr>
+      <tr
+        className="rating-good"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Good
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          85% - 89%
+        </td>
+      </tr>
+      <tr
+        className="rating-average"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Average
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          75% - 84%
+        </td>
+      </tr>
+      <tr
+        className="rating-poor"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Poor
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          66% - 74% 
+        </td>
+      </tr>
+      <tr
+        className="rating-bad"
+      >
+        <td
+          className="text-right"
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          <b>
+            Bad
+          </b>
+        </td>
+        <td
+          style={
+            Object {
+              "verticalAlign": "middle",
+            }
+          }
+        >
+          0% - 65%
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 `;

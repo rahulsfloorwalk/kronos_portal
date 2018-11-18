@@ -265,19 +265,45 @@ export function getColor(value){
 	switch(value){
 	case "1":
 	case 1:
-		return "danger";
+		return "rating-bad";
 	case "2":
 	case 2:
-		return "warning";
+		return "rating-poor";
 	case "3":
 	case 3:
-		return "info";
+		return "rating-average";
 	case "4":
 	case 4:
-		return "success";
+		return "rating-good";
 	case "5":
 	case 5:
-		return "success";
+		return "rating-excellent";
+	case "":
+	case null:
+	case undefined:
+		return "";
+	default:
+		return "";
+	}
+}
+
+export function getRatingText(colorCode){
+	switch(colorCode){
+	case "1":
+	case 1:
+		return "Bad";
+	case "2":
+	case 2:
+		return "Poor";
+	case "3":
+	case 3:
+		return "Average";
+	case "4":
+	case 4:
+		return "Good";
+	case "5":
+	case 5:
+		return "Excellent";
 	case "":
 	case null:
 	case undefined:

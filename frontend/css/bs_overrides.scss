@@ -135,3 +135,150 @@ body{
   z-index: -1000;
 }
 
+
+/* Client Rating Styles */
+
+//v1
+//$rating_bad_color : #F15B36;
+//$rating_poor_color : #F6923A;
+//$rating_average_color : #EDE73E;
+//$rating_good_color: #9BC438;
+//$rating_excellent_color: #76B049;
+
+//v2
+//$rating_bad_color : #FF0000;
+//$rating_poor_color : #FF8000;
+//$rating_average_color : #FFFF00;
+//$rating_good_color: #A5FF00;
+//$rating_excellent_color: #00FF00;
+
+//HSV Gradient from #FF0000 to #00FF00
+//
+//1 FF0000
+//2 FF3300
+//3 FF6600
+//4 FF9900
+//5 FFCC00
+//6 FEFF00
+//7 CBFF00
+//8 98FF00
+//9 65FF00
+//10 32FF00
+//11 00FF00
+
+//3
+$rating_bad_color : #FF6600;
+//5
+$rating_poor_color : #FFCC00;
+//6
+$rating_average_color : #FEFF00;
+//7
+$rating_good_color: #CBFF00;
+//9
+$rating_excellent_color: #65FF00;
+
+
+// Rating Table Styles
+$table_lighten_percentage: 30%;
+
+.table > {
+	thead >, tbody >, tfoot > {
+		tr {
+			&, > td, > th {
+				&.rating-bad {
+					background-color: lighten($rating_bad_color, $table_lighten_percentage);
+				}
+				&.rating-poor {
+					background-color: lighten($rating_poor_color, $table_lighten_percentage);
+				}
+				&.rating-average {
+					background-color: lighten($rating_average_color, $table_lighten_percentage);
+				}
+				&.rating-good {
+					background-color: lighten($rating_good_color, $table_lighten_percentage);
+				}
+				&.rating-excellent {
+					background-color: lighten($rating_excellent_color, $table_lighten_percentage);
+				}
+			}
+		}
+	}
+}
+
+// Rating Panel Styles
+
+$panel_border_lighten_pct: 20%;
+
+$panel_heading_text_darken_pct: 20%;
+$panel_heading_bg_lighten_pct: 40%;
+
+.panel-rating-bad {
+	> .panel-heading {
+		color: darken($rating_bad_color, $panel_heading_text_darken_pct);
+		background-color: lighten($rating_bad_color, $panel_heading_bg_lighten_pct);
+		border-color: lighten($rating_bad_color, $panel_border_lighten_pct);
+	}
+	border-color: lighten($rating_bad_color, $panel_border_lighten_pct);
+}
+
+.panel-rating-poor {
+	> .panel-heading {
+		color: darken($rating_poor_color, $panel_heading_text_darken_pct);
+		background-color: lighten($rating_poor_color, $panel_heading_bg_lighten_pct);
+		border-color: lighten($rating_poor_color, $panel_border_lighten_pct);
+	}
+	border-color: lighten($rating_poor_color, $panel_border_lighten_pct);
+}
+
+.panel-rating-average {
+	> .panel-heading {
+		color: darken($rating_average_color, $panel_heading_text_darken_pct);
+		background-color: lighten($rating_average_color, $panel_heading_bg_lighten_pct);
+		border-color: lighten($rating_average_color, $panel_border_lighten_pct);
+	}
+	border-color: lighten($rating_average_color, $panel_border_lighten_pct);
+}
+
+.panel-rating-good {
+	> .panel-heading {
+		color: darken($rating_good_color, $panel_heading_text_darken_pct);
+		background-color: lighten($rating_good_color, $panel_heading_bg_lighten_pct);
+		border-color: lighten($rating_good_color, $panel_border_lighten_pct);
+	}
+	border-color: lighten($rating_good_color, $panel_border_lighten_pct);
+}
+
+.panel-rating-excellent {
+	> .panel-heading {
+		color: darken($rating_excellent_color, $panel_heading_text_darken_pct);
+		background-color: lighten($rating_excellent_color, $panel_heading_bg_lighten_pct);
+		border-color: lighten($rating_excellent_color, $panel_border_lighten_pct);
+	}
+	border-color: lighten($rating_excellent_color, $panel_border_lighten_pct);
+}
+
+// Rating Progress Bar Styles
+
+$progress_bar_bg_lighten_pct : 5%;
+
+.progress-bar-rating-bad {
+	background-color: darken($rating_bad_color, $progress_bar_bg_lighten_pct);
+}
+
+.progress-bar-rating-poor {
+	background-color: darken($rating_poor_color, $progress_bar_bg_lighten_pct);
+}
+
+.progress-bar-rating-average {
+	background-color: darken($rating_average_color, $progress_bar_bg_lighten_pct);
+}
+
+.progress-bar-rating-good {
+	background-color: darken($rating_good_color, $progress_bar_bg_lighten_pct);
+}
+
+.progress-bar-rating-excellent {
+	background-color: darken($rating_excellent_color, $progress_bar_bg_lighten_pct);
+}
+
+// Rating Gauge Styles

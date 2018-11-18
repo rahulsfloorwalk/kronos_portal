@@ -280,19 +280,19 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Entrance
                 </td>
                 <td
-                  className="text-right danger"
+                  className="text-right rating-bad"
                 >
                   36
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   45
                   %
                 </td>
                 <td
-                  className="text-right info"
+                  className="text-right rating-average"
                 >
                   68
                   %
@@ -303,19 +303,19 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Need Analysis
                 </td>
                 <td
-                  className="text-right danger"
+                  className="text-right rating-bad"
                 >
                   32
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   49
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   60
                   %
@@ -326,19 +326,19 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Staff Analysis
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   47
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   56
                   %
                 </td>
                 <td
-                  className="text-right info"
+                  className="text-right rating-average"
                 >
                   66
                   %
@@ -349,19 +349,19 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Selling and Recommendation skills
                 </td>
                 <td
-                  className="text-right danger"
+                  className="text-right rating-bad"
                 >
                   30
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   43
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   46
                   %
@@ -372,19 +372,19 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Outlet analysis
                 </td>
                 <td
-                  className="text-right info"
+                  className="text-right rating-average"
                 >
                   61
                   %
                 </td>
                 <td
-                  className="text-right warning"
+                  className="text-right rating-poor"
                 >
                   52
                   %
                 </td>
                 <td
-                  className="text-right info"
+                  className="text-right rating-average"
                 >
                   70
                   %
