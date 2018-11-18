@@ -1,7 +1,5 @@
 import { combineReducers } from "redux";
 
-import types from "./action_types.js";
-
 import applicationReducer from "./reducers/application";
 import auditReducer from "./reducers/audit";
 import auditStoreReducer from "./reducers/audit_store";
@@ -19,7 +17,8 @@ import reportAttributeReducer from "./reducers/report_attribute";
 import formReducer from "./reducers/forms";
 import errorsReducer from "./reducers/errors";
 
-var initialStore = {
+/*
+const initialStore = {
 	applications: {},
 	audits: {},
 	auditStores: {},
@@ -84,6 +83,7 @@ var initialStore = {
 		},
 	}
 };
+*/
 
 const reducerMap = {
 	applications: applicationReducer,
