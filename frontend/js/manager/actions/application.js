@@ -34,7 +34,9 @@ export function submitApplicationApproveForm(obj){
 			url: url.api_base_path + `manager/application/${obj.application_id}/approve`,
 			method: "POST",
 			data: JSON.stringify({
-				"audit_date": obj.audit_date
+				"audit_date": obj.audit_date,
+				"reimbursement": obj.reimbursement,
+				"earnings_per_audit": obj.earnings_per_audit,
 			}),
 			contentType: "application/json"
 		});

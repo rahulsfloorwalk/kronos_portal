@@ -8,6 +8,8 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { fiatAssignAudit } from "../service/application.js";
 
+import { findAuditById } from "../selectors/audit";
+
 import { affectInputEventToComponent } from "../../react_utils.js";
 import FormErrorList from "../../components/FormErrorList.jsx";
 import { FormDateInput } from "../../components/FormInput.jsx";
@@ -46,18 +48,30 @@ class AuditFiatAssignForm extends React.Component {
 	};
 
 	state = {
-		errors: {}
+		errors: {},
 	};
 
 	componentDidMount() {
 		if(this.props.audit){
 			this.setState({
-				"audit": this.props.params.auditId
+				"audit": this.props.audit.id,
+				"earnings_per_audit": this.props.audit.earnings_per_audit,
+				"reimbursement": this.props.audit.reimbursement,
 			});
 		}
 		if(this.props.location && this.props.location.query && this.props.location.query.email) {
 			this.setState({
 				"email": this.props.location.query.email,
+			});
+		}
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.audit && nextProps.audit !== this.props.audit){
+			this.setState({
+				"audit": nextProps.audit.id,
+				"earnings_per_audit": nextProps.audit.earnings_per_audit,
+				"reimbursement": nextProps.audit.reimbursement,
 			});
 		}
 	}
@@ -76,7 +90,7 @@ class AuditFiatAssignForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		var promise = fiatAssignAudit(this.props.params.auditId, this.state.email, this.state.audit_date);
+		var promise = fiatAssignAudit(this.props.params.auditId, this.state.email, this.state.audit_date, this.state.earnings_per_audit, this.state.reimbursement);
 		promise.done(() => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`));
 		promise.fail((error) => this.setState({errors: error.responseJSON || {}}));
 	};
@@ -86,13 +100,26 @@ class AuditFiatAssignForm extends React.Component {
 			return <Loading/>;
 		}
 		return (
-			<Modal modalTitle="Approve Application" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Assign Application" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<p>Store: <b>{this.props.audit.store.name}, {this.props.audit.store.city.name}</b></p>
 					<p>Audit Cycle Dates: <b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b> to <b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></p>
 					<FormInput label="User Email" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.state.errors.email}/>
 					<FormDateInput label="Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
+					<FormInput
+						label="Audit Fees"
+						type="number"
+						value={this.state.earnings_per_audit}
+						name="earnings_per_audit"
+						onChange={(e) => this.setState({"earnings_per_audit": e.target.value})}
+						errors={this.state.errors.earnings_per_audit}/>
+					<FormInput
+						label="Reimbursement"
+						value={this.state.reimbursement}
+						name="reimbursement"
+						onChange={(e) => this.setState({"reimbursement": e.target.value})}
+						errors={this.state.errors.reimbursement}/>
 					<SaveButton text="Approve"/>
 				</form>
 			</Modal>
@@ -101,9 +128,10 @@ class AuditFiatAssignForm extends React.Component {
 }
 
 const mapStoreToProps = (store, ownProps) => {
+	const auditId = parseInt(ownProps.params.auditId);
 	return {
 		auditCycle: store.auditCycles[ownProps.params.auditCycleId],
-		audit: store.audits[ownProps.params.auditId],
+		audit: findAuditById(store, auditId),
 	};
 };
 

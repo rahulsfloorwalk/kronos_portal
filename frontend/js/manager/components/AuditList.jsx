@@ -28,6 +28,8 @@ import { rejectAllForAudit, rejectAllForAuditCycle } from "../service/applicatio
 import { findAuditStoresByAudit } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 
+import { findAuditsByAuditCycleId } from "../selectors/audit";
+
 import AuditApplicationList from "./application/AuditApplicationList.jsx";
 import AgencyListForAudit from "./audit/AgencyListForAudit.jsx";
 
@@ -292,7 +294,12 @@ const AuditRow = ReactRedux.connect()(__AuditRow);
 export class AuditList extends Component{
 	static propTypes = {
 		params: PropTypes.object,
-		audits: PropTypes.object.isRequired,
+		audits: PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			audit_cycle: PropTypes.shape({
+				id: PropTypes.number.isRequired,
+			}).isRequired,
+		})).isRequired,
 
 		children: PropTypes.node,
 		dispatch: PropTypes.func.isRequired,
@@ -508,9 +515,10 @@ export class AuditList extends Component{
 	}
 }
 
-const mapAuditToProps = function(store){
-	return{
-		audits: store.audits,
+const mapAuditToProps = (store, ownProps) => {
+	const auditCycleId = parseInt(ownProps.params.auditCycleId);
+	return {
+		audits: findAuditsByAuditCycleId(store, auditCycleId),
 	};
 };
 

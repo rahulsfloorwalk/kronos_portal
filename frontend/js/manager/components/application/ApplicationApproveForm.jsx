@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import $ from "jquery";
 import * as ReactRedux from "react-redux";
 
@@ -6,6 +7,8 @@ import Alert from "react-s-alert";
 
 import { submitApplicationApproveForm } from "../../actions/application.js";
 import { findById } from "../../service/application.js";
+
+import { findAuditById } from "../../selectors/audit";
 
 import { getAuditType, getAuditStatus } from "../../../utils.js";
 import { affectInputEventToComponent } from "../../../react_utils.js";
@@ -20,11 +23,17 @@ import Modal from "../../../components/Modal.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 class ApplicationApproveForm extends React.Component {
-    static contextTypes = {
-    	auditCycleId: React.PropTypes.number
-    };
+	static contextTypes = {
+		auditCycleId: React.PropTypes.number,
+		audit: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			audit_cycle: PropTypes.shape({
+				id: PropTypes.number.isRequired,
+			}).isRequired,
+		}),
+	};
 
-    state = {
+	state = {
     	application: null,
     	errors: {},
     };
@@ -36,19 +45,23 @@ class ApplicationApproveForm extends React.Component {
     			"audit_date": application.audit_date
     		});
     	});
+	if(this.props.audit) {
+		this.setState({
+			earnings_per_audit: this.props.audit.earnings_per_audit,
+			reimbursement: this.props.audit.reimbursement,
+		});
+	}
     }
 
-    /*
-	componentWillReceiveProps: function(nextProps) {
-		console.log("nextProps.application",nextProps.application);
-		if(nextProps.application && ! this.state.date_set ){
-			this.setState({
-				'audit_date': nextProps.application.audit_date,
-				'date_set': true
-			});
-		};
-	},
-	*/
+    componentWillReceiveProps(nextProps) {
+	if(nextProps.audit && nextProps.audit !== this.props.audit) {
+		this.setState({
+			earnings_per_audit: nextProps.audit.earnings_per_audit,
+			reimbursement: nextProps.audit.reimbursement,
+		});
+	}
+    }
+
     dateChanged = (date) => {
     	if( typeof date !== "string"){
     		this.setState({
@@ -57,23 +70,25 @@ class ApplicationApproveForm extends React.Component {
     	}
     };
 
-    onSubmit = (e) => {
-    	e.preventDefault();
-    	const obj = {
-    		application_id: this.state.application.id,
-    		audit_date: this.state.audit_date
-    	};
-    	const promise = this.props.dispatch(submitApplicationApproveForm(obj));
-    	promise.then(() => {
-    		this.props.router.push({
-    			pathname: `/audit_cycle/${this.context.auditCycleId}/audit`,
-    			state: { t: Date.now() },
-    		});
-    		Alert.success("APPLICATION APPROVED");
-    	}, (err) => {
-    		this.setState({ errors: err && err.responseJSON });
-    	});
-    };
+	onSubmit = (e) => {
+		e.preventDefault();
+		const obj = {
+			application_id: this.state.application.id,
+			audit_date: this.state.audit_date,
+			earnings_per_audit: this.state.earnings_per_audit,
+			reimbursement: this.state.reimbursement,
+		};
+		const promise = this.props.dispatch(submitApplicationApproveForm(obj));
+		promise.then(() => {
+			this.props.router.push({
+				pathname: `/audit_cycle/${this.context.auditCycleId}/audit`,
+				state: { t: Date.now() },
+			});
+			Alert.success("APPLICATION APPROVED");
+		}, (err) => {
+			this.setState({ errors: err && err.responseJSON });
+		});
+	};
 
     render() {
     	if( ! this.state.application){
@@ -85,6 +100,19 @@ class ApplicationApproveForm extends React.Component {
     				<FormErrorList errors={this.state.errors.non_field_errors}/>
     				<p><label>Auditor Name:</label> { this.state.application.profileinfo.first_name } {this.state.application.profileinfo.last_name}</p>
     				<FormDateInput label="Approved Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
+				<FormInput
+					label="Audit Fees"
+					type="number"
+					value={this.state.earnings_per_audit}
+					name="earnings_per_audit"
+					onChange={(e) => this.setState({"earnings_per_audit": e.target.value})}
+					errors={this.state.errors.earnings_per_audit}/>
+				<FormInput
+					label="Reimbursement"
+					value={this.state.reimbursement}
+					name="reimbursement"
+					onChange={(e) => this.setState({"reimbursement": e.target.value})}
+					errors={this.state.errors.reimbursement}/>
     				<SaveButton text="Approve"/>
     			</form>
     		</Modal>
@@ -93,18 +121,10 @@ class ApplicationApproveForm extends React.Component {
 }
 
 const mapStoreToProps = (store, ownProps) => {
-	let application;
-	try{
-		application = store.audits[ownProps.params.auditId].applications.filter(function(app){
-			return app.id === Number(ownProps.params.applicationId);
-		})[0];
-	}catch(e){
-		console.log("looks like we're still loading the application...",e);
-	}
+	const auditId = parseInt(ownProps.params.auditId);
 	return {
-		application,
-		errors: store.errors,
+		audit: findAuditById(store, auditId),
 	};
 };
 
-export default ReactRedux.connect()(ApplicationApproveForm);
+export default ReactRedux.connect(mapStoreToProps)(ApplicationApproveForm);

@@ -1,13 +1,15 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function fiatAssignAudit(audit_id, email, audit_date){
+export function fiatAssignAudit(audit_id, email, audit_date, earnings_per_audit, reimbursement){
 	var promise = $.ajax({
 		url: url.api_base_path + `manager/audit/${audit_id}/assign`,
 		method: "POST",
 		data: JSON.stringify({
 			email,
-			audit_date
+			audit_date,
+			earnings_per_audit,
+			reimbursement,
 		}),
 		contentType: "application/json"
 	});

@@ -9,8 +9,8 @@ describe("<AuditList/>", () => {
 		auditCycleId: "5",
 	};
 
-	const sampleAudits = {
-		"1505": {
+	const sampleAudits = [
+		{
 			"id": 1505,
 			"count": 1,
 			"audit_date": "2018-07-01",
@@ -36,13 +36,15 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 641
 			},
-			"audit_cycle": 114,
+			"audit_cycle": {
+				"id": 114,
+			},
 			"post_approval_description": "",
 			"application_count": 17,
 			"report_count": 2,
 			"valid_report_count": 1
 		},
-		"1506": {
+		{
 			"id": 1506,
 			"count": 1,
 			"audit_date": null,
@@ -68,13 +70,15 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 107
 			},
-			"audit_cycle": 114,
+			"audit_cycle": {
+				"id": 114,
+			},
 			"post_approval_description": "",
 			"application_count": 13,
 			"report_count": 1,
 			"valid_report_count": 1
 		},
-		"1507": {
+		{
 			"id": 1507,
 			"count": 1,
 			"audit_date": null,
@@ -100,13 +104,15 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 2
 			},
-			"audit_cycle": 114,
+			"audit_cycle": {
+				"id": 114,
+			},
 			"post_approval_description": "",
 			"application_count": 40,
 			"report_count": 1,
 			"valid_report_count": 1
 		},
-		"1508": {
+		{
 			"id": 1508,
 			"count": 1,
 			"audit_date": null,
@@ -132,13 +138,15 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 170
 			},
-			"audit_cycle": 114,
+			"audit_cycle": {
+				"id": 114,
+			},
 			"post_approval_description": "",
 			"application_count": 23,
 			"report_count": 1,
 			"valid_report_count": 1
 		},
-		"1509": {
+		{
 			"id": 1509,
 			"count": 1,
 			"audit_date": null,
@@ -164,13 +172,15 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 650
 			},
-			"audit_cycle": 114,
+			"audit_cycle": {
+				"id": 114,
+			},
 			"post_approval_description": "",
 			"application_count": 20,
 			"report_count": 1,
 			"valid_report_count": 1
 		},
-		"1510": {
+		{
 			"id": 1510,
 			"count": 1,
 			"audit_date": null,
@@ -196,13 +206,15 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 644
 			},
-			"audit_cycle": 114,
+			"audit_cycle": {
+				"id": 114,
+			},
 			"post_approval_description": "",
 			"application_count": 18,
 			"report_count": 2,
 			"valid_report_count": 1
 		},
-	};
+	];
 
 	it("renders the correct number of priority filter options", () => {
 		const dispatch = jest.fn();
