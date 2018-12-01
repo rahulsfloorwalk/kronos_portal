@@ -127,11 +127,13 @@ class AuditStoreManagerServiceTestCase(TestCase):
                                  audit__audit_cycle=self.audit_cycle)
         auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
         with self.assertRaises(ObjectNotFound):
-            service_manager.fail_report(audit_store.id, auditor.id)
+            message = "Failed due to non compliance"
+            service_manager.fail_report(audit_store.id, auditor.id, message)
 
     def test_fail_report_changes_report_status(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user)
-        modified_audit_store = service_manager.fail_report(audit_store.id, self.manager_user.id)
+        message = "Failed due to non compliance"
+        modified_audit_store = service_manager.fail_report(audit_store.id, self.manager_user.id, message)
         self.assertEqual(AuditStore.FAILED, modified_audit_store.status)
 
     def test_withdraw_report_raises_when_user_is_not_manager(self):

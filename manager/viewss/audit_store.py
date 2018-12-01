@@ -198,8 +198,15 @@ class AuditStoreIdFailView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
+
+    class DeSerializer(Serializer):
+        message = CharField()
+
+
     def post(self, request, audit_store_id):
-        audit_store = service_manager.fail_report(audit_store_id, request.user.id)
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = service_manager.fail_report(audit_store_id, request.user.id, ds.validated_data['message'])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdSubmitView(APIView):

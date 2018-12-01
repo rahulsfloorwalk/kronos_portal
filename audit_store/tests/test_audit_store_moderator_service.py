@@ -77,7 +77,8 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED,
                                  user=self.auditor_user)
         assign_perm('moderator_manage', self.moderator_user, audit_store)
-        report = service_moderator.fail_for_moderator(audit_store.id, self.moderator_user.id)
+        message = "Failed due to non compliance"
+        report = service_moderator.fail_for_moderator(audit_store.id, self.moderator_user.id, message)
         self.assertEqual(AuditStore.FAILED, report.status)
 
     def test_submit_for_moderator_returns_audit_store_with_submitted_status(self):

@@ -67,10 +67,10 @@ def find_by_id_for_moderator(audit_store_id, user_id):
 
 
 @atomic
-def fail_for_moderator(audit_store_id, user_id):
+def fail_for_moderator(audit_store_id, user_id, message):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    audit_store.fail(by=user)
+    audit_store.fail(by=user, message=message)
     return audit_store
 
 

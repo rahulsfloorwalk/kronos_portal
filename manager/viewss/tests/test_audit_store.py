@@ -194,7 +194,9 @@ class AuditStoreIdFailTestCase(ManagerAPITestCase):
 
         response = self.client.post(reverse('manager:audit_store_id_fail_view', kwargs = {
             'audit_store_id': audit_store.id
-        }))
+        }), {
+            "message": "Failed due to non compliance"
+        })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], AuditStore.FAILED)
 

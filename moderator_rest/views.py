@@ -177,8 +177,14 @@ class AuditStoreIdFailView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_MODERATOR],
     }
+
+    class DeSerializer(Serializer):
+        message = CharField()
+
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.fail_for_moderator(audit_store_id, request.user.id)
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = audit_store_service.fail_for_moderator(audit_store_id, request.user.id, ds.validated_data['message'])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdQAOKView(APIView):
