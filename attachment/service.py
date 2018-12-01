@@ -3,6 +3,7 @@ import random
 import string
 from datetime import date
 import os
+from typing import Tuple, Dict
 
 from django.utils import timezone
 from django.conf import settings
@@ -15,28 +16,54 @@ import audit_store.service as audit_store_service
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
 from answer.service import report_section as report_section_service
+from answer.service import answer as answer_service
 from auditor.models import ProfileInfo
 from .models import Attachment
 
-AWS = settings.AWS
 
 _logger = logging.getLogger(__name__)
 
-
-def check_file_size(file_size):
-    if int(file_size) < int(AWS["S3_ATTACHMENTS"]["MIN_SIZE"]):
+def check_file_size(file_size: int) -> None:
+    if int(file_size) < settings.AWS["S3_ATTACHMENTS"]["MIN_SIZE"]:
         raise AppLogicError("file is too small")
 
-    if int(file_size) > int(AWS["S3_ATTACHMENTS"]["MAX_SIZE"]):
+    if int(file_size) > settings.AWS["S3_ATTACHMENTS"]["MAX_SIZE"]:
         raise AppLogicError("file is too large")
 
+def get_proof_type(mime_type: str) -> str:
+    parts = mime_type.split("/")
+    return {
+        "image": Attachment.PHOTO,
+        "audio": Attachment.AUDIO,
+        "video": Attachment.VIDEO,
+    }.get(parts[0]) or Attachment.OTHER
+
+def parse_file_name(file_name: str) -> Tuple[str, str]:
+    return os.path.splitext(os.path.basename(file_name))
+
+def valid_file_type(mime_type: str, file_extension: str) -> str:
+    if mime_type is None or file_extension == '':
+        raise AppLogicError("unknown file type")
+
+def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size: int, file_slug: str, content_object) -> Attachment:
+    return Attachment.objects.create(
+        status = Attachment.UPLOADING,
+        proof_type = proof_type,
+        mime_type = mime_type,
+        file_name = file_name,
+        file_size = file_size,
+        file_slug = file_slug,
+        content_object = content_object,
+    )
 
 def generate_attachment_slug(file_extension):
-    file_name = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(AWS["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]))
+    file_name = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(settings.AWS["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]))
     return "ATTACHMENTS/{}/{}{}".format(date.today().strftime("%Y/%m/%d"), file_name, file_extension)
 
 
 def get_signed_post(file_extension):
+    AWS = settings.AWS
+
     # Get the service client
     s3 = boto3.client(
         's3',
@@ -49,14 +76,13 @@ def get_signed_post(file_extension):
     fields = {"acl": "public-read"}
 
     # Ensure that the ACL isn't changed and restrict the user to a length
-    # between 10 and 100.
+    # between MIN_SIZE and MAX_SIZE.
     conditions = [
         {"acl": "public-read"},
         ["content-length-range", AWS["S3_ATTACHMENTS"]["MIN_SIZE"], AWS["S3_ATTACHMENTS"]["MAX_SIZE"]],
         {"bucket": AWS["S3_ATTACHMENTS"]["BUCKET"]},
         {"success_action_status": "201"},
     ]
-
     # Generate the POST attributes
     post = s3.generate_presigned_post(
         Bucket=AWS["S3_ATTACHMENTS"]["BUCKET"],
@@ -151,6 +177,17 @@ def upload_for_report_section(audit_store_id, section_id, file_name, file_size, 
         return (post_data, attachment)
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def upload_for_answer(audit_store_id: int, question_id: int, file_name: str, file_size: int, mime_type: str) -> Tuple[Dict, Attachment]:
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    answer = answer_service.find_by_audit_store_and_question(audit_store.id, question_id)
+    check_file_size(file_size)
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], answer)
+    return (post_data, attachment)
 
 def upload_for_id_proof(user_id, file_name, file_size, mime_type):
     try:
