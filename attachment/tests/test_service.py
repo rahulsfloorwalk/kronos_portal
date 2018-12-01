@@ -33,6 +33,9 @@ class AttachmentServiceTestCase(TestCase):
         }
     }
 
+    def decode_policy(self, policy):
+        return json.loads(base64.b64decode(policy).decode("UTF-8"))
+
     def test_check_file_size_raises_when_file_size_is_too_small(self):
         with self.settings(AWS=self.AWS_SETTINGS):
             with self.assertRaisesRegex(AppLogicError, "file is too small"):
@@ -148,7 +151,7 @@ class AttachmentServiceTestCase(TestCase):
             expect(post_data["fields"]).to(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d")))))
             expect(post_data["fields"]).to(have_key("key", end_with(file_extension)))
 
-            policy = json.loads(base64.b64decode(post_data["fields"]["policy"]))
+            policy = self.decode_policy(post_data["fields"]["policy"])
             expect(policy["expiration"]).to(equal(expected_expiration))
             expect(policy["conditions"]).to(contain({"acl": "public-read"}))
             expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
@@ -193,7 +196,7 @@ class AttachmentServiceTestCase(TestCase):
             expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
             expect(post_data["fields"]["key"]).to(end_with(file_extension))
 
-            policy = json.loads(base64.b64decode(post_data["fields"]["policy"]))
+            policy = self.decode_policy(post_data["fields"]["policy"])
             expect(policy["expiration"]).to(equal(expected_expiration))
             expect(policy["conditions"]).to(contain({"acl": "public-read"}))
             expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
@@ -236,7 +239,7 @@ class AttachmentServiceTestCase(TestCase):
             expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
             expect(post_data["fields"]["key"]).to(end_with(file_extension))
 
-            policy = json.loads(base64.b64decode(post_data["fields"]["policy"]))
+            policy = self.decode_policy(post_data["fields"]["policy"])
             expect(policy["expiration"]).to(equal(expected_expiration))
             expect(policy["conditions"]).to(contain({"acl": "public-read"}))
             expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
@@ -278,7 +281,7 @@ class AttachmentServiceTestCase(TestCase):
             expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
             expect(post_data["fields"]["key"]).to(end_with(file_extension))
 
-            policy = json.loads(base64.b64decode(post_data["fields"]["policy"]))
+            policy = self.decode_policy(post_data["fields"]["policy"])
             expect(policy["expiration"]).to(equal(expected_expiration))
             expect(policy["conditions"]).to(contain({"acl": "public-read"}))
             expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
