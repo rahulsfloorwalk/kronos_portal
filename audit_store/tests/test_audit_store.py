@@ -55,6 +55,7 @@ class AuditStoreTestCase(TestCase):
                     status=AuditStore.WITHDRAWN,
                     old_status=status,
                     user_actor=self.manager_user,
+                    message="",
                     audit_store=audit_store,
                 )
 
@@ -85,6 +86,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACKNOWLEDGED,
                 old_status=AuditStore.ASSIGNED,
                 user_actor=self.auditor_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -129,6 +131,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.ACKNOWLEDGED,
                 user_actor=self.auditor_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -149,6 +152,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.ACKNOWLEDGED,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -176,6 +180,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACKNOWLEDGED,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -204,6 +209,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.SUBMITTED,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -239,6 +245,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.SUBMITTED,
                 old_status=AuditStore.PM_REVIEW,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -314,6 +321,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.COMPLETED,
                 old_status=AuditStore.PM_REVIEW,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -359,6 +367,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.PM_REVIEW,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -387,6 +396,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.ACCEPTED,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -421,6 +431,7 @@ class AuditStoreTestCase(TestCase):
                 status=AuditStore.REJECTED,
                 old_status=AuditStore.COMPLETED,
                 user_actor=self.manager_user,
+                message="",
                 audit_store=audit_store,
             )
 
@@ -449,7 +460,7 @@ class AuditStoreTestCase(TestCase):
         for status in AuditStore._FAILABLE_STATUSES:
             audit_store = mommy.make(AuditStore, status=status, user=self.auditor_user)
             with catch_signal(audit_store_status_change) as mock:
-                audit_store.fail(by=self.manager_user)
+                audit_store.fail(by=self.manager_user, message="Failed due to non compliance")
 
                 mock.assert_called_once_with(
                     signal=audit_store_status_change,
@@ -457,6 +468,7 @@ class AuditStoreTestCase(TestCase):
                     status=AuditStore.FAILED,
                     old_status=status,
                     user_actor=self.manager_user,
+                    message="Failed due to non compliance",
                     audit_store=audit_store,
                 )
 

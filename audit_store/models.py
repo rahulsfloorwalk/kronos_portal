@@ -376,14 +376,14 @@ class AuditStore(Model):
         self._change_status(AuditStore.REJECTED, by)
 
     @atomic
-    def fail(self, *args, by):
+    def fail(self, *args, by, message=""):
 
         if not self.is_failable():
             raise AppLogicError("Report cannot be failed now")
 
         self.qa_rating = AuditStore.BAD
         self.save()
-        self._change_status(AuditStore.FAILED, by)
+        self._change_status(AuditStore.FAILED, by, message)
 
     @atomic
     def rate(self, rating):
@@ -396,12 +396,13 @@ class AuditStore(Model):
         self.qa_rating = rating
         self.save()
 
-    def _change_status(self, new_status, user_actor):
+    def _change_status(self, new_status, user_actor, message=""):
         audit_store_status_change.send(
             sender=self.__class__,
             status=new_status,
             old_status=self.status,
             user_actor=user_actor,
+            message=message,
             audit_store=self
         )
         self.status = new_status
@@ -428,4 +429,5 @@ class ReportStatusLog(Model):
     user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
     audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
     status = CharField(db_column='status', max_length=20, choices=AuditStore.STATUS, blank=False)
+    message = CharField(db_column='message', max_length=4096, blank=True, null=True)
     created_at = DateTimeField(db_column="created_at")
