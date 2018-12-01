@@ -28,8 +28,8 @@ class AuditStoreAttachmentViewTestCase(APITestCase):
         "S3_ATTACHMENTS": {
             "AWS_ACCESS_KEY_ID": "foo",
             "AWS_SECRET_ACCESS_KEY": "bar",
-            "BUCKET": "test_bucket",
-            "REGION": "test_region",
+            "BUCKET": "floorwalk-attachments",
+            "REGION": "ap-southeast-1",
             "MIN_SIZE": 10,
             "MAX_SIZE": 1024 * 1024,
             "FILE_SLUG_SIZE": 100,
@@ -123,8 +123,8 @@ class ReportSectionAttachmentViewTestCase(APITestCase):
         "S3_ATTACHMENTS": {
             "AWS_ACCESS_KEY_ID": "foo",
             "AWS_SECRET_ACCESS_KEY": "bar",
-            "BUCKET": "test_bucket",
-            "REGION": "test_region",
+            "BUCKET": "floorwalk-attachments",
+            "REGION": "ap-southeast-1",
             "MIN_SIZE": 10,
             "MAX_SIZE": 1024 * 1024,
             "FILE_SLUG_SIZE": 100,
@@ -222,8 +222,8 @@ class AttachmentIdViewTestCase(APITestCase):
         "S3_ATTACHMENTS": {
             "AWS_ACCESS_KEY_ID": "foo",
             "AWS_SECRET_ACCESS_KEY": "bar",
-            "BUCKET": "test_bucket",
-            "REGION": "test_region",
+            "BUCKET": "floorwalk-attachments",
+            "REGION": "ap-southeast-1",
             "MIN_SIZE": 10,
             "MAX_SIZE": 1024 * 1024,
             "FILE_SLUG_SIZE": 100,
@@ -289,8 +289,8 @@ class AttachmentCompleteViewTestCase(APITestCase):
         "S3_ATTACHMENTS": {
             "AWS_ACCESS_KEY_ID": "foo",
             "AWS_SECRET_ACCESS_KEY": "bar",
-            "BUCKET": "test_bucket",
-            "REGION": "test_region",
+            "BUCKET": "floorwalk-attachments",
+            "REGION": "ap-southeast-1",
             "MIN_SIZE": 10,
             "MAX_SIZE": 1024 * 1024,
             "FILE_SLUG_SIZE": 100,
