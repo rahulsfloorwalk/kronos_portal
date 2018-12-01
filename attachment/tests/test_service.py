@@ -6,10 +6,11 @@ from model_mommy import mommy
 from faker import Faker
 from freezegun import freeze_time
 
+from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase
 from expects import expect, equal, be_none, be_an, be_a, have_key, start_with, end_with, contain
 
-from kronos.exceptions import AppLogicError
+from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
 from attachment import service
 from audit_store.models import AuditStore
@@ -298,3 +299,45 @@ class AttachmentServiceTestCase(TestCase):
             with self.assertRaisesRegex(AppLogicError, "invalid file type \\(only image or PDF supported\\)"):
                 service.upload_for_id_proof(profile_info.user_id, file_name, file_size, mime_type)
 
+
+    def test_get_audit_store_for_attachment_returns_audit_store_for_report_attachment(self):
+        audit_cycle = mommy.make(AuditCycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        attachment = mommy.make(Attachment, content_object=audit_store, status=Attachment.ATTACHED)
+
+        expect(service.get_audit_store_for_attachment(attachment.id)).to(equal(audit_store))
+
+    def test_get_audit_store_for_attachment_returns_audit_store_for_section_attachment(self):
+        audit_cycle = mommy.make(AuditCycle)
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        attachment = mommy.make(Attachment, content_object=report_section, status=Attachment.ATTACHED)
+
+        expect(service.get_audit_store_for_attachment(attachment.id)).to(equal(audit_store))
+
+    def test_get_audit_store_for_attachment_returns_audit_store_for_answer_attachment(self):
+        audit_cycle = mommy.make(AuditCycle)
+        question = mommy.make(Question, section__audit_cycle=audit_cycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        answer = mommy.make(Answer, question=question, audit_store=audit_store)
+        attachment = mommy.make(Attachment, content_object=answer, status=Attachment.ATTACHED)
+
+        expect(service.get_audit_store_for_attachment(attachment.id)).to(equal(audit_store))
+
+    def test_get_audit_store_for_attachment_raises_when_content_object_is_not_a_report_child_object(self):
+        profile_info = mommy.make(ProfileInfo, user__email=fake.email)
+        attachment = mommy.make(Attachment, content_object=profile_info, status=Attachment.ID_PROOF)
+
+        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type"):
+            service.get_audit_store_for_attachment(attachment.id)
+
+    def test_get_audit_store_for_attachment_raises_when_attachment_is_not_found(self):
+        with self.assertRaises(ObjectNotFound):
+            service.get_audit_store_for_attachment(123)
+
+    def test_get_audit_store_for_attachment_raises_when_attachment_is_orphaned(self):
+        attachment = mommy.make(Attachment, object_id=4, content_type=ContentType.objects.get_for_model(AuditStore), status=Attachment.PHOTO)
+
+        with self.assertRaises(ObjectNotFound):
+            service.get_audit_store_for_attachment(attachment.id)
