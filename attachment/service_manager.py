@@ -3,6 +3,7 @@ from kronos.exceptions import AppLogicError
 import audit_store.service as audit_store_service
 
 import answer.service.report_section as report_section_service
+import answer.service.answer as answer_service
 
 from . import service as attachment_service
 
@@ -23,6 +24,14 @@ def upload_for_report_section_for_manager(audit_store_id, section_id, file_name,
         raise AppLogicError("cannot upload attachment now")
 
     return attachment_service.upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type)
+
+def upload_for_answer_for_manager(audit_store_id, question_id, file_name, file_size, mime_type, user_id):
+    answer = answer_service.find_by_audit_store_and_question(audit_store_id, question_id)
+
+    if not answer.audit_store.is_editable_by_manager():
+        raise AppLogicError("cannot upload attachment now")
+
+    return attachment_service.upload_for_answer(audit_store_id, answer.question_id, file_name, file_size, mime_type)
 
 
 def find_by_audit_store_for_manager(audit_store_id):
