@@ -7,7 +7,7 @@ from faker import Faker
 from freezegun import freeze_time
 
 from django.contrib.contenttypes.models import ContentType
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from expects import expect, equal, be_none, be_an, be_a, have_key, start_with, end_with, contain
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
@@ -32,6 +32,11 @@ class AttachmentServiceTestCase(TestCase):
             "FILE_SLUG_SIZE": 10,
         }
     }
+
+    mime_type = "image/jpeg"
+    file_extension = ".jpeg"
+    file_name = "Cheese Wheel" + file_extension
+    file_size = 50000
 
     def decode_policy(self, policy):
         return json.loads(base64.b64decode(policy).decode("UTF-8"))
@@ -99,208 +104,184 @@ class AttachmentServiceTestCase(TestCase):
 
     def test_upload_for_object_creates_attachment(self):
         proof_type = Attachment.PHOTO
-        mime_type = "image/jpeg"
-        file_name = "Cheese Wheel.jpeg"
-        file_size = 50000
         file_slug = "i34hv3itg"
         obj = mommy.make(AuditStore, user__email=fake.email())
 
-        attachment = service.upload_for_object(proof_type, mime_type, file_name, file_size, file_slug, obj)
+        attachment = service.upload_for_object(proof_type, self.mime_type, self.file_name, self.file_size, file_slug, obj)
 
         expect(attachment.status).to(equal(Attachment.UPLOADING))
         expect(attachment.proof_type).to(equal(proof_type))
-        expect(attachment.mime_type).to(equal(mime_type))
-        expect(attachment.file_name).to(equal(file_name))
-        expect(attachment.file_size).to(equal(file_size))
+        expect(attachment.mime_type).to(equal(self.mime_type))
+        expect(attachment.file_name).to(equal(self.file_name))
+        expect(attachment.file_size).to(equal(self.file_size))
         expect(attachment.file_slug).to(equal(file_slug))
         expect(attachment.content_object).to(equal(obj))
 
+    @override_settings(AWS=AWS_SETTINGS)
     @freeze_time(datetime.now())
     def test_upload_for_answer_returns_post_data_and_attachment(self):
-        with self.settings(AWS=self.AWS_SETTINGS):
-            mime_type = "image/jpeg"
-            file_extension = ".jpeg"
-            file_name = "Cheese Wheel" + file_extension
-            file_size = 50000
-            utcnow = datetime.utcnow().replace(microsecond=0)
-            expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
+        utcnow = datetime.utcnow().replace(microsecond=0)
+        expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
 
-            S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
+        S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
 
-            audit_cycle = mommy.make(AuditCycle)
-            question = mommy.make(Question, section__audit_cycle=audit_cycle)
-            audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        audit_cycle = mommy.make(AuditCycle)
+        question = mommy.make(Question, section__audit_cycle=audit_cycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
 
-            post_data, attachment = service.upload_for_answer(audit_store.id, question.id, file_name, file_size, mime_type)
+        post_data, attachment = service.upload_for_answer(audit_store.id, question.id, self.file_name, self.file_size, self.mime_type)
 
-            expect(attachment.status).to(equal(Attachment.UPLOADING))
-            expect(attachment.proof_type).to(equal(Attachment.PHOTO))
-            expect(attachment.mime_type).to(equal(mime_type))
-            expect(attachment.file_name).to(equal(file_name))
-            expect(attachment.file_size).to(equal(file_size))
+        expect(attachment.status).to(equal(Attachment.UPLOADING))
+        expect(attachment.proof_type).to(equal(Attachment.PHOTO))
+        expect(attachment.mime_type).to(equal(self.mime_type))
+        expect(attachment.file_name).to(equal(self.file_name))
+        expect(attachment.file_size).to(equal(self.file_size))
 
-            expect(attachment.content_object).to(be_an(Answer))
-            expect(attachment.content_object.question).to(equal(question))
-            expect(attachment.content_object.audit_store).to(equal(audit_store))
+        expect(attachment.content_object).to(be_an(Answer))
+        expect(attachment.content_object.question).to(equal(question))
+        expect(attachment.content_object.audit_store).to(equal(audit_store))
 
-            expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-            expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
-            expect(post_data["fields"]).to(have_key("acl", "public-read"))
-            expect(post_data["fields"]).to(have_key("policy"))
-            expect(post_data["fields"]).to(have_key("signature"))
-            expect(post_data["fields"]).to(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d")))))
-            expect(post_data["fields"]).to(have_key("key", end_with(file_extension)))
+        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        expect(post_data["fields"]).to(have_key("acl", "public-read"))
+        expect(post_data["fields"]).to(have_key("policy"))
+        expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]).to(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d")))))
+        expect(post_data["fields"]).to(have_key("key", end_with(self.file_extension)))
 
-            policy = self.decode_policy(post_data["fields"]["policy"])
-            expect(policy["expiration"]).to(equal(expected_expiration))
-            expect(policy["conditions"]).to(contain({"acl": "public-read"}))
-            expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
-            expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
-            expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
-            expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
-            expect(policy["conditions"]).to(contain(have_key("key", end_with(file_extension))))
+        policy = self.decode_policy(post_data["fields"]["policy"])
+        expect(policy["expiration"]).to(equal(expected_expiration))
+        expect(policy["conditions"]).to(contain({"acl": "public-read"}))
+        expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
+        expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
+        expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
+        expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
+        expect(policy["conditions"]).to(contain(have_key("key", end_with(self.file_extension))))
 
+    @override_settings(AWS=AWS_SETTINGS)
     @freeze_time(datetime.now())
     def test_upload_for_report_section_returns_post_data_and_attachment(self):
-        with self.settings(AWS=self.AWS_SETTINGS):
-            mime_type = "image/jpeg"
-            file_extension = ".jpeg"
-            file_name = "Cheese Wheel" + file_extension
-            file_size = 50000
-            utcnow = datetime.utcnow().replace(microsecond=0)
-            expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
+        utcnow = datetime.utcnow().replace(microsecond=0)
+        expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
 
-            S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
+        S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
 
-            audit_cycle = mommy.make(AuditCycle)
-            section = mommy.make(Section, audit_cycle=audit_cycle)
-            audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        audit_cycle = mommy.make(AuditCycle)
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
 
-            post_data, attachment = service.upload_for_report_section(audit_store.id, section.id, file_name, file_size, mime_type)
+        post_data, attachment = service.upload_for_report_section(audit_store.id, section.id, self.file_name, self.file_size, self.mime_type)
 
-            expect(attachment.status).to(equal(Attachment.UPLOADING))
-            expect(attachment.proof_type).to(equal(Attachment.PHOTO))
-            expect(attachment.mime_type).to(equal(mime_type))
-            expect(attachment.file_name).to(equal(file_name))
-            expect(attachment.file_size).to(equal(file_size))
+        expect(attachment.status).to(equal(Attachment.UPLOADING))
+        expect(attachment.proof_type).to(equal(Attachment.PHOTO))
+        expect(attachment.mime_type).to(equal(self.mime_type))
+        expect(attachment.file_name).to(equal(self.file_name))
+        expect(attachment.file_size).to(equal(self.file_size))
 
-            expect(attachment.content_object).to(be_a(ReportSection))
-            expect(attachment.content_object.section).to(equal(section))
-            expect(attachment.content_object.audit_store).to(equal(audit_store))
+        expect(attachment.content_object).to(be_a(ReportSection))
+        expect(attachment.content_object.section).to(equal(section))
+        expect(attachment.content_object.audit_store).to(equal(audit_store))
 
-            expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-            expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
-            expect(post_data["fields"]).to(have_key("acl", "public-read"))
-            expect(post_data["fields"]).to(have_key("policy"))
-            expect(post_data["fields"]).to(have_key("signature"))
-            expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
-            expect(post_data["fields"]["key"]).to(end_with(file_extension))
+        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        expect(post_data["fields"]).to(have_key("acl", "public-read"))
+        expect(post_data["fields"]).to(have_key("policy"))
+        expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
+        expect(post_data["fields"]["key"]).to(end_with(self.file_extension))
 
-            policy = self.decode_policy(post_data["fields"]["policy"])
-            expect(policy["expiration"]).to(equal(expected_expiration))
-            expect(policy["conditions"]).to(contain({"acl": "public-read"}))
-            expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
-            expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
-            expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
-            expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
-            expect(policy["conditions"]).to(contain(have_key("key", end_with(file_extension))))
+        policy = self.decode_policy(post_data["fields"]["policy"])
+        expect(policy["expiration"]).to(equal(expected_expiration))
+        expect(policy["conditions"]).to(contain({"acl": "public-read"}))
+        expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
+        expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
+        expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
+        expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
+        expect(policy["conditions"]).to(contain(have_key("key", end_with(self.file_extension))))
 
+    @override_settings(AWS=AWS_SETTINGS)
     @freeze_time(datetime.now())
     def test_upload_for_audit_store_returns_post_data_and_attachment(self):
-        with self.settings(AWS=self.AWS_SETTINGS):
-            mime_type = "image/jpeg"
-            file_extension = ".jpeg"
-            file_name = "Cheese Wheel" + file_extension
-            file_size = 50000
-            utcnow = datetime.utcnow().replace(microsecond=0)
-            expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
+        utcnow = datetime.utcnow().replace(microsecond=0)
+        expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
 
-            S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
+        S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
 
-            audit_cycle = mommy.make(AuditCycle)
-            audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        audit_cycle = mommy.make(AuditCycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
 
-            post_data, attachment = service.upload_for_audit_store(audit_store.id, file_name, file_size, mime_type)
+        post_data, attachment = service.upload_for_audit_store(audit_store.id, self.file_name, self.file_size, self.mime_type)
 
-            expect(attachment.status).to(equal(Attachment.UPLOADING))
-            expect(attachment.proof_type).to(equal(Attachment.PHOTO))
-            expect(attachment.mime_type).to(equal(mime_type))
-            expect(attachment.file_name).to(equal(file_name))
-            expect(attachment.file_size).to(equal(file_size))
+        expect(attachment.status).to(equal(Attachment.UPLOADING))
+        expect(attachment.proof_type).to(equal(Attachment.PHOTO))
+        expect(attachment.mime_type).to(equal(self.mime_type))
+        expect(attachment.file_name).to(equal(self.file_name))
+        expect(attachment.file_size).to(equal(self.file_size))
 
-            expect(attachment.content_object).to(be_an(AuditStore))
-            expect(attachment.content_object).to(equal(audit_store))
+        expect(attachment.content_object).to(be_an(AuditStore))
+        expect(attachment.content_object).to(equal(audit_store))
 
-            expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-            expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
-            expect(post_data["fields"]).to(have_key("acl", "public-read"))
-            expect(post_data["fields"]).to(have_key("policy"))
-            expect(post_data["fields"]).to(have_key("signature"))
-            expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
-            expect(post_data["fields"]["key"]).to(end_with(file_extension))
+        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        expect(post_data["fields"]).to(have_key("acl", "public-read"))
+        expect(post_data["fields"]).to(have_key("policy"))
+        expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
+        expect(post_data["fields"]["key"]).to(end_with(self.file_extension))
 
-            policy = self.decode_policy(post_data["fields"]["policy"])
-            expect(policy["expiration"]).to(equal(expected_expiration))
-            expect(policy["conditions"]).to(contain({"acl": "public-read"}))
-            expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
-            expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
-            expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
-            expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
-            expect(policy["conditions"]).to(contain(have_key("key", end_with(file_extension))))
+        policy = self.decode_policy(post_data["fields"]["policy"])
+        expect(policy["expiration"]).to(equal(expected_expiration))
+        expect(policy["conditions"]).to(contain({"acl": "public-read"}))
+        expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
+        expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
+        expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
+        expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
+        expect(policy["conditions"]).to(contain(have_key("key", end_with(self.file_extension))))
 
     @freeze_time(datetime.now())
+    @override_settings(AWS=AWS_SETTINGS)
     def test_upload_for_id_proof_returns_post_data_and_attachment(self):
-        with self.settings(AWS=self.AWS_SETTINGS):
-            mime_type = "image/jpeg"
-            file_extension = ".jpeg"
-            file_name = "Cheese Wheel" + file_extension
-            file_size = 50000
-            utcnow = datetime.utcnow().replace(microsecond=0)
-            expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
+        utcnow = datetime.utcnow().replace(microsecond=0)
+        expected_expiration = (utcnow + timedelta(hours=1)).isoformat() + "Z"
 
-            S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
+        S3 = self.AWS_SETTINGS["S3_ATTACHMENTS"]
 
-            profile_info = mommy.make(ProfileInfo, user__email=fake.email)
+        profile_info = mommy.make(ProfileInfo, user__email=fake.email)
 
-            post_data, attachment = service.upload_for_id_proof(profile_info.user_id, file_name, file_size, mime_type)
+        post_data, attachment = service.upload_for_id_proof(profile_info.user_id, self.file_name, self.file_size, self.mime_type)
 
-            expect(attachment.status).to(equal(Attachment.UPLOADING))
-            expect(attachment.proof_type).to(equal(Attachment.ID_PROOF))
-            expect(attachment.mime_type).to(equal(mime_type))
-            expect(attachment.file_name).to(equal(file_name))
-            expect(attachment.file_size).to(equal(file_size))
+        expect(attachment.status).to(equal(Attachment.UPLOADING))
+        expect(attachment.proof_type).to(equal(Attachment.ID_PROOF))
+        expect(attachment.mime_type).to(equal(self.mime_type))
+        expect(attachment.file_name).to(equal(self.file_name))
+        expect(attachment.file_size).to(equal(self.file_size))
 
-            expect(attachment.content_object).to(be_a(ProfileInfo))
-            expect(attachment.content_object).to(equal(profile_info))
+        expect(attachment.content_object).to(be_a(ProfileInfo))
+        expect(attachment.content_object).to(equal(profile_info))
 
-            expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-            expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
-            expect(post_data["fields"]).to(have_key("acl", "public-read"))
-            expect(post_data["fields"]).to(have_key("policy"))
-            expect(post_data["fields"]).to(have_key("signature"))
-            expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
-            expect(post_data["fields"]["key"]).to(end_with(file_extension))
+        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        expect(post_data["fields"]).to(have_key("acl", "public-read"))
+        expect(post_data["fields"]).to(have_key("policy"))
+        expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
+        expect(post_data["fields"]["key"]).to(end_with(self.file_extension))
 
-            policy = self.decode_policy(post_data["fields"]["policy"])
-            expect(policy["expiration"]).to(equal(expected_expiration))
-            expect(policy["conditions"]).to(contain({"acl": "public-read"}))
-            expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
-            expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
-            expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
-            expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
-            expect(policy["conditions"]).to(contain(have_key("key", end_with(file_extension))))
+        policy = self.decode_policy(post_data["fields"]["policy"])
+        expect(policy["expiration"]).to(equal(expected_expiration))
+        expect(policy["conditions"]).to(contain({"acl": "public-read"}))
+        expect(policy["conditions"]).to(contain(["content-length-range", S3["MIN_SIZE"], S3["MAX_SIZE"]]))
+        expect(policy["conditions"]).to(contain({"bucket": S3["BUCKET"]}))
+        expect(policy["conditions"]).to(contain({"success_action_status": '201'}))
+        expect(policy["conditions"]).to(contain(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))))
+        expect(policy["conditions"]).to(contain(have_key("key", end_with(self.file_extension))))
 
+    @override_settings(AWS=AWS_SETTINGS)
     def test_upload_for_id_proof_raises_when_mime_type_is_not_image(self):
-        with self.settings(AWS=self.AWS_SETTINGS):
-            mime_type = "audio/ogg"
-            file_extension = ".jpeg"
-            file_name = "Cheese Wheel" + file_extension
-            file_size = 50000
+        profile_info = mommy.make(ProfileInfo, user__email=fake.email)
 
-            profile_info = mommy.make(ProfileInfo, user__email=fake.email)
-
-            with self.assertRaisesRegex(AppLogicError, "invalid file type \\(only image or PDF supported\\)"):
-                service.upload_for_id_proof(profile_info.user_id, file_name, file_size, mime_type)
+        with self.assertRaisesRegex(AppLogicError, "invalid file type \\(only image or PDF supported\\)"):
+            service.upload_for_id_proof(profile_info.user_id, self.file_name, self.file_size, "audio/ogg")
 
 
     def test_get_audit_store_for_attachment_returns_audit_store_for_report_attachment(self):
