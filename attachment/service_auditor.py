@@ -6,6 +6,7 @@ import audit_store.service as audit_store_service
 
 from answer.models import ReportSection
 from answer.service import report_section_auditor as report_section_auditor_service
+from answer.service import answer_auditor as answer_auditor_service
 
 from . import service as attachment_service
 
@@ -18,6 +19,10 @@ def upload_for_audit_store_by_auditor(audit_store_id: int, user_id: int, file_na
 def upload_for_report_section_by_auditor(audit_store_id: int, section_id: int, file_name: str, file_size: str, mime_type: str, user_id: int):
     report_section = report_section_auditor_service.find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user_id)
     return attachment_service.upload_for_report_section(audit_store_id, report_section.section_id, file_name, file_size, mime_type)
+
+def upload_for_answer_by_auditor(audit_store_id: int, question_id: int, file_name: str, file_size: str, mime_type: str, user_id: int):
+    answer = answer_auditor_service.find_by_audit_store_and_question_for_auditor(audit_store_id, question_id, user_id)
+    return attachment_service.upload_for_answer(audit_store_id, answer.question_id, file_name, file_size, mime_type)
 
 
 def find_by_audit_store_for_auditor(audit_store_id: int, user_id: int):

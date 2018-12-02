@@ -2,14 +2,14 @@
 from django.test import TestCase, override_settings
 from django.contrib.auth.models import User, Group
 
-from expects import expect, equal, have_length
+from expects import expect, equal, have_length, be_an, be_a
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
-from questionnaire.models import Section
-from answer.models import ReportSection
+from questionnaire.models import Section, Question
+from answer.models import ReportSection, Answer
 from attachment import service
 from attachment import service_auditor
 from audit_store.models import AuditStore
@@ -74,13 +74,11 @@ class AttachmentAuditorServiceTestCase(TestCase):
         expect(created_attachment.mime_type).to(equal(self.test_mime_type))
         expect(created_attachment.proof_type).to(equal(Attachment.PHOTO))
         expect(created_attachment.status).to(equal(Attachment.UPLOADING))
+        expect(created_attachment.content_object).to(be_an(AuditStore))
 
     def test_upload_for_report_section_for_auditor_creates_attachment(self):
         audit_store = self.audit_store_recipe.make()
         section = mommy.make(Section, audit_cycle=self.audit_cycle)
-        test_file = "hello_world.jpg"
-        test_mime_type = "image/jpeg"
-        test_size = 2048
         post_data, created_attachment = service_auditor.upload_for_report_section_by_auditor(
             audit_store.id,
             section.id,
@@ -89,11 +87,30 @@ class AttachmentAuditorServiceTestCase(TestCase):
             self.test_mime_type,
             self.auditor_user.id,
         )
-        expect(created_attachment.file_name).to(equal(test_file))
-        expect(created_attachment.file_size).to(equal(test_size))
-        expect(created_attachment.mime_type).to(equal(test_mime_type))
+        expect(created_attachment.file_name).to(equal(self.test_file))
+        expect(created_attachment.file_size).to(equal(self.test_size))
+        expect(created_attachment.mime_type).to(equal(self.test_mime_type))
         expect(created_attachment.proof_type).to(equal(Attachment.PHOTO))
         expect(created_attachment.status).to(equal(Attachment.UPLOADING))
+        expect(created_attachment.content_object).to(be_a(ReportSection))
+
+    def test_upload_for_answer_for_auditor_creates_attachment(self):
+        audit_store = self.audit_store_recipe.make()
+        question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
+        post_data, created_attachment = service_auditor.upload_for_answer_by_auditor(
+            audit_store.id,
+            question.id,
+            self.test_file,
+            self.test_size,
+            self.test_mime_type,
+            self.auditor_user.id,
+        )
+        expect(created_attachment.file_name).to(equal(self.test_file))
+        expect(created_attachment.file_size).to(equal(self.test_size))
+        expect(created_attachment.mime_type).to(equal(self.test_mime_type))
+        expect(created_attachment.proof_type).to(equal(Attachment.PHOTO))
+        expect(created_attachment.status).to(equal(Attachment.UPLOADING))
+        expect(created_attachment.content_object).to(be_an(Answer))
 
     def test_upload_for_id_proof_for_auditor_creates_attachment(self):
         post_data, created_attachment = service_auditor.upload_for_id_proof_by_auditor(
@@ -107,6 +124,7 @@ class AttachmentAuditorServiceTestCase(TestCase):
         expect(created_attachment.mime_type).to(equal(self.test_mime_type))
         expect(created_attachment.proof_type).to(equal(Attachment.ID_PROOF))
         expect(created_attachment.status).to(equal(Attachment.UPLOADING))
+        expect(created_attachment.content_object).to(be_a(ProfileInfo))
 
     def test_find_id_proof_for_auditor_returns_attachment(self):
         test_attachment = self.attachment_recipe.make(
