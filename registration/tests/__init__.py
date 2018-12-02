@@ -1,2 +1,0 @@
-
-from .test_auth_backend import CaseInsensitiveModelBackendTestCase

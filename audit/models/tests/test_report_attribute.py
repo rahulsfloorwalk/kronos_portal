@@ -2,10 +2,8 @@ from django.test import TestCase
 
 from expects import expect, be_true, be_false
 
-from model_mommy import mommy
-
 from kronos.exceptions import AppLogicError
-from audit.models import ReportAttribute, AuditCycle
+from audit.models import ReportAttribute
 
 
 class ReportAttributeTestCase(TestCase):

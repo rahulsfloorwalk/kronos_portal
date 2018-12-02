@@ -1,5 +1,5 @@
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField, DateTimeField
-from django.db.models import PROTECT, F, Sum
+from django.db.models import Model, CharField, AutoField, ForeignKey
+from django.db.models import PROTECT
 from django.contrib.postgres.fields import JSONField
 
 from jsonschema import validate

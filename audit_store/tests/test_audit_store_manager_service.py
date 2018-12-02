@@ -186,7 +186,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
                                       attribute_data=attribute_data)
 
         saved_audit_store = service_manager.set_report_attribute_value(audit_store.id, report_attribute.json_id, selected_option_id,
-                                                       self.manager_user.id)
+                                                                       self.manager_user.id)
         expect(saved_audit_store.attribute_data).to(have_key(report_attribute.json_id, selected_option_id))
 
     def test_set_report_attribute_value_raises_when_report_is_not_editable(self):

@@ -3,14 +3,11 @@ import calendar
 import datetime
 import xlsxwriter
 
-from django.db.models import Prefetch
-
 import audit.service.audit_cycle as audit_cycle_service
 from client.service.client_user import find_clientuser_by_user_id
 from kronos.utils import get_color_code, get_color_hex_from_code
 from manager.models import City
 from audit_store.models import AuditStore
-from answer.models import Answer
 
 
 # Get report for audit cycle client with filters
@@ -123,7 +120,7 @@ def create_text_structure(title, sections, audit_stores):
             'color_code': get_color_code(0, 0)
         }
         total_score_cell = {
-            'value': str(round(audit_store.percentage()))+"%",
+            'value': str(round(audit_store.percentage())) + "%",
             'color_code': audit_store.color()
         }
 
@@ -149,7 +146,7 @@ def create_text_structure(title, sections, audit_stores):
                 })
             else:
                 report_section_cells.append({
-                    'value': str(round(report_section.marks_percentage()))+"%",
+                    'value': str(round(report_section.marks_percentage())) + "%",
                     'color_code': report_section.color_code()
                 })
 

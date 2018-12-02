@@ -5,4 +5,4 @@ class NotifyConfig(AppConfig):
     name = 'notify'
 
     def ready(self):
-        from notify.handlers import status_change_notification_callback
+        from notify.handlers import status_change_notification_callback # noqa

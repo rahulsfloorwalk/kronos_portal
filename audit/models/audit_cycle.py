@@ -1,8 +1,5 @@
-from django.utils import timezone
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField, DateTimeField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey
 from django.db.models import PROTECT, F, Sum
-from auditor.models import AuditApplication
-from django.contrib.postgres.fields import JSONField
 
 import audit_store
 

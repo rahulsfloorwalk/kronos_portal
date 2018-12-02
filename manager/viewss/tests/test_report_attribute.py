@@ -77,4 +77,4 @@ class ReportAttributeViewPostTestCase(APITestCase):
         expect(response.data).to(have_key('audit_cycle_id', audit_cycle.id))
         expect(response.data).to(have_key('label', post_data["label"]))
         expect([o["option_label"] for o in response.data["attribute_data"]["options"]]).to(contain_only(*post_data["option_labels"]))
-    
+

@@ -2,21 +2,14 @@ from django.contrib.auth.models import Group, User, Permission
 
 from django.test import TestCase
 
-from guardian.shortcuts import assign_perm
-
 from model_mommy import mommy
-from model_mommy.recipe import Recipe
-from expects import expect, have_length, be_empty, contain_only, equal
+from expects import expect, contain_only
 from faker import Faker
 
-from kronos.exceptions import ObjectNotFound
 from registration.models import GROUP_NAME_CLIENT
 from audit.models import AuditCycle, ReportAttribute
 from audit.service import report_attribute_client_service
-from questionnaire.models import QuestionnaireType
 from client.models import Client, ClientUser
-from audit_store.models import AuditStore
-from client.models import Store
 
 fake = Faker()
 

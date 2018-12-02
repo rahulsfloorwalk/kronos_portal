@@ -600,7 +600,7 @@ class AuditStoreIdReportAttributeViewTestCase(APITestCase):
     def test_post_returns_404_when_json_id_does_not_exist(self):
 
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
-        report_attribute = mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle, attribute_data=self.attribute_data)
+        mommy.make(ReportAttribute, audit_cycle=audit_store.audit.audit_cycle, attribute_data=self.attribute_data)
         self.login()
 
         response = self.client.post(reverse(self.url_name, kwargs={

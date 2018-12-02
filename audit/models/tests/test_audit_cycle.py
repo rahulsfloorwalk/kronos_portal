@@ -21,7 +21,7 @@ class AuditCycleTestCase(TestCase):
         all_statuses = set(AuditCycle.ALL_STATUSES)
         trendable_statuses = set(AuditCycle.TRENDABLE_STATUSES)
         expected_difference = {AuditCycle.PREPARATION, AuditCycle.UPCOMING, AuditCycle.ACTIVE, AuditCycle.REPORT}
-        self.assertEqual(expected_difference, all_statuses-trendable_statuses)
+        self.assertEqual(expected_difference, all_statuses - trendable_statuses)
 
     def test_live_reporting_status_matches_snapshot(self):
         all_statuses = set(AuditCycle.ALL_STATUSES)
@@ -52,7 +52,7 @@ class AuditCycleTestCase(TestCase):
         agency_visible_statuses = set(AuditCycle.AGENCY_VISIBLE_STATUSES)
         expected_difference = {AuditCycle.PREPARATION, AuditCycle.ARCHIVED}
         self.assertEqual(expected_difference, all_statuses - agency_visible_statuses)
-        
+
     def test_manager_dashboard_status_matches_snapshot(self):
         all_statuses = set(AuditCycle.ALL_STATUSES)
         manager_dashboard_statuses = set(AuditCycle.MANAGER_DASHBOARD_STATUSES)
