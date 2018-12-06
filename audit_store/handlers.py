@@ -10,9 +10,11 @@ def status_change_report_log_callback(sender, **kwargs):
     user_actor = kwargs['user_actor']
     status = kwargs['status']
     audit_store = kwargs['audit_store']
+    message = kwargs['message']
     report_status_log = ReportStatusLog()
     report_status_log.user_actor = user_actor
     report_status_log.status = status
+    report_status_log.message = message
     report_status_log.audit_store = audit_store
     report_status_log.created_at = timezone.now()
     report_status_log.save()
