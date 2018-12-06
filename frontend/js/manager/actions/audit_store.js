@@ -172,7 +172,7 @@ export function uncompleteAuditStore(auditStoreId){
 	};
 }
 
-export function failAuditStore(auditStoreId){
+export function failAuditStore(auditStoreId, data){
 	return function(dispatch){
 		dispatch({
 			type: types.AUDIT_STORE_ID_FAIL,
@@ -180,7 +180,7 @@ export function failAuditStore(auditStoreId){
 			auditStoreId
 		});
 
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/fail`, function(auditStore){
+		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/fail`, data, function(auditStore){
 			dispatch({
 				type: types.AUDIT_STORE_ID_FAIL,
 				status: "success",

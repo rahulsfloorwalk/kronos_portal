@@ -1,0 +1,168 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FailReportMessageForm/> is rendered correctly when the AuditStore is loading 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Set Failure Message
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <div
+          className="text-center text-muted"
+        >
+          <img
+            alt="loading..."
+            src="/static/img/ripple.svg"
+            title="Please Wait"
+          />
+          <p>
+            LOADING
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<FailReportMessageForm/> renders the failure message pre-filled 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Set Failure Message
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <p>
+            <label>
+              Assigned To:
+            </label>
+             
+            John Doe
+          </p>
+          <p>
+            <label>
+              Report Date:
+            </label>
+             
+            2nd Sep 2018
+          </p>
+          <div
+            className="form-group"
+          >
+            <label>
+              Message
+            </label>
+            <input
+              className="form-control"
+              label="Message"
+              name="message"
+              onChange={[Function]}
+              type="text"
+              value="Failed due to non compliance of audit guidelines"
+            />
+            <ul />
+          </div>
+          <button
+            className="btn btn-danger"
+            type="submit"
+          >
+            Fail Report
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

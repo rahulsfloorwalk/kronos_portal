@@ -61,6 +61,7 @@ import AuditStoreDetails from "./AuditStoreDetails.jsx";
 import AuditStoreReport from "./AuditStoreReport.jsx";
 import AuditStoreEarningsPerAuditForm from "./audit_store/AuditStoreEarningsPerAuditForm.jsx";
 import AuditStoreReimbursementForm from "./audit_store/AuditStoreReimbursementForm.jsx";
+import FailReportMessageForm from "./audit_store/FailReportMessageForm.jsx";
 import AuditStoreReportAttributeForm from "./audit_store/AuditStoreReportAttributeForm.jsx";
 
 import AuditFiatAssignForm from "./AuditFiatAssignForm.jsx";
@@ -141,6 +142,7 @@ const Routes = () => (
 				<Route path="qa_rating" components={AuditStoreQARatingForm}/>
 				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm}/>
 				<Route path="reimbursement" component={AuditStoreReimbursementForm}/>
+				<Route path="fail_report_message" component={FailReportMessageForm}/>
 				<Route path="report_attribute/:reportAttributeJsonId" component={AuditStoreReportAttributeForm}/>
 			</Route>
 

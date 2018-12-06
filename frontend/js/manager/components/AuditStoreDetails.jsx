@@ -82,11 +82,6 @@ export class AuditStoreDetails extends React.Component{
 			Alert.success("REPORT IN CLIENT REVIEW");
 		});
 	};
-	failButtonClicked = () => {
-		this.props.dispatch(failAuditStore(this.props.params.auditStoreId)).then(()=>{
-			Alert.success("REPORT FAILED");
-		});
-	};
 	submitButtonClicked = () => {
 		this.props.dispatch(submitAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT SUBMITTED");
@@ -171,9 +166,7 @@ export class AuditStoreDetails extends React.Component{
 				</button>
 				<DropDown ref={(d) => this.moreOptionsDropdown=d}>
 					<li>
-						<a onClick={this.failButtonClicked}>
-							<ThumbsDown/> Fail Report
-						</a>
+						<ThumbsDown/><Link to={`/audit_store/${this.props.auditStore.id}/fail_report_message`}>Fail Report</Link>
 					</li>
 					<DropDownDivider/>
 					<li>
