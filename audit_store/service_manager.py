@@ -47,7 +47,6 @@ def set_report_summary(audit_store_id, report_summary, user_id):
 def submit_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
-    audit_store.copy_report_summary()
     audit_store.submit(by=user)
     return audit_store
 

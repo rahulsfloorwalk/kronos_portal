@@ -167,11 +167,11 @@ class AuditStoreManagerServiceTestCase(TestCase):
         self.assertEqual(audit_store.earnings_per_audit, 2000)
 
     def test_set_report_summary_sets_report_summary_when_report_is_editable(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, report_summary='FooBar')
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         service_manager.submit_report(audit_store.id, self.manager_user.id)
         audit_store = service_manager.set_report_summary(audit_store.id, 'FooBaz', self.manager_user.id)
         self.assertEqual(audit_store.report_summary, 'FooBaz')
-        self.assertEqual(audit_store.report_summary_original, 'FooBar')
+        self.assertEqual(audit_store.report_summary_original, '')
 
     def test_set_report_attribute_value_sets_attribute_option_when_report_is_editable(self):
         selected_option_id = "opt1"

@@ -78,7 +78,6 @@ def fail_for_moderator(audit_store_id, user_id):
 def submit_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    audit_store.copy_report_summary()
     audit_store.submit(by=user)
     return audit_store
 

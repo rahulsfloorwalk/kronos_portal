@@ -33,7 +33,6 @@ def submit_report(audit_store_id, user_id):
     user = auditor_service.find_auditor_by_id(user_id)
     if user != audit_store.user:
         raise AppLogicError("Report cannot be submitted by user")
-    audit_store.copy_report_summary()
     if not audit_store.is_submittable():
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
 

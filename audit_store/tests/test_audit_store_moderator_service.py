@@ -129,9 +129,9 @@ class AuditStoreModeratorServiceTestCase(TestCase):
             service_moderator.set_earnings_per_audit_for_moderator(audit_store.id, 2000, self.moderator_user.id)
 
     def test_set_report_summary_sets_report_summary_when_report_is_editable(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, report_summary='FooBar')
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user)
         assign_perm('moderator_manage', self.moderator_user, audit_store)
         service_moderator.submit_for_moderator(audit_store.id, self.moderator_user.id)
         audit_store = service_moderator.set_report_summary(audit_store.id, 'FooBaz', self.moderator_user.id)
         self.assertEqual(audit_store.report_summary, 'FooBaz')
-        self.assertEqual(audit_store.report_summary_original, 'FooBar')
+        self.assertEqual(audit_store.report_summary_original, '')
