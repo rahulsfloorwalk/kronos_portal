@@ -2,13 +2,39 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from questionnaire.service import section as section_service
 
-from ..serializers import SectionSerializer, SectionDeSerializer
+from ..serializers import SectionSerializer
+
+from questionnaire.models import Section
+
+class SectionDeSerializer(ModelSerializer):
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'audit_cycle',
+            'sequence',
+            'minimum_attachment_count',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            section = Section.objects.get(id=self.context.get('id'))
+        else:
+            section = Section()
+        section.name = self.validated_data['name']
+        section.sequence = self.validated_data['sequence']
+        section.audit_cycle = self.validated_data['audit_cycle']
+        section.minimum_attachment_count = self.validated_data['minimum_attachment_count']
+        return section
 
 
 class SectionViewByAuditCycle(APIView):

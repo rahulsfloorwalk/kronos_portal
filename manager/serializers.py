@@ -542,31 +542,10 @@ class SectionSerializer(ModelSerializer):
             'audit_cycle',
             'sequence',
             'questions',
+            'minimum_attachment_count',
             'max_marks'
         )
         read_only_fields = fields
-
-
-class SectionDeSerializer(ModelSerializer):
-    class Meta:
-        model = Section
-        fields = (
-            'id',
-            'name',
-            'audit_cycle',
-            'sequence',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if 'id' in self.context and self.context.get('id') is not None:
-            section = Section.objects.get(id=self.context.get('id'))
-        else:
-            section = Section()
-        section.name = self.validated_data.get('name', section.name)
-        section.sequence = self.validated_data.get('sequence', section.sequence)
-        section.audit_cycle = self.validated_data.get('audit_cycle', section.audit_cycle_id)
-        return section
 
 
 class AnswerSerializer(ModelSerializer):
