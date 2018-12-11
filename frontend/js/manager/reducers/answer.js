@@ -6,9 +6,7 @@ export default (state={}, action) => {
 	case types.ANSWER_GET:
 		switch(action.status){
 		case "request":
-			return Object.assign({}, state, {
-				answers: {}
-			});
+			return {};
 		case "success":
 			return ((answers) => {
 				const obj = {};

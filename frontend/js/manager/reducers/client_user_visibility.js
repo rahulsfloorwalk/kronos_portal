@@ -6,9 +6,7 @@ export default (state={}, action) => {
 	switch(action.type){
 	case types.CLIENT_USER_STORE_VISIBILITY:
 		return Object.assign({}, state, {
-			clientUserStoreVisibility: {
-				[action.storeId]: action.clientUsers,
-			},
+			[action.storeId]: action.clientUsers,
 		});
 	default:
 		return state;
