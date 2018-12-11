@@ -1,12 +1,14 @@
 from model_mommy import mommy
 from faker import Faker
-from expects import expect, equal
+from expects import expect, equal, be_false, be_true
 
 from django.test import TestCase
 
 from kronos.exceptions import AppLogicError
 
+from questionnaire.models import Section
 from answer.models import ReportSection
+from attachment.models import Attachment
 
 fake = Faker()
 class ReportSectionTestCase(TestCase):
@@ -57,3 +59,20 @@ class ReportSectionTestCase(TestCase):
         report_section = mommy.make(ReportSection, audit_store__user__email=fake.email(), auditor_comment=auditor_comment, auditor_comment_original="")
         report_section.copy_auditor_comment_original()
         expect(report_section.auditor_comment_original).to(equal(auditor_comment))
+
+    def test_has_minimum_attachments_returns_false_when_there_are_no_attachments(self):
+        section = mommy.make(Section, minimum_attachment_count=2)
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email(), section=section)
+        expect(report_section.has_minimum_attachments()).to(be_false)
+
+    def test_has_minimum_attachments_returns_false_when_there_are_no_attached_attachments(self):
+        section = mommy.make(Section, minimum_attachment_count=2)
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email(), section=section)
+        mommy.make(Attachment, status=Attachment.DELETED, content_object=report_section, _quantity=2)
+        expect(report_section.has_minimum_attachments()).to(be_false)
+
+    def test_has_minimum_attachments_returns_true_when_enough_attachments_exist(self):
+        section = mommy.make(Section, minimum_attachment_count=2)
+        report_section = mommy.make(ReportSection, audit_store__user__email=fake.email(), section=section)
+        mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section, _quantity=2)
+        expect(report_section.has_minimum_attachments()).to(be_true)

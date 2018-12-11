@@ -9,6 +9,7 @@ from kronos.exceptions import AppLogicError
 
 from questionnaire.models import Question
 from questionnaire.models import Section
+from attachment.models import Attachment
 
 class Answer(Model):
 
@@ -189,6 +190,9 @@ class ReportSection(Model):
             raise AppLogicError("pm comment cannot be blank")
         self.pm_comment = pm_comment
         self.save()
+
+    def has_minimum_attachments(self):
+        return self.attachments.filter(status=Attachment.ATTACHED).count() >= self.section.minimum_attachment_count
 
     class Meta:
         unique_together = (("audit_store","section"))
