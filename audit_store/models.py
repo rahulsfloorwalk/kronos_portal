@@ -128,6 +128,9 @@ class AuditStore(Model):
 
     attribute_data = JSONField(db_column='attribute_data', default=dict, blank=False)
 
+    report_summary = CharField(db_column='report_summary', max_length=16384, blank=True)
+    report_summary_original = CharField(db_column='report_summary_original', max_length=16384, blank=True)
+
     objects = AuditStoreQuerySet.as_manager()
 
     class Meta:
@@ -182,6 +185,10 @@ class AuditStore(Model):
 
         if self.status != AuditStore.ACKNOWLEDGED:
             _logger.debug("Report not acknowledged")
+            return False
+
+        if self.report_summary == '' or self.report_summary_original == '':
+            _logger.debug("Report summary is incomplete")
             return False
 
         sections = self.audit.audit_cycle.sections.all()

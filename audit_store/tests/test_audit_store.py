@@ -518,8 +518,15 @@ class AuditStoreTestCase(TestCase):
     ##########is_submittable ########
 
     def test_is_submittable_returns_true(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
-        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle, minimum_attachment_count=1)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='foobar',
+        )
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
         report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
         for i in range(3):
             section = section_recipe.make()
@@ -536,11 +543,34 @@ class AuditStoreTestCase(TestCase):
         expect(audit_store.is_submittable()).to(be_false)
 
     def test_is_submittable_when_status_is_not_acknowledged(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ASSIGNED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='foobar',
+        )
         with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
             audit_store.is_submittable()
             self.assertIn(
                 "DEBUG:audit_store.models:Report not acknowledged",
+                error_log.output
+            )
+        self.assertFalse(audit_store.is_submittable())
+
+    def test_is_submittable_when_report_summary_original_is_empty(self):
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+        )
+        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
+            audit_store.is_submittable()
+            self.assertIn(
+                "DEBUG:audit_store.models:Report summary is incomplete",
                 error_log.output
             )
         self.assertFalse(audit_store.is_submittable())
@@ -550,7 +580,9 @@ class AuditStoreTestCase(TestCase):
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
-            audit__audit_cycle=self.audit_cycle
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='foobar',
         )
         mommy.make(Section, audit_cycle=self.audit_cycle)
 
@@ -566,7 +598,9 @@ class AuditStoreTestCase(TestCase):
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
-            audit__audit_cycle=self.audit_cycle
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='foobar',
         )
         section = mommy.make(Section, audit_cycle=self.audit_cycle)
         mommy.make(ReportSection, audit_store=audit_store, auditor_comment="", section=section)
@@ -584,7 +618,9 @@ class AuditStoreTestCase(TestCase):
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
-            audit__audit_cycle=self.audit_cycle
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='foobar',
         )
         section = mommy.make(Section, audit_cycle=self.audit_cycle)
         mommy.make(ReportSection, audit_store=audit_store, auditor_comment="foobar", section=section)
@@ -603,7 +639,9 @@ class AuditStoreTestCase(TestCase):
             AuditStore,
             status=AuditStore.ACKNOWLEDGED,
             user=self.auditor_user,
-            audit__audit_cycle=self.audit_cycle
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='foobar',
         )
         section = mommy.make(Section, audit_cycle=self.audit_cycle)
         mommy.make(ReportSection, audit_store=audit_store, auditor_comment="foobar", section=section)

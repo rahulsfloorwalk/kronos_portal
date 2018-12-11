@@ -39,8 +39,14 @@ class AuditStoreAuditorServiceTestCase(TestCase):
         self.assertEqual(AuditStore.ACKNOWLEDGED, acknowledged_audit_store.status)
 
     def create_submittable_report(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user,
-                                 audit__audit_cycle=self.audit_cycle)
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary='Foobar',
+            report_summary_original='Foobar',
+        )
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
         report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
         for i in range(3):
