@@ -104,7 +104,7 @@ class AuditStoreServiceTestCase(TestCase):
         )
         report_summary = "foobar"
         with self.assertRaisesRegex(AppLogicError, "Cannot set report summary of current audit store"):
-            audit_store_service.set_report_summary_for_agency(mock_audit_store.id, self.agency_user.id, report_summary)
+            audit_store_service.set_report_summary(mock_audit_store.id, self.agency_user.id, report_summary)
 
     def test_set_report_summary_copies_report_summary(self):
         mock_audit_store = mommy.make(
@@ -114,7 +114,7 @@ class AuditStoreServiceTestCase(TestCase):
             audit__audit_cycle=self.audit_cycle
         )
         report_summary = "foobar"
-        audit_store = audit_store_service.set_report_summary_for_agency(mock_audit_store.id, self.agency_user.id, report_summary)
+        audit_store = audit_store_service.set_report_summary(mock_audit_store.id, self.agency_user.id, report_summary)
         self.assertEqual(report_summary, audit_store.report_summary_original)
 
 

@@ -33,7 +33,7 @@ def acknowledge_report(audit_store_id, user_id):
 
 
 @atomic
-def set_report_summary_for_agency(audit_store_id, user_id, report_summary):
+def set_report_summary(audit_store_id, user_id, report_summary):
     audit_store = find_by_id_for_agency_user(audit_store_id, user_id)
     if audit_store.is_editable_by_agency():
         audit_store.set_report_summary(report_summary)
