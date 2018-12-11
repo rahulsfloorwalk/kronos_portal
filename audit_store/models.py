@@ -277,6 +277,12 @@ class AuditStore(Model):
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
+    def set_report_summary(self, report_summary):
+        if report_summary in (None, ""):
+            raise AppLogicError("report summary cannot be blank")
+        self.report_summary = report_summary
+        self.save()
+
     def copy_report_summary(self):
         self.report_summary_original = self.report_summary
         self.save()

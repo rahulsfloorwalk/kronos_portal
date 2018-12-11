@@ -94,6 +94,28 @@ class AuditStoreServiceTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "Report cannot be submitted now"):
             audit_store_service.submit_report(audit_store.id, self.agency_user.id)
 
+    def test_set_report_summary_raises_when_report_is_not_acknowledged(self):
+        mock_audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ASSIGNED,
+            user=self.agency_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        report_summary = "foobar"
+        with self.assertRaisesRegex(AppLogicError, "Cannot set report summary of current audit store"):
+            audit_store_service.set_report_summary_for_agency(mock_audit_store.id, self.agency_user.id, report_summary)
+
+    def test_set_report_summary_copies_report_summary(self):
+        mock_audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.agency_user,
+            audit__audit_cycle=self.audit_cycle
+        )
+        report_summary = "foobar"
+        audit_store = audit_store_service.set_report_summary_for_agency(mock_audit_store.id, self.agency_user.id, report_summary)
+        self.assertEqual(report_summary, audit_store.report_summary_original)
+
     def test_submit_report_copies_report_summary_to_report_summary_original(self):
         report_summary = 'Foobar'
         mock_audit_store = mommy.make(

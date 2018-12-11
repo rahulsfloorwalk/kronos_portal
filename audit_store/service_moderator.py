@@ -78,6 +78,7 @@ def fail_for_moderator(audit_store_id, user_id):
 def submit_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    audit_store.copy_report_summary()
     audit_store.submit(by=user)
     return audit_store
 
@@ -112,3 +113,13 @@ def set_earnings_per_audit_for_moderator(audit_store_id, earnings_per_audit, use
         return audit_store
     else:
         raise AppLogicError("cannot set earnings per audit now")
+
+def set_report_summary(audit_store_id, report_summary, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    if audit_store.is_editable_by_moderator():
+        audit_store.set_report_summary(report_summary)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set report summary now")
+
+

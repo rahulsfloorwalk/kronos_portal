@@ -33,9 +33,21 @@ def set_earnings_per_audit(audit_store_id, earnings_per_audit, user_id):
     else:
         raise AppLogicError("cannot set earnings per audit now")
 
+
+def set_report_summary(audit_store_id, report_summary, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    manager_service.find_manager_by_user_id(user_id)
+    if audit_store.is_editable_by_manager():
+        audit_store.set_report_summary(report_summary)
+        return audit_store
+    else:
+        raise AppLogicError("cannot set report summary now")
+
+
 def submit_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
+    audit_store.copy_report_summary()
     audit_store.submit(by=user)
     return audit_store
 
