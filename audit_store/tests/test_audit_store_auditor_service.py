@@ -45,7 +45,6 @@ class AuditStoreAuditorServiceTestCase(TestCase):
             user=self.auditor_user,
             audit__audit_cycle=self.audit_cycle,
             report_summary='Foobar',
-            report_summary_original='Foobar',
         )
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
         report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
@@ -73,6 +72,18 @@ class AuditStoreAuditorServiceTestCase(TestCase):
 
         with self.assertRaisesRegex(AppLogicError, "Please complete all answers and all section summaries before submitting"):
             service_auditor.submit_report(audit_store.id, self.auditor_user.id)
+
+    def test_submit_report_copies_report_summary_to_report_summary_original(self):
+        report_summary = 'Foobar'
+        mock_audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary=report_summary
+        )
+        submitted_audit_store = service_auditor.submit_report(mock_audit_store.id, self.auditor_user.id)
+        self.assertEqual('Foobar', submitted_audit_store.report_summary_original)
 
     def test_submit_report_changes_report_status(self):
         audit_store = self.create_submittable_report()

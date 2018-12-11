@@ -277,6 +277,10 @@ class AuditStore(Model):
     def __str__(self):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
+    def copy_report_summary(self):
+        self.report_summary_original = self.report_summary
+        self.save()
+
     @atomic
     def withdraw(self, *args, by):
         if not self.is_withdrawable():

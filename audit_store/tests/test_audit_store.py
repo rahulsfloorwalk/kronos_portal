@@ -686,3 +686,14 @@ class AuditStoreTestCase(TestCase):
         expect(audit_store.attribute_data).to(equal({
             attribute_json_id: updated_option_id,
         }))
+
+    def test_copy_report_summary_original_copies_report_summary(self):
+        report_summary = 'Foobar'
+        audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.auditor_user,
+            report_summary=report_summary
+        )
+        audit_store.copy_report_summary()
+        expect(audit_store.report_summary_original).to(equal(report_summary))

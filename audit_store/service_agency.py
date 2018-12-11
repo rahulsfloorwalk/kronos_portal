@@ -35,6 +35,7 @@ def acknowledge_report(audit_store_id, user_id):
 @atomic
 def submit_report(audit_store_id, user_id):
     audit_store = find_by_id_for_agency_user(audit_store_id, user_id)
+    audit_store.copy_report_summary()
     if not audit_store.is_submittable():
         raise AppLogicError("Report cannot be submitted now")
     audit_store.submit(by=audit_store.user)
