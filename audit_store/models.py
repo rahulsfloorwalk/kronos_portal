@@ -196,6 +196,10 @@ class AuditStore(Model):
                     _logger.debug("Report not submittable, some auditor comment is incomplete")
                     return False
 
+                if not report_section.has_minimum_attachments():
+                    _logger.debug("Report not submittable, not enough attachments uploaded")
+                    return False
+
                 questions = Question.objects.filter(section_id=report_section.section_id).all()
                 answers = Answer.objects.filter(
                     audit_store__id=self.id,

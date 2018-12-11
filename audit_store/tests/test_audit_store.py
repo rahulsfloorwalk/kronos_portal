@@ -1,7 +1,7 @@
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 from faker import Faker
-from expects import expect, equal
+from expects import expect, equal, be_false
 
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
@@ -16,6 +16,7 @@ from audit_store.models import AuditStore
 from audit_store.signals import audit_store_status_change
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
+from attachment.models import Attachment
 
 fake=Faker()
 class AuditStoreTestCase(TestCase):
@@ -514,17 +515,25 @@ class AuditStoreTestCase(TestCase):
                 audit_store.is_editable_by_agency()
             )
 
+    ##########is_submittable ########
+
     def test_is_submittable_returns_true(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
-        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
+        section_recipe = Recipe(Section, audit_cycle=self.audit_cycle, minimum_attachment_count=1)
         report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
         for i in range(3):
             section = section_recipe.make()
-            report_section_recipe.make(section=section)
+            report_section = report_section_recipe.make(section=section)
+            mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section)
             for i in range(5):
                 question = mommy.make(Question, section=section)
                 mommy.make(Answer, question=question, audit_store=audit_store, answer_text="foobar", marks_obtained=1)
         self.assertTrue(audit_store.is_submittable())
+
+    def test_is_submittable_returns_false_when_minimum_attachments_are_not_uploaded(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
+        mommy.make(ReportSection, audit_store=audit_store, section__audit_cycle=self.audit_cycle, section__minimum_attachment_count=2, auditor_comment=fake.text())
+        expect(audit_store.is_submittable()).to(be_false)
 
     def test_is_submittable_when_status_is_not_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.auditor_user, audit__audit_cycle=self.audit_cycle)
