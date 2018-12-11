@@ -1,41 +1,27 @@
 from django.urls import reverse
 
-from django.contrib.auth.models import User, Group
-from django.contrib.auth.hashers import make_password
-
-from rest_framework.test import APITestCase
-
 from model_mommy import mommy
 from expects import expect, equal, have_length, have_key, contain_only
 
 from faker import Faker
 
+from .utils import ManagerAPITestCase
 from audit.models import AuditCycle
 from audit.models import ReportAttribute
-from registration.models import GROUP_NAME_MANAGER
 
 fake = Faker()
 
 
-class ReportAttributeViewGetTestCase(APITestCase):
-    fixtures = ['groups']
+class ReportAttributeViewTestCase(ManagerAPITestCase):
 
     def setUp(self):
-        self.email = fake.email()
-        self.password = fake.password()
-
-        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
-        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
-                                       groups=[self.manager_group])
-
-    def login(self):
-        self.client.login(username=self.email, password=self.password)
+        super(ReportAttributeViewTestCase, self).setUp()
+        self.login()
 
     def test_get_gets_report_attributes(self):
         audit_cycle = mommy.make(AuditCycle)
         mommy.make(ReportAttribute, audit_cycle=audit_cycle, _quantity=3)
         mommy.make(ReportAttribute, audit_cycle=mommy.make(AuditCycle))
-        self.login()
 
         response = self.client.get(reverse('manager:report_attribute_by_audit_cycle_view', kwargs = {
             'audit_cycle_id': audit_cycle.id
@@ -47,23 +33,8 @@ class ReportAttributeViewGetTestCase(APITestCase):
             expect(qt).to(have_key("audit_cycle_id", audit_cycle.id))
 
 
-class ReportAttributeViewPostTestCase(APITestCase):
-    fixtures = ['groups']
-
-    def setUp(self):
-        self.email = fake.email()
-        self.password = fake.password()
-
-        self.manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
-        self.manager_user = mommy.make(User, username=self.email, email=self.email, password=make_password(self.password),
-                                       groups=[self.manager_group])
-
-    def login(self):
-        self.client.login(username=self.email, password=self.password)
-
     def test_post_creates_new_report_attribute(self):
         audit_cycle = mommy.make(AuditCycle)
-        self.login()
 
         post_data = {
             'label': "MyLabel",
