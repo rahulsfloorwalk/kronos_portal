@@ -82,8 +82,14 @@ class AuditStoreIdSubmitTestCase(APITestCase):
 
     def setup_audit_store(self):
         self.audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
-        self.audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
-                                      audit__audit_cycle=self.audit_cycle)
+        self.audit_store = mommy.make(
+            AuditStore,
+            status=AuditStore.ACKNOWLEDGED,
+            user=self.agency_user,
+            audit__audit_cycle=self.audit_cycle,
+            report_summary="Summary",
+            report_summary_original="Summary"
+        )
 
     def login(self):
         # login first

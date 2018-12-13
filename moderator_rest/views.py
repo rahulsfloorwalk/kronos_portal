@@ -121,7 +121,7 @@ class AuditStoreIdReportSummaryView(APIView):
         ds = self.ReportSummaryDeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         report_summary = ds.validated_data['report_summary']
-        audit_store = audit_store_service.set_report_summary(audit_store_id, request.user.id, report_summary)
+        audit_store = audit_store_service.set_report_summary(audit_store_id, report_summary, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 
