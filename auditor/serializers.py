@@ -360,6 +360,7 @@ class AuditStoreSerializer(ModelSerializer):
             'reimbursement',
             'audit_date',
             'audit',
+            'report_summary',
             'user',
         )
         read_only_fields = fields

@@ -2,14 +2,14 @@ from django.conf import settings
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.serializers import Serializer, BooleanField
+from rest_framework.serializers import Serializer, BooleanField, CharField
 
 import attachment.service_auditor as attachment_auditor_service
 from answer.service import answer as answer_service
 from answer.service import report_section as report_section_service
 from audit.service import audit_service
 from audit_store import service as audit_store_service
-from audit_store import service_auditor
+from audit_store import service_auditor as audit_store_auditor_service
 from auditor.serializers import AnswerDeSerializer, ProfileInfoDeSerializer, AuditApplicationSerializer, AuditApplicationApplyDeSerializer, AuditApplicationCancelDeSerializer, PlainUserSerializer
 from auditor.serializers import AnswerSerializer
 from auditor.serializers import AttachmentSerializer
@@ -161,6 +161,23 @@ class AuditStoresView(APIView):
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
 
+class AuditStoreIdReportSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    class ReportSummaryDeSerializer(Serializer):
+        report_summary = CharField(max_length=16348, allow_blank=True)
+
+    def post(self, request, audit_store_id):
+        ds = self.ReportSummaryDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        report_summary = ds.validated_data['report_summary']
+        audit_store = audit_store_auditor_service.set_report_summary(audit_store_id, request.user.id, report_summary)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -300,7 +317,7 @@ class AuditStoreIdSubmitView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = service_auditor.submit_report(audit_store_id, request.user.id)
+        audit_store = audit_store_auditor_service.submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 
@@ -310,7 +327,7 @@ class AuditStoreIdAcknowledgeView(APIView):
         'POST': [GROUP_NAME_AUDITOR],
     }
     def post(self, request, audit_store_id):
-        audit_store = service_auditor.acknowledge_report(audit_store_id, request.user.id)
+        audit_store = audit_store_auditor_service.acknowledge_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 

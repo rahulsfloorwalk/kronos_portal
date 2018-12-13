@@ -107,6 +107,24 @@ class AuditStoreIdEarningsPerAuditView(APIView):
         audit_store = audit_store_service.set_earnings_per_audit_for_moderator(audit_store_id, ds.validated_data['earnings_per_audit'], request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+
+class AuditStoreIdReportSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    class ReportSummaryDeSerializer(Serializer):
+        report_summary = CharField(max_length=16348, allow_blank=True)
+
+    def post(self, request, audit_store_id, format=None):
+        ds = self.ReportSummaryDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        report_summary = ds.validated_data['report_summary']
+        audit_store = audit_store_service.set_report_summary(audit_store_id, request.user.id, report_summary)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreIdReimbursementView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

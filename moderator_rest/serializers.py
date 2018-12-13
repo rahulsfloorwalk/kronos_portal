@@ -203,6 +203,7 @@ class AuditStoreSerializer(ModelSerializer):
             'user',
             'qa_rating',
             'earnings_per_audit',
+            'report_summary',
             'reimbursement',
         )
         read_only_fields = fields

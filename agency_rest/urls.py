@@ -9,6 +9,7 @@ urlpatterns = ([
     url(r'states/(?P<state_code>[\w\-]+)/city$', views.CityView.as_view(), name='city_view'),
     url(r'states$', views.StateView.as_view(), name='state_view'),
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', views.AuditStoreIdReportSummaryView.as_view(), name="audit_store_id_report_summary_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section$', views.SectionView.as_view(), name="section_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', views.ReportSectionListView.as_view(), name="report_section_list_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', views.AnswerListView.as_view(), name="answer_list_view"),

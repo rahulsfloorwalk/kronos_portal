@@ -165,6 +165,7 @@ class AuditStoreSerializer(ModelSerializer):
             'reimbursement',
             'audit',
             'user',
+            'report_summary',
             'is_editable_by_agency',
         )
         read_only_fields = fields

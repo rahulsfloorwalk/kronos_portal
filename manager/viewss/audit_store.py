@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, IntegerField
+from rest_framework.serializers import Serializer, IntegerField, CharField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -61,6 +61,24 @@ class AuditStoreIdAuditDateView(APIView):
         ds.is_valid(raise_exception=True)
         audit_store = audit_store_service.set_audit_date(audit_store_id, ds.validated_data['audit_date'])
         return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreIdReportSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    class ReportSummaryDeSerializer(Serializer):
+        report_summary = CharField(max_length=16348, allow_blank=True)
+
+    def post(self, request, audit_store_id, format=None):
+        ds = AuditStoreIdReportSummaryView.ReportSummaryDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        report_summary = ds.validated_data['report_summary']
+        audit_store = service_manager.set_report_summary(audit_store_id, report_summary, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
 
 class AuditStoreIdReimbursementView(APIView):
     permission_classes = [HasGroupPermission]

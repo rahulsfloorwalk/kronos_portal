@@ -36,6 +36,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreView.as_view(), name="audit_store_view"),
     url(r'audit_store$', views.AuditStoresView.as_view(), name="audit_stores_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', views.AnswerListView.as_view(), name="answer_list_view"),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', views.AuditStoreIdReportSummaryView.as_view(), name="audit_store_id_report_summary_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', views.ReportSectionListView.as_view(), name="report_section_list_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/acknowledge$', views.AuditStoreIdAcknowledgeView.as_view(), name="audit_store_id_acknowledge_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', views.AuditStoreIdSubmitView.as_view(), name="audit_store_id_submit_view"),

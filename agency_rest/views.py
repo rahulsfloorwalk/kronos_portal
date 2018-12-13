@@ -311,6 +311,29 @@ class AttachmentCompleteView(APIView):
         return Response(AttachmentSerializer(attachment).data)
 
 
+class AuditStoreIdReportSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY]
+    }
+
+    class ReportSummaryDeSerializer(Serializer):
+        report_summary = CharField(max_length=16348, allow_blank=True)
+
+    def post(self, request, audit_store_id):
+        print("IN VIEW")
+        print(request.data)
+        ds = AuditStoreIdReportSummaryView.ReportSummaryDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        print("VALID")
+        report_summary = ds.validated_data['report_summary']
+        print("RS")
+        print(report_summary)
+        audit_store = audit_store_service.set_report_summary(audit_store_id, request.user.id, report_summary)
+        print(audit_store)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
