@@ -1,6 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 import types from "../action_types.js";
+import * as sectionService from "../service/section";
 
 export function fetchSections(auditCycleId){
 	return function(dispatch){
@@ -74,12 +75,7 @@ export function saveSectionAddForm(section){
 			section
 		});
 
-		var req = $.ajax({
-			type: "POST",
-			url: url.api_base_path + "manager/section",
-			data: JSON.stringify(section),
-			contentType: "application/json"
-		});
+		const req = sectionService.addSection(section);
 		req.done(function(savedSection){
 			dispatch({
 				type: types.SECTION_POST,
@@ -118,12 +114,7 @@ export function saveSectionEditForm(section){
 			section
 		});
 
-		var req = $.ajax({
-			type: "POST",
-			url: url.api_base_path + `manager/section/${section.id}`,
-			data: JSON.stringify(section),
-			contentType: "application/json"
-		});
+		const req = sectionService.updateSection(section);
 		req.done(function(savedSection){
 			dispatch({
 				type: types.SECTION_ID_POST,
@@ -157,10 +148,7 @@ export function deleteSection(sectionId){
 			status: "request",
 			sectionId,
 		});
-		let req = $.ajax({
-			url: url.api_base_path + `manager/section/${sectionId}`,
-			type: "DELETE"
-		});
+		const req = sectionService.deleteSection(sectionId);
 		req.done(function(){
 			dispatch({
 				type: types.SECTION_ID_DELETE,
