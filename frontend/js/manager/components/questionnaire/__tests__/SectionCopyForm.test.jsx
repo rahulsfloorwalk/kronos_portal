@@ -3,9 +3,9 @@ import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
 
 import { __SectionCopyForm } from "../SectionCopyForm.jsx";
-import { copySectionsFromTo } from "../../service/section.js";
+import { copySectionsFromTo } from "../../../service/section.js";
 
-jest.mock("../../service/section.js");
+jest.mock("../../../service/section.js");
 
 const sampleAuditCycle = {
 	id: 1,

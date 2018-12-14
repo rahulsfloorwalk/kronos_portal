@@ -46,11 +46,11 @@ import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
 import OpportunityEmailRecordList from "./OpportunityEmailRecordList.jsx";
 import OpportunityEmailRecordForm from "./OpportunityEmailRecordForm.jsx";
 
-import SectionForm from "./SectionForm.jsx";
-import SectionList from "./SectionList.jsx";
-import SectionCopyForm from "./SectionCopyForm.jsx";
+import SectionForm from "./questionnaire/SectionForm.jsx";
+import SectionList from "./questionnaire/SectionList.jsx";
+import SectionCopyForm from "./questionnaire/SectionCopyForm.jsx";
 
-import QuestionForm from "./QuestionForm.jsx";
+import QuestionForm from "./questionnaire/QuestionForm.jsx";
 
 import AuditList from "./AuditList.jsx";
 import AuditCopyForm from "./AuditCopyForm.jsx";

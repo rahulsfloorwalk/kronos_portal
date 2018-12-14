@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { hashHistory } from "react-router";
 
-import { fetchAuditCycles } from "../actions/audit.js";
+import { fetchAuditCycles } from "../../actions/audit.js";
 
-import { copySectionsFromTo } from "../service/section.js";
+import { copySectionsFromTo } from "../../service/section.js";
 
-import { affectInputEventToComponent } from "../../react_utils.js";
-import FormSelect from "../../components/FormSelect.jsx";
-import Modal from "../../components/Modal.jsx";
-import { Duplicate } from "../../components/Icons.jsx";
+import { affectInputEventToComponent } from "../../../react_utils.js";
+import FormSelect from "../../../components/FormSelect.jsx";
+import Modal from "../../../components/Modal.jsx";
+import { Duplicate } from "../../../components/Icons.jsx";
 
 const auditCycleProp = PropTypes.shape({
 	id: PropTypes.number.isRequired,
