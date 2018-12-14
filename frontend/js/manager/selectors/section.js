@@ -10,3 +10,7 @@ export const findQuestionnaireTotalForAuditCycleId = (store, auditCycleId) => {
 		.filter(s => s.audit_cycle === auditCycleId)
 		.reduce((sum, section) => sum + section.max_marks, 0);
 };
+
+export const findSectionBySectionId = (store, sectionId) => {
+	return store.sections[sectionId];
+};
