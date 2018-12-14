@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { updateSection, addSection, deleteSection } from "../section";
+import { updateSection, addSection, deleteSection, fetchSectionById, fetchSectionsByAuditCycleId } from "../section";
 
 jest.mock("jquery", () => ({
 	ajax: jest.fn(),
@@ -43,6 +43,26 @@ describe(deleteSection, () => {
 		expect($.ajax).toBeCalledWith({
 			type: "DELETE",
 			url: "/manager/section/1",
+		});
+	});
+});
+
+describe(fetchSectionById, () => {
+	it("calls the url to fetch a section by id", () => {
+		fetchSectionById(sampleSection.id);
+		expect($.ajax).toBeCalledWith({
+			type: "GET",
+			url: "/manager/section/1",
+		});
+	});
+});
+
+describe(fetchSectionsByAuditCycleId, () => {
+	it("calls the url to fetch sections by audit cycle id", () => {
+		fetchSectionsByAuditCycleId(sampleSection.audit_cycle);
+		expect($.ajax).toBeCalledWith({
+			type: "GET",
+			url: "/manager/audit_cycle/4/section",
 		});
 	});
 });
