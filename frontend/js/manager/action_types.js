@@ -125,6 +125,10 @@ var types = {
 
 	//Report Attributes
 	REPORT_ATTRIBUTE_GET: "REPORT_ATTRIBUTE_GET",
+
+	//Reset All Errors
+	RESET_FORM_ERRORS: "RESET_FORM_ERRORS",
+	SET_FORM_ERRORS: "SET_FORM_ERRORS",
 };
 
 export default types;

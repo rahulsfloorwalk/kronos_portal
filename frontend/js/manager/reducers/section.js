@@ -37,3 +37,20 @@ export default (state={}, action) => {
 		return state;
 	}
 };
+
+
+export const updateSection = (section) => {
+	return {
+		type: types.SECTION_ID_GET,
+		status: "success",
+		section,
+	};
+};
+
+export const updateSections = (sections) => {
+	return {
+		type: types.SECTION_GET,
+		status: "success",
+		sections,
+	};
+};

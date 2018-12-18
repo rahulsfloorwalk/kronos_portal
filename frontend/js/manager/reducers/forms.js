@@ -192,6 +192,12 @@ export default (state=initialState, action) => {
 			});
 		}
 		break;
+	case types.RESET_FORM_ERRORS:
+		return initialState;
+	case types.SET_FORM_ERRORS:
+		return Object.assign({}, initialState, {
+			errors: action.errors,
+		});
 	default:
 		return state;
 	}
@@ -199,3 +205,17 @@ export default (state=initialState, action) => {
 	return state;
 };
 
+
+
+export const resetFormErrors = () => {
+	return {
+		type: types.RESET_FORM_ERRORS,
+	};
+};
+
+export const setFormErrors = (errors) => {
+	return {
+		type: types.SET_FORM_ERRORS,
+		errors,
+	};
+};
