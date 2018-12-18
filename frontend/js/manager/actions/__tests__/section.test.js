@@ -121,32 +121,46 @@ describe("manager section actions", () => {
 			});
 		});
 
-		it("dispatches an action to update the saved section", () => {
-			return store.dispatch(saveSectionEditForm(sampleSectionData)).then(() => {
-				expect(store.getActions()).toContainEqual({
-					type: types.SECTION_ID_GET,
-					status: "success",
-					section: sampleSections[0],
+		describe("when the save succeeds", () => {
+			it("returns a promise resolved to the saved section", () => {
+				return store.dispatch(saveSectionEditForm(sampleSectionData)).then((savedSection) => {
+					expect(savedSection).toEqual(sampleSections[0]);
+				});
+			});
+
+			it("dispatches an action to update the saved section", () => {
+				return store.dispatch(saveSectionEditForm(sampleSectionData)).then(() => {
+					expect(store.getActions()).toContainEqual({
+						type: types.SECTION_ID_GET,
+						status: "success",
+						section: sampleSections[0],
+					});
 				});
 			});
 		});
 
 		describe("when the save fails", () => {
-			const sampleErrorResponse = {
-				responseJSON: {
-					name: ["This field is required"],
-					max_marks: ["This must be a valid integer."],
-				},
+			const sampleErrors = {
+				name: ["This field is required"],
+				max_marks: ["This must be a valid integer."],
 			};
 			beforeEach(() => {
-				service.updateSection.mockRejectedValue(sampleErrorResponse);
+				service.updateSection.mockRejectedValue({
+					responseJSON: sampleErrors,
+				});
+			});
+
+			it("returns a promise rejected with the errors", () => {
+				return store.dispatch(saveSectionEditForm(sampleSectionData)).catch((error) => {
+					expect(error.responseJSON).toEqual(sampleErrors);
+				});
 			});
 
 			it("dispatches an action to set the form errors", () => {
-				return store.dispatch(saveSectionEditForm(sampleSectionData)).then(() => {
+				return store.dispatch(saveSectionEditForm(sampleSectionData)).catch(() => {
 					expect(store.getActions()).toContainEqual({
 						type: types.SET_FORM_ERRORS,
-						errors: sampleErrorResponse.responseJSON,
+						errors: sampleErrors,
 					});
 				});
 			});
@@ -172,37 +186,50 @@ describe("manager section actions", () => {
 		});
 
 		it("calls the service with the section data", () => {
-			return store.dispatch(saveSectionAddForm(sampleSectionData)).then(() => {
-				expect(service.addSection).toBeCalledWith(sampleSectionData);
-			});
+			store.dispatch(saveSectionAddForm(sampleSectionData));
+			expect(service.addSection).toBeCalledWith(sampleSectionData);
 		});
 
-		it("dispatches an action to update the saved section", () => {
-			return store.dispatch(saveSectionAddForm(sampleSectionData)).then(() => {
-				expect(store.getActions()).toContainEqual({
-					type: types.SECTION_ID_GET,
-					status: "success",
-					section: sampleSections[0],
+		describe("when the save succeeds", () => {
+			it("returns a promise resolved to the saved section", () => {
+				return store.dispatch(saveSectionAddForm(sampleSectionData)).then((savedSection) => {
+					expect(savedSection).toEqual(sampleSections[0]);
+				});
+			});
+
+			it("dispatches an action to update the saved section", () => {
+				return store.dispatch(saveSectionAddForm(sampleSectionData)).then(() => {
+					expect(store.getActions()).toContainEqual({
+						type: types.SECTION_ID_GET,
+						status: "success",
+						section: sampleSections[0],
+					});
 				});
 			});
 		});
 
 		describe("when the save fails", () => {
-			const sampleErrorResponse = {
-				responseJSON: {
-					name: ["This field is required"],
-					max_marks: ["This must be a valid integer."],
-				},
+			const sampleErrors = {
+				name: ["This field is required"],
+				max_marks: ["This must be a valid integer."],
 			};
 			beforeEach(() => {
-				service.addSection.mockRejectedValue(sampleErrorResponse);
+				service.addSection.mockRejectedValue({
+					responseJSON: sampleErrors,
+				});
+			});
+
+			it("returns a promise rejected with the errors", () => {
+				return store.dispatch(saveSectionAddForm(sampleSectionData)).catch((error) => {
+					expect(error.responseJSON).toEqual(sampleErrors);
+				});
 			});
 
 			it("dispatches an action to set the form errors", () => {
-				return store.dispatch(saveSectionAddForm(sampleSectionData)).then(() => {
+				return store.dispatch(saveSectionAddForm(sampleSectionData)).catch(() => {
 					expect(store.getActions()).toContainEqual({
 						type: types.SET_FORM_ERRORS,
-						errors: sampleErrorResponse.responseJSON,
+						errors: sampleErrors,
 					});
 				});
 			});

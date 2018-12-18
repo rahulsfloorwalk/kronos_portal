@@ -38,9 +38,11 @@ export const saveSectionAddForm = (section) => {
 	return (dispatch) => {
 		dispatch(resetFormErrors());
 		return sectionService.addSection(section).then((savedSection) => {
-			return dispatch(updateSection(savedSection));
+			dispatch(updateSection(savedSection));
+			return savedSection;
 		}, (error) => {
-			return dispatch(setFormErrors(error.responseJSON));
+			dispatch(setFormErrors(error.responseJSON));
+			throw error;
 		});
 	};
 };
@@ -51,8 +53,10 @@ export const saveSectionEditForm = (section) => {
 
 		return sectionService.updateSection(section).then((savedSection) => {
 			dispatch(updateSection(savedSection));
+			return savedSection;
 		}, (error) => {
 			dispatch(setFormErrors(error.responseJSON));
+			throw error;
 		});
 	};
 };
