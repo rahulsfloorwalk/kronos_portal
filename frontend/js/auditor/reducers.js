@@ -444,6 +444,16 @@ export function rootReducer(store = initialStore, action) {
 			});
 		}
 		break;
+	case types.REPORT_SUMMARY_POST:
+		switch(action.status){
+		case "success":
+			return Object.assign({}, store, {
+				auditStores: Object.assign({}, store.auditStores, {
+					[action.auditStore.id]: action.auditStore
+				})
+			});
+		}
+		break;
 	case types.REPORT_SECTION_GET:
 		switch(action.status){
 		case "request":

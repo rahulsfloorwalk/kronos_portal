@@ -13,6 +13,7 @@ import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 
 import AttachmentUploadBox from "./AttachmentUploadBox.jsx";
+import ReportSummary from "./ReportSummary.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 import SectionList from "./questionnaire/SectionList.jsx";
@@ -63,6 +64,10 @@ class AuditStoreDetails extends React.Component {
     		});
     	});
     };
+
+    isReportEditable = () => {
+		return this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED";
+	};
 
     render() {
     	if(! this.props.auditStore){
@@ -148,6 +153,7 @@ class AuditStoreDetails extends React.Component {
     			</div>
     			{buttonPanel}
     			<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId}/>
+    			<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} />
     			<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors}/>
     			{buttonPanel}
     		</div>

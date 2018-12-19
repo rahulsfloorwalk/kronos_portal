@@ -76,3 +76,25 @@ export function submitAuditStore(auditStoreId){
 		//TODO: Handle error
 	};
 }
+
+export function submitReportSummary(audit_store_id, report_summary){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit_store/${audit_store_id}/report_summary`,
+			data: JSON.stringify({
+				report_summary
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(newSummary){
+			dispatch({
+				type: types.REPORT_SUMMARY_POST,
+				status: "success",
+				reportSummary: newSummary,
+			});
+		});
+		//TODO: Handle error
+		return req;
+	};
+}
