@@ -278,8 +278,6 @@ class AuditStore(Model):
         return "AuditStore({}): audit: {}".format(self.id, self.audit)
 
     def set_report_summary(self, report_summary):
-        if report_summary in (None, ""):
-            raise AppLogicError("report summary cannot be blank")
         self.report_summary = report_summary
         self.save()
 

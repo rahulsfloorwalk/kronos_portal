@@ -672,15 +672,6 @@ class AuditStoreTestCase(TestCase):
         audit_store.set_report_summary(report_summary)
         self.assertEqual(report_summary, audit_store.report_summary)
 
-    def test_set_report_summary_raises_when_report_summary_is_empty_or_none(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
-        report_summary = ""
-        with self.assertRaisesRegex(AppLogicError, "report summary cannot be blank"):
-            audit_store.set_report_summary(report_summary)
-            report_summary = None
-        with self.assertRaisesRegex(AppLogicError, "report summary cannot be blank"):
-            audit_store.set_report_summary(report_summary)
-
     def test_set_attribute_data_sets_a_new_value(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
         attribute_json_id = "foo_attr1"
