@@ -35,6 +35,7 @@ import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import { getAuditType } from "../../utils.js";
 
 import AttachmentDisplayBox from "./AttachmentDisplayBox.jsx";
+import ReportSummary from "./ReportSummary.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import AuditStoreReportAttributesTable from "./audit_store/AuditStoreReportAttributesTable.jsx";
 
@@ -123,6 +124,9 @@ export class AuditStoreDetails extends React.Component{
 		}).always(() => {
 			this.setState({auditDateLoading: false});
 		});
+	};
+	isSummaryEditable = () => {
+		return this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
 	};
 	render(){
 		if(! this.props.auditStore){
@@ -287,6 +291,7 @@ export class AuditStoreDetails extends React.Component{
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
+				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isSummaryEditable()}/>
 				{this.props.children}
 			</div>
 		);

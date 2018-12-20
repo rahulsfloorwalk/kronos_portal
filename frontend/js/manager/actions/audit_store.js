@@ -292,3 +292,11 @@ export function setReportAttributeValue(auditStoreId, reportAttributeJsonId, opt
 		});
 	};
 }
+
+export function setReportSummary(auditStoreId, reportSummary){
+	return (dispatch) => {
+		return service.setReportSummary(auditStoreId, reportSummary).then((auditStore) => {
+			dispatch(updateAuditStore(auditStore));
+		});
+	};
+}
