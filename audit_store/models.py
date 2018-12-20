@@ -187,10 +187,6 @@ class AuditStore(Model):
             _logger.debug("Report not acknowledged")
             return False
 
-        if self.report_summary == '' or self.report_summary_original == '':
-            _logger.debug("Report summary is incomplete")
-            return False
-
         sections = self.audit.audit_cycle.sections.all()
         report_sections = self.report_sections.all()
         if len(sections) != len(report_sections):

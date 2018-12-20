@@ -559,22 +559,6 @@ class AuditStoreTestCase(TestCase):
             )
         self.assertFalse(audit_store.is_submittable())
 
-    def test_is_submittable_when_report_summary_original_is_empty(self):
-        audit_store = mommy.make(
-            AuditStore,
-            status=AuditStore.ACKNOWLEDGED,
-            user=self.auditor_user,
-            audit__audit_cycle=self.audit_cycle,
-            report_summary='Foobar',
-        )
-        with self.assertLogs(logger="audit_store.models", level='DEBUG') as error_log:
-            audit_store.is_submittable()
-            self.assertIn(
-                "DEBUG:audit_store.models:Report summary is incomplete",
-                error_log.output
-            )
-        self.assertFalse(audit_store.is_submittable())
-
     def test_is_submittable_when_section_length_does_not_match_report_section(self):
         audit_store = mommy.make(
             AuditStore,
