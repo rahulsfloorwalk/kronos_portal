@@ -1,4 +1,4 @@
-import { qaOkAuditStore, pmRevertAuditStore, acceptAuditStore, setReportAttributeValue } from "../../../manager/actions/audit_store";
+import { qaOkAuditStore, pmRevertAuditStore, acceptAuditStore, setReportAttributeValue, setReportSummary } from "../../../manager/actions/audit_store";
 import types from "../../../manager/action_types";
 import * as service from "../../service/audit_store";
 
@@ -229,6 +229,40 @@ describe(setReportAttributeValue, () => {
 		const sampleOptionId = "opt1";
 
 		const thunk = setReportAttributeValue(sampleAuditStore.id, sampleJsonId, sampleOptionId);
+		thunk(dispatch);
+		setTimeout(() => {
+			expect(dispatch).lastCalledWith({
+				type: types.AUDIT_STORE_UPDATED,
+				status: "success",
+				auditStore: sampleAuditStore,
+			});
+			done();
+		});
+	});
+});
+
+describe("setReportSummary", () => {
+	const sampleAuditStore = {
+		id: 5,
+		audit_date: "2018-07-02",
+		report_summary: "Audit was completed successfully",
+	};
+	it("returns a thunk that calls the service with the audit store id, json id and option id", () => {
+		service.setReportSummary.mockResolvedValue(sampleAuditStore);
+		const dispatch = jest.fn();
+		const reportSummary = "Audit was completed successfully";
+
+		const thunk = setReportSummary(sampleAuditStore.id, reportSummary);
+		thunk(dispatch);
+
+		expect(service.setReportSummary).toBeCalledWith(sampleAuditStore.id, reportSummary);
+	});
+	it("dispatches an action when server returns an updated audit store successfully", (done) => {
+		service.setReportSummary.mockResolvedValue(sampleAuditStore);
+		const dispatch = jest.fn();
+		const reportSummary = "Audit was completed successfully";
+
+		const thunk = setReportSummary(sampleAuditStore.id, reportSummary);
 		thunk(dispatch);
 		setTimeout(() => {
 			expect(dispatch).lastCalledWith({
