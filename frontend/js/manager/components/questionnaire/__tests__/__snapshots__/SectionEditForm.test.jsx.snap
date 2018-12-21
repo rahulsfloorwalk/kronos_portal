@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionEditForm renders a pre-filled form 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Edit Section
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <div
+            className="form-group"
+          >
+            <label>
+              Sequence
+            </label>
+            <input
+              className="form-control"
+              label="Sequence"
+              name="sequence"
+              onChange={[Function]}
+              type="number"
+              value={1}
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Section Name
+            </label>
+            <input
+              className="form-control"
+              label="Section Name"
+              maxLength="50"
+              name="name"
+              onChange={[Function]}
+              type="text"
+              value="Coco Jumbo"
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Minimum Attachments
+            </label>
+            <input
+              className="form-control"
+              label="Minimum Attachments"
+              name="minimum_attachment_count"
+              onChange={[Function]}
+              type="number"
+              value={1}
+            />
+            <ul />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save
+          </button>
+           
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

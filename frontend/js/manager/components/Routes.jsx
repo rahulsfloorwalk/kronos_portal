@@ -46,7 +46,8 @@ import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
 import OpportunityEmailRecordList from "./OpportunityEmailRecordList.jsx";
 import OpportunityEmailRecordForm from "./OpportunityEmailRecordForm.jsx";
 
-import SectionForm from "./questionnaire/SectionForm.jsx";
+import SectionAddForm from "./questionnaire/SectionAddForm.jsx";
+import SectionEditForm from "./questionnaire/SectionEditForm.jsx";
 import SectionList from "./questionnaire/SectionList.jsx";
 import SectionCopyForm from "./questionnaire/SectionCopyForm.jsx";
 
@@ -114,8 +115,8 @@ const Routes = () => (
 				<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
 				<Route path="questionnaire" component={SectionList}>
 					<Route path="section/copy" component={SectionCopyForm}/>
-					<Route path="section/add" component={SectionForm}/>
-					<Route path="section/:sectionId/edit" component={SectionForm}/>
+					<Route path="section/add" component={SectionAddForm}/>
+					<Route path="section/:sectionId/edit" component={SectionEditForm}/>
 					<Route path="section/:sectionId/question/add" component={QuestionForm}/>
 					<Route path="section/:sectionId/question/:questionId/edit" component={QuestionForm}/>
 					<Route path="section/:sectionId/question/:questionId/delete" component={QuestionForm}/>
