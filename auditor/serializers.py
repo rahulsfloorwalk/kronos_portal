@@ -386,6 +386,7 @@ class SectionSerializer(ModelSerializer):
             'name',
             'audit_cycle',
             'sequence',
+            'minimum_attachment_count',
             'questions'
         )
         read_only_fields = fields

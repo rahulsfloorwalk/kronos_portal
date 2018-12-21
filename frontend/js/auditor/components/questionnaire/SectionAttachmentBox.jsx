@@ -21,6 +21,8 @@ export default class SectionAttachmentBox extends React.Component{
 			PropTypes.string,
 		]).isRequired,
 		auditStore: PropTypes.object,
+		minimumAttachmentCount: PropTypes.number,
+		showErrors: PropTypes.bool,
 	};
 
 	constructor(props){
@@ -154,9 +156,23 @@ export default class SectionAttachmentBox extends React.Component{
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
+		let minimumAttachmentCount, panelStyle;
+		if( this.props.minimumAttachmentCount) {
+			minimumAttachmentCount = <span>(atleast {this.props.minimumAttachmentCount})</span>;
+			if(this.props.showErrors && this.state.attachments.length < this.props.minimumAttachmentCount) {
+				panelStyle = {
+					backgroundColor: "#F2DEDE",
+				};
+			}
+			if(this.state.attachments.length >= this.props.minimumAttachmentCount){
+				panelStyle = {
+					backgroundColor: "#DFF0D8",
+				};
+			}
+		}
 		return (
-			<div className="panel-body">
-				<h4>Attachments {uploadButton}</h4>
+			<div className="panel-body " style={panelStyle}>
+				<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>
 				{attachmentRows}
 				<input type="file" multiple
 					onChange={this.uploadFile}

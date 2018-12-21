@@ -149,7 +149,13 @@ class __Section extends React.Component{
 						</tr>
 					</tbody>
 				</table>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} auditStore={this.props.auditStore} sectionId={this.props.section.id}/>
+				<SectionAttachmentBox
+					auditStoreId={this.props.auditStoreId}
+					auditStore={this.props.auditStore}
+					sectionId={this.props.section.id}
+					minimumAttachmentCount={this.props.section.minimum_attachment_count}
+					showErrors={this.props.showErrors}
+				/>
 			</div>
 		);
 	}
