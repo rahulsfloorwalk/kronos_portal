@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from json import loads, dumps
 
 states = OrderedDict()
 states["IN-AN"] = "Andaman and Nicobar Islands"
@@ -43,3 +44,12 @@ def get_django_choices():
     for code, name in states.items():
         choices.append((code, name))
     return tuple(choices)
+
+
+def get_state_dict(code):
+    state = ''
+    try:
+        state = loads(dumps(states))[code]
+    except KeyError:
+        pass
+    return state

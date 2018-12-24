@@ -1,6 +1,7 @@
 import {
 	FETCH_REPORTS,
 	SELECT_CITY,
+	SELECT_STATE,
 	SELECT_STORE_TYPE,
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
@@ -12,6 +13,7 @@ import {
 const initialState = {
 	reports: {},
 	selectedCityId: null,
+	selectedState: null,
 	selectedStoreType: null,
 	selectedStorePriority: null,
 	selectedEndDate: null,
@@ -30,6 +32,10 @@ export default (state=initialState, action) => {
 	case SELECT_CITY:
 		return Object.assign({}, state, {
 			selectedCityId: action.selectedCityId,
+		});
+	case SELECT_STATE:
+		return Object.assign({}, state, {
+			selectedState: action.selectedState,
 		});
 	case SELECT_STORE_TYPE:
 		return Object.assign({}, state, {
@@ -56,6 +62,7 @@ export default (state=initialState, action) => {
 	case RESET_FILTERS:
 		return Object.assign({}, state, {
 			selectedCityId: null,
+			selectedState: null,
 			selectedStoreType: null,
 			selectedStorePriority: null,
 			selectedEndDate: null,
@@ -86,6 +93,14 @@ export function selectCity(selectedCityId){
 		type: SELECT_CITY,
 		selectedCityId,
 	};
+}
+
+export function selectState(selectedState){
+	const obj = {
+		type: SELECT_STATE,
+		selectedState,
+	};
+	return obj;
 }
 
 export function selectStoreType(selectedStoreType){

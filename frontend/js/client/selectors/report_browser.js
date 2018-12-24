@@ -16,6 +16,10 @@ export default class ReportBrowserSelectors {
 		return this.getNamespacedStore(store).selectedCityId;
 	};
 
+	findSelectedState = (store) => {
+		return this.getNamespacedStore(store).selectedState;
+	};
+
 	findCitiesByAuditCycleId = (store, auditCycleId) => {
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((cities, report) => {
@@ -27,6 +31,18 @@ export default class ReportBrowserSelectors {
 					});
 				} else {
 					return cities;
+				}
+			}, []);
+	};
+
+	findStatesByAuditCycleId = (store, auditCycleId) => {
+		return this.findReportsByAuditCycleId(store, auditCycleId)
+			.reduce((states, report) => {
+				const state = states.find((c) => c === report.state);
+				if(state === undefined){
+					return states.concat(report.state);
+				} else {
+					return states;
 				}
 			}, []);
 	};
@@ -85,6 +101,16 @@ export default class ReportBrowserSelectors {
 		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
 		if(selectedAuditCycle){
 			return this.findCitiesByAuditCycleId(state, selectedAuditCycle.id);
+		} else {
+			return [];
+		}
+	};
+
+	findStatesBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			const states = this.findStatesByAuditCycleId(state, selectedAuditCycle.id);
+			return states;
 		} else {
 			return [];
 		}
@@ -155,6 +181,7 @@ export default class ReportBrowserSelectors {
 		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(store);
 
 		const selectedCityId = this.findSelectedCityId(store);
+		const selectedState = this.findSelectedState(store);
 		const selectedStoreType = this.findSelectedStoreType(store);
 		const selectedStorePriority = this.findSelectedStorePriority(store);
 		const selectedStartDate = this.findSelectedStartDateBySelectedAuditCycle(store);
@@ -163,6 +190,7 @@ export default class ReportBrowserSelectors {
 		if(selectedAuditCycle) {
 			return this.findReportsByAuditCycleId(store, selectedAuditCycle.id)
 				.filter(r => selectedCityId ? r.city_id === selectedCityId : true)
+				.filter(r => selectedState ? r.state === selectedState : true)
 				.filter(r => selectedStoreType ? r.store_type === selectedStoreType : true)
 				.filter(r => selectedStorePriority ? r.store_priority === selectedStorePriority : true)
 				.filter(r => moment(r.audit_date).isBetween(selectedStartDate, selectedEndDate, null, "[]"));
