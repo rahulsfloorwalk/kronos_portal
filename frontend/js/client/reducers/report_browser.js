@@ -36,6 +36,7 @@ export default (state=initialState, action) => {
 	case SELECT_STATE:
 		return Object.assign({}, state, {
 			selectedState: action.selectedState,
+			selectedCityId: null,
 		});
 	case SELECT_STORE_TYPE:
 		return Object.assign({}, state, {

@@ -21,15 +21,23 @@ export default class ReportBrowserSelectors {
 	};
 
 	findCitiesByAuditCycleId = (store, auditCycleId) => {
+		const selectedState = this.findSelectedState(store);
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((cities, report) => {
 				const city = cities.find((c) => c.id === report.city_id);
-				if(city === undefined){
+				if(city === undefined && selectedState === null){
 					return cities.concat({
 						id: report.city_id,
 						name: report.city_name,
 					});
-				} else {
+				}
+				else if(city === undefined && report.state === selectedState){
+					return cities.concat({
+						id: report.city_id,
+						name: report.city_name,
+					});
+				}
+				else {
 					return cities;
 				}
 			}, []);
