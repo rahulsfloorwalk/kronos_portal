@@ -367,6 +367,7 @@ export function rootReducer(store = initialStore, action) {
 	case types.AUDIT_STORE_ID_GET:
 	case types.AUDIT_STORE_ID_SUBMIT:
 	case types.AUDIT_STORE_ID_ACKNOWLEDGE:
+	case types.REPORT_SUMMARY_POST:
 		switch(action.status){
 		case "success":
 			return Object.assign({}, store, {
@@ -426,16 +427,6 @@ export function rootReducer(store = initialStore, action) {
 			return Object.assign({}, store, {
 				answers: Object.assign({}, store.answers, {
 					[action.answer.id]: action.answer
-				})
-			});
-		}
-		break;
-	case types.REPORT_SUMMARY_POST:
-		switch(action.status){
-		case "success":
-			return Object.assign({}, store, {
-				auditStores: Object.assign({}, store.auditStores, {
-					[action.auditStore.id]: action.auditStore
 				})
 			});
 		}
