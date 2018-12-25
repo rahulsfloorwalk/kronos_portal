@@ -53,6 +53,7 @@ describe("reportBrowserReducer", () => {
 		expect(reportBrowserState).toEqual({
 			reports: {},
 			selectedCityId: null,
+			selectedState: null,
 			selectedStoreType: null,
 			selectedStorePriority: null,
 			selectedEndDate: null,
@@ -80,6 +81,7 @@ describe("reportBrowserReducer", () => {
 			expect(state).toEqual({
 				reports: {},
 				selectedCityId: null,
+				selectedState: null,
 				selectedStoreType: null,
 				selectedStorePriority: null,
 				selectedEndDate: null,
