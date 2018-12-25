@@ -56,9 +56,6 @@ export function rootReducer(store = initialStore, action) {
 				loadingAuditorStats: false,
 				auditorStats: Object.assign({}, store.auditorStats, action.auditorStats)
 			});
-		case "error":
-			break;
-
 		}
 		break;
 	case types.AUDITOR_SCORE_GET:
@@ -72,8 +69,6 @@ export function rootReducer(store = initialStore, action) {
 				loadingAuditorScore: false,
 				auditorScore: Object.assign({}, store.auditorScore, action.auditorScore)
 			});
-		case "error":
-
 		}
 
 		break;
@@ -89,9 +84,6 @@ export function rootReducer(store = initialStore, action) {
 				loadingProfileInfo: false,
 				profileInfo: Object.assign({}, store.profileInfo, action.profileInfo)
 			});
-		case "error":
-			break;
-
 		}
 
 		break;
@@ -137,8 +129,6 @@ export function rootReducer(store = initialStore, action) {
 				loadingBankInfo: false,
 				bankInfo: Object.assign({}, store.bankInfo, action.bankInfo)
 			});
-		case "error":
-			break;
 		}
 
 		break;
@@ -184,8 +174,6 @@ export function rootReducer(store = initialStore, action) {
 				loadingAdditionalInfo: false,
 				additionalInfo: Object.assign({}, store.additionalInfo, action.additionalInfo)
 			});
-		case "error":
-			break;
 		}
 
 		break;
@@ -231,8 +219,6 @@ export function rootReducer(store = initialStore, action) {
 				loadingSocialInfo: false,
 				socialInfo: Object.assign({}, store.socialInfo, action.socialInfo)
 			});
-		case "error":
-			break;
 		}
 
 		break;
