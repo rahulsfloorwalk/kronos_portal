@@ -17,75 +17,7 @@ import reportAttributeReducer from "./reducers/report_attribute";
 import formReducer from "./reducers/forms";
 import errorsReducer from "./reducers/errors";
 
-/*
-const initialStore = {
-	applications: {},
-	audits: {},
-	auditStores: {},
-	auditCycles: {},
-	clients: {},
-	stores: {},
-	sections: {},
-	locations: {},
-	states: {},
-	cities: [],
-	profileInfos: {},
-	bankInfos: {},
-	additionalInfos: {},
-	socialInfos: {},
-	answers: {},
-	reportSections: {},
-	clientUsers: {},
-	clientUserStoreVisibility: {},
-	reportAttributes: {},
-	errors: {},
-	forms: {
-		client: {
-			initialValues:{},
-			errors: {}
-		},
-		location: {
-			initialValues:{},
-			errors: {}
-		},
-		audit: {
-			errors: {}
-		},
-		auditCycle: {
-			errors: {}
-		},
-		auditLocation: {
-			errors: {}
-		},
-		applicationAssign: {
-			errors: {}
-		},
-		applicationReject: {
-			errors: {}
-		},
-		applicationComplete: {
-			errors: {}
-		},
-		applicationFail: {
-			errors: {}
-		},
-		auditorSearch: {
-			search: "",
-		},
-		store: {
-			errors: {},
-		},
-		section: {
-			errors: {},
-		},
-		clientUser: {
-			errors: {},
-		},
-	}
-};
-*/
-
-const reducerMap = {
+export default combineReducers({
 	applications: applicationReducer,
 	audits: auditReducer,
 	auditStores: auditStoreReducer,
@@ -102,6 +34,5 @@ const reducerMap = {
 	reportAttributes: reportAttributeReducer,
 	forms: formReducer,
 	errors: errorsReducer,
-};
+});
 
-export default combineReducers(reducerMap);
