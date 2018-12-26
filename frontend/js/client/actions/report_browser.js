@@ -13,4 +13,13 @@ export function fetchReportsByAuditCycleId(auditCycleId){
 	};
 }
 
+export function selectState(selectedState){
+	return function(dispatch){
+		if(!selectedState) {
+			dispatch(reportBrowserActionCreators.resetCityFilter());
+		}
+		dispatch(reportBrowserActionCreators.selectState(selectedState));
+	};
+}
+
 

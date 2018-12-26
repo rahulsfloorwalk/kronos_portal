@@ -1,0 +1,158 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StateSelector renders nothing when there are no states 1`] = `null`;
+
+exports[`StateSelector renders nothing when there is only one state 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+   State:
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value=""
+  >
+    <option
+      value=""
+    >
+      All States
+    </option>
+    <option
+      value="K"
+    >
+      K
+    </option>
+    <option
+      value="a"
+    >
+      a
+    </option>
+    <option
+      value="r"
+    >
+      r
+    </option>
+    <option
+      value="n"
+    >
+      n
+    </option>
+    <option
+      value="a"
+    >
+      a
+    </option>
+    <option
+      value="t"
+    >
+      t
+    </option>
+    <option
+      value="a"
+    >
+      a
+    </option>
+    <option
+      value="k"
+    >
+      k
+    </option>
+    <option
+      value="a"
+    >
+      a
+    </option>
+  </select>
+</div>
+`;
+
+exports[`StateSelector renders the selector with nothing selected 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+   State:
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value=""
+  >
+    <option
+      value=""
+    >
+      All States
+    </option>
+    <option
+      value="Karnataka"
+    >
+      Karnataka
+    </option>
+    <option
+      value="Maharashtra"
+    >
+      Maharashtra
+    </option>
+  </select>
+</div>
+`;
+
+exports[`StateSelector renders the selector with selected city 1`] = `
+<div
+  style={
+    Object {
+      "display": "inline-block",
+      "width": "200px",
+    }
+  }
+>
+   State:
+  <select
+    className="form-control"
+    onChange={[Function]}
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+    value="Karnataka"
+  >
+    <option
+      value=""
+    >
+      All States
+    </option>
+    <option
+      value="Karnataka"
+    >
+      Karnataka
+    </option>
+    <option
+      value="Maharashtra"
+    >
+      Maharashtra
+    </option>
+  </select>
+</div>
+`;

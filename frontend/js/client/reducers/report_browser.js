@@ -7,6 +7,7 @@ import {
 	SELECT_START_DATE,
 	SELECT_END_DATE,
 	RESET_FILTERS,
+	RESET_CITY_FILTER,
 	SELECT_REPORT_ATTRIBUTE_OPTION,
 } from "../action_types";
 
@@ -60,6 +61,10 @@ export default (state=initialState, action) => {
 				[action.jsonId]: action.optionId,
 			}),
 		});
+	case RESET_CITY_FILTER:
+		return Object.assign({}, state, {
+			selectedCityId: null,
+		});
 	case RESET_FILTERS:
 		return Object.assign({}, state, {
 			selectedCityId: null,
@@ -86,6 +91,12 @@ export function fetchReportsByAuditCycleId(auditCycleId, reports){
 export function resetDependentFilters(){
 	return {
 		type: RESET_FILTERS,
+	};
+}
+
+export function resetCityFilter(){
+	return {
+		type: RESET_CITY_FILTER,
 	};
 }
 

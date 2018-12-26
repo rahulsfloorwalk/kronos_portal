@@ -25,7 +25,7 @@ export default class ReportBrowserSelectors {
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((cities, report) => {
 				const city = cities.find((c) => c.id === report.city_id);
-				if(city === undefined && selectedState === null){
+				if(city === undefined && (selectedState === null || selectedState === "")){
 					return cities.concat({
 						id: report.city_id,
 						name: report.city_name,

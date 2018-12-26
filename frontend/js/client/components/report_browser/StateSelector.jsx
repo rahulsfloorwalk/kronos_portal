@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { selectState } from "../../reducers/report_browser";
+import { selectState } from "../../actions/report_browser";
 import { reportBrowserSelectors } from "../../selectors";
 
 const selectStyle = {
@@ -17,14 +17,16 @@ export class StateSelector extends React.Component {
 
 		onSelect: PropTypes.func.isRequired,
 	};
-
+	getSelectedValue(selectedState){
+		return selectedState === "" ? null : selectedState;
+	}
 	render(){
 		if(this.props.states.length < 2) {
 			return null;
 		}
 		return (<div style={selectStyle}>
 			&nbsp;State:
-			<select onChange={e => this.props.onSelect(e.target.value)} value={this.props.selectedState || ""} className="form-control" style={selectStyle}>
+			<select onChange={e => this.getSelectedValue(this.props.onSelect(e.target.value))} value={this.props.selectedState || ""} className="form-control" style={selectStyle}>
 				<option value="">All States</option>
 				{this.props.states.map((s, i) => <option key={i} value={s}>{s}</option>)}
 			</select>
