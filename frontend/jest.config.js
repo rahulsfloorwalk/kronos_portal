@@ -10,6 +10,14 @@ module.exports = {
 		"text",
 		"html",
 	],
+	coverageThreshold: {
+		global: {
+			branches: 29,
+			functions: 30,
+			lines: 25,
+			statements: 25,
+		}
+	},
 	reporters: [
 		"default",
 		["jest-junit", { output: "test_results/junit.xml"}],
