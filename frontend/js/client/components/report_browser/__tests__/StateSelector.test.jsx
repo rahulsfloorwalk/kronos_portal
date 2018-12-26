@@ -1,7 +1,7 @@
 import React from "react";
 import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
-import { StateSelector } from "../StateSelector";s
+import { StateSelector } from "../StateSelector";
 
 const sampleStates = ["Karnataka", "Maharashtra"];
 

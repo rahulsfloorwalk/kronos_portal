@@ -9,6 +9,7 @@ const sampleReports = [
 		city_name: "Nagpur",
 		store_type: "Express",
 		store_priority: "HIGH",
+		state: "Maharashtra",
 	},
 	{
 		id: 2,
@@ -17,6 +18,7 @@ const sampleReports = [
 		city_name: "Mumbai",
 		store_type: "Slowmo",
 		store_priority: "MEDIUM",
+		state: "Maharashtra",
 	},
 	{
 		id: 3,
@@ -25,6 +27,7 @@ const sampleReports = [
 		city_name: "Mumbai",
 		store_type: "Slowmo",
 		store_priority: "MEDIUM",
+		state: "Maharashtra",
 	},
 	{
 		id: 4,
@@ -33,6 +36,7 @@ const sampleReports = [
 		city_name: "Mumbai",
 		store_type: "",
 		store_priority: "",
+		state: "Maharashtra",
 	},
 	{
 		id: 5,
@@ -41,11 +45,12 @@ const sampleReports = [
 		city_name: "Mumbai",
 		store_type: "",
 		store_priority: "",
+		state: "Maharashtra",
 	},
 ];
 
 
-const createSampleStore = (namespace, selectedCityId, selectedStoreType, selectedStorePriority, selectedStartDate, selectedEndDate, auditCycleId, selectedOptionIds) => {
+const createSampleStore = (namespace, selectedCityId, selectedStoreType, selectedStorePriority, selectedStartDate, selectedEndDate, auditCycleId, selectedOptionIds, selectedState) => {
 	return {
 		[namespace]: {
 			reports: {
@@ -57,6 +62,7 @@ const createSampleStore = (namespace, selectedCityId, selectedStoreType, selecte
 			selectedStartDate,
 			selectedEndDate,
 			selectedOptionIds,
+			selectedState,
 		},
 	};
 };
@@ -88,10 +94,17 @@ describe("ReportBrowserSelectors", () => {
 		});
 	});
 
+	describe("findSelectedState", () => {
+		it("gets the selected State", () => {
+			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, null, null, "Maharashtra");
+			expect(selectors.findSelectedState(sampleStore)).toEqual("Maharashtra");
+		});
+	});
+
 	describe("findCitiesByAuditCycleId", () => {
 		it("fetches distinct cities for the given audit cycle id", () => {
 			const auditCycleId = 5;
-			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId);
+			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId, null, null);
 			expect(selectors.findCitiesByAuditCycleId(sampleStore, auditCycleId)).toEqual([
 				{ id: 1, name: "Nagpur", },
 				{ id: 2, name: "Mumbai", },
@@ -102,7 +115,7 @@ describe("ReportBrowserSelectors", () => {
 	describe("findStoreTypesByAuditCycleId", () => {
 		it("returns distinct store types for the given audit cycle id", () => {
 			const auditCycleId = 5;
-			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId);
+			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId, null, null);
 			expect(selectors.findStoreTypesByAuditCycleId(sampleStore, auditCycleId)).toEqual([
 				"Express", "Slowmo",
 			]);
@@ -192,7 +205,7 @@ describe("ReportBrowserSelectors", () => {
 		it("returns distinct cities for the selected audit cycle", () => {
 			const auditCycleId = 5;
 			auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType.mockReturnValue({ id: auditCycleId });
-			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId);
+			const sampleStore = createSampleStore( namespace, 2, null, null, null, null, auditCycleId, null, null);
 			expect(selectors.findCitiesBySelectedAuditCycle(sampleStore)).toEqual([
 				{ id: 1, name: "Nagpur", },
 				{ id: 2, name: "Mumbai", },

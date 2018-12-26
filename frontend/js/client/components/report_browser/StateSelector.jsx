@@ -18,7 +18,7 @@ export class StateSelector extends React.Component {
 		onSelect: PropTypes.func.isRequired,
 	};
 	getSelectedValue(selectedState){
-		return selectedState === "" ? null : selectedState;
+		return (selectedState === "" || selectedState === undefined) ? null : selectedState;
 	}
 	render(){
 		if(this.props.states.length < 2) {
