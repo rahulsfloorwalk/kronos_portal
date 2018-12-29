@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('audit_store', '0016_auditstore_attribute_data'),
+        ('audit_store', '0017_auto_20181211_1630'),
     ]
 
     operations = [

@@ -17,6 +17,7 @@ def status_change_notification_callback(sender, **kwargs):
     status = kwargs['status']
     old_status = kwargs['old_status']
     audit_store = kwargs['audit_store']
+    message = kwargs['message'] if 'message' in kwargs else ''
 
     if status == AuditStore.ASSIGNED:
         send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_ASSIGNED, audit_store, audit_store.audit)
@@ -42,8 +43,8 @@ def status_change_notification_callback(sender, **kwargs):
         send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_WITHDRAWN, audit_store, audit_store.audit)
 
     elif status == AuditStore.FAILED:
-        send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_FAILED, audit_store, audit_store.audit)
-        send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_FAILED, audit_store, audit_store.audit)
+        send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_FAILED, audit_store, audit_store.audit, message)
+        send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_FAILED, audit_store, audit_store.audit, message)
 
     elif status == AuditStore.REJECTED:
         send_notification(user_actor, audit_store.user, verbs.AUDIT_STORE_REJECTED, audit_store, audit_store.audit)
@@ -54,7 +55,7 @@ def status_change_notification_callback(sender, **kwargs):
         send_notification(user_actor, Group.objects.get(name=GROUP_NAME_MANAGER), verbs.AUDIT_STORE_ACCEPTED, audit_store, audit_store.audit)
 
 
-def send_notification(user_actor, recipient, verb, action_object, target):
+def send_notification(user_actor, recipient, verb, action_object, target, message=""):
 
     notify.send(
         user_actor,
@@ -64,4 +65,4 @@ def send_notification(user_actor, recipient, verb, action_object, target):
         target=target
     )
     notif_id = Notification.objects.filter(verb=verb).order_by('-id')[0].id
-    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id))
+    connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id, message))

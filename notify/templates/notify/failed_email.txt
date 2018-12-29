@@ -1,5 +1,6 @@
 Hello {{ name }},
 Your audit at {{ client }} on {{ audit_date }} has failed due to non compliance of FloorWalk's regulations.
+Reason : {{ message }}
 We are sorry if the audit was not of your interest, but make sure you complete the audits if they are assigned to you henceforth.
 --
 Thanks and regards,

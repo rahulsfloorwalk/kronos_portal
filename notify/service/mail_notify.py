@@ -18,9 +18,9 @@ from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
 
-def send_notification_mail(notif_id):
+def send_notification_mail(notif_id, message):
     if settings.EMAIL_SWITCH['NOTIFICATION_EMAIL']:
-        notification_email_task.delay(notif_id)
+        notification_email_task.delay(notif_id, message)
     else:
         _logger.info("notification email disabled. skipping email for notification id : %s", notif_id)
 
@@ -50,7 +50,7 @@ def get_params_from_payment(payment, params):
     params['audit_date'] = payment.audit_store.audit_date
 
 @shared_task(ignore_result=True)
-def notification_email_task(notif_id):
+def notification_email_task(notif_id, message):
     '''generates and sends a notificaiton email based on given notification id and configured rules'''
     notif = Notification.objects.get(pk=notif_id)
     if notif.emailed:
@@ -141,6 +141,7 @@ def notification_email_task(notif_id):
         elif notif.verb == verbs.AUDIT_STORE_FAILED:
             get_params_from_audit_store(notif.action_object, params)
             subject = "Audit Failed for {}".format(params['client'])
+            params['message'] = message
             params['html_template'] = 'notify/failed_email.html'
             params['txt_template'] = 'notify/failed_email.txt'
 
