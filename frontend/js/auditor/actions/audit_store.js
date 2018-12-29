@@ -87,11 +87,11 @@ export function submitReportSummary(audit_store_id, report_summary){
 			}),
 			contentType: "application/json"
 		});
-		req.done(function(newSummary){
+		req.done(function(auditStore){
 			dispatch({
 				type: types.REPORT_SUMMARY_POST,
 				status: "success",
-				reportSummary: newSummary,
+				auditStore,
 			});
 		});
 		//TODO: Handle error
