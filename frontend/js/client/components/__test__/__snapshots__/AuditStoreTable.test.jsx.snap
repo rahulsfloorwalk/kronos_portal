@@ -33,206 +33,197 @@ exports[`AuditStoreTable renders a message when there are no reports 1`] = `
 `;
 
 exports[`AuditStoreTable renders the reports 1`] = `
-<div
-  style={
-    Object {
-      "overflow": "auto",
-      "width": "100%",
-    }
-  }
+<table
+  className="table table-bordered table-hover table-responsive"
 >
-  <table
-    className="table table-bordered table-hover"
-  >
-    <thead>
-      <tr>
-        <th>
-          Store Code
-        </th>
-        <th>
-          Name
-        </th>
-        <th
-          className="text-right"
-        >
-          Date
-        </th>
-        <th>
-          Total Score
-        </th>
-        <th
-          className="text-right"
-        >
-          Brand Pitch
-        </th>
-        <th
-          className="text-right"
-        >
-          Recommendations
-        </th>
-        <th
-          className="text-right"
-        >
-          Feedback
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        onClick={[Function]}
+  <thead>
+    <tr>
+      <th>
+        Store Code
+      </th>
+      <th>
+        Name
+      </th>
+      <th
+        className="text-right"
+      >
+        Date
+      </th>
+      <th>
+        Total Score
+      </th>
+      <th
+        className="text-right"
+      >
+        Brand Pitch
+      </th>
+      <th
+        className="text-right"
+      >
+        Recommendations
+      </th>
+      <th
+        className="text-right"
+      >
+        Feedback
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "pointer",
+        }
+      }
+    >
+      <td
+        className=""
+      />
+      <td
         style={
           Object {
-            "cursor": "pointer",
+            "borderTop": "solid lightgray 2px",
           }
         }
       >
-        <td
-          className=""
-        />
-        <td
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
-          }
-        >
-          <b>
-            ayoun the optic shop
-          </b>
-          <br />
-          <small>
-            Bangalore
-          </small>
-        </td>
-        <td
-          className="text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
-          }
-        >
-          10th May 2018
-        </td>
-        <td
-          className="rating-average text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
-          }
-        >
-          73%
-        </td>
-        <td
-          className="rating-poor text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
-          }
-        >
-          50%
-        </td>
-        <td
-          className="rating-good text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
-          }
-        >
-          100%
-        </td>
-        <td
-          className="rating-bad text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
-          }
-        >
-          0%
-        </td>
-      </tr>
-      <tr
-        onClick={[Function]}
+        <b>
+          ayoun the optic shop
+        </b>
+        <br />
+        <small>
+          Bangalore
+        </small>
+      </td>
+      <td
+        className="text-right"
         style={
           Object {
-            "cursor": "pointer",
+            "borderTop": "solid lightgray 2px",
           }
         }
       >
-        <td
-          className=""
-        />
-        <td
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
+        10th May 2018
+      </td>
+      <td
+        className="rating-average text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
           }
-        >
-          <b>
-            aneesh vision vare
-          </b>
-          <br />
-          <small>
-            Bangalore
-          </small>
-        </td>
-        <td
-          className="text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
+        }
+      >
+        73%
+      </td>
+      <td
+        className="rating-poor text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
           }
-        >
-          20th May 2018
-        </td>
-        <td
-          className="rating-average text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
+        }
+      >
+        50%
+      </td>
+      <td
+        className="rating-good text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
           }
-        >
-          73%
-        </td>
-        <td
-          className="rating-poor text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
+        }
+      >
+        100%
+      </td>
+      <td
+        className="rating-bad text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
           }
-        >
-          50%
-        </td>
-        <td
-          className="rating-bad text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
+        }
+      >
+        0%
+      </td>
+    </tr>
+    <tr
+      onClick={[Function]}
+      style={
+        Object {
+          "cursor": "pointer",
+        }
+      }
+    >
+      <td
+        className=""
+      />
+      <td
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
           }
-        >
-          0%
-        </td>
-        <td
-          className="rating-bad text-right"
-          style={
-            Object {
-              "borderTop": "solid lightgray 2px",
-            }
+        }
+      >
+        <b>
+          aneesh vision vare
+        </b>
+        <br />
+        <small>
+          Bangalore
+        </small>
+      </td>
+      <td
+        className="text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
           }
-        >
-          0%
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+        }
+      >
+        20th May 2018
+      </td>
+      <td
+        className="rating-average text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
+          }
+        }
+      >
+        73%
+      </td>
+      <td
+        className="rating-poor text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
+          }
+        }
+      >
+        50%
+      </td>
+      <td
+        className="rating-bad text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
+          }
+        }
+      >
+        0%
+      </td>
+      <td
+        className="rating-bad text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
+          }
+        }
+      >
+        0%
+      </td>
+    </tr>
+  </tbody>
+</table>
 `;

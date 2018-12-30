@@ -16,7 +16,7 @@ export default class DevelopmentMarker extends Component{
 		};
 		if(process.env.NODE_ENV === "development"){
 			return (
-				<nav className="navbar navbar-default navbar-static-top" style={texture}>
+				<nav className="navbar navbar-default navbar-static-top hidden-print" style={texture}>
 					<div className="container">
 						<ul className="nav navbar-nav">
 							<li><a><b>DEVELOPMENT IN PROGRESS</b></a></li>

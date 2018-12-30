@@ -19,7 +19,7 @@ exports[`QuestionnaireTypeTabs renders nothing when only one questionnaire type 
 
 exports[`QuestionnaireTypeTabs renders the tabs with selected questionnaire type 1`] = `
 <ul
-  className="nav nav-tabs nav-justified"
+  className="nav nav-tabs nav-justified hidden-print"
 >
   <li
     className=""

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PrintToPDFButton when sectionCount is <= 5 renders the button 1`] = `
+<a
+  onClick={[Function]}
+  style={
+    Object {
+      "cursor": "pointer",
+    }
+  }
+>
+  <h5>
+    <b>
+      Print as PDF
+    </b>
+  </h5>
+  <p
+    className="text-muted"
+  >
+    Trigger your browser print dialog and select 'Save as PDF'
+  </p>
+</a>
+`;
+
+exports[`PrintToPDFButton when sectionCount is > 5 renders nothing 1`] = `null`;

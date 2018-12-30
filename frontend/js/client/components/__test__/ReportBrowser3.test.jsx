@@ -1,9 +1,6 @@
 import React from "react";
-import Datetime from "react-datetime";
-import moment from "moment";
 import { shallow } from "enzyme";
 import ShallowRenderer from "react-test-renderer/shallow";
-import $ from "jquery";
 
 import { ReportBrowser3 } from "../ReportBrowser3";
 
@@ -31,8 +28,10 @@ const sampleAuditCycles = [
 const sampleReports = [
 	{
 		"id": 1,
+		"sections": [],
 	}, {
 		"id": 2,
+		"sections": [],
 	},
 ];
 

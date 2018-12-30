@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import DropDown from "../../components/DropDown.jsx";
-import { Download, ChevronDown } from "../../components/Icons.jsx";
+import { Download } from "../../components/Icons.jsx";
 
 import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 import AuditStoreTable from "./AuditStoreTable.jsx";
@@ -21,8 +21,9 @@ import ReportAttributeFilters from  "./report_browser/ReportAttributeFilters.jsx
 
 import DownloadDetailsButton from  "./report_browser/DownloadDetailsButton.jsx";
 import DownloadSummaryButton from  "./report_browser/DownloadSummaryButton.jsx";
+import PrintToPDFButton from  "./report_browser/PrintToPDFButton.jsx";
 
-import { auditCycleSelectors, reportAttributeSelectors, filterSelectors, userSelectors } from "../selectors";
+import { auditCycleSelectors, filterSelectors, userSelectors } from "../selectors";
 import { fetchReportsByAuditCycleId } from "../actions/report_browser";
 import { fetchUser } from "../actions/user";
 
@@ -57,8 +58,15 @@ export class ReportBrowser3 extends Component{
 		}
 	}
 
+	sectionCount = () => {
+		if(this.props.reports[0]){
+			return this.props.reports[0].sections.length;
+		}
+		return 0;
+	};
+
 	render(){
-		let table, reportAttributeFilters;
+		let table;
 		if(this.props.auditCycles.length === 0){
 			table = <Jumbotron heading="there are no reports here" para="yet"/>;
 		} else if(this.props.selectedAuditCycle){
@@ -79,7 +87,7 @@ export class ReportBrowser3 extends Component{
 					<StartDateSelector/>&nbsp;
 					<EndDateSelector/>&nbsp;
 					{ this.props.isClientAdmin && <ReportAttributeFilters/> }
-					<div className="btn-group pull-right">
+					<div className="btn-group pull-right hidden-print">
 						&nbsp;Download:<br/>
 						<button className="btn btn-default"
 							title="Download Reports"
@@ -90,6 +98,7 @@ export class ReportBrowser3 extends Component{
 						<DropDown ref={(e) => this.reportDropdown = e}>
 							<li><DownloadSummaryButton/></li>
 							<li><DownloadDetailsButton/></li>
+							<li><PrintToPDFButton sectionCount={this.sectionCount()}/></li>
 						</DropDown>
 					</div>
 				</div>

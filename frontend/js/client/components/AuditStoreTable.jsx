@@ -19,6 +19,8 @@ import apiNames from "../api_names";
 export class AuditStoreTable extends Component {
 	static propTypes = {
 		reports: PropTypes.arrayOf(PropTypes.shape({
+			sections: PropTypes.arrayOf(PropTypes.shape({
+			})),
 		})).isRequired,
 		isLoading: PropTypes.bool,
 	};
@@ -79,16 +81,14 @@ export class AuditStoreTable extends Component {
 			previousStore = r.store_id;
 		});
 		return (
-			<div style={{ "width": "100%", "overflow": "auto"}}>
-				<table className="table table-bordered table-hover">
-					<thead>
-						<tr>{headers}</tr>
-					</thead>
-					<tbody>
-						{trs}
-					</tbody>
-				</table>
-			</div>
+			<table className="table table-bordered table-hover table-responsive">
+				<thead>
+					<tr>{headers}</tr>
+				</thead>
+				<tbody>
+					{trs}
+				</tbody>
+			</table>
 		);
 	}
 }

@@ -33,7 +33,7 @@ export class QuestionnaireTypeTabs extends React.Component{
 
 
 		if(this.props.questionnaireTypes.length > 1) {
-			return (<ul className="nav nav-tabs nav-justified">
+			return (<ul className="nav nav-tabs nav-justified hidden-print">
 				{this.props.questionnaireTypes.map( qt => {
 					const activeClass = this.props.selectedQuestionnaireType.id === qt.id ? "active" : "";
 					return <li className={activeClass} key={qt.id} style={pointerStyle}>

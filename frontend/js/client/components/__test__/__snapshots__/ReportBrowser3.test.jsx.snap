@@ -27,7 +27,7 @@ exports[`ReportBrowser3 does not render the report attribute filters when the us
     <Connect(EndDateSelector) />
      
     <div
-      className="btn-group pull-right"
+      className="btn-group pull-right hidden-print"
     >
        Download:
       <br />
@@ -50,6 +50,11 @@ exports[`ReportBrowser3 does not render the report attribute filters when the us
         </li>
         <li>
           <Connect(DownloadDetailsButton) />
+        </li>
+        <li>
+          <PrintToPDFButton
+            sectionCount={0}
+          />
         </li>
       </DropDown>
     </div>
@@ -86,7 +91,7 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
      
     <Connect(ReportAttributeFilters) />
     <div
-      className="btn-group pull-right"
+      className="btn-group pull-right hidden-print"
     >
        Download:
       <br />
@@ -109,6 +114,11 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
         </li>
         <li>
           <Connect(DownloadDetailsButton) />
+        </li>
+        <li>
+          <PrintToPDFButton
+            sectionCount={0}
+          />
         </li>
       </DropDown>
     </div>
@@ -145,7 +155,7 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
      
     <Connect(ReportAttributeFilters) />
     <div
-      className="btn-group pull-right"
+      className="btn-group pull-right hidden-print"
     >
        Download:
       <br />
@@ -168,6 +178,11 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
         </li>
         <li>
           <Connect(DownloadDetailsButton) />
+        </li>
+        <li>
+          <PrintToPDFButton
+            sectionCount={0}
+          />
         </li>
       </DropDown>
     </div>
@@ -208,7 +223,7 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
      
     <Connect(ReportAttributeFilters) />
     <div
-      className="btn-group pull-right"
+      className="btn-group pull-right hidden-print"
     >
        Download:
       <br />
@@ -231,6 +246,11 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
         </li>
         <li>
           <Connect(DownloadDetailsButton) />
+        </li>
+        <li>
+          <PrintToPDFButton
+            sectionCount={0}
+          />
         </li>
       </DropDown>
     </div>
