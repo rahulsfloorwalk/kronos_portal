@@ -1,19 +1,18 @@
 import React from "react";
-import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
+import PropTypes from "prop-types";
 
 import {getColor} from "../../utils.js";
 
-// import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
-
 class RatingCard extends React.Component {
-	componentWillMount() {
-		// this.props.dispatch(fetchProfileInfo());
-	}
+	static propTypes = {
+		score: PropTypes.shape({
+			audit: PropTypes.any,
+			report: PropTypes.any,
+			conduct: PropTypes.any,
+		}),
+	};
 
 	render() {
-		console.log("rendering rating");
-		console.log(this.props);
 		let sampleData = [
 			{color:1, name:"Audit Quality", score: this.props.score.audit},
 			{color:3, name:"Report Quality", score: this.props.score.report},

@@ -12,7 +12,7 @@
     "jest-coverage": "./node_modules/.bin/jest --coverage",
     "jest-coverage-ci": "./node_modules/.bin/jest --coverage --runInBand",
     "jest-update-snapshot": "./node_modules/.bin/jest -u",
-    "eslint": "./node_modules/.bin/eslint js/**/*.js js/agency/**/*.jsx js/moderator/**/*.jsx"
+    "eslint": "./node_modules/.bin/eslint js/**/*.js js/agency/**/*.jsx js/moderator/**/*.jsx js/auditor/**/*.jsx"
   },
   "author": "",
   "license": "ISC",

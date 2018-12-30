@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import Header from "./Header.jsx";
 import Footer from "../../components/Footer.jsx";
@@ -7,27 +8,31 @@ import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
 import { fetchConfig } from "../service/config.js";
 
 class App extends React.Component {
-    state = {};
+	static propTypes = {
+		children: PropTypes.node,
+	};
 
-    componentDidMount() {
-    	fetchConfig().then((config) => this.setState({config}));
-    }
+	state = {};
 
-    render() {
-    	var contentStyle = {
-    		"minHeight": "600px"
-    	};
-    	return (
-    		<div>
-    			<DevelopmentMarker/>
-    			<Header/>
-    			<div className="container" style={contentStyle}>
-    				{this.props.children}
-    			</div>
-    			<Footer config={this.state.config}/>
-    		</div>
-    	);
-    }
+	componentDidMount() {
+		fetchConfig().then((config) => this.setState({config}));
+	}
+
+	render() {
+		var contentStyle = {
+			"minHeight": "600px"
+		};
+		return (
+			<div>
+				<DevelopmentMarker/>
+				<Header/>
+				<div className="container" style={contentStyle}>
+					{this.props.children}
+				</div>
+				<Footer config={this.state.config}/>
+			</div>
+		);
+	}
 }
 
 export default App;

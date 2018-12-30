@@ -1,13 +1,19 @@
 import React from "react";
-import { Link } from "react-router";
+import PropTypes from "prop-types";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 import Loading from "../../components/Loading.jsx";
 import { findReferrals } from "../service/referral.js";
-import ReferralTypeLabel from "../../components/ReferralTypeLabel.jsx";
 
 class ReferralRow extends React.Component{
+	static propTypes = {
+		referral: PropTypes.shape({
+			amount: PropTypes.number,
+			added_on: PropTypes.string,
+			comment: PropTypes.string,
+		}),
+	};
 
 	render(){
 		return (
@@ -35,6 +41,9 @@ class ReferralRow extends React.Component{
 }
 
 class ReferralList extends React.Component{
+	static propTypes = {
+		children: PropTypes.node,
+	};
 
 	constructor(props){
 		super(props);
@@ -56,44 +65,44 @@ class ReferralList extends React.Component{
 		}).always(() => this.setLoading(false));
 	}
 
-  calculatePending = (referrals) => {
-  	return referrals.reduce((sum, r) => sum += r.amount, 0);
-  };
+	calculatePending = (referrals) => {
+		return referrals.reduce((sum, r) => sum += r.amount, 0);
+	};
 
-  setLoading = (loading) => {
-  	this.setState(oldState => {
-  		Object.assign({}, oldState, {
-  			loading
-  		});
-  	});
-  };
+	setLoading = (loading) => {
+		this.setState(oldState => {
+			Object.assign({}, oldState, {
+				loading
+			});
+		});
+	};
 
-  render(){
-  	if(this.state.loading){
-  		return <Loading/>;
-  	}
-  	let rows = this.state.referrals.map(r => <ReferralRow referral={r} key={r.id}/>);
-  	if(rows.length > 0){
-  		return (
-  			<div>
-  				<h2 className="page-header">
-  					<span>Referral Payments</span>
-  					<span className="pull-right"><big><b>₹ {this.state.pending}</b> pending</big></span>
-  				</h2>
-  				{rows}
-  				{this.props.children}
-  			</div>
-  		);
-  	} else {
-  		return (
-  			<div className="jumbotron text-center">
-  				<h2>You have not referred anyone yet</h2>
-  				<h3>Referral payments will start appearing after an email is verified or an audit is completed</h3>
-  				<p className="text-muted">We will keep you informed when payments are approved and processed for you</p>
-  			</div>
-  		);
-  	}
-  }
+	render(){
+		if(this.state.loading){
+			return <Loading/>;
+		}
+		let rows = this.state.referrals.map(r => <ReferralRow referral={r} key={r.id}/>);
+		if(rows.length > 0){
+			return (
+				<div>
+					<h2 className="page-header">
+						<span>Referral Payments</span>
+						<span className="pull-right"><big><b>₹ {this.state.pending}</b> pending</big></span>
+					</h2>
+					{rows}
+					{this.props.children}
+				</div>
+			);
+		} else {
+			return (
+				<div className="jumbotron text-center">
+					<h2>You have not referred anyone yet</h2>
+					<h3>Referral payments will start appearing after an email is verified or an audit is completed</h3>
+					<p className="text-muted">We will keep you informed when payments are approved and processed for you</p>
+				</div>
+			);
+		}
+	}
 }
 
 export default ReferralList;

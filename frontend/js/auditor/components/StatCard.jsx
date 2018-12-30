@@ -1,13 +1,13 @@
 import React from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
-
-// import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
 
 class StatCard extends React.Component {
-	componentWillMount() {
-		// this.props.dispatch(fetchProfileInfo());
-	}
+	static propTypes = {
+		title: PropTypes.string,
+		image: PropTypes.string,
+		count: PropTypes.number,
+	};
 
 	render() {
 		return (

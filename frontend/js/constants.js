@@ -35,6 +35,7 @@ export const AttachmentProofType = [
 	"PHOTO",
 	"VIDEO",
 	"OTHER",
+	"ID_PROOF",
 ];
 
 export const AuditStoreRatings = [

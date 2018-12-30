@@ -1,9 +1,9 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
 import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
 import { affectInputEventToComponent } from "../../react_utils.js";
 
 import { truncateStyle } from "../../styles.js";
@@ -14,13 +14,17 @@ import { fetchProfileInfo } from "../actions/profile_info.js";
 
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import FormSelect from "../../components/FormSelect.jsx";
-import { Cross, ShareAlt } from "../../components/Icons.jsx";
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
-import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
 import Loading from "../../components/Loading.jsx";
-import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
+
+import { auditCyclePropType } from "../prop_types";
 
 class AuditCycleRow extends Component{
+	static propTypes = {
+		audit_cycle: auditCyclePropType,
+		fees: PropTypes.number,
+		reimbursement: PropTypes.number,
+		count: PropTypes.number,
+	};
 	constructor(props){
 		super(props);
 		this.state = {};
@@ -79,6 +83,16 @@ class AuditCycleRow extends Component{
 }
 
 class ClientList extends Component{
+	static propTypes = {
+		children: PropTypes.node,
+		dispatch: PropTypes.func.isRequired,
+		profileInfo: PropTypes.shape({
+			is_complete: PropTypes.bool,
+			mobile_number: PropTypes.string,
+		}),
+		audits: PropTypes.object,
+	};
+
 	constructor(props){
 		super(props);
 		this.state =  {
@@ -113,7 +127,7 @@ class ClientList extends Component{
 					<div className="jumbotron text-center">
 						<h2>Please complete your personal information</h2>
 						<h3>Please <Link className="btn btn-success" to="details/profile/edit"> Click Here</Link> to begin by saving your details</h3>
-						<p>We're sorry, but we need to know more about you to assign audits to you.</p>
+						<p>We&#39;re sorry, but we need to know more about you to assign audits to you.</p>
 					</div>
 				);
 			} else {
@@ -121,7 +135,7 @@ class ClientList extends Component{
 					<div className="jumbotron text-center">
 						<h2>Please update your Mobile Number</h2>
 						<h3>Please <Link className="btn btn-success" to="details/mobile_number/edit"> Click Here</Link> to update your mobile number.</h3>
-						<p>We're sorry, but we need to know how to contact your begore assigning audits to you.</p>
+						<p>We&#39;re sorry, but we need to know how to contact your begore assigning audits to you.</p>
 					</div>
 				);
 			}

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 
 import { setMobileNumber } from "../actions/profile_info.js";
@@ -11,6 +12,14 @@ import Modal from "../../components/Modal.jsx";
 
 
 class MobileNumberForm extends Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		router: PropTypes.shape({
+			push: PropTypes.func.isRequired,
+			goBack: PropTypes.func.isRequired,
+		}).isRequired,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {

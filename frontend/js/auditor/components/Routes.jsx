@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Provider } from "react-redux";
 import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
@@ -28,7 +29,7 @@ import PaymentList from "./PaymentList.jsx";
 import ReferralList from "./ReferralList.jsx";
 
 function logPageView() {
-	console.log(window.location.pathname, window.location.hash);
+	//console.log(window.location.pathname, window.location.hash);
 	ReactGA.set({ page: window.location.pathname });
 	ReactGA.pageview(window.location.pathname + window.location.hash);
 }
@@ -62,5 +63,9 @@ const Routes = ({store}) => (
 		</Router>
 	</Provider>
 );
+
+Routes.propTypes = {
+	store: PropTypes.object,
+};
 
 export default Routes;

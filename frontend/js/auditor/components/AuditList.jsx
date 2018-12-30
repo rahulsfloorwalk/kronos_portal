@@ -1,28 +1,27 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link, hashHistory } from "react-router";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { affectInputEventToComponent } from "../../react_utils.js";
-
 import { fetchApplications } from "../actions/application.js";
 import { fetchAudits } from "../actions/audit.js";
 import { fetchProfileInfo } from "../actions/profile_info.js";
 
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
 import { Cross, ShareAlt } from "../../components/Icons.jsx";
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
-import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
 import Loading from "../../components/Loading.jsx";
 import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
 import { fetchPreferences } from "../service/preferences.js";
 
+import { auditPropType, auditCyclePropType, applicationPropType } from "../prop_types";
 
 class AuditRow extends React.Component{
 	static propTypes = {
+		audit: auditPropType,
+		application: applicationPropType,
 	};
 
 	applyButtonClicked = () => {
@@ -58,7 +57,7 @@ class AuditRow extends React.Component{
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
 		else if( this.props.application.status === "APPROVED"){
-			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don't forget to conduct the audit!</span>;
+			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} else {
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
@@ -94,6 +93,14 @@ class AuditRow extends React.Component{
 }
 
 class AuditList extends Component{
+	static propTypes = {
+		children: PropTypes.node,
+		dispatch: PropTypes.func.isRequired,
+		auditCycle: auditCyclePropType,
+		audits: PropTypes.object,
+		applications: PropTypes.object,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -134,7 +141,7 @@ class AuditList extends Component{
 		}
 
 		let flexCenter = {display: "flex", justifyContent: "center", alignItems: "center", height:"170px"};
-		let flexLeft = {display: "flex", justifyContent: "left", alignItems: "center"};
+		//let flexLeft = {display: "flex", justifyContent: "left", alignItems: "center"};
 		let labelStyle = {fontSize: "1.2em"};
 		let valueStyle = {fontSize: "1.5em"};
 		return (

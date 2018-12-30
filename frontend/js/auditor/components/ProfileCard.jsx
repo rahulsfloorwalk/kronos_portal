@@ -1,14 +1,14 @@
 import React from "react";
-import * as ReactRedux from "react-redux";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
-// import { fetchProfileInfo } from '../../auditor/actions/profile_info.js';
-
-class ProfileCard extends React.Component {
-	componentWillMount() {
-		// this.props.dispatch(fetchProfileInfo());
-	}
-
+export default class ProfileCard extends React.Component {
+	static propTypes = {
+		firstName: PropTypes.string,
+		lastName: PropTypes.string,
+		city: PropTypes.string,
+		phone: PropTypes.string,
+	};
 	render() {
 		return (
 			<div className=" text-center">
@@ -19,5 +19,3 @@ class ProfileCard extends React.Component {
 		);
 	}
 }
-
-export default ProfileCard;
