@@ -228,7 +228,7 @@ jobs:
           name: run the linter
           command: |
             cd frontend
-            npm run eslint js/**/*.js js/{auditor,agency,components,moderator,client}/**/*.jsx
+            npm run eslint js/**/*.{js,jsx}
 
 workflows:
   version: 2
