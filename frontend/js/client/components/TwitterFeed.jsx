@@ -1,22 +1,14 @@
 import React, { Component } from "react";
-import { Link } from "react-router";
-import $ from "jquery";
+import PropTypes from "prop-types";
 
-import { ResponsiveContainer, PieChart, Pie, Legend, Cell, Tooltip } from "recharts";
-
-import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip } from "recharts";
 
 import { Tweet } from "react-twitter-widgets";
 
-import { fetchUser } from "../service/user.js";
 import { fetchClientHandles, fetchClientTwitterFeedByHandle } from "../service/twitter.js";
 
 import Loading from "../../components/Loading.jsx";
-import { Time } from "../../components/Icons.jsx";
-import { ArrowUp, ArrowDown, CircleArrowUp, CircleArrowDown, Minus } from "../../components/Icons.jsx";
-import { LabelValue_2_10 } from "../../components/LabelValue.jsx";
-import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import { ArrowUp, ArrowDown, Minus } from "../../components/Icons.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
 export default class TwitterFeed extends Component{
@@ -65,7 +57,6 @@ export default class TwitterFeed extends Component{
 			return (<Jumbotron heading="Please Contact FloorWalk team to get this feature" para=""/>);
 		}
 
-		console.log("currently selected", this.state.handles.find(h => { console.log("h",h,h.id,this.state.selectedTwitterHandle); console.log("eqqualcheck", h.id === this.state.selectedTwitterHandle); return h.id === this.state.selectedTwitterHandle;}));
 		return (
 			<div>
 				<select className="form-control input-lg" style={{width:"400px", display:"inline-block"}} name="selectedTwitterHandle" value={this.state.selectedTwitterHandle} onChange={this.twitterHandleChanged}>
@@ -79,6 +70,12 @@ export default class TwitterFeed extends Component{
 }
 
 class TwitterData extends Component{
+	static propTypes = {
+		handle: PropTypes.shape({
+			id: PropTypes.number,
+		}),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -103,9 +100,7 @@ class TwitterData extends Component{
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.handle) {
-			console.log("componentWillReceiveProps", nextProps);
 			if( nextProps.handle.id !== this.props.handle.id){
-				console.log("componentWillReceiveProps","nequalto", nextProps);
 				fetchClientTwitterFeedByHandle(nextProps.handle.id).then((tweets) => {
 					this.setState({ tweets });
 				});
@@ -238,6 +233,12 @@ class TwitterData extends Component{
 }
 
 class TweetPager extends Component {
+	static propTypes = {
+		tweets: PropTypes.arrayOf(PropTypes.shape({
+			tweet_id: PropTypes.string,
+		})),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {

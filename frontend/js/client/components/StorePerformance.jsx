@@ -52,10 +52,7 @@ export default class StorePerformance extends Component{
 	render(){
 		if(!this.state.data){
 			return <Loading/>;
-		}
-
-		else{
-			console.log(this.state.data);
+		} else {
 			return (
 				<ResponsiveContainer width="100%" aspect={3 / 1}>
 					<BarChart data={this.state.data} margin={{top: 5, right: 30, left: 20, bottom: 5}}>
