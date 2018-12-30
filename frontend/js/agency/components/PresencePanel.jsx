@@ -46,7 +46,7 @@ class PresenceRow extends React.Component{
 		return (<div className="panel panel-default">
 			<div className="panel-body">
 				<Checkbox checked={p && p.present} onChange={(val) => this.props.setPresence(c.id, val)} disabled={loading}/>
-			&nbsp;<big>{c.name}</big>
+				&nbsp;<big>{c.name}</big>
 			</div>
 		</div>);
 	}
