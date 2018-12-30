@@ -14,7 +14,7 @@ import AttachmentInProgressThumbnail from "../../components/AttachmentInProgress
 
 export default class AttachmentBox extends React.Component {
 	static propTypes = {
-		auditStoreId: PropTypes.number.isRequired,
+		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 		auditStore: PropTypes.shape({
 			status: PropTypes.string.isRequired,
 		}),

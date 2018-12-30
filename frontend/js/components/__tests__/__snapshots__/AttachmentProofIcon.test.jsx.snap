@@ -6,6 +6,12 @@ exports[`<AttachmentProofIcon/> renders correctly for proof type: AUDIO 1`] = `
 />
 `;
 
+exports[`<AttachmentProofIcon/> renders correctly for proof type: ID_PROOF 1`] = `
+<span
+  className="glyphicon glyphicon-file"
+/>
+`;
+
 exports[`<AttachmentProofIcon/> renders correctly for proof type: OTHER 1`] = `
 <span
   className="glyphicon glyphicon-file"
