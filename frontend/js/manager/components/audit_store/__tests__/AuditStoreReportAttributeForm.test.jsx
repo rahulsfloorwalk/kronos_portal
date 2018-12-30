@@ -29,6 +29,7 @@ describe("AuditStoreReportAttributeForm", () => {
 		"status": "PM_REVIEW",
 		"audit_date": "2018-06-09",
 		"audit": {
+			"id": 14542,
 			"audit_cycle": {
 				"type": "WALKIN",
 			},

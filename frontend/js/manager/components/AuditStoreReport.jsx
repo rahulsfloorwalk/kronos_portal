@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { } from "react-router";
-
-import { } from "../../styles.js";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
@@ -19,7 +16,15 @@ import AttachmentPreview from "./AttachmentPreview.jsx";
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
+import { auditStorePropType, sectionPropType } from "../prop_types";
+
 class AnswerComment extends Component {
+	static propTypes = {
+		answer_comment: PropTypes.string,
+		audit_store_id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		question_id: PropTypes.number,
+		editable: PropTypes.bool,
+	};
 	constructor(props){
 		super(props);
 		this.state = {
@@ -70,155 +75,175 @@ class AnswerComment extends Component {
 }
 
 class __QuestionRow extends React.Component {
-    static defaultProps = {
-    	marking: false
-    };
+	static propTypes = {
+		answer: PropTypes.shape({
+			answer_comment: PropTypes.string,
+		}),
+		auditStoreId: PropTypes.number.isRequired,
+		q: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			sequence: PropTypes.number.isRequired,
+			max_marks: PropTypes.number.isRequired,
+			question_type: PropTypes.string.isRequired,
+			question_txt: PropTypes.string.isRequired,
+			question_data: PropTypes.shape({
+				options: PropTypes.arrayOf(PropTypes.shape({
+				})),
+			}),
+		}),
+		dispatch: PropTypes.func.isRequired,
+		marking: PropTypes.bool,
+	};
 
-    state = {
-    	answer: {},
-    	error: false,
-    	marksObtainedSuccess: false,
-    	answerError: false,
-    	answerSuccess: false
-    };
+	static defaultProps = {
+		marking: false
+	};
 
-    componentDidMount() {
-    	if(this.props.answer){
-    		this.setState({
-    			answer: this.props.answer
-    		});
-    	}
-    }
+	state = {
+		answer: {},
+		error: false,
+		marksObtainedSuccess: false,
+		answerError: false,
+		answerSuccess: false
+	};
 
-    componentWillReceiveProps(nextProps) {
-    	if(nextProps.answer){
-    		this.setState({
-    			answer: nextProps.answer
-    		});
-    	}
-    }
+	componentDidMount() {
+		if(this.props.answer){
+			this.setState({
+				answer: this.props.answer
+			});
+		}
+	}
 
-    answerChanged = (e) => {
-    	this.setState({
-    		answer: Object.assign({}, this.state.answer, {
-    			answer_text: e.target.value
-    		})
-    	});
-    };
+	componentWillReceiveProps(nextProps) {
+		if(nextProps.answer){
+			this.setState({
+				answer: nextProps.answer
+			});
+		}
+	}
 
-    saveAnswer = (e) => {
-    	this.answerChanged(e);
-    	setAnswerText(
-    		this.props.auditStoreId,
-    		this.props.q.id,
-    		this.state.answer.answer_text,
-    	).then((a)=> this.setState({answer: a, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
-    };
+	answerChanged = (e) => {
+		this.setState({
+			answer: Object.assign({}, this.state.answer, {
+				answer_text: e.target.value
+			})
+		});
+	};
 
-    marksChanged = (e) => {
-    	this.setState({
-    		answer: Object.assign({}, this.state.answer, {
-    			marks_obtained: e.target.value
-    		})
-    	});
-    };
+	saveAnswer = (e) => {
+		this.answerChanged(e);
+		setAnswerText(
+			this.props.auditStoreId,
+			this.props.q.id,
+			this.state.answer.answer_text,
+		).then((a)=> this.setState({answer: a, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
+	};
 
-    saveMarks = (e) => {
-    	this.marksChanged(e);
-    	this.props.dispatch(setMarks({
-    		auditStoreId: this.props.auditStoreId,
-    		questionId: this.props.q.id,
-    		marks: this.state.answer.marks_obtained,
-    	})).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
-    };
+	marksChanged = (e) => {
+		this.setState({
+			answer: Object.assign({}, this.state.answer, {
+				marks_obtained: e.target.value
+			})
+		});
+	};
 
-    notApplicableClicked = (e) => {
-    	this.props.dispatch(setAnswerNotApplicable(this.props.auditStoreId, this.props.q.id, !this.state.answer.not_applicable));
-    };
+	saveMarks = (e) => {
+		this.marksChanged(e);
+		this.props.dispatch(setMarks({
+			auditStoreId: this.props.auditStoreId,
+			questionId: this.props.q.id,
+			marks: this.state.answer.marks_obtained,
+		})).then(()=> this.setState({error: false, marksObtainedSuccess: true}), ()=> this.setState({error: true, marksObtainedSuccess: false}));
+	};
 
-    render() {
-    	let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
-    	let answerElement = (
-    		<span>
-    			<big>{this.state.answer.answer_text}</big>
-    			{ this.props.q.question_type === "MUTEX"
-    				?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
-    				: null
-    			}
-    		</span>
-    	);
+	notApplicableClicked = () => {
+		this.props.dispatch(setAnswerNotApplicable(this.props.auditStoreId, this.props.q.id, !this.state.answer.not_applicable));
+	};
 
-    	let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
+	render() {
+		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
+		let answerElement = (
+			<span>
+				<big>{this.state.answer.answer_text}</big>
+				{ this.props.q.question_type === "MUTEX"
+					?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+					: null
+				}
+			</span>
+		);
 
-    	let notApplicableElement = (notApplicableIcon);
+		let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
 
-    	if( this.props.marking){
-    		let hasError = this.state.error ? "has-error" : "";
-    		let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
-    		markElement = (
-    			<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
-    				<input className="form-control text-right"
-    					onChange={this.marksChanged}
-    					onBlur={this.saveMarks}
-    					value={this.state.answer.marks_obtained}/>
-    				<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
-    			</div>
-    		);
+		let notApplicableElement = (notApplicableIcon);
 
-    		let hasAnswerError = this.state.answerError ? "has-error" : "";
-    		let hasAnswerSuccess = this.state.answerSuccess ? "has-success" : "";
-    		if(this.props.q.question_type === "PLAIN"){
-    			answerElement = (
-    				<div className={hasAnswerError + hasAnswerSuccess}>
-    					<input className="form-control"
-    						onChange={this.answerChanged}
-    						onBlur={this.saveAnswer}
-    						value={this.state.answer.answer_text}/>
-    				</div>
-    			);
-    		} else if(this.props.q.question_type === "MUTEX") {
-    			answerElement = (
-    				<div className="row">
-    					<div className="col-xs-5">
-    						<div className={hasAnswerError + hasAnswerSuccess}>
-    							<select className="form-control"
-    								onChange={this.answerChanged}
-    								onBlur={this.saveAnswer}
-    								value={this.state.answer.answer_text}>
-    								<option value=""></option>
-    								{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
-    							</select>
-    						</div>
-    					</div>
-    					<div className="col-xs-7">
-    						<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
-    					</div>
-    				</div>
-    			);
-    		}
+		if( this.props.marking){
+			let hasError = this.state.error ? "has-error" : "";
+			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
+			markElement = (
+				<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
+					<input className="form-control text-right"
+						onChange={this.marksChanged}
+						onBlur={this.saveMarks}
+						value={this.state.answer.marks_obtained}/>
+					<span className="input-group-addon">/&nbsp;{this.props.q.max_marks}</span>
+				</div>
+			);
 
-    		notApplicableElement = (
-    			<button className="btn btn-default" onClick={this.notApplicableClicked}>
-    				{notApplicableIcon}
-    			</button>
-    		);
-    	}
+			let hasAnswerError = this.state.answerError ? "has-error" : "";
+			let hasAnswerSuccess = this.state.answerSuccess ? "has-success" : "";
+			if(this.props.q.question_type === "PLAIN"){
+				answerElement = (
+					<div className={hasAnswerError + hasAnswerSuccess}>
+						<input className="form-control"
+							onChange={this.answerChanged}
+							onBlur={this.saveAnswer}
+							value={this.state.answer.answer_text}/>
+					</div>
+				);
+			} else if(this.props.q.question_type === "MUTEX") {
+				answerElement = (
+					<div className="row">
+						<div className="col-xs-5">
+							<div className={hasAnswerError + hasAnswerSuccess}>
+								<select className="form-control"
+									onChange={this.answerChanged}
+									onBlur={this.saveAnswer}
+									value={this.state.answer.answer_text}>
+									<option value=""></option>
+									{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
+								</select>
+							</div>
+						</div>
+						<div className="col-xs-7">
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+						</div>
+					</div>
+				);
+			}
 
-    	if( this.state.answer.not_applicable){
-    		markElement = (<span className="text-muted">&nbsp;</span>);
-    		answerElement = (<span className="text-muted">not applicable</span>);
-    	}
+			notApplicableElement = (
+				<button className="btn btn-default" onClick={this.notApplicableClicked}>
+					{notApplicableIcon}
+				</button>
+			);
+		}
 
-    	return (
-    		<tr>
-    			<td>{this.props.q.sequence}</td>
-    			<td>{this.props.q.question_txt}</td>
-    			<td>{answerElement}</td>
-    			<td className="text-right">{markElement}</td>
-    			<td className="">{notApplicableElement}</td>
-    		</tr>
-    	);
-    }
+		if( this.state.answer.not_applicable){
+			markElement = (<span className="text-muted">&nbsp;</span>);
+			answerElement = (<span className="text-muted">not applicable</span>);
+		}
+
+		return (
+			<tr>
+				<td>{this.props.q.sequence}</td>
+				<td>{this.props.q.question_txt}</td>
+				<td>{answerElement}</td>
+				<td className="text-right">{markElement}</td>
+				<td className="">{notApplicableElement}</td>
+			</tr>
+		);
+	}
 }
 
 var mapStoreToQuestionRowProps = function(store, ownProps){
@@ -277,7 +302,7 @@ class SectionAttachmentBox extends React.Component{
 		}
 	}
 
-	uploadButtonClicked = (e) => {
+	uploadButtonClicked = () => {
 		this.uploadInput.click();
 	};
 
@@ -291,7 +316,7 @@ class SectionAttachmentBox extends React.Component{
 		});
 	};
 
-	uploadFile = (e) => {
+	uploadFile = () => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -422,6 +447,21 @@ class __Section extends React.Component{
 
 	static propTypes = {
 		editable: PropTypes.bool.isRequired,
+		section: sectionPropType,
+		reportSection: PropTypes.shape({
+			auditor_comment: PropTypes.string,
+			pm_comment: PropTypes.string,
+			not_applicable: PropTypes.bool,
+			marks_obtained: PropTypes.number,
+			max_marks: PropTypes.number.isRequired,
+		}),
+		dispatch: PropTypes.func.isRequired,
+		auditStoreId: PropTypes.number.isRequired,
+		auditStore: auditStorePropType,
+
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string.isRequired,
+		}),
 	};
 
 	constructor(props){
@@ -516,7 +556,7 @@ class __Section extends React.Component{
 		});
 	};
 
-	notApplicableButtonClicked = (e) => {
+	notApplicableButtonClicked = () => {
 		this.props.dispatch(setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable));
 	};
 
@@ -659,6 +699,15 @@ var mapStoreToSectionProps = function(store, ownProps){
 var Section = connect(mapStoreToSectionProps)(__Section);
 
 export class AuditStoreReport extends React.Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string,
+		}),
+		auditStore: auditStorePropType,
+		sections: PropTypes.object,
+		children: PropTypes.node,
+	};
 	constructor(props){
 		super(props);
 		this.state = {

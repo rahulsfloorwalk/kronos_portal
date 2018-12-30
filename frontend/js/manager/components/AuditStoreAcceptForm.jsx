@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import $ from "jquery";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
 
@@ -10,19 +10,26 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { fetchAuditStore, acceptAuditStore } from "../actions/audit_store.js";
 
-import { getAuditType, getAuditStatus } from "../../utils.js";
 import { affectInputEventToComponent } from "../../react_utils.js";
 import FormErrorList from "../../components/FormErrorList.jsx";
-import { FormDateInput } from "../../components/FormInput.jsx";
 import FormInput from "../../components/FormInput.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import FormGroup from "../../components/FormGroup.jsx";
-import FormTextarea from "../../components/FormTextarea.jsx";
 import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
 import Loading from "../../components/Loading.jsx";
 
+import { auditStorePropType } from "../prop_types";
+
 class AuditStoreAcceptForm extends Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string,
+		}),
+		auditStore: auditStorePropType,
+		router: PropTypes.shape({
+			push: PropTypes.func.isRequired,
+		}),
+	};
 	constructor(props){
 		super(props);
 		this.state = {

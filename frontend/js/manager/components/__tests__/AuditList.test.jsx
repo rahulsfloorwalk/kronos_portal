@@ -8,6 +8,10 @@ describe("<AuditList/>", () => {
 	const sampleParams = {
 		auditCycleId: "5",
 	};
+	const sampleAuditCycle = {
+		id: 114,
+		type: "WALKIN",
+	};
 
 	const sampleAudits = [
 		{
@@ -36,9 +40,7 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 641
 			},
-			"audit_cycle": {
-				"id": 114,
-			},
+			"audit_cycle": sampleAuditCycle,
 			"post_approval_description": "",
 			"application_count": 17,
 			"report_count": 2,
@@ -70,9 +72,7 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 107
 			},
-			"audit_cycle": {
-				"id": 114,
-			},
+			"audit_cycle": sampleAuditCycle,
 			"post_approval_description": "",
 			"application_count": 13,
 			"report_count": 1,
@@ -104,9 +104,7 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 2
 			},
-			"audit_cycle": {
-				"id": 114,
-			},
+			"audit_cycle": sampleAuditCycle,
 			"post_approval_description": "",
 			"application_count": 40,
 			"report_count": 1,
@@ -138,9 +136,7 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 170
 			},
-			"audit_cycle": {
-				"id": 114,
-			},
+			"audit_cycle": sampleAuditCycle,
 			"post_approval_description": "",
 			"application_count": 23,
 			"report_count": 1,
@@ -172,9 +168,7 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 650
 			},
-			"audit_cycle": {
-				"id": 114,
-			},
+			"audit_cycle": sampleAuditCycle,
 			"post_approval_description": "",
 			"application_count": 20,
 			"report_count": 1,
@@ -206,9 +200,7 @@ describe("<AuditList/>", () => {
 				"client_id": 9,
 				"city_id": 644
 			},
-			"audit_cycle": {
-				"id": 114,
-			},
+			"audit_cycle": sampleAuditCycle,
 			"post_approval_description": "",
 			"application_count": 18,
 			"report_count": 2,

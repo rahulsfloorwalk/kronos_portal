@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import ProfileInfoPanel from "./ProfileInfoPanel.jsx";
 import BankInfoPanel from "./BankInfoPanel.jsx";
@@ -7,6 +8,12 @@ import SocialInfoPanel from "./SocialInfoPanel.jsx";
 import AuditorPreferencesPanel from "./AuditorPreferencesPanel.jsx";
 
 export default class AuditorDetails extends Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditorId: PropTypes.string.isRequired,
+		}),
+		children: PropTypes.node,
+	};
 	constructor(props){
 		super(props);
 	}

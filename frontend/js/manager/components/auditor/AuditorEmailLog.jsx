@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import * as ReactRedux from "react-redux";
-import { hashHistory, Link } from "react-router";
+import PropTypes from "prop-types";
 
 import moment from "moment";
 import { momentDateTimeFormat }  from "../../../../config.js";
@@ -8,12 +7,15 @@ import { momentDateTimeFormat }  from "../../../../config.js";
 import { fetchAuditor } from "../../service/auditor.js";
 import { findEmailLogByEmail } from "../../service/email_log.js";
 
-import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../../utils.js";
-
 export default class AuditorEmailLog extends Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditorId: PropTypes.string.isRequired,
+		}),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {

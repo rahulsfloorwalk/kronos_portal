@@ -1,17 +1,22 @@
 import React, { Component } from "react";
-import * as ReactRedux from "react-redux";
-import { hashHistory, Link } from "react-router";
+import PropTypes from "prop-types";
+import { Link } from "react-router";
 
 import moment from "moment";
-import { momentDateFormat, momentDateTimeFormat }  from "../../../../config.js";
+import { momentDateFormat }  from "../../../../config.js";
 
 import { findPaymentsByUserId } from "../../service/payment.js";
 
-import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 import PaymentStatusLabel from "../../../components/PaymentStatusLabel.jsx";
 
 export default class AuditorPayment extends Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditorId: PropTypes.string.isRequired,
+		}),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {

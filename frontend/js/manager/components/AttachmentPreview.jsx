@@ -1,13 +1,18 @@
 import React from "react";
-import { Link } from "react-router";
+import PropTypes from "prop-types";
 
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
 import Loading from "../../components/Loading.jsx";
 import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 
-import { DownloadAlt, Save, Plus, Cross, Trash, Pencil, Tasks, OptionHorizontal, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
+import { DownloadAlt,  Cross } from "../../components/Icons.jsx";
+import { attachmentPropType } from "../prop_types";
 
 class AttachmentRenderer extends React.Component {
+	static propTypes = {
+		attachment: attachmentPropType,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -23,11 +28,11 @@ class AttachmentRenderer extends React.Component {
 		this.setState((oldState) => Object.assign({}, oldState, { error }));
 	};
 
-	onLoad = (e) => {
+	onLoad = () => {
 		this.setLoading(false);
 	};
 
-	onError = (e) => {
+	onError = () => {
 		this.setError(true);
 		this.setLoading(false);
 	};
@@ -58,7 +63,6 @@ class AttachmentRenderer extends React.Component {
 				</audio>
 			);
 		}
-			break;
 		case "PHOTO": {
 			let loading, error;
 			if( this.state.loading){
@@ -92,10 +96,12 @@ class AttachmentRenderer extends React.Component {
 }
 
 export default class AttachmentPreview extends React.Component {
-
-	constructor(props){
-		super(props);
-	}
+	static propTypes = {
+		attachment: attachmentPropType,
+		editable: PropTypes.bool,
+		onDelete: PropTypes.func,
+		onRename: PropTypes.func,
+	};
 
 	render(){
 		if(!this.props.attachment){

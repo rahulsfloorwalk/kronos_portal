@@ -33,6 +33,8 @@ import { findAuditsByAuditCycleId } from "../selectors/audit";
 import AuditApplicationList from "./application/AuditApplicationList.jsx";
 import AgencyListForAudit from "./audit/AgencyListForAudit.jsx";
 
+import { auditPropType } from "../prop_types";
+
 class AuditStoreTableForAudit extends Component{
 	static propTypes = {
 		auditId: PropTypes.number.isRequired,
@@ -294,12 +296,7 @@ const AuditRow = ReactRedux.connect()(__AuditRow);
 export class AuditList extends Component{
 	static propTypes = {
 		params: PropTypes.object,
-		audits: PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			audit_cycle: PropTypes.shape({
-				id: PropTypes.number.isRequired,
-			}).isRequired,
-		})).isRequired,
+		audits: PropTypes.arrayOf(auditPropType).isRequired,
 
 		children: PropTypes.node,
 		dispatch: PropTypes.func.isRequired,

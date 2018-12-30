@@ -1,16 +1,22 @@
 import React, { Component } from "react";
-import { hashHistory, Link } from "react-router";
+import PropTypes from "prop-types";
+import { Link } from "react-router";
 
 import moment from "moment";
-import { momentDateFormat, momentDateTimeFormat }  from "../../../../config.js";
+import { momentDateFormat }  from "../../../../config.js";
 
 import { findReferralsByReferredBy } from "../../service/referral.js";
 
-import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 import ReferralTypeLabel from "../../../components/ReferralTypeLabel.jsx";
 
 export default class AuditorReferralList extends Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditorId: PropTypes.string.isRequired,
+		}),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {

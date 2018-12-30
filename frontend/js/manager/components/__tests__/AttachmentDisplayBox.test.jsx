@@ -28,10 +28,12 @@ describe("<AttachmentDisplayBox/>", () => {
 		audit_date: "2018-09-02",
 		qa_rating: null,
 		audit: {
+			id: 15432,
 			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",
 			audit_cycle: {
 				post_approval_description: "Conduct an Audit - Post Approval - Audit Cycle Description",
 				client: sampleClient,
+				type: "WALKIN",
 			},
 			store: {
 				name: "Store Name",
@@ -68,7 +70,7 @@ describe("<AttachmentDisplayBox/>", () => {
 	for( const [s, editable] of statuses){
 		it(`computes editable correctly when status is ${s}`, () => {
 			const auditStore = Object.assign({}, sampleAuditStore, { status: s });
-			const r = shallow(<AttachmentDisplayBox auditStore={auditStore} dispatch={store.dispatch} router={mockRouter} />);
+			const r = shallow(<AttachmentDisplayBox auditStoreId={auditStore.id} auditStore={auditStore} dispatch={store.dispatch} router={mockRouter} />);
 			const section = r.find("AttachmentPreview");
 			expect(section.length).toEqual(1);
 			expect(section.prop("editable")).toEqual(editable);

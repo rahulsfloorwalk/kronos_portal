@@ -129,14 +129,18 @@ describe("<AuditorRow/>", () => {
 });
 
 describe("<AuditorList />", () => {
+	let dispatch;
+	beforeEach(() => {
+		dispatch = jest.fn();
+	});
 
 	it("passes loading to false by default", () => {
-		const r = shallow(<AuditorList />);
+		const r = shallow(<AuditorList dispatch={dispatch}/>);
 		expect(r.state("loading")).toEqual(false);
 	});
 
 	it(" renders jumbotron by default", () => {
-		const r = renderer.create(<AuditorList />);
+		const r = renderer.create(<AuditorList dispatch={dispatch}/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 

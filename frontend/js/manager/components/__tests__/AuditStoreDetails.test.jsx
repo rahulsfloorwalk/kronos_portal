@@ -59,6 +59,7 @@ describe("<AuditStoreDetails/>", () => {
 		earnings_per_audit: 500,
 		reimbursement: 700,
 		audit: {
+			id: 125432,
 			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",
 			audit_cycle: {
 				id: 453,

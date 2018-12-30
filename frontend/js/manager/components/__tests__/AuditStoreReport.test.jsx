@@ -28,10 +28,12 @@ describe("<AuditStoreReport/>", () => {
 		audit_date: "2018-09-02",
 		qa_rating: null,
 		audit: {
+			id: 15432,
 			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",
 			audit_cycle: {
 				post_approval_description: "Conduct an Audit - Post Approval - Audit Cycle Description",
 				client: sampleClient,
+				type: "WALKIN",
 			},
 			store: {
 				name: "Store Name",

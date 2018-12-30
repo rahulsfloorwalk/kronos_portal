@@ -1,25 +1,28 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
 
 import Alert from "react-s-alert";
 
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from "../service/attachment.js";
 
-import { Paperclip, Plus, Cross, Record, Picture, Video, File, DownloadAlt } from "../../components/Icons.jsx";
+import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
-import ProgressBar from "../../components/ProgressBar.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
-import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 
 import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
+import { auditStorePropType } from "../prop_types";
 
 export class AttachmentDisplayBox extends Component{
+	static propTypes = {
+		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
+		auditStore: auditStorePropType
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -73,7 +76,7 @@ export class AttachmentDisplayBox extends Component{
 			Alert.warning("INVALIED FILE NAME");
 		});
 	};
-	uploadButtonClicked = (e) => {
+	uploadButtonClicked = () => {
 		this.uploadInput.click();
 	};
 	setProgressState = (tempId, progressState) => {
@@ -85,7 +88,7 @@ export class AttachmentDisplayBox extends Component{
 			});
 		});
 	};
-	uploadFile = (e) => {
+	uploadFile = () => {
 		if( this.uploadInput.files.length > 10){
 			alert("You can only upload 10 attachments at once");
 			return;
@@ -149,7 +152,7 @@ export class AttachmentDisplayBox extends Component{
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)}/>);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){

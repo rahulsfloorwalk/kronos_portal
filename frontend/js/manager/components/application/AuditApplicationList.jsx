@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 
 import Alert from "react-s-alert";
 
@@ -7,15 +8,25 @@ import { momentDateFormat }  from "../../../../config.js";
 
 import { Link, withRouter } from "react-router";
 
-import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar, ChevronDown, ChevronRight } from "../../../components/Icons.jsx";
+import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar } from "../../../components/Icons.jsx";
 
 import { findByAudit, waitListApplication } from "../../service/application.js";
 
 import ApplicationStatusLabel from "../../../components/ApplicationStatusLabel.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
 import ApplicationRepeat from "../../../components/ApplicationRepeat.jsx";
+import Loading from "../../../components/Loading.jsx";
 
 class AuditApplicationList extends Component{
+	static propTypes = {
+		auditId: PropTypes.number.isRequired,
+		location: PropTypes.shape({
+			state: PropTypes.shape({
+				t: PropTypes.string,
+			}),
+		}),
+		loading: PropTypes.bool,
+	};
 	constructor(props){
 		super(props);
 		this.state = {
@@ -99,8 +110,8 @@ class AuditApplicationList extends Component{
 }
 
 AuditApplicationList.contextTypes = {
-	auditCycleId: React.PropTypes.number,
-	router: React.PropTypes.object,
+	auditCycleId: PropTypes.number,
+	router: PropTypes.object,
 };
 
 export default withRouter(AuditApplicationList);

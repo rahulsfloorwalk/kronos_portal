@@ -18,6 +18,8 @@ import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
 import Loading from "../../components/Loading.jsx";
 
+import { auditPropType } from "../prop_types";
+
 class AuditFiatAssignForm extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
@@ -34,17 +36,7 @@ class AuditFiatAssignForm extends React.Component {
 			start_date: PropTypes.string.isRequired,
 			end_date: PropTypes.string.isRequired,
 		}),
-		audit: PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			store: PropTypes.shape({
-				id: PropTypes.number.isRequired,
-				name: PropTypes.string.isRequired,
-				city: PropTypes.shape({
-					id: PropTypes.number.isRequired,
-					name: PropTypes.string.isRequired,
-				}),
-			}),
-		}),
+		audit: auditPropType,
 	};
 
 	state = {

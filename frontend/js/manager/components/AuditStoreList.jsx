@@ -52,7 +52,6 @@ class AuditStoreRow extends React.Component {
 	};
 	state = {};
 	render() {
-		const auditorUrl = `/auditor/${this.props.auditStore.user.id}`;
 		let acceptButton = null;
 		if(this.props.auditStore.status == "COMPLETED"){
 			if(this.props.auditStore.audit.audit_cycle){

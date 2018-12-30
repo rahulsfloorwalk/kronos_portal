@@ -55,7 +55,9 @@ export class AuditorRow extends React.Component {
 export class AuditorList extends React.Component {
 
 	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
 		search: PropTypes.string,
+		children: PropTypes.node,
 	};
 
 	state = {
@@ -97,12 +99,13 @@ export class AuditorList extends React.Component {
 	};
 
 	render() {
+		let table;
 		let rows = [];
 		for (let a of this.state.auditors) {
 			rows.push(<AuditorRow auditor={a} key={a.id}/>);
 		}
 		if (rows.length > 0) {
-			var table = (
+			table = (
 				<div className="table-responsive">
 					<table className="table table-striped">
 						<thead>
@@ -125,7 +128,7 @@ export class AuditorList extends React.Component {
 				</div>
 			);
 		} else {
-			var table = (
+			table = (
 				<div className="jumbotron text-center">
 					<h2>no results found</h2>
 					<p>try modifying your search terms a bit..</p>
@@ -133,7 +136,7 @@ export class AuditorList extends React.Component {
 			);
 		}
 		if (this.state.loading) {
-			var table = <Loading/>;
+			table = <Loading/>;
 		}
 
 		return (
