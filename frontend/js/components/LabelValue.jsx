@@ -1,6 +1,11 @@
 import React from "react";
+import PropTypes from "prop-types";
 
-class LabelValue extends React.Component {
+export default class LabelValue extends React.Component {
+	static propTypes = {
+		label: PropTypes.string,
+		value: PropTypes.string,
+	};
 	render() {
 		return (
 			<div className="form-group">
@@ -11,7 +16,11 @@ class LabelValue extends React.Component {
 	}
 }
 
-class LabelValue_2_10 extends React.Component {
+export class LabelValue_2_10 extends React.Component {
+	static propTypes = {
+		label: PropTypes.string,
+		value: PropTypes.string,
+	};
 	render() {
 		return (
 			<div className="form-group">
@@ -21,6 +30,3 @@ class LabelValue_2_10 extends React.Component {
 		);
 	}
 }
-
-export { LabelValue_2_10 };
-export default LabelValue;

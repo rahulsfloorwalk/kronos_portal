@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import moment from "moment";
 
-import { Download } from "../../../components/Icons.jsx";
 import { url } from "../../../../config.js";
 
 import { auditCycleSelectors, reportBrowserSelectors } from "../../selectors";

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import Gauge from "react-svg-gauge";
 
-import { getColor, getRatingText } from "../../../utils";
+import { getRatingText } from "../../../utils";
 
 const getGaugeProps = (colorCode) => {
 	return {

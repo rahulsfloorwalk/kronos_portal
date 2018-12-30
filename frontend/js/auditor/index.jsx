@@ -1,4 +1,4 @@
-/* global PHOEBE_VERSION:false */
+/* global PHOEBE_VERSION:false process:false module:false */
 
 import "babel-polyfill";
 import React from "react";
@@ -10,7 +10,6 @@ import ReactGA from "react-ga";
 
 import * as Redux from "redux";
 import ReduxThunk from "redux-thunk";
-import ReduxLogger from "redux-logger";
 
 import $ from "jquery";
 
@@ -20,7 +19,7 @@ import { rootReducer } from "./reducers.js";
 import { fetchConfig } from "./service/config.js";
 
 let forbiddenEncountered = false;
-$(document).ajaxError(function(event, jqXHR, settings){
+$(document).ajaxError(function(event, jqXHR){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
 		let redirLoc = `/auth/login?next=${encodeURIComponent(window.location.toString())}`;
@@ -73,7 +72,6 @@ fetchConfig().then((config) => {
 
 	render(store);
 	if(module.hot){
-		console.log("module is HOT HOT HOT!", module);
 		module.hot.dispose(function(){
 			render(store);
 		});

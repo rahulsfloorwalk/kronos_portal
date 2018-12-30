@@ -1,5 +1,4 @@
 import React from "react";
-import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 
 import { DownloadSummaryButton } from "../DownloadSummaryButton";
@@ -11,7 +10,6 @@ const sampleAuditCycle = {
 
 describe(DownloadSummaryButton, () => {
 	it("renders nothing when auditCyle is not provided", () => {
-		const onSelect = jest.fn();
 		const r = renderer.create(<DownloadSummaryButton
 			auditCycle={undefined}
 			cityId={2}
@@ -24,7 +22,6 @@ describe(DownloadSummaryButton, () => {
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 	it("renders the button with the generated link", () => {
-		const onSelect = jest.fn();
 		const r = renderer.create(<DownloadSummaryButton
 			auditCycle={sampleAuditCycle}
 			cityId={2}

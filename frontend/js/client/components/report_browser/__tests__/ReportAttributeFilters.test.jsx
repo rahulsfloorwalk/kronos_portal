@@ -1,5 +1,4 @@
 import React from "react";
-import moment from "moment";
 import { shallow } from "enzyme";
 import ShallowRenderer from "react-test-renderer/shallow";
 
@@ -91,7 +90,6 @@ describe("ReportAttributeFilters", () => {
 	});
 
 	it("renders nothing when there are no report attributes", () => {
-		const fetchReportsByAuditCycleId = jest.fn();
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 		const tree = renderer.render(<ReportAttributeFilters
 			fetchReportAttributesByAuditCycleId={fetchReportAttributesByAuditCycleId}

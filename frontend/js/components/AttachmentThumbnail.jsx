@@ -1,15 +1,26 @@
 import React, { Component } from "react";
-import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
+import PropTypes from "prop-types";
 
 import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Plus, Cross, Pencil, Paperclip } from "./Icons.jsx";
+import { Cross } from "./Icons.jsx";
 
 import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
 import { loadingImageUrl } from "./Loading.jsx";
 
 export default class AttachmentThumbnail extends Component{
+	static propTypes = {
+		attachment: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			proof_type: PropTypes.string.isRequired,
+		}),
+		selected: PropTypes.bool,
+		deletable: PropTypes.bool,
+
+		onSelect: PropTypes.func,
+		onDelete: PropTypes.func,
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -21,10 +32,10 @@ export default class AttachmentThumbnail extends Component{
 	setHover = (hover) => {
 		this.setState((prevState) => Object.assign({}, prevState, { hover }));
 	};
-	onMouseEnter = (e) => {
+	onMouseEnter = () => {
 		this.setHover(true);
 	};
-	onMouseLeave = (e) => {
+	onMouseLeave = () => {
 		this.setHover(false);
 	};
 	setLoading = (loading) => {
@@ -33,10 +44,10 @@ export default class AttachmentThumbnail extends Component{
 	setError = (error) => {
 		this.setState((prevState) => Object.assign({}, prevState, { error }));
 	};
-	onImageLoad = (e) => {
+	onImageLoad = () => {
 		this.setLoading(false);
 	};
-	onImageError = (e) => {
+	onImageError = () => {
 		this.setLoading(false);
 		this.setError(true);
 	};

@@ -1,5 +1,5 @@
+/* global process:false */
 import React, { Component } from "react";
-import { Link } from "react-router";
 
 export default class DevelopmentMarker extends Component{
 	constructor(props){
@@ -10,9 +10,6 @@ export default class DevelopmentMarker extends Component{
 		let texture = {
 			background: `repeating-linear-gradient( 45deg, ${c[0]}, ${c[0]} 10px, ${c[1]} 10px, ${c[1]} 20px)`,
 			marginBottom: "0px",
-		};
-		let blackText = {
-			color: "black",
 		};
 		if(process.env.NODE_ENV === "development"){
 			return (

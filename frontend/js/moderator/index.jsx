@@ -1,4 +1,4 @@
-/* global PHOEBE_VERSION:false */
+/* global PHOEBE_VERSION:false process:false module:false */
 
 import "babel-polyfill";
 import React from "react";
@@ -20,7 +20,7 @@ const render = () => {
 };
 
 let forbiddenEncountered = false;
-$(document).ajaxError(function(event, jqXHR, settings){
+$(document).ajaxError(function(event, jqXHR){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
 		hashHistory.push("/login");
@@ -53,7 +53,6 @@ fetchConfig().then((config) => {
 
 	render();
 	if(module.hot){
-		console.log("Module is HOT HOT HOT!");
 		module.hot.dispose(function(){
 			render();
 		});

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 
 import FormSelect from "./FormSelect.jsx";
@@ -6,6 +7,15 @@ import FormSelect from "./FormSelect.jsx";
 /* Store Selector Starts */
 
 class StoreSelector extends React.Component {
+	static propTypes = {
+		stores: PropTypes.arrayOf(PropTypes.shape({
+			name: PropTypes.string,
+			city: PropTypes.shape({
+				name: PropTypes.string,
+			}),
+		})),
+	};
+
 	render() {
 		let storeOptions = [];
 		for( let s in this.props.stores){

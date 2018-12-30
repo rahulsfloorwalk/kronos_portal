@@ -1,3 +1,5 @@
+/* global process:false */
+
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -13,7 +15,7 @@ import reducers from "./selectors";
 import { fetchConfig } from "./service/config.js";
 
 let forbiddenEncountered = false;
-$(document).ajaxError(function(event, jqXHR, settings){
+$(document).ajaxError(function(event, jqXHR){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
 		alert("It looks like your session has expired, please click 'OK' to login again.");

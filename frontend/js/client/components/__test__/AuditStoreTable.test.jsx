@@ -1,8 +1,5 @@
 import React from "react";
-import Datetime from "react-datetime";
-import moment from "moment";
 import renderer from "react-test-renderer";
-import $ from "jquery";
 
 import { AuditStoreTable } from "../AuditStoreTable";
 

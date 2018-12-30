@@ -1,5 +1,4 @@
 import React from "react";
-import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 
 import AuditorNameDisplay from "../AuditorNameDisplay";
@@ -39,12 +38,7 @@ const sampleAuditorUser = {
 };
 
 describe("<AuditorNameDisplay/>", () => {
-	const sampleParams = {
-		auditCycleId: "5",
-	};
-
 	it("renders the auditor name and phone correctly for modrator", (done) => {
-		const dispatch = jest.fn().mockResolvedValue(sampleAuditorUser);
 		const r = renderer.create(<AuditorNameDisplay user={sampleAuditorUser} />);
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
@@ -53,7 +47,6 @@ describe("<AuditorNameDisplay/>", () => {
 	});
 
 	it("renders the agency name and phone correctly for modrator", (done) => {
-		const dispatch = jest.fn().mockResolvedValue(sampleAgencyUser);
 		const r = renderer.create(<AuditorNameDisplay user={sampleAgencyUser} />);
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
