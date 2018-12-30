@@ -1,11 +1,21 @@
 import React from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
 import { Cross, Plus, Home, Pencil, HandRight } from "../../../components/Icons.jsx";
 import { fetchStores, deleteStore } from "../../actions/store.js";
 
+import { storePropType } from "../../prop_types";
+
 class StoreRow extends React.Component {
+	static propTypes = {
+		store: storePropType,
+		serial: PropTypes.number,
+		onDelete: PropTypes.func,
+		dispatch: PropTypes.func.isRequired,
+	};
+
 	render() {
 		let linkTo = `/client/${this.props.store.client_id}/store/${this.props.store.id}/edit`;
 		let assignLink = `/client/${this.props.store.client_id}/store/${this.props.store.id}/assign`;
@@ -31,59 +41,66 @@ class StoreRow extends React.Component {
 }
 
 class StoreList extends React.Component {
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			clientId: PropTypes.string.isRequired,
+		}),
+		children: PropTypes.node,
+		stores: PropTypes.object,
+	};
 	componentDidMount() {
 		this.props.dispatch(fetchStores(this.props.params.clientId));
 	}
 
-    onDelete = (store) => {
-    	console.log("StoreList#onDelete", store);
-    	this.props.dispatch(deleteStore(store.id));
-    };
+	onDelete = (store) => {
+		this.props.dispatch(deleteStore(store.id));
+	};
 
-    render() {
-    	var rows = [];
-    	let serial = 1;
-    	for(var id in this.props.stores) {
-    		rows.push(<StoreRow serial={serial++} store={this.props.stores[id]} key={id} onDelete={this.onDelete}/>);
-    	}
-    	var addStoreLink = `/client/${this.props.params.clientId}/store/add`;
-    	return (
-    		<div>
-    			<h3 className="page-header">
-    				<Link to={addStoreLink} className="btn btn-default pull-right"><Plus/> Add Store</Link>
-    				<Home/> Store List
-    			</h3>
-    			<table className="table table-striped">
-    				<colgroup>
-    					<col style={{width: "5%"}}/>
-    					<col style={{width: "20%"}}/>
-    					<col style={{width: "50%"}}/>
-    					<col style={{width: "20%"}}/>
-    					<col style={{width: "5%"}}/>
-    				</colgroup>
-    				<thead>
-    					<tr>
-    						<th className="text-right">#</th>
-    						<th>Code</th>
-    						<th>Name</th>
-    						<th>Type</th>
-    						<th>Phone</th>
-    						<th>Address</th>
-    						<th>City</th>
-    						<th></th>
-    					</tr>
-    				</thead>
-    				<tbody>
-    					{rows}
-    				</tbody>
-    			</table>
-    			{this.props.children}
-    		</div>
-    	);
-    }
+	render() {
+		var rows = [];
+		let serial = 1;
+		for(var id in this.props.stores) {
+			rows.push(<StoreRow serial={serial++} store={this.props.stores[id]} key={id} onDelete={this.onDelete}/>);
+		}
+		var addStoreLink = `/client/${this.props.params.clientId}/store/add`;
+		return (
+			<div>
+				<h3 className="page-header">
+					<Link to={addStoreLink} className="btn btn-default pull-right"><Plus/> Add Store</Link>
+					<Home/> Store List
+				</h3>
+				<table className="table table-striped">
+					<colgroup>
+						<col style={{width: "5%"}}/>
+						<col style={{width: "20%"}}/>
+						<col style={{width: "50%"}}/>
+						<col style={{width: "20%"}}/>
+						<col style={{width: "5%"}}/>
+					</colgroup>
+					<thead>
+						<tr>
+							<th className="text-right">#</th>
+							<th>Code</th>
+							<th>Name</th>
+							<th>Type</th>
+							<th>Phone</th>
+							<th>Address</th>
+							<th>City</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{rows}
+					</tbody>
+				</table>
+				{this.props.children}
+			</div>
+		);
+	}
 }
 
-var mapStoreToProps = function(store, ownProps){
+var mapStoreToProps = function(store){
 	return {
 		stores: store.stores,
 

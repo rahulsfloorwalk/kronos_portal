@@ -1,6 +1,5 @@
 import React from "react";
-import $ from "jquery";
-import * as ReactRedux from "react-redux";
+import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
 
 import Alert from "react-s-alert";
@@ -9,9 +8,6 @@ import { fetchStates, fetchCities } from "../service/location.js";
 import { saveOpportunityEmailRecord } from "../service/opportunity_email.js";
 
 import { getInputEventChangeValue } from "../../react_utils.js";
-import FormSelect from "../../components/FormSelect.jsx";
-import FormInput from "../../components/FormInput.jsx";
-import FormGroup from "../../components/FormGroup.jsx";
 import SaveButton from "../../components/SaveButton.jsx";
 import FormErrorList from "../../components/FormErrorList.jsx";
 import Modal from "../../components/Modal.jsx";
@@ -20,64 +16,70 @@ import Loading from "../../components/Loading.jsx";
 import { __StateSelector } from "../../components/StateSelector.jsx";
 import { __CitySelector } from "../../components/CitySelector.jsx";
 
-export default class extends React.Component {
-    state = {
-    	errors: {},
-    	form: {},
-    	cities: [],
-    	states: {},
-    };
+export default class OpportunityEmailRecordForm extends React.Component {
+	static propTypes = {
+		params: PropTypes.shape({
+			auditCycleId: PropTypes.string.isRequired,
+		}),
+	};
 
-    componentDidMount() {
-    	fetchStates().done((states)=>this.setState({states}));
-    }
+	state = {
+		errors: {},
+		form: {},
+		cities: [],
+		states: {},
+	};
 
-    inputChanged = (e) => {
-    	let change = getInputEventChangeValue(e);
-    	this.setState((prevState) => {
-    		return Object.assign({}, prevState, {
-    			form: Object.assign({}, prevState.form, change),
-    		});
-    	});
-    };
+	componentDidMount() {
+		fetchStates().done((states)=>this.setState({states}));
+	}
 
-    stateChanged = (e) => {
-    	this.inputChanged(e);
-    	fetchCities(e.target.value).done((cities)=>this.setState({cities}));
-    };
+	inputChanged = (e) => {
+		let change = getInputEventChangeValue(e);
+		this.setState((prevState) => {
+			return Object.assign({}, prevState, {
+				form: Object.assign({}, prevState.form, change),
+			});
+		});
+	};
 
-    onSubmit = (e) => {
-    	e.preventDefault();
-    	let promise = saveOpportunityEmailRecord(this.props.params.auditCycleId, this.state.form.city).done((opp) => {
-    		hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`);
-    		Alert.success(`${opp.total_count} EMAILS SCHEDULED`);
-    	}).fail((err) => {
-    		this.setState({
-    			errors: err.responseJSON || {},
-    		});
-    	});
-    };
+	stateChanged = (e) => {
+		this.inputChanged(e);
+		fetchCities(e.target.value).done((cities)=>this.setState({cities}));
+	};
 
-    render() {
-    	if( ! (this.state.states)){
-    		return <Loading/>;
-    	}
+	onSubmit = (e) => {
+		e.preventDefault();
+		saveOpportunityEmailRecord(this.props.params.auditCycleId, this.state.form.city).done((opp) => {
+			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`);
+			Alert.success(`${opp.total_count} EMAILS SCHEDULED`);
+		}).fail((err) => {
+			this.setState({
+				errors: err.responseJSON || {},
+			});
+		});
+	};
 
-    	return (
-    		<Modal modalTitle="Schedule Opportunity Email" onClose={hashHistory.goBack}>
-    			<form onSubmit={this.onSubmit}>
-    				<FormErrorList errors={this.state.errors.non_field_errors}/>
-    				<div className="row">
-    					<div className="col-sm-6">
-    						<__StateSelector states={this.state.states} value={this.state.form.state} onChange={this.stateChanged}/>
-    					</div>
-    					<div className="col-sm-6">
-    						<__CitySelector cities={this.state.cities} value={this.state.form.city} onChange={this.inputChanged}/>
-    					</div>
-    				</div>
-    				<SaveButton/>
-    			</form>
-    		</Modal>
-    	);
-    }
+	render() {
+		if( ! (this.state.states)){
+			return <Loading/>;
+		}
+
+		return (
+			<Modal modalTitle="Schedule Opportunity Email" onClose={hashHistory.goBack}>
+				<form onSubmit={this.onSubmit}>
+					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					<div className="row">
+						<div className="col-sm-6">
+							<__StateSelector states={this.state.states} value={this.state.form.state} onChange={this.stateChanged}/>
+						</div>
+						<div className="col-sm-6">
+							<__CitySelector cities={this.state.cities} value={this.state.form.city} onChange={this.inputChanged}/>
+						</div>
+					</div>
+					<SaveButton/>
+				</form>
+			</Modal>
+		);
+	}
 }

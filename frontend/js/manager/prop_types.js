@@ -35,3 +35,20 @@ export const reportAttributePropType = PropTypes.shape({
 		})),
 	}).isRequired,
 });
+
+export const storePropType = PropTypes.shape({
+	id: PropTypes.number,
+	client_id: PropTypes.number,
+	code: PropTypes.string,
+	priority: PropTypes.string,
+	address: PropTypes.string,
+	name: PropTypes.string,
+	type: PropTypes.string,
+	phone: PropTypes.string,
+	city: PropTypes.shape({
+		name: PropTypes.string,
+		state: PropTypes.string,
+	}),
+});
+
+export const errorList = PropTypes.arrayOf(PropTypes.string);

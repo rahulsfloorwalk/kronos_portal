@@ -1,8 +1,5 @@
 import React from "react";
 
-import Header from "./Header.jsx";
-import Footer from "../../components/Footer.jsx";
-
 import NotificationBox from "./NotificationBox.jsx";
 import AuditCycleDashboard from "./AuditCycleDashboard.jsx";
 

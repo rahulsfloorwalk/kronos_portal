@@ -40,7 +40,7 @@ describe("<QuestionnaireTypeEditForm/>", () => {
 			push: jest.fn(),
 		};
 
-		const r = shallow(<QuestionnaireTypeEditForm params={sampleParams} router={sampleRouter}/>);
+		shallow(<QuestionnaireTypeEditForm params={sampleParams} router={sampleRouter}/>);
 		expect(fetchQuestionnaireType).toHaveBeenCalledTimes(1);
 		expect(fetchQuestionnaireType).toBeCalledWith(sampleParams.questionnaireTypeId);
 	});

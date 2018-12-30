@@ -1,23 +1,30 @@
 import React from "react";
-import $ from "jquery";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
 
 import { fetchAuditCycle, setPostApprovalDescription } from "../actions/audit.js";
 
-import { getAuditType, getAuditStatus } from "../../utils.js";
 import { affectInputEventToComponent } from "../../react_utils.js";
-import FormInput from "../../components/FormInput.jsx";
-import { FormDateInput } from "../../components/FormInput.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import FormGroup from "../../components/FormGroup.jsx";
 import FormTextarea from "../../components/FormTextarea.jsx";
 import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
-import Loading from "../../components/Loading.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 class PostApprovalDescriptionForm extends React.Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			auditCycleId: PropTypes.string.isRequired,
+		}),
+		auditCycle: PropTypes.shape({
+			post_approval_description: PropTypes.string,
+		}),
+		errors: PropTypes.shape({
+			post_approval_description: PropTypes.string,
+		}),
+	};
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -49,14 +56,12 @@ class PostApprovalDescriptionForm extends React.Component{
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		let promise;
 		this.props.dispatch(setPostApprovalDescription(this.props.params.auditCycleId, this.state.post_approval_description)).then((savedAuditCycle) => {
 			hashHistory.push(`/audit_cycle/${savedAuditCycle.id}/questionnaire`);
 		});
 	};
 
 	render(){
-		var clientRows = [];
 		return (
 			<Modal modalTitle={"Post Approval Description"} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>

@@ -1,23 +1,27 @@
 import React from "react";
-import * as ReactRedux from "react-redux";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
-import Alert from "react-s-alert";
-
 import moment from "moment";
-import { momentDateTimeFormat, url}  from "../../../config.js";
+import { momentDateTimeFormat}  from "../../../config.js";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
-import { File, Download, Plus } from "../../components/Icons.jsx";
-import Panel from "../../components/Panel.jsx";
+import { Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
-import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
-import PaymentStatusLabel from "../../components/PaymentStatusLabel.jsx";
 
-import { payAuditStore, unpayAuditStore} from "../actions/audit_store.js";
 import { findOpportunityEmailRecordsByAuditCycleId } from "../service/opportunity_email.js";
 
 class OpportunityEmailRecordRow extends React.Component{
+	static propTypes = {
+		record: PropTypes.shape({
+			progress_count: PropTypes.number,
+			total_count: PropTypes.number,
+			created_at: PropTypes.string,
+			city: PropTypes.shape({
+				name: PropTypes.string,
+			}),
+		}),
+	};
 	constructor(props){
 		super(props);
 		this.state = {};
@@ -42,6 +46,12 @@ class OpportunityEmailRecordRow extends React.Component{
 }
 
 export default class OpportunityEmailRecordList extends React.Component{
+	static propTypes = {
+		params: PropTypes.shape({
+			auditCycleId: PropTypes.number.isRequired,
+		}),
+		children: PropTypes.node,
+	};
 	constructor(props){
 		super(props);
 		this.state = {

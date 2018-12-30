@@ -1,4 +1,4 @@
-/* global PHOEBE_VERSION:false */
+/* global PHOEBE_VERSION:false module:false */
 
 import React from "react";
 import ReactDOM from "react-dom";
@@ -14,7 +14,7 @@ import Routes from "./components/Routes.jsx";
 import rootReducer from "./reducers.js";
 
 let forbiddenEncountered = false;
-$(document).ajaxError(function(event, jqXHR, settings){
+$(document).ajaxError(function(event, jqXHR){
 	if(jqXHR.status === 403 && !forbiddenEncountered){
 		forbiddenEncountered = true;
 		alert("It looks like your session has expired, please click 'OK' to login again.");
@@ -47,7 +47,6 @@ let render = store => {
 };
 render(store);
 if(module.hot){
-	console.log("module is HOT HOT HOT!", module);
 	module.hot.dispose(function(){
 		render(store);
 	});

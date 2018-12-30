@@ -1,5 +1,4 @@
 import React from "react";
-import { Provider } from "react-redux";
 import { Router, Route, IndexRoute, hashHistory } from "react-router";
 
 import App from "./App.jsx";
@@ -18,7 +17,6 @@ import QuestionnaireTypeEditForm from "./questionnaire_type/QuestionnaireTypeEdi
 
 import StoreList from "./store/StoreList.jsx";
 import StoreForm from "./store/StoreForm.jsx";
-import StoreDetail from "./store/StoreDetail.jsx";
 import StoreAssignForm from "./store/StoreAssignForm.jsx";
 
 import AuditorList from "./auditor/AuditorList.jsx";
@@ -58,7 +56,6 @@ import AuditCopyForm from "./AuditCopyForm.jsx";
 import AuditForm from "./AuditForm.jsx";
 
 import AuditStoreList from "./AuditStoreList.jsx";
-import AuditStoreCompleteForm from "./AuditStoreCompleteForm.jsx";
 import AuditStoreQARatingForm from "./AuditStoreQARatingForm.jsx";
 import AuditStoreDetails from "./AuditStoreDetails.jsx";
 import AuditStoreReport from "./AuditStoreReport.jsx";

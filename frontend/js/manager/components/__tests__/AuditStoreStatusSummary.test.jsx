@@ -50,7 +50,7 @@ describe("<AuditStoreStatusSummary/>", () => {
 	});
 	it("calls the stats service correctly", () => {
 		fetchAuditStoreStats.mockResolvedValue(sampleStats);
-		const r = shallow(<AuditStoreStatusSummary auditCycleId={5}/>);
+		shallow(<AuditStoreStatusSummary auditCycleId={5}/>);
 		expect(fetchAuditStoreStats).toBeCalledWith(5);
 	});
 	it("sets the state correctly once data is loaded", (done) => {

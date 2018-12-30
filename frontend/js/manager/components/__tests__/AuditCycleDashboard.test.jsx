@@ -56,7 +56,7 @@ describe("<AuditCycleDashboard/>", () => {
 
 	it("calls the stats service correctly", () => {
 		getDashboardAuditCycles.mockResolvedValue(sampleStats);
-		const r = shallow(<AuditCycleDashboard/>);
+		shallow(<AuditCycleDashboard/>);
 		expect(getDashboardAuditCycles).toBeCalled();
 	});
 

@@ -1,21 +1,15 @@
 import React, { Component } from "react";
-import { Link } from "react-router";
-
-import moment from "moment";
-import { momentDateFormat }  from "../../../config.js";
+import PropTypes from "prop-types";
 
 import { fetchAuditStoreStats } from "../service/audit_cycle_stats.js";
 
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
-import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx";
-import { King, Retweet, Inbox, Tasks, Pencil, File } from "../../components/Icons.jsx";
-import NavLink from "../../components/NavLink.jsx";
-import Panel from "../../components/Panel.jsx";
 import Loading from "../../components/Loading.jsx";
 
-import { getAuditType, getAuditStatus, getAuditApplicationStatus } from "../../utils.js";
-
 export default class AuditStoreStatusSummary extends Component{
+	static propTypes = {
+		auditCycleId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+	};
 	constructor(props){
 		super(props);
 		this.state = {};

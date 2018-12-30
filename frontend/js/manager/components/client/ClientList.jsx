@@ -1,5 +1,5 @@
 import React from "react";
-import * as ReactRedux from "react-redux";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import Loading from "../../../components/Loading.jsx";
@@ -8,6 +8,13 @@ import { Plus, King } from "../../../components/Icons.jsx";
 import { fetchClients } from "../../service/client.js";
 
 class ClientRow extends React.Component {
+	static propTypes = {
+		client: PropTypes.shape({
+			id: PropTypes.number,
+			logo_url: PropTypes.string,
+			name: PropTypes.string,
+		}),
+	};
 	render() {
 		var linkTo = `/client/${this.props.client.id}/audit_cycle`;
 		let style = {
@@ -29,33 +36,37 @@ class ClientRow extends React.Component {
 	}
 }
 
-export default class extends React.Component {
-    state = {};
+export default class ClientList extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
 
-    componentDidMount() {
-    	fetchClients().done((clients)=>this.setState({clients}));
-    }
+	state = {};
 
-    render() {
-    	if(! this.state.clients){
-    		return <Loading/>;
-    	}
+	componentDidMount() {
+		fetchClients().done((clients)=>this.setState({clients}));
+	}
 
-    	let rows = [];
-    	for(let c of this.state.clients) {
-    		rows.push(<ClientRow client={c} key={c.id}/>);
-    	}
-    	return (
-    		<div>
-    			<h2 className="page-header">
-    				<Link to="/client/add" className="btn btn-default pull-right"><Plus/> Add Client</Link>
-    				<King/> Client List
-    			</h2>
-    			<div className="row">
-    				{rows}
-    			</div>
-    			{this.props.children}
-    		</div>
-    	);
-    }
+	render() {
+		if(! this.state.clients){
+			return <Loading/>;
+		}
+
+		let rows = [];
+		for(let c of this.state.clients) {
+			rows.push(<ClientRow client={c} key={c.id}/>);
+		}
+		return (
+			<div>
+				<h2 className="page-header">
+					<Link to="/client/add" className="btn btn-default pull-right"><Plus/> Add Client</Link>
+					<King/> Client List
+				</h2>
+				<div className="row">
+					{rows}
+				</div>
+				{this.props.children}
+			</div>
+		);
+	}
 }

@@ -89,7 +89,7 @@ describe("<AuditStoreReportAttributesTable/>", () => {
 	it("calls the fetchReportAttributesByAuditCycleId prop on mount", () => {
 		const fetchReportAttributesByAuditCycleId = jest.fn();
 
-		const r = shallow(<AuditStoreReportAttributesTable
+		shallow(<AuditStoreReportAttributesTable
 			reportAttributes={sampleReportAttributes}
 			auditStore={sampleAuditStore}
 			auditStoreId={sampleAuditStore.id}

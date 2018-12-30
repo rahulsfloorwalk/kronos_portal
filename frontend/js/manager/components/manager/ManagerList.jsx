@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import { Check, Cross, Pencil, Plus, Queen } from "../../../components/Icons.jsx";
@@ -6,6 +7,13 @@ import { Check, Cross, Pencil, Plus, Queen } from "../../../components/Icons.jsx
 import { findManagers } from "../../service/manager.js";
 
 class ManagerRow extends React.Component {
+	static propTypes = {
+		manager: PropTypes.shape({
+			id: PropTypes.number,
+			email: PropTypes.string,
+			is_active: PropTypes.bool,
+		}),
+	};
 	render() {
 		var is_active = this.props.manager.is_active ? <Check/> : <Cross/>;
 		return (
@@ -20,50 +28,53 @@ class ManagerRow extends React.Component {
 	}
 }
 
-export default class extends React.Component {
-    state = {
-    	managers: [],
-    };
+export default class ManagerList extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
 
-    componentDidMount() {
-    	findManagers().then((managers) => {
-    		this.setState({
-    			managers
-    		});
-    	});
-    }
+	state = {
+		managers: [],
+	};
 
-    componentWillReceiveProps(nextProps) {
-    	console.log("componentWillReceiveProps", nextProps);
-    	this.componentDidMount();
-    }
+	componentDidMount() {
+		findManagers().then((managers) => {
+			this.setState({
+				managers
+			});
+		});
+	}
 
-    render() {
-    	let rows = [];
-    	for(let manager of this.state.managers) {
-    		rows.push(<ManagerRow manager={manager} key={manager.id}/>);
-    	}
-    	var addManagerLink = "/manager/add";
-    	return (
-    		<div>
-    			<h2 className="page-header">
-    				<Link to={addManagerLink} className="btn btn-default pull-right"><Plus/> Add Manager</Link>
-    				<Queen/> Manager
-    			</h2>
-    			<table className="table table-striped">
-    				<thead>
-    					<tr>
-    						<th>Email Address</th>
-    						<th>Active</th>
-    						<th></th>
-    					</tr>
-    				</thead>
-    				<tbody>
-    					{rows}
-    				</tbody>
-    			</table>
-    			{this.props.children}
-    		</div>
-    	);
-    }
+	componentWillReceiveProps() {
+		this.componentDidMount();
+	}
+
+	render() {
+		let rows = [];
+		for(let manager of this.state.managers) {
+			rows.push(<ManagerRow manager={manager} key={manager.id}/>);
+		}
+		var addManagerLink = "/manager/add";
+		return (
+			<div>
+				<h2 className="page-header">
+					<Link to={addManagerLink} className="btn btn-default pull-right"><Plus/> Add Manager</Link>
+					<Queen/> Manager
+				</h2>
+				<table className="table table-striped">
+					<thead>
+						<tr>
+							<th>Email Address</th>
+							<th>Active</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{rows}
+					</tbody>
+				</table>
+				{this.props.children}
+			</div>
+		);
+	}
 }

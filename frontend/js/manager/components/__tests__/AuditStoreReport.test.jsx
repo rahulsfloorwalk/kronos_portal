@@ -1,13 +1,9 @@
 import React from "react";
-import PropTypes from "prop-types";
-import { Provider } from "react-redux";
 import { shallow } from "enzyme";
-import renderer from "react-test-renderer";
 import configureStore from "redux-mock-store";
 import ReduxThunk from "redux-thunk";
 
 import { AuditStoreReport } from "../../../manager/components/AuditStoreReport";
-import types from "../../../manager/action_types";
 
 const middlewares = [ReduxThunk];
 const mockStore = configureStore(middlewares);
@@ -19,17 +15,6 @@ describe("<AuditStoreReport/>", () => {
 	const sampleClient = {
 		id: 6,
 		name: "Client Name",
-	};
-	const sampleStore = {
-		subscribe: jest.fn(),
-		dispatch: jest.fn(),
-		getState: jest.fn().mockImplementation(() => {
-			return {
-				auditStores: {
-					[sampleAuditStore.id]: sampleAuditStore,
-				},
-			};
-		}),
 	};
 
 	const sampleAuditStore = {

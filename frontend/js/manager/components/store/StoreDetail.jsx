@@ -1,14 +1,23 @@
 import React from "react";
+import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
 import { fetchStore } from "../../actions/store.js";
 
 import { Pencil, Home, King } from "../../../components/Icons.jsx";
-import Panel from "../../../components/Panel.jsx";
 import Loading from "../../../components/Loading.jsx";
+import { storePropType } from "../../prop_types";
 
 class StoreDetail extends React.Component {
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			storeId: PropTypes.string.isRequired,
+		}),
+		store: storePropType,
+		children: PropTypes.node,
+	};
 	componentDidMount() {
 		this.props.dispatch(fetchStore(this.props.params.storeId));
 	}
