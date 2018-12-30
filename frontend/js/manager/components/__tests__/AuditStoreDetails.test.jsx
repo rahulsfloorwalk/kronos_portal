@@ -58,6 +58,7 @@ describe("<AuditStoreDetails/>", () => {
 		status: "ASSIGNED",
 		earnings_per_audit: 500,
 		reimbursement: 700,
+		report_summary: "Foobar",
 		audit: {
 			id: 125432,
 			post_approval_description: "Conduct an Audit - Post Approval - Audit Description",

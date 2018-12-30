@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ReportSummary/> is rendered correctly when audit store is editable 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-tasks"
+    />
+     Report Summary
+  </h3>
+  <span>
+     
+    Foobar
+  </span>
+</div>
+`;
+
+exports[`<ReportSummary/> is rendered correctly when audit store is not editable 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-tasks"
+    />
+     Report Summary
+  </h3>
+  <span>
+     
+    Foobar
+  </span>
+</div>
+`;

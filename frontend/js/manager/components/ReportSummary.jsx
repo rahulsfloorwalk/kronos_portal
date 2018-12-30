@@ -4,16 +4,14 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Tasks } from "../../components/Icons.jsx";
 import { setReportSummary } from "../actions/audit_store.js";
+import { findSummaryByAuditStoreId } from "../selectors/audit_store";
 
 class __ReportSummary extends Component {
 
 	static propTypes = {
-		report_summary: PropTypes.string.isRequired,
-		audit_store_id: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.string,
-		]).isRequired,
-		dispatch: PropTypes.func.isRequired,
+		reportSummary: PropTypes.string.isRequired,
+		auditStoreId: PropTypes.number.isRequired,
+		onBlur: PropTypes.func.isRequired,
 		editable: PropTypes.bool.isRequired,
 	};
 
@@ -24,27 +22,29 @@ class __ReportSummary extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			report_summary: this.props.report_summary || "",
+			reportSummary: this.props.reportSummary,
 		};
 	}
 
 	componentDidMount(){
-		this.setState({ report_summary: this.props.report_summary, });
+		this.setState({ reportSummary: this.props.reportSummary, });
 	}
 
 	componentWillReceiveProps(nextProps){
-		this.setState({ report_summary: nextProps.report_summary, });
+		if(this.props.reportSummary != nextProps.reportSummary) {
+			this.setState({reportSummary: nextProps.reportSummary,});
+		}
 	}
 
 	summaryChanged = (e) => {
 		this.setState({
-			report_summary: e.target.value,
+			reportSummary: e.target.value,
 		});
 	};
 
 	onBlur = (e) => {
 		this.summaryChanged(e);
-		this.props.dispatch(setReportSummary(this.props.audit_store_id, e.target.value));
+		this.props.onBlur(this.props.auditStoreId, e.target.value);
 	};
 
 	render(){
@@ -52,11 +52,11 @@ class __ReportSummary extends Component {
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary</h3>
-					<textarea rows="5" className="form-control" value={this.state.report_summary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
+					<textarea rows="5" className="form-control" value={this.state.reportSummary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
 				</div>
 			);
 		} else {
-			const summaryText = this.props.report_summary ? <span> {this.props.report_summary}</span> : null;
+			const summaryText = this.state.reportSummary ? <span> {this.state.reportSummary}</span> : null;
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary</h3>
@@ -67,4 +67,13 @@ class __ReportSummary extends Component {
 	}
 }
 
-export default connect()(__ReportSummary);
+var mapStoreToProps = function(store, ownProps){
+	const reportSummary = findSummaryByAuditStoreId(store, ownProps.auditStoreId);
+	return {
+		reportSummary,
+	};
+};
+
+export default connect(mapStoreToProps, {
+	onBlur: setReportSummary,
+})(__ReportSummary);

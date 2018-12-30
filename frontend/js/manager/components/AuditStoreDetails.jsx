@@ -291,7 +291,7 @@ export class AuditStoreDetails extends React.Component{
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
-				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isSummaryEditable()}/>
+				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}
 			</div>
 		);

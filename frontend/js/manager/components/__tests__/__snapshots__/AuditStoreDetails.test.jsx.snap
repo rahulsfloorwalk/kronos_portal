@@ -343,6 +343,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -688,6 +692,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -1022,6 +1030,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -1374,6 +1386,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -1719,6 +1735,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -2074,6 +2094,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -2408,6 +2432,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -3178,6 +3206,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
       onBlur={[Function]}
       onChange={[Function]}
       rows="5"
+      value="Foobar"
     />
   </div>
 </div>
@@ -3513,6 +3542,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;
@@ -4283,6 +4316,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
       onBlur={[Function]}
       onChange={[Function]}
       rows="5"
+      value="Foobar"
     />
   </div>
 </div>
@@ -4618,6 +4652,10 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
       />
        Report Summary
     </h3>
+    <span>
+       
+      Foobar
+    </span>
   </div>
 </div>
 `;

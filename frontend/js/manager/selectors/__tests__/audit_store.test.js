@@ -1,5 +1,5 @@
 
-import { findAuditStoreById } from "../audit_store";
+import { findAuditStoreById, findSummaryByAuditStoreId } from "../audit_store";
 
 describe(findAuditStoreById, () => {
 	const sampleAuditStore = {
@@ -20,5 +20,29 @@ describe(findAuditStoreById, () => {
 			auditStores: {},
 		};
 		expect(findAuditStoreById(sampleStore, 5)).toBeUndefined();
+	});
+});
+
+describe("findSummaryByAuditStoreId", () => {
+	const sampleAuditStore = {
+		id: 4,
+		report_summary: "Report Summary for audit store 4",
+	};
+	it("should return the audit store summary for the audit store with given id", () => {
+		const sampleStore = {
+			auditStores: {
+				[sampleAuditStore.id]: sampleAuditStore,
+			},
+		};
+		expect(findSummaryByAuditStoreId(sampleStore, sampleAuditStore.id)).toEqual("Report Summary for audit store 4");
+	});
+
+	it("should return blank string if audit store is not found", () => {
+		const sampleStore = {
+			auditStores: {
+				[sampleAuditStore.id]: sampleAuditStore,
+			},
+		};
+		expect(findSummaryByAuditStoreId(sampleStore, 1)).toEqual("");
 	});
 });
