@@ -4,7 +4,7 @@ import sys
 from subprocess import call
 from setuptools import setup, find_packages
 
-version = '2.10.1'
+version = '2.11.0'
 
 if sys.argv[-1] == 'build_frontend':
     os.chdir('frontend')
