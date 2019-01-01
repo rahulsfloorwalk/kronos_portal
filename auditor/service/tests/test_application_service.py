@@ -1,7 +1,7 @@
 from datetime import date
 
 from django.contrib.auth.models import User, Group
-from django.test import TestCase
+from django.test import TransactionTestCase
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
 from expects import expect, equal
@@ -13,9 +13,9 @@ from auditor.service import application_service
 from auditor.tests.utils import additional_info_recipe
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from ..models import ProfileInfo, BankInfo, Preferences
+from auditor.models import ProfileInfo, BankInfo, Preferences
 
-class AuditApplicationTestCase(TestCase):
+class AuditApplicationTestCase(TransactionTestCase):
     fixtures = ['groups', 'city']
 
     def setUp(self):
@@ -302,3 +302,37 @@ class AuditApplicationTestCase(TestCase):
             status=AuditApplication.APPLIED,
         )
         self.assertAlmostEqual(1.0, application.avg_qa_rating())
+
+    def test_waitlist_sets_status_to_waitlisted(self):
+        audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+            audit=audit,
+            status=AuditApplication.APPLIED,
+        )
+
+        application = application_service.waitlist(application.id, self.manager_user)
+        expect(application.status).to(equal(AuditApplication.WAITLISTED))
+
+    def test_waitlist_raises_when_status_is_not_applied(self):
+        audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+            audit=audit,
+            status=AuditApplication.WAITLISTED,
+        )
+
+        with self.assertRaisesRegex(AppLogicError, "application cannot be waitlisted now"):
+            application_service.waitlist(application.id, self.manager_user)
+
+    def test_find_application_by_id_returns_application(self):
+        audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
+        application = self.application_recipe.make(
+            audit=audit,
+            status=AuditApplication.WAITLISTED,
+        )
+
+        application2 = application_service.find_application_by_id(application.id)
+        expect(application2).to(equal(application))
+
+    def test_find_application_by_id_raises_when_application_does_not_exist(self):
+        with self.assertRaises(ObjectNotFound):
+            application_service.find_application_by_id(45345)
