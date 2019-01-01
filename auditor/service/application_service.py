@@ -82,8 +82,8 @@ def apply(audit_id, user_id, audit_date):
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         else:
             raise AppLogicError("you cannot apply to this audit")
-    mail_notify.send_notification_mail(manager_notif_id)
-    mail_notify.send_notification_mail(auditor_notif_id)
+    mail_notify.send_notification_mail(manager_notif_id, "")
+    mail_notify.send_notification_mail(auditor_notif_id, "")
     return application
 
 
@@ -117,8 +117,8 @@ def cancel(audit_id, user_id):
             auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_CANCELED).order_by('-id')[0].id
         else:
             raise AppLogicError("you cannot cancel this application now")
-    mail_notify.send_notification_mail(manager_notif_id)
-    mail_notify.send_notification_mail(auditor_notif_id)
+    mail_notify.send_notification_mail(manager_notif_id, "")
+    mail_notify.send_notification_mail(auditor_notif_id, "")
     return application
 
 
@@ -187,8 +187,8 @@ def reject(application_id, user_actor):
             target=application.audit
         )
         auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_REJECTED).order_by('-id')[0].id
-    mail_notify.send_notification_mail(manager_notif_id)
-    mail_notify.send_notification_mail(auditor_notif_id)
+    mail_notify.send_notification_mail(manager_notif_id, "")
+    mail_notify.send_notification_mail(auditor_notif_id, "")
     return application
 
 def waitlist(application_id, user_actor):
@@ -219,8 +219,8 @@ def waitlist(application_id, user_actor):
             target=application.audit
         )
         auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_WAITLISTED).order_by('-id')[0].id
-    mail_notify.send_notification_mail(manager_notif_id)
-    mail_notify.send_notification_mail(auditor_notif_id)
+    mail_notify.send_notification_mail(manager_notif_id, "")
+    mail_notify.send_notification_mail(auditor_notif_id, "")
     return application
 
 

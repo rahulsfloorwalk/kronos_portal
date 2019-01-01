@@ -166,8 +166,8 @@ def pay(payment_id, user_actor):
                 raise AppLogicError("payment cannot be pending now")
         else:
             raise AppLogicError("Bank Details Incomplete")
-    mail_notify.send_notification_mail(manager_notif_id)
-    mail_notify.send_notification_mail(auditor_notif_id)
+    mail_notify.send_notification_mail(manager_notif_id, "")
+    mail_notify.send_notification_mail(auditor_notif_id, "")
     return payment
 
 def fail(payment_id, user_actor):
@@ -201,9 +201,9 @@ def fail(payment_id, user_actor):
         except Payment.DoesNotExist as e:
             raise ObjectNotFound from e
     # mail_notify.send_notification_mail(manager_notif_id)
-    mail_notify.send_notification_mail(auditor_notif_id)
-    mail_notify.send_notification_mail(notif_id1)
-    mail_notify.send_notification_mail(notif_id2)
+    mail_notify.send_notification_mail(auditor_notif_id, "")
+    mail_notify.send_notification_mail(notif_id1, "")
+    mail_notify.send_notification_mail(notif_id2, "")
     return payment
 
 
