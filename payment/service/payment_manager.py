@@ -4,7 +4,6 @@ import xlsxwriter
 import itertools
 from kronos import utils
 from django.utils import timezone
-from django.db import connection
 from django.db.transaction import atomic
 from django.contrib.auth.models import Group
 from auditor.models import BankInfo
@@ -103,7 +102,7 @@ def is_payment_payable(payment):
     return True
 
 
-def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor):
+def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_actor) -> (int, int):
     try:
         audit_store = audit_store_service.find_by_id(audit_store_id)
         payment = Payment()
@@ -120,7 +119,6 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
             target=payment.audit_store.audit
         )
         manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
         notify.send(
             user_actor,
             recipient=payment.user,
@@ -129,7 +127,7 @@ def add_payment_on_audit_store_accepted(audit_store_id, payment_amount, user_act
             target=payment.audit_store.audit
         )
         auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-        connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
+        return manager_notif_id, auditor_notif_id
 
     except Payment.DoesNotExist as e:
         raise ObjectNotFound from e
@@ -139,72 +137,74 @@ def clear_payment_for_audit_store(audit_store_id):
     payment.status = Payment.PAID
     payment.save()
 
-@atomic
 def pay(payment_id, user_actor):
-    payment = Payment.objects.get(pk=payment_id)
-    if is_payment_payable(payment):
-        if payment.status == Payment.PENDING:
-            payment.status = Payment.PAID
-            payment.paid_on = timezone.now()
-            payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
-            payment.save()
-            notify.send(
-                user_actor,
-                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=verbs.AUDIT_STORE_PAID,
-                action_object=payment.audit_store,
-                target=payment.audit_store
-            )
-            manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
-            notify.send(
-                user_actor,
-                recipient=payment.user,
-                verb=verbs.AUDIT_STORE_PAID,
-                action_object=payment.audit_store,
-                target=payment.audit_store
-            )
-            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
-            return payment
-        else:
-            raise AppLogicError("payment cannot be pending now")
-    else:
-        raise AppLogicError("Bank Details Incomplete")
-
-@atomic
-def fail(payment_id, user_actor):
-    try:
+    with atomic():
         payment = Payment.objects.get(pk=payment_id)
-        if payment.status == Payment.PAID:
-            payment.status = Payment.FAILED
-            payment.save()
-            notify.send(
-                user_actor,
-                recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
-                verb=verbs.PAYMENT_FAILED,
-                action_object=payment,
-                target=payment.audit_store
-            )
-            # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
-            # connection.on_commit(lambda: mail_notify.send_notification_mail(manager_notif_id))
-            notify.send(
-                user_actor,
-                recipient=payment.user,
-                verb=verbs.PAYMENT_FAILED,
-                action_object=payment,
-                target=payment.audit_store
-            )
-            auditor_notif_id = Notification.objects.filter(verb=verbs.PAYMENT_FAILED).order_by('-id')[0].id
-            connection.on_commit(lambda: mail_notify.send_notification_mail(auditor_notif_id))
-
-            # Add an additional pending payment
-            add_payment_on_audit_store_accepted(payment.audit_store.id, payment.amount, user_actor)
-            return payment
+        if is_payment_payable(payment):
+            if payment.status == Payment.PENDING:
+                payment.status = Payment.PAID
+                payment.paid_on = timezone.now()
+                payment.comment = get_payment_comment_for_paid_status(payment.audit_store)
+                payment.save()
+                notify.send(
+                    user_actor,
+                    recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                    verb=verbs.AUDIT_STORE_PAID,
+                    action_object=payment.audit_store,
+                    target=payment.audit_store
+                )
+                manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
+                notify.send(
+                    user_actor,
+                    recipient=payment.user,
+                    verb=verbs.AUDIT_STORE_PAID,
+                    action_object=payment.audit_store,
+                    target=payment.audit_store
+                )
+                auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PAID).order_by('-id')[0].id
+            else:
+                raise AppLogicError("payment cannot be pending now")
         else:
-            raise AppLogicError("Cannot fail the payment")
-    except Payment.DoesNotExist as e:
-        raise ObjectNotFound from e
+            raise AppLogicError("Bank Details Incomplete")
+    mail_notify.send_notification_mail(manager_notif_id)
+    mail_notify.send_notification_mail(auditor_notif_id)
+    return payment
+
+def fail(payment_id, user_actor):
+    with atomic():
+        try:
+            payment = Payment.objects.get(pk=payment_id)
+            if payment.status == Payment.PAID:
+                payment.status = Payment.FAILED
+                payment.save()
+                notify.send(
+                    user_actor,
+                    recipient=Group.objects.get(name=GROUP_NAME_MANAGER),
+                    verb=verbs.PAYMENT_FAILED,
+                    action_object=payment,
+                    target=payment.audit_store
+                )
+                # manager_notif_id = Notification.objects.filter(verb=verbs.AUDIT_STORE_PENDING).order_by('-id')[0].id
+                notify.send(
+                    user_actor,
+                    recipient=payment.user,
+                    verb=verbs.PAYMENT_FAILED,
+                    action_object=payment,
+                    target=payment.audit_store
+                )
+                auditor_notif_id = Notification.objects.filter(verb=verbs.PAYMENT_FAILED).order_by('-id')[0].id
+
+                # Add an additional pending payment
+                notif_id1, notif_id2 = add_payment_on_audit_store_accepted(payment.audit_store.id, payment.amount, user_actor)
+            else:
+                raise AppLogicError("Cannot fail the payment")
+        except Payment.DoesNotExist as e:
+            raise ObjectNotFound from e
+    # mail_notify.send_notification_mail(manager_notif_id)
+    mail_notify.send_notification_mail(auditor_notif_id)
+    mail_notify.send_notification_mail(notif_id1)
+    mail_notify.send_notification_mail(notif_id2)
+    return payment
 
 
 def clear_payment_for_audit_cycle(audit_cycle_id):
@@ -225,8 +225,6 @@ def find_by_audit_cycle(audit_cycle_id):
 
 def find_pending_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)
-
-
 def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id):
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     consilidated_payments = consolidate_by_user(pending_payments)
