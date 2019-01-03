@@ -94,89 +94,34 @@ def get_signed_post(file_extension):
 
 
 def complete(attachment_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        attachment.status = Attachment.ATTACHED
-        attachment.completed_at = timezone.now()
-        attachment.save()
-        return attachment
-    except (Attachment.DoesNotExist) as e:
-        raise ObjectNotFound from e
+    attachment = find_by_id(attachment_id)
+    attachment.status = Attachment.ATTACHED
+    attachment.completed_at = timezone.now()
+    attachment.save()
+    return attachment
 
 
 def upload_for_audit_store(audit_store_id, file_name, file_size, mime_type):
-    try:
-        audit_store = audit_store_service.find_by_id(audit_store_id)
-
-        check_file_size(file_size)
-
-        basename, file_extension = os.path.splitext(file_name)
-        if mime_type is None or file_extension == '':
-            raise AppLogicError("could not detect file type, please ensure you upload a known file type")
-
-        if mime_type.startswith("image/"):
-            proof_type = Attachment.PHOTO
-        elif mime_type.startswith("audio/"):
-            proof_type = Attachment.AUDIO
-        elif mime_type.startswith("video/"):
-            proof_type = Attachment.VIDEO
-        else:
-            proof_type = Attachment.OTHER
-
-        post_data = get_signed_post(file_extension)
-
-        attachment = Attachment()
-        attachment.status = Attachment.UPLOADING
-        attachment.proof_type = proof_type
-        attachment.mime_type = mime_type
-        attachment.file_name = file_name
-        attachment.file_size = file_size
-        attachment.file_slug = post_data["fields"]["key"]
-        attachment.content_object = audit_store
-
-        attachment.save()
-
-        return (post_data, attachment)
-    except AuditStore.DoesNotExist as e:
-        raise ObjectNotFound from e
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    check_file_size(file_size)
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], audit_store)
+    return (post_data, attachment)
 
 
 def upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type):
-    try:
-        audit_store = audit_store_service.find_by_id(audit_store_id)
-        report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
-
-        check_file_size(file_size)
-
-        basename, file_extension = os.path.splitext(file_name)
-        if mime_type is None or file_extension == '':
-            raise AppLogicError("could not detect file type, please ensure you upload a known file type")
-
-        if mime_type.startswith("image/"):
-            proof_type = Attachment.PHOTO
-        elif mime_type.startswith("audio/"):
-            proof_type = Attachment.AUDIO
-        elif mime_type.startswith("video/"):
-            proof_type = Attachment.VIDEO
-        else:
-            proof_type = Attachment.OTHER
-
-        post_data = get_signed_post(file_extension)
-
-        attachment = Attachment()
-        attachment.status = Attachment.UPLOADING
-        attachment.proof_type = proof_type
-        attachment.mime_type = mime_type
-        attachment.file_name = file_name
-        attachment.file_size = file_size
-        attachment.file_slug = post_data["fields"]["key"]
-        attachment.content_object = report_section
-
-        attachment.save()
-
-        return (post_data, attachment)
-    except AuditStore.DoesNotExist as e:
-        raise ObjectNotFound from e
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
+    check_file_size(file_size)
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], report_section)
+    return (post_data, attachment)
 
 def upload_for_answer(audit_store_id: int, question_id: int, file_name: str, file_size: int, mime_type: str) -> Tuple[Dict, Attachment]:
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -222,7 +167,7 @@ def upload_for_id_proof(user_id, file_name, file_size, mime_type):
 
 def get_audit_store_for_attachment(attachment_id):
     try:
-        attachment = Attachment.objects.get(pk=attachment_id)
+        attachment = find_by_id(attachment_id)
         if attachment.content_type.model_class() is AuditStore:
             return AuditStore.objects.get(pk=attachment.object_id)
 
@@ -233,15 +178,13 @@ def get_audit_store_for_attachment(attachment_id):
             return ReportSection.objects.get(pk=attachment.object_id).audit_store
 
         raise AppLogicError("Invalid Attachment Content Type")
-    except Attachment.DoesNotExist as e:
-        raise ObjectNotFound from e
     except (AuditStore.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
         _logger.warn("found orphan attachment with ID: %s", attachment_id)
         raise ObjectNotFound from e
 
 def get_auditor_for_attachment(attachment_id):
     try:
-        attachment = Attachment.objects.get(pk=attachment_id)
+        attachment = find_by_id(attachment_id)
         if attachment.content_type.model_class() is ProfileInfo:
             return ProfileInfo.objects.get(pk=attachment.object_id)
 
@@ -263,29 +206,23 @@ def find_by_profile_info(profile_info_id):
 
 
 def delete(attachment_id):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
-        attachment.status = Attachment.DELETED
-        attachment.save()
-    except (Attachment.DoesNotExist) as e:
-        raise ObjectNotFound from e
+    attachment = find_by_id(attachment_id)
+    attachment.status = Attachment.DELETED
+    attachment.save()
 
 
 def rename(attachment_id, new_name):
-    try:
-        attachment = Attachment.objects.get(pk=attachment_id)
+    attachment = find_by_id(attachment_id)
 
-        if new_name in ["", None]:
-            raise AppLogicError("new file name is invalid")
+    if new_name in ["", None]:
+        raise AppLogicError("new file name is invalid")
 
-        attachment.file_name = new_name
-        attachment.save()
-        return attachment
-    except Attachment.DoesNotExist as e:
-        raise ObjectNotFound from e
+    attachment.file_name = new_name
+    attachment.save()
+    return attachment
 
 def find_by_id(attachment_id):
     try:
-        return Attachment.objects.get(pk=attachment_id)
+        return Attachment.objects.exclude(status=Attachment.DELETED).get(pk=attachment_id)
     except Attachment.DoesNotExist as e:
         raise ObjectNotFound from e

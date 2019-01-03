@@ -6,9 +6,10 @@ from model_mommy import mommy
 from faker import Faker
 from freezegun import freeze_time
 
+from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, override_settings
-from expects import expect, equal, be_none, be_an, be_a, have_key, start_with, end_with, contain
+from expects import expect, equal, be_none, be_an, be_a, have_key, start_with, end_with, contain, be_within
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
@@ -73,17 +74,17 @@ class AttachmentServiceTestCase(TestCase):
             service.valid_file_type("image/png", "")
 
     def test_rename_renames_file(self):
-        attachment = mommy.make(Attachment, file_name="hello_world.jpg")
+        attachment = mommy.make(Attachment, status=Attachment.ATTACHED, file_name="hello_world.jpg")
         attachment = service.rename(attachment.id, "new_name")
         self.assertEqual("new_name", attachment.file_name)
 
     def test_rename_raises_when_name_is_none(self):
-        attachment = mommy.make(Attachment, file_name="hello_world.jpg")
+        attachment = mommy.make(Attachment, status=Attachment.ATTACHED, file_name="hello_world.jpg")
         with self.assertRaisesRegex(AppLogicError, "new file name is invalid"):
             attachment = service.rename(attachment.id, None)
 
     def test_rename_raises_when_name_is_empty(self):
-        attachment = mommy.make(Attachment, file_name="hello_world.jpg")
+        attachment = mommy.make(Attachment, status=Attachment.ATTACHED, file_name="hello_world.jpg")
         with self.assertRaisesRegex(AppLogicError, "new file name is invalid"):
             attachment = service.rename(attachment.id, "")
 
@@ -321,7 +322,38 @@ class AttachmentServiceTestCase(TestCase):
             service.get_audit_store_for_attachment(123)
 
     def test_get_audit_store_for_attachment_raises_when_attachment_is_orphaned(self):
-        attachment = mommy.make(Attachment, object_id=4, content_type=ContentType.objects.get_for_model(AuditStore), status=Attachment.PHOTO)
+        attachment = mommy.make(Attachment, object_id=4, content_type=ContentType.objects.get_for_model(AuditStore), status=Attachment.UPLOADING)
 
         with self.assertRaises(ObjectNotFound):
             service.get_audit_store_for_attachment(attachment.id)
+
+    def test_find_by_id_returns_attachment_with_given_id(self):
+        expected_attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
+        actual_attachment = service.find_by_id(expected_attachment.id)
+        expect(actual_attachment).to(equal(expected_attachment))
+
+    def test_find_by_id_raises_when_attachment_does_not_exist(self):
+        with self.assertRaises(ObjectNotFound):
+            service.find_by_id(435463)
+
+    def test_find_by_id_raises_when_attachment_is_deleted(self):
+        attachment = mommy.make(Attachment, status=Attachment.DELETED)
+        with self.assertRaises(ObjectNotFound):
+            service.find_by_id(attachment.id)
+
+    def test_complete_sets_attached_status(self):
+        attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
+        attachment = service.complete(attachment.id)
+        expect(attachment.status).to(equal(Attachment.ATTACHED))
+        expect(attachment.completed_at).to(be_within(timezone.now() - timedelta(seconds=1), timezone.now()))
+
+    def test_complete_sets_completed_at(self):
+        attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
+        attachment = service.complete(attachment.id)
+        expect(attachment.completed_at).to(be_within(timezone.now() - timedelta(seconds=1), timezone.now()))
+
+    def test_delete_sets_deleted_status(self):
+        attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
+        service.delete(attachment.id)
+        attachment.refresh_from_db()
+        expect(attachment.status).to(equal(Attachment.DELETED))

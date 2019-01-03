@@ -1,4 +1,5 @@
 from model_mommy import mommy
+from expects import expect, equal
 from faker import Faker
 
 from django.test import TestCase, override_settings
@@ -40,3 +41,9 @@ class AttachmentTestCase(TestCase):
                 "preview_url": "https://imgix_domain/foo/bar?auto=enhance,compress&h=500",
             }
         )
+
+    def test_extra_returns_empty_dict_when_proof_type_is_not_photo(self):
+        for proof_type in [p[0] for p in Attachment.PROOF_TYPE if p[0] is not Attachment.PHOTO]:
+            with self.subTest(proof_type=proof_type):
+                attachment = mommy.make(Attachment, file_slug="foo/bar", proof_type=proof_type)
+                expect(attachment.extra()).to(equal({}))
