@@ -7,7 +7,6 @@ from typing import Tuple, Dict
 
 from django.utils import timezone
 from django.conf import settings
-from django.contrib.auth.models import User
 
 import boto3
 
@@ -18,6 +17,7 @@ from answer.models import Answer, ReportSection
 from answer.service import report_section as report_section_service
 from answer.service import answer as answer_service
 from auditor.models import ProfileInfo
+from auditor.service import profile_info_service
 from .models import Attachment
 
 
@@ -135,35 +135,21 @@ def upload_for_answer(audit_store_id: int, question_id: int, file_name: str, fil
     return (post_data, attachment)
 
 def upload_for_id_proof(user_id, file_name, file_size, mime_type):
-    try:
-        profile_info = ProfileInfo.objects.get(user_id=user_id)
-        check_file_size(file_size)
+    profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+    check_file_size(file_size)
 
-        basename, file_extension = os.path.splitext(file_name)
-        if mime_type is None or file_extension == '':
-            raise AppLogicError("invalid file type (only image or PDF supported)")
+    basename, file_extension = parse_file_name(file_name)
+    if mime_type is None or file_extension == '':
+        raise AppLogicError("invalid file type (only image or PDF supported)")
 
-        if mime_type.startswith("image/") or mime_type == "application/pdf":
-            proof_type = Attachment.ID_PROOF
-        else:
-            raise AppLogicError("invalid file type (only image or PDF supported)")
+    if mime_type.startswith("image/") or mime_type == "application/pdf":
+        proof_type = Attachment.ID_PROOF
+    else:
+        raise AppLogicError("invalid file type (only image or PDF supported)")
 
-        post_data = get_signed_post(file_extension)
-
-        attachment = Attachment()
-        attachment.status = Attachment.UPLOADING
-        attachment.proof_type = proof_type
-        attachment.mime_type = mime_type
-        attachment.file_name = file_name
-        attachment.file_size = file_size
-        attachment.file_slug = post_data["fields"]["key"]
-        attachment.content_object = profile_info
-
-        attachment.save()
-
-        return (post_data, attachment)
-    except User.DoesNotExist as e:
-        raise ObjectNotFound from e
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], profile_info)
+    return (post_data, attachment)
 
 def get_audit_store_for_attachment(attachment_id):
     try:
@@ -182,16 +168,12 @@ def get_audit_store_for_attachment(attachment_id):
         _logger.warn("found orphan attachment with ID: %s", attachment_id)
         raise ObjectNotFound from e
 
-def get_auditor_for_attachment(attachment_id):
-    try:
-        attachment = find_by_id(attachment_id)
-        if attachment.content_type.model_class() is ProfileInfo:
-            return ProfileInfo.objects.get(pk=attachment.object_id)
+def get_auditor_for_attachment(attachment_id: int) -> ProfileInfo:
+    attachment = find_by_id(attachment_id)
+    if attachment.content_type.model_class() is ProfileInfo:
+        return profile_info_service.find_profile_info_by_id(attachment.object_id)
 
-        raise AppLogicError("Invalid Attachment Content Type")
-
-    except ProfileInfo.DoesNotExist as e:
-        raise ObjectNotFound from e
+    raise AppLogicError("Invalid Attachment Content Type")
 
 
 def find_by_audit_store(audit_store_id):

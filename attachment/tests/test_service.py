@@ -9,7 +9,7 @@ from freezegun import freeze_time
 from django.utils import timezone
 from django.contrib.contenttypes.models import ContentType
 from django.test import TestCase, override_settings
-from expects import expect, equal, be_none, be_an, be_a, have_key, start_with, end_with, contain, be_within
+from expects import expect, equal, be_none, be_an, be_a, have_key, start_with, end_with, contain, be_within, contain_only
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
@@ -284,6 +284,21 @@ class AttachmentServiceTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "invalid file type \\(only image or PDF supported\\)"):
             service.upload_for_id_proof(profile_info.user_id, self.file_name, self.file_size, "audio/ogg")
 
+    def test_upload_for_id_proof_raises_when_mime_type_is_none(self):
+        profile_info = mommy.make(ProfileInfo, user__email=fake.email)
+
+        with self.assertRaisesRegex(AppLogicError, "invalid file type \\(only image or PDF supported\\)"):
+            service.upload_for_id_proof(profile_info.user_id, self.file_name, self.file_size, None)
+
+    def test_upload_for_id_proof_raises_when_filename_does_not_have_extension(self):
+        profile_info = mommy.make(ProfileInfo, user__email=fake.email)
+
+        with self.assertRaisesRegex(AppLogicError, "invalid file type \\(only image or PDF supported\\)"):
+            service.upload_for_id_proof(profile_info.user_id, "foobar", self.file_size, self.mime_type)
+
+    def test_upload_for_id_proof_raises_when_user_does_not_exist(self):
+        with self.assertRaises(ObjectNotFound):
+            service.upload_for_id_proof(43534, self.file_name, self.file_size, self.mime_type)
 
     def test_get_audit_store_for_attachment_returns_audit_store_for_report_attachment(self):
         audit_cycle = mommy.make(AuditCycle)
@@ -357,3 +372,43 @@ class AttachmentServiceTestCase(TestCase):
         service.delete(attachment.id)
         attachment.refresh_from_db()
         expect(attachment.status).to(equal(Attachment.DELETED))
+
+    def test_get_auditor_for_attachment_returns_profile_info(self):
+        expected_profile_info = mommy.make(ProfileInfo, user__email=fake.email)
+        attachment = mommy.make(Attachment, status=Attachment.UPLOADING, content_object=expected_profile_info)
+        actual_profile = service.get_auditor_for_attachment(attachment.id)
+        expect(actual_profile).to(equal(expected_profile_info))
+
+    def test_get_auditor_for_attachment_raises_when_attachment_object_is_not_a_profile_info(self):
+        audit_store = mommy.make(AuditStore, user__email=fake.email())
+        attachment = mommy.make(Attachment, status=Attachment.UPLOADING, content_object=audit_store)
+        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type"):
+            service.get_auditor_for_attachment(attachment.id)
+
+    def test_find_by_profile_info_returns_attachments_for_given_profle(self):
+        profile_info = mommy.make(ProfileInfo, user__email=fake.email)
+        attachments = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=profile_info, _quantity=2)
+        mommy.make(Attachment, status=Attachment.UPLOADING, content_object=profile_info)
+
+        actual_attachments = list(service.find_by_profile_info(profile_info.id))
+        expect(actual_attachments).to(contain_only(*attachments))
+
+    def test_find_by_audit_store_returns_attachments_for_given_profle(self):
+        audit_store = mommy.make(AuditStore, user__email=fake.email())
+        attachments = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=audit_store, _quantity=2)
+        mommy.make(Attachment, status=Attachment.UPLOADING, content_object=audit_store)
+
+        actual_attachments = list(service.find_by_audit_store(audit_store.id))
+        expect(actual_attachments).to(contain_only(*attachments))
+
+    def test_find_by_audit_store_and_section_returns_attachments_for_given_profle(self):
+        audit_cycle = mommy.make(AuditCycle)
+        audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, user__email=fake.email())
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        report_section = mommy.make(ReportSection, audit_store=audit_store, section=section)
+
+        attachments = mommy.make(Attachment, status=Attachment.ATTACHED, content_object=report_section, _quantity=2)
+        mommy.make(Attachment, status=Attachment.UPLOADING, content_object=report_section)
+
+        actual_attachments = list(service.find_by_audit_store_and_section(audit_store.id, section.id))
+        expect(actual_attachments).to(contain_only(*attachments))

@@ -12,6 +12,12 @@ def find_profile_info_by_user_id(user_id):
     except ProfileInfo.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_profile_info_by_id(profile_info_id):
+    try:
+        return ProfileInfo.objects.get(pk=profile_info_id)
+    except ProfileInfo.DoesNotExist as e:
+        raise ObjectNotFound from e
+
 def set_mobile_number(profile_info, mobile_number):
     """Performs basic validation and unique checks and sets the mobile_number if satisfied"""
     try:
