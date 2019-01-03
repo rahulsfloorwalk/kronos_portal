@@ -10,7 +10,6 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
-from attachment import service
 from attachment import service_auditor
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
@@ -171,6 +170,30 @@ class AttachmentAuditorServiceTestCase(TestCase):
         )
         expect(completed_attachment.status).to(equal(Attachment.ATTACHED))
 
+    def test_complete_for_auditor_changes_status_to_attached_when_attachment_is_an_id_proof(self):
+        test_attachment = self.attachment_recipe.make(
+            status=Attachment.ATTACHED,
+            proof_type=Attachment.ID_PROOF,
+            content_object=self.profile_info,
+        )
+        completed_attachment = service_auditor.complete_for_auditor(
+            test_attachment.id,
+            self.auditor_user.id,
+        )
+        expect(completed_attachment.status).to(equal(Attachment.ATTACHED))
+
+    def test_complete_for_auditor_raises_when_attachment_is_an_id_proof_but_user_id_is_different(self):
+        test_attachment = self.attachment_recipe.make(
+            status=Attachment.ATTACHED,
+            proof_type=Attachment.ID_PROOF,
+            content_object=self.profile_info,
+        )
+        with self.assertRaises(ObjectNotFound):
+            service_auditor.complete_for_auditor(
+                test_attachment.id,
+                self.another_auditor_user.id,
+            )
+
     def test_complete_for_auditor_raises_exception_when_user_is_different(self):
         audit_store = self.audit_store_recipe.make()
         section = mommy.make(Section, audit_cycle=self.audit_cycle)
@@ -211,8 +234,28 @@ class AttachmentAuditorServiceTestCase(TestCase):
             attachment.id,
             self.auditor_user.id,
         )
-        deleted_attachment = service.find_by_id(attachment.id)
-        self.assertEqual(Attachment.DELETED, deleted_attachment.status)
+        attachment.refresh_from_db()
+        self.assertEqual(Attachment.DELETED, attachment.status)
+
+    def test_delete_for_auditor_raises_exception_when_user_is_different(self):
+        audit_store = self.audit_store_recipe.make()
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        attachment = self.attachment_recipe.make(status=Attachment.UPLOADING, content_object=report_section)
+        with self.assertRaises(ObjectNotFound):
+            service_auditor.delete_for_auditor(
+                attachment.id,
+                self.another_auditor_user.id,
+            )
+
+    def test_delete_for_auditor_raises_exception_when_contenttype_is_different(self):
+        section = mommy.make(Section, audit_cycle=self.audit_cycle)
+        attachment = self.attachment_recipe.make(status=Attachment.UPLOADING, content_object=section)
+        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type detected"):
+            service_auditor.delete_for_auditor(
+                attachment.id,
+                self.another_auditor_user.id,
+            )
 
     def test_delete_for_auditor_raises_exception_when_report_status_is_not_acknowledged(self):
         audit_store = self.audit_store_recipe.make(status=AuditStore.ASSIGNED)
@@ -224,3 +267,29 @@ class AttachmentAuditorServiceTestCase(TestCase):
                 attachment.id,
                 self.auditor_user.id,
             )
+
+    def test_delete_for_auditor_changes_status_to_deleted_when_attachment_is_an_id_proof(self):
+        test_attachment = self.attachment_recipe.make(
+            status=Attachment.ATTACHED,
+            proof_type=Attachment.ID_PROOF,
+            content_object=self.profile_info,
+        )
+        service_auditor.delete_for_auditor(
+            test_attachment.id,
+            self.auditor_user.id,
+        )
+        test_attachment.refresh_from_db()
+        expect(test_attachment.status).to(equal(Attachment.DELETED))
+
+    def test_delete_for_auditor_raises_when_attachment_is_an_id_proof_but_user_id_is_different(self):
+        test_attachment = self.attachment_recipe.make(
+            status=Attachment.ATTACHED,
+            proof_type=Attachment.ID_PROOF,
+            content_object=self.profile_info,
+        )
+        with self.assertRaises(ObjectNotFound):
+            service_auditor.delete_for_auditor(
+                test_attachment.id,
+                3423,
+            )
+

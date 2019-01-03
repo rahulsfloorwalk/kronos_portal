@@ -3,7 +3,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from auditor.models import ProfileInfo
 from audit_store.models import AuditStore
 import audit_store.service as audit_store_service
-
+from auditor.service import profile_info_service
 from answer.models import ReportSection
 from answer.service import report_section_auditor as report_section_auditor_service
 from answer.service import answer_auditor as answer_auditor_service
@@ -35,11 +35,8 @@ def find_by_audit_store_and_section_for_auditor(audit_store_id, section_id, user
     return attachment_service.find_by_audit_store_and_section(audit_store_id, report_section.section_id)
 
 def find_id_proof_for_auditor(user_id):
-    try:
-        profile_info = ProfileInfo.objects.get(user_id=user_id)
-        return attachment_service.find_by_profile_info(profile_info.id)
-    except ProfileInfo.DoesNotExist as e:
-        raise ObjectNotFound from e
+    profile_info = profile_info_service.find_profile_info_by_user_id(user_id)
+    return attachment_service.find_by_profile_info(profile_info.id)
 
 def complete_for_auditor(attachment_id, user_id):
 
