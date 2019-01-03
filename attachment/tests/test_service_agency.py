@@ -9,7 +9,6 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 from attachment.models import Attachment
 from questionnaire.models import Section, Question
 from answer.models import ReportSection, Answer
-from attachment import service as attachment_service
 from attachment import service_agency as attachment_agency_service
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
@@ -208,7 +207,7 @@ class AttachmentAgencyServiceTestCase(TestCase):
             content_type=ContentType.objects.get_for_model(Section),
             object_id=report_section.id,
         )
-        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type detected"):
+        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type"):
             attachment_agency_service.complete_for_agency(
                 attachment.id,
                 self.another_agency_user.id,
@@ -254,10 +253,52 @@ class AttachmentAgencyServiceTestCase(TestCase):
             attachment.id,
             self.agency_user.id,
         )
-        deleted_attachment = attachment_service.find_by_id(attachment.id)
-        self.assertEqual(Attachment.DELETED, deleted_attachment.status)
+        attachment.refresh_from_db()
+        self.assertEqual(Attachment.DELETED, attachment.status)
 
-    def test_delete_for_agency_raises_exception(self):
+    def test_delete_for_agency_raises_exception_when_user_is_different(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+                                 audit__audit_cycle=audit_cycle)
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        attachment = mommy.make(
+            Attachment,
+            status=Attachment.UPLOADING,
+            file_name=self.test_file,
+            file_size=self.test_size,
+            mime_type=self.test_mime_type,
+            content_type=ContentType.objects.get_for_model(ReportSection),
+            object_id=report_section.id,
+        )
+        with self.assertRaises(ObjectNotFound):
+            attachment_agency_service.delete_for_agency(
+                attachment.id,
+                self.another_agency_user.id,
+            )
+
+    def test_delete_for_agency_raises_exception_when_contenttype_is_different(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
+                                 audit__audit_cycle=audit_cycle)
+        section = mommy.make(Section, audit_cycle=audit_cycle)
+        report_section = mommy.make(ReportSection, section=section, audit_store=audit_store)
+        attachment = mommy.make(
+            Attachment,
+            status=Attachment.UPLOADING,
+            file_name=self.test_file,
+            file_size=self.test_size,
+            mime_type=self.test_mime_type,
+            content_type=ContentType.objects.get_for_model(Section),
+            object_id=report_section.id,
+        )
+        with self.assertRaisesRegex(AppLogicError, "Invalid Attachment Content Type"):
+            attachment_agency_service.delete_for_agency(
+                attachment.id,
+                self.another_agency_user.id,
+            )
+
+    def test_delete_for_agency_raises_exception_when_audit_store_not_acknowledged(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         audit_store = mommy.make(AuditStore, status=AuditStore.ASSIGNED, user=self.agency_user,
                                  audit__audit_cycle=audit_cycle)
