@@ -5,7 +5,7 @@ from django.test import TestCase
 from model_mommy import mommy
 from expects import expect, equal
 
-from kronos.exceptions import AppLogicError, ObjectNotFound
+from kronos.exceptions import ObjectNotFound
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from auditor.models import ProfileInfo
 from auditor.service import profile_info_service

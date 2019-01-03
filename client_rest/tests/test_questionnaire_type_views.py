@@ -64,7 +64,7 @@ class QuestionnaireTypesByClientViewTestCase(APITestCase):
     def test_get_gets_questionnaire_types_for_current_client(self):
         self.login()
 
-        with patch.object(questionnaire_type_client_service, 'find_questionnaire_types_for_client_by_user', return_value=self.sample_questionnaire_types()) as mock:
+        with patch.object(questionnaire_type_client_service, 'find_questionnaire_types_for_client_by_user', return_value=self.sample_questionnaire_types(), autospec=True) as mock:
             response = self.client.get(reverse('client_rest:questionnaire_types_by_client_view'))
 
         mock.assert_called_with(self.client_user)
