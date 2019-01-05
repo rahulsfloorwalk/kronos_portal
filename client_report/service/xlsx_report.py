@@ -1,30 +1,21 @@
 import xlsxwriter
 import io
-from kronos.exceptions import ObjectNotFound, AppLogicError
-from audit_store.models import AuditStore
+from audit_store import service_client as audit_store_service_client
 
 not_applicable_text = "N/A"
 
-def get_xlsx_report(audit_store_id, client_id):
-    try:
-        audit_store = AuditStore.objects.get(pk=audit_store_id)
-    except AuditStore.DoesNotExist as e:
-        raise ObjectNotFound from e
-
-    valid_client = audit_store.audit.store.client
-    if (valid_client.id == int(client_id)):
-        sections = list(audit_store.audit.audit_cycle.sections.all().order_by('sequence'))
-        answers = audit_store.answers.all()
-        sorted_answers = sorted(
-            sorted(answers, key=lambda answer:answer.question.sequence),
-            key=lambda answer:answer.question.section.sequence
-        )
-        report_sections = audit_store.report_sections.all()
-        sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
-        data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
-        return write_data(data), name
-    else:
-        raise AppLogicError("Invalid Client")
+def get_xlsx_report_for_clientuser(audit_store_id, user):
+    audit_store = audit_store_service_client.find_by_id_for_clientuser(audit_store_id, user)
+    sections = list(audit_store.audit.audit_cycle.sections.all().order_by('sequence'))
+    answers = audit_store.answers.all()
+    sorted_answers = sorted(
+        sorted(answers, key=lambda answer:answer.question.sequence),
+        key=lambda answer:answer.question.section.sequence
+    )
+    report_sections = audit_store.report_sections.all()
+    sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
+    data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
+    return write_data(data), name
 
 def create_text_structure(sections, answers, report_sections, audit_store):
     details_section = get_details_section(audit_store, report_sections, sections)
