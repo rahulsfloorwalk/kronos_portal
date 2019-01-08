@@ -6,19 +6,20 @@ from setuptools import setup, find_packages
 
 version = '2.11.2'
 
-if sys.argv[-1] == 'build_frontend':
-    os.chdir('frontend')
-    call(["npm","install"])
-    call(["npm","run","build-prod"])
-    os.chdir('..')
-
-    sys.exit()
-
-if sys.argv[-2] == 'bump':
-    call(["bumpversion", "--commit", "--tag", "--current-version", version, sys.argv[-1], "setup.py", "./frontend/package.json"])
-    sys.exit()
-
 if __name__ == "__main__":
+
+    if sys.argv[-1] == 'build_frontend':
+        os.chdir('frontend')
+        call(["npm","install"])
+        call(["npm","run","build-prod"])
+        os.chdir('..')
+
+        sys.exit()
+
+    if sys.argv[-2] == 'bump':
+        call(["bumpversion", "--commit", "--tag", "--current-version", version, sys.argv[-1], "setup.py", "./frontend/package.json"])
+        sys.exit()
+
     setup(
         name='kronos',
         version=version,
