@@ -42,7 +42,7 @@ class ReportAttribute(Model):
     json_id = CharField(db_column='json_id', max_length=20, blank=False)
     label = CharField(db_column='label', max_length=50, blank=False)
     audit_cycle = ForeignKey('audit.AuditCycle', db_column='audit_cycle_id', related_name='report_attributes', on_delete=PROTECT)
-    attribute_data = JSONField(db_column='attribute_data', default=dict(), blank=False)
+    attribute_data = JSONField(db_column='attribute_data', default=dict, blank=False)
 
     def clean(self):
         try:
