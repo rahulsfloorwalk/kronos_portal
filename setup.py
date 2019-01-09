@@ -1,3 +1,4 @@
+#!/bin/env python
 import os
 import sys
 
@@ -18,6 +19,10 @@ if __name__ == "__main__":
 
     if sys.argv[-2] == 'bump':
         call(["bumpversion", "--commit", "--tag", "--current-version", version, sys.argv[-1], "setup.py", "./frontend/package.json"])
+        sys.exit()
+
+    if sys.argv[-1] == 'test':
+        call(["pytest"])
         sys.exit()
 
     setup(
