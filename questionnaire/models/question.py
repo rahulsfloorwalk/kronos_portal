@@ -23,7 +23,24 @@ class Question(Model):
         QUESTION_DATA_V1,
     )
 
-    QUESTION_DATA_SCHEMA_V1 = {
+    QUESTION_DATA_PLAIN_SCHEMA_V1 = {
+        "type": "object",
+        "required": ["version"],
+        "properties": {
+            "version": {
+                "type": "integer",
+            },
+            "impact_factors": {
+                "type": "array",
+                "uniqueItems": True,
+                "items": {
+                    "type": "string",
+                }
+            },
+        },
+    }
+
+    QUESTION_DATA_MUTEX_SCHEMA_V1 = {
         "type": "object",
         "required": ["version", "options"],
         "properties": {
@@ -51,6 +68,13 @@ class Question(Model):
                     },
                 }
             },
+            "impact_factors": {
+                "type": "array",
+                "uniqueItems": True,
+                "items": {
+                    "type": "string",
+                }
+            },
         },
     }
 
@@ -62,15 +86,23 @@ class Question(Model):
     question_type = CharField(db_column='question_type', max_length=20, choices=QUESTION_TYPE, default=PLAIN, blank=False)
     question_data = JSONField(db_column='question_data', default=dict, blank=False)
 
-    def __validate_mutex_data(self):
-        def _has_unique_key(a_list_of_dicts, unique_key):
-            values = [d[unique_key] for d in a_list_of_dicts]
-            return len(values) is len(set(values))
+    def __has_unique_key(self, a_list_of_dicts, unique_key):
+        values = [d[unique_key] for d in a_list_of_dicts]
+        return len(values) is len(set(values))
+
+    def __validate_v1_data(self):
 
         data = self.question_data
-        if data.get("version") is self.QUESTION_DATA_V1:
+
+        if self.question_type == self.PLAIN:
+            if self.question_data != {}:
+                try:
+                    validate(self.question_data, self.QUESTION_DATA_PLAIN_SCHEMA_V1)
+                except ValidationError as v:
+                    raise AppLogicError(v.message) from v
+        elif self.question_type == self.MUTEX:
             try:
-                validate(self.question_data, self.QUESTION_DATA_SCHEMA_V1)
+                validate(self.question_data, self.QUESTION_DATA_MUTEX_SCHEMA_V1)
             except ValidationError as v:
                 raise AppLogicError(v.message) from v
 
@@ -80,26 +112,31 @@ class Question(Model):
                     raise AppLogicError("option marks cannot be greater than max marks")
 
             # check for unique sequences
-            if not _has_unique_key(data["options"], "sequence"):
+            if not self.__has_unique_key(data["options"], "sequence"):
                 raise AppLogicError("option sequences must be unique")
 
             # check for unique values
-            if not _has_unique_key(data["options"], "value"):
+            if not self.__has_unique_key(data["options"], "value"):
                 raise AppLogicError("option values must be unique")
         else:
-            raise AppLogicError("unknown version for question_data")
+            raise AppLogicError("unknown question_type")
 
-    def __validate_plain_data(self):
-        if self.question_data != {}:
-            raise AppLogicError("question_data must be empty")
+    def __question_data_version(self):
+        version = self.question_data.get("version") in self.QUESTION_DATA_VERSIONS
+        if self.question_type is Question.PLAIN:
+            if self.question_data == {}:
+                return self.QUESTION_DATA_V1
+            else:
+                return version
+        else:
+            return version
 
     def clean(self):
-        if self.question_type == self.PLAIN:
-            self.__validate_plain_data()
-        elif self.question_type == self.MUTEX:
-            self.__validate_mutex_data()
+        question_data_version = self.__question_data_version()
+        if question_data_version == self.QUESTION_DATA_V1:
+            self.__validate_v1_data()
         else:
-            raise AppLogicError("unknown question_type")
+            raise AppLogicError("unknown version for question_data")
 
     def __str__(self):
         return 'Question({}): {}, {}'.format(self.id, self.question_txt, self.max_marks)
