@@ -113,7 +113,7 @@ jobs:
           name: run tests and generate reports
           command: |
             . venv/bin/activate
-            coverage run manage.py test --verbosity=2 --with-xunit --xunit-file=test-results/xunittest.xml
+            coverage run -m pytest
             coverage html
             coverage report --fail-under=75
 

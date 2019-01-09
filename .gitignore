@@ -11,4 +11,5 @@ kronos.egg-info/
 dist/
 celerybeat-schedule
 htmlcov/
+test-results/
 .coverage
