@@ -39,6 +39,7 @@ class TestQuestionModel:
                     question.clean()
 
         class TestMutexQuestionType:
+            question_type = Question.MUTEX
 
             def test_clean_does_not_raise_for_valid_question_data(self):
                 question_data = {
