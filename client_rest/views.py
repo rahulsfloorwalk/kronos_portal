@@ -144,6 +144,17 @@ class AuditStoreView(APIView):
         audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
         return Response(audit_stores)
 
+
+class ImpactFactorByAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_store_id, format=None):
+        impact_factors = audit_store_client_service.find_impact_factors_by_id_for_clientuser(audit_store_id, request.user)
+        return Response(impact_factors)
+
+
 class SectionByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

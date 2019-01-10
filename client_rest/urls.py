@@ -30,6 +30,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_section$', views.ReportSectionByAuditStore.as_view(), name='report_section_by_audit_store'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/ears_report$', views.AuditStoreEARSReport.as_view(), name='audit_store_ears_report'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/impact_factor$', views.ImpactFactorByAuditStore.as_view(), name='audit_store_impact_factor'),
     url(r'audit_store/upcoming$', views.AuditStoreUpcoming.as_view(), name='audit_store_upcoming'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreIdView.as_view(), name='audit_store_id_view'),
     url(r'store/(?P<store_id>[0-9]+)/audit_store$', views.AuditStoreByStore.as_view(), name='audit_store_by_store'),
