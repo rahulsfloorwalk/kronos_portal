@@ -50,4 +50,6 @@ class AuditStoreClientServiceTestCase(TestCase):
             question = mommy.make(Question, section__audit_cycle_id=audit_store.audit.audit_cycle_id, max_marks=7, question_data=question_data)
             mommy.make(Answer, question=question, marks_obtained=i % 7, audit_store=audit_store)
         impact_factors = client_service.find_impact_factors_by_id_for_clientuser(audit_store.id, self.client_admin)
-        expect(impact_factors).to(have_keys(Foo1=39, Foo2=39, Foo3=21))
+        expect(impact_factors[0]).to(have_keys(name='Foo1', marks_obtained=19, total_marks=49, percentage=39))
+        expect(impact_factors[1]).to(have_keys(name='Foo2', marks_obtained=11, total_marks=28, percentage=39))
+        expect(impact_factors[2]).to(have_keys(name='Foo3', marks_obtained=3, total_marks=14, percentage=21))

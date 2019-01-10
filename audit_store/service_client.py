@@ -23,7 +23,7 @@ def _get_total_marks_for_answers(answers):
 
 
 def find_impact_factors_by_id_for_clientuser(audit_store_id, user):
-    impact_factor_map = {}
+    impact_factors_arr = []
     audit_store = find_by_id_for_clientuser(audit_store_id, user)
     impact_factors = question_service.find_impact_factors_by_audit_cycle(audit_store.audit.audit_cycle_id)
     for impact_factor in impact_factors:
@@ -32,8 +32,15 @@ def find_impact_factors_by_id_for_clientuser(audit_store_id, user):
         marks_obtained = _get_total_marks_for_answers(answers)
         total_marks = _get_total_marks_for_questions(questions)
         if total_marks > 0:
-            impact_factor_map[impact_factor] = round(marks_obtained*100.0/total_marks)
-    return impact_factor_map
+            impact_factor_obj = {
+                'name': impact_factor,
+                'marks_obtained': marks_obtained,
+                'total_marks': total_marks,
+                'percentage': round(marks_obtained*100.0/total_marks)
+            }
+            impact_factors_arr.append(impact_factor_obj)
+    impact_factors_arr.sort(key=lambda x: x['name'])
+    return impact_factors_arr
 
 
 def find_by_id_for_clientuser(audit_store_id, user):
