@@ -1,10 +1,12 @@
-var webpack = require('webpack');
+/* global module:false */
 
-var baseConfig = require('./webpack.config');
+const webpack = require("webpack");
+
+const baseConfig = require("./webpack.config");
 
 module.exports = Object.assign({}, baseConfig, {
 	output: Object.assign({}, baseConfig.output, {
-		filename: '[name].[chunkhash].bundle.js',
+		filename: "[name].[chunkhash].bundle.js",
 	}),
 	plugins : baseConfig.plugins.concat([
 		new webpack.DefinePlugin({
