@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImpactFactorTags when there are no impact factors renders nothing 1`] = `<div />`;
+
+exports[`ImpactFactorTags when there some impact factors renders the tags for every impact factor 1`] = `
+<div>
+  <span>
+    <span
+      className="badge"
+    >
+      Shell
+    </span>
+     
+  </span>
+  <span>
+    <span
+      className="badge"
+    >
+      British
+    </span>
+     
+  </span>
+  <span>
+    <span
+      className="badge"
+    >
+      Hindustan
+    </span>
+     
+  </span>
+</div>
+`;

@@ -7,6 +7,8 @@ import { Cross, Pencil } from "../../../components/Icons.jsx";
 import { getQuestionType } from "../../../utils.js";
 import { questionPropType } from "./prop_types";
 
+import ImpactFactorTags from "./ImpactFactorTags.jsx";
+
 export default class QuestionRow extends React.Component {
 	static propTypes = {
 		q: questionPropType,
@@ -18,6 +20,9 @@ export default class QuestionRow extends React.Component {
 			<tr>
 				<td>{this.props.q.sequence}</td>
 				<td>
+					<div className="pull-right">
+						<ImpactFactorTags impactFactors={this.props.q.question_data && this.props.q.question_data.impact_factors}/>
+					</div>
 					{this.props.q.question_txt}<br/>
 					<span className="text-muted">{
 						this.props.q.question_type === "MUTEX"
