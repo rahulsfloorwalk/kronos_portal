@@ -23,6 +23,15 @@ class Question(Model):
         QUESTION_DATA_V1,
     )
 
+    IMPACT_FACTORS_SCHEMA = {
+        "type": "array",
+        "uniqueItems": True,
+        "items": {
+            "minLength": 1,
+            "type": "string",
+        },
+    }
+
     QUESTION_DATA_PLAIN_SCHEMA_V1 = {
         "type": "object",
         "required": ["version"],
@@ -30,13 +39,7 @@ class Question(Model):
             "version": {
                 "type": "integer",
             },
-            "impact_factors": {
-                "type": "array",
-                "uniqueItems": True,
-                "items": {
-                    "type": "string",
-                }
-            },
+            "impact_factors": IMPACT_FACTORS_SCHEMA,
         },
     }
 
@@ -68,13 +71,7 @@ class Question(Model):
                     },
                 }
             },
-            "impact_factors": {
-                "type": "array",
-                "uniqueItems": True,
-                "items": {
-                    "type": "string",
-                }
-            },
+            "impact_factors": IMPACT_FACTORS_SCHEMA,
         },
     }
 

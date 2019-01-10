@@ -38,6 +38,15 @@ class TestQuestionModel:
                 with pytest.raises(AppLogicError, match="has non-unique elements"):
                     question.clean()
 
+            def test_clean_raises_when_impact_factors_are_empty(self):
+                question_data = {
+                    "version": 1,
+                    "impact_factors": ["Foo", "Bar", ""],
+                }
+                question = Question(max_marks=1, question_type=self.question_type, question_data=question_data)
+                with pytest.raises(AppLogicError, match=".* is too short"):
+                    question.clean()
+
         class TestMutexQuestionType:
             question_type = Question.MUTEX
 
@@ -198,4 +207,25 @@ class TestQuestionModel:
                 }
                 question = Question(max_marks=1, question_type=self.question_type, question_data=question_data)
                 with pytest.raises(AppLogicError, match="has non-unique elements"):
+                    question.clean()
+
+            def test_clean_raises_when_impact_factors_are_empty(self):
+                question_data = {
+                    "version": 1,
+                    "options": [
+                        {
+                            "sequence": 1,
+                            "value": "Yes",
+                            "marks": 2,
+                        },
+                        {
+                            "sequence": 2,
+                            "value": "No",
+                            "marks": 1,
+                        },
+                    ],
+                    "impact_factors": ["Foo", "Bar", ""],
+                }
+                question = Question(max_marks=1, question_type=self.question_type, question_data=question_data)
+                with pytest.raises(AppLogicError, match=".* is too short"):
                     question.clean()
