@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImpactFactorInput renders a pre filled form 1`] = `
+<input
+  className="form-control"
+  name="sequence"
+  onChange={[Function]}
+  placeholder="impact factors"
+  type="text"
+  value="Einstein,Newton"
+/>
+`;
+
+exports[`ImpactFactorInput renders an empty form 1`] = `
+<input
+  className="form-control"
+  name="sequence"
+  onChange={[Function]}
+  placeholder="impact factors"
+  type="text"
+  value=""
+/>
+`;
