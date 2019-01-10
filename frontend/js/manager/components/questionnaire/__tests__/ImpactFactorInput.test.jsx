@@ -28,6 +28,18 @@ describe(ImpactFactorInput, () => {
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
+	it("re-renders a pre filled form when the props change", () => {
+		const sampleTags = ["Einstein", "Newton"];
+
+		const r = shallow(<ImpactFactorInput
+			impactFactors={sampleTags}
+			onChange={onChange}
+		/>);
+
+		r.setProps({ impactFactors: [...sampleTags, "Galileo"] });
+		expect(r.find("input").prop("value")).toEqual("Einstein,Newton,Galileo");
+	});
+
 	it("calls onChange with the split values", () => {
 		const actualInput = "Einstein, Newton";
 		const expectedTags = ["Einstein", "Newton"];
@@ -39,6 +51,9 @@ describe(ImpactFactorInput, () => {
 		r.find("input").simulate("change", {
 			target: { value: actualInput },
 		});
+
+		//lose focus
+		r.find("input").simulate("blur");
 		expect(onChange).toBeCalledWith(expectedTags);
 	});
 });

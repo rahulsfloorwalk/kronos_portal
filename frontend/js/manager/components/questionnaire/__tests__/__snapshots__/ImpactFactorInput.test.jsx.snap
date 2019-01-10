@@ -4,6 +4,7 @@ exports[`ImpactFactorInput renders a pre filled form 1`] = `
 <input
   className="form-control"
   name="sequence"
+  onBlur={[Function]}
   onChange={[Function]}
   placeholder="impact factors"
   type="text"
@@ -15,6 +16,7 @@ exports[`ImpactFactorInput renders an empty form 1`] = `
 <input
   className="form-control"
   name="sequence"
+  onBlur={[Function]}
   onChange={[Function]}
   placeholder="impact factors"
   type="text"
