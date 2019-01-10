@@ -5,31 +5,32 @@ import { Plus, Cross } from "../../../components/Icons.jsx";
 
 export default class OptionBuilder extends Component{
 	static propTypes = {
-		question_data: PropTypes.object,
-		onChange: PropTypes.func,
+		options: PropTypes.arrayOf(PropTypes.shape({
+			sequence: PropTypes.number,
+			value: PropTypes.string,
+			marks: PropTypes.number,
+		})),
+		onChange: PropTypes.func.isRequired,
 	};
+
+	static defaultOptions = [
+		{
+			sequence: 1,
+			value: "Yes",
+			marks: 1,
+		},
+		{
+			sequence: 2,
+			value: "No",
+			marks: 0,
+		},
+	];
 
 	constructor(props){
 		super(props);
 
-		let question_data = Object.assign({}, {
-			version: 1,
-			options: [
-				{
-					sequence: 1,
-					value: "Yes",
-					marks: 1,
-				},
-				{
-					sequence: 2,
-					value: "No",
-					marks: 0,
-				},
-			],
-		}, props.question_data);
-
 		this.state = {
-			question_data
+			options: props.options.length > 0 ? props.options : OptionBuilder.defaultOptions,
 		};
 	}
 
@@ -38,48 +39,41 @@ export default class OptionBuilder extends Component{
 	}
 
 	notifyOptionsChanged = () => {
-		if(this.props.onChange){
-			this.props.onChange(this.state.question_data);
-		}
+		this.props.onChange(this.state.options);
 	};
 
 	setOptions = (newOptions) => {
 		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
-				question_data: Object.assign({}, prevState.question_data, {
-					options: newOptions
-				})
+				options: newOptions,
 			});
 		}, this.notifyOptionsChanged);
 	};
 
 	addOption = () => {
-		let lastItem = this.state.question_data.options[this.state.question_data.options.length - 1];
-		let newOptions = this.state.question_data.options.concat({
+		const lastItem = this.state.options[this.state.options.length - 1];
+		this.setOptions([...this.state.options, {
 			sequence: lastItem && lastItem.sequence + 1 || 0,
 			value: "",
 			marks: 0,
-		});
-		this.setOptions(newOptions);
+		}]);
 	};
 
 	deleteOption = (index) => {
-		let newOptions = this.state.question_data.options.filter((o,i) => i !== index);
-		this.setOptions(newOptions);
+		this.setOptions(this.state.options.filter((o,i) => i !== index));
 	};
 
 	setData = (index, key, data) => {
-		let newOptions = this.state.question_data.options.map((o, i) => {
+		this.setOptions(this.state.options.map((o, i) => {
 			if(i === index){
 				o[key] = data;
 			}
 			return o;
-		});
-		this.setOptions(newOptions);
+		}));
 	};
 
 	render(){
-		let rows = this.state.question_data.options.map((o, i) => {
+		const rows = this.state.options.map((o, i) => {
 			return (
 				<tr key={i}>
 					<td>
@@ -105,7 +99,7 @@ export default class OptionBuilder extends Component{
 		});
 
 		if( rows.length === 0){
-			rows.push(<tr><td colSpan={4} className="text-muted text-center">atleast one option is needed</td></tr>);
+			rows.push(<tr key="empty"><td colSpan={4} className="text-muted text-center">atleast one option is needed</td></tr>);
 		}
 
 		return (

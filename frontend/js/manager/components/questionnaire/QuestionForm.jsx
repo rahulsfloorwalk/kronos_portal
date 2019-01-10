@@ -12,6 +12,7 @@ import FormErrorList from "../../../components/FormErrorList.jsx";
 import SaveButton from "../../../components/SaveButton.jsx";
 import Modal from "../../../components/Modal.jsx";
 import OptionBuilder from "./OptionBuilder.jsx";
+import ImpactFactorInput from "./ImpactFactorInput.jsx";
 
 class QuestionForm extends React.Component {
 	static propTypes = {
@@ -87,11 +88,25 @@ class QuestionForm extends React.Component {
 		);
 	};
 
-	questionDataChanged = (questionData) => {
+	optionsChanged = (options) => {
 		this.setState({
 			form: Object.assign({}, this.state.form, {
-				question_data: questionData
+				question_data: Object.assign({}, this.state.form.question_data, {
+					version: 1,
+					options,
+				}),
 			})
+		});
+	};
+
+	impactFactorsChanged = (impactFactors) => {
+		this.setState({
+			form: Object.assign({}, this.state.form, {
+				question_data: Object.assign({}, this.state.form.question_data, {
+					version: 1,
+					impact_factors: impactFactors,
+				}),
+			}),
 		});
 	};
 
@@ -100,7 +115,10 @@ class QuestionForm extends React.Component {
 
 		let optionBuilder;
 		if(this.state.form.question_type === "MUTEX"){
-			optionBuilder = <OptionBuilder question_data={this.state.form.question_data} onChange={this.questionDataChanged}/>;
+			optionBuilder = <OptionBuilder
+				options={this.state.form.question_data ? this.state.form.question_data.options : []}
+				onChange={this.optionsChanged}
+			/>;
 		}
 
 		return (
@@ -125,6 +143,15 @@ class QuestionForm extends React.Component {
 					</div>
 					<div className="col-md-12">
 						{optionBuilder}
+					</div>
+					<div className="col-md-12">
+						<div className="form-group">
+							<label>Impact Factors</label>
+							<ImpactFactorInput
+								impactFactors={this.state.form.question_data ? this.state.form.question_data.impact_factors : []}
+								onChange={this.impactFactorsChanged}
+							/>
+						</div>
 					</div>
 					<div className="col-md-12">
 						<SaveButton/>&nbsp;
