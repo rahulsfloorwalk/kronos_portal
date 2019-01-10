@@ -15,7 +15,7 @@ def save(answer):
 def find_answers_by_question_id(question_id):
     return Answer.objects.filter(question_id=question_id)
 
-def find_by_audit_store_and_questions(audit_store_id, questions):
+def find_by_audit_store_id_and_questions(audit_store_id, questions):
     return Answer.objects.filter(audit_store_id=audit_store_id, question__in=questions)
 
 def find_by_audit_store_and_question(audit_store_id, question_id):

@@ -2,6 +2,8 @@
 from kronos.utils import today_ist
 from kronos.exceptions import ObjectNotFound
 from .models import AuditStore
+from answer.service import answer as answer_service
+from questionnaire.service import question as question_service
 
 
 def find_upcoming_for_client(client_id):
@@ -10,6 +12,28 @@ def find_upcoming_for_client(client_id):
         status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
         audit_date__gte=today_ist(),
     ).order_by('audit_date')
+
+
+def _get_total_marks_for_questions(questions):
+    return sum(question.max_marks for question in questions)
+
+
+def _get_total_marks_for_answers(answers):
+    return sum(answer.marks_obtained for answer in answers)
+
+
+def find_impact_factors_by_id_for_clientuser(audit_store_id, user):
+    impact_factor_map = {}
+    audit_store = find_by_id_for_clientuser(audit_store_id, user)
+    impact_factors = question_service.find_impact_factors_by_audit_cycle(audit_store.audit.audit_cycle_id)
+    for impact_factor in impact_factors:
+        questions = question_service.find_by_audit_cycle_id_and_impact_factor(audit_store.audit.audit_cycle_id, impact_factor)
+        answers = answer_service.find_by_audit_store_id_and_questions(audit_store.id, questions)
+        marks_obtained = _get_total_marks_for_answers(answers)
+        total_marks = _get_total_marks_for_questions(questions)
+        if total_marks > 0:
+            impact_factor_map[impact_factor] = round(marks_obtained*100.0/total_marks)
+    return impact_factor_map
 
 
 def find_by_id_for_clientuser(audit_store_id, user):

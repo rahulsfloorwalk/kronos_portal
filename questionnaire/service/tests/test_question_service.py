@@ -23,7 +23,7 @@ class QuestionServiceTestCase(TestCase):
         impact_factors = question_service.find_impact_factors_by_audit_cycle(self.audit_cycle.id)
         expect(sorted(impact_factors)).to(equal(self.impact_factors[:3]))
 
-    def test_find_filters_questions_correctly(self):
+    def test_find_by_audit_cycle_id_and_impact_factor(self):
 
         for i in range(10):
             question_data = {
@@ -31,10 +31,10 @@ class QuestionServiceTestCase(TestCase):
                 "impact_factors": self.impact_factors[i%1 : i%4]
             }
             mommy.make(Question, section__audit_cycle=self.audit_cycle, max_marks=1, question_data=question_data)
-        questions1 = question_service.find_by_audit_cycle_and_impact_factor(self.audit_cycle.id, "Foo1")
-        questions2 = question_service.find_by_audit_cycle_and_impact_factor(self.audit_cycle.id, "Foo2")
-        questions3 = question_service.find_by_audit_cycle_and_impact_factor(self.audit_cycle.id, "Foo3")
-        questions4 = question_service.find_by_audit_cycle_and_impact_factor(self.audit_cycle.id, "Foo4")
+        questions1 = question_service.find_by_audit_cycle_id_and_impact_factor(self.audit_cycle.id, "Foo1")
+        questions2 = question_service.find_by_audit_cycle_id_and_impact_factor(self.audit_cycle.id, "Foo2")
+        questions3 = question_service.find_by_audit_cycle_id_and_impact_factor(self.audit_cycle.id, "Foo3")
+        questions4 = question_service.find_by_audit_cycle_id_and_impact_factor(self.audit_cycle.id, "Foo4")
         expect(questions1).to(have_length(7))
         expect(questions2).to(have_length(4))
         expect(questions3).to(have_length(2))

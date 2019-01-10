@@ -31,7 +31,7 @@ class AnswerServiceTestCase(TestCase):
             answer = mommy.make(Answer, audit_store=audit_store, question=question)
             answers.append(answer)
 
-        answers = answer_service.find_by_audit_store_and_questions(audit_store.id, questions)
-        answers2 = answer_service.find_by_audit_store_and_questions(audit_store.id, self.other_questions)
+        answers = answer_service.find_by_audit_store_id_and_questions(audit_store.id, questions)
+        answers2 = answer_service.find_by_audit_store_id_and_questions(audit_store.id, self.other_questions)
         expect(answers).to(have_length(5))
         expect(answers2).to(have_length(0))
