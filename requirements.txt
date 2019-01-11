@@ -20,6 +20,7 @@ docutils==0.13.1
 expects==0.8.0
 Faker==0.7.15
 flake8==3.5.0
+flake8-print==3.1.0
 googlemaps==2.4.6
 gunicorn==19.6.0
 honcho==1.0.1
