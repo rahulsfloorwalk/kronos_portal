@@ -85,7 +85,7 @@ class Question(Model):
 
     def __has_unique_key(self, a_list_of_dicts, unique_key):
         values = [d[unique_key] for d in a_list_of_dicts]
-        return len(values) is len(set(values))
+        return len(values) == len(set(values))
 
     def __validate_v1_data(self):
 
@@ -120,7 +120,7 @@ class Question(Model):
 
     def __question_data_version(self):
         version = self.question_data.get("version") in self.QUESTION_DATA_VERSIONS
-        if self.question_type is Question.PLAIN:
+        if self.question_type == Question.PLAIN:
             if self.question_data == {}:
                 return self.QUESTION_DATA_V1
             else:

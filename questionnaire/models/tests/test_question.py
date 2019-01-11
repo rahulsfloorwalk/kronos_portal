@@ -7,7 +7,7 @@ from questionnaire.models import Question
 class TestQuestionModel:
 
     class TestCleanMethod:
-        question_type = Question.PLAIN
+        question_type = (Question.PLAIN + "_")[:-1]
 
         def test_clean_raises_when_question_type_is_unknown(self):
             question = Question(question_type="FOO", question_data={"version": 1})
@@ -15,7 +15,7 @@ class TestQuestionModel:
                 question.clean()
 
         class TestPlainQuestionType:
-            question_type = Question.PLAIN
+            question_type = (Question.PLAIN + "_")[:-1]
 
             def test_clean_does_not_raise_when_question_data_is_empty(self):
                 question = Question(max_marks=1, question_type=self.question_type, question_data={})
@@ -48,7 +48,7 @@ class TestQuestionModel:
                     question.clean()
 
         class TestMutexQuestionType:
-            question_type = Question.MUTEX
+            question_type = (Question.MUTEX + "_")[:-1]
 
             def test_clean_does_not_raise_for_valid_question_data(self):
                 question_data = {
