@@ -8,5 +8,6 @@ exclude =
 	frontend
 	.circleci
 	htmlcov
+	scripts
 max-complexity = 10
 max-line-length = 100

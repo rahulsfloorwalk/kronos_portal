@@ -11,7 +11,6 @@ _logger = logging.getLogger(__name__)
 
 class Login(View):
     def post(self, request):
-        print(request.POST)
         form = GroupAuthenticationForm(GROUP_NAME_MODERATOR, data=request.POST)
         _logger.info("moderator login attempt")
         if form.is_valid():

@@ -33,7 +33,6 @@ class SignupAPITestCase(TestCase):
         self.mobile = fake.numerify("##########")
         self.password = fake.password()
         self.referral_code = auditor.generate_ref_code(self.email, self.mobile)
-        print("referral_code", self.referral_code)
 
         self.auditor = User.objects.create_user(username=self.email, email=self.email, password=self.password)
         self.auditor.groups.add(Group.objects.get(name=GROUP_NAME_AUDITOR))
@@ -153,7 +152,6 @@ class SignupAPITestCase(TestCase):
 
         # check for a 200 on the same page, with errors
         self.assertEqual(response.status_code, 200)
-        print(response.context["form"]["phone"].errors)
         self.assertEqual(len(response.context["form"]["phone"].errors), 1)
 
     def test_invalid_email(self):

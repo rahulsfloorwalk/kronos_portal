@@ -97,7 +97,6 @@ def assign_audit_store(user_id, audit_store_id):
 def revoke_audit_store(audit_store_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     for user, perms in get_users_with_perms(audit_store, attach_perms=True).items():
-        print("moderator_manager", "in", perms, 'moderator_manage' in perms)
         if 'moderator_manage' in perms:
             remove_perm('moderator_manage', user, audit_store)
     return audit_store

@@ -28,7 +28,6 @@ class ReportAttributeViewTestCase(ManagerAPITestCase):
         }))
         expect(response.status_code).to(equal(200))
         expect(response.data).to(have_length(3))
-        print("RESPONSE", response.data)
         for qt in response.data:
             expect(qt).to(have_key("audit_cycle_id", audit_cycle.id))
 
