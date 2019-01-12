@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-import Badge from "../../../components/Badge.jsx";
+import Badge from "./Badge.jsx";
 
 export default class ImpactFactorTags extends Component {
 	static propTypes = {

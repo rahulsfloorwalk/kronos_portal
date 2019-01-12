@@ -7,7 +7,7 @@ import { Cross, Pencil } from "../../../components/Icons.jsx";
 import { getQuestionType } from "../../../utils.js";
 import { questionPropType } from "./prop_types";
 
-import ImpactFactorTags from "./ImpactFactorTags.jsx";
+import ImpactFactorTags from "../../../components/ImpactFactorTags.jsx";
 
 export default class QuestionRow extends React.Component {
 	static propTypes = {
