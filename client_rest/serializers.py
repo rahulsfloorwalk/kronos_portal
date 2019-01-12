@@ -136,6 +136,7 @@ class QuestionSerializer(ModelSerializer):
             'sequence',
             'question_txt',
             'question_type',
+            'question_data',
             'max_marks',
             'section',
         )

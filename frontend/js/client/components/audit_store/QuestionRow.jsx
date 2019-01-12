@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import ImpactFactorTags from "../../../components/ImpactFactorTags.jsx";
+
 export default class QuestionRow extends React.Component{
 	static propTypes = {
 		answer: PropTypes.shape({
@@ -16,6 +18,7 @@ export default class QuestionRow extends React.Component{
 			max_marks: PropTypes.number,
 			sequence: PropTypes.number,
 			question_type: PropTypes.string,
+			question_data: PropTypes.object,
 		}),
 		showMarks: PropTypes.bool,
 	};
@@ -40,7 +43,12 @@ export default class QuestionRow extends React.Component{
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td>{this.props.q.question_txt}</td>
+				<td>
+					<div className="pull-right">
+						<ImpactFactorTags impactFactors={this.props.q.question_data && this.props.q.question_data.impact_factors}/>
+					</div>
+					{this.props.q.question_txt}
+				</td>
 				<td>
 					{answerText}
 					{ this.props.q.question_type === "MUTEX" && this.props.answer && this.props.answer.answer_comment
