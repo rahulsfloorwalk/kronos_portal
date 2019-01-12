@@ -6,6 +6,7 @@ import { url }  from "../../../../config.js";
 import { fetchAuditStore } from "../../service/audit_store.js";
 import { fetchSections } from "../../service/section.js";
 import { fetchReportSections } from "../../service/report_section.js";
+import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 
 import { File, Print, Download } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
@@ -15,6 +16,7 @@ import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
 import AttachmentPrintRenderer from "./AttachmentPrintRenderer.jsx";
 import OverallExperienceGauge from "./OverallExperienceGauge.jsx";
+import ImpactFactorBox from "./ImpactFactorBox.jsx";
 
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
@@ -56,6 +58,11 @@ export default class AuditStoreDetail extends React.Component {
 				reportSections
 			});
 		});
+		findImpactFactorsByAuditStore(this.props.params.auditStoreId).then((impactFactors) => {
+			this.setState({
+				impactFactors
+			});
+		});
 	}
 
 	render() {
@@ -92,6 +99,9 @@ export default class AuditStoreDetail extends React.Component {
 						<OverallExperienceGauge colorCode={this.state.auditStore.color} value={this.state.auditStore.percentage}/>
 					</div>
 				</div>
+				{ this.state.impactFactors && this.state.impactFactors.length > 0 ?
+					<ImpactFactorBox impactFactors={this.state.impactFactors}/> : null
+				}
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
 				{ printMode ?

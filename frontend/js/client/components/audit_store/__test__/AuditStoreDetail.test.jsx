@@ -10,10 +10,13 @@ import SectionTotalsBox from "../SectionTotalsBox";
 import { fetchAuditStore } from "../../../service/audit_store.js";
 import { fetchSections } from "../../../service/section.js";
 import { fetchReportSections } from "../../../service/report_section.js";
+import {findImpactFactorsByAuditStore} from "../../../service/impact_factor.js";
+import ImpactFactorBox from "../ImpactFactorBox";
 
 jest.mock("../../../service/section.js");
 jest.mock("../../../service/audit_store.js");
 jest.mock("../../../service/report_section.js");
+jest.mock("../../../service/impact_factor.js");
 
 const sampleParams = {
 	auditStoreId: "2113",
@@ -347,12 +350,46 @@ const sampleReportSections = [
 	}
 ];
 
+const sampleImpactFactors = [
+	{
+		"name": "Customer Experience",
+		"marks_obtained": 15,
+		"total_marks": 100,
+		"percentage": 15
+	},
+	{
+		"name": "Brand Value",
+		"marks_obtained": 35,
+		"total_marks": 100,
+		"percentage": 35
+	},
+	{
+		"name": "Staff Interaction",
+		"marks_obtained": 55,
+		"total_marks": 100,
+		"percentage": 55
+	},
+	{
+		"name": "Product positioning",
+		"marks_obtained": 75,
+		"total_marks": 100,
+		"percentage": 75
+	},
+	{
+		"name": "WOW Factor",
+		"marks_obtained": 95,
+		"total_marks": 100,
+		"percentage": 95
+	},
+];
+
 describe("<AuditStoreDetail/>", () => {
 
 	beforeEach(() => {
 		fetchAuditStore.mockResolvedValue(sampleAuditStore);
 		fetchSections.mockResolvedValue(sampleSections);
 		fetchReportSections.mockResolvedValue(sampleReportSections);
+		findImpactFactorsByAuditStore.mockResolvedValue(sampleImpactFactors);
 	});
 
 	it("makes all the correct ajax calls", () => {
@@ -360,6 +397,7 @@ describe("<AuditStoreDetail/>", () => {
 		expect(fetchAuditStore).toBeCalledWith(sampleParams.auditStoreId);
 		expect(fetchSections).toBeCalledWith(sampleParams.auditStoreId);
 		expect(fetchReportSections).toBeCalledWith(sampleParams.auditStoreId);
+		expect(findImpactFactorsByAuditStore).toBeCalledWith(sampleParams.auditStoreId);
 	});
 
 	it("passes the correct props to SectionList, AuditStoreDetailsBox, SectionTotalsBox", (done) => {
@@ -369,6 +407,7 @@ describe("<AuditStoreDetail/>", () => {
 			expect(r.find(SectionList).prop("sections")).toEqual(sampleSections);
 			expect(r.find(SectionList).prop("reportSections")).toEqual(sampleReportSections);
 
+			expect(r.find(ImpactFactorBox).prop("impactFactors")).toEqual(sampleImpactFactors);
 			expect(r.find(SectionTotalsBox).prop("sections")).toEqual(sampleSections);
 			expect(r.find(SectionTotalsBox).prop("reportSections")).toEqual(sampleReportSections);
 
