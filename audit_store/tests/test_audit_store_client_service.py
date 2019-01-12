@@ -3,7 +3,7 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
 from model_mommy import mommy
-from expects import expect, have_length, equal, have_keys
+from expects import expect, have_keys
 
 from answer.models import Answer
 from audit.models import AuditCycle

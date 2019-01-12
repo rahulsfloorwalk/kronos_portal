@@ -17,7 +17,7 @@ class QuestionServiceTestCase(TestCase):
         for i in range(10):
             question_data = {
                 "version": 1,
-                "impact_factors": self.impact_factors[i%1 : i%4]
+                "impact_factors": self.impact_factors[i % 1: i % 4]
             }
             mommy.make(Question, section__audit_cycle=self.audit_cycle, max_marks=1, question_data=question_data)
         impact_factors = question_service.find_impact_factors_by_audit_cycle(self.audit_cycle.id)
@@ -28,7 +28,7 @@ class QuestionServiceTestCase(TestCase):
         for i in range(10):
             question_data = {
                 "version": 1,
-                "impact_factors": self.impact_factors[i%1 : i%4]
+                "impact_factors": self.impact_factors[i % 1: i % 4]
             }
             mommy.make(Question, section__audit_cycle=self.audit_cycle, max_marks=1, question_data=question_data)
         questions1 = question_service.find_by_audit_cycle_id_and_impact_factor(self.audit_cycle.id, "Foo1")

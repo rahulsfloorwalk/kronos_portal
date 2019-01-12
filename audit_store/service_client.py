@@ -36,7 +36,7 @@ def find_impact_factors_by_id_for_clientuser(audit_store_id, user):
                 'name': impact_factor,
                 'marks_obtained': marks_obtained,
                 'total_marks': total_marks,
-                'percentage': round(marks_obtained*100.0/total_marks)
+                'percentage': round(marks_obtained * 100.0 / total_marks)
             }
             impact_factors_arr.append(impact_factor_obj)
     impact_factors_arr.sort(key=lambda x: x['name'])
