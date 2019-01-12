@@ -8,31 +8,36 @@ const sampleImpactFactors = [
 		"name": "Customer Experience",
 		"marks_obtained": 15,
 		"total_marks": 100,
-		"percentage": 15
+		"percentage": 15,
+		"color_code": 1,
 	},
 	{
 		"name": "Brand Value",
 		"marks_obtained": 35,
 		"total_marks": 100,
-		"percentage": 35
+		"percentage": 35,
+		"color_code": 1,
 	},
 	{
 		"name": "Staff Interaction",
 		"marks_obtained": 55,
 		"total_marks": 100,
-		"percentage": 55
+		"percentage": 55,
+		"color_code": 1,
 	},
 	{
 		"name": "Product positioning",
 		"marks_obtained": 75,
 		"total_marks": 100,
-		"percentage": 75
+		"percentage": 75,
+		"color_code": 1,
 	},
 	{
 		"name": "WOW Factor",
 		"marks_obtained": 95,
 		"total_marks": 100,
-		"percentage": 95
+		"percentage": 95,
+		"color_code": 1,
 	},
 ];
 

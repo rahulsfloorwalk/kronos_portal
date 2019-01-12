@@ -108,7 +108,7 @@ exports[`<ImpactFactorBox/> renders the ImpactFactorBox correctly 1`] = `
               aria-valuemax="100"
               aria-valuemin="0"
               aria-valuenow={35}
-              className="progress-bar progress-bar-rating-poor"
+              className="progress-bar progress-bar-rating-bad"
               role="progressbar"
               style={
                 Object {
@@ -145,7 +145,7 @@ exports[`<ImpactFactorBox/> renders the ImpactFactorBox correctly 1`] = `
               aria-valuemax="100"
               aria-valuemin="0"
               aria-valuenow={55}
-              className="progress-bar progress-bar-rating-average"
+              className="progress-bar progress-bar-rating-bad"
               role="progressbar"
               style={
                 Object {
@@ -182,7 +182,7 @@ exports[`<ImpactFactorBox/> renders the ImpactFactorBox correctly 1`] = `
               aria-valuemax="100"
               aria-valuemin="0"
               aria-valuenow={75}
-              className="progress-bar progress-bar-rating-good"
+              className="progress-bar progress-bar-rating-bad"
               role="progressbar"
               style={
                 Object {
@@ -219,7 +219,7 @@ exports[`<ImpactFactorBox/> renders the ImpactFactorBox correctly 1`] = `
               aria-valuemax="100"
               aria-valuemin="0"
               aria-valuenow={95}
-              className="progress-bar progress-bar-rating-excellent"
+              className="progress-bar progress-bar-rating-bad"
               role="progressbar"
               style={
                 Object {

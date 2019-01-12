@@ -10,14 +10,14 @@ export default class ImpactFactorBox extends React.Component {
 			marks_obtained: PropTypes.number.isRequired,
 			total_marks: PropTypes.number.isRequired,
 			percentage: PropTypes.number.isRequired,
+			color_code: PropTypes.number.isRequired,
 		})),
 	};
 	render() {
 		const rows = [];
 
 		for(const s of this.props.impactFactors){
-			let color = Math.ceil(s.percentage/20);
-			let classes = getColor(color);
+			let classes = getColor(s.color_code);
 			let markingElement = `${s.percentage}%`;
 			let progressBarElement = (
 				<div className="progress">
