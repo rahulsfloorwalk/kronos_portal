@@ -8,14 +8,15 @@ from client.service.client_user import find_clientuser_by_user_id
 from kronos.utils import get_color_code, get_color_hex_from_code
 from manager.models import City
 from audit_store.models import AuditStore
+from manager.states import get_state_code
 
 
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
-    audit_cycle_name, sections, filtered_audit_stores, city_name, date_name, month_name = get_aggregate_data_with_filters(
+    audit_cycle_name, sections, filtered_audit_stores, city_name, state, date_name, month_name = get_aggregate_data_with_filters(
         audit_cycle_id, user_id, filters)
     data = create_text_structure(audit_cycle_name, sections, filtered_audit_stores)
-    name = (str(audit_cycle_name) + city_name + filters.get('type') + filters.get(
+    name = (str(audit_cycle_name) + city_name + state + filters.get('type') + filters.get(
         'priority') + date_name + month_name + ".xlsx").replace("-", "")
     return write_data(data), name
 
@@ -32,6 +33,8 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
 
 
     city_name = ''
+    state = filters.get('state', '')
+    state_code = get_state_code(state)
     month_name=''
 
     audit_stores = AuditStore.objects \
@@ -55,6 +58,9 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
         city_name = City.objects.get(pk=int(filters.get('city'))).name
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.city.id == int(filters.get('city'))]
+    if state_code not in ignored_filters:
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit.store.city.state == state_code]
     if filters.get('type') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.type == filters.get('type')]
@@ -82,7 +88,7 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
         "_",
         (filters.get('end_date') if filters.get('end_date') not in ignored_filters else "").replace("-", "_"))
 
-    return audit_cycle.name, sections, filtered_audit_stores, city_name, date_name, month_name
+    return audit_cycle.name, sections, filtered_audit_stores, city_name, state, date_name, month_name
 
 
 def create_text_structure(title, sections, audit_stores):

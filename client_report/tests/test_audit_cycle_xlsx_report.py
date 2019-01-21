@@ -21,7 +21,7 @@ class AuditCycleXlsxReportTestCase(TestCase):
             assign_audit_store_to_client_user(report.id, self.client_admin_id)
 
     def test_get_aggregate_data_with_date_filter(self):
-        audit_cycle_name, sections, questions, filtered_audit_stores, city_name, date_name, month_name\
+        audit_cycle_name, sections, questions, filtered_audit_stores, city_name, state, date_name, month_name\
             = xlsx_report_service.get_aggregate_data_with_filters(self.audit_cycle_id, self.client_admin_id, self.date_filter)
         self.assertEqual(audit_cycle_name, 'January 2017')
         self.assertEqual(5, len(filtered_audit_stores))
@@ -30,7 +30,7 @@ class AuditCycleXlsxReportTestCase(TestCase):
         self.assertEqual(month_name, '')
 
     def test_get_aggregate_data_with_city_filter(self):
-        audit_cycle_name, sections, questions, filtered_audit_stores, city_name, date_name, month_name\
+        audit_cycle_name, sections, questions, filtered_audit_stores, city_name, state, date_name, month_name\
             = xlsx_report_service.get_aggregate_data_with_filters(self.audit_cycle_id, self.client_admin_id, self.city_filter)
         self.assertEqual(audit_cycle_name, 'January 2017')
         self.assertEqual(4, len(filtered_audit_stores))
@@ -38,7 +38,7 @@ class AuditCycleXlsxReportTestCase(TestCase):
         self.assertEqual(month_name, '')
 
     def test_get_aggregate_data_without_filters(self):
-        audit_cycle_name, sections, questions, filtered_audit_stores, city_name, date_name, month_name\
+        audit_cycle_name, sections, questions, filtered_audit_stores, city_name, state, date_name, month_name\
             = xlsx_report_service.get_aggregate_data_with_filters(self.audit_cycle_id, self.client_admin_id, {})
         self.assertEqual(audit_cycle_name, 'January 2017')
         self.assertEqual(11, len(filtered_audit_stores))

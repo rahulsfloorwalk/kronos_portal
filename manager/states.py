@@ -53,3 +53,11 @@ def get_state_dict(code):
     except KeyError:
         pass
     return state
+
+def get_state_code(state_name):
+    state_code = ''
+    try:
+        state_code = list(filter(lambda x: x[1] == state_name, get_django_choices()))[0][0]
+    except IndexError:
+        pass
+    return state_code
