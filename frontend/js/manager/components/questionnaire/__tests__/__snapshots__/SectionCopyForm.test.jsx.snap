@@ -63,6 +63,7 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
             </label>
             <select
               className="form-control"
+              disabled={false}
               label="Audit Cycle"
               name="selectedAuditCycleId"
               onChange={[Function]}
@@ -91,6 +92,7 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
           </div>
           <button
             className="btn btn-primary btn-lg"
+            disabled={false}
           >
             <span
               className="glyphicon glyphicon-duplicate"

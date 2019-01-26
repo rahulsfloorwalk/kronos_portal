@@ -40,6 +40,7 @@ export class __SectionCopyForm extends React.Component {
 	state = {
 		selectedAuditCycleId: "",
 		errors: {},
+		submitting: false,
 	};
 
 	componentDidMount() {
@@ -52,11 +53,16 @@ export class __SectionCopyForm extends React.Component {
 		affectInputEventToComponent(e, this);
 	};
 
+	setSubmitting = (submitting) => this.setState((prevState) => Object.assign({}, prevState, { submitting }));
+
 	onSubmit = (e) => {
 		e.preventDefault();
+		this.setSubmitting(true);
 		copySectionsFromTo(this.state.selectedAuditCycleId, this.props.auditCycle.id).then(() => {
+			this.setSubmitting(false);
 			this.props.router.push(`/audit_cycle/${this.props.auditCycle.id}/questionnaire`);
 		}, (err) => {
+			this.setSubmitting(false);
 			err.responseJSON && this.setState({ errors: err.responseJSON });
 		});
 	};
@@ -67,11 +73,11 @@ export class __SectionCopyForm extends React.Component {
 			<Modal modalTitle="Copy Sections" onClose={this.props.router.goBack}>
 				<FormErrorList errors={this.state.errors.non_field_errors}/>
 				<form onSubmit={this.onSubmit}>
-					<FormSelect label="Audit Cycle" value={this.state.selectedAuditCycleId} name="selectedAuditCycleId" onChange={this.inputChanged}>
+					<FormSelect label="Audit Cycle" value={this.state.selectedAuditCycleId} name="selectedAuditCycleId" onChange={this.inputChanged} errors={this.state.errors.from_audit_cycle_id} disabled={this.state.submitting}>
 						<option value="">Select Audit Cycle</option>
 						{auditCycleOptions}
 					</FormSelect>
-					<button className="btn btn-primary btn-lg">
+					<button className="btn btn-primary btn-lg" disabled={this.state.submitting}>
 						<Duplicate/> Copy
 					</button>
 				</form>
