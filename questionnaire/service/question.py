@@ -53,6 +53,9 @@ def copy_questions_from_to(from_section_id, to_section_id):
         from_section = Section.objects.get(pk=from_section_id)
         to_section = Section.objects.get(pk=to_section_id)
 
+        if to_section.questions.count() > 0:
+            raise AppLogicError("section already has questions")
+
         for question in from_section.questions.all():
             new_question = Question()
             new_question.question_txt = question.question_txt
@@ -63,7 +66,7 @@ def copy_questions_from_to(from_section_id, to_section_id):
             new_question.section = to_section
             save(new_question)
 
-        to_section.questions.all()
+        return to_section.questions.all()
 
     except (Section.DoesNotExist) as e:
         raise ObjectNotFound from e

@@ -73,6 +73,9 @@ def copy_sections_from_to(from_audit_cycle_id, to_audit_cycle_id):
         from_audit_cycle = AuditCycle.objects.get(pk=from_audit_cycle_id)
         to_audit_cycle = AuditCycle.objects.get(pk=to_audit_cycle_id)
 
+        if to_audit_cycle.sections.count() > 0:
+            raise AppLogicError("audit cycle already has sections")
+
         for section in from_audit_cycle.sections.all():
             new_section = Section()
             new_section.name = section.name
