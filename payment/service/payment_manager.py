@@ -348,7 +348,6 @@ def consolidate_by_user(payments):
     return consolidated_payments
 
 
-@atomic
 def pay_all_pending_for_audit_cycle(audit_cycle_id, user_actor):
     pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     for payment in pending_payments:

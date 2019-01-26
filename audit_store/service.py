@@ -258,7 +258,6 @@ def get_audit_store_stats(audit_cycle_id):
     return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
 
 
-@atomic
 def accept_all_audit_stores(audit_cycle_id, user_actor):
     completed_audit_stores = find_by_audit_cycle(audit_cycle_id).filter(status=AuditStore.COMPLETED)
 
