@@ -2,7 +2,7 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -51,8 +51,14 @@ class SectionCopyByAuditCycle(APIView):
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
+
+    class DeSerializer(Serializer):
+        from_audit_cycle_id = IntegerField()
+
     def post(self, request, to_audit_cycle_id, format=None):
-        sections = section_service.copy_sections_from_to(request.data.get('from_audit_cycle_id'), to_audit_cycle_id)
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        sections = section_service.copy_sections_from_to(ds.validated_data["from_audit_cycle_id"], to_audit_cycle_id)
         return Response(SectionSerializer(sections, many=True).data)
 
 
