@@ -13,7 +13,7 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
 >
   <div
     className="modal-backdrop fade in"
-    onClick={[Function]}
+    onClick={[MockFunction]}
     style={
       Object {
         "height": "100%",
@@ -37,7 +37,7 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
       >
         <button
           className="close"
-          onClick={[Function]}
+          onClick={[MockFunction]}
           type="button"
         >
           ×
@@ -51,6 +51,7 @@ exports[`<__SectionCopyForm/> renders the list of audit cycles 1`] = `
       <div
         className="modal-body"
       >
+        <ul />
         <form
           onSubmit={[Function]}
         >

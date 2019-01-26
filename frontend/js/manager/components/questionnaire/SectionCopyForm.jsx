@@ -1,13 +1,13 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { hashHistory } from "react-router";
 
 import { fetchAuditCycles } from "../../actions/audit.js";
 
 import { copySectionsFromTo } from "../../service/section.js";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
+import FormErrorList from "../../../components/FormErrorList.jsx";
 import FormSelect from "../../../components/FormSelect.jsx";
 import Modal from "../../../components/Modal.jsx";
 import { Duplicate } from "../../../components/Icons.jsx";
@@ -31,10 +31,15 @@ export class __SectionCopyForm extends React.Component {
 		auditCycle: auditCycleProp,
 		otherAuditCycles: PropTypes.arrayOf(auditCycleProp),
 		fetchAuditCycles: PropTypes.func.isRequired,
+		router: PropTypes.shape({
+			goBack: PropTypes.func.isRequired,
+			push: PropTypes.func.isRequired,
+		}),
 	};
 
 	state = {
 		selectedAuditCycleId: "",
+		errors: {},
 	};
 
 	componentDidMount() {
@@ -50,14 +55,17 @@ export class __SectionCopyForm extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		copySectionsFromTo(this.state.selectedAuditCycleId, this.props.auditCycle.id).then(() => {
-			hashHistory.push(`/audit_cycle/${this.props.auditCycle.id}/questionnaire`);
+			this.props.router.push(`/audit_cycle/${this.props.auditCycle.id}/questionnaire`);
+		}, (err) => {
+			err.responseJSON && this.setState({ errors: err.responseJSON });
 		});
 	};
 
 	render() {
 		const auditCycleOptions = this.props.otherAuditCycles.map(ac => <option key={ac.id} value={ac.id}>{ac.name} - {ac.questionnaire_type && ac.questionnaire_type.name}</option>);
 		return (
-			<Modal modalTitle="Copy Sections" onClose={hashHistory.goBack}>
+			<Modal modalTitle="Copy Sections" onClose={this.props.router.goBack}>
+				<FormErrorList errors={this.state.errors.non_field_errors}/>
 				<form onSubmit={this.onSubmit}>
 					<FormSelect label="Audit Cycle" value={this.state.selectedAuditCycleId} name="selectedAuditCycleId" onChange={this.inputChanged}>
 						<option value="">Select Audit Cycle</option>

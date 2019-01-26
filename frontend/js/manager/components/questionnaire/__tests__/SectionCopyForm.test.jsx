@@ -45,9 +45,23 @@ const sampleAuditCycles = [
 ];
 
 describe("<__SectionCopyForm/>", () => {
+	let mockRouter;
+
+	beforeEach(() => {
+		mockRouter = {
+			goBack: jest.fn(),
+			push: jest.fn(),
+		};
+	});
+
 	it("renders the list of audit cycles", () => {
 		const fetchAuditCycles = jest.fn();
-		const r = renderer.create(<__SectionCopyForm auditCycle={sampleAuditCycle} otherAuditCycles={sampleAuditCycles} fetchAuditCycles={fetchAuditCycles}/>);
+		const r = renderer.create(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
 		expect(r.toJSON()).toMatchSnapshot();
 	});
 
@@ -55,7 +69,12 @@ describe("<__SectionCopyForm/>", () => {
 		const fetchAuditCycles = jest.fn();
 		copySectionsFromTo.mockResolvedValue([]);
 
-		shallow(<__SectionCopyForm auditCycle={sampleAuditCycle} otherAuditCycles={sampleAuditCycles} fetchAuditCycles={fetchAuditCycles}/>);
+		shallow(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
 
 		expect(fetchAuditCycles).toBeCalled();
 	});
@@ -65,7 +84,12 @@ describe("<__SectionCopyForm/>", () => {
 		const preventDefault = jest.fn();
 		copySectionsFromTo.mockResolvedValue([]);
 
-		const r = shallow(<__SectionCopyForm auditCycle={sampleAuditCycle} otherAuditCycles={sampleAuditCycles} fetchAuditCycles={fetchAuditCycles}/>);
+		const r = shallow(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
 
 		r.find("FormSelect").simulate("change", { target: { name: "selectedAuditCycleId", value: "2"}});
 		r.find("form").simulate("submit", { preventDefault });
@@ -78,10 +102,73 @@ describe("<__SectionCopyForm/>", () => {
 		const preventDefault = jest.fn();
 		copySectionsFromTo.mockResolvedValue([]);
 
-		const r = shallow(<__SectionCopyForm auditCycle={sampleAuditCycle} otherAuditCycles={sampleAuditCycles} fetchAuditCycles={fetchAuditCycles}/>);
+		const r = shallow(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
 
 		r.find("form").simulate("submit", { preventDefault });
 
 		expect(preventDefault).toBeCalled();
+	});
+
+	it("displays the errors when there is an error", (done) => {
+		const fetchAuditCycles = jest.fn();
+		const preventDefault = jest.fn();
+
+		copySectionsFromTo.mockRejectedValue({
+			responseJSON: {
+				non_field_errors: ["audit cycle already has sections"],
+			},
+		});
+
+		const r = shallow(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
+
+		r.find("form").simulate("submit", { preventDefault });
+		setTimeout(() => {
+			r.update();
+			expect(r.find("FormErrorList").prop("errors")).toEqual(["audit cycle already has sections"]);
+			done();
+		});
+	});
+
+	it("navigates to the questionnaire when the form is submitted successfully", (done) => {
+		const fetchAuditCycles = jest.fn();
+		const preventDefault = jest.fn();
+		copySectionsFromTo.mockResolvedValue([]);
+
+		const r = shallow(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
+
+		r.find("form").simulate("submit", { preventDefault });
+		setTimeout(() => {
+			expect(mockRouter.push).toBeCalledWith("/audit_cycle/1/questionnaire");
+			done();
+		});
+	});
+
+	it("navigates back if the modal is closed", () => {
+		const fetchAuditCycles = jest.fn();
+
+		const r = shallow(<__SectionCopyForm
+			auditCycle={sampleAuditCycle}
+			otherAuditCycles={sampleAuditCycles}
+			fetchAuditCycles={fetchAuditCycles}
+			router={mockRouter}
+		/>);
+
+		r.find("Modal").simulate("close");
+		expect(mockRouter.goBack).toBeCalled();
 	});
 });
