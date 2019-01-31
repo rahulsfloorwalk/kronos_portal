@@ -28,6 +28,8 @@ def find_audits_by_audit_cycle_id(audit_cycle_id):
         'applications',
         'applications__profileinfo',
         'applications__profileinfo__user',
+        'audit_cycle__questionnaire_type',
+        'audit_cycle__audits',
     )
 
 def save(audit):
