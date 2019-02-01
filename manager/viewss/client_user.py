@@ -1,13 +1,37 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, IntegerField
+from rest_framework.serializers import ModelSerializer, Serializer
+from rest_framework.serializers import IntegerField, PrimaryKeyRelatedField, CharField, EmailField, BooleanField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from ..serializers import ClientUserSerializer, ClientUserDeSerializer
+from manager.serializers import PlainUserSerializer
 from client.service import client_user as client_user_service
 from client.service import client_service
+from client.models import ClientUser, Client
+
+class ClientUserSerializer(ModelSerializer):
+    user = PlainUserSerializer()
+    class Meta:
+        model = ClientUser
+        fields = (
+            'id',
+            'full_name',
+            'client',
+            'user',
+            'is_client_admin',
+        )
+        read_only_fields = fields
+
+class ClientUserDeSerializer(Serializer):
+    client = PrimaryKeyRelatedField(queryset=Client.objects.all())
+    full_name = CharField(max_length=50)
+    email = EmailField()
+    password = CharField(min_length=8, max_length=128, allow_blank=True)
+    is_active = BooleanField()
+    is_client_admin = BooleanField()
+
 
 class ClientUserByClientView(APIView):
     permission_classes = [HasGroupPermission]

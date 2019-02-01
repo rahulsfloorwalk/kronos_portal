@@ -1,12 +1,11 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import CharField, EmailField, BooleanField
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
-from client.models import Client, Store, ClientUser
+from client.models import Client, Store
 from payment.models import Payment
 from registration.models import MobileNumber
 from .models import City
@@ -398,27 +397,6 @@ class AuditStoreSerializer(ModelSerializer):
             'attribute_data',
         )
         read_only_fields = fields
-
-class ClientUserSerializer(ModelSerializer):
-    user = PlainUserSerializer()
-    class Meta:
-        model = ClientUser
-        fields = (
-            'id',
-            'full_name',
-            'client',
-            'user',
-            'is_client_admin',
-        )
-        read_only_fields = fields
-
-class ClientUserDeSerializer(Serializer):
-    client = PrimaryKeyRelatedField(queryset=Client.objects.all())
-    full_name = CharField(max_length=50)
-    email = EmailField()
-    password = CharField(min_length=8, max_length=128, allow_blank=True)
-    is_active = BooleanField()
-    is_client_admin = BooleanField()
 
 class AuditStoreSerializerWithoutAudit(ModelSerializer):
     user = UserSerializer()
