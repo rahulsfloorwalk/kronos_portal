@@ -4,7 +4,6 @@ from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRe
 
 from agency.models import AgencyUser, Agency
 from answer.models import Answer, ReportSection
-from attachment.models import Attachment
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
@@ -534,22 +533,4 @@ class ReportSectionDeSerializer(Serializer):
     audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
     section = PrimaryKeyRelatedField(queryset=Section.objects.all())
     pm_comment = CharField(max_length=2048, allow_blank=True)
-
-
-class AttachmentSerializer(ModelSerializer):
-    class Meta:
-        model = Attachment
-        fields = (
-            'id',
-            'file_slug',
-            'proof_type',
-            'mime_type',
-            'file_name',
-            'status',
-            'content_type',
-            'object_id',
-            'direct_url',
-            'extra',
-        )
-        read_only_fields = fields
 

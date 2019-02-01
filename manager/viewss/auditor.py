@@ -12,7 +12,7 @@ import registration.service.auditor as auditor_service
 from auditor.service import profile_info_service, bank_info_service, additional_info_service
 from auditor.service import preferences_service
 from manager.serializers import PaymentSerializer
-from manager.serializers import AttachmentSerializer
+from manager.viewss.attachment import AttachmentSerializer
 from auditor.models import AdditionalInfo, BankInfo
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
