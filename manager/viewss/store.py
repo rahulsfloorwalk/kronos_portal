@@ -2,13 +2,47 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from client.service import store as store_service
+from client.models import Store
 
-from ..serializers import StoreSerializer, StoreDeSerializer
+from manager.serializers import StoreSerializer
+
+class StoreDeSerializer(ModelSerializer):
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'address',
+            'client',
+            'code',
+            'type',
+            'phone',
+            'priority',
+            'city',
+        )
+        read_only_fields = ('id',)
+        validators=[]
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            store = Store.objects.get(id=self.context.get('id'))
+        else:
+            store = Store()
+        store.name = self.validated_data.get('name', store.name)
+        store.address = self.validated_data.get('address', store.address)
+        store.city = self.validated_data.get('city', store.city_id)
+        store.client = self.validated_data.get('client', store.client_id)
+        store.code = self.validated_data.get('code', store.code)
+        store.type = self.validated_data.get('type', store.type)
+        store.priority = self.validated_data.get('priority', store.priority)
+        store.phone = self.validated_data.get('phone', store.phone)
+        return store
 
 
 class StoreViewByClient(APIView):
