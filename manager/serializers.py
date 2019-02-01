@@ -641,26 +641,3 @@ class NotificationSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
-class ProfileInfoSerializer(ModelSerializer):
-    city = CitySerializer()
-    class Meta:
-        model = ProfileInfo
-        fields = (
-            'id',
-            'first_name',
-            'last_name',
-            'gender',
-            'marital_status',
-            'education',
-            'mobile_number',
-            'date_of_birth',
-            'address',
-            'pincode',
-            'city',
-            'user_id',
-            'is_complete',
-            'average_rating',
-        )
-        read_only_fields = fields
-

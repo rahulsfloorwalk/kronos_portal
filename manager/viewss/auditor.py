@@ -12,7 +12,6 @@ import registration.service.auditor as auditor_service
 from auditor.service import profile_info_service, bank_info_service, additional_info_service
 from auditor.service import preferences_service
 from manager.serializers import PaymentSerializer
-from manager.serializers import ProfileInfoSerializer
 from manager.serializers import AttachmentSerializer
 from auditor.models import AdditionalInfo, BankInfo
 from payment.service import payment_manager as payment_service
@@ -21,9 +20,34 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from social.service import social_manager as social_service
 from referral.service import referral_auditor as referral_service
 from auditor.models import Preferences
+from auditor.models import ProfileInfo
 from referral.models import AuditorReferral
 from social.models import Facebook
 from registration.models import Verification
+from manager.serializers import CitySerializer
+
+class ProfileInfoSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = ProfileInfo
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'gender',
+            'marital_status',
+            'education',
+            'mobile_number',
+            'date_of_birth',
+            'address',
+            'pincode',
+            'city',
+            'user_id',
+            'is_complete',
+            'average_rating',
+        )
+        read_only_fields = fields
+
 
 class VerificationSerializer(ModelSerializer):
     class Meta:
