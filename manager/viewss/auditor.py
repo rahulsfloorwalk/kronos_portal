@@ -11,7 +11,6 @@ import auditor.service.stats as auditor_stats_service
 import registration.service.auditor as auditor_service
 from auditor.service import profile_info_service, bank_info_service, additional_info_service
 from auditor.service import preferences_service
-from manager.serializers import FacebookSerializer
 from manager.serializers import PaymentSerializer
 from manager.serializers import ProfileInfoSerializer, BankInfoSerializer
 from manager.serializers import AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
@@ -22,6 +21,7 @@ from social.service import social_manager as social_service
 from referral.service import referral_auditor as referral_service
 from auditor.models import Preferences
 from referral.models import AuditorReferral
+from social.models import Facebook
 
 class AuditorView(generics.ListAPIView):
     class AuditorViewPaginationClass(PageNumberPagination):
@@ -98,6 +98,18 @@ class AuditorAdditionalInfoView(APIView):
     def get(self, request, auditor_id, format=None):
         additional_info = additional_info_service.find_additional_info_by_user_id(auditor_id)
         return Response(AdditionalInfoSerializer(additional_info).data)
+
+class FacebookSerializer(ModelSerializer):
+    class Meta:
+        model = Facebook
+        fields = (
+            'id',
+            'facebook_id',
+            'profile_data',
+            'is_verified',
+            'user_id',
+        )
+        read_only_fields = fields
 
 class AuditorFacebookInfoView(APIView):
     permission_classes = [HasGroupPermission]

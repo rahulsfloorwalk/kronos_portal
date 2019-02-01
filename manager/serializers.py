@@ -15,7 +15,6 @@ from payment.models import Payment
 from questionnaire.models import Section, Question
 from registration.models import MobileNumber, Verification
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR, GROUP_NAME_AGENCY
-from social.models import Facebook
 from .models import City
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
@@ -712,18 +711,6 @@ class AdditionalInfoSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'is_complete',
-        )
-        read_only_fields = fields
-
-class FacebookSerializer(ModelSerializer):
-    class Meta:
-        model = Facebook
-        fields = (
-            'id',
-            'facebook_id',
-            'profile_data',
-            'is_verified',
-            'user_id',
         )
         read_only_fields = fields
 
