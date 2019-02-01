@@ -272,36 +272,6 @@ class AuditSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class AuditDeSerializer(ModelSerializer):
-    class Meta:
-        model = Audit
-        fields = (
-            'id',
-            'count',
-            'audit_date',
-            'earnings_per_audit',
-            'reimbursement',
-            'store',
-            'audit_cycle',
-            'post_approval_description',
-        )
-        read_only_fields = ('id',)
-        validators=[]
-
-    def deserialize(self):
-        if 'id' in self.context and self.context.get('id') is not None:
-            audit = Audit.objects.get(id=self.context.get('id'))
-        else:
-            audit = Audit()
-        audit.count = self.validated_data.get('count', audit.count)
-        audit.audit_date = self.validated_data.get('audit_date', audit.audit_date)
-        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
-        audit.reimbursement = self.validated_data.get('reimbursement', audit.reimbursement)
-        audit.store = self.validated_data.get('store', audit.store_id)
-        audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
-        audit.post_approval_description = self.validated_data.get('post_approval_description', audit.post_approval_description)
-        return audit
-
 class PaymentSerializer(ModelSerializer):
     class Meta:
         model = Payment

@@ -2,16 +2,47 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, PrimaryKeyRelatedField, EmailField, DateField, IntegerField
+from rest_framework.serializers import ModelSerializer, Serializer, PrimaryKeyRelatedField, EmailField, DateField, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from audit.models import Audit
 
 from ..service import audit as manager_audit_service
-from ..serializers import AuditSerializer, AuditDeSerializer, AuditStoreSerializer
+from ..serializers import AuditSerializer, AuditStoreSerializer
 from audit.service import audit_service
 from auditor.service import application_service
+
+class AuditDeSerializer(ModelSerializer):
+    class Meta:
+        model = Audit
+        fields = (
+            'id',
+            'count',
+            'audit_date',
+            'earnings_per_audit',
+            'reimbursement',
+            'store',
+            'audit_cycle',
+            'post_approval_description',
+        )
+        read_only_fields = ('id',)
+        validators=[]
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            audit = Audit.objects.get(id=self.context.get('id'))
+        else:
+            audit = Audit()
+        audit.count = self.validated_data.get('count', audit.count)
+        audit.audit_date = self.validated_data.get('audit_date', audit.audit_date)
+        audit.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit.earnings_per_audit)
+        audit.reimbursement = self.validated_data.get('reimbursement', audit.reimbursement)
+        audit.store = self.validated_data.get('store', audit.store_id)
+        audit.audit_cycle = self.validated_data.get('audit_cycle', audit.audit_cycle_id)
+        audit.post_approval_description = self.validated_data.get('post_approval_description', audit.post_approval_description)
+        return audit
+
 
 class AuditFiatAssignDeSerializer(Serializer):
     audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
