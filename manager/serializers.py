@@ -8,7 +8,6 @@ from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
-from questionnaire.models import Question
 from registration.models import MobileNumber
 from .models import City
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
@@ -437,47 +436,4 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             'attribute_data',
         )
         read_only_fields = fields
-
-
-class QuestionSerializer(ModelSerializer):
-    class Meta:
-        model = Question
-        fields = (
-            'id',
-            'sequence',
-            'question_txt',
-            'max_marks',
-            'section',
-            'question_type',
-            'question_data',
-        )
-        read_only_fields = fields
-
-
-class QuestionDeSerializer(ModelSerializer):
-    class Meta:
-        model = Question
-        fields = (
-            'id',
-            'sequence',
-            'question_txt',
-            'max_marks',
-            'section',
-            'question_type',
-            'question_data',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if 'id' in self.context and self.context.get('id') is not None:
-            question = Question.objects.get(id=self.context.get('id'))
-        else:
-            question = Question()
-        question.sequence = self.validated_data.get('sequence', question.sequence)
-        question.question_txt = self.validated_data.get('question_txt', question.question_txt)
-        question.max_marks = self.validated_data.get('max_marks', question.max_marks)
-        question.section = self.validated_data.get('section', question.section_id)
-        question.question_type = self.validated_data.get('question_type', question.question_type)
-        question.question_data = self.validated_data.get('question_data', question.question_data)
-        return question
 

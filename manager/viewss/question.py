@@ -2,13 +2,55 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from questionnaire.models import Question
 from questionnaire.service import question as question_service
 
-from ..serializers import QuestionSerializer, QuestionDeSerializer
+class QuestionSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'section',
+            'question_type',
+            'question_data',
+        )
+        read_only_fields = fields
+
+
+class QuestionDeSerializer(ModelSerializer):
+    class Meta:
+        model = Question
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'section',
+            'question_type',
+            'question_data',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            question = Question.objects.get(id=self.context.get('id'))
+        else:
+            question = Question()
+        question.sequence = self.validated_data.get('sequence', question.sequence)
+        question.question_txt = self.validated_data.get('question_txt', question.question_txt)
+        question.max_marks = self.validated_data.get('max_marks', question.max_marks)
+        question.section = self.validated_data.get('section', question.section_id)
+        question.question_type = self.validated_data.get('question_type', question.question_type)
+        question.question_data = self.validated_data.get('question_data', question.question_data)
+        return question
 
 
 class QuestionViewBySection(APIView):

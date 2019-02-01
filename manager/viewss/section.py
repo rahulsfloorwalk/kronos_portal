@@ -9,7 +9,7 @@ from registration.mixins import HasGroupPermission
 
 from questionnaire.service import section as section_service
 
-from ..serializers import QuestionSerializer
+from manager.viewss.question import QuestionSerializer
 
 from questionnaire.models import Section
 
