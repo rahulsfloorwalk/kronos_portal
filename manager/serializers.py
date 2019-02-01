@@ -16,7 +16,6 @@ from questionnaire.models import Section, Question
 from registration.models import MobileNumber, Verification
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR, GROUP_NAME_AGENCY
 from social.models import Facebook
-from referral.models import AuditorReferral
 from .models import City
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
@@ -769,18 +768,4 @@ class ManagerDeSerializer(Serializer):
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
 
-
-class AuditorReferralSerializer(ModelSerializer):
-    class Meta:
-        model = AuditorReferral
-        fields = (
-            'id',
-            'type',
-            'comment',
-            'referred_by',
-            'referred_to',
-            'amount',
-            'added_on'
-        )
-        read_only_fields = fields
 

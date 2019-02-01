@@ -18,11 +18,10 @@ from manager.serializers import AdditionalInfoSerializer, AuditorSerializer, Att
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from ..serializers import AuditorReferralSerializer
 from social.service import social_manager as social_service
 from referral.service import referral_auditor as referral_service
 from auditor.models import Preferences
-
+from referral.models import AuditorReferral
 
 class AuditorView(generics.ListAPIView):
     class AuditorViewPaginationClass(PageNumberPagination):
@@ -182,6 +181,20 @@ class IdProofAttachmentView(APIView):
     def get(self, request, auditor_id, format=None):
         attachments = attachment_auditor_service.find_id_proof_for_auditor(auditor_id)
         return Response(AttachmentSerializer(attachments, many=True).data)
+
+class AuditorReferralSerializer(ModelSerializer):
+    class Meta:
+        model = AuditorReferral
+        fields = (
+            'id',
+            'type',
+            'comment',
+            'referred_by',
+            'referred_to',
+            'amount',
+            'added_on'
+        )
+        read_only_fields = fields
 
 class ReferralView(APIView):
     permission_classes = [HasGroupPermission]
