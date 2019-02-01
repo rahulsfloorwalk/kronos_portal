@@ -1,8 +1,6 @@
 from django.contrib.auth.models import User
-from django.contrib.contenttypes.models import ContentType
-from notifications.models import Notification
 from rest_framework.serializers import CharField, EmailField, BooleanField, IntegerField
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField, RelatedField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField
 
 from agency.models import AgencyUser, Agency
 from answer.models import Answer, ReportSection
@@ -14,7 +12,6 @@ from client.models import Client, Store, ClientUser
 from payment.models import Payment
 from questionnaire.models import Section, Question
 from registration.models import MobileNumber
-from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR, GROUP_NAME_AGENCY
 from .models import City
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
@@ -563,81 +560,4 @@ class AuditFiatAssignDeSerializer(Serializer):
     audit_date = DateField()
     earnings_per_audit = IntegerField()
     reimbursement = IntegerField()
-
-class ContentTypeSerializer(ModelSerializer):
-    class Meta:
-        model = ContentType
-        fields = ('app_label','model')
-        read_only_fields = fields
-
-
-class NotificationSerializer(ModelSerializer):
-    class NotificationTargetField(RelatedField):
-        def to_representation(self, value):
-            if isinstance(value, Audit):
-                serializer = AuditSerializer(value)
-            elif isinstance(value, AuditStore):
-                serializer = AuditStoreSerializer(value)
-            elif isinstance(value, AuditApplication):
-                serializer = AuditApplicationSerializer(value)
-            else:
-                raise ValueError('Unexpected type of target object in notification: ', type(value))
-            return serializer.data
-
-    class NotificationActionObjectField(RelatedField):
-        def to_representation(self, value):
-            if isinstance(value, AuditApplication):
-                serializer = AuditApplicationSerializer(value)
-            elif isinstance(value, AuditStore):
-                serializer = AuditStoreSerializer(value)
-            elif isinstance(value, Payment):
-                serializer = PaymentSerializer(value)
-            else:
-                raise ValueError('Unexpected type of action object in notification: ', type(value))
-            return serializer.data
-
-    class NotificationActorField(RelatedField):
-        def to_representation(self, value):
-            if value.groups.filter(name=GROUP_NAME_MANAGER).exists():
-                serializer = PlainUserSerializer(value)
-            elif value.groups.filter(name=GROUP_NAME_AUDITOR).exists():
-                serializer = UserSerializer(value)
-            elif value.groups.filter(name=GROUP_NAME_MODERATOR).exists():
-                serializer = PlainUserSerializer(value)
-            elif value.groups.filter(name=GROUP_NAME_AGENCY).exists():
-                serializer = UserSerializer(value)
-            else:
-                raise ValueError("Cannot serialize user with unknown user groups:{}".format(value.groups.all()))
-            return serializer.data
-
-    actor = NotificationActorField(read_only=True)
-    actor_content_type = ContentTypeSerializer()
-
-    target = NotificationTargetField(read_only=True)
-    target_content_type = ContentTypeSerializer()
-
-    action_object = NotificationActionObjectField(read_only=True)
-    action_object_content_type = ContentTypeSerializer()
-
-    class Meta:
-        model = Notification
-        fields = (
-            'id',
-            'unread',
-            'timestamp',
-            'level',
-            'verb',
-            'description',
-            'recipient',
-
-            'actor',
-            'actor_content_type',
-
-            'target',
-            'target_content_type',
-
-            'action_object',
-            'action_object_content_type',
-        )
-        read_only_fields = fields
 
