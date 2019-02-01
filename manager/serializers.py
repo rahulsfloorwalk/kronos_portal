@@ -3,7 +3,7 @@ from rest_framework.serializers import CharField, EmailField, BooleanField
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField
 
 from agency.models import AgencyUser, Agency
-from answer.models import Answer, ReportSection
+from answer.models import Answer
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
@@ -512,25 +512,4 @@ class AnswerSerializer(ModelSerializer):
             'not_applicable',
         )
         read_only_fields = fields
-
-
-class ReportSectionSerializer(ModelSerializer):
-    class Meta:
-        model = ReportSection
-        fields = (
-            'id',
-            'audit_store',
-            'section',
-            'auditor_comment',
-            'pm_comment',
-            'not_applicable',
-            'marks_obtained',
-            'max_marks',
-        )
-        read_only_fields = fields
-
-class ReportSectionDeSerializer(Serializer):
-    audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
-    section = PrimaryKeyRelatedField(queryset=Section.objects.all())
-    pm_comment = CharField(max_length=2048, allow_blank=True)
 

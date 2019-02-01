@@ -1,13 +1,36 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField, BooleanField
+from rest_framework.serializers import ModelSerializer, Serializer, CharField, BooleanField, PrimaryKeyRelatedField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from audit_store.models import AuditStore
+from answer.models import ReportSection
 from answer.service import report_section as report_section_service
 from answer.service import report_section_manager as report_section_manager_service
-from ..serializers import ReportSectionSerializer, ReportSectionDeSerializer
+from questionnaire.models import Section
+
+class ReportSectionSerializer(ModelSerializer):
+    class Meta:
+        model = ReportSection
+        fields = (
+            'id',
+            'audit_store',
+            'section',
+            'auditor_comment',
+            'pm_comment',
+            'not_applicable',
+            'marks_obtained',
+            'max_marks',
+        )
+        read_only_fields = fields
+
+class ReportSectionDeSerializer(Serializer):
+    audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
+    section = PrimaryKeyRelatedField(queryset=Section.objects.all())
+    pm_comment = CharField(max_length=2048, allow_blank=True)
+
 
 class ReportSectionByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
