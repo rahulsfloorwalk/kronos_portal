@@ -9,7 +9,7 @@ from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
-from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalInfo, Preferences
+from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalInfo
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
 from questionnaire.models import Section, Question
@@ -781,21 +781,6 @@ class AuditorReferralSerializer(ModelSerializer):
             'referred_to',
             'amount',
             'added_on'
-        )
-        read_only_fields = fields
-
-class PreferencesSerializer(ModelSerializer):
-    class Meta:
-        model = Preferences
-        fields = (
-            'id',
-            'receive_new_opportunities_email',
-            'receive_transactional_email',
-            'receive_new_opportunities_sms',
-            'receive_transactional_sms',
-            'pp_accepted',
-            'agreement_accepted',
-            'user_id',
         )
         read_only_fields = fields
 

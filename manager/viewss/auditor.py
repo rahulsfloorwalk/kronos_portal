@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.serializers import BooleanField, Serializer
+from rest_framework.serializers import BooleanField, Serializer, ModelSerializer
 
 import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
@@ -15,13 +15,13 @@ from manager.serializers import FacebookSerializer
 from manager.serializers import PaymentSerializer
 from manager.serializers import ProfileInfoSerializer, BankInfoSerializer
 from manager.serializers import AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
-from manager.serializers import PreferencesSerializer
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from ..serializers import AuditorReferralSerializer
 from social.service import social_manager as social_service
 from referral.service import referral_auditor as referral_service
+from auditor.models import Preferences
 
 
 class AuditorView(generics.ListAPIView):
@@ -193,6 +193,20 @@ class ReferralView(APIView):
         referrals = referral_service.find_by_referred_by(auditor_id)
         return Response(AuditorReferralSerializer(referrals, many=True).data)
 
+class PreferencesSerializer(ModelSerializer):
+    class Meta:
+        model = Preferences
+        fields = (
+            'id',
+            'receive_new_opportunities_email',
+            'receive_transactional_email',
+            'receive_new_opportunities_sms',
+            'receive_transactional_sms',
+            'pp_accepted',
+            'agreement_accepted',
+            'user_id',
+        )
+        read_only_fields = fields
 
 class PreferencesView(APIView):
     permission_classes = [HasGroupPermission]
