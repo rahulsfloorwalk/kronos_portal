@@ -9,9 +9,25 @@ from registration.mixins import HasGroupPermission
 
 from questionnaire.service import section as section_service
 
-from ..serializers import SectionSerializer
+from ..serializers import QuestionSerializer
 
 from questionnaire.models import Section
+
+class SectionSerializer(ModelSerializer):
+    questions = QuestionSerializer(many=True)
+    class Meta:
+        model = Section
+        fields = (
+            'id',
+            'name',
+            'audit_cycle',
+            'sequence',
+            'questions',
+            'minimum_attachment_count',
+            'max_marks'
+        )
+        read_only_fields = fields
+
 
 class SectionDeSerializer(ModelSerializer):
     class Meta:

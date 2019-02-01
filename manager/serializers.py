@@ -8,7 +8,7 @@ from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
-from questionnaire.models import Section, Question
+from questionnaire.models import Question
 from registration.models import MobileNumber
 from .models import City
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
@@ -480,20 +480,4 @@ class QuestionDeSerializer(ModelSerializer):
         question.question_type = self.validated_data.get('question_type', question.question_type)
         question.question_data = self.validated_data.get('question_data', question.question_data)
         return question
-
-
-class SectionSerializer(ModelSerializer):
-    questions = QuestionSerializer(many=True)
-    class Meta:
-        model = Section
-        fields = (
-            'id',
-            'name',
-            'audit_cycle',
-            'sequence',
-            'questions',
-            'minimum_attachment_count',
-            'max_marks'
-        )
-        read_only_fields = fields
 
