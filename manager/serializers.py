@@ -446,30 +446,6 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
         )
         read_only_fields = fields
 
-class AuditStoreDeSerializer(ModelSerializer):
-    class Meta:
-        model = AuditStore
-        fields = (
-            'id',
-            'status',
-            'audit_date',
-            'audit',
-            'user',
-        )
-        read_only_fields = ('id',)
-        validators=[]
-
-    def deserialize(self):
-        if 'id' in self.context and self.context.get('id') is not None:
-            audit_store = AuditStore.objects.get(id=self.context.get('id'))
-        else:
-            audit_store = AuditStore()
-        audit_store.status = self.validated_data.get('status', audit_store.status)
-        audit_store.audit_date = self.validated_data.get('audit_date', audit_store.audit_date)
-        audit_store.audit = self.validated_data.get('audit', audit_store.audit_id)
-        audit_store.user = self.validated_data.get('user', audit_store.user_id)
-        return audit_store
-
 
 class QuestionSerializer(ModelSerializer):
     class Meta:
