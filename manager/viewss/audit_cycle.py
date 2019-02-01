@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField
+from rest_framework.serializers import Serializer, CharField, ModelSerializer
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -10,7 +10,44 @@ from audit.service import audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
 from auditor.service import application_service
 from questionnaire.service import questionnaire as questionnaire_service
-from manager.serializers import AuditCycleSerializer, AuditCycleDeSerializer
+from manager.serializers import AuditCycleSerializer
+from audit.models import AuditCycle
+
+class AuditCycleDeSerializer(ModelSerializer):
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'name',
+            'type',
+            'status',
+            'start_date',
+            'end_date',
+            'earnings_per_audit',
+            'reimbursement',
+            'description',
+            'client',
+            'questionnaire_type',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            audit_cycle = AuditCycle.objects.get(id=self.context.get('id'))
+        else:
+            audit_cycle = AuditCycle()
+        audit_cycle.name = self.validated_data.get('name', audit_cycle.name)
+        audit_cycle.type = self.validated_data.get('type', audit_cycle.type)
+        audit_cycle.status = self.validated_data.get('status', audit_cycle.status)
+        audit_cycle.start_date = self.validated_data.get('start_date', audit_cycle.start_date)
+        audit_cycle.end_date = self.validated_data.get('end_date', audit_cycle.end_date)
+        audit_cycle.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit_cycle.earnings_per_audit)
+        audit_cycle.reimbursement = self.validated_data.get('reimbursement', audit_cycle.reimbursement)
+        audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
+        audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
+        audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
+        return audit_cycle
+
 
 class AuditCycleViewByClient(APIView):
     permission_classes = [HasGroupPermission]
