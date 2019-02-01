@@ -3,7 +3,6 @@ from rest_framework.serializers import CharField, EmailField, BooleanField
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField
 
 from agency.models import AgencyUser, Agency
-from answer.models import Answer
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
@@ -495,21 +494,6 @@ class SectionSerializer(ModelSerializer):
             'questions',
             'minimum_attachment_count',
             'max_marks'
-        )
-        read_only_fields = fields
-
-
-class AnswerSerializer(ModelSerializer):
-    class Meta:
-        model = Answer
-        fields = (
-            'id',
-            'question',
-            'audit_store',
-            'answer_text',
-            'answer_comment',
-            'marks_obtained',
-            'not_applicable',
         )
         read_only_fields = fields
 

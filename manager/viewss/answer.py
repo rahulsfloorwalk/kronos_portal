@@ -1,14 +1,29 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Serializer, IntegerField, CharField, BooleanField
+from rest_framework.serializers import ModelSerializer, Serializer, IntegerField, CharField, BooleanField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from ..serializers import AnswerSerializer
+from answer.models import Answer
 from answer.service import answer as answer_service
 from answer.service import answer_manager as answer_manager_service
+
+class AnswerSerializer(ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = (
+            'id',
+            'question',
+            'audit_store',
+            'answer_text',
+            'answer_comment',
+            'marks_obtained',
+            'not_applicable',
+        )
+        read_only_fields = fields
+
 
 class AnswerByAuditStore(APIView):
     permission_classes = [HasGroupPermission]
