@@ -1,11 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer, EmailField, CharField, BooleanField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from ..serializers import PlainUserSerializer, ManagerDeSerializer
+from ..serializers import PlainUserSerializer
 from ..service import manager as manager_service
+
+
+class ManagerDeSerializer(Serializer):
+    email = EmailField()
+    password = CharField(min_length=8, max_length=128, allow_blank=True)
+    is_active = BooleanField()
 
 
 class ManagerView(APIView):

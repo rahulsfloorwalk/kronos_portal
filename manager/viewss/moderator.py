@@ -1,13 +1,18 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, IntegerField
+from rest_framework.serializers import EmailField, CharField, BooleanField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from ..serializers import PlainUserSerializer, ModeratorDeSerializer
+from ..serializers import PlainUserSerializer
 from ..service import moderator as moderator_service
 
+class ModeratorDeSerializer(Serializer):
+    email = EmailField()
+    password = CharField(min_length=8, max_length=128, allow_blank=True)
+    is_active = BooleanField()
 
 class ModeratorView(APIView):
     permission_classes = [HasGroupPermission]
