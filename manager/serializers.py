@@ -18,7 +18,6 @@ from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NA
 from social.models import Facebook
 from referral.models import AuditorReferral
 from .models import City
-from notify.models import OpportunityEmailRecord
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
 class ClientSerializer(ModelSerializer):
@@ -800,17 +799,3 @@ class PreferencesSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class OpportunityEmailRecordSerializer(ModelSerializer):
-    city = CitySerializer()
-    class Meta:
-        model = OpportunityEmailRecord
-        fields = (
-            'id',
-            'audit_cycle_id',
-            'city',
-            'total_count',
-            'progress_count',
-            'created_at',
-            'modified_at',
-        )
-        read_only_fields = fields
