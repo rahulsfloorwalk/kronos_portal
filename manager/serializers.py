@@ -9,7 +9,7 @@ from answer.models import Answer, ReportSection
 from attachment.models import Attachment
 from audit.models import Audit, AuditCycle
 from audit_store.models import AuditStore
-from auditor.models import ProfileInfo, AuditApplication, BankInfo, AdditionalInfo
+from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
 from questionnaire.models import Section, Question
@@ -664,55 +664,6 @@ class ProfileInfoSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
-class BankInfoSerializer(ModelSerializer):
-    class Meta:
-        model = BankInfo
-        fields = (
-            'id',
-            'bank_name',
-            'bank_name_from_ifsc',
-            'account_holder_name',
-            'account_number',
-            'ifsc_code',
-            'pan_number',
-            'user_id',
-            'is_complete',
-            'is_valid',
-        )
-        read_only_fields = fields
-
-
-class AdditionalInfoSerializer(ModelSerializer):
-    class Meta:
-        model = AdditionalInfo
-        fields = (
-            'id',
-            'has_car',
-            'car_cost',
-            'car_model',
-            'has_car',
-            'weekend_audit',
-            'hair_color',
-            'industry',
-            'company',
-            'height',
-            'weight',
-            'distance',
-            'camera_owned',
-            'camera_resoulution',
-            'laptop_owned',
-            'smart_phone_owned',
-            'weekend_audit',
-            'user_id',
-            'occupation',
-            'referral_code',
-            'referred_by',
-            'laptop_model',
-            'mobile_model',
-            'is_complete',
-        )
-        read_only_fields = fields
 
 class VerificationSerializer(ModelSerializer):
     class Meta:

@@ -12,8 +12,9 @@ import registration.service.auditor as auditor_service
 from auditor.service import profile_info_service, bank_info_service, additional_info_service
 from auditor.service import preferences_service
 from manager.serializers import PaymentSerializer
-from manager.serializers import ProfileInfoSerializer, BankInfoSerializer
-from manager.serializers import AdditionalInfoSerializer, AuditorSerializer, AttachmentSerializer
+from manager.serializers import ProfileInfoSerializer
+from manager.serializers import AuditorSerializer, AttachmentSerializer
+from auditor.models import AdditionalInfo, BankInfo
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
@@ -78,6 +79,56 @@ class AuditorProfileInfoView(APIView):
     def get(self, request, auditor_id, format=None):
         profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
         return Response(ProfileInfoSerializer(profile_info).data)
+
+class BankInfoSerializer(ModelSerializer):
+    class Meta:
+        model = BankInfo
+        fields = (
+            'id',
+            'bank_name',
+            'bank_name_from_ifsc',
+            'account_holder_name',
+            'account_number',
+            'ifsc_code',
+            'pan_number',
+            'user_id',
+            'is_complete',
+            'is_valid',
+        )
+        read_only_fields = fields
+
+
+class AdditionalInfoSerializer(ModelSerializer):
+    class Meta:
+        model = AdditionalInfo
+        fields = (
+            'id',
+            'has_car',
+            'car_cost',
+            'car_model',
+            'has_car',
+            'weekend_audit',
+            'hair_color',
+            'industry',
+            'company',
+            'height',
+            'weight',
+            'distance',
+            'camera_owned',
+            'camera_resoulution',
+            'laptop_owned',
+            'smart_phone_owned',
+            'weekend_audit',
+            'user_id',
+            'occupation',
+            'referral_code',
+            'referred_by',
+            'laptop_model',
+            'mobile_model',
+            'is_complete',
+        )
+        read_only_fields = fields
+
 
 class AuditorBankInfoView(APIView):
     permission_classes = [HasGroupPermission]
