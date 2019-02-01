@@ -1,5 +1,5 @@
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField
-from rest_framework.serializers import CharField, EmailField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField
+from rest_framework.serializers import CharField
 from django.contrib.auth.models import User
 
 from registration.models import MobileNumber
@@ -322,11 +322,6 @@ class AttachmentSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
-class AuditFiatAssignDeSerializer(Serializer):
-    audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
-    email = EmailField()
-    audit_date = DateField()
 
 class ProfileInfoSerializer(ModelSerializer):
     city = CitySerializer()

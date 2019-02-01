@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import CharField, EmailField, BooleanField, IntegerField
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, DateField
+from rest_framework.serializers import CharField, EmailField, BooleanField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField
 
 from agency.models import AgencyUser, Agency
 from answer.models import Answer, ReportSection
@@ -552,12 +552,4 @@ class AttachmentSerializer(ModelSerializer):
             'extra',
         )
         read_only_fields = fields
-
-
-class AuditFiatAssignDeSerializer(Serializer):
-    audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
-    email = EmailField()
-    audit_date = DateField()
-    earnings_per_audit = IntegerField()
-    reimbursement = IntegerField()
 

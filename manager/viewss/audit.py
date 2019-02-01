@@ -2,14 +2,23 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import Serializer, PrimaryKeyRelatedField, EmailField, DateField, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
+from audit.models import Audit
 
 from ..service import audit as manager_audit_service
-from ..serializers import AuditSerializer, AuditDeSerializer, AuditFiatAssignDeSerializer, AuditStoreSerializer
+from ..serializers import AuditSerializer, AuditDeSerializer, AuditStoreSerializer
 from audit.service import audit_service
 from auditor.service import application_service
+
+class AuditFiatAssignDeSerializer(Serializer):
+    audit = PrimaryKeyRelatedField(queryset=Audit.objects.all())
+    email = EmailField()
+    audit_date = DateField()
+    earnings_per_audit = IntegerField()
+    reimbursement = IntegerField()
 
 class AuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
