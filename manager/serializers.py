@@ -446,23 +446,6 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
         )
         read_only_fields = fields
 
-class AuditStoreSerializerWithPayment(ModelSerializer):
-    audit = AuditSerializer()
-    user = UserSerializer()
-    payment = PaymentSerializer()
-    class Meta:
-        model = AuditStore
-        fields = (
-            'id',
-            'status',
-            'audit_date',
-            'audit',
-            'user',
-            'payment',
-            'qa_rating',
-        )
-        read_only_fields = fields
-
 class AuditStoreDeSerializer(ModelSerializer):
     class Meta:
         model = AuditStore
