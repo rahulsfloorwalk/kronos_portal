@@ -34,7 +34,7 @@ class SectionTestCase(TestCase):
 
     def test_copy_sections_from_to_copies_all_sections(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
-        sections = mommy.make(Section, audit_cycle=audit_cycle, _quantity=4)
+        sections = mommy.make(Section, audit_cycle=audit_cycle, minimum_attachment_count=42, _quantity=4)
 
         another_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 
@@ -46,6 +46,7 @@ class SectionTestCase(TestCase):
 
         expect(list(map(lambda s: s.name, copied_sections))).to(contain_only(*map(lambda s: s.name, sections)))
         expect(list(map(lambda s: s.sequence, copied_sections))).to(contain_only(*map(lambda s: s.sequence, sections)))
+        expect(list(map(lambda s: s.minimum_attachment_count, copied_sections))).to(contain_only(*map(lambda s: s.minimum_attachment_count, sections)))
 
     def test_copy_sections_from_to_raises_if_destination_already_has_sections(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)

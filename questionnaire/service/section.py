@@ -80,6 +80,7 @@ def copy_sections_from_to(from_audit_cycle_id, to_audit_cycle_id):
             new_section = Section()
             new_section.name = section.name
             new_section.sequence = section.sequence
+            new_section.minimum_attachment_count = section.minimum_attachment_count
             new_section.audit_cycle = to_audit_cycle
             new_section.save()
             question_service.copy_questions_from_to(section.id, new_section.id)
