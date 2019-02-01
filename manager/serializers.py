@@ -390,7 +390,6 @@ class PaymentUserSerializer(ModelSerializer):
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializer()
     user = UserSerializer()
-    visible_to = PrimaryKeyRelatedField(many=True, read_only=True)
     assigned_to_moderator = PrimaryKeyRelatedField(many=True, read_only=True)
     class Meta:
         model = AuditStore
@@ -400,7 +399,6 @@ class AuditStoreSerializer(ModelSerializer):
             'audit_date',
             'audit',
             'user',
-            'visible_to',
             'assigned_to_moderator',
             'qa_rating',
             'earnings_per_audit',
