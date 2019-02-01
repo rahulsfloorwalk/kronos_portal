@@ -13,7 +13,7 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store, ClientUser
 from payment.models import Payment
 from questionnaire.models import Section, Question
-from registration.models import MobileNumber, Verification
+from registration.models import MobileNumber
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR, GROUP_NAME_MODERATOR, GROUP_NAME_AGENCY
 from .models import City
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
@@ -661,18 +661,6 @@ class ProfileInfoSerializer(ModelSerializer):
             'user_id',
             'is_complete',
             'average_rating',
-        )
-        read_only_fields = fields
-
-
-class VerificationSerializer(ModelSerializer):
-    class Meta:
-        model = Verification
-        fields = (
-            'id',
-            'key_expires',
-            'is_verified',
-            'user_id'
         )
         read_only_fields = fields
 
