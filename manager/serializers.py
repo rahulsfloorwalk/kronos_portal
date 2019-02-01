@@ -676,24 +676,3 @@ class VerificationSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-
-class AuditorSerializer(ModelSerializer):
-    profileinfo = ProfileInfoSerializer()
-    verification = VerificationSerializer()
-    class Meta:
-        model = User
-        fields = (
-            'id',
-            'username',
-            'email',
-            'is_active',
-            'date_joined',
-            'last_login',
-            'profileinfo',
-            'verification',
-        )
-        read_only_fields = fields
-
-
-
-

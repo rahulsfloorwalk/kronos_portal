@@ -12,8 +12,8 @@ import registration.service.auditor as auditor_service
 from auditor.service import profile_info_service, bank_info_service, additional_info_service
 from auditor.service import preferences_service
 from manager.serializers import PaymentSerializer
-from manager.serializers import ProfileInfoSerializer
-from manager.serializers import AuditorSerializer, AttachmentSerializer
+from manager.serializers import ProfileInfoSerializer, VerificationSerializer
+from manager.serializers import AttachmentSerializer
 from auditor.models import AdditionalInfo, BankInfo
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
@@ -23,6 +23,23 @@ from referral.service import referral_auditor as referral_service
 from auditor.models import Preferences
 from referral.models import AuditorReferral
 from social.models import Facebook
+
+class AuditorSerializer(ModelSerializer):
+    profileinfo = ProfileInfoSerializer()
+    verification = VerificationSerializer()
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'is_active',
+            'date_joined',
+            'last_login',
+            'profileinfo',
+            'verification',
+        )
+        read_only_fields = fields
 
 class AuditorView(generics.ListAPIView):
     class AuditorViewPaginationClass(PageNumberPagination):
