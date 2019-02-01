@@ -361,22 +361,6 @@ class UserSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
-class PaymentUserSerializer(ModelSerializer):
-    user = UserSerializer()
-    class Meta:
-        model = Payment
-        fields = (
-            'id',
-            'comment',
-            'amount',
-            'status',
-            'user',
-            'audit_store_id',
-            'added_on',
-            'paid_on',
-        )
-        read_only_fields = fields
-
 class AuditStoreSerializer(ModelSerializer):
     audit = AuditSerializer()
     user = UserSerializer()

@@ -2,13 +2,31 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.serializers import ModelSerializer
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from payment.service import payment_manager as payment_service
+from payment.models import Payment
 
-from ..serializers import PaymentUserSerializer
+from manager.serializers import UserSerializer
+
+class PaymentUserSerializer(ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Payment
+        fields = (
+            'id',
+            'comment',
+            'amount',
+            'status',
+            'user',
+            'audit_store_id',
+            'added_on',
+            'paid_on',
+        )
+        read_only_fields = fields
 
 class PaymentView(APIView):
     permission_classes = [HasGroupPermission]
