@@ -62,3 +62,7 @@ export function update(moderatorId, email, password, is_active){
 		contentType: "application/json"
 	});
 }
+
+export function findModeratorSummaryByAuditCycle(auditCycleId){
+	return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator_summary`);
+}

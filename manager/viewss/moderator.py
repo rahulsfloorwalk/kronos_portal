@@ -6,6 +6,7 @@ from rest_framework.serializers import EmailField, CharField, BooleanField
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from manager.service import moderator_summary
 from ..serializers import PlainUserSerializer
 from ..service import moderator as moderator_service
 
@@ -90,3 +91,12 @@ class ModeratorByAuditCycle(APIView):
         )
         return Response(PlainUserSerializer(saved_user).data)
 
+
+class ModeratorSummaryByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id):
+        return Response(moderator_summary.moderator_summary_for_audit_cycle(audit_cycle_id))
