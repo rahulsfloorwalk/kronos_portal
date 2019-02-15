@@ -1,4 +1,4 @@
-import reducer from "../answer";
+import reducer from "../moderator";
 
 import types from "../../action_types";
 
