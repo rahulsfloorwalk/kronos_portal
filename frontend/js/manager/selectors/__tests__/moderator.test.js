@@ -1,5 +1,5 @@
 
-import { findModeratorByUserId } from "../moderator";
+import { findModeratorByUserId, findModerators } from "../moderator";
 
 const sampleModerators = [
 	{
@@ -23,5 +23,16 @@ describe(findModeratorByUserId, () => {
 
 	it("should return undefined when the moderator with given id is not found", () => {
 		expect(findModeratorByUserId(sampleStore, 2)).toBeUndefined();
+	});
+});
+
+describe(findModerators, () => {
+
+	it("should return the list of moderators", () => {
+		expect(findModerators(sampleStore)).toEqual(sampleModerators);
+	});
+
+	it("should return an empty list when the moderator is empty", () => {
+		expect(findModerators({moderator: []})).toEqual([]);
 	});
 });
