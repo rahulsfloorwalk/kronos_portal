@@ -71,7 +71,6 @@ export class FailReportMessageForm extends Component{
 				</Modal>
 			);
 		}
-		console.log(this.props.auditStore);
 		const auditorName = this.props.auditStore.user.profileinfo ? this.props.auditStore.user.profileinfo.first_name + " " + this.props.auditStore.user.profileinfo.last_name : this.props.auditStore.user.agencyuser.full_name;
 		return (
 			<Modal modalTitle={modalTitle} onClose={this.props.router.goBack}>

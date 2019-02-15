@@ -1,13 +1,10 @@
 import React from "react";
 import { Provider } from "react-redux";
-import { shallow } from "enzyme";
 import renderer from "react-test-renderer";
 import configureStore from "redux-mock-store";
 import ReduxThunk from "redux-thunk";
 
 import __ReportSummary from "../ReportSummary";
-import types from "../../../manager/action_types";
-import {AuditStoreDetails} from "../AuditStoreDetails";
 
 jest.mock("react-dom", () => ({
 	findDOMNode: () => {},

@@ -13,7 +13,6 @@ import { momentDateFormat, url }  from "../../../config.js";
 import { fetchAuditStore,
 	completeAuditStore,
 	qaOkAuditStore,
-	failAuditStore,
 	withdrawAuditStore,
 	submitAuditStore,
 	unSubmitAuditStore,
