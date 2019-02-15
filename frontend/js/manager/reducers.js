@@ -14,6 +14,7 @@ import reportSectionReducer from "./reducers/report_section";
 import clientUserReducer from "./reducers/client_user";
 import clientUserStoreVisibilityReducer from "./reducers/client_user_visibility";
 import reportAttributeReducer from "./reducers/report_attribute";
+import auditCycleModeratorSummaryReducer from "./reducers/audit_cycle_moderator_summary";
 import formReducer from "./reducers/forms";
 import errorsReducer from "./reducers/errors";
 
@@ -32,6 +33,7 @@ export default combineReducers({
 	clientUsers: clientUserReducer,
 	clientUserStoreVisibility: clientUserStoreVisibilityReducer,
 	reportAttributes: reportAttributeReducer,
+	auditCycleModeratorSummary: auditCycleModeratorSummaryReducer,
 	forms: formReducer,
 	errors: errorsReducer,
 });
