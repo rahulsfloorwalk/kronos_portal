@@ -29,7 +29,7 @@ class ReportSectionSerializer(ModelSerializer):
 class ReportSectionDeSerializer(Serializer):
     audit_store = PrimaryKeyRelatedField(queryset=AuditStore.objects.all())
     section = PrimaryKeyRelatedField(queryset=Section.objects.all())
-    pm_comment = CharField(max_length=2048, allow_blank=True)
+    pm_comment = CharField(max_length=4096, allow_blank=True)
 
 
 class ReportSectionByAuditStore(APIView):

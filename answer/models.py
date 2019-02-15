@@ -87,9 +87,9 @@ class ReportSection(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     audit_store = ForeignKey('audit_store.AuditStore', related_name='report_sections', db_column='audit_store_id', blank=False, on_delete=PROTECT)
     section = ForeignKey(Section, db_column='section_id', related_name='report_sections', blank=False, on_delete=PROTECT)
-    pm_comment = CharField(db_column='pm_comment', max_length=2048, blank=True)
-    auditor_comment = CharField(db_column='auditor_comment', max_length=2048, blank=True)
-    auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=2048, blank=True)
+    pm_comment = CharField(db_column='pm_comment', max_length=4096, blank=True)
+    auditor_comment = CharField(db_column='auditor_comment', max_length=4096, blank=True)
+    auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=4096, blank=True)
     not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
 
     created_at = DateTimeField(db_column="created_at", null=True)

@@ -214,7 +214,7 @@ class CommentSubmitView(APIView):
     }
 
     class ReportSectionDeSerializer(Serializer):
-        auditor_comment = CharField(max_length=2048, allow_blank=True)
+        auditor_comment = CharField(max_length=4096, allow_blank=True)
 
     def post(self, request, audit_store_id, section_id, format=None):
         ds = self.ReportSectionDeSerializer(data=request.data)
