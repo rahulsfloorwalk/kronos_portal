@@ -270,6 +270,20 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
         onClick={[Function]}
         style={Object {}}
       >
+        <span
+          className="glyphicon glyphicon-knight"
+        />
+         Moderator Summary
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
         <b>
           ₹
         </b>

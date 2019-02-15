@@ -11,7 +11,7 @@ import { fetchAuditCycle } from "../../actions/audit.js";
 import AuditTypeLabel from "../../../components/AuditTypeLabel.jsx";
 import ExpandableDetails from "../../../components/ExpandableDetails.jsx";
 import MarkdownViewer from "../../../components/MarkdownViewer.jsx";
-import { Envelope, King, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
+import { Envelope, King, Knight, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
 import NavLink from "../../../components/NavLink.jsx";
 import Loading from "../../../components/Loading.jsx";
 
@@ -131,6 +131,7 @@ export class AuditCycleDetails extends React.Component{
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`}><Tasks/> Questionnaire</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit`}><Inbox/> Audits</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator_summary`}><Knight/> Moderator Summary</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/payment`}><b>₹</b> Payments</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`}><Envelope/> Email</NavLink>
 					{/*
