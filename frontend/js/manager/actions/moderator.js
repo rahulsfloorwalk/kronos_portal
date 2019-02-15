@@ -1,5 +1,6 @@
 import types from "../action_types.js";
 import { findModeratorSummaryByAuditCycle } from "../service/moderator";
+import { findModerators } from "../service/moderator";
 
 export const fetchModeratorSummaryByAuditCycle = (auditCycleId) => {
 	return (dispatch) => {
@@ -10,6 +11,18 @@ export const fetchModeratorSummaryByAuditCycle = (auditCycleId) => {
 				moderatorSummary: summaryData,
 			});
 			return summaryData;
+		});
+	};
+};
+
+export const fetchModerators = () => {
+	return (dispatch) => {
+		return findModerators().then((moderators) => {
+			dispatch({
+				type: types.MODERATOR_GET,
+				moderators,
+			});
+			return moderators;
 		});
 	};
 };
