@@ -23,8 +23,17 @@ workflows:
               only:
                 - development
                 - master
+      - sentry-upload-source:
+          type: approval
+          requires:
+            - package
 
 commands:
+  guard-tagged-commit:
+    description: "Returns a non-zero exit code if the current commit is not tagged."
+    steps:
+      - run: "if [[ -z $CI_TAG ]]; then echo 'Please ensure the commit is tagged.'; $(exit 1); else echo 'Commit is tagged. Good Job'; fi"
+
   py-restore-cache:
     description: "Restore, Update and Cache python dependencies"
     steps:
@@ -61,11 +70,40 @@ commands:
           key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
 
 jobs:
+  sentry-upload-source:
+    docker:
+      - image: circleci/python:3.5.4-node
+    environment:
+      - SENTRY_ORG: floorwalk
+      - SENTRY_PROJECT_NAME: kronos
+    steps:
+      - guard-tagged-commit
+      - checkout
+      - js-restore-cache
+      - attach_workspace:
+          at: frontend/dist
+      - run:
+          name: create a new sentry release
+          command: |
+            cd frontend
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME new $CI_TAG
+      - run:
+          name: upload source maps for the release
+          command: |
+            cd frontend
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME files $CI_TAG upload-sourcemaps --url-prefix="~/static/" --validate `find dist/ -name "*.js.map"`
+      - run:
+          name: finalize the release
+          command: |
+            cd frontend
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME finalize $CI_TAG
+
   package:
     docker:
       - image: circleci/python:3.5.4-node
 
     steps:
+      - guard-tagged-commit
       - checkout
       - py-restore-cache
       - js-restore-cache
@@ -114,11 +152,6 @@ jobs:
           name: create test results directory
           command: mkdir test-results
 
-      # run tests!
-      # this example uses Django's built-in test-runner
-      # other common Python testing frameworks include pytest and nose
-      # https://pytest.org
-      # https://nose.readthedocs.io
       - run:
           name: run tests and generate reports
           command: |
@@ -152,8 +185,6 @@ jobs:
 
   jstest:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.5.4-node
 
     steps:
@@ -174,8 +205,6 @@ jobs:
 
   jslint:
     docker:
-      # specify the version you desire here
-      # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:3.5.4-node
 
     steps:

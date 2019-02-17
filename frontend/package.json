@@ -46,6 +46,7 @@
     "reselect": "^2.2.1"
   },
   "devDependencies": {
+    "@sentry/cli": "^1.39.1",
     "babel": "^6.23.0",
     "babel-core": "^6.23.1",
     "babel-eslint": "^7.2.3",

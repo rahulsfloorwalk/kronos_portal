@@ -8,6 +8,7 @@ module.exports = Object.assign({}, baseConfig, {
 	output: Object.assign({}, baseConfig.output, {
 		filename: "[name].[chunkhash].bundle.js",
 	}),
+	devtool: "source-map",
 	plugins : baseConfig.plugins.concat([
 		new webpack.DefinePlugin({
 			"process.env": {
