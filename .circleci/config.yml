@@ -3,6 +3,80 @@
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
 version: 2
+
+workflows:
+  version: 2
+  test-and-package:
+    jobs:
+      - pytest
+      - jstest
+      - jslint
+      - pylint
+      - package:
+          requires:
+            - pytest
+            - jstest
+            - jslint
+            - pylint
+          filters:
+            branches:
+              only:
+                - development
+                - master
+      - sentry-upload-source-maps:
+          requires:
+            - package
+          filters:
+            branches:
+              only:
+                - development
+                - master
+
+references:
+  # Restore, Update and Cache dependencies
+  python-restore-cache: &python-restore-cache
+    restore_cache:
+      keys:
+      - v3-dependencies-{{ checksum "requirements.txt" }}
+      # fallback to using the latest cache if no exact match is found
+      - v3-dependencies-
+
+  python-update-cache: &python-update-cache
+    run:
+      name: install python dependencies
+      command: |
+        python3 -m venv venv
+        . venv/bin/activate
+        pip install -r requirements.txt
+
+  python-save-cache: &python-save-cache
+    save_cache:
+      paths:
+        - ./venv
+      key: v3-dependencies-{{ checksum "requirements.txt" }}
+
+  # Restore, Update and Cache dependencies
+  js-restore-cache: &js-restore-cache
+    restore_cache:
+      keys:
+      - v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+      # fallback to using the latest cache if no exact match is found
+      - v3-frontend-dependencies-
+
+  js-update-cache: &js-update-cache
+    run:
+      name: install javascript dependencies
+      command: |
+        cd frontend
+        npm install
+
+  js-save-cache: &js-save-cache
+    save_cache:
+      paths:
+        - ./frontend/node_modules
+      key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+
+
 jobs:
   package:
     docker:
@@ -10,48 +84,18 @@ jobs:
 
     steps:
       - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v3-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v3-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v3-dependencies-{{ checksum "requirements.txt" }}
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v3-frontend-dependencies-
-
-      - run:
-          name: install the frontend dependencies
-          command: |
-            cd frontend
-            npm install
+      - *python-restore-cache
+      - *python-update-cache
+      - *python-save-cache
+      - *js-restore-cache
+      - *js-update-cache
+      - *js-save-cache
 
       - run:
           name: generate frontend bundles through webpack
           command: |
             cd frontend
             npm run build-prod
-
-      - save_cache:
-          paths:
-            - ./frontend/node_modules
-          key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
 
       - run:
           name: package the tar
@@ -76,26 +120,10 @@ jobs:
       
     steps:
       - checkout
+      - *python-restore-cache
+      - *python-update-cache
+      - *python-save-cache
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v3-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v3-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v3-dependencies-{{ checksum "requirements.txt" }}
-        
       - run:
           name: write test properties
           command: cp .circleci/properties.test.ini properties.ini
@@ -132,25 +160,9 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v3-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v3-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            python3 -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt
-
-      - save_cache:
-          paths:
-            - ./venv
-          key: v3-dependencies-{{ checksum "requirements.txt" }}
+      - *python-restore-cache
+      - *python-update-cache
+      - *python-save-cache
 
       - run:
           name: run the linter
@@ -166,24 +178,9 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v3-frontend-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            cd frontend
-            npm install
-
-      - save_cache:
-          paths:
-            - ./frontend/node_modules
-          key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+      - *js-restore-cache
+      - *js-update-cache
+      - *js-save-cache
 
       - run:
           name: run the jest tests
@@ -205,47 +202,12 @@ jobs:
 
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - v3-frontend-dependencies-
-
-      - run:
-          name: install dependencies
-          command: |
-            cd frontend
-            npm install
-
-      - save_cache:
-          paths:
-            - ./frontend/node_modules
-          key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+      - *js-restore-cache
+      - *js-update-cache
+      - *js-save-cache
 
       - run:
           name: run the linter
           command: |
             cd frontend
             npm run eslint js/**/*.{js,jsx}
-
-workflows:
-  version: 2
-  test-and-package:
-    jobs:
-      - pytest
-      - jstest
-      - jslint
-      - pylint
-      - package:
-          requires:
-            - pytest
-            - jstest
-            - jslint
-            - pylint
-          filters:
-            branches:
-              only:
-                - development
-                - master
