@@ -54,10 +54,12 @@ const sampleModerators = [
 	{
 		id: 5744,
 		email: "alize@canberra.com",
+		is_active: true,
 	},
 	{
 		id: 5315,
 		email: "bob@petersburg.ru",
+		is_active: true,
 	},
 ];
 

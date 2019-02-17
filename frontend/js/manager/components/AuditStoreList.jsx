@@ -25,6 +25,7 @@ import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 const moderatorPropShape = PropTypes.shape({
 	id: PropTypes.number.isRequired,
 	email: PropTypes.string.isRequired,
+	is_active: PropTypes.bool.isRequired,
 });
 
 const auditStorePropShape = PropTypes.shape({

@@ -11,10 +11,17 @@ const sampleModerators = [
 	{
 		id: 1,
 		email: "alize@canberra.com",
+		is_active: true,
 	},
 	{
 		id: 2,
 		email: "bob@petersburg.ru",
+		is_active: true,
+	},
+	{
+		id: 3,
+		email: "john@boyega.foo",
+		is_active: false,
 	},
 ];
 
