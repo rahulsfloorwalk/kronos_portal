@@ -61,6 +61,7 @@ class AuditStoreRow extends React.Component {
 		}
 		return(
 			<tr>
+				<td className="text-right">{this.props.auditStore.id}</td>
 				<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				<td className="text-right">{acceptButton}</td>
@@ -93,6 +94,7 @@ class AuditStoreTable extends React.Component {
 			<table className="table table-striped">
 				<thead>
 					<tr>
+						<th className="text-right">Report ID</th>
 						<th>Auditor Name</th>
 						<th>Audit Date</th>
 						<th></th>

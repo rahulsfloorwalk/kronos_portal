@@ -15,7 +15,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -301,7 +302,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -587,7 +589,8 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -873,7 +876,8 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -1159,7 +1163,8 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -1451,7 +1456,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -1737,7 +1743,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -2030,7 +2037,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -2309,7 +2317,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -2588,7 +2597,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -2867,7 +2877,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -3146,7 +3157,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -3432,7 +3444,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"
@@ -4163,7 +4176,8 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     <span
       className="glyphicon glyphicon-file"
     />
-     Audit Report
+     Audit Report - 
+    5
   </h2>
   <div
     className="row"

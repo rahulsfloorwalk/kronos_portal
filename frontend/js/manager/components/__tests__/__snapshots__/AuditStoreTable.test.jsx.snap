@@ -6,6 +6,11 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
 >
   <thead>
     <tr>
+      <th
+        className="text-right"
+      >
+        Report ID
+      </th>
       <th>
         Auditor Name
       </th>
@@ -24,6 +29,11 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
   </thead>
   <tbody>
     <tr>
+      <td
+        className="text-right"
+      >
+        3925
+      </td>
       <td>
         <div>
           <b>
@@ -95,6 +105,11 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
       </td>
     </tr>
     <tr>
+      <td
+        className="text-right"
+      >
+        3930
+      </td>
       <td>
         <div>
           <b>

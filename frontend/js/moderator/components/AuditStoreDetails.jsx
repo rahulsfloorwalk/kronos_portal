@@ -130,7 +130,7 @@ export default class AuditStoreDetails extends React.Component{
 				*/}
 				<h2 className="page-header">
 					{failButton}
-					<File/> Audit Report
+					<File/> Audit Report - {this.state.auditStore.id}
 				</h2>
 				<div className="row">
 					<div className="col-md-6">

@@ -31,6 +31,7 @@ class AuditStoreList2 extends Component{
 		let reps = [];
 		for(let as of this.props.auditStores){
 			reps.push( <tr key={as.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}>
+				<td className="text-right">{as.id}</td>
 				<td>{as.audit.audit_cycle.client.name}</td>
 				<td>{as.audit.store.name}, {as.audit.store.city.name}</td>
 				<td><AuditorNameDisplay user={as.user}/></td>
@@ -53,6 +54,7 @@ class AuditStoreList2 extends Component{
 				<table className="table table-hover table-striped">
 					<thead>
 						<tr>
+							<th className="text-right">Report ID</th>
 							<th>Client</th>
 							<th>Store</th>
 							<th>Auditor Name</th>

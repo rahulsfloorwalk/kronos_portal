@@ -10,6 +10,8 @@ import Datetime from "react-datetime";
 import moment from "moment";
 import { momentDateFormat, url }  from "../../../config.js";
 
+import { auditStorePropType }  from "../prop_types";
+
 import { fetchAuditStore,
 	completeAuditStore,
 	qaOkAuditStore,
@@ -44,7 +46,7 @@ export class AuditStoreDetails extends React.Component{
 		params: PropTypes.shape({
 			auditStoreId: PropTypes.string.isRequired,
 		}),
-		auditStore: PropTypes.object,
+		auditStore: auditStorePropType,
 		errors: PropTypes.shape({
 			non_field_errors: PropTypes.array,
 		}),
@@ -211,7 +213,7 @@ export class AuditStoreDetails extends React.Component{
 					<li className="active"><File/> {this.props.auditStore.audit.store.name}</li>
 				</ol>
 				<h2 className="page-header">
-					<File/> Audit Report
+					<File/> Audit Report - {this.props.auditStore.id}
 					<div className="pull-right">
 						<a className="btn btn-default" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
 							<Download/> Excel Report
@@ -220,66 +222,72 @@ export class AuditStoreDetails extends React.Component{
 						{moreOptionsDropdown}
 					</div>
 				</h2>
-				<div className="panel panel-default">
-					<div className="panel-heading">
-						<h4 className="panel-title">Audit Details</h4>
-					</div>
-					<table className="table table-striped">
-						<tbody>
-							<tr>
-								<td className="text-right">Client:</td>
-								<th>{this.props.auditStore.audit.audit_cycle.client.name}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Store:</td>
-								<th>{this.props.auditStore.audit.store.name}</th>
-							</tr>
-							<tr>
+				<div className="row">
+					<div className="col-md-4">
+						<div className="panel panel-default">
+							<div className="panel-heading">
+								<h4 className="panel-title">Audit Details</h4>
+							</div>
+							<table className="table table-striped">
+								<tbody>
+									<tr>
+										<td className="text-right">Client:</td>
+										<th>{this.props.auditStore.audit.audit_cycle.client.name}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Store:</td>
+										<th>{this.props.auditStore.audit.store.name}</th>
+									</tr>
+									<tr>
 
-								<td className="text-right">Address:</td>
-								<th>{`${this.props.auditStore.audit.store.address}, ${this.props.auditStore.audit.store.city.name}`}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Type:</td>
-								<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Fees:</td>
-								<th>
-									₹ {this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit} (<Link to={`/audit_store/${this.props.auditStore.id}/earnings_per_audit`}>change</Link>)
-								</th>
-							</tr>
-							<tr>
-								<td className="text-right">Reimbursement upto:</td>
-								<th>
-									₹ {this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement} (<Link to={`/audit_store/${this.props.auditStore.id}/reimbursement`}>change</Link>)
-								</th>
-							</tr>
-							<tr>
-								<td className="text-right">Auditor:</td>
-								<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
-							</tr>
-							<tr>
-								<td className="text-right">Audit Date:</td>
-								<th>{auditDateElement}</th>
-							</tr>
-							<tr>
-								<td className="text-right">Status:</td>
-								<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
-							</tr>
-							<tr>
-								<td className="text-right">Rating:</td>
-								<th>
-									<AuditStoreRating rating={this.props.auditStore.qa_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/qa_rating`}>change</Link>)
-								</th>
-							</tr>
-						</tbody>
-						<AuditStoreReportAttributesTable auditStoreId={this.props.auditStore.id}/>
-					</table>
-					{detailsElement}
-					<div className="panel-footer text-right">
-						{errorFirst}
-						{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}&nbsp;{pmRevertButton}&nbsp;{completeButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
+										<td className="text-right">Address:</td>
+										<th>{`${this.props.auditStore.audit.store.address}, ${this.props.auditStore.audit.store.city.name}`}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Type:</td>
+										<th>{getAuditType(this.props.auditStore.audit.audit_cycle.type)}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Fees:</td>
+										<th>
+											₹ {this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit} (<Link to={`/audit_store/${this.props.auditStore.id}/earnings_per_audit`}>change</Link>)
+										</th>
+									</tr>
+									<tr>
+										<td className="text-right">Reimbursement upto:</td>
+										<th>
+											₹ {this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement} (<Link to={`/audit_store/${this.props.auditStore.id}/reimbursement`}>change</Link>)
+										</th>
+									</tr>
+									<tr>
+										<td className="text-right">Auditor:</td>
+										<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
+									</tr>
+									<tr>
+										<td className="text-right">Audit Date:</td>
+										<th>{auditDateElement}</th>
+									</tr>
+									<tr>
+										<td className="text-right">Status:</td>
+										<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
+									</tr>
+									<tr>
+										<td className="text-right">Rating:</td>
+										<th>
+											<AuditStoreRating rating={this.props.auditStore.qa_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/qa_rating`}>change</Link>)
+										</th>
+									</tr>
+								</tbody>
+								<AuditStoreReportAttributesTable auditStoreId={this.props.auditStore.id}/>
+							</table>
+							<div className="panel-footer text-right">
+								{errorFirst}
+								{submitButton}&nbsp;{unSubmitButton}&nbsp;{qaOkButton}&nbsp;{pmRevertButton}&nbsp;{completeButton}&nbsp;{uncompleteButton}&nbsp;{acceptButton}&nbsp;{rejectButton}
+							</div>
+						</div>
+					</div>
+					<div className="col-md-8">
+						{detailsElement}
 					</div>
 				</div>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
