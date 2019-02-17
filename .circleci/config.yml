@@ -23,25 +23,17 @@ workflows:
               only:
                 - development
                 - master
-      - sentry-upload-source-maps:
-          requires:
-            - package
-          filters:
-            branches:
-              only:
-                - development
-                - master
 
 references:
   # Restore, Update and Cache dependencies
-  python-restore-cache: &python-restore-cache
+  py-restore-cache: &python-restore-cache
     restore_cache:
       keys:
       - v3-dependencies-{{ checksum "requirements.txt" }}
       # fallback to using the latest cache if no exact match is found
       - v3-dependencies-
 
-  python-update-cache: &python-update-cache
+  py-update-cache: &python-update-cache
     run:
       name: install python dependencies
       command: |
@@ -49,7 +41,7 @@ references:
         . venv/bin/activate
         pip install -r requirements.txt
 
-  python-save-cache: &python-save-cache
+  py-save-cache: &python-save-cache
     save_cache:
       paths:
         - ./venv
@@ -84,9 +76,9 @@ jobs:
 
     steps:
       - checkout
-      - *python-restore-cache
-      - *python-update-cache
-      - *python-save-cache
+      - *py-restore-cache
+      - *py-update-cache
+      - *py-save-cache
       - *js-restore-cache
       - *js-update-cache
       - *js-save-cache
@@ -120,9 +112,9 @@ jobs:
       
     steps:
       - checkout
-      - *python-restore-cache
-      - *python-update-cache
-      - *python-save-cache
+      - *py-restore-cache
+      - *py-update-cache
+      - *py-save-cache
 
       - run:
           name: write test properties
@@ -160,9 +152,9 @@ jobs:
 
     steps:
       - checkout
-      - *python-restore-cache
-      - *python-update-cache
-      - *python-save-cache
+      - *py-restore-cache
+      - *py-update-cache
+      - *py-save-cache
 
       - run:
           name: run the linter
