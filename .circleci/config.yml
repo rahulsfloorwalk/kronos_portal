@@ -2,10 +2,10 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
 
 workflows:
-  version: 2
+  version: 2.1
   test-and-package:
     jobs:
       - pytest
@@ -24,50 +24,47 @@ workflows:
                 - development
                 - master
 
-references:
-  # Restore, Update and Cache dependencies
-  py-restore-cache: &py-restore-cache
-    restore_cache:
-      keys:
-      - v3-dependencies-{{ checksum "requirements.txt" }}
-      # fallback to using the latest cache if no exact match is found
-      - v3-dependencies-
+commands:
+  py-restore-cache:
+    description: "Restore, Update and Cache python dependencies"
+    steps:
+      - restore_cache:
+        keys:
+          - v3-dependencies-{{ checksum "requirements.txt" }}
+          # fallback to using the latest cache if no exact match is found
+          - v3-dependencies-
 
-  py-update-cache: &py-update-cache
-    run:
-      name: install python dependencies
-      command: |
-        python3 -m venv venv
-        . venv/bin/activate
-        pip install -r requirements.txt
+      - run:
+          name: install python dependencies
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
 
-  py-save-cache: &py-save-cache
-    save_cache:
-      paths:
-        - ./venv
-      key: v3-dependencies-{{ checksum "requirements.txt" }}
+      - save_cache:
+          paths:
+            - ./venv
+          key: v3-dependencies-{{ checksum "requirements.txt" }}
 
-  # Restore, Update and Cache dependencies
-  js-restore-cache: &js-restore-cache
-    restore_cache:
-      keys:
-      - v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
-      # fallback to using the latest cache if no exact match is found
-      - v3-frontend-dependencies-
+  js-restore-cache:
+    description: "Restore, Update and Cache javascript dependencies"
+    steps:
+      - restore_cache:
+          keys:
+            - v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v3-frontend-dependencies-
 
-  js-update-cache: &js-update-cache
-    run:
-      name: install javascript dependencies
-      command: |
-        cd frontend
-        npm install
+      - run:
+          name: install javascript dependencies
+          command: |
+            cd frontend
+            npm install
 
-  js-save-cache: &js-save-cache
-    save_cache:
-      paths:
-        - ./frontend/node_modules
-      key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
-
+      - save_cache:
+          paths:
+            - ./frontend/node_modules
+          key: v3-frontend-dependencies-{{ checksum "frontend/package-lock.json" }}
 
 jobs:
   package:
@@ -76,12 +73,8 @@ jobs:
 
     steps:
       - checkout
-      - *py-restore-cache
-      - *py-update-cache
-      - *py-save-cache
-      - *js-restore-cache
-      - *js-update-cache
-      - *js-save-cache
+      - py-restore-cache
+      - js-restore-cache
 
       - run:
           name: generate frontend bundles through webpack
@@ -95,6 +88,10 @@ jobs:
 
       - store_artifacts:
           path: dist
+
+      - persist_to_workspace:
+          paths:
+            - frontend/dist
 
   pytest:
     docker:
@@ -112,9 +109,7 @@ jobs:
       
     steps:
       - checkout
-      - *py-restore-cache
-      - *py-update-cache
-      - *py-save-cache
+      - py-restore-cache
 
       - run:
           name: write test properties
@@ -152,9 +147,7 @@ jobs:
 
     steps:
       - checkout
-      - *py-restore-cache
-      - *py-update-cache
-      - *py-save-cache
+      - py-restore-cache
 
       - run:
           name: run the linter
@@ -170,9 +163,7 @@ jobs:
 
     steps:
       - checkout
-      - *js-restore-cache
-      - *js-update-cache
-      - *js-save-cache
+      - js-restore-cache
 
       - run:
           name: run the jest tests
@@ -194,9 +185,7 @@ jobs:
 
     steps:
       - checkout
-      - *js-restore-cache
-      - *js-update-cache
-      - *js-save-cache
+      - js-restore-cache
 
       - run:
           name: run the linter
