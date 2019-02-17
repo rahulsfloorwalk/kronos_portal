@@ -29,7 +29,7 @@ workflows:
             - package
       - sentry-upload-source:
           requires:
-            - hold-sentry-upload-source:
+            - hold-sentry-upload-source
 
 commands:
   guard-tagged-commit:
