@@ -79,7 +79,6 @@ jobs:
       - SENTRY_ORG: floorwalk
       - SENTRY_PROJECT_NAME: kronos
     steps:
-      - guard-tagged-commit
       - checkout
       - js-restore-cache
       - attach_workspace:
@@ -105,7 +104,6 @@ jobs:
       - image: circleci/python:3.5.4-node
 
     steps:
-      - guard-tagged-commit
       - checkout
       - py-restore-cache
       - js-restore-cache
