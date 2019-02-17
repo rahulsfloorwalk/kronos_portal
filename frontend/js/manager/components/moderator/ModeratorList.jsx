@@ -8,6 +8,7 @@ import { findModerators } from "../../service/moderator.js";
 
 class ModeratorRow extends React.Component {
 	static propTypes = {
+		seq: PropTypes.number.isRequired,
 		moderator: PropTypes.shape({
 			id: PropTypes.number,
 			is_active: PropTypes.bool,
@@ -19,6 +20,7 @@ class ModeratorRow extends React.Component {
 		var is_active = this.props.moderator.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
+				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.moderator.email}</td>
 				<td>{is_active}</td>
 				<td>
@@ -51,11 +53,8 @@ export default class ModeratorList extends React.Component {
 	}
 
 	render() {
-		let rows = [];
-		for(let moderator of this.state.moderators) {
-			rows.push(<ModeratorRow moderator={moderator} key={moderator.id}/>);
-		}
-		var addModeratorLink = "/moderator/add";
+		const rows = this.state.moderators.map((m, i) => <ModeratorRow seq={i+1} moderator={m} key={m.id}/>);
+		const addModeratorLink = "/moderator/add";
 		return (
 			<div>
 				<h2 className="page-header">
@@ -65,6 +64,7 @@ export default class ModeratorList extends React.Component {
 				<table className="table table-striped">
 					<thead>
 						<tr>
+							<th className="text-right">#</th>
 							<th>Email Address</th>
 							<th>Active</th>
 							<th></th>

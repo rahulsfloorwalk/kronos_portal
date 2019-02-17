@@ -8,6 +8,7 @@ import { findManagers } from "../../service/manager.js";
 
 class ManagerRow extends React.Component {
 	static propTypes = {
+		seq: PropTypes.number.isRequired,
 		manager: PropTypes.shape({
 			id: PropTypes.number,
 			email: PropTypes.string,
@@ -18,6 +19,7 @@ class ManagerRow extends React.Component {
 		var is_active = this.props.manager.is_active ? <Check/> : <Cross/>;
 		return (
 			<tr>
+				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.manager.email}</td>
 				<td>{is_active}</td>
 				<td>
@@ -50,11 +52,8 @@ export default class ManagerList extends React.Component {
 	}
 
 	render() {
-		let rows = [];
-		for(let manager of this.state.managers) {
-			rows.push(<ManagerRow manager={manager} key={manager.id}/>);
-		}
-		var addManagerLink = "/manager/add";
+		const rows = this.state.managers.map((m,i) => <ManagerRow seq={i+1} manager={m} key={m.id}/>);
+		const addManagerLink = "/manager/add";
 		return (
 			<div>
 				<h2 className="page-header">
@@ -64,6 +63,7 @@ export default class ManagerList extends React.Component {
 				<table className="table table-striped">
 					<thead>
 						<tr>
+							<th className="text-right">#</th>
 							<th>Email Address</th>
 							<th>Active</th>
 							<th></th>
