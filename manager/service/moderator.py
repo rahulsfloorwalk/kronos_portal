@@ -88,6 +88,9 @@ def assign_audit_store(user_id, audit_store_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     mod_user = find_by_id(user_id)
 
+    if not mod_user.is_active:
+        raise AppLogicError("disabled moderators cannot be assigned reports")
+
     revoke_audit_store(audit_store_id)
     assign_perm('moderator_manage', mod_user, audit_store)
 
