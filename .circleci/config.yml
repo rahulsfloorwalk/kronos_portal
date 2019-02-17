@@ -90,17 +90,17 @@ jobs:
           name: create a new sentry release
           command: |
             cd frontend
-            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME new $CIRCLE_TAG
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME new $(node -p -e "require('./package.json').version")
       - run:
           name: upload source maps for the release
           command: |
             cd frontend
-            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME files $CIRCLE_TAG upload-sourcemaps --url-prefix="~/static/" --validate `find dist/ -name "*.js.map"`
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME files $(node -p -e "require('./package.json').version") upload-sourcemaps --url-prefix="~/static/" --validate `find dist/ -name "*.js.map"`
       - run:
           name: finalize the release
           command: |
             cd frontend
-            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME finalize $CIRCLE_TAG
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME finalize $(node -p -e "require('./package.json').version")
 
   package:
     docker:
