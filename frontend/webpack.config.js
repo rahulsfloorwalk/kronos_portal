@@ -16,7 +16,7 @@ module.exports = {
 		"agency/agency_vendor": ["axios","react","react-dom","react-redux","redux","redux-thunk","redux-logger","react-router","react-ga","raven-js", "babel-polyfill"],
 
 		"manager/manager": path.resolve(__dirname, "./js/manager/index.jsx"),
-		"manager/manager_vendor": ["jquery","react","react-dom","react-redux","redux","redux-thunk","redux-logger","react-router","react-s-alert"],
+		"manager/manager_vendor": ["jquery","react","react-dom","react-redux","redux","redux-thunk","redux-logger","react-router","react-s-alert", "raven-js"],
 
 		"client/client": path.resolve(__dirname, "./js/client/index.jsx"),
 		"client/client_vendor": ["jquery","react","react-dom","react-router","recharts", "raven-js", "babel-polyfill"],
