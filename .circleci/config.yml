@@ -26,14 +26,14 @@ workflows:
 
 references:
   # Restore, Update and Cache dependencies
-  py-restore-cache: &python-restore-cache
+  py-restore-cache: &py-restore-cache
     restore_cache:
       keys:
       - v3-dependencies-{{ checksum "requirements.txt" }}
       # fallback to using the latest cache if no exact match is found
       - v3-dependencies-
 
-  py-update-cache: &python-update-cache
+  py-update-cache: &py-update-cache
     run:
       name: install python dependencies
       command: |
@@ -41,7 +41,7 @@ references:
         . venv/bin/activate
         pip install -r requirements.txt
 
-  py-save-cache: &python-save-cache
+  py-save-cache: &py-save-cache
     save_cache:
       paths:
         - ./venv
