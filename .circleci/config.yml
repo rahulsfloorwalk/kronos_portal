@@ -32,7 +32,9 @@ commands:
   guard-tagged-commit:
     description: "Returns a non-zero exit code if the current commit is not tagged."
     steps:
-      - run: "if [[ -z $CI_TAG ]]; then echo 'Please ensure the commit is tagged.'; $(exit 1); else echo 'Commit is tagged. Good Job'; fi"
+      - run:
+          name: "Ensuring that the commit is tagged."
+          command: "if [[ -z $CIRCLE_TAG ]]; then echo 'Please ensure the commit is tagged.'; $(exit 1); else echo 'Commit is tagged. Good Job'; fi"
 
   py-restore-cache:
     description: "Restore, Update and Cache python dependencies"
@@ -86,17 +88,17 @@ jobs:
           name: create a new sentry release
           command: |
             cd frontend
-            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME new $CI_TAG
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME new $CIRCLE_TAG
       - run:
           name: upload source maps for the release
           command: |
             cd frontend
-            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME files $CI_TAG upload-sourcemaps --url-prefix="~/static/" --validate `find dist/ -name "*.js.map"`
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME files $CIRCLE_TAG upload-sourcemaps --url-prefix="~/static/" --validate `find dist/ -name "*.js.map"`
       - run:
           name: finalize the release
           command: |
             cd frontend
-            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME finalize $CI_TAG
+            ./node_modules/.bin/sentry-cli releases -p $SENTRY_PROJECT_NAME finalize $CIRCLE_TAG
 
   package:
     docker:
