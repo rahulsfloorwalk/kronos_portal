@@ -8,6 +8,8 @@ import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 import { DownloadAlt,  Cross } from "../../components/Icons.jsx";
 import { attachmentPropType } from "../prop_types";
 
+import attachmentErrorImageUrl from "../../../img/error_100.png";
+
 class AttachmentRenderer extends React.Component {
 	static propTypes = {
 		attachment: attachmentPropType,
@@ -70,7 +72,7 @@ class AttachmentRenderer extends React.Component {
 			}
 			if( this.state.error){
 				error = (<div className="text-center">
-					<img src="/static/img/error_100.png"/>
+					<img src={attachmentErrorImageUrl}/>
 					<p>cannot load image</p>
 				</div>);
 			}

@@ -16,6 +16,8 @@ import rootReducer from "./reducers.js";
 
 import { fetchConfig } from "./service/config";
 
+import "../../css/bs_overrides.scss";
+
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR){
 	if(jqXHR.status === 403 && !forbiddenEncountered){

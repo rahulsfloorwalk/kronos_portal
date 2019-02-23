@@ -6,6 +6,7 @@ import { pointerStyle } from "../../styles.js";
 
 import NavLink from "../../components/NavLink.jsx";
 import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/Icons.jsx";
+import floorwalkLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
 
 import { fetchUser } from "../service/user.js";
 
@@ -48,7 +49,7 @@ export default class Header extends React.Component {
 			marginTop: "2px",
 			marginBottom: "2px",
 		};
-		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : "/static/img/logo_3_transparent_bg_400x51.png";
+		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : floorwalkLogoUrl;
 		let clientName = this.state.clientUser ? this.state.clientUser.client.name : "FloorWalk";
 		return (
 			<div className="container-fluid">

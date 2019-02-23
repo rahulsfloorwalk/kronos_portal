@@ -1,6 +1,6 @@
 /* global PHOEBE_VERSION:false process:false module:false */
 
-import "babel-polyfill";
+import "@babel/polyfill";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -17,6 +17,8 @@ import Routes from "./components/Routes.jsx";
 import { rootReducer } from "./reducers.js";
 
 import { fetchConfig } from "./service/config.js";
+
+import "../../css/bs_overrides.scss";
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR){

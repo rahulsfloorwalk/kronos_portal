@@ -11,5 +11,14 @@ module.exports = Object.assign({}, baseConfig, {
 				NODE_ENV: JSON.stringify("development")
 			}
 		}),
-	])
+	]),
+	devServer: {
+		inline: true,
+		publicPath: "/static/",
+		proxy: {
+			"/": {
+				target: "http://localhost:8000/",
+			}
+		}
+	}
 });

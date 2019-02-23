@@ -8,6 +8,8 @@ import Heartbeat from "../../components/Heartbeat.jsx";
 import NavLink from "../../components/NavLink.jsx";
 import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook } from "../../components/Icons.jsx";
 
+import floorwalkHeaderLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
+
 export default class Header extends Component{
 	state = {};
 
@@ -20,7 +22,7 @@ export default class Header extends Component{
 				<div className="container-fluid">
 					<div className="navbar-header">
 						<Link className="navbar-brand" to="/">
-							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
+							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src={floorwalkHeaderLogoUrl}/>
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">

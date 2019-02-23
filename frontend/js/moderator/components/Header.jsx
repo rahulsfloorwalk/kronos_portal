@@ -8,6 +8,8 @@ import NavLink from "../../components/NavLink.jsx";
 
 import { logout } from "../service/auth.js";
 
+import floorwalkHeaderLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
+
 export default class Header extends React.Component {
 	performLogout = () => {
 		logout().then(() => {
@@ -24,7 +26,7 @@ export default class Header extends React.Component {
 				<div className="container">
 					<div className="navbar-header">
 						<a className="navbar-brand">
-							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
+							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src={floorwalkHeaderLogoUrl}/>
 						</a>
 					</div>
 					<ul className="nav navbar-nav">

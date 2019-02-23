@@ -7,6 +7,8 @@ import NavLink from "../../components/NavLink.jsx";
 
 import { Home, File, LogOut } from "../../components/Icons.jsx";
 
+import floorwalkLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
+
 export default class Header extends React.Component{
 	render(){
 		let brandStyle = {
@@ -18,7 +20,7 @@ export default class Header extends React.Component{
 				<div className="container">
 					<div className="navbar-header">
 						<Link className="navbar-brand" to="/">
-							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src="/static/img/logo_3_transparent_bg_400x51.png"/>
+							<img className="img-responsive" style={brandStyle} alt="FloorWalk" title="FloorWalk" src={floorwalkLogoUrl}/>
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">

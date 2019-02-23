@@ -6,7 +6,12 @@ import { truncateStyle, pointerStyle } from "../styles.js";
 import { Cross } from "./Icons.jsx";
 
 import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
-import { loadingImageUrl } from "./Loading.jsx";
+
+import loadingImageUrl from "../../img/ripple.svg";
+import attachmentErrorImgUrl from "../../img/error_100.png";
+import attachmentMicrophoneImgUrl from "../../img/microphone_100.png";
+import attachmentFilmImgUrl from "../../img/film_100.png";
+import attachmentFileImgUrl from "../../img/file_100.png";
 
 export default class AttachmentThumbnail extends Component{
 	static propTypes = {
@@ -124,22 +129,22 @@ export default class AttachmentThumbnail extends Component{
 				imageSrc = loadingImageUrl;
 				divStyle.backgroundSize = "30px 30px";
 			} else if( this.state.error) {
-				imageSrc = "/static/img/error_100.png";
+				imageSrc = attachmentErrorImgUrl;
 				divStyle.backgroundSize = "30px 30px";
 			} else {
 				imageSrc = a.extra.thumbnail_url;
 			}
 			break;
 		case "AUDIO":
-			imageSrc = "/static/img/microphone_100.png";
+			imageSrc = attachmentMicrophoneImgUrl;
 			divStyle.backgroundSize = "30px 30px";
 			break;
 		case "VIDEO":
-			imageSrc = "/static/img/film_100.png";
+			imageSrc = attachmentFilmImgUrl;
 			divStyle.backgroundSize = "30px 30px";
 			break;
 		case "OTHER":
-			imageSrc = "/static/img/file_100.png";
+			imageSrc = attachmentFileImgUrl;
 			divStyle.backgroundSize = "30px 30px";
 			break;
 		}

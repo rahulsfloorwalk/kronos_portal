@@ -1,6 +1,6 @@
 /* global process:false */
 
-import "babel-polyfill";
+import "@babel/polyfill";
 import promiseFinally from "promise.prototype.finally";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -20,6 +20,8 @@ import auditStoreReducer from "./reducers/audit_store.js";
 import reportSectionReducer from "./reducers/report_section.js";
 import answerReducer from "./reducers/answer.js";
 import sectionReducer from "./reducers/section.js";
+
+import "../../css/bs_overrides.scss";
 
 promiseFinally.shim();
 

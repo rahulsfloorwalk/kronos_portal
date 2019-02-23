@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import floorwalkFooterLogo from "../../img/logo_3_500x100.png";
+
 export default class Footer extends React.Component{
 	static propTypes = {
 		config: PropTypes.shape({
@@ -27,7 +29,7 @@ export default class Footer extends React.Component{
 			<div className="col-xs-12">
 				<hr/>
 				<p className="text-center">
-					<img style={brandStyle} src="/static/img/logo_3_500x100.png"/>
+					<img style={brandStyle} src={floorwalkFooterLogo}/>
 				</p>
 				<p className="text-center text-muted small">
 					<a href={this.props.config.RHEA_BASE_URL}>{ this.props.config.RHEA_DOMAIN }</a>

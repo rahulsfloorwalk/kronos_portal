@@ -1,6 +1,6 @@
 /* global PHOEBE_VERSION:false process:false module:false */
 
-import "babel-polyfill";
+import "@babel/polyfill";
 import React from "react";
 import ReactDOM from "react-dom";
 import $ from "jquery";
@@ -11,6 +11,8 @@ import { hashHistory } from "react-router";
 import { fetchConfig } from "./service/config.js";
 
 import Routes from "./components/Routes.jsx";
+
+import "../../css/bs_overrides.scss";
 
 const render = () => {
 	ReactDOM.render(

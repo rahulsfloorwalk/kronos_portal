@@ -6,11 +6,14 @@ import { Provider } from "react-redux";
 import { createStore, applyMiddleware } from "redux";
 import ReduxThunk from "redux-thunk";
 import $ from "jquery";
-import "babel-polyfill";
+import "@babel/polyfill";
 import Raven from "raven-js";
 
 import Routes from "./components/Routes.jsx";
 import reducers from "./selectors";
+
+import "../../bsvendor/css/bootstrap_noprint.min.css";
+import "../../css/bs_overrides.scss";
 
 import { fetchConfig } from "./service/config.js";
 

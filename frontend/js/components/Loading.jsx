@@ -1,6 +1,6 @@
 import React from "react";
 
-export const loadingImageUrl = "/static/img/ripple.svg";
+import loadingImageUrl from "../../img/ripple.svg";
 
 export default class Loading extends React.Component {
 	render() {

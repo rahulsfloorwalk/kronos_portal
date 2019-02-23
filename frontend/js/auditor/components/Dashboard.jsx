@@ -9,6 +9,11 @@ import ProfileCard from "./../components/ProfileCard.jsx";
 
 import Loading from "../../components/Loading.jsx";
 
+import applicationImgUrl from "../../../img/application_100.png";
+import thumbsUpImgUrl from "../../../img/thumbsup_100.png";
+import checkmarkImgUrl from "../../../img/checkmark_100.png";
+import moneyImgUrl from "../../../img/money_100.png";
+
 import { fetchProfileInfo, fetchAuditorStats, fetchAuditorScore } from "../actions/dashboard.js";
 
 class Dashboard extends React.Component {
@@ -65,22 +70,22 @@ class Dashboard extends React.Component {
 								<div className="col-md-6">
 									<StatCard
 										title="Audits Applied"
-										image="/static/img/application_100.png" count={stats.applied}/>
+										image={applicationImgUrl} count={stats.applied}/>
 								</div>
 								<div className="col-md-6">
 									<StatCard
 										title="Audits Assigned"
-										image="/static/img/thumbsup_100.png" count={stats.assigned}/>
+										image={thumbsUpImgUrl} count={stats.assigned}/>
 								</div>
 								<div className="col-md-6">
 									<StatCard
 										title="Reports Completed"
-										image="/static/img/checkmark_100.png" count={stats.completed}/>
+										image={checkmarkImgUrl} count={stats.completed}/>
 								</div>
 								<div className="col-md-6">
 									<StatCard
 										title="Payments Pending "
-										image="/static/img/money_100.png" count={stats.pending_payment}/>
+										image={moneyImgUrl} count={stats.pending_payment}/>
 								</div>
 							</div>
 						</div>
