@@ -12,6 +12,8 @@ import "react-s-alert/dist/s-alert-css-effects/slide.css";
 
 import { fetchConfig } from "../service/config.js";
 
+import favicon from "../../../img/favicon_64x64.png";
+
 export default class App extends Component{
 	static propTypes = {
 		children: PropTypes.node,
@@ -32,6 +34,9 @@ export default class App extends Component{
 		return (
 			<div>
 				<Helmet>
+					<meta httpEquiv="Content-Type" content="text/html;charset=utf-8" />
+					<meta name="viewport" content="width=device-width, initial-scale=1"/>
+					<link rel="icon" href={favicon} type="image/png" />
 					<title>{this.state.config ? this.state.config.BRAND_SHORTNAME : "" } Auditor Portal</title>
 				</Helmet>
 				<DevelopmentMarker/>
