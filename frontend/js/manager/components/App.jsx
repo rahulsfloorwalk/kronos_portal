@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Helmet } from "react-helmet";
 
 import Header from "./Header.jsx";
 import Footer from "../../components/Footer.jsx";
@@ -30,6 +31,9 @@ export default class App extends Component{
 		};
 		return (
 			<div>
+				<Helmet>
+					<title>{this.state.config ? this.state.config.BRAND_SHORTNAME : "" } Auditor Portal</title>
+				</Helmet>
 				<DevelopmentMarker/>
 				<Header/>
 				<div className="container-fluid" style={contentStyle}>

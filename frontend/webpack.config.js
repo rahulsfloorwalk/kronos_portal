@@ -73,37 +73,31 @@ module.exports = {
 			chunkFilename: "[id].css",
 		}),
 		new HtmlWebpackPlugin({
-			title: "FloorWalk Moderator Portal",
 			filename: "moderator/index.html",
 			chunks: ["moderator/moderator", "css/react-datetime"],
 			template: path.resolve(__dirname, "./js/moderator/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
-			title: "FloorWalk Manager Portal",
 			filename: "manager/index.html",
 			chunks: [ "manager/manager", "css/react-datetime"],
 			template: path.resolve(__dirname, "./js/manager/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
-			title: "FloorWalk Auditor Portal",
 			filename: "auditor/index.html",
 			chunks: [ "auditor/auditor", "css/react-datetime"],
 			template: path.resolve(__dirname, "./js/auditor/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
-			title: "FloorWalk Agency Portal",
 			filename: "agency/index.html",
 			chunks: [ "agency/agency", "css/react-datetime"],
 			template: path.resolve(__dirname, "./js/agency/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
-			title: "FloorWalk Client Portal",
 			filename: "client/index.html",
 			chunks: [ "client/client", "css/react-datetime"],
 			template: path.resolve(__dirname, "./js/client/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
-			title: "Report Print",
 			filename: "client/report_print.html",
 			chunks: [ "client/report_print", "css/react-datetime"],
 			template: path.resolve(__dirname, "./js/client/index.ejs"),
