@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
+import _ from "lodash";
 
 import Header from "./Header.jsx";
 import Footer from "../../components/Footer.jsx";
@@ -34,7 +35,7 @@ export default class App extends React.Component{
 					<meta httpEquiv="Content-Type" content="text/html;charset=utf-8" />
 					<meta name="viewport" content="width=device-width, initial-scale=1"/>
 					<link rel="icon" href={favicon} type="image/png" />
-					<title>{this.state.config ? this.state.config.BRAND_SHORTNAME : "" } Agency Portal</title>
+					<title>{_.get(this.state.config, "BRAND_SHORTNAME", "")} Agency Portal</title>
 				</Helmet>
 				<DevelopmentMarker/>
 				<Header/>
