@@ -38,7 +38,7 @@ class AttachmentItem extends React.Component {
 		return (
 			<div className="list-group-item">
 				{deleteButton}
-				<big>{icon} <a href={this.props.attachment.direct_url} target="_blank" title="Click to download file">
+				<big>{icon} <a href={this.props.attachment.direct_url} target="_blank" rel="noopener noreferrer" title="Click to download file">
 					{this.props.attachment.file_name}
 				</a></big>
 			</div>

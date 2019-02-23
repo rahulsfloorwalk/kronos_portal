@@ -79,7 +79,7 @@ export default class AuditStoreDetail extends React.Component {
 							<Print/> Print Report
 						</button>
 						:
-						<a className="btn btn-default pull-right hidden-print" href={`report_print.html#/${this.props.params.auditStoreId}`} target="_blank">
+						<a className="btn btn-default pull-right hidden-print" href={`report_print.html#/${this.props.params.auditStoreId}`} target="_blank" rel="noopener noreferrer">
 							<Print/> Print Report
 						</a>
 					}

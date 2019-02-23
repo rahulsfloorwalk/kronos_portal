@@ -30,6 +30,10 @@ const AuditTypeIcon = (props) => {
 	}
 };
 
+AuditTypeIcon.propTypes = {
+	type: PropTypes.oneOf(AuditType),
+};
+
 export default class AuditTypeLabel extends React.Component {
 	static propTypes = {
 		auditType: PropTypes.oneOf(AuditType),

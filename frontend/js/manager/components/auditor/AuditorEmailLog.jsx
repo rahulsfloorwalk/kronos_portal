@@ -53,8 +53,8 @@ export default class AuditorEmailLog extends Component{
 			return (<tr key={e.id}>
 				<td>{moment(e.sent_at).format(momentDateTimeFormat)}</td>
 				<td>{e.subject}</td>
-				<td><a href={`/manager/email_log/view/${e.id}/html`} className="btn btn-default" target="_blank">HTML</a></td>
-				<td><a href={`/manager/email_log/view/${e.id}/text`} className="btn btn-default" target="_blank">TEXT</a></td>
+				<td><a href={`/manager/email_log/view/${e.id}/html`} className="btn btn-default" target="_blank" rel="noopener noreferrer">HTML</a></td>
+				<td><a href={`/manager/email_log/view/${e.id}/text`} className="btn btn-default" target="_blank" rel="noopener noreferrer">TEXT</a></td>
 			</tr>);
 		});
 

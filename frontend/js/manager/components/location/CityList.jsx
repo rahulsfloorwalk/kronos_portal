@@ -34,7 +34,7 @@ export default class CityList extends React.Component {
 		for(let c of this.state.cities) {
 			rows.push(
 				<div key={c.id} className="list-group-item">
-					<a href={c.gmaps_url} className="btn btn-sm btn-default " target="_blank">
+					<a href={c.gmaps_url} className="btn btn-sm btn-default " target="_blank" rel="noopener noreferrer">
 						<MapMarker/>
 					</a>
 					&nbsp;

@@ -26,7 +26,7 @@ export default class SocialInfoPanel extends React.Component {
 				</div>
 				<div className="panel-body">
 					Facebook: { this.state.socialInfo.facebook_id ?
-						<a href={`https://wwww.facebook.com/${this.state.socialInfo.facebook_id}`} target="_blank">Profile Link</a>
+						<a href={`https://wwww.facebook.com/${this.state.socialInfo.facebook_id}`} target="_blank" rel="noopener noreferrer">Profile Link</a>
 						: <span className="text-muted">not connected</span> }
 				</div>
 			</div>

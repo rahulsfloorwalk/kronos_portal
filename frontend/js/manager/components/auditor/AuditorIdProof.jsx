@@ -48,7 +48,7 @@ export default class AuditorIdProof extends Component{
 		let idProofRows = this.state.id_proofs.map(e => {
 			return (<tr key={e.id}>
 				<td>{e.file_name}</td>
-				<td><a href={e.direct_url} className="btn btn-default" target="_blank">View File</a></td>
+				<td><a href={e.direct_url} className="btn btn-default" target="_blank" rel="noopener noreferrer">View File</a></td>
 			</tr>);
 		});
 
