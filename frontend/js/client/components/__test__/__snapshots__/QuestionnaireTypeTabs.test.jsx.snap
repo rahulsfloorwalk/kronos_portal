@@ -6,7 +6,7 @@ exports[`QuestionnaireTypeTabs renders a loading sign when there are no question
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

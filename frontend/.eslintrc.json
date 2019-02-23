@@ -52,5 +52,10 @@
         "no-extra-semi": 1,
 	"react/jsx-uses-vars": 2,
 	"babel/semi": 1
+    },
+    "settings": {
+	    "react": {
+		    "version": "15.6.0"
+	    }
     }
 }

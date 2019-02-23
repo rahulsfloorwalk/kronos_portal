@@ -56,7 +56,7 @@ exports[`<EarningsPerAuditForm/> is rendered correctly when the form is loading 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>

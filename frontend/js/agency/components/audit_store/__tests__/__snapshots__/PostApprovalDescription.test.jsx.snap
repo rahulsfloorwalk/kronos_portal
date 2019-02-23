@@ -9,7 +9,7 @@ exports[`<PostApprovalDescriptionRenderer/> renders the loading icons while load
   >
     <img
       alt="loading..."
-      src="/static/img/ripple.svg"
+      src="test-file-stub"
       title="Please Wait"
     />
     <p>
@@ -21,7 +21,7 @@ exports[`<PostApprovalDescriptionRenderer/> renders the loading icons while load
   >
     <img
       alt="loading..."
-      src="/static/img/ripple.svg"
+      src="test-file-stub"
       title="Please Wait"
     />
     <p>

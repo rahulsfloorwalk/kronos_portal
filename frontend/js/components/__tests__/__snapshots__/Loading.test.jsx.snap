@@ -6,7 +6,7 @@ exports[`<Loading/> renders a Loading widget 1`] = `
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

@@ -114,7 +114,7 @@ exports[`<AuditStoreDetails/> renders the details section for the audit store 1`
           >
             <img
               alt="loading..."
-              src="/static/img/ripple.svg"
+              src="test-file-stub"
               title="Please Wait"
             />
             <p>
@@ -126,7 +126,7 @@ exports[`<AuditStoreDetails/> renders the details section for the audit store 1`
           >
             <img
               alt="loading..."
-              src="/static/img/ripple.svg"
+              src="test-file-stub"
               title="Please Wait"
             />
             <p>
@@ -254,7 +254,7 @@ exports[`<AuditStoreDetails/> renders the details section for the audit store wi
           >
             <img
               alt="loading..."
-              src="/static/img/ripple.svg"
+              src="test-file-stub"
               title="Please Wait"
             />
             <p>
@@ -266,7 +266,7 @@ exports[`<AuditStoreDetails/> renders the details section for the audit store wi
           >
             <img
               alt="loading..."
-              src="/static/img/ripple.svg"
+              src="test-file-stub"
               title="Please Wait"
             />
             <p>

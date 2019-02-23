@@ -314,7 +314,7 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle is loading 1`] 
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

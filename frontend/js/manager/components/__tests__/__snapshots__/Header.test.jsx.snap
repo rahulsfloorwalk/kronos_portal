@@ -18,7 +18,7 @@ exports[`<Header/> is rendered correctly 1`] = `
         <img
           alt="FloorWalk"
           className="img-responsive"
-          src="/static/img/logo_3_transparent_bg_400x51.png"
+          src="test-file-stub"
           style={
             Object {
               "height": "25px",

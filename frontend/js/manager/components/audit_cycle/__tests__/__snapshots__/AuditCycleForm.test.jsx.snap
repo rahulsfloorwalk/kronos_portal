@@ -1174,7 +1174,7 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
             >
               <img
                 alt="loading..."
-                src="/static/img/ripple.svg"
+                src="test-file-stub"
                 title="Please Wait"
               />
               <p>
@@ -2369,7 +2369,7 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
             >
               <img
                 alt="loading..."
-                src="/static/img/ripple.svg"
+                src="test-file-stub"
                 title="Please Wait"
               />
               <p>

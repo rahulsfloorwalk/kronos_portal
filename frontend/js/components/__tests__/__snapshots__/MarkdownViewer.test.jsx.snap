@@ -16,7 +16,7 @@ exports[`<MarkdownViewer/> renders a loading widget when the Markdown module is 
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

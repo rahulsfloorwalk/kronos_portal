@@ -284,7 +284,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -296,7 +296,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -646,7 +646,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -658,7 +658,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -997,7 +997,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -1009,7 +1009,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -1366,7 +1366,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -1378,7 +1378,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -1728,7 +1728,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -1740,7 +1740,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -2100,7 +2100,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -2112,7 +2112,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -2451,7 +2451,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -2463,7 +2463,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -3233,7 +3233,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -3245,7 +3245,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -3587,7 +3587,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -3599,7 +3599,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -4369,7 +4369,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -4381,7 +4381,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -4723,7 +4723,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -4735,7 +4735,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
         >
           <img
             alt="loading..."
-            src="/static/img/ripple.svg"
+            src="test-file-stub"
             title="Please Wait"
           />
           <p>
@@ -4809,7 +4809,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loadi
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

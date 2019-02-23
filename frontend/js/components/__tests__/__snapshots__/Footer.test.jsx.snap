@@ -9,7 +9,7 @@ exports[`<Footer/> renders the footer 1`] = `
     className="text-center"
   >
     <img
-      src="/static/img/logo_3_500x100.png"
+      src="test-file-stub"
       style={
         Object {
           "height": "30px",

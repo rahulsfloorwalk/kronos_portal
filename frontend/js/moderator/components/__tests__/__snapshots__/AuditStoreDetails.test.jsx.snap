@@ -1439,7 +1439,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loadi
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

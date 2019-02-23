@@ -6,7 +6,7 @@ exports[`<AuditCycleDashboard/> is rendered correctly when the data are loading 
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

@@ -6,7 +6,7 @@ exports[`AuditCycleModeratorSummary renders a loading widget there is no summary
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>

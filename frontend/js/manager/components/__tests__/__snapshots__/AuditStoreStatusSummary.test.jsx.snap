@@ -6,7 +6,7 @@ exports[`<AuditStoreStatusSummary/> is rendered correctly when stats are loading
 >
   <img
     alt="loading..."
-    src="/static/img/ripple.svg"
+    src="test-file-stub"
     title="Please Wait"
   />
   <p>
