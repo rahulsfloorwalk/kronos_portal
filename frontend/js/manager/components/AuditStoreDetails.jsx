@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import Alert from "react-s-alert";
 
 import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 import moment from "moment";
 import { momentDateFormat, url }  from "../../../config.js";

@@ -15,7 +15,6 @@ module.exports = {
 		"client/client": path.resolve(__dirname, "./js/client/index.jsx"),
 		"client/report_print": path.resolve(__dirname, "./js/client/report_print.jsx"),
 		"moderator/moderator": path.resolve(__dirname, "./js/moderator/index.jsx"),
-		"css/react-datetime": path.resolve(__dirname, "./node_modules/react-datetime/css/react-datetime.css"),
 	},
 	output: {
 		path: path.resolve(__dirname, "./dist"),
@@ -74,32 +73,32 @@ module.exports = {
 		}),
 		new HtmlWebpackPlugin({
 			filename: "moderator/index.html",
-			chunks: ["moderator/moderator", "css/react-datetime"],
+			chunks: ["moderator/moderator"],
 			template: path.resolve(__dirname, "./js/moderator/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
 			filename: "manager/index.html",
-			chunks: [ "manager/manager", "css/react-datetime"],
+			chunks: [ "manager/manager"],
 			template: path.resolve(__dirname, "./js/manager/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
 			filename: "auditor/index.html",
-			chunks: [ "auditor/auditor", "css/react-datetime"],
+			chunks: [ "auditor/auditor"],
 			template: path.resolve(__dirname, "./js/auditor/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
 			filename: "agency/index.html",
-			chunks: [ "agency/agency", "css/react-datetime"],
+			chunks: [ "agency/agency"],
 			template: path.resolve(__dirname, "./js/agency/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
 			filename: "client/index.html",
-			chunks: [ "client/client", "css/react-datetime"],
+			chunks: [ "client/client"],
 			template: path.resolve(__dirname, "./js/client/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
 			filename: "client/report_print.html",
-			chunks: [ "client/report_print", "css/react-datetime"],
+			chunks: [ "client/report_print"],
 			template: path.resolve(__dirname, "./js/client/index.ejs"),
 		}),
 		new CopyWebpackPlugin([

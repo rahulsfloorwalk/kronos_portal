@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 import FormGroup from "./FormGroup.jsx";
 import FormErrorList from "./FormErrorList.jsx";

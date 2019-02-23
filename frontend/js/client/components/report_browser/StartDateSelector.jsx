@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import moment from "moment";
 import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 import { selectStartDate } from "../../reducers/report_browser";
 import { reportBrowserSelectors } from "../../selectors";

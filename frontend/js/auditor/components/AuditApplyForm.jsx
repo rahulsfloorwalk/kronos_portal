@@ -2,7 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
+
 import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
 
 import moment from "moment";
 
