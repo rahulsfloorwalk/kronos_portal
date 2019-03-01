@@ -70,6 +70,8 @@ exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
   </td>
   <td>
     Nagpur
+    , 
+    Maharashtra
   </td>
   <td>
     <strong

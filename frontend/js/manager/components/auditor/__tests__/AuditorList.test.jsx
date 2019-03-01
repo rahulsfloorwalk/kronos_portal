@@ -32,6 +32,7 @@ const sampleResults = {
 					"id": 1,
 					"name": "Nagpur",
 					"state": "IN-MH",
+					"state_name": "Maharashtra",
 					"lat": "21.145800",
 					"lon": "79.088155",
 					"gmaps_url": "http://maps.google.com/maps/place/Nagpur/@21.145800,79.088155,12z"
@@ -69,6 +70,7 @@ const sampleResults = {
 					"id": 1,
 					"name": "Nagpur",
 					"state": "IN-MH",
+					"state_name": "Maharashtra",
 					"lat": "21.145800",
 					"lon": "79.088155",
 					"gmaps_url": "http://maps.google.com/maps/place/Nagpur/@21.145800,79.088155,12z"
