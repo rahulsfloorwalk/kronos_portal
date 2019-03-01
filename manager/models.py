@@ -1,7 +1,7 @@
 from django.db.models import Model, CharField, AutoField, ForeignKey, DecimalField
 from django.db.models import PROTECT
 
-from . import states
+from manager import states
 
 class City(Model):
 
@@ -16,6 +16,9 @@ class City(Model):
 
     def gmaps_url(self):
         return 'http://maps.google.com/maps/place/{}/@{},{},12z'.format(self.name, self.lat, self.lon)
+
+    def state_name(self):
+        return states.states.get(self.state)
 
     class Meta:
         ordering = ['name']

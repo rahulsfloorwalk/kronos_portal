@@ -39,7 +39,7 @@ export class AuditorRow extends React.Component {
 				<td>{this.props.auditor.email}</td>
 				<td>{getGender(prof.gender)}</td>
 				<td>{prof.mobile_number}</td>
-				<td>{prof.city.name}</td>
+				<td>{prof.city.name}, {prof.city.state}</td>
 				<td>{prof.average_rating !== null ?
 					<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</td>
 				<td>{moment(this.props.auditor.last_login).format(momentDateFormat)}</td>
