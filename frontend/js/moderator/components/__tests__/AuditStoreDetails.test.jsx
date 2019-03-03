@@ -19,6 +19,12 @@ beforeAll(() => {
 	dateNowSpy = jest.spyOn(Date, "now").mockImplementation(() => 1527292800000);
 });
 
+afterAll(() => {
+	// Unlock Time
+	dateNowSpy.mockReset();
+	dateNowSpy.mockRestore();
+});
+
 describe("<AuditStoreDetails/>", () => {
 	const sampleParams = {
 		auditStoreId: "5",
@@ -69,9 +75,10 @@ describe("<AuditStoreDetails/>", () => {
 
 	it("is rendered correctly when AuditStore is not rated", (done) => {
 		findById.mockResolvedValue(sampleAuditStore);
-		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
-			expect(r.toJSON()).toMatchSnapshot();
+			r.update();
+			expect(r).toMatchSnapshot();
 			done();
 		});
 	});
@@ -79,24 +86,24 @@ describe("<AuditStoreDetails/>", () => {
 	it("is rendered correctly when AuditStore is already rated", (done) => {
 		sampleAuditStore.qa_rating = 1;
 		findById.mockResolvedValue(sampleAuditStore);
-		const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
 		setTimeout(() => {
-			expect(r.toJSON()).toMatchSnapshot();
+			r.update();
+			expect(r).toMatchSnapshot();
 			done();
 		});
 	});
 
 	const ratings = [ 0, 1, 2 ];
-	for( const rt of ratings){
-		it(`is rendered correctly for QA rating: ${rt}`, (done) => {
-			findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { qa_rating: rt }));
-			const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
-			setTimeout(() => {
-				expect(r.toJSON()).toMatchSnapshot();
-				done();
-			});
+	test.each(ratings)("is rendered correctly for QA rating: %s", (rt, done) => {
+		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { qa_rating: rt }));
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		setTimeout(() => {
+			r.update();
+			expect(r).toMatchSnapshot();
+			done();
 		});
-	}
+	});
 
 	const statuses = [
 		"ASSIGNED",
@@ -109,16 +116,15 @@ describe("<AuditStoreDetails/>", () => {
 		"WITHDRAWN",
 		"FAILED",
 	];
-	for( const s of statuses){
-		it(`is rendered correctly wwhere AuditStore status is ${s}`, (done) => {
-			findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { status: s }));
-			const r = renderer.create(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
-			setTimeout(() => {
-				expect(r.toJSON()).toMatchSnapshot();
-				done();
-			});
+	test.each(statuses)("is rendered correctly wwhere AuditStore status is %s", (s, done) => {
+		findById.mockResolvedValue(Object.assign({}, sampleAuditStore, { status: s }));
+		const r = shallow(<AuditStoreDetails params={sampleParams} location={sampleLocation}/>);
+		setTimeout(() => {
+			r.update();
+			expect(r).toMatchSnapshot();
+			done();
 		});
-	}
+	});
 
 	it("calls qaOk when QA OK button is clicked", (done) => {
 		sampleAuditStore.status = "SUBMITTED";
@@ -138,10 +144,4 @@ describe("<AuditStoreDetails/>", () => {
 			done();
 		});
 	});
-});
-
-afterAll(() => {
-	// Unlock Time
-	dateNowSpy.mockReset();
-	dateNowSpy.mockRestore();
 });
