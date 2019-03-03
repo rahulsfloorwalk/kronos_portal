@@ -6,42 +6,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -49,9 +46,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -61,9 +56,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -77,6 +70,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         >
           More Options
         </button>
+        <DropDown>
+          <li>
+            <ThumbsDown />
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/audit_store/5/fail_report_message"
+            >
+              Fail Report
+            </Link>
+          </li>
+          <DropDownDivider />
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Withdraw Report
+            </a>
+          </li>
+        </DropDown>
       </div>
     </div>
   </h2>
@@ -152,12 +165,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -171,12 +185,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -187,23 +202,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -223,16 +231,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-warning"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Assigned
-                </span>
+                <AuditStoreStatusLabel
+                  status="ASSIGNED"
+                />
               </th>
             </tr>
             <tr>
@@ -242,23 +243,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Rating:
               </td>
               <th>
-                <strong
-                  className="text-warning"
-                >
-                  Average
-                </strong>
+                <AuditStoreRating
+                  rating={1}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -279,88 +281,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -370,42 +306,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -413,9 +346,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -425,9 +356,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -441,6 +370,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         >
           More Options
         </button>
+        <DropDown>
+          <li>
+            <ThumbsDown />
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/audit_store/5/fail_report_message"
+            >
+              Fail Report
+            </Link>
+          </li>
+          <DropDownDivider />
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Withdraw Report
+            </a>
+          </li>
+        </DropDown>
       </div>
     </div>
   </h2>
@@ -516,12 +465,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -535,12 +485,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -551,23 +502,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -587,16 +531,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-warning"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Assigned
-                </span>
+                <AuditStoreStatusLabel
+                  status="ASSIGNED"
+                />
               </th>
             </tr>
             <tr>
@@ -606,21 +543,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -641,88 +581,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -732,42 +606,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -775,9 +646,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -787,9 +656,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -867,12 +734,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -886,12 +754,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -902,23 +771,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -938,16 +800,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-success2"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Accepted
-                </span>
+                <AuditStoreStatusLabel
+                  status="ACCEPTED"
+                />
               </th>
             </tr>
             <tr>
@@ -957,21 +812,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -992,88 +850,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -1083,42 +875,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -1126,9 +915,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -1138,9 +925,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -1154,6 +939,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
         >
           More Options
         </button>
+        <DropDown>
+          <li>
+            <ThumbsDown />
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/audit_store/5/fail_report_message"
+            >
+              Fail Report
+            </Link>
+          </li>
+          <DropDownDivider />
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Withdraw Report
+            </a>
+          </li>
+        </DropDown>
       </div>
     </div>
   </h2>
@@ -1229,12 +1034,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -1248,12 +1054,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -1264,23 +1071,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -1300,16 +1100,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-warning2"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  In Progress
-                </span>
+                <AuditStoreStatusLabel
+                  status="ACKNOWLEDGED"
+                />
               </th>
             </tr>
             <tr>
@@ -1319,21 +1112,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -1361,88 +1157,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -1452,42 +1182,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -1495,9 +1222,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -1507,9 +1232,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -1523,6 +1246,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
         >
           More Options
         </button>
+        <DropDown>
+          <li>
+            <ThumbsDown />
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/audit_store/5/fail_report_message"
+            >
+              Fail Report
+            </Link>
+          </li>
+          <DropDownDivider />
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Withdraw Report
+            </a>
+          </li>
+        </DropDown>
       </div>
     </div>
   </h2>
@@ -1598,12 +1341,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -1617,12 +1361,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -1633,23 +1378,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -1669,16 +1407,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-warning"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Assigned
-                </span>
+                <AuditStoreStatusLabel
+                  status="ASSIGNED"
+                />
               </th>
             </tr>
             <tr>
@@ -1688,21 +1419,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -1723,88 +1457,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -1814,42 +1482,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -1857,9 +1522,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -1869,9 +1532,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -1949,12 +1610,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -1968,12 +1630,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -1984,23 +1647,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -2020,16 +1676,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-success"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Client Review
-                </span>
+                <AuditStoreStatusLabel
+                  status="COMPLETED"
+                />
               </th>
             </tr>
             <tr>
@@ -2039,21 +1688,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -2095,88 +1747,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -2186,42 +1772,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -2229,9 +1812,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -2241,9 +1822,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -2321,12 +1900,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -2340,12 +1920,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -2356,23 +1937,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -2392,16 +1966,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-danger"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Failed
-                </span>
+                <AuditStoreStatusLabel
+                  status="FAILED"
+                />
               </th>
             </tr>
             <tr>
@@ -2411,21 +1978,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -2446,88 +2016,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -2537,42 +2041,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -2580,9 +2081,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -2592,9 +2091,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -2608,6 +2105,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
         >
           More Options
         </button>
+        <DropDown>
+          <li>
+            <ThumbsDown />
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/audit_store/5/fail_report_message"
+            >
+              Fail Report
+            </Link>
+          </li>
+          <DropDownDivider />
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Withdraw Report
+            </a>
+          </li>
+        </DropDown>
       </div>
     </div>
   </h2>
@@ -2683,12 +2200,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -2702,12 +2220,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -2718,23 +2237,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -2750,406 +2262,31 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                   <span
                     className="input-group-addon"
                   >
-                    <span
-                      className="glyphicon glyphicon-calendar"
-                    />
+                    <Calendar />
                   </span>
-                  <div
-                    className="rdt"
-                  >
-                    <input
-                      className="form-control"
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      type="text"
-                      value="2018-09-02"
-                    />
-                    <div
-                      className="rdtPicker"
-                    >
-                      <div
-                        className="rdtDays"
-                      >
-                        <table>
-                          <thead>
-                            <tr>
-                              <th
-                                className="rdtPrev"
-                                onClick={[Function]}
-                              >
-                                <span>
-                                  ‹
-                                </span>
-                              </th>
-                              <th
-                                className="rdtSwitch"
-                                colSpan={5}
-                                data-value={4}
-                                onClick={[Function]}
-                              >
-                                May 2018
-                              </th>
-                              <th
-                                className="rdtNext"
-                                onClick={[Function]}
-                              >
-                                <span>
-                                  ›
-                                </span>
-                              </th>
-                            </tr>
-                            <tr>
-                              <th
-                                className="dow"
-                              >
-                                Su
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Mo
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Tu
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                We
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Th
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Fr
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Sa
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td
-                                className="rdtDay rdtOld"
-                                data-value={29}
-                                onClick={[Function]}
-                              >
-                                29
-                              </td>
-                              <td
-                                className="rdtDay rdtOld"
-                                data-value={30}
-                                onClick={[Function]}
-                              >
-                                30
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={1}
-                                onClick={[Function]}
-                              >
-                                1
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={2}
-                                onClick={[Function]}
-                              >
-                                2
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={3}
-                                onClick={[Function]}
-                              >
-                                3
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={4}
-                                onClick={[Function]}
-                              >
-                                4
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={5}
-                                onClick={[Function]}
-                              >
-                                5
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={6}
-                                onClick={[Function]}
-                              >
-                                6
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={7}
-                                onClick={[Function]}
-                              >
-                                7
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={8}
-                                onClick={[Function]}
-                              >
-                                8
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={9}
-                                onClick={[Function]}
-                              >
-                                9
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={10}
-                                onClick={[Function]}
-                              >
-                                10
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={11}
-                                onClick={[Function]}
-                              >
-                                11
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={12}
-                                onClick={[Function]}
-                              >
-                                12
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={13}
-                                onClick={[Function]}
-                              >
-                                13
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={14}
-                                onClick={[Function]}
-                              >
-                                14
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={15}
-                                onClick={[Function]}
-                              >
-                                15
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={16}
-                                onClick={[Function]}
-                              >
-                                16
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={17}
-                                onClick={[Function]}
-                              >
-                                17
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={18}
-                                onClick={[Function]}
-                              >
-                                18
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={19}
-                                onClick={[Function]}
-                              >
-                                19
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={20}
-                                onClick={[Function]}
-                              >
-                                20
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={21}
-                                onClick={[Function]}
-                              >
-                                21
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={22}
-                                onClick={[Function]}
-                              >
-                                22
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={23}
-                                onClick={[Function]}
-                              >
-                                23
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={24}
-                                onClick={[Function]}
-                              >
-                                24
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={25}
-                                onClick={[Function]}
-                              >
-                                25
-                              </td>
-                              <td
-                                className="rdtDay rdtToday"
-                                data-value={26}
-                                onClick={[Function]}
-                              >
-                                26
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={27}
-                                onClick={[Function]}
-                              >
-                                27
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={28}
-                                onClick={[Function]}
-                              >
-                                28
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={29}
-                                onClick={[Function]}
-                              >
-                                29
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={30}
-                                onClick={[Function]}
-                              >
-                                30
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={31}
-                                onClick={[Function]}
-                              >
-                                31
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={1}
-                                onClick={[Function]}
-                              >
-                                1
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={2}
-                                onClick={[Function]}
-                              >
-                                2
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={3}
-                                onClick={[Function]}
-                              >
-                                3
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={4}
-                                onClick={[Function]}
-                              >
-                                4
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={5}
-                                onClick={[Function]}
-                              >
-                                5
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={6}
-                                onClick={[Function]}
-                              >
-                                6
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={7}
-                                onClick={[Function]}
-                              >
-                                7
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={8}
-                                onClick={[Function]}
-                              >
-                                8
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={9}
-                                onClick={[Function]}
-                              >
-                                9
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
+                  <Component
+                    className=""
+                    closeOnSelect={true}
+                    closeOnTab={true}
+                    dateFormat="Do MMM YYYY"
+                    defaultValue=""
+                    disabled={false}
+                    input={true}
+                    inputProps={
+                      Object {
+                        "className": "form-control",
+                      }
+                    }
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onViewModeChange={[Function]}
+                    strictParsing={true}
+                    timeConstraints={Object {}}
+                    timeFormat={false}
+                    utc={false}
+                    value="2018-09-02"
+                  />
                 </div>
               </th>
             </tr>
@@ -3160,16 +2297,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-primary"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  PM Review
-                </span>
+                <AuditStoreStatusLabel
+                  status="PM_REVIEW"
+                />
               </th>
             </tr>
             <tr>
@@ -3179,21 +2309,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -3228,91 +2361,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <textarea
-      className="form-control"
-      onBlur={[Function]}
-      onChange={[Function]}
-      rows="5"
-      value="Foobar"
-    />
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={true}
+  />
 </div>
 `;
 
@@ -3322,42 +2386,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -3365,9 +2426,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -3377,9 +2436,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -3457,12 +2514,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -3476,12 +2534,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -3492,23 +2551,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -3528,16 +2580,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-danger2"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Rejected
-                </span>
+                <AuditStoreStatusLabel
+                  status="REJECTED"
+                />
               </th>
             </tr>
             <tr>
@@ -3547,21 +2592,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -3582,88 +2630,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
@@ -3673,42 +2655,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -3716,9 +2695,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -3728,9 +2705,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -3744,6 +2719,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
         >
           More Options
         </button>
+        <DropDown>
+          <li>
+            <ThumbsDown />
+            <Link
+              onlyActiveOnIndex={false}
+              style={Object {}}
+              to="/audit_store/5/fail_report_message"
+            >
+              Fail Report
+            </Link>
+          </li>
+          <DropDownDivider />
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Withdraw Report
+            </a>
+          </li>
+        </DropDown>
       </div>
     </div>
   </h2>
@@ -3819,12 +2814,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -3838,12 +2834,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -3854,23 +2851,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -3886,406 +2876,31 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                   <span
                     className="input-group-addon"
                   >
-                    <span
-                      className="glyphicon glyphicon-calendar"
-                    />
+                    <Calendar />
                   </span>
-                  <div
-                    className="rdt"
-                  >
-                    <input
-                      className="form-control"
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onKeyDown={[Function]}
-                      type="text"
-                      value="2018-09-02"
-                    />
-                    <div
-                      className="rdtPicker"
-                    >
-                      <div
-                        className="rdtDays"
-                      >
-                        <table>
-                          <thead>
-                            <tr>
-                              <th
-                                className="rdtPrev"
-                                onClick={[Function]}
-                              >
-                                <span>
-                                  ‹
-                                </span>
-                              </th>
-                              <th
-                                className="rdtSwitch"
-                                colSpan={5}
-                                data-value={4}
-                                onClick={[Function]}
-                              >
-                                May 2018
-                              </th>
-                              <th
-                                className="rdtNext"
-                                onClick={[Function]}
-                              >
-                                <span>
-                                  ›
-                                </span>
-                              </th>
-                            </tr>
-                            <tr>
-                              <th
-                                className="dow"
-                              >
-                                Su
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Mo
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Tu
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                We
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Th
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Fr
-                              </th>
-                              <th
-                                className="dow"
-                              >
-                                Sa
-                              </th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                              <td
-                                className="rdtDay rdtOld"
-                                data-value={29}
-                                onClick={[Function]}
-                              >
-                                29
-                              </td>
-                              <td
-                                className="rdtDay rdtOld"
-                                data-value={30}
-                                onClick={[Function]}
-                              >
-                                30
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={1}
-                                onClick={[Function]}
-                              >
-                                1
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={2}
-                                onClick={[Function]}
-                              >
-                                2
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={3}
-                                onClick={[Function]}
-                              >
-                                3
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={4}
-                                onClick={[Function]}
-                              >
-                                4
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={5}
-                                onClick={[Function]}
-                              >
-                                5
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={6}
-                                onClick={[Function]}
-                              >
-                                6
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={7}
-                                onClick={[Function]}
-                              >
-                                7
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={8}
-                                onClick={[Function]}
-                              >
-                                8
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={9}
-                                onClick={[Function]}
-                              >
-                                9
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={10}
-                                onClick={[Function]}
-                              >
-                                10
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={11}
-                                onClick={[Function]}
-                              >
-                                11
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={12}
-                                onClick={[Function]}
-                              >
-                                12
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={13}
-                                onClick={[Function]}
-                              >
-                                13
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={14}
-                                onClick={[Function]}
-                              >
-                                14
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={15}
-                                onClick={[Function]}
-                              >
-                                15
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={16}
-                                onClick={[Function]}
-                              >
-                                16
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={17}
-                                onClick={[Function]}
-                              >
-                                17
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={18}
-                                onClick={[Function]}
-                              >
-                                18
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={19}
-                                onClick={[Function]}
-                              >
-                                19
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={20}
-                                onClick={[Function]}
-                              >
-                                20
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={21}
-                                onClick={[Function]}
-                              >
-                                21
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={22}
-                                onClick={[Function]}
-                              >
-                                22
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={23}
-                                onClick={[Function]}
-                              >
-                                23
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={24}
-                                onClick={[Function]}
-                              >
-                                24
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={25}
-                                onClick={[Function]}
-                              >
-                                25
-                              </td>
-                              <td
-                                className="rdtDay rdtToday"
-                                data-value={26}
-                                onClick={[Function]}
-                              >
-                                26
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay"
-                                data-value={27}
-                                onClick={[Function]}
-                              >
-                                27
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={28}
-                                onClick={[Function]}
-                              >
-                                28
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={29}
-                                onClick={[Function]}
-                              >
-                                29
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={30}
-                                onClick={[Function]}
-                              >
-                                30
-                              </td>
-                              <td
-                                className="rdtDay"
-                                data-value={31}
-                                onClick={[Function]}
-                              >
-                                31
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={1}
-                                onClick={[Function]}
-                              >
-                                1
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={2}
-                                onClick={[Function]}
-                              >
-                                2
-                              </td>
-                            </tr>
-                            <tr>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={3}
-                                onClick={[Function]}
-                              >
-                                3
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={4}
-                                onClick={[Function]}
-                              >
-                                4
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={5}
-                                onClick={[Function]}
-                              >
-                                5
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={6}
-                                onClick={[Function]}
-                              >
-                                6
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={7}
-                                onClick={[Function]}
-                              >
-                                7
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={8}
-                                onClick={[Function]}
-                              >
-                                8
-                              </td>
-                              <td
-                                className="rdtDay rdtNew"
-                                data-value={9}
-                                onClick={[Function]}
-                              >
-                                9
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  </div>
+                  <Component
+                    className=""
+                    closeOnSelect={true}
+                    closeOnTab={true}
+                    dateFormat="Do MMM YYYY"
+                    defaultValue=""
+                    disabled={false}
+                    input={true}
+                    inputProps={
+                      Object {
+                        "className": "form-control",
+                      }
+                    }
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onViewModeChange={[Function]}
+                    strictParsing={true}
+                    timeConstraints={Object {}}
+                    timeFormat={false}
+                    utc={false}
+                    value="2018-09-02"
+                  />
                 </div>
               </th>
             </tr>
@@ -4296,16 +2911,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-primary1"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  QA Review
-                </span>
+                <AuditStoreStatusLabel
+                  status="SUBMITTED"
+                />
               </th>
             </tr>
             <tr>
@@ -4315,21 +2923,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -4364,91 +2975,22 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <textarea
-      className="form-control"
-      onBlur={[Function]}
-      onChange={[Function]}
-      rows="5"
-      value="Foobar"
-    />
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={true}
+  />
 </div>
 `;
 
@@ -4458,42 +3000,39 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
     className="breadcrumb"
   >
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client"
       >
         Clients
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/client/6/audit_cycle"
       >
-        <span
-          className="glyphicon glyphicon-king"
-        />
+        <King />
          
         Client Name
-      </a>
+      </Link>
     </li>
     <li>
-      <a
-        onClick={[Function]}
+      <Link
+        onlyActiveOnIndex={false}
         style={Object {}}
+        to="/audit_cycle/453/audit_store"
       >
-        <span
-          className="glyphicon glyphicon-retweet"
-        />
+        <Retweet />
          
-      </a>
+      </Link>
     </li>
     <li
       className="active"
     >
-      <span
-        className="glyphicon glyphicon-file"
-      />
+      <File />
        
       Store Name
     </li>
@@ -4501,9 +3040,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
   <h2
     className="page-header"
   >
-    <span
-      className="glyphicon glyphicon-file"
-    />
+    <File />
      Audit Report - 
     5
     <div
@@ -4513,9 +3050,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
         className="btn btn-default"
         href="/manager/client/6/audit_store/5/xlsx_report"
       >
-        <span
-          className="glyphicon glyphicon-download"
-        />
+        <Download />
          Excel Report
       </a>
        
@@ -4593,12 +3128,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 ₹ 
                 500
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/earnings_per_audit"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -4612,12 +3148,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 ₹ 
                 700
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/reimbursement"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
@@ -4628,23 +3165,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 Auditor:
               </td>
               <td>
-                <div>
-                  <b>
-                    <a
-                      onClick={[Function]}
-                      style={Object {}}
-                    >
-                      John
-                       
-                      Doe
-                    </a>
-                  </b>
-                   (
-                  <a
-                    href="tel:undefined"
-                  />
-                  )
-                </div>
+                <AuditorNameDisplay
+                  user={
+                    Object {
+                      "profileinfo": Object {
+                        "first_name": "John",
+                        "last_name": "Doe",
+                      },
+                    }
+                  }
+                />
               </td>
             </tr>
             <tr>
@@ -4664,16 +3194,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 Status:
               </td>
               <th>
-                <span
-                  className="label label-default"
-                  style={
-                    Object {
-                      "fontSize": "100%",
-                    }
-                  }
-                >
-                  Withdrawn
-                </span>
+                <AuditStoreStatusLabel
+                  status="WITHDRAWN"
+                />
               </th>
             </tr>
             <tr>
@@ -4683,21 +3206,24 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 Rating:
               </td>
               <th>
-                <span>
-                  not rated
-                </span>
+                <AuditStoreRating
+                  rating={null}
+                />
                  (
-                <a
-                  onClick={[Function]}
+                <Link
+                  onlyActiveOnIndex={false}
                   style={Object {}}
+                  to="/audit_store/5/qa_rating"
                 >
                   change
-                </a>
+                </Link>
                 )
               </th>
             </tr>
           </tbody>
-          <tbody />
+          <Connect(AuditStoreReportAttributesTable)
+            auditStoreId={5}
+          />
         </table>
         <div
           className="panel-footer text-right"
@@ -4718,102 +3244,23 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
       <div
         className="panel-body"
       >
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
-        <div
-          className="text-center text-muted"
-        >
-          <img
-            alt="loading..."
-            src="test-file-stub"
-            title="Please Wait"
-          />
-          <p>
-            LOADING
-          </p>
-        </div>
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Description"
+        />
+        <MarkdownViewer
+          markdown="Conduct an Audit - Post Approval - Audit Cycle Description"
+        />
       </div>
     </div>
   </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-paperclip"
-      />
-       Attachments 
-    </h3>
-    <div
-      className="row"
-    >
-      <div
-        className="col-md-4"
-        style={
-          Object {
-            "maxHeight": "500px",
-            "overflowY": "auto",
-          }
-        }
-      >
-        <div
-          className="form-group"
-        >
-          <div
-            className="jumbotron text-center"
-          >
-            <h3>
-              no attachments here
-            </h3>
-            <p>
-              none uploaded
-            </p>
-          </div>
-        </div>
-      </div>
-      <div
-        className="col-md-8"
-      />
-    </div>
-  </div>
-  <div>
-    <h3
-      className="page-header"
-    >
-      <span
-        className="glyphicon glyphicon-tasks"
-      />
-       Report Summary
-    </h3>
-    <span>
-       
-      Foobar
-    </span>
-  </div>
+  <Connect(AttachmentDisplayBox)
+    auditStoreId="5"
+  />
+  <Connect(__ReportSummary)
+    auditStoreId={5}
+    editable={false}
+  />
 </div>
 `;
 
-exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loading 1`] = `
-<div
-  className="text-center text-muted"
->
-  <img
-    alt="loading..."
-    src="test-file-stub"
-    title="Please Wait"
-  />
-  <p>
-    LOADING
-  </p>
-</div>
-`;
+exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loading 1`] = `<Loading />`;
