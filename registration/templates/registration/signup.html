@@ -1,5 +1,6 @@
 {% extends "registration/base.html" %}
 {% load widget_tweaks %}
+{% load static %}
 {% block title %}Auditor Sign Up |{% endblock %}
 {% block content %}
 	<div class="row">
@@ -10,7 +11,7 @@
 	<div class="col-md-5">
 <h1 class="page-header">
 			<a href="{{rhea_base_url}}">
-			<img class="img-responsive" src="/static/img/logo_3_500x100.png"/>
+				<img class="img-responsive" src="{% static 'registration/logo_3_500x100.png' %}"/>
 			</a>
 </h1>
 		<div class="panel panel-primary">
@@ -117,22 +118,22 @@
 		<br/>
 		<div class="row">
 			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/grab_the_deal.png" alt=""/>
+				<img class="img-responsive center-block" width="150" height="150" src="{% static 'registration/signup/grab_the_deal.png' %}" alt=""/>
 				<h3 class="text-center">1. Grab the Deal</h3>
 				<p class="text-center">Tell us your interests and we give you a shop</p>
 			</div>
 			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/go_shopping.png" alt=""/>
+				<img class="img-responsive center-block" width="150" height="150" src="{% static 'registration/signup/go_shopping.png' %}" alt=""/>
 				<h3 class="text-center">2. Go Shopping</h3>
 				<p class="text-center">Keenly observe a few things while shopping</p>
 			</div>
 			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/tell_us_your_experience.png" alt=""/>
+				<img class="img-responsive center-block" width="150" height="150" src="{% static 'registration/signup/tell_us_your_experience.png' %}" alt=""/>
 				<h3 class="text-center">3. Tell us your experience</h3>
 				<p class="text-center">Report your observations and experience</p>
 			</div>
 			<div class="col-md-6">
-				<img class="img-responsive center-block" width="150" height="150" src="/static/img/signup/get_paid.jpeg" alt=""/>
+				<img class="img-responsive center-block" width="150" height="150" src="{% static 'registration/signup/get_paid.jpeg' %}" alt=""/>
 				<h3 class="text-center">4. Get Paid</h3>
 				<p class="text-center">Get reimbursed for your shopping and make some extra money</p>
 			</div>
