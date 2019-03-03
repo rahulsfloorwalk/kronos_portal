@@ -43,4 +43,27 @@ describe("<MarkdownViewer/>", () => {
 			done();
 		});
 	});
+
+	describe("when the Marked module cannot be loaded", () => {
+
+		beforeEach(() => {
+			jest.doMock("marked", () => {
+				//make the import fail
+				throw { code: "MODULE_NOT_FOUND", };
+			});
+		});
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it("renders an error message", (done) => {
+			const r = renderer.create(<MarkdownViewer markdown={sampleMarkdown}/>);
+			setTimeout(() => {
+				r.update(<MarkdownViewer markdown={sampleMarkdown}/>);
+				expect(r).toMatchSnapshot();
+				done();
+			});
+		});
+	});
 });

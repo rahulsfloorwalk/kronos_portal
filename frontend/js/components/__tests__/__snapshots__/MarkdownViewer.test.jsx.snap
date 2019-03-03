@@ -48,3 +48,9 @@ exports[`<MarkdownViewer/> renders sample transformed markdown content 1`] = `
   }
 />
 `;
+
+exports[`<MarkdownViewer/> when the Marked module cannot be loaded renders an error message 1`] = `
+<div>
+  there was a problem loading this preview
+</div>
+`;
