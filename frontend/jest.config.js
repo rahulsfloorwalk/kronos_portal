@@ -4,7 +4,9 @@ module.exports = {
 	setupFiles: [
 		"jest-prop-type-error",
 	],
-	setupTestFrameworkScriptFile: "./js/test_setup.js",
+	setupFilesAfterEnv: [
+		"./js/test_setup.js"
+	],
 	testPathIgnorePatterns: [
 		"./js/__tests__/setup.js",
 	],
