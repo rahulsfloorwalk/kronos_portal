@@ -1,5 +1,5 @@
 import types from "../action_types.js";
-import { findModeratorSummaryByAuditCycle } from "../service/moderator";
+import { findModeratorSummaryByAuditCycle, findModeratorSummary } from "../service/moderator";
 import { findModerators } from "../service/moderator";
 
 export const fetchModeratorSummaryByAuditCycle = (auditCycleId) => {
@@ -8,6 +8,18 @@ export const fetchModeratorSummaryByAuditCycle = (auditCycleId) => {
 			dispatch({
 				type: types.AUDIT_CYCLE_MODERATOR_SUMMARY,
 				auditCycleId: auditCycleId,
+				moderatorSummary: summaryData,
+			});
+			return summaryData;
+		});
+	};
+};
+
+export const fetchModeratorSummary = () => {
+	return (dispatch) => {
+		return findModeratorSummary().then((summaryData) => {
+			dispatch({
+				type: types.MODERATOR_SUMMARY,
 				moderatorSummary: summaryData,
 			});
 			return summaryData;

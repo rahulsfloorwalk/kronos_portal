@@ -1,0 +1,361 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModeratorSummary renders a loading widget there is no summary 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="test-file-stub"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`ModeratorSummary renders the empty message when there are no rows 1`] = `
+<div>
+   
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        no reports assigned
+      </h3>
+      <p>
+        assign a report to a moderator to make it visible here
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ModeratorSummary renders the moderator summary and moderator emails 1`] = `
+<div>
+   
+  <table
+    className="table table-bordered table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Moderator
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-warning"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Assigned
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-warning2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            In Progress
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-primary1"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            QA Review
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-primary"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            PM Review
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-success"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Client Review
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-success2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Accepted
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-danger"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Failed
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-danger2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Rejected
+          </span>
+        </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-default"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Withdrawn
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          sentinel@redis.com
+        </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          1
+        </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          4
+        </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+      </tr>
+      <tr>
+        <td>
+          warthog@pulmonary.com
+        </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          3
+        </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          8
+        </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

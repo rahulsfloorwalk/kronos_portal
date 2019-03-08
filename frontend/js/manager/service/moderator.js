@@ -66,3 +66,7 @@ export function update(moderatorId, email, password, is_active){
 export function findModeratorSummaryByAuditCycle(auditCycleId){
 	return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/moderator_summary`);
 }
+
+export function findModeratorSummary(){
+	return $.get( url.api_base_path + "manager/moderator/summary");
+}

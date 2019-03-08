@@ -1,5 +1,5 @@
-import { fetchModeratorSummaryByAuditCycle, fetchModerators } from "../moderator";
-import { findModeratorSummaryByAuditCycle, findModerators } from "../../service/moderator";
+import { fetchModeratorSummary, fetchModeratorSummaryByAuditCycle, fetchModerators } from "../moderator";
+import { findModeratorSummary, findModeratorSummaryByAuditCycle, findModerators } from "../../service/moderator";
 import types from "../../../manager/action_types";
 
 jest.mock("../../service/moderator");
@@ -83,3 +83,40 @@ describe(fetchModerators, () => {
 	});
 });
 
+describe(fetchModeratorSummary, () => {
+	const sampleSummary = {
+		1: {
+			"ASSIGNED": 3,
+		},
+	};
+
+	beforeEach(() => {
+		findModeratorSummary.mockResolvedValue(sampleSummary);
+	});
+
+	it("it dispatches a request to get the moderator summary for given audit cycle id", (done) => {
+		const dispatch = jest.fn();
+		const thunk = fetchModeratorSummary();
+		thunk(dispatch);
+		setTimeout(() => {
+			expect(dispatch).toBeCalledWith({
+				type: types.MODERATOR_SUMMARY,
+				moderatorSummary: sampleSummary,
+			});
+			done();
+		});
+	});
+
+	it("it returns a promise which resolves to the summary for given audit cycle id", () => {
+		const dispatch = jest.fn();
+		const thunk = fetchModeratorSummary();
+		return expect(thunk(dispatch)).resolves.toEqual(sampleSummary);
+	});
+
+	it("it calls the service to find the summary for given audit cycle id", () => {
+		const dispatch = jest.fn();
+		const thunk = fetchModeratorSummary();
+		thunk(dispatch);
+		expect(findModeratorSummary).toBeCalled();
+	});
+});

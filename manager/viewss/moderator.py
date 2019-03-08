@@ -100,3 +100,12 @@ class ModeratorSummaryByAuditCycle(APIView):
 
     def get(self, request, audit_cycle_id):
         return Response(moderator_summary.moderator_summary_for_audit_cycle(audit_cycle_id))
+
+class ModeratorSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request):
+        return Response(moderator_summary.moderator_summary_global())
