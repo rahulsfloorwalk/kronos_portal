@@ -72,7 +72,7 @@ export default class ModeratorForm extends React.Component {
 				this.state.moderator.is_active);
 		}
 		promise.then(function(){
-			hashHistory.push("/moderator");
+			hashHistory.push("/moderator/list");
 		}, (errors) => {
 			if (errors.responseJSON){
 				this.setState({

@@ -1,0 +1,44 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ModeratorIndex renders the children with the tabs 1`] = `
+<div>
+  <h2
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-knight"
+    />
+     Moderators
+  </h2>
+  <ul
+    className="nav nav-tabs"
+  >
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Summary
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Manage
+      </a>
+    </li>
+  </ul>
+  <br />
+  <p>
+    Sample Child
+  </p>
+</div>
+`;

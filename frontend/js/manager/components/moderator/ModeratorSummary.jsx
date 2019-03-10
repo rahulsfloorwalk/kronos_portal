@@ -9,7 +9,7 @@ import { AuditStoreStatus } from "../../../constants";
 
 import { fetchModeratorSummary, fetchModerators } from "../../actions/moderator";
 import { findModerators } from "../../selectors/moderator";
-import { findModeratorSummaryByAuditCycleId } from "../../selectors/audit_cycle_moderator_summary";
+import { findModeratorSummary } from "../../selectors/moderator_summary";
 
 export class ModeratorSummary extends React.Component{
 	static propTypes = {
@@ -29,6 +29,8 @@ export class ModeratorSummary extends React.Component{
 	}
 
 	render(){
+		const statuses = AuditStoreStatus.filter(s => !["REJECTED", "ACCEPTED", "WITHDRAWN", "FAILED"].includes(s));
+
 		if(!this.props.summary) {
 			return <Loading/>;
 		}
@@ -40,7 +42,7 @@ export class ModeratorSummary extends React.Component{
 		const rows = [];
 		for(const moderatorId in this.props.summary){
 			const moderator = this.props.moderators.find(m => m.id === parseInt(moderatorId));
-			const cells = AuditStoreStatus.map(s => <td key={s} style={rightAlign}>{this.props.summary[moderatorId][s]}</td>);
+			const cells = statuses.map(s => <td key={s} style={rightAlign}>{this.props.summary[moderatorId][s]}</td>);
 			rows.push(<tr key={moderatorId}>
 				<td>{moderator ? moderator.email : ""}</td>
 				{cells}
@@ -55,7 +57,7 @@ export class ModeratorSummary extends React.Component{
 		}
 
 
-		const headings = AuditStoreStatus.map(s => <th style={rightAlign} key={s}><AuditStoreStatusLabel status={s}/></th>);
+		const headings = statuses.map(s => <th style={rightAlign} key={s}><AuditStoreStatusLabel status={s}/></th>);
 		return (<div>
 			&nbsp;
 			<table className="table table-bordered table-striped">
@@ -73,11 +75,9 @@ export class ModeratorSummary extends React.Component{
 	}
 }
 
-const mapStoreToProps = (store, ownProps) => {
-	const auditCycleId = parseInt(ownProps.params.auditCycleId);
+const mapStoreToProps = (store) => {
 	return {
-		auditCycleId,
-		summary: findModeratorSummaryByAuditCycleId(store, auditCycleId),
+		summary: findModeratorSummary(store),
 		moderators: findModerators(store),
 	};
 };

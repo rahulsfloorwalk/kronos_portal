@@ -136,78 +136,6 @@ exports[`ModeratorSummary renders the moderator summary and moderator emails 1`]
             Client Review
           </span>
         </th>
-        <th
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        >
-          <span
-            className="label label-success2"
-            style={
-              Object {
-                "fontSize": "100%",
-              }
-            }
-          >
-            Accepted
-          </span>
-        </th>
-        <th
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        >
-          <span
-            className="label label-danger"
-            style={
-              Object {
-                "fontSize": "100%",
-              }
-            }
-          >
-            Failed
-          </span>
-        </th>
-        <th
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        >
-          <span
-            className="label label-danger2"
-            style={
-              Object {
-                "fontSize": "100%",
-              }
-            }
-          >
-            Rejected
-          </span>
-        </th>
-        <th
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        >
-          <span
-            className="label label-default"
-            style={
-              Object {
-                "fontSize": "100%",
-              }
-            }
-          >
-            Withdrawn
-          </span>
-        </th>
       </tr>
     </thead>
     <tbody>
@@ -254,34 +182,6 @@ exports[`ModeratorSummary renders the moderator summary and moderator emails 1`]
         >
           4
         </td>
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
       </tr>
       <tr>
         <td>
@@ -319,34 +219,6 @@ exports[`ModeratorSummary renders the moderator summary and moderator emails 1`]
         >
           8
         </td>
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
-        <td
-          style={
-            Object {
-              "textAlign": "right",
-            }
-          }
-        />
         <td
           style={
             Object {

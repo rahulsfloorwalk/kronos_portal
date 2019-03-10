@@ -70,6 +70,8 @@ import AuditFiatAssignForm from "./AuditFiatAssignForm.jsx";
 import ApplicationApproveForm from "./application/ApplicationApproveForm.jsx";
 import ApplicationRejectForm from "./application/ApplicationRejectForm.jsx";
 
+import ModeratorSummary from "./moderator/ModeratorSummary.jsx";
+import ModeratorIndex from "./moderator/ModeratorIndex.jsx";
 import ModeratorList from "./moderator/ModeratorList.jsx";
 import ModeratorForm from "./moderator/ModeratorForm.jsx";
 import AuditCycleModeratorList from "./AuditCycleModeratorList.jsx";
@@ -168,9 +170,12 @@ const Routes = () => (
 				<Route path=":stateId" component={CityList}/>
 			</Route>
 
-			<Route path="moderator" component={ModeratorList}>
-				<Route path="add" component={ModeratorForm}/>
-				<Route path=":userId/edit" component={ModeratorForm}/>
+			<Route path="moderator" component={ModeratorIndex}>
+				<Route path="summary" component={ModeratorSummary}/>
+				<Route path="list" component={ModeratorList}>
+					<Route path="add" component={ModeratorForm}/>
+					<Route path=":userId/edit" component={ModeratorForm}/>
+				</Route>
 			</Route>
 			<Route path="manager" component={ManagerList}>
 				<Route path="add" component={ManagerForm}/>

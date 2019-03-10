@@ -18,6 +18,7 @@ import auditCycleModeratorSummaryReducer from "./reducers/audit_cycle_moderator_
 import formReducer from "./reducers/forms";
 import errorsReducer from "./reducers/errors";
 import moderatorReducer from "./reducers/moderator";
+import moderatorSummaryReducer from "./reducers/moderator_summary";
 
 export default combineReducers({
 	applications: applicationReducer,
@@ -38,5 +39,6 @@ export default combineReducers({
 	forms: formReducer,
 	errors: errorsReducer,
 	moderator: moderatorReducer,
+	moderatorSummary: moderatorSummaryReducer,
 });
 
