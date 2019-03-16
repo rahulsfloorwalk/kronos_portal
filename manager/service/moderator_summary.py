@@ -15,7 +15,7 @@ def moderator_summary_for_audit_cycle(audit_cycle_id):
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
-    perms = UserObjectPermission.objects.filter(content_type=content_type, object_pk__in=report_ids, permission=permission)
+    perms = UserObjectPermission.objects.filter(content_type=content_type, object_pk__in=report_ids, permission=permission, user__is_active=True)
 
     data = {}
 
@@ -40,7 +40,7 @@ def moderator_summary_global():
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
-    perms = UserObjectPermission.objects.filter(content_type=content_type, object_pk__in=report_ids, permission=permission)
+    perms = UserObjectPermission.objects.filter(content_type=content_type, object_pk__in=report_ids, permission=permission, user__is_active=True)
 
     data = {}
 

@@ -28,13 +28,14 @@ class ModeratorSummaryTestCase(TestCase):
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
 
 
-    def test_moderator_summary_for_audit_cycle_returns_report_counts_for_every_status_and_moderator(self):
+    def test_moderator_summary_for_audit_cycle_returns_report_counts_for_every_status_and_active_moderator(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
 
         moderator1 = mommy.make(User, username="moderator1@foobar.com", email="moderator1@foobar.com", groups=[self.moderator_group])
         moderator2 = mommy.make(User, username="moderator2@foobar.com", email="moderator2@foobar.com", groups=[self.moderator_group])
         moderator3 = mommy.make(User, username="moderator3@foobar.com", email="moderator3@foobar.com", groups=[self.moderator_group])
+        moderator4 = mommy.make(User, username="moderator4@foobar.com", email="moderator4@foobar.com", groups=[self.moderator_group])
 
         report1 = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
         report2 = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.ACKNOWLEDGED)
@@ -45,6 +46,10 @@ class ModeratorSummaryTestCase(TestCase):
         assign_perm('moderator_manage', moderator2, report2)
         assign_perm('moderator_manage', moderator3, report3)
         assign_perm('moderator_manage', moderator3, report4)
+        assign_perm('moderator_manage', moderator4, report4)
+
+        moderator4.is_active = False
+        moderator4.save()
 
         data = moderator_summary_for_audit_cycle(audit_cycle.id)
 
@@ -55,10 +60,11 @@ class ModeratorSummaryTestCase(TestCase):
         expect(data[moderator3.id]).to(have_keys({AuditStore.SUBMITTED: 1, AuditStore.COMPLETED: 1}))
 
 
-    def test_moderator_summary_global_returns_report_counts_for_specfic_status_and_moderator(self):
+    def test_moderator_summary_global_returns_report_counts_for_specfic_status_and_active_moderator(self):
         moderator1 = mommy.make(User, username="moderator1@foobar.com", email="moderator1@foobar.com", groups=[self.moderator_group])
         moderator2 = mommy.make(User, username="moderator2@foobar.com", email="moderator2@foobar.com", groups=[self.moderator_group])
         moderator3 = mommy.make(User, username="moderator3@foobar.com", email="moderator3@foobar.com", groups=[self.moderator_group])
+        moderator4 = mommy.make(User, username="moderator4@foobar.com", email="moderator4@foobar.com", groups=[self.moderator_group])
 
         audit_cycle1 = mommy.make(AuditCycle, start_date=date(2018, 8, 1), end_date=date(2018, 9, 1), status=AuditCycle.REPORT)
         audit_cycle2 = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
@@ -74,6 +80,10 @@ class ModeratorSummaryTestCase(TestCase):
         assign_perm('moderator_manage', moderator2, report2)
         assign_perm('moderator_manage', moderator3, report3)
         assign_perm('moderator_manage', moderator3, report4)
+        assign_perm('moderator_manage', moderator4, report4)
+
+        moderator4.is_active = False
+        moderator4.save()
 
         data = moderator_summary_global()
 
