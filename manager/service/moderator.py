@@ -1,13 +1,17 @@
 from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.contrib.auth.models import User, Group
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
 
+from guardian.models import UserObjectPermission
 from guardian.shortcuts import assign_perm, get_users_with_perms, remove_perm
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.service import audit_cycle as audit_cycle_service
 from registration.models import GROUP_NAME_MODERATOR
 from audit_store import service as audit_store_service
+from audit_store.models import AuditStore
 
 def find_all():
     return Group.objects.get(name=GROUP_NAME_MODERATOR).user_set
@@ -98,8 +102,8 @@ def assign_audit_store(user_id, audit_store_id):
 
 @atomic
 def revoke_audit_store(audit_store_id):
+    content_type = ContentType.objects.get_for_model(AuditStore)
+    permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
     audit_store = audit_store_service.find_by_id(audit_store_id)
-    for user, perms in get_users_with_perms(audit_store, attach_perms=True).items():
-        if 'moderator_manage' in perms:
-            remove_perm('moderator_manage', user, audit_store)
+    UserObjectPermission.objects.filter(content_type=content_type, permission=permission, object_pk=str(audit_store.id)).delete()
     return audit_store

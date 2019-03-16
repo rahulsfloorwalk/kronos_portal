@@ -2,8 +2,10 @@ from datetime import date
 from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
+from guardian.shortcuts import assign_perm
+
 from model_mommy import mommy
-from expects import expect, equal, have_length
+from expects import expect, equal, have_length, be_empty
 
 from kronos.exceptions import AppLogicError
 from audit.models import Audit, AuditCycle
@@ -38,6 +40,38 @@ class ModeratorServiceTestCase(TestCase):
         expect(report.assigned_to_moderator()).to(have_length(1))
         expect(report.assigned_to_moderator()[0]).to(equal(moderator))
 
+    def test_assign_audit_store_overwrites_assignment_if_it_exists(self):
+        audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
+        audit = mommy.make(Audit, audit_cycle=audit_cycle)
+        report = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
+
+        moderator1 = mommy.make(User, username="moderator1@foobar.com", email="moderator1@foobar.com", groups=[self.moderator_group])
+        moderator2 = mommy.make(User, username="moderator2@foobar.com", email="moderator2@foobar.com", groups=[self.moderator_group])
+        assign_perm('moderator_manage', moderator1, report)
+
+        report = moderator_service.assign_audit_store(moderator2.id, report.id)
+
+        expect(report.assigned_to_moderator()).to(have_length(1))
+        expect(report.assigned_to_moderator()[0]).to(equal(moderator2))
+
+    def test_assign_audit_store_overwrites_assignment_if_previous_moderator_is_disabled(self):
+        audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
+        audit = mommy.make(Audit, audit_cycle=audit_cycle)
+        report = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
+
+        moderator1 = mommy.make(User, username="moderator1@foobar.com", email="moderator1@foobar.com", groups=[self.moderator_group])
+        moderator2 = mommy.make(User, username="moderator2@foobar.com", email="moderator2@foobar.com", groups=[self.moderator_group])
+        assign_perm('moderator_manage', moderator1, report)
+        moderator1.is_active = False
+        moderator1.save()
+
+        report = moderator_service.assign_audit_store(moderator2.id, report.id)
+        moderator1.is_active = True
+        moderator1.save()
+
+        expect(report.assigned_to_moderator()).to(have_length(1))
+        expect(report.assigned_to_moderator()[0]).to(equal(moderator2))
+
     def test_assign_audit_store_raises_if_moderator_is_deactivated(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
@@ -46,3 +80,19 @@ class ModeratorServiceTestCase(TestCase):
         report = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
         with self.assertRaisesRegex(AppLogicError, "disabled moderators cannot be assigned reports"):
             moderator_service.assign_audit_store(moderator.id, report.id)
+
+    def test_revoke_audit_store_removes_assignment_if_moderator_is_disabled(self):
+        audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
+        audit = mommy.make(Audit, audit_cycle=audit_cycle)
+        report = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
+
+        moderator1 = mommy.make(User, username="moderator1@foobar.com", email="moderator1@foobar.com", groups=[self.moderator_group])
+        assign_perm('moderator_manage', moderator1, report)
+        moderator1.is_active = False
+        moderator1.save()
+
+        report = moderator_service.revoke_audit_store(report.id)
+        moderator1.is_active = True
+        moderator1.save()
+
+        expect(report.assigned_to_moderator()).to(be_empty)
