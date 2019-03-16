@@ -5,6 +5,7 @@ exclude properties.ini
 recursive-include *.csv
 recursive-include **/fixtures *.json
 recursive-include **/templates *
+recursive-include **/static *
 recursive-include frontend/img *
 recursive-include frontend/dist *
 recursive-exclude frontend/node_modules *
