@@ -234,15 +234,15 @@ STATICFILES_DIRS = [
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-cache_forever = re.compile("\\.[a-f0-9]{5,}\\.((min|bundle)\\.)?(js|css)$")
-cache_never = re.compile("\\.html$")
-
 def whitenoise_add_header(headers, path, url):
+    cache_forever = re.compile(r"\.[a-f0-9]{5,}\.((min|bundle)\.)?(js|css)$")
+    cache_never = re.compile(r"\.html$")
+
     if cache_never.search(path):
-        _logger.debug("caching never: %s", url)
-        headers["Cache-Control"] = "max-age=0, public"
+        _logger.debug(f"caching never: {url}")
+        headers["Cache-Control"] = "no-store"
     elif cache_forever.search(path):
-        _logger.debug("caching forever: %s", url)
+        _logger.debug(f"caching forever: {url}")
         headers["Cache-Control"] = "max-age=86400, public, immutable"
 
 

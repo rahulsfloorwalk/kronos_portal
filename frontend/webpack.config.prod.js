@@ -6,7 +6,7 @@ const baseConfig = require("./webpack.config");
 
 module.exports = Object.assign({}, baseConfig, {
 	output: Object.assign({}, baseConfig.output, {
-		filename: "[name].[chunkhash].bundle.js",
+		filename: "[name].[contenthash].js",
 	}),
 	devtool: "source-map",
 	plugins : baseConfig.plugins.concat([
