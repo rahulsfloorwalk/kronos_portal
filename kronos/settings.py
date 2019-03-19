@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import sys
 import logging
+import re
 from configparser import ConfigParser
 
 from setup import version
@@ -113,6 +114,7 @@ INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -227,6 +229,24 @@ STATIC_ROOT = properties["GENERAL"]["STATIC_ROOT"]
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend", "dist"),
 ]
+
+# Enable compression and cache forever headers
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+cache_forever = re.compile("\\.[a-f0-9]{5,}\\.((min|bundle)\\.)?(js|css)$")
+cache_never = re.compile("\\.html$")
+
+def whitenoise_add_header(headers, path, url):
+    if cache_never.search(path):
+        _logger.debug("caching never: %s", url)
+        headers["Cache-Control"] = "max-age=0, public"
+    elif cache_forever.search(path):
+        _logger.debug("caching forever: %s", url)
+        headers["Cache-Control"] = "max-age=86400, public, immutable"
+
+
+WHITENOISE_ADD_HEADERS_FUNCTION = whitenoise_add_header
 
 # email settings
 EMAIL_HOST = properties["EMAIL_SETTINGS"]["HOST"]
