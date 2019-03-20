@@ -7528,5 +7528,415 @@
             "lat": "21.626424",
             "lon": "73.015198"
         }
+    },
+    {
+        "model": "manager.city",
+        "pk": 784,
+        "fields": {
+            "name": "Arsikere",
+            "state": "IN-KA",
+            "lat": "13.310455",
+            "lon": "76.253705"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 785,
+        "fields": {
+            "name": "Athani",
+            "state": "IN-KA",
+            "lat": "16.726881",
+            "lon": "75.064093"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 786,
+        "fields": {
+            "name": "Aurad",
+            "state": "IN-KA",
+            "lat": "18.249614",
+            "lon": "77.415689"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 787,
+        "fields": {
+            "name": "Bailongal",
+            "state": "IN-KA",
+            "lat": "15.813300",
+            "lon": "74.856561"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 788,
+        "fields": {
+            "name": "Bangarpet",
+            "state": "IN-KA",
+            "lat": "12.991491",
+            "lon": "78.178760"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 789,
+        "fields": {
+            "name": "Belagavi",
+            "state": "IN-KA",
+            "lat": "15.849695",
+            "lon": "74.497674"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 790,
+        "fields": {
+            "name": "Belthangady",
+            "state": "IN-KA",
+            "lat": "12.988664",
+            "lon": "75.272545"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 791,
+        "fields": {
+            "name": "Bhadravathi",
+            "state": "IN-KA",
+            "lat": "13.832990",
+            "lon": "75.708073"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 792,
+        "fields": {
+            "name": "Channarayapatna",
+            "state": "IN-KA",
+            "lat": "12.900021",
+            "lon": "76.389864"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 793,
+        "fields": {
+            "name": "Chikodi",
+            "state": "IN-KA",
+            "lat": "16.429191",
+            "lon": "74.587855"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 794,
+        "fields": {
+            "name": "Farangipet",
+            "state": "IN-KA",
+            "lat": "12.874449",
+            "lon": "74.957764"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 795,
+        "fields": {
+            "name": "Gokak",
+            "state": "IN-KA",
+            "lat": "16.159185",
+            "lon": "74.815620"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 796,
+        "fields": {
+            "name": "Harugeri",
+            "state": "IN-KA",
+            "lat": "16.517701",
+            "lon": "74.949747"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 797,
+        "fields": {
+            "name": "Hebbal",
+            "state": "IN-KA",
+            "lat": "13.035356",
+            "lon": "77.598787"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 798,
+        "fields": {
+            "name": "Hollenarsipura",
+            "state": "IN-KA",
+            "lat": "12.784906",
+            "lon": "76.243567"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 799,
+        "fields": {
+            "name": "Hosadurga",
+            "state": "IN-KA",
+            "lat": "13.798526",
+            "lon": "76.285057"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 800,
+        "fields": {
+            "name": "Hoskote",
+            "state": "IN-KA",
+            "lat": "13.073002",
+            "lon": "77.796697"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 801,
+        "fields": {
+            "name": "Hospet",
+            "state": "IN-KA",
+            "lat": "15.268854",
+            "lon": "76.390924"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 802,
+        "fields": {
+            "name": "Jamkhandi",
+            "state": "IN-KA",
+            "lat": "16.504320",
+            "lon": "75.291751"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 803,
+        "fields": {
+            "name": "Kalasa",
+            "state": "IN-KA",
+            "lat": "13.234359",
+            "lon": "75.355793"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 804,
+        "fields": {
+            "name": "Kalladka",
+            "state": "IN-KA",
+            "lat": "12.846238",
+            "lon": "75.071336"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 805,
+        "fields": {
+            "name": "Karkala",
+            "state": "IN-KA",
+            "lat": "13.215100",
+            "lon": "74.996180"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 806,
+        "fields": {
+            "name": "Katpady",
+            "state": "IN-KA",
+            "lat": "13.282981",
+            "lon": "74.747911"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 807,
+        "fields": {
+            "name": "Kinnigoli,",
+            "state": "IN-KA",
+            "lat": "13.072345",
+            "lon": "74.844865"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 808,
+        "fields": {
+            "name": "Kolar",
+            "state": "IN-KA",
+            "lat": "13.136214",
+            "lon": "78.129099"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 809,
+        "fields": {
+            "name": "Koppa",
+            "state": "IN-KA",
+            "lat": "13.532658",
+            "lon": "75.355793"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 810,
+        "fields": {
+            "name": "Kundapura",
+            "state": "IN-KA",
+            "lat": "13.631596",
+            "lon": "74.689992"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 811,
+        "fields": {
+            "name": "Kushalnagar",
+            "state": "IN-KA",
+            "lat": "12.460228",
+            "lon": "75.960838"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 812,
+        "fields": {
+            "name": "Laxmeshawar",
+            "state": "IN-KA",
+            "lat": "15.127463",
+            "lon": "75.472341"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 813,
+        "fields": {
+            "name": "Malavalli",
+            "state": "IN-KA",
+            "lat": "12.385343",
+            "lon": "77.053580"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 814,
+        "fields": {
+            "name": "Malpe",
+            "state": "IN-KA",
+            "lat": "13.355479",
+            "lon": "74.704443"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 815,
+        "fields": {
+            "name": "Malur",
+            "state": "IN-KA",
+            "lat": "13.003495",
+            "lon": "77.942453"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 816,
+        "fields": {
+            "name": "Mudhol",
+            "state": "IN-KA",
+            "lat": "16.333310",
+            "lon": "75.285821"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 817,
+        "fields": {
+            "name": "Nippani",
+            "state": "IN-KA",
+            "lat": "16.407015",
+            "lon": "74.376341"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 818,
+        "fields": {
+            "name": "Nitturu",
+            "state": "IN-KA",
+            "lat": "13.321116",
+            "lon": "76.861286"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 819,
+        "fields": {
+            "name": "Pavagada",
+            "state": "IN-KA",
+            "lat": "14.103100",
+            "lon": "77.280742"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 820,
+        "fields": {
+            "name": "Puttur",
+            "state": "IN-KA",
+            "lat": "12.768676",
+            "lon": "75.207064"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 821,
+        "fields": {
+            "name": "Sindagi",
+            "state": "IN-KA",
+            "lat": "16.917256",
+            "lon": "76.233428"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 822,
+        "fields": {
+            "name": "Sira",
+            "state": "IN-KA",
+            "lat": "13.744763",
+            "lon": "76.898950"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 823,
+        "fields": {
+            "name": "Talikot",
+            "state": "IN-KA",
+            "lat": "16.478257",
+            "lon": "76.310933"
+        }
+    },
+    {
+        "model": "manager.city",
+        "pk": 824,
+        "fields": {
+            "name": "Tiptur",
+            "state": "IN-KA",
+            "lat": "13.263781",
+            "lon": "76.470295"
+        }
     }
 ]
