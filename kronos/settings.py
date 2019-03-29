@@ -239,10 +239,10 @@ def whitenoise_add_header(headers, path, url):
     cache_never = re.compile(r"\.html$")
 
     if cache_never.search(path):
-        _logger.debug(f"caching never: {url}")
+        _logger.debug("caching never: {}".format(url))
         headers["Cache-Control"] = "no-store"
     elif cache_forever.search(path):
-        _logger.debug(f"caching forever: {url}")
+        _logger.debug("caching forever: {}".format(url))
         headers["Cache-Control"] = "max-age=86400, public, immutable"
 
 
