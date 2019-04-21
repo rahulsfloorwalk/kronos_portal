@@ -13,10 +13,10 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 import os
 import sys
 import logging
-import re
 from configparser import ConfigParser
 
 from setup import version
+from kronos.cache_headers import whitenoise_add_header
 
 _logger = logging.getLogger(__name__)
 
@@ -66,6 +66,8 @@ ALLOWED_HOSTS = ["localhost", KRONOS_DOMAIN.split(':')[0]]
 BRAND_NAME = properties["GENERAL"]["BRAND_NAME"]
 BRAND_SHORTNAME = properties["GENERAL"]["BRAND_SHORTNAME"]
 
+WHITENOISE_ENABLED = properties["GENERAL"]["WHITENOISE_ENABLED"] == "True"
+
 # Application definition
 
 DEPENDENCY_APPS = [
@@ -114,7 +116,6 @@ INSTALLED_APPS = DEPENDENCY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -124,6 +125,10 @@ MIDDLEWARE = [
     'registration.DisableCSRF',
     'kronos.middlewares.PhoebeVersionHeaderMiddleware',
 ]
+
+if WHITENOISE_ENABLED:
+    # insert this just after the SecurityMiddleware
+    MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 
 if DEBUG and DEBUG_TOOLBAR:
     MIDDLEWARE.append('debug_toolbar.middleware.DebugToolbarMiddleware')
@@ -224,29 +229,17 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = properties["GENERAL"]["STATIC_ROOT"]
-
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "frontend", "dist"),
 ]
 
-# Enable compression and cache forever headers
-# STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+if WHITENOISE_ENABLED:
 
-def whitenoise_add_header(headers, path, url):
-    cache_forever = re.compile(r"\.[a-f0-9]{5,}\.((min|bundle)\.)?(js|css)$")
-    cache_never = re.compile(r"\.html$")
-
-    if cache_never.search(path):
-        _logger.debug("caching never: {}".format(url))
-        headers["Cache-Control"] = "no-store"
-    elif cache_forever.search(path):
-        _logger.debug("caching forever: {}".format(url))
-        headers["Cache-Control"] = "max-age=86400, public, immutable"
-
-
-WHITENOISE_ADD_HEADERS_FUNCTION = whitenoise_add_header
+    STATIC_ROOT = properties["GENERAL"]["STATIC_ROOT"]
+    # Enable compression and cache forever headers
+    # STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    WHITENOISE_ADD_HEADERS_FUNCTION = whitenoise_add_header
 
 # email settings
 EMAIL_HOST = properties["EMAIL_SETTINGS"]["HOST"]
