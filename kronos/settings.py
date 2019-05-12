@@ -317,6 +317,7 @@ AWS = {
 
 AUTH_GA_ID = properties["FRONTEND"]["AUDITOR_GA_ID"]
 TAWK_TO_SRC = properties["FRONTEND"]["TAWK_TO_SRC"]
+COLLECTCDN_ID = properties["FRONTEND"]["COLLECTCDN_ID"]
 
 IMGIX_SUBDOMAIN = properties["GENERAL"]["IMGIX_SUBDOMAIN"]
 
@@ -346,6 +347,7 @@ FRONTEND_CONFIG = {
     "AUDITOR": {
         "TAWK_TO_SRC": TAWK_TO_SRC,
         "GA_ID": AUTH_GA_ID,
+        "COLLECTCDN_ID": COLLECTCDN_ID,
         "FB_CLIENT_ID": properties["FRONTEND"]["AUDITOR_FB_CLIENT_ID"],
         "FB_FIELDS": properties["FRONTEND"]["AUDITOR_FB_FIELDS"],
         "FB_SCOPE": properties["FRONTEND"]["AUDITOR_FB_SCOPE"],

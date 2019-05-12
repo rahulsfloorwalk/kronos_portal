@@ -4,6 +4,7 @@ import { Helmet } from "react-helmet";
 import _ from "lodash";
 
 import Header from "./Header.jsx";
+import CollectBot from "./CollectBot.jsx";
 import Footer from "../../components/Footer.jsx";
 import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
 
@@ -34,6 +35,7 @@ class App extends React.Component {
 					<link rel="icon" href={favicon} type="image/png" />
 					<title>{_.get(this.state.config, "BRAND_SHORTNAME", "")} Auditor Portal</title>
 				</Helmet>
+				<CollectBot collectId={_.get(this.state.config, "COLLECTCDN_ID", undefined)}/>
 				<DevelopmentMarker/>
 				<Header/>
 				<div className="container" style={contentStyle}>
