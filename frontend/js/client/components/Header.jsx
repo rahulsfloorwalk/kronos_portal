@@ -6,7 +6,8 @@ import { pointerStyle } from "../../styles.js";
 
 import NavLink from "../../components/NavLink.jsx";
 import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/Icons.jsx";
-import floorwalkLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
+
+import floorwalkLogoUrl from "../../../img/logo_500x300.png";
 
 import { fetchUser } from "../service/user.js";
 

@@ -7,12 +7,13 @@ import NavLink from "../../components/NavLink.jsx";
 
 import { Home, File, LogOut } from "../../components/Icons.jsx";
 
-import floorwalkLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
+import floorwalkLogoUrl from "../../../img/logo_500x268.png";
 
 export default class Header extends React.Component{
 	render(){
 		let brandStyle = {
-			height: "25px"
+			height: "40px",
+			transform: "translateY(-25%)",
 		};
 		return (
 			<nav className="navbar navbar-default navbar-static-top">

@@ -8,7 +8,7 @@ import NavLink from "../../components/NavLink.jsx";
 
 import { logout } from "../service/auth.js";
 
-import floorwalkHeaderLogoUrl from "../../../img/logo_3_transparent_bg_400x51.png";
+import floorwalkHeaderLogoUrl from "../../../img/logo_500x268.png";
 
 export default class Header extends React.Component {
 	performLogout = () => {
@@ -19,7 +19,8 @@ export default class Header extends React.Component {
 
 	render() {
 		let brandStyle = {
-			height: "25px"
+			height: "40px",
+			transform: "translateY(-25%)",
 		};
 		return (
 			<nav className="navbar navbar-default navbar-static-top">

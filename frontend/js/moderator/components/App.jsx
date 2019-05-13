@@ -9,7 +9,7 @@ import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
 
 import { fetchConfig } from "../service/config.js";
 
-import favicon from "../../../img/favicon_64x64.png";
+import favicon from "../../../img/favicon.png";
 
 export default class App extends React.Component {
 	static propTypes = {

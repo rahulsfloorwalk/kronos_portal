@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import floorwalkFooterLogo from "../../img/logo_3_500x100.png";
+import floorwalkFooterLogo from "../../img/logo_500x268.png";
 
 export default class Footer extends React.Component{
 	static propTypes = {
@@ -23,7 +23,7 @@ export default class Footer extends React.Component{
 
 	render(){
 		const brandStyle = {
-			height:"30px"
+			height:"40px"
 		};
 		return (
 			<div className="col-xs-12">
