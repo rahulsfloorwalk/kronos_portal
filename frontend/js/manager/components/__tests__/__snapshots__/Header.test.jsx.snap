@@ -21,7 +21,8 @@ exports[`<Header/> is rendered correctly 1`] = `
           src="test-file-stub"
           style={
             Object {
-              "height": "25px",
+              "height": "40px",
+              "transform": "translateY(-25%)",
             }
           }
           title="FloorWalk"
