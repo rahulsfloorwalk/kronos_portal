@@ -284,4 +284,14 @@ $progress_bar_bg_lighten_pct : 5%;
 	background-color: darken($rating_excellent_color, $progress_bar_bg_lighten_pct);
 }
 
+.watermark{
+	 position:fixed;
+	 bottom:50%;
+	 left: 36%;
+	 opacity:0.2;
+	 z-index:99;
+	 color:#000;
+}
+
+
 // Rating Gauge Styles
