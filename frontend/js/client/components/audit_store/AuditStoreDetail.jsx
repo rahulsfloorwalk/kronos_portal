@@ -18,6 +18,9 @@ import AttachmentPrintRenderer from "./AttachmentPrintRenderer.jsx";
 import OverallExperienceGauge from "./OverallExperienceGauge.jsx";
 import ImpactFactorBox from "./ImpactFactorBox.jsx";
 
+import floorwalkLogoUrl from "../../../../img/logo_500x300.png";
+import { fetchUser } from "../../service/user.js";
+
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
@@ -43,6 +46,15 @@ export default class AuditStoreDetail extends React.Component {
 	};
 
 	componentDidMount() {
+		fetchUser().then((clientUser)=>{
+			this.setState({
+				clientUser
+			});
+			if( this.props.location.pathname === "/"){
+				hashHistory.push("/dashboard");
+			}
+		});
+		
 		fetchAuditStore(this.props.params.auditStoreId).then((auditStore) => {
 			this.setState({
 				auditStore
@@ -70,8 +82,11 @@ export default class AuditStoreDetail extends React.Component {
 			return <Loading/>;
 		}
 		const printMode = this.props.printMode || this.props.route.printMode || false;
-
+		
+		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : floorwalkLogoUrl;
+		
 		return (
+			
 			<div>
 				<h2 className="page-header">
 					{ printMode ?
@@ -93,6 +108,13 @@ export default class AuditStoreDetail extends React.Component {
 				</h2>
 				<div className="row">
 					<div className="col-md-6">
+						{ printMode ?
+						<div className="watermark">
+							<img src={imgUrl} height="250" width="300" />
+						</div>
+						:
+						null
+						}
 						<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
 					</div>
 					<div className="col-md-6">
@@ -108,6 +130,7 @@ export default class AuditStoreDetail extends React.Component {
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
 					: null }
 			</div>
+			
 		);
 	}
 }
