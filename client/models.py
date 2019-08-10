@@ -70,6 +70,9 @@ class Store(Model):
         self.modified_at = timezone.now()
         return super(Store, self).save(*args, **kwargs)
 
+    def get_store_address(self):
+        return self.address
+
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)
 

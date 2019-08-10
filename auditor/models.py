@@ -8,6 +8,7 @@ from django.db.models import Model, CharField, AutoField, DateField, ForeignKey,
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
 from kronos.utils import validate_ifsc, validate_pan, get_bank_name_from_ifsc
+from manager.service import geo
 
 class CompletableMixin:
     """
@@ -103,6 +104,9 @@ class ProfileInfo(Model, CompletableMixin):
     def average_rating(self):
         from audit_store.service import average_rating_for_auditor
         return average_rating_for_auditor(self.user_id)
+
+    def get_pincode(self):
+        return self.pincode
 
     is_complete_attrs = [
         "first_name",
@@ -317,6 +321,12 @@ class AuditApplication(Model):
 
     def avg_qa_rating(self):
         return self.profileinfo.average_rating()
+
+    def distance(self):
+        audit_store_pincode = self.audit.get_pincode_audit()
+        auditor_pincode = self.profileinfo.get_pincode()
+        distance = geo.calculate_distance_from_pincode(audit_store_pincode, auditor_pincode)
+        return distance
 
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)

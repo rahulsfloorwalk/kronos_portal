@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField, DateTimeField
 from django.db.models import PROTECT
 from auditor.models import AuditApplication
-
+import re
 import audit_store
 
 
@@ -59,6 +59,16 @@ class Audit(Model):
             return len(self.audit_stores.all())
         else:
             return self.audit_stores.count()
+
+    def get_pincode_audit(self):
+        address = self.store.get_store_address()
+        regex = "\d{6}"
+        match = re.findall(regex, address)
+        if match:
+            pincode = match[0]
+        else:
+            pincode = None
+        return pincode
 
     def __str__(self):
         return "Audit({}): audit_cycle: {}, store: {}, count: {}".format(self.id, self.audit_cycle, self.store, self.count)

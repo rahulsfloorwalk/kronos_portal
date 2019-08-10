@@ -40,6 +40,7 @@ export class AuditorRow extends React.Component {
 				<td>{getGender(prof.gender)}</td>
 				<td>{prof.mobile_number}</td>
 				<td>{prof.city.name}, {prof.city.state_name}</td>
+				<td>{prof.pincode}</td>
 				<td>{prof.average_rating !== null ?
 					<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</td>
 				<td>{moment(this.props.auditor.last_login).format(momentDateFormat)}</td>
@@ -115,6 +116,7 @@ export class AuditorList extends React.Component {
 								<th>Gender</th>
 								<th>Mobile Number</th>
 								<th>City</th>
+								<th>Pincode</th>
 								<th>Rating</th>
 								<th>Last Login</th>
 								<th>Active</th>
@@ -146,7 +148,7 @@ export class AuditorList extends React.Component {
 				</h2>
 				<form className="form-group" onSubmit={this.onSubmit}>
 					<InputGroup>
-						<input className="form-control" placeholder="name, email, city or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
+						<input className="form-control" placeholder="name, email, city, pincode or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
 						<InputGroupBtn>
 							<button type="submit" className="btn btn-primary"><Search/> Search</button>
 						</InputGroupBtn>
