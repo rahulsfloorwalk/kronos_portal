@@ -92,7 +92,7 @@ class AuditorView(generics.ListAPIView):
     serializer_class = AuditorSerializer
     filter_backends = (SearchFilter,)
     pagination_class = AuditorViewPaginationClass
-    search_fields = ('email','profileinfo__first_name','profileinfo__last_name','profileinfo__mobile_number','profileinfo__city__name')
+    search_fields = ('email','profileinfo__first_name','profileinfo__last_name','profileinfo__mobile_number','profileinfo__city__name','profileinfo__pincode')
 
 
 class AuditorIdView(APIView):
