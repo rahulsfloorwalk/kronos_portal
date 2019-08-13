@@ -124,7 +124,8 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'last_name',
             'mobile_number',
             'city',
-            'user_id'
+            'user_id',
+            'pincode'
         )
         read_only_fields = fields
 
@@ -169,6 +170,7 @@ class AgencySmallSerializer(ModelSerializer):
 
 class AuditApplicationSerializer(ModelSerializer):
     profileinfo = ProfileInfoSmallSerializer()
+
     class Meta:
         model = AuditApplication
         fields = (
@@ -178,7 +180,8 @@ class AuditApplicationSerializer(ModelSerializer):
             'audit',
             'profileinfo',
             'avg_qa_rating',
-            'report_exists'
+            'report_exists',
+            'distance'
         )
         read_only_fields = fields
 

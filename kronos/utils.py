@@ -95,6 +95,15 @@ with open("./datasets/banknames.json","r") as bank_file:
     bank_list = json.load(bank_file)
     __logger.info("loaded %d banks", len(bank_list))
 
+with open("./datasets/pincode.json") as pincode_file:
+    pincode_list = json.load(pincode_file)
+    __logger.info("loaded %d pincodes", len(pincode_list))
+
+def get_lat_lon_from_pincode(pincode):
+    if pincode in pincode_list:
+        return pincode_list[pincode]
+    else:
+        return None
 
 def validate_ifsc(ifsc_code):
     return len(ifsc_code) is 11 and str.upper(ifsc_code) in ifsc_list

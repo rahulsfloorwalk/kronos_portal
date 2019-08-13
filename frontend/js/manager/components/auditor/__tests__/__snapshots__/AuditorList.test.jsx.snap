@@ -21,7 +21,7 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
         className="form-control"
         name="search"
         onChange={[Function]}
-        placeholder="name, email, city or mobile number"
+        placeholder="name, email, city, pincode or mobile number"
         required={true}
       />
       <span
@@ -72,6 +72,9 @@ exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
     Nagpur
     , 
     Maharashtra
+  </td>
+  <td>
+    440012
   </td>
   <td>
     <strong
