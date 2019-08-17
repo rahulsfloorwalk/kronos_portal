@@ -8,5 +8,6 @@ recursive-include **/templates *
 recursive-include **/static *
 recursive-include frontend/img *
 recursive-include frontend/dist *
+recursive-include datasets *
 recursive-exclude frontend/node_modules *
 recursive-exclude venv *
