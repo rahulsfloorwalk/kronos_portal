@@ -20,6 +20,7 @@ import AuditStoreRating from "../../components/AuditStoreRating.jsx";
 import AttachmentBox from "./AttachmentBox.jsx";
 import AuditStoreSections from "./AuditStoreSections.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
+import ReportSummary from "./ReportSummary.jsx";
 
 export default class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -82,6 +83,9 @@ export default class AuditStoreDetails extends React.Component{
 		}).always(() => {
 			this.setState({auditDateLoading: false});
 		});
+	};
+	isSummaryEditable = () => {
+		return this.state.auditStore.status === "SUBMITTED" || this.state.auditStore.status === "PM_REVIEW";
 	};
 	render(){
 		if(! this.state.auditStore){
@@ -212,6 +216,7 @@ export default class AuditStoreDetails extends React.Component{
 					</div>
 				</div>
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore}/>
+				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()} reportSummary={this.state.auditStore.report_summary}/>
 				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>
 				{this.props.children}
 			</div>
