@@ -9,7 +9,6 @@ export default class ReportSummary extends Component {
 	static propTypes = {
 		reportSummary: PropTypes.string.isRequired,
 		auditStoreId: PropTypes.number.isRequired,
-		onBlur: PropTypes.func.isRequired,
 		editable: PropTypes.bool.isRequired,
 	};
 

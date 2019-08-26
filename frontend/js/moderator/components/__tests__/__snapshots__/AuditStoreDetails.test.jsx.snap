@@ -915,9 +915,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
 </div>
 `;
 
-exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already rated 1`] = `<Loading />`;
-
-exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already rated 2`] = `
+exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already rated 1`] = `
 <div>
   <h2
     className="page-header"
@@ -1468,6 +1466,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": null,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -1478,6 +1477,11 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       }
     }
     auditStoreId="5"
+  />
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
   />
   <AuditStoreSections
     auditStore={
@@ -1506,6 +1510,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": null,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
