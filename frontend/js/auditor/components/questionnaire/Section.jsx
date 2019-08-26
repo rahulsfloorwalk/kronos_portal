@@ -113,9 +113,9 @@ class __Section extends React.Component{
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
-		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment ? "" : "success";
-		let badClass = this.props.showErrors && !this.state.auditor_comment ? "danger" : "";
-
+		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 20 ? "" : "success";
+		let badClass = this.props.showErrors && (this.state.auditor_comment).length< 20 ? "danger" : "";
+		
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">

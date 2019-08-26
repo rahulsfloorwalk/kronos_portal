@@ -35,6 +35,8 @@ def submit_report(audit_store_id, user_id):
         raise AppLogicError("Report cannot be submitted by user")
     if not audit_store.is_submittable():
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
+    if not audit_store.check_auditor_comment_len():
+        raise AppLogicError("Section summary should be greater than 20 characters")
 
     audit_store.submit(by=user)
     return audit_store

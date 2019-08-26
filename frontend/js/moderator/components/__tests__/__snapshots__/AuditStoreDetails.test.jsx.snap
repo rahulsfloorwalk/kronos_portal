@@ -257,6 +257,13 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -555,6 +562,13 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -853,6 +867,13 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -1151,6 +1172,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -1449,6 +1477,13 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -1755,6 +1790,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -2060,6 +2102,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -2358,6 +2407,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -2649,6 +2705,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -2940,6 +3003,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -3231,6 +3301,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -3522,6 +3599,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -3865,6 +3949,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
@@ -4156,6 +4247,13 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
+  <h3
+    className="page-header"
+  >
+    <Tasks />
+     Report Summary
+  </h3>
+  no report summary
   <AuditStoreSections
     auditStore={
       Object {
