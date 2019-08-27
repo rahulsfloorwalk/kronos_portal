@@ -71,7 +71,7 @@ class AuditStoreIdSubmitTestCase(APITestCase):
             report_summary_original="Summary"
         )
         section_recipe = Recipe(Section, audit_cycle=self.audit_cycle)
-        report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar")
+        report_section_recipe = Recipe(ReportSection, audit_store=audit_store, auditor_comment="foobar foobar foobar foobar foobar")
         for i in range(3):
             section = section_recipe.make()
             report_section_recipe.make(section=section)

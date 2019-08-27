@@ -246,6 +246,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 0,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -257,13 +258,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -291,6 +290,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 0,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -551,6 +551,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -562,13 +563,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -596,6 +595,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -856,6 +856,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 2,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -867,13 +868,11 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -901,6 +900,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 2,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -1161,6 +1161,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -1172,13 +1173,11 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -1206,6 +1205,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -1466,6 +1466,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": null,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -1477,13 +1478,11 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -1511,6 +1510,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": null,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -1779,6 +1779,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ACCEPTED",
         "user": Object {
           "profileinfo": Object {
@@ -1790,13 +1791,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -1824,6 +1823,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ACCEPTED",
         "user": Object {
           "profileinfo": Object {
@@ -2091,6 +2091,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ACKNOWLEDGED",
         "user": Object {
           "profileinfo": Object {
@@ -2102,13 +2103,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -2136,6 +2135,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ACKNOWLEDGED",
         "user": Object {
           "profileinfo": Object {
@@ -2396,6 +2396,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -2407,13 +2408,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -2441,6 +2440,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "ASSIGNED",
         "user": Object {
           "profileinfo": Object {
@@ -2694,6 +2694,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "COMPLETED",
         "user": Object {
           "profileinfo": Object {
@@ -2705,13 +2706,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -2739,6 +2738,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "COMPLETED",
         "user": Object {
           "profileinfo": Object {
@@ -2992,6 +2992,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "FAILED",
         "user": Object {
           "profileinfo": Object {
@@ -3003,13 +3004,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -3037,6 +3036,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "FAILED",
         "user": Object {
           "profileinfo": Object {
@@ -3290,6 +3290,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "PM_REVIEW",
         "user": Object {
           "profileinfo": Object {
@@ -3301,13 +3302,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={true}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -3335,6 +3334,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "PM_REVIEW",
         "user": Object {
           "profileinfo": Object {
@@ -3588,6 +3588,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "REJECTED",
         "user": Object {
           "profileinfo": Object {
@@ -3599,13 +3600,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -3633,6 +3632,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "REJECTED",
         "user": Object {
           "profileinfo": Object {
@@ -3938,6 +3938,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "SUBMITTED",
         "user": Object {
           "profileinfo": Object {
@@ -3949,13 +3950,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={true}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -3983,6 +3982,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "SUBMITTED",
         "user": Object {
           "profileinfo": Object {
@@ -4236,6 +4236,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "WITHDRAWN",
         "user": Object {
           "profileinfo": Object {
@@ -4247,13 +4248,11 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId="5"
   />
-  <h3
-    className="page-header"
-  >
-    <Tasks />
-     Report Summary
-  </h3>
-  no report summary
+  <ReportSummary
+    auditStoreId={5}
+    editable={false}
+    reportSummary="Foobar"
+  />
   <AuditStoreSections
     auditStore={
       Object {
@@ -4281,6 +4280,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
         "audit_date": "2018-09-02",
         "id": 5,
         "qa_rating": 1,
+        "report_summary": "Foobar",
         "status": "WITHDRAWN",
         "user": Object {
           "profileinfo": Object {

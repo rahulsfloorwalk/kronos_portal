@@ -222,7 +222,7 @@ class AuditStore(Model):
         report_sections = self.report_sections.all()
         for report_section in report_sections:
             auditor_comment = report_section.auditor_comment
-            if len(auditor_comment) < 20:
+            if len(auditor_comment) < 30:
                 return False
         return True
 
