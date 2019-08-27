@@ -76,3 +76,13 @@ export function rate(auditStoreId, qa_rating){
 		contentType: "application/json"
 	});
 }
+export function setReportSummary(audit_store_id, report_summary){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${audit_store_id}/report_summary`,
+		method: "POST",
+		data: JSON.stringify({
+			report_summary: report_summary,
+		}),
+		contentType: "application/json",
+	});
+}
