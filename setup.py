@@ -5,7 +5,8 @@ import sys
 from subprocess import call
 from setuptools import setup, find_packages
 
-version = '2.17.5'
+
+version = '2.17.4'
 
 if __name__ == "__main__":
 
