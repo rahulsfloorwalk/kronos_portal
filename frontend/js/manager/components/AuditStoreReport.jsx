@@ -595,7 +595,7 @@ class __Section extends React.Component{
 			let hasPmCommentSuccess = this.state.pmCommentSuccess ? "has-success" : "";
 			pmCommentElement = (
 				<div className={hasPmCommentError + hasPmCommentSuccess}>
-					<input
+					<textarea
 						disabled={this.state.savingPMComment}
 						placeholder="enter PM comment here"
 						required="true"
@@ -612,7 +612,7 @@ class __Section extends React.Component{
 			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
 			auditorCommentElement = (
 				<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
-					<input
+					<textarea
 						disabled={this.state.savingAuditorComment}
 						placeholder="enter auditor comment here"
 						required="true"

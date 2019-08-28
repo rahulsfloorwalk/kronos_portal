@@ -218,6 +218,14 @@ class AuditStore(Model):
                         return False
         return True
 
+    def check_auditor_comment_len(self):
+        report_sections = self.report_sections.all()
+        for report_section in report_sections:
+            auditor_comment = report_section.auditor_comment
+            if len(auditor_comment) < 30:
+                return False
+        return True
+
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()
         report_sections = self.report_sections.all()
