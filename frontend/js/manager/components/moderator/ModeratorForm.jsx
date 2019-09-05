@@ -86,6 +86,7 @@ export default class ModeratorForm extends React.Component {
 		if(this.state.loading){
 			return (<Loading/>);
 		}
+		console.log(this.state.moderator)
 		var modalTitle = this.props.params.userId ? "Edit Moderator" : "Add Moderator";
 		let passwordPlaceholder = this.props.params.userId ? "leave blank to keep password unchanged" : "";
 		return (

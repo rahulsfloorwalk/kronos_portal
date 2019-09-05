@@ -1,6 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
+import { Link } from "react-router";
 
 import Loading from "../../../components/Loading.jsx";
 import Jumbotron from "../../../components/Jumbotron.jsx";
@@ -44,7 +45,7 @@ export class ModeratorSummary extends React.Component{
 			const moderator = this.props.moderators.find(m => m.id === parseInt(moderatorId));
 			const cells = statuses.map(s => <td key={s} style={rightAlign}>{this.props.summary[moderatorId][s]}</td>);
 			rows.push(<tr key={moderatorId}>
-				<td>{moderator ? moderator.email : ""}</td>
+				<td><Link to={`/moderator/list/${moderatorId}/reportlist`}>{moderator ? moderator.email : ""}</Link></td>
 				{cells}
 			</tr>);
 		}
