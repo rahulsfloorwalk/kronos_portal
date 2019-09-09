@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { hashHistory } from "react-router";
+import { hashHistory , Link } from "react-router";
 
 import { findReportsById } from "../../service/moderator.js";
 
@@ -15,12 +15,13 @@ class ModeratorReportRow extends React.Component {
 		seq: PropTypes.number.isRequired,
 		moderator_report: PropTypes.object,
 	};
-
+	
 	render() {
 		return (
-			<tr key={this.props.moderator_report.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${this.props.moderator_report.id}/report`)}>
+			
+			<tr key={this.props.moderator_report.id}>
 				<td className="text-right">{this.props.seq}</td>
-				<td>{this.props.moderator_report.id}</td>
+				<td><Link to={`/audit_store/${this.props.moderator_report.id}/report`}>{this.props.moderator_report.id}</Link></td>
 				<td>{this.props.moderator_report.audit.audit_cycle.client.name}</td>
 				<td>{this.props.moderator_report.audit.store.name}, {this.props.moderator_report.audit.store.city.name}</td>
 				<td>{this.props.moderator_report.earnings_per_audit}</td>
@@ -59,7 +60,6 @@ export default class ModeratorReportList extends React.Component {
 	render() {
 		var modalTitle = "Moderator Report List";
 		var modalSize = "modal-lg"
-		console.log(this.state.moderator_reports)
 		const {moderator_reports} = this.state
 		
 		const rows = this.state.moderator_reports.map((m, i) => <ModeratorReportRow seq={i+1} moderator_report={m} key={m.id}/>);
