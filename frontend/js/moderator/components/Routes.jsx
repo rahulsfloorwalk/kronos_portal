@@ -10,6 +10,7 @@ import AuditStoreDashboard from "./AuditStoreDashboard.jsx";
 import AuditStoreQARatingForm from "./AuditStoreQARatingForm.jsx";
 import AuditStoreEarningsPerAuditForm from "./AuditStoreEarningsPerAuditForm.jsx";
 import AuditStoreReimbursementForm from "./AuditStoreReimbursementForm.jsx";
+import AttachmentEditForm from "./AttachmentEditForm.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -26,7 +27,9 @@ const Routes = () => (
 				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm}/>
 				<Route path="reimbursement" component={AuditStoreReimbursementForm}/>
 			</Route>
+			<Route path="/:attachmentId/edit" component={AttachmentEditForm}/>
 		</Route>
+		
 	</Router>
 );
 

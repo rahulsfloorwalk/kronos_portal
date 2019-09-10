@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router";
 
 import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Cross } from "./Icons.jsx";
+import { Cross , Pencil } from "./Icons.jsx";
 
 import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
 
@@ -152,6 +153,7 @@ export default class AttachmentThumbnail extends Component{
 		return (
 			<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
 				{deleteButton}
+				<Link to={`/${a.id}/edit`}><button className="btn btn-default btn-sm pull-right"><Pencil/></button></Link>
 				<div style={fileNameStyle}>
 					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
 					<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a>
