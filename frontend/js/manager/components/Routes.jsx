@@ -74,6 +74,7 @@ import ModeratorSummary from "./moderator/ModeratorSummary.jsx";
 import ModeratorIndex from "./moderator/ModeratorIndex.jsx";
 import ModeratorList from "./moderator/ModeratorList.jsx";
 import ModeratorForm from "./moderator/ModeratorForm.jsx";
+import ModeratorReportList from "./moderator/ModeratorReportList.jsx";
 import AuditCycleModeratorList from "./AuditCycleModeratorList.jsx";
 import AuditCycleModeratorAssignForm from "./AuditCycleModeratorAssignForm.jsx";
 
@@ -173,6 +174,7 @@ const Routes = () => (
 			<Route path="moderator" component={ModeratorIndex}>
 				<Route path="summary" component={ModeratorSummary}/>
 				<Route path="list" component={ModeratorList}>
+					<Route path=":userId/reportlist" component={ModeratorReportList}/>
 					<Route path="add" component={ModeratorForm}/>
 					<Route path=":userId/edit" component={ModeratorForm}/>
 				</Route>
