@@ -141,7 +141,12 @@ exports[`ModeratorSummary renders the moderator summary and moderator emails 1`]
     <tbody>
       <tr>
         <td>
-          sentinel@redis.com
+          <a
+            onClick={[Function]}
+            style={Object {}}
+          >
+            sentinel@redis.com
+          </a>
         </td>
         <td
           style={
@@ -185,7 +190,12 @@ exports[`ModeratorSummary renders the moderator summary and moderator emails 1`]
       </tr>
       <tr>
         <td>
-          warthog@pulmonary.com
+          <a
+            onClick={[Function]}
+            style={Object {}}
+          >
+            warthog@pulmonary.com
+          </a>
         </td>
         <td
           style={

@@ -70,3 +70,7 @@ export function findModeratorSummaryByAuditCycle(auditCycleId){
 export function findModeratorSummary(){
 	return $.get( url.api_base_path + "manager/moderator/summary");
 }
+
+export function findReportsById(moderatorId){
+	return $.get(url.api_base_path + `manager/moderator/${moderatorId}/reportlist`);
+}
