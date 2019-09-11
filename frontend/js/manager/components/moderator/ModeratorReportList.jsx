@@ -11,24 +11,6 @@ import { momentDateFormat}  from "../../../../config.js";
 import AuditStoreStatusLabel from "../../../components/AuditStoreStatusLabel.jsx";
 import ModeratorAssignDropdown from "../ModeratorAssignDropdown.jsx";
 
-const auditStorePropShape = PropTypes.shape({
-	id: PropTypes.number.isRequired,
-	status: PropTypes.string.isRequired,
-	audit: PropTypes.object,
-	audit_date: PropTypes.string.isRequired,
-	user: PropTypes.shape({
-		id: PropTypes.number.isRequired,
-		email: PropTypes.string.isRequired,
-		profileinfo: PropTypes.shape({
-			first_name: PropTypes.string,
-			last_name: PropTypes.string,
-			mobile_number: PropTypes.string,
-		}),
-	}),
-	assigned_to_moderator: PropTypes.arrayOf(PropTypes.number),
-});
-
-
 class ModeratorReportRow extends React.Component {
 	static propTypes = {
 		seq: PropTypes.number.isRequired,
