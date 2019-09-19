@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router";
 
 import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Cross , Pencil } from "./Icons.jsx";
+import { Cross } from "./Icons.jsx";
 
 import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
 
@@ -20,6 +19,7 @@ export default class AttachmentThumbnail extends Component{
 			id: PropTypes.number.isRequired,
 			proof_type: PropTypes.string.isRequired,
 		}),
+		user: PropTypes.string,
 		selected: PropTypes.bool,
 		deletable: PropTypes.bool,
 
