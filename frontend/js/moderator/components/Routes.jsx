@@ -27,7 +27,6 @@ const Routes = () => (
 				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm}/>
 				<Route path="reimbursement" component={AuditStoreReimbursementForm}/>
 			</Route>
-			<Route path="/:attachmentId/edit" component={AttachmentEditForm}/>
 		</Route>
 		
 	</Router>

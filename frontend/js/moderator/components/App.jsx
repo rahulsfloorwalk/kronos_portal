@@ -38,7 +38,7 @@ export default class App extends React.Component {
 				</Helmet>
 				<DevelopmentMarker/>
 				<Header/>
-				<div className="container" style={contentStyle}>
+				<div className="container-fluid" style={contentStyle}>
 					{this.props.children}
 				</div>
 				<Footer config={this.state.config}/>

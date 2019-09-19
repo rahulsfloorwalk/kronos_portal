@@ -6,7 +6,8 @@ import answer.service.report_section_moderator as report_section_moderator_servi
 import answer.service.answer_moderator as answer_moderator_service
 
 from . import service as attachment_service
-
+import audit_store.service as audit_store_service_section
+from answer.service import report_section as report_section_service
 
 def find_by_audit_store_for_moderator(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_moderator(audit_store_id, user_id)
@@ -69,3 +70,20 @@ def delete_for_moderator(attachment_id, user_id):
         raise AppLogicError("cannot delete attachment now")
 
     return attachment_service.delete(attachment_id)
+
+def move_to_section(audit_store_id,section_id,attachment_list):
+    if not attachment_list and not section_id:
+        raise AppLogicError("Please select attachment and section in which attachment to be moved")
+    if not attachment_list:
+        raise AppLogicError("Please select attachment to be moved")
+    if not section_id:
+        raise AppLogicError("Please select section to move attachment")
+    audit_store = audit_store_service_section.find_by_id(audit_store_id)
+    if section_id == "0":
+        content_obj = audit_store
+    else:
+        report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
+        content_obj = report_section
+    for attachment_id in attachment_list:
+        attachment = attachment_service.update_attachment_section(attachment_id,content_obj)
+    return attachment

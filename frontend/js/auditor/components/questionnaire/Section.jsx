@@ -155,6 +155,7 @@ class __Section extends React.Component{
 					sectionId={this.props.section.id}
 					minimumAttachmentCount={this.props.section.minimum_attachment_count}
 					showErrors={this.props.showErrors}
+						sections={this.props.sections}
 				/>
 			</div>
 		);

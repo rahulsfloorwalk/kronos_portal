@@ -113,3 +113,12 @@ export function doAttachmentUpload(url, file){
 
 	return mainPromise;
 }
+
+export function moveAttachmentToSection(auditStoreId,sectionId,attachmentIdList){
+	return $.ajax({
+		url: url.api_base_path + `auditor/attachment/${auditStoreId}/movetosection_auditor`,
+		type: "POST",
+		data: JSON.stringify({section_id: sectionId , attachment_list: attachmentIdList}),
+		contentType: "application/json"
+	});
+}

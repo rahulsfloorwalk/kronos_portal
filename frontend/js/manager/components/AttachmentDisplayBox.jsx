@@ -1,11 +1,14 @@
+import $ from "jquery";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 
 import Alert from "react-s-alert";
 
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment } from "../service/attachment.js";
+import { orderKeys } from "../../react_utils.js";
 
+import { fetchSections } from "../actions/section.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection } from "../service/attachment.js";
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -16,11 +19,14 @@ import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
 import { auditStorePropType } from "../prop_types";
+import { fetchReportSections } from "../actions/report_section.js";
 
 export class AttachmentDisplayBox extends Component{
 	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
 		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
-		auditStore: auditStorePropType
+		auditStore: auditStorePropType,
+		sections: PropTypes.object,
 	};
 
 	constructor(props){
@@ -28,7 +34,11 @@ export class AttachmentDisplayBox extends Component{
 		this.state = {
 			attachments: [],
 			inProgress: {},
-			selectedAttachment: undefined
+			selectedAttachment: undefined,
+			sectionId: "",
+			submitMessage : "",
+			submitStatus: "",
+			showErrors: false,
 		};
 	}
 	reloadState = () => {
@@ -40,6 +50,7 @@ export class AttachmentDisplayBox extends Component{
 	};
 	componentDidMount(){
 		this.reloadState();
+		this.props.dispatch(fetchReportSections(this.props.auditStoreId));
 	}
 	attachmentSelected = (attachment) => {
 		this.setState({
@@ -144,15 +155,49 @@ export class AttachmentDisplayBox extends Component{
 			});
 		}
 	};
+	
+	getSectionId = (e) => {
+		this.setState({
+			sectionId : e.target.value
+		});
+	}
+	
+	moveAttachment = () => {
+		let attachmentlist = []
+		$('.attachment_checkbox input:checked').each(function() {
+			let val = $(this).attr('value');
+			attachmentlist.push(val);
+		});
+		
+		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then((response) => {
+			window.location.reload();
+		},(err) => {
+			console.log(err.responseJSON.non_field_errors[0])
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+		
+	};
+	
 	render(){
+		
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
-
+		
+		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
+		
+		var contentStyle = {
+			"paddingTop": "2%"
+		};
+		
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager"/>);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
@@ -184,18 +229,43 @@ export class AttachmentDisplayBox extends Component{
 				</span>
 			);
 		}
-
+		
+		var optionList = []
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
 		}
-
+		else{
+			var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+				return s1.sequence - s2.sequence;
+			});
+			
+			for(var sectionId of orderedKeys) {
+					optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+			}
+		}
+		
 		return (
 			<div>
-				<h3 className="page-header">
-					<Paperclip/> Attachments {uploadButton}
-				</h3>
+				<div className="row page-header">
+					<div className="col-md-8">
+						<h3><Paperclip/> Attachments {uploadButton}</h3>
+						{submitMessageElement}
+					</div>
+					<div className="col-md-4" style={contentStyle}>
+							<div className="col-md-8">
+								<select className="form-control" onChange={this.getSectionId}>
+									<option value="">Select Section</option>
+									{optionList}
+								</select>
+							</div>
+							<div className="col-md-2">
+								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+							</div>
+					</div>
+				</div>
+				
 				<div className="row">
-					<div className="col-md-4" style={{maxHeight:"500px", overflowY: "auto"}}>
+					<div className="col-md-4 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
 						{attachmentRows}
 					</div>
 					<div className="col-md-8">
@@ -210,6 +280,7 @@ export class AttachmentDisplayBox extends Component{
 var mapStoreToProps = function(store, ownProps){
 	return {
 		auditStore: store.auditStores[ownProps.auditStoreId],
+		sections:store.sections
 	};
 };
 

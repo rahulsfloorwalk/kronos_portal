@@ -7,7 +7,7 @@ from auditor.service import profile_info_service
 from answer.models import ReportSection
 from answer.service import report_section_auditor as report_section_auditor_service
 from answer.service import answer_auditor as answer_auditor_service
-
+import answer.service.report_section as report_section_service
 from . import service as attachment_service
 
 
@@ -85,3 +85,20 @@ def delete_for_auditor(attachment_id, user_id):
 
 def upload_for_id_proof_by_auditor(user_id, file_name, file_size, mime_type):
     return attachment_service.upload_for_id_proof(user_id, file_name, file_size, mime_type)
+
+def move_to_section(audit_store_id,section_id,attachment_list):
+    if not attachment_list and not section_id:
+        raise AppLogicError("Please select attachment and section in which attachment to be moved")
+    if not attachment_list:
+        raise AppLogicError("Please select attachment to be moved")
+    if not section_id:
+        raise AppLogicError("Please select section to move attachment")
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    if section_id == "0":
+        content_obj = audit_store
+    else:
+        report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
+        content_obj = report_section
+    for attachment_id in attachment_list:
+        attachment = attachment_service.update_attachment_section(attachment_id,content_obj)
+    return attachment

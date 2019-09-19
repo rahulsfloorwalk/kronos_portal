@@ -92,7 +92,7 @@ class AuditStoreTables extends Component {
 		for(let client_id in client_dict){
 			tables.push(<AuditStoreList2 key={client_id} auditStores={client_dict[client_id]}/>);
 		}
-		return (<div>
+		return (<div className="container">
 			<h2 className="page-header">{this.props.auditStores.length} Reports</h2>
 			{tables}
 		</div>);

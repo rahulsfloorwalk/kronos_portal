@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { } from "react-router";
+import $ from "jquery";
 
 import { } from "../../styles.js";
 
@@ -12,7 +13,7 @@ import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx
 import { affectInputEventToComponent } from "../../react_utils.js";
 import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment } from "../service/answer.js";
 import { fetchSections, fetchReportSections, submitAuditorComment, submitPMComment, setNotApplicable } from "../service/section.js";
-import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection } from "../service/attachment.js";
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
@@ -256,6 +257,10 @@ class SectionAttachmentBox extends React.Component{
 			attachments : [],
 			inProgress: {},
 			selectedAttachmentId: null,
+			attachmentSectionId: "",
+			submitMessage: "",
+			submitStatus: "",
+			showErrors: false,
 		};
 	}
 
@@ -367,8 +372,38 @@ class SectionAttachmentBox extends React.Component{
 			});
 		}
 	};
-
+	
+	getAttachmentSectionId = (e) => {
+		this.setState({
+			attachmentSectionId : e.target.value
+		});
+	};
+	
+	moveAttachmentSection = () => {
+		let attachmentlist = []
+		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
+			let val = $(this).attr('value');
+			attachmentlist.push(val);
+		});
+		
+		console.log(attachmentlist);
+		console.log("section_id",this.props.sectionId);
+		
+		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then((response) => {
+			window.location.reload();
+		},(err) => {
+			console.log(err.responseJSON.non_field_errors[0])
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+	};
+	
 	render(){
+		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
+		
 		let uploadButton;
 		let editable = false;
 
@@ -386,6 +421,7 @@ class SectionAttachmentBox extends React.Component{
 				onDelete={() => this.attachmentDeleteClicked(a)}
 				deletable={this.props.auditStore && this.props.auditStore.status === "SUBMITTED"}
 				selected={a.id === this.state.selectedAttachmentId}
+				user="moderator"
 			/>);
 		}
 		for(let id in this.state.inProgress){
@@ -401,17 +437,44 @@ class SectionAttachmentBox extends React.Component{
 			}
 			attachmentRows.push(" ");
 		}
-
+		
+		let sectionSelect = null;
+		
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
+			sectionSelect = null;
+		}
+		else{
+			sectionSelect = (
+				<div className="col-md-4">
+					<div className="col-md-8">
+						<select className="form-control" onChange={this.getAttachmentSectionId}>
+							<option value="">Select Section</option>
+							<option key="0" value="0">Main Section</option>
+							{this.props.sections.map((s) => s.id === this.props.sectionId ? null : (<option key={s.id} value={s.id}>{s.name}</option>) )}
+						</select>
+					</div>
+					<div className="col-md-2">
+						<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
+					</div>
+				</div>
+			);
 		}
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
 
 		return (
+			<div>
 			<div className="panel-body">
-				<div>
+				<div className="col-md-8">
 					<h4>Attachments {uploadButton}</h4>
+					{submitMessageElement}
+				</div>
+				{sectionSelect}
+			</div>
+			
+			<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
+				<div>
 					{attachmentRows}
 					<input type="file" multiple
 						onChange={this.uploadFile}
@@ -421,6 +484,7 @@ class SectionAttachmentBox extends React.Component{
 				<AttachmentPreview attachment={selectedAttachment} editable={editable}
 					onRename={this.selectedAttachmentRenamed}
 					onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
+			</div>
 			</div>
 		);
 	}
@@ -467,6 +531,7 @@ class Section extends React.Component{
 		//set initial state to true so that you don't get setState() calls
 		// on an unmounted component
 		not_applicable: true,
+		sections:[],
 	};
 
 	componentDidMount(){
@@ -475,6 +540,12 @@ class Section extends React.Component{
 				auditor_comment: this.props.reportSection.auditor_comment,
 				pm_comment: this.props.reportSection.pm_comment,
 				not_applicable: this.props.reportSection.not_applicable,
+			});
+			
+			fetchSections(this.props.auditStoreId).then((sections) => {
+				this.setState({
+					sections
+				});
 			});
 		}
 	}
@@ -650,7 +721,7 @@ class Section extends React.Component{
 					<hr/>
 					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div>
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections}/>
 			</div>);
 		}
 		return (
@@ -713,6 +784,7 @@ export default class AuditStoreSections extends React.Component{
 				section={section}
 				reportSection={reportSection}
 				answers={this.state.answers}
+				sections={this.state.sections}
 			/>);
 		}
 		if( sectionRows.length === 0){

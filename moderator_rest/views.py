@@ -288,6 +288,16 @@ class AttachmentIdCompleteView(APIView):
         attachment = attachment_service.complete_for_moderator(attachment_id, request.user.id)
         return Response(AttachmentSerializer(attachment).data)
 
+class MoveAttachmentToSection(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST':[GROUP_NAME_MODERATOR],
+    }
+
+    def post(self,request,audit_store_id):
+        attachment = attachment_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
+        return Response(AttachmentSerializer(attachment).data)
+
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

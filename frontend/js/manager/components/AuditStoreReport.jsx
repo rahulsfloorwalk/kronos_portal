@@ -1,3 +1,4 @@
+import $ from "jquery";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -5,7 +6,7 @@ import { connect } from "react-redux";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
 
-import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection } from "../service/attachment.js";
 import { affectInputEventToComponent, orderKeys } from "../../react_utils.js";
 import { fetchSections } from "../actions/section.js";
 import { fetchAnswers, setMarks, setAnswerNotApplicable } from "../actions/answer.js";
@@ -79,7 +80,7 @@ class __QuestionRow extends React.Component {
 		answer: PropTypes.shape({
 			answer_comment: PropTypes.string,
 		}),
-		auditStoreId: PropTypes.number.isRequired,
+		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 		q: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			sequence: PropTypes.number.isRequired,
@@ -281,6 +282,10 @@ class SectionAttachmentBox extends React.Component{
 			attachments : [],
 			inProgress: {},
 			selectedAttachmentId: null,
+			attachmentSectionId: "",
+			submitMessage: "",
+			submitStatus: "",
+			showErrors: false,
 		};
 	}
 
@@ -392,8 +397,36 @@ class SectionAttachmentBox extends React.Component{
 			});
 		}
 	};
-
+	
+	getAttachmentSectionId = (e) => {
+		this.setState({
+			attachmentSectionId : e.target.value
+		});
+	};
+	
+	moveAttachmentSection = () => {
+		let attachmentlist = []
+		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
+			let val = $(this).attr('value');
+			attachmentlist.push(val);
+		});
+		
+		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then((response) => {
+			window.location.reload();
+		},(err) => {
+			console.log(err.responseJSON.non_field_errors[0])
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+	};
+	
+	
 	render(){
+		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
+		
 		let uploadButton;
 
 		if(this.props.editable) {
@@ -403,7 +436,7 @@ class SectionAttachmentBox extends React.Component{
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
 			attachmentRows.push(
-				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId}/>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager"/>
 			);
 		}
 		for(let id in this.state.inProgress){
@@ -418,17 +451,57 @@ class SectionAttachmentBox extends React.Component{
 				/>);
 			}
 		}
-
+		
+		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+			return s1.sequence - s2.sequence;
+		});
+		var optionList = []
+		for(var sectionId of orderedKeys) {
+			if(this.props.sectionId == sectionId){
+				null
+			}
+			else{
+				optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+			}
+		}
+		
+		let sectionSelect = null;
+		
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
+			sectionSelect = null;
+		}
+		else{
+			sectionSelect = (
+				<div className="col-md-4">
+					<div className="col-md-8">
+						<select className="form-control" onChange={this.getAttachmentSectionId}>
+							<option value="">Select Section</option>
+							<option key="0" value="0">Main Section</option>
+							{optionList}
+						</select>
+					</div>
+					<div className="col-md-2">
+						<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
+					</div>
+				</div>
+			);
 		}
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
 
 		return (
+			<div>
 			<div className="panel-body">
-				<div>
+				<div className="col-md-8">
 					<h4>Attachments {uploadButton}</h4>
+					{submitMessageElement}
+				</div>
+				{sectionSelect}
+			</div>
+			
+			<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
+				<div>
 					{attachmentRows}
 					<input type="file" multiple
 						onChange={this.uploadFile}
@@ -438,6 +511,7 @@ class SectionAttachmentBox extends React.Component{
 				<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
 					onRename={this.selectedAttachmentRenamed}
 					onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
+			</div>
 			</div>
 		);
 	}
@@ -456,7 +530,7 @@ class __Section extends React.Component{
 			max_marks: PropTypes.number.isRequired,
 		}),
 		dispatch: PropTypes.func.isRequired,
-		auditStoreId: PropTypes.number.isRequired,
+		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 		auditStore: auditStorePropType,
 
 		params: PropTypes.shape({
@@ -664,7 +738,7 @@ class __Section extends React.Component{
 					<hr/>
 					<div><b>PM Comment:</b> {pmCommentElement}</div>
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} sections={this.props.sections}/>
 			</div>);
 		}
 
@@ -742,7 +816,7 @@ export class AuditStoreReport extends React.Component{
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable}/>);
+			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable} sections={this.props.sections}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire"/>);
