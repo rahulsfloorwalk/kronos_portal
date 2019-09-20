@@ -187,6 +187,7 @@ export class AttachmentDisplayBox extends Component{
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
+		let editable = this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
 		
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 		
@@ -197,7 +198,7 @@ export class AttachmentDisplayBox extends Component{
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager"/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager" editable={editable}/>);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
@@ -212,7 +213,7 @@ export class AttachmentDisplayBox extends Component{
 			}
 		}
 
-		let editable = this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
+		
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}/>;
@@ -230,27 +231,20 @@ export class AttachmentDisplayBox extends Component{
 			);
 		}
 		
-		var optionList = []
+		var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
 		}
 		else{
-			var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
-				return s1.sequence - s2.sequence;
-			});
-			
-			for(var sectionId of orderedKeys) {
-					optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
-			}
-		}
-		
-		return (
-			<div>
-				<div className="row page-header">
-					<div className="col-md-8">
-						<h3><Paperclip/> Attachments {uploadButton}</h3>
-						{submitMessageElement}
-					</div>
+			if(editable){
+				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+					return s1.sequence - s2.sequence;
+				});
+				var optionList = []
+				for(var sectionId of orderedKeys) {
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+				}
+				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
 							<div className="col-md-8">
 								<select className="form-control" onChange={this.getSectionId}>
@@ -262,6 +256,19 @@ export class AttachmentDisplayBox extends Component{
 								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
 							</div>
 					</div>
+				);
+			}
+			
+		}
+		
+		return (
+			<div>
+				<div className="row page-header">
+					<div className="col-md-8">
+						<h3><Paperclip/> Attachments {uploadButton}</h3>
+						{submitMessageElement}
+					</div>
+					{selectSection}
 				</div>
 				
 				<div className="row">

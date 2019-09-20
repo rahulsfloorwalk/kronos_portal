@@ -436,7 +436,7 @@ class SectionAttachmentBox extends React.Component{
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
 			attachmentRows.push(
-				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager"/>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable}/>
 			);
 		}
 		for(let id in this.state.inProgress){
@@ -472,20 +472,22 @@ class SectionAttachmentBox extends React.Component{
 			sectionSelect = null;
 		}
 		else{
-			sectionSelect = (
-				<div className="col-md-4">
-					<div className="col-md-8">
-						<select className="form-control" onChange={this.getAttachmentSectionId}>
-							<option value="">Select Section</option>
-							<option key="0" value="0">Main Section</option>
-							{optionList}
-						</select>
+			if(this.props.editable){
+				sectionSelect = (
+					<div className="col-md-4">
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getAttachmentSectionId}>
+								<option value="">Select Section</option>
+								<option key="0" value="0">Main Section</option>
+								{optionList}
+							</select>
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
+						</div>
 					</div>
-					<div className="col-md-2">
-						<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
-					</div>
-				</div>
-			);
+				);
+			}
 		}
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];

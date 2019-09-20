@@ -164,7 +164,9 @@ export default class AttachmentThumbnail extends Component{
 			checkboxElement = null;
 		}
 		else{
-			checkboxElement = (<input type="checkbox" style={contentStyle} value={a.id}/>);
+			if(this.props.editable){
+				checkboxElement = (<input type="checkbox" style={contentStyle} value={a.id}/>);
+			}
 		}
 		
 		return (

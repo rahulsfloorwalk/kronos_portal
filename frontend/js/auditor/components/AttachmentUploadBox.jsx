@@ -2,6 +2,7 @@ import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 import { orderKeys } from "../../react_utils.js";
 import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment , moveAttachmentToSection } from "../service/attachment.js";
 
@@ -13,7 +14,9 @@ import AttachmentInProgressThumbnail from "../../components/AttachmentInProgress
 
 import { auditStorePropType } from "../prop_types";
 
-import { fetchReportSections } from "../actions/report_section.js";
+import { fetchSections } from "../actions/section.js";
+
+import { fetchAuditStore } from "../actions/audit_store.js";
 
 class AttachmentUploadBox extends React.Component {
 	static propTypes = {
@@ -43,7 +46,7 @@ class AttachmentUploadBox extends React.Component {
 
 	componentDidMount() {
 		this.reloadState();
-		this.props.dispatch(fetchReportSections(this.props.auditStoreId));
+		this.props.dispatch(fetchSections(this.props.auditStoreId));
 	}
 
 	uploadButtonClicked = () => {
@@ -135,7 +138,6 @@ class AttachmentUploadBox extends React.Component {
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then((response) => {
 			window.location.reload();
 		},(err) => {
-			console.log(err.responseJSON.non_field_errors[0])
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
@@ -178,7 +180,7 @@ class AttachmentUploadBox extends React.Component {
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="auditor"/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="auditor" editable={this.props.editable}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -194,9 +196,7 @@ class AttachmentUploadBox extends React.Component {
 			}
 		}
 		
-		
-		
-		var optionList = []
+		var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
 				<div key="empty" className="text-muted">
@@ -205,12 +205,30 @@ class AttachmentUploadBox extends React.Component {
 			);
 		}
 		else{
-			var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
-				return s1.sequence - s2.sequence;
-			});
-			for(var sectionId of orderedKeys) {
-					optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
-			}
+			if (this.props.editable){
+				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+					return s1.sequence - s2.sequence;
+				});
+				var optionList = []
+				for(var sectionId of orderedKeys) {
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+				}
+				
+				selectSection = (
+					<div className="col-md-4" style={contentStyle}>
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getSectionId}>
+								<option value="">Select Section</option>
+								{optionList}
+							</select>
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+						</div>
+					</div>
+				);
+				
+			}	
 		}
 
 		return (
@@ -222,21 +240,7 @@ class AttachmentUploadBox extends React.Component {
 					</h3>
 					{submitMessageElement}
 				</div>
-				
-				<div className="col-md-4" style={contentStyle}>
-						<div className="col-md-8">
-							<select className="form-control" onChange={this.getSectionId}>
-								<option value="">Select Section</option>
-								{optionList}
-							</select>
-						</div>
-						<div className="col-md-2">
-							<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
-						</div>
-				</div>
-				
-				
-				
+				{selectSection}
 			</div>
 			<div className="form-group attachment_checkbox" style={{}}>
 				{attachmentRows}

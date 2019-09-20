@@ -422,6 +422,7 @@ class SectionAttachmentBox extends React.Component{
 				deletable={this.props.auditStore && this.props.auditStore.status === "SUBMITTED"}
 				selected={a.id === this.state.selectedAttachmentId}
 				user="moderator"
+				editable={this.props.editable}
 			/>);
 		}
 		for(let id in this.state.inProgress){
@@ -442,23 +443,24 @@ class SectionAttachmentBox extends React.Component{
 		
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
-			sectionSelect = null;
 		}
 		else{
-			sectionSelect = (
-				<div className="col-md-4">
-					<div className="col-md-8">
-						<select className="form-control" onChange={this.getAttachmentSectionId}>
-							<option value="">Select Section</option>
-							<option key="0" value="0">Main Section</option>
-							{this.props.sections.map((s) => s.id === this.props.sectionId ? null : (<option key={s.id} value={s.id}>{s.name}</option>) )}
-						</select>
+			if (this.props.editable){
+				sectionSelect = (
+					<div className="col-md-4">
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getAttachmentSectionId}>
+								<option value="">Select Section</option>
+								<option key="0" value="0">Main Section</option>
+								{this.props.sections.map((s) => s.id === this.props.sectionId ? null : (<option key={s.id} value={s.id}>{s.name}</option>) )}
+							</select>
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
+						</div>
 					</div>
-					<div className="col-md-2">
-						<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
-					</div>
-				</div>
-			);
+				);
+			}
 		}
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
@@ -721,7 +723,7 @@ class Section extends React.Component{
 					<hr/>
 					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div>
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable}/>
 			</div>);
 		}
 		return (
@@ -785,6 +787,7 @@ export default class AuditStoreSections extends React.Component{
 				reportSection={reportSection}
 				answers={this.state.answers}
 				sections={this.state.sections}
+				editable = {this.props.editable}
 			/>);
 		}
 		if( sectionRows.length === 0){

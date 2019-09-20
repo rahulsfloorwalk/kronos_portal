@@ -176,6 +176,8 @@ export default class SectionAttachmentBox extends React.Component{
 				deletable={deletable}
 				onDelete={() => this.attachmentDeleteClicked(a)}
 				user="auditor"
+				editable = {this.props.editable}
+				
 			/>);
 		}
 		for(let id in this.state.inProgress){
@@ -201,34 +203,37 @@ export default class SectionAttachmentBox extends React.Component{
 			sectionSelect = null;
 		}
 		else{
-			var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
-				return s1.sequence - s2.sequence;
-			});
-			var optionList = []
-			for(var sectionId of orderedKeys) {
-				if(this.props.sectionId == sectionId){
-					null
+			if(this.props.editable){
+				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
+					return s1.sequence - s2.sequence;
+				});
+				var optionList = []
+				for(var sectionId of orderedKeys) {
+					if(this.props.sectionId == sectionId){
+						null
+					}
+					else{
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+					}
 				}
-				else{
-					optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
-				}
-			}
+				
+				sectionSelect = (
+					<div className="col-md-4">
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getAttachmentSectionId}>
+								<option value="">Select Section</option>
+								<option key="0" value="0">Main Section</option>
+								{optionList}
+							</select>
+							
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
+						</div>
+					</div>
+				);
 			
-			sectionSelect = (
-				<div className="col-md-4">
-					<div className="col-md-8">
-						<select className="form-control" onChange={this.getAttachmentSectionId}>
-							<option value="">Select Section</option>
-							<option key="0" value="0">Main Section</option>
-							{optionList}
-						</select>
-						
-					</div>
-					<div className="col-md-2">
-						<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
-					</div>
-				</div>
-			);
+			}
 		}
 		let minimumAttachmentCount, panelStyle;
 		if( this.props.minimumAttachmentCount) {
@@ -244,8 +249,12 @@ export default class SectionAttachmentBox extends React.Component{
 				};
 			}
 		}
+		let borderStyle = {
+			borderTop: "1px solid #eee"
+		};
+		
 		return (
-			<div>
+			<div style={borderStyle}>
 			<div className="panel-body" style={panelStyle}>
 				<div className="col-md-8">
 					<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>

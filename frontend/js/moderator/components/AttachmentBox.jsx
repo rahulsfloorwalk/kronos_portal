@@ -168,9 +168,6 @@ export default class AttachmentBox extends React.Component {
 			attachmentlist.push(val);
 		});
 		
-		console.log(attachmentlist);
-		console.log(this.state.sectionId);
-		
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then((response) => {
 			window.location.reload();
 		},(err) => {
@@ -186,6 +183,7 @@ export default class AttachmentBox extends React.Component {
 	
 	
 	render() {
+		/*console.log("sctions",this.state.sections)*/
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 		
 		var contentStyle = {
@@ -198,7 +196,7 @@ export default class AttachmentBox extends React.Component {
 
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} user="moderator"/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} user="moderator" editable={this.props.editable}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -227,10 +225,28 @@ export default class AttachmentBox extends React.Component {
 			</div>);
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
 		}
-
+		
+		var selectSection = null;
+		
+		
 		if( attachmentRows.length === 0){
 			return <Jumbotron heading="no attachments here" para="none uploaded"/>;
 		} else {
+			if(this.props.editable){
+				selectSection = (
+					<div className="col-md-4" style={contentStyle}>
+							<div className="col-md-8">
+								<select className="form-control" onChange={this.getSectionId}>
+									<option value="">Select Section</option>
+									{this.state.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
+								</select>
+							</div>
+							<div className="col-md-2">
+								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+							</div>
+					</div>
+				);
+			}
 			return (
 				<div>
 					<div className="row page-header">
@@ -238,17 +254,7 @@ export default class AttachmentBox extends React.Component {
 							<h3><Paperclip/> Attachments {uploadButton}</h3>
 							{submitMessageElement}
 						</div>
-						<div className="col-md-4" style={contentStyle}>
-								<div className="col-md-8">
-									<select className="form-control" onChange={this.getSectionId}>
-										<option value="">Select Section</option>
-										{this.state.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
-									</select>
-								</div>
-								<div className="col-md-2">
-									<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
-								</div>
-						</div>
+						{selectSection}
 					</div>
 					
 					<div className="row">

@@ -75,7 +75,7 @@ class SectionList extends React.Component{
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} showErrors={this.props.showErrors} sections={this.props.sections}/>);
+			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} showErrors={this.props.showErrors} sections={this.props.sections} editable={this.props.editable}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please contact support"/>);

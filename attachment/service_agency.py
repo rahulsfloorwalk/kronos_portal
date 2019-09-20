@@ -4,8 +4,6 @@ from answer.service import report_section_agency as report_section_agency_servic
 from answer.service import answer_agency as answer_agency_service
 from attachment import service as attachment_service
 from audit_store.models import AuditStore
-import audit_store.service as audit_store_service_for_attachmet_section
-import answer.service.report_section as report_section_service
 
 
 def upload_for_audit_store_by_agency(audit_store_id, file_name, file_size, mime_type, user_id):
