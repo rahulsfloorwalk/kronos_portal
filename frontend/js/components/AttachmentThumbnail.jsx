@@ -19,13 +19,16 @@ export default class AttachmentThumbnail extends Component{
 			id: PropTypes.number.isRequired,
 			proof_type: PropTypes.string.isRequired,
 		}),
+		user: PropTypes.string,
 		selected: PropTypes.bool,
 		deletable: PropTypes.bool,
 
 		onSelect: PropTypes.func,
 		onDelete: PropTypes.func,
+		
+		editable:PropTypes.bool
 	};
-
+	
 	constructor(props){
 		super(props);
 		this.state = {
@@ -56,6 +59,8 @@ export default class AttachmentThumbnail extends Component{
 		this.setLoading(false);
 		this.setError(true);
 	};
+	
+	
 	componentDidMount(){
 		if(this.props.attachment && this.props.attachment.proof_type === "PHOTO"){
 			this.setLoading(true);
@@ -69,6 +74,12 @@ export default class AttachmentThumbnail extends Component{
 		}
 	}
 	render(){
+		
+		var contentStyle = {
+			"width": "20px",
+            "height": "20px",
+		};
+		
 		let selected = this.props.selected || false;
 		let onSelect = this.props.onSelect || (() => {});
 		let selectable = !!this.props.onSelect;
@@ -149,8 +160,20 @@ export default class AttachmentThumbnail extends Component{
 			break;
 		}
 		divStyle.backgroundImage = `url(${imageSrc})`;
+		
+		let checkboxElement = null;
+		if (this.props.user == "client" || this.props.user == "agency"){
+			checkboxElement = null;
+		}
+		else{
+			if(this.props.editable){
+				checkboxElement = (<input type="checkbox" style={contentStyle} value={a.id}/>);
+			}
+		}
+		
 		return (
 			<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+				{checkboxElement}
 				{deleteButton}
 				<div style={fileNameStyle}>
 					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;

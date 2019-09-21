@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { hashHistory } from "react-router";
 
 import { url }  from "../../../../config.js";
 
@@ -30,6 +31,7 @@ export default class AuditStoreDetail extends React.Component {
 		route: PropTypes.shape({
 			printMode: PropTypes.bool,
 		}),
+		location:PropTypes.object
 	};
 
 	static defaultProps = {

@@ -56,6 +56,12 @@ def upload_for_object(proof_type: str, mime_type: str, file_name: str, file_size
         content_object = content_object,
     )
 
+def update_attachment_section(attachment_id,content_object) -> Attachment:
+    obj = Attachment.objects.get(id=attachment_id)
+    obj.content_object=content_object
+    obj.save()
+    return obj
+
 def generate_attachment_slug(file_extension):
     file_name = ''.join(random.SystemRandom().choice(string.ascii_letters + string.digits) for _ in range(settings.AWS["S3_ATTACHMENTS"]["FILE_SLUG_SIZE"]))
     return "ATTACHMENTS/{}/{}{}".format(date.today().strftime("%Y/%m/%d"), file_name, file_extension)

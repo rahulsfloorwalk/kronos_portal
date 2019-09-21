@@ -114,3 +114,13 @@ class AttachmentCompleteView(APIView):
     def post(self, request, attachment_id):
         attachment = attachment_manager_service.complete_for_manager(attachment_id)
         return Response(AttachmentSerializer(attachment).data)
+
+class MoveAttachmentToSection(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST':[GROUP_NAME_MANAGER],
+    }
+
+    def post(self,request,audit_store_id):
+        attachment = attachment_manager_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
+        return Response(AttachmentSerializer(attachment).data)

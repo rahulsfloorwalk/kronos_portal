@@ -48,5 +48,6 @@ urlpatterns = ([
     url(r'section/(?P<section_id>[0-9]+)/comment$', views.CommentSubmitView.as_view(), name="comment_submit_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),
+    url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_auditor$', views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_auditor'),
 
 ], 'auditor')

@@ -152,6 +152,7 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', attachment_views.AttachmentCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', attachment_views.AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', attachment_views.AttachmentIdView.as_view(), name='attachment_id_view'),
+    url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_manager$', attachment_views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_manager'),
     url(r'moderator/(?P<user_id>[0-9]+)$', moderator_views.ModeratorIdView.as_view(), name='moderator_id_view'),
     url(r'moderator/summary$', moderator_views.ModeratorSummaryView.as_view(), name='moderator_summary_view'),
     url(r'moderator/(?P<user_id>[0-9]+)/reportlist$', moderator_views.ModeratorReportList.as_view(), name='moderator_report_list'),

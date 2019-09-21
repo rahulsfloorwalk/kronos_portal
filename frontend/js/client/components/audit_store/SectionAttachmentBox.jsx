@@ -55,6 +55,7 @@ export default class SectionAttachmentBox extends React.Component{
 				key={a.id}
 				onSelect={() => this.selectAttachment(a.id)}
 				selected={this.state.selectedAttachmentId === a.id}
+				user="client"
 			/>);
 		}
 

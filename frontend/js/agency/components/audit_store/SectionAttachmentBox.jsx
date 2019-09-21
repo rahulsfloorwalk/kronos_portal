@@ -133,6 +133,7 @@ export default class SectionAttachmentBox extends React.Component{
 				attachment={a}
 				deletable={deletable}
 				onDelete={() => this.attachmentDeleteClicked(a)}
+				user="agency"
 			/>);
 		}
 		for(const id in this.state.inProgress){

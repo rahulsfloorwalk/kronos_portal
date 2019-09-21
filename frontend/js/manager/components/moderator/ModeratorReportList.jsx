@@ -5,7 +5,6 @@ import { hashHistory , Link } from "react-router";
 import { findReportsById , findModerators } from "../../service/moderator.js";
 
 import Modal from "../../../components/Modal.jsx";
-import { pointerStyle }  from "../../../styles.js";
 import moment from "moment";
 import { momentDateFormat}  from "../../../../config.js";
 import AuditStoreStatusLabel from "../../../components/AuditStoreStatusLabel.jsx";
@@ -16,6 +15,8 @@ class ModeratorReportRow extends React.Component {
 		seq: PropTypes.number.isRequired,
 		auditStore: PropTypes.object,
 		
+		moderators:PropTypes.array,
+		onUpdate:PropTypes.func
 	};
 	
 	render() {
@@ -41,6 +42,8 @@ export default class ModeratorReportList extends React.Component {
 		params: PropTypes.shape({
 			userId: PropTypes.string,
 		}),
+		moderators:PropTypes.array,
+		onUpdate:PropTypes.func
 	};
 
 	state = {
@@ -61,7 +64,7 @@ export default class ModeratorReportList extends React.Component {
 		
 	}
 	
-	auditStoreUpdated = (auditStore) => {
+	auditStoreUpdated = () => {
 		findReportsById(this.props.params.userId).then((auditStore) => {
 			this.setState({
 				auditStore
@@ -71,8 +74,7 @@ export default class ModeratorReportList extends React.Component {
 	
 	render() {
 		var modalTitle = "Moderator Report List";
-		var modalSize = "modal-lg"
-		const {auditStore} = this.state
+		var modalSize = "modal-lg";
 		
 		const rows = this.state.auditStore.map((m, i) => <ModeratorReportRow seq={i+1} auditStore={m} moderators={this.state.moderators} onUpdate={this.auditStoreUpdated} key={m.id}/>);
 		
