@@ -25,6 +25,9 @@ export default class SectionAttachmentBox extends React.Component{
 		auditStore: PropTypes.object,
 		minimumAttachmentCount: PropTypes.number,
 		showErrors: PropTypes.bool,
+		
+		editable:PropTypes.bool,
+		sections:PropTypes.object
 	};
 
 	constructor(props){
@@ -136,7 +139,7 @@ export default class SectionAttachmentBox extends React.Component{
 	};
 	
 	moveAttachmentSection = () => {
-		let attachmentlist = []
+		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
 			let val = $(this).attr('value');
 			attachmentlist.push(val);
@@ -146,10 +149,9 @@ export default class SectionAttachmentBox extends React.Component{
 		console.log("section_id",this.props.sectionId);
 		console.log("attachment_section_id",this.state.attachmentSectionId);
 		
-		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then((response) => {
+		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
-			console.log(err.responseJSON.non_field_errors[0])
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
@@ -207,13 +209,13 @@ export default class SectionAttachmentBox extends React.Component{
 				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 					return s1.sequence - s2.sequence;
 				});
-				var optionList = []
+				var optionList = [];
 				for(var sectionId of orderedKeys) {
 					if(this.props.sectionId == sectionId){
-						null
+						null;
 					}
 					else{
-						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
 					}
 				}
 				

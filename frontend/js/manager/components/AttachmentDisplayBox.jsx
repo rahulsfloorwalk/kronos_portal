@@ -7,7 +7,6 @@ import Alert from "react-s-alert";
 
 import { orderKeys } from "../../react_utils.js";
 
-import { fetchSections } from "../actions/section.js";
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection } from "../service/attachment.js";
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -19,7 +18,7 @@ import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
 import { auditStorePropType } from "../prop_types";
-import { fetchReportSections } from "../actions/report_section.js";
+import { fetchSections } from "../actions/section.js";
 
 export class AttachmentDisplayBox extends Component{
 	static propTypes = {
@@ -50,7 +49,7 @@ export class AttachmentDisplayBox extends Component{
 	};
 	componentDidMount(){
 		this.reloadState();
-		this.props.dispatch(fetchReportSections(this.props.auditStoreId));
+		this.props.dispatch(fetchSections(this.props.auditStoreId));
 	}
 	attachmentSelected = (attachment) => {
 		this.setState({
@@ -163,16 +162,15 @@ export class AttachmentDisplayBox extends Component{
 	}
 	
 	moveAttachment = () => {
-		let attachmentlist = []
+		let attachmentlist = [];
 		$('.attachment_checkbox input:checked').each(function() {
 			let val = $(this).attr('value');
 			attachmentlist.push(val);
 		});
 		
-		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then((response) => {
+		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
-			console.log(err.responseJSON.non_field_errors[0])
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
@@ -240,9 +238,9 @@ export class AttachmentDisplayBox extends Component{
 				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 					return s1.sequence - s2.sequence;
 				});
-				var optionList = []
+				var optionList = [];
 				for(var sectionId of orderedKeys) {
-						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
 				}
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>

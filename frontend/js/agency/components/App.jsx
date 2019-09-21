@@ -23,7 +23,6 @@ export default class App extends React.Component{
 
 	componentDidMount(){
 		fetchConfig().then((config) => this.setState({config}));
-		console.log("config",this.state.config)
 	}
 
 	render(){

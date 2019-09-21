@@ -157,7 +157,7 @@ class AuditStoreDetails extends React.Component {
 					</div>
 				</div>
 				{buttonPanel}
-	<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId} editable={this.isReportEditable()} updateAuditStore={() => {this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId))}}/>
+				<AttachmentUploadBox auditStoreId={this.props.params.auditStoreId} editable={this.isReportEditable()}/>
 				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} />
 				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors} editable={this.isReportEditable()}/>
 				{buttonPanel}

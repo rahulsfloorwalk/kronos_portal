@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import $ from "jquery";
 
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection } from "../service/attachment.js";
-import { fetchSections } from "../service/section.js"
+import { fetchSections } from "../service/section.js";
 
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -20,6 +20,7 @@ export default class AttachmentBox extends React.Component {
 		auditStore: PropTypes.shape({
 			status: PropTypes.string.isRequired,
 		}),
+		editable:PropTypes.bool
 	};
 
 	state = {
@@ -162,16 +163,15 @@ export default class AttachmentBox extends React.Component {
 	}
 	
 	moveAttachment = () => {
-		let attachmentlist = []
+		let attachmentlist = [];
 		$('.attachment_checkbox input:checked').each(function() {
 			let val = $(this).attr('value');
 			attachmentlist.push(val);
 		});
 		
-		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then((response) => {
+		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
-			console.log(err.responseJSON.non_field_errors[0])
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",

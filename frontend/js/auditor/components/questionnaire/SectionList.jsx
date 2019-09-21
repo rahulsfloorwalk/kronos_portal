@@ -25,6 +25,7 @@ class SectionList extends React.Component{
 			PropTypes.number,
 			PropTypes.string,
 		]).isRequired,
+		editable:PropTypes.bool
 	};
 
 	constructor(props){

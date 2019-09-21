@@ -249,6 +249,9 @@ class SectionAttachmentBox extends React.Component{
 		auditStore: PropTypes.shape({
 			status: PropTypes.string,
 		}),
+		editable:PropTypes.bool,
+		sections:PropTypes.array
+		
 	};
 
 	constructor(props){
@@ -380,19 +383,15 @@ class SectionAttachmentBox extends React.Component{
 	};
 	
 	moveAttachmentSection = () => {
-		let attachmentlist = []
+		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
 			let val = $(this).attr('value');
 			attachmentlist.push(val);
 		});
 		
-		console.log(attachmentlist);
-		console.log("section_id",this.props.sectionId);
-		
-		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then((response) => {
+		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
-			console.log(err.responseJSON.non_field_errors[0])
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
@@ -515,6 +514,7 @@ class Section extends React.Component{
 			status: PropTypes.string,
 		}),
 		answers: PropTypes.array,
+		sections:PropTypes.array
 	};
 
 	state = {
@@ -747,6 +747,8 @@ export default class AuditStoreSections extends React.Component{
 			status: PropTypes.string,
 		}),
 		children: PropTypes.node,
+		editable:PropTypes.bool,
+		sections:PropTypes.object
 	};
 
 	state = {

@@ -274,6 +274,7 @@ class SectionAttachmentBox extends React.Component{
 			PropTypes.string,
 		]).isRequired,
 		auditStore: PropTypes.object.isRequired,
+		sections:PropTypes.object
 	};
 
 	constructor(props){
@@ -405,16 +406,15 @@ class SectionAttachmentBox extends React.Component{
 	};
 	
 	moveAttachmentSection = () => {
-		let attachmentlist = []
+		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
 			let val = $(this).attr('value');
 			attachmentlist.push(val);
 		});
 		
-		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then((response) => {
+		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
-			console.log(err.responseJSON.non_field_errors[0])
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
@@ -455,13 +455,13 @@ class SectionAttachmentBox extends React.Component{
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
 		});
-		var optionList = []
+		var optionList = [];
 		for(var sectionId of orderedKeys) {
 			if(this.props.sectionId == sectionId){
-				null
+				null;
 			}
 			else{
-				optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+				optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
 			}
 		}
 		
@@ -538,6 +538,7 @@ class __Section extends React.Component{
 		params: PropTypes.shape({
 			auditStoreId: PropTypes.string.isRequired,
 		}),
+		sections:PropTypes.object
 	};
 
 	constructor(props){

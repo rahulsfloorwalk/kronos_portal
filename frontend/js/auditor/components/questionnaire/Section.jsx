@@ -23,6 +23,9 @@ class __Section extends React.Component{
 
 		auditStore: PropTypes.object,
 		reportSection: PropTypes.object,
+		
+		editable:PropTypes.bool,
+		sections:PropTypes.object
 	};
 	constructor(props){
 		super(props);

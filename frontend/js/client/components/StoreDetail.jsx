@@ -11,7 +11,7 @@ import NavLink from "../../components/NavLink.jsx";
 export default class StoreDetail extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
-			storeId: PropTypes.number,
+			storeId: PropTypes.oneOfType([PropTypes.number,PropTypes.string])
 		}),
 		children: PropTypes.node,
 	};

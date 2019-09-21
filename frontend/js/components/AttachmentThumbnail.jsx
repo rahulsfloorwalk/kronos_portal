@@ -25,6 +25,8 @@ export default class AttachmentThumbnail extends Component{
 
 		onSelect: PropTypes.func,
 		onDelete: PropTypes.func,
+		
+		editable:PropTypes.bool
 	};
 	
 	constructor(props){

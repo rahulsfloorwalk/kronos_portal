@@ -2,7 +2,6 @@ import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
-import { Link } from "react-router";
 import { orderKeys } from "../../react_utils.js";
 import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment , moveAttachmentToSection } from "../service/attachment.js";
 
@@ -16,12 +15,13 @@ import { auditStorePropType } from "../prop_types";
 
 import { fetchSections } from "../actions/section.js";
 
-import { fetchAuditStore } from "../actions/audit_store.js";
-
 class AttachmentUploadBox extends React.Component {
 	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
 		auditStoreId: PropTypes.oneOfType([ PropTypes.number, PropTypes.string, ]),
 		auditStore: auditStorePropType,
+		editable:PropTypes.bool,
+		sections:PropTypes.object
 	};
 
 	state = {
@@ -121,7 +121,7 @@ class AttachmentUploadBox extends React.Component {
 			this.reloadState();
 		});
 	};
-	
+
 	getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
@@ -129,13 +129,13 @@ class AttachmentUploadBox extends React.Component {
 	}
 	
 	moveAttachment = () => {
-		let attachmentlist = []
+		let attachmentlist = [];
 		$('.attachment_checkbox input:checked').each(function() {
 			let val = $(this).attr('value');
 			attachmentlist.push(val);
 		});
 		
-		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then((response) => {
+		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
 			this.setState({
@@ -209,9 +209,9 @@ class AttachmentUploadBox extends React.Component {
 				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 					return s1.sequence - s2.sequence;
 				});
-				var optionList = []
+				var optionList = [];
 				for(var sectionId of orderedKeys) {
-						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>))
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
 				}
 				
 				selectSection = (
