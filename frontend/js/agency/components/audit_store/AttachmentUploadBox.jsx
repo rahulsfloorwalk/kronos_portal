@@ -1,8 +1,9 @@
+import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment } from "../../service/attachment.js";
+import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment, moveAttachmentToSection } from "../../service/attachment.js";
 
 import { Paperclip } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
@@ -12,11 +13,18 @@ import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgr
 
 import { auditStorePropType } from "../../prop_types.js";
 import { findAuditStore } from "../../reducers/audit_store.js";
+import { findSectionsByAuditStoreId } from "../../reducers/section.js";
 
 class __AttachmentUploadBox extends React.Component {
 	static propTypes = {
 		auditStoreId: PropTypes.number.isRequired,
 		auditStore: auditStorePropType.isRequired,
+		sections: PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			sequence: PropTypes.number.isRequired,
+		})),
+		editable:PropTypes.bool
 	};
 
 	state = {
@@ -24,7 +32,11 @@ class __AttachmentUploadBox extends React.Component {
 		attachments: [],
 		inProgress: {},
 		progress: "",
-		uploading: false
+		uploading: false,
+		sectionId:"",
+		submitMessage : "",
+		submitStatus: "",
+		showErrors: false,
 	};
 
 	reloadState = () => {
@@ -111,7 +123,38 @@ class __AttachmentUploadBox extends React.Component {
 		});
 	};
 
+	getSectionId = (e) => {
+		this.setState({
+			sectionId : e.target.value
+		});
+	};
+
+	moveAttachment = () => {
+		let attachmentlist = [];
+		$('.attachment_checkbox input:checked').each(function() {
+			let val = $(this).attr('value');
+			attachmentlist.push(val);
+		});
+		
+		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
+			window.location.reload();
+		},(err) => {
+			this.setState({
+				submitMessage : err.responseJSON.non_field_errors[0],
+				submitStatus: "danger",
+				showErrors: true,
+			});
+		});
+		
+	};
+
 	render() {
+		var contentStyle = {
+			"paddingTop": "2%"
+		};
+		
+		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
+		
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -135,7 +178,7 @@ class __AttachmentUploadBox extends React.Component {
 		const attachmentRows = [];
 
 		for(const a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="agency"/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="agency" editable={this.props.editable}/>);
 		}
 
 		for(const id in this.state.inProgress){
@@ -150,7 +193,7 @@ class __AttachmentUploadBox extends React.Component {
 				/>);
 			}
 		}
-
+		var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
 				<div key="empty" className="text-muted">
@@ -158,14 +201,39 @@ class __AttachmentUploadBox extends React.Component {
 				</div>
 			);
 		}
+		else{
+			if(this.props.editable){
+				selectSection = (
+					<div className="col-md-4" style={contentStyle}>
+							<div className="col-md-8">
+								<select className="form-control" onChange={this.getSectionId}>
+									<option value="">Select Section</option>
+									{this.props.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
+								</select>
+							</div>
+							<div className="col-md-2">
+								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+							</div>
+					</div>
+				);
+			}
+		}
 
 		return (
-			<div className="">
-				<h3 className="page-header">
-					<Paperclip/> Attachments {uploadButton}
-				</h3>
-				<div className="form-group" style={{}}>
-					{attachmentRows}
+			<div>
+				<div className="row page-header">
+					<div className="col-md-8">
+					<h3>
+						<Paperclip/> Attachments {uploadButton}
+					</h3>
+					{submitMessageElement}
+					</div>
+					{selectSection}
+				</div>	
+				<div className="row">	
+					<div className="form-group attachment_checkbox" style={{}}>
+						{attachmentRows}
+					</div>
 				</div>
 			</div>
 		);
@@ -173,8 +241,11 @@ class __AttachmentUploadBox extends React.Component {
 }
 
 const mapStoreToProps = (store, ownProps) => {
+	const auditStore = findAuditStore(store, ownProps.auditStoreId);
 	return {
 		auditStore: findAuditStore(store, ownProps.auditStoreId),
+		sections: findSectionsByAuditStoreId(store, ownProps.auditStoreId),
+		editable: auditStore && auditStore.is_editable_by_agency,
 	};
 };
 

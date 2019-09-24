@@ -4,7 +4,8 @@ from answer.service import report_section_agency as report_section_agency_servic
 from answer.service import answer_agency as answer_agency_service
 from attachment import service as attachment_service
 from audit_store.models import AuditStore
-
+import audit_store.service as audit_store_service_section
+import answer.service.report_section as report_section_service
 
 def upload_for_audit_store_by_agency(audit_store_id, file_name, file_size, mime_type, user_id):
     audit_store = audit_store_service.find_by_id_for_agency_user(audit_store_id, user_id)
@@ -49,3 +50,20 @@ def delete_for_agency(attachment_id, user_id):
         raise AppLogicError("Cannot delete attachment now")
 
     return attachment_service.delete(attachment_id)
+
+def move_to_section(audit_store_id,section_id,attachment_list):
+    if not attachment_list and not section_id:
+        raise AppLogicError("Please select attachment and section in which attachment to be moved")
+    if not attachment_list:
+        raise AppLogicError("Please select attachment to be moved")
+    if not section_id:
+        raise AppLogicError("Please select section to move attachment")
+    audit_store = audit_store_service_section.find_by_id(audit_store_id)
+    if section_id == "0":
+        content_obj = audit_store
+    else:
+        report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
+        content_obj = report_section
+    for attachment_id in attachment_list:
+        attachment = attachment_service.update_attachment_section(attachment_id,content_obj)
+    return attachment

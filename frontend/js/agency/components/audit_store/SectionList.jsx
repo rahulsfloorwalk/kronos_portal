@@ -28,7 +28,8 @@ export class __SectionList extends React.Component {
 				auditStoreId={this.props.auditStoreId}
 				sectionId={section.id}
 				key={section.id}
-				showErrors={this.props.showErrors}/>;
+				showErrors={this.props.showErrors}
+				sections={this.props.sections}/>;
 		});
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please contact support"/>);
