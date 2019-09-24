@@ -2,7 +2,7 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = ([
-    url(r'agency$', views.AgencyView.as_view(), name='agency_view'),
+    url(r'agency_view$', views.AgencyView.as_view(), name='agency_view'),
     url(r'user$', views.UserView.as_view(), name='user_view'),
     url(r'presence/city/(?P<city_id>[0-9]+)/present$', views.AgencyPresencePresentView.as_view(), name='agency_presence_present_view'),
     url(r'presence/state/(?P<state_code>[\w\-]+)$', views.AgencyPresenceByStateView.as_view(), name='agency_presence_by_state_view'),
@@ -24,4 +24,5 @@ urlpatterns = ([
     url(r'audit_store$', views.AuditStoreListView.as_view(), name="audit_store_list_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),
+    url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_agency$', views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_agency'),
 ], 'agency_rest')

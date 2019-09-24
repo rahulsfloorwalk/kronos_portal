@@ -14,6 +14,11 @@ import { auditStorePropType } from "../../prop_types.js";
 
 export class __Section extends React.Component{
 	static propTypes = {
+		sections: PropTypes.arrayOf(PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			sequence: PropTypes.number.isRequired,
+		})),
 		section: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
@@ -29,6 +34,7 @@ export class __Section extends React.Component{
 		auditStore: auditStorePropType,
 		showErrors: PropTypes.bool,
 		auditorComment: PropTypes.string,
+		editable: PropTypes.bool,
 	};
 
 	state = {};
@@ -80,7 +86,7 @@ export class __Section extends React.Component{
 							</tr>
 						</tbody>
 					</table>
-					<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore}/>
+					<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={this.props.editable}/>
 				</div>
 			);
 		} else {
@@ -91,10 +97,12 @@ export class __Section extends React.Component{
 
 const mapStateToProps = (store, ownProps) => {
 	const reportSection = findReportSection(store, ownProps.auditStoreId, ownProps.sectionId);
+	const auditStore = findAuditStore( store, ownProps.auditStoreId);
 	return {
 		auditStore: findAuditStore( store, ownProps.auditStoreId),
 		section: findSection(store, ownProps.auditStoreId, ownProps.sectionId),
 		auditorComment: reportSection && reportSection.auditor_comment,
+		editable: auditStore && auditStore.is_editable_by_agency,
 	};
 };
 

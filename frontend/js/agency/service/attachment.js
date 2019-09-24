@@ -1,4 +1,5 @@
-
+import $ from "jquery";
+import {url} from "../../../config.js";
 import axios from "axios";
 
 export function findAttachmentsByAuditStore(auditStoreId){
@@ -78,5 +79,14 @@ export function doAttachmentUpload(url, file, progressCallback){
 				reject("There was an error, please try again.");
 			}
 		});
+	});
+}
+
+export function moveAttachmentToSection(auditStoreId,sectionId,attachmentIdList){
+	return $.ajax({
+		url: url.api_base_path + `agency/attachment/${auditStoreId}/movetosection_agency`,
+		type: "POST",
+		data: JSON.stringify({section_id: sectionId , attachment_list: attachmentIdList}),
+		contentType: "application/json"
 	});
 }

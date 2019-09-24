@@ -27,10 +27,38 @@ exports[`<__SectionList/> renders the list of sections correctly 1`] = `
   <Connect(__Section)
     auditStoreId={2}
     sectionId={1}
+    sections={
+      Array [
+        Object {
+          "id": 1,
+          "name": "Personal Details",
+          "sequence": 1,
+        },
+        Object {
+          "id": 2,
+          "name": "Professional Details",
+          "sequence": 2,
+        },
+      ]
+    }
   />
   <Connect(__Section)
     auditStoreId={2}
     sectionId={2}
+    sections={
+      Array [
+        Object {
+          "id": 1,
+          "name": "Personal Details",
+          "sequence": 1,
+        },
+        Object {
+          "id": 2,
+          "name": "Professional Details",
+          "sequence": 2,
+        },
+      ]
+    }
   />
 </div>
 `;

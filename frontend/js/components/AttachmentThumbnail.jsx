@@ -162,7 +162,7 @@ export default class AttachmentThumbnail extends Component{
 		divStyle.backgroundImage = `url(${imageSrc})`;
 		
 		let checkboxElement = null;
-		if (this.props.user == "client" || this.props.user == "agency"){
+		if (this.props.user == "client"){
 			checkboxElement = null;
 		}
 		else{

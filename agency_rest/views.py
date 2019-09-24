@@ -349,3 +349,12 @@ class AuditStoreIdView(APIView):
         audit_store = audit_store_service.find_by_id_for_agency_user(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+class MoveAttachmentToSection(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST':[GROUP_NAME_AGENCY],
+    }
+
+    def post(self,request,audit_store_id):
+        attachment = attachment_agency_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
+        return Response(AttachmentSerializer(attachment).data)
