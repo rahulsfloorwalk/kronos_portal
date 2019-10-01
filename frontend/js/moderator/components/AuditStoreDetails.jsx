@@ -5,10 +5,11 @@ import { Link } from "react-router";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 
+
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { findById, qaOk, fail, unsubmit, submit, setAuditDate } from "../service/audit_store.js";
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment } from "../service/audit_store.js";
 
 import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -84,11 +85,23 @@ export default class AuditStoreDetails extends React.Component{
 			this.setState({auditDateLoading: false});
 		});
 	};
+	setModeratorStatus = (e) =>{
+		setAuditModeratorStatus(this.props.params.auditStoreId,e.target.value).then((auditStore) => {
+			this.setState({
+				auditStore
+			});
+		});
+	};
+	setModeratorComment = (e) => {
+		setAuditModeratorComment(this.props.params.auditStoreId,e.target.value);
+	};
 	render(){
 		if(! this.state.auditStore){
 			return <Loading/>;
 		}
-
+		var paddingStyle={
+			paddingBottom:'2%'
+		};
 		let auditDateElement = moment(this.state.auditStore.audit_date).format(momentDateFormat);
 
 		let failButton, qaOkButton, unSubmitButton, submitButton;
@@ -121,6 +134,47 @@ export default class AuditStoreDetails extends React.Component{
 
 		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
 		let editable = this.state.auditStore && this.state.auditStore.status === "SUBMITTED";
+		
+		var selectElement = null;
+		var textareaElement = null;
+		if (editable){
+			selectElement = (
+				<select className="form-control" onChange={this.setModeratorStatus} value={this.state.auditStore.moderator_status}>
+					<option value="">Select Status</option>
+					<option value="MISS_IMAGE">Missing Image</option>
+					<option value="MISS_AUDIO">Missing Audio</option>
+					<option value="MISS_VIDEO">Missing Video</option>
+					<option value="AUDITOR_NOT_RESPONDING">Auditor Not Responding</option>
+					<option value="CONTRADICTION">Contradiction</option>
+					<option value="NOT_SUFFICIENT_PROOFS">Not Suffiecient Proofs</option>
+					<option value="DATE_TIME_MISSING">Date or Time Missing in Image</option>
+					<option value="WAITING_FOR_ATTACHMENT">Waiting for Attachment from Auditor</option>
+					<option value="FAULTY_REPORT">Faulty Report</option>
+				</select>);
+			textareaElement = (
+				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.state.auditStore.moderator_comment}></textarea>
+			);
+		}
+		else{
+			selectElement = (
+				<select className="form-control" onChange={this.setModeratorStatus} value={this.state.auditStore.moderator_status} disabled>
+					<option value="">Select Status</option>
+					<option value="MISS_IMAGE">Missing Image</option>
+					<option value="MISS_AUDIO">Missing Audio</option>
+					<option value="MISS_VIDEO">Missing Video</option>
+					<option value="AUDITOR_NOT_RESPONDING">Auditor Not Responding</option>
+					<option value="CONTRADICTION">Contradiction</option>
+					<option value="NOT_SUFFICIENT_PROOFS">Not Suffiecient Proofs</option>
+					<option value="DATE_TIME_MISSING">Date or Time Missing in Image</option>
+					<option value="WAITING_FOR_ATTACHMENT">Waiting for Attachment from Auditor</option>
+					<option value="FAULTY_REPORT">Faulty Report</option>
+				</select>
+			);
+
+			textareaElement = (
+				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.state.auditStore.moderator_comment} readOnly></textarea>
+			);
+		}
 		return (
 			<div>
 				{/*
@@ -204,6 +258,17 @@ export default class AuditStoreDetails extends React.Component{
 						</div>
 					</div>
 					<div className="col-md-6">
+						<div className="row" style={paddingStyle}>
+							<div className="col-md-6">
+								<label>Moderator Report Status : </label>
+								{selectElement}
+							</div>
+							<div className="col-md-6">
+							<label>Moderator Comment : </label>
+								{textareaElement}
+							</div>	
+						</div>
+
 						<div className="panel panel-default">
 							<div className="panel-body">
 								<MarkdownViewer markdown={this.state.auditStore.audit.post_approval_description || ""}/>

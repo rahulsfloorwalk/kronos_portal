@@ -121,4 +121,14 @@ def set_report_summary(audit_store_id, report_summary, user_id):
     else:
         raise AppLogicError("cannot set report summary now")
 
+def set_moderator_status(audit_store_id, moderator_status, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id,user_id)
+    audit_store.set_moderator_status(moderator_status)
+    return audit_store
 
+def set_moderator_comment(audit_store_id, moderator_comment, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    if len(moderator_comment) > 2999:
+        raise AppLogicError("Comment should not be greater than 3000 character")
+    audit_store.set_moderator_comment(moderator_comment)
+    return audit_store

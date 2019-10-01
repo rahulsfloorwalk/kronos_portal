@@ -279,6 +279,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -579,6 +663,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -847,6 +1015,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
     <div
       className="col-md-8"
     >
+      <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
       <div
         className="panel-body"
       >
@@ -1155,6 +1407,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -1455,6 +1791,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -1745,6 +2165,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -2013,6 +2517,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
     <div
       className="col-md-8"
     >
+      <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
       <div
         className="panel-body"
       >
@@ -2359,6 +2947,88 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -2627,6 +3297,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
     <div
       className="col-md-8"
     >
+      <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
       <div
         className="panel-body"
       >
@@ -2973,6 +3727,88 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
       className="col-md-8"
     >
       <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+          />
+        </div>
+      </div>
+      <div
         className="panel-body"
       >
         <MarkdownViewer
@@ -3241,6 +4077,90 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
     <div
       className="col-md-8"
     >
+      <div
+        className="row"
+        style={
+          Object {
+            "paddingBottom": "2%",
+          }
+        }
+      >
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Report Status : 
+          </label>
+          <select
+            className="form-control"
+            disabled={true}
+            onChange={[Function]}
+          >
+            <option
+              value=""
+            >
+              Select Status
+            </option>
+            <option
+              value="MISS_IMAGE"
+            >
+              Missing Image
+            </option>
+            <option
+              value="MISS_AUDIO"
+            >
+              Missing Audio
+            </option>
+            <option
+              value="MISS_VIDEO"
+            >
+              Missing Video
+            </option>
+            <option
+              value="AUDITOR_NOT_RESPONDING"
+            >
+              Auditor Not Responding
+            </option>
+            <option
+              value="CONTRADICTION"
+            >
+              Contradiction
+            </option>
+            <option
+              value="NOT_SUFFICIENT_PROOFS"
+            >
+              Not Suffiecient Proofs
+            </option>
+            <option
+              value="DATE_TIME_MISSING"
+            >
+              Date or Time Missing in Image
+            </option>
+            <option
+              value="WAITING_FOR_ATTACHMENT"
+            >
+              Waiting for Attachment from Auditor
+            </option>
+            <option
+              value="FAULTY_REPORT"
+            >
+              Faulty Report
+            </option>
+          </select>
+        </div>
+        <div
+          className="col-md-6"
+        >
+          <label>
+            Moderator Comment : 
+          </label>
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            readOnly={true}
+          />
+        </div>
+      </div>
       <div
         className="panel-body"
       >
