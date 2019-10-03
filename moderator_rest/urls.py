@@ -6,6 +6,7 @@ from .views import AuditStorePendingView, AuditStoreCompletedView
 from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
+from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView
 from .views import ConfigView
 
 urlpatterns = ([
@@ -31,6 +32,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', AuditStoreIdReportSummaryView.as_view(), name='audit_store_id_report_summary_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/audit_date$', AuditStoreIdAuditDateView.as_view(), name='audit_store_id_audit_date_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_status$', AuditStoreIdModeratorStatusView.as_view(), name='audit_store_id_moderator_status_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_comment$', AuditStoreIdModeratorCommentView.as_view(), name='audit_store_id_moderator_comment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/earnings_per_audit$', AuditStoreIdEarningsPerAuditView.as_view(), name='audit_store_id_earnings_per_audit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reimbursement$', AuditStoreIdReimbursementView.as_view(), name='audit_store_id_reimbursement_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/qa_rating$', AuditStoreIdQARatingView.as_view(), name='audit_store_id_qa_rating_view'),

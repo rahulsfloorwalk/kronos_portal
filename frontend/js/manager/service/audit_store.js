@@ -21,6 +21,26 @@ export function setAuditDate(audit_store_id, audit_date){
 		contentType: "application/json"
 	});
 }
+export function setAuditModeratorStatus(audit_store_id, moderator_status){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/moderator_status`,
+		method: "POST",
+		data: JSON.stringify({
+			moderator_status
+		}),
+		contentType: "application/json"
+	});
+}
+export function setAuditModeratorComment(audit_store_id, moderator_comment){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/moderator_comment`,
+		method: "POST",
+		data:JSON.stringify({
+			moderator_comment
+		}),
+		contentType:"application/json"
+	});
+}
 
 export function rate(audit_store_id, qa_rating){
 	return $.ajax({

@@ -25,7 +25,7 @@ import { fetchAuditStore,
 	rejectAuditStore,
 	pmRevertAuditStore,
 } from "../actions/audit_store.js";
-import { setAuditDate } from "../service/audit_store.js";
+import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment } from "../service/audit_store.js";
 
 import { Calendar, Retweet, King, File, Download, ThumbsDown } from "../../components/Icons.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
@@ -125,11 +125,21 @@ export class AuditStoreDetails extends React.Component{
 	isSummaryEditable = () => {
 		return this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
 	};
+	setModeratorStatus = (e) =>{
+		setAuditModeratorStatus(this.props.auditStore.id,e.target.value).then((auditStore) => {
+			this.props.dispatch(updateAuditStore(auditStore));
+		});
+	};
+	setModeratorComment = (e) => {
+		setAuditModeratorComment(this.props.auditStore.id,e.target.value);
+	};
 	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
-
+		var paddingStyle={
+			paddingBottom:'2%'
+		};
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
 
 		let moreOptionsDropdown;
@@ -203,6 +213,47 @@ export class AuditStoreDetails extends React.Component{
 		let errorFirst;
 		if(this.props.errors && this.props.errors.non_field_errors){
 			errorFirst = (<span>{this.props.errors.non_field_errors[0]}</span>);
+		}
+
+		var selectElement = null;
+		var textareaElement = null;
+		if (this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW"){
+			selectElement = (
+				<select className="form-control" onChange={this.setModeratorStatus} value={this.props.auditStore.moderator_status}>
+					<option value="">Select Status</option>
+					<option value="MISS_IMAGE">Missing Image</option>
+					<option value="MISS_AUDIO">Missing Audio</option>
+					<option value="MISS_VIDEO">Missing Video</option>
+					<option value="AUDITOR_NOT_RESPONDING">Auditor Not Responding</option>
+					<option value="CONTRADICTION">Contradiction</option>
+					<option value="NOT_SUFFICIENT_PROOFS">Not Suffiecient Proofs</option>
+					<option value="DATE_TIME_MISSING">Date or Time Missing in Image</option>
+					<option value="WAITING_FOR_ATTACHMENT">Waiting for Attachment from Auditor</option>
+					<option value="FAULTY_REPORT">Faulty Report</option>
+				</select>);
+			textareaElement = (
+				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.props.auditStore.moderator_comment}></textarea>
+			);
+		}
+		else{
+			selectElement = (
+				<select className="form-control" onChange={this.setModeratorStatus} value={this.props.auditStore.moderator_status} disabled>
+					<option value="">Select Status</option>
+					<option value="MISS_IMAGE">Missing Image</option>
+					<option value="MISS_AUDIO">Missing Audio</option>
+					<option value="MISS_VIDEO">Missing Video</option>
+					<option value="AUDITOR_NOT_RESPONDING">Auditor Not Responding</option>
+					<option value="CONTRADICTION">Contradiction</option>
+					<option value="NOT_SUFFICIENT_PROOFS">Not Suffiecient Proofs</option>
+					<option value="DATE_TIME_MISSING">Date or Time Missing in Image</option>
+					<option value="WAITING_FOR_ATTACHMENT">Waiting for Attachment from Auditor</option>
+					<option value="FAULTY_REPORT">Faulty Report</option>
+				</select>
+			);
+
+			textareaElement = (
+				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.props.auditStore.moderator_comment} readOnly></textarea>
+			);
 		}
 
 		return (
@@ -288,6 +339,16 @@ export class AuditStoreDetails extends React.Component{
 						</div>
 					</div>
 					<div className="col-md-8">
+						<div className="row" style={paddingStyle}>
+							<div className="col-md-6">
+								<label>Moderator Report Status : </label>
+								{selectElement}
+							</div>
+							<div className="col-md-6">
+							<label>Moderator Comment : </label>
+								{textareaElement}
+							</div>
+						</div>
 						{detailsElement}
 					</div>
 				</div>

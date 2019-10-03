@@ -265,3 +265,15 @@ def accept_all_audit_stores(audit_cycle_id, user_actor):
         accept(audit_store.id, user_actor)
 
     return len(completed_audit_stores)
+
+def set_moderator_status(audit_store_id, moderator_status):
+    audit_store = find_by_id(audit_store_id)
+    audit_store.set_moderator_status(moderator_status)
+    return audit_store
+
+def set_moderator_comment(audit_store_id, moderator_comment):
+    audit_store = find_by_id(audit_store_id)
+    if len(moderator_comment) > 2999:
+        raise AppLogicError("Comment should not be greater than 3000 character")
+    audit_store.set_moderator_comment(moderator_comment)
+    return audit_store

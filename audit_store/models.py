@@ -109,6 +109,28 @@ class AuditStore(Model):
         (GOOD, "Good"),
     )
 
+    MISS_IMAGE = "MISS_IMAGE"
+    MISS_AUDIO = "MISS_AUDIO"
+    MISS_VIDEO = "MISS_VIDEO"
+    AUDITOR_NOT_RESPONDING = "AUDITOR_NOT_RESPONDING"
+    CONTRADICTION = "CONTRADICTION"
+    NOT_SUFFICIENT_PROOFS = "NOT_SUFFICIENT_PROOFS"
+    DATE_TIME_MISSING = "DATE_TIME_MISSING"
+    WAITING_FOR_ATTACHMENT = "WAITING_FOR_ATTACHMENT"
+    FAULTY_REPORT = "FAULTY_REPORT"
+
+    MODERATOR_STATUS = (
+        (MISS_IMAGE,"Missing Image"),
+        (MISS_AUDIO,"Missing Audio"),
+        (MISS_AUDIO,"Missing Video"),
+        (AUDITOR_NOT_RESPONDING,"Auditor Not Responding"),
+        (CONTRADICTION,"Contradiction"),
+        (NOT_SUFFICIENT_PROOFS,"Not Suffiecient Proofs"),
+        (DATE_TIME_MISSING,"Date or Time Missing in Image"),
+        (WAITING_FOR_ATTACHMENT,"Waiting for Attachment from Auditor"),
+        (FAULTY_REPORT,"Faulty Report"),
+    )
+
     id = AutoField(db_column='id', primary_key=True)
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     audit_date = DateField(db_column='audit_date')
@@ -127,6 +149,9 @@ class AuditStore(Model):
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 
     attribute_data = JSONField(db_column='attribute_data', default=dict, blank=False)
+
+    moderator_status = CharField(db_column='moderator_status', max_length=100, choices=MODERATOR_STATUS, blank=True)
+    moderator_comment = CharField(db_column='moderator_comment', max_length=3000, blank=True)
 
     report_summary = CharField(db_column='report_summary', max_length=16384, blank=True)
     report_summary_original = CharField(db_column='report_summary_original', max_length=16384, blank=True)
@@ -287,6 +312,14 @@ class AuditStore(Model):
 
     def copy_report_summary(self):
         self.report_summary_original = self.report_summary
+        self.save()
+
+    def set_moderator_status(self, moderator_status):
+        self.moderator_status = moderator_status
+        self.save()
+
+    def set_moderator_comment(self, moderator_comment):
+        self.moderator_comment = moderator_comment
         self.save()
 
     @atomic
