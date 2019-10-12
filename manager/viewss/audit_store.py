@@ -337,4 +337,3 @@ class AcceptAllCompletedForAuditCycle(APIView):
     def post(self, request, audit_cycle_id, format=None):
         count = audit_store_service.accept_all_audit_stores(audit_cycle_id, request.user)
         return Response(count)
-

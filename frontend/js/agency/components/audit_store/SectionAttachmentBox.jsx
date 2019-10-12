@@ -23,7 +23,7 @@ export default class SectionAttachmentBox extends React.Component{
 		]).isRequired,
 		auditStore: PropTypes.object,
 		editable: PropTypes.bool,
-		sections: PropTypes.object
+		sections: PropTypes.oneOfType([PropTypes.object,PropTypes.array])
 	};
 
 	state = {
@@ -170,6 +170,7 @@ export default class SectionAttachmentBox extends React.Component{
 				onDelete={() => this.attachmentDeleteClicked(a)}
 				user="agency"
 				editable={this.props.editable}
+				faulty_report_id=""
 			/>);
 		}
 		for(const id in this.state.inProgress){

@@ -102,6 +102,16 @@ export default class AuditStoreDetails extends React.Component{
 		var paddingStyle={
 			paddingBottom:'2%'
 		};
+		var faultyReportMessageStyle = {
+			fontSize:'16px',
+			color:"red",
+			paddingRight:"5px",
+			paddingTop:"1%"
+		};
+		let faultyReportMessage = null;
+		if(this.state.auditStore.find_faulty_report_count > 0){
+			faultyReportMessage = (<span style={faultyReportMessageStyle} className="pull-right">{this.state.auditStore.find_faulty_report_count} Repeated Attachment Found</span>);
+		}
 		let auditDateElement = moment(this.state.auditStore.audit_date).format(momentDateFormat);
 
 		let failButton, qaOkButton, unSubmitButton, submitButton;
@@ -187,6 +197,7 @@ export default class AuditStoreDetails extends React.Component{
 				<h2 className="page-header">
 					{failButton}
 					<File/> Audit Report - {this.state.auditStore.id}
+					{faultyReportMessage}
 				</h2>
 				<div className="row">
 					<div className="col-md-6">

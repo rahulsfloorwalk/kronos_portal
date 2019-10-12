@@ -43,6 +43,9 @@ class Attachment(Model):
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
+    image_hash = CharField(db_column="image_hash", max_length=500,blank=True)
+    attachment_id = CharField(db_column="attachment_id",max_length=50,blank=True)
+
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
@@ -66,3 +69,14 @@ class Attachment(Model):
             }
         else:
             return {}
+
+    def faulty_report_id(self):
+        if self.attachment_id:
+            attachment_obj = Attachment.objects.get(id=self.attachment_id)
+            app_label, model = attachment_obj.content_type.app_label,attachment_obj.content_type.model
+            if app_label == "answer" and model == "reportsection":
+                return attachment_obj.content_object.audit_store.id
+            elif app_label == "audit_store" and model == "auditstore":
+                return attachment_obj.content_object.id
+            else:
+                return None
