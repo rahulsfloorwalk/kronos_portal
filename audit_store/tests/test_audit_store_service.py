@@ -132,7 +132,7 @@ class AuditStoreServiceTestCase(TestCase):
         end_date = date(2018, 5, 31)
         audit_store = mommy.make(
             AuditStore,
-            status=AuditStore.ACKNOWLEDGED,
+            status=AuditStore.COMPLETED,
             user=self.auditor_user,
             audit__audit_cycle__start_date=start_date,
             audit__audit_cycle__end_date=end_date,
