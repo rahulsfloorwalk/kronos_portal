@@ -27,6 +27,6 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(queue_at, send_post_audit_reminders.s())
 
     # schedules for find repeated image attachment
-    # Executes every day at 1730 UTC == 2300 IST
-    queue_at_attachment = crontab(hour='*/5',minute=0)
+    # Execute every five hours : midnight, 5am, 10am, 3pm, 8pm.
+    queue_at_attachment = crontab(hour='*/5', minute=0)
     sender.add_periodic_task(queue_at_attachment, find_faulty_report.s())
