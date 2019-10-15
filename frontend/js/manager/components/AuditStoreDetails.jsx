@@ -57,7 +57,7 @@ export class AuditStoreDetails extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			auditDateLoading: false
+			auditDateLoading: false,
 		};
 	}
 
@@ -140,8 +140,18 @@ export class AuditStoreDetails extends React.Component{
 		var paddingStyle={
 			paddingBottom:'2%'
 		};
-		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
+		var faultyReportMessageStyle = {
+			fontSize:'16px',
+			color:"red",
+			paddingRight:"5px"
+		};
+		let faultyReportMessage = null;
+		if(this.props.auditStore.find_faulty_report_count > 0){
+			faultyReportMessage = (<span style={faultyReportMessageStyle}>{this.props.auditStore.find_faulty_report_count} Repeated Attachment Found</span>);
+		}
 
+		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
+		
 		let moreOptionsDropdown;
 		let completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, pmRevertButton;
 		if (this.props.auditStore.status === "ACKNOWLEDGED"){
@@ -189,7 +199,7 @@ export class AuditStoreDetails extends React.Component{
 				</DropDown>
 			</div>);
 		}
-		if(this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW"){
+		if(this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW" || this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED"){
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
 			let hasAuditDateSuccess = this.state.auditDateSuccess ? "has-success" : "";
 			auditDateElement = (<div className={"input-group " + hasAuditDateError + hasAuditDateSuccess}>
@@ -267,6 +277,7 @@ export class AuditStoreDetails extends React.Component{
 				<h2 className="page-header">
 					<File/> Audit Report - {this.props.auditStore.id}
 					<div className="pull-right">
+						{faultyReportMessage}
 						<a className="btn btn-default" href={url.api_base_path + "manager/client/" + this.props.auditStore.audit.store.client.id + "/audit_store/" + this.props.auditStore.id + "/xlsx_report"}>
 							<Download/> Excel Report
 						</a>

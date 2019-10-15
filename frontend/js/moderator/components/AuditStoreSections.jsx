@@ -422,6 +422,7 @@ class SectionAttachmentBox extends React.Component{
 				selected={a.id === this.state.selectedAttachmentId}
 				user="moderator"
 				editable={this.props.editable}
+				faulty_report_id={a.faulty_report_id}
 			/>);
 		}
 		for(let id in this.state.inProgress){

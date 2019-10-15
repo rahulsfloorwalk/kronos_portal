@@ -55,6 +55,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/uncomplete$', audit_store_views.AuditStoreIdUnCompleteView.as_view(), name='audit_store_id_uncomplete_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/accept', audit_store_views.AuditStoreIdAcceptView.as_view(), name='audit_store_id_accept_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reject', audit_store_views.AuditStoreIdRejectView.as_view(), name='audit_store_id_reject_view'),
+
     url(r'payment/(?P<payment_id>[0-9]+)/pay$', payment_views.PaymentIdPayView.as_view(), name='payment_id_pay_view'),
     url(r'payment/(?P<payment_id>[0-9]+)/fail', payment_views.PaymentIdFailView.as_view(), name='payment_id_fail_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/answer$', answer_views.AnswerByAuditStore.as_view(), name='answers_by_audit_store'),

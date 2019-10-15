@@ -178,7 +178,7 @@ class __AttachmentUploadBox extends React.Component {
 		const attachmentRows = [];
 
 		for(const a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="agency" editable={this.props.editable}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="agency" editable={this.props.editable} faulty_report_id=""/>);
 		}
 
 		for(const id in this.state.inProgress){

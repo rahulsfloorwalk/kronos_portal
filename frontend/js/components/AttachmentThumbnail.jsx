@@ -5,6 +5,8 @@ import { truncateStyle, pointerStyle } from "../styles.js";
 
 import { Cross } from "./Icons.jsx";
 
+import {Link} from "react-router";
+
 import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
 
 import loadingImageUrl from "../../img/ripple.svg";
@@ -26,7 +28,9 @@ export default class AttachmentThumbnail extends Component{
 		onSelect: PropTypes.func,
 		onDelete: PropTypes.func,
 		
-		editable:PropTypes.bool
+		editable:PropTypes.bool,
+
+		faulty_report_id : PropTypes.oneOfType([PropTypes.string,PropTypes.number])
 	};
 	
 	constructor(props){
@@ -80,6 +84,11 @@ export default class AttachmentThumbnail extends Component{
             "height": "20px",
 		};
 		
+		var faulty_style = {
+			"fontSize": "14px",
+			"color": "red"
+		};
+
 		let selected = this.props.selected || false;
 		let onSelect = this.props.onSelect || (() => {});
 		let selectable = !!this.props.onSelect;
@@ -171,13 +180,19 @@ export default class AttachmentThumbnail extends Component{
 			}
 		}
 		
+		let faultyMessageElement = null;
+		if (this.props.faulty_report_id){
+			faultyMessageElement = (<span style={faulty_style}>Repeat Alert :<Link style={faulty_style} to={`/audit_store/${this.props.faulty_report_id}/report`} target="_blank">{this.props.faulty_report_id}</Link></span>);
+		}
+
 		return (
 			<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
 				{checkboxElement}
 				{deleteButton}
 				<div style={fileNameStyle}>
 					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
-					<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a>
+					<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a><br/>
+					{faultyMessageElement}
 				</div>
 				<img className="hidden" src={imageSrc} onLoad={this.onImageLoad} onError={this.onImageError}/>
 			</div>
