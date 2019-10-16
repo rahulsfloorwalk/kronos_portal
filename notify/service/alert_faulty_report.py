@@ -14,9 +14,9 @@ def find_content_id_by_object_name(app_label,model):
     return content_obj.id
 
 def find_faulty_report():
-    attachment_obj = Attachment.objects.filter(completed_at__date=date.today(), mime_type__contains="image", status="ATTACHED")
+    attachment_obj = Attachment.objects.filter(completed_at__date=date.today(), proof_type="PHOTO", status="ATTACHED")
     for att in attachment_obj:
-        if not att.attachment_id:
+        if not att.attachment_id and att.image_hash:
             img_hash = hex_to_hash(att.image_hash)
             app_label, model = att.content_type.app_label, att.content_type.model
             object_id = att.object_id
@@ -44,6 +44,7 @@ def find_faulty_report():
                                     att.save()
                                     att_cmp.attachment_id = att.id
                                     att_cmp.save()
+                                    _logger.info("Repeated Attachment Found Attachment ID : %s", att.id)
                                 else:
                                     if not att.id:
                                         if (img_hash - img_hash_compare) < 11:
@@ -51,6 +52,7 @@ def find_faulty_report():
                                             att.save()
                                             att_cmp.attachment_id = att.id
                                             att_cmp.save()
+                                            _logger.info("Repeated Attachment Found Attachment ID : %s", att.id)
             elif app_label == "audit_store" and model == "auditstore":
                 audit_store = AuditStore.objects.get(id=object_id)
                 audit_store_id = audit_store.id
@@ -75,6 +77,7 @@ def find_faulty_report():
                                     att.save()
                                     att_cmp.attachment_id = att.id
                                     att_cmp.save()
+                                    _logger.info("Repeated Attachment Found Attachment ID : %s", att.id)
                                 else:
                                     if not att.id:
                                         if (img_hash - img_hash_compare) < 11:
@@ -82,3 +85,4 @@ def find_faulty_report():
                                             att.save()
                                             att_cmp.attachment_id = att.id
                                             att_cmp.save()
+                                            _logger.info("Repeated Attachment Found Attachment ID : %s", att.id)
