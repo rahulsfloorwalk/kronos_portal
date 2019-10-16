@@ -37,7 +37,7 @@ def find_faulty_report():
                                                      object_id__in=report_section_list, mime_type__contains="image",
                                                      status="ATTACHED"))
                         for att_cmp in attachment_compare_obj:
-                            if not att_cmp.id == att.id:
+                            if not att_cmp.id == att.id and att_cmp.image_hash:
                                 img_hash_compare = hex_to_hash(att_cmp.image_hash)
                                 if img_hash == img_hash_compare:
                                     att.attachment_id = att_cmp.id
@@ -70,7 +70,7 @@ def find_faulty_report():
                                                      object_id__in=report_section_list, mime_type__contains="image",
                                                      status="ATTACHED"))
                         for att_cmp in attachment_compare_obj:
-                            if not att_cmp.id == att.id:
+                            if not att_cmp.id == att.id and att_cmp.image_hash:
                                 img_hash_compare = hex_to_hash(att_cmp.image_hash)
                                 if img_hash == img_hash_compare:
                                     att.attachment_id = att_cmp.id
