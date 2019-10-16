@@ -13,6 +13,7 @@ def find_content_id_by_object_name(app_label,model):
     content_obj = ContentType.objects.get(app_label=app_label, model=model)
     return content_obj.id
 
+@app.task(ignore_result=True)
 def find_faulty_report():
     attachment_obj = Attachment.objects.filter(completed_at__date=date.today(), proof_type="PHOTO", status="ATTACHED")
     for att in attachment_obj:
@@ -86,3 +87,4 @@ def find_faulty_report():
                                             att_cmp.attachment_id = att.id
                                             att_cmp.save()
                                             _logger.info("Repeated Attachment Found Attachment ID : %s", att.id)
+    return True
