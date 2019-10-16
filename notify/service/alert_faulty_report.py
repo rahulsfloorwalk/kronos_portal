@@ -7,7 +7,10 @@ from django.contrib.contenttypes.models import ContentType
 from answer.models import ReportSection
 from audit_store.models import AuditStore
 from datetime import date
+from kronos.celery import app
+
 _logger = logging.getLogger(__name__)
+
 
 def find_content_id_by_object_name(app_label,model):
     content_obj = ContentType.objects.get(app_label=app_label, model=model)
