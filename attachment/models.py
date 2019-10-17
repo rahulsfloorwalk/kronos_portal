@@ -77,11 +77,12 @@ class Attachment(Model):
             thumbnail_height = 100
             preview_width = 0
             preview_height = 500
+
+            s3 = settings.AWS["S3_ATTACHMENTS"]
+            s3_url = "https://s3-{}.amazonaws.com/{}".format(s3["REGION"], s3["BUCKET"])
             return {
-                "thumbnail_url": "http://{}/unsafe/{}x{}/smart/{}".format(subdomain, thumbnail_width, thumbnail_height,
-                                                                          self.direct_url()),
-                "preview_url": "http://{}/unsafe/{}x{}/smart/{}".format(subdomain, preview_width, preview_height,
-                                                                        self.direct_url()),
+                "thumbnail_url": "http://{}/unsafe/{}x{}/smart/{}/{}".format(subdomain, thumbnail_width, thumbnail_height, s3_url, self.file_slug),
+                "preview_url": "http://{}/unsafe/{}x{}/smart/{}/{}".format(subdomain, preview_width, preview_height, s3_url, self.file_slug),
             }
         else:
             return {}
