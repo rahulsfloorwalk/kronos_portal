@@ -145,10 +145,6 @@ export default class SectionAttachmentBox extends React.Component{
 			attachmentlist.push(val);
 		});
 		
-		console.log(attachmentlist);
-		console.log("section_id",this.props.sectionId);
-		console.log("attachment_section_id",this.state.attachmentSectionId);
-		
 		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -179,6 +175,7 @@ export default class SectionAttachmentBox extends React.Component{
 				onDelete={() => this.attachmentDeleteClicked(a)}
 				user="auditor"
 				editable = {this.props.editable}
+				faulty_report_id=""
 				
 			/>);
 		}

@@ -49,6 +49,7 @@ export default class AttachmentDisplayBox extends React.Component {
 				onSelect={() => this.attachmentSelected(a)}
 				selected={this.state.selectedAttachmentId === a.id}
 				user="client"
+				faulty_report_id=""
 			/>);
 		}
 

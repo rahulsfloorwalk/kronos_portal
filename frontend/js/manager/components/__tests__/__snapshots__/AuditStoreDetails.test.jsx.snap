@@ -221,7 +221,38 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Audit Date:
               </td>
               <th>
-                2nd Sep 2018
+                <div
+                  className="input-group "
+                >
+                  <span
+                    className="input-group-addon"
+                  >
+                    <Calendar />
+                  </span>
+                  <Component
+                    className=""
+                    closeOnSelect={true}
+                    closeOnTab={true}
+                    dateFormat="Do MMM YYYY"
+                    defaultValue=""
+                    disabled={false}
+                    input={true}
+                    inputProps={
+                      Object {
+                        "className": "form-control",
+                      }
+                    }
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onViewModeChange={[Function]}
+                    strictParsing={true}
+                    timeConstraints={Object {}}
+                    timeFormat={false}
+                    utc={false}
+                    value="2018-09-02"
+                  />
+                </div>
               </th>
             </tr>
             <tr>
@@ -605,7 +636,38 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Audit Date:
               </td>
               <th>
-                2nd Sep 2018
+                <div
+                  className="input-group "
+                >
+                  <span
+                    className="input-group-addon"
+                  >
+                    <Calendar />
+                  </span>
+                  <Component
+                    className=""
+                    closeOnSelect={true}
+                    closeOnTab={true}
+                    dateFormat="Do MMM YYYY"
+                    defaultValue=""
+                    disabled={false}
+                    input={true}
+                    inputProps={
+                      Object {
+                        "className": "form-control",
+                      }
+                    }
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onViewModeChange={[Function]}
+                    strictParsing={true}
+                    timeConstraints={Object {}}
+                    timeFormat={false}
+                    utc={false}
+                    value="2018-09-02"
+                  />
+                </div>
               </th>
             </tr>
             <tr>
@@ -1342,7 +1404,38 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 Audit Date:
               </td>
               <th>
-                2nd Sep 2018
+                <div
+                  className="input-group "
+                >
+                  <span
+                    className="input-group-addon"
+                  >
+                    <Calendar />
+                  </span>
+                  <Component
+                    className=""
+                    closeOnSelect={true}
+                    closeOnTab={true}
+                    dateFormat="Do MMM YYYY"
+                    defaultValue=""
+                    disabled={false}
+                    input={true}
+                    inputProps={
+                      Object {
+                        "className": "form-control",
+                      }
+                    }
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onViewModeChange={[Function]}
+                    strictParsing={true}
+                    timeConstraints={Object {}}
+                    timeFormat={false}
+                    utc={false}
+                    value="2018-09-02"
+                  />
+                </div>
               </th>
             </tr>
             <tr>
@@ -1733,7 +1826,38 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 Audit Date:
               </td>
               <th>
-                2nd Sep 2018
+                <div
+                  className="input-group "
+                >
+                  <span
+                    className="input-group-addon"
+                  >
+                    <Calendar />
+                  </span>
+                  <Component
+                    className=""
+                    closeOnSelect={true}
+                    closeOnTab={true}
+                    dateFormat="Do MMM YYYY"
+                    defaultValue=""
+                    disabled={false}
+                    input={true}
+                    inputProps={
+                      Object {
+                        "className": "form-control",
+                      }
+                    }
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onViewModeChange={[Function]}
+                    strictParsing={true}
+                    timeConstraints={Object {}}
+                    timeFormat={false}
+                    utc={false}
+                    value="2018-09-02"
+                  />
+                </div>
               </th>
             </tr>
             <tr>

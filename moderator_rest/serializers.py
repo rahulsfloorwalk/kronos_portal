@@ -166,6 +166,7 @@ class AuditStoreSerializer(ModelSerializer):
             'reimbursement',
             'moderator_status',
             'moderator_comment',
+            'find_faulty_report_count'
         )
         read_only_fields = fields
 
@@ -306,6 +307,7 @@ class AttachmentSerializer(ModelSerializer):
             'object_id',
             'direct_url',
             'extra',
+            'faulty_report_id',
         )
         read_only_fields = fields
 

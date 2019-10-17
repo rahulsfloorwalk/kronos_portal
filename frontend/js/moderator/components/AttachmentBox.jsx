@@ -196,7 +196,7 @@ export default class AttachmentBox extends React.Component {
 
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} user="moderator" editable={this.props.editable}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} user="moderator" editable={this.props.editable} faulty_report_id={a.faulty_report_id}/>);
 		}
 
 		for(let id in this.state.inProgress){

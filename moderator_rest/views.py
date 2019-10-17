@@ -472,4 +472,3 @@ class ConfigView(APIView):
             **settings.FRONTEND_CONFIG["MODERATOR"],
             **settings.FRONTEND_CONFIG["COMMON"],
         })
-

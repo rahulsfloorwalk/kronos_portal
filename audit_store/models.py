@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
@@ -22,7 +22,15 @@ from questionnaire.models import Question
 from audit_store.signals import audit_store_status_change
 from django.contrib.postgres.fields import JSONField
 
+from answer.models import ReportSection
+from attachment.models import Attachment
+from django.contrib.contenttypes.models import ContentType
+
 _logger = logging.getLogger(__name__)
+
+def find_content_id_by_object_name(app_label,model):
+    content_obj = ContentType.objects.get(app_label=app_label, model=model)
+    return content_obj.id
 
 
 class AuditStoreQuerySet(QuerySet):
@@ -464,6 +472,20 @@ class AuditStore(Model):
         self.attribute_data[attribute_json_id] = attribute_option_id
         self.save()
 
+    def find_faulty_report_count(self):
+        audit_store_content_type_id = find_content_id_by_object_name("audit_store", "auditstore")
+        report_section_content_type_id = find_content_id_by_object_name("answer", "reportsection")
+        report_section_list = ReportSection.objects.filter(audit_store_id=self.id).values_list('id')
+        attachment_obj = Attachment.objects.filter(
+            Q(content_type_id=audit_store_content_type_id, object_id=self.id, mime_type__contains="image",
+              status="ATTACHED") | Q(content_type_id=report_section_content_type_id,
+                                     object_id__in=report_section_list, mime_type__contains="image",
+                                     status="ATTACHED"))
+        count = 0
+        for i in attachment_obj:
+            if i.attachment_id:
+                count += 1
+        return count
 
 class ReportStatusLog(Model):
     id = AutoField(db_column='id', primary_key=True)
