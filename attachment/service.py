@@ -104,27 +104,25 @@ def get_signed_post(file_extension):
 
 def save_image_hash(attachment):
     mime_type = attachment.mime_type
-    if "image" in mime_type:
-        app_label, model = attachment.content_type.app_label, attachment.content_type.model
-        if (app_label == "answer" and model == "reportsection") or (app_label == "audit_store" and model == "auditstore"):
-            response = requests.get(attachment.direct_url())
-            if response.status_code == 200:
-                img_hash = imagehash.average_hash(Image.open(BytesIO(response.content)))
-                attachment.image_hash = img_hash
-                return True
-
-def save_all_images():
-    obj = Attachment.objects.filter(mime_type__contains="image",status="ATTACHED")
-    for i in obj:
-        save_image_hash(i)
-        i.save()
+    try:
+        if "image" in mime_type:
+            app_label, model = attachment.content_type.app_label, attachment.content_type.model
+            if (app_label == "answer" and model == "reportsection") or (app_label == "audit_store" and model == "auditstore"):
+                response = requests.get(attachment.direct_url())
+                if response.status_code == 200:
+                    img_hash = imagehash.average_hash(Image.open(BytesIO(response.content)))
+                    attachment.image_hash = img_hash
+                    attachment.save()
+                    return True
+    except:
+        return False
 
 def complete(attachment_id):
     attachment = find_by_id(attachment_id)
     attachment.status = Attachment.ATTACHED
     attachment.completed_at = timezone.now()
-    save_image_hash(attachment)
     attachment.save()
+    save_image_hash(attachment)
     return attachment
 
 
