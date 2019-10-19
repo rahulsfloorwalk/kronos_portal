@@ -114,7 +114,7 @@ def save_image_hash(attachment):
                     attachment.image_hash = img_hash
                     attachment.save()
                     return True
-    except:
+    except RuntimeError:
         return False
 
 def complete(attachment_id):
