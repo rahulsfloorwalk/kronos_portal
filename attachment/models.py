@@ -57,7 +57,7 @@ class Attachment(Model):
         s3 = settings.AWS["S3_ATTACHMENTS"]
         return "https://s3-{}.amazonaws.com/{}/{}".format(s3["REGION"],s3["BUCKET"],self.file_slug)
 
-    def extra(self):
+    '''def extra(self):
         if self.proof_type == self.PHOTO:
             subdomain = settings.IMGIX_SUBDOMAIN
             thumbnail_width = 150
@@ -66,6 +66,23 @@ class Attachment(Model):
             return {
                 "thumbnail_url": "https://{}/{}?fit=crop&auto=enhance,compress&crop=entropy&w={}&h={}".format(subdomain,self.file_slug,thumbnail_width,thumbnail_height),
                 "preview_url": "https://{}/{}?auto=enhance,compress&h={}".format(subdomain,self.file_slug,preview_height)
+            }
+        else:
+            return {}'''
+
+    def extra(self):
+        if self.proof_type == self.PHOTO:
+            subdomain = settings.THUMBOR_SUBDOMAIN
+            thumbnail_width = 150
+            thumbnail_height = 100
+            preview_width = 0
+            preview_height = 500
+
+            s3 = settings.AWS["S3_ATTACHMENTS"]
+            s3_url = "https://s3-{}.amazonaws.com/{}".format(s3["REGION"], s3["BUCKET"])
+            return {
+                "thumbnail_url": "http://{}/unsafe/{}x{}/smart/{}/{}".format(subdomain, thumbnail_width, thumbnail_height, s3_url, self.file_slug),
+                "preview_url": "http://{}/unsafe/{}x{}/smart/{}/{}".format(subdomain, preview_width, preview_height, s3_url, self.file_slug),
             }
         else:
             return {}

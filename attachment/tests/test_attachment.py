@@ -6,10 +6,13 @@ from django.test import TestCase, override_settings
 
 from attachment.models import Attachment
 
+from django.conf import settings
+
 fake = Faker()
 class AttachmentTestCase(TestCase):
 
     test_imgix_subdomain = "imgix_domain"
+    test_thumbor_subdomain = "thumbor_domain"
 
     test_aws_settings = {
         "S3_ATTACHMENTS": {
@@ -31,14 +34,28 @@ class AttachmentTestCase(TestCase):
             "https://s3-test_region.amazonaws.com/test_bucket/foo/bar",
         )
 
-    @override_settings(IMGIX_SUBDOMAIN = test_imgix_subdomain)
+    # @override_settings(IMGIX_SUBDOMAIN = test_imgix_subdomain)
+    # def test_extra_returns_correct_data_when_proof_type_is_photo(self):
+    #     attachment = mommy.make(Attachment, file_slug="foo/bar", proof_type=Attachment.PHOTO)
+    #     self.assertEqual(
+    #         attachment.extra(),
+    #         {
+    #             "thumbnail_url": "https://imgix_domain/foo/bar?fit=crop&auto=enhance,compress&crop=entropy&w=150&h=100",
+    #             "preview_url": "https://imgix_domain/foo/bar?auto=enhance,compress&h=500",
+    #         }
+    #     )
+
+    @override_settings(THUMBOR_SUBDOMAIN=test_thumbor_subdomain)
     def test_extra_returns_correct_data_when_proof_type_is_photo(self):
-        attachment = mommy.make(Attachment, file_slug="foo/bar", proof_type=Attachment.PHOTO)
+        attachment = mommy.make(Attachment, file_slug='foo/bar', proof_type=Attachment.PHOTO)
+        s3 = settings.AWS["S3_ATTACHMENTS"]
+        s3_url = "https://s3-{}.amazonaws.com/{}".format(s3["REGION"], s3["BUCKET"])
         self.assertEqual(
             attachment.extra(),
             {
-                "thumbnail_url": "https://imgix_domain/foo/bar?fit=crop&auto=enhance,compress&crop=entropy&w=150&h=100",
-                "preview_url": "https://imgix_domain/foo/bar?auto=enhance,compress&h=500",
+                "thumbnail_url": "http://thumbor_domain/unsafe/150x100/smart/{}/foo/bar".format(s3_url),
+                "preview_url": "http://thumbor_domain/unsafe/0x500/smart/{}/foo/bar".format(s3_url),
+
             }
         )
 
