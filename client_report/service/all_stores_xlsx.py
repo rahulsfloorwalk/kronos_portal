@@ -12,16 +12,14 @@ from kronos.utils import get_color_code, get_color_hex_from_code
 def generate_all_stores_audit_cycle_wise_report_for_clientuser(client_user_id):
     client_id = ClientUser.objects.get(user__id=client_user_id).client.id
     client_name, audit_cycle_list, store_list = get_aggregate_data(client_id)
-    # print("audit_cycle_list",audit_cycle_list)
     data = create_text_structure(client_name, audit_cycle_list, store_list)
-    name = (str(client_name)+" audit cycle wise report"+".xlsx").replace("-","")
+    name = (str(client_name) + " audit cycle wise report" + ".xlsx").replace("-", "")
     return write_data(data), name
 
 
 def get_aggregate_data(client_id):
     client_name = Client.objects.get(id=client_id).brand_name
-    print("client_name ",client_name)
-    audit_cycle_list = AuditCycle.objects.filter(client_id=client_id)
+    audit_cycle_list = AuditCycle.objects.filter(client_id=client_id, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING]).order_by('start_date')
     store_list = Store.objects.filter(client_id=client_id)
     return client_name, audit_cycle_list, store_list
 
@@ -39,7 +37,7 @@ def create_text_structure(client_name, audit_cycle_list, store_list):
         audit_cycle.append({
             'value': audit_cycle_d.name,
         })
-    cells = [{'value': "Store Code"}, {'value': "Store Name"}, {'value': "Audit Date"}] + audit_cycle
+    cells = [{'value': "Store Code"}, {'value': "Store Name"}] + audit_cycle
     row = {'type': 'audit_cycle', 'content': cells}
     rows.append(row)
 
@@ -53,43 +51,38 @@ def create_text_structure(client_name, audit_cycle_list, store_list):
             'value': store.name + " - " + store.city.name,
             'color_code': get_color_code(0, 0)
         }
-        audit_date_cell = {
-            # 'value': audit_store.audit_date.strftime('%d-%m-%Y'),
-            'value': "",
-            'color_code': get_color_code(0, 0)
-        }
 
         report_section_cells = []
         for audit_cycle in audit_cycle_list:
             if Audit.objects.filter(audit_cycle_id=audit_cycle.id, store_id=store.id).exists():
                 audit_id = Audit.objects.get(audit_cycle_id=audit_cycle.id, store_id=store.id).id
                 if AuditStore.objects.filter(audit_id=audit_id):
-                    count = AuditStore.objects.filter(audit_id=audit_id).count()
+                    count = Audit.objects.get(audit_cycle_id=audit_cycle.id, store_id=store.id).count
                     if count > 1:
-                        percent = ""
+                        per = 0
+                        mean_count = 0
                         for c in range(count):
                             audit_report = AuditStore.objects.filter(audit_id=audit_id)[c]
                             if audit_report.is_presentable():
-                                per = str(round(audit_report.percentage())) + "%" + ", "
-                                color_code = audit_report.color()
-                            else:
-                                per = "NA,"
-                                color_code = get_color_code(0, 0)
-                            percent = percent + per
+                                mean_count = mean_count + 1
+                                per = per + round(audit_report.percentage())
+
+                        percent = round(per / mean_count)
+                        report_section_cells.append({
+                            'value': str(percent) + "%",
+                            'color_code': get_color_code(percent, 100)
+                        })
+
                     else:
                         audit_report = AuditStore.objects.get(audit_id=audit_id)
                         if audit_report.is_presentable():
                             percent = str(round(audit_report.percentage())) + "%"
                             color_code = audit_report.color()
-                        else:
-                            percent = "NA"
-                            color_code = get_color_code(0, 0)
-                    if "," in percent:
-                        percent = percent[:-1]
-                    report_section_cells.append({
-                        'value': percent,
-                        'color_code': color_code
-                    })
+
+                            report_section_cells.append({
+                                'value': percent,
+                                'color_code': color_code
+                            })
                 else:
                     report_section_cells.append(
                         {
@@ -103,35 +96,7 @@ def create_text_structure(client_name, audit_cycle_list, store_list):
                         'color_code': get_color_code(0, 0)
                     })
 
-
-
-        '''report_section_cells = []
-        for section in sections:
-            # look for the answer in the prefetched answers
-            report_sections = audit_store.report_sections.all()
-            for rs in report_sections:
-                if rs.section_id == section.id:
-                    report_section = rs
-                    break
-
-            if not report_section:
-                report_section_cells.append({
-                    'value': "",
-                    'color_code': get_color_code(0, 0)
-                })
-
-            if report_section.not_applicable:
-                report_section_cells.append({
-                    'value': "Not Applicable",
-                    'color_code': get_color_code(0, 0)
-                })
-            else:
-                report_section_cells.append({
-                    'value': str(round(report_section.marks_percentage())) + "%",
-                    'color_code': report_section.color_code()
-                })'''
-
-        content = [store_code_cell, store_name_cell, audit_date_cell] + report_section_cells
+        content = [store_code_cell, store_name_cell] + report_section_cells
         row = {
             'type': 'report_section',
             'content': content

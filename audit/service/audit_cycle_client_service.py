@@ -37,6 +37,7 @@ def find_all_for_clientuser(user_id):
         .values(
             'audit__audit_cycle__id',
             'audit__audit_cycle__name',
+            'audit__audit_cycle__status',
             'audit__audit_cycle__start_date',
             'audit__audit_cycle__end_date',
             'audit__audit_cycle__questionnaire_type__id',
@@ -48,6 +49,7 @@ def find_all_for_clientuser(user_id):
         return {
             "id": values["audit__audit_cycle__id"],
             "name": values["audit__audit_cycle__name"],
+            "status": values["audit__audit_cycle__status"],
             "start_date": values["audit__audit_cycle__start_date"],
             "end_date": values["audit__audit_cycle__end_date"],
             "questionnaire_type": {

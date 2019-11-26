@@ -258,7 +258,6 @@ class AllStoresAuditCycleWiseXlsxReport(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request):
-        print("user_id",request.user.id)
         report, name = all_stores_xlsx_report_service.generate_all_stores_audit_cycle_wise_report_for_clientuser(request.user.id)
         # audit_cycles = audit_cycle_client_service.find_all_for_clientuser(request.user.id)
         # return Response(audit_cycles)
