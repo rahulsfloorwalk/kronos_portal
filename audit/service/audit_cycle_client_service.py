@@ -5,6 +5,7 @@ from audit_store.models import AuditStore
 
 from client.service.client_user import find_clientuser_by_user_id
 
+
 def find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id):
     user = find_clientuser_by_user_id(user_id)
     return AuditCycle.objects \
@@ -60,3 +61,18 @@ def find_all_for_clientuser(user_id):
         }
 
     return map(map_audit_cycle_values, rows)
+
+
+def get_audit_cycle_year_list(user_id):
+    user = find_clientuser_by_user_id(user_id)
+    result = AuditCycle.objects.filter(client=user.clientuser.client, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING])
+    if result:
+        year_list = []
+        for i in result:
+            year = i.start_date.year
+            if year not in year_list:
+                year_list.append(year)
+        audit_cycle_data = {'audit_cycle_status': True, 'audit_cycle_year_list': year_list}
+    else:
+        audit_cycle_data = {'audit_cycle_status': False, 'audit_cycle_year_list': []}
+    return audit_cycle_data
