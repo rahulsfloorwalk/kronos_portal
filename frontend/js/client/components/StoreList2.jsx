@@ -5,7 +5,11 @@ import { pointerStyle } from "../../styles.js";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
 
-import { fetchAllStores, fetchAuditCycles } from "../service/store.js";
+import { Download } from "../../components/Icons.jsx";
+
+import DropDown from "../../components/DropDown.jsx";
+
+import { fetchAllStores, fetchAuditCyclesYearList } from "../service/store.js";
 
 import { url } from "../../../config.js";
 
@@ -23,7 +27,7 @@ export default class StoreList2 extends Component{
 				stores
 			});
 		});
-		fetchAuditCycles().then((audit_cycles)=>{
+		fetchAuditCyclesYearList().then((audit_cycles)=>{
 			this.setState({
 				audit_cycles
 			});
@@ -47,23 +51,37 @@ export default class StoreList2 extends Component{
 		}
 
 		let storeTable;
-		let base_url = url.api_base_path+"client/audit_cycle_wise_xlsx_report";
 		let div_style = {
 			paddingBottom:'1%'
 		};
 		let audit_cycle_button = (null);
-		for (var au of this.state.audit_cycles){
-			if (au['status'] == 'CLEARING' || au['status'] == 'ARCHIVED'){
-				audit_cycle_button = (
-						<div className="btn-group pull-right hidden-print" style={div_style}>
-							<a className="btn btn-default" href={base_url}>
-								<b>Audit Cycle Report</b>
-							</a>
-						</div>
-				);
-				break;
-			}
+		if (this.state.audit_cycles['audit_cycle_status']){
+			var li_list = [];
+			for(var i in this.state.audit_cycles['audit_cycle_year_list']){
+				let base_url = url.api_base_path+"client/audit_cycle_wise_xlsx_report?";
+				base_url += "year=" + encodeURIComponent(this.state.audit_cycles['audit_cycle_year_list'][i] || "");
+				li_list.push(<li key={i}>
+					<a href={base_url}>
+						<h5><b>{this.state.audit_cycles['audit_cycle_year_list'][i]}</b></h5>
+					</a>
+				</li>);
+			};
+			audit_cycle_button = (
+				<div className="btn-group pull-right hidden-print" style={div_style}>
+					&nbsp;Download:<br/>
+					<button className="btn btn-default"
+						title="Download Reports"
+						onClick={() => this.reportDropdown && this.reportDropdown.toggle()}>
+							<Download/> {this.state.audit_cycles['audit_cycle_year_list'].length} Audit Cycle Reports Year Wise &nbsp;
+							<span className="caret"/>
+					</button>
+					<DropDown ref={(e) => this.reportDropdown = e}>
+						{li_list}
+					</DropDown>
+				</div>
+			);
 		}
+		
 		if( storeRows.length > 0) {
 			storeTable = (
 				<div>

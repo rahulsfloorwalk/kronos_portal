@@ -201,6 +201,17 @@ class AttachmentByReportSection(APIView):
         attachments = attachment_client_service.find_by_audit_store_and_section_for_client(audit_store_id, section_id, request.user.clientuser.client.id)
         return Response(AttachmentSerializer(attachments, many=True).data)
 
+
+class AuditCycleYearList(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request):
+        audit_cycle_year_data = audit_cycle_client_service.get_audit_cycle_year_list(request.user.id)
+        return Response(audit_cycle_year_data)
+
 class AuditStoreXlsxReport(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -258,9 +269,10 @@ class AllStoresAuditCycleWiseXlsxReport(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request):
-        report, name = all_stores_xlsx_report_service.generate_all_stores_audit_cycle_wise_report_for_clientuser(request.user.id)
+        year = request.GET.get('year')
+        report, name = all_stores_xlsx_report_service.generate_all_stores_audit_cycle_wise_report_for_clientuser(request.user.id, year)
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-        response['Content-Disposition'] = 'attachment; filename="'+ name + '"'
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
 class AuditStoreEARSReport(APIView):

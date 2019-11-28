@@ -25,6 +25,6 @@ export function fetchStorePerformance(storeId, questionnaireTypeId){
 	return $.get( url.api_base_path + `client/report/questionnaire_type/${questionnaireTypeId}/store/${storeId}/marking_graph`);
 }
 
-export function fetchAuditCycles(){
-	return $.get( url.api_base_path + "client/audit_cycle");
+export function fetchAuditCyclesYearList(){
+	return $.get( url.api_base_path + "client/audit_cycle_year_list");
 }

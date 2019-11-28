@@ -128,15 +128,15 @@ class AuditStore(Model):
     FAULTY_REPORT = "FAULTY_REPORT"
 
     MODERATOR_STATUS = (
-        (MISS_IMAGE,"Missing Image"),
-        (MISS_AUDIO,"Missing Audio"),
-        (MISS_AUDIO,"Missing Video"),
-        (AUDITOR_NOT_RESPONDING,"Auditor Not Responding"),
-        (CONTRADICTION,"Contradiction"),
-        (NOT_SUFFICIENT_PROOFS,"Not Suffiecient Proofs"),
-        (DATE_TIME_MISSING,"Date or Time Missing in Image"),
-        (WAITING_FOR_ATTACHMENT,"Waiting for Attachment from Auditor"),
-        (FAULTY_REPORT,"Faulty Report"),
+        (MISS_IMAGE, "Missing Image"),
+        (MISS_AUDIO, "Missing Audio"),
+        (MISS_AUDIO, "Missing Video"),
+        (AUDITOR_NOT_RESPONDING, "Auditor Not Responding"),
+        (CONTRADICTION, "Contradiction"),
+        (NOT_SUFFICIENT_PROOFS, "Not Suffiecient Proofs"),
+        (DATE_TIME_MISSING, "Date or Time Missing in Image"),
+        (WAITING_FOR_ATTACHMENT, "Waiting for Attachment from Auditor"),
+        (FAULTY_REPORT, "Faulty Report"),
     )
 
     id = AutoField(db_column='id', primary_key=True)
