@@ -9,7 +9,7 @@ export function fetchReportSections(auditStoreId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/report_section`);
 }
 
-export function submitPMComment(auditStoreId, sectionId, pmComment){
+/* export function submitPMComment(auditStoreId, sectionId, pmComment){
 	return $.ajax({
 		type: "POST",
 		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/section/${sectionId}/pm_comment`,
@@ -18,7 +18,7 @@ export function submitPMComment(auditStoreId, sectionId, pmComment){
 		}),
 		contentType: "application/json"
 	});
-}
+} */
 
 export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 	return $.ajax({

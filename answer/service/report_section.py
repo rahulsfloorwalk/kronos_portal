@@ -58,6 +58,7 @@ def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment)
             report_section.audit_store = audit_store
         report_section.auditor_comment = auditor_comment
         report_section.auditor_comment_original = auditor_comment
+        report_section.pm_comment = "--"
         report_section.save()
         return report_section
     else:

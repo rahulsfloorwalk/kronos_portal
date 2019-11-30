@@ -12,7 +12,7 @@ import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx
 
 import { affectInputEventToComponent } from "../../react_utils.js";
 import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment } from "../service/answer.js";
-import { fetchSections, fetchReportSections, submitAuditorComment, submitPMComment, setNotApplicable } from "../service/section.js";
+import { fetchSections, fetchReportSections, submitAuditorComment, setNotApplicable } from "../service/section.js";
 import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection } from "../service/attachment.js";
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
@@ -519,17 +519,17 @@ class Section extends React.Component{
 	};
 
 	state = {
-		pmCommentError: false,
+		// pmCommentError: false,
 		auditorCommentError: false,
 
-		pmCommentSuccess: false,
+		// pmCommentSuccess: false,
 		auditorCommentSuccess: false,
 
-		savingPMComment: false,
+		// savingPMComment: false,
 		savingAuditorComment: false,
 
 		auditor_comment: "",
-		pm_comment: "",
+		// pm_comment: "",
 
 		//set initial state to true so that you don't get setState() calls
 		// on an unmounted component
@@ -541,7 +541,7 @@ class Section extends React.Component{
 		if(this.props.reportSection){
 			this.setState({
 				auditor_comment: this.props.reportSection.auditor_comment,
-				pm_comment: this.props.reportSection.pm_comment,
+				// pm_comment: this.props.reportSection.pm_comment,
 				not_applicable: this.props.reportSection.not_applicable,
 			});
 			
@@ -556,7 +556,7 @@ class Section extends React.Component{
 		if(nextProps.reportSection){
 			this.setState({
 				auditor_comment: nextProps.reportSection.auditor_comment,
-				pm_comment: nextProps.reportSection.pm_comment,
+				// pm_comment: nextProps.reportSection.pm_comment,
 				not_applicable: nextProps.reportSection.not_applicable
 			});
 		}
@@ -588,7 +588,7 @@ class Section extends React.Component{
 			this.setState({savingAuditorComment: false});
 		});
 	};
-	savePMComment = (e) => {
+	/* savePMComment = (e) => {
 		e.preventDefault();
 		if(this.props.reportSection && this.props.reportSection.pm_comment === this.state.pm_comment){
 			return;
@@ -611,7 +611,7 @@ class Section extends React.Component{
 		}).always(() => {
 			this.setState({savingPMComment: false});
 		});
-	};
+	}; */
 	notApplicableButtonClicked = () => {
 		this.setState({
 			not_applicable: !this.state.not_applicable,
@@ -635,7 +635,7 @@ class Section extends React.Component{
 		}
 
 		let auditorCommentElement = (<span className="text-muted">auditor comment is empty</span>);
-		let pmCommentElement = (<span className="text-muted">PM comment is empty</span>);
+		// let pmCommentElement = (<span className="text-muted">PM comment is empty</span>);
 		let marksObtained = 0;
 		let maxMarks = this.props.section.max_marks;
 		let notApplicableCheckboxIcon = <Unchecked/>;
@@ -646,14 +646,14 @@ class Section extends React.Component{
 			marksObtained = this.props.reportSection.marks_obtained;
 			maxMarks = this.props.reportSection.max_marks;
 
-			pmCommentElement = this.state.pm_comment ? (<span>{this.state.pm_comment}</span>) : pmCommentElement;
+			// pmCommentElement = this.state.pm_comment ? (<span>{this.state.pm_comment}</span>) : pmCommentElement;
 			auditorCommentElement = this.state.auditor_comment ? (<span>{this.state.auditor_comment}</span>) : auditorCommentElement;
 			notApplicableCheckboxIcon = this.state.not_applicable ? <Checked/> : <Unchecked/>;
 			notApplicableElement = (<span className="">{notApplicableCheckboxIcon}</span>);
 		}
 
 		if(editable){
-			let hasPmCommentError = this.state.pmCommentError ? "has-error" : "";
+			/* let hasPmCommentError = this.state.pmCommentError ? "has-error" : "";
 			let hasPmCommentSuccess = this.state.pmCommentSuccess ? "has-success" : "";
 			pmCommentElement = (
 				<div className={hasPmCommentError + hasPmCommentSuccess}>
@@ -668,7 +668,7 @@ class Section extends React.Component{
 						onChange={this.inputChanged}
 					/>
 				</div>
-			);
+			); */
 
 			let hasAuditorCommentError = this.state.auditorCommentError ? "has-error" : "";
 			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
@@ -721,8 +721,8 @@ class Section extends React.Component{
 					<p><b>Total Marks:</b> {marksObtained} out of {maxMarks}</p>
 					<hr/>
 					<div><b>Auditor Comment:</b>&nbsp;{ this.state.savingAuditorComment ? "saving..." : ""} {auditorCommentElement}</div>
-					<hr/>
-					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div>
+					{/* <hr/> */}
+					{/* <div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div> */}
 				</div>
 				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable}/>
 			</div>);

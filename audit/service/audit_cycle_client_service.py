@@ -65,13 +65,18 @@ def find_all_for_clientuser(user_id):
 
 def get_audit_cycle_year_list(user_id):
     user = find_clientuser_by_user_id(user_id)
-    result = AuditCycle.objects.filter(client=user.clientuser.client, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING])
+    result = AuditCycle.objects \
+        .filter(client=user.clientuser.client, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING]).exists()
     if result:
+        first_entry = AuditCycle.objects \
+            .filter(client=user.clientuser.client, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING]) \
+            .order_by('start_date').first()
+        last_entry = AuditCycle.objects \
+            .filter(client=user.clientuser.client, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING]) \
+            .order_by('start_date').last()
         year_list = []
-        for i in result:
-            year = i.start_date.year
-            if year not in year_list:
-                year_list.append(year)
+        for i in range(first_entry.start_date.year, last_entry.start_date.year + 1):
+            year_list.append(i)
         audit_cycle_data = {'audit_cycle_status': True, 'audit_cycle_year_list': year_list}
     else:
         audit_cycle_data = {'audit_cycle_status': False, 'audit_cycle_year_list': []}
