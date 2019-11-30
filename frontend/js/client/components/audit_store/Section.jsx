@@ -28,7 +28,7 @@ export default class Section extends React.Component {
 		reportSection: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			auditor_comment: PropTypes.string,
-			pm_comment: PropTypes.string,
+			// pm_comment: PropTypes.string,
 			not_applicable: PropTypes.bool,
 			color_code: PropTypes.number,
 			marks_obtained: PropTypes.number,
@@ -60,7 +60,7 @@ export default class Section extends React.Component {
 		if(this.props.reportSection){
 			var classes = "default";
 			var auditor_comment = this.props.reportSection.auditor_comment;
-			var pm_comment = this.props.reportSection.pm_comment;
+			// var pm_comment = this.props.reportSection.pm_comment;
 			marksObtained = this.props.reportSection.marks_obtained;
 			maxMarks = this.props.reportSection.max_marks;
 			notApplicable = this.props.reportSection.not_applicable;
@@ -105,9 +105,9 @@ export default class Section extends React.Component {
 					</table>
 					<div className="panel-footer">
 						{totalMarks}
-						<p><b>Auditor Comment:</b> {auditor_comment}</p>
-						<hr/>
-						<p><b>PM Comment:</b> {pm_comment}</p>
+						<p><b>Section Summary:</b> {auditor_comment}</p>
+						{/* <hr/>
+						<p><b>PM Comment:</b> {pm_comment}</p> */}
 					</div>
 					{ this.props.printMode ? null
 						: <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore}/> }

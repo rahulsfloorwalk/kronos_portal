@@ -21,7 +21,7 @@ export function fetchReportSections(auditStoreId){
 	};
 }
 
-export function submitPMComment(reportSection){
+/* export function submitPMComment(reportSection){
 	return function(dispatch){
 		dispatch({
 			type: types.REPORT_SECTION_PM_COMMENT,
@@ -48,7 +48,7 @@ export function submitPMComment(reportSection){
 		//TODO: Handle error
 		return req;
 	};
-}
+} */
 
 export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 	return function(dispatch){

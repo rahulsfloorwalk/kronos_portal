@@ -13,7 +13,7 @@ def generate_all_stores_audit_cycle_wise_report_for_clientuser(client_user_id, y
     client_id = ClientUser.objects.get(user__id=client_user_id).client.id
     client_name, audit_cycle_list, store_list, audit_store_list = get_aggregate_data(client_id, year)
     data = create_text_structure(client_name, audit_cycle_list, store_list, audit_store_list)
-    name = (str(client_name) + " audit cycle wise report" + "year(" + str(year) + ")" + ".xlsx").replace("-", "")
+    name = (str(client_name) + " audit cycle wise report " + "year(" + str(year) + ")" + ".xlsx").replace("-", "")
     return write_data(data), name
 
 
