@@ -28,7 +28,7 @@ export default class Section extends React.Component {
 		reportSection: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			auditor_comment: PropTypes.string,
-			// pm_comment: PropTypes.string,
+			pm_comment: PropTypes.string,
 			not_applicable: PropTypes.bool,
 			color_code: PropTypes.number,
 			marks_obtained: PropTypes.number,
@@ -60,7 +60,7 @@ export default class Section extends React.Component {
 		if(this.props.reportSection){
 			var classes = "default";
 			var auditor_comment = this.props.reportSection.auditor_comment;
-			// var pm_comment = this.props.reportSection.pm_comment;
+			var pm_comment = this.props.reportSection.pm_comment;
 			marksObtained = this.props.reportSection.marks_obtained;
 			maxMarks = this.props.reportSection.max_marks;
 			notApplicable = this.props.reportSection.not_applicable;
@@ -87,6 +87,30 @@ export default class Section extends React.Component {
 		if(notApplicable){
 			panelBody = (<div className="panel-footer text-center text-muted">section not applicable</div>);
 		} else {
+			let comment_code = null;			
+			if(this.props.reportSection.pm_comment == "--"){
+				comment_code = (
+					<p><b>Section Summary:</b> {auditor_comment}</p>
+				);
+			}
+			else{
+				let margin_style = {
+					marginLeft: "2%"
+				};
+				let fontstyle={
+					fontSize: "16px"
+				};
+				comment_code = (
+					<div>
+					<p style={fontstyle}><b>Section Summary:</b></p>
+					<div style={margin_style}>
+						<p><b>Auditor Comment:</b> {auditor_comment}</p>
+						{/* <hr/> */}
+						<p><b>PM Comment:</b> {pm_comment}</p>
+						</div>
+					</div>
+				);
+			}
 			panelBody = (
 				<div>
 					<table className="table table-striped">
@@ -105,7 +129,8 @@ export default class Section extends React.Component {
 					</table>
 					<div className="panel-footer">
 						{totalMarks}
-						<p><b>Section Summary:</b> {auditor_comment}</p>
+						{comment_code}
+						{/* <p><b>Section Summary:</b> {auditor_comment}</p> */}
 						{/* <hr/>
 						<p><b>PM Comment:</b> {pm_comment}</p> */}
 					</div>
