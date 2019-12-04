@@ -87,29 +87,28 @@ export default class Section extends React.Component {
 		if(notApplicable){
 			panelBody = (<div className="panel-footer text-center text-muted">section not applicable</div>);
 		} else {
-			let comment_code = null;			
-			if(this.props.reportSection.pm_comment == "--"){
-				comment_code = (
-					<p><b>Section Summary:</b> {auditor_comment}</p>
-				);
-			}
-			else{
-				let margin_style = {
-					marginLeft: "2%"
-				};
-				let fontstyle={
-					fontSize: "16px"
-				};
-				comment_code = (
-					<div>
-					<p style={fontstyle}><b>Section Summary:</b></p>
-					<div style={margin_style}>
-						<p><b>Auditor Comment:</b> {auditor_comment}</p>
-						{/* <hr/> */}
-						<p><b>PM Comment:</b> {pm_comment}</p>
+			let comment_code = (
+				<p><b>Section Summary:</b> {auditor_comment}</p>
+			);
+			if(pm_comment){
+				if(this.props.reportSection.pm_comment != "--"){
+					let margin_style = {
+						marginLeft: "2%"
+					};
+					let fontstyle={
+						fontSize: "16px"
+					};
+					comment_code = (
+						<div>
+						<p style={fontstyle}><b>Section Summary:</b></p>
+						<div style={margin_style}>
+							<p><b>Auditor Comment:</b> {auditor_comment}</p>
+							{/* <hr/> */}
+							<p><b>PM Comment:</b> {pm_comment}</p>
+							</div>
 						</div>
-					</div>
-				);
+					);
+				}
 			}
 			panelBody = (
 				<div>
