@@ -173,6 +173,29 @@ export function setPostApprovalDescription(auditCycleId, postApprovalDescription
 	};
 }
 
+export function setCheckPoints(auditCycleId, checkpoints){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/checkpoints`,
+			data: JSON.stringify({
+				checkpoints: checkpoints
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(AuditCycle){
+			dispatch({
+				type: types.AUDIT_CYCLE_ID_POST,
+				status: "success",
+				auditCycle: AuditCycle
+			});
+		});
+		return req;
+	};
+}
+
+
+
 //code for audits here
 
 export function hideAudit(audit_id){

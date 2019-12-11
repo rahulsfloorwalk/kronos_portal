@@ -95,6 +95,18 @@ export default class AuditStoreDetails extends React.Component{
 	setModeratorComment = (e) => {
 		setAuditModeratorComment(this.props.params.auditStoreId,e.target.value);
 	};
+	openCheckPoint = () => {
+		console.log("click");
+		document.getElementsByClassName("main")[0].style.marginRight = "250px";
+		document.getElementsByClassName("sidebar")[0].style.width = "250px";
+		document.getElementsByClassName("checkpoint")[0].style.display = "none";
+	};
+	closeCheckPoint = () => {
+		console.log("click");
+		document.getElementsByClassName("main")[0].style.marginRight = "0";
+		document.getElementsByClassName("sidebar")[0].style.width = "0";
+		document.getElementsByClassName("checkpoint")[0].style.display = "block";
+	};
 	render(){
 		if(! this.state.auditStore){
 			return <Loading/>;
@@ -147,6 +159,8 @@ export default class AuditStoreDetails extends React.Component{
 		
 		var selectElement = null;
 		var textareaElement = null;
+		var checkpointButton = null;
+		var sidebarElement = null;
 		if (editable){
 			selectElement = (
 				<select className="form-control" onChange={this.setModeratorStatus} value={this.state.auditStore.moderator_status}>
@@ -163,6 +177,38 @@ export default class AuditStoreDetails extends React.Component{
 				</select>);
 			textareaElement = (
 				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.state.auditStore.moderator_comment}></textarea>
+			);
+			checkpointButton = (<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoint</button>);
+			sidebarElement = (
+				<div className="sidebar">
+					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
+					<ul>
+						<li><label><input type="checkbox" />CheckPoint CheckPoint CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint2</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint3</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint4</label></li>
+						
+					</ul>
+					<a href="javascript:void(0)" className="btn btn-primary pull-right">Save</a>
+				</div>
 			);
 		}
 		else{
@@ -186,7 +232,7 @@ export default class AuditStoreDetails extends React.Component{
 			);
 		}
 		return (
-			<div>
+			<div className="main">
 				{/*
 					<ol className="breadcrumb">
 						<li><Link to="/">Audit Cycle</Link></li>
@@ -194,6 +240,7 @@ export default class AuditStoreDetails extends React.Component{
 						<li className="active"><File/> {moment(this.state.auditStore.audit_date).format(momentDateFormat)}</li>
 					</ol>
 				*/}
+				{checkpointButton}
 				<h2 className="page-header">
 					{failButton}
 					<File/> Audit Report - {this.state.auditStore.id}
@@ -292,6 +339,8 @@ export default class AuditStoreDetails extends React.Component{
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary}/>
 				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>
 				{this.props.children}
+			
+				{sidebarElement}
 			</div>
 		);
 	}

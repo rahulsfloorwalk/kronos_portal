@@ -30,7 +30,8 @@ def get_aggregate_data(client_id, year):
         .presentable() \
         .prefetch_related(
             'audit__audit_cycle',
-            'audit__store'
+            'audit__store',
+            'answer'
         )
     for i in audit_store_data.iterator():
         audit_store_list.append({'audit_cycle_id': i.audit.audit_cycle.id, 'store_id': i.audit.store.id, 'percentage': i.percentage()})

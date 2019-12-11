@@ -133,6 +133,18 @@ export class AuditStoreDetails extends React.Component{
 	setModeratorComment = (e) => {
 		setAuditModeratorComment(this.props.auditStore.id,e.target.value);
 	};
+	openCheckPoint = () => {
+		console.log("click");
+		document.getElementsByClassName("main")[0].style.marginRight = "250px";
+		document.getElementsByClassName("sidebar")[0].style.width = "250px";
+		document.getElementsByClassName("checkpoint")[0].style.display = "none";
+	};
+	closeCheckPoint = () => {
+		console.log("click");
+		document.getElementsByClassName("main")[0].style.marginRight = "0";
+		document.getElementsByClassName("sidebar")[0].style.width = "0";
+		document.getElementsByClassName("checkpoint")[0].style.display = "block";
+	};
 	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -267,13 +279,14 @@ export class AuditStoreDetails extends React.Component{
 		}
 
 		return (
-			<div>
+			<div className="main">
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
 					<li><Link to={`/client/${this.props.auditStore.audit.audit_cycle.client.id}/audit_cycle`}><King/> {this.props.auditStore.audit.audit_cycle.client.name}</Link></li>
 					<li><Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.props.auditStore.audit.audit_cycle.name}</Link></li>
 					<li className="active"><File/> {this.props.auditStore.audit.store.name}</li>
 				</ol>
+				<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoint</button>
 				<h2 className="page-header">
 					<File/> Audit Report - {this.props.auditStore.id}
 					<div className="pull-right">
@@ -283,6 +296,7 @@ export class AuditStoreDetails extends React.Component{
 						</a>
 						&nbsp;
 						{moreOptionsDropdown}
+						
 					</div>
 				</h2>
 				<div className="row">
@@ -366,6 +380,36 @@ export class AuditStoreDetails extends React.Component{
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}
+				
+				<div id="mySidebar" className="sidebar">
+					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
+					<ul>
+						<li><label><input type="checkbox" />CheckPoint CheckPoint CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint2</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint3</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint</label></li>
+						<li><label><input type="checkbox" />CheckPoint4</label></li>
+						
+					</ul>
+					<a href="javascript:void(0)" className="btn btn-primary pull-right">Save</a>
+				</div>
 			</div>
 		);
 	}

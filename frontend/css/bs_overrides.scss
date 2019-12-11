@@ -293,5 +293,52 @@ $progress_bar_bg_lighten_pct : 5%;
 	 color:#000;
 }
 
+.sidebar {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	right: 0;
+	background-color: #eee;
+	overflow-x: hidden;
+	transition: 0.5s;
+	padding-top: 60px;
+	margin-top: 4%;
+	padding-bottom: 5%;
+  }
+  
+  .sidebar li {
+	padding: 8px 8px 8px 0px;
+	text-decoration: none;
+	font-size: 16px;
+	display: block;
+	transition: 0.3s;
+  }
+  
+  .sidebar .closebtn {
+	position: absolute;
+	top: 35px;
+	right: 25px;
+	font-size: 36px;
+	margin-left: 50px;
+  }
+  
+  .sidebar label{
+	  font-weight: 100 !important;
+  }
+  
+  .checkpoint{
+	  bottom: 3%;
+	  position: fixed;
+	  right: 3%;
+	  z-index: 9999;
+  }
+  
+  /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+  @media screen and (max-height: 450px) {
+	.sidebar {padding-top: 15px;}
+	.sidebar a {font-size: 18px;}
+  }
 
 // Rating Gauge Styles
