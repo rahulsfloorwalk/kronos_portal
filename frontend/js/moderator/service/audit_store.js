@@ -63,7 +63,16 @@ export function setAuditModeratorComment(audit_store_id, moderator_comment){
 		contentType:"application/json"
 	});
 }
-
+export function saveCheckList(audit_store_id, check_points){
+	return $.ajax({
+		url: url.api_base_path+ `moderator/audit_store/${audit_store_id}/check_points`,
+		method: "POST",
+		data:JSON.stringify({
+			check_points:check_points
+		}),
+		contentType: "application/json"
+	});
+}
 export function setEarningsPerAudit(auditStoreId, earnings_per_audit){
 	return $.ajax({
 		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/earnings_per_audit`,

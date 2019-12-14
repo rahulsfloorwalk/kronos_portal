@@ -42,6 +42,7 @@ import AuditCycleDetails from "./audit_cycle/AuditCycleDetails.jsx";
 import AuditCyclePaymentList from "./AuditCyclePaymentList.jsx";
 import AuditCycleModeratorSummary from "./audit_cycle/AuditCycleModeratorSummary.jsx";
 import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
+import CheckPoints from "./CheckPoints.jsx";
 import OpportunityEmailRecordList from "./OpportunityEmailRecordList.jsx";
 import OpportunityEmailRecordForm from "./OpportunityEmailRecordForm.jsx";
 
@@ -115,6 +116,7 @@ const Routes = () => (
 			<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
 				<Route path="edit" component={AuditCycleForm}/>
 				<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
+				<Route path="checkpoints" component={CheckPoints}/>
 				<Route path="questionnaire" component={SectionList}>
 					<Route path="section/copy" component={SectionCopyForm}/>
 					<Route path="section/add" component={SectionAddForm}/>

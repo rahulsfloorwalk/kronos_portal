@@ -21,7 +21,19 @@ def fiat_assign(audit_id, email, audit_date, reimbursement, earnings_per_audit, 
     if audit_cycle.status == AuditCycle.ARCHIVED:
         raise AppLogicError("audit_cycle is archived")
 
-    return AuditStore.objects.assign_audit_store(audit, audit_date, user, reimbursement, earnings_per_audit, user_actor)
+    if audit_cycle.check_points:
+        check_points = audit_cycle.check_points
+        checkpoints_list = check_points.split(";")
+        check_points_id = 1
+        checkpoints_dict = {}
+        for i in checkpoints_list:
+            if i.strip():
+                checkpoints_dict[str(check_points_id)] = {"checkpoint": i.strip(), "value": False}
+                check_points_id += 1
+    else:
+        checkpoints_dict = {}
+
+    return AuditStore.objects.assign_audit_store(audit, audit_date, user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor)
 
 def get_latest_audit_cycle_for_client(client_id, audit_cycle_type):
     if audit_cycle_type is None:

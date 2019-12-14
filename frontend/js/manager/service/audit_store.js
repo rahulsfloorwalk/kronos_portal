@@ -42,6 +42,18 @@ export function setAuditModeratorComment(audit_store_id, moderator_comment){
 	});
 }
 
+export function saveCheckList(audii_store_id, check_list){
+	return $.ajax({
+		url: url.api_base_path+ `manager/audit_store/${audii_store_id}/check_points`,
+		method: "POST",
+		data: JSON.stringify({
+			check_points:check_list
+		}),
+		contentType: "application/json"
+	});
+}
+
+
 export function rate(audit_store_id, qa_rating){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/qa_rating`,

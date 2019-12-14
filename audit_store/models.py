@@ -56,7 +56,7 @@ class AuditStoreQuerySet(QuerySet):
         query_set = self.filter(audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES)
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
-    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, by):
+    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, checkpoints, by):
         audit_store = AuditStore()
         audit_store.audit = audit
         audit_store.audit_date = audit_date
@@ -64,6 +64,7 @@ class AuditStoreQuerySet(QuerySet):
         audit_store.status = AuditStore.ASSIGNED
         audit_store.reimbursement = reimbursement
         audit_store.earnings_per_audit = earnings_per_audit
+        audit_store.check_points = checkpoints
         audit_store.save()
         audit_store_status_change.send(
             sender=self.__class__,
@@ -163,6 +164,8 @@ class AuditStore(Model):
 
     report_summary = CharField(db_column='report_summary', max_length=16384, blank=True)
     report_summary_original = CharField(db_column='report_summary_original', max_length=16384, blank=True)
+
+    check_points = JSONField(db_column='check_points', default=dict, blank=False)
 
     objects = AuditStoreQuerySet.as_manager()
 
@@ -328,6 +331,10 @@ class AuditStore(Model):
 
     def set_moderator_comment(self, moderator_comment):
         self.moderator_comment = moderator_comment
+        self.save()
+
+    def set_check_points(self, check_points):
+        self.check_points = check_points
         self.save()
 
     @atomic

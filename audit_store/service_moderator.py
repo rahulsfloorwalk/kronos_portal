@@ -132,3 +132,14 @@ def set_moderator_comment(audit_store_id, moderator_comment, user_id):
         raise AppLogicError("Comment should not be greater than 3000 character")
     audit_store.set_moderator_comment(moderator_comment)
     return audit_store
+
+def set_check_points(audit_store_id, check_points, user_id):
+    audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    db_check_points = audit_store.check_points
+    for i in db_check_points:
+        if i in check_points:
+            db_check_points[i]['value'] = True
+        else:
+            db_check_points[i]['value'] = False
+    audit_store.set_check_points(db_check_points)
+    return audit_store

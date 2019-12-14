@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
+import $ from "jquery";
 
 import Alert from "react-s-alert";
 
@@ -25,7 +26,7 @@ import { fetchAuditStore,
 	rejectAuditStore,
 	pmRevertAuditStore,
 } from "../actions/audit_store.js";
-import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment } from "../service/audit_store.js";
+import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList } from "../service/audit_store.js";
 
 import { Calendar, Retweet, King, File, Download, ThumbsDown } from "../../components/Icons.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
@@ -134,16 +135,27 @@ export class AuditStoreDetails extends React.Component{
 		setAuditModeratorComment(this.props.auditStore.id,e.target.value);
 	};
 	openCheckPoint = () => {
-		console.log("click");
 		document.getElementsByClassName("main")[0].style.marginRight = "250px";
 		document.getElementsByClassName("sidebar")[0].style.width = "250px";
 		document.getElementsByClassName("checkpoint")[0].style.display = "none";
 	};
 	closeCheckPoint = () => {
-		console.log("click");
 		document.getElementsByClassName("main")[0].style.marginRight = "0";
 		document.getElementsByClassName("sidebar")[0].style.width = "0";
 		document.getElementsByClassName("checkpoint")[0].style.display = "block";
+	};
+	saveCheckPoints = () => {
+		let check_points_list = [];
+		$('.sidebar input:checked').each(function() {
+			let val = $(this).attr('value');
+			check_points_list.push(val);
+		});
+		console.log("check_points_list",check_points_list);
+		saveCheckList(this.props.auditStore.id, check_points_list).then((auditStore) => {
+			this.props.dispatch(updateAuditStore(auditStore));
+			this.closeCheckPoint();
+			Alert.success("CheckPoints Saved");
+		});
 	};
 	render(){
 		if(! this.props.auditStore){
@@ -277,7 +289,21 @@ export class AuditStoreDetails extends React.Component{
 				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.props.auditStore.moderator_comment} readOnly></textarea>
 			);
 		}
-
+		
+		var check_points = this.props.auditStore.check_points;
+		var checkpointButton = null;
+		var check_point_row = [];
+		for (let i in check_points){
+			if(check_points[i]['value']){
+				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]['checkpoint']}</span></label></li>);
+			}
+			else{
+				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]['checkpoint']}</span></label></li>);
+			}
+		}
+		if(check_point_row.length !=0){
+			checkpointButton = (<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoints</button>);
+		}
 		return (
 			<div className="main">
 				<ol className="breadcrumb">
@@ -286,7 +312,7 @@ export class AuditStoreDetails extends React.Component{
 					<li><Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.props.auditStore.audit.audit_cycle.name}</Link></li>
 					<li className="active"><File/> {this.props.auditStore.audit.store.name}</li>
 				</ol>
-				<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoint</button>
+				{checkpointButton}
 				<h2 className="page-header">
 					<File/> Audit Report - {this.props.auditStore.id}
 					<div className="pull-right">
@@ -381,34 +407,12 @@ export class AuditStoreDetails extends React.Component{
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}
 				
-				<div id="mySidebar" className="sidebar">
+				<div className="sidebar">
 					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
 					<ul>
-						<li><label><input type="checkbox" />CheckPoint CheckPoint CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint2</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint3</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint</label></li>
-						<li><label><input type="checkbox" />CheckPoint4</label></li>
-						
+						{check_point_row}
 					</ul>
-					<a href="javascript:void(0)" className="btn btn-primary pull-right">Save</a>
+					<button className="btn btn-primary pull-right" onClick={this.saveCheckPoints}>Save</button>
 				</div>
 			</div>
 		);

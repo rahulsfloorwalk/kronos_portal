@@ -127,24 +127,20 @@ def set_post_approval_description(audit_cycle_id, post_approval_description):
     audit_cycle.post_approval_description = post_approval_description
     return save(audit_cycle)
 
+
 def set_checkpoints(audit_cycle_id, checkpoints):
-    audit_cycle = find_by_id(audit_cycle_id)
-
-
-    checkpoints_list = checkpoints.split(";")
-    # print(checkpoints_list)
-    # checkpoints_data = []
-    id = 1
-    checkpoints_dict = {}
-    for i in checkpoints_list:
-        if i.strip():
-            checkpoints_dict[str(id)] = {"checkpoint": i.strip()}
-            id += 1
-    # checkpoints_data.append(checkpoints_dict)
-    # print("checkpoints_data", checkpoints_data)
-    # checkpoints_content = {"options": checkpoints_data}
-    # audit_cycle.checkpoints = checkpoints_content
-    return audit_cycle
+    if AuditCycle.objects.filter(id=audit_cycle_id, status__in=[AuditCycle.CLEARING, AuditCycle.ARCHIVED]).exists():
+        raise AppLogicError("Checkpoints cannot be edited")
+    elif AuditStore.objects.\
+            filter(audit__audit_cycle__id=audit_cycle_id, status__in=[AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED])\
+            .exists():
+        raise AppLogicError("Checkpoints cannot be edited")
+    elif ";" not in checkpoints:
+        raise AppLogicError("Please enter semicolon (;) in checkpoints")
+    else:
+        audit_cycle = find_by_id(audit_cycle_id)
+        audit_cycle.check_points = checkpoints
+        return save(audit_cycle)
 
 
 def find_audit_cycles_by_client(client_id):

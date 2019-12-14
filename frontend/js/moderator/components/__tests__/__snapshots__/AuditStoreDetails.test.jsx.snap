@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -391,7 +393,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -781,7 +785,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -1171,7 +1177,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already rated 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -1561,7 +1569,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -1966,7 +1976,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when the AuditStore is loadi
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is ACCEPTED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -2349,7 +2361,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is ACKNOWLEDGED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -2746,7 +2760,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is ASSIGNED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -3136,7 +3152,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is COMPLETED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -3519,7 +3537,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is FAILED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -3902,7 +3922,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is PM_REVIEW 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -4285,7 +4307,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is REJECTED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -4668,7 +4692,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is SUBMITTED 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >
@@ -5101,7 +5127,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
 `;
 
 exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is WITHDRAWN 1`] = `
-<div>
+<div
+  className="main"
+>
   <h2
     className="page-header"
   >

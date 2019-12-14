@@ -69,6 +69,7 @@ class AuditCycleSerializer(ModelSerializer):
             'reimbursement',
             'description',
             'post_approval_description',
+            'check_points',
             'client',
             'audit_count',
             'questionnaire_type',
@@ -286,7 +287,8 @@ class AuditStoreSerializer(ModelSerializer):
             'attribute_data',
             'moderator_status',
             'moderator_comment',
-            'find_faulty_report_count'
+            'find_faulty_report_count',
+            'check_points'
         )
         read_only_fields = fields
 
