@@ -32,10 +32,12 @@ class AuditStoreQuerySetTestCase(TestCase):
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
 
+        self.check_points = {}
+
     def test_assign_audit_report_sends_signal(self):
         audit = mommy.make(Audit)
         with catch_signal(audit_store_status_change) as mock:
-            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, 3000, 4000, self.manager_user)
+            audit_store = AuditStore.objects.assign_audit_store(audit, datetime.now().date(), self.auditor_user, 3000, 4000, self.check_points, self.manager_user)
 
             mock.assert_called_once_with(
                 signal=audit_store_status_change,
@@ -54,6 +56,7 @@ class AuditStoreQuerySetTestCase(TestCase):
             self.auditor_user,
             3000,
             4000,
+            self.check_points,
             self.manager_user,
         )
         self.assertEqual(datetime.now().date(), audit_store.audit_date)

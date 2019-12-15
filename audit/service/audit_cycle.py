@@ -128,5 +128,20 @@ def set_post_approval_description(audit_cycle_id, post_approval_description):
     return save(audit_cycle)
 
 
+def set_checkpoints(audit_cycle_id, checkpoints):
+    if AuditCycle.objects.filter(id=audit_cycle_id, status__in=[AuditCycle.CLEARING, AuditCycle.ARCHIVED]).exists():
+        raise AppLogicError("Checkpoints cannot be edited")
+    elif AuditStore.objects.\
+            filter(audit__audit_cycle__id=audit_cycle_id, status__in=[AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.COMPLETED, AuditStore.ACCEPTED])\
+            .exists():
+        raise AppLogicError("Checkpoints cannot be edited")
+    elif ";" not in checkpoints:
+        raise AppLogicError("Please enter semicolon (;) in checkpoints")
+    else:
+        audit_cycle = find_by_id(audit_cycle_id)
+        audit_cycle.check_points = checkpoints
+        return save(audit_cycle)
+
+
 def find_audit_cycles_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')

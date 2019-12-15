@@ -76,6 +76,13 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       >
         Post Approval Desc.
       </a>
+      ) (
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Checkpoints
+      </a>
       )
     </small>
   </h3>

@@ -111,6 +111,21 @@ class AuditCycleIdPostApprovalDescriptionView(APIView):
         saved_audit_cycle = audit_cycle_service.set_post_approval_description(audit_cycle_id, ds.validated_data["post_approval_description"])
         return Response(AuditCycleSerializer(saved_audit_cycle).data)
 
+class AuditCycleIdCheckPointsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        checkpoints = CharField(allow_blank=True, max_length=20480)
+
+    def post(self, request, audit_cycle_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_cycle = audit_cycle_service.set_checkpoints(audit_cycle_id, ds.validated_data['checkpoints'])
+        return Response(AuditCycleSerializer(audit_cycle).data)
 
 class ExportQuestionnaire(APIView):
     permission_classes = [HasGroupPermission]

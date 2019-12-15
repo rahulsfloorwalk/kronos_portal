@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
+import $ from "jquery";
 
 import Alert from "react-s-alert";
 
@@ -25,7 +26,7 @@ import { fetchAuditStore,
 	rejectAuditStore,
 	pmRevertAuditStore,
 } from "../actions/audit_store.js";
-import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment } from "../service/audit_store.js";
+import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList } from "../service/audit_store.js";
 
 import { Calendar, Retweet, King, File, Download, ThumbsDown } from "../../components/Icons.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
@@ -132,6 +133,29 @@ export class AuditStoreDetails extends React.Component{
 	};
 	setModeratorComment = (e) => {
 		setAuditModeratorComment(this.props.auditStore.id,e.target.value);
+	};
+	openCheckPoint = () => {
+		document.getElementsByClassName("main")[0].style.marginRight = "250px";
+		document.getElementsByClassName("sidebar")[0].style.width = "250px";
+		document.getElementsByClassName("checkpoint")[0].style.display = "none";
+	};
+	closeCheckPoint = () => {
+		document.getElementsByClassName("main")[0].style.marginRight = "0";
+		document.getElementsByClassName("sidebar")[0].style.width = "0";
+		document.getElementsByClassName("checkpoint")[0].style.display = "block";
+	};
+	saveCheckPoints = () => {
+		let check_points_list = [];
+		$('.sidebar input:checked').each(function() {
+			let val = $(this).attr('value');
+			check_points_list.push(val);
+		});
+		console.log("check_points_list",check_points_list);
+		saveCheckList(this.props.auditStore.id, check_points_list).then((auditStore) => {
+			this.props.dispatch(updateAuditStore(auditStore));
+			this.closeCheckPoint();
+			Alert.success("CheckPoints Saved");
+		});
 	};
 	render(){
 		if(! this.props.auditStore){
@@ -265,15 +289,30 @@ export class AuditStoreDetails extends React.Component{
 				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.props.auditStore.moderator_comment} readOnly></textarea>
 			);
 		}
-
+		
+		var check_points = this.props.auditStore.check_points;
+		var checkpointButton = null;
+		var check_point_row = [];
+		for (let i in check_points){
+			if(check_points[i]['value']){
+				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]['checkpoint']}</span></label></li>);
+			}
+			else{
+				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]['checkpoint']}</span></label></li>);
+			}
+		}
+		if(check_point_row.length !=0){
+			checkpointButton = (<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoints</button>);
+		}
 		return (
-			<div>
+			<div className="main">
 				<ol className="breadcrumb">
 					<li><Link to="/client">Clients</Link></li>
 					<li><Link to={`/client/${this.props.auditStore.audit.audit_cycle.client.id}/audit_cycle`}><King/> {this.props.auditStore.audit.audit_cycle.client.name}</Link></li>
 					<li><Link to={`/audit_cycle/${this.props.auditStore.audit.audit_cycle.id}/audit_store`}><Retweet/> {this.props.auditStore.audit.audit_cycle.name}</Link></li>
 					<li className="active"><File/> {this.props.auditStore.audit.store.name}</li>
 				</ol>
+				{checkpointButton}
 				<h2 className="page-header">
 					<File/> Audit Report - {this.props.auditStore.id}
 					<div className="pull-right">
@@ -283,6 +322,7 @@ export class AuditStoreDetails extends React.Component{
 						</a>
 						&nbsp;
 						{moreOptionsDropdown}
+						
 					</div>
 				</h2>
 				<div className="row">
@@ -366,6 +406,14 @@ export class AuditStoreDetails extends React.Component{
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}
+				
+				<div className="sidebar">
+					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
+					<ul>
+						{check_point_row}
+					</ul>
+					<button className="btn btn-primary pull-right" onClick={this.saveCheckPoints}>Save</button>
+				</div>
 			</div>
 		);
 	}

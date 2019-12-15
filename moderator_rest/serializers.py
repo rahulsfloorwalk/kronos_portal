@@ -166,7 +166,8 @@ class AuditStoreSerializer(ModelSerializer):
             'reimbursement',
             'moderator_status',
             'moderator_comment',
-            'find_faulty_report_count'
+            'find_faulty_report_count',
+            'check_points'
         )
         read_only_fields = fields
 

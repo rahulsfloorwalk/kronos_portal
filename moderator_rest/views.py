@@ -94,6 +94,7 @@ class AuditStoreIdAuditDateView(APIView):
         audit_store = audit_store_service.set_audit_date_for_moderator(audit_store_id, ds.validated_data['audit_date'], request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+
 class AuditStoreIdModeratorStatusView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -104,6 +105,7 @@ class AuditStoreIdModeratorStatusView(APIView):
         audit_store = audit_store_service.set_moderator_status(audit_store_id,request.data['moderator_status'],request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
+
 class AuditStoreIdModeratorCommentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -112,6 +114,16 @@ class AuditStoreIdModeratorCommentView(APIView):
 
     def post(self, request, audit_store_id):
         audit_store = audit_store_service.set_moderator_comment(audit_store_id, request.data['moderator_comment'], request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+class AuditStoreIdCheckPoints(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_service.set_check_points(audit_store_id, request.data['check_points'], request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdEarningsPerAuditView(APIView):
