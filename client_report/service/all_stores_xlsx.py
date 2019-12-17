@@ -22,16 +22,24 @@ def get_aggregate_data(client_id, year):
     audit_cycle_list = AuditCycle.objects \
         .filter(client_id=client_id, status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING], start_date__year=year) \
         .order_by('start_date')
-    store_list = Store.objects.filter(client_id=client_id)
-    audit_store_list = []
     audit_store_data = AuditStore.objects \
         .filter(audit__store__client__id=client_id, audit__audit_cycle__status__in=[AuditCycle.ARCHIVED, AuditCycle.CLEARING]) \
         .filter(audit__audit_cycle__start_date__year=year) \
         .presentable() \
         .prefetch_related(
-            'answers',
-            'report_sections'
+            'audit',
+            'audit__store',
+            'audit__audit_cycle',
+            'report_sections',
+            'report_sections__section',
+            'report_sections__section__questions',
+            'report_sections__section__questions__answers',
         )
+    store_list = Store.objects.filter(client_id=client_id)\
+        .prefetch_related(
+            'city'
+    )
+    audit_store_list = []
     for i in audit_store_data.iterator():
         audit_store_list.append({'audit_cycle_id': i.audit.audit_cycle.id, 'store_id': i.audit.store.id, 'percentage': i.percentage()})
     return client_name, audit_cycle_list, store_list, audit_store_list
