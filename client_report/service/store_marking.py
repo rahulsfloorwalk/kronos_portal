@@ -7,13 +7,21 @@ from kronos.utils import get_color_code
 
 
 def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
-    all_cycles = AuditCycle.objects.filter(
+    all_cycles_query = AuditCycle.objects.filter(
         client_id=client_id,
-        status__in=AuditCycle.TRENDABLE_STATUSES,
+        # status__in=AuditCycle.TRENDABLE_STATUSES,
         questionnaire_type_id=questionnaire_type_id,
     ).order_by('end_date')
 
-    all_cycle_count = all_cycles.count()
+    all_cycles = []
+    for cycle in all_cycles_query:
+        if cycle.audits.filter(store_id=store_id):
+            for audit in cycle.audits.filter(store_id=store_id):
+                if audit.audit_stores.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]):
+                    all_cycles.append(cycle)
+
+    all_cycle_count = len(all_cycles)
+    # all_cycle_count = all_cycles.count()
 
     if all_cycle_count is 0:
         return {"scores": [], "audit_cycle": []}
@@ -42,13 +50,21 @@ def get_scores_graph_for_store_by_questionnaire_type(store_id, client_id, questi
     return {"scores": scores_list, "audit_cycle": audit_cycles_list, "max_marks": max_scores_list, "color_codes": color_codes}
 
 def get_scores_for_store_by_questionnaire_type(store_id, client_id, questionnaire_type_id):
-    all_cycles = AuditCycle.objects.filter(
+    all_cycles_query = AuditCycle.objects.filter(
         client_id=client_id,
-        status__in=AuditCycle.LIVE_REPORTING_STATUSES,
+        # status__in=AuditCycle.TRENDABLE_STATUSES,
         questionnaire_type_id=questionnaire_type_id,
     ).order_by('end_date')
 
-    all_cycle_count = all_cycles.count()
+    all_cycles = []
+    for cycle in all_cycles_query:
+        if cycle.audits.filter(store_id=store_id):
+            for audit in cycle.audits.filter(store_id=store_id):
+                if audit.audit_stores.filter(status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]):
+                    all_cycles.append(cycle)
+
+    all_cycle_count = len(all_cycles)
+    # all_cycle_count = all_cycles.count()
 
     if all_cycle_count is 0:
         return {"scores": [], "audit_cycle": []}

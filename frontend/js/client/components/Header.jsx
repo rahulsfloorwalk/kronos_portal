@@ -5,7 +5,8 @@ import { Link, hashHistory } from "react-router";
 import { pointerStyle } from "../../styles.js";
 
 import NavLink from "../../components/NavLink.jsx";
-import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/Icons.jsx";
+// import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/Icons.jsx";
+import { Dashboard, File, LogOut, Time, Home } from "../../components/Icons.jsx";
 
 import floorwalkLogoUrl from "../../../img/logo_500x300.png";
 
@@ -74,9 +75,9 @@ export default class Header extends React.Component {
 						{ this.state.clientUser.is_client_admin ?
 							<NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
 							: "" }
-						{ this.state.clientUser.is_client_admin ?
+						{/* { this.state.clientUser.is_client_admin ?
 							<NavLink to="/twitter"><Retweet/> Twitter</NavLink>
-							: null }
+							: null } */}
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

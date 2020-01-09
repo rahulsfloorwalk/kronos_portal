@@ -3,6 +3,7 @@ from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT
 from django.conf import settings
+from kronos.utils import get_color_code_by_percentage
 
 class Client(Model):
 
@@ -72,6 +73,21 @@ class Store(Model):
 
     def get_store_address(self):
         return self.address
+
+    def get_total_percentage(self):
+        percentage = 0
+        count = 0
+        total_percentage = None
+        for audit in self.audits.all():
+            audit_stores = audit.audit_stores.presentable()
+            for audit_store in audit_stores:
+                percentage += audit_store.percentage()
+                count += 1
+            if percentage is 0:
+                return {"score": percentage, "color": get_color_code_by_percentage(percentage)}
+            total_percentage = round(percentage / count)
+
+        return {"score": total_percentage, "color": get_color_code_by_percentage(total_percentage)}
 
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)

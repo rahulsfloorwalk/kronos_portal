@@ -10,6 +10,14 @@ export function fetchAuditCycles(){
 	};
 }
 
+export function fetchAuditCyclesForDashboard(){
+	return function(dispatch){
+		return auditCycles.fetchAuditCyclesForDashboard().then((auditCycles) => {
+			dispatch(auditCycleActionCreators.fetchAuditCyclesForDashboard(auditCycles));
+		});
+	};
+}
+
 export function selectAuditCycle(selectedAuditCycleId){
 	return function(dispatch){
 		dispatch(auditCycleActionCreators.selectAuditCycle(selectedAuditCycleId));

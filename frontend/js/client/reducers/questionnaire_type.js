@@ -36,3 +36,10 @@ export function fetchQuestionnaireTypes(questionnaireTypes){
 	};
 }
 
+
+export function fetchQuestionnaireTypesForDashboard(questionnaireTypes){
+	return {
+		type: FETCH_QUESTIONNAIRE_TYPES,
+		questionnaireTypes
+	};
+}

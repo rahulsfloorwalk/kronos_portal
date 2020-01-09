@@ -5,7 +5,8 @@ import { Text } from "recharts";
 
 import {demo} from "../../../config.js";
 
-import {fetchCityWisePerformance} from "../service/dashboard.js";
+// import {fetchCityWisePerformance} from "../service/dashboard.js";
+import {fetchCityWisePerformanceByAuditCycleId} from "../service/dashboard.js";
 
 import { getColor } from "../../utils.js";
 
@@ -142,6 +143,12 @@ export default class CityWisePerformanceChartWrapper extends React.Component{
 			is_default: PropTypes.bool.isRequired,
 			client_id: PropTypes.number.isRequired,
 		}).isRequired,
+		auditCycle: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			start_date: PropTypes.string.isRequired,
+			end_date: PropTypes.string.isRequired,
+		}).isRequired,
 	};
 
 	state = {
@@ -157,10 +164,10 @@ export default class CityWisePerformanceChartWrapper extends React.Component{
 		});
 	};
 
-	reloadData = (questionnaireTypeId) => {
+	reloadData = (questionnaireTypeId, auditCycleId) => {
 		if(!demo){
 			this.setLoading(true);
-			fetchCityWisePerformance(questionnaireTypeId).then((reportData) => {
+			fetchCityWisePerformanceByAuditCycleId(questionnaireTypeId, auditCycleId).then((reportData) => {
 				this.setState({
 					"reportData": reportData
 				});
@@ -170,13 +177,16 @@ export default class CityWisePerformanceChartWrapper extends React.Component{
 
 	componentDidMount(){
 		//console.log("AuditCycleStorePerformance","componentDidMount");
-		this.reloadData(this.props.questionnaireType.id);
+		this.reloadData(this.props.questionnaireType.id, this.props.auditCycle.id);
 	}
 
 	componentWillReceiveProps(nextProps){
 		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.questionnaireType);
+		if(this.props.auditCycle !== nextProps.auditCycle){
+			this.reloadData(nextProps.questionnaireType.id, nextProps.auditCycle.id);
+		}
 		if( this.props.questionnaireType !== nextProps.questionnaireType) {
-			this.reloadData(nextProps.questionnaireType.id);
+			this.reloadData(nextProps.questionnaireType.id, nextProps.auditCycle.id);
 		}
 	}
 

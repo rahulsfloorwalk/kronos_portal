@@ -9,7 +9,8 @@ import Loading from "../../components/Loading.jsx";
 import Modal from "../../components/Modal.jsx";
 import { getColor } from "../../utils.js";
 
-import {fetchAuditCyclesTimeSeries} from "../service/dashboard.js";
+// import {fetchAuditCyclesTimeSeries} from "../service/dashboard.js";
+import {fetchAuditCyclesTimeSeriesByAuditCycleId} from "../service/dashboard.js";
 
 export default class AuditCycleTimeSeries extends React.Component{
 	static propTypes = {
@@ -18,6 +19,12 @@ export default class AuditCycleTimeSeries extends React.Component{
 			name: PropTypes.string.isRequired,
 			is_default: PropTypes.bool.isRequired,
 			client_id: PropTypes.number.isRequired,
+		}).isRequired,
+		auditCycle: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			start_date: PropTypes.string.isRequired,
+			end_date: PropTypes.string.isRequired,
 		}).isRequired,
 	};
 
@@ -54,10 +61,10 @@ export default class AuditCycleTimeSeries extends React.Component{
 		return data;
 	};
 
-	reloadData = (questionnaireTypeId) => {
+	reloadData = (questionnaireTypeId, auditCycleId) => {
 		if(!demo){
 			this.setLoading(true);
-			fetchAuditCyclesTimeSeries(questionnaireTypeId).then((reportData) => {
+			fetchAuditCyclesTimeSeriesByAuditCycleId(questionnaireTypeId, auditCycleId).then((reportData) => {
 				let ts_structure = this.create_structure(reportData);
 				this.setState({
 					reportData,
@@ -71,13 +78,16 @@ export default class AuditCycleTimeSeries extends React.Component{
 
 	componentDidMount(){
 		//console.log("AuditCycleTimeSeries","componentDidMount");
-		this.reloadData(this.props.questionnaireType.id);
+		this.reloadData(this.props.questionnaireType.id, this.props.auditCycle.id);
 	}
 
 	componentWillReceiveProps(nextProps){
 		//console.log("AuditCycleTimeSeries","componentWillReceiveProps", nextProps.questionnaireType);
+		if(this.props.auditCycle !== nextProps.auditCycle) {
+			this.reloadData(nextProps.questionnaireType.id, nextProps.auditCycle.id);
+		}
 		if( this.props.questionnaireType !== nextProps.questionnaireType) {
-			this.reloadData(nextProps.questionnaireType.id);
+			this.reloadData(nextProps.questionnaireType.id, nextProps.auditCycle.id);
 		}
 	}
 

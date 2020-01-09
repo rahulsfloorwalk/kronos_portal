@@ -4,7 +4,9 @@ import renderer from "react-test-renderer";
 import $ from "jquery";
 
 import AuditCycleTimeSeries from "../AuditCycleTimeSeries.jsx";
-import { fetchAuditCyclesTimeSeries } from "../../service/dashboard.js";
+// import { fetchAuditCyclesTimeSeries } from "../../service/dashboard.js";
+import { fetchAuditCyclesTimeSeriesByAuditCycleId } from "../../service/dashboard.js";
+
 
 jest.mock("../../service/dashboard.js");
 
@@ -20,12 +22,20 @@ const sampleQuestionnaireType = {
 	"client_id": 1
 };
 
+const sampleAuditCycle = {
+	"id":1,
+	"name": "January 2017",
+	"start_date": "2017-01-01",
+	"end_date": "2017-01-31",
+	"type": "walk in"
+};
+
 const sampleTimeSeriesData = {
 	"title": "Audit Cycle Summary",
 	"audit_cycle_master": [
 		"January 2017",
-		"February 2017",
-		"March 2017"
+		// "February 2017",
+		// "March 2017"
 	],
 	"section_master": [
 		"Entrance",
@@ -57,7 +67,7 @@ const sampleTimeSeriesData = {
 				"value": 61
 			}
 		],
-		[
+		/* [
 			{
 				"color_code": 2,
 				"value": 45
@@ -100,32 +110,34 @@ const sampleTimeSeriesData = {
 				"color_code": 3,
 				"value": 70
 			}
-		]
+		] */
 	]
 };
 
 describe("<AuditCycleTimeSeries/>", () => {
 	beforeEach(() => {
-		fetchAuditCyclesTimeSeries.mockReturnValue($.Deferred().resolve(sampleTimeSeriesData).promise());
+		// fetchAuditCyclesTimeSeries.mockReturnValue($.Deferred().resolve(sampleTimeSeriesData).promise());
+		fetchAuditCyclesTimeSeriesByAuditCycleId.mockReturnValue($.Deferred().resolve(sampleTimeSeriesData).promise());
 	});
 
 	it("renders the chart correctly", (done) => {
-		const r = renderer.create(<AuditCycleTimeSeries questionnaireType={sampleQuestionnaireType}/>, { createNodeMock });
+		const r = renderer.create(<AuditCycleTimeSeries questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle} />, { createNodeMock });
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();
 		});
 	});
 	it("calls fetchAuditCyclesTimeSeries with the correct ID", (done) => {
-		shallow(<AuditCycleTimeSeries questionnaireType={sampleQuestionnaireType}/>);
+		shallow(<AuditCycleTimeSeries questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle} />);
 		setTimeout(() => {
-			expect(fetchAuditCyclesTimeSeries).toHaveBeenCalledWith(sampleQuestionnaireType.id);
+			// expect(fetchAuditCyclesTimeSeries).toHaveBeenCalledWith(sampleQuestionnaireType.id);
+			expect(fetchAuditCyclesTimeSeriesByAuditCycleId).toHaveBeenCalledWith(sampleQuestionnaireType.id, sampleAuditCycle.id);
 			done();
 		});
 	});
 
 	it("renders the data popup correctly when the button is clicked", (done) => {
-		const r = renderer.create(<AuditCycleTimeSeries questionnaireType={sampleQuestionnaireType}/>, { createNodeMock });
+		const r = renderer.create(<AuditCycleTimeSeries questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle} />, { createNodeMock });
 		setTimeout(() => {
 			r.getInstance().setState({ dataPopup: true });
 			expect(r.toJSON()).toMatchSnapshot();

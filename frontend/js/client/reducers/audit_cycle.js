@@ -29,6 +29,12 @@ export function fetchAuditCycles(auditCycles){
 	};
 }
 
+export function fetchAuditCyclesForDashboard(auditCycles){
+	return {
+		type: FETCH_AUDIT_CYCLES,
+		auditCycles,
+	};
+}
 
 export function selectAuditCycle(selectedAuditCycleId){
 	return {

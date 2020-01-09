@@ -295,6 +295,15 @@ class AuditCycleView(APIView):
         audit_cycles = audit_cycle_client_service.find_all_for_clientuser(request.user.id)
         return Response(audit_cycles)
 
+class AuditCycleForDashboardView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, format=None):
+        audit_cycles = audit_cycle_client_service.find_all_for_dashboard_clientuser(request.user.id)
+        return Response(audit_cycles)
+
 class ReportAttributeByAuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -395,6 +404,15 @@ class DashboardStoreTrends(APIView):
         data = store_trends.get_performing_stores_by_type_for_clientuser(questionnaire_type_id, request.user.id)
         return Response(data)
 
+class DashboardStoreTrendsByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
+        data = store_trends.get_performing_stores_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
+        return Response(data)
+
 class DashboardCityWiseTrends(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -403,6 +421,17 @@ class DashboardCityWiseTrends(APIView):
     def get(self, request, questionnaire_type_id, format=None):
         data = city_trends.get_performing_cities_by_type_for_clientuser(questionnaire_type_id, request.user.id)
         return Response(data)
+
+
+class DashboardCityWiseTrendsByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
+        data = city_trends.get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
+        return Response(data)
+
 
 class DashboardStoreTrendsXlsx(APIView):
     permission_classes = [HasGroupPermission]
@@ -441,6 +470,16 @@ class AuditCycleTimeSeriesReport(APIView):
     def get(self, request, questionnaire_type_id, format=None):
         audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, questionnaire_type_id, request.user.id)
         return Response(audit_cycle_time_series)
+
+class AuditCycleTimeSeriesReportByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
+        audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id, questionnaire_type_id, request.user.id)
+        return Response(audit_cycle_time_series)
+
 
 class AuditCycleTimeSeriesReportXlsx(APIView):
     permission_classes = [HasGroupPermission]
@@ -499,3 +538,12 @@ class QuestionnaireTypesByClient(APIView):
         types = questionnaire_type_client_service.find_questionnaire_types_for_client_by_user(request.user)
         return Response(types)
 
+
+class QuestionnaireTypesForDashboardByClient(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request):
+        types = questionnaire_type_client_service.find_questionnaire_types_for_client_dashboard_by_user(request.user)
+        return Response(types)

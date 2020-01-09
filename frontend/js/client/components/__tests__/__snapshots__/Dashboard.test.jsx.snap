@@ -3,6 +3,8 @@
 exports[`Dashboard renders the tab strip and a loading sign when no questionnaire type is selected 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabs) />
+  <Connect(AuditCycleSelector) />
+  <hr />
   <Loading />
 </div>
 `;
@@ -10,40 +12,8 @@ exports[`Dashboard renders the tab strip and a loading sign when no questionnair
 exports[`Dashboard renders the tab strip and charts with the selected questionnaire type 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabs) />
-  <div>
-    <AuditCycleTimeSeries
-      questionnaireType={
-        Object {
-          "client_id": 9,
-          "id": 213,
-          "is_default": true,
-          "name": "Walk In",
-        }
-      }
-    />
-    <hr />
-    <AuditCycleStorePerformanceWrapper
-      questionnaireType={
-        Object {
-          "client_id": 9,
-          "id": 213,
-          "is_default": true,
-          "name": "Walk In",
-        }
-      }
-    />
-    <hr />
-    <CityWisePerformanceChartWrapper
-      questionnaireType={
-        Object {
-          "client_id": 9,
-          "id": 213,
-          "is_default": true,
-          "name": "Walk In",
-        }
-      }
-    />
-    <hr />
-  </div>
+  <Connect(AuditCycleSelector) />
+  <hr />
+  <Loading />
 </div>
 `;

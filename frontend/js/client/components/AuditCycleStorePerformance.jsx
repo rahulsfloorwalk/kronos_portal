@@ -6,7 +6,8 @@ import { Text } from "recharts";
 
 import {demo} from "../../../config.js";
 
-import {fetchStoreWisePerformance} from "../service/dashboard.js";
+// import {fetchStoreWisePerformance} from "../service/dashboard.js";
+import {fetchStoreWisePerformanceByAuditCycleId} from "../service/dashboard.js";
 
 import { getColor } from "../../utils.js";
 import { ThList } from "../../components/Icons.jsx";
@@ -147,6 +148,12 @@ class AuditCycleStorePerformanceWrapper extends React.Component{
 			is_default: PropTypes.bool.isRequired,
 			client_id: PropTypes.number.isRequired,
 		}).isRequired,
+		auditCycle: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			start_date: PropTypes.string.isRequired,
+			end_date: PropTypes.string.isRequired,
+		}).isRequired,
 	};
 
 	state = {
@@ -162,10 +169,10 @@ class AuditCycleStorePerformanceWrapper extends React.Component{
 		});
 	};
 
-	reloadData = (questionnaireTypeId) => {
+	reloadData = (questionnaireTypeId, auditCycleId) => {
 		if(!demo){
 			this.setLoading(true);
-			fetchStoreWisePerformance(questionnaireTypeId).then((reportData) => {
+			fetchStoreWisePerformanceByAuditCycleId(questionnaireTypeId, auditCycleId).then((reportData) => {
 				this.setState({
 					"reportData": reportData
 				});
@@ -175,13 +182,16 @@ class AuditCycleStorePerformanceWrapper extends React.Component{
 
 	componentDidMount(){
 		//console.log("AuditCycleStorePerformance","componentDidMount");
-		this.reloadData(this.props.questionnaireType.id);
+		this.reloadData(this.props.questionnaireType.id, this.props.auditCycle.id);
 	}
 
 	componentWillReceiveProps(nextProps){
 		//console.log("AuditCycleStorePerformance","componentWillReceiveProps", nextProps.questionnaireType);
+		if(this.props.auditCycle !== nextProps.auditCycle){
+			this.reloadData(nextProps.questionnaireType.id, nextProps.auditCycle.id);
+		}
 		if( this.props.questionnaireType !== nextProps.questionnaireType) {
-			this.reloadData(nextProps.questionnaireType.id);
+			this.reloadData(nextProps.questionnaireType.id, nextProps.auditCycle.id);
 		}
 	}
 
