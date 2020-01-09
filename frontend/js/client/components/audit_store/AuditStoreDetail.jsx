@@ -56,7 +56,6 @@ export default class AuditStoreDetail extends React.Component {
 				hashHistory.push("/dashboard");
 			}
 		});
-		
 		fetchAuditStore(this.props.params.auditStoreId).then((auditStore) => {
 			this.setState({
 				auditStore

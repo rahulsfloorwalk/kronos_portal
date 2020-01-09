@@ -6,6 +6,7 @@ import { Text } from "recharts";
 import { getRatingText } from "../../utils";
 import Loading from "../../components/Loading.jsx";
 import { fetchStorePerformance } from "../service/store.js";
+import Jumbotron from "../../components/Jumbotron.jsx";
 
 export default class StorePerformance extends Component{
 	static propTypes = {
@@ -53,17 +54,22 @@ export default class StorePerformance extends Component{
 		if(!this.state.data){
 			return <Loading/>;
 		} else {
-			return (
-				<ResponsiveContainer width="100%" aspect={3 / 1}>
-					<BarChart data={this.state.data} margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-						<XAxis dataKey="name"/>
-						<YAxis/>
-						<Tooltip/>
-						<Legend />
-						<Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : "("+getRatingText(v.color_code)+")\n"+v.value+"%"}</Text>}/>
-					</BarChart>
-				</ResponsiveContainer>
-			);
+			if(this.state.data.length > 0){
+				return (
+					<ResponsiveContainer width="100%" aspect={3 / 1}>
+						<BarChart data={this.state.data} margin={{top: 35, right: 80, left: 20, bottom: 5}}>
+							<XAxis dataKey="name" label="AuditCycle"/>
+							<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
+							<Tooltip/>
+							<Legend />
+							<Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : "("+getRatingText(v.color_code)+")\n"+v.value+"%"}</Text>}/>
+						</BarChart>
+					</ResponsiveContainer>
+				);
+			}
+			else{
+				return (<Jumbotron heading="no reports for this store" para="only completed reports graph will show up here"/>);
+			}
 		}
 	}
 }

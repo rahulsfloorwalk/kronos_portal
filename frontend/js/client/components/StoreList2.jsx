@@ -13,6 +13,8 @@ import { fetchAllStores, fetchAuditCyclesYearList } from "../service/store.js";
 
 import { url } from "../../../config.js";
 
+import { getColor } from "../../utils.js";
+
 export default class StoreList2 extends Component{
 	constructor(props){
 		super(props);
@@ -38,14 +40,15 @@ export default class StoreList2 extends Component{
 		let index = 0;
 		for(let store of this.state.stores) {
 			storeRows.push(
-				<tr key={store.id} onClick={() => hashHistory.push(`/store/${store.id}/trends`)} style={pointerStyle}>
+				<tr title="Click to open Store Details" key={store.id} onClick={() => hashHistory.push(`/store/${store.id}/trends`)} style={pointerStyle}>
 					<td className="text-right">{++index}</td>
 					<td>{store.code}</td>
 					<td>{store.name}</td>
-					<td>{store.type}</td>
-					<td>{store.priority}</td>
+					{/* <td>{store.type}</td>
+					<td>{store.priority}</td> */}
 					<td>{store.address}</td>
 					<td>{store.city.name}</td>
+					<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
 				</tr>
 			);
 		}
@@ -92,10 +95,11 @@ export default class StoreList2 extends Component{
 								<th className="text-right">#</th>
 								<th>Code</th>
 								<th>Name</th>
-								<th>Type</th>
-								<th>Priority</th>
+								{/* <th>Type</th>
+								<th>Priority</th> */}
 								<th>Address</th>
 								<th>City</th>
+								<th>Total Score</th>
 							</tr>
 						</thead>
 						<tbody>

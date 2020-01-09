@@ -7,6 +7,7 @@ import { fetchStore } from "../service/store.js";
 import { File, Stats } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import NavLink from "../../components/NavLink.jsx";
+import { getColor } from "../../utils.js";
 
 export default class StoreDetail extends React.Component {
 	static propTypes = {
@@ -49,6 +50,7 @@ export default class StoreDetail extends React.Component {
 										{ this.state.store.priority ? <td className="">Priority</td> : null }
 										<td className="">Address</td>
 										<td className="">City</td>
+										<td className="">Total Score</td>
 									</tr>
 									<tr>
 										{ this.state.store.code ? <td><b>{ this.state.store.code }</b></td> : null }
@@ -57,6 +59,7 @@ export default class StoreDetail extends React.Component {
 										{ this.state.store.priority ? <td><b>{ this.state.store.priority }</b></td> : null }
 										<td><b>{ this.state.store.address }</b></td>
 										<td><b>{ this.state.store.city.name }</b></td>
+										<td className={getColor(this.state.store.get_total_percentage.color)}><b>{this.state.store.get_total_percentage.score === null ? "N/A" : this.state.store.get_total_percentage.score+"%"}</b></td>
 									</tr>
 								</tbody>
 							</table>

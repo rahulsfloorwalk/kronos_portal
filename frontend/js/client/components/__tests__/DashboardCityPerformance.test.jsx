@@ -4,7 +4,8 @@ import renderer from "react-test-renderer";
 import $ from "jquery";
 
 import DashboardCityPerformanceChart from "../DashboardCityPerformanceChart.jsx";
-import { fetchCityWisePerformance } from "../../service/dashboard.js";
+// import { fetchCityWisePerformance } from "../../service/dashboard.js";
+import { fetchCityWisePerformanceByAuditCycleId } from "../../service/dashboard.js";
 
 jest.mock("../../service/dashboard.js");
 
@@ -20,13 +21,21 @@ const sampleQuestionnaireType = {
 	"client_id": 1
 };
 
+const sampleAuditCycle = {
+	"id":1,
+	"name": "January 2017",
+	"start_date": "2017-01-01",
+	"end_date": "2017-01-31",
+	"type": "walk in"
+};
+
 const sampleCityPerformanceData = {
 	"type": "1",
 	"questionnaire_type": "1",
 	"columns": [
 		"January 2017",
-		"February 2017",
-		"March 2017"
+		/* "February 2017",
+		"March 2017" */
 	],
 	"data": [
 		[
@@ -39,14 +48,14 @@ const sampleCityPerformanceData = {
 					"color_code": 1,
 					"value": 32
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 60
 				},
 				{
 					"color_code": 3,
 					"value": 72
-				}
+				} */
 			]
 		],
 		[
@@ -59,14 +68,14 @@ const sampleCityPerformanceData = {
 					"color_code": 1,
 					"value": 24
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 43
 				},
 				{
 					"color_code": 3,
 					"value": 66
-				}
+				} */
 			]
 		],
 		[
@@ -79,14 +88,14 @@ const sampleCityPerformanceData = {
 					"color_code": 3,
 					"value": 76
 				},
-				{
+				/* {
 					"color_code": 1,
 					"value": 40
 				},
 				{
 					"color_code": 2,
 					"value": 60
-				}
+				} */
 			]
 		],
 		[
@@ -99,14 +108,14 @@ const sampleCityPerformanceData = {
 					"color_code": 2,
 					"value": 54
 				},
-				{
+				/* {
 					"color_code": 3,
 					"value": 64
 				},
 				{
 					"color_code": 2,
 					"value": 58
-				}
+				} */
 			]
 		],
 		[
@@ -119,14 +128,14 @@ const sampleCityPerformanceData = {
 					"color_code": 1,
 					"value": 36
 				},
-				{
+				/* {
 					"color_code": 1,
 					"value": 40
 				},
 				{
 					"color_code": 2,
 					"value": 56
-				}
+				} */
 			]
 		],
 		[
@@ -139,14 +148,14 @@ const sampleCityPerformanceData = {
 					"color_code": 3,
 					"value": 72
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 48
 				},
 				{
 					"color_code": 2,
 					"value": 56
-				}
+				} */
 			]
 		],
 		[
@@ -159,14 +168,14 @@ const sampleCityPerformanceData = {
 					"color_code": 1,
 					"value": 40
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 56
 				},
 				{
 					"color_code": 2,
 					"value": 48
-				}
+				} */
 			]
 		]
 	]
@@ -174,20 +183,22 @@ const sampleCityPerformanceData = {
 
 describe("<DashboardCityPerformanceChart/>", () => {
 	beforeEach(() => {
-		fetchCityWisePerformance.mockReturnValue($.Deferred().resolve(sampleCityPerformanceData).promise());
+		// fetchCityWisePerformance.mockReturnValue($.Deferred().resolve(sampleCityPerformanceData).promise());
+		fetchCityWisePerformanceByAuditCycleId.mockReturnValue($.Deferred().resolve(sampleCityPerformanceData).promise());
 	});
 
 	it("renders the chart correctly", (done) => {
-		const r = renderer.create(<DashboardCityPerformanceChart questionnaireType={sampleQuestionnaireType}/>, { createNodeMock });
+		const r = renderer.create(<DashboardCityPerformanceChart questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle}/>, { createNodeMock });
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();
 		});
 	});
 	it("calls fetchCityWisePerformance with the correct ID", (done) => {
-		shallow(<DashboardCityPerformanceChart questionnaireType={sampleQuestionnaireType}/>);
+		shallow(<DashboardCityPerformanceChart questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle}/>);
 		setTimeout(() => {
-			expect(fetchCityWisePerformance).toHaveBeenCalledWith(sampleQuestionnaireType.id);
+			// expect(fetchCityWisePerformance).toHaveBeenCalledWith(sampleQuestionnaireType.id);
+			expect(fetchCityWisePerformanceByAuditCycleId).toHaveBeenCalledWith(sampleQuestionnaireType.id, sampleAuditCycle.id);
 			done();
 		});
 	});

@@ -262,16 +262,6 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                 >
                   January 2017
                 </th>
-                <th
-                  className="text-right"
-                >
-                  February 2017
-                </th>
-                <th
-                  className="text-right"
-                >
-                  March 2017
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -285,18 +275,6 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   36
                   %
                 </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  45
-                  %
-                </td>
-                <td
-                  className="text-right rating-average"
-                >
-                  68
-                  %
-                </td>
               </tr>
               <tr>
                 <td>
@@ -306,18 +284,6 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   className="text-right rating-bad"
                 >
                   32
-                  %
-                </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  49
-                  %
-                </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  60
                   %
                 </td>
               </tr>
@@ -331,18 +297,6 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   47
                   %
                 </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  56
-                  %
-                </td>
-                <td
-                  className="text-right rating-average"
-                >
-                  66
-                  %
-                </td>
               </tr>
               <tr>
                 <td>
@@ -354,18 +308,6 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   30
                   %
                 </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  43
-                  %
-                </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  46
-                  %
-                </td>
               </tr>
               <tr>
                 <td>
@@ -375,18 +317,6 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   className="text-right rating-average"
                 >
                   61
-                  %
-                </td>
-                <td
-                  className="text-right rating-poor"
-                >
-                  52
-                  %
-                </td>
-                <td
-                  className="text-right rating-average"
-                >
-                  70
                   %
                 </td>
               </tr>

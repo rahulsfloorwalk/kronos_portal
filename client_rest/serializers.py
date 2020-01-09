@@ -97,6 +97,7 @@ class StoreSerializer(ModelSerializer):
             'priority',
             'name',
             'address',
+            'get_total_percentage',
             'city',
             'client',
         )

@@ -4,7 +4,8 @@ import renderer from "react-test-renderer";
 import $ from "jquery";
 
 import AuditCycleStorePerformance from "../AuditCycleStorePerformance.jsx";
-import { fetchStoreWisePerformance } from "../../service/dashboard.js";
+// import { fetchStoreWisePerformance } from "../../service/dashboard.js";
+import { fetchStoreWisePerformanceByAuditCycleId } from "../../service/dashboard.js";
 
 jest.mock("../../service/dashboard.js");
 
@@ -20,13 +21,21 @@ const sampleQuestionnaireType = {
 	"client_id": 1
 };
 
+const sampleAuditCycle = {
+	"id":1,
+	"name": "January 2017",
+	"start_date": "2017-01-01",
+	"end_date": "2017-01-31",
+	"type": "walk in"
+};
+
 const sampleStorePerformanceData = {
 	"type": "1",
 	"questionnaire_type": "1",
 	"columns": [
 		"January 2017",
-		"February 2017",
-		"March 2017"
+		/* "February 2017",
+		"March 2017" */
 	],
 	"data": [
 		[
@@ -47,14 +56,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 28
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 56
 				},
 				{
 					"color_code": 4,
 					"value": 92
-				}
+				} */
 			]
 		],
 		[
@@ -75,14 +84,14 @@ const sampleStorePerformanceData = {
 					"color_code": 3,
 					"value": 64
 				},
-				{
+				/* {
 					"color_code": 3,
 					"value": 76
 				},
 				{
 					"color_code": 3,
 					"value": 80
-				}
+				} */
 			]
 		],
 		[
@@ -103,14 +112,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 28
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 52
 				},
 				{
 					"color_code": 3,
 					"value": 74
-				}
+				} */
 			]
 		],
 		[
@@ -131,14 +140,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 32
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 60
 				},
 				{
 					"color_code": 3,
 					"value": 72
-				}
+				} */
 			]
 		],
 		[
@@ -159,14 +168,14 @@ const sampleStorePerformanceData = {
 					"color_code": 3,
 					"value": 76
 				},
-				{
+				/* {
 					"color_code": 1,
 					"value": 40
 				},
 				{
 					"color_code": 2,
 					"value": 60
-				}
+				} */
 			]
 		],
 		[
@@ -187,14 +196,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 28
 				},
-				{
+				/* {
 					"color_code": 1,
 					"value": 40
 				},
 				{
 					"color_code": 2,
 					"value": 60
-				}
+				} */
 			]
 		],
 		[
@@ -215,14 +224,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 36
 				},
-				{
+				/* {
 					"color_code": 1,
 					"value": 40
 				},
 				{
 					"color_code": 2,
 					"value": 56
-				}
+				} */
 			]
 		],
 		[
@@ -243,14 +252,14 @@ const sampleStorePerformanceData = {
 					"color_code": 3,
 					"value": 72
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 48
 				},
 				{
 					"color_code": 2,
 					"value": 56
-				}
+				} */
 			]
 		],
 		[
@@ -271,14 +280,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 40
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 56
 				},
 				{
 					"color_code": 2,
 					"value": 48
-				}
+				} */
 			]
 		],
 		[
@@ -299,14 +308,14 @@ const sampleStorePerformanceData = {
 					"color_code": 1,
 					"value": 12
 				},
-				{
+				/* {
 					"color_code": 1,
 					"value": 24
 				},
 				{
 					"color_code": 1,
 					"value": 40
-				}
+				} */
 			]
 		],
 		[
@@ -327,14 +336,14 @@ const sampleStorePerformanceData = {
 					"color_code": 2,
 					"value": 44
 				},
-				{
+				/* {
 					"color_code": 2,
 					"value": 52
 				},
 				{
 					"color_code": 1,
 					"value": 36
-				}
+				} */
 			]
 		]
 	]
@@ -342,20 +351,22 @@ const sampleStorePerformanceData = {
 
 describe("<AuditCycleStorePerformance/>", () => {
 	beforeEach(() => {
-		fetchStoreWisePerformance.mockReturnValue($.Deferred().resolve(sampleStorePerformanceData).promise());
+		// fetchStoreWisePerformance.mockReturnValue($.Deferred().resolve(sampleStorePerformanceData).promise());
+		fetchStoreWisePerformanceByAuditCycleId.mockReturnValue($.Deferred().resolve(sampleStorePerformanceData).promise());
 	});
 
 	it("renders the chart correctly", (done) => {
-		const r = renderer.create(<AuditCycleStorePerformance questionnaireType={sampleQuestionnaireType}/>, { createNodeMock });
+		const r = renderer.create(<AuditCycleStorePerformance questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle} />, { createNodeMock });
 		setTimeout(() => {
 			expect(r.toJSON()).toMatchSnapshot();
 			done();
 		});
 	});
 	it("calls fetchStoreWisePerformance with the correct ID", (done) => {
-		shallow(<AuditCycleStorePerformance questionnaireType={sampleQuestionnaireType}/>);
+		shallow(<AuditCycleStorePerformance questionnaireType={sampleQuestionnaireType} auditCycle={sampleAuditCycle} />);
 		setTimeout(() => {
-			expect(fetchStoreWisePerformance).toHaveBeenCalledWith(sampleQuestionnaireType.id);
+			// expect(fetchStoreWisePerformance).toHaveBeenCalledWith(sampleQuestionnaireType.id);
+			expect(fetchStoreWisePerformanceByAuditCycleId).toHaveBeenCalledWith(sampleQuestionnaireType.id, sampleAuditCycle.id);
 			done();
 		});
 	});

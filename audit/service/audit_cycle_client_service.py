@@ -62,6 +62,43 @@ def find_all_for_clientuser(user_id):
 
     return map(map_audit_cycle_values, rows)
 
+def find_all_for_dashboard_clientuser(user_id):
+    user = find_clientuser_by_user_id(user_id)
+    rows = AuditStore.objects \
+        .presentable() \
+        .visible_to(user) \
+        .filter(
+            audit__audit_cycle__client__id=user.clientuser.client_id,
+            # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
+        ) \
+        .distinct('audit__audit_cycle_id') \
+        .order_by('-audit__audit_cycle_id') \
+        .values(
+            'audit__audit_cycle__id',
+            'audit__audit_cycle__name',
+            'audit__audit_cycle__status',
+            'audit__audit_cycle__start_date',
+            'audit__audit_cycle__end_date',
+            'audit__audit_cycle__questionnaire_type__id',
+            'audit__audit_cycle__questionnaire_type__name',
+            'audit__audit_cycle__questionnaire_type__is_default',
+        )
+
+    def map_audit_cycle_values(values):
+        return {
+            "id": values["audit__audit_cycle__id"],
+            "name": values["audit__audit_cycle__name"],
+            "status": values["audit__audit_cycle__status"],
+            "start_date": values["audit__audit_cycle__start_date"],
+            "end_date": values["audit__audit_cycle__end_date"],
+            "questionnaire_type": {
+                "id": values["audit__audit_cycle__questionnaire_type__id"],
+                "name": values["audit__audit_cycle__questionnaire_type__name"],
+                "is_default": values["audit__audit_cycle__questionnaire_type__is_default"],
+            },
+        }
+
+    return map(map_audit_cycle_values, rows)
 
 def get_audit_cycle_year_list(user_id):
     user = find_clientuser_by_user_id(user_id)

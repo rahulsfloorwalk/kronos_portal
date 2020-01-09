@@ -183,6 +183,7 @@ class ReportSection(Model):
         if auditor_comment in (None, ""):
             raise AppLogicError("auditor comment cannot be blank")
         self.auditor_comment = auditor_comment
+        self.pm_comment = "--"
         self.save()
 
     def set_pm_comment(self, pm_comment):

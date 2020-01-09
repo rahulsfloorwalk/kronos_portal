@@ -25,6 +25,19 @@ def get_audit_cycle_section_averages_for_client(client_id, questionnaire_type_id
     return get_audit_cycle_section_averages(qs, user_id)
 
 
+def get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id, questionnaire_type_id, user_id):
+    qs = AuditCycle.objects.filter(id=audit_cycle_id) \
+        .filter(questionnaire_type_id=questionnaire_type_id)
+    # prefetch related sections, report_sections, questions and answers
+    qs = qs.prefetch_related(
+        'sections',
+        Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+        'sections__questions',
+        Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+    )
+    return get_audit_cycle_section_averages(qs, user_id)
+
+
 def get_audit_cycle_section_averages(qs, user_id):
     audit_cycle_count = qs.count()
     if audit_cycle_count > 3:

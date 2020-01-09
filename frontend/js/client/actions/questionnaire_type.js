@@ -9,7 +9,13 @@ export function fetchQuestionnaireTypes(){
 		});
 	};
 }
-
+export function fetchQuestionnaireTypesForDashboard(){
+	return function(dispatch){
+		return questionnaireType.fetchQuestionnaireTypesForDashboard().then((questionnaireTypes) => {
+			dispatch(questionnaireTypeActionCreators.fetchQuestionnaireTypesForDashboard(questionnaireTypes));
+		});
+	};
+}
 
 export function selectQuestionnaireType(selectedQuestionnaireTypeId){
 	return function(dispatch){
