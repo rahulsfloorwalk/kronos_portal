@@ -8,7 +8,8 @@ import FormInput from "../../components/FormInput.jsx";
 import { login } from "../service/auth.js";
 import { affectInputEventToComponent } from "../../react_utils.js";
 
-import floorwalkLogoUrl from "../../../img/logo_3_500x100.png";
+// import floorwalkLogoUrl from "../../../img/logo_3_500x100.png";
+import floorwalkLogoUrl from "../../../img/logo_200x120.png";
 
 export default class Login extends React.Component {
 	static propTypes = {
@@ -54,7 +55,7 @@ export default class Login extends React.Component {
 					<div className="row">
 						<div className="col-md-6 col-md-offset-3">
 							<a href="http://floorwalk.in">
-								<img className="img-responsive" src={floorwalkLogoUrl}/>
+								<img className="img-responsive" style={{marginLeft:"auto",marginRight:"auto"}} src={floorwalkLogoUrl}/>
 							</a>
 						</div>
 					</div>

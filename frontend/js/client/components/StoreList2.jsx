@@ -15,20 +15,32 @@ import { url } from "../../../config.js";
 
 import { getColor } from "../../utils.js";
 
+import Loading from "../../components/Loading.jsx";
+
 export default class StoreList2 extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			stores: [],
 			audit_cycles: [],
+			loading: false,
 		};
 	}
+
+	setLoading = (loading) => {
+		this.setState( prevState => {
+			return Object.assign({}, prevState, {
+				loading
+			});
+		});
+	};
 	componentDidMount() {
+		this.setLoading(true);
 		fetchAllStores().then((stores)=>{
 			this.setState({
 				stores
 			});
-		});
+		}).always(() => this.setLoading(false));
 		fetchAuditCyclesYearList().then((audit_cycles)=>{
 			this.setState({
 				audit_cycles
@@ -36,6 +48,9 @@ export default class StoreList2 extends Component{
 		});
 	}
 	render(){
+		if(this.state.loading){
+			return <Loading/>;
+		}
 		let storeRows = [];
 		let index = 0;
 		for(let store of this.state.stores) {

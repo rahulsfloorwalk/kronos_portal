@@ -3263,7 +3263,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -4083,7 +4083,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"

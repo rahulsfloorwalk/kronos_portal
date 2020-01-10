@@ -78,13 +78,13 @@ class Store(Model):
         percentage = 0
         count = 0
         total_percentage = None
-        for audit in self.audits.all():
+        for audit in self.audits.filter():
             audit_stores = audit.audit_stores.presentable()
             for audit_store in audit_stores:
-                percentage += audit_store.percentage()
+                percentage += audit_store.audit_store_percentage
                 count += 1
-            if percentage is 0:
-                return {"score": percentage, "color": get_color_code_by_percentage(percentage)}
+            if count is 0:
+                return {"score": None, "color": get_color_code_by_percentage(None)}
             total_percentage = round(percentage / count)
 
         return {"score": total_percentage, "color": get_color_code_by_percentage(total_percentage)}
