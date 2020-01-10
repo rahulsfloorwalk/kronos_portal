@@ -223,7 +223,7 @@ export default class AuditStoreDetails extends React.Component{
 					<option value="MISS_VIDEO">Missing Video</option>
 					<option value="AUDITOR_NOT_RESPONDING">Auditor Not Responding</option>
 					<option value="CONTRADICTION">Contradiction</option>
-					<option value="NOT_SUFFICIENT_PROOFS">Not Suffiecient Proofs</option>
+					<option value="NOT_SUFFICIENT_PROOFS">Not Sufficient Proofs</option>
 					<option value="DATE_TIME_MISSING">Date or Time Missing in Image</option>
 					<option value="WAITING_FOR_ATTACHMENT">Waiting for Attachment from Auditor</option>
 					<option value="FAULTY_REPORT">Faulty Report</option>

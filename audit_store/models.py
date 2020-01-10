@@ -134,7 +134,7 @@ class AuditStore(Model):
         (MISS_AUDIO, "Missing Video"),
         (AUDITOR_NOT_RESPONDING, "Auditor Not Responding"),
         (CONTRADICTION, "Contradiction"),
-        (NOT_SUFFICIENT_PROOFS, "Not Suffiecient Proofs"),
+        (NOT_SUFFICIENT_PROOFS, "Not Sufficient Proofs"),
         (DATE_TIME_MISSING, "Date or Time Missing in Image"),
         (WAITING_FOR_ATTACHMENT, "Waiting for Attachment from Auditor"),
         (FAULTY_REPORT, "Faulty Report"),
@@ -167,6 +167,8 @@ class AuditStore(Model):
 
     check_points = JSONField(db_column='check_points', default=dict, blank=False)
 
+    audit_store_percentage = IntegerField(db_column='percentage', null=True, blank=True)
+
     objects = AuditStoreQuerySet.as_manager()
 
     class Meta:
@@ -195,6 +197,10 @@ class AuditStore(Model):
             return max_marks
         else:
             return int(self.marks_obtained() * 100 / max_marks)
+
+    def save_percentage(self):
+        self.audit_store_percentage = int(self.percentage())
+        self.save()
 
     def color(self):
         return get_color_code_by_percentage(self.percentage())
@@ -404,6 +410,8 @@ class AuditStore(Model):
             raise AppLogicError("Report cannot be completed now")
 
         self._change_status(AuditStore.COMPLETED, by)
+        self.save_percentage()
+
 
     @atomic
     def revert_complete(self, *args, by):

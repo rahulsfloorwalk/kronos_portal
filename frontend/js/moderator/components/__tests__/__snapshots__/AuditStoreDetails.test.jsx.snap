@@ -257,7 +257,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -649,7 +649,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -1041,7 +1041,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -1433,7 +1433,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -1825,7 +1825,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -2225,7 +2225,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -2624,7 +2624,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -3016,7 +3016,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -3401,7 +3401,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -3786,7 +3786,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -4171,7 +4171,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -4556,7 +4556,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"
@@ -5376,7 +5376,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
             <option
               value="NOT_SUFFICIENT_PROOFS"
             >
-              Not Suffiecient Proofs
+              Not Sufficient Proofs
             </option>
             <option
               value="DATE_TIME_MISSING"

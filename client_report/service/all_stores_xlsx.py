@@ -41,7 +41,7 @@ def get_aggregate_data(client_id, year):
     )
     audit_store_list = []
     for i in audit_store_data.iterator():
-        audit_store_list.append({'audit_cycle_id': i.audit.audit_cycle.id, 'store_id': i.audit.store.id, 'percentage': i.percentage()})
+        audit_store_list.append({'audit_cycle_id': i.audit.audit_cycle.id, 'store_id': i.audit.store.id, 'percentage': i.audit_store_percentage})
     return client_name, audit_cycle_list, store_list, audit_store_list
 
 
@@ -88,8 +88,8 @@ def create_text_structure(client_name, audit_cycle_list, store_list, audit_store
                 #         .presentable():
                 for res in result:
                     mean_count += 1
-                    per = per + round(res['percentage'])
-                percent = round(per / mean_count)
+                    per = per + int(res['percentage'])
+                percent = int(per / mean_count)
                 report_section_cells.append({
                     'value': str(percent) + "%",
                     'color_code': get_color_code(percent, 100)
