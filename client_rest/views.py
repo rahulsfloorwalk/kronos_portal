@@ -538,6 +538,14 @@ class QuestionnaireTypesByClient(APIView):
         types = questionnaire_type_client_service.find_questionnaire_types_for_client_by_user(request.user)
         return Response(types)
 
+class StoreQuestionnaireTypesList(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, store_id):
+        types = questionnaire_type_client_service.find_questionnaire_types_for_client_store_by_user(request.user, store_id)
+        return Response(types)
 
 class QuestionnaireTypesForDashboardByClient(APIView):
     permission_classes = [HasGroupPermission]

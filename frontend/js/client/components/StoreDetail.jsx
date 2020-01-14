@@ -50,7 +50,7 @@ export default class StoreDetail extends React.Component {
 										{ this.state.store.priority ? <td className="">Priority</td> : null }
 										<td className="">Address</td>
 										<td className="">City</td>
-										<td className="">Total Score</td>
+										<td className="">Total Score Till Date</td>
 									</tr>
 									<tr>
 										{ this.state.store.code ? <td><b>{ this.state.store.code }</b></td> : null }
