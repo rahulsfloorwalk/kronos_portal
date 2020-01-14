@@ -83,10 +83,10 @@ class Store(Model):
             for audit_store in audit_stores:
                 percentage += audit_store.audit_store_percentage
                 count += 1
-            if count is 0:
-                return {"score": None, "color": get_color_code_by_percentage(None)}
-            total_percentage = round(percentage / count)
-
+            if percentage is not 0:
+                total_percentage = round(percentage / count)
+        if total_percentage is None:
+            return {"score": None, "color": get_color_code_by_percentage(None)}
         return {"score": total_percentage, "color": get_color_code_by_percentage(total_percentage)}
 
     def __str__(self):

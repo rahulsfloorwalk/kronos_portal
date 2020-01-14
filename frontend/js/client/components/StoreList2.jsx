@@ -114,7 +114,7 @@ export default class StoreList2 extends Component{
 								<th>Priority</th> */}
 								<th>Address</th>
 								<th>City</th>
-								<th>Total Score</th>
+								<th>Total Score Till Date</th>
 							</tr>
 						</thead>
 						<tbody>

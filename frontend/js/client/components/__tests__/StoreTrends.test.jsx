@@ -5,7 +5,8 @@ import StorePerformance from "../StorePerformance.jsx";
 import QuestionnaireTrends from "../QuestionnaireTrends.jsx";
 
 import StoreTrends from "../StoreTrends.jsx";
-import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
+// import { fetchQuestionnaireTypes } from "../../service/questionnaire_type.js";
+import { fetchQuestionnaireTypesForStore } from "../../service/questionnaire_type.js";
 jest.mock("../../service/questionnaire_type.js");
 import { fetchStore } from "../../service/store.js";
 jest.mock("../../service/store.js");
@@ -65,12 +66,12 @@ const sampleStore = {
 describe("<StoreTrends/>", () => {
 	beforeEach(() => {
 		fetchStore.mockResolvedValue(sampleStore);
-		fetchQuestionnaireTypes.mockResolvedValue(sampleQuestionnaireTypes);
+		fetchQuestionnaireTypesForStore.mockResolvedValue(sampleQuestionnaireTypes);
 	});
 
 	it("it fetches the questionnaire types", () => {
 		shallow(<StoreTrends params={sampleParams}/>);
-		expect(fetchQuestionnaireTypes).toHaveBeenCalled();
+		expect(fetchQuestionnaireTypesForStore).toHaveBeenCalled();
 	});
 
 	it("it fetches the store by ID", () => {

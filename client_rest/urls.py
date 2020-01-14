@@ -48,6 +48,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', views.ReportAttributeByAuditCycleView.as_view(), name='report_attributes_by_audit_cycle_view'),
     url(r'audit_cycle/aggregation$', views.AuditCycleAggregate.as_view(), name='audit_cycle_aggregation'),
     url(r'questionnaire_types$', views.QuestionnaireTypesByClient.as_view(), name='questionnaire_types_by_client_view'),
+    url(r'store/(?P<store_id>[0-9]+)/questionnaire_types_list$', views.StoreQuestionnaireTypesList.as_view(), name='store_questionnaire_types_list'),
     url(r'questionnaire_types_for_dashboard$', views.QuestionnaireTypesForDashboardByClient.as_view(), name='questionnaire_types_for_dashboard_by_client_view'),
     url(r'types$', views.AuditTypesByClient.as_view(), name='audit_types_by_client'),
     url(r'city$', views.CityView.as_view(), name='city_view'),
