@@ -73,6 +73,9 @@ export default class Header extends React.Component {
 							<NavLink to="/store"><Home/> Store Browser</NavLink>
 							: null }
 						{ this.state.clientUser.is_client_admin ?
+							<NavLink to="/store_performance"><File/> Store Performance</NavLink>
+							: null }
+						{ this.state.clientUser.is_client_admin ?
 							<NavLink to="/upcoming"><Time/> Upcoming Audits</NavLink>
 							: "" }
 						{/* { this.state.clientUser.is_client_admin ?

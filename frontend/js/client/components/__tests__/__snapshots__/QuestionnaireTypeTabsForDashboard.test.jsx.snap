@@ -1,0 +1,89 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuestionnaireTypeTabsForDashboard renders a loading sign when there are no questionnaire types 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="test-file-stub"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;
+
+exports[`QuestionnaireTypeTabsForDashboard renders nothing when only one questionnaire type exists 1`] = `null`;
+
+exports[`QuestionnaireTypeTabsForDashboard renders the tabs with selected questionnaire type 1`] = `
+<ul
+  className="nav nav-tabs nav-justified hidden-print"
+>
+  <li
+    className=""
+    style={
+      Object {
+        "cursor": "pointer",
+      }
+    }
+  >
+    <a
+      onClick={[Function]}
+    >
+      <b>
+        Monty
+      </b>
+    </a>
+  </li>
+  <li
+    className="active"
+    style={
+      Object {
+        "cursor": "pointer",
+      }
+    }
+  >
+    <a
+      onClick={[Function]}
+    >
+      <b>
+        Python
+      </b>
+    </a>
+  </li>
+  <li
+    className=""
+    style={
+      Object {
+        "cursor": "pointer",
+      }
+    }
+  >
+    <a
+      onClick={[Function]}
+    >
+      <b>
+        Flying
+      </b>
+    </a>
+  </li>
+  <li
+    className=""
+    style={
+      Object {
+        "cursor": "pointer",
+      }
+    }
+  >
+    <a
+      onClick={[Function]}
+    >
+      <b>
+        Circus
+      </b>
+    </a>
+  </li>
+</ul>
+`;

@@ -17,6 +17,9 @@ import AuditStoreDetail from "./audit_store/AuditStoreDetail.jsx";
 import UpcomingAuditStores from "./UpcomingAuditStores.jsx";
 import TwitterFeed from "./TwitterFeed.jsx";
 
+import StorePerformanceCount from "./StorePerformanceCount.jsx";
+import StorePerformanceStoreList from "./StorePerformanceStoreList.jsx";
+
 const IndexComponent = () => null;
 
 const Routes = () => (<Router history={hashHistory}>
@@ -37,6 +40,9 @@ const Routes = () => (<Router history={hashHistory}>
 		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
 		<Route path="/upcoming" component={UpcomingAuditStores}/>
 
+		<Route path="store_performance" component={StorePerformanceCount}>
+			<Route path="audit_cycle/:audit_cycle_id/section/:section_id/percentage/:percentage/store_list" component={StorePerformanceStoreList}/>
+		</Route>
 		<Route path="/twitter" component={TwitterFeed}/>
 	</Route>
 </Router>);

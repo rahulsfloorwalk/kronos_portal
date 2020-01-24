@@ -126,15 +126,15 @@ class AttachmentUploadBox extends React.Component {
 		this.setState({
 			sectionId : e.target.value
 		});
-	}
-	
+	};
+
 	moveAttachment = () => {
 		let attachmentlist = [];
-		$('.attachment_checkbox input:checked').each(function() {
-			let val = $(this).attr('value');
+		$(".attachment_checkbox input:checked").each(function() {
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -146,20 +146,18 @@ class AttachmentUploadBox extends React.Component {
 		});
 		
 	};
-	
-	
-	
+
 	render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
-		
+
 		var contentStyle = {
 			"paddingTop": "2%"
 		};
-		
+
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		let uploadButton;
 		let deletable = false;
 		if(this.props.auditStore.status === "ACKNOWLEDGED"){
@@ -195,7 +193,7 @@ class AttachmentUploadBox extends React.Component {
 				/>);
 			}
 		}
-		
+
 		var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
@@ -213,7 +211,7 @@ class AttachmentUploadBox extends React.Component {
 				for(var sectionId of orderedKeys) {
 						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
 				}
-				
+
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
 						<div className="col-md-8">
@@ -227,7 +225,6 @@ class AttachmentUploadBox extends React.Component {
 						</div>
 					</div>
 				);
-				
 			}	
 		}
 

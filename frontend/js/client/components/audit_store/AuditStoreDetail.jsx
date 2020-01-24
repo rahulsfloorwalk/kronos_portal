@@ -83,9 +83,9 @@ export default class AuditStoreDetail extends React.Component {
 			return <Loading/>;
 		}
 		const printMode = this.props.printMode || this.props.route.printMode || false;
-		
+
 		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : floorwalkLogoUrl;
-		
+
 		return (
 			
 			<div>
@@ -131,7 +131,7 @@ export default class AuditStoreDetail extends React.Component {
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
 					: null }
 			</div>
-			
+
 		);
 	}
 }

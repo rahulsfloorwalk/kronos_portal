@@ -131,11 +131,11 @@ class __AttachmentUploadBox extends React.Component {
 
 	moveAttachment = () => {
 		let attachmentlist = [];
-		$('.attachment_checkbox input:checked').each(function() {
-			let val = $(this).attr('value');
+		$(".attachment_checkbox input:checked").each(function() {
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -145,16 +145,16 @@ class __AttachmentUploadBox extends React.Component {
 				showErrors: true,
 			});
 		});
-		
+
 	};
 
 	render() {
 		var contentStyle = {
 			"paddingTop": "2%"
 		};
-		
+
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -205,15 +205,15 @@ class __AttachmentUploadBox extends React.Component {
 			if(this.props.editable){
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
-							<div className="col-md-8">
-								<select className="form-control" onChange={this.getSectionId}>
-									<option value="">Select Section</option>
-									{this.props.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
-								</select>
-							</div>
-							<div className="col-md-2">
-								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
-							</div>
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getSectionId}>
+								<option value="">Select Section</option>
+								{this.props.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
+							</select>
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+						</div>
 					</div>
 				);
 			}
@@ -229,8 +229,8 @@ class __AttachmentUploadBox extends React.Component {
 					{submitMessageElement}
 					</div>
 					{selectSection}
-				</div>	
-				<div className="row">	
+				</div>
+				<div className="row">
 					<div className="form-group attachment_checkbox" style={{}}>
 						{attachmentRows}
 					</div>

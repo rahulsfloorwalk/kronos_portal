@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`StorePerformanceCount renders the tab strip and a loading sign when no questionnaire type is selected 1`] = `
+<div>
+  <Connect(QuestionnaireTypeTabsForDashboard) />
+  <div
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "250px",
+      }
+    }
+  >
+    <label
+      className="control-label"
+    >
+      Percentage : 
+    </label>
+    <br />
+    <input
+      className="form-control"
+      maxLength="3"
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      placeholder="Enter percentage"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+  >
+      
+    <button
+      className="btn btn-primary"
+      onClick={[Function]}
+      type="button"
+    >
+      Search
+    </button>
+  </div>
+  <hr />
+  <Jumbotron
+    align="center"
+    heading="no results found"
+    para="Use this dashboard to get stores which have scored less than optimal value. You can enter the optimal value in the input box above between 1-100"
+  />
+</div>
+`;
+
+exports[`StorePerformanceCount renders the tab strip and data with the selected questionnaire type 1`] = `
+<div>
+  <Connect(QuestionnaireTypeTabsForDashboard) />
+  <div
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "250px",
+      }
+    }
+  >
+    <label
+      className="control-label"
+    >
+      Percentage : 
+    </label>
+    <br />
+    <input
+      className="form-control"
+      maxLength="3"
+      onChange={[Function]}
+      onKeyDown={[Function]}
+      placeholder="Enter percentage"
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    style={
+      Object {
+        "display": "inline-block",
+        "width": "200px",
+      }
+    }
+  >
+      
+    <button
+      className="btn btn-primary"
+      onClick={[Function]}
+      type="button"
+    >
+      Search
+    </button>
+  </div>
+  <hr />
+  <Jumbotron
+    align="center"
+    heading="no results found"
+    para="Use this dashboard to get stores which have scored less than optimal value. You can enter the optimal value in the input box above between 1-100"
+  />
+</div>
+`;

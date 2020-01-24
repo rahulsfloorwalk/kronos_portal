@@ -70,27 +70,27 @@ export default class StoreList2 extends Component{
 
 		let storeTable;
 		let div_style = {
-			paddingBottom:'1%'
+			paddingBottom:"1%"
 		};
 		let audit_cycle_button = (null);
-		if (this.state.audit_cycles['audit_cycle_status']){
+		if (this.state.audit_cycles["audit_cycle_status"]){
 			var li_list = [];
-			for(var i in this.state.audit_cycles['audit_cycle_year_list']){
+			for(var i in this.state.audit_cycles["audit_cycle_year_list"]){
 				let base_url = url.api_base_path+"client/audit_cycle_wise_xlsx_report?";
-				base_url += "year=" + encodeURIComponent(this.state.audit_cycles['audit_cycle_year_list'][i] || "");
+				base_url += "year=" + encodeURIComponent(this.state.audit_cycles["audit_cycle_year_list"][i] || "");
 				li_list.push(<li key={i}>
 					<a href={base_url}>
-						<h5><b>{this.state.audit_cycles['audit_cycle_year_list'][i]}</b></h5>
+						<h5><b>{this.state.audit_cycles["audit_cycle_year_list"][i]}</b></h5>
 					</a>
 				</li>);
-			};
+			}
 			audit_cycle_button = (
 				<div className="btn-group pull-right hidden-print" style={div_style}>
 					&nbsp;Download:<br/>
 					<button className="btn btn-default"
 						title="Download Reports"
 						onClick={() => this.reportDropdown && this.reportDropdown.toggle()}>
-							<Download/> {this.state.audit_cycles['audit_cycle_year_list'].length} Audit Cycle Reports Year Wise &nbsp;
+							<Download/> {this.state.audit_cycles["audit_cycle_year_list"].length} Audit Cycle Reports Year Wise &nbsp;
 							<span className="caret"/>
 					</button>
 					<DropDown ref={(e) => this.reportDropdown = e}>
@@ -99,7 +99,7 @@ export default class StoreList2 extends Component{
 				</div>
 			);
 		}
-		
+
 		if( storeRows.length > 0) {
 			storeTable = (
 				<div>

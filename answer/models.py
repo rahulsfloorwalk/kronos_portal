@@ -91,6 +91,7 @@ class ReportSection(Model):
     auditor_comment = CharField(db_column='auditor_comment', max_length=4096, blank=True)
     auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=4096, blank=True)
     not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
+    report_section_percentage = IntegerField(db_column='percentage', blank=True, null=True)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
@@ -167,6 +168,10 @@ class ReportSection(Model):
         if max_marks == 0:
             return 0
         return (self.marks_obtained() * 100.0) / max_marks
+
+    def save_percentage(self):
+        self.report_section_percentage = int(self.marks_percentage())
+        self.save()
 
     def color_code(self):
         return get_color_code(self.marks_obtained(), self.max_marks())

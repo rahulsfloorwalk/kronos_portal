@@ -124,21 +124,20 @@ export default class SectionAttachmentBox extends React.Component{
 			});
 		}
 	};
-	
-	
+
 	getAttachmentSectionId = (e) => {
 		this.setState({
 			attachmentSectionId : e.target.value
 		});
 	};
-	
+
 	moveAttachmentSection = () => {
 		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
-			let val = $(this).attr('value');
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -149,11 +148,10 @@ export default class SectionAttachmentBox extends React.Component{
 			});
 		});
 	};
-	
-	
+
 	render(){
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		let uploadButton;
 		if(this.props.auditStore && this.props.auditStore.is_editable_by_agency){
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm" style={{
