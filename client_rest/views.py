@@ -555,3 +555,27 @@ class QuestionnaireTypesForDashboardByClient(APIView):
     def get(self, request):
         types = questionnaire_type_client_service.find_questionnaire_types_for_client_dashboard_by_user(request.user)
         return Response(types)
+
+class StorePerformanceView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request):
+        store_performance_data = section_service.get_store_performance_data(request.data["percentage"],
+                                                                            request.data["questionnaire_id"])
+        return Response(store_performance_data)
+
+
+class StorePerformanceStoreListByPercentageView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request):
+        store_list = section_service.get_store_performance_store_list(
+            request.data['audit_cycle_id'],
+            request.data['section_id'],
+            request.data['percentage']
+        )
+        return Response(store_list)

@@ -54,13 +54,13 @@ export default class StoreTrends extends Component{
 			<h3 className="page-header">
 				Store Performance
 				<div className="pull-right">
-					{selectedQuestionnaireType ? 
+					{selectedQuestionnaireType ?
 						<select className="form-control input-lg" value={this.state.selectedQuestionnaireTypeId} onChange={this.selectQuestionnaireType}>
 							{this.state.questionnaireTypes.map(qt => <option key={qt.id} value={qt.id}>{qt.name}</option>)}
-						</select> 
+						</select>
 						: null
 					}
-					
+
 				</div>
 			</h3>
 			{ selectedQuestionnaireType ?

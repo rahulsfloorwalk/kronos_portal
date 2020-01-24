@@ -14,7 +14,7 @@ const questionnaireTypePropType = PropTypes.shape({
 	is_default: PropTypes.bool.isRequired,
 });
 
-export class QuestionnaireTypeTabs extends React.Component{
+export class QuestionnaireTypeTabsForDashboard extends React.Component{
 	static propTypes =  {
 		questionnaireTypes: PropTypes.arrayOf(questionnaireTypePropType),
 		selectedQuestionnaireType: questionnaireTypePropType,
@@ -58,4 +58,4 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
 	onMount: fetchQuestionnaireTypesForDashboard,
 	onSelect: selectQuestionnaireType,
-})(QuestionnaireTypeTabs);
+})(QuestionnaireTypeTabsForDashboard);

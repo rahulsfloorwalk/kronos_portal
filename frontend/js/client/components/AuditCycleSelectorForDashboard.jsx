@@ -12,7 +12,7 @@ const auditCyclePropType = PropTypes.shape({
 	end_date: PropTypes.string.isRequired,
 });
 
-export class AuditCycleSelector extends React.Component {
+export class AuditCycleSelectorForDashboard extends React.Component {
 	static propTypes = {
 		auditCycles: PropTypes.arrayOf(auditCyclePropType),
 		selectedAuditCycle: auditCyclePropType,
@@ -52,4 +52,4 @@ const mapStateToProps = (state) => {
 export default connect(mapStateToProps, {
 	onMount: fetchAuditCyclesForDashboard,
 	onSelect: selectAuditCycle,
-})(AuditCycleSelector);
+})(AuditCycleSelectorForDashboard);

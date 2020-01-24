@@ -1,7 +1,7 @@
 from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import manager as manager_service
-
+from answer.models import ReportSection
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -76,6 +76,9 @@ def complete_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.complete(by=user)
+    report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
+    for report in report_obj:
+        report.save_percentage()
     return audit_store
 
 
