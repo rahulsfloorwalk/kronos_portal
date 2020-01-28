@@ -316,6 +316,7 @@ AWS = {
 }
 
 AUTH_GA_ID = properties["FRONTEND"]["AUDITOR_GA_ID"]
+CLIENT_GA_ID = properties["FRONTEND"]["CLIENT_GA_ID"]
 TAWK_TO_SRC = properties["FRONTEND"]["TAWK_TO_SRC"]
 COLLECTCDN_ID = properties["FRONTEND"]["COLLECTCDN_ID"]
 

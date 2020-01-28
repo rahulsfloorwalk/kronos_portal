@@ -101,7 +101,7 @@ export class StorePerformanceCount extends React.Component{
 			let headers = [];
 			let headers_section = [];
 			headers.push(<th key="audit_cycle" rowSpan="2" style={{textAlign:"center"}}>Audit Cycle</th>);
-			headers.push(<th key="store_count" colSpan="3" style={{textAlign:"center"}}>{"Store count which is less than "+this.state.storePerformanceData["percentage"]+"%" }</th>);
+			headers.push(<th key="store_count" colSpan={this.state.storePerformanceData["sections"].length} style={{textAlign:"center"}}>{"Store count which is less than "+this.state.storePerformanceData["percentage"]+"%" }</th>);
 			headers_section = headers_section.concat(this.state.storePerformanceData["sections"].map(s => <th key={s["id"]} className="text-right">{s["name"]}</th>));
 
 			let trs = [];

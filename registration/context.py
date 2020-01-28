@@ -3,6 +3,7 @@ from django.conf import settings
 def registration_context():
     return {
         "auth_ga_id": settings.AUTH_GA_ID,
+        "client_ga_id": settings.CLIENT_GA_ID,
         "TAWK_TO_SRC": settings.TAWK_TO_SRC,
         "COLLECTCDN_ID": settings.COLLECTCDN_ID,
 
