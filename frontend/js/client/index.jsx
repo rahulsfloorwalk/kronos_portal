@@ -16,6 +16,9 @@ import "../../bsvendor/css/bootstrap_noprint.min.css";
 import "../../css/bs_overrides.scss";
 
 import { fetchConfig } from "./service/config.js";
+import ReactGA from 'react-ga';
+import { hashHistory } from "react-router";
+
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR){
@@ -48,6 +51,12 @@ fetchConfig().done((config) => {
 			phoebe_version: config.PHOEBE_VERSION,
 		});
 	}
+
+	ReactGA.initialize(config.GA_ID);
+	hashHistory.listen(location => {
+		ReactGA.set({ page: location.pathname }); // Update the user's current page
+		ReactGA.pageview(location.pathname); // Record a pageview for the given page
+	});
 
 	ReactDOM.render(
 		<Provider store={store}>
