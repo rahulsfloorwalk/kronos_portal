@@ -5,6 +5,7 @@ from django.db.models import Q
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle, Audit
+from audit_store.models import AuditStore
 from manager.models import City
 from manager.service import geo
 from registration.service import auditor as auditor_service
@@ -94,6 +95,23 @@ def find_audits_around_city(city_id:int, kms:int=None):
             store__city__lon__gte=lon_min
         )
     )
+    available_audit_list = []
+    for i in available_audits:
+        audit_count = Audit.objects.get(id=i.id).count
+        if audit_count > 1:
+            if not AuditStore.objects \
+                    .filter(audit__id=i.id, status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]) \
+                    .count() == audit_count:
+                available_audit_list.append(i.id)
+        else:
+            if AuditStore.objects.filter(audit__id=i.id).exists():
+                if not AuditStore.objects.filter(audit__id=i.id, status__in=[AuditStore.COMPLETED,
+                                                                             AuditStore.ACCEPTED]) \
+                        .exists():
+                    available_audit_list.append(i.id)
+            else:
+                available_audit_list.append(i.id)
+    available_audits = Audit.objects.filter(id__in=available_audit_list)
     return available_audits
 
 
