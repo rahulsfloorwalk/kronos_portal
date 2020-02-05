@@ -1,4 +1,5 @@
 import React from "react";
+// import ReactDOM from 'react-dom';
 import PropTypes from "prop-types";
 
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
@@ -53,13 +54,37 @@ class AttachmentRenderer extends React.Component {
 				this.setError(false);
 			}
 		}
+		if(nextProps.attachment.proof_type === "AUDIO"){
+			if(nextProps.attachment.proof_type === this.props.attachment.proof_type){
+				const audio = this.audio_tag;
+				const source = audio.querySelector("source");
+
+				if(nextProps.attachment.id !== this.props.attachment.id){
+					source.src = nextProps.attachment.direct_url;
+					audio.load();
+				}
+			}
+		}
+		if(nextProps.attachment.proof_type === "VIDEO"){
+			if(nextProps.attachment.proof_type === this.props.attachment.proof_type){
+				if (this.props.attachment.mime_type == "video/mp4"){
+					const video = this.video_tag;
+					const source = video.querySelector("source");
+
+					if(nextProps.attachment.id !== this.props.attachment.id){
+						source.src = nextProps.attachment.direct_url;
+						video.load();
+					}
+				}
+			}
+		}
 	}
 
 	render(){
 		switch(this.props.attachment.proof_type){
 		case "AUDIO": {
 			return (
-				<audio controls>
+				<audio ref={node => this.audio_tag = node} controls>
 					<source src={this.props.attachment.direct_url}
 						type={this.props.attachment.mime_type}/>
 				</audio>
@@ -90,7 +115,17 @@ class AttachmentRenderer extends React.Component {
 			</div>
 			);
 		}
-		case "VIDEO":
+		case "VIDEO":{
+			if (this.props.attachment.mime_type == "video/mp4"){
+				return (
+					<video ref={node => this.video_tag = node} width="600" height="310" controls>
+						<source src={this.props.attachment.direct_url}
+							type={this.props.attachment.mime_type}/>
+					</video>
+				);
+			}
+			return (<p>Please download this file.</p>);
+		}
 		case "OTHER":
 			return null;
 		}

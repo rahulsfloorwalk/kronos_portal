@@ -3,13 +3,20 @@
 {% load static %}
 {% block title %}Auditor Sign Up |{% endblock %}
 {% block content %}
+
+<style>
+.page-header{
+	margin: 20px 0 10px !important;
+}
+</style>
+
 	<div class="row">
 		<div class="col-md-5">
 		</div>
 	</div>
 <div class="row">
 	<div class="col-md-5">
-		<h1 class="page-header text-center">
+		<h1 class="text-center" style="margin:40px 0px 20px">
 			<a href="{{rhea_base_url}}">
 				<img src="{% static 'registration/logo_200x120.png' %}"/>
 			</a>
@@ -110,9 +117,7 @@
 		</div>
 	</div>
 	<div class="col-md-7">
-		<br/>
-		<br/>
-		<br/>
+
 		<h1 class="page-header">Here's How it Works!</h1>
 		<h4 class="">Go shopping as a Mystery Shopper. Give us your feedback and get paid. Simple!!</h4>
 		<br/>
@@ -138,6 +143,14 @@
 				<p class="text-center">Get reimbursed for your shopping and make some extra money</p>
 			</div>
 		</div>
+
+		<hr>
+		<iframe width="100%" height="300"
+		allowFullScreen="allowFullScreen"
+		frameBorder="0"
+		src="https://www.youtube.com/embed/ONxB8PDpLh8">
+		</iframe>
+
 	</div>
 </div>
 {% include "registration/tawk.html" %}
