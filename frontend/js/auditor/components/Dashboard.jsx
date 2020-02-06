@@ -7,6 +7,8 @@ import NotificationBox from "./../components/NotificationBox.jsx";
 import StatCard from "./../components/StatCard.jsx";
 import ProfileCard from "./../components/ProfileCard.jsx";
 
+import { Tasks } from "../../components/Icons.jsx";
+
 import Loading from "../../components/Loading.jsx";
 
 import applicationImgUrl from "../../../img/application_100.png";
@@ -58,7 +60,6 @@ class Dashboard extends React.Component {
 					<div className="row">
 						<div className="col-md-8">
 							<br/>
-							<br/>
 							<ProfileCard
 								firstName={this.props.firstName}
 								lastName={this.props.lastName}
@@ -66,26 +67,33 @@ class Dashboard extends React.Component {
 								phone={this.props.phone}
 							/>
 							<br/>
-							<div className="row">
-								<div className="col-md-6">
-									<StatCard
-										title="Audits Applied"
-										image={applicationImgUrl} count={stats.applied}/>
+							<div className="panel panel-primary">
+								<div className="panel-heading">
+									<h4 className="panel-title">
+										<Tasks/> Your Summary
+									</h4>
 								</div>
-								<div className="col-md-6">
-									<StatCard
-										title="Audits Assigned"
-										image={thumbsUpImgUrl} count={stats.assigned}/>
-								</div>
-								<div className="col-md-6">
-									<StatCard
-										title="Reports Completed"
-										image={checkmarkImgUrl} count={stats.completed}/>
-								</div>
-								<div className="col-md-6">
-									<StatCard
-										title="Payments Pending "
-										image={moneyImgUrl} count={stats.pending_payment}/>
+								<div className="row">
+									<div className="col-md-6">
+										<StatCard
+											title="Audits Applied"
+											image={applicationImgUrl} count={stats.applied}/>
+									</div>
+									<div className="col-md-6">
+										<StatCard
+											title="Audits Assigned"
+											image={thumbsUpImgUrl} count={stats.assigned}/>
+									</div>
+									<div className="col-md-6">
+										<StatCard
+											title="Reports Completed"
+											image={checkmarkImgUrl} count={stats.completed}/>
+									</div>
+									<div className="col-md-6">
+										<StatCard
+											title="Payments Pending "
+											image={moneyImgUrl} count={stats.pending_payment}/>
+									</div>
 								</div>
 							</div>
 						</div>
