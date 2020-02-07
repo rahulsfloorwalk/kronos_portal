@@ -100,8 +100,9 @@ export default class PaymentList extends React.Component{
 						Your Payments
 					</h2>
 					<p style={{fontSize:"150%"}}>
-						<b>Payment terms:</b> Payments will be transferred into your bank accounts within <b>30-45 days</b> from date of completion of report.
-						It might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays.
+						<b>Payment terms:</b> Payment will be transferred into your bank account within <b>45 days</b> after the completion of the respective month of your report submission.
+						<br/>
+						Once the payment done from FloorWalk it might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays.
 						For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a>.
 					</p>
 					{rows}
