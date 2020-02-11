@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link, hashHistory } from "react-router";
+import $ from "jquery";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
@@ -118,6 +119,9 @@ class AuditList extends Component{
 			this.setLoading(false);
 		});
 	};
+	close_div = () => {
+		$(".assignment_info").hide();
+	};
 	componentDidMount() {
 		this.reloadAudits(100);
 		this.props.dispatch(fetchProfileInfo());
@@ -146,6 +150,19 @@ class AuditList extends Component{
 		let valueStyle = {fontSize: "1.5em"};
 		return (
 			<div>
+				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px"}}>
+					<button className="btn pull-right" onClick={this.close_div}><u>Close(x)</u></button>
+					<br/>
+					<h3 style={{textAlign:"center"}}>About audit assignment process</h3>
+					<p style={{fontSize:"16px"}}>The audits are assigned basis on right auditor profile match and time of audit application. It is an automated process and happens via system. Only applications applied from the portal are considered for assignment.</p>
+					<p style={{fontSize:"16px"}}><b>Tips for getting audit approved:</b></p>
+					<p style={{fontSize:"14px"}}>
+						1. Kindly <b>complete your detailed profile</b> with ID proofs to increase chances of audit assignment<br/>
+						2. Keep <b>checking the portal</b> for new opportunities<br/>
+						3. <b>Apply for the opportunities</b> as soon as they are live on the portal 
+					</p>
+				</div>
+
 				<h2 className="page-header">
 					<Link className="btn btn-default btn-lg" to="/audit"><b>↲</b></Link> <b>{this.props.auditCycle.client.auditor_display_name}</b> Audits
 				</h2>
