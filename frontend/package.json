@@ -45,7 +45,8 @@
     "redux": "^3.3.1",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.2",
-    "reselect": "^2.2.1"
+    "reselect": "^2.2.1",
+    "video-react": "^0.14.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",

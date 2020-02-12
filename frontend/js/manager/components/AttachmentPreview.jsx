@@ -11,6 +11,8 @@ import { attachmentPropType } from "../prop_types";
 
 import attachmentErrorImageUrl from "../../../img/error_100.png";
 
+import { Player, BigPlayButton  } from "video-react";
+
 class AttachmentRenderer extends React.Component {
 	static propTypes = {
 		attachment: attachmentPropType,
@@ -67,14 +69,8 @@ class AttachmentRenderer extends React.Component {
 		}
 		if(nextProps.attachment.proof_type === "VIDEO"){
 			if(nextProps.attachment.proof_type === this.props.attachment.proof_type){
-				if (this.props.attachment.mime_type == "video/mp4"){
-					const video = this.video_tag;
-					const source = video.querySelector("source");
-
-					if(nextProps.attachment.id !== this.props.attachment.id){
-						source.src = nextProps.attachment.direct_url;
-						video.load();
-					}
+				if(nextProps.attachment.id !== this.props.attachment.id){
+					this.player.load();
 				}
 			}
 		}
@@ -84,10 +80,13 @@ class AttachmentRenderer extends React.Component {
 		switch(this.props.attachment.proof_type){
 		case "AUDIO": {
 			return (
-				<audio ref={node => this.audio_tag = node} controls>
-					<source src={this.props.attachment.direct_url}
-						type={this.props.attachment.mime_type}/>
-				</audio>
+				<div>
+					<p><b>Please download file if you are not able to play it.</b></p>
+					<audio ref={node => this.audio_tag = node} controls>
+						<source src={this.props.attachment.direct_url}
+							type={this.props.attachment.mime_type}/>
+					</audio>
+				</div>
 			);
 		}
 		case "PHOTO": {
@@ -116,15 +115,21 @@ class AttachmentRenderer extends React.Component {
 			);
 		}
 		case "VIDEO":{
-			if (this.props.attachment.mime_type == "video/mp4"){
-				return (
-					<video ref={node => this.video_tag = node} width="600" height="310" controls>
-						<source src={this.props.attachment.direct_url}
-							type={this.props.attachment.mime_type}/>
-					</video>
-				);
-			}
-			return (<p>Please download this file.</p>);
+			return (
+				// <video ref={node => this.video_tag = node} width="600" height="310" controls>
+				// 	<source src={this.props.attachment.direct_url}
+				// 		type={this.props.attachment.mime_type}/>
+				// </video>
+				<center>
+					<p><b>Please download file if you are not able to play it.</b></p>
+					<Player fluid={false} width={600} height={350} ref={node => this.player = node}>
+						<BigPlayButton position="center" />
+						<source src={this.props.attachment.direct_url} />
+					</Player>
+				</center>
+
+			);
+			// return (<p>Please download this file.</p>);
 		}
 		case "OTHER":
 			return null;
