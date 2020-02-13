@@ -14,9 +14,10 @@ import reducers from "./selectors";
 
 import "../../bsvendor/css/bootstrap_noprint.min.css";
 import "../../css/bs_overrides.scss";
+import "../../node_modules/video-react/dist/video-react.css";
 
 import { fetchConfig } from "./service/config.js";
-import ReactGA from 'react-ga';
+import ReactGA from "react-ga";
 import { hashHistory } from "react-router";
 
 

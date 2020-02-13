@@ -14,6 +14,8 @@ import Routes from "./components/Routes.jsx";
 
 import "../../css/bs_overrides.scss";
 
+import "../../node_modules/video-react/dist/video-react.css";
+
 const render = () => {
 	ReactDOM.render(
 		<Routes/>,
