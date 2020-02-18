@@ -145,6 +145,21 @@ export default class AttachmentPreview extends React.Component {
 		onRename: PropTypes.func,
 	};
 
+	state = {
+		display:"none"
+	};
+
+	showModal = () => {
+		this.setState({ display:"block" });
+	};
+
+	hideModal = () => {
+		this.setState({ display:"none" });
+	};
+	delete_hideModal = () => {
+		this.props.onDelete();
+		this.setState({ display:"none" });
+	};
 	render(){
 		if(!this.props.attachment){
 			return null;
@@ -155,7 +170,7 @@ export default class AttachmentPreview extends React.Component {
 		let headingText;
 
 		if(this.props.editable){
-			deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.props.onDelete}><Cross/> Delete</button>);
+			deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.showModal}><Cross/> Delete</button>);
 			headingText = (<InPlaceEditable inputText={this.props.attachment.file_name} onSave={this.props.onRename}>
 				{icon} {this.props.attachment.file_name}
 			</InPlaceEditable>);
@@ -168,6 +183,19 @@ export default class AttachmentPreview extends React.Component {
 				<DownloadAlt/> Download File
 			</a>
 		);
+
+		const modalStyle = {
+			display: this.state.display,
+			overflow: "scroll"
+		};
+		const modalBackdropStyle = {
+			zIndex: "1060",
+			height: "100%"
+		};
+		const modalDialogStyle = {
+			zIndex: "1070",
+		};
+
 		return (
 			<div>
 				<h4 className="page-header">
@@ -178,6 +206,25 @@ export default class AttachmentPreview extends React.Component {
 					<AttachmentRenderer attachment={this.props.attachment}/>
 					<br/>
 					{downloadButton}
+				</div>
+
+				<div className="modal" tabIndex="-1" style={modalStyle}>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
+						<div className="modal-dialog" style={modalDialogStyle}>
+							<div className="modal-content">
+								<div className="modal-header">
+									<button type="button" className="close" onClick={this.hideModal}>&times;</button>
+									<h4 className="modal-title">Delete Attachment</h4>
+								</div>
+								<div className="modal-body">
+									Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
+								</div>
+								<div className="modal-footer">	
+									<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
+									<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
+								</div>
+							</div>
+						</div>
 				</div>
 			</div>
 		);

@@ -20,6 +20,7 @@ export default class AttachmentThumbnail extends Component{
 		attachment: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			proof_type: PropTypes.string.isRequired,
+			file_name: PropTypes.string
 		}),
 		user: PropTypes.string,
 		selected: PropTypes.bool,
@@ -39,8 +40,20 @@ export default class AttachmentThumbnail extends Component{
 			hover: false,
 			loading: false,
 			error: false,
+			display:"none",
 		};
 	}
+	showModal = () => {
+		this.setState({ display:"block" });
+	};
+
+	hideModal = () => {
+		this.setState({ display:"none" });
+	};
+	delete_hideModal = () => {
+		this.props.onDelete();
+		this.setState({ display:"none" });
+	};
 	setHover = (hover) => {
 		this.setState((prevState) => Object.assign({}, prevState, { hover }));
 	};
@@ -124,6 +137,18 @@ export default class AttachmentThumbnail extends Component{
 			color:"Black",
 		};
 
+		const modalStyle = {
+			display: this.state.display,
+			overflow: "scroll"
+		};
+		const modalBackdropStyle = {
+			zIndex: "1060",
+			height: "100%"
+		};
+		const modalDialogStyle = {
+			zIndex: "1070",
+		};
+
 		if(selectable && (this.state.hover || selected)){
 			divStyle.border = "solid #337AB7 2px";
 		}
@@ -136,7 +161,7 @@ export default class AttachmentThumbnail extends Component{
 		let deleteButton;
 		if( this.props.deletable && this.props.onDelete){
 			deleteButton = (
-				<button className="btn btn-default btn-sm pull-right" onClick={this.props.onDelete} title="Delete Attachment">
+				<button className="btn btn-default btn-sm pull-right" onClick={this.showModal} title="Delete Attachment">
 					<Cross/>
 				</button>
 			);
@@ -195,6 +220,25 @@ export default class AttachmentThumbnail extends Component{
 					{faultyMessageElement}
 				</div>
 				<img className="hidden" src={imageSrc} onLoad={this.onImageLoad} onError={this.onImageError}/>
+
+				<div className="modal" tabIndex="-1" style={modalStyle}>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
+						<div className="modal-dialog" style={modalDialogStyle}>
+							<div className="modal-content">
+								<div className="modal-header">
+									<button type="button" className="close" onClick={this.hideModal}>&times;</button>
+									<h4 className="modal-title">Delete Attachment</h4>
+								</div>
+								<div className="modal-body">
+									Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
+								</div>
+								<div className="modal-footer">	
+									<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
+									<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
+								</div>
+							</div>
+						</div>
+				</div>
 			</div>
 		);
 	}

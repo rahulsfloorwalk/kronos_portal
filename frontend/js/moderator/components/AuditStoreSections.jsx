@@ -66,7 +66,7 @@ class AnswerComment extends Component {
 			let hasError = this.state.error ? "has-error" : "";
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
-					<input className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+					<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1"/>
 				</div>
 			);
 		} else {
