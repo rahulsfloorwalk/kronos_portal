@@ -5,7 +5,7 @@ import { pointerStyle } from "../../styles.js";
 
 import NavLink from "../../components/NavLink.jsx";
 
-import { File, User, Inbox, LogOut } from "../../components/Icons.jsx";
+import { File, User, Inbox, LogOut, Tasks } from "../../components/Icons.jsx";
 
 import floorwalkLogoUrl from "../../../img/logo_500x268.png";
 
@@ -30,6 +30,7 @@ class Header extends React.Component {
 						<NavLink to="/audit_store"><File/> Reports</NavLink>
 						<NavLink to="/payment"><big><b>₹</b></big> Payments</NavLink>
 						<NavLink to="/referral"><big><b>₹</b></big> Referrals</NavLink>
+						<NavLink to="/shopper_guide/videos"><Tasks/> Shopper Guide</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
