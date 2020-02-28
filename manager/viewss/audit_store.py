@@ -284,7 +284,7 @@ class AuditStoreXlsxReport(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, client_id, audit_store_id, format=None):
-        report, name = xlsx_report_service.get_xlsx_report(audit_store_id, client_id)
+        report, name = xlsx_report_service.get_xlsx_report_for_manager(audit_store_id)
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response

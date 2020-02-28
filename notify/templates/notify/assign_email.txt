@@ -5,6 +5,9 @@ The audit details are as follows:
 Store Name: {{ store_name }}
 Store Address: {{ store_address }}
 Audit Date: {{ audit_date }}
+Click Here to Read Audit Guidelines
+
+{{ kronos_base_url }}/auth/login?next=/static/auditor/index.html%23/audit_store&ref=email_cta&utm_source=email_footer
 Note: It is mandatory to view the questionnaire and agree to it before conducting the audit.
 
 --

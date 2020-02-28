@@ -1,8 +1,23 @@
 import xlsxwriter
 import io
 from audit_store import service_client as audit_store_service_client
-
+from audit_store.models import AuditStore
 not_applicable_text = "N/A"
+
+
+def get_xlsx_report_for_manager(audit_store_id):
+    audit_store = AuditStore.objects.get(id=audit_store_id)
+    sections = list(audit_store.audit.audit_cycle.sections.all().order_by('sequence'))
+    answers = audit_store.answers.all()
+    sorted_answers = sorted(
+        sorted(answers, key=lambda answer:answer.question.sequence),
+        key=lambda answer:answer.question.section.sequence
+    )
+    report_sections = audit_store.report_sections.all()
+    sorted_report_sections = sorted(report_sections, key=lambda report_section:report_section.section.sequence)
+    data, name = create_text_structure(sections, sorted_answers, sorted_report_sections, audit_store)
+    return write_data(data), name
+
 
 def get_xlsx_report_for_clientuser(audit_store_id, user):
     audit_store = audit_store_service_client.find_by_id_for_clientuser(audit_store_id, user)
@@ -116,12 +131,12 @@ def get_answers_section(sections, answers, report_sections):
             else:
                 answer_key = key
                 break
-        content = ["", "Auditor Comment", report_sections[section_key].auditor_comment, "", ""]
+        content = ["", "Section Summary", report_sections[section_key].auditor_comment, "", ""]
         row = {'type': 'comment', 'content': content}
         rows.append(row)
-        content = ["", "PM Comment", report_sections[section_key].pm_comment, "", ""]
-        row = {'type': 'pm_comment', 'content': content}
-        rows.append(row)
+        # content = ["", "PM Comment", report_sections[section_key].pm_comment, "", ""]
+        # row = {'type': 'pm_comment', 'content': content}
+        # rows.append(row)
         section_key += 1
     return rows
 

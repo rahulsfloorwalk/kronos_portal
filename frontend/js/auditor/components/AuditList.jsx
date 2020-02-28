@@ -18,6 +18,7 @@ import ApplicationStatusLabel from "../../components/ApplicationStatusLabel.jsx"
 import { fetchPreferences } from "../service/preferences.js";
 
 import { auditPropType, auditCyclePropType, applicationPropType } from "../prop_types";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 class AuditRow extends React.Component{
 	static propTypes = {
@@ -215,7 +216,8 @@ class AuditList extends Component{
 								</p>
 							</div>
 							<div className="col-sm-12">
-								<p style={{fontSize:"1.2em"}}>{this.props.auditCycle.description}</p>
+								{/* <p style={{fontSize:"1.2em"}}>{this.props.auditCycle.description}</p> */}
+								<MarkdownViewer markdown={this.props.auditCycle.description}/>
 							</div>
 						</div>
 					</div>
