@@ -34,8 +34,8 @@ class XLSXReportTestCase(TestCase):
         excel_data, file_name = get_xlsx_report_for_clientuser(self.audit_store_id, self.client_admin)
 
         # uncomment and run test to update snapshot
-        #import os
-        #with open(os.path.join(os.path.dirname(__file__), "snapshots", snapshot_name), "wb") as f:
+        # import os
+        # with open(os.path.join(os.path.dirname(__file__), "snapshots", snapshot_name), "wb") as f:
         #    f.write(excel_data.getvalue())
 
         expect(file_name).to(equal("Showroom 3 2017-03-15.xlsx"))

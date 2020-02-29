@@ -79,11 +79,11 @@ def apply(audit_id, user_id, audit_date):
                 action_object=application,
                 target=audit
             )
-            auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
+            # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         else:
             raise AppLogicError("you cannot apply to this audit")
     mail_notify.send_notification_mail(manager_notif_id, "")
-    mail_notify.send_notification_mail(auditor_notif_id, "")
+    # mail_notify.send_notification_mail(auditor_notif_id, "")
     return application
 
 

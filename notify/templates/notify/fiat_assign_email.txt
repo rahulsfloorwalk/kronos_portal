@@ -4,6 +4,9 @@ The audit details are as follows:
 Store Name: {{ store_name }}
 Store Address: {{ store_address }}
 Audit Date: {{ audit_date }}
+Click Here to Read Audit Guidelines
+
+{{ kronos_base_url }}/auth/login?next=/static/auditor/index.html%23/audit_store&ref=email_cta&utm_source=email_footer
 Note: You can view the questionnaire on the portal. It is required that you go through the questionnaire before conducting the audit. It is also mandatory to submit report with valid audit proofs within 24 hours of audit completion.
 
 ## Audit Instructions
