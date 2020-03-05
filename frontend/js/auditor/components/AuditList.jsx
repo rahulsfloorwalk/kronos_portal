@@ -120,8 +120,13 @@ class AuditList extends Component{
 			this.setLoading(false);
 		});
 	};
+	open_div = () =>{
+		$(".assignment_process_button").hide();
+		$(".assignment_info").show();
+	};
 	close_div = () => {
 		$(".assignment_info").hide();
+		$(".assignment_process_button").show();
 	};
 	componentDidMount() {
 		this.reloadAudits(100);
@@ -151,7 +156,10 @@ class AuditList extends Component{
 		let valueStyle = {fontSize: "1.5em"};
 		return (
 			<div>
-				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px"}}>
+				<div className="row">
+					<button className="btn btn-default pull-right assignment_process_button" onClick={this.open_div}>Read audit assignment process</button>
+				</div>
+				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px",display:"none"}}>
 					<button className="btn pull-right" onClick={this.close_div}><u>Close(x)</u></button>
 					<br/>
 					<h3 style={{textAlign:"center"}}>About audit assignment process</h3>
