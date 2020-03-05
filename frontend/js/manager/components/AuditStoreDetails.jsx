@@ -408,11 +408,16 @@ export class AuditStoreDetails extends React.Component{
 				{this.props.children}
 				
 				<div className="sidebar">
+					<button className="btn btn-primary savebtn" onClick={this.saveCheckPoints}>Save</button>
 					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
 					<ul>
 						{check_point_row}
 					</ul>
-					<button className="btn btn-primary pull-right" onClick={this.saveCheckPoints}>Save</button>
+					<br/>
+					<br/>
+					<br/>
+					<br/>
+					<br/>
 				</div>
 			</div>
 		);

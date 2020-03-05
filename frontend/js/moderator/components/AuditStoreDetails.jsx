@@ -107,8 +107,8 @@ export default class AuditStoreDetails extends React.Component{
 	};
 	saveCheckPoints = () => {
 		let check_points_list = [];
-		$('.sidebar input:checked').each(function() {
-			let val = $(this).attr('value');
+		$(".sidebar input:checked").each(function() {
+			let val = $(this).attr("value");
 			check_points_list.push(val);
 		});
 		saveCheckList(this.props.params.auditStoreId, check_points_list).then((auditStore) => {
@@ -121,10 +121,10 @@ export default class AuditStoreDetails extends React.Component{
 			return <Loading/>;
 		}
 		var paddingStyle={
-			paddingBottom:'2%'
+			paddingBottom:"2%"
 		};
 		var faultyReportMessageStyle = {
-			fontSize:'16px',
+			fontSize:"16px",
 			color:"red",
 			paddingRight:"5px",
 			paddingTop:"1%"
@@ -175,22 +175,27 @@ export default class AuditStoreDetails extends React.Component{
 		if(editable){
 			var check_point_row = [];
 			for (let i in check_points){
-				if(check_points[i]['value']){
-					check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]['checkpoint']}</span></label></li>);
+				if(check_points[i]["value"]){
+					check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]["checkpoint"]}</span></label></li>);
 				}
 				else{
-					check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]['checkpoint']}</span></label></li>);
+					check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]["checkpoint"]}</span></label></li>);
 				}
 			}
 			if(check_point_row.length !=0){
 				checkpointButton = (<button className="btn btn-danger checkpoint" onClick={this.openCheckPoint}>CheckPoints</button>);
 				sidebarElement = (
 					<div className="sidebar">
+						<button className="btn btn-primary savebtn" onClick={this.saveCheckPoints}>Save</button>
 						<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>
 						<ul>
 							{check_point_row}
 						</ul>
-						<button className="btn btn-primary pull-right" onClick={this.saveCheckPoints}>Save</button>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
+						<br/>
 					</div>
 				);
 			}

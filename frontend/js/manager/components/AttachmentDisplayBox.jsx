@@ -159,12 +159,12 @@ export class AttachmentDisplayBox extends Component{
 		this.setState({
 			sectionId : e.target.value
 		});
-	}
+	};
 	
 	moveAttachment = () => {
 		let attachmentlist = [];
-		$('.attachment_checkbox input:checked').each(function() {
-			let val = $(this).attr('value');
+		$(".attachment_checkbox input:checked").each(function() {
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
 		
