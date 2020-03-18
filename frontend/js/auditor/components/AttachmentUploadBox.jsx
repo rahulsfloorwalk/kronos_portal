@@ -144,7 +144,6 @@ class AttachmentUploadBox extends React.Component {
 				showErrors: true,
 			});
 		});
-		
 	};
 
 	render() {
@@ -209,7 +208,7 @@ class AttachmentUploadBox extends React.Component {
 				});
 				var optionList = [];
 				for(var sectionId of orderedKeys) {
-						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
+					optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]["name"]}</option>));
 				}
 
 				selectSection = (
@@ -225,23 +224,23 @@ class AttachmentUploadBox extends React.Component {
 						</div>
 					</div>
 				);
-			}	
+			}
 		}
 
 		return (
 			<div>
-			<div className="row page-header">
-				<div className="col-md-8">
-					<h3>
-						<Paperclip/> Attachments {uploadButton}
-					</h3>
-					{submitMessageElement}
+				<div className="row page-header">
+					<div className="col-md-8">
+						<h3>
+							<Paperclip/> Attachments {uploadButton}
+						</h3>
+						{submitMessageElement}
+					</div>
+					{selectSection}
 				</div>
-				{selectSection}
-			</div>
-			<div className="form-group attachment_checkbox" style={{}}>
-				{attachmentRows}
-			</div>
+				<div className="form-group attachment_checkbox" style={{}}>
+					{attachmentRows}
+				</div>
 			</div>
 		);
 	}

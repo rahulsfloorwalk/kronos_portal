@@ -223,10 +223,10 @@ class __AttachmentUploadBox extends React.Component {
 			<div>
 				<div className="row page-header">
 					<div className="col-md-8">
-					<h3>
-						<Paperclip/> Attachments {uploadButton}
-					</h3>
-					{submitMessageElement}
+						<h3>
+							<Paperclip/> Attachments {uploadButton}
+						</h3>
+						{submitMessageElement}
 					</div>
 					{selectSection}
 				</div>

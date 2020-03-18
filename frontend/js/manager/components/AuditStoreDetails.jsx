@@ -146,11 +146,10 @@ export class AuditStoreDetails extends React.Component{
 	};
 	saveCheckPoints = () => {
 		let check_points_list = [];
-		$('.sidebar input:checked').each(function() {
-			let val = $(this).attr('value');
+		$(".sidebar input:checked").each(function() {
+			let val = $(this).attr("value");
 			check_points_list.push(val);
 		});
-		console.log("check_points_list",check_points_list);
 		saveCheckList(this.props.auditStore.id, check_points_list).then((auditStore) => {
 			this.props.dispatch(updateAuditStore(auditStore));
 			this.closeCheckPoint();
@@ -162,10 +161,10 @@ export class AuditStoreDetails extends React.Component{
 			return <Loading/>;
 		}
 		var paddingStyle={
-			paddingBottom:'2%'
+			paddingBottom:"2%"
 		};
 		var faultyReportMessageStyle = {
-			fontSize:'16px',
+			fontSize:"16px",
 			color:"red",
 			paddingRight:"5px"
 		};
@@ -175,7 +174,7 @@ export class AuditStoreDetails extends React.Component{
 		}
 
 		let auditDateElement = moment(this.props.auditStore.audit_date).format(momentDateFormat);
-		
+
 		let moreOptionsDropdown;
 		let completeButton, unSubmitButton, submitButton, uncompleteButton, acceptButton, rejectButton, qaOkButton, pmRevertButton;
 		if (this.props.auditStore.status === "ACKNOWLEDGED"){
@@ -289,16 +288,16 @@ export class AuditStoreDetails extends React.Component{
 				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.props.auditStore.moderator_comment} readOnly></textarea>
 			);
 		}
-		
+
 		var check_points = this.props.auditStore.check_points;
 		var checkpointButton = null;
 		var check_point_row = [];
 		for (let i in check_points){
-			if(check_points[i]['value']){
-				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]['checkpoint']}</span></label></li>);
+			if(check_points[i]["value"]){
+				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} defaultChecked /><span>{check_points[i]["checkpoint"]}</span></label></li>);
 			}
 			else{
-				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]['checkpoint']}</span></label></li>);
+				check_point_row.push(<li key={i}><label><input type="checkbox" value={i} /><span>{check_points[i]["checkpoint"]}</span></label></li>);
 			}
 		}
 		if(check_point_row.length !=0){
@@ -322,7 +321,6 @@ export class AuditStoreDetails extends React.Component{
 						</a>
 						&nbsp;
 						{moreOptionsDropdown}
-						
 					</div>
 				</h2>
 				<div className="row">
@@ -396,7 +394,7 @@ export class AuditStoreDetails extends React.Component{
 								{selectElement}
 							</div>
 							<div className="col-md-6">
-							<label>Moderator Comment : </label>
+								<label>Moderator Comment : </label>
 								{textareaElement}
 							</div>
 						</div>
@@ -406,7 +404,7 @@ export class AuditStoreDetails extends React.Component{
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}
-				
+
 				<div className="sidebar">
 					<button className="btn btn-primary savebtn" onClick={this.saveCheckPoints}>Save</button>
 					<a href="javascript:void(0)" className="closebtn" onClick={this.closeCheckPoint}>×</a>

@@ -165,7 +165,7 @@ export default class AuditStoreDetails extends React.Component{
 
 		let errorMessageElement = (<span>{this.state.errorMessage}</span>);
 		let editable = this.state.auditStore && this.state.auditStore.status === "SUBMITTED";
-		
+
 		var selectElement = null;
 		var textareaElement = null;
 		var checkpointButton = null;
@@ -330,9 +330,9 @@ export default class AuditStoreDetails extends React.Component{
 								{selectElement}
 							</div>
 							<div className="col-md-6">
-							<label>Moderator Comment : </label>
+								<label>Moderator Comment : </label>
 								{textareaElement}
-							</div>	
+							</div>
 						</div>
 
 						<div className="panel panel-default">
@@ -347,7 +347,7 @@ export default class AuditStoreDetails extends React.Component{
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary}/>
 				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>
 				{this.props.children}
-			
+
 				{sidebarElement}
 			</div>
 		);

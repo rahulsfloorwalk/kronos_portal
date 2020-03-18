@@ -331,6 +331,16 @@ class AuditStoreIdAcknowledgeView(APIView):
         return Response(AuditStoreSerializer(audit_store).data)
 
 
+class AuditStoreIdFailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_auditor_service.fail_report(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class ReportSectionListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

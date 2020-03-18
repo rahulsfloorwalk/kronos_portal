@@ -16,6 +16,7 @@ import AuditCancelForm from "./AuditCancelForm.jsx";
 
 import AuditStoreList from "./AuditStoreList.jsx";
 import AuditStoreDetails from "./AuditStoreDetails.jsx";
+import PerformAudit from "./PerformAudit.jsx";
 
 import ProfileInfoForm from "./ProfileInfoForm.jsx";
 import BankInfoForm from "./BankInfoForm.jsx";
@@ -60,7 +61,9 @@ const Routes = ({store}) => (
 					</Route>
 				</Route>
 				<Route path="audit_store" component={AuditStoreList}/>
-				<Route path="audit_store/:auditStoreId/section" component={AuditStoreDetails}/>
+				<Route path="audit_store/:auditStoreId/section" component={AuditStoreDetails}>
+					<Route path="perform_audit" component={PerformAudit}/>
+				</Route>
 				<Route path="payment" component={PaymentList}/>
 				<Route path="referral" component={ReferralList}/>
 				<Route path="tos_accept" component={ToSAcceptForm}/>

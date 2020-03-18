@@ -53,7 +53,7 @@ class CheckPoints extends React.Component{
 		}
 	}
 
-    fieldChanged = (e) => {
+	fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
 	};
 

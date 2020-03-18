@@ -25,7 +25,7 @@ export default class SectionAttachmentBox extends React.Component{
 		auditStore: PropTypes.object,
 		minimumAttachmentCount: PropTypes.number,
 		showErrors: PropTypes.bool,
-		
+
 		editable:PropTypes.bool,
 		sections:PropTypes.object
 	};
@@ -131,20 +131,20 @@ export default class SectionAttachmentBox extends React.Component{
 			});
 		}
 	};
-	
+
 	getAttachmentSectionId = (e) => {
 		this.setState({
 			attachmentSectionId : e.target.value
 		});
 	};
-	
+
 	moveAttachmentSection = () => {
 		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
-			let val = $(this).attr('value');
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -155,9 +155,7 @@ export default class SectionAttachmentBox extends React.Component{
 			});
 		});
 	};
-	
-	
-	
+
 	render(){
 		let uploadButton;
 		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
@@ -176,7 +174,6 @@ export default class SectionAttachmentBox extends React.Component{
 				user="auditor"
 				editable = {this.props.editable}
 				faulty_report_id=""
-				
 			/>);
 		}
 		for(let id in this.state.inProgress){
@@ -192,10 +189,9 @@ export default class SectionAttachmentBox extends React.Component{
 			}
 			attachmentRows.push(" ");
 		}
-		
+
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
-		
+
 		let sectionSelect = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
@@ -212,10 +208,10 @@ export default class SectionAttachmentBox extends React.Component{
 						null;
 					}
 					else{
-						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
+						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]["name"]}</option>));
 					}
 				}
-				
+
 				sectionSelect = (
 					<div className="col-md-4">
 						<div className="col-md-8">
@@ -224,14 +220,13 @@ export default class SectionAttachmentBox extends React.Component{
 								<option key="0" value="0">Main Section</option>
 								{optionList}
 							</select>
-							
 						</div>
 						<div className="col-md-2">
 							<button className="btn btn-default btn-sm" onClick={this.moveAttachmentSection}>Move to</button>
 						</div>
 					</div>
 				);
-			
+
 			}
 		}
 		let minimumAttachmentCount, panelStyle;
@@ -251,24 +246,24 @@ export default class SectionAttachmentBox extends React.Component{
 		let borderStyle = {
 			borderTop: "1px solid #eee"
 		};
-		
+
 		return (
 			<div style={borderStyle}>
-			<div className="panel-body" style={panelStyle}>
-				<div className="col-md-8">
-					<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>
-					{submitMessageElement}
+				<div className="panel-body" style={panelStyle}>
+					<div className="col-md-8">
+						<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>
+						{submitMessageElement}
+					</div>
+					{sectionSelect}
 				</div>
-				{sectionSelect}
-			</div>
-			<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`} style={panelStyle}>
-				{attachmentRows}
-				<input type="file" multiple
-					onChange={this.uploadFile}
-					disabled={this.state.uploading}
-					ref={(input)=>this.uploadInput = input}
-					style={{"display":"none"}}/>
-			</div>
+				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`} style={panelStyle}>
+					{attachmentRows}
+					<input type="file" multiple
+						onChange={this.uploadFile}
+						disabled={this.state.uploading}
+						ref={(input)=>this.uploadInput = input}
+						style={{"display":"none"}}/>
+				</div>
 			</div>
 		);
 	}

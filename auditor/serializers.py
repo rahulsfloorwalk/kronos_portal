@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField, RelatedField, IntegerField
+from rest_framework.serializers import ModelSerializer, ValidationError, Serializer, PrimaryKeyRelatedField, CharField, RelatedField, IntegerField, SerializerMethodField
 from rest_framework import serializers
 
 from notifications.models import Notification
@@ -20,6 +20,7 @@ from referral.models import AuditorReferral
 from social.models import Facebook
 from auditor.models import Preferences
 # from kronos.utils import validate_ifsc, validate_pan
+from kronos.utils import get_difference_between_date
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -350,6 +351,11 @@ class AuditApplicationCancelDeSerializer(Serializer):
 
 
 class AuditStoreSerializer(ModelSerializer):
+    get_date_diff = SerializerMethodField('get_date_difference')
+
+    def get_date_difference(self, audit_store_obj):
+        return get_difference_between_date(audit_store_obj.audit_date)
+
     audit = AuditSerializer()
     class Meta:
         model = AuditStore
@@ -362,6 +368,7 @@ class AuditStoreSerializer(ModelSerializer):
             'audit',
             'report_summary',
             'user',
+            'get_date_diff'
         )
         read_only_fields = fields
 

@@ -10,7 +10,7 @@ def get_color_code_by_percentage(percentage):
     if percentage is None:
         return 0
 
-    if percentage > 90:
+    if percentage > 89:
         return 5
     elif percentage > 84:
         return 4
@@ -45,8 +45,15 @@ IST = timezone.pytz.timezone("Asia/Kolkata")
 def now_ist():
     return timezone.localtime(timezone.now(), IST)
 
+
 def today_ist():
     return timezone.localtime(timezone.now(), IST).date()
+
+
+def get_difference_between_date(date_val):
+    today = today_ist()
+    diff = today - date_val
+    return diff.days
 
 
 def view_log(func, method=None, *outerargs):

@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
+import { Link } from "react-router";
 
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
@@ -26,6 +27,7 @@ class AuditStoreDetails extends React.Component {
 			auditStoreId: PropTypes.string.isRequired,
 		}),
 		auditStore: auditStorePropType,
+		children: PropTypes.node,
 	};
 
 	state = {
@@ -79,7 +81,7 @@ class AuditStoreDetails extends React.Component {
 			return <Loading/>;
 		}
 
-		let submitAuditButton, acknowledgeButton;
+		let submitAuditButton, acknowledgeButton, performAuditButton;
 		if(this.props.auditStore.status === "ASSIGNED"){
 			acknowledgeButton = (
 				<span>
@@ -90,9 +92,19 @@ class AuditStoreDetails extends React.Component {
 				&nbsp;
 					<big>I have read the <b>instructions</b>, <b>questionnaire</b> and agree to conduct the audit.</big>
 				</span>);
+			if(this.props.auditStore.get_date_diff > 0){
+				performAuditButton = (
+					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" type="button">Performed the Audit?</button></Link>
+				);
+			}
 		}
 		if(this.props.auditStore.status === "ACKNOWLEDGED"){
 			submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary btn-lg">Submit Report</button>);
+			if(this.props.auditStore.get_date_diff > 0){
+				performAuditButton = (
+					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" type="button">Performed the Audit?</button></Link>
+				);
+			}
 		}
 
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
@@ -109,6 +121,7 @@ class AuditStoreDetails extends React.Component {
 
 		return (
 			<div>
+				&nbsp;{performAuditButton}
 				<h2 className="page-header">Audit Report - <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
 				<div className="row">
 					<div className="col-md-12">
@@ -161,6 +174,7 @@ class AuditStoreDetails extends React.Component {
 				<ReportSummary audit_store_id={this.props.params.auditStoreId} report_summary={this.props.auditStore.report_summary} editable={this.isReportEditable()} />
 				<SectionList auditStoreId={this.props.params.auditStoreId} showErrors={this.state.showErrors} editable={this.isReportEditable()}/>
 				{buttonPanel}
+				{this.props.children}
 			</div>
 		);
 	}
