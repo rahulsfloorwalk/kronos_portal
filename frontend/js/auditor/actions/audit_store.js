@@ -77,6 +77,26 @@ export function submitAuditStore(auditStoreId){
 	};
 }
 
+export function failAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_FAIL,
+			status: "request",
+			auditStoreId
+		});
+
+		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/fail`, function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_FAIL,
+				status: "success",
+				auditStore
+			});
+		});
+		//TODO: Handle error
+	};
+	//return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/fail`);
+}
+
 export function submitReportSummary(audit_store_id, report_summary){
 	return function(dispatch){
 		let req = $.ajax({

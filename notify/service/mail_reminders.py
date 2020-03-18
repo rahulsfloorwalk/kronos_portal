@@ -9,6 +9,8 @@ from registration.models import GROUP_NAME_AGENCY
 
 from .mail import send_email
 
+from registration.context import registration_context
+
 _logger = logging.getLogger(__name__)
 
 @app.task(ignore_result=True)
@@ -61,7 +63,9 @@ def send_reminder_for_audit_store(audit_store_id, reminder_type):
         _logger.info("skipping reminder email for agency with user id %s", audit_store.user.id)
         return
 
-    params = {}
+    params = {
+        **registration_context(),
+    }
     params['to_email'] = audit_store.user.email
     params['first_name'] = audit_store.user.profileinfo.first_name
     params['last_name'] = audit_store.user.profileinfo.last_name
@@ -71,14 +75,15 @@ def send_reminder_for_audit_store(audit_store_id, reminder_type):
     params['store_address'] = audit_store.audit.store.address
     params['audit_cycle_post_approval_description'] = audit_store.audit.audit_cycle.post_approval_description
     params['audit_post_approval_description'] = audit_store.audit.post_approval_description
+    params['audit_store_id'] = audit_store.id
 
     if reminder_type == "PRE":
         params['html_template'] = "notify/pre_reminder.html"
         params['txt_template'] = "notify/pre_reminder.txt"
         params['subject'] = "Don't forget your {} audit tomorrow".format(params['client'])
     elif reminder_type == "ON":
-        params['html_template'] = "notify/on_reminder.html"
-        params['txt_template'] = "notify/on_reminder.txt"
+        params['html_template'] = "notify/on_reminder_new.html"
+        params['txt_template'] = "notify/on_reminder_new.txt"
         params['subject'] = "We hope your {} audit went well".format(params['client'])
     elif reminder_type == "POST":
         params['html_template'] = "notify/post_reminder.html"

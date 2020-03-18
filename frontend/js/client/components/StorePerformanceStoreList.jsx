@@ -44,7 +44,7 @@ export default class StorePerformanceStoreList extends React.Component {
 		audit_cycle_name: ""
 	};
 
-    setLoading = (loading) => {
+	setLoading = (loading) => {
 		this.setState(prevState => {
 			return Object.assign({},prevState,{
 				loading

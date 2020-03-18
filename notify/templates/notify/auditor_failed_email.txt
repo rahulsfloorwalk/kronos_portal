@@ -1,0 +1,5 @@
+Hello,
+Auditor failed the audit report of {{ client_name }} of {{ store_name }}.
+Please Check the Audit Report by clicking the below button
+--
+Thanks and regards

@@ -28,12 +28,12 @@ export default class AttachmentThumbnail extends Component{
 
 		onSelect: PropTypes.func,
 		onDelete: PropTypes.func,
-		
+
 		editable:PropTypes.bool,
 
 		faulty_report_id : PropTypes.oneOfType([PropTypes.string,PropTypes.number])
 	};
-	
+
 	constructor(props){
 		super(props);
 		this.state = {
@@ -76,8 +76,7 @@ export default class AttachmentThumbnail extends Component{
 		this.setLoading(false);
 		this.setError(true);
 	};
-	
-	
+
 	componentDidMount(){
 		if(this.props.attachment && this.props.attachment.proof_type === "PHOTO"){
 			this.setLoading(true);
@@ -91,12 +90,11 @@ export default class AttachmentThumbnail extends Component{
 		}
 	}
 	render(){
-		
 		var contentStyle = {
 			"width": "20px",
             "height": "20px",
 		};
-		
+
 		var faulty_style = {
 			"fontSize": "14px",
 			"color": "red"
@@ -243,4 +241,3 @@ export default class AttachmentThumbnail extends Component{
 		);
 	}
 }
-

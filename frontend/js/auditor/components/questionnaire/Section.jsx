@@ -23,7 +23,7 @@ class __Section extends React.Component{
 
 		auditStore: PropTypes.object,
 		reportSection: PropTypes.object,
-		
+
 		editable:PropTypes.bool,
 		sections:PropTypes.object
 	};
@@ -118,7 +118,7 @@ class __Section extends React.Component{
 
 		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 30 ? "" : "success";
 		let badClass = this.props.showErrors && (this.state.auditor_comment).length < 30 ? "danger" : "";
-		
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading">

@@ -100,11 +100,11 @@ export default class Section extends React.Component {
 					};
 					comment_code = (
 						<div>
-						<p style={fontstyle}><b>Section Summary:</b></p>
-						<div style={margin_style}>
-							<p><b>Auditor Comment:</b> {auditor_comment}</p>
-							{/* <hr/> */}
-							<p><b>PM Comment:</b> {pm_comment}</p>
+							<p style={fontstyle}><b>Section Summary:</b></p>
+							<div style={margin_style}>
+								<p><b>Auditor Comment:</b> {auditor_comment}</p>
+								{/* <hr/> */}
+								<p><b>PM Comment:</b> {pm_comment}</p>
 							</div>
 						</div>
 					);

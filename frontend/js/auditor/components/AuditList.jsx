@@ -168,7 +168,7 @@ class AuditList extends Component{
 					<p style={{fontSize:"14px"}}>
 						1. Kindly <b>complete your detailed profile</b> with ID proofs to increase chances of audit assignment<br/>
 						2. Keep <b>checking the portal</b> for new opportunities<br/>
-						3. <b>Apply for the opportunities</b> as soon as they are live on the portal 
+						3. <b>Apply for the opportunities</b> as soon as they are live on the portal
 					</p>
 				</div>
 

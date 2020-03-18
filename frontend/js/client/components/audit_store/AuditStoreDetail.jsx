@@ -87,7 +87,6 @@ export default class AuditStoreDetail extends React.Component {
 		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : floorwalkLogoUrl;
 
 		return (
-			
 			<div>
 				<h2 className="page-header">
 					{ printMode ?
@@ -110,11 +109,11 @@ export default class AuditStoreDetail extends React.Component {
 				<div className="row">
 					<div className="col-md-6">
 						{ printMode ?
-						<div className="watermark">
-							<img src={imgUrl} height="250" width="300" />
-						</div>
-						:
-						null
+							<div className="watermark">
+								<img src={imgUrl} height="250" width="300" />
+							</div>
+							:
+							null
 						}
 						<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
 					</div>

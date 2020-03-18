@@ -14,14 +14,14 @@ class ModeratorReportRow extends React.Component {
 	static propTypes = {
 		seq: PropTypes.number.isRequired,
 		auditStore: PropTypes.object,
-		
+
 		moderators:PropTypes.array,
 		onUpdate:PropTypes.func
 	};
-	
+
 	render() {
 		return (
-			
+
 			<tr key={this.props.auditStore.id}>
 				<td className="text-right">{this.props.seq}</td>
 				<td><Link to={`/audit_store/${this.props.auditStore.id}/report`}>{this.props.auditStore.id}</Link></td>
@@ -61,9 +61,8 @@ export default class ModeratorReportList extends React.Component {
 		findModerators().then((moderators) => {
 			this.setState({ moderators });
 		});
-		
 	}
-	
+
 	auditStoreUpdated = () => {
 		findReportsById(this.props.params.userId).then((auditStore) => {
 			this.setState({
@@ -71,13 +70,13 @@ export default class ModeratorReportList extends React.Component {
 			});
 		});
 	};
-	
+
 	render() {
 		var modalTitle = "Moderator Report List";
 		var modalSize = "modal-lg";
-		
+
 		const rows = this.state.auditStore.map((m, i) => <ModeratorReportRow seq={i+1} auditStore={m} moderators={this.state.moderators} onUpdate={this.auditStoreUpdated} key={m.id}/>);
-		
+
 		return (
 			<Modal modalTitle={modalTitle} size={modalSize} onClose={hashHistory.goBack}>
 				<table className="table table-bordered table-hover table-striped">
@@ -93,7 +92,7 @@ export default class ModeratorReportList extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-					{rows}
+						{rows}
 					</tbody>
 				</table>
 			</Modal>

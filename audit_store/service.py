@@ -92,7 +92,8 @@ def find_for_pre_reminder():
 
 def find_for_on_reminder():
     return AuditStore.objects.filter(
-        audit_date=today_ist(),
+        # audit_date=today_ist(),
+        audit_date=today_ist() - timedelta(days=1),
         status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
 

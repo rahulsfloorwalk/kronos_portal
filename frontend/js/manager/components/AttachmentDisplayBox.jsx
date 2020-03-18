@@ -154,20 +154,20 @@ export class AttachmentDisplayBox extends Component{
 			});
 		}
 	};
-	
+
 	getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
 		});
 	};
-	
+
 	moveAttachment = () => {
 		let attachmentlist = [];
 		$(".attachment_checkbox input:checked").each(function() {
 			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -177,22 +177,20 @@ export class AttachmentDisplayBox extends Component{
 				showErrors: true,
 			});
 		});
-		
 	};
-	
+
 	render(){
-		
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
 		let editable = this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
 		
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		var contentStyle = {
 			"paddingTop": "2%"
 		};
-		
+
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
@@ -211,7 +209,6 @@ export class AttachmentDisplayBox extends Component{
 			}
 		}
 
-		
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}/>;
@@ -228,7 +225,7 @@ export class AttachmentDisplayBox extends Component{
 				</span>
 			);
 		}
-		
+
 		var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
@@ -258,7 +255,7 @@ export class AttachmentDisplayBox extends Component{
 			}
 			
 		}
-		
+
 		return (
 			<div>
 				<div className="row page-header">
@@ -268,7 +265,6 @@ export class AttachmentDisplayBox extends Component{
 					</div>
 					{selectSection}
 				</div>
-				
 				<div className="row">
 					<div className="col-md-4 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
 						{attachmentRows}

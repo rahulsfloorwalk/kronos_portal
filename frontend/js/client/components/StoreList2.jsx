@@ -90,8 +90,8 @@ export default class StoreList2 extends Component{
 					<button className="btn btn-default"
 						title="Download Reports"
 						onClick={() => this.reportDropdown && this.reportDropdown.toggle()}>
-							<Download/> {this.state.audit_cycles["audit_cycle_year_list"].length} Audit Cycle Reports Year Wise &nbsp;
-							<span className="caret"/>
+						<Download/> {this.state.audit_cycles["audit_cycle_year_list"].length} Audit Cycle Reports Year Wise &nbsp;
+						<span className="caret"/>
 					</button>
 					<DropDown ref={(e) => this.reportDropdown = e}>
 						{li_list}
