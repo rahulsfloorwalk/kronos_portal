@@ -129,8 +129,8 @@ def generate_xlsx_from_structure(report_data):
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
-    # worksheet.write(row, col, "Staff Names", summary_header_format)
-    worksheet.write(row, col, "", summary_header_format)
+    worksheet.write(row, col, "Staff Names", summary_header_format)
+    # worksheet.write(row, col, "", summary_header_format)
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
@@ -145,8 +145,8 @@ def generate_xlsx_from_structure(report_data):
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
-    # worksheet.write(row, col, "Bowling", summary_header_format)
-    worksheet.write(row, col, "", summary_header_format)
+    worksheet.write(row, col, "Bowling", summary_header_format)
+    # worksheet.write(row, col, "", summary_header_format)
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
@@ -161,8 +161,8 @@ def generate_xlsx_from_structure(report_data):
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
-    # worksheet.write(row, col, "Tele Operator", summary_header_format)
-    worksheet.write(row, col, "", summary_header_format)
+    worksheet.write(row, col, "Tele Operator", summary_header_format)
+    # worksheet.write(row, col, "", summary_header_format)
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
@@ -177,8 +177,8 @@ def generate_xlsx_from_structure(report_data):
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
-    # worksheet.write(row, col, "Restaurant", summary_header_format)
-    worksheet.write(row, col, "", summary_header_format)
+    worksheet.write(row, col, "Restaurant", summary_header_format)
+    # worksheet.write(row, col, "", summary_header_format)
     col += 1
     worksheet.write(row, col, "", summary_value_format)
     col += 1
