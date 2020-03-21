@@ -68,6 +68,6 @@ def fail_report(audit_store_id, user_id):
     # Send Mail at "audits@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_FAILED_BY_AUDITOR_EMAIL']:
         email = "audits@floorwalk.in"
-        send_audit_report_failed_email.delay(email, audit_store)
+        send_audit_report_failed_email.delay(email, audit_store_id)
     # End of Send Mail at "audits@floorwalk.in"
     return audit_store

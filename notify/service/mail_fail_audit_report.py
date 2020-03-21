@@ -8,10 +8,13 @@ from .mail import send_email
 
 from registration.context import registration_context
 
+from audit_store.models import AuditStore
+
 _logger = logging.getLogger(__name__)
 
 @shared_task(ignore_result=True)
-def send_audit_report_failed_email(email_address, audit_store):
+def send_audit_report_failed_email(email_address, audit_store_id):
+    audit_store = AuditStore.objects.get(id=audit_store_id)
     client_name = audit_store.audit.audit_cycle.client.brand_name
     store_name = audit_store.audit.store.name + " " + audit_store.audit.store.city.name
     audit_store_id = audit_store.id
