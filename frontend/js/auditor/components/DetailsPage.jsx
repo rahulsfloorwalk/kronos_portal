@@ -60,7 +60,7 @@ class DetailsPage extends React.Component {
 							<p>Email: <b>{this.props.user.email}</b></p>
 							<p>Mobile Number: &nbsp;
 								{ this.props.profileInfo.mobile_number ?
-									<b>{this.props.profileInfo.mobile_number}</b>
+									<b>{this.props.profileInfo.mobile_number} &nbsp;&nbsp; <Link to="/details/mobile_number/edit">Change</Link></b>
 									: <Link to="/details/mobile_number/edit"><b className="text-danger">Please click here to update your Mobile Number.</b></Link> }
 							</p>
 							<p>Password: <a href="/auth/password_change">Click here</a> to change your password.</p>

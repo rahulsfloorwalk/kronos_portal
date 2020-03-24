@@ -53,7 +53,7 @@ class MobileNumberForm extends Component{
 		return (
 			<Modal modalTitle="Update Mobile Number" onClose={this.props.router.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<p><big>You must have a registered mobile number in order to view available audits in your region</big></p>
+					{/* <p><big>You must have a registered mobile number in order to view available audits in your region</big></p> */}
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<FormInput label="Mobile Number (10-digit)" placeholder="__________"
 						maxLength="10" type="text" required={true}

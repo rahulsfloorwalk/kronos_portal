@@ -333,3 +333,10 @@ class AuditApplication(Model):
 
     class Meta:
         unique_together = (("profileinfo", "audit"))
+
+
+class MobileNumberHistoryLog(Model):
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, null=True,
+                              validators=[numericValidator, minLengthValidator])
+    created_at = DateTimeField(db_column="created_at")
