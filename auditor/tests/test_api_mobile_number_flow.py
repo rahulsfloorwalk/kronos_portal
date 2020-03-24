@@ -31,7 +31,7 @@ class MobileNumberAPITestCase(APITestCase):
     def test_mobile_number(self):
         self.login()
 
-        mobile_number = fake.numerify("##########")
+        mobile_number = fake.numerify("6#########")
 
         profile_url = reverse('auditor:profile_info_view')
         mobile_url = reverse('auditor:mobile_number_view')
@@ -51,7 +51,8 @@ class MobileNumberAPITestCase(APITestCase):
 
         # retry setting the mobile number
         response = self.client.post(mobile_url, {
-            "mobile_number": fake.numerify("##########"),
+            # "mobile_number": fake.numerify("##########"),
+            "mobile_number": mobile_number,
         })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data.get("mobile_number"), mobile_number)
