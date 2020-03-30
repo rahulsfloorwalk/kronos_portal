@@ -26,7 +26,7 @@ export default class AuditStoreStatusSummary extends Component{
 				<thead>
 					<tr>
 						{
-							["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
+							["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "AUDITOR_WITHDRAWN", "FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
 								return (
 									<td key={status} className="text-center">
 										<AuditStoreStatusLabel status={status}/>
@@ -39,7 +39,7 @@ export default class AuditStoreStatusSummary extends Component{
 				<tbody>
 					<tr>
 						{
-							["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
+							["ASSIGNED", "ACKNOWLEDGED", "WITHDRAWN", "AUDITOR_WITHDRAWN", "FAILED", "SUBMITTED", "PM_REVIEW", "COMPLETED", "ACCEPTED", "REJECTED"].map((status) => {
 								let item = this.state.stats.find( s => s.status === status);
 								return (
 									<td key={status} className="text-center">

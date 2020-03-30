@@ -336,8 +336,32 @@ class AuditStoreIdFailView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_AUDITOR],
     }
+
+    class FailedMessageDeSerializer(Serializer):
+        message = CharField(max_length=4096, allow_blank=True)
+
     def post(self, request, audit_store_id):
-        audit_store = audit_store_auditor_service.fail_report(audit_store_id, request.user.id)
+        ds = self.FailedMessageDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        message = ds.validated_data['message']
+        audit_store = audit_store_auditor_service.fail_report(audit_store_id, request.user.id, message)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreIdWithdrawView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+
+    class WithdrawMessageDeSerializer(Serializer):
+        message = CharField(max_length=4096, allow_blank=True)
+
+    def post(self, request, audit_store_id):
+        ds = self.WithdrawMessageDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        message = ds.validated_data['message']
+        audit_store = audit_store_auditor_service.withdraw_report(audit_store_id, request.user.id, message)
         return Response(AuditStoreSerializer(audit_store).data)
 
 

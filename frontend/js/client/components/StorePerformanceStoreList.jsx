@@ -91,7 +91,7 @@ export default class StorePerformanceStoreList extends React.Component {
 						</tr>
 					</thead>
 					<tbody>
-					{rows}
+						{rows}
 					</tbody>
 				</table>
 				{loading_element}

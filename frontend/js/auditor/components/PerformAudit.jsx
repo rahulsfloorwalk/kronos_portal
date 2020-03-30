@@ -4,6 +4,11 @@ import { hashHistory } from "react-router";
 import * as ReactRedux from "react-redux";
 
 import Modal from "../../components/Modal.jsx";
+
+import FormInput from "../../components/FormInput.jsx";
+
+import { affectInputEventToComponent } from "../../react_utils.js";
+
 import {failAuditStore, fetchAuditStore} from "../actions/audit_store.js";
 
 import { auditStorePropType } from "../prop_types";
@@ -19,6 +24,9 @@ class PerformAudit extends React.Component{
 
 	constructor(props){
 		super(props);
+		this.state = {
+			"message":""
+		};
 	}
 
 	componentDidMount() {
@@ -28,10 +36,15 @@ class PerformAudit extends React.Component{
 		}
 	}
 
+	fieldChanged = (e) => {
+		affectInputEventToComponent(e, this);
+	};
+
 	onSubmit = (e) => {
 		e.preventDefault();
-		this.props.dispatch(failAuditStore(this.props.params.auditStoreId));
-		location.reload();
+		this.props.dispatch(failAuditStore(this.props.params.auditStoreId, this.state.message)).then(()=>{
+			location.reload();
+		});
 	};
 
 	closeModal = () => {
@@ -42,8 +55,8 @@ class PerformAudit extends React.Component{
 		return (
 			<Modal modalTitle="Performed the Audit?" onClose={this.closeModal}>
 				<form onSubmit={this.onSubmit}>
-					<p>If you did not perform the Audit please click <b>No</b> Button and if you did please click <b>Yes</b> Button and Fill the Report within a 48 hours.</p>
-					<br/>
+					<p>If you did not perform the Audit please give reason and click <b>No</b> button and if you did please click <b>Yes</b> button and Fill the Report within a 48 hours.</p>
+					<FormInput type="text" label="Reason: (optional)" value={this.state.message} name="message" placeholder="Please enter reason if you not performed the audit" onChange={this.fieldChanged}/>
 					<div className="form-group">
 						<button type="button" onClick={this.closeModal} className="btn btn-primary">Yes</button>&nbsp;&nbsp;
 						<button type="submit" className="btn btn-danger">No</button>

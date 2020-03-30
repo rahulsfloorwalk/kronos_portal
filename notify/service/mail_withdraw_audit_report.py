@@ -13,7 +13,7 @@ from audit_store.models import AuditStore
 _logger = logging.getLogger(__name__)
 
 @shared_task(ignore_result=True)
-def send_audit_report_failed_email(email_address, audit_store_id, message):
+def send_audit_report_withdraw_email(email_address, audit_store_id, message):
     audit_store = AuditStore.objects.get(id=audit_store_id)
     client_name = audit_store.audit.audit_cycle.client.brand_name
     store_name = audit_store.audit.store.name + " " + audit_store.audit.store.city.name
@@ -27,10 +27,10 @@ def send_audit_report_failed_email(email_address, audit_store_id, message):
     }
 
     # generate email from templates
-    subject = "Audit Report Failed by Auditor - {} - {}".format(params['client_name'], params['store_name'])
-    html_message = get_template("notify/auditor_failed_email.html").render(params)
-    txt_message = get_template("notify/auditor_failed_email.txt").render(params)
+    subject = "Audit Report Withdrawn by Auditor - {} - {}".format(params['client_name'], params['store_name'])
+    html_message = get_template("notify/auditor_withdraw_email.html").render(params)
+    txt_message = get_template("notify/auditor_withdraw_email.txt").render(params)
 
-    _logger.info("sending audit report failed email to : %s", email_address)
+    _logger.info("sending audit report withdraw email to : %s", email_address)
     send_email(email_address, subject, html_message, txt_message)
-    _logger.info("audit report failed email sent successfully to : %s", email_address)
+    _logger.info("audit report withdraw email sent successfully to : %s", email_address)

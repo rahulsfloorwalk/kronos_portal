@@ -6,6 +6,8 @@ from django.utils import timezone
 from audit_store.models import AuditStore, ReportStatusLog
 from django.conf import settings
 from notify.service.mail_fail_audit_report import send_audit_report_failed_email
+from notify.service.mail_withdraw_audit_report import send_audit_report_withdraw_email
+from auditor.service.application_service import change_application_status_to_withdrawn
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
@@ -45,7 +47,7 @@ def submit_report(audit_store_id, user_id):
     return audit_store
 
 @atomic
-def fail_report(audit_store_id, user_id):
+def fail_report(audit_store_id, user_id, message):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     user = auditor_service.find_auditor_by_id(user_id)
     if user != audit_store.user:
@@ -59,7 +61,7 @@ def fail_report(audit_store_id, user_id):
     report_status_log = ReportStatusLog()
     report_status_log.user_actor = user
     report_status_log.status = AuditStore.FAILED
-    report_status_log.message = ""
+    report_status_log.message = message
     report_status_log.audit_store = audit_store
     report_status_log.created_at = timezone.now()
     report_status_log.save()
@@ -68,6 +70,40 @@ def fail_report(audit_store_id, user_id):
     # Send Mail at "audits@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_FAILED_BY_AUDITOR_EMAIL']:
         email = "audits@floorwalk.in"
-        send_audit_report_failed_email.delay(email, audit_store_id)
+        send_audit_report_failed_email.delay(email, audit_store_id, message)
+    # End of Send Mail at "audits@floorwalk.in"
+    return audit_store
+
+
+@atomic
+def withdraw_report(audit_store_id, user_id, message):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    user = auditor_service.find_auditor_by_id(user_id)
+    if user != audit_store.user:
+        raise AppLogicError("Report cannot be withdrawn by user")
+
+    audit_store.status = AuditStore.AUDITOR_WITHDRAWN
+    audit_store.save()
+
+    # Save Data in Report Status Log
+    report_status_log = ReportStatusLog()
+    report_status_log.user_actor = user
+    report_status_log.status = AuditStore.AUDITOR_WITHDRAWN
+    report_status_log.message = message
+    report_status_log.audit_store = audit_store
+    report_status_log.created_at = timezone.now()
+    report_status_log.save()
+    # End of Save Data in Report Status Log
+
+    # Chnage Audit Application Status to WITHDRAWN
+    application_obj = change_application_status_to_withdrawn(audit_store_id)
+    if application_obj is not None:
+        application_obj.save()
+    # End of Change Audit Application Status to WITHDRAWN
+
+    # Send Mail at "audits@floorwalk.in"
+    if settings.EMAIL_SWITCH['AUDIT_REPORT_WITHDRAW_BY_AUDITOR_EMAIL']:
+        email = "audits@floorwalk.in"
+        send_audit_report_withdraw_email.delay(email, audit_store_id, message)
     # End of Send Mail at "audits@floorwalk.in"
     return audit_store

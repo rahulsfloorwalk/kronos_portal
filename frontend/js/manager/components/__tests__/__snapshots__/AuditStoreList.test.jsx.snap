@@ -60,6 +60,11 @@ exports[`<AuditStoreList/> renders the list of audit stores correctly 1`] = `
         Withdrawn
       </option>
       <option
+        value="AUDITOR_WITHDRAWN"
+      >
+        Auditor Withdrawn
+      </option>
+      <option
         value="COMPLETED"
       >
         Client Review

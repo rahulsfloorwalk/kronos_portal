@@ -142,6 +142,8 @@ export function getAuditApplicationStatus(value){
 		return "Approved";
 	case "REJECTED":
 		return "Denied";
+	case "WITHDRAWN":
+		return "Withdrawn";
 	case "":
 	case null:
 	case undefined:
@@ -161,6 +163,8 @@ export function getAuditStoreStatus(value){
 		return "Failed";
 	case "WITHDRAWN":
 		return "Withdrawn";
+	case "AUDITOR_WITHDRAWN":
+		return "Auditor Withdrawn";
 	case "SUBMITTED":
 		return "QA Review";
 	case "PM_REVIEW":

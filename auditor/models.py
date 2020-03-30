@@ -291,12 +291,14 @@ class AuditApplication(Model):
     NOT_APPLIED = 'NOT_APPLIED'
     APPLIED = 'APPLIED'
     REJECTED = 'REJECTED'
+    WITHDRAWN = 'WITHDRAWN'
     WAITLISTED = 'WAITLISTED'
     APPROVED = 'APPROVED'
     STATUS = (
         (NOT_APPLIED, "Not Applied"),
         (APPLIED, "Applied"),
         (REJECTED, "Rejected"),
+        (WITHDRAWN, "Withdrawn"),
         (WAITLISTED, "Wait Listed"),
         (APPROVED, "Approved"),
     )

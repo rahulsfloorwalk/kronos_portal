@@ -2,6 +2,8 @@ from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import manager as manager_service
 from answer.models import ReportSection
+from auditor.service.application_service import change_application_status_to_withdrawn
+
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
@@ -114,4 +116,9 @@ def withdraw_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.withdraw(by=user)
+    # Change Audit Application Status to WITHDRAWN
+    application_obj = change_application_status_to_withdrawn(audit_store_id)
+    if application_obj is not None:
+        application_obj.save()
+    # End of Change Audit Application Status to WITHDRAWN
     return audit_store

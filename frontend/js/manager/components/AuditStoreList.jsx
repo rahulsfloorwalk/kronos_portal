@@ -222,6 +222,7 @@ class AuditStoreList extends Component{
 						<option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
 						<option value="PM_REVIEW">{getAuditStoreStatus("PM_REVIEW")}</option>
 						<option value="WITHDRAWN">{getAuditStoreStatus("WITHDRAWN")}</option>
+						<option value="AUDITOR_WITHDRAWN">{getAuditStoreStatus("AUDITOR_WITHDRAWN")}</option>
 						<option value="COMPLETED">{getAuditStoreStatus("COMPLETED")}</option>
 						<option value="FAILED">{getAuditStoreStatus("FAILED")}</option>
 						<option value="ACCEPTED">{getAuditStoreStatus("ACCEPTED")}</option>

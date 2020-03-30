@@ -22,6 +22,8 @@ export default class ApplicationStatusLabel extends React.Component {
 			return "success";
 		case "REJECTED":
 			return "danger";
+		case "WITHDRAWN":
+			return "default";
 		case "":
 		case null:
 		case undefined:

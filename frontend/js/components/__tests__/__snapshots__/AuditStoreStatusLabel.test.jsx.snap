@@ -39,6 +39,19 @@ exports[`<AuditStoreStatusLabel/> renders correctly for status: ASSIGNED 1`] = `
 </span>
 `;
 
+exports[`<AuditStoreStatusLabel/> renders correctly for status: AUDITOR_WITHDRAWN 1`] = `
+<span
+  className="label label-default"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Auditor Withdrawn
+</span>
+`;
+
 exports[`<AuditStoreStatusLabel/> renders correctly for status: COMPLETED 1`] = `
 <span
   className="label label-success"

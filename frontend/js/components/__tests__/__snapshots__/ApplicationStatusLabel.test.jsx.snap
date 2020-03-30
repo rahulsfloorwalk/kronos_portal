@@ -64,3 +64,16 @@ exports[`<ApplicationStatusLabel/> renders correctly for status: WAITLISTED 1`] 
   Wait Listed
 </span>
 `;
+
+exports[`<ApplicationStatusLabel/> renders correctly for status: WITHDRAWN 1`] = `
+<span
+  className="label label-default"
+  style={
+    Object {
+      "fontSize": "100%",
+    }
+  }
+>
+  Withdrawn
+</span>
+`;

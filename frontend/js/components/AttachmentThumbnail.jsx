@@ -92,7 +92,7 @@ export default class AttachmentThumbnail extends Component{
 	render(){
 		var contentStyle = {
 			"width": "20px",
-            "height": "20px",
+			"height": "20px",
 		};
 
 		var faulty_style = {
@@ -192,7 +192,7 @@ export default class AttachmentThumbnail extends Component{
 			break;
 		}
 		divStyle.backgroundImage = `url(${imageSrc})`;
-		
+
 		let checkboxElement = null;
 		if (this.props.user == "client"){
 			checkboxElement = null;
@@ -202,7 +202,7 @@ export default class AttachmentThumbnail extends Component{
 				checkboxElement = (<input type="checkbox" style={contentStyle} value={a.id}/>);
 			}
 		}
-		
+
 		let faultyMessageElement = null;
 		if (this.props.faulty_report_id){
 			faultyMessageElement = (<span style={faulty_style}>Repeat Alert :<Link style={faulty_style} to={`/audit_store/${this.props.faulty_report_id}/report`} target="_blank">{this.props.faulty_report_id}</Link></span>);
@@ -221,21 +221,21 @@ export default class AttachmentThumbnail extends Component{
 
 				<div className="modal" tabIndex="-1" style={modalStyle}>
 					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
-						<div className="modal-dialog" style={modalDialogStyle}>
-							<div className="modal-content">
-								<div className="modal-header">
-									<button type="button" className="close" onClick={this.hideModal}>&times;</button>
-									<h4 className="modal-title">Delete Attachment</h4>
-								</div>
-								<div className="modal-body">
-									Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
-								</div>
-								<div className="modal-footer">	
-									<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
-									<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
-								</div>
+					<div className="modal-dialog" style={modalDialogStyle}>
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" onClick={this.hideModal}>&times;</button>
+								<h4 className="modal-title">Delete Attachment</h4>
+							</div>
+							<div className="modal-body">
+								Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
+							</div>
+							<div className="modal-footer">
+								<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
+								<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
 							</div>
 						</div>
+					</div>
 				</div>
 			</div>
 		);

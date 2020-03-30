@@ -28,7 +28,7 @@ export default class ApplicationStatusSummary extends React.Component {
 				<thead>
 					<tr>
 						{
-							["APPLIED", "WAITLISTED", "APPROVED", "REJECTED"].map((status) => {
+							["APPLIED", "WAITLISTED", "APPROVED", "WITHDRAWN", "REJECTED"].map((status) => {
 								return (
 									<td key={status} className="text-center">
 										<ApplicationStatusLabel status={status} />
@@ -41,7 +41,7 @@ export default class ApplicationStatusSummary extends React.Component {
 				<tbody>
 					<tr>
 						{
-							["APPLIED", "WAITLISTED", "APPROVED", "REJECTED"].map((status) => {
+							["APPLIED", "WAITLISTED", "APPROVED", "WITHDRAWN", "REJECTED"].map((status) => {
 								let item = this.state.stats.find( s => s.status === status);
 								return (
 									<td key={status} className="text-center">

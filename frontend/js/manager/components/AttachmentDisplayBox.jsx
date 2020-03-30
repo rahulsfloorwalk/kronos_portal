@@ -184,7 +184,7 @@ export class AttachmentDisplayBox extends Component{
 			return <Loading/>;
 		}
 		let editable = this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW";
-		
+
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
 		var contentStyle = {
@@ -237,23 +237,22 @@ export class AttachmentDisplayBox extends Component{
 				});
 				var optionList = [];
 				for(var sectionId of orderedKeys) {
-						optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
+					optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]["name"]}</option>));
 				}
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
-							<div className="col-md-8">
-								<select className="form-control" onChange={this.getSectionId}>
-									<option value="">Select Section</option>
-									{optionList}
-								</select>
-							</div>
-							<div className="col-md-2">
-								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
-							</div>
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getSectionId}>
+								<option value="">Select Section</option>
+								{optionList}
+							</select>
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+						</div>
 					</div>
 				);
 			}
-			
 		}
 
 		return (

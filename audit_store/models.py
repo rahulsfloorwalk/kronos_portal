@@ -82,6 +82,7 @@ class AuditStore(Model):
     ACKNOWLEDGED = 'ACKNOWLEDGED'
     SUBMITTED = 'SUBMITTED'
     PM_REVIEW = 'PM_REVIEW'
+    AUDITOR_WITHDRAWN = 'AUDITOR_WITHDRAWN'
     WITHDRAWN = 'WITHDRAWN'
     COMPLETED = 'COMPLETED'
     ACCEPTED = 'ACCEPTED'
@@ -94,6 +95,7 @@ class AuditStore(Model):
         (SUBMITTED, "Submitted"),
         (PM_REVIEW, "PM Review"),
         (COMPLETED, "Completed"),
+        (AUDITOR_WITHDRAWN, "Auditor Withdrawn"),
         (WITHDRAWN, "Withdrawn"),
         (ACCEPTED, "Accepted"),
         (REJECTED, "Rejected"),

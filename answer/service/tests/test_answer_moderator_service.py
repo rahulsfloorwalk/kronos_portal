@@ -34,7 +34,7 @@ class AnswerModeratorServiceTestCase(TestCase):
 
     def test_set_not_applicable_for_moderator_sets_not_applicable(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -58,7 +58,7 @@ class AnswerModeratorServiceTestCase(TestCase):
 
     def test_set_answer_comment_for_moderator_sets_answer_comment(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -120,7 +120,7 @@ class AnswerModeratorServiceTestCase(TestCase):
 
     def test_set_answer_text_for_moderator_sets_answer_text_or_raises_based_on_status(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -150,7 +150,7 @@ class AnswerModeratorServiceTestCase(TestCase):
 
     def test_set_marks_obtained_for_moderator_sets_marks_obtained_or_raises_based_on_status(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
