@@ -61,6 +61,11 @@ class AuditRow extends React.Component{
 		else if( this.props.application.status === "APPROVED"){
 			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
+		}
+		else if( this.props.application.status === "WITHDRAWN"){
+			auditDate =  <span>Your Audit Application has <b className="text-default">Withdrawn</b>. <br/>You Can Re-Apply by clicking  apply button.<br/><small><b className="text-danger">NOTE: DO NOT CONDUCT THE AUDIT.</b></small></span>;
+			button = <button type="button" className="btn btn-primary" onClick={this.applyButtonClicked}><ShareAlt/> Apply</button>;
+			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		} else {
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
@@ -225,7 +230,7 @@ class AuditList extends Component{
 							</div>
 							<div className="col-sm-12">
 								{/* <p style={{fontSize:"1.2em"}}>{this.props.auditCycle.description}</p> */}
-								<MarkdownViewer markdown={this.props.auditCycle.description}/>
+								<MarkdownViewer markdown={this.props.auditCycle.description || ""}/>
 							</div>
 						</div>
 					</div>

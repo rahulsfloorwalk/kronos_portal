@@ -33,7 +33,7 @@ class ReportSectionModeratorServiceTestCase(TestCase):
 
     def test_set_not_applicable_for_moderator_sets_not_applicable(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -57,7 +57,7 @@ class ReportSectionModeratorServiceTestCase(TestCase):
 
     def test_set_auditor_comment_for_moderator_sets_auditor_comment_or_raises(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -82,7 +82,7 @@ class ReportSectionModeratorServiceTestCase(TestCase):
 
     def test_set_pm_comment_for_moderator_sets_pm_comment_or_raises(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)

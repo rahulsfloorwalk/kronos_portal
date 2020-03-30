@@ -30,7 +30,7 @@ export class ModeratorSummary extends React.Component{
 	}
 
 	render(){
-		const statuses = AuditStoreStatus.filter(s => !["REJECTED", "ACCEPTED", "WITHDRAWN", "FAILED"].includes(s));
+		const statuses = AuditStoreStatus.filter(s => !["REJECTED", "ACCEPTED", "WITHDRAWN", "AUDITOR_WITHDRAWN", "FAILED"].includes(s));
 
 		if(!this.props.summary) {
 			return <Loading/>;

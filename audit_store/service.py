@@ -26,7 +26,7 @@ def find_audit_stores_for_auditor(profileinfo_id):
         profile_info = ProfileInfo.objects.get(pk=profileinfo_id)
         return AuditStore.objects.filter(
             user_id=profile_info.user_id,
-            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED),
+            status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED, AuditStore.PM_REVIEW, AuditStore.FAILED, AuditStore.COMPLETED, AuditStore.ACCEPTED, AuditStore.REJECTED, AuditStore.AUDITOR_WITHDRAWN),
             audit__audit_cycle__status__in=AuditCycle.AUDITOR_VISIBLE_STATUSES
         ).order_by('-audit_date')
     except ProfileInfo.DoesNotExist as e:

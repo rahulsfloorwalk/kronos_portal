@@ -21,6 +21,7 @@ class AuditStoreRow extends React.Component {
 		auditStore: auditStorePropType,
 	};
 	render() {
+		let withdrawButton , auditStoreStatusLabel, withdrawMessage, viewButton;
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
 		const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
@@ -31,6 +32,20 @@ class AuditStoreRow extends React.Component {
 			marginBottom: "10px",
 		};
 
+		if((this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED") && this.props.auditStore.get_date_diff <= -2){
+			withdrawButton = (<Link to={`audit_store/${this.props.auditStore.id}/withdraw`} className="btn btn-primary">Withdraw</Link>);
+		}
+
+		if (this.props.auditStore.status === "AUDITOR_WITHDRAWN"){
+			auditStoreStatusLabel = (<AuditStoreStatusLabel status="WITHDRAWN"/>);
+			withdrawMessage = (<span><b>Your Audit has been Withdrawn.</b></span>);
+			viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>View</Link>);
+		}
+		else{
+			auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
+			viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link>);
+		}
+
 		return (
 			<div className="panel panel-default">
 				<div className="panel-body">
@@ -38,7 +53,7 @@ class AuditStoreRow extends React.Component {
 						<b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name}
 					</h3>
 					<div>
-						<AuditStoreStatusLabel status={this.props.auditStore.status}/>
+						{auditStoreStatusLabel}
 						&nbsp;&nbsp;&bull;&nbsp;&nbsp;
 						<div style={inlineBlockStyle}>
 							<b>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</b>
@@ -60,7 +75,10 @@ class AuditStoreRow extends React.Component {
 						</div>
 					</div>
 					<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
-					<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link>
+					{viewButton}
+					&nbsp;&nbsp;
+					{withdrawButton}
+					{withdrawMessage}
 				</div>
 			</div>
 		);

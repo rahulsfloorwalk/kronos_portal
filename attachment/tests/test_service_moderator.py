@@ -52,7 +52,7 @@ class AttachmentModeratorServiceTestCase(TestCase):
         test_mime_type = "image/jpeg"
         test_size = 2048
 
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -85,7 +85,7 @@ class AttachmentModeratorServiceTestCase(TestCase):
         test_mime_type = "image/jpeg"
         test_size = 2048
 
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             section = mommy.make(Section, audit_cycle=audit_cycle)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
@@ -122,7 +122,7 @@ class AttachmentModeratorServiceTestCase(TestCase):
         test_mime_type = "image/jpeg"
         test_size = 2048
 
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             question = mommy.make(Question, section__audit_cycle=audit_cycle)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
@@ -155,7 +155,7 @@ class AttachmentModeratorServiceTestCase(TestCase):
 
     def test_complete_for_moderator_completes_attachment_based_on_audit_store_status(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -175,7 +175,7 @@ class AttachmentModeratorServiceTestCase(TestCase):
 
     def test_delete_for_moderator_deletes_attachment_based_on_audit_store_status(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)
@@ -194,7 +194,7 @@ class AttachmentModeratorServiceTestCase(TestCase):
 
     def test_rename_for_moderator_renames_attachment_based_on_audit_store_status(self):
         audit_store_recipe = Recipe(AuditStore, user=self.auditor_user)
-        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN]:
+        for status in [s[0] for s in AuditStore.STATUS if s[0] is not AuditStore.WITHDRAWN and s[0] is not AuditStore.AUDITOR_WITHDRAWN]:
             audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
             audit_store = audit_store_recipe.make(status=status, audit__audit_cycle=audit_cycle)
             assign_perm('audit_store.moderator_manage', self.moderator_user, audit_store)

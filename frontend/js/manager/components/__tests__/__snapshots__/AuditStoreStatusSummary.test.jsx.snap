@@ -67,6 +67,20 @@ exports[`<AuditStoreStatusSummary/> is rendered correctly when stats have succes
         className="text-center"
       >
         <span
+          className="label label-default"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Auditor Withdrawn
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
           className="label label-danger"
           style={
             Object {
@@ -164,6 +178,11 @@ exports[`<AuditStoreStatusSummary/> is rendered correctly when stats have succes
         <b>
           6
         </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b />
       </td>
       <td
         className="text-center"

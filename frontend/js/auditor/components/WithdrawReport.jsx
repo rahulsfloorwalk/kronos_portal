@@ -1,0 +1,76 @@
+import React from "react";
+import PropTypes from "prop-types";
+import { hashHistory } from "react-router";
+import * as ReactRedux from "react-redux";
+
+import Modal from "../../components/Modal.jsx";
+
+import FormInput from "../../components/FormInput.jsx";
+
+import { affectInputEventToComponent } from "../../react_utils.js";
+
+import {withdrawAuditStore, fetchAuditStore} from "../actions/audit_store.js";
+
+import { auditStorePropType } from "../prop_types";
+
+class WithdrawReport extends React.Component{
+	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
+		params: PropTypes.shape({
+			auditStoreId: PropTypes.string.isRequired,
+		}),
+		auditStore: auditStorePropType,
+	};
+
+	constructor(props){
+		super(props);
+		this.state = {
+			"message":""
+		};
+	}
+
+	componentDidMount() {
+		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
+		if(this.props.auditStore.status === "FAILED" || this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW" || this.props.auditStore.status === "WITHDRAWN" || this.props.auditStore.status === "AUDITOR_WITHDRAWN" || this.props.auditStore.status === "COMPLETED" || this.props.auditStore.status === "ACCEPTED" || this.props.auditStore.status === "REJECTED"){
+			hashHistory.push("audit_store");
+		}
+	}
+
+	fieldChanged = (e) => {
+		affectInputEventToComponent(e, this);
+	};
+
+	onSubmit = (e) => {
+		e.preventDefault();
+		this.props.dispatch(withdrawAuditStore(this.props.params.auditStoreId, this.state.message)).then(()=>{
+			hashHistory.push("audit_store");
+		});
+	};
+
+	closeModal = () => {
+		hashHistory.push("audit_store");
+	};
+
+	render(){
+		return (
+			<Modal modalTitle="Withdraw the Audit?" onClose={this.closeModal}>
+				<form onSubmit={this.onSubmit}>
+					<p>Are you sure you want to <b>Withdraw</b> audit of <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b> - {this.props.auditStore.audit.store.name} ?</p>
+					<FormInput type="text" label="Reason:" value={this.state.message} name="message" placeholder="Please enter reason for audit withdraw" onChange={this.fieldChanged}/>
+					<div className="form-group">
+						<button type="submit" className="btn btn-primary">Yes</button>
+						&nbsp;&nbsp;
+						<button type="button" onClick={this.closeModal} className="btn btn-default">Cancel</button>
+					</div>
+				</form>
+			</Modal>
+		);
+	}
+}
+
+const mapStoreToProps = (store, ownProps) => {
+	return {
+		auditStore: store.auditStores[ownProps.params.auditStoreId],
+	};
+};
+export default ReactRedux.connect( mapStoreToProps)(WithdrawReport);

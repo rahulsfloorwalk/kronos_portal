@@ -251,7 +251,6 @@ class SectionAttachmentBox extends React.Component{
 		}),
 		editable:PropTypes.bool,
 		sections:PropTypes.array
-		
 	};
 
 	constructor(props){
@@ -375,20 +374,20 @@ class SectionAttachmentBox extends React.Component{
 			});
 		}
 	};
-	
+
 	getAttachmentSectionId = (e) => {
 		this.setState({
 			attachmentSectionId : e.target.value
 		});
 	};
-	
+
 	moveAttachmentSection = () => {
 		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
-			let val = $(this).attr('value');
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.attachmentSectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -399,10 +398,10 @@ class SectionAttachmentBox extends React.Component{
 			});
 		});
 	};
-	
+
 	render(){
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		let uploadButton;
 		let editable = false;
 
@@ -438,9 +437,9 @@ class SectionAttachmentBox extends React.Component{
 			}
 			attachmentRows.push(" ");
 		}
-		
+
 		let sectionSelect = null;
-		
+
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
@@ -467,26 +466,26 @@ class SectionAttachmentBox extends React.Component{
 
 		return (
 			<div>
-			<div className="panel-body">
-				<div className="col-md-8">
-					<h4>Attachments {uploadButton}</h4>
-					{submitMessageElement}
+				<div className="panel-body">
+					<div className="col-md-8">
+						<h4>Attachments {uploadButton}</h4>
+						{submitMessageElement}
+					</div>
+					{sectionSelect}
 				</div>
-				{sectionSelect}
-			</div>
-			
-			<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
-				<div>
-					{attachmentRows}
-					<input type="file" multiple
-						onChange={this.uploadFile}
-						ref={(input)=>this.uploadInput = input}
-						style={{"display":"none"}}/>
+
+				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
+					<div>
+						{attachmentRows}
+						<input type="file" multiple
+							onChange={this.uploadFile}
+							ref={(input)=>this.uploadInput = input}
+							style={{"display":"none"}}/>
+					</div>
+					<AttachmentPreview attachment={selectedAttachment} editable={editable}
+						onRename={this.selectedAttachmentRenamed}
+						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
 				</div>
-				<AttachmentPreview attachment={selectedAttachment} editable={editable}
-					onRename={this.selectedAttachmentRenamed}
-					onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
-			</div>
 			</div>
 		);
 	}
@@ -544,7 +543,7 @@ class Section extends React.Component{
 				pm_comment: this.props.reportSection.pm_comment,
 				not_applicable: this.props.reportSection.not_applicable,
 			});
-			
+
 			fetchSections(this.props.auditStoreId).then((sections) => {
 				this.setState({
 					sections

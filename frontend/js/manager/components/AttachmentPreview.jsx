@@ -210,21 +210,21 @@ export default class AttachmentPreview extends React.Component {
 
 				<div className="modal" tabIndex="-1" style={modalStyle}>
 					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
-						<div className="modal-dialog" style={modalDialogStyle}>
-							<div className="modal-content">
-								<div className="modal-header">
-									<button type="button" className="close" onClick={this.hideModal}>&times;</button>
-									<h4 className="modal-title">Delete Attachment</h4>
-								</div>
-								<div className="modal-body">
-									Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
-								</div>
-								<div className="modal-footer">	
-									<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
-									<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
-								</div>
+					<div className="modal-dialog" style={modalDialogStyle}>
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" onClick={this.hideModal}>&times;</button>
+								<h4 className="modal-title">Delete Attachment</h4>
+							</div>
+							<div className="modal-body">
+								Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
+							</div>
+							<div className="modal-footer">
+								<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
+								<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
 							</div>
 						</div>
+					</div>
 				</div>
 			</div>
 		);

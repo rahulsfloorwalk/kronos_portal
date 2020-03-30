@@ -1,5 +1,5 @@
 Hello,
-Auditor failed the audit report of {{ client_name }} of {{ store_name }}.
+Auditor withdrawn the audit report of {{ client_name }} of {{ store_name }}.
 Reason : {{reason}}
 Please Check the Audit Report by clicking the below button
 --

@@ -59,7 +59,8 @@ def apply(audit_id, user_id, audit_date):
         if audit_date < audit.audit_cycle.start_date or audit_date > audit.audit_cycle.end_date:
             raise AppLogicError("preferred audit date is not within range")
 
-        if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status is None:
+
+        if audit.audit_cycle.status not in (AuditCycle.PREPARATION, AuditCycle.ARCHIVED) and application.status == AuditApplication.NOT_APPLIED or application.status == AuditApplication.WITHDRAWN or application.status is None:
             application.status = AuditApplication.APPLIED
             application.audit_date = audit_date
             application.report_exists = previous_report_exists(profile_info, audit, audit_date)
@@ -269,3 +270,14 @@ def previous_report_exists(profile_info, audit, audit_date):
     if profile_info.user.auditstore_set.filter(audit__store=audit.store, audit_date__lt=audit_date).exists():
         return True
     return False
+
+
+def change_application_status_to_withdrawn(audit_store_id):
+    audit_store_obj = AuditStore.objects.get(id=audit_store_id)
+    audit_id = audit_store_obj.audit.id
+    user_id = audit_store_obj.user.id
+    if AuditApplication.objects.filter(audit__id=audit_id, profileinfo__user__id=user_id):
+        audit_application_obj = AuditApplication.objects.get(audit__id=audit_id, profileinfo__user__id=user_id)
+        audit_application_obj.status = AuditApplication.WITHDRAWN
+        return audit_application_obj
+    return None

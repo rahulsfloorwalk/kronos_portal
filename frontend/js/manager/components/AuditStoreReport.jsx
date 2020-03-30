@@ -425,7 +425,7 @@ class SectionAttachmentBox extends React.Component{
 
 	render(){
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		let uploadButton;
 
 		if(this.props.editable) {
@@ -450,7 +450,7 @@ class SectionAttachmentBox extends React.Component{
 				/>);
 			}
 		}
-		
+
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
 		});
@@ -460,12 +460,12 @@ class SectionAttachmentBox extends React.Component{
 				null;
 			}
 			else{
-				optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]['name']}</option>));
+				optionList.push((<option key={sectionId} value={sectionId}>{this.props.sections[sectionId]["name"]}</option>));
 			}
 		}
-		
+
 		let sectionSelect = null;
-		
+
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 			sectionSelect = null;
@@ -500,7 +500,7 @@ class SectionAttachmentBox extends React.Component{
 					</div>
 					{sectionSelect}
 				</div>
-				
+
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
 					<div>
 						{attachmentRows}

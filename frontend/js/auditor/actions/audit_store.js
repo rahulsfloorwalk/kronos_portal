@@ -77,24 +77,49 @@ export function submitAuditStore(auditStoreId){
 	};
 }
 
-export function failAuditStore(auditStoreId){
+export function withdrawAuditStore(auditStoreId, message){
 	return function(dispatch){
-		dispatch({
-			type: types.AUDIT_STORE_ID_FAIL,
-			status: "request",
-			auditStoreId
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit_store/${auditStoreId}/withdraw`,
+			data: JSON.stringify({
+				message
+			}),
+			contentType: "application/json"
 		});
-
-		return $.post( url.api_base_path + `auditor/audit_store/${auditStoreId}/fail`, function(auditStore){
+		req.done(function(auditStore){
 			dispatch({
-				type: types.AUDIT_STORE_ID_FAIL,
+				type: types.AUDIT_STORE_ID_WITDRAW,
 				status: "success",
-				auditStore
+				auditStore,
 			});
 		});
 		//TODO: Handle error
+		return req;
 	};
-	//return $.get( url.api_base_path + `auditor/audit_store/${auditStoreId}/fail`);
+}
+
+
+export function failAuditStore(auditStoreId, message){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit_store/${auditStoreId}/fail`,
+			data: JSON.stringify({
+				message
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_FAIL,
+				status: "success",
+				auditStore,
+			});
+		});
+		//TODO: Handle error
+		return req;
+	};
 }
 
 export function submitReportSummary(audit_store_id, report_summary){

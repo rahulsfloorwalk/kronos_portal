@@ -208,6 +208,24 @@ exports[`AuditCycleModeratorSummary renders the moderator summary and moderator 
             Withdrawn
           </span>
         </th>
+        <th
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        >
+          <span
+            className="label label-default"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Auditor Withdrawn
+          </span>
+        </th>
       </tr>
     </thead>
     <tbody>
@@ -282,6 +300,13 @@ exports[`AuditCycleModeratorSummary renders the moderator summary and moderator 
             }
           }
         />
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
       </tr>
       <tr>
         <td>
@@ -319,6 +344,13 @@ exports[`AuditCycleModeratorSummary renders the moderator summary and moderator 
         >
           8
         </td>
+        <td
+          style={
+            Object {
+              "textAlign": "right",
+            }
+          }
+        />
         <td
           style={
             Object {

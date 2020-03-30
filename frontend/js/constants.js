@@ -5,6 +5,7 @@ export const ApplicationStatus = [
 	"WAITLISTED",
 	"APPROVED",
 	"REJECTED",
+	"WITHDRAWN",
 ];
 
 export const AuditStoreStatus = [
@@ -17,6 +18,7 @@ export const AuditStoreStatus = [
 	"FAILED",
 	"REJECTED",
 	"WITHDRAWN",
+	"AUDITOR_WITHDRAWN",
 ];
 
 export const QuestionType = [

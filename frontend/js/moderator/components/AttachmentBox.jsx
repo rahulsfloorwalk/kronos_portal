@@ -155,20 +155,20 @@ export default class AttachmentBox extends React.Component {
 			});
 		}
 	};
-	
+
 	getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
 		});
-	}
-	
+	};
+
 	moveAttachment = () => {
 		let attachmentlist = [];
-		$('.attachment_checkbox input:checked').each(function() {
-			let val = $(this).attr('value');
+		$(".attachment_checkbox input:checked").each(function() {
+			let val = $(this).attr("value");
 			attachmentlist.push(val);
 		});
-		
+
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			window.location.reload();
 		},(err) => {
@@ -178,18 +178,16 @@ export default class AttachmentBox extends React.Component {
 				showErrors: true,
 			});
 		});
-		
 	};
-	
-	
+
 	render() {
 		/*console.log("sctions",this.state.sections)*/
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
-		
+
 		var contentStyle = {
 			"paddingTop": "2%"
 		};
-		
+
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
@@ -225,25 +223,24 @@ export default class AttachmentBox extends React.Component {
 			</div>);
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
 		}
-		
+
 		var selectSection = null;
-		
-		
+
 		if( attachmentRows.length === 0){
 			return <Jumbotron heading="no attachments here" para="none uploaded"/>;
 		} else {
 			if(this.props.editable){
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
-							<div className="col-md-8">
-								<select className="form-control" onChange={this.getSectionId}>
-									<option value="">Select Section</option>
-									{this.state.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
-								</select>
-							</div>
-							<div className="col-md-2">
-								<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
-							</div>
+						<div className="col-md-8">
+							<select className="form-control" onChange={this.getSectionId}>
+								<option value="">Select Section</option>
+								{this.state.sections.map((s) => <option key={s.id} value={s.id}>{s.name}</option> )}
+							</select>
+						</div>
+						<div className="col-md-2">
+							<button className="btn btn-default btn-sm" onClick={this.moveAttachment}>Move to</button>
+						</div>
 					</div>
 				);
 			}
@@ -256,7 +253,7 @@ export default class AttachmentBox extends React.Component {
 						</div>
 						{selectSection}
 					</div>
-					
+
 					<div className="row">
 						<div className="col-md-4 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
 							{attachmentRows}

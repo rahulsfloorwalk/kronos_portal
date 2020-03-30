@@ -31,6 +31,8 @@ export default class AuditStoreStatusLabel extends React.Component {
 			return "danger2";
 		case "WITHDRAWN":
 			return "default";
+		case "AUDITOR_WITHDRAWN":
+			return "default";
 		case "":
 		case null:
 		case undefined:
