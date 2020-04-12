@@ -7,12 +7,16 @@ from .views import SectionView, ReportSectionView, AnswerView
 from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
+from .views import AttachmentProofTagList, AttachmentIdProofTagView
 from .views import ConfigView
 
 urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', AttachmentIdCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', AttachmentIdView.as_view(), name='attachment_id_view'),
+
+    url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
+
     url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_moderator$', MoveAttachmentToSection.as_view(), name='move_attachment_to_section'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/not_applicable$', NotApplicableView.as_view(), name='not_applicable_view'),
@@ -49,5 +53,8 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_store$', AuditStoreByAuditCycle.as_view(), name='audit_store_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', AuditCycleIdView.as_view(), name='audit_cycle_id_view'),
     url(r'audit_cycle$', AuditCycleView.as_view(), name='audit_cycle_view'),
+
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
+
     url(r'config$', ConfigView.as_view(), name='config_view'),
 ], 'moderator')

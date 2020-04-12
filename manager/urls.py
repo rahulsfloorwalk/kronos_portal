@@ -16,6 +16,7 @@ from .viewss import notifications as notification_views
 from .viewss import report_stats as report_stats_views
 from .viewss import moderator as moderator_views
 from .viewss import manager as manager_views
+from .viewss import proof_tag as proof_tag_views
 from .viewss import email_log as email_log_views
 from .viewss import opportunity_email as opportunity_email_views
 from .viewss import social as social_views
@@ -98,6 +99,8 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', report_attribute_views.ReportAttributeView.as_view(), name='report_attribute_by_audit_cycle_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/proof_tag', proof_tag_views.AuditCycleProofTag.as_view(), name='audit_cycle_proof_tag'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list', proof_tag_views.AttachmentAuditCycleProofTagList.as_view(), name='attachment_audit_cycle_proof_tag'),
 
     url(r'store/(?P<store_id>[0-9]+)/client_user$', client_user_views.ClientUserByStoreIdView.as_view(), name='client_user_by_store_id_view'),
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
@@ -156,6 +159,7 @@ urlpatterns = ([
     url(r'client_user$', client_user_views.ClientUserView.as_view(), name='client_user_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', attachment_views.AttachmentCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', attachment_views.AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
+    url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag', attachment_views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', attachment_views.AttachmentIdView.as_view(), name='attachment_id_view'),
     url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_manager$', attachment_views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_manager'),
     url(r'moderator/(?P<user_id>[0-9]+)$', moderator_views.ModeratorIdView.as_view(), name='moderator_id_view'),
@@ -164,6 +168,9 @@ urlpatterns = ([
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),
     url(r'manager$', manager_views.ManagerView.as_view(), name='manager_view'),
+
+    url(r'proof_tag$', proof_tag_views.ProofTagView.as_view(), name='proof_tag_views'),
+    url(r'proof_tag/(?P<proof_tag_id>[0-9]+)$', proof_tag_views.ProofTagIdView.as_view(), name='proof_tag_id_view'),
 
     url(r'email_log/view/(?P<email_log_id>[0-9]+)/text$', email_log_views.EmailLogTextViewById.as_view(), name='email_log_view_by_id'),
     url(r'email_log/view/(?P<email_log_id>[0-9]+)/html$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),

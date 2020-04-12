@@ -17,6 +17,8 @@ import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachme
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
+import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
+
 class AnswerComment extends Component {
 
 	static propTypes = {
@@ -250,7 +252,8 @@ class SectionAttachmentBox extends React.Component{
 			status: PropTypes.string,
 		}),
 		editable:PropTypes.bool,
-		sections:PropTypes.array
+		sections:PropTypes.array,
+		proof_tags: PropTypes.array
 	};
 
 	constructor(props){
@@ -359,6 +362,12 @@ class SectionAttachmentBox extends React.Component{
 
 	selectedAttachmentRenamed = (newName) => {
 		renameAttachment(this.state.selectedAttachmentId, newName).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+		});
+	};
+
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachmentId, e.target.value).then(()=>{
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};
@@ -483,8 +492,10 @@ class SectionAttachmentBox extends React.Component{
 							style={{"display":"none"}}/>
 					</div>
 					<AttachmentPreview attachment={selectedAttachment} editable={editable}
+						proof_tags={this.props.proof_tags}
 						onRename={this.selectedAttachmentRenamed}
-						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
+						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
+						onChange={this.saveAttachmentTag}/>
 				</div>
 			</div>
 		);
@@ -514,7 +525,8 @@ class Section extends React.Component{
 			status: PropTypes.string,
 		}),
 		answers: PropTypes.array,
-		sections:PropTypes.array
+		sections:PropTypes.array,
+		proof_tags: PropTypes.array
 	};
 
 	state = {
@@ -723,7 +735,7 @@ class Section extends React.Component{
 					{/* <hr/>
 					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div> */}
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable} proof_tags={this.props.proof_tags}/>
 			</div>);
 		}
 		return (
@@ -745,6 +757,7 @@ export default class AuditStoreSections extends React.Component{
 		auditStoreId: PropTypes.number,
 		auditStore: PropTypes.shape({
 			status: PropTypes.string,
+			audit: PropTypes.object
 		}),
 		children: PropTypes.node,
 		editable:PropTypes.bool,
@@ -755,6 +768,7 @@ export default class AuditStoreSections extends React.Component{
 		sections: [],
 		reportSections: [],
 		answers: [],
+		proof_tags: [],
 		loading: false
 	};
 
@@ -774,6 +788,11 @@ export default class AuditStoreSections extends React.Component{
 				reportSections
 			});
 		});
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
 	}
 	render(){
 		//var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
@@ -790,6 +809,7 @@ export default class AuditStoreSections extends React.Component{
 				answers={this.state.answers}
 				sections={this.state.sections}
 				editable = {this.props.editable}
+				proof_tags={this.state.proof_tags}
 			/>);
 		}
 		if( sectionRows.length === 0){

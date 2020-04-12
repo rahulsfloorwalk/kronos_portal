@@ -5,8 +5,8 @@ from django.contrib.auth.models import User
 from registration.models import MobileNumber
 from agency.models import Agency, AgencyUser
 from client.models import Client, Store
-from manager.models import City
-from audit.models import AuditCycle, Audit
+from manager.models import City, ProofTag
+from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from auditor.models import ProfileInfo
 from audit_store.models import AuditStore
 from questionnaire.models import Section, Question
@@ -309,6 +309,7 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
             'extra',
             'faulty_report_id',
+            'proof_tag'
         )
         read_only_fields = fields
 
@@ -335,3 +336,24 @@ class ProfileInfoSerializer(ModelSerializer):
         read_only_fields = fields
 
 
+class ProofTagSerializer(ModelSerializer):
+    class Meta:
+        model = ProofTag
+        fields = (
+            'id',
+            'name',
+            'description',
+            'is_active'
+        )
+
+
+class AuditCycleProoftagListSerializer(ModelSerializer):
+    proof_tag = ProofTagSerializer()
+    class Meta:
+        model = AuditCycleProofTagList
+        fields = (
+            'id',
+            'is_active',
+            'proof_tag'
+        )
+        read_only_fields = fields

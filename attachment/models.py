@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, IntegerField, PROTECT, DateTimeField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+from audit.models.proof_tag import AuditCycleProofTagList
 
 class Attachment(Model):
 
@@ -43,8 +44,10 @@ class Attachment(Model):
     object_id = PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
-    image_hash = CharField(db_column="image_hash", max_length=500,blank=True)
-    attachment_id = CharField(db_column="attachment_id",max_length=50,blank=True)
+    image_hash = CharField(db_column="image_hash", max_length=500, blank=True)
+    attachment_id = CharField(db_column="attachment_id", max_length=50, blank=True)
+
+    proof_tag = ForeignKey(AuditCycleProofTagList, db_column='proof_tag', blank=True, null=True, default="", on_delete=PROTECT)
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''

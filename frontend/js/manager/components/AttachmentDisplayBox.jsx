@@ -19,6 +19,7 @@ import AttachmentInProgressThumbnail from "../../components/AttachmentInProgress
 
 import { auditStorePropType } from "../prop_types";
 import { fetchSections } from "../actions/section.js";
+import {fetchproofTags, saveAttachmentTag} from "../service/proof_tag.js";
 
 export class AttachmentDisplayBox extends Component{
 	static propTypes = {
@@ -33,6 +34,7 @@ export class AttachmentDisplayBox extends Component{
 		this.state = {
 			attachments: [],
 			inProgress: {},
+			proof_tags: [],
 			selectedAttachment: undefined,
 			sectionId: "",
 			submitMessage : "",
@@ -50,6 +52,11 @@ export class AttachmentDisplayBox extends Component{
 	componentDidMount(){
 		this.reloadState();
 		this.props.dispatch(fetchSections(this.props.auditStoreId));
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
 	}
 	attachmentSelected = (attachment) => {
 		this.setState({
@@ -84,6 +91,23 @@ export class AttachmentDisplayBox extends Component{
 			}
 		}, ()=> {
 			Alert.warning("INVALIED FILE NAME");
+		});
+	};
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then((a)=>{
+			Alert.success("PROOF TAG SAVED");
+			this.setState({
+				selectedAttachment: a
+			});
+			for( let i in this.state.attachments){
+				if(this.state.attachments[i].id === a.id){
+					let arr = this.state.attachments;
+					arr[i] = a;
+					this.setState({
+						attachments: arr
+					});
+				}
+			}
 		});
 	};
 	uploadButtonClicked = () => {
@@ -210,8 +234,10 @@ export class AttachmentDisplayBox extends Component{
 		}
 
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
+			proof_tags={this.state.proof_tags}
 			onRename={this.attachmentRenamed}
-			onDelete={this.deleteButtonClicked}/>;
+			onDelete={this.deleteButtonClicked}
+			onChange={this.saveAttachmentTag}/>;
 
 		let uploadButton;
 		if(editable){

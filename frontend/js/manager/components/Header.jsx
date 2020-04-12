@@ -6,7 +6,7 @@ import { pointerStyle } from "../../styles.js";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Heartbeat from "../../components/Heartbeat.jsx";
 import NavLink from "../../components/NavLink.jsx";
-import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook } from "../../components/Icons.jsx";
+import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook, File } from "../../components/Icons.jsx";
 
 import floorwalkHeaderLogoUrl from "../../../img/logo_500x268.png";
 
@@ -40,6 +40,7 @@ export default class Header extends Component{
 							</a>
 						</li>
 						<NavLink to="/state"><MapMarker/> <span className="hidden-xs">Cities</span></NavLink>
+						<NavLink to="/proof_tag"><File/> <span className="hidden-xs">Proofs Tag</span></NavLink>
 						<li>
 							<a style={pointerStyle}
 								onClick={(e)=>{e.stopPropagation(); this.logoutDropdown && this.logoutDropdown.toggle();}}>

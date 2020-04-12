@@ -6,7 +6,7 @@ import { findAttachmentsByAuditStore } from "../../service/attachment.js";
 import { Paperclip } from "../../../components/Icons.jsx";
 import Jumbotron from "../../../components/Jumbotron.jsx";
 
-import AttachmentPreview from "../../../manager/components/AttachmentPreview.jsx";
+import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 

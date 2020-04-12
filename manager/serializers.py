@@ -2,13 +2,13 @@ from django.contrib.auth.models import User
 from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from agency.models import AgencyUser, Agency
-from audit.models import Audit, AuditCycle
+from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City
+from .models import City, ProofTag
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
 class ClientSerializer(ModelSerializer):
@@ -309,3 +309,26 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
         )
         read_only_fields = fields
 
+
+class ProofTagSerializer(ModelSerializer):
+    class Meta:
+        model = ProofTag
+        fields = (
+            'id',
+            'name',
+            'description',
+            'is_active'
+        )
+        read_only_fields = ('id',)
+
+
+class AuditCycleProofTagListSerializer(ModelSerializer):
+    proof_tag = ProofTagSerializer()
+    class Meta:
+        model = AuditCycleProofTagList
+        fields = (
+            'id',
+            'is_active',
+            'proof_tag'
+        )
+        read_only_fields = fields

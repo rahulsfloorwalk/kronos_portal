@@ -3,6 +3,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
+import Alert from "react-s-alert";
+
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
 
@@ -18,6 +20,7 @@ import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
 import { auditStorePropType, sectionPropType } from "../prop_types";
+import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
 class AnswerComment extends Component {
 	static propTypes = {
@@ -274,7 +277,8 @@ class SectionAttachmentBox extends React.Component{
 			PropTypes.string,
 		]).isRequired,
 		auditStore: PropTypes.object.isRequired,
-		sections:PropTypes.object
+		sections:PropTypes.object,
+		proof_tags: PropTypes.array
 	};
 
 	constructor(props){
@@ -383,6 +387,13 @@ class SectionAttachmentBox extends React.Component{
 
 	selectedAttachmentRenamed = (newName) => {
 		renameAttachment(this.state.selectedAttachmentId, newName).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+		});
+	};
+
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachmentId, e.target.value).then(()=>{
+			Alert.success("PROOF TAG SAVED");
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};
@@ -510,8 +521,10 @@ class SectionAttachmentBox extends React.Component{
 							style={{"display":"none"}}/>
 					</div>
 					<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
+						proof_tags={this.props.proof_tags}
 						onRename={this.selectedAttachmentRenamed}
-						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}/>
+						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
+						onChange={this.saveAttachmentTag}/>
 				</div>
 			</div>
 		);
@@ -537,7 +550,8 @@ class __Section extends React.Component{
 		params: PropTypes.shape({
 			auditStoreId: PropTypes.string.isRequired,
 		}),
-		sections:PropTypes.object
+		sections:PropTypes.object,
+		proof_tags: PropTypes.array
 	};
 
 	constructor(props){
@@ -746,7 +760,7 @@ class __Section extends React.Component{
 					<div><b>PM Comment:</b> {pmCommentElement}</div> */}
 					{pmCommentElement}
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} sections={this.props.sections}/>
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} sections={this.props.sections} proof_tags={this.props.proof_tags}/>
 			</div>);
 		}
 
@@ -794,6 +808,7 @@ export class AuditStoreReport extends React.Component{
 		super(props);
 		this.state = {
 			loading: false,
+			proof_tags: []
 		};
 	}
 
@@ -806,6 +821,11 @@ export class AuditStoreReport extends React.Component{
 			});
 			this.props.dispatch(fetchSections(this.props.auditStore.audit.audit_cycle.id)).always(() => this.setState({loading: false}));
 		}
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
 	}
 
 	componentWillReceiveProps( nextProps){
@@ -824,7 +844,7 @@ export class AuditStoreReport extends React.Component{
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable} sections={this.props.sections}/>);
+			sectionRows.push(<Section auditStoreId={this.props.params.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} editable={editable} sections={this.props.sections} proof_tags={this.state.proof_tags}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please add a section from the questionnaire"/>);

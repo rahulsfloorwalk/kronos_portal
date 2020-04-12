@@ -153,6 +153,25 @@ exports[`<Header/> is rendered correctly 1`] = `
           </span>
         </a>
       </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-file"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Proofs Tag
+          </span>
+        </a>
+      </li>
       <li>
         <a
           onClick={[Function]}

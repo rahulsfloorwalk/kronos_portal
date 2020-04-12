@@ -4,6 +4,7 @@ import $ from "jquery";
 
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection } from "../service/attachment.js";
 import { fetchSections } from "../service/section.js";
+import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -19,12 +20,14 @@ export default class AttachmentBox extends React.Component {
 		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 		auditStore: PropTypes.shape({
 			status: PropTypes.string.isRequired,
+			audit: PropTypes.object
 		}),
 		editable:PropTypes.bool
 	};
 
 	state = {
 		attachments: [],
+		proof_tags: [],
 		inProgress: {},
 		selectedAttachment: undefined,
 		sections:[],
@@ -49,6 +52,11 @@ export default class AttachmentBox extends React.Component {
 				sections
 			});
 		});
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
 	}
 
 	attachmentSelected = (attachment) => {
@@ -70,6 +78,23 @@ export default class AttachmentBox extends React.Component {
 
 	attachmentRenamed = (file_name) => {
 		renameAttachment(this.state.selectedAttachment.id, file_name).done((a)=>{
+			this.setState({
+				selectedAttachment: a
+			});
+			for( let i in this.state.attachments){
+				if(this.state.attachments[i].id === a.id){
+					let arr = this.state.attachments;
+					arr[i] = a;
+					this.setState({
+						attachments: arr
+					});
+				}
+			}
+		});
+	};
+
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then((a)=>{
 			this.setState({
 				selectedAttachment: a
 			});
@@ -212,8 +237,10 @@ export default class AttachmentBox extends React.Component {
 
 		let editable = this.props.auditStore.status === "SUBMITTED";
 		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={editable}
+			proof_tags={this.state.proof_tags}
 			onRename={this.attachmentRenamed}
-			onDelete={this.deleteButtonClicked}/>;
+			onDelete={this.deleteButtonClicked}
+			onChange={this.saveAttachmentTag}/>;
 
 		let uploadButton;
 		if(this.props.auditStore.status === "SUBMITTED"){

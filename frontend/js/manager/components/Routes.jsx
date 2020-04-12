@@ -43,6 +43,7 @@ import AuditCyclePaymentList from "./AuditCyclePaymentList.jsx";
 import AuditCycleModeratorSummary from "./audit_cycle/AuditCycleModeratorSummary.jsx";
 import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
 import CheckPoints from "./CheckPoints.jsx";
+import ProofsTag from "./ProofsTag.jsx";
 import OpportunityEmailRecordList from "./OpportunityEmailRecordList.jsx";
 import OpportunityEmailRecordForm from "./OpportunityEmailRecordForm.jsx";
 
@@ -82,6 +83,9 @@ import AuditCycleModeratorAssignForm from "./AuditCycleModeratorAssignForm.jsx";
 import ManagerForm from "./manager/ManagerForm.jsx";
 import ManagerList from "./manager/ManagerList.jsx";
 
+import ProofTagList from "./proof_tag/ProofTagList.jsx";
+import ProofTagForm from "./proof_tag/ProofTagForm.jsx";
+
 const Routes = () => (
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
@@ -117,6 +121,7 @@ const Routes = () => (
 				<Route path="edit" component={AuditCycleForm}/>
 				<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
 				<Route path="checkpoints" component={CheckPoints}/>
+				<Route path="proofs_tag" component={ProofsTag}/>
 				<Route path="questionnaire" component={SectionList}>
 					<Route path="section/copy" component={SectionCopyForm}/>
 					<Route path="section/add" component={SectionAddForm}/>
@@ -184,6 +189,10 @@ const Routes = () => (
 			<Route path="manager" component={ManagerList}>
 				<Route path="add" component={ManagerForm}/>
 				<Route path=":userId/edit" component={ManagerForm}/>
+			</Route>
+			<Route path="proof_tag" component={ProofTagList}>
+				<Route path="add" component={ProofTagForm}/>
+				<Route path=":proof_tag_id/edit" component={ProofTagForm}/>
 			</Route>
 		</Route>
 	</Router>
