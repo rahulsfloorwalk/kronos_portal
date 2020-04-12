@@ -23,7 +23,8 @@ class AttachmentSerializer(ModelSerializer):
             'object_id',
             'direct_url',
             'extra',
-            'faulty_report_id'
+            'faulty_report_id',
+            'proof_tag'
         )
         read_only_fields = fields
 
@@ -124,4 +125,13 @@ class MoveAttachmentToSection(APIView):
 
     def post(self,request,audit_store_id):
         attachment = attachment_manager_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
+        return Response(AttachmentSerializer(attachment).data)
+
+class AttachmentIdProofTagView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def post(self, request, attachment_id):
+        attachment = attachment_manager_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
         return Response(AttachmentSerializer(attachment).data)

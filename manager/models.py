@@ -1,5 +1,6 @@
-from django.db.models import Model, CharField, AutoField, ForeignKey, DecimalField
+from django.db.models import Model, CharField, AutoField, ForeignKey, DecimalField, BooleanField, DateTimeField
 from django.db.models import PROTECT
+from django.utils import timezone
 
 from manager import states
 
@@ -33,3 +34,18 @@ class Location(Model):
     def __str__(self):
         return 'Location({}): {}, {}'.format(self.id, self.name, self.city)
 
+
+class ProofTag(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    description = CharField(db_column='description', max_length=1000, blank=True)
+    is_active = BooleanField(db_column='is_active', default=True)
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save update timestamp '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(ProofTag, self).save(*args, **kwargs)

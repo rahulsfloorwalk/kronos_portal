@@ -11,6 +11,7 @@ from registration.models import GROUP_NAME_MODERATOR
 
 from audit_store.models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
+import audit.service.audit_cycle_proof_tag as audit_cycle_proof_tag_service
 import audit_store.service_moderator as audit_store_service
 import attachment.service_moderator as attachment_service
 import questionnaire.service.section as section_service
@@ -23,7 +24,7 @@ from .serializers import AttachmentSerializer
 from .serializers import SectionSerializer
 from .serializers import ReportSectionSerializer
 from .serializers import AnswerSerializer
-
+from .serializers import AuditCycleProoftagListSerializer
 
 class AuditCycleView(APIView):
     permission_classes = [HasGroupPermission]
@@ -320,6 +321,7 @@ class AttachmentIdCompleteView(APIView):
         attachment = attachment_service.complete_for_moderator(attachment_id, request.user.id)
         return Response(AttachmentSerializer(attachment).data)
 
+
 class MoveAttachmentToSection(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -329,6 +331,27 @@ class MoveAttachmentToSection(APIView):
     def post(self,request,audit_store_id):
         attachment = attachment_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
         return Response(AttachmentSerializer(attachment).data)
+
+
+class AttachmentProofTagList(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR]
+    }
+    def get(self, request, audit_cycle_id):
+        proof_tag = audit_cycle_proof_tag_service.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
+        return Response(AuditCycleProoftagListSerializer(proof_tag, many=True).data)
+
+
+class AttachmentIdProofTagView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+    def post(self, request, attachment_id):
+        attachment = attachment_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
+        return Response(AttachmentSerializer(attachment).data)
+
 
 class SectionView(APIView):
     permission_classes = [HasGroupPermission]

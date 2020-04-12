@@ -19,3 +19,13 @@ export const auditCyclePropType = PropTypes.shape({
 	start_date: PropTypes.string.isRequired,
 	end_date: PropTypes.string.isRequired,
 });
+
+export const attachmentPropType = PropTypes.shape({
+	id: PropTypes.number.isRequired,
+	direct_url: PropTypes.string.isRequired,
+	mime_type: PropTypes.string.isRequired,
+	proof_type: PropTypes.string.isRequired,
+	extra: PropTypes.shape({
+		preview_url: PropTypes.string,
+	}),
+});

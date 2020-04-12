@@ -24,6 +24,7 @@ from answer.service import answer as answer_service
 from auditor.models import ProfileInfo
 from auditor.service import profile_info_service
 from .models import Attachment
+from audit.service import audit_cycle_proof_tag
 
 _logger = logging.getLogger(__name__)
 
@@ -225,6 +226,16 @@ def rename(attachment_id, new_name):
         raise AppLogicError("new file name is invalid")
 
     attachment.file_name = new_name
+    attachment.save()
+    return attachment
+
+def save_attachment_proof_tag(attachment_id, proof_tag_id):
+    attachment = find_by_id(attachment_id)
+    if proof_tag_id == "":
+        attachment.proof_tag = None
+    else:
+        proof_tag_obj = audit_cycle_proof_tag.find_by_id(proof_tag_id)
+        attachment.proof_tag = proof_tag_obj
     attachment.save()
     return attachment
 

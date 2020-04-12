@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
-import AttachmentPreview from "../../../manager/components/AttachmentPreview.jsx";
+import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import { findAttachmentsByAuditStoreAndSection } from "../../service/attachment.js";
 

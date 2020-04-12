@@ -83,3 +83,6 @@ def move_to_section(audit_store_id,section_id,attachment_list):
     for attachment_id in attachment_list:
         attachment = attachment_service.update_attachment_section(attachment_id,content_obj)
     return attachment
+
+def save_attachment_proof_tag(attachemt_id, proof_tag_id):
+    return attachment_service.save_attachment_proof_tag(attachemt_id, proof_tag_id)
