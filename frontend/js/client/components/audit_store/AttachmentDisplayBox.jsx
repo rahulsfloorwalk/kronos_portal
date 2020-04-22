@@ -8,7 +8,7 @@ import Jumbotron from "../../../components/Jumbotron.jsx";
 
 import AttachmentPreview from "./AttachmentPreview.jsx";
 
-import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
+import ClientAttachmentThumbnail from "../../../components/ClientAttachmentThumbnail.jsx";
 
 export default class AttachmentDisplayBox extends React.Component {
 	static propTypes = {
@@ -43,7 +43,7 @@ export default class AttachmentDisplayBox extends React.Component {
 	render() {
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail
+			attachmentRows.push(<ClientAttachmentThumbnail
 				attachment={a}
 				key={a.id}
 				onSelect={() => this.attachmentSelected(a)}

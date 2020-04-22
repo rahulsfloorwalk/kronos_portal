@@ -431,6 +431,8 @@ class SectionAttachmentBox extends React.Component{
 				user="moderator"
 				editable={this.props.editable}
 				faulty_report_id={a.faulty_report_id}
+				proof_tags={this.props.proof_tags}
+				onChange={this.saveAttachmentTag}
 			/>);
 		}
 		for(let id in this.state.inProgress){

@@ -19,7 +19,7 @@ export class ModeratorSummary extends React.Component{
 			id: PropTypes.number.isRequired,
 			email: PropTypes.string.isRequired,
 		}).isRequired),
-
+		children: PropTypes.node,
 		fetchModeratorSummary: PropTypes.func.isRequired,
 		fetchModerators: PropTypes.func.isRequired,
 	};
@@ -45,7 +45,7 @@ export class ModeratorSummary extends React.Component{
 			const moderator = this.props.moderators.find(m => m.id === parseInt(moderatorId));
 			const cells = statuses.map(s => <td key={s} style={rightAlign}>{this.props.summary[moderatorId][s]}</td>);
 			rows.push(<tr key={moderatorId}>
-				<td><Link to={`/moderator/list/${moderatorId}/reportlist`}>{moderator ? moderator.email : ""}</Link></td>
+				<td><Link to={`/moderator/summary/${moderatorId}/reportlist`}>{moderator ? moderator.email : ""}</Link></td>
 				{cells}
 			</tr>);
 		}
@@ -72,6 +72,7 @@ export class ModeratorSummary extends React.Component{
 					{rows}
 				</tbody>
 			</table>
+			{this.props.children}
 		</div>);
 	}
 }

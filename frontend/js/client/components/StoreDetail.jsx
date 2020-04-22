@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import { fetchStore } from "../service/store.js";
+import { fetchQuestionnaireTypesForProofComparison } from "../service/questionnaire_type.js";
 
 import { File, Stats } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -17,7 +18,9 @@ export default class StoreDetail extends React.Component {
 		children: PropTypes.node,
 	};
 
-	state = {};
+	state = {
+		questionnaireTypes: []
+	};
 
 	componentDidMount() {
 		fetchStore(this.props.params.storeId).then((store) => {
@@ -25,11 +28,20 @@ export default class StoreDetail extends React.Component {
 				store
 			});
 		});
+		fetchQuestionnaireTypesForProofComparison(this.props.params.storeId).then((questionnaireTypes) =>{
+			this.setState({
+				questionnaireTypes
+			});
+		});
 	}
 
 	render() {
 		if(! this.state.store){
 			return <Loading/>;
+		}
+		let proof_comparison_menu;
+		if(this.state.questionnaireTypes.length > 0){
+			proof_comparison_menu = (<NavLink to={`/store/${this.props.params.storeId}/proof_comparison`}><File/> Proof Comparison</NavLink>);
 		}
 		return (
 			<div>
@@ -69,6 +81,7 @@ export default class StoreDetail extends React.Component {
 				<ul className="nav nav-tabs">
 					<NavLink to={`/store/${this.props.params.storeId}/trends`}><Stats/> Trends</NavLink>
 					<NavLink to={`/store/${this.props.params.storeId}/reports`}><File/> Reports</NavLink>
+					{proof_comparison_menu}
 				</ul>
 				{this.props.children}
 			</div>

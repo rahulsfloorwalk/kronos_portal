@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
+import ClientAttachmentThumbnail from "../../../components/ClientAttachmentThumbnail.jsx";
 import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import { findAttachmentsByAuditStoreAndSection } from "../../service/attachment.js";
@@ -50,7 +50,7 @@ export default class SectionAttachmentBox extends React.Component{
 
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail
+			attachmentRows.push(<ClientAttachmentThumbnail
 				attachment={a}
 				key={a.id}
 				onSelect={() => this.selectAttachment(a.id)}

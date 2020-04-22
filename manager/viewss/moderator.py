@@ -9,7 +9,7 @@ from registration.mixins import HasGroupPermission
 from manager.service import moderator_summary
 from ..serializers import PlainUserSerializer
 from ..service import moderator as moderator_service
-import audit_store.service_moderator as audit_store_service
+import audit_store.service_manager as audit_store_service
 from manager.serializers import AuditStoreSerializer
 
 class ModeratorDeSerializer(Serializer):
@@ -112,12 +112,13 @@ class ModeratorSummaryView(APIView):
     def get(self, request):
         return Response(moderator_summary.moderator_summary_global())
 
+
 class ModeratorReportList(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET':[GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_MANAGER],
     }
 
-    def get(self,request,user_id):
-        audit_stores = audit_store_service.find_qa_pending_audit_stores_for_moderator(user_id)
+    def get(self, request, user_id):
+        audit_stores = audit_store_service.find_qa_pending_audit_stores_of_moderator_for_manager(user_id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)

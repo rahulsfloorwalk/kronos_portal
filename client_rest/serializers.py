@@ -1,10 +1,10 @@
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
 
-from audit.models import Audit, AuditCycle, ReportAttribute
+from audit.models import Audit, AuditCycle, ReportAttribute, AuditCycleProofTagList
 from audit_store.models import AuditStore
 from client.models import Client, Store, ClientUser
-from manager.models import City
+from manager.models import City, ProofTag
 
 from questionnaire.models import Section, Question
 from answer.models import Answer, ReportSection
@@ -240,5 +240,28 @@ class ReportAttributeSerializer(ModelSerializer):
             'label',
             'audit_cycle_id',
             'attribute_data',
+        )
+        read_only_fields = fields
+
+
+class ProofTagSerializer(ModelSerializer):
+    class Meta:
+        model = ProofTag
+        fields = (
+            'id',
+            'name',
+            'description',
+            'is_active'
+        )
+
+
+class AuditCycleProoftagListSerializer(ModelSerializer):
+    proof_tag = ProofTagSerializer()
+    class Meta:
+        model = AuditCycleProofTagList
+        fields = (
+            'id',
+            'is_active',
+            'proof_tag'
         )
         read_only_fields = fields

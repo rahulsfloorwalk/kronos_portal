@@ -35,6 +35,7 @@ export class __Section extends React.Component{
 		showErrors: PropTypes.bool,
 		auditorComment: PropTypes.string,
 		editable: PropTypes.bool,
+		proof_tags: PropTypes.array,
 	};
 
 	state = {};
@@ -86,7 +87,7 @@ export class __Section extends React.Component{
 							</tr>
 						</tbody>
 					</table>
-					<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={this.props.editable}/>
+					<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={this.props.editable} proof_tags={this.props.proof_tags}/>
 				</div>
 			);
 		} else {

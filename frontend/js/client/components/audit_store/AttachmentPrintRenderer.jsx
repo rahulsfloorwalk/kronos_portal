@@ -5,7 +5,7 @@ import { findAttachmentsByAuditStore, findAttachmentsByAuditStoreAndSection } fr
 
 import { Paperclip } from "../../../components/Icons.jsx";
 
-import AttachmentPreview from "../../../manager/components/AttachmentPreview.jsx";
+import AttachmentPreview from "./AttachmentPreview.jsx";
 
 export default class AttachmentPrintRenderer extends React.Component {
 	static propTypes = {

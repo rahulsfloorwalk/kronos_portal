@@ -51,5 +51,7 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),
     url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_auditor$', views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_auditor'),
+    url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
 ], 'auditor')

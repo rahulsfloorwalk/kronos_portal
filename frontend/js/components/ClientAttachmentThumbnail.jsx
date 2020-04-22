@@ -20,8 +20,7 @@ export default class AttachmentThumbnail extends Component{
 		attachment: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			proof_type: PropTypes.string.isRequired,
-			file_name: PropTypes.string,
-			proof_tag: PropTypes.any
+			file_name: PropTypes.string
 		}),
 		user: PropTypes.string,
 		selected: PropTypes.bool,
@@ -33,9 +32,6 @@ export default class AttachmentThumbnail extends Component{
 		editable:PropTypes.bool,
 
 		faulty_report_id : PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
-
-		proof_tags: PropTypes.array,
-		onChange: PropTypes.func
 	};
 
 	constructor(props){
@@ -47,17 +43,6 @@ export default class AttachmentThumbnail extends Component{
 			display:"none",
 		};
 	}
-	showModal = () => {
-		this.setState({ display:"block" });
-	};
-
-	hideModal = () => {
-		this.setState({ display:"none" });
-	};
-	delete_hideModal = () => {
-		this.props.onDelete();
-		this.setState({ display:"none" });
-	};
 	setHover = (hover) => {
 		this.setState((prevState) => Object.assign({}, prevState, { hover }));
 	};
@@ -94,12 +79,6 @@ export default class AttachmentThumbnail extends Component{
 		}
 	}
 	render(){
-		var proof_tag_select_box_style = {
-			fontSize:"12px",
-			width: "145px",
-			height: "30px"
-		};
-
 		var contentStyle = {
 			"width": "20px",
 			"height": "20px",
@@ -145,18 +124,6 @@ export default class AttachmentThumbnail extends Component{
 			color:"Black",
 		};
 
-		const modalStyle = {
-			display: this.state.display,
-			overflow: "scroll"
-		};
-		const modalBackdropStyle = {
-			zIndex: "1060",
-			height: "100%"
-		};
-		const modalDialogStyle = {
-			zIndex: "1070",
-		};
-
 		if(selectable && (this.state.hover || selected)){
 			divStyle.border = "solid #337AB7 2px";
 		}
@@ -167,12 +134,6 @@ export default class AttachmentThumbnail extends Component{
 		}
 
 		let deleteButton;
-		let proof_tag_select_box;
-		let option_tag_list = [];
-
-		for(let p of this.props.proof_tags){
-			option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag.name}</option>);
-		}
 
 		if( this.props.deletable && this.props.onDelete){
 			deleteButton = (
@@ -180,19 +141,6 @@ export default class AttachmentThumbnail extends Component{
 					<Cross/>
 				</button>
 			);
-			if(option_tag_list.length > 0){
-				let proof_tag_select_box_value;
-				if(this.props.attachment.proof_tag){
-					proof_tag_select_box_value = this.props.attachment.proof_tag;
-				}
-				else{
-					proof_tag_select_box_value = "";
-				}
-				proof_tag_select_box = (<select className="form-control form-control-sm" value={proof_tag_select_box_value} style={proof_tag_select_box_style} onChange={this.props.onChange}>
-					<option value="">Select Tag</option>
-					{option_tag_list}
-				</select>);
-			}
 		}
 
 		let imageSrc;
@@ -239,39 +187,15 @@ export default class AttachmentThumbnail extends Component{
 		}
 
 		return (
-			<div style={{display:"inline-block",width:"150px",height:"100px",margin: "5px",}}>
-				<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-					{checkboxElement}
-					{deleteButton}
-					<div style={fileNameStyle}>
-						<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
-						<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a><br/>
-						{faultyMessageElement}
-					</div>
-					<img className="hidden" src={imageSrc} onLoad={this.onImageLoad} onError={this.onImageError}/>
-
-					<div className="modal" tabIndex="-1" style={modalStyle}>
-						<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
-						<div className="modal-dialog" style={modalDialogStyle}>
-							<div className="modal-content">
-								<div className="modal-header">
-									<button type="button" className="close" onClick={this.hideModal}>&times;</button>
-									<h4 className="modal-title">Delete Attachment</h4>
-								</div>
-								<div className="modal-body">
-									Are you sure you want to delete <b>{this.props.attachment.file_name}</b> attachment ?
-								</div>
-								<div className="modal-footer">
-									<button type="button" className="btn btn-default" onClick={this.delete_hideModal}>Yes</button>
-									<button type="button" className="btn btn-default" onClick={this.hideModal}>No</button>
-								</div>
-							</div>
-						</div>
-					</div>
+			<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
+				{checkboxElement}
+				{deleteButton}
+				<div style={fileNameStyle}>
+					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
+					<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a><br/>
+					{faultyMessageElement}
 				</div>
-				<div style={{marginLeft: "5px", marginBottom: "10px"}} onClick={onSelect}>
-					{proof_tag_select_box}
-				</div>
+				<img className="hidden" src={imageSrc} onLoad={this.onImageLoad} onError={this.onImageError}/>
 			</div>
 		);
 	}

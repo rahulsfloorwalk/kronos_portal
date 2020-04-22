@@ -37,7 +37,8 @@ from .serializers import CitySerializer
 from auditor.service import profile_info_service
 from auditor.service import additional_info_service
 from auditor.service import bank_info_service
-
+from audit.service import audit_cycle_proof_tag
+from .serializers import AuditCycleProoftagListSerializer
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -613,3 +614,22 @@ class TosAcceptView(APIView):
         preferences = preferences_service.tos_accept(request.user.id, ds.validated_data.get('tos_accept'))
         return Response(PreferencesSerializer(preferences).data)
 
+
+class AttachmentProofTagList(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, audit_cycle_id):
+        proof_tag = audit_cycle_proof_tag.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
+        return Response(AuditCycleProoftagListSerializer(proof_tag, many=True).data)
+
+
+class AttachmentIdProofTagView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def post(self, request, attachment_id):
+        attachment = attachment_auditor_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
+        return Response(AttachmentSerializer(attachment).data)

@@ -48,7 +48,7 @@ export class __AuditStoreReport extends React.Component {
 				<AuditStoreDetails auditStore={this.props.auditStore}/>
 				{buttonPanel}
 				<AttachmentUploadBox auditStoreId={this.props.auditStore.id}/>
-				<SectionList auditStoreId={this.props.auditStore.id} showErrors={this.state.showErrors}/>
+				<SectionList auditStoreId={this.props.auditStore.id} showErrors={this.state.showErrors} auditStore={this.props.auditStore}/>
 				{buttonPanel}
 			</div>);
 		} else {

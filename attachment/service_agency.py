@@ -51,6 +51,7 @@ def delete_for_agency(attachment_id, user_id):
 
     return attachment_service.delete(attachment_id)
 
+
 def move_to_section(audit_store_id,section_id,attachment_list):
     if not attachment_list and not section_id:
         raise AppLogicError("Please select attachment and section in which attachment to be moved")
@@ -67,3 +68,7 @@ def move_to_section(audit_store_id,section_id,attachment_list):
     for attachment_id in attachment_list:
         attachment = attachment_service.update_attachment_section(attachment_id,content_obj)
     return attachment
+
+
+def save_attachment_proof_tag(attachment_id, proof_tag_id):
+    return attachment_service.save_attachment_proof_tag(attachment_id, proof_tag_id)

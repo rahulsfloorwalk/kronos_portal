@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 from rest_framework.serializers import ModelSerializer
 
-from manager.models import City
+from manager.models import City, ProofTag
 from registration.models import MobileNumber
 
 from agency.models import Agency
@@ -12,7 +12,7 @@ from agency.models import AgencyPresence
 
 from answer.models import Answer, ReportSection
 from audit_store.models import AuditStore
-from audit.models import AuditCycle, Audit
+from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from attachment.models import Attachment
 from client.models import Client, Store
 from questionnaire.models import Question, Section
@@ -240,5 +240,29 @@ class AttachmentSerializer(ModelSerializer):
             'object_id',
             'direct_url',
             'extra',
+            'proof_tag'
+        )
+        read_only_fields = fields
+
+
+class ProofTagSerializer(ModelSerializer):
+    class Meta:
+        model = ProofTag
+        fields = (
+            'id',
+            'name',
+            'description',
+            'is_active'
+        )
+
+
+class AuditCycleProoftagListSerializer(ModelSerializer):
+    proof_tag = ProofTagSerializer()
+    class Meta:
+        model = AuditCycleProofTagList
+        fields = (
+            'id',
+            'is_active',
+            'proof_tag'
         )
         read_only_fields = fields
