@@ -1,8 +1,12 @@
 from kronos.exceptions import AppLogicError
+from guardian.shortcuts import get_objects_for_user
 from audit_store import service as audit_store_service
 from registration.service import manager as manager_service
 from answer.models import ReportSection
 from auditor.service.application_service import change_application_status_to_withdrawn
+from registration.service.moderator import find_moderator_by_user_id
+from audit_store.models import AuditStore
+from audit.models import AuditCycle
 
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
@@ -122,3 +126,14 @@ def withdraw_report(audit_store_id, user_id):
         application_obj.save()
     # End of Change Audit Application Status to WITHDRAWN
     return audit_store
+
+
+def find_qa_pending_audit_stores_of_moderator_for_manager(user_id):
+    # TODO: move this in to the AuditStoreQuerySet
+    user = find_moderator_by_user_id(user_id)
+    query_set = AuditStore.objects.filter(
+        audit__audit_cycle__status__in=AuditCycle.ALL_STATUSES,
+        status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED)
+    ).order_by('audit_date')
+
+    return get_objects_for_user(user, 'moderator_manage', klass=query_set)

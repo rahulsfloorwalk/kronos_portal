@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { orderKeys } from "../../react_utils.js";
 import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment , moveAttachmentToSection } from "../service/attachment.js";
+import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
 import { Paperclip } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -27,6 +28,8 @@ class AttachmentUploadBox extends React.Component {
 	state = {
 		uploadMessage : "",
 		attachments: [],
+		selectedAttachment: undefined,
+		proof_tags: [],
 		inProgress: {},
 		progress: "",
 		uploading: false,
@@ -47,6 +50,11 @@ class AttachmentUploadBox extends React.Component {
 	componentDidMount() {
 		this.reloadState();
 		this.props.dispatch(fetchSections(this.props.auditStoreId));
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
 	}
 
 	uploadButtonClicked = () => {
@@ -116,6 +124,12 @@ class AttachmentUploadBox extends React.Component {
 		}
 	};
 
+	attachmentSelected = (attachment) => {
+		this.setState({
+			selectedAttachment: attachment
+		});
+	};
+
 	attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(()=>{
 			this.reloadState();
@@ -143,6 +157,12 @@ class AttachmentUploadBox extends React.Component {
 				submitStatus: "danger",
 				showErrors: true,
 			});
+		});
+	};
+
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
+			this.reloadState();
 		});
 	};
 
@@ -177,7 +197,7 @@ class AttachmentUploadBox extends React.Component {
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="auditor" editable={this.props.editable} faulty_report_id=""/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} key={a.id} user="auditor" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
 		}
 
 		for(let id in this.state.inProgress){

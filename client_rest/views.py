@@ -23,6 +23,7 @@ import attachment.service_client as attachment_client_service
 import audit.service.audit_cycle as audit_cycle_service
 from audit.service import audit_cycle_client_service
 from audit.service import report_attribute_client_service
+from audit.service import audit_cycle_proof_tag
 
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
@@ -40,6 +41,7 @@ from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerialize
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
+from .serializers import AuditCycleProoftagListSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -556,6 +558,17 @@ class QuestionnaireTypesForDashboardByClient(APIView):
         types = questionnaire_type_client_service.find_questionnaire_types_for_client_dashboard_by_user(request.user)
         return Response(types)
 
+
+class QuestionnaireTypesListForProofComparison(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, store_id):
+        types = questionnaire_type_client_service.find_questionnaire_types_for_proof_comparison(store_id)
+        return Response(types)
+
+
 class StorePerformanceView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -579,3 +592,35 @@ class StorePerformanceStoreListByPercentageView(APIView):
             request.data['percentage']
         )
         return Response(store_list)
+
+
+class ProofTagListByStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request, store_id):
+        proof_tags = audit_cycle_proof_tag.find_proof_tags_by_store(store_id, None)
+        return Response(AuditCycleProoftagListSerializer(proof_tags, many=True).data)
+
+
+class ProofTagListByQuestionnaireType(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request, store_id):
+        proof_tags = audit_cycle_proof_tag.find_proof_tags_by_store(store_id, request.data['questionnaireTypeId'])
+        return Response(AuditCycleProoftagListSerializer(proof_tags, many=True).data)
+
+
+class ProofsByTag(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request, store_id):
+        audit_cycle_list = audit_cycle_proof_tag.get_audit_cycle_list_by_store(store_id, request.data['questionnaireTypeId'])
+        proof_tag_id = audit_cycle_proof_tag.get_master_proof_tag_id_from_audit_cycle_proof_tag(request.data['proof_tag_id'])
+        attachment = attachment_client_service.get_attachment_by_proof_tag(store_id, audit_cycle_list, proof_tag_id)
+        return Response(attachment)

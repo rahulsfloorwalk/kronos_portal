@@ -10,6 +10,7 @@ import StoreDetail from "./StoreDetail.jsx";
 import StoreTrends from "./StoreTrends.jsx";
 import StoreList2 from "./StoreList2.jsx";
 import StoreAuditStoreList from "./store/StoreAuditStoreList.jsx";
+import ProofComparison from "./store/ProofComparison.jsx";
 import WeightedBrowser from "./WeightedBrowser.jsx";
 
 import AuditStoreDetail from "./audit_store/AuditStoreDetail.jsx";
@@ -36,6 +37,7 @@ const Routes = () => (<Router history={hashHistory}>
 		<Route path="/store/:storeId" component={StoreDetail}>
 			<Route path="trends" component={StoreTrends}/>
 			<Route path="reports" component={StoreAuditStoreList}/>
+			<Route path="proof_comparison" component={ProofComparison}/>
 		</Route>
 		<Route path="/audit_store/:auditStoreId" component={AuditStoreDetail}/>
 		<Route path="/upcoming" component={UpcomingAuditStores}/>

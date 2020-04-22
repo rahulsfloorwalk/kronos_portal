@@ -4,6 +4,7 @@ We are pleased to inform you that {{client_name}} audits are now available in {{
 
 {{ kronos_base_url }}/auth/login?next=/static/auditor/index.html%23/audit/cycle/65&ref=email_cta&utm_source=email_footer
 
+ Description: {{description}}
  * Make sure your profile is complete including the Bank Details.
  * Apply as soon as possible to increase your chances of approval.
  * Note that do not conduct the audits unless your application has been approved.

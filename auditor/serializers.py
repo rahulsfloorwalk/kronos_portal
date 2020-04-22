@@ -7,8 +7,8 @@ from notifications.models import Notification
 
 from registration.models import GROUP_NAME_AUDITOR
 
-from manager.models import City
-from audit.models import Audit, AuditCycle
+from manager.models import City, ProofTag
+from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from client.models import Client, Store
 from audit_store.models import AuditStore
 from .models import ProfileInfo, AdditionalInfo, BankInfo, AuditApplication
@@ -452,6 +452,7 @@ class AttachmentSerializer(ModelSerializer):
             'object_id',
             'direct_url',
             'extra',
+            'proof_tag',
         )
         read_only_fields = fields
 
@@ -653,3 +654,26 @@ class PreferencesSerializer(ModelSerializer):
         preferences.receive_new_opportunities_sms = self.validated_data.get('receive_new_opportunities_sms', preferences.receive_new_opportunities_sms)
 
         return preferences
+
+
+class ProofTagSerializer(ModelSerializer):
+    class Meta:
+        model = ProofTag
+        fields = (
+            'id',
+            'name',
+            'description',
+            'is_active'
+        )
+
+
+class AuditCycleProoftagListSerializer(ModelSerializer):
+    proof_tag = ProofTagSerializer()
+    class Meta:
+        model = AuditCycleProofTagList
+        fields = (
+            'id',
+            'is_active',
+            'proof_tag'
+        )
+        read_only_fields = fields

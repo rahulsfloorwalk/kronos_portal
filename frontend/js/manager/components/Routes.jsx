@@ -179,9 +179,10 @@ const Routes = () => (
 			</Route>
 
 			<Route path="moderator" component={ModeratorIndex}>
-				<Route path="summary" component={ModeratorSummary}/>
-				<Route path="list" component={ModeratorList}>
+				<Route path="summary" component={ModeratorSummary}>
 					<Route path=":userId/reportlist" component={ModeratorReportList}/>
+				</Route>
+				<Route path="list" component={ModeratorList}>
 					<Route path="add" component={ModeratorForm}/>
 					<Route path=":userId/edit" component={ModeratorForm}/>
 				</Route>

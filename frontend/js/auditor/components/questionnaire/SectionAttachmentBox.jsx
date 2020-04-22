@@ -10,6 +10,7 @@ import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgressThumbnail.jsx";
 
 import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../../auditor/service/attachment.js";
+import { saveAttachmentTag } from "../../service/proof_tag.js";
 
 export default class SectionAttachmentBox extends React.Component{
 
@@ -27,13 +28,15 @@ export default class SectionAttachmentBox extends React.Component{
 		showErrors: PropTypes.bool,
 
 		editable:PropTypes.bool,
-		sections:PropTypes.object
+		sections:PropTypes.object,
+		proof_tags: PropTypes.array
 	};
 
 	constructor(props){
 		super(props);
 		this.state = {
 			attachments: [],
+			selectedAttachment: undefined,
 			inProgress: {},
 			attachmentSectionId: "",
 			submitMessage: "",
@@ -70,6 +73,12 @@ export default class SectionAttachmentBox extends React.Component{
 					[tempId]: Object.assign({}, prevState.inProgress[tempId], progressState)
 				})
 			});
+		});
+	};
+
+	attachmentSelected = (attachment) => {
+		this.setState({
+			selectedAttachment: attachment
 		});
 	};
 
@@ -156,6 +165,12 @@ export default class SectionAttachmentBox extends React.Component{
 		});
 	};
 
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+		});
+	};
+
 	render(){
 		let uploadButton;
 		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
@@ -171,9 +186,12 @@ export default class SectionAttachmentBox extends React.Component{
 				attachment={a}
 				deletable={deletable}
 				onDelete={() => this.attachmentDeleteClicked(a)}
+				onSelect={() => this.attachmentSelected(a)}
 				user="auditor"
 				editable = {this.props.editable}
 				faulty_report_id=""
+				proof_tags= {this.props.proof_tags}
+				onChange= {this.saveAttachmentTag}
 			/>);
 		}
 		for(let id in this.state.inProgress){

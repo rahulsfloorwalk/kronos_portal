@@ -26,6 +26,7 @@ exports[`<__SectionList/> renders the list of sections correctly 1`] = `
   </h3>
   <Connect(__Section)
     auditStoreId={2}
+    proof_tags={Array []}
     sectionId={1}
     sections={
       Array [
@@ -44,6 +45,7 @@ exports[`<__SectionList/> renders the list of sections correctly 1`] = `
   />
   <Connect(__Section)
     auditStoreId={2}
+    proof_tags={Array []}
     sectionId={2}
     sections={
       Array [

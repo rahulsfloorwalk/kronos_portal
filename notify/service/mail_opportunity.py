@@ -94,6 +94,7 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
         'first_name': user.profileinfo.first_name,
         'last_name': user.profileinfo.last_name,
         'to_email': user.email,
+        'description': audit_cycle.description.replace("###", "").replace("**", "").replace("*", "").replace("##", ""),
         **registration_context(),
     }
 

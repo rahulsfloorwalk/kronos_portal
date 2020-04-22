@@ -203,11 +203,11 @@ def get_auditor_for_attachment(attachment_id: int) -> ProfileInfo:
 
 
 def find_by_audit_store(audit_store_id):
-    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
+    return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED).order_by('id')
 
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
-    return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED)
+    return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED).order_by('id')
 
 def find_by_profile_info(profile_info_id):
     return Attachment.objects.filter(profile_infos__id=profile_info_id, status=Attachment.ATTACHED)
@@ -244,3 +244,13 @@ def find_by_id(attachment_id):
         return Attachment.objects.exclude(status=Attachment.DELETED).get(pk=attachment_id)
     except Attachment.DoesNotExist as e:
         raise ObjectNotFound from e
+
+
+def find_by_audit_store_list(audit_store_list, proof_tag_id):
+    return Attachment.objects.filter(audit_stores__id__in=audit_store_list, status=Attachment.ATTACHED, proof_tag__proof_tag__id=proof_tag_id)\
+        .order_by('id')
+
+
+def find_by_report_section_list(report_section_list, proof_tag_id):
+    return Attachment.objects.filter(report_sections__id__in=report_section_list, status=Attachment.ATTACHED, proof_tag__proof_tag__id=proof_tag_id)\
+        .order_by('id')

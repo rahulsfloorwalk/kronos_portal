@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment, moveAttachmentToSection } from "../../service/attachment.js";
+import { fetchproofTags, saveAttachmentTag } from "../../service/proof_tag.js";
 
 import { Paperclip } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
@@ -30,6 +31,8 @@ class __AttachmentUploadBox extends React.Component {
 	state = {
 		uploadMessage : "",
 		attachments: [],
+		selectedAttachment: undefined,
+		proof_tags: [],
 		inProgress: {},
 		progress: "",
 		uploading: false,
@@ -49,6 +52,11 @@ class __AttachmentUploadBox extends React.Component {
 
 	componentDidMount() {
 		this.reloadState();
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
 	}
 
 	uploadButtonClicked = () => {
@@ -117,6 +125,12 @@ class __AttachmentUploadBox extends React.Component {
 		}
 	};
 
+	attachmentSelected = (attachment) => {
+		this.setState({
+			selectedAttachment: attachment
+		});
+	};
+
 	attachmentDeleteClicked = (attachment) => {
 		deleteAttachment(attachment.id).then(()=>{
 			this.reloadState();
@@ -146,6 +160,12 @@ class __AttachmentUploadBox extends React.Component {
 			});
 		});
 
+	};
+
+	saveAttachmentTag = (e) => {
+		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
+			this.reloadState();
+		});
 	};
 
 	render() {
@@ -178,7 +198,7 @@ class __AttachmentUploadBox extends React.Component {
 		const attachmentRows = [];
 
 		for(const a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} user="agency" editable={this.props.editable} faulty_report_id=""/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} key={a.id} onSelect={() => this.attachmentSelected(a)} user="agency" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
 		}
 
 		for(const id in this.state.inProgress){

@@ -15,6 +15,7 @@ import { orderKeys } from "../../../react_utils.js";
 import { fetchSections } from "../../actions/section.js";
 import { fetchAnswers } from "../../actions/answer.js";
 import { fetchReportSections } from "../../actions/report_section.js";
+import { fetchproofTags } from "../../service/proof_tag.js";
 
 class SectionList extends React.Component{
 	static propTypes = {
@@ -25,13 +26,15 @@ class SectionList extends React.Component{
 			PropTypes.number,
 			PropTypes.string,
 		]).isRequired,
-		editable:PropTypes.bool
+		editable:PropTypes.bool,
+		auditStore: PropTypes.object
 	};
 
 	constructor(props){
 		super(props);
 		this.state = {
 			loading: true,
+			proof_tags: [],
 		};
 	}
 
@@ -48,6 +51,11 @@ class SectionList extends React.Component{
 			this.props.dispatch(fetchReportSections(this.props.auditStoreId)),
 		]).then(() => {
 			this.setLoading(false);
+		});
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
 		});
 	}
 	/*componentWillReceiveProps: function(nextProps){
@@ -76,7 +84,7 @@ class SectionList extends React.Component{
 		});
 		var sectionRows = [];
 		for(var sectionId of orderedKeys) {
-			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} showErrors={this.props.showErrors} sections={this.props.sections} editable={this.props.editable}/>);
+			sectionRows.push(<Section auditStoreId={this.props.auditStoreId} section={this.props.sections[sectionId]} key={sectionId} showErrors={this.props.showErrors} sections={this.props.sections} editable={this.props.editable} proof_tags={this.state.proof_tags}/>);
 		}
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please contact support"/>);

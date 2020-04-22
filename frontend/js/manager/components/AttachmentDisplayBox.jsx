@@ -218,7 +218,7 @@ export class AttachmentDisplayBox extends Component{
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} deletable={false} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager" editable={editable} faulty_report_id={a.faulty_report_id}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager" editable={editable} deletable={editable} faulty_report_id={a.faulty_report_id} proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag} />);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){

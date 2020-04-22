@@ -23,6 +23,7 @@ from agency_rest.serializers import ReportSectionSerializer
 from agency_rest.serializers import SectionSerializer
 from agency_rest.serializers import AttachmentSerializer
 from agency_rest.serializers import AuditStoreSerializer
+from agency_rest.serializers import AuditCycleProoftagListSerializer
 
 from audit_store import service_agency as audit_store_service
 
@@ -31,7 +32,7 @@ from answer.service import report_section_agency as report_section_service
 from attachment import service_agency as attachment_agency_service
 
 from questionnaire.service import section as section_service
-
+from audit.service import audit_cycle_proof_tag
 
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
@@ -357,4 +358,24 @@ class MoveAttachmentToSection(APIView):
 
     def post(self,request,audit_store_id):
         attachment = attachment_agency_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
+        return Response(AttachmentSerializer(attachment).data)
+
+
+class AttachmentProofTagList(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY]
+    }
+    def get(self, request, audit_cycle_id):
+        proof_tags = audit_cycle_proof_tag.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
+        return Response(AuditCycleProoftagListSerializer(proof_tags, many=True).data)
+
+
+class AttachmentIdProofTagView(APIView):
+    permission_classes= [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AGENCY]
+    }
+    def post(self, request, attachment_id):
+        attachment = attachment_agency_service.save_attachment_proof_tag(attachment_id, request.data['proof_tag_id'])
         return Response(AttachmentSerializer(attachment).data)

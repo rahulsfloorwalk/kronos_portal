@@ -11,6 +11,8 @@ import { Tasks } from "../../../components/Icons.jsx";
 
 import { findSectionsByAuditStoreId } from "../../reducers/section.js";
 
+import { fetchproofTags } from "../../service/proof_tag.js";
+
 export class __SectionList extends React.Component {
 	static propTypes = {
 		sections: PropTypes.arrayOf(PropTypes.shape({
@@ -20,7 +22,23 @@ export class __SectionList extends React.Component {
 		})),
 		auditStoreId: PropTypes.number.isRequired,
 		showErrors: PropTypes.bool,
+		auditStore: PropTypes.object
 	};
+
+	constructor(props){
+		super(props);
+		this.state = {
+			proof_tags: [],
+		};
+	}
+
+	componentDidMount() {
+		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
+	}
 
 	render(){
 		const sectionRows = this.props.sections.map(section => {
@@ -29,7 +47,8 @@ export class __SectionList extends React.Component {
 				sectionId={section.id}
 				key={section.id}
 				showErrors={this.props.showErrors}
-				sections={this.props.sections}/>;
+				sections={this.props.sections}
+				proof_tags={this.state.proof_tags}/>;
 		});
 		if( sectionRows.length === 0){
 			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="please contact support"/>);
