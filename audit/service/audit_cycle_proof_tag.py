@@ -73,9 +73,12 @@ def get_audit_cycle_list_by_store(store_id, questionnaire_type_id):
         .filter(audit_cycle__id__in=audit_audit_cycle_list, is_active=True,
                 audit_cycle__questionnaire_type__id=questionnaire_type_id) \
         .distinct('audit_cycle__id') \
-        .order_by('audit_cycle__id') \
+        .order_by('-audit_cycle__id') \
         .values_list('audit_cycle__id', flat=True)
-    return audit_cycle_list[0:3]
+    if len(audit_cycle_list) >= 3:
+        return audit_cycle_list[0:3]
+    else:
+        return audit_cycle_list
 
 
 def get_master_proof_tag_id_from_audit_cycle_proof_tag(proof_id):

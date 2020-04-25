@@ -102,7 +102,7 @@ class AttachmentRenderer extends React.Component {
 			let imageStyle = {
 				"display": this.state.loading ? "none" : "block",
 				"maxWidth": "100%",
-				"maxHeight": "200px",
+				"maxHeight": "300px",
 				"margin": "auto",
 			};
 			return (<div style={{"textAlign": "center"}}>
@@ -120,7 +120,7 @@ class AttachmentRenderer extends React.Component {
 				// </video>
 				<center>
 					<p><b>Please download file if you are not able to play it.</b></p>
-					<Player fluid={false} width={350} height={150} ref={node => this.player = node}>
+					<Player fluid={false} width={"100%"} height={300} ref={node => this.player = node}>
 						<BigPlayButton position="center" />
 						<source src={this.props.attachment.direct_url} />
 					</Player>

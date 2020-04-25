@@ -97,7 +97,7 @@ def find_questionnaire_types_for_proof_comparison(store_id):
                     audit_cycle__questionnaire_type__id=qt.id, is_active=True) \
             .distinct('audit_cycle__id') \
             .count()
-        if audit_cycle_count >= 3:
+        if audit_cycle_count >= 1:
             qt_dict = {}
             qt_dict['id'] = qt.id
             qt_dict['name'] = qt.name

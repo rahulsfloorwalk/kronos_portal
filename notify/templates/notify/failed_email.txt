@@ -1,5 +1,5 @@
 Hello {{ name }},
-Your audit at {{ client }} on {{ audit_date }} has failed due to non compliance of FloorWalk's regulations.
+Your audit at {{ client }} on {{ audit_date }} has rejected due to non compliance of FloorWalk's regulations.
 Reason : {{ message }}
 --
 Thanks and regards,
