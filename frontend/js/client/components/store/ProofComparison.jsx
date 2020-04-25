@@ -13,6 +13,7 @@ import Loading from "../../../components/Loading.jsx";
 class ShowAttachment extends Component {
 	static propTypes = {
 		audit_cycle_attachments: PropTypes.object.isRequired,
+		audit_cycle_length: PropTypes.number
 	};
 
 	constructor(props){
@@ -35,14 +36,37 @@ class ShowAttachment extends Component {
 		else{
 			attachment_data = (<Jumbotron key="empty" heading="No proofs for this tag" para=""/>);
 		}
-		return (
-			<div className="col-sm-4 col-md-4" style={{paddingLeft: "12px", paddingRight: "12px"}}>
-				<center><h4>{this.props.audit_cycle_attachments.name}</h4></center>
-				<div className="row" style={{maxHeight:"500px",overflow:"auto",padding:"5px"}}>
-					{attachment_data}
+
+		if(this.props.audit_cycle_length === 1){
+			return (
+				<div className="col-sm-12 col-md-12" style={{paddingLeft: "12px", paddingRight: "12px"}}>
+					<center><h4>{this.props.audit_cycle_attachments.name}</h4></center>
+					<div className="row" style={{maxHeight:"500px",overflow:"auto",padding:"5px"}}>
+						{attachment_data}
+					</div>
 				</div>
-			</div>
-		);
+			);
+		}
+		else if(this.props.audit_cycle_length === 2){
+			return (
+				<div className="col-sm-6 col-md-6" style={{paddingLeft: "12px", paddingRight: "15px",borderRight: "1px solid"}}>
+					<center><h4>{this.props.audit_cycle_attachments.name}</h4></center>
+					<div className="row" style={{maxHeight:"500px",overflow:"auto",padding:"5px"}}>
+						{attachment_data}
+					</div>
+				</div>
+			);
+		}
+		else{
+			return (
+				<div className="col-sm-4 col-md-4" style={{paddingLeft: "12px", paddingRight: "15px", borderRight: "1px solid"}}>
+					<center><h4>{this.props.audit_cycle_attachments.name}</h4></center>
+					<div className="row" style={{maxHeight:"500px",overflow:"auto",padding:"5px"}}>
+						{attachment_data}
+					</div>
+				</div>
+			);
+		}
 	}
 }
 
@@ -132,7 +156,7 @@ export default class ProofComparison extends Component{
 		let audit_cycle_attachment_show_list = [];
 		if(this.state.audit_cycle_attachments.length > 0){
 			for(let a of this.state.audit_cycle_attachments){
-				audit_cycle_attachment_show_list.push(<ShowAttachment key={a.id} audit_cycle_attachments={a}/>);
+				audit_cycle_attachment_show_list.push(<ShowAttachment key={a.id} audit_cycle_attachments={a} audit_cycle_length={this.state.audit_cycle_attachments.length}/>);
 			}
 			audit_cycle_list_data = (
 				<div className="row" style={{marginLeft: "-10px", marginRight: "-10px"}}>
