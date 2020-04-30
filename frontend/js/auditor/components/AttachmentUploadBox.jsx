@@ -150,7 +150,8 @@ class AttachmentUploadBox extends React.Component {
 		});
 
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
-			window.location.reload();
+			this.reloadState();
+			this.props.dispatch(fetchSections(this.props.auditStoreId));
 		},(err) => {
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],

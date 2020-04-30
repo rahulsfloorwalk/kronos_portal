@@ -10,10 +10,11 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from audit_store.models import AuditStore
+from auditor.models import ProfileInfo
 from audit_store import service as audit_store_service
 from audit_store import service_manager
 from ..service import moderator as moderator_service
-
+from auditor.service import profile_info_service
 
 from client_report.service import xlsx_report as xlsx_report_service
 
@@ -158,6 +159,24 @@ class AuditStoreIdQARatingView(APIView):
         audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
         audit_store.rate(ds.validated_data['qa_rating'])
         return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreAuditorRatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    class DeSerializer(Serializer):
+        auditor_rating = serializers.ChoiceField(ProfileInfo.AUDITOR_RATING)
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = get_object_or_404(AuditStore, pk=audit_store_id)
+        profile_info_service.save_auditor_rating(audit_store.user, ds.validated_data['auditor_rating'])
+        return Response(AuditStoreSerializer(audit_store).data)
+
 
 class AuditStoreIdReportAttributeView(APIView):
     permission_classes = [HasGroupPermission]

@@ -11,6 +11,7 @@ import {searchAuditors} from "../../service/auditor.js";
 
 import {Search, Check, Cross, Pawn} from "../../../components/Icons.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
+import AuditorRating from "../../../components/AuditorRating.jsx";
 import {momentDateFormat} from "../../../../config.js";
 import InputGroup from "../../../components/InputGroup.jsx";
 import {InputGroupBtn} from "../../../components/InputGroup.jsx";
@@ -41,8 +42,9 @@ export class AuditorRow extends React.Component {
 				<td>{prof.mobile_number}</td>
 				<td>{prof.city.name}, {prof.city.state_name}</td>
 				<td>{prof.pincode}</td>
-				<td>{prof.average_rating !== null ?
-					<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</td>
+				<td><center>{prof.average_rating !== null ?
+					<AuditStoreRating rating={Math.round(prof.average_rating)}/> : null}</center></td>
+				<td><center><AuditorRating rating={prof.auditor_rating}/></center></td>
 				<td>{moment(this.props.auditor.last_login).format(momentDateFormat)}</td>
 				<td>{activeIcon}</td>
 				<td>
@@ -117,7 +119,8 @@ export class AuditorList extends React.Component {
 								<th>Mobile Number</th>
 								<th>City</th>
 								<th>Pincode</th>
-								<th>Rating</th>
+								<th>Report Rating</th>
+								<th>Auditor Rating</th>
 								<th>Last Login</th>
 								<th>Active</th>
 								<th></th>

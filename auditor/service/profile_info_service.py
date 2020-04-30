@@ -2,6 +2,7 @@ from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils import timezone
 import re
+from django.db.transaction import atomic
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
@@ -91,3 +92,10 @@ def count_profileinfo_in_city(city_id):
 
 def find_profileinfo_by_city(city_id):
     return ProfileInfo.objects.filter(city_id=city_id, user__is_active=True)
+
+
+@atomic
+def save_auditor_rating(user, rating):
+    profile_info = ProfileInfo.objects.get(user=user)
+    profile_info.auditor_rating = rating
+    profile_info.save()

@@ -57,12 +57,26 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not 
       440033
     </p>
     <p>
-      Rating: 
+      Report Rating: 
       <strong
         className="text-success"
       >
         Good
       </strong>
+    </p>
+    <p>
+      Auditor Rating: 
+      <strong>
+        unknown rating
+      </strong>
+       (
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        change
+      </a>
+      )
     </p>
   </div>
 </div>
@@ -125,7 +139,21 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null
       440033
     </p>
     <p>
-      Rating: 
+      Report Rating: 
+    </p>
+    <p>
+      Auditor Rating: 
+      <strong>
+        unknown rating
+      </strong>
+       (
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        change
+      </a>
+      )
     </p>
   </div>
 </div>

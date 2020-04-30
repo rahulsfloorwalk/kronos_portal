@@ -73,6 +73,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_status$', audit_store_views.AuditStoreIdModeratorStatusView.as_view(), name='audit_store_id_moderator_status_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator_comment$', audit_store_views.AuditStoreIdModeratorCommentView.as_view(), name='audit_store_id_moderator_comment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/qa_rating$', audit_store_views.AuditStoreIdQARatingView.as_view(), name='audit_store_id_qa_rating_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/auditor_rating$', audit_store_views.AuditStoreAuditorRatingView.as_view(), name='audit_store_id_auditor_rating_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_attribute', audit_store_views.AuditStoreIdReportAttributeView.as_view(), name='audit_store_id_report_attribute_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reimbursement$', audit_store_views.AuditStoreIdReimbursementView.as_view(), name='audit_store_id_reimbursement_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/earnings_per_audit$', audit_store_views.AuditStoreIdEarningsPerAuditView.as_view(), name='audit_store_id_earnings_per_audit_view'),
@@ -122,6 +123,7 @@ urlpatterns = ([
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 
     url(r'auditor/(?P<auditor_id>[0-9]+)/preferences$', auditor_views.PreferencesView.as_view(), name='auditor_preferences_view'),
+    url(r'auditor/(?P<auditor_id>[0-9]+)/auditor_rating$', auditor_views.AuditorRatingView.as_view(), name='auditor_rating_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/profile_info$', auditor_views.AuditorProfileInfoView.as_view(), name='auditor_profile_info_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/bank_info$', auditor_views.AuditorBankInfoView.as_view(), name='auditor_bank_info_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/additional_info$', auditor_views.AuditorAdditionalInfoView.as_view(), name='auditor_additional_info_view'),

@@ -10,6 +10,7 @@ from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_MODERATOR
 
 from audit_store.models import AuditStore
+from auditor.models import ProfileInfo
 import audit.service.audit_cycle as audit_cycle_service
 import audit.service.audit_cycle_proof_tag as audit_cycle_proof_tag_service
 import audit_store.service_moderator as audit_store_service
@@ -17,6 +18,7 @@ import attachment.service_moderator as attachment_service
 import questionnaire.service.section as section_service
 import answer.service.report_section_moderator as report_section_moderator_service
 import answer.service.answer_moderator as answer_moderator_service
+from auditor.service import profile_info_service
 
 from .serializers import AuditCycleSerializer
 from .serializers import AuditStoreSerializer
@@ -187,6 +189,24 @@ class AuditStoreIdQARatingView(APIView):
         audit_store.rate(ds.validated_data['qa_rating'])
         return Response(AuditStoreSerializer(audit_store).data)
 
+
+class AuditorRatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    class DeSerializer(Serializer):
+        auditor_rating = ChoiceField(ProfileInfo.AUDITOR_RATING)
+
+    def post(self, request, audit_store_id):
+        ds = self.DeSerializer(data=request.data)
+        audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
+        ds.is_valid(raise_exception=True)
+        profile_info_service.save_auditor_rating(audit_store.user, ds.validated_data['auditor_rating'])
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreIdSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -195,6 +215,7 @@ class AuditStoreIdSubmitView(APIView):
     def post(self, request, audit_store_id):
         audit_store = audit_store_service.submit_for_moderator(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
+
 
 class AuditStoreIdUnSubmitView(APIView):
     permission_classes = [HasGroupPermission]

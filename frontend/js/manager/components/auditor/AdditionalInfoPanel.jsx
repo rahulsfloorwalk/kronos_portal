@@ -8,7 +8,10 @@ import Loading from "../../../components/Loading.jsx";
 
 export default class AdditionalInfoPanel extends React.Component {
 	static propTypes = {
-		auditorId: PropTypes.number.isRequired,
+		auditorId: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.number
+		]).isRequired,
 		children: PropTypes.node,
 	};
 

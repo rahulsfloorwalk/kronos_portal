@@ -33,6 +33,7 @@ import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import AuditStoreRating from "../../components/AuditStoreRating.jsx";
+import AuditorRating from "../../components/AuditorRating.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 import { getAuditType } from "../../utils.js";
@@ -373,9 +374,15 @@ export class AuditStoreDetails extends React.Component{
 										<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
 									</tr>
 									<tr>
-										<td className="text-right">Rating:</td>
+										<td className="text-right">Report Rating:</td>
 										<th>
 											<AuditStoreRating rating={this.props.auditStore.qa_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/qa_rating`}>change</Link>)
+										</th>
+									</tr>
+									<tr>
+										<td className="text-right">Auditor Rating:</td>
+										<th>
+											<AuditorRating rating={this.props.auditStore.user.profileinfo.auditor_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/auditor_rating`}>change</Link>)
 										</th>
 									</tr>
 								</tbody>

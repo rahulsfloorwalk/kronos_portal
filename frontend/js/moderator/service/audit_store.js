@@ -105,6 +105,18 @@ export function rate(auditStoreId, qa_rating){
 		contentType: "application/json"
 	});
 }
+
+export function auditor_rate(auditStoreId, auditor_rating){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/auditor_rating`,
+		method: "POST",
+		data: JSON.stringify({
+			auditor_rating
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function setReportSummary(audit_store_id, report_summary){
 	return $.ajax({
 		url: url.api_base_path + `moderator/audit_store/${audit_store_id}/report_summary`,

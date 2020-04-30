@@ -83,6 +83,17 @@ class ProfileInfo(Model, CompletableMixin):
         (FIFTEEN_PLUS, "15+ lpa"),
     )
 
+    EXCELLENT = "E"
+    GOOD = "G"
+    AVERAGE = "A"
+    WORSE = "W"
+    AUDITOR_RATING = (
+        (EXCELLENT, "Excellent"),
+        (GOOD, "Good"),
+        (AVERAGE, "Average"),
+        (WORSE, "Worse"),
+    )
+
     id = AutoField(db_column='id', primary_key=True)
     first_name = CharField(db_column='first_name', max_length=40, blank=True)
     last_name = CharField(db_column='last_name', max_length=40, blank=True)
@@ -95,6 +106,8 @@ class ProfileInfo(Model, CompletableMixin):
     date_of_birth = DateField(db_column='dob', blank=True, null=True)
     address = CharField(db_column='address', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
+
+    auditor_rating = CharField(db_column='auditor_rating', max_length=1, choices=AUDITOR_RATING, null=True)
 
     city = ForeignKey(City, db_column='city_id', null=True, blank=True, on_delete=PROTECT)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)

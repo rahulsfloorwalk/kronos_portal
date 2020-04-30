@@ -14,6 +14,7 @@ import { findByAudit, waitListApplication } from "../../service/application.js";
 
 import ApplicationStatusLabel from "../../../components/ApplicationStatusLabel.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
+import AuditorRating from "../../../components/AuditorRating.jsx";
 import ApplicationRepeat from "../../../components/ApplicationRepeat.jsx";
 import Loading from "../../../components/Loading.jsx";
 
@@ -84,7 +85,7 @@ class AuditApplicationList extends Component{
 			}
 			rows.push(
 				<tr key={app.id} className="">
-					<td><User/>&nbsp;{auditorLink}</td>
+					<td><User/>&nbsp;{auditorLink}<br/>&nbsp;&nbsp;&nbsp;&nbsp;(<AuditorRating rating={app.profileinfo.auditor_rating}/>)</td>
 					<td><Earphone/>&nbsp;<a href={`tel:${app.profileinfo.mobile_number}`}>{app.profileinfo.mobile_number}</a></td>
 					<td><Calendar/>&nbsp;{moment(app.audit_date).format(momentDateFormat)}</td>
 					<td>{app.profileinfo.pincode}</td>
