@@ -47,7 +47,7 @@ class Attachment(Model):
     image_hash = CharField(db_column="image_hash", max_length=500, blank=True)
     attachment_id = CharField(db_column="attachment_id", max_length=50, blank=True)
 
-    proof_tag = ForeignKey(AuditCycleProofTagList, db_column='proof_tag', blank=True, null=True, default="", on_delete=PROTECT)
+    proof_tag = ForeignKey(AuditCycleProofTagList, db_column='proof_tag_id', blank=True, null=True, default="", on_delete=PROTECT)
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''

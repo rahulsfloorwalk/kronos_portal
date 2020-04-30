@@ -8,6 +8,7 @@ import { momentDateFormat, momentDateTimeFormat }  from "../../../config.js";
 import { findNotifications, findActors } from "../service/notification.js";
 
 import { Bell } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
 
 class NotificationItem extends React.Component {
 	static propTypes = {
@@ -182,6 +183,9 @@ export default class NotificationBox extends React.Component {
 	}
 
 	render() {
+		if(this.state.notifications.length === 0){
+			return <Loading/>;
+		}
 		let rows = [];
 		for(var n of this.state.notifications) {
 			rows.push(<NotificationItem n={n} key={n.id}/>);

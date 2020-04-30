@@ -77,11 +77,20 @@ exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
     440012
   </td>
   <td>
-    <strong
-      className="text-success"
-    >
-      Good
-    </strong>
+    <center>
+      <strong
+        className="text-success"
+      >
+        Good
+      </strong>
+    </center>
+  </td>
+  <td>
+    <center>
+      <strong>
+        unknown rating
+      </strong>
+    </center>
   </td>
   <td>
     14th Jul 2018

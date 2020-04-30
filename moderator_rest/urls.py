@@ -9,6 +9,7 @@ from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditVi
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
 from .views import AttachmentProofTagList, AttachmentIdProofTagView
 from .views import ConfigView
+from .views import AuditorRatingView
 
 urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', AttachmentIdCompleteView.as_view(), name='attachment_id_complete_view'),
@@ -41,6 +42,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/earnings_per_audit$', AuditStoreIdEarningsPerAuditView.as_view(), name='audit_store_id_earnings_per_audit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/reimbursement$', AuditStoreIdReimbursementView.as_view(), name='audit_store_id_reimbursement_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/qa_rating$', AuditStoreIdQARatingView.as_view(), name='audit_store_id_qa_rating_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/auditor_rating$', AuditorRatingView.as_view(), name='audit_store_id_auditor_rating_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', AuditStoreIdSubmitView.as_view(), name='audit_store_id_submit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/unsubmit$', AuditStoreIdUnSubmitView.as_view(), name='audit_store_id_unsubmit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/fail$', AuditStoreIdFailView.as_view(), name='audit_store_id_fail_view'),

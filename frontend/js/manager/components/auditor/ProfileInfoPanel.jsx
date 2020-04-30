@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router";
 
 import moment from "moment";
 import {momentDateFormat} from "../../../../config.js";
@@ -8,17 +9,24 @@ import {getGender, getEducationStatus, getMaritalStatus} from "../../../utils.js
 
 import Loading from "../../../components/Loading.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
+import AuditorRating from "../../../components/AuditorRating.jsx";
 import PropTypes from "prop-types";
 
 export default class ProfileInfoPanel extends React.Component {
 	static propTypes = {
-		auditorId: PropTypes.number.isRequired,
+		auditorId: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.number
+		]).isRequired,
 	};
 
 	state = {};
 
 	componentDidMount() {
 		fetchProfileInfoForAuditor(this.props.auditorId).then((profileInfo) => this.setState({profileInfo}));
+	}
+	componentWillReceiveProps(nextProps) {
+		fetchProfileInfoForAuditor(nextProps.auditorId).then((profileInfo) => this.setState({profileInfo}));
 	}
 
 	render() {
@@ -43,8 +51,9 @@ export default class ProfileInfoPanel extends React.Component {
 					<p>City: {auditor_city.name}</p>
 					<p>State: {auditor_city.state}</p>
 					<p>Pincode: {this.state.profileInfo.pincode}</p>
-					<p>Rating: {this.state.profileInfo.average_rating !== null ?
+					<p>Report Rating: {this.state.profileInfo.average_rating !== null ?
 						<AuditStoreRating rating={Math.round(this.state.profileInfo.average_rating)}/> : null}</p>
+					<p>Auditor Rating: <AuditorRating rating={this.state.profileInfo.auditor_rating}/> (<Link to={`/auditor/${this.props.auditorId}/details/auditor_rating/edit`}>change</Link>)</p>
 				</div>
 			</div>
 		);

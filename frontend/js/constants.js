@@ -47,6 +47,14 @@ export const AuditStoreRatings = [
 	null,
 ];
 
+export const AuditorRatings = [
+	"E",
+	"G",
+	"A",
+	"W",
+	null,
+];
+
 export const AuditType = [
 	"WALKIN",
 	"PHONE",

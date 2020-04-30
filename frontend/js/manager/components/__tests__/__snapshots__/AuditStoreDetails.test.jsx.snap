@@ -273,7 +273,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -284,6 +284,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -713,7 +732,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -724,6 +743,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -1091,7 +1129,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -1102,6 +1140,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -1531,7 +1588,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -1542,6 +1599,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -1978,7 +2054,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -1989,6 +2065,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -2356,7 +2451,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -2367,6 +2462,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -2755,7 +2869,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -2766,6 +2880,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -3195,7 +3328,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -3206,6 +3339,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -3585,7 +3737,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -3596,6 +3748,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -4025,7 +4196,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -4036,6 +4207,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>
@@ -4415,7 +4605,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
               <td
                 className="text-right"
               >
-                Rating:
+                Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -4426,6 +4616,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="/audit_store/5/qa_rating"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="/audit_store/5/auditor_rating"
                 >
                   change
                 </Link>

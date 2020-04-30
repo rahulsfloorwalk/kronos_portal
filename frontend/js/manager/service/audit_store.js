@@ -65,6 +65,17 @@ export function rate(audit_store_id, qa_rating){
 	});
 }
 
+export function auditor_rate(audit_store_id, auditor_rating){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/auditor_rating`,
+		method: "POST",
+		data: JSON.stringify({
+			auditor_rating
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function setReimbursement(audit_store_id, reimbursement){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/reimbursement`,

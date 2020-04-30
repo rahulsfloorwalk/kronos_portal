@@ -174,7 +174,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -185,6 +185,25 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -566,7 +585,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -577,6 +596,25 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -958,7 +996,7 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -969,6 +1007,25 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -1350,7 +1407,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -1361,6 +1418,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -1742,7 +1818,7 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -1753,6 +1829,25 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -2142,7 +2237,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -2153,6 +2248,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -2534,7 +2648,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -2545,6 +2659,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -2933,7 +3066,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -2944,6 +3077,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -3318,7 +3470,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -3329,6 +3481,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -3703,7 +3874,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -3714,6 +3885,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -4088,7 +4278,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -4099,6 +4289,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -4473,7 +4682,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -4484,6 +4693,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -4896,7 +5124,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -4907,6 +5135,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>
@@ -5293,7 +5540,7 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
               <td
                 className="text-right"
               >
-                QA Rating:
+                QA Report Rating:
               </td>
               <th>
                 <AuditStoreRating
@@ -5304,6 +5551,25 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                   onlyActiveOnIndex={false}
                   style={Object {}}
                   to="foo/bar/rate"
+                >
+                  change
+                </Link>
+                )
+              </th>
+            </tr>
+            <tr>
+              <td
+                className="text-right"
+              >
+                Auditor Rating:
+              </td>
+              <th>
+                <AuditorRating />
+                 (
+                <Link
+                  onlyActiveOnIndex={false}
+                  style={Object {}}
+                  to="foo/bar/auditor_rate"
                 >
                   change
                 </Link>

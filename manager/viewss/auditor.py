@@ -4,7 +4,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.serializers import BooleanField, Serializer, ModelSerializer
+from rest_framework.serializers import BooleanField, Serializer, ModelSerializer, ChoiceField
 
 import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
@@ -45,6 +45,7 @@ class ProfileInfoSerializer(ModelSerializer):
             'user_id',
             'is_complete',
             'average_rating',
+            'auditor_rating'
         )
         read_only_fields = fields
 
@@ -357,3 +358,26 @@ class PreferencesView(APIView):
         prefs_ds.is_valid(raise_exception=True)
         preference = preferences_service.set_preferences(auditor_id, prefs_ds.validated_data)
         return Response(PreferencesSerializer(preference).data)
+
+
+class AuditorRatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    class DeSerializer(Serializer):
+        auditor_rating = ChoiceField(ProfileInfo.AUDITOR_RATING)
+
+    def get(self, request, auditor_id):
+        auditor_profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
+        return Response({"auditor_rating": auditor_profile_info.auditor_rating})
+
+    def post(self, request, auditor_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        user = auditor_service.find_auditor_by_id(auditor_id)
+        profile_info_service.save_auditor_rating(user, ds.validated_data['auditor_rating'])
+        auditor_profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
+        return Response({"auditor_rating": auditor_profile_info.auditor_rating})

@@ -79,7 +79,8 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'last_name',
             'mobile_number',
             'city',
-            'user_id'
+            'user_id',
+            'auditor_rating'
         )
         read_only_fields = fields
 

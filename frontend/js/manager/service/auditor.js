@@ -52,3 +52,16 @@ export function setMobileNumber(userId, mobile_number){
 export function sendPasswordResetEmail(userId){
 	return $.post( url.api_base_path + `manager/auditor/${userId}/password_reset`);
 }
+
+export function fetchAuditorRating(userId){
+	return $.get(url.api_base_path + `manager/auditor/${userId}/auditor_rating`);
+}
+
+export function saveAuditorRating(userId, auditor_rating){
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + `manager/auditor/${userId}/auditor_rating`,
+		data: JSON.stringify({auditor_rating}),
+		contentType: "application/json"
+	});
+}

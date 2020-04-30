@@ -10,7 +10,7 @@ from django.conf import settings
 
 import boto3
 
-from PIL import Image
+from PIL import Image, ImageFile
 import imagehash
 import requests
 from io import BytesIO
@@ -27,6 +27,8 @@ from .models import Attachment
 from audit.service import audit_cycle_proof_tag
 
 _logger = logging.getLogger(__name__)
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 
 def check_file_size(file_size: int) -> None:
     if int(file_size) < settings.AWS["S3_ATTACHMENTS"]["MIN_SIZE"]:

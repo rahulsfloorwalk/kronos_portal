@@ -29,6 +29,7 @@ import AuditorPayment from "./auditor/AuditorPayment.jsx";
 import AuditorDetails from "./auditor/AuditorDetails.jsx";
 import AuditorReferralList from "./auditor/AuditorReferralList.jsx";
 import PreferencesForm from "./auditor/PreferencesForm.jsx";
+import AuditorRatingForm from "./auditor/AuditorRatingForm.jsx";
 
 import AgencyUserSearch from "./agency_user/AgencyUserSearch.jsx";
 import AgencyUserDetails from "./agency_user/AgencyUserDetails.jsx";
@@ -85,6 +86,8 @@ import ManagerList from "./manager/ManagerList.jsx";
 
 import ProofTagList from "./proof_tag/ProofTagList.jsx";
 import ProofTagForm from "./proof_tag/ProofTagForm.jsx";
+
+import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingForm.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -156,12 +159,14 @@ const Routes = () => (
 				<Route path="reimbursement" component={AuditStoreReimbursementForm}/>
 				<Route path="fail_report_message" component={FailReportMessageForm}/>
 				<Route path="report_attribute/:reportAttributeJsonId" component={AuditStoreReportAttributeForm}/>
+				<Route path="auditor_rating" component={AuditStoreAuditorRatingForm}/>
 			</Route>
 
 			<Route path="auditor" component={AuditorList}/>
 			<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
 				<Route path="details" component={AuditorDetails}>
 					<Route path="preferences/edit" component={PreferencesForm}/>
+					<Route path="auditor_rating/edit" component={AuditorRatingForm}/>
 				</Route>
 				<Route path="applications" component={AuditorApplicationList}/>
 				<Route path="reports" component={AuditorReportList}/>
