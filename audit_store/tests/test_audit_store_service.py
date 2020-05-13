@@ -27,7 +27,7 @@ class AuditStoreServiceTestCase(TestCase):
                                        groups=[self.manager_group])
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
-        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user, auditor_rating=ProfileInfo.EXCELLENT)
 
     def test_complete_changes_status_from_pm_review_to_completed(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user=self.auditor_user, audit__audit_cycle__status=AuditCycle.ACTIVE, qa_rating=AuditStore.AVERAGE)

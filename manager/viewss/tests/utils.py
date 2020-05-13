@@ -29,5 +29,5 @@ class ManagerAPITestCase(APITestCase):
         auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
         auditor_email = fake.email()
         auditor_user = mommy.make(User, username=auditor_email, email=auditor_email, groups=[auditor_group])
-        mommy.make(ProfileInfo, user=auditor_user)
+        mommy.make(ProfileInfo, user=auditor_user, auditor_rating=ProfileInfo.EXCELLENT)
         return auditor_user

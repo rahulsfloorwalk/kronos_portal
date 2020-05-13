@@ -99,3 +99,8 @@ def save_auditor_rating(user, rating):
     profile_info = ProfileInfo.objects.get(user=user)
     profile_info.auditor_rating = rating
     profile_info.save()
+
+
+def get_auditor_rating_by_user(user):
+    profile_info = ProfileInfo.objects.get(user=user)
+    return profile_info.auditor_rating is not None

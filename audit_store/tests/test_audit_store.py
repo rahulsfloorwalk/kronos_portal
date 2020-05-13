@@ -29,7 +29,7 @@ class AuditStoreTestCase(TestCase):
                                        groups=[self.manager_group])
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
-        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user)
+        self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user, auditor_rating=ProfileInfo.EXCELLENT)
         self.audit_cycle = mommy.make(AuditCycle)
 
 
