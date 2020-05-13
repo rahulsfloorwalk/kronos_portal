@@ -25,6 +25,7 @@ from django.contrib.postgres.fields import JSONField
 from answer.models import ReportSection
 from attachment.models import Attachment
 from django.contrib.contenttypes.models import ContentType
+from auditor.service.profile_info_service import get_auditor_rating_by_user
 
 _logger = logging.getLogger(__name__)
 
@@ -307,6 +308,9 @@ class AuditStore(Model):
     def is_qa_rated(self):
         return self.qa_rating is not None
 
+    def is_auditor_rated(self):
+        return get_auditor_rating_by_user(self.user)
+
     def is_presentable(self):
         if self.status in (self.COMPLETED, self.ACCEPTED):
             return True
@@ -407,6 +411,9 @@ class AuditStore(Model):
 
         if not self.is_qa_rated():
             raise AppLogicError("Report is not rated")
+
+        if not self.is_auditor_rated():
+            raise AppLogicError("Auditor is not rated")
 
         if self.status != AuditStore.PM_REVIEW:
             raise AppLogicError("Report cannot be completed now")

@@ -120,8 +120,9 @@ export default class DOBPicker extends React.Component{
 	};
 
 	render(){
+		let currentYear = moment().year();
 		let yearOptions = [];
-		for( let y = 2000; y >= 1950; y--){
+		for( let y = currentYear - 15; y >= currentYear - 80; y--){
 			yearOptions.push(<option key={y} value={y}>{y}</option>);
 		}
 

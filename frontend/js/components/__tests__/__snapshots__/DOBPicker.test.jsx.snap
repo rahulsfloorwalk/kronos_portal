@@ -26,6 +26,31 @@ exports[`<DOBPicker/> renders a date correctly 1`] = `
               Year
             </option>
             <option
+              value={2005}
+            >
+              2005
+            </option>
+            <option
+              value={2004}
+            >
+              2004
+            </option>
+            <option
+              value={2003}
+            >
+              2003
+            </option>
+            <option
+              value={2002}
+            >
+              2002
+            </option>
+            <option
+              value={2001}
+            >
+              2001
+            </option>
+            <option
               value={2000}
             >
               2000
@@ -279,6 +304,56 @@ exports[`<DOBPicker/> renders a date correctly 1`] = `
               value={1950}
             >
               1950
+            </option>
+            <option
+              value={1949}
+            >
+              1949
+            </option>
+            <option
+              value={1948}
+            >
+              1948
+            </option>
+            <option
+              value={1947}
+            >
+              1947
+            </option>
+            <option
+              value={1946}
+            >
+              1946
+            </option>
+            <option
+              value={1945}
+            >
+              1945
+            </option>
+            <option
+              value={1944}
+            >
+              1944
+            </option>
+            <option
+              value={1943}
+            >
+              1943
+            </option>
+            <option
+              value={1942}
+            >
+              1942
+            </option>
+            <option
+              value={1941}
+            >
+              1941
+            </option>
+            <option
+              value={1940}
+            >
+              1940
             </option>
           </select>
         </td>
@@ -570,6 +645,31 @@ exports[`<DOBPicker/> renders a date in a leap year correctly 1`] = `
               Year
             </option>
             <option
+              value={2005}
+            >
+              2005
+            </option>
+            <option
+              value={2004}
+            >
+              2004
+            </option>
+            <option
+              value={2003}
+            >
+              2003
+            </option>
+            <option
+              value={2002}
+            >
+              2002
+            </option>
+            <option
+              value={2001}
+            >
+              2001
+            </option>
+            <option
               value={2000}
             >
               2000
@@ -823,6 +923,56 @@ exports[`<DOBPicker/> renders a date in a leap year correctly 1`] = `
               value={1950}
             >
               1950
+            </option>
+            <option
+              value={1949}
+            >
+              1949
+            </option>
+            <option
+              value={1948}
+            >
+              1948
+            </option>
+            <option
+              value={1947}
+            >
+              1947
+            </option>
+            <option
+              value={1946}
+            >
+              1946
+            </option>
+            <option
+              value={1945}
+            >
+              1945
+            </option>
+            <option
+              value={1944}
+            >
+              1944
+            </option>
+            <option
+              value={1943}
+            >
+              1943
+            </option>
+            <option
+              value={1942}
+            >
+              1942
+            </option>
+            <option
+              value={1941}
+            >
+              1941
+            </option>
+            <option
+              value={1940}
+            >
+              1940
             </option>
           </select>
         </td>
@@ -1104,6 +1254,31 @@ exports[`<DOBPicker/> renders correctly when no date is given 1`] = `
               Year
             </option>
             <option
+              value={2005}
+            >
+              2005
+            </option>
+            <option
+              value={2004}
+            >
+              2004
+            </option>
+            <option
+              value={2003}
+            >
+              2003
+            </option>
+            <option
+              value={2002}
+            >
+              2002
+            </option>
+            <option
+              value={2001}
+            >
+              2001
+            </option>
+            <option
               value={2000}
             >
               2000
@@ -1357,6 +1532,56 @@ exports[`<DOBPicker/> renders correctly when no date is given 1`] = `
               value={1950}
             >
               1950
+            </option>
+            <option
+              value={1949}
+            >
+              1949
+            </option>
+            <option
+              value={1948}
+            >
+              1948
+            </option>
+            <option
+              value={1947}
+            >
+              1947
+            </option>
+            <option
+              value={1946}
+            >
+              1946
+            </option>
+            <option
+              value={1945}
+            >
+              1945
+            </option>
+            <option
+              value={1944}
+            >
+              1944
+            </option>
+            <option
+              value={1943}
+            >
+              1943
+            </option>
+            <option
+              value={1942}
+            >
+              1942
+            </option>
+            <option
+              value={1941}
+            >
+              1941
+            </option>
+            <option
+              value={1940}
+            >
+              1940
             </option>
           </select>
         </td>
@@ -1493,6 +1718,31 @@ exports[`<DOBPicker/> when it is disabled renders a date correctly 1`] = `
               Year
             </option>
             <option
+              value={2005}
+            >
+              2005
+            </option>
+            <option
+              value={2004}
+            >
+              2004
+            </option>
+            <option
+              value={2003}
+            >
+              2003
+            </option>
+            <option
+              value={2002}
+            >
+              2002
+            </option>
+            <option
+              value={2001}
+            >
+              2001
+            </option>
+            <option
               value={2000}
             >
               2000
@@ -1746,6 +1996,56 @@ exports[`<DOBPicker/> when it is disabled renders a date correctly 1`] = `
               value={1950}
             >
               1950
+            </option>
+            <option
+              value={1949}
+            >
+              1949
+            </option>
+            <option
+              value={1948}
+            >
+              1948
+            </option>
+            <option
+              value={1947}
+            >
+              1947
+            </option>
+            <option
+              value={1946}
+            >
+              1946
+            </option>
+            <option
+              value={1945}
+            >
+              1945
+            </option>
+            <option
+              value={1944}
+            >
+              1944
+            </option>
+            <option
+              value={1943}
+            >
+              1943
+            </option>
+            <option
+              value={1942}
+            >
+              1942
+            </option>
+            <option
+              value={1941}
+            >
+              1941
+            </option>
+            <option
+              value={1940}
+            >
+              1940
             </option>
           </select>
         </td>
@@ -2037,6 +2337,31 @@ exports[`<DOBPicker/> when it is disabled renders correctly when no date is give
               Year
             </option>
             <option
+              value={2005}
+            >
+              2005
+            </option>
+            <option
+              value={2004}
+            >
+              2004
+            </option>
+            <option
+              value={2003}
+            >
+              2003
+            </option>
+            <option
+              value={2002}
+            >
+              2002
+            </option>
+            <option
+              value={2001}
+            >
+              2001
+            </option>
+            <option
               value={2000}
             >
               2000
@@ -2290,6 +2615,56 @@ exports[`<DOBPicker/> when it is disabled renders correctly when no date is give
               value={1950}
             >
               1950
+            </option>
+            <option
+              value={1949}
+            >
+              1949
+            </option>
+            <option
+              value={1948}
+            >
+              1948
+            </option>
+            <option
+              value={1947}
+            >
+              1947
+            </option>
+            <option
+              value={1946}
+            >
+              1946
+            </option>
+            <option
+              value={1945}
+            >
+              1945
+            </option>
+            <option
+              value={1944}
+            >
+              1944
+            </option>
+            <option
+              value={1943}
+            >
+              1943
+            </option>
+            <option
+              value={1942}
+            >
+              1942
+            </option>
+            <option
+              value={1941}
+            >
+              1941
+            </option>
+            <option
+              value={1940}
+            >
+              1940
             </option>
           </select>
         </td>

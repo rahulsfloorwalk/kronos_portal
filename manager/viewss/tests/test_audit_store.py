@@ -158,7 +158,7 @@ class AuditStoreIdCompleteTestCase(ManagerAPITestCase):
         self.login()
 
     def test_post_changes_status_to_completed(self):
-        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user__email=fake.email, qa_rating=AuditStore.GOOD)
+        audit_store = mommy.make(AuditStore, status=AuditStore.PM_REVIEW, user__email=fake.email, user=self.create_auditor, qa_rating=AuditStore.GOOD)
 
         response = self.client.post(reverse('manager:audit_store_id_complete_view', kwargs = {
             'audit_store_id': audit_store.id
