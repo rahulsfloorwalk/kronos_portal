@@ -2,6 +2,7 @@ from django.conf import settings
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.serializers import Serializer, BooleanField, CharField
 
 import attachment.service_auditor as attachment_auditor_service
@@ -540,6 +541,7 @@ class ReferralView(APIView):
 
 class StatsView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
     }
@@ -557,6 +559,7 @@ class ProfilePercentageView(APIView):
 
 class ScoreView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
     }

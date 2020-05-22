@@ -2,7 +2,7 @@ from django.conf.urls import url
 
 
 from . import views
-
+from . import views_api
 urlpatterns = ([
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
     url(r'user$', views.UserView.as_view(), name='user_view'),
@@ -24,6 +24,8 @@ urlpatterns = ([
     url(r'facebook_info$', views.FacebookInfoView.as_view(), name="facebook_info_view"),
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
     url(r'referral$', views.ReferralView.as_view(), name="referral_view"),
+
+    url(r'change_password_api$', views_api.ChangePasswordView.as_view(), name="change_password_api"),
 
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/cancel$', views.AuditApplicationCancelView.as_view(), name="audit_application_cancel_view"),

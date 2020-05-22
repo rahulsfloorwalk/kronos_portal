@@ -116,4 +116,3 @@ def check_phone_exists(phone_number):
         return True
     else:
         return False
-
