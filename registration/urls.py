@@ -3,6 +3,7 @@ from django.contrib.auth.views import password_reset, password_reset_done, passw
 from django.contrib.auth.views import password_change, password_change_done
 
 from . import views
+from . import views_api
 from . import client_views
 from . import moderator_views
 from . import manager_views
@@ -66,5 +67,9 @@ urlpatterns = ([
     },name="password_reset_complete"),
 
     url(r'activate/(?P<key>.+)$', views.activate, name="activate"),
+
+    # API for android app
+    url(r'api/signup_api$', views_api.SignUpAPI.as_view(), name="signup_api"),
+    url(r'api/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
 
 ], 'registration')
