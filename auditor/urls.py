@@ -25,8 +25,6 @@ urlpatterns = ([
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
     url(r'referral$', views.ReferralView.as_view(), name="referral_view"),
 
-    url(r'change_password_api$', views_api.ChangePasswordView.as_view(), name="change_password_api"),
-
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/cancel$', views.AuditApplicationCancelView.as_view(), name="audit_application_cancel_view"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/apply$', views.AuditApplicationApplyView.as_view(), name="audit_application_apply_view"),
@@ -56,4 +54,11 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
+
+    # API for android
+    url(r'change_password_api$', views_api.ChangePasswordView.as_view(), name="change_password_api"),
+    url(r'dashboard_api$', views_api.DashboardView.as_view(), name="dashboard_view"),
+    url(r'auditor_profile_api$', views_api.AuditorProfileView.as_view(), name="auditor_profile_view"),
+    url(r'auditor_opportunity_email$', views_api.AuditorOpportunityEmail.as_view(), name="auditor_opportunity_email"),
+    url(r'auditor_opportunity_sms$', views_api.AuditorOpportunitySMS.as_view(), name="auditor_opportunity_sms")
 ], 'auditor')
