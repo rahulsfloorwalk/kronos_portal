@@ -95,6 +95,7 @@ class BankInfoView(APIView):
 
 class MobileNumberView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'POST': [GROUP_NAME_AUDITOR]
     }
@@ -251,6 +252,7 @@ class AuditApplicationCancelView(APIView):
 
 class CityView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
         'POST': [GROUP_NAME_AUDITOR]
@@ -263,6 +265,7 @@ class CityView(APIView):
 
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
         'POST': [GROUP_NAME_AUDITOR]
@@ -541,7 +544,6 @@ class ReferralView(APIView):
 
 class StatsView(APIView):
     permission_classes = [HasGroupPermission]
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
     }
@@ -559,7 +561,6 @@ class ProfilePercentageView(APIView):
 
 class ScoreView(APIView):
     permission_classes = [HasGroupPermission]
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
     }

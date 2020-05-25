@@ -677,3 +677,23 @@ class AuditCycleProoftagListSerializer(ModelSerializer):
             'proof_tag'
         )
         read_only_fields = fields
+
+
+class UserAPISerializer(ModelSerializer):
+    profileinfo = ProfileInfoSerializer()
+    bankinfo = BankInfoSerializer()
+    facebook = FacebookSerializer()
+    additionalinfo = AdditionalInfoSerializer()
+    preferences = PreferencesSerializer()
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'profileinfo',
+            'bankinfo',
+            'facebook',
+            'additionalinfo',
+            'preferences'
+        )
+        read_only_fields = fields
