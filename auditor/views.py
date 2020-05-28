@@ -43,6 +43,7 @@ from .serializers import AuditCycleProoftagListSerializer
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
         'POST': [GROUP_NAME_AUDITOR]
@@ -60,6 +61,7 @@ class ProfileInfoView(APIView):
 
 class AdditionalInfoView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
         'POST': [GROUP_NAME_AUDITOR]
@@ -78,6 +80,7 @@ class AdditionalInfoView(APIView):
 
 class BankInfoView(APIView):
     permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     required_groups = {
         'GET': [GROUP_NAME_AUDITOR],
         'POST': [GROUP_NAME_AUDITOR]
