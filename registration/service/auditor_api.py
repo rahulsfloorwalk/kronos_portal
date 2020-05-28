@@ -20,6 +20,8 @@ from registration.models import GROUP_NAME_AUDITOR
 from django.db import IntegrityError
 from registration.service.auditor import generate_ref_code
 from registration.context import registration_context
+from auditor.service import profile_info_service
+from auditor.service import auditor_api
 
 _logger = logging.getLogger(__name__)
 
@@ -43,6 +45,11 @@ def sign_up_auditor(data):
 
     if not len(data.get("phone")) == 10:
         response = {'detail': 'Phone number should be 10 digit'}
+        status = 400
+        return response, status
+
+    if not profile_info_service.mobile_number_pattern.match(data.get("phone")):
+        response = {'detail': 'invalid phone number'}
         status = 400
         return response, status
 
@@ -159,7 +166,8 @@ def login_auditor(data):
         else:
             token, created = Token.objects.get_or_create(user=user)
 
-            response = {'detail': 'Login Successfully', 'token': token.key}
+            result = auditor_api.get_auditor_dashboard_data(user.id)
+            response = {'detail': 'Login Successfully', 'token': token.key, 'auditor_dashboard_data': result}
             status = 200
     else:
         response = {'detail': 'Username or Password incorrect'}
