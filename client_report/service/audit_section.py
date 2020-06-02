@@ -2,7 +2,7 @@ from kronos.exceptions import ObjectNotFound
 from kronos.utils import get_color_code_by_percentage
 
 from manager import states
-from client.service.client_user import find_clientuser_by_user_id
+# from client.service.client_user import find_clientuser_by_user_id
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
@@ -161,7 +161,7 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
 
 def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
 
-    user = find_clientuser_by_user_id(user_id)
+    # user = find_clientuser_by_user_id(user_id)
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
     sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
@@ -169,10 +169,37 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
     sections = sections.prefetch_related('questions')
 
     audit_stores = []
+    """
+        Normal client user can't access dashboard and report browser that's why need to
+        remove visible_to(user) function
+    """
+    """
     qs = AuditStore.objects \
         .filter(audit__audit_cycle=audit_cycle) \
         .presentable() \
         .visible_to(user) \
+        .order_by(
+            'audit__store__city__name',
+            'audit__store__name',
+            '-audit_date',
+        ) \
+        .select_related(
+            # join in related audit, store and city to avoid redundant queries
+            'audit',
+            'audit__store',
+            'audit__store__city',
+        ) \
+        .prefetch_related(
+            # prefetch report_sections, questions and answers for the given sections
+            'report_sections',
+            'report_sections__section',
+            'report_sections__section__questions',
+            'report_sections__section__questions__answers',
+        )
+    """
+    qs = AuditStore.objects \
+        .filter(audit__audit_cycle=audit_cycle) \
+        .presentable() \
         .order_by(
             'audit__store__city__name',
             'audit__store__name',

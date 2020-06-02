@@ -45,18 +45,35 @@ def find_impact_factors_by_id_for_clientuser(audit_store_id, user):
 
 
 def find_by_id_for_clientuser(audit_store_id, user):
+    """
+        Normal client user can't access dashboard and report browser that's why need to
+        remove visible_to(user) function
+    """
     try:
+        """
         return AuditStore.objects.presentable().visible_to(user).get(
+            audit__audit_cycle__client_id=user.clientuser.client.id,
+            id=audit_store_id,
+        )
+        """
+        return AuditStore.objects.presentable().get(
             audit__audit_cycle__client_id=user.clientuser.client.id,
             id=audit_store_id,
         )
     except AuditStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
+
 def find_presentable_for_client(client_id):
     return AuditStore.objects.presentable().filter(
         audit__audit_cycle__client_id=client_id,
     ).order_by('-audit_date')
 
+
 def find_visible_to_client_user(user):
-    return AuditStore.objects.presentable().visible_to(user)
+    """
+    Normal client user can't access dashboard and report browser that's why need to
+    remove visible_to(user) function
+    """
+    # return AuditStore.objects.presentable().visible_to(user)
+    return AuditStore.objects.presentable()

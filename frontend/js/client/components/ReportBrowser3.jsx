@@ -7,9 +7,11 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 import DropDown from "../../components/DropDown.jsx";
 import { Download } from "../../components/Icons.jsx";
 
-import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
+// import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
+import QuestionnaireTypeTabsForDashboard from "./QuestionnaireTypeTabsForDashboard.jsx";
 import AuditStoreTable from "./AuditStoreTable.jsx";
-import AuditCycleSelector from "./AuditCycleSelector.jsx";
+// import AuditCycleSelector from "./AuditCycleSelector.jsx";
+import AuditCycleSelectorForDashboard from "./AuditCycleSelectorForDashboard.jsx";
 
 import CitySelector from  "./report_browser/CitySelector.jsx";
 import StateSelector from  "./report_browser/StateSelector.jsx";
@@ -77,9 +79,11 @@ export class ReportBrowser3 extends Component{
 
 		return (
 			<div>
-				<QuestionnaireTypeTabs />
+				{/* <QuestionnaireTypeTabs /> */}
+				<QuestionnaireTypeTabsForDashboard />
 				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
-					<AuditCycleSelector/>&nbsp;
+					{/* <AuditCycleSelector/>&nbsp; */}
+					<AuditCycleSelectorForDashboard/>&nbsp;
 					<StateSelector/>&nbsp;
 					<CitySelector/>&nbsp;
 					<StoreTypeSelector/>&nbsp;
