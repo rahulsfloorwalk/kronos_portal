@@ -58,7 +58,7 @@ class AdditionalInfoForm extends React.Component {
 				switch(e.target.name){
 				case "has_car":
 					change["car_model"] = "";
-					change["car_cost"] = "";
+					change["car_cost"] = 0;
 					break;
 				case "laptop_owned":
 					change["laptop_model"] = "";

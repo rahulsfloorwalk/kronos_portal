@@ -29,10 +29,31 @@ def find_questionnaire_types_for_client_by_user(user):
 
     return [q for q in map(map_questionnaire_type_values, rows) if q["id"]]
 
+
 def find_questionnaire_types_for_client_dashboard_by_user(user):
+    """
+        Normal client user can't access dashboard and report browser that's why need to
+        remove visible_to(user) function
+    """
+    """
     rows = AuditStore.objects \
         .presentable() \
         .visible_to(user) \
+        .filter(
+            audit__audit_cycle__client__id=user.clientuser.client_id,
+            # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
+        ) \
+        .distinct('audit__audit_cycle__questionnaire_type_id') \
+        .order_by('audit__audit_cycle__questionnaire_type__id') \
+        .values(
+            'audit__audit_cycle__questionnaire_type__id',
+            'audit__audit_cycle__questionnaire_type__name',
+            'audit__audit_cycle__questionnaire_type__is_default',
+            'audit__audit_cycle__questionnaire_type__client_id',
+        )
+    """
+    rows = AuditStore.objects \
+        .presentable() \
         .filter(
             audit__audit_cycle__client__id=user.clientuser.client_id,
             # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES

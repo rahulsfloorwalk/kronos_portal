@@ -2,7 +2,7 @@
 
 exports[`ReportBrowser3 does not render the report attribute filters when the user is not a client admin 1`] = `
 <div>
-  <Connect(QuestionnaireTypeTabs) />
+  <Connect(QuestionnaireTypeTabsForDashboard) />
   <div
     className="form-group"
     style={
@@ -12,7 +12,7 @@ exports[`ReportBrowser3 does not render the report attribute filters when the us
       }
     }
   >
-    <Connect(AuditCycleSelector) />
+    <Connect(AuditCycleSelectorForDashboard) />
      
     <Connect(StateSelector) />
      
@@ -65,7 +65,7 @@ exports[`ReportBrowser3 does not render the report attribute filters when the us
 
 exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] = `
 <div>
-  <Connect(QuestionnaireTypeTabs) />
+  <Connect(QuestionnaireTypeTabsForDashboard) />
   <div
     className="form-group"
     style={
@@ -75,7 +75,7 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
       }
     }
   >
-    <Connect(AuditCycleSelector) />
+    <Connect(AuditCycleSelectorForDashboard) />
      
     <Connect(StateSelector) />
      
@@ -129,7 +129,7 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
 
 exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
 <div>
-  <Connect(QuestionnaireTypeTabs) />
+  <Connect(QuestionnaireTypeTabsForDashboard) />
   <div
     className="form-group"
     style={
@@ -139,7 +139,7 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
       }
     }
   >
-    <Connect(AuditCycleSelector) />
+    <Connect(AuditCycleSelectorForDashboard) />
      
     <Connect(StateSelector) />
      
@@ -197,7 +197,7 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
 
 exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
 <div>
-  <Connect(QuestionnaireTypeTabs) />
+  <Connect(QuestionnaireTypeTabsForDashboard) />
   <div
     className="form-group"
     style={
@@ -207,7 +207,7 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
       }
     }
   >
-    <Connect(AuditCycleSelector) />
+    <Connect(AuditCycleSelectorForDashboard) />
      
     <Connect(StateSelector) />
      

@@ -71,7 +71,8 @@ class AuditCycleTestCase(TestCase):
         assign_perm('clientuser_store_visible', self.client_non_admin, self.store)
         section_averages = get_averages_for_sections_for_client_user(self.audit_cycle.sections.all(), self.non_admin_client_user_id)
         self.assertEqual(len(section_averages), 5)
-        self.assertEqual(section_averages[0].get('average').get('value'), 20)
+        # self.assertEqual(section_averages[0].get('average').get('value'), 20)
+        self.assertEqual(section_averages[0].get('average').get('value'), 36)
 
     def test_get_average_for_report_sections(self):
         report_section_average = get_average_for_report_sections(self.section.report_sections.all())
