@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from "recharts";
+import { ResponsiveContainer, BarChart, CartesianGrid, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Label} from "recharts";
 import { Text } from "recharts";
 
 import {demo} from "../../../config.js";
@@ -9,7 +9,7 @@ import {demo} from "../../../config.js";
 // import {fetchStoreWisePerformance} from "../service/dashboard.js";
 import {fetchStoreWisePerformanceByAuditCycleId} from "../service/dashboard.js";
 
-import { getColor } from "../../utils.js";
+import { getColor, getColorbyValue } from "../../utils.js";
 import { ThList } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -39,21 +39,30 @@ class AuditCycleStorePerformance extends React.Component{
 
 	create_structure = (input_data) => {
 		let data_arr = input_data.data;
-		let label_arr = input_data.columns;
+		// let label_arr = input_data.columns;
 		let size = this.props.type === "all" ? data_arr.length : 5;
 
 		if(this.props.type === "worst"){
 			data_arr = data_arr.slice().reverse();
 		}
 		let data = [];
+		// for(let i=0; i < size; i++){
+		// 	let obj = {};
+		// 	obj["name"] = data_arr[i][0].name;
+		// 	obj["type"] = data_arr[i][0].type;
+		// 	obj["code"] = data_arr[i][0].code;
+		// 	for(let j=0; j < label_arr.length; j++){
+		// 		obj[label_arr[j]] = data_arr[i][1][j] ? data_arr[i][1][j].value : null;
+		// 	}
+		// 	data.push(obj);
+		// }
+
 		for(let i=0; i < size; i++){
 			let obj = {};
 			obj["name"] = data_arr[i][0].name;
 			obj["type"] = data_arr[i][0].type;
 			obj["code"] = data_arr[i][0].code;
-			for(let j=0; j < label_arr.length; j++){
-				obj[label_arr[j]] = data_arr[i][1][j] ? data_arr[i][1][j].value : null;
-			}
+			obj["Score"] = data_arr[i][1][0] ? data_arr[i][1][0].value : null;
 			data.push(obj);
 		}
 		return data;
@@ -66,27 +75,43 @@ class AuditCycleStorePerformance extends React.Component{
 	};
 
 	render(){
-		let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
-		if (this.props.type === "best" || this.props.type === "all"){
-			colors = ["#688833", "#30AD23", "#11772D"];
-		}
-		else if (this.props.type === "worst"){
-			colors = ["#D94E47", "#D0231A", "#A61C14"];
-		}
-		let bars = [];
+		// let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
+		// if (this.props.type === "best" || this.props.type === "all"){
+		// 	colors = ["#688833", "#30AD23", "#11772D"];
+		// }
+		// else if (this.props.type === "worst"){
+		// 	colors = ["#D94E47", "#D0231A", "#A61C14"];
+		// }
+		// let bars = [];
 
-		let labels = this.props.reportData.columns;
-		for(let i=0; i < labels.length; i++){
-			bars.push(<Bar key={i} dataKey={labels[i]} barSize={20} fill={colors[i]} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>);
-		}
+		// let labels = this.props.reportData.columns;
+		// for(let i=0; i < labels.length; i++){
+		// 	bars.push(<Bar key={i} dataKey={labels[i]} barSize={20} fill={colors[i]} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>);
+		// }
 
 		let data = this.create_structure(this.props.reportData);
+		let bars;
+		bars = (
+			<Bar dataKey="Score" barSize={20} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>} isAnimationActive={false}>
+				{
+					data.map((entry, index) => (
+						<Cell key={`cell-${index}`} fill={getColorbyValue(entry["Score"])} />
+					))
+				}
+			</Bar>
+		);
+
 
 		let chart = (
 			<ResponsiveContainer width="100%" aspect={3 / 1}>
 				<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}} onClick={(active)=>active&&this.toggleModal()}>
-					<XAxis dataKey="name" tick={this.tickFunction} interval={0}/>
-					<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
+					<CartesianGrid strokeDasharray="3 3" />
+					<XAxis dataKey="name" tick={this.tickFunction} interval={0}>
+						<Label value="Store List" offset={0} position="insideBottomRight" />
+					</XAxis>
+					<YAxis domain={[0,100]} tickFormatter={f => f + "%"}>
+						<Label value="Score" offset={0} position="insideTopLeft" />
+					</YAxis>
 					<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 					<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
 					{bars}

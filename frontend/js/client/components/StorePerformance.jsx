@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, Legend} from "recharts";
+import { ResponsiveContainer, BarChart, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Label} from "recharts";
 import { Text } from "recharts";
 
-import { getRatingText } from "../../utils";
+// import { getRatingText } from "../../utils";
+import { getColorbyValue } from "../../utils";
 import Loading from "../../components/Loading.jsx";
 import { fetchStorePerformance } from "../service/store.js";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -55,14 +56,27 @@ export default class StorePerformance extends Component{
 			return <Loading/>;
 		} else {
 			if(this.state.data.length > 0){
+				const data = this.state.data;
 				return (
 					<ResponsiveContainer width="100%" aspect={3 / 1}>
 						<BarChart data={this.state.data} margin={{top: 35, right: 80, left: 20, bottom: 5}}>
-							<XAxis dataKey="name" label="AuditCycle"/>
-							<YAxis label="Score" domain={[0,100]} tickFormatter={f => f + "%"}/>
+							<XAxis dataKey="name" >
+								<Label value="AuditCycle" offset={0} position="insideBottomRight" />
+							</XAxis>
+							<YAxis domain={[0,100]} tickFormatter={f => f + "%"}>
+								<Label value="Score" offset={0} position="insideTopLeft" />
+							</YAxis>
 							<Tooltip/>
 							<Legend />
-							<Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : "("+getRatingText(v.color_code)+")\n"+v.value+"%"}</Text>}/>
+							{/* <Bar dataKey="score" barSize={40} fill="#49A2CF" label={v => <Text {...v}>{v.value === null ? "N/A" : "("+getRatingText(v.color_code)+")\n"+v.value+"%"}</Text>}/> */}
+
+							<Bar dataKey="score" barSize={20} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>} isAnimationActive={false}>
+								{
+									data.map((entry, index) => (
+										<Cell key={`cell-${index}`} fill={getColorbyValue(entry["score"])} />
+									))
+								}
+							</Bar>
 						</BarChart>
 					</ResponsiveContainer>
 				);
