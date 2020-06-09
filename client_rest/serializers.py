@@ -265,3 +265,14 @@ class AuditCycleProoftagListSerializer(ModelSerializer):
             'proof_tag'
         )
         read_only_fields = fields
+
+
+class AuditCycleScoreSerializer(ModelSerializer):
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'name',
+            'get_total_percentage'
+        )
+        read_only_fields = fields

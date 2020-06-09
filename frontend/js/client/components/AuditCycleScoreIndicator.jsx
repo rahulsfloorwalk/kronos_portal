@@ -2,9 +2,13 @@ import React , { Component } from "react";
 import PropTypes from "prop-types";
 import ReactStoreIndicator from "react-score-indicator";
 
+import {demo} from "../../../config.js";
+
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
+import { IndicatorScoreColorsList } from "../../constants.js";
+import { fetchAuditCycleScoreList } from "../service/dashboard.js";
 
 class AuditCycleScoreIndicator extends Component{
 	static propTypes = {
@@ -27,17 +31,16 @@ class AuditCycleScoreIndicator extends Component{
 			div_class = "col-md-3";
 		}
 
-		const colors_list = ["#CD5C5C","#CD5C5C", "#FF7F50", "#FF7F50", "#808080", "#4ca9d7", "#3da940", "#3da940"];
 		let score_data = [];
 		for(let a of audit_cycle_score_list) {
 			score_data.push(
-				<div key={a.audit_cycle_name} className={div_class} style={{textAlign: "center"}}>
+				<div key={a.id} className={div_class} style={{textAlign: "center"}}>
 					<ReactStoreIndicator
-						value={a.score}
+						value={a.get_total_percentage}
 						maxValue={100}
-						stepsColors={colors_list}
+						stepsColors={IndicatorScoreColorsList}
 					/>
-					<h4><b>{a.audit_cycle_name}</b></h4>
+					<h4><b>{a.name}</b></h4>
 				</div>
 			);
 		}
@@ -63,12 +66,7 @@ class AuditCycleScoreIndicatorWrapper extends Component{
 
 	state = {
 		loading: false,
-		// auditCycleScore: null,
-		auditCycleScoreList: [
-			{"audit_cycle_name":"April 2020", "score":85},
-			{"audit_cycle_name":"May 2020", "score":95},
-			{"audit_cycle_name":"June 2020", "score":60}
-		]
+		auditCycleScoreList: [],
 	};
 
 	setLoading = (loading) => {
@@ -79,16 +77,16 @@ class AuditCycleScoreIndicatorWrapper extends Component{
 		});
 	};
 
-	// reloadData = (questionnaireTypeId) => {
-	// 	if(!demo){
-	// 		this.setLoading(true);
-	// 		fetchCityWisePerformanceByAuditCycleId(questionnaireTypeId).then((auditCycleScoreList) => {
-	// 			this.setState({
-	// 				"auditCycleScoreList": auditCycleScoreList
-	// 			});
-	// 		}).always(() => this.setLoading(false));
-	// 	}
-	// };
+	reloadData = (questionnaireTypeId) => {
+		if(!demo){
+			this.setLoading(true);
+			fetchAuditCycleScoreList(questionnaireTypeId).then((auditCycleScoreList) => {
+				this.setState({
+					"auditCycleScoreList": auditCycleScoreList
+				});
+			}).always(() => this.setLoading(false));
+		}
+	};
 
 	componentDidMount(){
 		this.reloadData(this.props.questionnaireType.id);

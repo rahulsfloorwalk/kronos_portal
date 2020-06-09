@@ -135,7 +135,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 						<BarChart data={data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 							<CartesianGrid strokeDasharray="3 3" />
 							<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
-								<Label value="Score" offset={0} position="insideTopLeft" />
+								<Label value="Score" offset={0} angle={-90} position="left" />
 							</YAxis>
 							<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}>
 								<Label value="Section List" offset={0} position="bottom" />

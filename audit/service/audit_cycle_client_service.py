@@ -143,3 +143,26 @@ def get_audit_cycle_year_list(user_id):
     else:
         audit_cycle_data = {'audit_cycle_status': False, 'audit_cycle_year_list': []}
     return audit_cycle_data
+
+
+def get_audit_cycle_score(questionnaire_type_id, user_id):
+    user = find_clientuser_by_user_id(user_id)
+    rows = AuditStore.objects \
+        .presentable() \
+        .filter(audit__audit_cycle__questionnaire_type_id=questionnaire_type_id,
+                audit__audit_cycle__client__id=user.clientuser.client_id) \
+        .distinct('audit__audit_cycle_id') \
+        .order_by('-audit__audit_cycle_id') \
+        .values_list(
+            'audit__audit_cycle__id',
+            flat=True
+        )
+
+    if len(rows) is 0:
+        return []
+
+    if len(rows) > 4:
+        rows = rows[:4]
+
+    audit_cycle_list = AuditCycle.objects.filter(id__in=rows).order_by('-id')
+    return audit_cycle_list

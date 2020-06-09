@@ -78,3 +78,15 @@ export const AuditType = [
 	"SKIN_SENSITIVE",
 	"RETAIL",
 ];
+
+
+export const IndicatorScoreColorsList = [
+	"#CD5C5C",
+	"#CD5C5C",
+	"#FF7F50",
+	"#FF7F50",
+	"#808080",
+	"#4ca9d7",
+	"#3da940",
+	"#3da940",
+];

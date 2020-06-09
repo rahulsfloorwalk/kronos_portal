@@ -32,3 +32,7 @@ export function fetchAuditCyclesTimeSeries(questionnaire_type_id){
 export function fetchAuditCyclesTimeSeriesByAuditCycleId(questionnaire_type_id, audit_cycle_id){
 	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle/${audit_cycle_id}/time_series`);
 }
+
+export function fetchAuditCycleScoreList(questionnaire_type_id){
+	return $.get(url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle_scores`);
+}

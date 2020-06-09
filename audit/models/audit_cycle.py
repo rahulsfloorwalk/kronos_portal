@@ -120,5 +120,20 @@ class AuditCycle(Model):
         else:
             return self.completed_audit_count() * 100 / audit_count
 
+    def get_total_percentage(self):
+        percentage = 0
+        count = 0
+        total_percentage = None
+        for audit in self.audits.filter():
+            audit_stores = audit.audit_stores.presentable()
+            for audit_store_obj in audit_stores:
+                percentage += audit_store_obj.audit_store_percentage
+                count += 1
+            if percentage is not 0:
+                total_percentage = round(percentage / count)
+        if total_percentage is None:
+            return None
+        return total_percentage
+
     def __str__(self):
         return "AuditCycle({}): {}, client: {}".format(self.id, self.name, self.client)

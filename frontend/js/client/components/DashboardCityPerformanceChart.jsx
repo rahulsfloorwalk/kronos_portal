@@ -106,7 +106,7 @@ class CityWisePerformanceChart extends React.Component{
 						<Label value="City List" offset={0} position="insideBottomRight" />
 					</XAxis>
 					<YAxis domain={[0,100]} tickFormatter={f => f + "%"}>
-						<Label value="Score" offset={0} position="insideTopLeft" />
+						<Label value="Score" angle={-90} offset={0} position="left" />
 					</YAxis>
 					<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 					<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>

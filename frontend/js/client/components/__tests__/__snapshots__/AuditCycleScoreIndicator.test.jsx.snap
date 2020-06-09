@@ -1,0 +1,362 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditCycleScoreIndicator/> renders the chart correctly 1`] = `
+<div
+  className="row"
+>
+  <h3
+    style={
+      Object {
+        "marginBottom": "30px",
+        "textAlign": "center",
+      }
+    }
+  >
+    Audit Cycle Score
+  </h3>
+  <div>
+    <div
+      className="col-md-4"
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+    >
+      <div
+        className="styles_wrapper__3KXDn"
+        style={
+          Object {
+            "width": "200px",
+          }
+        }
+      >
+        <div
+          className="styles_scoreWrapper__2ELf-"
+        >
+          <svg
+            className="styles_rangeSvg__1TDxQ"
+            id="score_graph"
+            viewBox="13 10 475 390"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              className="styles_pathEl__j7uKd step_1 styles_pathEl--active__1aVpT"
+              d="M67.16,397.93A236,236,0,0,1,16,285.4l28.07-4.52a207.5,207.5,0,0,0,45,98.94Z"
+              fill="#CD5C5C"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_2 styles_pathEl--active__1aVpT"
+              d="M14.62,275.41A237.85,237.85,0,0,1,13,247.62a235.34,235.34,0,0,1,19.59-94.48l26.07,11.35a207.08,207.08,0,0,0-17.22,83.13,211.93,211.93,0,0,0,1.42,24.48Z"
+              fill="#CD5C5C"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_3 styles_pathEl--active__1aVpT"
+              d="M62.38,156.42,36.81,144A238,238,0,0,1,118,50.78l15.86,23.61A209.57,209.57,0,0,0,62.38,156.42Z"
+              fill="#FF7F50"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_4 styles_pathEl--active__1aVpT"
+              d="M141.29,69.6,126.44,45.34A236.72,236.72,0,0,1,245.06,10.67l.58,28.44A208.19,208.19,0,0,0,141.29,69.6Z"
+              fill="#FF7F50"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_5 styles_pathEl--active__1aVpT"
+              d="M358.86,69.69A208.25,208.25,0,0,0,254.53,39.11l.6-28.43a236.62,236.62,0,0,1,118.6,34.77Z"
+              fill="#808080"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_6 styles_pathEl--active__1aVpT"
+              d="M437.7,156.59A209.46,209.46,0,0,0,366.33,74.5l15.89-23.6a238.18,238.18,0,0,1,81.06,93.26Z"
+              fill="#4ca9d7"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_7 styles_pathEl--active__1aVpT"
+              d="M485.37,275.58l-28.25-3.32a210.66,210.66,0,0,0,1.44-24.64,207.24,207.24,0,0,0-17.16-83l26.08-11.33A235.4,235.4,0,0,1,487,247.62,241.16,241.16,0,0,1,485.37,275.58Z"
+              fill="#3da940"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_8 styles_pathEl--active__1aVpT"
+              d="M433.27,397.9l-22-18a208.14,208.14,0,0,0,44.61-98.81L484,285.57A236.55,236.55,0,0,1,433.27,397.9Z"
+              fill="#3da940"
+            />
+          </svg>
+          <div
+            className="styles_scoreValue__2dBgK"
+            style={
+              Object {
+                "bottom": 25,
+                "color": "#3da940",
+              }
+            }
+          >
+            <span
+              className="styles_value__2Y4_G"
+              style={
+                Object {
+                  "fontSize": 36,
+                }
+              }
+            >
+              100
+            </span>
+            <span
+              className="styles_separator__1X7r0"
+              style={
+                Object {
+                  "fontSize": 20,
+                }
+              }
+            >
+              /
+            </span>
+            <span
+              className="styles_maxValue__3RXTR"
+              style={
+                Object {
+                  "fontSize": 20,
+                }
+              }
+            >
+              100
+            </span>
+          </div>
+        </div>
+      </div>
+      <h4>
+        <b>
+          January 2020
+        </b>
+      </h4>
+    </div>
+    <div
+      className="col-md-4"
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+    >
+      <div
+        className="styles_wrapper__3KXDn"
+        style={
+          Object {
+            "width": "200px",
+          }
+        }
+      >
+        <div
+          className="styles_scoreWrapper__2ELf-"
+        >
+          <svg
+            className="styles_rangeSvg__1TDxQ"
+            id="score_graph"
+            viewBox="13 10 475 390"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              className="styles_pathEl__j7uKd step_1 styles_pathEl--active__1aVpT"
+              d="M67.16,397.93A236,236,0,0,1,16,285.4l28.07-4.52a207.5,207.5,0,0,0,45,98.94Z"
+              fill="#CD5C5C"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_2 styles_pathEl--active__1aVpT"
+              d="M14.62,275.41A237.85,237.85,0,0,1,13,247.62a235.34,235.34,0,0,1,19.59-94.48l26.07,11.35a207.08,207.08,0,0,0-17.22,83.13,211.93,211.93,0,0,0,1.42,24.48Z"
+              fill="#CD5C5C"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_3 styles_pathEl--active__1aVpT"
+              d="M62.38,156.42,36.81,144A238,238,0,0,1,118,50.78l15.86,23.61A209.57,209.57,0,0,0,62.38,156.42Z"
+              fill="#FF7F50"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_4 styles_pathEl--active__1aVpT"
+              d="M141.29,69.6,126.44,45.34A236.72,236.72,0,0,1,245.06,10.67l.58,28.44A208.19,208.19,0,0,0,141.29,69.6Z"
+              fill="#FF7F50"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_5 styles_pathEl--active__1aVpT"
+              d="M358.86,69.69A208.25,208.25,0,0,0,254.53,39.11l.6-28.43a236.62,236.62,0,0,1,118.6,34.77Z"
+              fill="#808080"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_6 styles_pathEl--active__1aVpT"
+              d="M437.7,156.59A209.46,209.46,0,0,0,366.33,74.5l15.89-23.6a238.18,238.18,0,0,1,81.06,93.26Z"
+              fill="#4ca9d7"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_7 styles_pathEl--active__1aVpT"
+              d="M485.37,275.58l-28.25-3.32a210.66,210.66,0,0,0,1.44-24.64,207.24,207.24,0,0,0-17.16-83l26.08-11.33A235.4,235.4,0,0,1,487,247.62,241.16,241.16,0,0,1,485.37,275.58Z"
+              fill="#3da940"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_8 false"
+              d="M433.27,397.9l-22-18a208.14,208.14,0,0,0,44.61-98.81L484,285.57A236.55,236.55,0,0,1,433.27,397.9Z"
+              fill="#3da940"
+            />
+          </svg>
+          <div
+            className="styles_scoreValue__2dBgK"
+            style={
+              Object {
+                "bottom": 25,
+                "color": "#3da940",
+              }
+            }
+          >
+            <span
+              className="styles_value__2Y4_G"
+              style={
+                Object {
+                  "fontSize": 36,
+                }
+              }
+            >
+              85
+            </span>
+            <span
+              className="styles_separator__1X7r0"
+              style={
+                Object {
+                  "fontSize": 20,
+                }
+              }
+            >
+              /
+            </span>
+            <span
+              className="styles_maxValue__3RXTR"
+              style={
+                Object {
+                  "fontSize": 20,
+                }
+              }
+            >
+              100
+            </span>
+          </div>
+        </div>
+      </div>
+      <h4>
+        <b>
+          March 2020
+        </b>
+      </h4>
+    </div>
+    <div
+      className="col-md-4"
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+    >
+      <div
+        className="styles_wrapper__3KXDn"
+        style={
+          Object {
+            "width": "200px",
+          }
+        }
+      >
+        <div
+          className="styles_scoreWrapper__2ELf-"
+        >
+          <svg
+            className="styles_rangeSvg__1TDxQ"
+            id="score_graph"
+            viewBox="13 10 475 390"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              className="styles_pathEl__j7uKd step_1 styles_pathEl--active__1aVpT"
+              d="M67.16,397.93A236,236,0,0,1,16,285.4l28.07-4.52a207.5,207.5,0,0,0,45,98.94Z"
+              fill="#CD5C5C"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_2 styles_pathEl--active__1aVpT"
+              d="M14.62,275.41A237.85,237.85,0,0,1,13,247.62a235.34,235.34,0,0,1,19.59-94.48l26.07,11.35a207.08,207.08,0,0,0-17.22,83.13,211.93,211.93,0,0,0,1.42,24.48Z"
+              fill="#CD5C5C"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_3 styles_pathEl--active__1aVpT"
+              d="M62.38,156.42,36.81,144A238,238,0,0,1,118,50.78l15.86,23.61A209.57,209.57,0,0,0,62.38,156.42Z"
+              fill="#FF7F50"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_4 styles_pathEl--active__1aVpT"
+              d="M141.29,69.6,126.44,45.34A236.72,236.72,0,0,1,245.06,10.67l.58,28.44A208.19,208.19,0,0,0,141.29,69.6Z"
+              fill="#FF7F50"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_5 styles_pathEl--active__1aVpT"
+              d="M358.86,69.69A208.25,208.25,0,0,0,254.53,39.11l.6-28.43a236.62,236.62,0,0,1,118.6,34.77Z"
+              fill="#808080"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_6 styles_pathEl--active__1aVpT"
+              d="M437.7,156.59A209.46,209.46,0,0,0,366.33,74.5l15.89-23.6a238.18,238.18,0,0,1,81.06,93.26Z"
+              fill="#4ca9d7"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_7 styles_pathEl--active__1aVpT"
+              d="M485.37,275.58l-28.25-3.32a210.66,210.66,0,0,0,1.44-24.64,207.24,207.24,0,0,0-17.16-83l26.08-11.33A235.4,235.4,0,0,1,487,247.62,241.16,241.16,0,0,1,485.37,275.58Z"
+              fill="#3da940"
+            />
+            <path
+              className="styles_pathEl__j7uKd step_8 styles_pathEl--active__1aVpT"
+              d="M433.27,397.9l-22-18a208.14,208.14,0,0,0,44.61-98.81L484,285.57A236.55,236.55,0,0,1,433.27,397.9Z"
+              fill="#3da940"
+            />
+          </svg>
+          <div
+            className="styles_scoreValue__2dBgK"
+            style={
+              Object {
+                "bottom": 25,
+                "color": "#3da940",
+              }
+            }
+          >
+            <span
+              className="styles_value__2Y4_G"
+              style={
+                Object {
+                  "fontSize": 36,
+                }
+              }
+            >
+              90
+            </span>
+            <span
+              className="styles_separator__1X7r0"
+              style={
+                Object {
+                  "fontSize": 20,
+                }
+              }
+            >
+              /
+            </span>
+            <span
+              className="styles_maxValue__3RXTR"
+              style={
+                Object {
+                  "fontSize": 20,
+                }
+              }
+            >
+              100
+            </span>
+          </div>
+        </div>
+      </div>
+      <h4>
+        <b>
+          May 2020
+        </b>
+      </h4>
+    </div>
+  </div>
+</div>
+`;
