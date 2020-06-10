@@ -23,21 +23,21 @@ const sampleQuestionnaireType = {
 };
 
 const sampleAuditCycleScoreList = [
-    {
-        "id":1,
-        "name": "January 2020",
-        "get_total_percentage": 100
-    },
-    {
-        "id":2,
-        "name": "March 2020",
-        "get_total_percentage": 85
-    },
-    {
-        "id":3,
-        "name": "May 2020",
-        "get_total_percentage": 90
-    }
+	{
+		"id":1,
+		"name": "January 2020",
+		"get_total_percentage": 100
+	},
+	{
+		"id":2,
+		"name": "March 2020",
+		"get_total_percentage": 85
+	},
+	{
+		"id":3,
+		"name": "May 2020",
+		"get_total_percentage": 90
+	}
 ];
 
 describe("<AuditCycleScoreIndicator/>", () => {
