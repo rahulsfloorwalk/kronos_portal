@@ -8,8 +8,9 @@ import FormSelect from "./FormSelect.jsx";
 
 class StoreSelector extends React.Component {
 	static propTypes = {
-		stores: PropTypes.arrayOf(PropTypes.shape({
+		stores: PropTypes.objectOf(PropTypes.shape({
 			name: PropTypes.string,
+			code: PropTypes.oneOf[PropTypes.string, null],
 			city: PropTypes.shape({
 				name: PropTypes.string,
 			}),
@@ -19,7 +20,7 @@ class StoreSelector extends React.Component {
 	render() {
 		let storeOptions = [];
 		for( let s in this.props.stores){
-			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].city.name} -- {this.props.stores[s].name}</option>);
+			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].city.name} -- {this.props.stores[s].name}({this.props.stores[s].code})</option>);
 		}
 		return (
 			<FormSelect label="Store" name="store" {...this.props}>

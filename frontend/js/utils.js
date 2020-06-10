@@ -374,3 +374,22 @@ export function getReferralType(value){
 		return `unknown referral type ${value} - ${typeof value}`;
 	}
 }
+
+
+export function getColorbyValue(value){
+	if (value >= 90){
+		return "#688833"; // Green
+	}
+	else if (value >=85){
+		return "#4ca9d7"; // Blue
+	}
+	else if (value >= 75){
+		return "#808080"; // Grey
+	}
+	else if (value >= 65){
+		return "#FF7F50"; // Orange
+	}
+	else{
+		return "#CD5C5C"; // Red
+	}
+}

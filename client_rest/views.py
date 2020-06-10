@@ -42,6 +42,8 @@ from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUs
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
 from .serializers import AuditCycleProoftagListSerializer
+from .serializers import AuditCycleScoreSerializer
+
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -624,3 +626,14 @@ class ProofsByTag(APIView):
         proof_tag_id = audit_cycle_proof_tag.get_master_proof_tag_id_from_audit_cycle_proof_tag(request.data['proof_tag_id'])
         attachment = attachment_client_service.get_attachment_by_proof_tag(store_id, audit_cycle_list, proof_tag_id)
         return Response(attachment)
+
+
+class AuditCycleScore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+
+    def get(self, request, questionnaire_type_id):
+        audit_cycle_list = audit_cycle_client_service.get_audit_cycle_score(questionnaire_type_id, request.user.id)
+        return Response(AuditCycleScoreSerializer(audit_cycle_list, many=True).data)

@@ -11,6 +11,9 @@ urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/performance/store$', views.AuditCycleStorePerformance.as_view(), name='audit_cycle_store_performance'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store_trends$', views.DashboardStoreTrends.as_view(), name='dashboard_store_trends'),
+
+    url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle_scores$', views.AuditCycleScore.as_view(), name='audit_cycle_score'),
+
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store_trends$', views.DashboardStoreTrendsByAuditCycleId.as_view(), name='dashboard_store_trends_by_audit_cycle_id'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store_trends_xlsx$', views.DashboardStoreTrendsXlsx.as_view(), name='dashboard_store_trends_xlsx'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/city_trends$', views.DashboardCityWiseTrends.as_view(), name='dashboard_city_trends'),

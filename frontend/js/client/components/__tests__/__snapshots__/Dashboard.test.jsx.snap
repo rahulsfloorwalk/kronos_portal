@@ -3,6 +3,8 @@
 exports[`Dashboard renders the tab strip and a loading sign when no questionnaire type is selected 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabsForDashboard) />
+  <Loading />
+  <hr />
   <Connect(AuditCycleSelectorForDashboard) />
   <hr />
   <Loading />
@@ -12,6 +14,8 @@ exports[`Dashboard renders the tab strip and a loading sign when no questionnair
 exports[`Dashboard renders the tab strip and charts with the selected questionnaire type 1`] = `
 <div>
   <Connect(QuestionnaireTypeTabsForDashboard) />
+  <Loading />
+  <hr />
   <Connect(AuditCycleSelectorForDashboard) />
   <hr />
   <Loading />
