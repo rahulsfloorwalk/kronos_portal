@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.conf import settings
 
 import boto3
+from botocore.client import Config
 
 from PIL import Image, ImageFile
 import imagehash
@@ -82,7 +83,8 @@ def get_signed_post(file_extension):
         's3',
         aws_access_key_id=AWS["S3_ATTACHMENTS"]["AWS_ACCESS_KEY_ID"],
         aws_secret_access_key=AWS["S3_ATTACHMENTS"]["AWS_SECRET_ACCESS_KEY"],
-        region_name=AWS["S3_ATTACHMENTS"]["REGION"]
+        region_name=AWS["S3_ATTACHMENTS"]["REGION"],
+        config=Config(signature_version='s3v4')
     )
 
     # Make sure everything posted is publicly readable

@@ -27,7 +27,7 @@ class AttachmentServiceTestCase(TestCase):
             "AWS_ACCESS_KEY_ID": "floorwalk_access_key",
             "AWS_SECRET_ACCESS_KEY": "floorwalk_secret_access_key",
             "BUCKET": "floorwalk-attachments",
-            "REGION": "ap-southeast-1",
+            "REGION": "ap-south-1",
             "MAX_SIZE": 200 * 1024 * 1024,
             "MIN_SIZE": 10,
             "FILE_SLUG_SIZE": 10,
@@ -142,11 +142,13 @@ class AttachmentServiceTestCase(TestCase):
         expect(attachment.content_object.question).to(equal(question))
         expect(attachment.content_object.audit_store).to(equal(audit_store))
 
-        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        # expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data).to(have_key("url", "https://s3.{}.amazonaws.com/{}".format(S3["REGION"], S3["BUCKET"])))
+        # expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
         expect(post_data["fields"]).to(have_key("acl", "public-read"))
         expect(post_data["fields"]).to(have_key("policy"))
-        expect(post_data["fields"]).to(have_key("signature"))
+        # expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]).to(have_key("x-amz-signature"))
         expect(post_data["fields"]).to(have_key("key", start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d")))))
         expect(post_data["fields"]).to(have_key("key", end_with(self.file_extension)))
 
@@ -183,11 +185,13 @@ class AttachmentServiceTestCase(TestCase):
         expect(attachment.content_object.section).to(equal(section))
         expect(attachment.content_object.audit_store).to(equal(audit_store))
 
-        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        # expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data).to(have_key("url", "https://s3.{}.amazonaws.com/{}".format(S3["REGION"], S3["BUCKET"])))
+        # expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
         expect(post_data["fields"]).to(have_key("acl", "public-read"))
         expect(post_data["fields"]).to(have_key("policy"))
-        expect(post_data["fields"]).to(have_key("signature"))
+        # expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]).to(have_key("x-amz-signature"))
         expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
         expect(post_data["fields"]["key"]).to(end_with(self.file_extension))
 
@@ -222,11 +226,13 @@ class AttachmentServiceTestCase(TestCase):
         expect(attachment.content_object).to(be_an(AuditStore))
         expect(attachment.content_object).to(equal(audit_store))
 
-        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        # expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data).to(have_key("url", "https://s3.{}.amazonaws.com/{}".format(S3["REGION"], S3["BUCKET"])))
+        # expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
         expect(post_data["fields"]).to(have_key("acl", "public-read"))
         expect(post_data["fields"]).to(have_key("policy"))
-        expect(post_data["fields"]).to(have_key("signature"))
+        # expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]).to(have_key("x-amz-signature"))
         expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
         expect(post_data["fields"]["key"]).to(end_with(self.file_extension))
 
@@ -260,11 +266,13 @@ class AttachmentServiceTestCase(TestCase):
         expect(attachment.content_object).to(be_a(ProfileInfo))
         expect(attachment.content_object).to(equal(profile_info))
 
-        expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
-        expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
+        # expect(post_data).to(have_key("url", "https://{}.s3.amazonaws.com/".format(S3["BUCKET"])))
+        expect(post_data).to(have_key("url", "https://s3.{}.amazonaws.com/{}".format(S3["REGION"], S3["BUCKET"])))
+        # expect(post_data["fields"]).to(have_key("AWSAccessKeyId", S3["AWS_ACCESS_KEY_ID"]))
         expect(post_data["fields"]).to(have_key("acl", "public-read"))
         expect(post_data["fields"]).to(have_key("policy"))
-        expect(post_data["fields"]).to(have_key("signature"))
+        # expect(post_data["fields"]).to(have_key("signature"))
+        expect(post_data["fields"]).to(have_key("x-amz-signature"))
         expect(post_data["fields"]["key"]).to(start_with("ATTACHMENTS/{}".format(date.today().strftime("%Y/%m/%d"))))
         expect(post_data["fields"]["key"]).to(end_with(self.file_extension))
 
