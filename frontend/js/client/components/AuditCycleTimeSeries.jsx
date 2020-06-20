@@ -1,13 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { ResponsiveContainer, BarChart, CartesianGrid, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Text, Label} from "recharts";
+// import { ResponsiveContainer, BarChart, CartesianGrid, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Text, Label, LineChart, Line} from "recharts";
+import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Text, Label} from "recharts";
 
 import {demo} from "../../../config.js";
 
 import { ThList } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Modal from "../../components/Modal.jsx";
-import { getColor, getColorbyValue  } from "../../utils.js";
+// import { getColor, getColorbyValue  } from "../../utils.js";
+import { getColorbyValue  } from "../../utils.js";
 
 // import {fetchAuditCyclesTimeSeries} from "../service/dashboard.js";
 import {fetchAuditCyclesTimeSeriesByAuditCycleId} from "../service/dashboard.js";
@@ -105,9 +107,10 @@ export default class AuditCycleTimeSeries extends React.Component{
 	};
 
 	render(){
-		let chart;
+		// let chart;
+		let line_chart;
 		if(this.state.loading){
-			chart = <Loading/>;
+			line_chart = <Loading/>;
 		} else {
 			//let colors = ["#9ED5CD", "#44A7CB", "#2E62A1", "#192574"]; // obtained from goo.gl/CKlX3T
 			//let colors = ["#add8e6", "#99cfe0", "#86c5da", "#72bcd4"];
@@ -118,21 +121,41 @@ export default class AuditCycleTimeSeries extends React.Component{
 			// 	bars.push(<Bar key={i} barSize={30} dataKey={this.state.labels[i]} fill={colors[i]} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>);
 			// }
 			const data = this.state.data;
-			let bars;
-			bars = (
-				<Bar dataKey="Section Score" barSize={30} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>} isAnimationActive={false}>
-					{
-						data.map((entry, index) => (
-							<Cell key={`cell-${index}`} fill={getColorbyValue(entry["Section Score"])} />
-						))
-					}
-				</Bar>
+			// let bars;
+			let lines;
+			// bars = (
+			// 	<Bar dataKey="Section Score" barSize={30} label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>} isAnimationActive={false}>
+			// 		{
+			// 			data.map((entry, index) => (
+			// 				<Cell key={`cell-${index}`} fill={getColorbyValue(entry["Section Score"])} />
+			// 			))
+			// 		}
+			// 	</Bar>
+			// );
+			lines = (
+				<Line type="monotone" dataKey="Section Score" stroke="#2387ea" label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>
 			);
 
-			if (this.state.data.length <= 5){
-				chart = (
+			if (this.state.data.length <=7){
+				// chart = (
+				// 	<ResponsiveContainer width="100%" aspect={3 / 1}>
+				// 		<BarChart data={data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+				// 			<CartesianGrid strokeDasharray="3 3" />
+				// 			<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
+				// 				<Label value="Score" offset={0} angle={-90} position="left" />
+				// 			</YAxis>
+				// 			<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}>
+				// 				<Label value="Section List" offset={0} position="bottom" />
+				// 			</XAxis>
+				// 			<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
+				// 			<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
+				// 			{bars}
+				// 		</BarChart>
+				// 	</ResponsiveContainer>
+				// );
+				line_chart = (
 					<ResponsiveContainer width="100%" aspect={3 / 1}>
-						<BarChart data={data} margin={{top: 25, right: 5, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+						<LineChart data={data} margin={{top: 25, right: 25, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 							<CartesianGrid strokeDasharray="3 3" />
 							<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
 								<Label value="Score" offset={0} angle={-90} position="left" />
@@ -142,28 +165,48 @@ export default class AuditCycleTimeSeries extends React.Component{
 							</XAxis>
 							<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 							<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
-							{bars}
-						</BarChart>
+							{lines}
+						</LineChart>
 					</ResponsiveContainer>
 				);
+
 			}
 			else{
-				let width = (this.state.data.length*20).toString().concat("%");
-				chart = (
+				let width = (this.state.data.length*15).toString().concat("%");
+				// chart = (
+				// 	<div style={{ "width": "100%", "overflow": "scroll"}}>
+				// 		<ResponsiveContainer width={width} height={450}>
+				// 			<BarChart layout="horizontal" data={data} margin={{top: 25, right: 5, left: 25, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+				// 				<CartesianGrid strokeDasharray="3 3" />
+				// 				<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
+				// 					<Label value="Score" offset={0} angle={-90} position="left" />
+				// 				</YAxis>
+				// 				<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}>
+				// 					<Label value="Section List" offset={0} position="bottom" />
+				// 				</XAxis>
+				// 				<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
+				// 				<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
+				// 				{bars}
+				// 			</BarChart>
+				// 		</ResponsiveContainer>
+				// 	</div>
+				// );
+
+				line_chart = (
 					<div style={{ "width": "100%", "overflow": "scroll"}}>
-						<ResponsiveContainer width={width} height={300}>
-							<BarChart layout="horizontal" data={data} margin={{top: 25, right: 5, left: 25, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+						<ResponsiveContainer width={width} height={440}>
+							<LineChart data={data} margin={{top: 25, right: 25, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 								<CartesianGrid strokeDasharray="3 3" />
 								<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
-									<Label value="Score" offset={0} position="insideTopLeft" />
+									<Label value="Score" offset={0} angle={-90} position="left" />
 								</YAxis>
 								<XAxis dataKey="name" type="category" tick={this.tickFunction} interval={0}>
 									<Label value="Section List" offset={0} position="bottom" />
 								</XAxis>
 								<Tooltip formatter={v => v === null ? "N/A" : v+"%"}/>
 								<Legend wrapperStyle={{ top: 0}} verticalAlign="top"/>
-								{bars}
-							</BarChart>
+								{lines}
+							</LineChart>
 						</ResponsiveContainer>
 					</div>
 				);
@@ -173,7 +216,8 @@ export default class AuditCycleTimeSeries extends React.Component{
 			<div>
 				{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button> : null }
 				<h3 className="text-center">{this.state.title}</h3>
-				{chart}
+				{/* {chart} */}
+				{line_chart}
 				{ this.state.dataPopup ?
 					<Modal modalTitle="Section Improvement over time" onClose={this.toggleModal}>
 						<table className="table table-striped ">
@@ -191,7 +235,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 										tds.push(<td key={reportData.section_master[i]}>{reportData.section_master[i]}</td>);
 										for(let j=0; j < reportData.audit_cycle_master.length; j++){
 											if(reportData.values[j][i]){
-												tds.push(<td className={"text-right "+getColor(reportData.values[j][i].color_code)} key={j+"-"+i}>{reportData.values[j][i].value}%</td>);
+												tds.push(<td className="text-right" style={{backgroundColor:getColorbyValue(reportData.values[j][i].value)}} key={j+"-"+i}>{reportData.values[j][i].value}%</td>);
 											} else {
 												tds.push(<td className="text-right" key={j+"-"+i}></td>);
 											}

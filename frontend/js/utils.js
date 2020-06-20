@@ -384,9 +384,10 @@ export function getColorbyValue(value){
 		return "#4ca9d7"; // Blue
 	}
 	else if (value >= 75){
-		return "#808080"; // Grey
+		// return "#808080"; // Grey
+		return "#dbb001"; //Yellow
 	}
-	else if (value >= 65){
+	else if (value >= 66){
 		return "#FF7F50"; // Orange
 	}
 	else{
