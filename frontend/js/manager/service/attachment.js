@@ -63,10 +63,10 @@ export function doAttachmentUpload(url, file){
 		mainPromise.notify("STARTING_UPLOAD");
 
 		var formData = new FormData();
-		formData.append("x-amz-credential", post_data.fields['x-amz-credential']);
-		formData.append("x-amz-algorithm", post_data.fields['x-amz-algorithm']);
-		formData.append("x-amz-date", post_data.fields['x-amz-date']);
-		formData.append("x-amz-signature", post_data.fields['x-amz-signature']);
+		formData.append("x-amz-credential", post_data.fields["x-amz-credential"]);
+		formData.append("x-amz-algorithm", post_data.fields["x-amz-algorithm"]);
+		formData.append("x-amz-date", post_data.fields["x-amz-date"]);
+		formData.append("x-amz-signature", post_data.fields["x-amz-signature"]);
 		formData.append("acl", post_data.fields.acl);
 		formData.append("policy", post_data.fields.policy);
 		formData.append("key", post_data.fields.key);

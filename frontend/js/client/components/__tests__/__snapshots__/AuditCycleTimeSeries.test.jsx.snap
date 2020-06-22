@@ -154,7 +154,12 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Entrance
                 </td>
                 <td
-                  className="text-right rating-bad"
+                  className="text-right"
+                  style={
+                    Object {
+                      "backgroundColor": "#CD5C5C",
+                    }
+                  }
                 >
                   36
                   %
@@ -165,7 +170,12 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Need Analysis
                 </td>
                 <td
-                  className="text-right rating-bad"
+                  className="text-right"
+                  style={
+                    Object {
+                      "backgroundColor": "#CD5C5C",
+                    }
+                  }
                 >
                   32
                   %
@@ -176,7 +186,12 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Staff Analysis
                 </td>
                 <td
-                  className="text-right rating-poor"
+                  className="text-right"
+                  style={
+                    Object {
+                      "backgroundColor": "#CD5C5C",
+                    }
+                  }
                 >
                   47
                   %
@@ -187,7 +202,12 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Selling and Recommendation skills
                 </td>
                 <td
-                  className="text-right rating-bad"
+                  className="text-right"
+                  style={
+                    Object {
+                      "backgroundColor": "#CD5C5C",
+                    }
+                  }
                 >
                   30
                   %
@@ -198,7 +218,12 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
                   Outlet analysis
                 </td>
                 <td
-                  className="text-right rating-average"
+                  className="text-right"
+                  style={
+                    Object {
+                      "backgroundColor": "#CD5C5C",
+                    }
+                  }
                 >
                   61
                   %

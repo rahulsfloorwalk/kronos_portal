@@ -8,7 +8,8 @@ import {demo} from "../../../config.js";
 // import {fetchCityWisePerformance} from "../service/dashboard.js";
 import {fetchCityWisePerformanceByAuditCycleId} from "../service/dashboard.js";
 
-import { getColor, getColorbyValue } from "../../utils.js";
+// import { getColor, getColorbyValue } from "../../utils.js";
+import { getColorbyValue } from "../../utils.js";
 
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -140,7 +141,7 @@ class CityWisePerformanceChart extends React.Component{
 										tds.push(<td key={data[i][0].name}>{data[i][0].name}</td>);
 										for(let j=0; j < reportData.columns.length; j++){
 											if(data[i][1][j]){
-												tds.push(<td key={i+"."+j} className={"text-right "+getColor(data[i][1][j].color_code)}>{data[i][1][j].value}%</td>);
+												tds.push(<td key={i+"."+j} className="text-right" style={{backgroundColor:getColorbyValue(data[i][1][j].value)}}>{data[i][1][j].value}%</td>);
 											} else {
 												tds.push(<td className="text-right" key={j+"-"+i}></td>);
 											}

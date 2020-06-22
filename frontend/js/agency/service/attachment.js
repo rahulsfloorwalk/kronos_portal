@@ -42,10 +42,10 @@ export function doAttachmentUpload(url, file, progressCallback){
 			progressCallback("STARTING_UPLOAD");
 
 			const formData = new FormData();
-			formData.append("x-amz-credential", post_data.fields['x-amz-credential']);
-			formData.append("x-amz-algorithm", post_data.fields['x-amz-algorithm']);
-			formData.append("x-amz-date", post_data.fields['x-amz-date']);
-			formData.append("x-amz-signature", post_data.fields['x-amz-signature']);
+			formData.append("x-amz-credential", post_data.fields["x-amz-credential"]);
+			formData.append("x-amz-algorithm", post_data.fields["x-amz-algorithm"]);
+			formData.append("x-amz-date", post_data.fields["x-amz-date"]);
+			formData.append("x-amz-signature", post_data.fields["x-amz-signature"]);
 			formData.append("acl", post_data.fields.acl);
 			formData.append("policy", post_data.fields.policy);
 			formData.append("key", post_data.fields.key);

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { ResponsiveContainer, BarChart, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Label} from "recharts";
+import { ResponsiveContainer, CartesianGrid, BarChart, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Label} from "recharts";
 import { Text } from "recharts";
 
 // import { getRatingText } from "../../utils";
@@ -60,11 +60,12 @@ export default class StorePerformance extends Component{
 				return (
 					<ResponsiveContainer width="100%" aspect={3 / 1}>
 						<BarChart data={this.state.data} margin={{top: 35, right: 80, left: 20, bottom: 5}}>
+							<CartesianGrid strokeDasharray="3 3" />
 							<XAxis dataKey="name" >
 								<Label value="AuditCycle" offset={0} position="insideBottomRight" />
 							</XAxis>
 							<YAxis domain={[0,100]} tickFormatter={f => f + "%"}>
-								<Label value="Score" offset={0} position="insideTopLeft" />
+								<Label value="Score" offset={0} angle={-90} position="left" />
 							</YAxis>
 							<Tooltip/>
 							<Legend />
