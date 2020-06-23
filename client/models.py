@@ -3,7 +3,7 @@ from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT
 from django.conf import settings
-from kronos.utils import get_color_code_by_percentage
+from kronos.utils import get_color_code_by_percentage, get_rank_by_percentage
 
 class Client(Model):
 
@@ -88,6 +88,10 @@ class Store(Model):
         if total_percentage is None:
             return {"score": None, "color": get_color_code_by_percentage(None)}
         return {"score": total_percentage, "color": get_color_code_by_percentage(total_percentage)}
+
+    def get_store_rank(self):
+        total_percentage = self.get_total_percentage()
+        return get_rank_by_percentage(total_percentage["score"])
 
     def __str__(self):
         return 'Store({}): {}, client: {}'.format(self.id, self.name, self.client)

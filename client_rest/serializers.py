@@ -98,6 +98,7 @@ class StoreSerializer(ModelSerializer):
             'name',
             'address',
             'get_total_percentage',
+            'get_store_rank',
             'city',
             'client',
         )

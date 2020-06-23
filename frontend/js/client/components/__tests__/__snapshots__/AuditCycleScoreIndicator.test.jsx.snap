@@ -63,7 +63,7 @@ exports[`<AuditCycleScoreIndicator/> renders the chart correctly 1`] = `
             <path
               className="styles_pathEl__j7uKd step_5 styles_pathEl--active__1aVpT"
               d="M358.86,69.69A208.25,208.25,0,0,0,254.53,39.11l.6-28.43a236.62,236.62,0,0,1,118.6,34.77Z"
-              fill="#808080"
+              fill="#dbb001"
             />
             <path
               className="styles_pathEl__j7uKd step_6 styles_pathEl--active__1aVpT"
@@ -177,7 +177,7 @@ exports[`<AuditCycleScoreIndicator/> renders the chart correctly 1`] = `
             <path
               className="styles_pathEl__j7uKd step_5 styles_pathEl--active__1aVpT"
               d="M358.86,69.69A208.25,208.25,0,0,0,254.53,39.11l.6-28.43a236.62,236.62,0,0,1,118.6,34.77Z"
-              fill="#808080"
+              fill="#dbb001"
             />
             <path
               className="styles_pathEl__j7uKd step_6 styles_pathEl--active__1aVpT"
@@ -291,7 +291,7 @@ exports[`<AuditCycleScoreIndicator/> renders the chart correctly 1`] = `
             <path
               className="styles_pathEl__j7uKd step_5 styles_pathEl--active__1aVpT"
               d="M358.86,69.69A208.25,208.25,0,0,0,254.53,39.11l.6-28.43a236.62,236.62,0,0,1,118.6,34.77Z"
-              fill="#808080"
+              fill="#dbb001"
             />
             <path
               className="styles_pathEl__j7uKd step_6 styles_pathEl--active__1aVpT"

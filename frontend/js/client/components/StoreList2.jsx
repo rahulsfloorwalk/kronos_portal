@@ -37,6 +37,7 @@ export default class StoreList2 extends Component{
 	componentDidMount() {
 		this.setLoading(true);
 		fetchAllStores().then((stores)=>{
+			stores.sort((a, b) => (a.get_store_rank===null)-(b.get_store_rank===null) || +(a.get_store_rank>b.get_store_rank)||-(a.get_store_rank<b.get_store_rank));
 			this.setState({
 				stores
 			});
@@ -63,6 +64,7 @@ export default class StoreList2 extends Component{
 					<td>{store.priority}</td> */}
 					<td>{store.address}</td>
 					<td>{store.city.name}</td>
+					<td>{store.get_store_rank === null ? "N/A" : store.get_store_rank}</td>
 					<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
 				</tr>
 			);
@@ -71,6 +73,10 @@ export default class StoreList2 extends Component{
 		let storeTable;
 		let div_style = {
 			paddingBottom:"1%"
+		};
+		const selectStyle = {
+			display: "inline-block",
+			width: "150px",
 		};
 		let audit_cycle_button = (null);
 		if (this.state.audit_cycles["audit_cycle_status"]){
@@ -102,7 +108,34 @@ export default class StoreList2 extends Component{
 
 		if( storeRows.length > 0) {
 			storeTable = (
-				<div>
+				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
+					<div style={selectStyle}>
+						&nbsp;Store Code:
+						<input type="text" className="form-control" />
+					</div>
+					&nbsp;
+					<div style={selectStyle}>
+						&nbsp;City:
+						<select value="" className="form-control" style={selectStyle}>
+							<option value="">All Cities</option>
+						</select>
+					</div>
+					&nbsp;
+					<div style={{display: "inline-block",width: "80px",}}>
+						&nbsp;Percentage:
+						<input type="text" className="form-control" />
+					</div>
+					&nbsp; to &nbsp;
+					<div style={{display: "inline-block",width: "80px",}}>
+						&nbsp;
+						<input type="text" className="form-control" />
+					</div>
+					<div style={selectStyle}>
+						&nbsp;
+						<button className="btn btn-primary">Go</button>
+						&nbsp;&nbsp;
+						<button className="btn btn-primary">Clear</button>
+					</div>
 					{audit_cycle_button}
 					<table className="table table-striped table-bordered table-hover">
 						<thead>
@@ -114,6 +147,7 @@ export default class StoreList2 extends Component{
 								<th>Priority</th> */}
 								<th>Address</th>
 								<th>City</th>
+								<th>Rank</th>
 								<th>Total Score Till Date</th>
 							</tr>
 						</thead>
