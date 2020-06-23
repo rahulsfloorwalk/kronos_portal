@@ -133,7 +133,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 			// 	</Bar>
 			// );
 			lines = (
-				<Line type="monotone" dataKey="Section Score" stroke="#2387ea" label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>}/>
+				<Line type="monotone" dataKey="Section Score" stroke="#2387ea" label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>} isAnimationActive={false} />
 			);
 
 			if (this.state.data.length <=7){
@@ -155,7 +155,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 				// );
 				line_chart = (
 					<ResponsiveContainer width="100%" aspect={3 / 1}>
-						<LineChart data={data} margin={{top: 25, right: 25, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+						<LineChart data={data} margin={{top: 25, right: 50, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 							<CartesianGrid strokeDasharray="3 3" />
 							<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
 								<Label value="Score" offset={0} angle={-90} position="left" />
@@ -195,7 +195,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 				line_chart = (
 					<div style={{ "width": "100%", "overflow": "scroll"}}>
 						<ResponsiveContainer width={width} height={440}>
-							<LineChart data={data} margin={{top: 25, right: 25, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
+							<LineChart data={data} margin={{top: 25, right: 50, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 								<CartesianGrid strokeDasharray="3 3" />
 								<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
 									<Label value="Score" offset={0} angle={-90} position="left" />

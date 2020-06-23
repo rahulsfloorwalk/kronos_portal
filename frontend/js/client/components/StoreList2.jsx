@@ -17,6 +17,10 @@ import { getColor } from "../../utils.js";
 
 import Loading from "../../components/Loading.jsx";
 
+import StoreCodeSelector from "./store/StoreCodeSelector.jsx";
+
+import CitySelectorForStoreFilter from "./store/CitySelectorForStoreFilter.jsx";
+
 export default class StoreList2 extends Component{
 	constructor(props){
 		super(props);
@@ -24,6 +28,11 @@ export default class StoreList2 extends Component{
 			stores: [],
 			audit_cycles: [],
 			loading: false,
+			selectedCity: "",
+			storeCode: "",
+			percentFrom: "",
+			percentTo: "",
+			errMsg: ""
 		};
 	}
 
@@ -35,6 +44,15 @@ export default class StoreList2 extends Component{
 		});
 	};
 	componentDidMount() {
+		this.fetchStores();
+		fetchAuditCyclesYearList().then((audit_cycles)=>{
+			this.setState({
+				audit_cycles
+			});
+		});
+	}
+
+	fetchStores = () =>{
 		this.setLoading(true);
 		fetchAllStores().then((stores)=>{
 			stores.sort((a, b) => (a.get_store_rank===null)-(b.get_store_rank===null) || +(a.get_store_rank>b.get_store_rank)||-(a.get_store_rank<b.get_store_rank));
@@ -42,18 +60,76 @@ export default class StoreList2 extends Component{
 				stores
 			});
 		}).always(() => this.setLoading(false));
-		fetchAuditCyclesYearList().then((audit_cycles)=>{
+	};
+
+	changeValue = (e) => {
+		if (e.target.name === "percentFrom" || e.target.name === "percentTo"){
+			const re = /^[0-9\b]+$/;
+			if (e.target.value === "" || re.test(e.target.value)) {
+				this.setState({
+					[e.target.name]: e.target.value,
+					errMsg: ""
+				});
+			}
+		}
+		else{
 			this.setState({
-				audit_cycles
+				[e.target.name]: e.target.value,
+				errMsg: ""
 			});
-		});
-	}
+		}
+	};
+
+	filterStore = () => {
+		const {selectedCity, storeCode, percentFrom, percentTo} = this.state;
+		if (selectedCity === "" && storeCode === "" && percentFrom === "" && percentTo === ""){
+			this.setState({
+				errMsg : "Please enter or select value for filter"
+			});
+		}
+		else if(percentFrom != "" || percentTo != ""){
+			if(percentFrom === ""){
+				document.getElementById("percentFrom").focus();
+				this.setState({
+					errMsg : "Please enter both values of percent field"
+				});
+			}
+			else if(percentTo === ""){
+				document.getElementById("percentTo").focus();
+				this.setState({
+					errMsg : "Please enter both values of percent field"
+				});
+			}
+			// else{
+
+			// }
+		}
+		// else{
+		// }
+	};
+
+	resetFilter = () =>{
+		const {selectedCity, storeCode, percentFrom, percentTo} = this.state;
+		if(selectedCity != "" || storeCode != "" || percentFrom != "" || percentTo != ""){
+			this.setState({
+				storeCode: "",
+				selectedCity: "",
+				percentFrom : "",
+				percentTo : "",
+				errMsg: ""
+			});
+			this.fetchStores();
+		}
+	};
+
 	render(){
 		if(this.state.loading){
 			return <Loading/>;
 		}
+		let citiesRows = [];
 		let storeRows = [];
 		let index = 0;
+		let errSpan;
 		for(let store of this.state.stores) {
 			storeRows.push(
 				<tr title="Click to open Store Details" key={store.id} onClick={() => hashHistory.push(`/store/${store.id}/trends`)} style={pointerStyle}>
@@ -68,8 +144,13 @@ export default class StoreList2 extends Component{
 					<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
 				</tr>
 			);
+			if(citiesRows.filter(item => item.id == store.city.id).length === 0){
+				citiesRows.push(
+					{"id": store.city.id, "name": store.city.name}
+				);
+			}
 		}
-
+		citiesRows.sort((a, b) => (a.name > b.name) ? 1 : -1);
 		let storeTable;
 		let div_style = {
 			paddingBottom:"1%"
@@ -105,37 +186,32 @@ export default class StoreList2 extends Component{
 				</div>
 			);
 		}
-
+		if(this.state.errMsg){
+			errSpan = (<span style={{color:"red"}}><b>{this.state.errMsg}</b></span>);
+		}
 		if( storeRows.length > 0) {
 			storeTable = (
 				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
-					<div style={selectStyle}>
-						&nbsp;Store Code:
-						<input type="text" className="form-control" />
-					</div>
+					<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
 					&nbsp;
-					<div style={selectStyle}>
-						&nbsp;City:
-						<select value="" className="form-control" style={selectStyle}>
-							<option value="">All Cities</option>
-						</select>
-					</div>
+					<CitySelectorForStoreFilter name="selectedCity" citiesRows={citiesRows} onChange={this.changeValue} selectedCity={this.state.selectedCity}/>
 					&nbsp;
 					<div style={{display: "inline-block",width: "80px",}}>
-						&nbsp;Percentage:
-						<input type="text" className="form-control" />
+						&nbsp;<b>Percentage</b>:
+						<input type="text" name="percentFrom" id="percentFrom" className="form-control" value={this.state.percentFrom} onChange={this.changeValue} maxLength="2"/>
 					</div>
 					&nbsp; to &nbsp;
 					<div style={{display: "inline-block",width: "80px",}}>
 						&nbsp;
-						<input type="text" className="form-control" />
+						<input type="text" name="percentTo" id="percentTo" className="form-control" value={this.state.percentTo} onChange={this.changeValue} maxLength="3"/>
 					</div>
 					<div style={selectStyle}>
-						&nbsp;
-						<button className="btn btn-primary">Go</button>
 						&nbsp;&nbsp;
-						<button className="btn btn-primary">Clear</button>
+						<button className="btn btn-primary" onClick={this.filterStore}>Go</button>
+						&nbsp;&nbsp;
+						<button className="btn btn-primary" onClick={this.resetFilter}>Clear</button>
 					</div>
+					{errSpan}
 					{audit_cycle_button}
 					<table className="table table-striped table-bordered table-hover">
 						<thead>
