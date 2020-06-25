@@ -8,7 +8,7 @@ class CitySelectorForStoreFilter extends Component {
 			name: PropTypes.string.isRequired,
 		})),
 		name: PropTypes.string,
-		selectedCity: PropTypes.number,
+		selectedCity: PropTypes.string,
 
 		onChange: PropTypes.func.isRequired,
 	};
@@ -23,7 +23,8 @@ class CitySelectorForStoreFilter extends Component {
 			<div style={selectStyle}>
 				&nbsp;<b>City</b>:
 				<select name={name} value={selectedCity} className="form-control" style={selectStyle} onChange={onChange}>
-					<option value="">All Cities</option>
+					<option value="">Select City</option>
+					{/* <option value="all">All Cities</option> */}
 					{
 						citiesRows.map(city => <option key={city.id} value={city.id}>{city.name}</option>)
 					}

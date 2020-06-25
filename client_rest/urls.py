@@ -47,6 +47,8 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)/get_proofs_by_tag$', views.ProofsByTag.as_view(), name='proofs_by_tag'),
     url(r'store/(?P<store_id>[0-9]+)$', views.StoreById.as_view(), name='store_by_id'),
     url(r'store$', views.StoreByClient.as_view(), name='store_by_client'),
+    url(r'filter_stores$', views.StoreFilter.as_view(), name='filter_stores'),
+
     url(r'user$', views.ClientUserView.as_view(), name='client_user_view'),
     url(r'audit_cycle$', views.AuditCycleView.as_view(), name='audit_cycle_view'),
     url(r'audit_cycle_for_dashboard$', views.AuditCycleForDashboardView.as_view(), name='audit_cycle_dashboard_view'),

@@ -9,7 +9,7 @@ import { Download } from "../../components/Icons.jsx";
 
 import DropDown from "../../components/DropDown.jsx";
 
-import { fetchAllStores, fetchAuditCyclesYearList } from "../service/store.js";
+import { fetchAllStores, fetchAuditCyclesYearList, fetchFilterStores } from "../service/store.js";
 
 import { url } from "../../../config.js";
 
@@ -26,6 +26,8 @@ export default class StoreList2 extends Component{
 		super(props);
 		this.state = {
 			stores: [],
+			filterstores: [],
+			citiesRows: [],
 			audit_cycles: [],
 			loading: false,
 			selectedCity: "",
@@ -53,11 +55,34 @@ export default class StoreList2 extends Component{
 	}
 
 	fetchStores = () =>{
+		let cityRows = [];
 		this.setLoading(true);
 		fetchAllStores().then((stores)=>{
 			stores.sort((a, b) => (a.get_store_rank===null)-(b.get_store_rank===null) || +(a.get_store_rank>b.get_store_rank)||-(a.get_store_rank<b.get_store_rank));
+			for (let i = 0; i < stores.length; i++) {
+				if(cityRows.filter(item => item.id == stores[i].city.id).length === 0){
+					cityRows.push(
+						{"id": stores[i].city.id, "name": stores[i].city.name}
+					);
+				}
+				cityRows.sort((a, b) => (a.name > b.name) ? 1 : -1);
+			}
 			this.setState({
-				stores
+				stores: stores,
+				citiesRows: cityRows,
+				filterstores: []
+			});
+		}).always(() => this.setLoading(false));
+	};
+
+	fetchFilterStore = () => {
+		const {selectedCity, storeCode, percentFrom, percentTo} = this.state;
+		this.setLoading(true);
+		fetchFilterStores(storeCode, selectedCity, percentFrom, percentTo).then((filterstores)=>{
+			filterstores.sort((a, b) => (a.get_store_rank===null)-(b.get_store_rank===null) || +(a.get_store_rank>b.get_store_rank)||-(a.get_store_rank<b.get_store_rank));
+			this.setState({
+				filterstores:filterstores,
+				stores: []
 			});
 		}).always(() => this.setLoading(false));
 	};
@@ -84,7 +109,7 @@ export default class StoreList2 extends Component{
 		const {selectedCity, storeCode, percentFrom, percentTo} = this.state;
 		if (selectedCity === "" && storeCode === "" && percentFrom === "" && percentTo === ""){
 			this.setState({
-				errMsg : "Please enter or select value for filter"
+				errMsg : "Please enter or select at least one value for filter"
 			});
 		}
 		else if(percentFrom != "" || percentTo != ""){
@@ -100,12 +125,13 @@ export default class StoreList2 extends Component{
 					errMsg : "Please enter both values of percent field"
 				});
 			}
-			// else{
-
-			// }
+			else{
+				this.fetchFilterStore();
+			}
 		}
-		// else{
-		// }
+		else{
+			this.fetchFilterStore();
+		}
 	};
 
 	resetFilter = () =>{
@@ -126,31 +152,43 @@ export default class StoreList2 extends Component{
 		if(this.state.loading){
 			return <Loading/>;
 		}
-		let citiesRows = [];
 		let storeRows = [];
 		let index = 0;
 		let errSpan;
-		for(let store of this.state.stores) {
-			storeRows.push(
-				<tr title="Click to open Store Details" key={store.id} onClick={() => hashHistory.push(`/store/${store.id}/trends`)} style={pointerStyle}>
-					<td className="text-right">{++index}</td>
-					<td>{store.code}</td>
-					<td>{store.name}</td>
-					{/* <td>{store.type}</td>
-					<td>{store.priority}</td> */}
-					<td>{store.address}</td>
-					<td>{store.city.name}</td>
-					<td>{store.get_store_rank === null ? "N/A" : store.get_store_rank}</td>
-					<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
-				</tr>
-			);
-			if(citiesRows.filter(item => item.id == store.city.id).length === 0){
-				citiesRows.push(
-					{"id": store.city.id, "name": store.city.name}
+		if(this.state.stores.length > 0){
+			for(let store of this.state.stores) {
+				storeRows.push(
+					<tr title="Click to open Store Details" key={store.id} onClick={() => hashHistory.push(`/store/${store.id}/trends`)} style={pointerStyle}>
+						<td className="text-right">{++index}</td>
+						<td>{store.code}</td>
+						<td>{store.name}</td>
+						{/* <td>{store.type}</td>
+						<td>{store.priority}</td> */}
+						<td>{store.address}</td>
+						<td>{store.city.name}</td>
+						<td>{store.get_store_rank === null ? "N/A" : store.get_store_rank}</td>
+						<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
+					</tr>
 				);
 			}
 		}
-		citiesRows.sort((a, b) => (a.name > b.name) ? 1 : -1);
+		else{
+			for(let store of this.state.filterstores) {
+				storeRows.push(
+					<tr title="Click to open Store Details" key={store.id} onClick={() => hashHistory.push(`/store/${store.id}/trends`)} style={pointerStyle}>
+						<td className="text-right">{++index}</td>
+						<td>{store.code}</td>
+						<td>{store.name}</td>
+						{/* <td>{store.type}</td>
+						<td>{store.priority}</td> */}
+						<td>{store.address}</td>
+						<td>{store.city.name}</td>
+						<td>{store.get_store_rank === null ? "N/A" : store.get_store_rank}</td>
+						<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
+					</tr>
+				);
+			}
+		}
 		let storeTable;
 		let div_style = {
 			paddingBottom:"1%"
@@ -159,7 +197,7 @@ export default class StoreList2 extends Component{
 			display: "inline-block",
 			width: "150px",
 		};
-		let audit_cycle_button = (null);
+		let audit_cycle_button;
 		if (this.state.audit_cycles["audit_cycle_status"]){
 			var li_list = [];
 			for(var i in this.state.audit_cycles["audit_cycle_year_list"]){
@@ -189,7 +227,8 @@ export default class StoreList2 extends Component{
 		if(this.state.errMsg){
 			errSpan = (<span style={{color:"red"}}><b>{this.state.errMsg}</b></span>);
 		}
-		if( storeRows.length > 0) {
+		const { citiesRows } = this.state;
+		if (storeRows.length > 0){
 			storeTable = (
 				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
 					<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
@@ -233,10 +272,35 @@ export default class StoreList2 extends Component{
 					</table>
 				</div>
 			);
-		} else {
-			storeTable = (<Jumbotron heading="there are no stores here" para=""/>);
+		}
+		else {
+			storeTable = (
+				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
+					<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
+					&nbsp;
+					<CitySelectorForStoreFilter name="selectedCity" citiesRows={citiesRows} onChange={this.changeValue} selectedCity={this.state.selectedCity}/>
+					&nbsp;
+					<div style={{display: "inline-block",width: "80px",}}>
+						&nbsp;<b>Percentage</b>:
+						<input type="text" name="percentFrom" id="percentFrom" className="form-control" value={this.state.percentFrom} onChange={this.changeValue} maxLength="2"/>
+					</div>
+					&nbsp; to &nbsp;
+					<div style={{display: "inline-block",width: "80px",}}>
+						&nbsp;
+						<input type="text" name="percentTo" id="percentTo" className="form-control" value={this.state.percentTo} onChange={this.changeValue} maxLength="3"/>
+					</div>
+					<div style={selectStyle}>
+						&nbsp;&nbsp;
+						<button className="btn btn-primary" onClick={this.filterStore}>Go</button>
+						&nbsp;&nbsp;
+						<button className="btn btn-primary" onClick={this.resetFilter}>Clear</button>
+					</div>
+					{errSpan}
+					{audit_cycle_button}
+					<Jumbotron heading="No stores found" para="Please try to change or clear filter"/>
+				</div>
+			);
 		}
 		return storeTable;
 	}
 }
-

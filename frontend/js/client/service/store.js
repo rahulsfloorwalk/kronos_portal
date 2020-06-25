@@ -28,3 +28,17 @@ export function fetchStorePerformance(storeId, questionnaireTypeId){
 export function fetchAuditCyclesYearList(){
 	return $.get( url.api_base_path + "client/audit_cycle_year_list");
 }
+
+export function fetchFilterStores(storeCode, selectedCity, percentFrom, percentTo){
+	return $.ajax({
+		type: "POST",
+		url : url.api_base_path + "client/filter_stores",
+		data: JSON.stringify({
+			store_code : storeCode,
+			selected_city: selectedCity,
+			percent_from: percentFrom,
+			percent_to: percentTo
+		}),
+		contentType: "application/json"
+	});
+}

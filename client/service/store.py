@@ -1,5 +1,6 @@
 from django.db import IntegrityError
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -52,3 +53,24 @@ def find_cities_for_clientuser(user_id):
         raise ObjectNotFound from e
 
 
+def find_filter_stores_by_clientuser(user_id, store_code, selected_city, percent_from, percent_to):
+    user = client_user_service.find_clientuser_by_user_id(user_id)
+    if store_code is "" and selected_city is "":
+        stores = Store.objects.filter(client_id=user.clientuser.client.id)
+    else:
+        if store_code is "":
+            store_code = None
+        if selected_city is "":
+            selected_city = None
+        stores = Store.objects.filter(client_id=user.clientuser.client.id) \
+            .filter(Q(code__contains=store_code) | Q(city_id=selected_city))
+
+    if percent_from is not "":
+        store_list = []
+        for store in stores:
+            store_total_percentage = store.get_total_percentage()['score']
+            if store_total_percentage:
+                if (store_total_percentage >= int(percent_from)) and (store_total_percentage <= int(percent_to)):
+                    store_list.append(store)
+        stores = store_list
+    return stores
