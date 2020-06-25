@@ -637,3 +637,16 @@ class AuditCycleScore(APIView):
     def get(self, request, questionnaire_type_id):
         audit_cycle_list = audit_cycle_client_service.get_audit_cycle_score(questionnaire_type_id, request.user.id)
         return Response(AuditCycleScoreSerializer(audit_cycle_list, many=True).data)
+
+
+class StoreFilter(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request):
+        stores = store_service.find_filter_stores_by_clientuser(request.user.id, request.data['store_code'].strip(),
+                                                                request.data['selected_city'],
+                                                                request.data['percent_from'],
+                                                                request.data['percent_to'])
+        return Response(StoreSerializer(stores, many=True).data)

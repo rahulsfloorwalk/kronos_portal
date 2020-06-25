@@ -81,12 +81,12 @@ export const AuditType = [
 
 
 export const IndicatorScoreColorsList = [
-	"#CD5C5C",
-	"#CD5C5C",
-	"#FF7F50",
-	"#FF7F50",
-	"#808080",
-	"#4ca9d7",
-	"#3da940",
-	"#3da940",
+	"#CD5C5C", //Red
+	"#CD5C5C", //Red
+	"#FF7F50", // Orange
+	"#FF7F50", // Orange
+	"#dbb001", //Yellow
+	"#4ca9d7", // Blue
+	"#3da940", // Green
+	"#3da940", // Green
 ];

@@ -23,6 +23,25 @@ def get_color_code_by_percentage(percentage):
     else:
         return 0
 
+
+def get_rank_by_percentage(percentage):
+    if percentage is None:
+        return None
+
+    if percentage > 89:
+        return 1
+    elif percentage > 84:
+        return 2
+    elif percentage > 74:
+        return 3
+    elif percentage > 65:
+        return 4
+    elif percentage >= 0:
+        return 5
+    else:
+        return None
+
+
 def get_color_code(marks_obtained, max_marks):
     if marks_obtained is None:
         marks_obtained = 0
