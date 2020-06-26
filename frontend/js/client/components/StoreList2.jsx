@@ -58,7 +58,7 @@ export default class StoreList2 extends Component{
 		let cityRows = [];
 		this.setLoading(true);
 		fetchAllStores().then((stores)=>{
-			stores.sort((a, b) => (a.get_store_rank===null)-(b.get_store_rank===null) || +(a.get_store_rank>b.get_store_rank)||-(a.get_store_rank<b.get_store_rank));
+			stores.sort((a, b) => (a.get_total_percentage["score"]===null)-(b.get_total_percentage["score"]===null) || +(a.get_total_percentage["score"] < b.get_total_percentage["score"])||-(a.get_total_percentage["score"] > b.get_total_percentage["score"]));
 			for (let i = 0; i < stores.length; i++) {
 				if(cityRows.filter(item => item.id == stores[i].city.id).length === 0){
 					cityRows.push(
@@ -79,7 +79,7 @@ export default class StoreList2 extends Component{
 		const {selectedCity, storeCode, percentFrom, percentTo} = this.state;
 		this.setLoading(true);
 		fetchFilterStores(storeCode, selectedCity, percentFrom, percentTo).then((filterstores)=>{
-			filterstores.sort((a, b) => (a.get_store_rank===null)-(b.get_store_rank===null) || +(a.get_store_rank>b.get_store_rank)||-(a.get_store_rank<b.get_store_rank));
+			filterstores.sort((a, b) => (a.get_total_percentage["score"]===null)-(b.get_total_percentage["score"]===null) || +(a.get_total_percentage["score"] < b.get_total_percentage["score"])||-(a.get_total_percentage["score"] > b.get_total_percentage["score"]));
 			this.setState({
 				filterstores:filterstores,
 				stores: []
