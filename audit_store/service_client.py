@@ -1,7 +1,7 @@
 
 from kronos.utils import today_ist, get_color_code_by_percentage
 from kronos.exceptions import ObjectNotFound
-from .models import AuditStore
+from .models import AuditStore, ReportStatusLog
 from answer.service import answer as answer_service
 from questionnaire.service import question as question_service
 
@@ -77,3 +77,8 @@ def find_visible_to_client_user(user):
     """
     # return AuditStore.objects.presentable().visible_to(user)
     return AuditStore.objects.presentable()
+
+
+def find_today_client_review_status_reports(client_id):
+    return ReportStatusLog.objects.filter(audit_store__audit__audit_cycle__client_id=client_id,
+                                          status=AuditStore.COMPLETED, created_at__date=today_ist())
