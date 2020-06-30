@@ -1,6 +1,6 @@
 {
   "name": "phoebe",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -82,7 +82,7 @@
     "sass-loader": "^6.0.6",
     "style-loader": "^0.13.1",
     "webpack": "^4.29.5",
-    "webpack-cli": "^3.2.3",
+    "webpack-cli": "^3.2.4",
     "webpack-dev-server": "^3.2.0"
   }
 }
