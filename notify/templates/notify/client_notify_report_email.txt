@@ -1,0 +1,9 @@
+Hello,
+{{ subject_text }}.
+
+
+Please Check the Audit Report by clicking the link
+
+
+Thanks and regards
+FloorWalk Team

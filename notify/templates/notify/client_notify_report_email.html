@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    </head>
+    <body>
+        <p>Hello,</p>
+        <p>{{ subject_text }}.</p>
+        <br>
+        <p>
+            {% for i in report_list %}
+                <p><b>Audit Cycle Name:</b> {{i.audit_cycle_name}}</p>
+                <p><b>Store Details:</b> {{i.store_details}}</p>
+                <p><a href="{{ kronos_base_url }}{% url 'registration:client_login' %}?next=/static/client/index.html#/audit_store/{{i.audit_store_id}}" target="_blank">{{ kronos_base_url }}{% url 'registration:client_login' %}?next=/static/client/index.html#/audit_store/{{i.audit_store_id}}</a></p>
+                <br>
+            {% endfor %}
+        </p>
+        <p>Please check the Audit Report by clicking the link</p>
+        <br>
+		<p>Thanks and regards,</p>
+		<p>FloorWalk Team</p>
+    </body>
+</html>

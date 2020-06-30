@@ -22,6 +22,7 @@ class ClientSerializer(ModelSerializer):
             'phone',
             'logo_url',
             'brand_logo_url',
+            'receive_email_notification',
         )
         read_only_fields = ('id',)
 
@@ -36,6 +37,7 @@ class ClientSerializer(ModelSerializer):
         client.phone = self.validated_data.get('phone', client.phone)
         client.logo_url = self.validated_data.get('logo_url', client.logo_url)
         client.brand_logo_url = self.validated_data.get('brand_logo_url', client.brand_logo_url)
+        client.receive_email_notification = self.validated_data.get('receive_email_notification', client.receive_email_notification)
         return client
 
 class CitySerializer(ModelSerializer):
