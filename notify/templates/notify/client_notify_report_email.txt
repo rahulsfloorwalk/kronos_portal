@@ -1,7 +1,9 @@
 Hello,
-{{ report_count }} reports is in Client Review.
+{{ subject_text }}.
+
 
 Please Check the Audit Report by clicking the link
+
 
 Thanks and regards
 FloorWalk Team

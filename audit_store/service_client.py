@@ -80,5 +80,14 @@ def find_visible_to_client_user(user):
 
 
 def find_today_client_review_status_reports(client_id):
-    return ReportStatusLog.objects.filter(audit_store__audit__audit_cycle__client_id=client_id,
-                                          status=AuditStore.COMPLETED, created_at__date=today_ist())
+    return ReportStatusLog.objects \
+        .filter(audit_store__audit__audit_cycle__client_id=client_id,
+                status=AuditStore.COMPLETED, created_at__date=today_ist()) \
+        .distinct('audit_store_id')
+
+
+def find_audit_store_exclude_today(audit_store_id):
+    return ReportStatusLog.objects \
+        .filter(audit_store_id=audit_store_id) \
+        .exclude(created_at__date=today_ist()) \
+        .exists()

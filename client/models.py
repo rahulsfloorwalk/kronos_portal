@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField
+from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField, BooleanField
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT
 from django.conf import settings
@@ -14,6 +14,7 @@ class Client(Model):
     phone = CharField(db_column='phone', max_length=15, blank=True)
     logo_url = CharField(db_column='logo_url', max_length=512, blank=True)
     brand_logo_url = CharField(db_column='brand_logo_url', max_length=512, blank=True)
+    receive_email_notification = BooleanField(db_column='receive_email_notification', default=True)
 
     def auditor_logo_url(self):
         return self.brand_logo_url or self.logo_url

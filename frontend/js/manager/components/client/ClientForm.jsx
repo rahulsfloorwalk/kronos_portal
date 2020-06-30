@@ -36,6 +36,7 @@ export default class extends React.Component {
 						phone: client.phone,
 						logo_url: client.logo_url,
 						brand_logo_url: client.brand_logo_url,
+						receive_email_notification: client.receive_email_notification
 					},
 				});
 			});
@@ -60,6 +61,7 @@ export default class extends React.Component {
 				phone: this.state.form.phone,
 				logo_url: this.state.form.logo_url,
 				brand_logo_url: this.state.form.brand_logo_url,
+				receive_email_notification: this.state.form.receive_email_notification,
 			});
 		} else {
 			submitPromise = addClient({
@@ -69,6 +71,7 @@ export default class extends React.Component {
 				phone: this.state.form.phone,
 				logo_url: this.state.form.logo_url,
 				brand_logo_url: this.state.form.brand_logo_url,
+				receive_email_notification: this.state.form.receive_email_notification,
 			});
 		}
 		submitPromise.done(function(savedClient){
@@ -92,6 +95,7 @@ export default class extends React.Component {
 					<FormInput label="Phone Number" maxLength="15" type="text" value={this.state.form.phone} name="phone" onChange={this.inputChanged} errors={this.state.errors.phone}/>
 					<FormInput label="Logo URL" maxLength="512" type="text" value={this.state.form.logo_url} name="logo_url" onChange={this.inputChanged} errors={this.state.errors.logo_url}/>
 					<FormInput label="Brand Logo URL" maxLength="512" type="text" value={this.state.form.brand_logo_url} name="brand_logo_url" onChange={this.inputChanged} errors={this.state.errors.brand_logo_url}/>
+					<FormInput label="Receive Email Notification" type="checkbox" checked={this.state.form.receive_email_notification} name="receive_email_notification" onChange={this.inputChanged} errors={this.state.errors.receive_email_notification}/>
 					<SaveButton/>
 				</form>
 			</Modal>
