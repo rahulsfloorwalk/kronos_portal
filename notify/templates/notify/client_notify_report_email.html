@@ -6,17 +6,28 @@
         <p>Hello,</p>
         <p>{{ subject_text }}.</p>
         <br>
-        <p>
-            {% for i in report_list %}
-                <p><b>Audit Cycle Name:</b> {{i.audit_cycle_name}}</p>
-                <p><b>Store Details:</b> {{i.store_details}}</p>
-                <p><a href="{{ kronos_base_url }}{% url 'registration:client_login' %}?next=/static/client/index.html#/audit_store/{{i.audit_store_id}}" target="_blank">{{ kronos_base_url }}{% url 'registration:client_login' %}?next=/static/client/index.html#/audit_store/{{i.audit_store_id}}</a></p>
-                <br>
-            {% endfor %}
-        </p>
-        <p>Please check the Audit Report by clicking the link</p>
+            <table border="1" cellpadding="8" cellspacing="0" width="700">
+                <tr>
+                    <th style="font-size: 14px;">Audit Cycle Name</th>
+                    <th style="font-size: 14px;">Store Details</th>
+                    <th style="font-size: 14px;">Audit Store</th>
+                </tr>
+                {% for i in report_list %}
+                    <tr>
+                        <td style="font-size: 13px;">{{i.audit_cycle_name}}</td>
+                        <td style="font-size: 13px;">{{i.store_details}}</td>
+                        <td style="text-align:center">
+                            <a href="{{ kronos_base_url }}{% url 'registration:client_login' %}?next=/static/client/index.html#/audit_store/{{i.audit_store_id}}" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:12px;font-weight:bold;margin:0;padding:10px 20px;text-decoration:none;background-color:#3498db;border-color:#3498db;color:#ffffff;">
+                                Click Here
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
         <br>
-		<p>Thanks and regards,</p>
+        <p>Please check the Audit Report by clicking the button.</p>
+        <br>
+		<p>Thanks and Regards,</p>
 		<p>FloorWalk Team</p>
     </body>
 </html>

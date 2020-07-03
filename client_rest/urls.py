@@ -61,6 +61,8 @@ urlpatterns = ([
     url(r'questionnaire_types_for_dashboard$', views.QuestionnaireTypesForDashboardByClient.as_view(), name='questionnaire_types_for_dashboard_by_client_view'),
     url(r'store_performance$', views.StorePerformanceView.as_view(), name='store_performance_view'),
     url(r'store_performance_store_list_by_percentage$', views.StorePerformanceStoreListByPercentageView.as_view(), name='store_performance_store_list_by_percentage'),
+    url(r'email_notification$', views.EmailNotification.as_view(), name='email_notification'),
+
     url(r'types$', views.AuditTypesByClient.as_view(), name='audit_types_by_client'),
     url(r'city$', views.CityView.as_view(), name='city_view'),
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
