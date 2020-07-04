@@ -6,7 +6,7 @@ import { pointerStyle } from "../../styles.js";
 
 import NavLink from "../../components/NavLink.jsx";
 // import { Dashboard, File, LogOut, Time, Retweet, Home } from "../../components/Icons.jsx";
-import { Dashboard, File, LogOut, Time, Home } from "../../components/Icons.jsx";
+import { Dashboard, File, LogOut, Time, Home, Bell } from "../../components/Icons.jsx";
 
 import floorwalkLogoUrl from "../../../img/logo_500x300.png";
 
@@ -83,6 +83,17 @@ export default class Header extends React.Component {
 							: null } */}
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
+						{ this.state.clientUser.is_client_admin ?
+							<li>
+								<Link to="/email_notification">
+									<Bell/> Receive Email Notification
+									&nbsp;
+									&nbsp;
+								</Link>
+							</li>
+							:
+							null
+						}
 						<li>
 							<a style={pointerStyle} onClick={() => this._logoutForm && this._logoutForm.submit()}>
 								<LogOut/> Logout

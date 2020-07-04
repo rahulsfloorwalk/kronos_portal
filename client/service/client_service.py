@@ -16,3 +16,10 @@ def find_all_clients():
 def save(client):
     client.save()
     return client
+
+
+def update_receive_email_notification(client_id, receive_email_notification):
+    client = find_client_by_id(client_id)
+    client.receive_email_notification = receive_email_notification
+    client.save()
+    return client

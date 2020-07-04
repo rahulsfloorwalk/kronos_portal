@@ -7,3 +7,17 @@ export function fetchUser(){
 	return promise;
 }
 
+export function getEmailNotification(){
+	return $.get(url.api_base_path + "client/email_notification");
+}
+
+export function saveEmailNotification(receive_email_notification){
+	return $.ajax({
+		type: "POST",
+		url : url.api_base_path + "client/email_notification",
+		data: JSON.stringify({
+			receive_email_notification:receive_email_notification
+		}),
+		contentType: "application/json"
+	});
+}

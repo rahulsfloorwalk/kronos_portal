@@ -31,7 +31,8 @@ class ClientSerializer(ModelSerializer):
             'name',
             'email',
             'phone',
-            'logo_url'
+            'logo_url',
+            'receive_email_notification'
         )
         read_only_fields = fields
 

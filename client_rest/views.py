@@ -25,6 +25,8 @@ from audit.service import audit_cycle_client_service
 from audit.service import report_attribute_client_service
 from audit.service import audit_cycle_proof_tag
 
+from client.service import client_service
+
 from client_report.service import ears_xlsx as ears_xlsx_report_service
 from client_report.service import xlsx_report as xlsx_report_service
 from client_report.service import all_stores_xlsx as all_stores_xlsx_report_service
@@ -43,7 +45,7 @@ from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
 from .serializers import AuditCycleProoftagListSerializer
 from .serializers import AuditCycleScoreSerializer
-
+from .serializers import ClientSerializer
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -650,3 +652,19 @@ class StoreFilter(APIView):
                                                                 request.data['percent_from'],
                                                                 request.data['percent_to'])
         return Response(StoreSerializer(stores, many=True).data)
+
+
+class EmailNotification(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request):
+        client = client_service.find_client_by_id(request.user.clientuser.client.id)
+        return Response(ClientSerializer(client).data)
+
+    def post(self, request):
+        client_user = client_service.update_receive_email_notification(request.user.clientuser.client.id,
+                                                                       request.data['receive_email_notification'])
+        return Response(ClientSerializer(client_user).data)

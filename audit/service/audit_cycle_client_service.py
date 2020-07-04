@@ -168,7 +168,9 @@ def get_audit_cycle_score(questionnaire_type_id, user_id):
     return audit_cycle_list
 
 
-def find_all_client_with_active_archived_and_report_audit_cycle_status():
-    return AuditCycle.objects.filter(status__in=[AuditCycle.ACTIVE, AuditCycle.ARCHIVED, AuditCycle.REPORT]) \
+def find_all_client_with_active_report_and_clearing_audit_cycle_status():
+    return AuditCycle.objects \
+        .filter(status__in=[AuditCycle.ACTIVE, AuditCycle.REPORT, AuditCycle.CLEARING],
+                client__receive_email_notification=True) \
         .distinct('client_id') \
         .values_list('client_id', flat=True)

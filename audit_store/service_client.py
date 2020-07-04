@@ -88,6 +88,6 @@ def find_today_client_review_status_reports(client_id):
 
 def find_audit_store_exclude_today(audit_store_id):
     return ReportStatusLog.objects \
-        .filter(audit_store_id=audit_store_id) \
+        .filter(audit_store_id=audit_store_id, status=AuditStore.COMPLETED) \
         .exclude(created_at__date=today_ist()) \
         .exists()
