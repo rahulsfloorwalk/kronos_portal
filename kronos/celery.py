@@ -18,6 +18,7 @@ def setup_periodic_tasks(sender, **kwargs):
 
     from notify.service.mail_reminders import send_pre_audit_reminders, send_on_audit_reminders
     from notify.service.mail_notify_client import send_mail_to_client
+    from notify.service.reporting_stats_mail_notify import reporting_stats_send_mail
     # from notify.service.mail_reminders import send_pre_audit_reminders, send_on_audit_reminders, send_post_audit_reminders
     from notify.service.alert_faulty_report import find_faulty_report
 
@@ -28,6 +29,8 @@ def setup_periodic_tasks(sender, **kwargs):
     # sender.add_periodic_task(queue_at, send_post_audit_reminders.s()) --comment-- stopped to send post audit email
     # setup schedules for sending completed reports to client
     sender.add_periodic_task(queue_at, send_mail_to_client.s())
+    # setup schedules for sending reporting stats
+    sender.add_periodic_task(queue_at, reporting_stats_send_mail.s())
 
     # Executes every day at 0330 UTC == 0900 IST
     queue_at_9 = crontab(hour=3, minute=30)

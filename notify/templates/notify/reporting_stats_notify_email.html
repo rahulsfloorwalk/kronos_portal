@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    </head>
+    <body>
+        <p>Hello,</p>
+        <p>Here is the today's Reporting Stats</p>
+        <br>
+            <table border="1" cellpadding="8" cellspacing="0" width="700">
+                <tr>
+                    <th style="font-size: 14px;">Client Name</th>
+                    <th style="font-size: 14px;">Audit Cycle Name</th>
+                    <th style="font-size: 14px;">Completed Audit</th>
+                    <th style="font-size: 14px;">Total Audit</th>
+                    <th style="font-size: 14px;">Percentage</th>
+                </tr>
+                {% for i in stats_list %}
+                    <tr>
+                        <td style="font-size: 13px;">{{i.client_name}}</td>
+                        <td style="font-size: 13px;">{{i.audit_cycle_name}}</td>
+                        <td style="font-size: 13px;">{{i.total_count}}</td>
+                        <td style="font-size: 13px;">{{i.completed_count}}</td>
+                        <td style="font-size: 13px;">{{i.completed_percentage}}%</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        <br>
+		<p>Thanks and Regards,</p>
+		<p>FloorWalk Team</p>
+    </body>
+</html>
