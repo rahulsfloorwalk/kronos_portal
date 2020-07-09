@@ -22,7 +22,7 @@ def reporting_stats_send_mail():
                     'audit_cycle_name': audit_cycle.name,
                     'total_count': audit_cycle.audit_count(),
                     'completed_count': audit_cycle.completed_audit_count(),
-                    'completed_percentage': audit_cycle.completed_percentage()
+                    'completed_percentage': round(audit_cycle.completed_percentage(), 2)
                 }
             )
         if len(stats_list) > 0:
