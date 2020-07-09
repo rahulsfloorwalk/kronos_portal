@@ -240,6 +240,12 @@ def save_attachment_proof_tag(attachment_id, proof_tag_id):
     else:
         proof_tag_obj = audit_cycle_proof_tag.find_by_id(proof_tag_id)
         attachment.proof_tag = proof_tag_obj
+        attachment_file_name = attachment.file_name
+        if "." in attachment_file_name:
+            extension = attachment_file_name.split(".")[-1]
+            attachment.file_name = proof_tag_obj.proof_tag.name + "." + extension
+        else:
+            attachment.file_name = proof_tag_obj.proof_tag.name
     attachment.save()
     return attachment
 

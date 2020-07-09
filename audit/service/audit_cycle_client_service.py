@@ -169,7 +169,7 @@ def get_audit_cycle_score(questionnaire_type_id, user_id):
 
 
 def find_all_active_audit_cycle():
-    return AuditCycle.objects.filter(status=AuditCycle.ACTIVE)
+    return AuditCycle.objects.filter(status=AuditCycle.ACTIVE).order_by('client__name')
 
 
 def find_all_client_with_active_report_and_clearing_audit_cycle_status():

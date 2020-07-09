@@ -22,7 +22,7 @@ def reporting_stats_send_mail():
                     'audit_cycle_name': audit_cycle.name,
                     'total_count': audit_cycle.audit_count(),
                     'completed_count': audit_cycle.completed_audit_count(),
-                    'completed_percentage': audit_cycle.completed_percentage()
+                    'completed_percentage': round(audit_cycle.completed_percentage(), 2)
                 }
             )
         if len(stats_list) > 0:
@@ -41,7 +41,7 @@ def reporting_stats_send_mail():
 
 @app.task(ignore_result=True)
 def send_reporting_stats_mail(to_email, stats_list):
-    subject = "[FloorWalk] Today's Reporting Stats"
+    subject = "Today's Reporting Stats"
     params = {'stats_list': stats_list}
     html_message = get_template("notify/reporting_stats_notify_email.html").render(params)
     txt_message = get_template("notify/reporting_stats_notify_email.txt").render(params)
