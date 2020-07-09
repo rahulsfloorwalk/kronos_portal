@@ -41,7 +41,7 @@ def reporting_stats_send_mail():
 
 @app.task(ignore_result=True)
 def send_reporting_stats_mail(to_email, stats_list):
-    subject = "[FloorWalk] Today's Reporting Stats"
+    subject = "Today's Reporting Stats"
     params = {'stats_list': stats_list}
     html_message = get_template("notify/reporting_stats_notify_email.html").render(params)
     txt_message = get_template("notify/reporting_stats_notify_email.txt").render(params)
