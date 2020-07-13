@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function fiatAssignAudit(audit_id, email, audit_date, earnings_per_audit, reimbursement){
+export function fiatAssignAudit(audit_id, email, audit_date, earnings_per_audit, reimbursement, audit_count){
 	var promise = $.ajax({
 		url: url.api_base_path + `manager/audit/${audit_id}/assign`,
 		method: "POST",
@@ -10,6 +10,7 @@ export function fiatAssignAudit(audit_id, email, audit_date, earnings_per_audit,
 			audit_date,
 			earnings_per_audit,
 			reimbursement,
+			audit_count
 		}),
 		contentType: "application/json"
 	});

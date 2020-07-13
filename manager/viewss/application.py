@@ -38,6 +38,7 @@ class AuditApplicationApproveView(APIView):
         audit_date = DateField()
         reimbursement = IntegerField()
         earnings_per_audit = IntegerField()
+        audit_count = IntegerField()
 
     def post(self, request, application_id, format=None):
         ds = self.DeSerializer(data=request.data)
@@ -47,6 +48,7 @@ class AuditApplicationApproveView(APIView):
             ds.validated_data['audit_date'],
             ds.validated_data["reimbursement"],
             ds.validated_data["earnings_per_audit"],
+            ds.validated_data["audit_count"],
             request.user,
         )
         return Response(AuditApplicationSerializer(application).data)

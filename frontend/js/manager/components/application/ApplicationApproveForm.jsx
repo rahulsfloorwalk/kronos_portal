@@ -43,13 +43,15 @@ class ApplicationApproveForm extends React.Component {
 	state = {
 		application: null,
 		errors: {},
+		loading: false,
 	};
 
 	componentDidMount() {
 		findById(this.props.params.applicationId).then(application => {
 			this.setState({
 				application,
-				"audit_date": application.audit_date
+				"audit_date": application.audit_date,
+				"audit_count": 1
 			});
 		});
 		if(this.props.audit) {
@@ -69,6 +71,8 @@ class ApplicationApproveForm extends React.Component {
 		}
 	}
 
+	setLoading = (loading) => this.setState((prevState) => Object.assign({}, prevState, { loading }));
+
 	dateChanged = (date) => {
 		if( typeof date !== "string"){
 			this.setState({
@@ -78,12 +82,14 @@ class ApplicationApproveForm extends React.Component {
 	};
 
 	onSubmit = (e) => {
+		this.setLoading(true);
 		e.preventDefault();
 		const obj = {
 			application_id: this.state.application.id,
 			audit_date: this.state.audit_date,
 			earnings_per_audit: this.state.earnings_per_audit,
 			reimbursement: this.state.reimbursement,
+			audit_count: this.state.audit_count
 		};
 		const promise = this.props.dispatch(submitApplicationApproveForm(obj));
 		promise.then(() => {
@@ -92,6 +98,7 @@ class ApplicationApproveForm extends React.Component {
 				state: { t: Date.now() },
 			});
 			Alert.success("APPLICATION APPROVED");
+			this.setLoading(false);
 		}, (err) => {
 			this.setState({ errors: err && err.responseJSON });
 		});
@@ -101,12 +108,39 @@ class ApplicationApproveForm extends React.Component {
 		if( ! this.state.application){
 			return <Loading/>;
 		}
+		var audit_details = this.props.audit;
+		var audit_count = audit_details.count - audit_details.report_count;
+		let audit_select_option = [];
+		if (audit_count === 0){
+			audit_select_option.push(<option key="1" value="1">1</option>);
+		}
+		else{
+			for(var i=1;i<=audit_count;i++){
+				audit_select_option.push(<option key={i} value={i}>{i}</option>);
+			}
+		}
+		let audit_select = (
+			<select className="form-control"
+				name="audit_count"
+				value={this.state.audit_count}
+				onChange={(e) => this.setState({"audit_count": e.target.value})}>
+				{audit_select_option}
+			</select>
+		);
+		let saveButton = (<SaveButton text="Approve"/>);
+		if (this.state.loading){
+			saveButton = <Loading/>;
+		}
 		return (
 			<Modal modalTitle="Approve Application" onClose={this.props.router.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					<p><label>Auditor Name:</label> { this.state.application.profileinfo.first_name } {this.state.application.profileinfo.last_name}</p>
 					<FormDateInput label="Approved Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
+					<p>
+						<label>Asigned Audit Count</label>
+						{audit_select}
+					</p>
 					<FormInput
 						label="Audit Fees"
 						type="number"
@@ -120,7 +154,7 @@ class ApplicationApproveForm extends React.Component {
 						name="reimbursement"
 						onChange={(e) => this.setState({"reimbursement": e.target.value})}
 						errors={this.state.errors.reimbursement}/>
-					<SaveButton text="Approve"/>
+					{saveButton}
 				</form>
 			</Modal>
 		);

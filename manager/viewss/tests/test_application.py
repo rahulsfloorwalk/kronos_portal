@@ -28,6 +28,7 @@ class AuditApplicationApproveViewTestCase(ManagerAPITestCase):
             "audit_date": sample_date.strftime("%Y-%m-%d"),
             "earnings_per_audit": 3000,
             "reimbursement": 4000,
+            "audit_count": 2,
         }
 
         response = self.client.post(reverse('manager:audit_application_approve_view', kwargs={

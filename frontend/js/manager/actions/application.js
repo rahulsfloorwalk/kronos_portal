@@ -37,6 +37,7 @@ export function submitApplicationApproveForm(obj){
 				"audit_date": obj.audit_date,
 				"reimbursement": obj.reimbursement,
 				"earnings_per_audit": obj.earnings_per_audit,
+				"audit_count": obj.audit_count,
 			}),
 			contentType: "application/json"
 		});
