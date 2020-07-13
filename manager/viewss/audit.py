@@ -50,6 +50,7 @@ class AuditFiatAssignDeSerializer(Serializer):
     audit_date = DateField()
     earnings_per_audit = IntegerField()
     reimbursement = IntegerField()
+    audit_count = IntegerField()
 
 class AuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -111,9 +112,10 @@ class AuditFiatAssignView(APIView):
             audit_f_assign_ds.validated_data["audit_date"],
             audit_f_assign_ds.validated_data["reimbursement"],
             audit_f_assign_ds.validated_data["earnings_per_audit"],
+            audit_f_assign_ds.validated_data["audit_count"],
             request.user
         )
-        return Response(AuditStoreSerializer(audit_store).data)
+        return Response(AuditStoreSerializer(audit_store, many=True).data)
 
 
 class AuditHiddenView(APIView):

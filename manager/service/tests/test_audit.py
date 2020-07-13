@@ -35,39 +35,41 @@ class FiatAssignTestCase(TestCase):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
         sample_date = date(2018, 9, 5)
-        report = fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, self.manager_user)
+        reports = fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
 
-        expect(report.reimbursement).to(equal(3000))
-        expect(report.earnings_per_audit).to(equal(4000))
-        expect(report.user).to(equal(self.auditor_user))
+        for report in reports:
+            expect(report.reimbursement).to(equal(3000))
+            expect(report.earnings_per_audit).to(equal(4000))
+            expect(report.user).to(equal(self.auditor_user))
 
     def test_it_assigns_a_report_to_agency(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
         sample_date = date(2018, 9, 5)
-        report = fiat_assign(audit.id, self.agency_user.email, sample_date, 3000, 4000, self.manager_user)
+        reports = fiat_assign(audit.id, self.agency_user.email, sample_date, 3000, 4000, 2, self.manager_user)
 
-        expect(report.reimbursement).to(equal(3000))
-        expect(report.earnings_per_audit).to(equal(4000))
-        expect(report.user).to(equal(self.agency_user))
+        for report in reports:
+            expect(report.reimbursement).to(equal(3000))
+            expect(report.earnings_per_audit).to(equal(4000))
+            expect(report.user).to(equal(self.agency_user))
 
     def test_it_raises_when_audit_range_is_out_of_range(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
         sample_date = date(2018, 10, 5)
         with self.assertRaisesRegex(AppLogicError, "audit date is out of range"):
-            fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, self.manager_user)
+            fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
 
     def test_that_it_raises_when_audit_cycle_is_archived(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ARCHIVED)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
         sample_date = date(2018, 9, 5)
         with self.assertRaisesRegex(AppLogicError, "audit_cycle is archived"):
-            fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, self.manager_user)
+            fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
 
     def test_that_it_raises_when_user_with_email_does_not_exist(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
         sample_date = date(2018, 9, 5)
         with self.assertRaisesRegex(AppLogicError, "email is not valid"):
-            fiat_assign(audit.id, "foo@bar.com", sample_date, 3000, 4000, self.manager_user)
+            fiat_assign(audit.id, "foo@bar.com", sample_date, 3000, 4000, 2, self.manager_user)

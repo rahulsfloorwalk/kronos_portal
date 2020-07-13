@@ -123,7 +123,7 @@ def cancel(audit_id, user_id):
     return application
 
 
-def approve(application_id, audit_date, reimbursement, earnings_per_audit, user_actor):
+def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit_count, user_actor):
     with atomic():
         try:
             application = AuditApplication.objects.get(id=application_id)
@@ -156,20 +156,20 @@ def approve(application_id, audit_date, reimbursement, earnings_per_audit, user_
             action_object=application,
             target=application.audit
         )
+        for _ in range(audit_count):
+            if audit_cycle.check_points:
+                check_points = audit_cycle.check_points
+                checkpoints_list = check_points.split(";")
+                check_points_id = 1
+                checkpoints_dict = {}
+                for i in checkpoints_list:
+                    if i.strip():
+                        checkpoints_dict[str(check_points_id)] = {"checkpoint": i.strip(), "value": False}
+                        check_points_id += 1
+            else:
+                checkpoints_dict = {}
 
-        if audit_cycle.check_points:
-            check_points = audit_cycle.check_points
-            checkpoints_list = check_points.split(";")
-            check_points_id = 1
-            checkpoints_dict = {}
-            for i in checkpoints_list:
-                if i.strip():
-                    checkpoints_dict[str(check_points_id)] = {"checkpoint": i.strip(), "value": False}
-                    check_points_id += 1
-        else:
-            checkpoints_dict = {}
-
-        AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor)
+            AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor)
     return application
 
 def reject(application_id, user_actor):

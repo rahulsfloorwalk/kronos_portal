@@ -41,6 +41,7 @@ class AuditFiatAssignForm extends React.Component {
 
 	state = {
 		errors: {},
+		loading: false,
 	};
 
 	componentDidMount() {
@@ -68,6 +69,8 @@ class AuditFiatAssignForm extends React.Component {
 		}
 	}
 
+	setLoading = (loading) => this.setState((prevState) => Object.assign({}, prevState, { loading }));
+
 	dateChanged = (date) => {
 		if( typeof date !== "string"){
 			this.setState({
@@ -81,15 +84,43 @@ class AuditFiatAssignForm extends React.Component {
 	};
 
 	onSubmit = (e) => {
+		this.setLoading(true);
 		e.preventDefault();
-		var promise = fiatAssignAudit(this.props.params.auditId, this.state.email, this.state.audit_date, this.state.earnings_per_audit, this.state.reimbursement);
-		promise.done(() => hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`));
+		var promise = fiatAssignAudit(this.props.params.auditId, this.state.email, this.state.audit_date, this.state.earnings_per_audit, this.state.reimbursement, this.state.audit_count);
+		promise.done(() => {
+			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
+			this.setLoading(false);
+		}
+		);
 		promise.fail((error) => this.setState({errors: error.responseJSON || {}}));
 	};
 
 	render() {
 		if( ! this.props.audit){
 			return <Loading/>;
+		}
+		var audit_details = this.props.audit;
+		var audit_count = audit_details.count - audit_details.report_count;
+		let audit_select_option = [];
+		if (audit_count === 0){
+			audit_select_option.push(<option key="1" value="1">1</option>);
+		}
+		else{
+			for(var i=1;i<=audit_count;i++){
+				audit_select_option.push(<option key={i} value={i}>{i}</option>);
+			}
+		}
+		let audit_select = (
+			<select className="form-control"
+				name="audit_count"
+				value={this.state.audit_count}
+				onChange={(e) => this.setState({"audit_count": e.target.value})}>
+				{audit_select_option}
+			</select>
+		);
+		let saveButton = (<SaveButton text="Approve"/>);
+		if (this.state.loading){
+			saveButton = <Loading/>;
 		}
 		return (
 			<Modal modalTitle="Assign Application" onClose={hashHistory.goBack}>
@@ -99,6 +130,10 @@ class AuditFiatAssignForm extends React.Component {
 					<p>Audit Cycle Dates: <b>{moment(this.props.auditCycle.start_date).format(momentDateFormat)}</b> to <b>{moment(this.props.auditCycle.end_date).format(momentDateFormat)}</b></p>
 					<FormInput label="User Email" value={this.state.email} name="email" onChange={this.inputChanged} errors={this.state.errors.email}/>
 					<FormDateInput label="Audit Date" value={this.state.audit_date} name="audit_date" onChange={this.dateChanged} errors={this.state.errors.audit_date}/>
+					<p>
+						<label>Asigned Audit Count</label>
+						{audit_select}
+					</p>
 					<FormInput
 						label="Audit Fees"
 						type="number"
@@ -112,7 +147,7 @@ class AuditFiatAssignForm extends React.Component {
 						name="reimbursement"
 						onChange={(e) => this.setState({"reimbursement": e.target.value})}
 						errors={this.state.errors.reimbursement}/>
-					<SaveButton text="Approve"/>
+					{saveButton}
 				</form>
 			</Modal>
 		);

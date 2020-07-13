@@ -35,17 +35,19 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
             "earnings_per_audit": 3000,
             "reimbursement": 4000,
             "email": self.create_auditor().email,
+            "audit_count": 2,
         }
 
-        response = self.client.post(reverse('manager:audit_fiat_assign_view', kwargs={
+        responses = self.client.post(reverse('manager:audit_fiat_assign_view', kwargs={
             "audit_id": audit.id,
         }), post_data, format="json")
 
-        expect(response.status_code).to(equal(200))
-        expect(response.data).to(have_key("audit_date", post_data["audit_date"]))
-        expect(response.data).to(have_key("earnings_per_audit", 3000))
-        expect(response.data).to(have_key("reimbursement", 4000))
-        expect(response.data["user"]).to(have_key("email", post_data["email"]))
+        expect(responses.status_code).to(equal(200))
+        for response in responses.data:
+            expect(response).to(have_key("audit_date", post_data["audit_date"]))
+            expect(response).to(have_key("earnings_per_audit", 3000))
+            expect(response).to(have_key("reimbursement", 4000))
+            expect(response["user"]).to(have_key("email", post_data["email"]))
 
     def test_post_assigns_a_new_report_to_an_agency(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
@@ -57,15 +59,17 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
             "earnings_per_audit": 3000,
             "reimbursement": 4000,
             "email": self.agency_user.email,
+            "audit_count": 2,
         }
 
-        response = self.client.post(reverse('manager:audit_fiat_assign_view', kwargs={
+        responses = self.client.post(reverse('manager:audit_fiat_assign_view', kwargs={
             "audit_id": audit.id,
         }), post_data, format="json")
 
-        expect(response.status_code).to(equal(200))
-        expect(response.data).to(have_key("audit_date", post_data["audit_date"]))
-        expect(response.data).to(have_key("earnings_per_audit", 3000))
-        expect(response.data).to(have_key("reimbursement", 4000))
-        expect(response.data["user"]).to(have_key("email", post_data["email"]))
+        expect(responses.status_code).to(equal(200))
+        for response in responses.data:
+            expect(response).to(have_key("audit_date", post_data["audit_date"]))
+            expect(response).to(have_key("earnings_per_audit", 3000))
+            expect(response).to(have_key("reimbursement", 4000))
+            expect(response["user"]).to(have_key("email", post_data["email"]))
 
