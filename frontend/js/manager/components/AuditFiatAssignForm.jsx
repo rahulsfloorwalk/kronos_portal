@@ -50,6 +50,7 @@ class AuditFiatAssignForm extends React.Component {
 				"audit": this.props.audit.id,
 				"earnings_per_audit": this.props.audit.earnings_per_audit,
 				"reimbursement": this.props.audit.reimbursement,
+				"audit_count": 1
 			});
 		}
 		if(this.props.location && this.props.location.query && this.props.location.query.email) {
