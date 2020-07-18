@@ -55,7 +55,7 @@ class PerformAudit extends React.Component{
 		return (
 			<Modal modalTitle="Performed the Audit?" onClose={this.closeModal}>
 				<form onSubmit={this.onSubmit}>
-					<p>If you did not perform the Audit please give reason and click <b>No</b> button and if you did please click <b>Yes</b> button and Fill the Report within a 48 hours.</p>
+					<p>If you did not perform or not going to perform the Audit, please give reason and click <b>No</b> and if you did or going to perform, please click <b>Yes</b> and Fill the Report within a 48 hours.</p>
 					<FormInput type="text" label="Reason: (optional)" value={this.state.message} name="message" placeholder="Please enter reason if you not performed the audit" onChange={this.fieldChanged}/>
 					<div className="form-group">
 						<button type="button" onClick={this.closeModal} className="btn btn-primary">Yes</button>&nbsp;&nbsp;

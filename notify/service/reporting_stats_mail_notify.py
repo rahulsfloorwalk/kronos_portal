@@ -26,6 +26,7 @@ def reporting_stats_send_mail():
                 }
             )
         if len(stats_list) > 0:
+            stats_list = sorted(stats_list, key=lambda i: i['completed_percentage'], reverse=True)
             _logger.info("sending reporting stats email with %s audit cycle", len(stats_list))
             email = settings.REPORTING_EMAIL_LIST
             if ";" in email:

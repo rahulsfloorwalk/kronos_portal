@@ -101,6 +101,7 @@ class ApplicationApproveForm extends React.Component {
 			this.setLoading(false);
 		}, (err) => {
 			this.setState({ errors: err && err.responseJSON });
+			this.setLoading(false);
 		});
 	};
 

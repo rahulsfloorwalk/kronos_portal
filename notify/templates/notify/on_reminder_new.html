@@ -7,7 +7,7 @@
 		<h1>We hope your audit went well</h1>
 		<p>Hello <b>{{ first_name }},</b></p>
 		<p>This email is just to check in on your {{client}} audit that was scheduled yesterday (<b>{{ audit_date }}</b>).</p>
-        <p>If for any reason you were <b>not able to perform yesterday's audit</b>, Please click the button below.</p>
+		<p>If for any reason you were <b>not able to perform yesterday's audit</b>, Please click the button below or goto report which is assign to you in portal and click <b>Performed the Audit?</b> button.</p>
         <p><a href="{{ kronos_base_url }}{% url 'registration:login' %}?next=/static/auditor/index.html#/audit_store/{{audit_store_id}}/section/perform_audit" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;background-color:#3498db;border-color:#3498db;color:#ffffff;">Click Here</a></p>
 <!--        <p><a href="http://localhost:8080/auth/login?next=/static/auditor/index.html#/audit_store/63/section/perform_audit" target="_blank" style="text-decoration:underline;background-color:#ffffff;border:solid 1px #3498db;border-radius:5px;box-sizing:border-box;color:#3498db;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;background-color:#3498db;border-color:#3498db;color:#ffffff;">Click Here</a></p>-->
 		<p>Please make sure you fill out and submit the audit report by the <b>end of the day</b> along with all the audit proofs duly attached.</p>

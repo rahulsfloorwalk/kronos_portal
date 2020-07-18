@@ -93,7 +93,10 @@ class AuditFiatAssignForm extends React.Component {
 			this.setLoading(false);
 		}
 		);
-		promise.fail((error) => this.setState({errors: error.responseJSON || {}}));
+		promise.fail((error) => {
+			this.setState({errors: error.responseJSON || {}});
+			this.setLoading(false);
+		});
 	};
 
 	render() {

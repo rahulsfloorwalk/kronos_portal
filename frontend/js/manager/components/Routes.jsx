@@ -11,6 +11,10 @@ import ClientDetail from "./client/ClientDetail.jsx";
 import ClientUserList from "./client_user/ClientUserList.jsx";
 import ClientUserForm from "./client_user/ClientUserForm.jsx";
 
+import ClientManagerList from "./client_manager/ClientManagerList.jsx";
+import ClientManagerForm from "./client_manager/ClientManagerForm.jsx";
+import ClientManagerDelete from "./client_manager/ClientManagerDelete.jsx";
+
 import QuestionnaireTypeList from "./questionnaire_type/QuestionnaireTypeList.jsx";
 import QuestionnaireTypeForm from "./questionnaire_type/QuestionnaireTypeForm.jsx";
 import QuestionnaireTypeEditForm from "./questionnaire_type/QuestionnaireTypeEditForm.jsx";
@@ -111,6 +115,11 @@ const Routes = () => (
 				<Route path="client_user" component={ClientUserList}>
 					<Route path="add" component={ClientUserForm}/>
 					<Route path=":clientUserId/edit" component={ClientUserForm}/>
+				</Route>
+				<Route path="client_manager" component={ClientManagerList}>
+					<Route path="add" component={ClientManagerForm}/>
+					<Route path=":clientManagerId/edit" component={ClientManagerForm}/>
+					<Route path=":clientUserId/delete" component={ClientManagerDelete}/>
 				</Route>
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm}/>
