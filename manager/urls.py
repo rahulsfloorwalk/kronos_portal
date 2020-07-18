@@ -10,6 +10,7 @@ from .viewss import section as section_views
 from .viewss import question as question_views
 from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
+from .viewss import client_manager as client_manager_views
 from .viewss import report_section as report_section_views
 from .viewss import attachment as attachment_views
 from .viewss import notifications as notification_views
@@ -159,6 +160,11 @@ urlpatterns = ([
 
     url(r'client_user/(?P<client_user_id>[0-9]+)$', client_user_views.ClientUserIdView.as_view(), name='client_user_id_view'),
     url(r'client_user$', client_user_views.ClientUserView.as_view(), name='client_user_view'),
+
+    url(r'client/(?P<client_id>[0-9]+)/client_manager$', client_manager_views.ClientManagerByClientView.as_view(), name='client_manager_view_by_client'),
+    url(r'client_manager$', client_manager_views.ClientManagerView.as_view(), name='client_manager_view'),
+    url(r'client_manager/(?P<client_manager_id>[0-9]+)$', client_manager_views.ClientManagerIdView.as_view(), name='client_manager_id_view'),
+
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', attachment_views.AttachmentCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', attachment_views.AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag', attachment_views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),

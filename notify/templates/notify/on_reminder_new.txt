@@ -4,7 +4,7 @@ Hello {{ first_name }},
 
 This email is just to check in on your {{client}} audit that was scheduled yesterday ({{ audit_date }}).
 
-If for any reason you were not able to perform yesterday's audit, Please click the link below.
+If for any reason you were not able to perform yesterday's audit, Please click the button below or goto report which is assign to you in portal and click Performed the Audit? button.
 
 Please make sure you fill out and submit the audit report by the end of the day along with all the audit proofs duly attached.
 

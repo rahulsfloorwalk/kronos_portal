@@ -8,6 +8,7 @@ from django.conf import settings
 from notify.service.mail_fail_audit_report import send_audit_report_failed_email
 from notify.service.mail_withdraw_audit_report import send_audit_report_withdraw_email
 from auditor.service.application_service import change_application_status_to_withdrawn
+from client.service.client_manager import get_manager_email_list_by_audit_store_obj
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
@@ -67,11 +68,16 @@ def fail_report(audit_store_id, user_id, message):
     report_status_log.save()
     # End of Save Data in Report Status Log
 
-    # Send Mail at "audits@floorwalk.in"
+    # Send Mail to manager or "ankush.take@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_FAILED_BY_AUDITOR_EMAIL']:
-        email = "audits@floorwalk.in"
-        send_audit_report_failed_email.delay(email, audit_store_id, message)
-    # End of Send Mail at "audits@floorwalk.in"
+        email_list = get_manager_email_list_by_audit_store_obj(audit_store)
+        if email_list:
+            emails = email_list
+        else:
+            emails = ["ankush.take@floorwalk.in"]
+        for email in emails:
+            send_audit_report_failed_email.delay(email, audit_store_id, message)
+    # End of Send Mail to manager or "ankush.take@floorwalk.in"
     return audit_store
 
 
@@ -101,9 +107,14 @@ def withdraw_report(audit_store_id, user_id, message):
         application_obj.save()
     # End of Change Audit Application Status to WITHDRAWN
 
-    # Send Mail at "audits@floorwalk.in"
+    # Send Mail to manager or "ankus.take@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_WITHDRAW_BY_AUDITOR_EMAIL']:
-        email = "audits@floorwalk.in"
-        send_audit_report_withdraw_email.delay(email, audit_store_id, message)
-    # End of Send Mail at "audits@floorwalk.in"
+        email_list = get_manager_email_list_by_audit_store_obj(audit_store)
+        if email_list:
+            emails = email_list
+        else:
+            emails = ["ankush.take@floorwalk.in"]
+        for email in emails:
+            send_audit_report_withdraw_email.delay(email, audit_store_id, message)
+    # End of Send Mail to manager or "ankus.take@floorwalk.in"
     return audit_store
