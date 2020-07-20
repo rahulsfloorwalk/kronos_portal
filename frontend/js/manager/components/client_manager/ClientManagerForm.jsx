@@ -92,19 +92,24 @@ export default class ClientManagerForm extends React.Component{
 
 	render(){
 		var modalTitle = this.props.params.clientManagerId ? "Edit Manager" : "Add Manager";
-		let manageOptionList;
-		if (this.state.managerList){
-			manageOptionList = this.state.managerList.map((m)=> <option key={m.id} value={m.id}>{m.email}</option>);
-		}
+		let managerOptionList;
 		let selectBoxElement;
 		if (this.props.params.clientManagerId){
 			selectBoxElement = (<label>{this.state.form.manager_email}</label>);
 		}
 		else{
+			if (this.state.managerList){
+				managerOptionList = this.state.managerList.map((m)=>
+				{	return m.is_active === true ?
+					<option key={m.id} value={m.id}>{m.email}</option>
+					: null;
+				}
+				);
+			}
 			selectBoxElement = (
 				<select className="form-control" name="manager_id" value={this.state.form.manager_id} onChange={this.fieldChanged}>
 					<option value="">Select Manager</option>
-					{manageOptionList}
+					{managerOptionList}
 				</select>
 			);
 		}
