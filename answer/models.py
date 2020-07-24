@@ -200,5 +200,8 @@ class ReportSection(Model):
     def has_minimum_attachments(self):
         return self.attachments.filter(status=Attachment.ATTACHED).count() >= self.section.minimum_attachment_count
 
+    def is_proof_tag_not_given_for_attachments(self):
+        return self.attachments.filter(status=Attachment.ATTACHED, proof_tag=None).exists()
+
     class Meta:
         unique_together = (("audit_store","section"))

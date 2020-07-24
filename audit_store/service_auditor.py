@@ -9,6 +9,7 @@ from notify.service.mail_fail_audit_report import send_audit_report_failed_email
 from notify.service.mail_withdraw_audit_report import send_audit_report_withdraw_email
 from auditor.service.application_service import change_application_status_to_withdrawn
 from client.service.client_manager import get_manager_email_list_by_audit_store_obj
+from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
@@ -36,6 +37,7 @@ def set_report_summary(audit_store_id, user_id, report_summary):
 @atomic
 def submit_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    audit_cycle_proof_tag = get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_store.audit.audit_cycle.id)
     user = auditor_service.find_auditor_by_id(user_id)
     if user != audit_store.user:
         raise AppLogicError("Report cannot be submitted by user")
@@ -43,6 +45,10 @@ def submit_report(audit_store_id, user_id):
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
     if not audit_store.check_auditor_comment_len():
         raise AppLogicError("Section summary should be greater than 30 characters")
+    if audit_cycle_proof_tag:
+        if audit_store.is_proof_tag_not_given_for_attachments():
+            raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
+                                "drop-down present below the attachment.")
 
     audit_store.submit(by=user)
     return audit_store

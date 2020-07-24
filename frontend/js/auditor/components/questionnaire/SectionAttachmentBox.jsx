@@ -8,6 +8,7 @@ import { orderKeys } from "../../../react_utils.js";
 
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgressThumbnail.jsx";
+import AttachmentPreview from "../../components/AttachmentPreview.jsx";
 
 import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../../auditor/service/attachment.js";
 import { saveAttachmentTag } from "../../service/proof_tag.js";
@@ -77,9 +78,23 @@ export default class SectionAttachmentBox extends React.Component{
 	};
 
 	attachmentSelected = (attachment) => {
-		this.setState({
-			selectedAttachment: attachment
-		});
+		if (this.state.selectedAttachment){
+			if(this.state.selectedAttachment.id === attachment.id){
+				this.setState({
+					selectedAttachment: null
+				});
+			}
+			else{
+				this.setState({
+					selectedAttachment: attachment
+				});
+			}
+		}
+		else{
+			this.setState({
+				selectedAttachment: attachment
+			});
+		}
 	};
 
 	attachmentDeleteClicked = (attachment) => {
@@ -179,14 +194,20 @@ export default class SectionAttachmentBox extends React.Component{
 		}
 
 		let attachmentRows = [];
+		let deletable = this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED";
+		let selectedAttachmentId = null;
+		if (this.state.selectedAttachment){
+			selectedAttachmentId = this.state.selectedAttachment.id;
+		}
+		let selectedAttachment = this.state.attachments.filter( a => a.id === selectedAttachmentId)[0];
 		for(let a of this.state.attachments){
-			let deletable = this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED";
 			attachmentRows.push(<AttachmentThumbnail
 				key={a.id}
 				attachment={a}
 				deletable={deletable}
 				onDelete={() => this.attachmentDeleteClicked(a)}
 				onSelect={() => this.attachmentSelected(a)}
+				selected={a.id === selectedAttachmentId}
 				user="auditor"
 				editable = {this.props.editable}
 				faulty_report_id=""
@@ -275,12 +296,20 @@ export default class SectionAttachmentBox extends React.Component{
 					{sectionSelect}
 				</div>
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`} style={panelStyle}>
-					{attachmentRows}
-					<input type="file" multiple
-						onChange={this.uploadFile}
-						disabled={this.state.uploading}
-						ref={(input)=>this.uploadInput = input}
-						style={{"display":"none"}}/>
+					<div style={{maxHeight:"500px", overflowY: "auto"}}>
+						{attachmentRows}
+						<input type="file" multiple
+							onChange={this.uploadFile}
+							disabled={this.state.uploading}
+							ref={(input)=>this.uploadInput = input}
+							style={{"display":"none"}}/>
+					</div>
+					<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
+						deletable={deletable}
+						proof_tags={this.props.proof_tags}
+						// onRename={this.selectedAttachmentRenamed}
+						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
+						onChange={this.saveAttachmentTag}/>
 				</div>
 			</div>
 		);

@@ -83,3 +83,7 @@ def get_audit_cycle_list_by_store(store_id, questionnaire_type_id):
 
 def get_master_proof_tag_id_from_audit_cycle_proof_tag(proof_id):
     return AuditCycleProofTagList.objects.get(id=proof_id).proof_tag.id
+
+
+def get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_cycle_id):
+    return AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, is_active=True).exists()
