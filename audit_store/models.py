@@ -511,6 +511,18 @@ class AuditStore(Model):
                 count += 1
         return count
 
+    def is_proof_tag_not_given_for_attachments(self):
+        report_sections = self.report_sections.all()
+        for report_section in report_sections:
+            check_proof_tag_in_reports_section = report_section.is_proof_tag_not_given_for_attachments()
+            if check_proof_tag_in_reports_section:
+                return check_proof_tag_in_reports_section
+        check_proof_tag_in_audit_store = self.attachments.filter(status=Attachment.ATTACHED, proof_tag=None).exists()
+        if check_proof_tag_in_audit_store:
+            return check_proof_tag_in_audit_store
+        return False
+
+
 class ReportStatusLog(Model):
     id = AutoField(db_column='id', primary_key=True)
     user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)

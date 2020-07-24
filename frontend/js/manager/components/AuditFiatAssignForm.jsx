@@ -104,7 +104,7 @@ class AuditFiatAssignForm extends React.Component {
 			return <Loading/>;
 		}
 		var audit_details = this.props.audit;
-		var audit_count = audit_details.count - audit_details.report_count;
+		var audit_count = audit_details.count - audit_details.valid_report_count;
 		let audit_select_option = [];
 		if (audit_count === 0){
 			audit_select_option.push(<option key="1" value="1">1</option>);

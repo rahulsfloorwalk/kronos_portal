@@ -19,6 +19,7 @@ import { rootReducer } from "./reducers.js";
 import { fetchConfig } from "./service/config.js";
 
 import "../../css/bs_overrides.scss";
+import "../../node_modules/video-react/dist/video-react.css";
 
 let forbiddenEncountered = false;
 $(document).ajaxError(function(event, jqXHR){

@@ -11,6 +11,7 @@ import Loading from "../../components/Loading.jsx";
 
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
+import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import { auditStorePropType } from "../prop_types";
 
@@ -131,8 +132,11 @@ class AttachmentUploadBox extends React.Component {
 	};
 
 	attachmentDeleteClicked = (attachment) => {
-		deleteAttachment(attachment.id).then(()=>{
-			this.reloadState();
+		deleteAttachment(attachment.id).then(() => {
+			this.setState({
+				selectedAttachment: null,
+				attachments: this.state.attachments.filter((a) => a.id !== attachment.id)
+			});
 		});
 	};
 
@@ -152,6 +156,9 @@ class AttachmentUploadBox extends React.Component {
 		moveAttachmentToSection(this.props.auditStoreId,this.state.sectionId,attachmentlist).then(() => {
 			this.reloadState();
 			this.props.dispatch(fetchSections(this.props.auditStoreId));
+			this.setState({
+				selectedAttachment: null,
+			});
 		},(err) => {
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
@@ -162,8 +169,19 @@ class AttachmentUploadBox extends React.Component {
 	};
 
 	saveAttachmentTag = (e) => {
-		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
-			this.reloadState();
+		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then((a)=>{
+			this.setState({
+				selectedAttachment: a
+			});
+			for( let i in this.state.attachments){
+				if(this.state.attachments[i].id === a.id){
+					let arr = this.state.attachments;
+					arr[i] = a;
+					this.setState({
+						attachments: arr
+					});
+				}
+			}
 		});
 	};
 
@@ -198,7 +216,7 @@ class AttachmentUploadBox extends React.Component {
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} key={a.id} user="auditor" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} key={a.id} user="auditor" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -213,6 +231,12 @@ class AttachmentUploadBox extends React.Component {
 				/>);
 			}
 		}
+
+		let attachmentElement = <AttachmentPreview attachment={this.state.selectedAttachment} editable={this.props.editable}
+			proof_tags={this.state.proof_tags}
+			// onRename={this.attachmentRenamed}
+			onDelete={() => this.attachmentDeleteClicked(this.state.selectedAttachment)}
+			onChange={this.saveAttachmentTag}/>;
 
 		var selectSection = null;
 		if( attachmentRows.length === 0){
@@ -259,8 +283,16 @@ class AttachmentUploadBox extends React.Component {
 					</div>
 					{selectSection}
 				</div>
-				<div className="form-group attachment_checkbox" style={{}}>
+				{/* <div className="form-group attachment_checkbox" style={{}}>
 					{attachmentRows}
+				</div> */}
+				<div className="row">
+					<div className="col-md-4 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
+						{attachmentRows}
+					</div>
+					<div className="col-md-8">
+						{attachmentElement}
+					</div>
 				</div>
 			</div>
 		);
