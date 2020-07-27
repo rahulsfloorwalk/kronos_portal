@@ -163,12 +163,7 @@ export default class AttachmentPreview extends React.Component {
 		this.setState({ display:"none" });
 	};
 	render(){
-		var proof_tag_select_box_style = {
-			width:"20%",
-			height:"30px",
-			fontSize:"13px",
-			marginRight:"1%"
-		};
+		let proof_tag_select_box_style;
 
 		if(!this.props.attachment){
 			return null;
@@ -187,9 +182,24 @@ export default class AttachmentPreview extends React.Component {
 		let proof_tag_select_box_value;
 		if(this.props.attachment.proof_tag){
 			proof_tag_select_box_value = this.props.attachment.proof_tag;
+			proof_tag_select_box_style = {
+				fontSize:"12px",
+				width: "145px",
+				height: "30px",
+				marginRight:"1%",
+				backgroundColor: "#DFF0D8",
+			};
 		}
 		else{
 			proof_tag_select_box_value = "";
+			proof_tag_select_box_style = {
+				fontSize:"12px",
+				width: "145px",
+				height: "30px",
+				marginRight:"1%",
+				backgroundColor: "#F2DEDE",
+				border: "1px solid #ed0c0c",
+			};
 		}
 
 		if(this.props.editable){
