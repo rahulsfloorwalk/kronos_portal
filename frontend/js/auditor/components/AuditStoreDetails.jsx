@@ -41,6 +41,7 @@ class AuditStoreDetails extends React.Component {
 	}
 
 	submitButtonClicked = () => {
+		this.setState({showErrors: false,submitMessage: ""});
 		var promise = this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
 		promise.then(() => {
 			this.setState({

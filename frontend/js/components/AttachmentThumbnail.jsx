@@ -94,11 +94,7 @@ export default class AttachmentThumbnail extends Component{
 		}
 	}
 	render(){
-		var proof_tag_select_box_style = {
-			fontSize:"12px",
-			width: "145px",
-			height: "30px"
-		};
+		let proof_tag_select_box_style;
 
 		var contentStyle = {
 			"width": "20px",
@@ -184,9 +180,22 @@ export default class AttachmentThumbnail extends Component{
 				let proof_tag_select_box_value;
 				if(this.props.attachment.proof_tag){
 					proof_tag_select_box_value = this.props.attachment.proof_tag;
+					proof_tag_select_box_style = {
+						fontSize:"12px",
+						width: "145px",
+						height: "30px",
+						backgroundColor: "#DFF0D8",
+					};
 				}
 				else{
 					proof_tag_select_box_value = "";
+					proof_tag_select_box_style = {
+						fontSize:"12px",
+						width: "145px",
+						height: "30px",
+						backgroundColor: "#F2DEDE",
+						border: "1px solid #ed0c0c",
+					};
 				}
 				proof_tag_select_box = (<select className="form-control form-control-sm" value={proof_tag_select_box_value} style={proof_tag_select_box_style} onChange={this.props.onChange}>
 					<option value="">Select Tag</option>
