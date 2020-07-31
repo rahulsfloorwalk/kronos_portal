@@ -13,7 +13,7 @@ import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx
 import { affectInputEventToComponent } from "../../react_utils.js";
 import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment } from "../service/answer.js";
 import { fetchSections, fetchReportSections, submitAuditorComment, setNotApplicable } from "../service/section.js";
-import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
@@ -266,6 +266,7 @@ class SectionAttachmentBox extends React.Component{
 			submitMessage: "",
 			submitStatus: "",
 			showErrors: false,
+			disableRotateButton: false
 		};
 	}
 
@@ -408,6 +409,14 @@ class SectionAttachmentBox extends React.Component{
 		});
 	};
 
+	rotateImage = (angle) => {
+		this.setState({disableRotateButton: true});
+		rotateImageAngle(this.state.selectedAttachmentId, angle).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+			this.setState({disableRotateButton: false});
+		});
+	};
+
 	render(){
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -431,6 +440,7 @@ class SectionAttachmentBox extends React.Component{
 				user="moderator"
 				editable={this.props.editable}
 				faulty_report_id={a.faulty_report_id}
+				faulty_attachment_url={a.faulty_attachment_url}
 				proof_tags={this.props.proof_tags}
 				onChange={this.saveAttachmentTag}
 			/>);
@@ -497,7 +507,9 @@ class SectionAttachmentBox extends React.Component{
 						proof_tags={this.props.proof_tags}
 						onRename={this.selectedAttachmentRenamed}
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
-						onChange={this.saveAttachmentTag}/>
+						onChange={this.saveAttachmentTag}
+						rotateImage={this.rotateImage}
+						disableRotateButton={this.state.disableRotateButton}/>
 				</div>
 			</div>
 		);

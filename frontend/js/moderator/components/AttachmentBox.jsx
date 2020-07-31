@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import $ from "jquery";
 
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { fetchSections } from "../service/section.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
@@ -35,6 +35,7 @@ export default class AttachmentBox extends React.Component {
 		submitMessage : "",
 		submitStatus: "",
 		showErrors: false,
+		disableRotateButton: false
 	};
 
 	reloadState = () => {
@@ -205,6 +206,25 @@ export default class AttachmentBox extends React.Component {
 		});
 	};
 
+	rotateImage = (angle) => {
+		this.setState({disableRotateButton: true});
+		rotateImageAngle(this.state.selectedAttachment.id, angle).then((a)=>{
+			this.setState({
+				selectedAttachment: a
+			});
+			for( let i in this.state.attachments){
+				if(this.state.attachments[i].id === a.id){
+					let arr = this.state.attachments;
+					arr[i] = a;
+					this.setState({
+						attachments: arr
+					});
+				}
+			}
+			this.setState({disableRotateButton: false});
+		});
+	};
+
 	render() {
 		/*console.log("sctions",this.state.sections)*/
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
@@ -219,7 +239,7 @@ export default class AttachmentBox extends React.Component {
 
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="moderator" editable={this.props.editable} deletable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="moderator" editable={this.props.editable} deletable={this.props.editable} faulty_report_id={a.faulty_report_id} faulty_attachment_url={a.faulty_attachment_url} proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -240,7 +260,9 @@ export default class AttachmentBox extends React.Component {
 			proof_tags={this.state.proof_tags}
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}
-			onChange={this.saveAttachmentTag}/>;
+			onChange={this.saveAttachmentTag}
+			rotateImage={this.rotateImage}
+			disableRotateButton={this.state.disableRotateButton}/>;
 
 		let uploadButton;
 		if(this.props.auditStore.status === "SUBMITTED"){

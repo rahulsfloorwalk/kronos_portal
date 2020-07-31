@@ -7,7 +7,7 @@ import Alert from "react-s-alert";
 
 import { orderKeys } from "../../react_utils.js";
 
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -40,6 +40,7 @@ export class AttachmentDisplayBox extends Component{
 			submitMessage : "",
 			submitStatus: "",
 			showErrors: false,
+			disableRotateButton: false,
 		};
 	}
 	reloadState = () => {
@@ -207,6 +208,25 @@ export class AttachmentDisplayBox extends Component{
 		});
 	};
 
+	rotateImage = (angle) => {
+		this.setState({disableRotateButton: true});
+		rotateImageAngle(this.state.selectedAttachment.id, angle).then((a)=>{
+			this.setState({
+				selectedAttachment: a
+			});
+			for( let i in this.state.attachments){
+				if(this.state.attachments[i].id === a.id){
+					let arr = this.state.attachments;
+					arr[i] = a;
+					this.setState({
+						attachments: arr
+					});
+				}
+			}
+			this.setState({disableRotateButton: false});
+		});
+	};
+
 	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -241,7 +261,9 @@ export class AttachmentDisplayBox extends Component{
 			proof_tags={this.state.proof_tags}
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}
-			onChange={this.saveAttachmentTag}/>;
+			onChange={this.saveAttachmentTag}
+			rotateImage={this.rotateImage}
+			disableRotateButton={this.state.disableRotateButton}/>;
 
 		let uploadButton;
 		if(editable){

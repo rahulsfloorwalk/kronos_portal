@@ -310,7 +310,8 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
             'extra',
             'faulty_report_id',
-            'proof_tag'
+            'proof_tag',
+            'faulty_attachment_url',
         )
         read_only_fields = fields
 

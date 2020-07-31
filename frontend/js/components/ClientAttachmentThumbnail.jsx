@@ -3,10 +3,6 @@ import PropTypes from "prop-types";
 
 import { truncateStyle, pointerStyle } from "../styles.js";
 
-import { Cross } from "./Icons.jsx";
-
-import {Link} from "react-router";
-
 import AttachmentProofIcon from "./AttachmentProofIcon.jsx";
 
 import loadingImageUrl from "../../img/ripple.svg";
@@ -15,23 +11,16 @@ import attachmentMicrophoneImgUrl from "../../img/microphone_100.png";
 import attachmentFilmImgUrl from "../../img/film_100.png";
 import attachmentFileImgUrl from "../../img/file_100.png";
 
-export default class AttachmentThumbnail extends Component{
+export default class ClientAttachmentThumbnail extends Component{
 	static propTypes = {
 		attachment: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			proof_type: PropTypes.string.isRequired,
 			file_name: PropTypes.string
 		}),
-		user: PropTypes.string,
 		selected: PropTypes.bool,
-		deletable: PropTypes.bool,
 
 		onSelect: PropTypes.func,
-		onDelete: PropTypes.func,
-
-		editable:PropTypes.bool,
-
-		faulty_report_id : PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
 	};
 
 	constructor(props){
@@ -79,16 +68,6 @@ export default class AttachmentThumbnail extends Component{
 		}
 	}
 	render(){
-		var contentStyle = {
-			"width": "20px",
-			"height": "20px",
-		};
-
-		var faulty_style = {
-			"fontSize": "14px",
-			"color": "red"
-		};
-
 		let selected = this.props.selected || false;
 		let onSelect = this.props.onSelect || (() => {});
 		let selectable = !!this.props.onSelect;
@@ -133,16 +112,6 @@ export default class AttachmentThumbnail extends Component{
 			anchorStyle.color = "White";
 		}
 
-		let deleteButton;
-
-		if( this.props.deletable && this.props.onDelete){
-			deleteButton = (
-				<button className="btn btn-default btn-sm pull-right" onClick={this.showModal} title="Delete Attachment">
-					<Cross/>
-				</button>
-			);
-		}
-
 		let imageSrc;
 		switch(a.proof_type){
 		case "PHOTO":
@@ -169,31 +138,13 @@ export default class AttachmentThumbnail extends Component{
 			divStyle.backgroundSize = "30px 30px";
 			break;
 		}
-		divStyle.backgroundImage = `url(${imageSrc})`;
-
-		let checkboxElement = null;
-		if (this.props.user == "client"){
-			checkboxElement = null;
-		}
-		else{
-			if(this.props.editable){
-				checkboxElement = (<input type="checkbox" style={contentStyle} value={a.id}/>);
-			}
-		}
-
-		let faultyMessageElement = null;
-		if (this.props.faulty_report_id){
-			faultyMessageElement = (<span style={faulty_style}>Repeat Alert :<Link style={faulty_style} to={`/audit_store/${this.props.faulty_report_id}/report`} target="_blank">{this.props.faulty_report_id}</Link></span>);
-		}
+		divStyle.backgroundImage = `url("${imageSrc}")`;
 
 		return (
 			<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-				{checkboxElement}
-				{deleteButton}
 				<div style={fileNameStyle}>
 					<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;
 					<a href={a.direct_url} style={anchorStyle}>{a.file_name}</a><br/>
-					{faultyMessageElement}
 				</div>
 				<img className="hidden" src={imageSrc} onLoad={this.onImageLoad} onError={this.onImageError}/>
 			</div>

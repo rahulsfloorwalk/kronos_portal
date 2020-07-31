@@ -4,9 +4,8 @@ import PropTypes from "prop-types";
 
 import AttachmentProofIcon from "../../../components/AttachmentProofIcon.jsx";
 import Loading from "../../../components/Loading.jsx";
-import InPlaceEditable from "../../../components/InPlaceEditable.jsx";
 
-import { DownloadAlt,  Cross } from "../../../components/Icons.jsx";
+import { DownloadAlt } from "../../../components/Icons.jsx";
 import { attachmentPropType } from "../../prop_types";
 
 import attachmentErrorImageUrl from "../../../../img/error_100.png";
@@ -141,42 +140,17 @@ export default class AttachmentPreview extends React.Component {
 	static propTypes = {
 		attachment: attachmentPropType,
 		editable: PropTypes.bool,
-		onDelete: PropTypes.func,
-		onRename: PropTypes.func,
 	};
 
-	state = {
-		display:"none"
-	};
-
-	showModal = () => {
-		this.setState({ display:"block" });
-	};
-
-	hideModal = () => {
-		this.setState({ display:"none" });
-	};
-	delete_hideModal = () => {
-		this.props.onDelete();
-		this.setState({ display:"none" });
-	};
 	render(){
 		if(!this.props.attachment){
 			return null;
 		}
 
 		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
-		let deleteButton;
 		let headingText;
 
-		if(this.props.editable){
-			deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.showModal}><Cross/> Delete</button>);
-			headingText = (<InPlaceEditable inputText={this.props.attachment.file_name} onSave={this.props.onRename}>
-				{icon} {this.props.attachment.file_name}
-			</InPlaceEditable>);
-		} else {
-			headingText = (<span>{icon} {this.props.attachment.file_name}</span>);
-		}
+		headingText = (<span>{icon} {this.props.attachment.file_name}</span>);
 
 		let downloadButton = (
 			<a className="btn btn-default hidden-print" href={this.props.attachment.direct_url}>
@@ -187,7 +161,6 @@ export default class AttachmentPreview extends React.Component {
 		return (
 			<div>
 				<h4 className="page-header">
-					{deleteButton}
 					{headingText}
 				</h4>
 				<div className="text-center">
