@@ -53,8 +53,8 @@ class AttachmentTestCase(TestCase):
         self.assertEqual(
             attachment.extra(),
             {
-                "thumbnail_url": "https://thumbor_domain/unsafe/150x100/smart/{}/foo/bar".format(s3_url),
-                "preview_url": "https://thumbor_domain/unsafe/0x500/smart/{}/foo/bar".format(s3_url),
+                "thumbnail_url": "https://thumbor_domain/unsafe/150x100/filters:rotate(0)/{}/foo/bar".format(s3_url),
+                "preview_url": "https://thumbor_domain/unsafe/0x500/filters:rotate(0)/{}/foo/bar".format(s3_url),
 
             }
         )

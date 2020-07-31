@@ -35,7 +35,8 @@ export default class AttachmentThumbnail extends Component{
 		faulty_report_id : PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
 
 		proof_tags: PropTypes.array,
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		faulty_attachment_url : PropTypes.string
 	};
 
 	constructor(props){
@@ -230,7 +231,7 @@ export default class AttachmentThumbnail extends Component{
 			divStyle.backgroundSize = "30px 30px";
 			break;
 		}
-		divStyle.backgroundImage = `url(${imageSrc})`;
+		divStyle.backgroundImage = `url("${imageSrc}")`;
 
 		let checkboxElement = null;
 		if (this.props.user == "client"){
@@ -244,7 +245,12 @@ export default class AttachmentThumbnail extends Component{
 
 		let faultyMessageElement = null;
 		if (this.props.faulty_report_id){
-			faultyMessageElement = (<span style={faulty_style}>Repeat Alert :<Link style={faulty_style} to={`/audit_store/${this.props.faulty_report_id}/report`} target="_blank">{this.props.faulty_report_id}</Link></span>);
+			if(this.props.user == "moderator"){
+				faultyMessageElement = (<span style={faulty_style}>Repeat Alert :<a style={faulty_style}href={this.props.faulty_attachment_url} target="_blank" rel="noopener noreferrer">{this.props.faulty_report_id}</a></span>);
+			}
+			else{
+				faultyMessageElement = (<span style={faulty_style}>Repeat Alert :<Link style={faulty_style} to={`/audit_store/${this.props.faulty_report_id}/report`} target="_blank">{this.props.faulty_report_id}</Link></span>);
+			}
 		}
 
 		return (

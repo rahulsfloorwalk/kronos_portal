@@ -91,3 +91,13 @@ def move_to_section(audit_store_id,section_id,attachment_list):
 
 def save_attachment_proof_tag(attachment_id, proof_tag_id):
     return attachment_service.save_attachment_proof_tag(attachment_id, proof_tag_id)
+
+
+def rotate_image_attachment_by_id(attachment_id, user_id, angle):
+    audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)
+    audit_store_service.find_by_id_for_moderator(audit_store.id, user_id)
+
+    if not audit_store.is_editable_by_moderator():
+        raise AppLogicError("cannot rotate attachment now")
+
+    return attachment_service.rotate(attachment_id, angle)

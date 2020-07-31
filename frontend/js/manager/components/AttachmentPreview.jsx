@@ -6,7 +6,7 @@ import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
 import Loading from "../../components/Loading.jsx";
 import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 
-import { DownloadAlt,  Cross } from "../../components/Icons.jsx";
+import { DownloadAlt,  Cross, Repeat } from "../../components/Icons.jsx";
 import { attachmentPropType } from "../prop_types";
 
 import attachmentErrorImageUrl from "../../../img/error_100.png";
@@ -144,11 +144,14 @@ export default class AttachmentPreview extends React.Component {
 		onDelete: PropTypes.func,
 		onRename: PropTypes.func,
 		proof_tags: PropTypes.array,
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		rotateImage: PropTypes.func,
+		disableRotateButton: PropTypes.bool
 	};
 
 	state = {
-		display:"none"
+		display:"none",
+		rotateButtonDisabled: false
 	};
 
 	showModal = () => {
@@ -171,6 +174,8 @@ export default class AttachmentPreview extends React.Component {
 
 		let icon = <AttachmentProofIcon proofType={this.props.attachment.proof_type}/>;
 		let deleteButton;
+		let rotateLeftButton;
+		let rotateRightButton;
 		let headingText;
 		let proof_tag_select_box;
 		let option_tag_list = [];
@@ -204,6 +209,18 @@ export default class AttachmentPreview extends React.Component {
 
 		if(this.props.editable){
 			deleteButton = (<button type="button" className="btn btn-default btn-sm pull-right" onClick={this.showModal}><Cross/> Delete</button>);
+			if (this.props.attachment.proof_type === "PHOTO"){
+				rotateLeftButton = (
+					<button type="button" className="btn btn-default" onClick={() => this.props.rotateImage("left")} disabled={this.props.disableRotateButton}>
+						<Repeat/> Rotate Left
+					</button>
+				);
+				rotateRightButton = (
+					<button type="button" className="btn btn-default" onClick={()=> this.props.rotateImage("right")} disabled={this.props.disableRotateButton}>
+						<Repeat/> Rotate Right
+					</button>
+				);
+			}
 			headingText = (<InPlaceEditable inputText={this.props.attachment.file_name} onSave={this.props.onRename}>
 				{icon} {this.props.attachment.file_name}
 			</InPlaceEditable>);
@@ -251,7 +268,11 @@ export default class AttachmentPreview extends React.Component {
 				<div className="text-center">
 					<AttachmentRenderer attachment={this.props.attachment}/>
 					<br/>
+					{rotateLeftButton}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					{downloadButton}
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					{rotateRightButton}
 				</div>
 
 				<div className="modal" tabIndex="-1" style={modalStyle}>

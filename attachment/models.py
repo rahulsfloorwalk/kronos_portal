@@ -1,6 +1,7 @@
 from django.utils import timezone
 from django.conf import settings
 from django.db.models import Model, CharField, AutoField, PositiveIntegerField, ForeignKey, IntegerField, PROTECT, DateTimeField
+from django.contrib.postgres.fields import JSONField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from audit.models.proof_tag import AuditCycleProofTagList
@@ -49,6 +50,8 @@ class Attachment(Model):
 
     proof_tag = ForeignKey(AuditCycleProofTagList, db_column='proof_tag_id', blank=True, null=True, default="", on_delete=PROTECT)
 
+    extra_properties = JSONField(db_column='extra_properties', default=dict)
+
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
@@ -73,6 +76,12 @@ class Attachment(Model):
         else:
             return {}'''
 
+    def get_rotate_angle(self):
+        if self.extra_properties:
+            return self.extra_properties['rotate_angle']
+        else:
+            return 0
+
     def extra(self):
         if self.proof_type == self.PHOTO:
             subdomain = settings.THUMBOR_SUBDOMAIN
@@ -80,12 +89,13 @@ class Attachment(Model):
             thumbnail_height = 100
             preview_width = 0
             preview_height = 500
+            rotate_angle = self.get_rotate_angle()
 
             s3 = settings.AWS["S3_ATTACHMENTS"]
             s3_url = "https://s3-{}.amazonaws.com/{}".format(s3["REGION"], s3["BUCKET"])
             return {
-                "thumbnail_url": "https://{}/unsafe/{}x{}/smart/{}/{}".format(subdomain, thumbnail_width, thumbnail_height, s3_url, self.file_slug),
-                "preview_url": "https://{}/unsafe/{}x{}/smart/{}/{}".format(subdomain, preview_width, preview_height, s3_url, self.file_slug),
+                "thumbnail_url": "https://{}/unsafe/{}x{}/filters:rotate({})/{}/{}".format(subdomain, thumbnail_width, thumbnail_height, rotate_angle, s3_url, self.file_slug),
+                "preview_url": "https://{}/unsafe/{}x{}/filters:rotate({})/{}/{}".format(subdomain, preview_width, preview_height, rotate_angle, s3_url, self.file_slug),
             }
         else:
             return {}
@@ -100,3 +110,11 @@ class Attachment(Model):
                 return attachment_obj.content_object.id
             else:
                 return None
+
+    def faulty_attachment_url(self):
+        if self.attachment_id:
+            attachment_obj = Attachment.objects.get(id=self.attachment_id)
+            url = attachment_obj.extra()
+            return url['preview_url']
+        else:
+            return None

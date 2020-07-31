@@ -125,3 +125,11 @@ export function moveAttachmentToSection(auditStoreId,sectionId,attachmentIdList)
 	});
 }
 
+export function rotateImageAngle(attachmentId, angle){
+	return $.ajax({
+		url: url.api_base_path + `moderator/attachment/${attachmentId}/rotate`,
+		type: "POST",
+		data: JSON.stringify({angle:angle}),
+		contentType: "application/json"
+	});
+}

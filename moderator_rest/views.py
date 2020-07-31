@@ -332,6 +332,18 @@ class AttachmentIdRenameView(APIView):
             })
 
 
+class AttachmentIdRotateView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR],
+    }
+
+    def post(self, request, attachment_id):
+        attachment = attachment_service.rotate_image_attachment_by_id(attachment_id, request.user.id,
+                                                                      request.data["angle"])
+        return Response(AttachmentSerializer(attachment).data)
+
+
 class AttachmentIdCompleteView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -264,3 +264,28 @@ def find_by_audit_store_list(audit_store_list, proof_tag_id):
 def find_by_report_section_list(report_section_list, proof_tag_id):
     return Attachment.objects.filter(report_sections__id__in=report_section_list, status=Attachment.ATTACHED, proof_tag__proof_tag__id=proof_tag_id)\
         .order_by('id')
+
+
+def rotate(attachment_id, angle):
+    attachment = find_by_id(attachment_id)
+    rotate_angle = attachment.get_rotate_angle()
+    rotate_angle_data = {}
+    if rotate_angle == 0:
+        if angle == "left":
+            new_rotate_angle = 0 + 90
+        else:
+            new_rotate_angle = 360 - 90
+    else:
+        if angle == "left":
+            new_rotate_angle = rotate_angle + 90
+        else:
+            new_rotate_angle = rotate_angle - 90
+
+    if new_rotate_angle >= 360 or new_rotate_angle < 0:
+        rotate_angle_data['rotate_angle'] = 0
+    else:
+        rotate_angle_data['rotate_angle'] = new_rotate_angle
+
+    attachment.extra_properties = rotate_angle_data
+    attachment.save()
+    return attachment

@@ -8,6 +8,7 @@ from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtai
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
 from .views import AttachmentProofTagList, AttachmentIdProofTagView
+from .views import AttachmentIdRotateView
 from .views import ConfigView
 from .views import AuditorRatingView
 
@@ -19,6 +20,8 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
     url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_moderator$', MoveAttachmentToSection.as_view(), name='move_attachment_to_section'),
+
+    url(r'attachment/(?P<attachment_id>[0-9]+)/rotate$', AttachmentIdRotateView.as_view(), name='attachment_id_rotate_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/not_applicable$', NotApplicableView.as_view(), name='not_applicable_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/auditor_comment$', AuditorCommentView.as_view(), name='auditor_comment_view'),

@@ -8,7 +8,7 @@ import Alert from "react-s-alert";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
 
-import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { affectInputEventToComponent, orderKeys } from "../../react_utils.js";
 import { fetchSections } from "../actions/section.js";
 import { fetchAnswers, setMarks, setAnswerNotApplicable } from "../actions/answer.js";
@@ -291,6 +291,7 @@ class SectionAttachmentBox extends React.Component{
 			submitMessage: "",
 			submitStatus: "",
 			showErrors: false,
+			disableRotateButton: false,
 		};
 	}
 
@@ -434,6 +435,14 @@ class SectionAttachmentBox extends React.Component{
 		});
 	};
 
+	rotateImage = (angle) => {
+		this.setState({disableRotateButton: true});
+		rotateImageAngle(this.state.selectedAttachmentId, angle).then(()=>{
+			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
+			this.setState({disableRotateButton: false});
+		});
+	};
+
 	render(){
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -524,7 +533,9 @@ class SectionAttachmentBox extends React.Component{
 						proof_tags={this.props.proof_tags}
 						onRename={this.selectedAttachmentRenamed}
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
-						onChange={this.saveAttachmentTag}/>
+						onChange={this.saveAttachmentTag}
+						rotateImage={this.rotateImage}
+						disableRotateButton={this.state.disableRotateButton}/>
 				</div>
 			</div>
 		);

@@ -59,6 +59,7 @@ def delete_for_manager(attachment_id):
 
     attachment_service.delete(attachment_id)
 
+
 def rename_for_manager(attachment_id, new_name):
     audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)
 
@@ -66,6 +67,7 @@ def rename_for_manager(attachment_id, new_name):
         raise AppLogicError("cannot rename attachment now")
 
     return attachment_service.rename(attachment_id, new_name)
+
 
 def move_to_section(audit_store_id,section_id,attachment_list):
     if not attachment_list and not section_id:
@@ -84,5 +86,15 @@ def move_to_section(audit_store_id,section_id,attachment_list):
         attachment = attachment_service.update_attachment_section(attachment_id,content_obj)
     return attachment
 
-def save_attachment_proof_tag(attachemt_id, proof_tag_id):
-    return attachment_service.save_attachment_proof_tag(attachemt_id, proof_tag_id)
+
+def save_attachment_proof_tag(attachment_id, proof_tag_id):
+    return attachment_service.save_attachment_proof_tag(attachment_id, proof_tag_id)
+
+
+def rotate_attachment_for_manager(attachment_id, angle):
+    audit_store = attachment_service.get_audit_store_for_attachment(attachment_id)
+
+    if not audit_store.is_editable_by_manager():
+        raise AppLogicError("cannot rotate attachment now")
+
+    return attachment_service.rotate(attachment_id, angle)
