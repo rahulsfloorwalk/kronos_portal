@@ -2,11 +2,13 @@ from django.db.transaction import atomic
 from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import auditor as auditor_service
+from auditor.service.profile_info_service import find_profile_info_by_user_id
 from django.utils import timezone
 from audit_store.models import AuditStore, ReportStatusLog
 from django.conf import settings
 from notify.service.mail_fail_audit_report import send_audit_report_failed_email
 from notify.service.mail_withdraw_audit_report import send_audit_report_withdraw_email
+from notify.service.mail_concern_audit_report import send_audit_report_concern_email
 from auditor.service.application_service import change_application_status_to_withdrawn
 from client.service.client_manager import get_manager_email_list_by_audit_store_obj
 from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
@@ -113,7 +115,7 @@ def withdraw_report(audit_store_id, user_id, message):
         application_obj.save()
     # End of Change Audit Application Status to WITHDRAWN
 
-    # Send Mail to manager or "ankus.take@floorwalk.in"
+    # Send Mail to manager or "ankush.take@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_WITHDRAW_BY_AUDITOR_EMAIL']:
         email_list = get_manager_email_list_by_audit_store_obj(audit_store)
         if email_list:
@@ -122,5 +124,28 @@ def withdraw_report(audit_store_id, user_id, message):
             emails = ["ankush.take@floorwalk.in"]
         for email in emails:
             send_audit_report_withdraw_email.delay(email, audit_store_id, message)
-    # End of Send Mail to manager or "ankus.take@floorwalk.in"
+    # End of Send Mail to manager or "ankush.take@floorwalk.in"
+    return audit_store
+
+
+def concern_report(audit_store_id, user_id, message):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    user = auditor_service.find_auditor_by_id(user_id)
+    user_profile_info = find_profile_info_by_user_id(user_id)
+
+    if user != audit_store.user:
+        raise AppLogicError("Concern not accepted by user")
+    if audit_store.status not in [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED]:
+        raise AppLogicError("Concern not accepted by user")
+
+    # Send Mail to manager or "ankush.take@floorwalk.in"
+    if settings.EMAIL_SWITCH['AUDIT_REPORT_CONCERN_BY_AUDITOR_EMAIL']:
+        email_list = get_manager_email_list_by_audit_store_obj(audit_store)
+        if email_list:
+            emails = email_list
+        else:
+            emails = ["ankush.take@floorwalk.in"]
+        for email in emails:
+            send_audit_report_concern_email.delay(email, audit_store_id, user_profile_info, message)
+    # End of Send Mail to manager or "ankush.take@floorwalk.in"
     return audit_store

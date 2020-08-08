@@ -82,7 +82,7 @@ class AuditStoreDetails extends React.Component {
 			return <Loading/>;
 		}
 
-		let submitAuditButton, acknowledgeButton, performAuditButton;
+		let submitAuditButton, acknowledgeButton, performAuditButton, concernButton;
 		if(this.props.auditStore.status === "ASSIGNED"){
 			acknowledgeButton = (
 				<span>
@@ -95,17 +95,19 @@ class AuditStoreDetails extends React.Component {
 				</span>);
 			if(this.props.auditStore.get_date_diff > 0){
 				performAuditButton = (
-					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" type="button">Performed the Audit?</button></Link>
+					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
 				);
 			}
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary btn-lg pull-right">Any Concern?</Link>);
 		}
 		if(this.props.auditStore.status === "ACKNOWLEDGED"){
 			submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary btn-lg">Submit Report</button>);
 			if(this.props.auditStore.get_date_diff > 0){
 				performAuditButton = (
-					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" type="button">Performed the Audit?</button></Link>
+					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
 				);
 			}
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary btn-lg pull-right">Any Concern?</Link>);
 		}
 
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
@@ -122,7 +124,9 @@ class AuditStoreDetails extends React.Component {
 
 		return (
 			<div>
-				&nbsp;{performAuditButton}
+				<div className="row">
+					{performAuditButton}{concernButton}
+				</div>
 				<h2 className="page-header">Audit Report - <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
 				<div className="row">
 					<div className="col-md-12">

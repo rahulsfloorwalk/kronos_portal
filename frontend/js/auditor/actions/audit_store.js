@@ -143,3 +143,24 @@ export function submitReportSummary(audit_store_id, report_summary){
 		return req;
 	};
 }
+
+export function submitConcern(auditStoreId, message){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `auditor/audit_store/${auditStoreId}/report_concern`,
+			data: JSON.stringify({
+				message
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(auditStore){
+			dispatch({
+				type: types.REPORT_CONCERN_POST,
+				status: "success",
+				auditStore,
+			});
+		});
+		return req;
+	};
+}

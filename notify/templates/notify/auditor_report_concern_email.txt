@@ -1,0 +1,10 @@
+Auditor has concern about the audit
+Hello,
+Auditor has the concern about audit report of {{ client_name }} of {{ store_name }}.
+Auditor Name : {{auditor_name}}
+Mobile Number : {{auditor_mobile_number}}
+Email Address : {{auditor_email}}
+Concern : {{concern}}
+Please Check the Audit Report by clicking the below button
+--
+Thanks and regards

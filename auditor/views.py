@@ -373,6 +373,23 @@ class AuditStoreIdWithdrawView(APIView):
         return Response(AuditStoreSerializer(audit_store).data)
 
 
+class AuditStoreReportConcern(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+    }
+
+    class ReportConcernDeSerializer(Serializer):
+        message = CharField(max_length=4096, allow_blank=False)
+
+    def post(self, request, audit_store_id):
+        ds = self.ReportConcernDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        message = ds.validated_data['message']
+        audit_store = audit_store_auditor_service.concern_report(audit_store_id, request.user.id, message)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class ReportSectionListView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -535,6 +552,23 @@ class PaymentView(APIView):
     def get(self, request, format=None):
         payments = payment_service.find_by_user(request.user.id)
         return Response(PaymentSerializer(payments, many=True).data)
+
+class PaymentConcernView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    class PaymentConcernDeSerializer(Serializer):
+        message = CharField(max_length=4096, allow_blank=False)
+
+    def post(self, request, payment_id):
+        ds = self.PaymentConcernDeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        message = ds.validated_data['message']
+        payment = payment_service.payment_concern(payment_id, request.user.id, message)
+        return Response(PaymentSerializer(payment).data)
+
 
 class ReferralView(APIView):
     permission_classes = [HasGroupPermission]
