@@ -16,6 +16,8 @@ import AuditCancelForm from "./AuditCancelForm.jsx";
 
 import AuditStoreList from "./AuditStoreList.jsx";
 import WithdrawReport from "./WithdrawReport.jsx";
+import ReportConcern from "./ReportConcern.jsx";
+import PaymentConcern from "./PaymentConcern.jsx";
 import AuditStoreDetails from "./AuditStoreDetails.jsx";
 import PerformAudit from "./PerformAudit.jsx";
 
@@ -63,10 +65,13 @@ const Routes = ({store}) => (
 				</Route>
 				<Route path="audit_store" component={AuditStoreList}/>
 				<Route path="audit_store/:auditStoreId/withdraw" component={WithdrawReport}/>
+				<Route path="audit_store/:auditStoreId/report_concern" component={ReportConcern}/>
 				<Route path="audit_store/:auditStoreId/section" component={AuditStoreDetails}>
 					<Route path="perform_audit" component={PerformAudit}/>
+					<Route path="report_concern" component={ReportConcern}/>
 				</Route>
 				<Route path="payment" component={PaymentList}/>
+				<Route path="payment/:paymentId/payment_concern" component={PaymentConcern}/>
 				<Route path="referral" component={ReferralList}/>
 				<Route path="tos_accept" component={ToSAcceptForm}/>
 				<Route path="shopper_guide" component={ShopperGuide}>

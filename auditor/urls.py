@@ -23,6 +23,9 @@ urlpatterns = ([
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
     url(r'facebook_info$', views.FacebookInfoView.as_view(), name="facebook_info_view"),
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
+
+    url(r'payment/(?P<payment_id>[0-9]+)/payment_concern$', views.PaymentConcernView.as_view(), name="payment_concern_view"),
+
     url(r'referral$', views.ReferralView.as_view(), name="referral_view"),
 
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
@@ -44,6 +47,8 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/withdraw$', views.AuditStoreIdWithdrawView.as_view(), name="audit_store_id_withdraw_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', views.AuditStoreAttachmentView.as_view(), name="audit_store_upload_view"),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', views.ReportSectionAttachmentView.as_view(), name="report_section_attachment_view"),
+
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_concern$', views.AuditStoreReportConcern.as_view(), name="audit_store_report_concern"),
 
     url(r'question/(?P<question_id>[0-9]+)/answer$', views.AnswerSubmitView.as_view(), name="answer_submit_view"),
     url(r'question/(?P<question_id>[0-9]+)/answer_comment$', views.AnswerCommentView.as_view(), name="answer_comment_view"),

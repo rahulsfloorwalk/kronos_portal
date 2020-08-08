@@ -13,6 +13,7 @@ import ExpandableDetails from "../../components/ExpandableDetails.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
+import Loading from "../../components/Loading.jsx";
 
 import { auditStorePropType } from "../prop_types";
 
@@ -21,7 +22,7 @@ class AuditStoreRow extends React.Component {
 		auditStore: auditStorePropType,
 	};
 	render() {
-		let withdrawButton , auditStoreStatusLabel, withdrawMessage, viewButton;
+		let withdrawButton , auditStoreStatusLabel, withdrawMessage, viewButton, concernButton;
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
 		const fees = earnings_per_audit ? <b>Fees: ₹ {earnings_per_audit}, </b> : "";
 		const reimbursement = this.props.auditStore.reimbursement || this.props.auditStore.audit.reimbursement;
@@ -34,6 +35,9 @@ class AuditStoreRow extends React.Component {
 
 		if((this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED") && this.props.auditStore.get_date_diff <= -2){
 			withdrawButton = (<Link to={`audit_store/${this.props.auditStore.id}/withdraw`} className="btn btn-primary">Withdraw</Link>);
+		}
+		if(this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED"){
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/report_concern`} className="btn btn-primary">Any Concern?</Link>);
 		}
 
 		if (this.props.auditStore.status === "AUDITOR_WITHDRAWN"){
@@ -77,6 +81,8 @@ class AuditStoreRow extends React.Component {
 					<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
 					{viewButton}
 					&nbsp;&nbsp;
+					{concernButton}
+					&nbsp;&nbsp;
 					{withdrawButton}
 					{withdrawMessage}
 				</div>
@@ -93,35 +99,50 @@ class AuditStoreList extends React.Component {
 
 	state = {
 		auditStores: [],
+		loading: false
+	};
+
+	setLoading = (loading) => {
+		this.setState(oldState => Object.assign({}, oldState, { loading }));
 	};
 
 	componentDidMount() {
 		//FIXME we're using BOTH internal component state and the redux store to contain the list of audit stores.
 		//ideally only one should exist.
-		this.props.dispatch(fetchAuditStores()).then( auditStores => this.setState({auditStores}));
+		this.setLoading(true);
+		this.props.dispatch(fetchAuditStores()).then( auditStores =>
+		{
+			this.setState({auditStores});
+			this.setLoading(false);
+		});
 		this.props.dispatch(fetchProfileInfo());
 	}
 
 	render() {
 		let rows = this.state.auditStores.map(as => <AuditStoreRow auditStore={as} key={as.id}/>);
-		if(rows.length > 0){
-			return (
-				<div>
-					<h2 className="page-header">
-							Your Audits
-					</h2>
-					{rows}
-					{this.props.children}
-				</div>
-			);
-		} else {
-			return (
-				<div className="jumbotron text-center">
-					<h2>There are no audits approved for you.</h2>
-					<h3>Apply for some audits from the audits section!</h3>
-					<p>We will keep you informed when audits are approved for you</p>
-				</div>
-			);
+		if(this.state.loading){
+			return <Loading/>;
+		}
+		else{
+			if(rows.length > 0){
+				return (
+					<div>
+						<h2 className="page-header">
+								Your Audits
+						</h2>
+						{rows}
+						{this.props.children}
+					</div>
+				);
+			} else {
+				return (
+					<div className="jumbotron text-center">
+						<h2>There are no audits approved for you.</h2>
+						<h3>Apply for some audits from the audits section!</h3>
+						<p>We will keep you informed when audits are approved for you</p>
+					</div>
+				);
+			}
 		}
 	}
 }
