@@ -2,7 +2,6 @@ from django.db.transaction import atomic
 from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import auditor as auditor_service
-from auditor.service.profile_info_service import find_profile_info_by_user_id
 from django.utils import timezone
 from audit_store.models import AuditStore, ReportStatusLog
 from django.conf import settings
@@ -131,7 +130,6 @@ def withdraw_report(audit_store_id, user_id, message):
 def concern_report(audit_store_id, user_id, message):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
     user = auditor_service.find_auditor_by_id(user_id)
-    user_profile_info = find_profile_info_by_user_id(user_id)
 
     if user != audit_store.user:
         raise AppLogicError("Concern not accepted by user")
@@ -146,6 +144,6 @@ def concern_report(audit_store_id, user_id, message):
         else:
             emails = ["ankush.take@floorwalk.in"]
         for email in emails:
-            send_audit_report_concern_email.delay(email, audit_store_id, user_profile_info, message)
+            send_audit_report_concern_email.delay(email, audit_store_id, user_id, message)
     # End of Send Mail to manager or "ankush.take@floorwalk.in"
     return audit_store

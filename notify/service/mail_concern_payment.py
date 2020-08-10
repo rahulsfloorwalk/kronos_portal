@@ -10,15 +10,18 @@ from registration.context import registration_context
 
 from audit_store.models import AuditStore
 
+from auditor.service.profile_info_service import find_profile_info_by_user_id
+
 _logger = logging.getLogger(__name__)
 
 
 @shared_task(ignore_result=True)
-def send_payment_concern_email(email_address, audit_store_id, user_profile_info, message):
+def send_payment_concern_email(email_address, audit_store_id, user_id, message):
     audit_store = AuditStore.objects.get(id=audit_store_id)
     client_name = audit_store.audit.audit_cycle.client.brand_name
     store_name = audit_store.audit.store.name + " " + audit_store.audit.store.city.name
     audit_store_id = audit_store.id
+    user_profile_info = find_profile_info_by_user_id(user_id)
     auditor_name = user_profile_info.first_name + " " + user_profile_info.last_name
     auditor_mobile_number = user_profile_info.mobile_number
     auditor_email = user_profile_info.user.email
