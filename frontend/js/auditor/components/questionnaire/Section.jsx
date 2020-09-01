@@ -25,7 +25,7 @@ class __Section extends React.Component{
 		reportSection: PropTypes.object,
 
 		editable:PropTypes.bool,
-		sections:PropTypes.object,
+		// sections:PropTypes.object,
 		proof_tags: PropTypes.array,
 	};
 	constructor(props){
@@ -159,7 +159,7 @@ class __Section extends React.Component{
 					sectionId={this.props.section.id}
 					minimumAttachmentCount={this.props.section.minimum_attachment_count}
 					showErrors={this.props.showErrors}
-					sections={this.props.sections}
+					// sections={this.props.sections}
 					editable={this.props.editable}
 					proof_tags={this.props.proof_tags}
 				/>

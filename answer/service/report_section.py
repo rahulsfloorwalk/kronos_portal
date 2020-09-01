@@ -75,3 +75,7 @@ def find_by_audit_store_and_section_for_client(audit_store_id, section_id, clien
         return report_section
     else:
         raise ObjectNotFound
+
+
+def get_answer_section_id_by_section_id(audit_store_id, section_id):
+    return ReportSection.objects.get(audit_store__id=audit_store_id, section__id=section_id).id

@@ -7,6 +7,7 @@ from auditor.service.application_service import change_application_status_to_wit
 from registration.service.moderator import find_moderator_by_user_id
 from audit_store.models import AuditStore
 from audit.models import AuditCycle
+from attachment.service import set_attachment_by_proof_tag
 
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
@@ -53,6 +54,7 @@ def set_report_summary(audit_store_id, report_summary, user_id):
 def submit_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
+    set_attachment_by_proof_tag(audit_store_id)
     audit_store.submit(by=user)
     return audit_store
 
@@ -67,6 +69,7 @@ def revert_submit_report(audit_store_id, user_id):
 def qa_ok_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
+    set_attachment_by_proof_tag(audit_store_id)
     audit_store.qa_ok(by=user)
     return audit_store
 
@@ -81,6 +84,7 @@ def pm_revert_report(audit_store_id, user_id):
 def complete_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
+    set_attachment_by_proof_tag(audit_store_id)
     audit_store.complete(by=user)
     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
     for report in report_obj:

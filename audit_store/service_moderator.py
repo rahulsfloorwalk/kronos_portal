@@ -9,6 +9,8 @@ from audit.models import AuditCycle
 from audit_store.models import AuditStore
 import audit.service.audit_cycle as audit_cycle_service
 from audit_store import service as audit_store_service
+from attachment.service import set_attachment_by_proof_tag
+
 
 def find_qa_completed_audit_stores_for_moderator(user_id):
     # TODO: move this in to the AuditStoreQuerySet
@@ -78,6 +80,7 @@ def fail_for_moderator(audit_store_id, user_id, message):
 def submit_for_moderator(audit_store_id, user_id):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
+    set_attachment_by_proof_tag(audit_store_id)
     audit_store.submit(by=user)
     return audit_store
 

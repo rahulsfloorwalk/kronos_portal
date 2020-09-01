@@ -13,6 +13,8 @@ from answer.models import ReportSection
 
 from questionnaire.service import question as question_service
 
+from questionnaire.service import section_proof_tag as proof_tag_service
+
 import logging
 __logger = logging.getLogger(__name__)
 
@@ -88,7 +90,7 @@ def copy_sections_from_to(from_audit_cycle_id, to_audit_cycle_id):
             new_section.audit_cycle = to_audit_cycle
             new_section.save()
             question_service.copy_questions_from_to(section.id, new_section.id)
-
+            proof_tag_service.copy_proof_tag_from_to(section.id, new_section.id, to_audit_cycle_id)
         return to_audit_cycle.sections.all()
 
     except (AuditCycle.DoesNotExist) as e:

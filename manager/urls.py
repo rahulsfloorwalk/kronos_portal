@@ -7,6 +7,7 @@ from .viewss import audit as audit_views
 from .viewss import audit_store as audit_store_views
 from .viewss import audit_cycle as audit_cycle_views
 from .viewss import section as section_views
+from .viewss import section_proof_tag as section_proof_tag_views
 from .viewss import question as question_views
 from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
@@ -154,6 +155,8 @@ urlpatterns = ([
     url(r'section/(?P<section_id>[0-9]+)/question$', question_views.QuestionViewBySection.as_view(), name='question_view_by_section'),
     url(r'section/(?P<section_id>[0-9]+)$', section_views.SectionIdView.as_view(), name='section_id_view'),
     url(r'section$', section_views.SectionView.as_view(), name='section_view'),
+
+    url(r'section/(?P<section_id>[0-9]+)/proof_tag$', section_proof_tag_views.SectionProofTag.as_view(), name='question_view_by_section'),
 
     url(r'question/(?P<question_id>[0-9]+)$', question_views.QuestionIdView.as_view(), name='question_id_view'),
     url(r'question$', question_views.QuestionView.as_view(), name='question_view'),

@@ -54,6 +54,7 @@ import OpportunityEmailRecordForm from "./OpportunityEmailRecordForm.jsx";
 
 import SectionAddForm from "./questionnaire/SectionAddForm.jsx";
 import SectionEditForm from "./questionnaire/SectionEditForm.jsx";
+import SectionProofTag from "./questionnaire/SectionProofTag.jsx";
 import SectionList from "./questionnaire/SectionList.jsx";
 import SectionCopyForm from "./questionnaire/SectionCopyForm.jsx";
 
@@ -138,6 +139,7 @@ const Routes = () => (
 					<Route path="section/copy" component={SectionCopyForm}/>
 					<Route path="section/add" component={SectionAddForm}/>
 					<Route path="section/:sectionId/edit" component={SectionEditForm}/>
+					<Route path="section/:sectionId/proof_tag" component={SectionProofTag}/>
 					<Route path="section/:sectionId/question/add" component={QuestionForm}/>
 					<Route path="section/:sectionId/question/:questionId/edit" component={QuestionForm}/>
 					<Route path="section/:sectionId/question/:questionId/delete" component={QuestionForm}/>

@@ -6,21 +6,29 @@ from audit.models.proof_tag import AuditCycleProofTagList
 from audit.service import audit_cycle
 from audit.models.audit_cycle import AuditCycle
 from audit.models.audit import Audit
-
+from questionnaire.models.proof_tag import SectionProofTag
 from questionnaire.service import questionnaire_type_client_service
+
 
 def get_audit_cycle_proof_tag(audit_cycle_id):
     proof_tag_obj = ProofTag.objects.filter(is_active=True)
     proof_tag_list = []
     for i in proof_tag_obj:
+        proof_tag_name = i.name
         proof_tag_dict = {}
         if AuditCycleProofTagList.objects.filter(proof_tag_id=i.id, audit_cycle_id=audit_cycle_id, is_active=True).exists():
+            audit_cycle_proof_tag_obj = AuditCycleProofTagList.objects.get(proof_tag_id=i.id,
+                                                                           audit_cycle_id=audit_cycle_id,
+                                                                           is_active=True)
+            if SectionProofTag.objects.filter(audit_cycle_proof_tag=audit_cycle_proof_tag_obj).exists():
+                section_obj = SectionProofTag.objects.get(audit_cycle_proof_tag=audit_cycle_proof_tag_obj).section
+                proof_tag_name = "{} ({})".format(i.name, section_obj.name)
             is_present_in_audit_cycle = True
         else:
             is_present_in_audit_cycle = False
 
         proof_tag_dict['id'] = i.id
-        proof_tag_dict['name'] = i.name
+        proof_tag_dict['name'] = proof_tag_name
         proof_tag_dict['is_present_in_audit_cycle'] = is_present_in_audit_cycle
         proof_tag_list.append(proof_tag_dict)
     return sorted(proof_tag_list, key=lambda j: j['name'])
