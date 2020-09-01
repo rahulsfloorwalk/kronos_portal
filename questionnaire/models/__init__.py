@@ -1,5 +1,6 @@
 from questionnaire.models.questionnaire_type import QuestionnaireType
 from questionnaire.models.section import Section
 from questionnaire.models.question import Question
+from questionnaire.models.proof_tag import SectionProofTag
 
-__all__ = [QuestionnaireType, Section, Question]
+__all__ = [QuestionnaireType, Section, Question, SectionProofTag]

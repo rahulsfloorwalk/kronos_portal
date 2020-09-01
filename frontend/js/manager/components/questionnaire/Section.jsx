@@ -103,6 +103,10 @@ export default class Section extends React.Component {
 						<b>{this.props.section.questions.length}</b> questions,
 						<b>{this.props.section.max_marks}</b> marks
 						&nbsp;
+						<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/proof_tag`} className="btn btn-default">
+							Proof Tag
+						</Link>
+						&nbsp;
 						<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/edit`} className="btn btn-default">
 							<Pencil/>
 						</Link>

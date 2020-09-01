@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { } from "react-router";
-import $ from "jquery";
+// import $ from "jquery";
 
 import { } from "../../styles.js";
 
@@ -13,7 +13,8 @@ import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx
 import { affectInputEventToComponent } from "../../react_utils.js";
 import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment } from "../service/answer.js";
 import { fetchSections, fetchReportSections, submitAuditorComment, setNotApplicable } from "../service/section.js";
-import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
+// import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection, rotateImageAngle } from "../service/attachment.js";
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 
@@ -252,7 +253,7 @@ class SectionAttachmentBox extends React.Component{
 			status: PropTypes.string,
 		}),
 		editable:PropTypes.bool,
-		sections:PropTypes.array,
+		// sections:PropTypes.array,
 		proof_tags: PropTypes.array
 	};
 
@@ -262,7 +263,7 @@ class SectionAttachmentBox extends React.Component{
 			attachments : [],
 			inProgress: {},
 			selectedAttachmentId: null,
-			attachmentSectionId: "",
+			// attachmentSectionId: "",
 			submitMessage: "",
 			submitStatus: "",
 			showErrors: false,
@@ -385,7 +386,7 @@ class SectionAttachmentBox extends React.Component{
 		}
 	};
 
-	getAttachmentSectionId = (e) => {
+	/*getAttachmentSectionId = (e) => {
 		this.setState({
 			attachmentSectionId : e.target.value
 		});
@@ -407,7 +408,7 @@ class SectionAttachmentBox extends React.Component{
 				showErrors: true,
 			});
 		});
-	};
+	};*/
 
 	rotateImage = (angle) => {
 		this.setState({disableRotateButton: true});
@@ -459,12 +460,12 @@ class SectionAttachmentBox extends React.Component{
 			attachmentRows.push(" ");
 		}
 
-		let sectionSelect = null;
+		// let sectionSelect = null;
 
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
-		else{
+		/*else{
 			if (this.props.editable){
 				sectionSelect = (
 					<div className="col-md-4">
@@ -481,7 +482,7 @@ class SectionAttachmentBox extends React.Component{
 					</div>
 				);
 			}
-		}
+		}*/
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
 
@@ -492,7 +493,7 @@ class SectionAttachmentBox extends React.Component{
 						<h4>Attachments {uploadButton}</h4>
 						{submitMessageElement}
 					</div>
-					{sectionSelect}
+					{/* {sectionSelect} */}
 				</div>
 
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
@@ -539,7 +540,7 @@ class Section extends React.Component{
 			status: PropTypes.string,
 		}),
 		answers: PropTypes.array,
-		sections:PropTypes.array,
+		// sections:PropTypes.array,
 		proof_tags: PropTypes.array
 	};
 
@@ -559,7 +560,7 @@ class Section extends React.Component{
 		//set initial state to true so that you don't get setState() calls
 		// on an unmounted component
 		not_applicable: true,
-		sections:[],
+		// sections:[],
 	};
 
 	componentDidMount(){
@@ -570,11 +571,11 @@ class Section extends React.Component{
 				not_applicable: this.props.reportSection.not_applicable,
 			});
 
-			fetchSections(this.props.auditStoreId).then((sections) => {
+			/*fetchSections(this.props.auditStoreId).then((sections) => {
 				this.setState({
 					sections
 				});
-			});
+			});*/
 		}
 	}
 	componentWillReceiveProps(nextProps){
@@ -749,7 +750,8 @@ class Section extends React.Component{
 					{/* <hr/>
 					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div> */}
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable} proof_tags={this.props.proof_tags}/>
+				{/* <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable} proof_tags={this.props.proof_tags}/> */}
+				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={editable} proof_tags={this.props.proof_tags}/>
 			</div>);
 		}
 		return (
@@ -821,7 +823,7 @@ export default class AuditStoreSections extends React.Component{
 				section={section}
 				reportSection={reportSection}
 				answers={this.state.answers}
-				sections={this.state.sections}
+				// sections={this.state.sections}
 				editable = {this.props.editable}
 				proof_tags={this.state.proof_tags}
 			/>);

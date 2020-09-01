@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import $ from "jquery";
+// import $ from "jquery";
 
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
-import { fetchSections } from "../service/section.js";
+// import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, rotateImageAngle } from "../service/attachment.js";
+// import { fetchSections } from "../service/section.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
 import { Paperclip, Plus } from "../../components/Icons.jsx";
@@ -30,8 +31,8 @@ export default class AttachmentBox extends React.Component {
 		proof_tags: [],
 		inProgress: {},
 		selectedAttachment: undefined,
-		sections:[],
-		sectionId : "",
+		// sections:[],
+		// sectionId : "",
 		submitMessage : "",
 		submitStatus: "",
 		showErrors: false,
@@ -48,11 +49,11 @@ export default class AttachmentBox extends React.Component {
 
 	componentDidMount() {
 		this.reloadState();
-		fetchSections(this.props.auditStoreId).then((sections) => {
+		/*fetchSections(this.props.auditStoreId).then((sections) => {
 			this.setState({
 				sections
 			});
-		});
+		});*/
 		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 			this.setState({
 				proof_tags
@@ -182,7 +183,7 @@ export default class AttachmentBox extends React.Component {
 		}
 	};
 
-	getSectionId = (e) => {
+	/*getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
 		});
@@ -204,7 +205,7 @@ export default class AttachmentBox extends React.Component {
 				showErrors: true,
 			});
 		});
-	};
+	};*/
 
 	rotateImage = (angle) => {
 		this.setState({disableRotateButton: true});
@@ -226,12 +227,11 @@ export default class AttachmentBox extends React.Component {
 	};
 
 	render() {
-		/*console.log("sctions",this.state.sections)*/
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
-		var contentStyle = {
+		/*var contentStyle = {
 			"paddingTop": "2%"
-		};
+		};*/
 
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -273,12 +273,12 @@ export default class AttachmentBox extends React.Component {
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
 		}
 
-		var selectSection = null;
+		// var selectSection = null;
 
 		if( attachmentRows.length === 0){
 			return <Jumbotron heading="no attachments here" para="none uploaded"/>;
 		} else {
-			if(this.props.editable){
+			/*if(this.props.editable){
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
 						<div className="col-md-8">
@@ -292,7 +292,7 @@ export default class AttachmentBox extends React.Component {
 						</div>
 					</div>
 				);
-			}
+			}*/
 			return (
 				<div>
 					<div className="row page-header">
@@ -300,7 +300,7 @@ export default class AttachmentBox extends React.Component {
 							<h3><Paperclip/> Attachments {uploadButton}</h3>
 							{submitMessageElement}
 						</div>
-						{selectSection}
+						{/* {selectSection} */}
 					</div>
 
 					<div className="row">

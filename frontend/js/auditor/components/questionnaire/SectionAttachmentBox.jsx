@@ -1,16 +1,17 @@
-import $ from "jquery";
+// import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import { } from "react-router";
 
 import { Paperclip } from "../../../components/Icons.jsx";
-import { orderKeys } from "../../../react_utils.js";
+// import { orderKeys } from "../../../react_utils.js";
 
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgressThumbnail.jsx";
 import AttachmentPreview from "../../components/AttachmentPreview.jsx";
 
-import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../../auditor/service/attachment.js";
+// import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../../auditor/service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment } from "../../../auditor/service/attachment.js";
 import { saveAttachmentTag } from "../../service/proof_tag.js";
 
 export default class SectionAttachmentBox extends React.Component{
@@ -29,7 +30,7 @@ export default class SectionAttachmentBox extends React.Component{
 		showErrors: PropTypes.bool,
 
 		editable:PropTypes.bool,
-		sections:PropTypes.object,
+		// sections:PropTypes.object,
 		proof_tags: PropTypes.array
 	};
 
@@ -39,7 +40,7 @@ export default class SectionAttachmentBox extends React.Component{
 			attachments: [],
 			selectedAttachment: undefined,
 			inProgress: {},
-			attachmentSectionId: "",
+			// attachmentSectionId: "",
 			submitMessage: "",
 			submitStatus: "",
 			showErrors: false,
@@ -78,7 +79,10 @@ export default class SectionAttachmentBox extends React.Component{
 	};
 
 	attachmentSelected = (attachment) => {
-		if (this.state.selectedAttachment){
+		this.setState({
+			selectedAttachment: attachment
+		});
+		/*if (this.state.selectedAttachment){
 			if(this.state.selectedAttachment.id === attachment.id){
 				this.setState({
 					selectedAttachment: null
@@ -94,7 +98,7 @@ export default class SectionAttachmentBox extends React.Component{
 			this.setState({
 				selectedAttachment: attachment
 			});
-		}
+		}*/
 	};
 
 	attachmentDeleteClicked = (attachment) => {
@@ -156,7 +160,7 @@ export default class SectionAttachmentBox extends React.Component{
 		}
 	};
 
-	getAttachmentSectionId = (e) => {
+	/*getAttachmentSectionId = (e) => {
 		this.setState({
 			attachmentSectionId : e.target.value
 		});
@@ -178,7 +182,7 @@ export default class SectionAttachmentBox extends React.Component{
 				showErrors: true,
 			});
 		});
-	};
+	};*/
 
 	saveAttachmentTag = (e) => {
 		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
@@ -231,12 +235,12 @@ export default class SectionAttachmentBox extends React.Component{
 
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
-		let sectionSelect = null;
+		// let sectionSelect = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
-			sectionSelect = null;
+			// sectionSelect = null;
 		}
-		else{
+		/*else{
 			if(this.props.editable){
 				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 					return s1.sequence - s2.sequence;
@@ -267,7 +271,7 @@ export default class SectionAttachmentBox extends React.Component{
 				);
 
 			}
-		}
+		}*/
 		let minimumAttachmentCount, panelStyle;
 		if( this.props.minimumAttachmentCount) {
 			minimumAttachmentCount = <span>(atleast {this.props.minimumAttachmentCount})</span>;
@@ -293,7 +297,7 @@ export default class SectionAttachmentBox extends React.Component{
 						<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>
 						{submitMessageElement}
 					</div>
-					{sectionSelect}
+					{/* {sectionSelect} */}
 				</div>
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`} style={panelStyle}>
 					<div style={{maxHeight:"500px", overflowY: "auto"}}>

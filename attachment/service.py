@@ -20,12 +20,16 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 import audit_store.service as audit_store_service
 from audit_store.models import AuditStore
 from answer.models import Answer, ReportSection
+from django.contrib.contenttypes.models import ContentType
+
 from answer.service import report_section as report_section_service
 from answer.service import answer as answer_service
 from auditor.models import ProfileInfo
 from auditor.service import profile_info_service
 from .models import Attachment
 from audit.service import audit_cycle_proof_tag
+from questionnaire.service.section_proof_tag import get_section_id_by_audit_cycle_proof_tag_id
+from answer.service import report_section as answer_service_report_section
 
 _logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -233,6 +237,7 @@ def rename(attachment_id, new_name):
     attachment.save()
     return attachment
 
+
 def save_attachment_proof_tag(attachment_id, proof_tag_id):
     attachment = find_by_id(attachment_id)
     if proof_tag_id == "":
@@ -248,6 +253,7 @@ def save_attachment_proof_tag(attachment_id, proof_tag_id):
             attachment.file_name = proof_tag_obj.proof_tag.name
     attachment.save()
     return attachment
+
 
 def find_by_id(attachment_id):
     try:
@@ -289,3 +295,31 @@ def rotate(attachment_id, angle):
     attachment.extra_properties = rotate_angle_data
     attachment.save()
     return attachment
+
+
+def update_attachment_by_proof_tag(audit_store_id, attachment_list):
+    for attachment in attachment_list:
+        if attachment.proof_tag:
+            section_id = get_section_id_by_audit_cycle_proof_tag_id(attachment.proof_tag.id)
+            if section_id:
+                answer_section_id = answer_service_report_section.get_answer_section_id_by_section_id(audit_store_id, section_id)
+                content_type_obj = ContentType.objects.get(app_label='answer', model='reportsection')
+                attachment.content_type = content_type_obj
+                attachment.object_id = answer_section_id
+                attachment.save()
+            else:
+                content_type_obj = ContentType.objects.get(app_label='audit_store', model='auditstore')
+                attachment.content_type = content_type_obj
+                attachment.object_id = audit_store_id
+                attachment.save()
+
+
+def set_attachment_by_proof_tag(audit_store_id):
+    audit_store_attachment = Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED)
+    report_section_obj = answer_service_report_section.find_by_audit_store(audit_store_id)
+    report_section_list = report_section_obj.values_list('id')
+    report_section_attachment = Attachment.objects.filter(report_sections__id__in=report_section_list,
+                                                          status=Attachment.ATTACHED)
+    update_attachment_by_proof_tag(audit_store_id, audit_store_attachment)
+    update_attachment_by_proof_tag(audit_store_id, report_section_attachment)
+    return True

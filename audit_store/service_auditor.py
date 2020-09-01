@@ -11,6 +11,8 @@ from notify.service.mail_concern_audit_report import send_audit_report_concern_e
 from auditor.service.application_service import change_application_status_to_withdrawn
 from client.service.client_manager import get_manager_email_list_by_audit_store_obj
 from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
+from attachment.service import set_attachment_by_proof_tag
+
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
@@ -50,7 +52,7 @@ def submit_report(audit_store_id, user_id):
         if audit_store.is_proof_tag_not_given_for_attachments():
             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
                                 "drop-down present below the attachment.")
-
+    set_attachment_by_proof_tag(audit_store_id)
     audit_store.submit(by=user)
     return audit_store
 

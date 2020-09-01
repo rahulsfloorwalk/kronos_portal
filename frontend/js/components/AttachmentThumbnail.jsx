@@ -97,10 +97,10 @@ export default class AttachmentThumbnail extends Component{
 	render(){
 		let proof_tag_select_box_style;
 
-		var contentStyle = {
+		/*var contentStyle = {
 			"width": "20px",
 			"height": "20px",
-		};
+		};*/
 
 		var faulty_style = {
 			"fontSize": "14px",
@@ -233,7 +233,7 @@ export default class AttachmentThumbnail extends Component{
 		}
 		divStyle.backgroundImage = `url("${imageSrc}")`;
 
-		let checkboxElement = null;
+		/*let checkboxElement = null;
 		if (this.props.user == "client"){
 			checkboxElement = null;
 		}
@@ -241,7 +241,7 @@ export default class AttachmentThumbnail extends Component{
 			if(this.props.editable){
 				checkboxElement = (<input type="checkbox" style={contentStyle} value={a.id}/>);
 			}
-		}
+		}*/
 
 		let faultyMessageElement = null;
 		if (this.props.faulty_report_id){
@@ -256,7 +256,7 @@ export default class AttachmentThumbnail extends Component{
 		return (
 			<div style={{display:"inline-block",width:"150px",height:"100px",margin: "5px",}}>
 				<div style={divStyle} title={a.file_name} onClick={onSelect} onMouseEnter={this.onMouseEnter} onMouseLeave={this.onMouseLeave}>
-					{checkboxElement}
+					{/* {checkboxElement} */}
 					{deleteButton}
 					<div style={fileNameStyle}>
 						<AttachmentProofIcon proofType={a.proof_type}/>&nbsp;

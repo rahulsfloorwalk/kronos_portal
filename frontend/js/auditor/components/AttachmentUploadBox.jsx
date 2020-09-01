@@ -1,9 +1,10 @@
-import $ from "jquery";
+// import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
-import { orderKeys } from "../../react_utils.js";
-import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment , moveAttachmentToSection } from "../service/attachment.js";
+// import { orderKeys } from "../../react_utils.js";
+// import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment , moveAttachmentToSection } from "../service/attachment.js";
+import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment } from "../service/attachment.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
 import { Paperclip } from "../../components/Icons.jsx";
@@ -15,7 +16,7 @@ import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import { auditStorePropType } from "../prop_types";
 
-import { fetchSections } from "../actions/section.js";
+// import { fetchSections } from "../actions/section.js";
 
 class AttachmentUploadBox extends React.Component {
 	static propTypes = {
@@ -23,7 +24,7 @@ class AttachmentUploadBox extends React.Component {
 		auditStoreId: PropTypes.oneOfType([ PropTypes.number, PropTypes.string, ]),
 		auditStore: auditStorePropType,
 		editable:PropTypes.bool,
-		sections:PropTypes.object
+		// sections:PropTypes.object
 	};
 
 	state = {
@@ -34,7 +35,7 @@ class AttachmentUploadBox extends React.Component {
 		inProgress: {},
 		progress: "",
 		uploading: false,
-		sectionId:"",
+		// sectionId:"",
 		submitMessage : "",
 		submitStatus: "",
 		showErrors: false,
@@ -50,7 +51,7 @@ class AttachmentUploadBox extends React.Component {
 
 	componentDidMount() {
 		this.reloadState();
-		this.props.dispatch(fetchSections(this.props.auditStoreId));
+		// this.props.dispatch(fetchSections(this.props.auditStoreId));
 		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 			this.setState({
 				proof_tags
@@ -140,7 +141,7 @@ class AttachmentUploadBox extends React.Component {
 		});
 	};
 
-	getSectionId = (e) => {
+	/*getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
 		});
@@ -166,7 +167,7 @@ class AttachmentUploadBox extends React.Component {
 				showErrors: true,
 			});
 		});
-	};
+	};*/
 
 	saveAttachmentTag = (e) => {
 		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then((a)=>{
@@ -190,9 +191,9 @@ class AttachmentUploadBox extends React.Component {
 			return <Loading/>;
 		}
 
-		var contentStyle = {
-			"paddingTop": "2%"
-		};
+		// var contentStyle = {
+		// 	"paddingTop": "2%"
+		// };
 
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -238,7 +239,7 @@ class AttachmentUploadBox extends React.Component {
 			onDelete={() => this.attachmentDeleteClicked(this.state.selectedAttachment)}
 			onChange={this.saveAttachmentTag}/>;
 
-		var selectSection = null;
+		// var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
 				<div key="empty" className="text-muted">
@@ -246,7 +247,7 @@ class AttachmentUploadBox extends React.Component {
 				</div>
 			);
 		}
-		else{
+		/*else{
 			if (this.props.editable){
 				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 					return s1.sequence - s2.sequence;
@@ -270,7 +271,7 @@ class AttachmentUploadBox extends React.Component {
 					</div>
 				);
 			}
-		}
+		}*/
 
 		return (
 			<div>
@@ -281,7 +282,7 @@ class AttachmentUploadBox extends React.Component {
 						</h3>
 						{submitMessageElement}
 					</div>
-					{selectSection}
+					{/* {selectSection} */}
 				</div>
 				{/* <div className="form-group attachment_checkbox" style={{}}>
 					{attachmentRows}
@@ -302,7 +303,7 @@ class AttachmentUploadBox extends React.Component {
 var mapStoreToProps = function(store, ownProps){
 	return {
 		auditStore: store.auditStores[ownProps.auditStoreId],
-		sections: store.sections
+		// sections: store.sections
 	};
 };
 

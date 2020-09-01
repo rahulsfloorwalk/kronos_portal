@@ -1,13 +1,14 @@
-import $ from "jquery";
+// import $ from "jquery";
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 
 import Alert from "react-s-alert";
 
-import { orderKeys } from "../../react_utils.js";
+// import { orderKeys } from "../../react_utils.js";
 
-import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
+// import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
+import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, rotateImageAngle } from "../service/attachment.js";
 import { Paperclip, Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -18,7 +19,7 @@ import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 
 import { auditStorePropType } from "../prop_types";
-import { fetchSections } from "../actions/section.js";
+// import { fetchSections } from "../actions/section.js";
 import {fetchproofTags, saveAttachmentTag} from "../service/proof_tag.js";
 
 export class AttachmentDisplayBox extends Component{
@@ -26,7 +27,7 @@ export class AttachmentDisplayBox extends Component{
 		dispatch: PropTypes.func.isRequired,
 		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 		auditStore: auditStorePropType,
-		sections: PropTypes.object,
+		// sections: PropTypes.object,
 	};
 
 	constructor(props){
@@ -36,7 +37,7 @@ export class AttachmentDisplayBox extends Component{
 			inProgress: {},
 			proof_tags: [],
 			selectedAttachment: undefined,
-			sectionId: "",
+			// sectionId: "",
 			submitMessage : "",
 			submitStatus: "",
 			showErrors: false,
@@ -52,7 +53,7 @@ export class AttachmentDisplayBox extends Component{
 	};
 	componentDidMount(){
 		this.reloadState();
-		this.props.dispatch(fetchSections(this.props.auditStoreId));
+		// this.props.dispatch(fetchSections(this.props.auditStoreId));
 		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 			this.setState({
 				proof_tags
@@ -180,7 +181,7 @@ export class AttachmentDisplayBox extends Component{
 		}
 	};
 
-	getSectionId = (e) => {
+	/*getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
 		});
@@ -206,7 +207,7 @@ export class AttachmentDisplayBox extends Component{
 				showErrors: true,
 			});
 		});
-	};
+	};*/
 
 	rotateImage = (angle) => {
 		this.setState({disableRotateButton: true});
@@ -235,9 +236,9 @@ export class AttachmentDisplayBox extends Component{
 
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
-		var contentStyle = {
-			"paddingTop": "2%"
-		};
+		// var contentStyle = {
+		// 	"paddingTop": "2%"
+		// };
 
 		var attachmentRows = [];
 
@@ -278,11 +279,11 @@ export class AttachmentDisplayBox extends Component{
 			);
 		}
 
-		var selectSection = null;
+		// var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
 		}
-		else{
+		/*else{
 			if(editable){
 				var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 					return s1.sequence - s2.sequence;
@@ -305,7 +306,7 @@ export class AttachmentDisplayBox extends Component{
 					</div>
 				);
 			}
-		}
+		}*/
 
 		return (
 			<div>
@@ -314,7 +315,7 @@ export class AttachmentDisplayBox extends Component{
 						<h3><Paperclip/> Attachments {uploadButton}</h3>
 						{submitMessageElement}
 					</div>
-					{selectSection}
+					{/* {selectSection} */}
 				</div>
 				<div className="row">
 					<div className="col-md-4 attachment_checkbox" style={{maxHeight:"500px", overflowY: "auto"}}>
@@ -332,7 +333,7 @@ export class AttachmentDisplayBox extends Component{
 var mapStoreToProps = function(store, ownProps){
 	return {
 		auditStore: store.auditStores[ownProps.auditStoreId],
-		sections:store.sections
+		// sections:store.sections
 	};
 };
 
