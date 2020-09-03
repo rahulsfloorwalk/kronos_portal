@@ -254,6 +254,19 @@ class AuditStoreIdQAOKView(APIView):
         audit_store.qa_ok(by=request.user)
         return Response(AuditStoreSerializer(audit_store).data)
 
+
+class AuditStoreIdArrangeAttachment(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MODERATOR]
+    }
+
+    def post(self, request, audit_store_id):
+        audit_store = get_object_or_404(AuditStore.objects.for_moderator(request.user), pk=audit_store_id)
+        set_attachment_by_proof_tag(audit_store_id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreAttachmentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

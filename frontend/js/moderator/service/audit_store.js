@@ -127,3 +127,7 @@ export function setReportSummary(audit_store_id, report_summary){
 		contentType: "application/json",
 	});
 }
+
+export function arrangeAttachment(auditStoreId){
+	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/arrange_attachment`);
+}

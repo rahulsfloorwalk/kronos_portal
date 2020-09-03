@@ -16,6 +16,8 @@ from audit_store import service_manager
 from ..service import moderator as moderator_service
 from auditor.service import profile_info_service
 
+from attachment.service import set_attachment_by_proof_tag
+
 from client_report.service import xlsx_report as xlsx_report_service
 
 from ..serializers import AuditStoreSerializer, AuditStoreSerializerWithoutAudit
@@ -269,6 +271,18 @@ class AuditStoreIdSubmitView(APIView):
     def post(self, request, audit_store_id):
         audit_store = service_manager.submit_report(audit_store_id, request.user.id)
         return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreIdArrangeAttachment(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_service.find_by_id(audit_store_id)
+        set_attachment_by_proof_tag(audit_store_id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
 
 class AuditStoreIdUnSubmitView(APIView):
     permission_classes = [HasGroupPermission]

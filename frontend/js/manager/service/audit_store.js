@@ -173,3 +173,7 @@ export function revokeFromModerator(auditStoreId){
 export function acceptAllReports(audit_cycle_id){
 	return $.post( url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store/accept`);
 }
+
+export function arrangeAttachment(auditStoreId){
+	return $.post(url.api_base_path + `manager/audit_store/${auditStoreId}/arrange_attachment`);
+}
