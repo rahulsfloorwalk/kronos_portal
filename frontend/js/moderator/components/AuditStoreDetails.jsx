@@ -9,7 +9,7 @@ import "react-datetime/css/react-datetime.css";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList } from "../service/audit_store.js";
+import { findById, qaOk, fail, unsubmit, submit, setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
 
 import { Calendar, File, Envelope } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -117,6 +117,12 @@ export default class AuditStoreDetails extends React.Component{
 			this.closeCheckPoint();
 		});
 	};
+	arrangeAttachmentByProofTag = () => {
+		arrangeAttachment(this.props.params.auditStoreId).then(() => {
+			location.reload();
+		});
+	};
+
 	render(){
 		if(! this.state.auditStore){
 			return <Loading/>;
@@ -350,6 +356,7 @@ export default class AuditStoreDetails extends React.Component{
 						</div>
 					</div>
 				</div>
+				<button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary}/>
 				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>

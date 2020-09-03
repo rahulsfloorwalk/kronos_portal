@@ -26,7 +26,7 @@ import { fetchAuditStore,
 	rejectAuditStore,
 	pmRevertAuditStore,
 } from "../actions/audit_store.js";
-import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList } from "../service/audit_store.js";
+import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment } from "../service/audit_store.js";
 
 import { Calendar, Retweet, King, File, Download, ThumbsDown } from "../../components/Icons.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
@@ -157,6 +157,12 @@ export class AuditStoreDetails extends React.Component{
 			Alert.success("CheckPoints Saved");
 		});
 	};
+	arrangeAttachmentByProofTag = () => {
+		arrangeAttachment(this.props.params.auditStoreId).then(() => {
+			location.reload();
+		});
+	};
+
 	render(){
 		if(! this.props.auditStore){
 			return <Loading/>;
@@ -408,6 +414,7 @@ export class AuditStoreDetails extends React.Component{
 						{detailsElement}
 					</div>
 				</div>
+				<button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}

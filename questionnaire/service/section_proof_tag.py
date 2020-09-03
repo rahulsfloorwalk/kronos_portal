@@ -67,10 +67,17 @@ def copy_proof_tag_from_to(from_section_id, to_section_id, audit_cycle_id):
 
         for section_proof_tag in from_section.section_proof_tag.all():
             proof_tag_obj = ProofTag.objects.get(pk=section_proof_tag.audit_cycle_proof_tag.proof_tag.id)
-            audit_cycle_proof_tag_obj = AuditCycleProofTagList()
-            audit_cycle_proof_tag_obj.audit_cycle = audit_cycle_obj
-            audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
-            audit_cycle_proof_tag_obj.save()
+            if AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle_obj, proof_tag=proof_tag_obj).exists():
+                AuditCycleProofTagList.objects.filter(audit_cycle=audit_cycle_obj, proof_tag=proof_tag_obj)\
+                    .update(is_active=True)
+                audit_cycle_proof_tag_obj = AuditCycleProofTagList.objects.get(audit_cycle=audit_cycle_obj,
+                                                                               proof_tag=proof_tag_obj)
+            else:
+                audit_cycle_proof_tag_obj = AuditCycleProofTagList()
+                audit_cycle_proof_tag_obj.audit_cycle = audit_cycle_obj
+                audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
+                audit_cycle_proof_tag_obj.save()
+
             new_section_proof_tag = SectionProofTag()
             new_section_proof_tag.audit_cycle_proof_tag = audit_cycle_proof_tag_obj
             new_section_proof_tag.section = to_section
