@@ -11,7 +11,7 @@ import { fetchAuditCycle } from "../../actions/audit.js";
 import AuditTypeLabel from "../../../components/AuditTypeLabel.jsx";
 import ExpandableDetails from "../../../components/ExpandableDetails.jsx";
 import MarkdownViewer from "../../../components/MarkdownViewer.jsx";
-import { Envelope, King, Knight, Retweet, Inbox, Tasks, Pencil, File } from "../../../components/Icons.jsx";
+import { Envelope, King, Knight, Retweet, Inbox, Tasks, Pencil, File, Duplicate } from "../../../components/Icons.jsx";
 import NavLink from "../../../components/NavLink.jsx";
 import Loading from "../../../components/Loading.jsx";
 
@@ -50,6 +50,7 @@ export class AuditCycleDetails extends React.Component{
 		}
 
 		let editAuditCycleLink = `/audit_cycle/${this.props.auditCycle.id}/edit`;
+		let copyAuditCycleLink = `/audit_cycle/${this.props.auditCycle.id}/copy`;
 		let detailsElement = <ExpandableDetails details={<MarkdownViewer markdown={this.props.auditCycle.description}/>}/>;
 
 		return (
@@ -60,9 +61,14 @@ export class AuditCycleDetails extends React.Component{
 					<li className="active"><Retweet/> {this.props.auditCycle.name}</li>
 				</ol>
 				<h3 className="page-header">
-					<Link to={editAuditCycleLink} className="btn btn-default pull-right">
-						<Pencil/>
-					</Link>
+					<span className="pull-right">
+						<Link to={copyAuditCycleLink} className="btn btn-default">
+							<Duplicate/> Copy Details
+						</Link>&nbsp;
+						<Link to={editAuditCycleLink} className="btn btn-default">
+							<Pencil/>
+						</Link>
+					</span>
 					<Retweet/> { this.props.auditCycle.client.name } - { this.props.auditCycle.name } <small>( { detailsElement }) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>Post Approval Desc.</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/checkpoints`}>Checkpoints</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/proofs_tag`}>Proofs Tag</Link>)</small>
 				</h3>
 				<div className="row" style={{fontSize:"110%"}}>

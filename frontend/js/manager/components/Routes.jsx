@@ -43,6 +43,7 @@ import CityList from "./location/CityList.jsx";
 
 import AuditCycleList from "./audit_cycle/AuditCycleList.jsx";
 import AuditCycleForm from "./audit_cycle/AuditCycleForm.jsx";
+import AuditCycleCopyForm from "./audit_cycle/AuditCycleCopyForm.jsx";
 import AuditCycleDetails from "./audit_cycle/AuditCycleDetails.jsx";
 import AuditCyclePaymentList from "./AuditCyclePaymentList.jsx";
 import AuditCycleModeratorSummary from "./audit_cycle/AuditCycleModeratorSummary.jsx";
@@ -132,6 +133,7 @@ const Routes = () => (
 
 			<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
 				<Route path="edit" component={AuditCycleForm}/>
+				<Route path="copy" component={AuditCycleCopyForm}/>
 				<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
 				<Route path="checkpoints" component={CheckPoints}/>
 				<Route path="proofs_tag" component={ProofsTag}/>

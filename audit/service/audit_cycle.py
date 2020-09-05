@@ -10,6 +10,8 @@ from client.service.client_user import find_clientuser_by_user_id
 from ..models import AuditCycle
 from auditor.models import AuditApplication
 from audit_store.models import AuditStore
+from . import audit_cycle_proof_tag
+
 
 def save(audit):
     AuditCycle.save(audit)
@@ -145,3 +147,21 @@ def set_checkpoints(audit_cycle_id, checkpoints):
 
 def find_audit_cycles_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')
+
+
+def copy_audit_details_from_to(from_audit_cycle_id, to_audit_cycle_id, checkpoints, post_approval_desc, proof_tags):
+    if not from_audit_cycle_id:
+        raise AppLogicError("Please Select Audit Cycle")
+
+    from_audit_cycle = find_by_id(from_audit_cycle_id)
+    to_audit_cycle = find_by_id(to_audit_cycle_id)
+
+    if checkpoints:
+        to_audit_cycle.check_points = from_audit_cycle.check_points
+    if post_approval_desc:
+        to_audit_cycle.post_approval_description = from_audit_cycle.post_approval_description
+    if proof_tags:
+        audit_cycle_proof_tag.copy_proof_tag_from_to_audit_cycle(from_audit_cycle, to_audit_cycle)
+
+    to_audit_cycle.save()
+    return to_audit_cycle

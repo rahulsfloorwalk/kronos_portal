@@ -116,6 +116,9 @@ urlpatterns = ([
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', audit_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/audit/copy$', audit_views.AuditCopyByAuditCycle.as_view(), name='audit_copy_by_audit_cycle'),
+
+    url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/copy_audit_details$', audit_cycle_views.AuditDetailsCopyByAuditCycle.as_view(), name='audit_details_copy_by_audit_cycle'),
+
     url(r'audit/(?P<audit_id>[0-9]+)/assign$', audit_views.AuditFiatAssignView.as_view(), name='audit_fiat_assign_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/application/deny_all$', audit_views.AuditRejectAllApplicationsView.as_view(), name='audit_id_reject_all_applications_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/audit_store$', audit_store_views.AuditStoreByAudit.as_view(), name='audit_store_by_audit_id_view'),
