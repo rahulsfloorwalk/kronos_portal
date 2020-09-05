@@ -38,15 +38,30 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
   <h3
     className="page-header"
   >
-    <a
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      style={Object {}}
+    <span
+      className="pull-right"
     >
-      <span
-        className="glyphicon glyphicon-pencil"
-      />
-    </a>
+      <a
+        className="btn btn-default"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-duplicate"
+        />
+         Copy Details
+      </a>
+       
+      <a
+        className="btn btn-default"
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-pencil"
+        />
+      </a>
+    </span>
     <span
       className="glyphicon glyphicon-retweet"
     />

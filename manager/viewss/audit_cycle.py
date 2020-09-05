@@ -175,3 +175,17 @@ class AuditCycleAuditStoreStats(APIView):
     def get(self, request, audit_cycle_id):
         stats = audit_store_service.get_audit_store_stats(audit_cycle_id)
         return Response(stats)
+
+class AuditDetailsCopyByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    def post(self, request, to_audit_cycle_id):
+        audit_cycle = audit_cycle_service.copy_audit_details_from_to(request.data.get("from_audit_cycle_id"),
+                                                                     to_audit_cycle_id,
+                                                                     request.data.get("checkpoints"),
+                                                                     request.data.get("post_approval_desc"),
+                                                                     request.data.get("proof_tags"))
+        return Response(AuditCycleSerializer(audit_cycle).data)

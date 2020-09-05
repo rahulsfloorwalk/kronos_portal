@@ -95,3 +95,19 @@ def get_master_proof_tag_id_from_audit_cycle_proof_tag(proof_id):
 
 def get_status_of_audit_cycle_proof_tag_by_audit_cycle_id(audit_cycle_id):
     return AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, is_active=True).exists()
+
+
+@atomic
+def copy_proof_tag_from_to_audit_cycle(from_audit_cycle, to_audit_cycle):
+    from_audit_cycle_proof_tag_list = from_audit_cycle.proof_tags_list.all()
+    for from_proof_tag in from_audit_cycle_proof_tag_list:
+        if AuditCycleProofTagList.objects\
+                .filter(audit_cycle=to_audit_cycle, proof_tag=from_proof_tag.proof_tag).exists():
+            AuditCycleProofTagList.objects\
+                .filter(audit_cycle=to_audit_cycle, proof_tag=from_proof_tag.proof_tag)\
+                .update(is_active=True)
+        else:
+            audit_cycle_proof_tag_obj = AuditCycleProofTagList()
+            audit_cycle_proof_tag_obj.audit_cycle = to_audit_cycle
+            audit_cycle_proof_tag_obj.proof_tag = from_proof_tag.proof_tag
+            audit_cycle_proof_tag_obj.save()
