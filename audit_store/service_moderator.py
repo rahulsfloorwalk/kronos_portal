@@ -1,5 +1,5 @@
 from django.db.transaction import atomic
-from guardian.shortcuts import get_objects_for_user
+from guardian.shortcuts import get_objects_for_user, get_users_with_perms
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -146,3 +146,11 @@ def set_check_points(audit_store_id, check_points, user_id):
             db_check_points[i]['value'] = False
     audit_store.set_check_points(db_check_points)
     return audit_store
+
+
+def get_moderator_email_by_audit_store_obj(audit_store):
+    users_with_perms = get_users_with_perms(audit_store, attach_perms=True)
+    for user, perms in users_with_perms.items():
+        if 'moderator_manage' in perms:
+            return user.email
+    return None

@@ -701,6 +701,7 @@ class Section extends React.Component{
 			auditorCommentElement = (
 				<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
 					<textarea
+						maxLength="4096"
 						disabled={this.state.savingAuditorComment}
 						placeholder="enter auditor comment here"
 						required="true"

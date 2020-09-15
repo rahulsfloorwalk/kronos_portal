@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import Alert from "react-s-alert";
+
 import { connect } from "react-redux";
 
 import { submitAnswerComment } from "../../actions/answer.js";
@@ -49,6 +51,7 @@ class __AnswerComment extends Component {
 	onBlur = (e) => {
 		this.commentChanged(e);
 		this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value));
+		Alert.success("Data Saved");
 	};
 
 	render(){

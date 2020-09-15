@@ -12,7 +12,7 @@ from auditor.service.application_service import change_application_status_to_wit
 from client.service.client_manager import get_manager_email_list_by_audit_store_obj
 from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
 from attachment.service import set_attachment_by_proof_tag
-
+from audit_store.service_moderator import get_moderator_email_by_audit_store_obj
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
@@ -141,6 +141,9 @@ def concern_report(audit_store_id, user_id, message):
     # Send Mail to manager or "ankush.take@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_CONCERN_BY_AUDITOR_EMAIL']:
         email_list = get_manager_email_list_by_audit_store_obj(audit_store)
+        moderator_email = get_moderator_email_by_audit_store_obj(audit_store)
+        if moderator_email:
+            email_list.append(moderator_email)
         if email_list:
             emails = email_list
         else:
