@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { } from "react-router";
 
+import Alert from "react-s-alert";
+
 import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
 import QuestionRow from "./QuestionRow.jsx";
 
@@ -80,6 +82,7 @@ class __Section extends React.Component{
 			audit_store: this.props.auditStoreId,
 		};
 		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
+		Alert.success("Data Saved");
 	};
 
 	render(){
@@ -99,7 +102,9 @@ class __Section extends React.Component{
 		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
 			commentElement = (
 				<form onSubmit={this.submitComment}>
-					<input
+					<textarea
+						rows="3"
+						maxLength="4096"
 						className="form-control"
 						name="auditor_comment"
 						value={this.state.auditor_comment}

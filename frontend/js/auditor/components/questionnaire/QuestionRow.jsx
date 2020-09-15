@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { } from "react-router";
 
+import Alert from "react-s-alert";
+
 import { } from "../../../components/Icons.jsx";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
@@ -75,6 +77,7 @@ class QuestionRow extends React.Component{
 			audit_store: this.props.auditStoreId,
 		};
 		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
+		Alert.success("Data Saved");
 	};
 
 	inputChanged = (e) => {

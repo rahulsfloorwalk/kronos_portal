@@ -3,6 +3,10 @@ import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 import _ from "lodash";
 
+import Alert from "react-s-alert";
+import "react-s-alert/dist/s-alert-default.css";
+import "react-s-alert/dist/s-alert-css-effects/slide.css";
+
 import Header from "./Header.jsx";
 import CollectBot from "./CollectBot.jsx";
 import Footer from "../../components/Footer.jsx";
@@ -42,6 +46,7 @@ class App extends React.Component {
 					{this.props.children}
 				</div>
 				<Footer config={this.state.config}/>
+				<Alert stack={{limit: 1}} effect="slide" timeout={2000} />
 			</div>
 		);
 	}

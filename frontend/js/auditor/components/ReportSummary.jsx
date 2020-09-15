@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
+import Alert from "react-s-alert";
+
 import { connect } from "react-redux";
 import { Tasks } from "../../components/Icons.jsx";
 import { submitReportSummary } from "../actions/audit_store.js";
@@ -45,6 +47,7 @@ class __ReportSummary extends Component {
 	onBlur = (e) => {
 		this.summaryChanged(e);
 		this.props.dispatch(submitReportSummary(this.props.audit_store_id, e.target.value));
+		Alert.success("Data Saved");
 	};
 
 	render(){
