@@ -210,20 +210,11 @@ export function submitAuditStore(auditStoreId){
 	};
 }
 
-export function unSubmitAuditStore(auditStoreId){
-	return function(dispatch){
-		dispatch({
-			type: types.AUDIT_STORE_ID_UN_SUBMIT,
-			status: "request",
-			auditStoreId
-		});
+export function unSubmitAuditStore(auditStoreId, reason){
+	return (dispatch) => {
 
-		return $.post( url.api_base_path + `manager/audit_store/${auditStoreId}/unsubmit`, function(auditStore){
-			dispatch({
-				type: types.AUDIT_STORE_ID_UN_SUBMIT,
-				status: "success",
-				auditStore
-			});
+		return service.unSubmitAuditStore(auditStoreId, reason).then((auditStore) => {
+			dispatch(updateAuditStore(auditStore));
 		});
 		//TODO: Handle error
 	};

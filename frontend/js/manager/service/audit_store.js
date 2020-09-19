@@ -76,6 +76,18 @@ export function auditor_rate(audit_store_id, auditor_rating){
 	});
 }
 
+export function unSubmitAuditStore(audit_store_id, reason){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/unsubmit`,
+		method: "POST",
+		data: JSON.stringify({
+			reason: reason,
+		}),
+		contentType: "application/json",
+	});
+}
+
+
 export function setReimbursement(audit_store_id, reimbursement){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/reimbursement`,

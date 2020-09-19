@@ -414,6 +414,93 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -831,6 +918,93 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -1248,6 +1422,93 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -1665,6 +1926,93 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -2082,6 +2430,93 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -2507,6 +2942,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -2931,6 +3453,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -3348,6 +3957,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -3758,6 +4454,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -4168,6 +4951,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -4578,6 +5448,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -4988,6 +5945,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -5448,6 +6492,93 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;
 
@@ -5858,5 +6989,92 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
     }
     auditStoreId={5}
   />
+  <div
+    className="modal"
+    style={
+      Object {
+        "display": "none",
+        "overflow": "scroll",
+      }
+    }
+    tabIndex="-1"
+  >
+    <div
+      className="modal-backdrop fade in"
+      onClick={[Function]}
+      style={
+        Object {
+          "height": "100%",
+          "zIndex": "1060",
+        }
+      }
+    />
+    <div
+      className="modal-dialog"
+      style={
+        Object {
+          "zIndex": "1070",
+        }
+      }
+    >
+      <div
+        className="modal-content"
+      >
+        <div
+          className="modal-header"
+        >
+          <button
+            className="close"
+            onClick={[Function]}
+            type="button"
+          >
+            ×
+          </button>
+          <h4
+            className="modal-title"
+          >
+            Revert To Auditor
+          </h4>
+        </div>
+        <div
+          className="modal-body"
+        >
+          Please Enter reason for reverting the audit to auditor
+          <textarea
+            className="form-control"
+            onBlur={[Function]}
+            onChange={[Function]}
+            rows="5"
+            value=""
+          />
+          <span
+            style={
+              Object {
+                "color": "red",
+              }
+            }
+          />
+        </div>
+        <div
+          className="modal-footer"
+        >
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Submit
+          </button>
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 `;

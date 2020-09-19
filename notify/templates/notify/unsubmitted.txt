@@ -1,7 +1,7 @@
 Hello {{ name }},
 Your audit report for <b>{{ client }}</b> on <b>{{ audit_date }}</b> needs some rectifications and improvments.
-We have unsubmitted your report so that you can make the necessary modifications and submit again.
-Don't worry, our project manager will contact you shortly and help you with reporting.
+We have reverted your report so that you can make the necessary modifications and submit again.
+Reason: {{message}}
 --
 Thanks and regards,
 FloorWalk Team

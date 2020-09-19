@@ -93,8 +93,9 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
         audit_store = mommy.make(AuditStore, audit__audit_cycle=audit_cycle, status=AuditStore.SUBMITTED,
                                  user=self.auditor_user)
+        message = "reason for revert the audit"
         assign_perm('moderator_manage', self.moderator_user, audit_store)
-        report = service_moderator.unsubmit_for_moderator(audit_store.id, self.moderator_user.id)
+        report = service_moderator.unsubmit_for_moderator(audit_store.id, self.moderator_user.id, message)
         self.assertEqual(AuditStore.ACKNOWLEDGED, report.status)
 
     def test_set_audit_date_for_moderator_sets_date_correctly(self):

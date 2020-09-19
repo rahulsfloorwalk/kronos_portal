@@ -59,10 +59,10 @@ def submit_report(audit_store_id, user_id):
     return audit_store
 
 
-def revert_submit_report(audit_store_id, user_id):
+def revert_submit_report(audit_store_id, user_id, message):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
-    audit_store.revert_submit(by=user)
+    audit_store.revert_submit(by=user, message=message)
     return audit_store
 
 

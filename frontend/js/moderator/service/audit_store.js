@@ -21,8 +21,15 @@ export function submit(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/submit`);
 }
 
-export function unsubmit(auditStoreId){
-	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/unsubmit`);
+export function unsubmit(auditStoreId, reason){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/unsubmit`,
+		method: "POST",
+		data: JSON.stringify({
+			reason: reason
+		}),
+		contentType: "application/json"
+	});
 }
 
 export function fail(auditStoreId){

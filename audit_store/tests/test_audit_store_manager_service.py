@@ -42,12 +42,14 @@ class AuditStoreManagerServiceTestCase(TestCase):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user,
                                  audit__audit_cycle=self.audit_cycle)
         auditor = mommy.make(User, username="faker@foobar.com", email="faker@foobar.com", groups=[self.auditor_group])
+        message = "reason for revert the audit"
         with self.assertRaises(ObjectNotFound):
-            service_manager.revert_submit_report(audit_store.id, auditor.id)
+            service_manager.revert_submit_report(audit_store.id, auditor.id, message)
 
     def test_revert_submit_report_changes_report_status(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
-        modified_audit_store = service_manager.revert_submit_report(audit_store.id, self.manager_user.id)
+        message = "reason for revert the audit"
+        modified_audit_store = service_manager.revert_submit_report(audit_store.id, self.manager_user.id, message)
         self.assertEqual(AuditStore.ACKNOWLEDGED, modified_audit_store.status)
 
     def test_qa_ok_report_raises_when_user_is_not_manager(self):
