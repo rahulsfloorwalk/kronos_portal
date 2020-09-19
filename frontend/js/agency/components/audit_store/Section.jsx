@@ -14,11 +14,11 @@ import { auditStorePropType } from "../../prop_types.js";
 
 export class __Section extends React.Component{
 	static propTypes = {
-		sections: PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-			sequence: PropTypes.number.isRequired,
-		})),
+		// sections: PropTypes.arrayOf(PropTypes.shape({
+		// 	id: PropTypes.number.isRequired,
+		// 	name: PropTypes.string.isRequired,
+		// 	sequence: PropTypes.number.isRequired,
+		// })),
 		section: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
@@ -87,7 +87,8 @@ export class __Section extends React.Component{
 							</tr>
 						</tbody>
 					</table>
-					<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={this.props.editable} proof_tags={this.props.proof_tags}/>
+					{/* <SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={this.props.editable} proof_tags={this.props.proof_tags}/> */}
+					<SectionAttachmentBox auditStoreId={this.props.auditStore.id} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} proof_tags={this.props.proof_tags}/>
 				</div>
 			);
 		} else {

@@ -47,7 +47,7 @@ export class __SectionList extends React.Component {
 				sectionId={section.id}
 				key={section.id}
 				showErrors={this.props.showErrors}
-				sections={this.props.sections}
+				// sections={this.props.sections}
 				proof_tags={this.state.proof_tags}/>;
 		});
 		if( sectionRows.length === 0){

@@ -224,8 +224,15 @@ class AuditStoreIdUnSubmitView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_MODERATOR],
     }
+
+    class DeSerializer(Serializer):
+        reason = CharField(allow_blank=True)
+
     def post(self, request, audit_store_id):
-        audit_store = audit_store_service.unsubmit_for_moderator(audit_store_id, request.user.id)
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = audit_store_service.unsubmit_for_moderator(audit_store_id, request.user.id,
+                                                                 ds.validated_data['reason'])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdFailView(APIView):

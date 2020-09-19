@@ -111,10 +111,13 @@ class AuditStoreIdRevertSubmitTestCase(ManagerAPITestCase):
 
     def test_post_changes_status_to_acknowledged(self):
         audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user__email=fake.email, qa_rating=AuditStore.GOOD)
+        reason = "reason for revert the audit"
 
         response = self.client.post(reverse('manager:audit_store_id_unsubmit_view', kwargs = {
             'audit_store_id': audit_store.id
-        }))
+        }), {
+            "reason": reason
+        })
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["status"], AuditStore.ACKNOWLEDGED)
 

@@ -10,3 +10,13 @@ class EmailLog(Model):
 
     class Meta:
         ordering = ['-sent_at']
+
+
+class MessageLog(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    sent_to = CharField(db_column='mobile_number', max_length=10)
+    message_status = CharField(db_column='message_status', max_length=50)
+    sent_at = DateTimeField(db_column='sent_at')
+
+    class Meta:
+        ordering = ['-sent_at']

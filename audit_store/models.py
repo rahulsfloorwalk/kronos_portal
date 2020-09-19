@@ -376,12 +376,12 @@ class AuditStore(Model):
         self._change_status(AuditStore.SUBMITTED, by)
 
     @atomic
-    def revert_submit(self, *args, by):
+    def revert_submit(self, *args, by, message):
 
         if self.status != AuditStore.SUBMITTED:
             raise AppLogicError("Report cannot be unsubmitted now")
 
-        self._change_status(AuditStore.ACKNOWLEDGED, by)
+        self._change_status(AuditStore.ACKNOWLEDGED, by, message)
 
     @atomic
     def qa_ok(self, *args, by):

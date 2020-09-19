@@ -289,8 +289,14 @@ class AuditStoreIdUnSubmitView(APIView):
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
+
+    class DeSerializer(Serializer):
+        reason = CharField(allow_blank=True)
+
     def post(self, request, audit_store_id):
-        audit_store = service_manager.revert_submit_report(audit_store_id, request.user.id)
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_store = service_manager.revert_submit_report(audit_store_id, request.user.id, ds.validated_data['reason'])
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdAcceptView(APIView):

@@ -1,9 +1,10 @@
-import $ from "jquery";
+// import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
-import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment, moveAttachmentToSection } from "../../service/attachment.js";
+// import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment, moveAttachmentToSection } from "../../service/attachment.js";
+import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment } from "../../service/attachment.js";
 import { fetchproofTags, saveAttachmentTag } from "../../service/proof_tag.js";
 
 import { Paperclip } from "../../../components/Icons.jsx";
@@ -14,17 +15,17 @@ import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgr
 
 import { auditStorePropType } from "../../prop_types.js";
 import { findAuditStore } from "../../reducers/audit_store.js";
-import { findSectionsByAuditStoreId } from "../../reducers/section.js";
+// import { findSectionsByAuditStoreId } from "../../reducers/section.js";
 
 class __AttachmentUploadBox extends React.Component {
 	static propTypes = {
 		auditStoreId: PropTypes.number.isRequired,
 		auditStore: auditStorePropType.isRequired,
-		sections: PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-			sequence: PropTypes.number.isRequired,
-		})),
+		// sections: PropTypes.arrayOf(PropTypes.shape({
+		// 	id: PropTypes.number.isRequired,
+		// 	name: PropTypes.string.isRequired,
+		// 	sequence: PropTypes.number.isRequired,
+		// })),
 		editable:PropTypes.bool
 	};
 
@@ -137,7 +138,7 @@ class __AttachmentUploadBox extends React.Component {
 		});
 	};
 
-	getSectionId = (e) => {
+	/*getSectionId = (e) => {
 		this.setState({
 			sectionId : e.target.value
 		});
@@ -160,7 +161,7 @@ class __AttachmentUploadBox extends React.Component {
 			});
 		});
 
-	};
+	};*/
 
 	saveAttachmentTag = (e) => {
 		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
@@ -169,9 +170,9 @@ class __AttachmentUploadBox extends React.Component {
 	};
 
 	render() {
-		var contentStyle = {
-			"paddingTop": "2%"
-		};
+		// var contentStyle = {
+		// 	"paddingTop": "2%"
+		// };
 
 		let submitMessageElement = <big><b className={this.state.submitStatus ? "text-" + this.state.submitStatus : ""}>{this.state.submitMessage}</b></big>;
 
@@ -213,7 +214,7 @@ class __AttachmentUploadBox extends React.Component {
 				/>);
 			}
 		}
-		var selectSection = null;
+		// var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(
 				<div key="empty" className="text-muted">
@@ -221,7 +222,7 @@ class __AttachmentUploadBox extends React.Component {
 				</div>
 			);
 		}
-		else{
+		/*else{
 			if(this.props.editable){
 				selectSection = (
 					<div className="col-md-4" style={contentStyle}>
@@ -237,7 +238,7 @@ class __AttachmentUploadBox extends React.Component {
 					</div>
 				);
 			}
-		}
+		}*/
 
 		return (
 			<div>
@@ -248,7 +249,7 @@ class __AttachmentUploadBox extends React.Component {
 						</h3>
 						{submitMessageElement}
 					</div>
-					{selectSection}
+					{/* {selectSection} */}
 				</div>
 				<div className="row">
 					<div className="form-group attachment_checkbox" style={{}}>
@@ -264,7 +265,7 @@ const mapStoreToProps = (store, ownProps) => {
 	const auditStore = findAuditStore(store, ownProps.auditStoreId);
 	return {
 		auditStore: findAuditStore(store, ownProps.auditStoreId),
-		sections: findSectionsByAuditStoreId(store, ownProps.auditStoreId),
+		// sections: findSectionsByAuditStoreId(store, ownProps.auditStoreId),
 		editable: auditStore && auditStore.is_editable_by_agency,
 	};
 };

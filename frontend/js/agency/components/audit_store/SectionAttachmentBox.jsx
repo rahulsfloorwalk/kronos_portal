@@ -1,4 +1,4 @@
-import $ from "jquery";
+// import $ from "jquery";
 import React from "react";
 import PropTypes from "prop-types";
 import { } from "react-router";
@@ -8,7 +8,8 @@ import { Paperclip } from "../../../components/Icons.jsx";
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgressThumbnail.jsx";
 
-import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../service/attachment.js";
+// import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../service/attachment.js";
+import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment } from "../../service/attachment.js";
 import { saveAttachmentTag } from "../../service/proof_tag.js";
 
 export default class SectionAttachmentBox extends React.Component{
@@ -24,7 +25,7 @@ export default class SectionAttachmentBox extends React.Component{
 		]).isRequired,
 		auditStore: PropTypes.object,
 		editable: PropTypes.bool,
-		sections: PropTypes.oneOfType([PropTypes.object,PropTypes.array]),
+		// sections: PropTypes.oneOfType([PropTypes.object,PropTypes.array]),
 		proof_tags: PropTypes.array
 	};
 
@@ -32,7 +33,7 @@ export default class SectionAttachmentBox extends React.Component{
 		attachments: [],
 		selectedAttachment: undefined,
 		inProgress: {},
-		attachmentSectionId: "",
+		// attachmentSectionId: "",
 		submitMessage: "",
 		submitStatus: "",
 		showErrors: false,
@@ -134,13 +135,13 @@ export default class SectionAttachmentBox extends React.Component{
 		}
 	};
 
-	getAttachmentSectionId = (e) => {
+	/*getAttachmentSectionId = (e) => {
 		this.setState({
 			attachmentSectionId : e.target.value
 		});
-	};
+	};*/
 
-	moveAttachmentSection = () => {
+	/*moveAttachmentSection = () => {
 		let attachmentlist = [];
 		$(`.attachment_checkbox_section${this.props.sectionId} input:checked`).each(function() {
 			let val = $(this).attr("value");
@@ -156,7 +157,7 @@ export default class SectionAttachmentBox extends React.Component{
 				showErrors: true,
 			});
 		});
-	};
+	};*/
 
 	saveAttachmentTag = (e) => {
 		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
@@ -202,11 +203,11 @@ export default class SectionAttachmentBox extends React.Component{
 			}
 			attachmentRows.push(" ");
 		}
-		let sectionSelect = null;
+		// let sectionSelect = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<span key="empty" className="text-muted">no attachments here&nbsp;</span>);
 		}
-		else{
+		/*else{
 			if(this.props.editable){
 				sectionSelect = (
 					<div className="col-md-4">
@@ -223,7 +224,7 @@ export default class SectionAttachmentBox extends React.Component{
 					</div>
 				);
 			}
-		}
+		}*/
 		return (
 			<div>
 				<div className="panel-body">
@@ -231,7 +232,7 @@ export default class SectionAttachmentBox extends React.Component{
 						<h4>Attachments {uploadButton}</h4>
 						{submitMessageElement}
 					</div>
-					{sectionSelect}
+					{/* {sectionSelect} */}
 				</div>
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
 					{attachmentRows}

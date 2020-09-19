@@ -128,7 +128,9 @@ def notification_email_task(notif_id, message):
 
         elif notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
             get_params_from_audit_store(notif.action_object, params)
-            subject = "Audit Report Unsubmitted for {}".format(params['client'])
+            # subject = "Audit Report Unsubmitted for {}".format(params['client'])
+            subject = "Audit Report Reverted for {}".format(params['client'])
+            params['message'] = message
             params['html_template'] = 'notify/unsubmitted.html'
             params['txt_template'] = 'notify/unsubmitted.txt'
 

@@ -43,6 +43,9 @@ export default class AuditStoreDetails extends React.Component{
 			auditDateSuccess: false,
 			auditDateError: false,
 			errorMessage: "",
+			display:"none",
+			reason: "",
+			errMsg: ""
 		};
 	}
 	setAuditStore = (auditStore) => {
@@ -71,8 +74,36 @@ export default class AuditStoreDetails extends React.Component{
 	submitButtonClicked = () => {
 		submit(this.props.params.auditStoreId).then(this.setAuditStore);
 	};
+	showModal = () => {
+		this.setState({ display:"block" });
+	};
+
+	hideModal = () => {
+		this.setState({ display:"none", errMsg: "" });
+	};
+	submit_hideModal = () => {
+		if (this.state.reason === ""){
+			this.setState({errMsg: "Please enter reason"});
+		}
+		else{
+			this.unSubmitButtonClicked();
+			this.setState({ display:"none" });
+		}
+	};
+
+	reasonChanged = (e) => {
+		this.setState({
+			reason: e.target.value,
+			errMsg: ""
+		});
+	};
+
+	onBlur = (e) => {
+		this.reasonChanged(e);
+	};
+
 	unSubmitButtonClicked = () => {
-		unsubmit(this.props.params.auditStoreId).then(this.setAuditStore);
+		unsubmit(this.props.params.auditStoreId, this.state.reason).then(this.setAuditStore);
 	};
 	auditDateChanged = (momentDate) => {
 		this.setState({auditDateLoading: true});
@@ -136,6 +167,18 @@ export default class AuditStoreDetails extends React.Component{
 			paddingRight:"5px",
 			paddingTop:"1%"
 		};
+		const modalStyle = {
+			display: this.state.display,
+			overflow: "scroll"
+		};
+		const modalBackdropStyle = {
+			zIndex: "1060",
+			height: "100%"
+		};
+		const modalDialogStyle = {
+			zIndex: "1070",
+		};
+
 		let faultyReportMessage = null;
 		if(this.state.auditStore.find_faulty_report_count > 0){
 			faultyReportMessage = (<span style={faultyReportMessageStyle} className="pull-right">{this.state.auditStore.find_faulty_report_count} Repeated Attachment Found</span>);
@@ -150,7 +193,16 @@ export default class AuditStoreDetails extends React.Component{
 			failButton = (<button onClick={this.failButtonClicked} type="button" className="btn btn-default pull-right">Fail</button>);
 		}
 		if(this.state.auditStore.status === "SUBMITTED"){
-			unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-default">Revert to Auditor</button>);
+			if(this.state.auditStore.user.agencyuser){
+				unSubmitButton = (<button onClick={this.unSubmitButtonClicked} type="button" className="btn btn-default">
+					Revert to Auditor
+				</button>);
+			}
+			else{
+				unSubmitButton = (<button onClick={this.showModal} type="button" className="btn btn-default">
+					Revert to Auditor
+				</button>);
+			}
 			qaOkButton = (<button onClick={this.qaOkButtonClicked} type="button" className="btn btn-primary">Forward to PM</button>);
 
 			let hasAuditDateError = this.state.auditDateError ? "has-error" : "";
@@ -246,6 +298,15 @@ export default class AuditStoreDetails extends React.Component{
 				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.state.auditStore.moderator_comment} readOnly></textarea>
 			);
 		}
+		let auditorRatingElement;
+		if (this.state.auditStore.user.profileinfo){
+			auditorRatingElement = (<tr>
+				<td className="text-right">Auditor Rating:</td>
+				<th>
+					<AuditorRating rating={this.state.auditStore.user.profileinfo.auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
+				</th>
+			</tr>);
+		}
 		return (
 			<div className="main">
 				{/*
@@ -322,12 +383,7 @@ export default class AuditStoreDetails extends React.Component{
 											<AuditStoreRating rating={this.state.auditStore.qa_rating}/> (<Link to={`${this.props.location.pathname}/rate`}>change</Link>)
 										</th>
 									</tr>
-									<tr>
-										<td className="text-right">Auditor Rating:</td>
-										<th>
-											<AuditorRating rating={this.state.auditStore.user.profileinfo.auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
-										</th>
-									</tr>
+									{auditorRatingElement}
 								</tbody>
 							</table>
 							<div className="panel-footer text-right">
@@ -363,6 +419,28 @@ export default class AuditStoreDetails extends React.Component{
 				{this.props.children}
 
 				{sidebarElement}
+
+				<div className="modal" tabIndex="-1" style={modalStyle}>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
+					<div className="modal-dialog" style={modalDialogStyle}>
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" onClick={this.hideModal}>&times;</button>
+								<h4 className="modal-title">Revert To Auditor</h4>
+							</div>
+							<div className="modal-body">
+								Please Enter reason for reverting the audit to auditor
+								<textarea rows="5" className="form-control" value={this.state.reason} onChange={this.reasonChanged} onBlur={this.onBlur} />
+								<span style={{color:"red"}}>{this.state.errMsg}</span>
+							</div>
+							<div className="modal-footer">
+								<button type="button" className="btn btn-primary" onClick={this.submit_hideModal}>Submit</button>
+								<button type="button" className="btn btn-default" onClick={this.hideModal}>Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
 		);
 	}
