@@ -3,12 +3,15 @@ from django.db.models import PROTECT
 from django.utils import timezone
 
 from manager import states
+from manager import country
+
 
 class City(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column="name", max_length=100, blank=False)
     state = CharField(db_column="state", max_length=5, blank=False, choices=states.get_django_choices())
+    country = CharField(db_column="country", max_length=5, blank=False, default="IN", choices=country.get_country_django_choices())
     lat = DecimalField(max_digits=9, decimal_places=6, null=True)
     lon = DecimalField(max_digits=9, decimal_places=6, null=True)
 

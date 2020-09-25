@@ -2,6 +2,7 @@ from collections import OrderedDict
 from json import loads, dumps
 
 states = OrderedDict()
+# Indian States
 states["IN-AN"] = "Andaman and Nicobar Islands"
 states["IN-AP"] = "Andhra Pradesh"
 states["IN-AR"] = "Arunachal Pradesh"
@@ -38,6 +39,15 @@ states["IN-TR"] = "Tripura"
 states["IN-UT"] = "Uttarakhand"
 states["IN-UP"] = "Uttar Pradesh"
 states["IN-WB"] = "West Bengal"
+
+# Australian States
+states["AU-NS"] = "New South Wales"
+states["AU-NT"] = "Northern Territory"
+states["AU-QL"] = "Queensland"
+states["AU-TA"] = "Tasmania"
+states["AU-VI"] = "Victoria"
+states["AU-WA"] = "Western Australia"
+
 
 def get_django_choices():
     choices = []
