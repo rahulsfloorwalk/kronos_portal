@@ -13,6 +13,7 @@ import AuditStoreTable from "./AuditStoreTable.jsx";
 // import AuditCycleSelector from "./AuditCycleSelector.jsx";
 import AuditCycleSelectorForDashboard from "./AuditCycleSelectorForDashboard.jsx";
 
+import CountrySelector from "./report_browser/CountrySelector.jsx";
 import CitySelector from  "./report_browser/CitySelector.jsx";
 import StateSelector from  "./report_browser/StateSelector.jsx";
 import EndDateSelector from  "./report_browser/EndDateSelector.jsx";
@@ -84,6 +85,7 @@ export class ReportBrowser3 extends Component{
 				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
 					{/* <AuditCycleSelector/>&nbsp; */}
 					<AuditCycleSelectorForDashboard/>&nbsp;
+					<CountrySelector/>&nbsp;
 					<StateSelector/>&nbsp;
 					<CitySelector/>&nbsp;
 					<StoreTypeSelector/>&nbsp;

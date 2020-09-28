@@ -41,12 +41,20 @@ states["IN-UP"] = "Uttar Pradesh"
 states["IN-WB"] = "West Bengal"
 
 # Australian States
+states["AU-CT"] = "Australian Capital Territory"
 states["AU-NS"] = "New South Wales"
 states["AU-NT"] = "Northern Territory"
 states["AU-QL"] = "Queensland"
+states["AU-SA"] = "South Australia"
 states["AU-TA"] = "Tasmania"
 states["AU-VI"] = "Victoria"
 states["AU-WA"] = "Western Australia"
+
+# Singapore States
+states["SG-NA"] = "Singapore"
+
+# England State
+states["EN-NA"] = "England"
 
 
 def get_django_choices():
@@ -71,3 +79,12 @@ def get_state_code(state_name):
     except IndexError:
         pass
     return state_code
+
+
+def get_state_by_country(country):
+    country_with_dash = country + "-"
+    states_dict = {}
+    for code, name in states.items():
+        if country_with_dash in code:
+            states_dict[code] = name
+    return states_dict

@@ -8,7 +8,8 @@ import { } from "../../styles.js";
 import { } from "../../components/Icons.jsx";
 //import Loading from "../../components/Loading.jsx";
 
-import { fetchStates } from "../service/city.js";
+// import { fetchStates } from "../service/city.js";
+import { fetchStatesByCountry } from "../service/city.js";
 
 export default class StateSelector extends React.Component{
 	static propTypes = {
@@ -28,7 +29,8 @@ export default class StateSelector extends React.Component{
 
 	componentDidMount(){
 		this.setLoading(true);
-		fetchStates().then((states)=>this.setState({states})).finally(this.setLoading(false));
+		// fetchStates().then((states)=>this.setState({states})).finally(this.setLoading(false));
+		fetchStatesByCountry("IN").then((states)=>this.setState({states})).finally(this.setLoading(false));
 	}
 
 	stateChanged = (e) => {

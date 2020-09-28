@@ -14,6 +14,7 @@ export class DownloadSummaryButton extends React.Component {
 		}),
 		cityId: PropTypes.number,
 		state: PropTypes.string,
+		country: PropTypes.string,
 		storeType: PropTypes.string,
 		storePriority: PropTypes.string,
 		startDate: PropTypes.string,
@@ -25,6 +26,7 @@ export class DownloadSummaryButton extends React.Component {
 		let base = url.api_base_path + `client/audit_cycle/${this.props.auditCycle.id}/report_browser_filtered_xlsx_report?`;
 		base += "city=" + encodeURIComponent(this.props.cityId || "");
 		base += "&state=" + encodeURIComponent(this.props.state || "");
+		base += "&country=" + encodeURIComponent(this.props.country || "");
 		base += "&priority=" + encodeURIComponent(this.props.storePriority || "");
 		base += "&start_date=" + encodeURIComponent(moment(this.props.startDate).format("YYYY-MM-DD") || "");
 		base += "&end_date=" + encodeURIComponent(moment(this.props.endDate).format("YYYY-MM-DD") || "");
@@ -54,6 +56,7 @@ const mapStateToProps = (store) => {
 		auditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(store),
 		cityId: reportBrowserSelectors.findSelectedCityId(store),
 		state : reportBrowserSelectors.findSelectedState(store),
+		country : reportBrowserSelectors.findSelectedCountry(store),
 		storeType: reportBrowserSelectors.findSelectedStoreType(store),
 		storePriority: reportBrowserSelectors.findSelectedStorePriority(store),
 		startDate: reportBrowserSelectors.findSelectedStartDateBySelectedAuditCycle(store),

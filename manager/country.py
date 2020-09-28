@@ -3,9 +3,10 @@ from json import loads, dumps
 
 country = OrderedDict()
 country["AU"] = "Australia"
+country["EN"] = "England"
 country["IN"] = "India"
-country["NZ"] = "New Zealand"
-country["UK"] = "United Kingdom"
+# country["NZ"] = "New Zealand"
+country["SG"] = "Singapore"
 
 
 def get_country_django_choices():
@@ -16,12 +17,12 @@ def get_country_django_choices():
 
 
 def get_country_dict(code):
-    country = ''
+    country_name = ''
     try:
-        country = loads(dumps(country))[code]
+        country_name = loads(dumps(country))[code]
     except KeyError:
         pass
-    return country
+    return country_name
 
 
 def get_country_code(country_name):

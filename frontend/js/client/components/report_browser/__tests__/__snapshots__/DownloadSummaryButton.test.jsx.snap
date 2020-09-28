@@ -4,7 +4,7 @@ exports[`DownloadSummaryButton renders nothing when auditCyle is not provided 1`
 
 exports[`DownloadSummaryButton renders the button with the generated link 1`] = `
 <a
-  href="/client/audit_cycle/1/report_browser_filtered_xlsx_report?city=2&state=&priority=BAR&start_date=2018-06-01&end_date=2018-06-30&type=FOO&attribute=foo%3Abar"
+  href="/client/audit_cycle/1/report_browser_filtered_xlsx_report?city=2&state=&country=&priority=BAR&start_date=2018-06-01&end_date=2018-06-30&type=FOO&attribute=foo%3Abar"
 >
   <h5>
     <b>

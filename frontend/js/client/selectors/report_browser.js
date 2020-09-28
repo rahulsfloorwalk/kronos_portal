@@ -20,12 +20,23 @@ export default class ReportBrowserSelectors {
 		return this.getNamespacedStore(store).selectedState;
 	};
 
+	findSelectedCountry = (store) => {
+		return this.getNamespacedStore(store).selectedCountry;
+	};
+
 	findCitiesByAuditCycleId = (store, auditCycleId) => {
 		const selectedState = this.findSelectedState(store);
+		const selectedCountry = this.findSelectedCountry(store);
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((cities, report) => {
 				const city = cities.find((c) => c.id === report.city_id);
-				if(city === undefined && (selectedState === null || selectedState === "")){
+				if(city === undefined && (selectedState === null || selectedState === "") && (selectedCountry === null || selectedCountry === "")){
+					return cities.concat({
+						id: report.city_id,
+						name: report.city_name,
+					});
+				}
+				else if(city === undefined && (selectedState === null || selectedState === "") && (report.country === selectedCountry )){
 					return cities.concat({
 						id: report.city_id,
 						name: report.city_name,
@@ -44,13 +55,30 @@ export default class ReportBrowserSelectors {
 	};
 
 	findStatesByAuditCycleId = (store, auditCycleId) => {
+		const selectedCountry = this.findSelectedCountry(store);
 		return this.findReportsByAuditCycleId(store, auditCycleId)
 			.reduce((states, report) => {
 				const state = states.find((c) => c === report.state);
-				if(state === undefined){
+				if(state === undefined && (selectedCountry === null || selectedCountry === "")){
 					return states.concat(report.state);
-				} else {
+				}
+				else if (state === undefined && report.country === selectedCountry){
+					return states.concat(report.state);
+				}
+				else {
 					return states;
+				}
+			}, []);
+	};
+
+	findCountryByAuditCycleId = (store, auditCycleId) => {
+		return this.findReportsByAuditCycleId(store, auditCycleId)
+			.reduce((countries, report) => {
+				const country = countries.find((c) => c === report.country);
+				if(country === undefined){
+					return countries.concat(report.country);
+				} else {
+					return countries;
 				}
 			}, []);
 	};
@@ -124,6 +152,16 @@ export default class ReportBrowserSelectors {
 		}
 	};
 
+	findCountryBySelectedAuditCycle = (state) => {
+		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
+		if(selectedAuditCycle){
+			const countries = this.findCountryByAuditCycleId(state, selectedAuditCycle.id);
+			return countries;
+		} else {
+			return [];
+		}
+	};
+
 	findStoreTypesBySelectedAuditCycle = (state) => {
 		const selectedAuditCycle = this.auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state);
 		if(selectedAuditCycle){
@@ -190,6 +228,7 @@ export default class ReportBrowserSelectors {
 
 		const selectedCityId = this.findSelectedCityId(store);
 		const selectedState = this.findSelectedState(store);
+		const selectedCountry = this.findSelectedCountry(store);
 		const selectedStoreType = this.findSelectedStoreType(store);
 		const selectedStorePriority = this.findSelectedStorePriority(store);
 		const selectedStartDate = this.findSelectedStartDateBySelectedAuditCycle(store);
@@ -199,6 +238,7 @@ export default class ReportBrowserSelectors {
 			return this.findReportsByAuditCycleId(store, selectedAuditCycle.id)
 				.filter(r => selectedCityId ? r.city_id === selectedCityId : true)
 				.filter(r => selectedState ? r.state === selectedState : true)
+				.filter(r => selectedCountry ? r.country === selectedCountry : true)
 				.filter(r => selectedStoreType ? r.store_type === selectedStoreType : true)
 				.filter(r => selectedStorePriority ? r.store_priority === selectedStorePriority : true)
 				.filter(r => moment(r.audit_date).isBetween(selectedStartDate, selectedEndDate, null, "[]"));

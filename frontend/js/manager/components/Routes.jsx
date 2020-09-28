@@ -38,6 +38,7 @@ import AuditorRatingForm from "./auditor/AuditorRatingForm.jsx";
 import AgencyUserSearch from "./agency_user/AgencyUserSearch.jsx";
 import AgencyUserDetails from "./agency_user/AgencyUserDetails.jsx";
 
+import CountryList from "./location/CountryList.jsx";
 import StateList from "./location/StateList.jsx";
 import CityList from "./location/CityList.jsx";
 
@@ -192,8 +193,10 @@ const Routes = () => (
 			<Route path="agency_user" component={AgencyUserSearch}/>
 			<Route path="agency_user/:userId" component={AgencyUserDetails}/>
 
-			<Route path="state" component={StateList}>
-				<Route path=":stateId" component={CityList}/>
+			<Route path="country" component={CountryList}>
+				<Route path=":countryId/state" component={StateList}>
+					<Route path=":stateId/city" component={CityList}/>
+				</Route>
 			</Route>
 
 			<Route path="moderator" component={ModeratorIndex}>

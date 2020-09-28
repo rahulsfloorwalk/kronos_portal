@@ -5,7 +5,8 @@ import { hashHistory } from "react-router";
 
 import Alert from "react-s-alert";
 
-import { fetchStates, fetchCities } from "../../actions/location.js";
+// import { fetchCountry, fetchStates, fetchStatesByCountry, fetchCities } from "../../actions/location.js";
+import { fetchCountry, fetchStatesByCountry, fetchCities } from "../../actions/location.js";
 import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from "../../actions/store.js";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
@@ -14,6 +15,7 @@ import FormErrorList from "../../../components/FormErrorList.jsx";
 import SaveButton from "../../../components/SaveButton.jsx";
 import Modal from "../../../components/Modal.jsx";
 
+import CountrySelector from "../../../components/CountrySelector.jsx";
 import StateSelector from "../../../components/StateSelector.jsx";
 import CitySelector from "../../../components/CitySelector.jsx";
 
@@ -40,7 +42,8 @@ class StoreForm extends React.Component {
 	state = {};
 
 	componentDidMount() {
-		this.props.dispatch(fetchStates());
+		this.props.dispatch(fetchCountry());
+		// this.props.dispatch(fetchStates());
 
 		if(this.props.params.storeId){
 			this.props.dispatch(loadStoreEditForm(this.props.params.storeId));
@@ -53,9 +56,11 @@ class StoreForm extends React.Component {
 		this.setState(nextProps.store);
 		if(nextProps.store && nextProps.store.city){
 			this.setState({
+				"country": nextProps.store.city.country,
 				"city": nextProps.store.city.id,
 				"state": nextProps.store.city.state
 			});
+			this.props.dispatch(fetchStatesByCountry(nextProps.store.city.country));
 			this.props.dispatch(fetchCities(nextProps.store.city.state));
 		}
 	}
@@ -64,11 +69,26 @@ class StoreForm extends React.Component {
 		affectInputEventToComponent(e, this);
 	};
 
+	myCountryChanged = (e) => {
+		this.inputChanged(e);
+		var countryCode = e.target.value;
+		if(countryCode){
+			this.props.dispatch(fetchStatesByCountry(e.target.value));
+			this.setState({
+				"state": "",
+				"city": ""
+			});
+		}
+	};
+
 	myStateChanged = (e) => {
 		this.inputChanged(e);
 		var stateCode = e.target.value;
 		if( stateCode){
 			this.props.dispatch(fetchCities(e.target.value));
+			this.setState({
+				"city": ""
+			});
 		}
 	};
 
@@ -122,13 +142,16 @@ class StoreForm extends React.Component {
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<div className="row">
 						<div className="col-sm-6">
-							<StateSelector value={this.state.state} onChange={this.myStateChanged}/>
+							<CountrySelector value={this.state.country} onChange={this.myCountryChanged}/>
 						</div>
 						<div className="col-sm-6">
-							<CitySelector value={this.state.city} onChange={this.myCityChanged}/>
+							<StateSelector value={this.state.state} onChange={this.myStateChanged}/>
 						</div>
 					</div>
 					<div className="row">
+						<div className="col-sm-6">
+							<CitySelector value={this.state.city} onChange={this.myCityChanged}/>
+						</div>
 						<div className="col-sm-6">
 							<FormInput label="Name" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
 						</div>

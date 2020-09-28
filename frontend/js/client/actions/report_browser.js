@@ -22,4 +22,14 @@ export function selectState(selectedState){
 	};
 }
 
+export function selectCountry(selectedCountry){
+	return function(dispatch){
+		if(!selectCountry) {
+			dispatch(reportBrowserActionCreators.resetStateFilter());
+			dispatch(reportBrowserActionCreators.resetCityFilter());
+		}
+		dispatch(reportBrowserActionCreators.selectCountry(selectedCountry));
+	};
+}
+
 
