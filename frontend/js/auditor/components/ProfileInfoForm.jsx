@@ -5,7 +5,8 @@ import { hashHistory } from "react-router";
 
 import moment from "moment";
 
-import { fetchStates, fetchCities } from "../actions/location_info.js";
+// import { fetchCountries, fetchStates, fetchStatesByCountry, fetchCities } from "../actions/location_info.js";
+import { fetchCountries, fetchStatesByCountry, fetchCities } from "../actions/location_info.js";
 import { fetchProfileInfo, saveProfileInfo } from "../actions/profile_info.js";
 
 import { affectInputEventToComponent } from "../../react_utils.js";
@@ -15,6 +16,37 @@ import FormSelect from "../../components/FormSelect.jsx";
 import Modal from "../../components/Modal.jsx";
 import DOBPicker from "../../components/DOBPicker.jsx";
 import Loading from "../../components/Loading.jsx";
+
+/* Country Selector begins */
+
+class __CountrySelector extends React.Component {
+	static propTypes = {
+		countries: PropTypes.object,
+	};
+
+	render() {
+		let countryOptions = [];
+		for( let c in this.props.countries){
+			countryOptions.push(<option key={c} value={c}>{this.props.countries[c]}</option>);
+		}
+		return (
+			<FormSelect label="Country (✳)" name="country" {...this.props}>
+				<option value=""></option>
+				{countryOptions}
+			</FormSelect>
+		);
+	}
+}
+
+var mapStoreToPropsForCountrySelector = function(store){
+	return {
+		countries: store.countries,
+	};
+};
+
+var CountrySelector = ReactRedux.connect(mapStoreToPropsForCountrySelector)(__CountrySelector);
+
+/* Country Selector ends */
 
 /* State Selector begins */
 
@@ -39,7 +71,7 @@ class __StateSelector extends React.Component {
 
 var mapStoreToPropsForStateSelector = function(store){
 	return {
-		states: store.states,
+		states: store.country_states,
 	};
 };
 
@@ -122,14 +154,17 @@ class ProfileInfoForm extends React.Component {
 		this.setLoading(true);
 		Promise.all([
 			this.props.dispatch(fetchProfileInfo()),
-			this.props.dispatch(fetchStates()),
+			this.props.dispatch(fetchCountries()),
+			// this.props.dispatch(fetchStates()),
 		]).then(([profileInfo] )=> {
 			this.setLoading(false);
 			this.setState(profileInfo);
 			if(profileInfo.city){
 				this.setState({
 					state: profileInfo.city.state,
+					country: profileInfo.city.country,
 				});
+				this.props.dispatch(fetchStatesByCountry(profileInfo.city.country)),
 				this.props.dispatch(fetchCities(profileInfo.city.state));
 			}
 		});
@@ -137,6 +172,21 @@ class ProfileInfoForm extends React.Component {
 
 	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
+	};
+
+	myCountryChanged = (e) => {
+		this.inputChanged(e);
+		if(e.target.value){
+			this.props.dispatch(fetchStatesByCountry(e.target.value));
+			this.setState({
+				state: ""
+			});
+		} else {
+			this.setState({
+				state: "",
+				city_id: "",
+			});
+		}
 	};
 
 	myStateChanged = (e) => {
@@ -227,8 +277,14 @@ class ProfileInfoForm extends React.Component {
 						</div>
 						<div className="row">
 							<div className="col-md-6">
-								<StateSelector value={this.state.state} onChange={this.myStateChanged} disabled={this.state.submitting}/>
+								<CountrySelector value={this.state.country} onChange={this.myCountryChanged} disabled={this.state.submitting}/>
 							</div>
+							<div className="col-md-6">
+								<StateSelector value={this.state.state} onChange={this.myStateChanged} 	disabled={this.state.submitting}/>
+
+							</div>
+						</div>
+						<div className="row">
 							<div className="col-md-6">
 								<CitySelector state={this.state.state} value={this.state.city_id} onChange={this.inputChanged} disabled={this.state.submitting}/>
 							</div>

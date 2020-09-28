@@ -7,6 +7,7 @@ import auditCycleReducer from "./reducers/audit_cycle";
 import clientReducer from "./reducers/client";
 import storeReducer from "./reducers/store";
 import sectionReducer from "./reducers/section";
+import countryReducer from "./reducers/country";
 import stateReducer from "./reducers/state";
 import cityReducer from "./reducers/city";
 import answerReducer from "./reducers/answer";
@@ -28,6 +29,7 @@ export default combineReducers({
 	clients: clientReducer,
 	stores: storeReducer,
 	sections: sectionReducer,
+	countries: countryReducer,
 	states: stateReducer,
 	cities: cityReducer,
 	answers: answerReducer,

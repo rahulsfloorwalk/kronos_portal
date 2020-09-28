@@ -238,6 +238,7 @@ class AuditCycleFilteredXlsxReport(APIView):
         filters = {}
         filters['city'] = request.GET.get('city')
         filters['state'] = request.GET.get('state')
+        filters['country'] = request.GET.get('country')
         filters['type'] = request.GET.get('type')
         filters['priority'] = request.GET.get('priority')
         filters['month'] = request.GET.get('month')
@@ -258,6 +259,7 @@ class ReportBrowserFilteredXlsxReport(APIView):
         filters = {}
         filters['city'] = request.GET.get('city')
         filters['state'] = request.GET.get('state')
+        filters['country'] = request.GET.get('country')
         filters['type'] = request.GET.get('type')
         filters['priority'] = request.GET.get('priority')
         filters['month'] = request.GET.get('month')

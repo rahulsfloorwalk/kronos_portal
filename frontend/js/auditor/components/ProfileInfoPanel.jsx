@@ -11,7 +11,7 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { Check, Warning, Pencil } from "../../components/Icons.jsx";
 
-import { fetchStates } from "../actions/location_info.js";
+// import { fetchCountries, fetchStates } from "../actions/location_info.js";
 import { fetchProfileInfo } from "../actions/profile_info.js";
 import { getGender, getEducationStatus, getMaritalStatus } from "../../utils.js";
 import Loading from "../../components/Loading.jsx";
@@ -47,7 +47,8 @@ class ProfileInfoPanelBase extends React.Component {
 
 	componentDidMount() {
 		this.props.dispatch(fetchProfileInfo());
-		this.props.dispatch(fetchStates());
+		// this.props.dispatch(fetchCountries());
+		// this.props.dispatch(fetchStates());
 	}
 
 	render() {
@@ -97,6 +98,7 @@ class ProfileInfoPanelBase extends React.Component {
 							<tr><td className="text-muted text-right">*Address:</td><th>{this.props.profileInfo.address}</th></tr>
 							<tr><td className="text-muted text-right">*City:</td><th>{auditorCity.name}</th></tr>
 							<tr><td className="text-muted text-right">*State:</td><th>{auditorCity.state}</th></tr>
+							<tr><td className="text-muted text-right">*Country:</td><th>{auditorCity.country}</th></tr>
 							<tr><td className="text-muted text-right">*Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>
 						</tbody>
 					</table>
@@ -110,7 +112,8 @@ class ProfileInfoPanelBase extends React.Component {
 var mapStoreToProps = function(store){
 	return {
 		profileInfo: store.profileInfo,
-		states: store.states
+		// countries: store.countries,
+		// states: store.states,
 	};
 };
 

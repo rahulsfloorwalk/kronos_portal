@@ -64,7 +64,8 @@ export default class AuditCycleTimeSeries extends React.Component{
 		for(let i=0; i < ts.section_master.length; i++){
 			let obj = {};
 			obj["name"] = ts.section_master[i];
-			obj["Section Score"] = ts.values[0][i].value;
+			// obj["Section Score"] = ts.values[0][i].value;
+			obj["Section Score"] = ts.values[0][i] ? ts.values[0][i].value : null;
 			data.push(obj);
 		}
 		return data;

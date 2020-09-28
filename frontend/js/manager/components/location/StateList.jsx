@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
 
-import { fetchStates } from "../../service/location.js";
+import { fetchStatesByCountry, fetchCountries } from "../../service/location.js";
 
 import { MapMarker } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
@@ -11,6 +11,7 @@ export default class StateList extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			stateId: PropTypes.string,
+			countryId: PropTypes.string,
 		}),
 		children: PropTypes.node,
 	};
@@ -18,7 +19,14 @@ export default class StateList extends React.Component {
 	state = {};
 
 	componentDidMount() {
-		fetchStates().done((states) => this.setState({states}));
+		fetchCountries().done((countries) => this.setState({countries}));
+		fetchStatesByCountry(this.props.params.countryId).done((states) => this.setState({states}));
+	}
+
+	componentWillReceiveProps(nextProps) {
+		if(this.props.params.countryId !== nextProps.params.countryId){
+			fetchStatesByCountry(nextProps.params.countryId).done((states) => this.setState({states}));
+		}
 	}
 
 	render() {
@@ -27,7 +35,7 @@ export default class StateList extends React.Component {
 		}
 		let rows = [];
 		for(let stateId in this.state.states) {
-			let linkTo = `state/${stateId}`;
+			let linkTo = `country/${this.props.params.countryId}/state/${stateId}/city`;
 			let activeClass = this.props.params.stateId === stateId ? "active" : "";
 			rows.push(
 				<Link key={stateId} to={linkTo} className={"list-group-item " + activeClass}>
@@ -38,7 +46,7 @@ export default class StateList extends React.Component {
 		return (
 			<div>
 				<div className="row">
-					<div className="col-md-3">
+					<div className="col-md-6">
 						<h2 className="page-header">
 							<MapMarker/> States
 						</h2>

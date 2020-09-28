@@ -1,6 +1,26 @@
 import types from "../action_types.js";
+import { fetchCountries as _fetchCountry } from "../service/location.js";
 import { fetchStates as _fetchStates } from "../service/location.js";
+import { fetchStatesByCountry as _fetchStatesByCountry } from "../service/location.js";
 import { fetchCities as _fetchCities } from "../service/location.js";
+
+export function fetchCountry(){
+	return function(dispatch){
+		dispatch({
+			type: types.COUNTRY_GET,
+			status: "request",
+		});
+
+		return _fetchCountry().done(function(countries){
+			dispatch({
+				type: types.COUNTRY_GET,
+				status: "success",
+				countries: countries
+			});
+		});
+		//TODO: Handle error
+	};
+}
 
 export function fetchStates(){
 	return function(dispatch){
@@ -13,13 +33,30 @@ export function fetchStates(){
 			dispatch({
 				type: types.STATE_GET,
 				status: "success",
-				states: states
+				country_states: states
 			});
 		});
 		//TODO: Handle error
 	};
 }
 
+export function fetchStatesByCountry(countryCode){
+	return function(dispatch){
+		dispatch({
+			type: types.STATE_GET_BY_COUNTRY,
+			status: "request",
+		});
+
+		return _fetchStatesByCountry(countryCode).done(function(states){
+			dispatch({
+				type: types.STATE_GET_BY_COUNTRY,
+				status: "success",
+				states: states
+			});
+		});
+		//TODO: Handle error
+	};
+}
 export function fetchCities(stateCode){
 	return function(dispatch){
 		dispatch({

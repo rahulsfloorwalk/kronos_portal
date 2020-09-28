@@ -26,6 +26,7 @@ from auditor.service import application_service
 from auditor.service import preferences_service
 from auditor.service import stats as auditor_dashboard_service
 from manager import states
+from manager import country
 from manager.models import City
 from manager.service import notifications as notification_service
 from payment.service import payment_auditor as payment_service
@@ -275,6 +276,29 @@ class StateView(APIView):
     }
     def get(self, request, format=None):
         return Response(states.states)
+
+
+class StateViewByCountry(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+
+    def get(self, request, country):
+        return Response(states.get_state_by_country(country))
+
+
+class CountryView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR]
+    }
+
+    def get(self, request, format=None):
+        return Response(country.country)
+
 
 class AnswerSubmitView(APIView):
     permission_classes = [HasGroupPermission]

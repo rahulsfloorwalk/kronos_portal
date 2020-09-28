@@ -39,7 +39,7 @@ export default class Header extends Component{
 								<Heartbeat/>
 							</a>
 						</li>
-						<NavLink to="/state"><MapMarker/> <span className="hidden-xs">Cities</span></NavLink>
+						<NavLink to="/country"><MapMarker/> <span className="hidden-xs">Cities</span></NavLink>
 						<NavLink to="/proof_tag"><File/> <span className="hidden-xs">Proofs Tag</span></NavLink>
 						<li>
 							<a style={pointerStyle}

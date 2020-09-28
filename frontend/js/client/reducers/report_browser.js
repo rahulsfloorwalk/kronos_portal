@@ -2,12 +2,14 @@ import {
 	FETCH_REPORTS,
 	SELECT_CITY,
 	SELECT_STATE,
+	SELECT_COUNTRY,
 	SELECT_STORE_TYPE,
 	SELECT_PRIORITY,
 	SELECT_START_DATE,
 	SELECT_END_DATE,
 	RESET_FILTERS,
 	RESET_CITY_FILTER,
+	RESET_STATE_FILTER,
 	SELECT_REPORT_ATTRIBUTE_OPTION,
 } from "../action_types";
 
@@ -15,6 +17,7 @@ const initialState = {
 	reports: {},
 	selectedCityId: null,
 	selectedState: null,
+	selectedCountry: null,
 	selectedStoreType: null,
 	selectedStorePriority: null,
 	selectedEndDate: null,
@@ -38,6 +41,12 @@ export default (state=initialState, action) => {
 		return Object.assign({}, state, {
 			selectedState: action.selectedState,
 			selectedCityId: null,
+		});
+	case SELECT_COUNTRY:
+		return Object.assign({}, state, {
+			selectedCountry: action.selectedCountry,
+			selectedState: null,
+			selectedCityId: null
 		});
 	case SELECT_STORE_TYPE:
 		return Object.assign({}, state, {
@@ -65,10 +74,15 @@ export default (state=initialState, action) => {
 		return Object.assign({}, state, {
 			selectedCityId: null,
 		});
+	case RESET_STATE_FILTER:
+		return Object.assign({}, state, {
+			selectedState: null,
+		});
 	case RESET_FILTERS:
 		return Object.assign({}, state, {
 			selectedCityId: null,
 			selectedState: null,
+			selectedCountry: null,
 			selectedStoreType: null,
 			selectedStorePriority: null,
 			selectedEndDate: null,
@@ -100,6 +114,12 @@ export function resetCityFilter(){
 	};
 }
 
+export function resetStateFilter(){
+	return {
+		type: RESET_STATE_FILTER,
+	};
+}
+
 export function selectCity(selectedCityId){
 	return {
 		type: SELECT_CITY,
@@ -111,6 +131,14 @@ export function selectState(selectedState){
 	const obj = {
 		type: SELECT_STATE,
 		selectedState,
+	};
+	return obj;
+}
+
+export function selectCountry(selectedCountry){
+	const obj = {
+		type: SELECT_COUNTRY,
+		selectedCountry,
 	};
 	return obj;
 }

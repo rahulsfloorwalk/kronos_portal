@@ -7,7 +7,9 @@ urlpatterns = ([
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
     url(r'user$', views.UserView.as_view(), name='user_view'),
     url(r'notifications$', views.NotificationsView.as_view(), name='notifications_view'),
+    url(r'country$', views.CountryView.as_view(), name='country_view'),
     url(r'state$', views.StateView.as_view(), name='state_view'),
+    url(r'state/(?P<country>[\w\-]+)$', views.StateViewByCountry.as_view(), name='state_view_by_country'),
     url(r'city/(?P<state>[\w\-]+)$', views.CityView.as_view(), name='city_view'),
     url(r'id_proof/attachment$', views.UserIdProofAttachmentView.as_view(), name="id_proof_upload_view"),
 

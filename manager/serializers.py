@@ -47,6 +47,7 @@ class CitySerializer(ModelSerializer):
             'id',
             'name',
             'state',
+            'country',
             'state_name',
             'lat',
             'lon',

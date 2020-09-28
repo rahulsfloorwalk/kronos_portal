@@ -12,15 +12,32 @@ from manager.models import City
 from audit_store.models import AuditStore
 from questionnaire.models import Question
 from manager.states import get_state_code
-
+from manager.country import get_country_code
 
 # Get report for audit cycle client with filters
 def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
-    audit_cycle_name, sections, questions, filtered_audit_stores, city_name, state, date_name, month_name = get_aggregate_data_with_filters(
+    audit_cycle_name, sections, questions, filtered_audit_stores, city_name, state, country, date_name, month_name = get_aggregate_data_with_filters(
         audit_cycle_id, user_id, filters)
     data = create_text_structure(audit_cycle_name, sections, questions, filtered_audit_stores)
-    name = (str(audit_cycle_name) + city_name + state + filters.get('type') + filters.get(
-        'priority') + date_name + month_name + ".xlsx").replace("-", "")
+    '''name = (str(audit_cycle_name) + city_name + state + country + filters.get('type') + filters.get(
+        'priority') + date_name + month_name + ".xlsx").replace("-", "")'''
+    name = (str(audit_cycle_name))
+    if city_name:
+        name = name + "_" + city_name
+    if state:
+        name = name + "_" + state
+    if country:
+        name = name + "_" + country
+    if filters.get('type'):
+        name = name + "_" + filters.get('type')
+    if filters.get('priority'):
+        name = name + "_" + filters.get('priority')
+    if date_name:
+        name = name + date_name
+    if month_name:
+        name = name + "_" + month_name
+    name = name + ".xlsx"
+    name = name.replace("-", "")
     return write_data(data), name
 
 
@@ -33,6 +50,8 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     )
 
     city_name = ''
+    country = filters.get('country', '')
+    country_code = get_country_code(country)
     state = filters.get('state', '')
     state_code = get_state_code(state)
     month_name=''
@@ -62,6 +81,9 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     if state_code not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.city.state == state_code]
+    if country_code not in ignored_filters:
+        filtered_audit_stores = [x for x in filtered_audit_stores if
+                                 x.audit.store.city.country == country_code]
     if filters.get('type') not in ignored_filters:
         filtered_audit_stores = [x for x in filtered_audit_stores if
                                  x.audit.store.type == filters.get('type')]
@@ -90,7 +112,7 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
         "_",
         (filters.get('end_date') if filters.get('end_date') not in ignored_filters else "").replace("-", "_"))
 
-    return audit_cycle.name, sections, questions, filtered_audit_stores, city_name, state, date_name, month_name
+    return audit_cycle.name, sections, questions, filtered_audit_stores, city_name, state, country, date_name, month_name
 
 
 def create_text_structure(title, sections, questions, audit_stores):

@@ -11,7 +11,7 @@ from registration.mixins import HasGroupPermission
 from agency.models import AgencyPresence
 
 from manager.service import city_service
-from manager.states import states
+from manager.states import states, get_state_by_country
 from manager.models import City
 
 from agency_rest.serializers import AgencySerializer
@@ -41,6 +41,16 @@ class StateView(APIView):
     }
     def get(self, request, format=None):
         return Response(states)
+
+
+class StateViewByCountry(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AGENCY]
+    }
+    def get(self, request, country_code):
+        return Response(get_state_by_country(country_code))
+
 
 class CityView(APIView):
     permission_classes = [HasGroupPermission]

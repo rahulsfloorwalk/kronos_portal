@@ -7,6 +7,7 @@ urlpatterns = ([
     url(r'presence/city/(?P<city_id>[0-9]+)/present$', views.AgencyPresencePresentView.as_view(), name='agency_presence_present_view'),
     url(r'presence/state/(?P<state_code>[\w\-]+)$', views.AgencyPresenceByStateView.as_view(), name='agency_presence_by_state_view'),
     url(r'states/(?P<state_code>[\w\-]+)/city$', views.CityView.as_view(), name='city_view'),
+    url(r'(?P<country_code>[\w\-]+)/states$', views.StateViewByCountry.as_view(), name='state_view_by_country'),
     url(r'states$', views.StateView.as_view(), name='state_view'),
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', views.AuditStoreIdReportSummaryView.as_view(), name="audit_store_id_report_summary_view"),

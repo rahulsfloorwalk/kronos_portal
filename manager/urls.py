@@ -35,7 +35,9 @@ urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)$', report_stats_views.AuditCycleStoreSectionAverageReport.as_view(), name='audit_cycle_store_section_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city/(?P<city_id>[0-9]+)$', report_stats_views.AuditCycleCitySectionAverageReport.as_view(), name='audit_cycle_city_section_average'),
 
+    url(r'country$', city_views.CountryView.as_view(), name='country_view'),
     url(r'state$', city_views.StateView.as_view(), name='state_view'),
+    url(r'(?P<country>[\w\-]+)/state_by_country_id$', city_views.StateViewByCountryId.as_view(), name='state_view_by_country_id'),
     url(r'city/(?P<state>[\w\-]+)$', city_views.CityView.as_view(), name='city_view'),
 
     url(r'client/(?P<client_id>[0-9]+)/questionnaire_type$', questionnaire_type_views.QuestionnaireTypeByClientView.as_view(), name='questionnaire_type_by_client_view'),

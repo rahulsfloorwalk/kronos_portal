@@ -377,11 +377,27 @@ export function rootReducer(store = initialStore, action) {
 			});
 		}
 		break;
+	case types.COUNTRY_GET:
+		switch(action.status){
+		case "success":
+			return Object.assign({}, store, {
+				countries: action.countries
+			});
+		}
+		break;
 	case types.STATE_GET:
 		switch(action.status){
 		case "success":
 			return Object.assign({}, store, {
 				states: action.states
+			});
+		}
+		break;
+	case types.STATE_GET_BY_COUNTRY:
+		switch(action.status){
+		case "success":
+			return Object.assign({}, store,{
+				country_states: action.country_states
 			});
 		}
 		break;

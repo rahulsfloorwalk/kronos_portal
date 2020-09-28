@@ -2,6 +2,7 @@ from kronos.exceptions import ObjectNotFound
 from kronos.utils import get_color_code_by_percentage
 
 from manager import states
+from manager import country
 # from client.service.client_user import find_clientuser_by_user_id
 
 from audit.models import AuditCycle, Audit
@@ -224,6 +225,7 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
         audit_stores.append({
             'audit_store_id': audit_store.id,
             'audit_date': audit_store.audit_date,
+            'country': country.get_country_dict(audit_store.audit.store.city.country),
             'state': states.get_state_dict(audit_store.audit.store.city.state),
             'city_name': audit_store.audit.store.city.name,
             'city_id': audit_store.audit.store.city.id,
