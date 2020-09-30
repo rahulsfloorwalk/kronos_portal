@@ -56,6 +56,21 @@ states["SG-NA"] = "Singapore"
 # England State
 states["EN-NA"] = "England"
 
+# New Zealand States
+states["NZ-AL"] = "Auckland"
+states["NZ-NL"] = "Northland"
+states["NZ-BP"] = "Bay of Plenty"
+states["NZ-HB"] = "Hawke's Bay"
+states["NZ-GB"] = "Gisborne"
+states["NZ-MW"] = "Manawatu-Whanganui"
+states["NZ-TN"] = "Taranaki"
+states["NZ-WK"] = "Waikato"
+states["NZ-WT"] = "Wellington"
+states["NZ-CB"] = "Canterbury"
+states["NZ-OT"] = "Otago"
+states["NZ-SL"] = "Southland"
+states["NZ-WC"] = "West Coast"
+
 
 def get_django_choices():
     choices = []
@@ -83,7 +98,7 @@ def get_state_code(state_name):
 
 def get_state_by_country(country):
     country_with_dash = country + "-"
-    states_dict = {}
+    states_dict = OrderedDict()
     for code, name in states.items():
         if country_with_dash in code:
             states_dict[code] = name
