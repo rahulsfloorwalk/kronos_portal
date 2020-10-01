@@ -7,6 +7,7 @@ country["EN"] = "England"
 country["IN"] = "India"
 country["NZ"] = "New Zealand"
 country["SG"] = "Singapore"
+country["US"] = "United States"
 
 
 def get_country_django_choices():
