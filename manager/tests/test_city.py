@@ -9,5 +9,5 @@ class CityTestCase(TestCase):
         expect(city.state_name()).to(equal("Maharashtra"))
 
     def test_state_name_returns_none_if_the_code_is_invalid(self):
-        city = City(name="Foo", state="US-CA")
+        city = City(name="Foo", state="IN-CA")
         expect(city.state_name()).to(be_none)
