@@ -1,11 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
+
+import domtoimage from "dom-to-image";
+import fileDownload from "js-file-download";
+
 // import { ResponsiveContainer, BarChart, CartesianGrid, Bar, Cell, XAxis, YAxis, Tooltip, Legend, Text, Label, LineChart, Line} from "recharts";
 import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Text, Label} from "recharts";
 
 import {demo} from "../../../config.js";
 
-import { ThList } from "../../components/Icons.jsx";
+import { ThList, Download } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Modal from "../../components/Modal.jsx";
 // import { getColor, getColorbyValue  } from "../../utils.js";
@@ -65,7 +69,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 			let obj = {};
 			obj["name"] = ts.section_master[i];
 			// obj["Section Score"] = ts.values[0][i].value;
-			obj["Section Score"] = ts.values[0][i] ? ts.values[0][i].value : null;
+			obj["Section Score"] = ts.values[0][i] ? ts.values[0][i].value : "NA";
 			data.push(obj);
 		}
 		return data;
@@ -107,6 +111,14 @@ export default class AuditCycleTimeSeries extends React.Component{
 		return (<Text {...values} width={values.width / count}>{values.payload.value}</Text>);
 	};
 
+	downloadFile = () =>{
+		let audit_cycle_name = this.props.auditCycle.name;
+		domtoimage.toBlob(document.getElementById("audit_cycle_summary"), {bgcolor: "white"})
+			.then(function (blob) {
+				fileDownload(blob,  audit_cycle_name + " Audit Cycle Summary.jpg");
+			});
+	};
+
 	render(){
 		// let chart;
 		let line_chart;
@@ -134,7 +146,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 			// 	</Bar>
 			// );
 			lines = (
-				<Line type="monotone" dataKey="Section Score" stroke="#2387ea" label={v => <Text {...v}>{v.value === null ? "N/A" : v.value+"%"}</Text>} isAnimationActive={false} />
+				<Line type="monotone" dataKey="Section Score" stroke="#2387ea" label={v => <Text {...v}>{v.value === "NA" ? "NA" : v.value+"%"}</Text>} isAnimationActive={false} />
 			);
 
 			if (this.state.data.length <=7){
@@ -155,7 +167,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 				// 	</ResponsiveContainer>
 				// );
 				line_chart = (
-					<ResponsiveContainer width="100%" aspect={3 / 1}>
+					<ResponsiveContainer width="100%" aspect={3 / 1} id="audit_cycle_summary">
 						<LineChart data={data} margin={{top: 25, right: 50, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 							<CartesianGrid strokeDasharray="3 3" />
 							<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
@@ -194,8 +206,8 @@ export default class AuditCycleTimeSeries extends React.Component{
 				// );
 
 				line_chart = (
-					<div style={{ "width": "100%", "overflow": "scroll"}}>
-						<ResponsiveContainer width={width} height={440}>
+					<div style={{ "width": "100%", "overflowX": "scroll", "overflowY": "hidden"}}>
+						<ResponsiveContainer width={width} height={440} id="audit_cycle_summary">
 							<LineChart data={data} margin={{top: 25, right: 50, left: 5, bottom: 30}} onClick={(active)=>active&&this.toggleModal()}>
 								<CartesianGrid strokeDasharray="3 3" />
 								<YAxis type="number" domain={[0,100]} tickFormatter={f => f + "%"}>
@@ -215,6 +227,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 		}
 		return(
 			<div>
+				{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.downloadFile} title="Download">Download <Download/></button> : null }
 				{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button> : null }
 				<h3 className="text-center">{this.state.title}</h3>
 				{/* {chart} */}
@@ -238,7 +251,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 											if(reportData.values[j][i]){
 												tds.push(<td className="text-right" style={{backgroundColor:getColorbyValue(reportData.values[j][i].value)}} key={j+"-"+i}>{reportData.values[j][i].value}%</td>);
 											} else {
-												tds.push(<td className="text-right" key={j+"-"+i}></td>);
+												tds.push(<td className="text-right" key={j+"-"+i}>NA</td>);
 											}
 										}
 										trs.push(<tr key={reportData.section_master[i]}>{tds}</tr>);

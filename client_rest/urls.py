@@ -22,6 +22,10 @@ urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city$', views.AuditCycleCityPerformance.as_view(), name='audit_cycle_city_performance'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/time_series$', views.AuditCycleTimeSeriesReport.as_view(), name='audit_cycle_time_series'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/time_series$', views.AuditCycleTimeSeriesReportByAuditCycleId.as_view(), name='audit_cycle_time_series_by_audit_cycle_id'),
+
+    url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/improvable_questions$', views.ImprovableQuestionsByAuditCycleId.as_view(), name='improvable_questions_by_audit_cycle_id'),
+    url(r'audit_cycle_improvable_questions_xlsx$', views.ImprovableQuestionsXlsxReport.as_view(), name='audit_cycle_improvable_questions_xlsx'),
+
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/time_series_xlsx$', views.AuditCycleTimeSeriesReportXlsx.as_view(), name='audit_cycle_time_series_xlsx'),
     url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/marking_graph', views.MarkingGraphByStore.as_view(), name='marking_graph_by_store'),
     url(r'report/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store/(?P<store_id>[0-9]+)/marking', views.MarkingByStore.as_view(), name='marking_by_store'),

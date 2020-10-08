@@ -46,6 +46,7 @@ from .serializers import ReportAttributeSerializer
 from .serializers import AuditCycleProoftagListSerializer
 from .serializers import AuditCycleScoreSerializer
 from .serializers import ClientSerializer
+from client_report.service import improvable_questions
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -487,6 +488,31 @@ class AuditCycleTimeSeriesReportByAuditCycleId(APIView):
     def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
         audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id, questionnaire_type_id, request.user.id)
         return Response(audit_cycle_time_series)
+
+
+class ImprovableQuestionsByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id):
+        audit_cycle_improvable_questions = improvable_questions.get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+        return Response(audit_cycle_improvable_questions)
+
+
+class ImprovableQuestionsXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request):
+        audit_cycle_id = request.GET.get('auditCycleId')
+        questionnaire_type_id = request.GET.get('questionnaireTypeId')
+        report, name = improvable_questions.get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+        response = HttpResponse(report.read(),
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
 
 
 class AuditCycleTimeSeriesReportXlsx(APIView):
