@@ -5,6 +5,16 @@ exports[`<DashboardCityPerformanceChart/> renders the chart correctly 1`] = `
   <button
     className="btn btn-default pull-right"
     onClick={[Function]}
+    title="Download"
+  >
+    Download 
+    <span
+      className="glyphicon glyphicon-download"
+    />
+  </button>
+  <button
+    className="btn btn-default pull-right"
+    onClick={[Function]}
     title="View Data"
   >
     <span
@@ -18,6 +28,7 @@ exports[`<DashboardCityPerformanceChart/> renders the chart correctly 1`] = `
   </h3>
   <div
     className="recharts-responsive-container"
+    id="city_performance_all"
     style={
       Object {
         "height": "100%",

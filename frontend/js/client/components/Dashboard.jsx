@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 
 import AuditCycleTimeSeries from "./AuditCycleTimeSeries.jsx";
+import AuditCycleImprovableQuestions from "./AuditCycleImprovableQuestions.jsx";
 import AuditCycleStorePerformance from "./AuditCycleStorePerformance.jsx";
 import DashboardCityPerformanceChart from "./DashboardCityPerformanceChart.jsx";
 import AuditCycleScoreIndicator from "./AuditCycleScoreIndicator.jsx";
@@ -43,6 +44,8 @@ export class Dashboard extends React.Component{
 				<hr/>
 				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle ? <div>
 					<AuditCycleTimeSeries questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+					<hr/>
+					<AuditCycleImprovableQuestions questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
 					<hr/>
 					<AuditCycleStorePerformance questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
 					<hr/>

@@ -5,6 +5,9 @@ import { Text } from "recharts";
 
 import {demo} from "../../../config.js";
 
+import domtoimage from "dom-to-image";
+import fileDownload from "js-file-download";
+
 // import {fetchCityWisePerformance} from "../service/dashboard.js";
 import {fetchCityWisePerformanceByAuditCycleId} from "../service/dashboard.js";
 
@@ -14,7 +17,7 @@ import { getColorbyValue } from "../../utils.js";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import Modal from "../../components/Modal.jsx";
-import { ThList } from "../../components/Icons.jsx";
+import { ThList, Download } from "../../components/Icons.jsx";
 
 class CityWisePerformanceChart extends React.Component{
 	static propTypes = {
@@ -23,6 +26,12 @@ class CityWisePerformanceChart extends React.Component{
 		reportData: PropTypes.shape({
 			data: PropTypes.array.isRequired,
 			columns: PropTypes.arrayOf(PropTypes.string).isRequired,
+		}).isRequired,
+		auditCycle: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			start_date: PropTypes.string.isRequired,
+			end_date: PropTypes.string.isRequired,
 		}).isRequired,
 	};
 
@@ -72,6 +81,14 @@ class CityWisePerformanceChart extends React.Component{
 		return (<Text {...values} width={values.width / count}>{values.payload.value}</Text>);
 	};
 
+	downloadFile = () =>{
+		let audit_cycle_name = this.props.auditCycle.name;
+		domtoimage.toBlob(document.getElementById(`city_performance_${this.props.type}`), {bgcolor: "white"})
+			.then(function (blob) {
+				fileDownload(blob,  audit_cycle_name + " City Wise Performance.jpg");
+			});
+	};
+
 	render(){
 		// let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		// if (this.props.type === "best" || this.props.type === "all"){
@@ -100,7 +117,7 @@ class CityWisePerformanceChart extends React.Component{
 		);
 
 		let chart = (
-			<ResponsiveContainer width="100%" aspect={3 / 1}>
+			<ResponsiveContainer width="100%" aspect={3 / 1} id={`city_performance_${this.props.type}`}>
 				<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}} onClick={(active)=>active&&this.toggleModal()}>
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis dataKey="name" tick={this.tickFunction} interval={0}>
@@ -117,6 +134,7 @@ class CityWisePerformanceChart extends React.Component{
 		);
 		return(
 			<div>
+				<button className="btn btn-default pull-right" onClick={this.downloadFile} title="Download">Download <Download/></button>
 				<button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button>
 				<h3 className="text-center">{this.props.title}</h3>
 				{chart}
@@ -228,16 +246,16 @@ export default class CityWisePerformanceChartWrapper extends React.Component{
 			return (
 				<div className="row">
 					<div className="col-md-6">
-						<CityWisePerformanceChart title="Best Performing Cities" type="best" reportData={this.state.reportData}/>
+						<CityWisePerformanceChart title="Best Performing Cities" type="best" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 					</div>
 					<div className="col-md-6">
-						<CityWisePerformanceChart title="Worst Performing Cities" type="worst" reportData={this.state.reportData}/>
+						<CityWisePerformanceChart title="Worst Performing Cities" type="worst" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 					</div>
 				</div>
 			);
 		} else {
 			return (
-				<CityWisePerformanceChart title="City Wise Performance" type="all" reportData={this.state.reportData}/>
+				<CityWisePerformanceChart title="City Wise Performance" type="all" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 			);
 		}
 	}

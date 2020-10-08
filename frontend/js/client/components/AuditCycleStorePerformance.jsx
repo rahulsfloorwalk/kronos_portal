@@ -6,12 +6,15 @@ import { Text } from "recharts";
 
 import {demo} from "../../../config.js";
 
+import domtoimage from "dom-to-image";
+import fileDownload from "js-file-download";
+
 // import {fetchStoreWisePerformance} from "../service/dashboard.js";
 import {fetchStoreWisePerformanceByAuditCycleId} from "../service/dashboard.js";
 
 // import { getColor, getColorbyValue } from "../../utils.js";
 import { getColorbyValue } from "../../utils.js";
-import { ThList } from "../../components/Icons.jsx";
+import { ThList, Download } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 import Modal from "../../components/Modal.jsx";
@@ -23,6 +26,12 @@ class AuditCycleStorePerformance extends React.Component{
 		reportData: PropTypes.shape({
 			data: PropTypes.array.isRequired,
 			columns: PropTypes.arrayOf(PropTypes.string).isRequired,
+		}).isRequired,
+		auditCycle: PropTypes.shape({
+			id: PropTypes.number.isRequired,
+			name: PropTypes.string.isRequired,
+			start_date: PropTypes.string.isRequired,
+			end_date: PropTypes.string.isRequired,
 		}).isRequired,
 	};
 
@@ -75,6 +84,14 @@ class AuditCycleStorePerformance extends React.Component{
 		return (<Text {...values} width={values.width / count}>{values.payload.value}</Text>);
 	};
 
+	downloadFile = () =>{
+		let audit_cycle_name = this.props.auditCycle.name;
+		domtoimage.toBlob(document.getElementById(`store_performance_${this.props.type}`), {bgcolor: "white"})
+			.then(function (blob) {
+				fileDownload(blob,  audit_cycle_name + " Business Unit Performance.jpg");
+			});
+	};
+
 	render(){
 		// let colors = ["#005d8a", "#0085c6", "#4ca9d7"];
 		// if (this.props.type === "best" || this.props.type === "all"){
@@ -104,8 +121,8 @@ class AuditCycleStorePerformance extends React.Component{
 
 
 		let chart = (
-			<ResponsiveContainer width="100%" aspect={3 / 1}>
-				<BarChart width={600} height={300} data={data} margin={{top: 25, right: 10, left: 10, bottom: 5}} onClick={(active)=>active&&this.toggleModal()}>
+			<ResponsiveContainer width="100%" aspect={3 / 1} id={`store_performance_${this.props.type}`}>
+				<BarChart width={700} height={370} data={data} margin={{top: 25, right: 10, left: 10, bottom: 20}} onClick={(active)=>active&&this.toggleModal()}>
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis dataKey="name" tick={this.tickFunction} interval={0}>
 						<Label value="Store List" offset={0} position="insideBottomRight" />
@@ -121,6 +138,7 @@ class AuditCycleStorePerformance extends React.Component{
 		);
 		return(
 			<div>
+				<button className="btn btn-default pull-right" onClick={this.downloadFile} title="Download">Download <Download/></button>
 				<button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button>
 				<h3 className="text-center">{this.props.title}</h3>
 				{chart}
@@ -235,16 +253,16 @@ class AuditCycleStorePerformanceWrapper extends React.Component{
 			return (
 				<div className="row">
 					<div className="col-md-6">
-						<AuditCycleStorePerformance title="Best Performing Business Units" type="best" reportData={this.state.reportData}/>
+						<AuditCycleStorePerformance title="Best Performing Business Units" type="best" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 					</div>
 					<div className="col-md-6">
-						<AuditCycleStorePerformance title="Worst Performing Business Units" type="worst" reportData={this.state.reportData}/>
+						<AuditCycleStorePerformance title="Worst Performing Business Units" type="worst" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 					</div>
 				</div>
 			);
 		} else {
 			return (
-				<AuditCycleStorePerformance title="Business Unit Performance" type="all" reportData={this.state.reportData}/>
+				<AuditCycleStorePerformance title="Business Unit Performance" type="all" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 			);
 		}
 	}

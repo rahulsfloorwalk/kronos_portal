@@ -11,6 +11,16 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
       <button
         className="btn btn-default pull-right"
         onClick={[Function]}
+        title="Download"
+      >
+        Download 
+        <span
+          className="glyphicon glyphicon-download"
+        />
+      </button>
+      <button
+        className="btn btn-default pull-right"
+        onClick={[Function]}
         title="View Data"
       >
         <span
@@ -24,6 +34,7 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
       </h3>
       <div
         className="recharts-responsive-container"
+        id="store_performance_best"
         style={
           Object {
             "height": "100%",
@@ -55,6 +66,16 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
       <button
         className="btn btn-default pull-right"
         onClick={[Function]}
+        title="Download"
+      >
+        Download 
+        <span
+          className="glyphicon glyphicon-download"
+        />
+      </button>
+      <button
+        className="btn btn-default pull-right"
+        onClick={[Function]}
         title="View Data"
       >
         <span
@@ -68,6 +89,7 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
       </h3>
       <div
         className="recharts-responsive-container"
+        id="store_performance_worst"
         style={
           Object {
             "height": "100%",
