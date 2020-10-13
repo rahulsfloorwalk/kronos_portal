@@ -20,7 +20,7 @@ def create_text_structure(sections, questions):
     rows = []
     row = {
         'type': 'header',
-        'text_arr': ['Sequence','Question/Section', 'Max Marks']
+        'text_arr': ['Sequence', 'Question/Section', 'Max Marks', 'Question Type', 'Question Options']
     }
     rows.append(row)
     for section in sections:
@@ -33,11 +33,17 @@ def create_text_structure(sections, questions):
         rows.append(row)
         for question in questions:
             if question.section == section:
+                question_option = ""
+                if question.question_type == 'MUTEX':
+                    for qo in question.question_data['options']:
+                        question_option = question_option + "sequnce: " + str(qo['sequence']) + ", option: " + str(qo['value']) + ", marks: " + str(qo['marks']) + "\n"
                 row = {
                     'type': 'question',
                     'text': question.question_txt,
                     'max_marks': question.max_marks,
-                    'sequence': question.sequence
+                    'sequence': question.sequence,
+                    'question_type': question.question_type,
+                    'question_option': question_option
                 }
                 rows.append(row)
 
@@ -75,6 +81,7 @@ def write_data(data):
     })
     base_question_style = {
         'text_wrap': True,
+        'top': 1,
         'bottom': 1,
         'right': 1,
         'font_color': 'black',
@@ -95,6 +102,8 @@ def write_data(data):
     worksheet.set_column(0, 0, 20)
     worksheet.set_column(1, 1, 50)
     worksheet.set_column(2, 2, 20)
+    worksheet.set_column(3, 3, 20)
+    worksheet.set_column(4, 4, 40)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col
@@ -118,6 +127,8 @@ def write_data(data):
             worksheet.write(row, col, line.get('sequence'), curr_format)
             worksheet.write(row, col + 1, line.get('text'), curr_format)
             worksheet.write(row, col + 2, line.get('max_marks'), curr_format)
+            worksheet.write(row, col + 3, line.get('question_type'), curr_format)
+            worksheet.write(row, col + 4, line.get('question_option'), curr_format)
 
         line_counter = ~line_counter
         col = start_col
