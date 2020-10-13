@@ -1,6 +1,5 @@
 import xlsxwriter
 import io
-import json
 from audit.service import audit_cycle as audit_cycle_service
 
 
@@ -37,7 +36,7 @@ def create_text_structure(sections, questions):
                 question_option = ""
                 if question.question_type == 'MUTEX':
                     for qo in question.question_data['options']:
-                        question_option = question_option + f"sequnce: {qo['sequence']}, option: {qo['value']}, marks: {qo['marks']} \n"
+                        question_option = question_option + "sequnce: " + str(qo['sequence']) + ", option: " + str(qo['value']) + ", marks: " + str(qo['marks']) + "\n"
                 row = {
                     'type': 'question',
                     'text': question.question_txt,
