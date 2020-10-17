@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 
 import AuditCycleTimeSeries from "./AuditCycleTimeSeries.jsx";
 import AuditCycleImprovableQuestions from "./AuditCycleImprovableQuestions.jsx";
+import QuestionnaireSurvey from "./QuestionnaireSurvey.jsx";
 import AuditCycleStorePerformance from "./AuditCycleStorePerformance.jsx";
 import DashboardCityPerformanceChart from "./DashboardCityPerformanceChart.jsx";
 import AuditCycleScoreIndicator from "./AuditCycleScoreIndicator.jsx";
@@ -51,6 +52,7 @@ export class Dashboard extends React.Component{
 					<hr/>
 					<DashboardCityPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
 					<hr/>
+					<QuestionnaireSurvey questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
 				</div> : <Loading/> }
 			</div>
 		);

@@ -22,16 +22,17 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
                 total_question_marks = question.max_marks * answer_obj.count()
                 obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']
                 percentage = (obtained_marks / total_question_marks) * 100
-                if percentage < 75:
-                    improvable_questions_dict = {}
-                    improvable_questions_dict['question_id'] = question.id
-                    improvable_questions_dict['question_txt'] = question.question_txt
-                    improvable_questions_dict['question_section'] = question.section.name
-                    improvable_questions_dict['total_marks'] = total_question_marks
-                    improvable_questions_dict['obtained_marks'] = obtained_marks
-                    improvable_questions_dict['lost_marks'] = total_question_marks - obtained_marks
-                    improvable_questions_dict['percentage'] = percentage
-                    improvable_questions_list.append(improvable_questions_dict)
+                if obtained_marks is not None:
+                    if percentage < 75:
+                        improvable_questions_dict = {}
+                        improvable_questions_dict['question_id'] = question.id
+                        improvable_questions_dict['question_txt'] = question.question_txt
+                        improvable_questions_dict['question_section'] = question.section.name
+                        improvable_questions_dict['total_marks'] = total_question_marks
+                        improvable_questions_dict['obtained_marks'] = obtained_marks
+                        improvable_questions_dict['lost_marks'] = total_question_marks - obtained_marks
+                        improvable_questions_dict['percentage'] = percentage
+                        improvable_questions_list.append(improvable_questions_dict)
 
     return sorted(improvable_questions_list, key=lambda qd: qd['lost_marks'], reverse=True)
 
@@ -127,7 +128,10 @@ def write_data(data):
 
     start_row = 0
     start_col = 0
-    worksheet.set_column(0, 512, 15)
+    # worksheet.set_column(0, 512, 15)
+    worksheet.set_column(0, 0, 30)
+    worksheet.set_column(1, 1, 50)
+    worksheet.set_column(2, 2, 20)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col

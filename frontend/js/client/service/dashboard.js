@@ -40,3 +40,7 @@ export function fetchAuditCycleScoreList(questionnaire_type_id){
 export function fetchImrovableQuestionsByAuditCycleId(questionnaire_type_id, audit_cycle_id){
 	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle/${audit_cycle_id}/improvable_questions`);
 }
+
+export function fetchQuestionnaireSurveyByAuditCycleId(questionnaire_type_id, audit_cycle_id){
+	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle/${audit_cycle_id}/questionnaire_survey`);
+}
