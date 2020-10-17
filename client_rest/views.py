@@ -47,6 +47,7 @@ from .serializers import AuditCycleProoftagListSerializer
 from .serializers import AuditCycleScoreSerializer
 from .serializers import ClientSerializer
 from client_report.service import improvable_questions
+from client_report.service import questionnaire_survey
 
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
@@ -509,6 +510,33 @@ class ImprovableQuestionsXlsxReport(APIView):
         audit_cycle_id = request.GET.get('auditCycleId')
         questionnaire_type_id = request.GET.get('questionnaireTypeId')
         report, name = improvable_questions.get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+        response = HttpResponse(report.read(),
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+
+
+class QuestionnaireSurveyByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id):
+        audit_cycle_questionnaire_survey = questionnaire_survey.get_questionnaire_survey_by_audit_cycle(audit_cycle_id,
+                                                                                                        questionnaire_type_id)
+        return Response(audit_cycle_questionnaire_survey)
+
+
+class QuestionnaireSurveyXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request):
+        audit_cycle_id = request.GET.get('auditCycleId')
+        questionnaire_type_id = request.GET.get('questionnaireTypeId')
+        report, name = questionnaire_survey.get_questionnaire_survey_xlsx_by_audit_cycle(audit_cycle_id,
+                                                                                         questionnaire_type_id)
         response = HttpResponse(report.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
