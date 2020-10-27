@@ -24,7 +24,8 @@ class AttachmentSerializer(ModelSerializer):
             'direct_url',
             'extra',
             'faulty_report_id',
-            'proof_tag'
+            'proof_tag',
+            'audio_transcript_data'
         )
         read_only_fields = fields
 

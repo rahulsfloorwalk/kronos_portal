@@ -440,7 +440,6 @@ export default class AuditStoreDetails extends React.Component{
 						</div>
 					</div>
 				</div>
-
 			</div>
 		);
 	}

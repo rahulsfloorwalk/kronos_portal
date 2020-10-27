@@ -125,6 +125,10 @@ with open("./datasets/pincode.json") as pincode_file:
     pincode_list = json.load(pincode_file)
     __logger.info("loaded %d pincodes", len(pincode_list))
 
+with open("./datasets/audio_transcription_language_code.json") as language_code_file:
+    language_code_list = json.load(language_code_file)
+    __logger.info("loaded %d langugae_code", len(language_code_list))
+
 def get_lat_lon_from_pincode(pincode):
     if pincode in pincode_list:
         return pincode_list[pincode]
@@ -143,3 +147,10 @@ pan_pattern = re.compile("[A-Z]{3}[ABCFGHLJPTK][A-Z]\d{4}[A-Z]", flags=re.ASCII)
 
 def validate_pan(pan_number):
     return pan_pattern.match(str.upper(pan_number))
+
+
+def get_language_code_by_country_code(country_code):
+    if country_code in language_code_list:
+        return language_code_list[country_code]
+    else:
+        return None

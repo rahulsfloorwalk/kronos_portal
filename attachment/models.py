@@ -52,6 +52,8 @@ class Attachment(Model):
 
     extra_properties = JSONField(db_column='extra_properties', default=dict)
 
+    audio_transcript_data = JSONField(db_column='audio_transcript_data', default=dict)
+
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:

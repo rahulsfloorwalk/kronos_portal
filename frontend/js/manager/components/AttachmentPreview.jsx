@@ -9,6 +9,8 @@ import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 import { DownloadAlt,  Cross, Repeat } from "../../components/Icons.jsx";
 import { attachmentPropType } from "../prop_types";
 
+import Jumbotron from "../../components/Jumbotron.jsx";
+
 import attachmentErrorImageUrl from "../../../img/error_100.png";
 
 import { Player, BigPlayButton  } from "video-react";
@@ -77,8 +79,41 @@ class AttachmentRenderer extends React.Component {
 	}
 
 	render(){
+		let file_extension_arr = (this.props.attachment.file_slug).split(".");
+		let file_extension = file_extension_arr[file_extension_arr.length - 1];
 		switch(this.props.attachment.proof_type){
 		case "AUDIO": {
+			let audio_transcipt_table_data;
+			let audio_transcipt_rows = [];
+			const audio_transcript_data = (this.props.attachment.audio_transcript_data).hasOwnProperty("transcript_list") ? this.props.attachment.audio_transcript_data["transcript_list"] : [];
+			let count_key = 1;
+			for(let tl of audio_transcript_data){
+				audio_transcipt_rows.push(
+					<tr key={count_key}>
+						<td>{tl.transcript_data}</td>
+						<td>{tl.end_time}</td>
+					</tr>
+				);
+				count_key += 1;
+			}
+			if (audio_transcipt_rows.length > 0){
+				audio_transcipt_table_data = (
+					<table className="table table-bordered">
+						<thead>
+							<tr>
+								<th>Transcript data</th>
+								<th>End Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							{audio_transcipt_rows}
+						</tbody>
+					</table>
+				);
+			}
+			else{
+				audio_transcipt_table_data = (<Jumbotron heading="Not found" para="Audio transcription not available for this attachment"/>);
+			}
 			return (
 				<div>
 					<p><b>Please download file if you are not able to play it.</b></p>
@@ -86,6 +121,9 @@ class AttachmentRenderer extends React.Component {
 						<source src={this.props.attachment.direct_url}
 							type={this.props.attachment.mime_type}/>
 					</audio>
+					<div style={{overflowY:"auto", maxHeight:"400px"}}>
+						{audio_transcipt_table_data}
+					</div>
 				</div>
 			);
 		}
@@ -132,7 +170,48 @@ class AttachmentRenderer extends React.Component {
 			// return (<p>Please download this file.</p>);
 		}
 		case "OTHER":
-			return null;
+			if (file_extension == "amr"){
+				let audio_transcipt_table_data;
+				let audio_transcipt_rows = [];
+				const audio_transcript_data = (this.props.attachment.audio_transcript_data).hasOwnProperty("transcript_list") ? this.props.attachment.audio_transcript_data["transcript_list"] : [];
+				let count_key = 1;
+				for(let tl of audio_transcript_data){
+					audio_transcipt_rows.push(
+						<tr key={count_key}>
+							<td>{tl.transcript_data}</td>
+							<td>{tl.end_time}</td>
+						</tr>
+					);
+					count_key += 1;
+				}
+				if (audio_transcipt_rows.length > 0){
+					audio_transcipt_table_data = (
+						<table className="table table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>Transcript data</th>
+									<th>End Time</th>
+								</tr>
+							</thead>
+							<tbody>
+								{audio_transcipt_rows}
+							</tbody>
+						</table>
+					);
+				}
+				else{
+					audio_transcipt_table_data = (<Jumbotron heading="Not found" para="Audio transcription not available for this attachment"/>);
+				}
+				return (
+					<div style={{overflowY:"auto", maxHeight:"400px"}}>
+						<p><b>.amr audio file does not support on browser, so you have to download the file.</b></p>
+						{audio_transcipt_table_data}
+					</div>
+				);
+			}
+			else{
+				return null;
+			}
 		}
 	}
 }
