@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import Loading from "../../../components/Loading.jsx";
-import { Check, Cross, Pencil, Plus, Bishop } from "../../../components/Icons.jsx";
+import { Check, Cross, Pencil, Plus, Bishop, MapMarker } from "../../../components/Icons.jsx";
 
 import { fetchClientUsers } from "../../service/client_user.js";
 
@@ -32,6 +32,11 @@ class ClientUserRow extends React.Component {
 				<td>{is_active}</td>
 				<td>
 					<Link to={`/client/${this.props.clientUser.client}/client_user/${this.props.clientUser.id}/edit`} className="btn btn-default"><Pencil/></Link>
+					&nbsp;
+					{!this.props.clientUser.is_client_admin ?
+						<Link to={`/client/${this.props.clientUser.client}/client_user/${this.props.clientUser.id}/assign_stores`} className="btn btn-default"><MapMarker/></Link>
+						: null
+					}
 				</td>
 			</tr>
 		);

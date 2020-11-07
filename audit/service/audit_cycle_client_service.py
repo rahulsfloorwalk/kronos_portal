@@ -3,7 +3,7 @@ from kronos.exceptions import ObjectNotFound
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 
-from client.service.client_user import find_clientuser_by_user_id
+from client.service.client_user import find_clientuser_by_user_id, find_non_client_admin_user_store_by_client_user_id
 
 
 def find_by_questionnaire_type_for_clientuser(questionnaire_type_id, user_id):
@@ -64,6 +64,7 @@ def find_all_for_clientuser(user_id):
 
 def find_all_for_dashboard_clientuser(user_id):
     user = find_clientuser_by_user_id(user_id)
+    client_user = user.clientuser
     """
         Normal client user can't access dashboard and report browser that's why need to
         remove visible_to(user) function
@@ -89,25 +90,46 @@ def find_all_for_dashboard_clientuser(user_id):
             'audit__audit_cycle__questionnaire_type__is_default',
         )
     """
-
-    rows = AuditStore.objects \
-        .presentable() \
-        .filter(
-            audit__audit_cycle__client__id=user.clientuser.client_id,
-            # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
-        ) \
-        .distinct('audit__audit_cycle_id') \
-        .order_by('-audit__audit_cycle_id') \
-        .values(
-            'audit__audit_cycle__id',
-            'audit__audit_cycle__name',
-            'audit__audit_cycle__status',
-            'audit__audit_cycle__start_date',
-            'audit__audit_cycle__end_date',
-            'audit__audit_cycle__questionnaire_type__id',
-            'audit__audit_cycle__questionnaire_type__name',
-            'audit__audit_cycle__questionnaire_type__is_default',
-        )
+    if client_user.is_client_admin():
+        rows = AuditStore.objects \
+            .presentable() \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
+            ) \
+            .distinct('audit__audit_cycle_id') \
+            .order_by('-audit__audit_cycle_id') \
+            .values(
+                'audit__audit_cycle__id',
+                'audit__audit_cycle__name',
+                'audit__audit_cycle__status',
+                'audit__audit_cycle__start_date',
+                'audit__audit_cycle__end_date',
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+            )
+    else:
+        non_client_admin_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_client_admin_store_list = non_client_admin_store.get_store_list()
+        rows = AuditStore.objects \
+            .presentable() \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                audit__store__id__in=non_client_admin_store_list
+            ) \
+            .distinct('audit__audit_cycle_id') \
+            .order_by('-audit__audit_cycle_id') \
+            .values(
+                'audit__audit_cycle__id',
+                'audit__audit_cycle__name',
+                'audit__audit_cycle__status',
+                'audit__audit_cycle__start_date',
+                'audit__audit_cycle__end_date',
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+            )
 
     def map_audit_cycle_values(values):
         return {

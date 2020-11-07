@@ -116,3 +116,20 @@ class ClientUserByStoreIdView(APIView):
             ds.validated_data["user_id"],
         )
         return Response((u.id for u in users))
+
+
+class ClientUserAssignStoresView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    def get(self, request, client_user_id):
+        assign_store_list = client_user_service.get_assign_stores_to_non_admin_user(client_user_id)
+        return Response({"store_list": assign_store_list})
+
+    def post(self, request, client_user_id):
+        assign_store_list = client_user_service.assign_stores_to_non_admin_user(client_user_id,
+                                                                                request.data['stores_list'])
+        return Response({"store_list": assign_store_list})

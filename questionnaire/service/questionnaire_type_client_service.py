@@ -2,22 +2,42 @@ from audit_store.models import AuditStore
 from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from questionnaire.models import QuestionnaireType
 from client.models import Store
+from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
+
 
 def find_questionnaire_types_for_client_by_user(user):
-    rows = AuditStore.objects \
-        .presentable() \
-        .visible_to(user) \
-        .filter(
-            audit__audit_cycle__client__id=user.clientuser.client_id,
-        ) \
-        .distinct('audit__audit_cycle__questionnaire_type_id') \
-        .order_by('audit__audit_cycle__questionnaire_type__id') \
-        .values(
-            'audit__audit_cycle__questionnaire_type__id',
-            'audit__audit_cycle__questionnaire_type__name',
-            'audit__audit_cycle__questionnaire_type__is_default',
-            'audit__audit_cycle__questionnaire_type__client_id',
-        )
+    client_user = user.clientuser
+    if client_user.is_client_admin():
+        rows = AuditStore.objects \
+            .presentable() \
+            .visible_to(user) \
+            .filter(audit__audit_cycle__client__id=user.clientuser.client_id) \
+            .distinct('audit__audit_cycle__questionnaire_type_id') \
+            .order_by('audit__audit_cycle__questionnaire_type__id') \
+            .values(
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+                'audit__audit_cycle__questionnaire_type__client_id',
+            )
+    else:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        rows = AuditStore.objects \
+            .presentable() \
+            .visible_to(user) \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                audit__store__id__in=non_admin_user_store_list
+            ) \
+            .distinct('audit__audit_cycle__questionnaire_type_id') \
+            .order_by('audit__audit_cycle__questionnaire_type__id') \
+            .values(
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+                'audit__audit_cycle__questionnaire_type__client_id',
+            )
 
     def map_questionnaire_type_values(values):
         return {
@@ -52,20 +72,39 @@ def find_questionnaire_types_for_client_dashboard_by_user(user):
             'audit__audit_cycle__questionnaire_type__client_id',
         )
     """
-    rows = AuditStore.objects \
-        .presentable() \
-        .filter(
-            audit__audit_cycle__client__id=user.clientuser.client_id,
-            # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
-        ) \
-        .distinct('audit__audit_cycle__questionnaire_type_id') \
-        .order_by('audit__audit_cycle__questionnaire_type__id') \
-        .values(
-            'audit__audit_cycle__questionnaire_type__id',
-            'audit__audit_cycle__questionnaire_type__name',
-            'audit__audit_cycle__questionnaire_type__is_default',
-            'audit__audit_cycle__questionnaire_type__client_id',
-        )
+    client_user = user.clientuser
+    if client_user.is_client_admin():
+        rows = AuditStore.objects \
+            .presentable() \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id
+                # audit__audit_cycle__status__in=AuditCycle.TRENDABLE_STATUSES
+            ) \
+            .distinct('audit__audit_cycle__questionnaire_type_id') \
+            .order_by('audit__audit_cycle__questionnaire_type__id') \
+            .values(
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+                'audit__audit_cycle__questionnaire_type__client_id',
+            )
+    else:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        rows = AuditStore.objects \
+            .presentable() \
+            .filter(
+                audit__audit_cycle__client__id=user.clientuser.client_id,
+                audit__store__id__in=non_admin_user_store_list
+            ) \
+            .distinct('audit__audit_cycle__questionnaire_type_id') \
+            .order_by('audit__audit_cycle__questionnaire_type__id') \
+            .values(
+                'audit__audit_cycle__questionnaire_type__id',
+                'audit__audit_cycle__questionnaire_type__name',
+                'audit__audit_cycle__questionnaire_type__is_default',
+                'audit__audit_cycle__questionnaire_type__client_id',
+            )
 
     def map_questionnaire_type_values(values):
         return {
@@ -76,6 +115,7 @@ def find_questionnaire_types_for_client_dashboard_by_user(user):
         }
 
     return [q for q in map(map_questionnaire_type_values, rows) if q["id"]]
+
 
 def find_questionnaire_types_for_client_store_by_user(user, store_id):
     rows = AuditStore.objects \

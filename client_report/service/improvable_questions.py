@@ -7,17 +7,27 @@ from audit_store.models import AuditStore
 from questionnaire.service.question import find_by_audit_cycle
 from answer.service.answer import find_answers_by_question_id
 from kronos.utils import get_color_code, get_color_hex_from_code
+from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 
 
-def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id):
+def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
     improvable_questions_list = []
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
     questions_list = find_by_audit_cycle(audit_cycle_obj.id)
+    client_admin = client_user.is_client_admin()
+    if not client_admin:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
     for question in questions_list:
         if question.max_marks > 0:
             answer_obj = find_answers_by_question_id(question.id)
-            answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                           not_applicable=False)
+            if client_admin:
+                answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                                               not_applicable=False)
+            else:
+                answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                                               audit_store__audit__store__id__in=non_admin_user_store_list,
+                                               not_applicable=False)
             if answer_obj.count() > 0:
                 total_question_marks = question.max_marks * answer_obj.count()
                 obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']
@@ -37,9 +47,9 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
     return sorted(improvable_questions_list, key=lambda qd: qd['lost_marks'], reverse=True)
 
 
-def get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id):
+def get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    improvable_questions_data = get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+    improvable_questions_data = get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user)
     data = create_text_structure(audit_cycle_obj.name, improvable_questions_data)
     name = (str(audit_cycle_obj.name) + " Improvable Questions List" + ".xlsx").replace("-", "")
     return write_data(data), name

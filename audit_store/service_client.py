@@ -1,9 +1,13 @@
+import xlsxwriter
+import io
+from django.conf import settings
 
-from kronos.utils import today_ist, get_color_code_by_percentage
+from kronos.utils import today_ist, get_color_code_by_percentage, get_color_code, get_color_hex_from_code
 from kronos.exceptions import ObjectNotFound
-from .models import AuditStore, ReportStatusLog
+from .models import AuditStore, ReportStatusLog, ReportActionPlan
 from answer.service import answer as answer_service
 from questionnaire.service import question as question_service
+from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 
 
 def find_upcoming_for_client(client_id):
@@ -91,3 +95,189 @@ def find_audit_store_exclude_today(audit_store_id):
         .filter(audit_store_id=audit_store_id, status=AuditStore.COMPLETED) \
         .exclude(created_at__date=today_ist()) \
         .exists()
+
+
+def get_reports_action_plan(client_user):
+    if client_user.is_client_admin():
+        report_action = ReportActionPlan.objects\
+            .filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]).order_by('status', 'target_date')
+    else:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        report_action = ReportActionPlan.objects\
+            .filter(audit_store__audit__store__id__in=non_admin_user_store_list,
+                    audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]).order_by('status', 'target_date')
+    return report_action
+
+
+def change_status_report_action(action_plan_id):
+    report_action_plan = ReportActionPlan.objects.get(pk=action_plan_id)
+    report_action_plan.status = ReportActionPlan.TAKEN
+    report_action_plan.save()
+    return report_action_plan
+
+
+def get_audit_store_action_plan(audit_store_id):
+    audit_store_action_plan = ReportActionPlan.objects.filter(audit_store__id=audit_store_id).order_by('status')
+    return audit_store_action_plan
+
+
+def submit_audit_store_action_plan(audit_store_id, action_plan, target_date, person):
+    audit_store = AuditStore.objects.get(pk=audit_store_id)
+    report_action_obj = ReportActionPlan()
+    report_action_obj.audit_store = audit_store
+    report_action_obj.action_plan_description = action_plan
+    report_action_obj.person_responsible = person
+    report_action_obj.target_date = target_date
+    report_action_obj.status = ReportActionPlan.PENDING
+    report_action_obj.save()
+    return report_action_obj
+
+
+def get_reports_action_plan_xlsx(client_user):
+    report_action_data = get_reports_action_plan(client_user)
+    data = create_text_structure(report_action_data)
+    name = ("Action Report Plan List" + ".xlsx").replace("-", "")
+    return write_data(data), name
+
+
+def create_text_structure(report_action_data):
+    rows = []
+
+    # generate title row
+    row = {'type': 'title', 'content': ['Action Report Plan List']}
+    rows.append(row)
+
+    # generate header of improvable questions
+    cells = [{'value': "Report ID"}, {'value': "Person Responsible"}, {'value': "Target Date"},
+             {'value': "Action Plan"}, {'value': "Status"}, {'value': "Report URL"}]
+    row = {'type': 'header', 'content': cells}
+    rows.append(row)
+
+    # generate improvable question rows
+    for action in report_action_data:
+        audit_store_id = {
+            'value': action.audit_store_id,
+            'color_code': get_color_code(0, 0)
+        }
+        person_responsible = {
+            'value': action.person_responsible,
+            'color_code': get_color_code(0, 0)
+        }
+        target_date = {
+            'value': str(action.target_date),
+            'color_code': get_color_code(0, 0)
+        }
+        action_plan_description = {
+            'value': action.action_plan_description,
+            'color_code': get_color_code(0, 0)
+        }
+        action_status = "Action Pending" if action.status == ReportActionPlan.PENDING else "Action Taken"
+        color_value = 1 if action_status == "Action Pending" else 100
+        status = {
+            'value': action_status,
+            'color_code': get_color_code(color_value, 100)
+        }
+        audit_report_url = settings.KRONOS_BASE_URL + "/auth/client/login?next=/static/client/index.html%23/audit_store/" + str(action.audit_store_id)
+        url = {
+            'value': "Click Here",
+            'url': audit_report_url,
+            'color_code': get_color_code(0, 0)
+        }
+        content = [audit_store_id, person_responsible, target_date, action_plan_description, status, url]
+        row = {
+            'type': 'action_data',
+            'content': content
+        }
+        rows.append(row)
+    return rows
+
+
+def write_data(data):
+    title_color = '#FFFFFF'
+    question_color = '#BEBEBE'
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    worksheet = workbook.add_worksheet()
+    section_format = workbook.add_format({
+        'text_wrap': True,
+        'bold': True,
+        'top': 1,
+        'bottom': 1,
+        'right': 1,
+        'bg_color': question_color,
+        'font_color': 'black',
+        'valign': 'vcenter',
+        'font_size': 14,
+    })
+
+    title_format = workbook.add_format({
+        'text_wrap': True,
+        'bold': True,
+        'font_size': 16,
+        'bottom': 1,
+        'bg_color': title_color,
+        'font_color': 'black',
+        'valign': 'vcenter',
+    })
+
+    base_answer_style = {
+        'text_wrap': True,
+        'bottom': 1,
+        'right': 1,
+        'valign': 'vcenter',
+    }
+
+
+    def get_format_for_color_code(wb, base_style_dict, color_code):
+        colored_style = base_style_dict.copy()
+        colored_style['bg_color'] = get_color_hex_from_code(color_code)
+        return wb.add_format(colored_style)
+
+    start_row = 0
+    start_col = 0
+    # worksheet.set_column(0, 512, 15)
+    worksheet.set_column(0, 0, 10)
+    worksheet.set_column(1, 1, 20)
+    worksheet.set_column(2, 2, 15)
+    worksheet.set_column(3, 3, 90)
+    worksheet.set_column(4, 4, 15)
+    worksheet.set_column(5, 5, 30)
+    worksheet.set_default_row(40)
+    row = start_row
+    col = start_col
+
+    line_counter = 0
+    for line in data:
+        if line.get('type') == 'title':
+            for point in line.get('content'):
+                worksheet.merge_range(row, col, row, col + 5, point, title_format)
+                col += 1
+        elif line.get('type') == 'header':
+            for cell in line.get('content'):
+                if isinstance(cell, dict):
+                    if cell.get('colspan', 1) > 1:
+                        worksheet.merge_range(row, col, row, col + cell.get('colspan') - 1, cell.get('value'),
+                                              section_format)
+                        col += cell.get('colspan', 1)
+                    else:
+                        worksheet.write(row, col, cell.get('value', ""), section_format)
+                        col += 1
+                else:
+                    worksheet.write(row, col, cell, section_format)
+                    col += 1
+        elif line.get('type') == 'action_data':
+            for cell in line.get('content'):
+                if 'url' in cell:
+                    worksheet.write_url(row, col, cell.get('url'), string=cell.get('value'))
+                else:
+                    worksheet.write(row, col, cell.get('value'),
+                                    get_format_for_color_code(workbook, base_answer_style, cell.get('color_code', 0)))
+                col += 1
+            line_counter = ~line_counter
+        col = start_col
+        row += 1
+
+    workbook.close()
+    output.seek(0)
+    return output

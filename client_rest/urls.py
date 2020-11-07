@@ -48,6 +48,14 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/impact_factor$', views.ImpactFactorByAuditStore.as_view(), name='audit_store_impact_factor'),
     url(r'audit_store/upcoming$', views.AuditStoreUpcoming.as_view(), name='audit_store_upcoming'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', views.AuditStoreIdView.as_view(), name='audit_store_id_view'),
+
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_action$', views.AuditStoreReportActionView.as_view(), name='audit_store_report_action_view'),
+
+    url(r'action_reports$', views.ActionReportsView.as_view(), name='action_reports_view'),
+    url(r'action_reports_xlsx$', views.ActionReportsXlsxView.as_view(), name='action_reports_xlsx'),
+
+    url(r'action_report/(?P<action_plan_id>[0-9]+)/change_status$', views.ActionReportChangeStatus.as_view(), name='action_report_change_status'),
+
     url(r'store/(?P<store_id>[0-9]+)/audit_store$', views.AuditStoreByStore.as_view(), name='audit_store_by_store'),
     url(r'store/(?P<store_id>[0-9]+)/proof_tag_list$', views.ProofTagListByStore.as_view(), name='proof_tag_list_by_store'),
     url(r'store/(?P<store_id>[0-9]+)/proof_tag_list_by_questionnaire_type$', views.ProofTagListByQuestionnaireType.as_view(), name='proof_tag_list_by_questionnaire_type'),

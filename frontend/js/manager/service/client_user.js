@@ -52,3 +52,18 @@ export function revokeStoreFromClientUser(store_id, user_id){
 export function fetchClientUsersForStore(store_id){
 	return $.get(url.api_base_path + `manager/store/${store_id}/client_user`);
 }
+
+export function getAssignStoresForNonAdminUser(user_id){
+	return $.get(url.api_base_path + `manager/client_user/${user_id}/assign_stores`);
+}
+
+export function assignStoresForNonAdminUser(user_id, store_list){
+	return $.ajax({
+		url: url.api_base_path + `manager/client_user/${user_id}/assign_stores`,
+		method: "POST",
+		data: JSON.stringify({
+			"stores_list": store_list
+		}),
+		contentType: "application/json"
+	});
+}

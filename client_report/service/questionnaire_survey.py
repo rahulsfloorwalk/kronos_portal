@@ -4,11 +4,16 @@ import io
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from answer.service.answer import find_answers_by_question_id
+from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 
 
-def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id):
+def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
     sections = audit_cycle_obj.sections.order_by('sequence')
+    client_admin = client_user.is_client_admin()
+    if not client_admin:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
     questionnaire_survey_list = []
     for section in sections:
         if section.questions.filter(question_type='MUTEX').exists():
@@ -22,15 +27,27 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
                 if question.section == section:
                     if question.question_type == 'MUTEX' and question.max_marks > 0:
                         answer_obj = find_answers_by_question_id(question.id)
-                        answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                                       not_applicable=False)
+                        if client_admin:
+                            answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                                                           not_applicable=False)
+                        else:
+                            answer_obj = answer_obj.filter(
+                                audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                                audit_store__audit__store__id__in=non_admin_user_store_list,
+                                not_applicable=False)
                         if answer_obj.count() > 0:
                             total_answer_count = answer_obj.count()
                             options_list = []
                             for option in question.question_data['options']:
-                                option_answer_obj = answer_obj.filter(
-                                    audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
-                                    not_applicable=False, answer_text=option['value'])
+                                if client_admin:
+                                    option_answer_obj = answer_obj.filter(
+                                        audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                                        not_applicable=False, answer_text=option['value'])
+                                else:
+                                    option_answer_obj = answer_obj.filter(
+                                        audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                                        audit_store__audit__store__id__in=non_admin_user_store_list,
+                                        not_applicable=False, answer_text=option['value'])
                                 if option_answer_obj.count() > 0:
                                     option_count = option_answer_obj.count()
                                     percentage = round((option_count / total_answer_count) * 100, 2)
@@ -47,9 +64,9 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
     return questionnaire_survey_list
 
 
-def get_questionnaire_survey_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id):
+def get_questionnaire_survey_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    questionnaire_survey_data = get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+    questionnaire_survey_data = get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user)
     data = create_text_structure(audit_cycle_obj.name, questionnaire_survey_data)
     name = (str(audit_cycle_obj.name) + " Question Summary List" + ".xlsx").replace("-", "")
     return write_data(data), name

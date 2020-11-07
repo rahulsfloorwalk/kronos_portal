@@ -394,3 +394,12 @@ export function getColorbyValue(value){
 		return "#CD5C5C"; // Red
 	}
 }
+
+export function getColorForActionPlanStatus(value){
+	if(value == "Pending"){
+		return "#CD5C5C";
+	}
+	else{
+		return "#688833";
+	}
+}

@@ -13,7 +13,9 @@ import Loading from "../../components/Loading.jsx";
 // import QuestionnaireTypeTabs from "./QuestionnaireTypeTabs.jsx";
 import QuestionnaireTypeTabsForDashboard from "./QuestionnaireTypeTabsForDashboard.jsx";
 
-import { questionnaireTypeSelectors, auditCycleSelectors } from "../selectors";
+import { fetchUser } from "../actions/user";
+
+import { questionnaireTypeSelectors, auditCycleSelectors, userSelectors } from "../selectors";
 import AuditCycleSelectorForDashboard from "./AuditCycleSelectorForDashboard.jsx";
 
 const questionnaireTypePropType = PropTypes.shape({
@@ -29,16 +31,23 @@ const auditCyclePropType = PropTypes.shape({
 export class Dashboard extends React.Component{
 	static propTypes = {
 		selectedQuestionnaireType: questionnaireTypePropType,
-		selectedAuditCycle:auditCyclePropType
+		selectedAuditCycle:auditCyclePropType,
+		isClientAdmin: PropTypes.bool.isRequired,
+
+		fetchUser: PropTypes.func.isRequired,
 	};
+
+	componentDidMount() {
+		this.props.fetchUser();
+	}
 
 	render(){
 		return (
 			<div>
 				<QuestionnaireTypeTabsForDashboard />
-				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle ?
+				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle && this.props.isClientAdmin ?
 					<AuditCycleScoreIndicator questionnaireType={this.props.selectedQuestionnaireType} />
-					: <Loading/>
+					: null
 				}
 				<hr/>
 				<AuditCycleSelectorForDashboard />
@@ -63,7 +72,10 @@ const mapStateToProps = (state) => {
 	return {
 		selectedQuestionnaireType: questionnaireTypeSelectors.findSelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
+		isClientAdmin: userSelectors.isClientAdmin(state),
 	};
 };
 
-export default connect(mapStateToProps)(Dashboard);
+export default connect(mapStateToProps,{
+	fetchUser
+})(Dashboard);

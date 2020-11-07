@@ -12,16 +12,29 @@ from client.service import client_user as client_user_service
 
 def get_performing_cities(audit_cycle, user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
+    client_user = user.clientuser
     stores = {}
-    visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
-        .filter(audit__audit_cycle=audit_cycle) \
-        .prefetch_related(
-        'audit__store__city',
-        'report_sections',
-        'report_sections__section',
-        'report_sections__section__questions',
-        'report_sections__section__questions__answers',
-    )
+    if client_user.is_client_admin():
+        visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
+            .filter(audit__audit_cycle=audit_cycle) \
+            .prefetch_related(
+                'audit__store__city',
+                'report_sections',
+                'report_sections__section',
+                'report_sections__section__questions',
+                'report_sections__section__questions__answers')
+    else:
+        non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        visible_audit_stores_in_cycle = client_service.find_visible_to_client_user(user) \
+            .filter(audit__audit_cycle=audit_cycle,
+                    audit__store__id__in=non_admin_user_store_list) \
+            .prefetch_related(
+                'audit__store__city',
+                'report_sections',
+                'report_sections__section',
+                'report_sections__section__questions',
+                'report_sections__section__questions__answers')
     for k, g in itertools.groupby(visible_audit_stores_in_cycle, lambda x: x.audit.store):
         obtained = 0
         count = 0

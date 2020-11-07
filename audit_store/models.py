@@ -530,3 +530,31 @@ class ReportStatusLog(Model):
     status = CharField(db_column='status', max_length=20, choices=AuditStore.STATUS, blank=False)
     message = CharField(db_column='message', max_length=4096, blank=True, null=True)
     created_at = DateTimeField(db_column="created_at")
+
+
+class ReportActionPlan(Model):
+
+    PENDING = 'PENDING'
+    TAKEN = 'TAKEN'
+
+    STATUS = (
+        (PENDING, "PENDING"),
+        (TAKEN, "TAKEN")
+    )
+
+    id = AutoField(db_column='id', primary_key=True)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
+    action_plan_description = CharField(db_column='action_plan_description', max_length=4096, blank=True, null=True)
+    person_responsible = CharField(db_column='person_responsible', max_length=100, blank=True, null=True)
+    target_date = DateField(db_column='target_date')
+    status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
+    created_at = DateTimeField(db_column="created_at")
+    modified_at = DateTimeField(db_column="modified_at")
+
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(ReportActionPlan, self).save(*args, **kwargs)

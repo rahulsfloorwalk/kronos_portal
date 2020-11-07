@@ -46,6 +46,7 @@ from .serializers import ReportAttributeSerializer
 from .serializers import AuditCycleProoftagListSerializer
 from .serializers import AuditCycleScoreSerializer
 from .serializers import ClientSerializer
+from .serializers import ReportActionPlanSerializer
 from client_report.service import improvable_questions
 from client_report.service import questionnaire_survey
 
@@ -143,6 +144,61 @@ class AuditStoreIdView(APIView):
     def get(self, request, audit_store_id, format=None):
         audit_store = audit_store_client_service.find_by_id_for_clientuser(audit_store_id, request.user)
         return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreReportActionView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+        'POST': [GROUP_NAME_CLIENT]
+    }
+
+    def get(self, request, audit_store_id):
+        audit_report_action = audit_store_client_service.get_audit_store_action_plan(audit_store_id)
+        return Response(ReportActionPlanSerializer(audit_report_action, many=True).data)
+
+    def post(self, request, audit_store_id):
+        audit_report_action = audit_store_client_service\
+            .submit_audit_store_action_plan(audit_store_id, request.data['action_plan'], request.data['target_date'],
+                                            request.data['person'])
+        return Response(ReportActionPlanSerializer(audit_report_action).data)
+
+
+class ActionReportsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request):
+        reports_action = audit_store_client_service.get_reports_action_plan(request.user.clientuser)
+        return Response(ReportActionPlanSerializer(reports_action, many=True).data)
+
+
+class ActionReportsXlsxView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request):
+        report_action, name = audit_store_client_service.get_reports_action_plan_xlsx(request.user.clientuser)
+        response = HttpResponse(report_action.read(),
+                                content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+
+
+class ActionReportChangeStatus(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request, action_plan_id):
+        report_action = audit_store_client_service.change_status_report_action(action_plan_id)
+        return Response(ReportActionPlanSerializer(report_action).data)
+
 
 class AuditStoreView(APIView):
     permission_classes = [HasGroupPermission]
@@ -478,7 +534,7 @@ class AuditCycleTimeSeriesReport(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, questionnaire_type_id, format=None):
-        audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, questionnaire_type_id, request.user.id)
+        audit_cycle_time_series = audit_cycle.get_audit_cycle_section_averages_for_client(request.user, questionnaire_type_id)
         return Response(audit_cycle_time_series)
 
 class AuditCycleTimeSeriesReportByAuditCycleId(APIView):
@@ -497,7 +553,7 @@ class ImprovableQuestionsByAuditCycleId(APIView):
         'GET': [GROUP_NAME_CLIENT]
     }
     def get(self, request, questionnaire_type_id, audit_cycle_id):
-        audit_cycle_improvable_questions = improvable_questions.get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+        audit_cycle_improvable_questions = improvable_questions.get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
         return Response(audit_cycle_improvable_questions)
 
 
@@ -509,7 +565,7 @@ class ImprovableQuestionsXlsxReport(APIView):
     def get(self, request):
         audit_cycle_id = request.GET.get('auditCycleId')
         questionnaire_type_id = request.GET.get('questionnaireTypeId')
-        report, name = improvable_questions.get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id)
+        report, name = improvable_questions.get_improvable_questions_xlsx_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
         response = HttpResponse(report.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
@@ -522,8 +578,7 @@ class QuestionnaireSurveyByAuditCycleId(APIView):
         'GET': [GROUP_NAME_CLIENT]
     }
     def get(self, request, questionnaire_type_id, audit_cycle_id):
-        audit_cycle_questionnaire_survey = questionnaire_survey.get_questionnaire_survey_by_audit_cycle(audit_cycle_id,
-                                                                                                        questionnaire_type_id)
+        audit_cycle_questionnaire_survey = questionnaire_survey.get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_id, request.user.clientuser)
         return Response(audit_cycle_questionnaire_survey)
 
 
@@ -536,7 +591,8 @@ class QuestionnaireSurveyXlsxReport(APIView):
         audit_cycle_id = request.GET.get('auditCycleId')
         questionnaire_type_id = request.GET.get('questionnaireTypeId')
         report, name = questionnaire_survey.get_questionnaire_survey_xlsx_by_audit_cycle(audit_cycle_id,
-                                                                                         questionnaire_type_id)
+                                                                                         questionnaire_type_id,
+                                                                                         request.user.clientuser)
         response = HttpResponse(report.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
@@ -549,7 +605,7 @@ class AuditCycleTimeSeriesReportXlsx(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, questionnaire_type_id, format=None):
-        data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user.clientuser.client_id, questionnaire_type_id, request.user.id)
+        data = audit_cycle.get_audit_cycle_section_averages_for_client(request.user, questionnaire_type_id)
         audit_cycle_time_series = audit_cycle.get_excel_report(data)
         return Response(audit_cycle_time_series)
 
