@@ -14,10 +14,24 @@ def save(store):
 def find_stores_by_client(client_id):
     return Store.objects.filter(client_id=client_id).order_by('city__name').select_related('client','city')
 
-def find_stores_by_clientuser(user_id):
+
+def find_stores_by_clientuser_for_manager(user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
     # return Store.objects.filter(client_id=user.clientuser.client.id).order_by('city__name').select_related('client','city')
     return Store.objects.filter(client_id=user.clientuser.client.id).select_related('client', 'city')
+
+
+def find_stores_by_clientuser(user_id):
+    user = client_user_service.find_clientuser_by_user_id(user_id)
+    client_user = user.clientuser
+    if client_user.is_client_admin():
+        return Store.objects.filter(client_id=user.clientuser.client.id).select_related('client', 'city')
+    else:
+        non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        return Store.objects.filter(client_id=user.clientuser.client.id,
+                                    id__in=non_admin_user_store_list).select_related('client', 'city')
+
 
 def find_stores_by_clientuser_and_city(user_id, city_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
@@ -54,7 +68,9 @@ def find_cities_for_clientuser(user_id):
 
 def find_filter_stores_by_clientuser(user_id, store_code, selected_city, percent_from, percent_to):
     user = client_user_service.find_clientuser_by_user_id(user_id)
-    stores = Store.objects.filter(client_id=user.clientuser.client.id)
+    stores = Store.objects.filter(client_id=user.clientuser.client.id,
+                                  id__in=[245, 246, 248]
+                                  )
     if store_code != "":
         stores = stores.filter(code__contains=store_code)
     if selected_city != "":

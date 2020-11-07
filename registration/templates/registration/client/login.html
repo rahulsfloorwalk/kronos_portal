@@ -27,7 +27,7 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				<form action="{% url 'registration:client_login' %}" method="POST">
+				<form action="{% url 'registration:client_login' %}{% if next %}?next={{next}}{%endif%}" method="POST">
 					{% csrf_token %}
 					<div class="form-group">
 						<label>Email Address</label>

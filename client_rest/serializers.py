@@ -2,7 +2,7 @@ from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
 
 from audit.models import Audit, AuditCycle, ReportAttribute, AuditCycleProofTagList
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore, ReportActionPlan
 from client.models import Client, Store, ClientUser
 from manager.models import City, ProofTag
 
@@ -130,6 +130,21 @@ class AuditStoreSerializer(ModelSerializer):
             'percentage'
         )
         read_only_fields = fields
+
+
+class ReportActionPlanSerializer(ModelSerializer):
+    class Meta:
+        model = ReportActionPlan
+        fields = (
+            'id',
+            'action_plan_description',
+            'person_responsible',
+            'target_date',
+            'status',
+            'audit_store_id'
+        )
+        read_only_fields = fields
+
 
 class QuestionSerializer(ModelSerializer):
     class Meta:

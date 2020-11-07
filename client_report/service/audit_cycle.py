@@ -10,8 +10,8 @@ from answer.models import ReportSection, Answer
 from client.service import client_user as client_user_service
 
 
-def get_audit_cycle_section_averages_for_client(client_id, questionnaire_type_id, user_id):
-    qs = AuditCycle.objects.filter(client__id=client_id) \
+def get_audit_cycle_section_averages_for_client(user, questionnaire_type_id):
+    qs = AuditCycle.objects.filter(client__id=user.clientuser.client_id) \
         .filter(questionnaire_type_id=questionnaire_type_id) \
         .filter(status__in=AuditCycle.TRENDABLE_STATUSES) \
         .order_by('end_date')
@@ -22,7 +22,7 @@ def get_audit_cycle_section_averages_for_client(client_id, questionnaire_type_id
         'sections__questions',
         Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
     )
-    return get_audit_cycle_section_averages(qs, user_id)
+    return get_audit_cycle_section_averages(qs, user.id)
 
 
 def get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id, questionnaire_type_id, user_id):
@@ -81,19 +81,35 @@ def get_audit_cycle_section_averages(qs, user_id):
 def get_averages_for_sections_for_client_user(sections, user_id):
     user = client_user_service.find_clientuser_by_user_id(user_id)
     visible_audit_stores = client_service.find_visible_to_client_user(user)
+    client_user = user.clientuser
+    client_admin = client_user.is_client_admin()
+    if not client_admin:
+        non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
     section_averages = []
     for section in sections:
         if section.max_marks() > 0:
             sec = {}
             sec['section'] = section
-            filtered_report_sections = ReportSection.objects\
-                .filter(audit_store__in=visible_audit_stores)\
-                .filter(section=section)\
-                .prefetch_related(
-                    'section',
-                    'section__questions',
-                    'section__questions__answers'
-                )
+            if client_admin:
+                filtered_report_sections = ReportSection.objects\
+                    .filter(audit_store__in=visible_audit_stores)\
+                    .filter(section=section)\
+                    .prefetch_related(
+                        'section',
+                        'section__questions',
+                        'section__questions__answers'
+                    )
+            else:
+                filtered_report_sections = ReportSection.objects \
+                    .filter(audit_store__in=visible_audit_stores,
+                            audit_store__audit__store__id__in=non_admin_user_store_list) \
+                    .filter(section=section) \
+                    .prefetch_related(
+                        'section',
+                        'section__questions',
+                        'section__questions__answers'
+                    )
             sec['average'] = get_average_for_report_sections(filtered_report_sections)
         # if section.max_marks() > 0:
             section_averages.append(sec)

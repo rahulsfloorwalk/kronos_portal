@@ -1,5 +1,6 @@
 import logging
 
+from django.utils.http import is_safe_url
 from django.conf import settings
 from django.forms import Form
 from django.shortcuts import render, redirect
@@ -19,21 +20,30 @@ class Login(View):
     __client_url = settings.FRONTEND_CONFIG["CLIENT"]["LOGIN_SUCCESS_REDIRECT_URL"]
 
     def get(self, request):
+        next_url = request.GET.get('next')
         if request.user.is_authenticated() and request.user.groups.filter(name=GROUP_NAME_CLIENT).exists():
             _logger.info("client auto redirected: %s", request.user)
-            return redirect(self.__client_url)
+            if next_url and is_safe_url(next_url, request.get_host()):
+                return redirect(next_url)
+            else:
+                return redirect(self.__client_url)
         else:
             form = GroupAuthenticationForm(GROUP_NAME_CLIENT)
-            return render(request, self.__template, {'form': form})
+            return render(request, self.__template, {'form': form, 'next': next_url})
 
     def post(self, request):
+        next_url = request.POST.get('next')
         form = GroupAuthenticationForm(GROUP_NAME_CLIENT, data=request.POST)
         _logger.info("client login attempt")
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            _logger.info("client_user successfully logged in : %s",user)
-            return redirect(self.__client_url)
+            if next_url and is_safe_url(next_url, request.get_host()):
+                _logger.info("client_user successfully logged in : %s and redirected to: %s", user, next_url)
+                return redirect(next_url)
+            else:
+                _logger.info("client_user successfully logged in : %s",user)
+                return redirect(self.__client_url)
         else:
             _logger.warn("client_user login failed : %s")
             messages.add_message(request, messages.WARNING, 'Login Failed')

@@ -3,7 +3,7 @@ from kronos.utils import get_color_code_by_percentage
 
 from manager import states
 from manager import country
-# from client.service.client_user import find_clientuser_by_user_id
+from client.service.client_user import find_clientuser_by_user_id, find_non_client_admin_user_store_by_client_user_id
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
@@ -162,7 +162,8 @@ def get_audit_store_section_list_for_client(audit_cycle_id, store_id, client_id)
 
 def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
 
-    # user = find_clientuser_by_user_id(user_id)
+    user = find_clientuser_by_user_id(user_id)
+    client_user = user.clientuser
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
     sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
@@ -198,27 +199,54 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
             'report_sections__section__questions__answers',
         )
     """
-    qs = AuditStore.objects \
-        .filter(audit__audit_cycle=audit_cycle) \
-        .presentable() \
-        .order_by(
-            'audit__store__city__name',
-            'audit__store__name',
-            '-audit_date',
-        ) \
-        .select_related(
-            # join in related audit, store and city to avoid redundant queries
-            'audit',
-            'audit__store',
-            'audit__store__city',
-        ) \
-        .prefetch_related(
-            # prefetch report_sections, questions and answers for the given sections
-            'report_sections',
-            'report_sections__section',
-            'report_sections__section__questions',
-            'report_sections__section__questions__answers',
-        )
+    if client_user.is_client_admin():
+        qs = AuditStore.objects \
+            .filter(audit__audit_cycle=audit_cycle) \
+            .presentable() \
+            .order_by(
+                'audit__store__city__name',
+                'audit__store__name',
+                '-audit_date',
+            ) \
+            .select_related(
+                # join in related audit, store and city to avoid redundant queries
+                'audit',
+                'audit__store',
+                'audit__store__city',
+            ) \
+            .prefetch_related(
+                # prefetch report_sections, questions and answers for the given sections
+                'report_sections',
+                'report_sections__section',
+                'report_sections__section__questions',
+                'report_sections__section__questions__answers',
+            )
+    else:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        qs = AuditStore.objects \
+            .filter(audit__audit_cycle=audit_cycle,
+                    audit__store__id__in=non_admin_user_store_list
+                    ) \
+            .presentable() \
+            .order_by(
+                'audit__store__city__name',
+                'audit__store__name',
+                '-audit_date',
+            ) \
+            .select_related(
+                # join in related audit, store and city to avoid redundant queries
+                'audit',
+                'audit__store',
+                'audit__store__city',
+            ) \
+            .prefetch_related(
+                # prefetch report_sections, questions and answers for the given sections
+                'report_sections',
+                'report_sections__section',
+                'report_sections__section__questions',
+                'report_sections__section__questions__answers',
+            )
 
     for audit_store in qs:
         total_pct = audit_store.percentage()

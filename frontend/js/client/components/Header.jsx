@@ -65,12 +65,14 @@ export default class Header extends React.Component {
 					<ul className="nav navbar-nav">
 						<NavLink to="/dashboard"><Dashboard/> Dashboard</NavLink>
 						<NavLink to="/browser3"><File/> Report Browser</NavLink>
+						<NavLink to="/action_reports"><File/> Action Plan Tracking</NavLink>
+						<NavLink to="/store"><Home/> Store Browser</NavLink>
 						{ this.state.clientUser.client.id === 23 ?
 							<NavLink to="/weighted_browser"><File/> Weighted Reports</NavLink>
 							: null }
-						{ this.state.clientUser.is_client_admin ?
+						{/* { this.state.clientUser.is_client_admin ?
 							<NavLink to="/store"><Home/> Store Browser</NavLink>
-							: null }
+							: null } */}
 						{ this.state.clientUser.is_client_admin ?
 							<NavLink to="/store_performance"><File/> Store Performance</NavLink>
 							: null }

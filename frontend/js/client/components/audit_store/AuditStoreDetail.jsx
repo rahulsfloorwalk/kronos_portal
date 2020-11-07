@@ -1,20 +1,24 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
+import Datetime from "react-datetime";
+import "react-datetime/css/react-datetime.css";
+import moment from "moment";
 
 import { url }  from "../../../../config.js";
 
-import { fetchAuditStore } from "../../service/audit_store.js";
+import { fetchAuditStore, submitReportActionPlan, getReportActionPlan } from "../../service/audit_store.js";
 import { fetchSections } from "../../service/section.js";
 import { fetchReportSections } from "../../service/report_section.js";
 import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 
-import { File, Print, Download } from "../../../components/Icons.jsx";
+import { File, Print, Download, Comment } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
 import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
+import ActionReportBox from "./ActionReportBox.jsx";
 import AttachmentPrintRenderer from "./AttachmentPrintRenderer.jsx";
 import OverallExperienceGauge from "./OverallExperienceGauge.jsx";
 import ImpactFactorBox from "./ImpactFactorBox.jsx";
@@ -45,6 +49,12 @@ export default class AuditStoreDetail extends React.Component {
 		auditStore: null,
 		sections: [],
 		reportSections: [],
+		actionPlan: null,
+		display: "none",
+		errMsg: "",
+		action_plan: "",
+		target_date: "",
+		person: ""
 	};
 
 	componentDidMount() {
@@ -76,7 +86,83 @@ export default class AuditStoreDetail extends React.Component {
 				impactFactors
 			});
 		});
+		this.getReportActionPlanList();
 	}
+
+	getReportActionPlanList = () =>{
+		getReportActionPlan(this.props.params.auditStoreId).then((actionPlan) => {
+			this.setState({
+				actionPlan
+			});
+		});
+	};
+
+	showModal = () => {
+		this.setState({ display:"block" });
+	};
+
+	hideModal = () => {
+		this.setState({ display:"none", errMsg: "" });
+	};
+	submit_hideModal = () => {
+		let action_plan = this.state.action_plan;
+		let target_date = this.state.target_date;
+		let person = this.state.person;
+		if (action_plan === ""){
+			this.setState({errMsg: "Please enter Action Plan"});
+		}
+		else if(target_date === ""){
+			this.setState({errMsg: "Please enter valid Target Date"});
+		}
+		else if(person === ""){
+			this.setState({errMsg: "Please enter Person Responsible"});
+		}
+		else{
+			submitReportActionPlan(this.props.params.auditStoreId, action_plan, target_date, person).then(() => {
+				this.getReportActionPlanList();
+				this.setState({
+					display:"none",
+					errMsg: "",
+					action_plan: "",
+					target_date: "",
+					person: ""
+				});
+			});
+		}
+	};
+
+	validation = (currentDate) => {
+		var yesterday = moment().subtract( 1, "day" );
+		return currentDate.isAfter(yesterday);
+	};
+
+	dateChanged = (date) => {
+		if(typeof date !== "string"){
+			this.setState({
+				target_date: date.format("YYYY-MM-DD"),
+				errMsg: ""
+			});
+		}
+		else{
+			this.setState({
+				target_date: ""
+			});
+		}
+	};
+
+	actionPlanChanged = (e) =>{
+		this.setState({
+			action_plan: e.target.value,
+			errMsg: ""
+		});
+	};
+
+	personChanged = (e) =>{
+		this.setState({
+			person: e.target.value,
+			errMsg: ""
+		});
+	};
 
 	render() {
 		if(! this.state.auditStore){
@@ -85,6 +171,18 @@ export default class AuditStoreDetail extends React.Component {
 		const printMode = this.props.printMode || this.props.route.printMode || false;
 
 		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : floorwalkLogoUrl;
+
+		const modalStyle = {
+			display: this.state.display,
+			overflow: "scroll"
+		};
+		const modalBackdropStyle = {
+			zIndex: "1060",
+			height: "100%"
+		};
+		const modalDialogStyle = {
+			zIndex: "1070",
+		};
 
 		return (
 			<div>
@@ -104,6 +202,9 @@ export default class AuditStoreDetail extends React.Component {
 					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/xlsx_report"}>
 						<Download/> Excel Report
 					</a> : ""}
+					{ ! printMode ? <button className="btn btn-default pull-right hidden-print" onClick={this.showModal}>
+						<Comment/> Write Action Plan
+					</button> : ""}
 					<File/> Audit Report
 				</h2>
 				<div className="row">
@@ -124,11 +225,47 @@ export default class AuditStoreDetail extends React.Component {
 				{ this.state.impactFactors && this.state.impactFactors.length > 0 ?
 					<ImpactFactorBox impactFactors={this.state.impactFactors}/> : null
 				}
+				<ActionReportBox actionPlan={this.state.actionPlan}/>
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
 				{ printMode ?
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
 					: null }
+
+				<div className="modal" tabIndex="-1" style={modalStyle}>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
+					<div className="modal-dialog" style={modalDialogStyle}>
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" onClick={this.hideModal}>&times;</button>
+								<h4 className="modal-title">Create a Action Plan</h4>
+							</div>
+							<div className="modal-body">
+								<label>Action Plan:</label>
+								<textarea rows="5" className="form-control" value={this.state.action_plan} onChange={this.actionPlanChanged} />
+
+								<label>Target Date:</label>
+								<Datetime
+									timeFormat={false}
+									dateFormat="YYYY-MM-DD"
+									closeOnSelect={true}
+									value={this.state.target_date}
+									onChange={this.dateChanged}
+									isValidDate={this.validation}
+								/>
+
+								<label>Person Responsible:</label>
+								<input type="text" className="form-control" value={this.state.person} onChange={this.personChanged} />
+							</div>
+							<div className="modal-footer">
+								<span style={{color:"red"}}>{this.state.errMsg}</span>
+								&nbsp;&nbsp;
+								<button type="button" className="btn btn-primary" onClick={this.submit_hideModal}>Submit</button>
+								<button type="button" className="btn btn-default" onClick={this.hideModal}>Close</button>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 
 		);

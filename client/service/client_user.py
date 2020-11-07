@@ -8,7 +8,7 @@ from guardian.shortcuts import get_users_with_perms
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from registration.models import GROUP_NAME_CLIENT
 
-from ..models import ClientUser
+from ..models import ClientUser, NonClientAdminUserStore
 
 from . import client_service
 from . import store as store_service
@@ -29,6 +29,13 @@ def find_clientuser_by_user_id(user_id):
     try:
         return Group.objects.get(name=GROUP_NAME_CLIENT).user_set.get(pk=user_id)
     except (Group.DoesNotExist, User.DoesNotExist) as e:
+        raise ObjectNotFound from e
+
+
+def find_non_client_admin_user_store_by_client_user_id(client_user_id):
+    try:
+        return NonClientAdminUserStore.objects.get(client_user__id=client_user_id)
+    except NonClientAdminUserStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
 @atomic
@@ -115,3 +122,36 @@ def revoke_store_from_client_user(store_id, user_id):
 
     remove_perm('clientuser_store_visible', user, store)
     return find_by_visible_store(store_id)
+
+
+def get_assign_stores_to_non_admin_user(client_user_id):
+    non_admin_store_list = []
+    client_user_obj = find_clientuser_by_id(client_user_id)
+    store_obj = store_service.find_stores_by_clientuser_for_manager(client_user_obj.user.id)
+    if NonClientAdminUserStore.objects.filter(client_user__id=client_user_id).exists():
+        non_admin_user_store_obj = NonClientAdminUserStore.objects.get(client_user__id=client_user_id)
+        non_admin_store_list = non_admin_user_store_obj.get_store_list()
+    store_list = []
+    for store in store_obj:
+        store_dict = {}
+        store_dict['present'] = False
+        if store.id in non_admin_store_list:
+            store_dict['present'] = True
+        store_dict['id'] = store.id
+        store_dict['name'] = store.name
+        store_dict['city_name'] = store.city.name
+        store_list.append(store_dict)
+    return sorted(store_list, key=lambda s: (s['name'], s['city_name']))
+
+
+def assign_stores_to_non_admin_user(client_user_id, store_list):
+    client_user = find_clientuser_by_id(client_user_id)
+    if NonClientAdminUserStore.objects.filter(client_user__id=client_user_id).exists():
+        non_client_admin_user = NonClientAdminUserStore.objects.get(client_user__id=client_user_id)
+    else:
+        non_client_admin_user = NonClientAdminUserStore()
+
+    non_client_admin_user.client_user = client_user
+    non_client_admin_user.stores = {"store_list": store_list}
+    non_client_admin_user.save()
+    return store_list

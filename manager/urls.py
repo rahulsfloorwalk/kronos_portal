@@ -169,6 +169,7 @@ urlpatterns = ([
 
     url(r'client_user/(?P<client_user_id>[0-9]+)$', client_user_views.ClientUserIdView.as_view(), name='client_user_id_view'),
     url(r'client_user$', client_user_views.ClientUserView.as_view(), name='client_user_view'),
+    url(r'client_user/(?P<client_user_id>[0-9]+)/assign_stores$', client_user_views.ClientUserAssignStoresView.as_view(), name='client_user_assign_stores_view'),
 
     url(r'client/(?P<client_id>[0-9]+)/client_manager$', client_manager_views.ClientManagerByClientView.as_view(), name='client_manager_view_by_client'),
     url(r'client_manager$', client_manager_views.ClientManagerView.as_view(), name='client_manager_view'),

@@ -48,6 +48,26 @@ class ClientUser(Model):
         )
 
 
+class NonClientAdminUserStore(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    client_user = ForeignKey(ClientUser, related_name='non_admin_user_store_list', db_column='client_user_id', blank=False, on_delete=PROTECT)
+    stores = JSONField(db_column='stores', default=dict, blank=False)
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(NonClientAdminUserStore, self).save(*args, **kwargs)
+
+    def get_store_list(self):
+        if "store_list" in self.stores:
+            return self.stores['store_list']
+        return []
+
+
 class ClientManager(Model):
 
     id = AutoField(db_column='id', primary_key=True)

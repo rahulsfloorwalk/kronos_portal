@@ -6,8 +6,9 @@ import AuditStoreDetail from "../AuditStoreDetail";
 import SectionList from "../SectionList";
 import AuditStoreDetailsBox from "../AuditStoreDetailsBox";
 import SectionTotalsBox from "../SectionTotalsBox";
+import ActionReportBox from "../ActionReportBox";
 
-import { fetchAuditStore } from "../../../service/audit_store.js";
+import { fetchAuditStore, getReportActionPlan } from "../../../service/audit_store.js";
 import { fetchSections } from "../../../service/section.js";
 import { fetchReportSections } from "../../../service/report_section.js";
 import {findImpactFactorsByAuditStore} from "../../../service/impact_factor.js";
@@ -388,6 +389,17 @@ const sampleImpactFactors = [
 	},
 ];
 
+const sampleReportActions = [
+	{
+		"id": 100,
+		"action_plan_description": "Test Action Plan",
+		"person_responsible": "Test Person",
+		"target_date": "2020-11-07",
+		"status": "PENDING",
+		"audit_store_id": 2113
+	}
+];
+
 describe("<AuditStoreDetail/>", () => {
 
 	beforeEach(() => {
@@ -395,6 +407,7 @@ describe("<AuditStoreDetail/>", () => {
 		fetchSections.mockResolvedValue(sampleSections);
 		fetchReportSections.mockResolvedValue(sampleReportSections);
 		findImpactFactorsByAuditStore.mockResolvedValue(sampleImpactFactors);
+		getReportActionPlan.mockResolvedValue(sampleReportActions);
 	});
 
 	it("makes all the correct ajax calls", () => {
@@ -403,6 +416,7 @@ describe("<AuditStoreDetail/>", () => {
 		expect(fetchSections).toBeCalledWith(sampleParams.auditStoreId);
 		expect(fetchReportSections).toBeCalledWith(sampleParams.auditStoreId);
 		expect(findImpactFactorsByAuditStore).toBeCalledWith(sampleParams.auditStoreId);
+		expect(getReportActionPlan).toBeCalledWith(sampleParams.auditStoreId);
 	});
 
 	it("passes the correct props to SectionList, AuditStoreDetailsBox, SectionTotalsBox", (done) => {
@@ -415,6 +429,7 @@ describe("<AuditStoreDetail/>", () => {
 			expect(r.find(ImpactFactorBox).prop("impactFactors")).toEqual(sampleImpactFactors);
 			expect(r.find(SectionTotalsBox).prop("sections")).toEqual(sampleSections);
 			expect(r.find(SectionTotalsBox).prop("reportSections")).toEqual(sampleReportSections);
+			expect(r.find(ActionReportBox).prop("actionPlan")).toEqual(sampleReportActions);
 
 			expect(r.find(AuditStoreDetailsBox).prop("auditStore")).toEqual(sampleAuditStore);
 			done();

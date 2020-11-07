@@ -10,6 +10,7 @@ import ClientDetail from "./client/ClientDetail.jsx";
 
 import ClientUserList from "./client_user/ClientUserList.jsx";
 import ClientUserForm from "./client_user/ClientUserForm.jsx";
+import ClientUserAssignStores from "./client_user/ClientUserAssignStores.jsx";
 
 import ClientManagerList from "./client_manager/ClientManagerList.jsx";
 import ClientManagerForm from "./client_manager/ClientManagerForm.jsx";
@@ -118,6 +119,7 @@ const Routes = () => (
 				<Route path="client_user" component={ClientUserList}>
 					<Route path="add" component={ClientUserForm}/>
 					<Route path=":clientUserId/edit" component={ClientUserForm}/>
+					<Route path=":clientUserId/assign_stores" component={ClientUserAssignStores}/>
 				</Route>
 				<Route path="client_manager" component={ClientManagerList}>
 					<Route path="add" component={ClientManagerForm}/>
