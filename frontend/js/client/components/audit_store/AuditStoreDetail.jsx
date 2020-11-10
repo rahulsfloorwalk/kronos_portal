@@ -51,7 +51,7 @@ export default class AuditStoreDetail extends React.Component {
 		auditStore: null,
 		sections: [],
 		reportSections: [],
-		actionPlan: null,
+		actionPlan: [],
 		display: "none",
 		errMsg: "",
 		action_plan: "",
