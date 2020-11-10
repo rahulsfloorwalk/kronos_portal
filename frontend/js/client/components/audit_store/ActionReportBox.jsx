@@ -27,32 +27,36 @@ export default class SectionTotalsBox extends React.Component {
 						<td>{moment(a["target_date"]).format(momentDateFormat)}</td>
 						<td>{a["action_plan_description"]}</td>
 						<td>{status}</td>
+						<td>{a["created_by"]}</td>
 					</tr>
 				);
 			}
-			return(
-				<div className="panel panel-default">
-					<div className="panel-heading">
-						<h4 className="panel-title">Report Actions</h4>
+			if(rows.length > 0){
+				return(
+					<div className="panel panel-default">
+						<div className="panel-heading">
+							<h4 className="panel-title">Report Actions</h4>
+						</div>
+						<table className="table table-bordered table-hover table-responsive table-striped">
+							<thead>
+								<tr>
+									<th style={{width:"10%"}}>Person Responsible</th>
+									<th style={{width:"10%"}}>Target Date</th>
+									<th style={{width:"60%"}}>Description</th>
+									<th style={{width:"10%"}}>Status</th>
+									<th style={{width:"10%"}}>Created By</th>
+								</tr>
+							</thead>
+							<tbody>
+								{rows}
+							</tbody>
+						</table>
 					</div>
-					<table className="table table-bordered table-hover table-responsive table-striped">
-						<thead>
-							<tr>
-								<th style={{width:"15%"}}>Person Responsible</th>
-								<th style={{width:"10%"}}>Target Date</th>
-								<th style={{width:"60%"}}>Description</th>
-								<th style={{width:"15%"}}>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							{rows}
-						</tbody>
-					</table>
-				</div>
-			);
-		}
-		else{
-			return null;
+				);
+			}
+			else{
+				return null;
+			}
 		}
 	}
 }

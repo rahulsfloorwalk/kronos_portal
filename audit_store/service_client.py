@@ -8,6 +8,7 @@ from .models import AuditStore, ReportStatusLog, ReportActionPlan
 from answer.service import answer as answer_service
 from questionnaire.service import question as question_service
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
+from audit.service.audit_cycle import find_by_id
 
 
 def find_upcoming_for_client(client_id):
@@ -97,16 +98,20 @@ def find_audit_store_exclude_today(audit_store_id):
         .exists()
 
 
-def get_reports_action_plan(client_user):
+def get_reports_action_plan(client_user, audit_cycle_id):
     if client_user.is_client_admin():
         report_action = ReportActionPlan.objects\
-            .filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]).order_by('status', 'target_date')
+            .filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                    audit_store__audit__audit_cycle__id=audit_cycle_id)\
+            .order_by('status', 'target_date')
     else:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
         report_action = ReportActionPlan.objects\
             .filter(audit_store__audit__store__id__in=non_admin_user_store_list,
-                    audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]).order_by('status', 'target_date')
+                    audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
+                    audit_store__audit__audit_cycle__id=audit_cycle_id)\
+            .order_by('status', 'target_date')
     return report_action
 
 
@@ -122,35 +127,37 @@ def get_audit_store_action_plan(audit_store_id):
     return audit_store_action_plan
 
 
-def submit_audit_store_action_plan(audit_store_id, action_plan, target_date, person):
+def submit_audit_store_action_plan(audit_store_id, client_user, action_plan, target_date, person):
     audit_store = AuditStore.objects.get(pk=audit_store_id)
     report_action_obj = ReportActionPlan()
     report_action_obj.audit_store = audit_store
     report_action_obj.action_plan_description = action_plan
     report_action_obj.person_responsible = person
+    report_action_obj.created_by = client_user.full_name
     report_action_obj.target_date = target_date
     report_action_obj.status = ReportActionPlan.PENDING
     report_action_obj.save()
     return report_action_obj
 
 
-def get_reports_action_plan_xlsx(client_user):
-    report_action_data = get_reports_action_plan(client_user)
-    data = create_text_structure(report_action_data)
-    name = ("Action Report Plan List" + ".xlsx").replace("-", "")
+def get_reports_action_plan_xlsx(client_user, audit_cycle_id):
+    audit_cycle = find_by_id(audit_cycle_id)
+    report_action_data = get_reports_action_plan(client_user, audit_cycle_id)
+    data = create_text_structure(report_action_data, audit_cycle.name)
+    name = (str(audit_cycle.name) + " Action Report Plan List" + ".xlsx").replace("-", "")
     return write_data(data), name
 
 
-def create_text_structure(report_action_data):
+def create_text_structure(report_action_data, audit_cycle_name):
     rows = []
 
     # generate title row
-    row = {'type': 'title', 'content': ['Action Report Plan List']}
+    row = {'type': 'title', 'content': [str(audit_cycle_name) + ' Action Report Plan List']}
     rows.append(row)
 
     # generate header of improvable questions
     cells = [{'value': "Report ID"}, {'value': "Person Responsible"}, {'value': "Target Date"},
-             {'value': "Action Plan"}, {'value': "Status"}, {'value': "Report URL"}]
+             {'value': "Action Plan"}, {'value': "Status"}, {'value': "Created By"}, {'value': "Report URL"}]
     row = {'type': 'header', 'content': cells}
     rows.append(row)
 
@@ -178,13 +185,17 @@ def create_text_structure(report_action_data):
             'value': action_status,
             'color_code': get_color_code(color_value, 100)
         }
+        created_by = {
+            'value': action.created_by,
+            'color_code': get_color_code(0, 0)
+        }
         audit_report_url = settings.KRONOS_BASE_URL + "/auth/client/login?next=/static/client/index.html%23/audit_store/" + str(action.audit_store_id)
         url = {
             'value': "Click Here",
             'url': audit_report_url,
             'color_code': get_color_code(0, 0)
         }
-        content = [audit_store_id, person_responsible, target_date, action_plan_description, status, url]
+        content = [audit_store_id, person_responsible, target_date, action_plan_description, status, created_by, url]
         row = {
             'type': 'action_data',
             'content': content
@@ -240,9 +251,10 @@ def write_data(data):
     worksheet.set_column(0, 0, 10)
     worksheet.set_column(1, 1, 20)
     worksheet.set_column(2, 2, 15)
-    worksheet.set_column(3, 3, 90)
+    worksheet.set_column(3, 3, 80)
     worksheet.set_column(4, 4, 15)
-    worksheet.set_column(5, 5, 30)
+    worksheet.set_column(5, 5, 20)
+    worksheet.set_column(6, 6, 30)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col
@@ -251,7 +263,7 @@ def write_data(data):
     for line in data:
         if line.get('type') == 'title':
             for point in line.get('content'):
-                worksheet.merge_range(row, col, row, col + 5, point, title_format)
+                worksheet.merge_range(row, col, row, col + 6, point, title_format)
                 col += 1
         elif line.get('type') == 'header':
             for cell in line.get('content'):

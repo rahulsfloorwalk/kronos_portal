@@ -15,6 +15,8 @@ import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 import { File, Print, Download, Comment } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
+import Alert from "react-s-alert";
+
 import AuditStoreDetailsBox from "./AuditStoreDetailsBox.jsx";
 import SectionList from "./SectionList.jsx";
 import SectionTotalsBox from "./SectionTotalsBox.jsx";
@@ -54,7 +56,8 @@ export default class AuditStoreDetail extends React.Component {
 		errMsg: "",
 		action_plan: "",
 		target_date: "",
-		person: ""
+		person: "",
+		loading_modal: false
 	};
 
 	componentDidMount() {
@@ -98,7 +101,10 @@ export default class AuditStoreDetail extends React.Component {
 	};
 
 	showModal = () => {
-		this.setState({ display:"block" });
+		this.setState({
+			display:"block",
+			loading_modal: false
+		});
 	};
 
 	hideModal = () => {
@@ -118,6 +124,9 @@ export default class AuditStoreDetail extends React.Component {
 			this.setState({errMsg: "Please enter Person Responsible"});
 		}
 		else{
+			this.setState({
+				loading_modal: true
+			});
 			submitReportActionPlan(this.props.params.auditStoreId, action_plan, target_date, person).then(() => {
 				this.getReportActionPlanList();
 				this.setState({
@@ -125,8 +134,10 @@ export default class AuditStoreDetail extends React.Component {
 					errMsg: "",
 					action_plan: "",
 					target_date: "",
-					person: ""
+					person: "",
+					loading_modal: false
 				});
+				Alert.success("ACTION PLAN SUBMITTED");
 			});
 		}
 	};
@@ -183,7 +194,18 @@ export default class AuditStoreDetail extends React.Component {
 		const modalDialogStyle = {
 			zIndex: "1070",
 		};
-
+		let submit_button_html;
+		if(!this.state.loading_modal){
+			submit_button_html = (
+				<div className="modal-footer">
+					<span style={{color:"red"}}>{this.state.errMsg}</span>&nbsp;&nbsp;
+					<button type="button" className="btn btn-primary" onClick={this.submit_hideModal}>Submit</button><button type="button" className="btn btn-default" onClick={this.hideModal}>Close</button>
+				</div>
+			);
+		}
+		else{
+			submit_button_html = (<Loading/>);
+		}
 		return (
 			<div>
 				<h2 className="page-header">
@@ -257,17 +279,11 @@ export default class AuditStoreDetail extends React.Component {
 								<label>Person Responsible:</label>
 								<input type="text" className="form-control" value={this.state.person} onChange={this.personChanged} />
 							</div>
-							<div className="modal-footer">
-								<span style={{color:"red"}}>{this.state.errMsg}</span>
-								&nbsp;&nbsp;
-								<button type="button" className="btn btn-primary" onClick={this.submit_hideModal}>Submit</button>
-								<button type="button" className="btn btn-default" onClick={this.hideModal}>Close</button>
-							</div>
+							{submit_button_html}
 						</div>
 					</div>
 				</div>
 			</div>
-
 		);
 	}
 }

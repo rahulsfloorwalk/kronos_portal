@@ -159,7 +159,7 @@ class AuditStoreReportActionView(APIView):
 
     def post(self, request, audit_store_id):
         audit_report_action = audit_store_client_service\
-            .submit_audit_store_action_plan(audit_store_id, request.data['action_plan'], request.data['target_date'],
+            .submit_audit_store_action_plan(audit_store_id, request.user.clientuser, request.data['action_plan'], request.data['target_date'],
                                             request.data['person'])
         return Response(ReportActionPlanSerializer(audit_report_action).data)
 
@@ -170,8 +170,8 @@ class ActionReportsView(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
 
-    def get(self, request):
-        reports_action = audit_store_client_service.get_reports_action_plan(request.user.clientuser)
+    def get(self, request, audit_cycle_id):
+        reports_action = audit_store_client_service.get_reports_action_plan(request.user.clientuser, audit_cycle_id)
         return Response(ReportActionPlanSerializer(reports_action, many=True).data)
 
 
@@ -181,8 +181,8 @@ class ActionReportsXlsxView(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
 
-    def get(self, request):
-        report_action, name = audit_store_client_service.get_reports_action_plan_xlsx(request.user.clientuser)
+    def get(self, request, audit_cycle_id):
+        report_action, name = audit_store_client_service.get_reports_action_plan_xlsx(request.user.clientuser, audit_cycle_id)
         response = HttpResponse(report_action.read(),
                                 content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
