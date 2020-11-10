@@ -139,6 +139,7 @@ class ReportActionPlanSerializer(ModelSerializer):
             'id',
             'action_plan_description',
             'person_responsible',
+            'created_by',
             'target_date',
             'status',
             'audit_store_id'

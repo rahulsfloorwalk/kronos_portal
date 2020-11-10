@@ -51,8 +51,8 @@ urlpatterns = ([
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_action$', views.AuditStoreReportActionView.as_view(), name='audit_store_report_action_view'),
 
-    url(r'action_reports$', views.ActionReportsView.as_view(), name='action_reports_view'),
-    url(r'action_reports_xlsx$', views.ActionReportsXlsxView.as_view(), name='action_reports_xlsx'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/action_reports$', views.ActionReportsView.as_view(), name='action_reports_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/action_reports_xlsx$', views.ActionReportsXlsxView.as_view(), name='action_reports_xlsx'),
 
     url(r'action_report/(?P<action_plan_id>[0-9]+)/change_status$', views.ActionReportChangeStatus.as_view(), name='action_report_change_status'),
 

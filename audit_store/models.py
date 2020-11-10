@@ -546,6 +546,7 @@ class ReportActionPlan(Model):
     audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
     action_plan_description = CharField(db_column='action_plan_description', max_length=4096, blank=True, null=True)
     person_responsible = CharField(db_column='person_responsible', max_length=100, blank=True, null=True)
+    created_by = CharField(db_column='created_by', max_length=100, blank=True, null=True)
     target_date = DateField(db_column='target_date')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     created_at = DateTimeField(db_column="created_at")
