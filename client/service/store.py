@@ -68,9 +68,14 @@ def find_cities_for_clientuser(user_id):
 
 def find_filter_stores_by_clientuser(user_id, store_code, selected_city, percent_from, percent_to):
     user = client_user_service.find_clientuser_by_user_id(user_id)
-    stores = Store.objects.filter(client_id=user.clientuser.client.id,
-                                  id__in=[245, 246, 248]
-                                  )
+    client_user = user.clientuser
+    if client_user.is_client_admin():
+        stores = Store.objects.filter(client_id=user.clientuser.client.id)
+    else:
+        non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        stores = Store.objects.filter(client_id=user.clientuser.client.id, id__in=non_admin_user_store_list)
+
     if store_code != "":
         stores = stores.filter(code__contains=store_code)
     if selected_city != "":

@@ -190,9 +190,6 @@ export default class StoreList2 extends Component{
 			}
 		}
 		let storeTable;
-		let div_style = {
-			paddingBottom:"1%"
-		};
 		const selectStyle = {
 			display: "inline-block",
 			width: "150px",
@@ -210,7 +207,7 @@ export default class StoreList2 extends Component{
 				</li>);
 			}
 			audit_cycle_button = (
-				<div className="btn-group pull-right hidden-print" style={div_style}>
+				<div className="btn-group pull-right hidden-print">
 					&nbsp;Download:<br/>
 					<button className="btn btn-default"
 						title="Download Store Score By Audit Cycle"
@@ -230,28 +227,30 @@ export default class StoreList2 extends Component{
 		const { citiesRows } = this.state;
 		if (storeRows.length > 0){
 			storeTable = (
-				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
-					<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
-					&nbsp;
-					<CitySelectorForStoreFilter name="selectedCity" citiesRows={citiesRows} onChange={this.changeValue} selectedCity={this.state.selectedCity}/>
-					&nbsp;
-					<div style={{display: "inline-block",width: "80px",}}>
-						&nbsp;<b>Percentage</b>:
-						<input type="text" name="percentFrom" id="percentFrom" className="form-control" value={this.state.percentFrom} onChange={this.changeValue} maxLength="2"/>
-					</div>
-					&nbsp; to &nbsp;
-					<div style={{display: "inline-block",width: "80px",}}>
+				<div>
+					<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
+						<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
 						&nbsp;
-						<input type="text" name="percentTo" id="percentTo" className="form-control" value={this.state.percentTo} onChange={this.changeValue} maxLength="3"/>
+						<CitySelectorForStoreFilter name="selectedCity" citiesRows={citiesRows} onChange={this.changeValue} selectedCity={this.state.selectedCity}/>
+						&nbsp;
+						<div style={{display: "inline-block",width: "80px",}}>
+							&nbsp;<b>Percentage</b>:
+							<input type="text" name="percentFrom" id="percentFrom" className="form-control" value={this.state.percentFrom} onChange={this.changeValue} maxLength="2"/>
+						</div>
+						&nbsp; to &nbsp;
+						<div style={{display: "inline-block",width: "80px",}}>
+							&nbsp;
+							<input type="text" name="percentTo" id="percentTo" className="form-control" value={this.state.percentTo} onChange={this.changeValue} maxLength="3"/>
+						</div>
+						<div style={selectStyle}>
+							&nbsp;&nbsp;
+							<button className="btn btn-primary" onClick={this.filterStore}>Go</button>
+							&nbsp;&nbsp;
+							<button className="btn btn-primary" onClick={this.resetFilter}>Clear</button>
+						</div>
+						{errSpan}
+						{audit_cycle_button}
 					</div>
-					<div style={selectStyle}>
-						&nbsp;&nbsp;
-						<button className="btn btn-primary" onClick={this.filterStore}>Go</button>
-						&nbsp;&nbsp;
-						<button className="btn btn-primary" onClick={this.resetFilter}>Clear</button>
-					</div>
-					{errSpan}
-					{audit_cycle_button}
 					<table className="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
@@ -275,28 +274,30 @@ export default class StoreList2 extends Component{
 		}
 		else {
 			storeTable = (
-				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
-					<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
-					&nbsp;
-					<CitySelectorForStoreFilter name="selectedCity" citiesRows={citiesRows} onChange={this.changeValue} selectedCity={this.state.selectedCity}/>
-					&nbsp;
-					<div style={{display: "inline-block",width: "80px",}}>
-						&nbsp;<b>Percentage</b>:
-						<input type="text" name="percentFrom" id="percentFrom" className="form-control" value={this.state.percentFrom} onChange={this.changeValue} maxLength="2"/>
-					</div>
-					&nbsp; to &nbsp;
-					<div style={{display: "inline-block",width: "80px",}}>
+				<div>
+					<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
+						<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
 						&nbsp;
-						<input type="text" name="percentTo" id="percentTo" className="form-control" value={this.state.percentTo} onChange={this.changeValue} maxLength="3"/>
+						<CitySelectorForStoreFilter name="selectedCity" citiesRows={citiesRows} onChange={this.changeValue} selectedCity={this.state.selectedCity}/>
+						&nbsp;
+						<div style={{display: "inline-block",width: "80px",}}>
+							&nbsp;<b>Percentage</b>:
+							<input type="text" name="percentFrom" id="percentFrom" className="form-control" value={this.state.percentFrom} onChange={this.changeValue} maxLength="2"/>
+						</div>
+						&nbsp; to &nbsp;
+						<div style={{display: "inline-block",width: "80px",}}>
+							&nbsp;
+							<input type="text" name="percentTo" id="percentTo" className="form-control" value={this.state.percentTo} onChange={this.changeValue} maxLength="3"/>
+						</div>
+						<div style={selectStyle}>
+							&nbsp;&nbsp;
+							<button className="btn btn-primary" onClick={this.filterStore}>Go</button>
+							&nbsp;&nbsp;
+							<button className="btn btn-primary" onClick={this.resetFilter}>Clear</button>
+						</div>
+						{errSpan}
+						{audit_cycle_button}
 					</div>
-					<div style={selectStyle}>
-						&nbsp;&nbsp;
-						<button className="btn btn-primary" onClick={this.filterStore}>Go</button>
-						&nbsp;&nbsp;
-						<button className="btn btn-primary" onClick={this.resetFilter}>Clear</button>
-					</div>
-					{errSpan}
-					{audit_cycle_button}
 					<Jumbotron heading="No stores found" para="Please try to change or clear filter"/>
 				</div>
 			);

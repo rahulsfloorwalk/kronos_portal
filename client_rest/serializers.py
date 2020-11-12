@@ -142,7 +142,8 @@ class ReportActionPlanSerializer(ModelSerializer):
             'created_by',
             'target_date',
             'status',
-            'audit_store_id'
+            'audit_store_id',
+            'store_details'
         )
         read_only_fields = fields
 

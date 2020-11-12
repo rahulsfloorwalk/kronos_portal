@@ -156,7 +156,7 @@ def create_text_structure(report_action_data, audit_cycle_name):
     rows.append(row)
 
     # generate header of improvable questions
-    cells = [{'value': "Report ID"}, {'value': "Person Responsible"}, {'value': "Target Date"},
+    cells = [{'value': "Report ID"}, {'value': "Person Responsible"}, {'value': "Target Date"}, {'value': "Store"},
              {'value': "Action Plan"}, {'value': "Status"}, {'value': "Created By"}, {'value': "Report URL"}]
     row = {'type': 'header', 'content': cells}
     rows.append(row)
@@ -173,6 +173,10 @@ def create_text_structure(report_action_data, audit_cycle_name):
         }
         target_date = {
             'value': str(action.target_date),
+            'color_code': get_color_code(0, 0)
+        }
+        store = {
+            'value': str(action.store_details()),
             'color_code': get_color_code(0, 0)
         }
         action_plan_description = {
@@ -195,7 +199,7 @@ def create_text_structure(report_action_data, audit_cycle_name):
             'url': audit_report_url,
             'color_code': get_color_code(0, 0)
         }
-        content = [audit_store_id, person_responsible, target_date, action_plan_description, status, created_by, url]
+        content = [audit_store_id, person_responsible, target_date, store, action_plan_description, status, created_by, url]
         row = {
             'type': 'action_data',
             'content': content
@@ -251,10 +255,11 @@ def write_data(data):
     worksheet.set_column(0, 0, 10)
     worksheet.set_column(1, 1, 20)
     worksheet.set_column(2, 2, 15)
-    worksheet.set_column(3, 3, 80)
-    worksheet.set_column(4, 4, 15)
-    worksheet.set_column(5, 5, 20)
-    worksheet.set_column(6, 6, 30)
+    worksheet.set_column(3, 3, 15)
+    worksheet.set_column(4, 4, 80)
+    worksheet.set_column(5, 5, 15)
+    worksheet.set_column(6, 6, 15)
+    worksheet.set_column(7, 7, 15)
     worksheet.set_default_row(40)
     row = start_row
     col = start_col
