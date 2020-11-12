@@ -120,6 +120,7 @@ class ActionReports extends React.Component{
 							<td>{a["audit_store_id"]}</td>
 							<td>{a["person_responsible"]}</td>
 							<td>{moment(a["target_date"]).format(momentDateFormat)}</td>
+							<td>{a["store_details"]}</td>
 							<td>{a["action_plan_description"]}</td>
 							<td>{status}</td>
 							<td>{a["created_by"]}</td>
@@ -142,6 +143,7 @@ class ActionReports extends React.Component{
 							<td>{a["audit_store_id"]}</td>
 							<td>{a["person_responsible"]}</td>
 							<td>{moment(a["target_date"]).format(momentDateFormat)}</td>
+							<td>{a["store_details"]}</td>
 							<td>{a["action_plan_description"]}</td>
 							<td>{status}</td>
 							<td>{a["created_by"]}</td>
@@ -163,6 +165,7 @@ class ActionReports extends React.Component{
 						<td>{a["audit_store_id"]}</td>
 						<td>{a["person_responsible"]}</td>
 						<td>{moment(a["target_date"]).format(momentDateFormat)}</td>
+						<td>{a["store_details"]}</td>
 						<td>{a["action_plan_description"]}</td>
 						<td>{status}</td>
 						<td>{a["created_by"]}</td>
@@ -186,6 +189,7 @@ class ActionReports extends React.Component{
 							<th>Report ID</th>
 							<th>Person Responsible</th>
 							<th>Target Date</th>
+							<th>Store</th>
 							<th>Action Plan</th>
 							<th>Status</th>
 							<th>Created By</th>
@@ -204,9 +208,9 @@ class ActionReports extends React.Component{
 		return(
 			<div>
 				<QuestionnaireTypeTabsForDashboard /><br/>
-				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
+				<div className="form-group" style={{marginTop: "10px", verticalAlign: "top"}}>
 					<AuditCycleSelectorForDashboard/>&nbsp;
-					<div style={{width: "200px", display: "inline-block"}}>
+					<div style={{width: "200px", display: "inline-block", verticalAlign: "top"}}>
 						<label className="control-label" style={{fontSize: "18px"}}>&nbsp;Status:</label>
 						<b>
 							<select className="form-control" onChange={this.changeStatusFilter}>

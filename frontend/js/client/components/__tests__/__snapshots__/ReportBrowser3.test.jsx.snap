@@ -8,7 +8,7 @@ exports[`ReportBrowser3 does not render the report attribute filters when the us
     style={
       Object {
         "marginTop": "10px",
-        "verticalAlign": "middle",
+        "verticalAlign": "top",
       }
     }
   >
@@ -73,7 +73,7 @@ exports[`ReportBrowser3 renders a loading widget when no cycle is selected 1`] =
     style={
       Object {
         "marginTop": "10px",
-        "verticalAlign": "middle",
+        "verticalAlign": "top",
       }
     }
   >
@@ -139,7 +139,7 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
     style={
       Object {
         "marginTop": "10px",
-        "verticalAlign": "middle",
+        "verticalAlign": "top",
       }
     }
   >
@@ -209,7 +209,7 @@ exports[`ReportBrowser3 renders the audit store table with correct props 1`] = `
     style={
       Object {
         "marginTop": "10px",
-        "verticalAlign": "middle",
+        "verticalAlign": "top",
       }
     }
   >

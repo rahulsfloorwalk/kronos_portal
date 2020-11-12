@@ -82,7 +82,7 @@ export class ReportBrowser3 extends Component{
 			<div>
 				{/* <QuestionnaireTypeTabs /> */}
 				<QuestionnaireTypeTabsForDashboard />
-				<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
+				<div className="form-group" style={{marginTop: "10px", verticalAlign: "top"}}>
 					{/* <AuditCycleSelector/>&nbsp; */}
 					<AuditCycleSelectorForDashboard/>&nbsp;
 					<CountrySelector/>&nbsp;

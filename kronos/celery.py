@@ -45,6 +45,6 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(queue_at_attachment, find_faulty_report.s())
 
     # schedule for save audio transcription
-    # Execute cron every one hour
-    queue_for_transcription = crontab(hour='*/1', minute=0)
-    sender.add_periodic_task(queue_for_transcription, save_audio_transcription.s())
+    # Execute cron every midnight at 11:40
+    queue_at_midnight = crontab(hour=18, minute=20)
+    sender.add_periodic_task(queue_at_midnight, save_audio_transcription.s())

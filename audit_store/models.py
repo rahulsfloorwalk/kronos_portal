@@ -559,3 +559,7 @@ class ReportActionPlan(Model):
             self.created_at = timezone.now()
         self.modified_at = timezone.now()
         return super(ReportActionPlan, self).save(*args, **kwargs)
+
+    def store_details(self):
+        store = self.audit_store.audit.store
+        return store.name + ", " + store.city.name
