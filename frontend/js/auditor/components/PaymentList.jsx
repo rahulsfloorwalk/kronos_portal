@@ -29,6 +29,8 @@ class PaymentRow extends React.Component{
 						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
 						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
 						<p>{this.props.payment.comment}</p>
+						<p>Audit Date: <b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b></p>
+						<p>Client: <b>{this.props.payment.get_audit_details.client_name}</b></p>
 						{/* <button className="btn btn-primary btn-xs pull-right">Any Concern?</button> */}
 						<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-primary btn-xs pull-right">Any Concern?</Link>
 					</div>
@@ -44,6 +46,8 @@ class PaymentRow extends React.Component{
 					</div>
 					<div className="col-sm-4">
 						<p>{this.props.payment.comment}</p>
+						<p>Audit Date: <b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b></p>
+						<p>Client: <b>{this.props.payment.get_audit_details.client_name}</b></p>
 					</div>
 					<div className="col-sm-2">
 						{/* <button className="btn btn-primary btn-sm pull-right">Any Concern?</button> */}
@@ -63,6 +67,8 @@ class PaymentRow extends React.Component{
 					</div>
 					<div className="col-md-5">
 						<p>{this.props.payment.comment}</p>
+						<p>Audit Date: <b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b></p>
+						<p>Client: <b>{this.props.payment.get_audit_details.client_name}</b></p>
 					</div>
 					<div className="col-md-2">
 						{/* <button className="btn btn-primary btn-lg">Any Concern?</button> */}

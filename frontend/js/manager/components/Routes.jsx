@@ -67,7 +67,8 @@ import AuditList from "./AuditList.jsx";
 import AuditCopyForm from "./AuditCopyForm.jsx";
 import AuditForm from "./AuditForm.jsx";
 
-import AuditStoreList from "./AuditStoreList.jsx";
+// import AuditStoreList from "./AuditStoreList.jsx";
+import AuditStoreList from "./AuditStoreListNew.jsx";
 import AuditStoreQARatingForm from "./AuditStoreQARatingForm.jsx";
 import AuditStoreDetails from "./AuditStoreDetails.jsx";
 import AuditStoreReport from "./AuditStoreReport.jsx";

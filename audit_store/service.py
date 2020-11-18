@@ -9,11 +9,13 @@ from kronos.utils import today_ist
 
 from .models import AuditStore
 from auditor.models import ProfileInfo
-from audit.models import AuditCycle
+from audit.models import AuditCycle, Audit
 from kronos.exceptions import ObjectNotFound, AppLogicError
 import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
 from audit.service import report_attribute_service
+from registration.models import MobileNumber, GROUP_NAME_AUDITOR
+
 
 def find_by_id(audit_store_id):
     try:
@@ -49,6 +51,60 @@ def find_by_audit_cycle(audit_cycle_id):
         'user',
         'user__profileinfo',
     )
+
+
+def find_by_audit_cycle_new(audit_cycle_id):
+    audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('store__city__name').values_list('id', flat=True)
+    audit_store_list = []
+    for audit_id in audit_list:
+        audit_store_obj = AuditStore.objects.filter(audit__id=audit_id)\
+            .prefetch_related('audit', 'audit__store', 'audit__store__city')
+        if audit_store_obj.count() > 0:
+            audit_store_dict = {}
+            audit_report_list = []
+            for audit_report in audit_store_obj:
+                audit_store_dict['id'] = audit_report.audit.id
+                audit_store_dict['store_name'] = audit_report.audit.store.name
+                audit_store_dict['store_address'] = audit_report.audit.store.address
+                audit_store_dict['store_city'] = audit_report.audit.store.city.name
+                audit_report_dict = {}
+                audit_report_dict['id'] = audit_report.id
+                audit_report_dict['status'] = audit_report.status
+                audit_report_dict['audit_date'] = audit_report.audit_date
+                audit_report_dict['assigned_to_moderator'] = [audit_report.assigned_to_moderator()[0].id] if audit_report.assigned_to_moderator() else []
+                if audit_report.user.groups.get().name == GROUP_NAME_AUDITOR:
+                    audit_report_dict['user'] = {'id': audit_report.user.id,
+                                                 'email': audit_report.user.email,
+                                                 'profileinfo':
+                                                     {
+                                                         'first_name': audit_report.user.profileinfo.first_name,
+                                                         'last_name': audit_report.user.profileinfo.last_name,
+                                                         'mobile_number': audit_report.user.profileinfo.mobile_number
+                                                     },
+                                                 'agencyuser': None,
+                                                 'mobile_numbers': []
+                                                 }
+                else:
+                    mobile_obj = MobileNumber.objects.filter(user_id=audit_report.user.id)
+                    if mobile_obj.count() > 0:
+                        mobile_data = [{'mobile_number': mobile_obj[0].mobile_number,
+                                        'is_verified': mobile_obj[0].is_verified
+                                        }]
+                    else:
+                        mobile_data = [{'mobile_number': None,
+                                        'is_verified': None
+                                        }]
+                    audit_report_dict['user'] = {'id': audit_report.user.id,
+                                                 'email': audit_report.user.email,
+                                                 'agencyuser': {'full_name': audit_report.user.agencyuser.full_name},
+                                                 'profileinfo': None,
+                                                 'mobile_numbers': mobile_data
+                                                 }
+                audit_report_list.append(audit_report_dict)
+            audit_store_dict['reports'] = audit_report_list
+            audit_store_list.append(audit_store_dict)
+    return audit_store_list
+
 
 def find_by_id_for_auditor(audit_store_id, user_id):
     try:
