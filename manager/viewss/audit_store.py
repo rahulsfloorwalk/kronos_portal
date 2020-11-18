@@ -32,6 +32,18 @@ class AuditStoreByAuditCycle(APIView):
         serial_audit_stores = AuditStoreSerializerWithoutAudit(audit_stores, many=True).data
         return Response(serial_audit_stores)
 
+
+class AuditStoreByAuditCycleNew(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id, format=None):
+        audit_stores = audit_store_service.find_by_audit_cycle_new(audit_cycle_id)
+        return Response(audit_stores)
+
+
 class AuditStoreByAudit(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

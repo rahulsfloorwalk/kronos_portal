@@ -22,3 +22,7 @@ class Payment(Model):
     audit_store = ForeignKey(AuditStore, db_column='audit_store_id', related_name='payments', on_delete=PROTECT)
     added_on = DateTimeField(db_column='added_on', auto_now_add=True, null=False)
     paid_on = DateTimeField(db_column='paid_on', null=True)
+
+    def get_audit_details(self):
+        return {'audit_date': self.audit_store.audit_date,
+                'client_name': self.audit_store.audit.audit_cycle.client.brand_name}
