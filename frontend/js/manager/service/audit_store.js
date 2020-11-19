@@ -163,8 +163,8 @@ export function findAuditStoresByAuditCycle(audit_cycle_id){
 	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store`);
 }
 
-export function findAuditStoresByAuditCycleNew(audit_cycle_id){
-	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store_new`);
+export function findAuditStoresByAuditCycleNew(audit_cycle_id, data){
+	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store_new`, data);
 }
 
 export function assignToModerator(auditStoreId, userId){

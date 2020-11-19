@@ -53,8 +53,13 @@ def find_by_audit_cycle(audit_cycle_id):
     )
 
 
-def find_by_audit_cycle_new(audit_cycle_id):
-    audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('store__city__name').values_list('id', flat=True)
+def find_by_audit_cycle_new(audit_cycle_id, last_audit_id):
+    total_audit_count = 0
+    if last_audit_id != "":
+        audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id').values_list('id', flat=True)[0:200]
+    else:
+        total_audit_count = Audit.objects.filter(audit_cycle__id=audit_cycle_id).count()
+        audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id').values_list('id', flat=True)[0:200]
     audit_store_list = []
     for audit_id in audit_list:
         audit_store_obj = AuditStore.objects.filter(audit__id=audit_id)\
@@ -103,7 +108,7 @@ def find_by_audit_cycle_new(audit_cycle_id):
                 audit_report_list.append(audit_report_dict)
             audit_store_dict['reports'] = audit_report_list
             audit_store_list.append(audit_store_dict)
-    return audit_store_list
+    return {'audit_store_list': audit_store_list, 'total_audit_count': total_audit_count}
 
 
 def find_by_id_for_auditor(audit_store_id, user_id):

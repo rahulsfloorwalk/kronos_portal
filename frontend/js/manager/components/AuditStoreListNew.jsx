@@ -129,7 +129,9 @@ class AuditStoreList extends Component{
 		loading: false,
 		moderators: [],
 		filterReports: [],
-		filterStatus: false
+		filterStatus: false,
+		totalAuditStoreCount: 0,
+		loadMoreLoader: false
 	};
 
 	setLoading = (loading) => {
@@ -137,9 +139,11 @@ class AuditStoreList extends Component{
 	};
 	reloadReports = (auditCycleId) => {
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(auditCycleId).then((auditStores) => {
+		let lastAuditId="";
+		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId}).then((response) => {
 			this.setState({
-				auditStores
+				auditStores: response.audit_store_list,
+				totalAuditStoreCount: response.total_audit_count
 			});
 			this.setLoading(false);
 		});
@@ -216,8 +220,28 @@ class AuditStoreList extends Component{
 			});
 		}
 	};
+	loadMoreReports = () => {
+		this.setState({
+			loadMoreLoader: true
+		});
+		let lastAuditId=this.state.auditStores[this.state.auditStores.length-1].id;
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId}).then((response) => {
+			let newAuditStores = this.state.auditStores;
+			for(let reports of response.audit_store_list){
+				newAuditStores.push(reports);
+			}
+			this.setState({
+				auditStores: newAuditStores,
+				loadMoreLoader: false
+			});
+		});
+	};
 	render(){
 		let rows = [];
+		let loadMoreButton;
+		if(this.state.loadMoreLoader){
+			loadMoreButton = (<Loading/>);
+		}
 		let reports = this.state.auditStores;
 		if(this.state.filterStatus){
 			reports = this.state.filterReports;
@@ -239,6 +263,11 @@ class AuditStoreList extends Component{
 						{audit_report_rows}
 					</div>
 				);
+			}
+			if(reports.length !== this.state.totalAuditStoreCount){
+				loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
+					Load More
+				</button>);
 			}
 		}
 		if( !this.state.loading && rows.length === 0){
@@ -272,6 +301,9 @@ class AuditStoreList extends Component{
 					</span>
 				</div>
 				{rows}
+				<div className="text-center">
+					{loadMoreButton}
+				</div>
 				{this.props.children}
 			</div>
 		);
