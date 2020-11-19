@@ -40,7 +40,7 @@ class AuditStoreByAuditCycleNew(APIView):
     }
 
     def get(self, request, audit_cycle_id, format=None):
-        audit_stores = audit_store_service.find_by_audit_cycle_new(audit_cycle_id)
+        audit_stores = audit_store_service.find_by_audit_cycle_new(audit_cycle_id, request.GET.get('lastAuditId'))
         return Response(audit_stores)
 
 
