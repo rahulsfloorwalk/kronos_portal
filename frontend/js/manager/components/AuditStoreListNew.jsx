@@ -239,8 +239,9 @@ class AuditStoreList extends Component{
 	render(){
 		let rows = [];
 		let loadMoreButton;
+		let loadMoreLoading;
 		if(this.state.loadMoreLoader){
-			loadMoreButton = (<Loading/>);
+			loadMoreLoading = (<Loading/>);
 		}
 		let reports = this.state.auditStores;
 		if(this.state.filterStatus){
@@ -249,20 +250,24 @@ class AuditStoreList extends Component{
 		if(reports.length > 0){
 			for(let report of reports){
 				let audit_report_rows = [];
-				audit_report_rows.push(
-					<AuditStoreTable auditStores={report.reports}
-						key={report.id}
-						onUpdate={this.auditStoreUpdated}
-						moderators={this.state.moderators}/>
-				);
-				rows.push(
-					<div className="panel panel-default" key={report.id}>
-						<div className="panel-heading">
-							<b>{report.store_name}</b>, {report.store_address}, {report.store_city}
+				if(report.reports.length > 0){
+					audit_report_rows.push(
+						<AuditStoreTable auditStores={report.reports}
+							key={report.id}
+							onUpdate={this.auditStoreUpdated}
+							moderators={this.state.moderators}/>
+					);
+				}
+				if(audit_report_rows.length > 0){
+					rows.push(
+						<div className="panel panel-default" key={report.id}>
+							<div className="panel-heading">
+								<b>{report.store_name}</b>, {report.store_address}, {report.store_city}
+							</div>
+							{audit_report_rows}
 						</div>
-						{audit_report_rows}
-					</div>
-				);
+					);
+				}
 			}
 			if(reports.length !== this.state.totalAuditStoreCount){
 				loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
@@ -302,6 +307,7 @@ class AuditStoreList extends Component{
 				</div>
 				{rows}
 				<div className="text-center">
+					{loadMoreLoading}
 					{loadMoreButton}
 				</div>
 				{this.props.children}
