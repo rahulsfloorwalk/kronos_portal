@@ -56,22 +56,28 @@ def find_by_audit_cycle(audit_cycle_id):
 def find_by_audit_cycle_new(audit_cycle_id, last_audit_id):
     total_audit_count = 0
     if last_audit_id != "":
-        audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id').values_list('id', flat=True)[0:200]
+        audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id')\
+            .values('id', 'store__name', 'store__address', 'store__city__name')[0:5]
     else:
-        total_audit_count = Audit.objects.filter(audit_cycle__id=audit_cycle_id).count()
-        audit_list = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id').values_list('id', flat=True)[0:200]
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id') \
+            .values('id', 'store__name', 'store__address', 'store__city__name')
+        total_audit_count = audit_list_obj.count()
+        audit_list = audit_list_obj[0:5]
     audit_store_list = []
-    for audit_id in audit_list:
-        audit_store_obj = AuditStore.objects.filter(audit__id=audit_id)\
-            .prefetch_related('audit', 'audit__store', 'audit__store__city')
+    for audit in audit_list:
+        audit_store_dict = {}
+        audit_report_list = []
+        audit_store_dict['id'] = audit['id']
+        audit_store_dict['store_name'] = audit['store__name']
+        audit_store_dict['store_address'] = audit['store__address']
+        audit_store_dict['store_city'] = audit['store__city__name']
+        audit_store_obj = AuditStore.objects.filter(audit__id=audit['id']).prefetch_related(
+            'user',
+            'user__profileinfo',
+            'user__agencyuser'
+        )
         if audit_store_obj.count() > 0:
-            audit_store_dict = {}
-            audit_report_list = []
             for audit_report in audit_store_obj:
-                audit_store_dict['id'] = audit_report.audit.id
-                audit_store_dict['store_name'] = audit_report.audit.store.name
-                audit_store_dict['store_address'] = audit_report.audit.store.address
-                audit_store_dict['store_city'] = audit_report.audit.store.city.name
                 audit_report_dict = {}
                 audit_report_dict['id'] = audit_report.id
                 audit_report_dict['status'] = audit_report.status
@@ -106,8 +112,8 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id):
                                                  'mobile_numbers': mobile_data
                                                  }
                 audit_report_list.append(audit_report_dict)
-            audit_store_dict['reports'] = audit_report_list
-            audit_store_list.append(audit_store_dict)
+        audit_store_dict['reports'] = audit_report_list
+        audit_store_list.append(audit_store_dict)
     return {'audit_store_list': audit_store_list, 'total_audit_count': total_audit_count}
 
 
