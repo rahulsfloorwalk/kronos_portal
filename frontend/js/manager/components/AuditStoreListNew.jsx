@@ -129,7 +129,7 @@ class AuditStoreList extends Component{
 		loading: false,
 		moderators: [],
 		filterReports: [],
-		filterStatus: false,
+		filterStatus: "",
 		totalAuditStoreCount: 0,
 		loadMoreLoader: false
 	};
@@ -140,7 +140,8 @@ class AuditStoreList extends Component{
 	reloadReports = (auditCycleId) => {
 		this.setLoading(true);
 		let lastAuditId="";
-		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId}).then((response) => {
+		let status="";
+		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -161,27 +162,19 @@ class AuditStoreList extends Component{
 	}
 	statusChanged = (e) => {
 		let status = e.target.value;
-		if(status === ""){
+		let lastAuditId = "";
+		this.setState({
+			filterStatus: status,
+			auditStores: []
+		});
+		this.setLoading(true);
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status}).then((response) => {
 			this.setState({
-				filterStatus: false
-			});
-		}
-		else{
-			this.setLoading(true);
-			let filter_rows = [];
-			for(let report of this.state.auditStores){
-				for(let rep of report.reports){
-					if(rep.status === status){
-						filter_rows.push(report);
-					}
-				}
-			}
-			this.setState({
-				filterReports: filter_rows,
-				filterStatus: true
+				auditStores: response.audit_store_list,
+				totalAuditStoreCount: response.total_audit_count
 			});
 			this.setLoading(false);
-		}
+		});
 	};
 	auditStoreUpdated = (auditStore) => {
 		let audit_index = null;
@@ -224,8 +217,9 @@ class AuditStoreList extends Component{
 		this.setState({
 			loadMoreLoader: true
 		});
-		let lastAuditId=this.state.auditStores[this.state.auditStores.length-1].id;
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId}).then((response) => {
+		let lastAuditId= this.state.auditStores[this.state.auditStores.length-1].id;
+		let status = this.state.filterStatus;
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status}).then((response) => {
 			let newAuditStores = this.state.auditStores;
 			for(let reports of response.audit_store_list){
 				newAuditStores.push(reports);
@@ -244,9 +238,6 @@ class AuditStoreList extends Component{
 			loadMoreLoading = (<Loading/>);
 		}
 		let reports = this.state.auditStores;
-		if(this.state.filterStatus){
-			reports = this.state.filterReports;
-		}
 		if(reports.length > 0){
 			for(let report of reports){
 				let audit_report_rows = [];
