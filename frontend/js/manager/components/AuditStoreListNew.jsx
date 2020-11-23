@@ -14,7 +14,7 @@ import Loading from "../../components/Loading.jsx";
 
 import ModeratorAssignDropdown from "./ModeratorAssignDropdown.jsx";
 import AuditStoreStatusSummary from "./AuditStoreStatusSummary.jsx";
-import { findAuditStoresByAuditCycleNew  } from "../service/audit_store.js";
+import { findAuditStoresByAuditCycleNew, getUserList } from "../service/audit_store.js";
 import { acceptAllReports } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 import { getAuditStoreStatus } from "../../utils.js";
@@ -129,7 +129,9 @@ class AuditStoreList extends Component{
 		loading: false,
 		moderators: [],
 		filterReports: [],
+		userList: [],
 		filterStatus: "",
+		userId: "",
 		totalAuditStoreCount: 0,
 		loadMoreLoader: false
 	};
@@ -141,7 +143,8 @@ class AuditStoreList extends Component{
 		this.setLoading(true);
 		let lastAuditId="";
 		let status="";
-		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status}).then((response) => {
+		let userId= "";
+		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -154,6 +157,9 @@ class AuditStoreList extends Component{
 		findModerators().then((moderators) => {
 			this.setState({ moderators });
 		});
+		getUserList(this.props.params.auditCycleId).then((userList) => {
+			this.setState({ userList });
+		});
 	}
 	componentWillReceiveProps(nextProps){
 		if(nextProps.params.auditCycleId !== this.props.params.auditCycleId || (nextProps.location.state && nextProps.location.state.reload)){
@@ -163,12 +169,30 @@ class AuditStoreList extends Component{
 	statusChanged = (e) => {
 		let status = e.target.value;
 		let lastAuditId = "";
+		let userId = this.state.userId;
 		this.setState({
 			filterStatus: status,
 			auditStores: []
 		});
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status}).then((response) => {
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId}).then((response) => {
+			this.setState({
+				auditStores: response.audit_store_list,
+				totalAuditStoreCount: response.total_audit_count
+			});
+			this.setLoading(false);
+		});
+	};
+	userChanged = (e) => {
+		let userId = e.target.value;
+		let lastAuditId = "";
+		let status = this.state.filterStatus;
+		this.setState({
+			userId: userId,
+			auditStores: []
+		});
+		this.setLoading(true);
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -219,7 +243,8 @@ class AuditStoreList extends Component{
 		});
 		let lastAuditId= this.state.auditStores[this.state.auditStores.length-1].id;
 		let status = this.state.filterStatus;
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status}).then((response) => {
+		let userId = this.state.userId;
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId}).then((response) => {
 			let newAuditStores = this.state.auditStores;
 			for(let reports of response.audit_store_list){
 				newAuditStores.push(reports);
@@ -272,6 +297,13 @@ class AuditStoreList extends Component{
 		if(this.state.loading){
 			rows.push(<Loading key="loading"/>);
 		}
+		let users = this.state.userList;
+		let user_option_list = [];
+		if(users.length > 0){
+			for(let user of users){
+				user_option_list.push(<option value={user.user.id}>{user.user.email}</option>);
+			}
+		}
 		return(
 			<div>
 				<br/>
@@ -289,6 +321,11 @@ class AuditStoreList extends Component{
 						<option value="FAILED">{getAuditStoreStatus("FAILED")}</option>
 						<option value="ACCEPTED">{getAuditStoreStatus("ACCEPTED")}</option>
 						<option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
+					</select>
+					&nbsp;
+					<select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.userChanged}>
+						<option value="">All User</option>
+						{user_option_list}
 					</select>
 					<span className="pull-right">
 						<button className="btn btn-default" onClick={this.acceptAllClicked}>

@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.db.transaction import atomic
 from django.db.models import Count, Avg
 
-from guardian.shortcuts import assign_perm, remove_perm
+from guardian.shortcuts import assign_perm, remove_perm, get_users_with_perms
 
 from kronos.utils import today_ist
 
@@ -14,7 +14,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
 from audit.service import report_attribute_service
-from registration.models import MobileNumber, GROUP_NAME_AUDITOR
+from registration.models import GROUP_NAME_AUDITOR
 
 
 def find_by_id(audit_store_id):
@@ -53,7 +53,12 @@ def find_by_audit_cycle(audit_cycle_id):
     )
 
 
-def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status):
+def find_by_audit_cycle_distinct_user(audit_cycle_id):
+    return AuditStore.objects.filter(audit__audit_cycle_id=audit_cycle_id).distinct('user__email') \
+        .order_by('user__email').prefetch_related('user')
+
+
+def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id):
     total_audit_count = 0
     if status != "" and last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
@@ -63,7 +68,8 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status):
     elif status != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id') \
             .select_related('store__name', 'store__address', 'store__city__name') \
-            .values('id', 'store__name', 'store__address', 'store__city__name')
+            .values('id', 'store__name', 'store__address', 'store__city__name') \
+            .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id') \
@@ -74,7 +80,17 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status):
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name')
         total_audit_count = audit_list_obj.count()
+    if user_id != "":
+        audit_list_obj = audit_list_obj.filter(audit_stores__user__id=user_id).distinct('id')
+        total_audit_count = audit_list_obj.count()
+
     audit_list = audit_list_obj[0:100]
+    audit_id_list = [audit['id'] for audit in audit_list]
+    audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
+        .values('id', 'status', 'audit_date', 'audit__id', 'user__groups__name', 'user__email', 'user__id',
+                'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number',
+                'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number',
+                'user__mobile_numbers__is_verified')
     audit_store_list = []
     for audit in audit_list:
         audit_store_dict = {}
@@ -83,45 +99,34 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status):
         audit_store_dict['store_name'] = audit['store__name']
         audit_store_dict['store_address'] = audit['store__address']
         audit_store_dict['store_city'] = audit['store__city__name']
-        audit_store_obj = AuditStore.objects.filter(audit__id=audit['id']).select_related(
-            'user',
-            'user__profileinfo',
-            'user__agencyuser'
-        )
-        if audit_store_obj.count() > 0:
-            for audit_report in audit_store_obj:
+        for audit_report in audit_store_obj:
+            if audit_report['audit__id'] == audit['id']:
                 audit_report_dict = {}
-                audit_report_dict['id'] = audit_report.id
-                audit_report_dict['status'] = audit_report.status
-                audit_report_dict['audit_date'] = audit_report.audit_date
-                audit_report_dict['assigned_to_moderator'] = [audit_report.assigned_to_moderator()[0].id] if audit_report.assigned_to_moderator() else []
-                if audit_report.user.groups.get().name == GROUP_NAME_AUDITOR:
-                    audit_report_dict['user'] = {'id': audit_report.user.id,
-                                                 'email': audit_report.user.email,
+                audit_report_dict['id'] = audit_report['id']
+                audit_report_dict['status'] = audit_report['status']
+                audit_report_dict['audit_date'] = audit_report['audit_date']
+                audit_report_obj = AuditStore.objects.get(pk=audit_report['id'])
+                users_with_perms = get_users_with_perms(audit_report_obj, attach_perms=True)
+                moderator = [user.id for user, perms in users_with_perms.items() if "moderator_manage" in perms]
+                audit_report_dict['assigned_to_moderator'] = moderator
+                if audit_report['user__groups__name'] == GROUP_NAME_AUDITOR:
+                    audit_report_dict['user'] = {'id': audit_report['user__id'],
+                                                 'email': audit_report['user__email'],
                                                  'profileinfo':
-                                                     {
-                                                         'first_name': audit_report.user.profileinfo.first_name,
-                                                         'last_name': audit_report.user.profileinfo.last_name,
-                                                         'mobile_number': audit_report.user.profileinfo.mobile_number
-                                                     },
+                                                     {'first_name': audit_report['user__profileinfo__first_name'],
+                                                         'last_name': audit_report['user__profileinfo__last_name'],
+                                                         'mobile_number': audit_report['user__profileinfo__mobile_number']},
                                                  'agencyuser': None,
-                                                 'mobile_numbers': []
-                                                 }
+                                                 'mobile_numbers': []}
                 else:
-                    mobile_obj = MobileNumber.objects.filter(user_id=audit_report.user.id)
-                    if mobile_obj.count() > 0:
-                        mobile_data = [{'mobile_number': mobile_obj[0].mobile_number,
-                                        'is_verified': mobile_obj[0].is_verified
-                                        }]
-                    else:
-                        mobile_data = [{'mobile_number': None,
-                                        'is_verified': None
-                                        }]
-                    audit_report_dict['user'] = {'id': audit_report.user.id,
-                                                 'email': audit_report.user.email,
-                                                 'agencyuser': {'full_name': audit_report.user.agencyuser.full_name},
+                    audit_report_dict['user'] = {'id': audit_report['user__id'],
+                                                 'email': audit_report['user__email'],
+                                                 'agencyuser': {'full_name': audit_report['user__agencyuser__full_name']},
                                                  'profileinfo': None,
-                                                 'mobile_numbers': mobile_data
+                                                 'mobile_numbers': [{
+                                                     'mobile_number': audit_report['user__mobile_numbers__mobile_number'],
+                                                     'is_verified': audit_report['user__mobile_numbers__is_verified']
+                                                 }]
                                                  }
                 audit_report_list.append(audit_report_dict)
         audit_store_dict['reports'] = audit_report_list

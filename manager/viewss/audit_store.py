@@ -20,7 +20,7 @@ from attachment.service import set_attachment_by_proof_tag
 
 from client_report.service import xlsx_report as xlsx_report_service
 
-from ..serializers import AuditStoreSerializer, AuditStoreSerializerWithoutAudit
+from ..serializers import AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -33,6 +33,17 @@ class AuditStoreByAuditCycle(APIView):
         return Response(serial_audit_stores)
 
 
+class UserListForReportsFilter(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, audit_cycle_id, format=None):
+        user_list = audit_store_service.find_by_audit_cycle_distinct_user(audit_cycle_id)
+        return Response(AuditStoreSerializerWithUser(user_list, many=True).data)
+
+
 class AuditStoreByAuditCycleNew(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -42,7 +53,8 @@ class AuditStoreByAuditCycleNew(APIView):
     def get(self, request, audit_cycle_id, format=None):
         audit_stores = audit_store_service.find_by_audit_cycle_new(audit_cycle_id,
                                                                    request.GET.get('lastAuditId'),
-                                                                   request.GET.get('status'))
+                                                                   request.GET.get('status'),
+                                                                   request.GET.get('userId'))
         return Response(audit_stores)
 
 
