@@ -336,3 +336,21 @@ class AuditCycleProofTagListSerializer(ModelSerializer):
             'proof_tag'
         )
         read_only_fields = fields
+
+
+class UserSerializerWithUserDetails(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email'
+        )
+        read_only_fields = fields
+
+
+class AuditStoreSerializerWithUser(ModelSerializer):
+    user = UserSerializerWithUserDetails()
+    class Meta:
+        model = AuditStore
+        fields = ['user']
+        read_only_fields = fields

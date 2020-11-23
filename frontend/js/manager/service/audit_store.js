@@ -163,6 +163,10 @@ export function findAuditStoresByAuditCycle(audit_cycle_id){
 	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store`);
 }
 
+export function getUserList(audit_cycle_id){
+	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/user_list_for_reports_filter`);
+}
+
 export function findAuditStoresByAuditCycleNew(audit_cycle_id, data){
 	return $.get(url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/audit_store_new`, data);
 }
