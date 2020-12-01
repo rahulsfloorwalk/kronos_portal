@@ -13,14 +13,15 @@ from client.service.client_user import find_non_client_admin_user_store_by_clien
 def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_id, client_user):
     improvable_questions_list = []
     audit_cycle_obj = AuditCycle.objects.get(id=audit_cycle_id, questionnaire_type_id=questionnaire_type_id)
-    questions_list = find_by_audit_cycle(audit_cycle_obj.id)
+    questions_list = find_by_audit_cycle(audit_cycle_obj.id).prefetch_related('section')\
+        .values('id', 'max_marks', 'section__name', 'question_txt')
     client_admin = client_user.is_client_admin()
     if not client_admin:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
     for question in questions_list:
-        if question.max_marks > 0:
-            answer_obj = find_answers_by_question_id(question.id)
+        if question['max_marks'] > 0:
+            answer_obj = find_answers_by_question_id(question['id'])
             if client_admin:
                 answer_obj = answer_obj.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                                not_applicable=False)
@@ -29,20 +30,20 @@ def get_improvable_questions_by_audit_cycle(audit_cycle_id, questionnaire_type_i
                                                audit_store__audit__store__id__in=non_admin_user_store_list,
                                                not_applicable=False)
             if answer_obj.count() > 0:
-                total_question_marks = question.max_marks * answer_obj.count()
+                total_question_marks = question['max_marks'] * answer_obj.count()
                 obtained_marks = (answer_obj.aggregate(sum_marks=Sum('marks_obtained')))['sum_marks']
-                percentage = (obtained_marks / total_question_marks) * 100
-                if obtained_marks is not None:
-                    if percentage < 75:
-                        improvable_questions_dict = {}
-                        improvable_questions_dict['question_id'] = question.id
-                        improvable_questions_dict['question_txt'] = question.question_txt
-                        improvable_questions_dict['question_section'] = question.section.name
-                        improvable_questions_dict['total_marks'] = total_question_marks
-                        improvable_questions_dict['obtained_marks'] = obtained_marks
-                        improvable_questions_dict['lost_marks'] = total_question_marks - obtained_marks
-                        improvable_questions_dict['percentage'] = percentage
-                        improvable_questions_list.append(improvable_questions_dict)
+                percentage = round((obtained_marks / total_question_marks) * 100, 2)
+                if obtained_marks is not None and percentage < 75:
+                    # if percentage < 75:
+                    improvable_questions_dict = {}
+                    improvable_questions_dict['question_id'] = question['id']
+                    improvable_questions_dict['question_txt'] = question['question_txt']
+                    improvable_questions_dict['question_section'] = question['section__name']
+                    improvable_questions_dict['total_marks'] = total_question_marks
+                    improvable_questions_dict['obtained_marks'] = obtained_marks
+                    improvable_questions_dict['lost_marks'] = total_question_marks - obtained_marks
+                    improvable_questions_dict['percentage'] = percentage
+                    improvable_questions_list.append(improvable_questions_dict)
 
     return sorted(improvable_questions_list, key=lambda qd: qd['lost_marks'], reverse=True)
 

@@ -172,11 +172,11 @@ def get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire
             'data': [],
         }
 
-    if audit_cycle_count > 3:
-        audit_cycles = qs[audit_cycle_count - 3:]
-    else:
-        audit_cycles = qs
-
+    # if audit_cycle_count > 3:
+    #     audit_cycles = qs[audit_cycle_count - 3:]
+    # else:
+    #     audit_cycles = qs
+    audit_cycles = qs
     audit_cycle_names = []
 
     data = []

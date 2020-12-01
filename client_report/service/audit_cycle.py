@@ -39,11 +39,12 @@ def get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id
 
 
 def get_audit_cycle_section_averages(qs, user_id):
-    audit_cycle_count = qs.count()
-    if audit_cycle_count > 3:
-        audit_cycles = qs[audit_cycle_count - 3:]
-    else:
-        audit_cycles = qs
+    # audit_cycle_count = qs.count()
+    # if audit_cycle_count > 3:
+    #     audit_cycles = qs[audit_cycle_count - 3:]
+    # else:
+    #     audit_cycles = qs
+    audit_cycles = qs
     section_master = []
     audit_cycle_master = [audit_cycle.name for audit_cycle in audit_cycles]
     # print("audit_cycles", [(ac.name, ac.end_date) for ac in audit_cycles])
