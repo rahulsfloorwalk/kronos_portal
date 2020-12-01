@@ -39,7 +39,7 @@ from client_report.service import audit_cycle
 from client_report.service import store_marking as store_marking_service
 
 from social.service import twitter_client
-from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer
+from .serializers import AuditStoreSerializer, StoreSerializer, SectionSerializer, AnswerSerializer, CitySerializer
 from .serializers import ReportSectionSerializer, AttachmentSerializer, ClientUserSerializer, AuditCycleSerializer
 from .serializers import TwitterFeedSerializer, TwitterHandleSerializer
 from .serializers import ReportAttributeSerializer
@@ -94,11 +94,14 @@ class StoreByClient(APIView):
         'GET': [GROUP_NAME_CLIENT],
     }
     def get(self, request, format=None):
-        if request.GET.get('city_id'):
-            stores = store_service.find_stores_by_clientuser_and_city(request.user.id, request.GET.get('city_id'))
-        else:
-            stores = store_service.find_stores_by_clientuser(request.user.id)
-        return Response(StoreSerializer(stores, many=True).data)
+        # if request.GET.get('city_id'):
+        #     stores = store_service.find_stores_by_clientuser_and_city(request.user.id, request.GET.get('city_id'))
+        # else:
+        stores, cities_list, store_count = store_service.find_stores_by_clientuser(request.user.id,
+                                                                                   request.GET.get('lastStoreId'))
+        return Response({'stores_list': StoreSerializer(stores, many=True).data,
+                         'city_list': CitySerializer(cities_list, many=True).data, 'store_count': store_count})
+
 
 class StoreById(APIView):
     permission_classes = [HasGroupPermission]

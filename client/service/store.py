@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from ..models import Store
+from manager.models import City
 from client.service import client_user as client_user_service
 
 
@@ -21,16 +22,33 @@ def find_stores_by_clientuser_for_manager(user_id):
     return Store.objects.filter(client_id=user.clientuser.client.id).select_related('client', 'city')
 
 
-def find_stores_by_clientuser(user_id):
+def find_stores_by_clientuser(user_id, lastStoreId):
     user = client_user_service.find_clientuser_by_user_id(user_id)
     client_user = user.clientuser
     if client_user.is_client_admin():
-        return Store.objects.filter(client_id=user.clientuser.client.id).select_related('client', 'city')
+        if lastStoreId != "":
+            store_obj = Store.objects.filter(client_id=user.clientuser.client.id, id__gt=lastStoreId).order_by('id') \
+                .select_related('client', 'city')
+        else:
+            store_obj = Store.objects.filter(client_id=user.clientuser.client.id).order_by('id')\
+                .select_related('client', 'city')
+        city_list = list(store_obj.values_list('city__id', flat=True))
+        cities_list = City.objects.filter(id__in=city_list)
+        return store_obj[0:300], cities_list, store_obj.count()
     else:
         non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
-        return Store.objects.filter(client_id=user.clientuser.client.id,
-                                    id__in=non_admin_user_store_list).select_related('client', 'city')
+        if lastStoreId != "":
+            store_obj = Store.objects.filter(client_id=user.clientuser.client.id, id__gt=lastStoreId,
+                                             id__in=non_admin_user_store_list).order_by('id')\
+                .select_related('client', 'city')
+        else:
+            store_obj = Store.objects.filter(client_id=user.clientuser.client.id,
+                                             id__in=non_admin_user_store_list).order_by('id') \
+                .select_related('client', 'city')
+        city_list = list(store_obj.values_list('city__id', flat=True))
+        cities_list = City.objects.filter(id__in=city_list)
+        return store_obj[0:300], cities_list, store_obj.count()
 
 
 def find_stores_by_clientuser_and_city(user_id, city_id):

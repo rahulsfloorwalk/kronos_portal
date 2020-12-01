@@ -84,7 +84,7 @@ def pm_revert_report(audit_store_id, user_id):
 def complete_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
-    set_attachment_by_proof_tag(audit_store_id)
+    # set_attachment_by_proof_tag(audit_store_id)
     audit_store.complete(by=user)
     report_obj = ReportSection.objects.filter(audit_store=audit_store, not_applicable=False)
     for report in report_obj:

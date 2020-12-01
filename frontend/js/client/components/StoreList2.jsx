@@ -29,12 +29,14 @@ export default class StoreList2 extends Component{
 			filterstores: [],
 			citiesRows: [],
 			audit_cycles: [],
+			storeCount: "",
 			loading: false,
 			selectedCity: "",
 			storeCode: "",
 			percentFrom: "",
 			percentTo: "",
-			errMsg: ""
+			errMsg: "",
+			loadMoreLoader: false
 		};
 	}
 
@@ -55,21 +57,22 @@ export default class StoreList2 extends Component{
 	}
 
 	fetchStores = () =>{
-		let cityRows = [];
 		this.setLoading(true);
-		fetchAllStores().then((stores)=>{
-			stores.sort((a, b) => (a.get_total_percentage["score"]===null)-(b.get_total_percentage["score"]===null) || +(a.get_total_percentage["score"] < b.get_total_percentage["score"])||-(a.get_total_percentage["score"] > b.get_total_percentage["score"]));
-			for (let i = 0; i < stores.length; i++) {
-				if(cityRows.filter(item => item.id == stores[i].city.id).length === 0){
-					cityRows.push(
-						{"id": stores[i].city.id, "name": stores[i].city.name}
-					);
-				}
-				cityRows.sort((a, b) => (a.name > b.name) ? 1 : -1);
-			}
+		let lastStoreId = "";
+		fetchAllStores({lastStoreId}).then((stores)=>{
+			// stores.sort((a, b) => (a.get_total_percentage["score"]===null)-(b.get_total_percentage["score"]===null) || +(a.get_total_percentage["score"] < b.get_total_percentage["score"])||-(a.get_total_percentage["score"] > b.get_total_percentage["score"]));
+			// for (let i = 0; i < stores.length; i++) {
+			// 	if(cityRows.filter(item => item.id == stores[i].city.id).length === 0){
+			// 		cityRows.push(
+			// 			{"id": stores[i].city.id, "name": stores[i].city.name}
+			// 		);
+			// 	}
+			// 	cityRows.sort((a, b) => (a.name > b.name) ? 1 : -1);
+			// }
 			this.setState({
-				stores: stores,
-				citiesRows: cityRows,
+				stores: stores["stores_list"],
+				citiesRows: stores["city_list"],
+				storeCount: stores["store_count"],
 				filterstores: []
 			});
 		}).always(() => this.setLoading(false));
@@ -148,6 +151,23 @@ export default class StoreList2 extends Component{
 		}
 	};
 
+	loadMoreStores = () => {
+		this.setState({
+			loadMoreLoader: true
+		});
+		let lastStoreId = this.state.stores[this.state.stores.length-1].id;
+		fetchAllStores({lastStoreId}).then((response) => {
+			let newStores = this.state.stores;
+			for(let stores of response.stores_list){
+				newStores.push(stores);
+			}
+			this.setState({
+				auditStores: newStores,
+				loadMoreLoader: false
+			});
+		});
+	};
+
 	render(){
 		if(this.state.loading){
 			return <Loading/>;
@@ -155,6 +175,11 @@ export default class StoreList2 extends Component{
 		let storeRows = [];
 		let index = 0;
 		let errSpan;
+		let loadMoreButton;
+		let loadMoreLoading;
+		if(this.state.loadMoreLoader){
+			loadMoreLoading = (<Loading/>);
+		}
 		if(this.state.stores.length > 0){
 			for(let store of this.state.stores) {
 				storeRows.push(
@@ -170,6 +195,11 @@ export default class StoreList2 extends Component{
 						<td className={getColor(store.get_total_percentage.color)}>{store.get_total_percentage.score === null ? "N/A" : store.get_total_percentage.score+"%" }</td>
 					</tr>
 				);
+			}
+			if(this.state.stores.length != this.state.storeCount){
+				loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreStores}>
+					Load More
+				</button>);
 			}
 		}
 		else{
@@ -269,6 +299,10 @@ export default class StoreList2 extends Component{
 							{storeRows}
 						</tbody>
 					</table>
+					<div className="text-center">
+						{loadMoreLoading}
+						{loadMoreButton}
+					</div>
 				</div>
 			);
 		}

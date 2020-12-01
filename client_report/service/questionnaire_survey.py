@@ -35,8 +35,8 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
                                 audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                 audit_store__audit__store__id__in=non_admin_user_store_list,
                                 not_applicable=False)
-                        if answer_obj.count() > 0:
-                            total_answer_count = answer_obj.count()
+                        total_answer_count = answer_obj.count()
+                        if total_answer_count > 0:
                             options_list = []
                             for option in question.question_data['options']:
                                 if client_admin:
@@ -48,8 +48,8 @@ def get_questionnaire_survey_by_audit_cycle(audit_cycle_id, questionnaire_type_i
                                         audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED],
                                         audit_store__audit__store__id__in=non_admin_user_store_list,
                                         not_applicable=False, answer_text=option['value'])
-                                if option_answer_obj.count() > 0:
-                                    option_count = option_answer_obj.count()
+                                option_count = option_answer_obj.count()
+                                if option_count > 0:
                                     percentage = round((option_count / total_answer_count) * 100, 2)
                                     options_list.append({'option_name': option['value'], 'percentage': percentage})
                                 else:

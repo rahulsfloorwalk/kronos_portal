@@ -179,6 +179,7 @@ def get_audit_cycle_score(questionnaire_type_id, user_id):
                 audit__audit_cycle__client__id=user.clientuser.client_id) \
         .distinct('audit__audit_cycle_id') \
         .order_by('-audit__audit_cycle_id') \
+        .prefetch_related('audit__audit_cycle_id')\
         .values_list(
             'audit__audit_cycle__id',
             flat=True

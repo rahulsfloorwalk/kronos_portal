@@ -21,7 +21,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.reporting_stats_mail_notify import reporting_stats_send_mail
     # from notify.service.mail_reminders import send_pre_audit_reminders, send_on_audit_reminders, send_post_audit_reminders
     from notify.service.alert_faulty_report import find_faulty_report
-    from attachment.save_audio_transcription import save_audio_transcription
+    # from attachment.save_audio_transcription import save_audio_transcription
 
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
@@ -46,5 +46,5 @@ def setup_periodic_tasks(sender, **kwargs):
 
     # schedule for save audio transcription
     # Execute cron every midnight at 11:40
-    queue_at_midnight = crontab(hour=18, minute=20)
-    sender.add_periodic_task(queue_at_midnight, save_audio_transcription.s())
+    # queue_at_midnight = crontab(hour=18, minute=20)
+    # sender.add_periodic_task(queue_at_midnight, save_audio_transcription.s())

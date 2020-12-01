@@ -8,6 +8,7 @@ from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from ..validators import numericValidator, minLengthValidator, maxLengthValidator
 from ..models import ProfileInfo, MobileNumberHistoryLog
+from registration.models import GROUP_NAME_AUDITOR
 
 mobile_number_regex = "^[6-9]\d{9}$"
 mobile_number_pattern = re.compile(mobile_number_regex)
@@ -102,5 +103,9 @@ def save_auditor_rating(user, rating):
 
 
 def get_auditor_rating_by_user(user):
-    profile_info = ProfileInfo.objects.get(user=user)
-    return profile_info.auditor_rating is not None
+    group = user.groups.all()[0]
+    if group.name == GROUP_NAME_AUDITOR:
+        profile_info = ProfileInfo.objects.get(user=user)
+        return profile_info.auditor_rating is not None
+    else:
+        return True
