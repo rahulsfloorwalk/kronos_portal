@@ -260,6 +260,7 @@ class AnswerSerializer(ModelSerializer):
             'answer_comment',
             'marks_obtained',
             'not_applicable',
+            'get_answer_text_list'
         )
         read_only_fields = fields
 

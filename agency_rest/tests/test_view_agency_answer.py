@@ -64,7 +64,8 @@ class AnswerSubmitViewTestCase(APITestCase):
             "question_id": self.plain_question.id
         })
         payload = {
-            'answer_text': answer_text
+            'answer_text': answer_text,
+            'status': True
         }
 
         response = self.client.post(url, payload, format="json")
@@ -86,7 +87,8 @@ class AnswerSubmitViewTestCase(APITestCase):
             "question_id": self.plain_question.id
         })
         payload = {
-            'answer_text': answer_text
+            'answer_text': answer_text,
+            'status': True
         }
 
         response = self.client.post(url, payload, format="json")

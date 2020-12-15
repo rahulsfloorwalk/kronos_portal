@@ -5,7 +5,7 @@ import { findAttachmentsByAuditStore, findAttachmentsByAuditStoreAndSection } fr
 
 import { Paperclip } from "../../../components/Icons.jsx";
 
-import AttachmentPreview from "./AttachmentPreview.jsx";
+import PrintAttachmentPreview from "./PrintAttachmentPreview.jsx";
 
 export default class AttachmentPrintRenderer extends React.Component {
 	static propTypes = {
@@ -51,7 +51,8 @@ export default class AttachmentPrintRenderer extends React.Component {
 				</h3>
 				<div className="row">
 					<div className="col-xs-offset-1 col-xs-10">
-						{this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)}
+						{/* {this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)} */}
+						{this.state.attachments.map( a => <PrintAttachmentPreview key={a.id} attachment={a} editable={false}/>)}
 					</div>
 				</div>
 			</div>);

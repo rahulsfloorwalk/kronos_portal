@@ -350,6 +350,8 @@ export function getQuestionType(value){
 		return "Plain";
 	case "MUTEX":
 		return "Mutually Exclusive";
+	case "MULTISELECT":
+		return "Multiple Select";
 	case "":
 	case null:
 	case undefined:

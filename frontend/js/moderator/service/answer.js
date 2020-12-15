@@ -5,12 +5,13 @@ export function fetchAnswers(auditStoreId){
 	return $.get( url.api_base_path + `moderator/audit_store/${auditStoreId}/answer`);
 }
 
-export function setAnswerText(auditStoreId, questionId, answer_text){
+export function setAnswerText(auditStoreId, questionId, answer_text, status){
 	return $.ajax({
 		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/question/${questionId}/answer_text`,
 		method: "POST",
 		data: JSON.stringify({
-			answer_text
+			answer_text,
+			status
 		}),
 		contentType: "application/json"
 	});

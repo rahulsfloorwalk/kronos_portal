@@ -4,9 +4,10 @@ export function fetchAnswers(auditStoreId){
 	return axios.get(`/agency/audit_store/${auditStoreId}/answer`).then( r => r.data);
 }
 
-export function setAnswerText(auditStoreId, questionId, answerText){
+export function setAnswerText(auditStoreId, questionId, answerText, status){
 	return axios.post(`/agency/audit_store/${auditStoreId}/question/${questionId}/answer`, {
 		answer_text: answerText,
+		status: status
 	}).then( r => r.data);
 }
 

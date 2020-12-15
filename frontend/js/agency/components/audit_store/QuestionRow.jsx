@@ -40,8 +40,8 @@ export class __QuestionRow extends React.Component{
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
-		const goodClass = this.props.answerText ? "success" : "";
-		const badClass = this.props.showErrors && (this.props.answerText ? "" : "danger");
+		let goodClass = this.props.answerText ? "success" : "";
+		let badClass = this.props.showErrors && (this.props.answerText ? "" : "danger");
 		return (
 			<tr className={goodClass || badClass}>
 				<td>

@@ -124,7 +124,10 @@ def get_answers_section(sections, answers, report_sections):
                 if (answer.not_applicable):
                     content = ["", answers[key].question.question_txt, not_applicable_text, not_applicable_text, not_applicable_text]
                 else:
-                    content = ["", answers[key].question.question_txt, answers[key].answer_text,
+                    answer_text = answers[key].answer_text
+                    if answers[key].question.question_type == "MULTISELECT":
+                        answer_text = (answers[key].answer_text).replace(";", ", ")
+                    content = ["", answers[key].question.question_txt, answer_text,
                                answers[key].marks_obtained, answers[key].question.max_marks]
                 row = {'type': 'line', 'content': content}
                 rows.append(row)

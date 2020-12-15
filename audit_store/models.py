@@ -258,9 +258,10 @@ class AuditStore(Model):
                     return False
 
                 for answer in answers:
-                    if not answer.not_applicable and answer.answer_text in (None, ''):
-                        _logger.debug("Report not submittable, some answer is incomplete")
-                        return False
+                    if not answer.question.question_type == Question.MULTISELECT:
+                        if not answer.not_applicable and answer.answer_text in (None, ''):
+                            _logger.debug("Report not submittable, some answer is incomplete")
+                            return False
         return True
 
     def check_auditor_comment_len(self):

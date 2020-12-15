@@ -2,7 +2,7 @@ from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField, IntegerField
+from rest_framework.serializers import Serializer, CharField, IntegerField, BooleanField
 from rest_framework.views import APIView
 
 from registration.models import GROUP_NAME_AGENCY
@@ -150,12 +150,15 @@ class AnswerSubmitView(APIView):
 
     class AnswerDeserializer(Serializer):
         answer_text = CharField(allow_blank=True)
+        status = BooleanField()
 
     def post(self, request, audit_store_id, question_id, format=None):
         ds = self.AnswerDeserializer(data=request.data)
         ds.is_valid(raise_exception=True)
         answer_text = ds.validated_data.get('answer_text')
-        answer = answer_service.submit_answer_by_agency(audit_store_id, question_id, request.user.id, answer_text)
+        status = ds.validated_data.get('status')
+        answer = answer_service.submit_answer_by_agency(audit_store_id, question_id, request.user.id, answer_text,
+                                                        status)
         return Response(AnswerSerializer(answer).data)
 
 

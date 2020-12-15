@@ -13,12 +13,14 @@ import { questionPropType } from "../../../prop_types.js";
 
 import PlainAnswerElement from "./PlainAnswerElement.jsx";
 import MutexAnswerElement from "./MutexAnswerElement.jsx";
+import MultiSelectAnswerElement from "./MultiSelectAnswerElement.jsx";
 
 export class __AnswerElement extends React.Component{
 	static propTypes = {
 		question: questionPropType.isRequired,
 		auditStoreId: PropTypes.number.isRequired,
 
+		answer: PropTypes.object,
 		answerText: PropTypes.string.isRequired,
 		setAnswerText: PropTypes.func.isRequired,
 
@@ -60,9 +62,13 @@ export class __AnswerElement extends React.Component{
 
 	onBlur = () => {
 		if( this.props.answerText !== this.state.answerText){
-			this.props.setAnswerText(this.state.answerText);
+			this.props.setAnswerText(this.state.answerText, true);
 		}
 		this.props.onBlur();
+	};
+
+	submitMultiSelectAnswer = (e) => {
+		this.props.setAnswerText(e.target.value, e.target.checked);
 	};
 
 	render(){
@@ -91,6 +97,19 @@ export class __AnswerElement extends React.Component{
 
 				options={this.props.question.question_data.options}
 			/>;
+		} else if(this.props.question.question_type === "MULTISELECT") {
+			return <MultiSelectAnswerElement
+				editable={this.props.editable}
+				answerText={this.state.answerText}
+				answer={this.props.answer}
+
+				questionId={this.props.question.id}
+				auditStoreId={this.props.auditStoreId}
+
+				onClick={this.submitMultiSelectAnswer}
+
+				options={this.props.question.question_data.options}
+			/>;
 		}
 	}
 }
@@ -107,8 +126,8 @@ const mapStoreToProps = (store, ownProps) => {
 
 const mapDispatchToProps = (dispatch, ownProps) => {
 	return {
-		setAnswerText: (answerText) => {
-			dispatch(setAnswerText(ownProps.auditStoreId, ownProps.question.id, answerText));
+		setAnswerText: (answerText, status) => {
+			dispatch(setAnswerText(ownProps.auditStoreId, ownProps.question.id, answerText, status));
 		},
 	};
 };

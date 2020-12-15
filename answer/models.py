@@ -40,17 +40,17 @@ class Answer(Model):
         self.save()
 
     def set_answer_comment(self, answer_comment):
-        if self.question.question_type == Question.MUTEX:
+        if self.question.question_type == Question.MUTEX or self.question.question_type == Question.MULTISELECT:
             self.answer_comment = answer_comment
             self.save()
         else:
-            raise AppLogicError("Question type must be mutex")
+            raise AppLogicError("Question type must be mutex or multiselect")
 
     def copy_answer_text_original(self):
         self.answer_text_original = self.answer_text
         self.save()
 
-    def set_answer_text(self, answer_text):
+    def set_answer_text(self, answer_text, status):
         if answer_text is None:
             raise AppLogicError("answer cannot be none")
 
@@ -59,15 +59,39 @@ class Answer(Model):
             if len(result) == 1:
                 self.marks_obtained = result[0]["marks"]
                 self.answer_text = answer_text
+                self.answer_text_original = answer_text
                 self.save()
             else:
                 raise AppLogicError("invalid answer")
         elif self.question.question_type == Question.PLAIN:
             self.answer_text = answer_text
+            self.answer_text_original = answer_text
             self.save()
-
-        self.answer_text = answer_text
-        self.answer_text_original = answer_text
+        elif answer_text and self.question.question_type == Question.MULTISELECT:
+            result = [o for o in self.question.question_data["options"] if o["value"] == answer_text]
+            if len(result) == 1:
+                if not status:
+                    self.marks_obtained = self.marks_obtained - result[0]["marks"]
+                else:
+                    if self.marks_obtained:
+                        self.marks_obtained = self.marks_obtained + result[0]["marks"]
+                    else:
+                        self.marks_obtained = result[0]["marks"]
+            if not status:
+                answer_text_list = self.answer_text.split(";")
+                answer_text_list.remove(answer_text)
+                self.answer_text = ';'.join(answer_text_list)
+                self.answer_text_original = ';'.join(answer_text_list)
+            else:
+                if self.answer_text == "":
+                    self.answer_text = answer_text
+                    self.answer_text_original = answer_text
+                else:
+                    self.answer_text = self.answer_text + ";" + answer_text
+                    self.answer_text_original = self.answer_text_original + ";" + answer_text
+            self.save()
+        # self.answer_text = answer_text
+        # self.answer_text_original = answer_text
         self.save()
 
     def set_marks_obtained(self, marks_obtained):
@@ -78,6 +102,12 @@ class Answer(Model):
 
         self.marks_obtained = marks_obtained
         self.save()
+
+    def get_answer_text_list(self):
+        if self.question.question_type == Question.MULTISELECT:
+            return self.answer_text.split(";")
+        else:
+            return self.answer_text
 
     class Meta:
         unique_together = (('question', 'audit_store',))

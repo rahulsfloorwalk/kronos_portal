@@ -35,7 +35,7 @@ def find_by_audit_store(audit_store_id):
     return Answer.objects.filter(audit_store_id=audit_store_id)
 
 
-def submit_answer(audit_store_id, question_id, user_id, answer_text):
+def submit_answer(audit_store_id, question_id, user_id, answer_text, status):
     audit_store = audit_store_service.find_by_id(audit_store_id)
 
     if user_id != audit_store.user_id:
@@ -53,13 +53,38 @@ def submit_answer(audit_store_id, question_id, user_id, answer_text):
             answer.marks_obtained = result[0]["marks"]
         else:
             raise AppLogicError("invalid answer")
+    if answer_text and q.question_type == Question.MULTISELECT:
+        result = [o for o in q.question_data["options"] if o["value"] == answer_text]
+        if len(result) == 1:
+            if not status:
+                answer.marks_obtained = answer.marks_obtained - result[0]["marks"]
+            else:
+                if answer.marks_obtained:
+                    answer.marks_obtained = answer.marks_obtained + result[0]["marks"]
+                else:
+                    answer.marks_obtained = result[0]["marks"]
+        else:
+            raise AppLogicError("invalid answer")
 
     # set marks_obtained to zero if max_marks is 0 so that it doesn't need to filled manually later on
     if q.question_type == Question.PLAIN and q.max_marks is 0:
         answer.marks_obtained = 0
-
-    answer.answer_text = answer_text
-    answer.answer_text_original = answer_text
+    if q.question_type == Question.MULTISELECT:
+        if not status:
+            answer_text_list = answer.answer_text.split(";")
+            answer_text_list.remove(answer_text)
+            answer.answer_text = ';'.join(answer_text_list)
+            answer.answer_text_original = ';'.join(answer_text_list)
+        else:
+            if answer.answer_text == "":
+                answer.answer_text = answer_text
+                answer.answer_text_original = answer_text
+            else:
+                answer.answer_text = answer.answer_text + ";" + answer_text
+                answer.answer_text_original = answer.answer_text_original + ";" + answer_text
+    else:
+        answer.answer_text = answer_text
+        answer.answer_text_original = answer_text
     return save(answer)
 
 
@@ -72,7 +97,7 @@ def set_answer_comment_by_auditor(audit_store_id, question_id, answer_comment, u
     answer = find_by_audit_store_and_question(audit_store_id, question_id)
     q = question_service.find_question_by_id(question_id)
 
-    if q.question_type == Question.MUTEX:
+    if q.question_type == Question.MUTEX or q.question_type == Question.MULTISELECT:
         answer.answer_comment = answer_comment
     else:
         raise AppLogicError("invalid answer_comment or question")

@@ -13,9 +13,9 @@ export function fetchAnswers(auditStoreId){
 	};
 }
 
-export function setAnswerText(auditStoreId, questionId, answerText){
+export function setAnswerText(auditStoreId, questionId, answerText, status){
 	return function(dispatch){
-		return answer.setAnswerText(auditStoreId, questionId, answerText).then((answer) => {
+		return answer.setAnswerText(auditStoreId, questionId, answerText, status).then((answer) => {
 			dispatch({
 				type: FETCH_ANSWER,
 				answer,

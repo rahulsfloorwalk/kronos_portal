@@ -108,14 +108,16 @@ class AnswerModeratorServiceTestCase(TestCase):
                 audit_store.id,
                 plain_answer.question.id,
                 answer_text,
-                self.moderator_user.id
+                self.moderator_user.id,
+                True
             )
         with self.assertRaisesRegex(AppLogicError, "answer text cannot be blank"):
             answer_moderator_service.set_answer_text_for_moderator(
                 audit_store.id,
                 mutex_answer.question.id,
                 answer_text,
-                self.moderator_user.id
+                self.moderator_user.id,
+                True
             )
 
     def test_set_answer_text_for_moderator_sets_answer_text_or_raises_based_on_status(self):
@@ -136,7 +138,8 @@ class AnswerModeratorServiceTestCase(TestCase):
                     audit_store.id,
                     answer.question.id,
                     answer_text,
-                    self.moderator_user.id
+                    self.moderator_user.id,
+                    True
                 )
                 self.assertEqual(answer_text, saved_answer.answer_text)
             else:
@@ -145,7 +148,8 @@ class AnswerModeratorServiceTestCase(TestCase):
                         audit_store.id,
                         answer.question.id,
                         answer_text,
-                        self.moderator_user.id
+                        self.moderator_user.id,
+                        True
                     )
 
     def test_set_marks_obtained_for_moderator_sets_marks_obtained_or_raises_based_on_status(self):

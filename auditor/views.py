@@ -312,7 +312,8 @@ class AnswerSubmitView(APIView):
         audit_store = ds.validated_data['audit_store']
         answer_text = ds.validated_data['answer_text']
         question = ds.validated_data['question']
-        answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text)
+        status = request.data['status']
+        answer = answer_service.submit_answer(audit_store.id, question.id, request.user.id, answer_text, status)
         return Response(AnswerSerializer(answer).data)
 
 
