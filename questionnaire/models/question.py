@@ -127,7 +127,6 @@ class Question(Model):
             option_marks = 0
             for option in data["options"]:
                 option_marks = option_marks + option["marks"]
-            print("option_marks", option_marks)
             if option_marks != self.max_marks:
                 raise AppLogicError("addition of option marks should be equal to max marks")
 

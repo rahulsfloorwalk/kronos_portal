@@ -77,7 +77,6 @@ class QuestionIdView(APIView):
         q_ds = QuestionDeSerializer(data=request.data, context={'id':question_id})
         q_ds.is_valid(raise_exception=True)
         question = q_ds.deserialize()
-        print("question:", request.data)
         saved_question = question_service.save(question)
         return Response(QuestionSerializer(saved_question).data)
 
