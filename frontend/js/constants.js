@@ -24,6 +24,7 @@ export const AuditStoreStatus = [
 export const QuestionType = [
 	"PLAIN",
 	"MUTEX",
+	"MULTISELECT"
 ];
 
 export const PaymentStatus = [

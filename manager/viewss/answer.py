@@ -21,6 +21,7 @@ class AnswerSerializer(ModelSerializer):
             'answer_comment',
             'marks_obtained',
             'not_applicable',
+            'get_answer_text_list'
         )
         read_only_fields = fields
 
@@ -73,12 +74,14 @@ class AnswerByQuestionAndStore(APIView):
     }
     class AnswerDeserializer(Serializer):
         answer_text = CharField()
+        status = BooleanField()
 
     def post(self, request, audit_store_id, question_id):
         ds = AnswerByQuestionAndStore.AnswerDeserializer(data=request.data)
         ds.is_valid(raise_exception=True)
         answer_text = ds.validated_data.get('answer_text')
-        answer = answer_manager_service.set_answer_text_for_manager(audit_store_id, question_id, answer_text)
+        status = ds.validated_data.get('status')
+        answer = answer_manager_service.set_answer_text_for_manager(audit_store_id, question_id, answer_text, status)
         return Response(AnswerSerializer(answer).data)
 
 

@@ -507,12 +507,15 @@ class AnswerTextView(APIView):
     }
     class Deserializer(Serializer):
         answer_text = CharField()
+        status = BooleanField()
 
     def post(self, request, audit_store_id, question_id):
         ds = self.Deserializer(data=request.data)
         ds.is_valid(raise_exception=True)
         answer_text = ds.validated_data.get('answer_text')
-        answer = answer_moderator_service.set_answer_text_for_moderator(audit_store_id, question_id, answer_text, request.user.id)
+        status = ds.validated_data.get('status')
+        answer = answer_moderator_service.set_answer_text_for_moderator(audit_store_id, question_id, answer_text,
+                                                                        request.user.id, status)
         return Response(AnswerSerializer(answer).data)
 
 class AnswerNotApplicableView(APIView):

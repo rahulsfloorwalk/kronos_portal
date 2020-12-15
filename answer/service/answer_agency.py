@@ -27,11 +27,11 @@ def set_answer_comment_by_agency(audit_store_id, question_id, user_id, answer_co
 
 
 @atomic
-def submit_answer_by_agency(audit_store_id, question_id, user_id, answer_text):
+def submit_answer_by_agency(audit_store_id, question_id, user_id, answer_text, status):
     audit_store = audit_store_service.find_by_id_for_agency_user(audit_store_id, user_id)
     if audit_store.is_editable_by_agency():
         answer = find_by_audit_store_and_question_for_agency(audit_store_id, question_id, user_id)
-        answer.set_answer_text(answer_text)
+        answer.set_answer_text(answer_text, status)
         answer.copy_answer_text_original()
         return answer
     else:

@@ -51,7 +51,7 @@ describe("<__AnswerElement/>", () => {
 			const r = shallow(<__AnswerElement {...props}/>);
 			r.find(PlainAnswerElement).simulate("change", { target: { value: "Hello World" }});
 			r.find(PlainAnswerElement).simulate("blur", { target: { value: "Hello World" }});
-			expect(props.setAnswerText).toHaveBeenCalledWith("Hello World");
+			expect(props.setAnswerText).toHaveBeenCalledWith("Hello World", true);
 		});
 
 		it("calls onFocus when the inner element is focused", () => {

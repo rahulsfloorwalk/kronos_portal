@@ -75,6 +75,7 @@ class QuestionRow extends React.Component{
 			question: this.props.q.id,
 			answer_text: this.state.answer_text,
 			audit_store: this.props.auditStoreId,
+			status: true
 		};
 		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
 		Alert.success("Data Saved");
@@ -82,6 +83,16 @@ class QuestionRow extends React.Component{
 
 	inputChanged = (e) => {
 		affectInputEventToComponent(e, this);
+	};
+
+	submitMultiSelectAnswer = (e) => {
+		let payload = {
+			question: this.props.q.id,
+			answer_text: e.target.value,
+			audit_store: this.props.auditStoreId,
+			status: e.target.checked
+		};
+		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
 	};
 
 	render(){
@@ -94,9 +105,16 @@ class QuestionRow extends React.Component{
 			answer = (<span className="text-muted">{noAnswerText}</span>);
 		}
 
+		if(this.props.q.question_type === "MULTISELECT"){
+			answer = (this.state.answer_text).replaceAll(";", ", ");
+		}
+		if(answer === ""){
+			answer = "No answer selected";
+		}
+
 		let answerElement = (<p>
 			{answer}
-			{ this.props.q.question_type === "MUTEX"
+			{ this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
 				? <AnswerComment editable={false}
 					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id}
 					answer_comment={this.props.answer && this.props.answer.answer_comment }
@@ -134,6 +152,31 @@ class QuestionRow extends React.Component{
 								<option value="">select answer</option>
 								{this.props.q.question_data.options.map(o => <option key={o.sequence} value={o.value}>{o.value}</option>)}
 							</select>
+						</div>
+						<div className="col-xs-7">
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+						</div>
+					</div>
+				);
+			} else if(this.props.q.question_type === "MULTISELECT") {
+				let checkbox_list = [];
+				let multiselect_answer_list = [];
+				if(this.props.answer){
+					multiselect_answer_list = this.props.answer.get_answer_text_list;
+				}
+				for(let o of this.props.q.question_data.options){
+					if(multiselect_answer_list.includes(o.value)){
+						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} defaultChecked style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+					}
+					else{
+						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+					}
+				}
+
+				answerElement = (
+					<div className="row">
+						<div className="col-xs-5">
+							{checkbox_list}
 						</div>
 						<div className="col-xs-7">
 							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>

@@ -72,7 +72,7 @@ class AnswerAgencyServiceTestCase(TestCase):
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer_text = "foobar"
         with self.assertRaisesRegex(AppLogicError, "Cannot submit answer to current audit store"):
-            agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+            agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text, True)
 
     def test_submit_answer_by_agency_raises_when_report_and_answer_do_not_belong_to_the_same_audit_cycle(self):
         mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
@@ -81,7 +81,7 @@ class AnswerAgencyServiceTestCase(TestCase):
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer_text = "foobar"
         with self.assertRaises(ObjectNotFound):
-            agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+            agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text, True)
 
     def test_submit_answer_by_agency(self):
         mock_audit_store = mommy.make(AuditStore, status=AuditStore.ACKNOWLEDGED, user=self.agency_user,
@@ -89,7 +89,7 @@ class AnswerAgencyServiceTestCase(TestCase):
         mock_question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer_text = "foobar"
-        answer = agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+        answer = agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text, True)
         self.assertEqual(answer_text, answer.answer_text_original)
 
     def test_submit_answer_by_agency_copies_to_answer_text_original(self):
@@ -98,5 +98,5 @@ class AnswerAgencyServiceTestCase(TestCase):
         mock_question = mommy.make(Question, section__audit_cycle=self.audit_cycle)
         mommy.make(Answer, audit_store=mock_audit_store, question=mock_question)
         answer_text = "foobar"
-        answer = agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text)
+        answer = agency_answer_service.submit_answer_by_agency(mock_audit_store.id, mock_question.id, self.agency_user, answer_text, True)
         self.assertEqual(answer_text, answer.answer_text_original)

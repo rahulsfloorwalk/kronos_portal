@@ -95,6 +95,7 @@ export class QuestionRow extends React.Component{
 		}),
 		answer: PropTypes.shape({
 			answer_comment: PropTypes.string,
+			get_answer_text_list: PropTypes.array
 		}),
 		marking: PropTypes.bool,
 
@@ -141,7 +142,10 @@ export class QuestionRow extends React.Component{
 	};
 	saveAnswer = (e) => {
 		this.answerChanged(e);
-		setAnswerText( this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text).then((answer)=> this.setState({answer, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
+		setAnswerText( this.props.auditStoreId, this.props.q.id, this.state.answer.answer_text, true).then((answer)=> this.setState({answer, answerError: false, answerSuccess: true}), ()=> this.setState({answerError: true, answerSuccess: false}));
+	};
+	submitMultiSelectAnswer = (e) => {
+		setAnswerText(this.props.auditStoreId, this.props.q.id, e.target.value, e.target.checked).then((answer) => this.setState({answer, answerError: false, answerSuccess: true}));
 	};
 	marksChanged = (e) => {
 		this.setState({
@@ -215,6 +219,30 @@ export class QuestionRow extends React.Component{
 						</div>
 						<div className="col-xs-7">
 							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={true} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
+						</div>
+					</div>
+				);
+			} else if(this.props.q.question_type === "MULTISELECT") {
+				let checkbox_list = [];
+				let multiselect_answer_list = [];
+				if(this.props.answer){
+					multiselect_answer_list = this.props.answer.get_answer_text_list;
+				}
+				for(let o of this.props.q.question_data.options){
+					if(multiselect_answer_list.includes(o.value)){
+						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} defaultChecked style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+					}
+					else{
+						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+					}
+				}
+				answerElement = (
+					<div className="row">
+						<div className="col-xs-5">
+							{checkbox_list}
+						</div>
+						<div className="col-xs-7">
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
 						</div>
 					</div>
 				);

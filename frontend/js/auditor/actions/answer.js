@@ -31,7 +31,8 @@ export function submitAnswer(answer){
 
 		var payload = {
 			audit_store: answer.audit_store,
-			answer_text: answer.answer_text
+			answer_text: answer.answer_text,
+			status: answer.status
 		};
 		var req = $.ajax({
 			type: "POST",

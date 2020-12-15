@@ -18,12 +18,12 @@ def set_answer_comment_for_manager(audit_store_id, question_id, answer_comment):
     else:
         raise AppLogicError("Answer comment cannot be set now")
 
-def set_answer_text_for_manager(audit_store_id, question_id, answer_text):
+def set_answer_text_for_manager(audit_store_id, question_id, answer_text, status):
     answer = answer_service.find_by_audit_store_and_question(audit_store_id, question_id)
     if answer_text == "":
         raise AppLogicError("answer text cannot be blank")
     if answer.audit_store.is_editable_by_manager():
-        answer.set_answer_text(answer_text)
+        answer.set_answer_text(answer_text, status)
         return answer
     else:
         raise AppLogicError("Answer text cannot be set now")

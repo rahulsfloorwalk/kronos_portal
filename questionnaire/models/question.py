@@ -11,10 +11,12 @@ from questionnaire.models.section import Section
 class Question(Model):
     PLAIN = "PLAIN"
     MUTEX = "MUTEX"
+    MULTISELECT = "MULTISELECT"
 
     QUESTION_TYPE = (
         (PLAIN, "Plain"),
         (MUTEX, "Mutually Exclusive"),
+        (MULTISELECT, "Multiple Select"),
     )
 
     QUESTION_DATA_V1 = 1
@@ -107,6 +109,27 @@ class Question(Model):
             for option in data["options"]:
                 if option["marks"] > self.max_marks:
                     raise AppLogicError("option marks cannot be greater than max marks")
+
+            # check for unique sequences
+            if not self.__has_unique_key(data["options"], "sequence"):
+                raise AppLogicError("option sequences must be unique")
+
+            # check for unique values
+            if not self.__has_unique_key(data["options"], "value"):
+                raise AppLogicError("option values must be unique")
+        elif self.question_type == self.MULTISELECT:
+            try:
+                validate(self.question_data, self.QUESTION_DATA_MUTEX_SCHEMA_V1)
+            except ValidationError as v:
+                raise AppLogicError(v.message) from v
+
+            # check for max marks and option marks
+            option_marks = 0
+            for option in data["options"]:
+                option_marks = option_marks + option["marks"]
+            print("option_marks", option_marks)
+            if option_marks != self.max_marks:
+                raise AppLogicError("addition of option marks should be equal to max marks")
 
             # check for unique sequences
             if not self.__has_unique_key(data["options"], "sequence"):

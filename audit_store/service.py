@@ -83,8 +83,15 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id):
     if user_id != "":
         audit_list_obj = audit_list_obj.filter(audit_stores__user__id=user_id).distinct('id')
         total_audit_count = audit_list_obj.count()
-
     audit_list = audit_list_obj[0:100]
+    if audit_list_obj.filter(count__gte=50):
+        audit_list = audit_list_obj[0:2]
+    if audit_list_obj.filter(count__gte=20):
+        audit_list = audit_list_obj[0:5]
+    if audit_list_obj.filter(count__gte=10):
+        audit_list = audit_list_obj[0:10]
+    if audit_list_obj.filter(count__gte=2):
+        audit_list = audit_list_obj[0:50]
     audit_id_list = [audit['id'] for audit in audit_list]
     audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
         .values('id', 'status', 'audit_date', 'audit__id', 'user__groups__name', 'user__email', 'user__id',

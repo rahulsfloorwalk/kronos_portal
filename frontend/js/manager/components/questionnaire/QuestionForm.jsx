@@ -100,21 +100,23 @@ class QuestionForm extends React.Component {
 	};
 
 	impactFactorsChanged = (impactFactors) => {
-		this.setState({
-			form: Object.assign({}, this.state.form, {
-				question_data: Object.assign({}, this.state.form.question_data, {
-					version: 1,
-					impact_factors: impactFactors,
+		if(impactFactors.length > 0){
+			this.setState({
+				form: Object.assign({}, this.state.form, {
+					question_data: Object.assign({}, this.state.form.question_data, {
+						version: 1,
+						impact_factors: impactFactors,
+					}),
 				}),
-			}),
-		});
+			});
+		}
 	};
 
 	render() {
 		var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
 
 		let optionBuilder;
-		if(this.state.form.question_type === "MUTEX"){
+		if(this.state.form.question_type === "MUTEX" || this.state.form.question_type === "MULTISELECT"){
 			optionBuilder = <OptionBuilder
 				options={this.state.form.question_data ? this.state.form.question_data.options : []}
 				onChange={this.optionsChanged}
@@ -136,6 +138,7 @@ class QuestionForm extends React.Component {
 							<option value=""></option>
 							<option value="PLAIN">{getQuestionType("PLAIN")}</option>
 							<option value="MUTEX">{getQuestionType("MUTEX")}</option>
+							<option value="MULTISELECT">{getQuestionType("MULTISELECT")}</option>
 						</FormSelect>
 					</div>
 					<div className="col-md-12">

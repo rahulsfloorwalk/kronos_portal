@@ -94,12 +94,14 @@ class AnswerManagerServiceTestCase(TestCase):
                 audit_store.id,
                 plain_answer.question.id,
                 answer_text,
+                True
             )
         with self.assertRaisesRegex(AppLogicError, "answer text cannot be blank"):
             answer_manager_service.set_answer_text_for_manager(
                 audit_store.id,
                 mutex_answer.question.id,
                 answer_text,
+                True
             )
 
     def test_set_answer_text_for_manager_sets_answer_text(self):
@@ -119,6 +121,7 @@ class AnswerManagerServiceTestCase(TestCase):
                     audit_store.id,
                     answer.question.id,
                     answer_text,
+                    True
                 )
                 self.assertEqual(answer_text, saved_answer.answer_text)
             else:
@@ -127,6 +130,7 @@ class AnswerManagerServiceTestCase(TestCase):
                         audit_store.id,
                         answer.question.id,
                         answer_text,
+                        True
                     )
 
     def test_set_marks_obtained_for_manager_sets_marks_obtained_or_raises_based_on_status(self):

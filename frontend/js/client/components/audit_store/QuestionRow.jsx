@@ -35,6 +35,9 @@ export default class QuestionRow extends React.Component{
 				answerText = (<span className="text-muted">not applicable</span>);
 			} else {
 				answerText = this.props.answer.answer_text;
+				if(this.props.q.question_type === "MULTISELECT"){
+					answerText = (this.props.answer.answer_text).replaceAll(";", ", ");
+				}
 				if( this.props.showMarks){
 					answerMarks = this.props.answer.marks_obtained;
 				}
@@ -51,8 +54,8 @@ export default class QuestionRow extends React.Component{
 				</td>
 				<td>
 					{answerText}
-					{ this.props.q.question_type === "MUTEX" && this.props.answer && this.props.answer.answer_comment
-						? " ( " + this.props.answer.answer_comment + ")"
+					{ (this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT") && this.props.answer && this.props.answer.answer_comment
+						? " (" + this.props.answer.answer_comment + ")"
 						: null
 					}
 				</td>

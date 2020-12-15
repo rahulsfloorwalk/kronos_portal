@@ -12,12 +12,13 @@ def find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, 
     audit_store = audit_store_moderator_service.find_by_id_for_moderator(audit_store_id, user_id)
     return answer_service.find_by_audit_store_and_question(audit_store.id, question_id)
 
-def set_answer_text_for_moderator(audit_store_id, question_id, answer_text, user_id):
+
+def set_answer_text_for_moderator(audit_store_id, question_id, answer_text, user_id, status):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
     if answer_text == "":
         raise AppLogicError("answer text cannot be blank")
     if answer.audit_store.is_editable_by_moderator():
-        answer.set_answer_text(answer_text)
+        answer.set_answer_text(answer_text, status)
         return answer
     else:
         raise AppLogicError("Answer text cannot be set now")

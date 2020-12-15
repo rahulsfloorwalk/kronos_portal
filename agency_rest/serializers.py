@@ -208,6 +208,7 @@ class AnswerSerializer(ModelSerializer):
             'audit_store_id',
             'answer_text',
             'answer_comment',
+            'get_answer_text_list'
         )
         read_only_fields = fields
 

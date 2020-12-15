@@ -43,7 +43,12 @@ export default class ImpactFactorInput extends Component {
 	};
 
 	onBlur = () => {
-		this.props.onChange(this.parse(this.state.inputState));
+		if(this.state.inputState != ""){
+			this.props.onChange(this.parse(this.state.inputState));
+		}
+		else{
+			this.props.onChange([]);
+		}
 	};
 
 	render(){
