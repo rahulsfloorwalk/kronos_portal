@@ -105,9 +105,9 @@ class QuestionRow extends React.Component{
 			answer = (<span className="text-muted">{noAnswerText}</span>);
 		}
 
-		if(this.props.q.question_type === "MULTISELECT"){
-			answer = (this.state.answer_text).replaceAll(";", ", ");
-		}
+		// if(this.props.q.question_type === "MULTISELECT"){
+		// 	answer = (this.state.answer_text).replaceAll(";", ", ");
+		// }
 		if(answer === ""){
 			answer = "No answer selected";
 		}

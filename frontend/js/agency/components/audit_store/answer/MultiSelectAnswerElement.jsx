@@ -48,7 +48,8 @@ export default class MultiSelectAnswerElement extends React.Component {
 			</div>;
 		}
 		else {
-			let answerText = (this.props.answerText).replaceAll(";", ", ");
+			// let answerText = (this.props.answerText).replaceAll(";", ", ");
+			let answerText = this.props.answerText;
 			if(answerText === ""){
 				answerText = "No answer selected";
 			}
