@@ -10,6 +10,8 @@ import { pointerStyle }  from "../../styles.js";
 import {  } from "../../components/Icons.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 
+import Loading from "../../components/Loading.jsx";
+
 import Jumbotron from "../../components/Jumbotron.jsx";
 
 import { findPending, findCompleted } from "../service/audit_store.js";
@@ -109,32 +111,108 @@ export default class AuditStoreDashboard extends Component {
 		this.state = {
 			qa_pending: [],
 			qa_done: [],
+			totalAuditStoreCount: 0,
+			loading: false,
+			loadMoreLoader: false
 		};
 	}
 
+	setLoading = (loading) => {
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
+	};
+
 	componentDidMount(){
+		this.setLoading(true);
+		let lastAuditStoreDate = "";
 		if(this.props.location.query.type === "qa_done"){
-			findCompleted().then(auditStores => this.setState({qa_done: auditStores}));
+			findCompleted(lastAuditStoreDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		} else {
-			findPending().then(auditStores => this.setState({qa_pending: auditStores}));
+			findPending(lastAuditStoreDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
 
 	componentWillReceiveProps(nextProps){
 		if(this.props.location.query.type !== nextProps.location.query.type){
+			this.setLoading(true);
+			let lastAuditStoreDate = "";
 			if( nextProps.location.query.type === "qa_done"){
-				findCompleted().then(auditStores => this.setState({qa_done: auditStores}));
+				findCompleted(lastAuditStoreDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			} else {
-				findPending().then(auditStores => this.setState({qa_pending: auditStores}));
+				findPending(lastAuditStoreDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			}
 		}
 	}
 
+	loadMore(qa_type){
+		this.setState({
+			loadMoreLoader: true
+		});
+		if(qa_type === "qa_done"){
+			let lastAuditStoreDate = this.state.qa_done[this.state.qa_done.length-1].audit_date;
+			findCompleted(lastAuditStoreDate).then((auditStores) => {
+				let newAuditStores = this.state.qa_done;
+				for(let reports of auditStores.auditStores){
+					let check_report = this.state.qa_done.filter(function(report){ return (report.id === reports.id); });
+					if(check_report.length === 0){
+						newAuditStores.push(reports);
+					}
+				}
+				this.setState({
+					qa_done: newAuditStores,
+					loadMoreLoader: false
+				});
+			});
+		}
+		else{
+			let lastAuditStoreDate = this.state.qa_pending[this.state.qa_pending.length-1].audit_date;
+			findPending(lastAuditStoreDate).then((auditStores) => {
+				let newAuditStores = this.state.qa_pending;
+				for(let reports of auditStores.auditStores){
+					let check_report = this.state.qa_pending.filter(function(report){ return (report.id === reports.id); });
+					if(check_report.length === 0){
+						newAuditStores.push(reports);
+					}
+				}
+				this.setState({
+					qa_pending: newAuditStores,
+					loadMoreLoader: false
+				});
+			});
+		}
+	}
+
 	render(){
+		if(this.state.loading){
+			return <Loading/>;
+		}
+		let loadMoreLoading;
+		if(this.state.loadMoreLoader){
+			loadMoreLoading = (<Loading/>);
+		}
 		if(this.props.location.query.type === "qa_done"){
-			return <AuditStoreTables auditStores={this.state.qa_done}/>;
+			let loadMoreButton;
+			if(this.state.qa_done.length !== this.state.totalAuditStoreCount){
+				loadMoreButton = (<center><button className="btn btn-default" onClick={() => this.loadMore("qa_done")}>Load More</button></center>);
+			}
+			return (
+				<div>
+					<AuditStoreTables auditStores={this.state.qa_done}/>
+					{loadMoreButton}
+					{loadMoreLoading}
+				</div>
+			);
 		} else {
-			return <AuditStoreTables auditStores={this.state.qa_pending}/>;
+			let loadMoreButton;
+			if(this.state.qa_pending.length !== this.state.totalAuditStoreCount){
+				loadMoreButton = (<center><button className="btn btn-default" onClick={() => this.loadMore("qa_pending")}>Load More</button></center>);
+			}
+			return (
+				<div>
+					<AuditStoreTables auditStores={this.state.qa_pending}/>
+					{loadMoreButton}
+					{loadMoreLoading}
+				</div>
+			);
 		}
 	}
 }

@@ -58,23 +58,27 @@ class AuditStoreByAuditCycle(APIView):
         audit_stores = audit_store_service.find_by_audit_cycle_for_moderator(audit_cycle_id, request.user.id)
         return Response(AuditStoreSerializer(audit_stores, many=True).data)
 
+
 class AuditStoreCompletedView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET': [GROUP_NAME_MODERATOR],
+        'POST': [GROUP_NAME_MODERATOR],
     }
-    def get(self, request):
-        audit_stores = audit_store_service.find_qa_completed_audit_stores_for_moderator(request.user.id)
-        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+    def post(self, request):
+        audit_stores, count = audit_store_service\
+            .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'])
+        return Response({"auditStores": AuditStoreSerializer(audit_stores, many=True).data, "count": count})
+
 
 class AuditStorePendingView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET': [GROUP_NAME_MODERATOR],
+        'POST': [GROUP_NAME_MODERATOR],
     }
-    def get(self, request):
-        audit_stores = audit_store_service.find_qa_pending_audit_stores_for_moderator(request.user.id)
-        return Response(AuditStoreSerializer(audit_stores, many=True).data)
+    def post(self, request):
+        audit_stores, count = audit_store_service\
+            .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'])
+        return Response({"auditStores": AuditStoreSerializer(audit_stores, many=True).data, "count": count})
 
 
 class AuditStoreIdView(APIView):

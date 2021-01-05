@@ -33,6 +33,7 @@ class AuditStoreModeratorServiceTestCase(TestCase):
                                          username="moderator@foobar.com",
                                          email="moderator@foobar.com",
                                          groups=[self.moderator_group])
+        self.lastAuditStoreId = ""
 
     def create_reports(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
@@ -51,13 +52,13 @@ class AuditStoreModeratorServiceTestCase(TestCase):
 
     def test_find_qa_pending_audit_stores_for_moderator(self):
         self.create_reports()
-        reports = service_moderator.find_qa_pending_audit_stores_for_moderator(self.moderator_user.id)
-        self.assertEqual(reports.count(), 2)
+        reports = service_moderator.find_qa_pending_audit_stores_for_moderator(self.moderator_user.id, self.lastAuditStoreId)
+        self.assertEqual(reports[0].count(), 2)
 
     def test_find_qa_completed_audit_stores_for_moderator(self):
         self.create_reports()
-        reports = service_moderator.find_qa_completed_audit_stores_for_moderator(self.moderator_user.id)
-        self.assertEqual(reports.count(), 2)
+        reports = service_moderator.find_qa_completed_audit_stores_for_moderator(self.moderator_user.id, self.lastAuditStoreId)
+        self.assertEqual(reports[0].count(), 2)
 
     def test_find_by_id_for_moderator_returns_audit_store(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
