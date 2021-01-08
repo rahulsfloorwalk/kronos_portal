@@ -66,7 +66,8 @@ class AuditStoreCompletedView(APIView):
     }
     def post(self, request):
         audit_stores, count = audit_store_service\
-            .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'])
+            .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
+                                                          request.data['filterStatus'])
         return Response({"auditStores": AuditStoreSerializer(audit_stores, many=True).data, "count": count})
 
 
@@ -77,7 +78,8 @@ class AuditStorePendingView(APIView):
     }
     def post(self, request):
         audit_stores, count = audit_store_service\
-            .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'])
+            .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
+                                                        request.data['filterStatus'])
         return Response({"auditStores": AuditStoreSerializer(audit_stores, many=True).data, "count": count})
 
 

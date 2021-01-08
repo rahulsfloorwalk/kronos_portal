@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { hashHistory } from "react-router";
+// import { hashHistory } from "react-router";
 
 import moment from "moment";
 import { momentDateFormat}  from "../../../config.js";
@@ -9,6 +9,7 @@ import { pointerStyle }  from "../../styles.js";
 
 import {  } from "../../components/Icons.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
+import { getAuditStoreStatus } from "../../utils.js";
 
 import Loading from "../../components/Loading.jsx";
 
@@ -29,10 +30,17 @@ class AuditStoreList2 extends Component{
 		this.state = {
 		};
 	}
+
+	openReportNewTab(id) {
+		let url = `/static/moderator#/audit_store/${id}/report`;
+		window.open(url);
+	}
+
 	render(){
 		let reps = [];
 		for(let as of this.props.auditStores){
-			reps.push( <tr key={as.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}>
+			reps.push( <tr key={as.id} style={pointerStyle} onClick={() => this.openReportNewTab(as.id)}>
+				{/* <tr key={as.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}> */}
 				<td className="text-right">{as.id}</td>
 				<td>{as.audit.audit_cycle.client.name}</td>
 				<td>{as.audit.store.name}, {as.audit.store.city.name}</td>
@@ -113,7 +121,8 @@ export default class AuditStoreDashboard extends Component {
 			qa_done: [],
 			totalAuditStoreCount: 0,
 			loading: false,
-			loadMoreLoader: false
+			loadMoreLoader: false,
+			filterStatus: ""
 		};
 	}
 
@@ -125,9 +134,9 @@ export default class AuditStoreDashboard extends Component {
 		this.setLoading(true);
 		let lastAuditStoreDate = "";
 		if(this.props.location.query.type === "qa_done"){
-			findCompleted(lastAuditStoreDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findCompleted(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		} else {
-			findPending(lastAuditStoreDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findPending(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
 
@@ -136,10 +145,24 @@ export default class AuditStoreDashboard extends Component {
 			this.setLoading(true);
 			let lastAuditStoreDate = "";
 			if( nextProps.location.query.type === "qa_done"){
-				findCompleted(lastAuditStoreDate).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findCompleted(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			} else {
-				findPending(lastAuditStoreDate).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findPending(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			}
+		}
+	}
+
+	statusChanged(e, qa_type){
+		this.setState({
+			filterStatus: e.target.value
+		});
+		this.setLoading(true);
+		let lastAuditStoreDate = "";
+		if(qa_type === "qa_done"){
+			findCompleted(lastAuditStoreDate, e.target.value).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+		}
+		else{
+			findPending(lastAuditStoreDate, e.target.value).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
 
@@ -149,7 +172,7 @@ export default class AuditStoreDashboard extends Component {
 		});
 		if(qa_type === "qa_done"){
 			let lastAuditStoreDate = this.state.qa_done[this.state.qa_done.length-1].audit_date;
-			findCompleted(lastAuditStoreDate).then((auditStores) => {
+			findCompleted(lastAuditStoreDate, this.state.filterStatus).then((auditStores) => {
 				let newAuditStores = this.state.qa_done;
 				for(let reports of auditStores.auditStores){
 					let check_report = this.state.qa_done.filter(function(report){ return (report.id === reports.id); });
@@ -165,7 +188,7 @@ export default class AuditStoreDashboard extends Component {
 		}
 		else{
 			let lastAuditStoreDate = this.state.qa_pending[this.state.qa_pending.length-1].audit_date;
-			findPending(lastAuditStoreDate).then((auditStores) => {
+			findPending(lastAuditStoreDate, this.state.filterStatus).then((auditStores) => {
 				let newAuditStores = this.state.qa_pending;
 				for(let reports of auditStores.auditStores){
 					let check_report = this.state.qa_pending.filter(function(report){ return (report.id === reports.id); });
@@ -189,13 +212,28 @@ export default class AuditStoreDashboard extends Component {
 		if(this.state.loadMoreLoader){
 			loadMoreLoading = (<Loading/>);
 		}
+		let statusFilter;
 		if(this.props.location.query.type === "qa_done"){
 			let loadMoreButton;
 			if(this.state.qa_done.length !== this.state.totalAuditStoreCount){
 				loadMoreButton = (<center><button className="btn btn-default" onClick={() => this.loadMore("qa_done")}>Load More</button></center>);
 			}
+			statusFilter = (
+				<select className="form-control" style={{display:"inline-block", width:"200px"}} value={this.state.filterStatus} onChange={(e) => this.statusChanged(e, "qa_done")}>
+					<option value="">All Status</option>
+					<option value="PM_REVIEW">{getAuditStoreStatus("PM_REVIEW")}</option>
+					<option value="COMPLETED">{getAuditStoreStatus("COMPLETED")}</option>
+					<option value="FAILED">{getAuditStoreStatus("FAILED")}</option>
+					<option value="ACCEPTED">{getAuditStoreStatus("ACCEPTED")}</option>
+					<option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
+				</select>
+			);
 			return (
 				<div>
+					<div className="container">
+						<label>Status Filter : </label> &nbsp;
+						{statusFilter}
+					</div>
 					<AuditStoreTables auditStores={this.state.qa_done}/>
 					{loadMoreButton}
 					{loadMoreLoading}
@@ -206,8 +244,20 @@ export default class AuditStoreDashboard extends Component {
 			if(this.state.qa_pending.length !== this.state.totalAuditStoreCount){
 				loadMoreButton = (<center><button className="btn btn-default" onClick={() => this.loadMore("qa_pending")}>Load More</button></center>);
 			}
+			statusFilter = (
+				<select className="form-control" style={{display:"inline-block", width:"200px"}} value={this.state.filterStatus} onChange={(e) => this.statusChanged(e, "qa_pending")}>
+					<option value="">All Status</option>
+					<option value="ASSIGNED">{getAuditStoreStatus("ASSIGNED")}</option>
+					<option value="ACKNOWLEDGED">{getAuditStoreStatus("ACKNOWLEDGED")}</option>
+					<option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
+				</select>
+			);
 			return (
 				<div>
+					<div className="container">
+						<label>Status Filter : </label> &nbsp;
+						{statusFilter}
+					</div>
 					<AuditStoreTables auditStores={this.state.qa_pending}/>
 					{loadMoreButton}
 					{loadMoreLoading}
