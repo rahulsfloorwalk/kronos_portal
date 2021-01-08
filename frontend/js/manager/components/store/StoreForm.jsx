@@ -39,7 +39,9 @@ class StoreForm extends React.Component {
 			non_field_errors: errorList,
 		}),
 	};
-	state = {};
+	state = {
+		city_error: ""
+	};
 
 	componentDidMount() {
 		this.props.dispatch(fetchCountry());
@@ -94,51 +96,63 @@ class StoreForm extends React.Component {
 
 	myCityChanged = (e) => {
 		this.inputChanged(e);
+		this.setState({
+			city_error: ""
+		});
 	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		var submitPromise;
-		if(this.props.params.storeId){
-			submitPromise = this.props.dispatch(saveStoreEditForm({
-				id: this.props.params.storeId,
-
-				client: this.state.client.id,
-				city: this.state.city,
-
-				name: this.state.name,
-				address: this.state.address,
-
-				code: this.state.code,
-				type: this.state.type,
-				priority: this.state.priority,
-				phone: this.state.phone,
-			}));
-		} else {
-			submitPromise = this.props.dispatch(saveStoreAddForm({
-				client: this.props.params.clientId,
-				city: this.state.city,
-
-				name: this.state.name,
-				address: this.state.address,
-
-				code: this.state.code,
-				type: this.state.type,
-				priority: this.state.priority,
-				phone: this.state.phone,
-			}));
+		if(typeof this.state.city === "undefined" || this.state.city === ""){
+			this.setState({
+				city_error: "Please select city"
+			});
 		}
-		submitPromise.then(function(savedStore){
-			hashHistory.push(`/client/${savedStore.client.id}/store`);
-			Alert.success("STORE SAVED");
-		});
+		else{
+			var submitPromise;
+			if(this.props.params.storeId){
+				submitPromise = this.props.dispatch(saveStoreEditForm({
+					id: this.props.params.storeId,
+
+					client: this.state.client.id,
+					city: this.state.city,
+
+					name: this.state.name,
+					address: this.state.address,
+
+					code: this.state.code,
+					type: this.state.type,
+					priority: this.state.priority,
+					phone: this.state.phone,
+				}));
+			} else {
+				submitPromise = this.props.dispatch(saveStoreAddForm({
+					client: this.props.params.clientId,
+					city: this.state.city,
+
+					name: this.state.name,
+					address: this.state.address,
+
+					code: this.state.code,
+					type: this.state.type,
+					priority: this.state.priority,
+					phone: this.state.phone,
+				}));
+			}
+			submitPromise.then(function(savedStore){
+				hashHistory.push(`/client/${savedStore.client.id}/store`);
+				Alert.success("STORE SAVED");
+			});
+		}
 	};
 
 	render() {
 		var modalTitle = this.props.params.storeId ? "Edit Store" : "Add Store";
+		var city_error_span = (<span style={{color:"red"}}><b>{this.state.city_error}</b></span>);
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
+					{city_error_span}
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<div className="row">
 						<div className="col-sm-6">
