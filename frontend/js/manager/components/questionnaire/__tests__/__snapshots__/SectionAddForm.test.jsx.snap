@@ -79,7 +79,7 @@ exports[`SectionAddForm renders an empty form 1`] = `
             <input
               className="form-control"
               label="Section Name"
-              maxLength="50"
+              maxLength="100"
               name="name"
               onChange={[Function]}
               type="text"
