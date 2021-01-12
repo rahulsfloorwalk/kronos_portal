@@ -248,11 +248,12 @@ class AuditStore(Model):
                     _logger.debug("Report not submittable, not enough attachments uploaded")
                     return False
 
-                questions = Question.objects.filter(section_id=report_section.section_id).all()
+                questions = Question.objects.filter(section_id=report_section.section_id)\
+                    .exclude(question_type=Question.MULTISELECT).all()
                 answers = Answer.objects.filter(
                     audit_store__id=self.id,
                     question__section_id=report_section.section_id
-                ).all()
+                ).exclude(question__question_type=Question.MULTISELECT).all()
                 if len(questions) != len(answers):
                     _logger.debug("Report not submittable, question length does not match answer length")
                     return False
