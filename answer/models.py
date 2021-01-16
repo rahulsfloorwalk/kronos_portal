@@ -72,23 +72,25 @@ class Answer(Model):
             if len(result) == 1:
                 if not status:
                     self.marks_obtained = self.marks_obtained - result[0]["marks"]
+
+                    answer_text_list = self.answer_text.split(";")
+                    answer_text_list.remove(answer_text)
+                    self.answer_text = ';'.join(answer_text_list)
+                    self.answer_text_original = ';'.join(answer_text_list)
+
                 else:
-                    if self.marks_obtained:
-                        self.marks_obtained = self.marks_obtained + result[0]["marks"]
+                    if self.answer_text:
+                        answer_text_list = self.answer_text.split(";")
+                        if answer_text not in answer_text_list:
+                            self.marks_obtained = self.marks_obtained + result[0]["marks"]
+
+                            self.answer_text = self.answer_text + ";" + answer_text
+                            self.answer_text_original = self.answer_text_original + ";" + answer_text
                     else:
                         self.marks_obtained = result[0]["marks"]
-            if not status:
-                answer_text_list = self.answer_text.split(";")
-                answer_text_list.remove(answer_text)
-                self.answer_text = ';'.join(answer_text_list)
-                self.answer_text_original = ';'.join(answer_text_list)
-            else:
-                if self.answer_text == "":
-                    self.answer_text = answer_text
-                    self.answer_text_original = answer_text
-                else:
-                    self.answer_text = self.answer_text + ";" + answer_text
-                    self.answer_text_original = self.answer_text_original + ";" + answer_text
+
+                        self.answer_text = answer_text
+                        self.answer_text_original = answer_text
             self.save()
         # self.answer_text = answer_text
         # self.answer_text_original = answer_text

@@ -13,6 +13,8 @@ from client.service.client_manager import get_manager_email_list_by_audit_store_
 from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
 from attachment.service import set_attachment_by_proof_tag
 from audit_store.service_moderator import get_moderator_email_by_audit_store_obj
+from answer.service.answer_auditor import add_multiselect_answer_questions
+
 
 @atomic
 def acknowledge_report(audit_store_id, user_id):
@@ -54,6 +56,7 @@ def submit_report(audit_store_id, user_id):
                                 "drop-down present below the attachment.")
     set_attachment_by_proof_tag(audit_store_id)
     audit_store.submit(by=user)
+    add_multiselect_answer_questions(audit_store_id, user_id)
     return audit_store
 
 @atomic

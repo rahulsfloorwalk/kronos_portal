@@ -173,7 +173,7 @@ export class QuestionRow extends React.Component{
 		let answerElement = (
 			<span>
 				<big>{this.state.answer.answer_text}</big>
-				{ this.props.q.question_type === "MUTEX"
+				{ this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
 					?  <AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} editable={false} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}/>
 					: null
 				}

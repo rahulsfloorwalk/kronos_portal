@@ -36,7 +36,12 @@ export default class QuestionRow extends React.Component{
 			} else {
 				answerText = this.props.answer.answer_text;
 				if(this.props.q.question_type === "MULTISELECT"){
-					answerText = (this.props.answer.answer_text).replaceAll(";", ", ");
+					if (answerText === ""){
+						answerText = "No Option Selected";
+					}
+					else{
+						answerText = (this.props.answer.answer_text).replaceAll(";", ", ");
+					}
 				}
 				if( this.props.showMarks){
 					answerMarks = this.props.answer.marks_obtained;
