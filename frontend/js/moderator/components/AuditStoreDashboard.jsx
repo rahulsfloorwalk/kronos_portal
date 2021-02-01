@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router";
 // import { hashHistory } from "react-router";
 
 import moment from "moment";
 import { momentDateFormat}  from "../../../config.js";
 
-import { pointerStyle }  from "../../styles.js";
+// import { pointerStyle }  from "../../styles.js";
 
 import {  } from "../../components/Icons.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
@@ -31,15 +32,15 @@ class AuditStoreList2 extends Component{
 		};
 	}
 
-	openReportNewTab(id) {
-		let url = `/static/moderator#/audit_store/${id}/report`;
-		window.open(url);
-	}
+	// openReportNewTab(id) {
+	// 	let url = `/static/moderator#/audit_store/${id}/report`;
+	// 	window.open(url);
+	// }
 
 	render(){
 		let reps = [];
 		for(let as of this.props.auditStores){
-			reps.push( <tr key={as.id} style={pointerStyle} onClick={() => this.openReportNewTab(as.id)}>
+			reps.push( <tr key={as.id}>
 				{/* <tr key={as.id} style={pointerStyle} onClick={() => hashHistory.push(`/audit_store/${as.id}/report`)}> */}
 				<td className="text-right">{as.id}</td>
 				<td>{as.audit.audit_cycle.client.name}</td>
@@ -50,6 +51,9 @@ class AuditStoreList2 extends Component{
 				<td>{as.audit.store.city.name}</td>
 				<td>{moment(as.audit_date).format(momentDateFormat)}</td>
 				<td><AuditStoreStatusLabel status={as.status}/></td>
+				<td>
+					<Link to={`/audit_store/${as.id}/report`} target="_blank" className="btn btn-default">View</Link>
+				</td>
 			</tr>);
 		}
 
@@ -73,6 +77,7 @@ class AuditStoreList2 extends Component{
 							<th>City</th>
 							<th>Audit Date</th>
 							<th>Report Status</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
@@ -234,6 +239,8 @@ export default class AuditStoreDashboard extends Component {
 						<label>Status Filter : </label> &nbsp;
 						{statusFilter}
 					</div>
+					{loadMoreButton}
+					{loadMoreLoading}
 					<AuditStoreTables auditStores={this.state.qa_done}/>
 					{loadMoreButton}
 					{loadMoreLoading}
@@ -258,6 +265,8 @@ export default class AuditStoreDashboard extends Component {
 						<label>Status Filter : </label> &nbsp;
 						{statusFilter}
 					</div>
+					{loadMoreButton}
+					{loadMoreLoading}
 					<AuditStoreTables auditStores={this.state.qa_pending}/>
 					{loadMoreButton}
 					{loadMoreLoading}

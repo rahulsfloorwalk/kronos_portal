@@ -240,6 +240,8 @@ export class QuestionRow extends React.Component{
 					<div className="row">
 						<div className="col-xs-5">
 							{checkbox_list}
+							<br/>
+							{this.state.answer.answer_text}
 						</div>
 						<div className="col-xs-7">
 							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
