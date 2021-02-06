@@ -82,7 +82,7 @@ class __QuestionRow extends React.Component {
 	static propTypes = {
 		answer: PropTypes.shape({
 			answer_comment: PropTypes.string,
-			get_answer_text_list: PropTypes.array
+			get_answer_text_list: PropTypes.oneOf[PropTypes.array, PropTypes.string]
 		}),
 		auditStoreId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]).isRequired,
 		q: PropTypes.shape({
@@ -862,12 +862,16 @@ export class AuditStoreReport extends React.Component{
 				loading: true
 			});
 			this.props.dispatch(fetchSections(this.props.auditStore.audit.audit_cycle.id)).always(() => this.setState({loading: false}));
-		}
-		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 			this.setState({
-				proof_tags
+				loading: true
 			});
-		});
+			fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
+				this.setState({
+					proof_tags,
+					loading: false
+				});
+			});
+		}
 	}
 
 	componentWillReceiveProps( nextProps){
