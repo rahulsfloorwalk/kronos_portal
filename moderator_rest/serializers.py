@@ -173,6 +173,23 @@ class AuditStoreSerializer(ModelSerializer):
         read_only_fields = fields
 
 
+class AuditStoreSerializerForList(ModelSerializer):
+    audit = AuditSerializerWithoutApplications()
+    user = UserSerializer()
+    class Meta:
+        model = AuditStore
+        fields = (
+            'id',
+            'status',
+            'audit_date',
+            'audit',
+            'user',
+            'earnings_per_audit',
+            'reimbursement'
+        )
+        read_only_fields = fields
+
+
 class QuestionSerializer(ModelSerializer):
     class Meta:
         model = Question

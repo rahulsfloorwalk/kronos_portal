@@ -5,6 +5,8 @@ import { } from "react-router";
 
 import { } from "../../styles.js";
 
+import Loading from "../../components/Loading.jsx";
+
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -95,7 +97,7 @@ export class QuestionRow extends React.Component{
 		}),
 		answer: PropTypes.shape({
 			answer_comment: PropTypes.string,
-			get_answer_text_list: PropTypes.array
+			get_answer_text_list: PropTypes.oneOf[PropTypes.array, PropTypes.string]
 		}),
 		marking: PropTypes.bool,
 
@@ -819,32 +821,31 @@ export default class AuditStoreSections extends React.Component{
 		loading: false
 	};
 
+	setLoading = (loading) => this.setState(prevState => Object.assign({}, prevState, { loading }));
+
 	componentDidMount() {
-		fetchSections(this.props.auditStoreId).then((sections) => {
+		this.setLoading(true);
+		Promise.all([
+			fetchSections(this.props.auditStoreId),
+			fetchAnswers(this.props.auditStoreId),
+			fetchReportSections(this.props.auditStoreId),
+			fetchproofTags(this.props.auditStore.audit.audit_cycle.id)
+		]).then(([sections, answers, reportSections, proof_tags]) => {
 			this.setState({
-				sections
-			});
-		});
-		fetchAnswers(this.props.auditStoreId).then((answers) => {
-			this.setState({
-				answers
-			});
-		});
-		fetchReportSections(this.props.auditStoreId).then((reportSections) => {
-			this.setState({
-				reportSections
-			});
-		});
-		fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
-			this.setState({
+				sections,
+				answers,
+				reportSections,
 				proof_tags
 			});
-		});
+		}).finally(()=>this.setLoading(false));
 	}
 	render(){
 		//var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 		//	return s1.sequence - s2.sequence;
 		//});
+		if(this.state.loading){
+			return <Loading/>;
+		}
 		var sectionRows = [];
 		for(var section of this.state.sections) {
 			let reportSection = this.state.reportSections.filter(rs => rs.section === section.id)[0];

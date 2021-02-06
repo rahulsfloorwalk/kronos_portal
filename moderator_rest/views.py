@@ -22,7 +22,7 @@ from auditor.service import profile_info_service
 from attachment.service import set_attachment_by_proof_tag
 
 from .serializers import AuditCycleSerializer
-from .serializers import AuditStoreSerializer
+from .serializers import AuditStoreSerializer, AuditStoreSerializerForList
 from .serializers import AttachmentSerializer
 from .serializers import SectionSerializer
 from .serializers import ReportSectionSerializer
@@ -68,7 +68,7 @@ class AuditStoreCompletedView(APIView):
         audit_stores, count = audit_store_service\
             .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
                                                           request.data['filterStatus'])
-        return Response({"auditStores": AuditStoreSerializer(audit_stores, many=True).data, "count": count})
+        return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
 
 class AuditStorePendingView(APIView):
@@ -80,7 +80,7 @@ class AuditStorePendingView(APIView):
         audit_stores, count = audit_store_service\
             .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
                                                         request.data['filterStatus'])
-        return Response({"auditStores": AuditStoreSerializer(audit_stores, many=True).data, "count": count})
+        return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
 
 class AuditStoreIdView(APIView):

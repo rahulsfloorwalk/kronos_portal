@@ -66,7 +66,7 @@ class AuditStoreRow extends React.Component {
 				<td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
 				<td><ModeratorAssignDropdown moderators={this.props.moderators} selectedModeratorId={this.props.auditStore.assigned_to_moderator} auditStoreId={this.props.auditStore.id} onUpdate={this.props.onUpdate}/></td>
 				<td>
-					<Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>
+					<Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default" target="_blank">View</Link>
 				</td>
 			</tr>
 		);
@@ -301,7 +301,7 @@ class AuditStoreList extends Component{
 		let user_option_list = [];
 		if(users.length > 0){
 			for(let user of users){
-				user_option_list.push(<option value={user.user.id}>{user.user.email}</option>);
+				user_option_list.push(<option key={user.user.id} value={user.user.id}>{user.user.email}</option>);
 			}
 		}
 		return(
