@@ -140,7 +140,7 @@ def create_text_structure(title, sections, questions, audit_stores):
     question_cells = []
     for question in questions:
         question_cells.append(question.question_txt)
-    content = ["Store Code", "Store", "Audit Date"] + question_cells
+    content = ["Store Code", "Store", "Store City", "Audit Date"] + question_cells
     row = {'type': 'question', 'content': content}
     rows.append(row)
 
@@ -152,6 +152,10 @@ def create_text_structure(title, sections, questions, audit_stores):
         }
         store_name_cell = {
             'value': audit_store.audit.store.name + " - " + audit_store.audit.store.city.name,
+            'color_code': get_color_code(0, 0)
+        }
+        store_city_cell = {
+            'value': audit_store.audit.store.city.name,
             'color_code': get_color_code(0, 0)
         }
         audit_date_cell = {
@@ -190,12 +194,21 @@ def create_text_structure(title, sections, questions, audit_stores):
                     'color_code': get_color_code(0, 0)
                 })
             else:
+                if answer.question.question_type == Question.MUTEX:
+                    if answer.answer_comment:
+                        answer_val = answer.answer_text + " (" + answer.answer_comment + ")"
+                    else:
+                        answer_val = answer.answer_text
+                elif answer.question.question_type == Question.MULTISELECT:
+                    answer_val = answer.answer_text.replace(";", ", ")
+                else:
+                    answer_val = answer.answer_text
                 answer_cells.append({
-                    'value': answer.answer_text,
+                    'value': answer_val,
                     'color_code': get_color_code(answer.marks_obtained, question.max_marks)
                 })
 
-        content = [store_code_cell, store_name_cell, audit_date_cell] + answer_cells
+        content = [store_code_cell, store_name_cell, store_city_cell, audit_date_cell] + answer_cells
         row = {
             'type': 'answer',
             'content': content

@@ -7,6 +7,7 @@ import Alert from "react-s-alert";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
 import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
+import Loading from "../../components/Loading.jsx";
 
 import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { affectInputEventToComponent, orderKeys } from "../../react_utils.js";
@@ -861,10 +862,7 @@ export class AuditStoreReport extends React.Component{
 			this.setState({
 				loading: true
 			});
-			this.props.dispatch(fetchSections(this.props.auditStore.audit.audit_cycle.id)).always(() => this.setState({loading: false}));
-			this.setState({
-				loading: true
-			});
+			this.props.dispatch(fetchSections(this.props.auditStore.audit.audit_cycle.id));
 			fetchproofTags(this.props.auditStore.audit.audit_cycle.id).then((proof_tags) => {
 				this.setState({
 					proof_tags,
@@ -884,6 +882,9 @@ export class AuditStoreReport extends React.Component{
 	}
 
 	render(){
+		if(this.state.loading){
+			return <Loading/>;
+		}
 		const editable = this.props.auditStore && (this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW");
 		var orderedKeys = orderKeys(this.props.sections, function(s1,s2){
 			return s1.sequence - s2.sequence;
