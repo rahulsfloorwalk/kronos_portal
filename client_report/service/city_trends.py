@@ -21,8 +21,9 @@ def get_performing_cities(audit_cycle, user_id):
                 'audit__store__city',
                 'report_sections',
                 'report_sections__section',
-                'report_sections__section__questions',
-                'report_sections__section__questions__answers')
+                # 'report_sections__section__questions',
+                # 'report_sections__section__questions__answers'
+        )
     else:
         non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
         non_admin_user_store_list = non_admin_user_store.get_store_list()
@@ -33,13 +34,15 @@ def get_performing_cities(audit_cycle, user_id):
                 'audit__store__city',
                 'report_sections',
                 'report_sections__section',
-                'report_sections__section__questions',
-                'report_sections__section__questions__answers')
+                # 'report_sections__section__questions',
+                # 'report_sections__section__questions__answers'
+        )
     for k, g in itertools.groupby(visible_audit_stores_in_cycle, lambda x: x.audit.store):
         obtained = 0
         count = 0
         for audit_store in list(g):
-            obtained += audit_store.percentage()
+            # obtained += audit_store.percentage()
+            obtained += audit_store.audit_store_percentage
             count += 1
         if count > 0: stores[k] = obtained / count
     cities = {}
@@ -159,8 +162,8 @@ def get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire
         Prefetch('audits__audit_stores', queryset=AuditStore.objects.presentable()),
         'audits__audit_stores__report_sections',
         'audits__audit_stores__report_sections__section',
-        'audits__audit_stores__report_sections__section__questions',
-        'audits__audit_stores__report_sections__section__questions__answers',
+        # 'audits__audit_stores__report_sections__section__questions',
+        # 'audits__audit_stores__report_sections__section__questions__answers',
     )
 
     audit_cycle_count = qs.count()

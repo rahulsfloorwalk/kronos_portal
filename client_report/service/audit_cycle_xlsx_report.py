@@ -223,7 +223,7 @@ def write_data(data):
     title_color = '#FFFFFF'
     question_color = '#BEBEBE'
     output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True, 'constant_memory': True})
     worksheet = workbook.add_worksheet()
     section_format = workbook.add_format({
         'text_wrap': True,

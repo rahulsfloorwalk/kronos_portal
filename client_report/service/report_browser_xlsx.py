@@ -68,8 +68,8 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                 'audit__store__city',
                 'report_sections',
                 'report_sections__section',
-                'report_sections__section__questions',
-                'report_sections__section__questions__answers',
+                # 'report_sections__section__questions',
+                # 'report_sections__section__questions__answers',
             ).order_by(sort, "audit__store__name")
     else:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(clientuser.id)
@@ -84,8 +84,8 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
                 'audit__store__city',
                 'report_sections',
                 'report_sections__section',
-                'report_sections__section__questions',
-                'report_sections__section__questions__answers',
+                # 'report_sections__section__questions',
+                # 'report_sections__section__questions__answers',
             ).order_by(sort, "audit__store__name")
 
     filtered_audit_stores = audit_stores
@@ -165,7 +165,8 @@ def create_text_structure(title, sections, audit_stores):
             'color_code': get_color_code(0, 0)
         }
         total_score_cell = {
-            'value': str(round(audit_store.percentage())) + "%",
+            # 'value': str(round(audit_store.percentage())) + "%",
+            'value': str(round(audit_store.audit_store_percentage)) + "%",
             'color_code': audit_store.color()
         }
 
@@ -191,8 +192,9 @@ def create_text_structure(title, sections, audit_stores):
                 })
             else:
                 report_section_cells.append({
-                    'value': str(round(report_section.marks_percentage())) + "%",
-                    'color_code': report_section.color_code()
+                    # 'value': str(round(report_section.marks_percentage())) + "%",
+                    'value': str(round(report_section.report_section_percentage)) + "%",
+                    'color_code': get_color_code(round(report_section.report_section_percentage), 100)
                 })
 
         content = [store_code_cell, store_name_cell, audit_date_cell, total_score_cell] + report_section_cells
@@ -208,7 +210,7 @@ def write_data(data):
     title_color = '#FFFFFF'
     question_color = '#BEBEBE'
     output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output, {'in_memory': True})
+    workbook = xlsxwriter.Workbook(output, {'in_memory': True, 'constant_memory': True})
     worksheet = workbook.add_worksheet()
     section_format = workbook.add_format({
         'text_wrap': True,

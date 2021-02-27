@@ -1,7 +1,7 @@
 from django.db.models import Prefetch
 
 from kronos.exceptions import AppLogicError
-from kronos.utils import get_color_code_by_percentage
+# from kronos.utils import get_color_code_by_percentage
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from audit_store import service_client as client_service
@@ -32,8 +32,8 @@ def get_audit_cycle_section_averages_for_client_by_audit_cycle_id(audit_cycle_id
     qs = qs.prefetch_related(
         'sections',
         Prefetch('sections__report_sections', queryset=ReportSection.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
-        'sections__questions',
-        Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
+        # 'sections__questions',
+        # Prefetch('sections__questions__answers', queryset=Answer.objects.filter(audit_store__status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED])),
     )
     return get_audit_cycle_section_averages(qs, user_id)
 
@@ -95,22 +95,12 @@ def get_averages_for_sections_for_client_user(sections, user_id):
             if client_admin:
                 filtered_report_sections = ReportSection.objects\
                     .filter(audit_store__in=visible_audit_stores)\
-                    .filter(section=section)\
-                    .prefetch_related(
-                        'section',
-                        'section__questions',
-                        'section__questions__answers'
-                    )
+                    .filter(section=section)
             else:
                 filtered_report_sections = ReportSection.objects \
                     .filter(audit_store__in=visible_audit_stores,
                             audit_store__audit__store__id__in=non_admin_user_store_list) \
-                    .filter(section=section) \
-                    .prefetch_related(
-                        'section',
-                        'section__questions',
-                        'section__questions__answers'
-                    )
+                    .filter(section=section)
             sec['average'] = get_average_for_report_sections(filtered_report_sections)
         # if section.max_marks() > 0:
             section_averages.append(sec)
@@ -125,10 +115,11 @@ def get_average_for_report_sections(report_sections):
     for report_section in report_sections:
         if not report_section.not_applicable:
             counter += 1
-            total += report_section.marks_percentage()
+            # total += report_section.marks_percentage()
+            total += report_section.report_section_percentage
     if counter > 0:
         return {
-            'color_code': get_color_code_by_percentage(int(total / counter)),
+            # 'color_code': get_color_code_by_percentage(int(total / counter)),
             'value': int(total / counter)
         }
     return None

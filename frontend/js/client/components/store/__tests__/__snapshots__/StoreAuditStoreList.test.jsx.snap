@@ -46,7 +46,6 @@ exports[`<StoreAuditStoreList/> renders the table correctly 1`] = `
         <td
           className="text-right rating-good"
         >
-          81
           %
         </td>
         <td
@@ -80,7 +79,6 @@ exports[`<StoreAuditStoreList/> renders the table correctly 1`] = `
         <td
           className="text-right rating-average"
         >
-          72
           %
         </td>
         <td

@@ -10008,6 +10008,7 @@
             "qa_rating": null,
             "audit": 1,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.736Z",
             "modified_at": "2018-03-10T08:43:06.736Z"
         }
@@ -10021,6 +10022,7 @@
             "qa_rating": null,
             "audit": 2,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.787Z",
             "modified_at": "2018-03-10T08:43:06.787Z"
         }
@@ -10034,6 +10036,7 @@
             "qa_rating": null,
             "audit": 3,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.806Z",
             "modified_at": "2018-03-10T08:43:06.806Z"
         }
@@ -10047,6 +10050,7 @@
             "qa_rating": null,
             "audit": 4,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.823Z",
             "modified_at": "2018-03-10T08:43:06.823Z"
         }
@@ -10060,6 +10064,7 @@
             "qa_rating": null,
             "audit": 5,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.844Z",
             "modified_at": "2018-03-10T08:43:06.844Z"
         }
@@ -10073,6 +10078,7 @@
             "qa_rating": null,
             "audit": 6,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.872Z",
             "modified_at": "2018-03-10T08:43:06.872Z"
         }
@@ -10086,6 +10092,7 @@
             "qa_rating": null,
             "audit": 7,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.898Z",
             "modified_at": "2018-03-10T08:43:06.898Z"
         }
@@ -10099,6 +10106,7 @@
             "qa_rating": null,
             "audit": 8,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.924Z",
             "modified_at": "2018-03-10T08:43:06.924Z"
         }
@@ -10112,6 +10120,7 @@
             "qa_rating": null,
             "audit": 9,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.947Z",
             "modified_at": "2018-03-10T08:43:06.947Z"
         }
@@ -10125,6 +10134,7 @@
             "qa_rating": null,
             "audit": 10,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:06.973Z",
             "modified_at": "2018-03-10T08:43:06.973Z"
         }
@@ -10138,6 +10148,7 @@
             "qa_rating": null,
             "audit": 11,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.010Z",
             "modified_at": "2018-03-10T08:43:07.010Z"
         }
@@ -10151,6 +10162,7 @@
             "qa_rating": null,
             "audit": 12,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.050Z",
             "modified_at": "2018-03-10T08:43:07.050Z"
         }
@@ -10164,6 +10176,7 @@
             "qa_rating": null,
             "audit": 13,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.066Z",
             "modified_at": "2018-03-10T08:43:07.066Z"
         }
@@ -10177,6 +10190,7 @@
             "qa_rating": null,
             "audit": 14,
             "user": 3,
+            "audit_store_percentage": 0,
             "created_at": "2018-03-10T08:43:07.082Z",
             "modified_at": "2018-03-10T08:43:07.082Z"
         }
@@ -10190,6 +10204,7 @@
             "qa_rating": null,
             "audit": 14,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.093Z",
             "modified_at": "2018-03-10T08:43:07.093Z"
         }
@@ -10203,6 +10218,7 @@
             "qa_rating": null,
             "audit": 15,
             "user": 3,
+            "audit_store_percentage": 0,
             "created_at": "2018-03-10T08:43:07.150Z",
             "modified_at": "2018-03-10T08:43:07.150Z"
         }
@@ -10216,6 +10232,7 @@
             "qa_rating": null,
             "audit": 15,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.151Z",
             "modified_at": "2018-03-10T08:43:07.151Z"
         }
@@ -10229,6 +10246,7 @@
             "qa_rating": null,
             "audit": 16,
             "user": 3,
+            "audit_store_percentage": 0,
             "created_at": "2018-03-10T08:43:07.176Z",
             "modified_at": "2018-03-10T08:43:07.176Z"
         }
@@ -10242,6 +10260,7 @@
             "qa_rating": null,
             "audit": 16,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.176Z",
             "modified_at": "2018-03-10T08:43:07.176Z"
         }
@@ -10255,6 +10274,7 @@
             "qa_rating": null,
             "audit": 17,
             "user": 3,
+            "audit_store_percentage": 0,
             "created_at": "2018-03-10T08:43:07.267Z",
             "modified_at": "2018-03-10T08:43:07.267Z"
         }
@@ -10268,6 +10288,7 @@
             "qa_rating": null,
             "audit": 17,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.272Z",
             "modified_at": "2018-03-10T08:43:07.272Z"
         }
@@ -10281,6 +10302,7 @@
             "qa_rating": null,
             "audit": 18,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.299Z",
             "modified_at": "2018-03-10T08:43:07.299Z"
         }
@@ -10294,6 +10316,7 @@
             "qa_rating": null,
             "audit": 19,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.328Z",
             "modified_at": "2018-03-10T08:43:07.328Z"
         }
@@ -10307,6 +10330,7 @@
             "qa_rating": null,
             "audit": 20,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.352Z",
             "modified_at": "2018-03-10T08:43:07.352Z"
         }
@@ -10319,7 +10343,8 @@
             "audit_date": "2017-02-27",
             "qa_rating": null,
             "audit": 21,
-            "user": 3,
+                      "audit_store_percentage": 75,  "user": 3,
+
             "created_at": "2018-03-10T08:43:07.376Z",
             "modified_at": "2018-03-10T08:43:07.376Z"
         }
@@ -10333,6 +10358,7 @@
             "qa_rating": null,
             "audit": 22,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.401Z",
             "modified_at": "2018-03-10T08:43:07.401Z"
         }
@@ -10346,6 +10372,7 @@
             "qa_rating": null,
             "audit": 23,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.453Z",
             "modified_at": "2018-03-10T08:43:07.453Z"
         }
@@ -10359,6 +10386,7 @@
             "qa_rating": null,
             "audit": 24,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.474Z",
             "modified_at": "2018-03-10T08:43:07.474Z"
         }
@@ -10372,6 +10400,7 @@
             "qa_rating": null,
             "audit": 25,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.494Z",
             "modified_at": "2018-03-10T08:43:07.494Z"
         }
@@ -10385,6 +10414,7 @@
             "qa_rating": null,
             "audit": 26,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.520Z",
             "modified_at": "2018-03-10T08:43:07.520Z"
         }
@@ -10398,6 +10428,7 @@
             "qa_rating": null,
             "audit": 27,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.548Z",
             "modified_at": "2018-03-10T08:43:07.548Z"
         }
@@ -10411,6 +10442,7 @@
             "qa_rating": null,
             "audit": 28,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.580Z",
             "modified_at": "2018-03-10T08:43:07.580Z"
         }
@@ -10424,6 +10456,7 @@
             "qa_rating": null,
             "audit": 29,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.616Z",
             "modified_at": "2018-03-10T08:43:07.616Z"
         }
@@ -10437,6 +10470,7 @@
             "qa_rating": null,
             "audit": 29,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.641Z",
             "modified_at": "2018-03-10T08:43:07.641Z"
         }
@@ -10450,6 +10484,7 @@
             "qa_rating": null,
             "audit": 30,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.659Z",
             "modified_at": "2018-03-10T08:43:07.659Z"
         }
@@ -10463,6 +10498,7 @@
             "qa_rating": null,
             "audit": 31,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.675Z",
             "modified_at": "2018-03-10T08:43:07.675Z"
         }
@@ -10476,6 +10512,7 @@
             "qa_rating": null,
             "audit": 32,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.699Z",
             "modified_at": "2018-03-10T08:43:07.699Z"
         }
@@ -10489,6 +10526,7 @@
             "qa_rating": null,
             "audit": 33,
             "user": 3,
+            "audit_store_percentage": 75,
             "created_at": "2018-03-10T08:43:07.716Z",
             "modified_at": "2018-03-10T08:43:07.716Z"
         }
@@ -23478,6 +23516,7 @@
             "auditor_comment": "staff was not looking very interested",
             "auditor_comment_original": "staff was not looking very interested",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.742Z",
             "modified_at": "2018-03-10T08:43:06.742Z"
         }
@@ -23492,6 +23531,7 @@
             "auditor_comment": "selling skills were quite poor",
             "auditor_comment_original": "selling skills were quite poor",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.753Z",
             "modified_at": "2018-03-10T08:43:06.753Z"
         }
@@ -23506,6 +23546,7 @@
             "auditor_comment": "entrance was visible and welcoming",
             "auditor_comment_original": "entrance was visible and welcoming",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.754Z",
             "modified_at": "2018-03-10T08:43:06.754Z"
         }
@@ -23520,6 +23561,7 @@
             "auditor_comment": "my need was not asked",
             "auditor_comment_original": "my need was not asked",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.755Z",
             "modified_at": "2018-03-10T08:43:06.755Z"
         }
@@ -23534,6 +23576,7 @@
             "auditor_comment": "outlet was quite clean and presentable",
             "auditor_comment_original": "outlet was quite clean and presentable",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.756Z",
             "modified_at": "2018-03-10T08:43:06.756Z"
         }
@@ -23548,6 +23591,7 @@
             "auditor_comment": "entrance was welcoming",
             "auditor_comment_original": "entrance was welcoming",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.788Z",
             "modified_at": "2018-03-10T08:43:06.788Z"
         }
@@ -23562,6 +23606,7 @@
             "auditor_comment": "my needs were met",
             "auditor_comment_original": "my needs were met",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.788Z",
             "modified_at": "2018-03-10T08:43:06.788Z"
         }
@@ -23576,6 +23621,7 @@
             "auditor_comment": "staff was quite enthusiastic and welcoming",
             "auditor_comment_original": "staff was quite enthusiastic and welcoming",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.789Z",
             "modified_at": "2018-03-10T08:43:06.789Z"
         }
@@ -23590,6 +23636,7 @@
             "auditor_comment": "selling skills were good",
             "auditor_comment_original": "selling skills were good",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.790Z",
             "modified_at": "2018-03-10T08:43:06.790Z"
         }
@@ -23604,6 +23651,7 @@
             "auditor_comment": "temperature was quite high for me",
             "auditor_comment_original": "temperature was quite high for me",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.791Z",
             "modified_at": "2018-03-10T08:43:06.791Z"
         }
@@ -23618,6 +23666,7 @@
             "auditor_comment": "it was decent",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.806Z",
             "modified_at": "2018-03-10T08:43:06.806Z"
         }
@@ -23632,6 +23681,7 @@
             "auditor_comment": "average experience",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.807Z",
             "modified_at": "2018-03-10T08:43:06.807Z"
         }
@@ -23646,6 +23696,7 @@
             "auditor_comment": "the experience was horrible",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.808Z",
             "modified_at": "2018-03-10T08:43:06.808Z"
         }
@@ -23660,6 +23711,7 @@
             "auditor_comment": "very bad",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.808Z",
             "modified_at": "2018-03-10T08:43:06.808Z"
         }
@@ -23674,6 +23726,7 @@
             "auditor_comment": "it was good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.809Z",
             "modified_at": "2018-03-10T08:43:06.809Z"
         }
@@ -23688,6 +23741,7 @@
             "auditor_comment": "dirty washroom",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.824Z",
             "modified_at": "2018-03-10T08:43:06.824Z"
         }
@@ -23702,6 +23756,7 @@
             "auditor_comment": "overall it was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.824Z",
             "modified_at": "2018-03-10T08:43:06.824Z"
         }
@@ -23716,6 +23771,7 @@
             "auditor_comment": "not so good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.825Z",
             "modified_at": "2018-03-10T08:43:06.825Z"
         }
@@ -23730,6 +23786,7 @@
             "auditor_comment": "not attended properly",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.826Z",
             "modified_at": "2018-03-10T08:43:06.826Z"
         }
@@ -23744,6 +23801,7 @@
             "auditor_comment": "not so good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.827Z",
             "modified_at": "2018-03-10T08:43:06.827Z"
         }
@@ -23758,6 +23816,7 @@
             "auditor_comment": "very dirty entrance",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.845Z",
             "modified_at": "2018-03-10T08:43:06.845Z"
         }
@@ -23772,6 +23831,7 @@
             "auditor_comment": "not so good staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.845Z",
             "modified_at": "2018-03-10T08:43:06.845Z"
         }
@@ -23786,6 +23846,7 @@
             "auditor_comment": "not so good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.846Z",
             "modified_at": "2018-03-10T08:43:06.846Z"
         }
@@ -23800,6 +23861,7 @@
             "auditor_comment": "less interactive staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.847Z",
             "modified_at": "2018-03-10T08:43:06.847Z"
         }
@@ -23814,6 +23876,7 @@
             "auditor_comment": "dirty washroom",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.847Z",
             "modified_at": "2018-03-10T08:43:06.847Z"
         }
@@ -23828,6 +23891,7 @@
             "auditor_comment": "very dirty entrance it was overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.873Z",
             "modified_at": "2018-03-10T08:43:06.873Z"
         }
@@ -23842,6 +23906,7 @@
             "auditor_comment": "not so good staff at showroom was present",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.874Z",
             "modified_at": "2018-03-10T08:43:06.874Z"
         }
@@ -23856,6 +23921,7 @@
             "auditor_comment": "not so good in talking no name badge",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.874Z",
             "modified_at": "2018-03-10T08:43:06.874Z"
         }
@@ -23870,6 +23936,7 @@
             "auditor_comment": "less interactive staff with no manners disappointing experience",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.875Z",
             "modified_at": "2018-03-10T08:43:06.875Z"
         }
@@ -23884,6 +23951,7 @@
             "auditor_comment": "washroom was dirty as usual",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.876Z",
             "modified_at": "2018-03-10T08:43:06.876Z"
         }
@@ -23898,6 +23966,7 @@
             "auditor_comment": "very dirty entrance it was",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.899Z",
             "modified_at": "2018-03-10T08:43:06.899Z"
         }
@@ -23912,6 +23981,7 @@
             "auditor_comment": "not so good staff at showroom",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.900Z",
             "modified_at": "2018-03-10T08:43:06.900Z"
         }
@@ -23926,6 +23996,7 @@
             "auditor_comment": "not so good in talking",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.900Z",
             "modified_at": "2018-03-10T08:43:06.900Z"
         }
@@ -23940,6 +24011,7 @@
             "auditor_comment": "less interactive staff with no manners",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.901Z",
             "modified_at": "2018-03-10T08:43:06.901Z"
         }
@@ -23954,6 +24026,7 @@
             "auditor_comment": "washroom was dirty",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.902Z",
             "modified_at": "2018-03-10T08:43:06.902Z"
         }
@@ -23968,6 +24041,7 @@
             "auditor_comment": "it was average overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.925Z",
             "modified_at": "2018-03-10T08:43:06.925Z"
         }
@@ -23982,6 +24056,7 @@
             "auditor_comment": "washroom dirty",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.925Z",
             "modified_at": "2018-03-10T08:43:06.925Z"
         }
@@ -23996,6 +24071,7 @@
             "auditor_comment": "it was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.926Z",
             "modified_at": "2018-03-10T08:43:06.926Z"
         }
@@ -24010,6 +24086,7 @@
             "auditor_comment": "the process was not so good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.927Z",
             "modified_at": "2018-03-10T08:43:06.927Z"
         }
@@ -24024,6 +24101,7 @@
             "auditor_comment": "the experience was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.928Z",
             "modified_at": "2018-03-10T08:43:06.928Z"
         }
@@ -24038,6 +24116,7 @@
             "auditor_comment": "it was not fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.947Z",
             "modified_at": "2018-03-10T08:43:06.947Z"
         }
@@ -24052,6 +24131,7 @@
             "auditor_comment": "the process was not so good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.948Z",
             "modified_at": "2018-03-10T08:43:06.948Z"
         }
@@ -24066,6 +24146,7 @@
             "auditor_comment": "the experience was not fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.949Z",
             "modified_at": "2018-03-10T08:43:06.949Z"
         }
@@ -24080,6 +24161,7 @@
             "auditor_comment": "it was average overall, not so good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.950Z",
             "modified_at": "2018-03-10T08:43:06.950Z"
         }
@@ -24094,6 +24176,7 @@
             "auditor_comment": "washroom was fine this time",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.950Z",
             "modified_at": "2018-03-10T08:43:06.950Z"
         }
@@ -24108,6 +24191,7 @@
             "auditor_comment": "the experience was not fine just bearable",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.974Z",
             "modified_at": "2018-03-10T08:43:06.974Z"
         }
@@ -24122,6 +24206,7 @@
             "auditor_comment": "it was average overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.974Z",
             "modified_at": "2018-03-10T08:43:06.974Z"
         }
@@ -24136,6 +24221,7 @@
             "auditor_comment": "washroom was not fine this time",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.975Z",
             "modified_at": "2018-03-10T08:43:06.975Z"
         }
@@ -24150,6 +24236,7 @@
             "auditor_comment": "it was not fine just bearable",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.975Z",
             "modified_at": "2018-03-10T08:43:06.975Z"
         }
@@ -24164,6 +24251,7 @@
             "auditor_comment": "the process was not so good but still fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:06.975Z",
             "modified_at": "2018-03-10T08:43:06.975Z"
         }
@@ -24178,6 +24266,7 @@
             "auditor_comment": "it was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.011Z",
             "modified_at": "2018-03-10T08:43:07.011Z"
         }
@@ -24192,6 +24281,7 @@
             "auditor_comment": "it was very bad",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.012Z",
             "modified_at": "2018-03-10T08:43:07.012Z"
         }
@@ -24206,6 +24296,7 @@
             "auditor_comment": "it was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.013Z",
             "modified_at": "2018-03-10T08:43:07.013Z"
         }
@@ -24220,6 +24311,7 @@
             "auditor_comment": "average experience",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.014Z",
             "modified_at": "2018-03-10T08:43:07.014Z"
         }
@@ -24234,6 +24326,7 @@
             "auditor_comment": "not visible form outside",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.014Z",
             "modified_at": "2018-03-10T08:43:07.014Z"
         }
@@ -24248,6 +24341,7 @@
             "auditor_comment": "showroom was good",
             "auditor_comment_original": "showroom was good",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.050Z",
             "modified_at": "2018-03-10T08:43:07.050Z"
         }
@@ -24262,6 +24356,7 @@
             "auditor_comment": "staff overall was decent",
             "auditor_comment_original": "staff overall was decent",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.051Z",
             "modified_at": "2018-03-10T08:43:07.051Z"
         }
@@ -24276,6 +24371,7 @@
             "auditor_comment": "staff was quite interactive",
             "auditor_comment_original": "staff was quite interactive",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.051Z",
             "modified_at": "2018-03-10T08:43:07.051Z"
         }
@@ -24290,6 +24386,7 @@
             "auditor_comment": "staff put a lot of effort to convince me",
             "auditor_comment_original": "staff put a lot of effort to convince me",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.052Z",
             "modified_at": "2018-03-10T08:43:07.052Z"
         }
@@ -24304,6 +24401,7 @@
             "auditor_comment": "overall showroom was clean",
             "auditor_comment_original": "overall showroom was clean",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.052Z",
             "modified_at": "2018-03-10T08:43:07.052Z"
         }
@@ -24318,6 +24416,7 @@
             "auditor_comment": "no parking space for customers",
             "auditor_comment_original": "no parking space for customers",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.067Z",
             "modified_at": "2018-03-10T08:43:07.067Z"
         }
@@ -24332,6 +24431,7 @@
             "auditor_comment": "staff was good to talk",
             "auditor_comment_original": "staff was good to talk",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.067Z",
             "modified_at": "2018-03-10T08:43:07.067Z"
         }
@@ -24346,6 +24446,7 @@
             "auditor_comment": "staff tried to convience",
             "auditor_comment_original": "staff tried to convience",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.068Z",
             "modified_at": "2018-03-10T08:43:07.068Z"
         }
@@ -24360,6 +24461,7 @@
             "auditor_comment": "washroom was clean and good",
             "auditor_comment_original": "washroom was clean and good",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.068Z",
             "modified_at": "2018-03-10T08:43:07.068Z"
         }
@@ -24374,6 +24476,7 @@
             "auditor_comment": "staff not so good",
             "auditor_comment_original": "staff not so good",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.069Z",
             "modified_at": "2018-03-10T08:43:07.069Z"
         }
@@ -24388,6 +24491,7 @@
             "auditor_comment": "no security guard no parking space",
             "auditor_comment_original": "no security guard no parking space",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.083Z",
             "modified_at": "2018-03-10T08:43:07.083Z"
         }
@@ -24402,6 +24506,7 @@
             "auditor_comment": "staff was average",
             "auditor_comment_original": "staff was average",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.083Z",
             "modified_at": "2018-03-10T08:43:07.083Z"
         }
@@ -24416,6 +24521,7 @@
             "auditor_comment": "staff not energetic",
             "auditor_comment_original": "staff not energetic",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.084Z",
             "modified_at": "2018-03-10T08:43:07.084Z"
         }
@@ -24430,6 +24536,7 @@
             "auditor_comment": "very bad",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.094Z",
             "modified_at": "2018-03-10T08:43:07.094Z"
         }
@@ -24444,6 +24551,7 @@
             "auditor_comment": "very good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.095Z",
             "modified_at": "2018-03-10T08:43:07.095Z"
         }
@@ -24458,6 +24566,7 @@
             "auditor_comment": "good staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.095Z",
             "modified_at": "2018-03-10T08:43:07.095Z"
         }
@@ -24472,6 +24581,7 @@
             "auditor_comment": "very bad it was",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.096Z",
             "modified_at": "2018-03-10T08:43:07.096Z"
         }
@@ -24486,6 +24596,7 @@
             "auditor_comment": "it was very poor",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.123Z",
             "modified_at": "2018-03-10T08:43:07.123Z"
         }
@@ -24500,6 +24611,7 @@
             "auditor_comment": "washroom dirty and bad smell",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.152Z",
             "modified_at": "2018-03-10T08:43:07.152Z"
         }
@@ -24514,6 +24626,7 @@
             "auditor_comment": "no parking space there",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.152Z",
             "modified_at": "2018-03-10T08:43:07.152Z"
         }
@@ -24528,6 +24641,7 @@
             "auditor_comment": "not interactive staff very bad in talking",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.153Z",
             "modified_at": "2018-03-10T08:43:07.153Z"
         }
@@ -24542,6 +24656,7 @@
             "auditor_comment": "no introduction given by staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.154Z",
             "modified_at": "2018-03-10T08:43:07.154Z"
         }
@@ -24556,6 +24671,7 @@
             "auditor_comment": "no proper interactiveness by staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.155Z",
             "modified_at": "2018-03-10T08:43:07.155Z"
         }
@@ -24570,6 +24686,7 @@
             "auditor_comment": "no parking space",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.177Z",
             "modified_at": "2018-03-10T08:43:07.177Z"
         }
@@ -24584,6 +24701,7 @@
             "auditor_comment": "not interactive staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.178Z",
             "modified_at": "2018-03-10T08:43:07.178Z"
         }
@@ -24598,6 +24716,7 @@
             "auditor_comment": "no introduction given",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.179Z",
             "modified_at": "2018-03-10T08:43:07.179Z"
         }
@@ -24612,6 +24731,7 @@
             "auditor_comment": "washroom dirty",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.179Z",
             "modified_at": "2018-03-10T08:43:07.179Z"
         }
@@ -24626,6 +24746,7 @@
             "auditor_comment": "no proper interactiveness",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.180Z",
             "modified_at": "2018-03-10T08:43:07.180Z"
         }
@@ -24640,6 +24761,7 @@
             "auditor_comment": "",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.268Z",
             "modified_at": "2018-03-10T08:43:07.268Z"
         }
@@ -24654,6 +24776,7 @@
             "auditor_comment": "",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.269Z",
             "modified_at": "2018-03-10T08:43:07.269Z"
         }
@@ -24668,6 +24791,7 @@
             "auditor_comment": "",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.270Z",
             "modified_at": "2018-03-10T08:43:07.270Z"
         }
@@ -24682,6 +24806,7 @@
             "auditor_comment": "",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.270Z",
             "modified_at": "2018-03-10T08:43:07.270Z"
         }
@@ -24696,6 +24821,7 @@
             "auditor_comment": "",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.271Z",
             "modified_at": "2018-03-10T08:43:07.271Z"
         }
@@ -24710,6 +24836,7 @@
             "auditor_comment": "washroom dirty",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.273Z",
             "modified_at": "2018-03-10T08:43:07.273Z"
         }
@@ -24724,6 +24851,7 @@
             "auditor_comment": "no introduction given",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.274Z",
             "modified_at": "2018-03-10T08:43:07.274Z"
         }
@@ -24738,6 +24866,7 @@
             "auditor_comment": "No parking space",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.274Z",
             "modified_at": "2018-03-10T08:43:07.274Z"
         }
@@ -24752,6 +24881,7 @@
             "auditor_comment": "good pitch by staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.275Z",
             "modified_at": "2018-03-10T08:43:07.275Z"
         }
@@ -24766,6 +24896,7 @@
             "auditor_comment": "less intuitive staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.275Z",
             "modified_at": "2018-03-10T08:43:07.275Z"
         }
@@ -24780,6 +24911,7 @@
             "auditor_comment": "entrance was good and welcoming",
             "auditor_comment_original": "entrance was good and welcoming",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.300Z",
             "modified_at": "2018-03-10T08:43:07.300Z"
         }
@@ -24794,6 +24926,7 @@
             "auditor_comment": "staff was interactive and good",
             "auditor_comment_original": "staff was interactive and good",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.301Z",
             "modified_at": "2018-03-10T08:43:07.301Z"
         }
@@ -24808,6 +24941,7 @@
             "auditor_comment": "overall staff was good",
             "auditor_comment_original": "overall staff was good",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.301Z",
             "modified_at": "2018-03-10T08:43:07.301Z"
         }
@@ -24822,6 +24956,7 @@
             "auditor_comment": "staff was not very much convincible",
             "auditor_comment_original": "staff was not very much convincible",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.302Z",
             "modified_at": "2018-03-10T08:43:07.302Z"
         }
@@ -24836,6 +24971,7 @@
             "auditor_comment": "outlet was having uncomfortable temperature",
             "auditor_comment_original": "outlet was having uncomfortable temperature",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.302Z",
             "modified_at": "2018-03-10T08:43:07.302Z"
         }
@@ -24850,6 +24986,7 @@
             "auditor_comment": "not so proper overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.329Z",
             "modified_at": "2018-03-10T08:43:07.329Z"
         }
@@ -24864,6 +25001,7 @@
             "auditor_comment": "purpose was not asked",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.330Z",
             "modified_at": "2018-03-10T08:43:07.330Z"
         }
@@ -24878,6 +25016,7 @@
             "auditor_comment": "not energetic staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.330Z",
             "modified_at": "2018-03-10T08:43:07.330Z"
         }
@@ -24892,6 +25031,7 @@
             "auditor_comment": "average experience",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.331Z",
             "modified_at": "2018-03-10T08:43:07.331Z"
         }
@@ -24906,6 +25046,7 @@
             "auditor_comment": "washroom unclean",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.331Z",
             "modified_at": "2018-03-10T08:43:07.331Z"
         }
@@ -24920,6 +25061,7 @@
             "auditor_comment": "very good overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.352Z",
             "modified_at": "2018-03-10T08:43:07.352Z"
         }
@@ -24934,6 +25076,7 @@
             "auditor_comment": "purpose was not asked to auditor",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.353Z",
             "modified_at": "2018-03-10T08:43:07.353Z"
         }
@@ -24948,6 +25091,7 @@
             "auditor_comment": "not energetic staff at all",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.354Z",
             "modified_at": "2018-03-10T08:43:07.354Z"
         }
@@ -24962,6 +25106,7 @@
             "auditor_comment": "average experience overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.354Z",
             "modified_at": "2018-03-10T08:43:07.354Z"
         }
@@ -24976,6 +25121,7 @@
             "auditor_comment": "washroom unclean as always",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.355Z",
             "modified_at": "2018-03-10T08:43:07.355Z"
         }
@@ -24990,6 +25136,7 @@
             "auditor_comment": "very good overall it was",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.377Z",
             "modified_at": "2018-03-10T08:43:07.377Z"
         }
@@ -25004,6 +25151,7 @@
             "auditor_comment": "purpose was  asked to auditor overall good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.378Z",
             "modified_at": "2018-03-10T08:43:07.378Z"
         }
@@ -25018,6 +25166,7 @@
             "auditor_comment": "not energetic staff at all there",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.378Z",
             "modified_at": "2018-03-10T08:43:07.378Z"
         }
@@ -25032,6 +25181,7 @@
             "auditor_comment": "average experience overall it was",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.379Z",
             "modified_at": "2018-03-10T08:43:07.379Z"
         }
@@ -25046,6 +25196,7 @@
             "auditor_comment": "washroom clean this time",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.380Z",
             "modified_at": "2018-03-10T08:43:07.380Z"
         }
@@ -25060,6 +25211,7 @@
             "auditor_comment": "dirty showroom",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.402Z",
             "modified_at": "2018-03-10T08:43:07.402Z"
         }
@@ -25074,6 +25226,7 @@
             "auditor_comment": "signage is clearly visible",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.403Z",
             "modified_at": "2018-03-10T08:43:07.403Z"
         }
@@ -25088,6 +25241,7 @@
             "auditor_comment": "very good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.404Z",
             "modified_at": "2018-03-10T08:43:07.404Z"
         }
@@ -25102,6 +25256,7 @@
             "auditor_comment": "overall good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.405Z",
             "modified_at": "2018-03-10T08:43:07.405Z"
         }
@@ -25116,6 +25271,7 @@
             "auditor_comment": "it was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.405Z",
             "modified_at": "2018-03-10T08:43:07.405Z"
         }
@@ -25130,6 +25286,7 @@
             "auditor_comment": "There was no parking space at all, I had to park my vehicle two blocks away. Also the showroom was not visible from main road.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.454Z",
             "modified_at": "2018-03-10T08:43:07.454Z"
         }
@@ -25144,6 +25301,7 @@
             "auditor_comment": "The staff member was not very active in addressing my needs, did not ask about my preference.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.455Z",
             "modified_at": "2018-03-10T08:43:07.455Z"
         }
@@ -25158,6 +25316,7 @@
             "auditor_comment": "The staff was very well behaved and was proactive during interaction with me.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.456Z",
             "modified_at": "2018-03-10T08:43:07.456Z"
         }
@@ -25172,6 +25331,7 @@
             "auditor_comment": "The staff did not try to convince me to make a purchase, he was very uninterested and did not initiate conversations regarding products.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.457Z",
             "modified_at": "2018-03-10T08:43:07.457Z"
         }
@@ -25186,6 +25346,7 @@
             "auditor_comment": "The washroom was not kept clean at all, neither the accessories were there for use.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.457Z",
             "modified_at": "2018-03-10T08:43:07.457Z"
         }
@@ -25200,6 +25361,7 @@
             "auditor_comment": "The showroom was easily locatable and visible form main road, but no security guard on entry.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.475Z",
             "modified_at": "2018-03-10T08:43:07.475Z"
         }
@@ -25214,6 +25376,7 @@
             "auditor_comment": "The staff was god in explaining product details, very knowledgeable person.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.475Z",
             "modified_at": "2018-03-10T08:43:07.475Z"
         }
@@ -25228,6 +25391,7 @@
             "auditor_comment": "The staff was least interested in helping me out find a suitable product as per my choice.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.476Z",
             "modified_at": "2018-03-10T08:43:07.476Z"
         }
@@ -25242,6 +25406,7 @@
             "auditor_comment": "The staff was not very much involved in interaction during my visit.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.477Z",
             "modified_at": "2018-03-10T08:43:07.477Z"
         }
@@ -25256,6 +25421,7 @@
             "auditor_comment": "The display area was in a mess with all products scattered everywhere.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.478Z",
             "modified_at": "2018-03-10T08:43:07.478Z"
         }
@@ -25270,6 +25436,7 @@
             "auditor_comment": "The outlet was easily visible and had comfortable parking space as well. It was very convenient for me to park my vehicle.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.495Z",
             "modified_at": "2018-03-10T08:43:07.495Z"
         }
@@ -25284,6 +25451,7 @@
             "auditor_comment": "The staff was just showing products in front of him, no interactiveness from his side.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.495Z",
             "modified_at": "2018-03-10T08:43:07.495Z"
         }
@@ -25298,6 +25466,7 @@
             "auditor_comment": "The staff did not introduce proactively, also no name badge visible.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.496Z",
             "modified_at": "2018-03-10T08:43:07.496Z"
         }
@@ -25312,6 +25481,7 @@
             "auditor_comment": "The staff did try to convince me to upgrade my product and buy the better one.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.497Z",
             "modified_at": "2018-03-10T08:43:07.497Z"
         }
@@ -25326,6 +25496,7 @@
             "auditor_comment": "The AC was not working properly, it was very hot inside the outlet. Also washroom was not clean. It was stinking.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.498Z",
             "modified_at": "2018-03-10T08:43:07.498Z"
         }
@@ -25340,6 +25511,7 @@
             "auditor_comment": "No place for helmets and to keep belongings",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.521Z",
             "modified_at": "2018-03-10T08:43:07.521Z"
         }
@@ -25354,6 +25526,7 @@
             "auditor_comment": "No one addressed me upon arrival, I myself have to go and ask for help at display counter",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.522Z",
             "modified_at": "2018-03-10T08:43:07.522Z"
         }
@@ -25368,6 +25541,7 @@
             "auditor_comment": "No proper uniform, also no name badge visible",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.524Z",
             "modified_at": "2018-03-10T08:43:07.524Z"
         }
@@ -25382,6 +25556,7 @@
             "auditor_comment": "Unclean washroom vey dirty and stinking as well.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.525Z",
             "modified_at": "2018-03-10T08:43:07.525Z"
         }
@@ -25396,6 +25571,7 @@
             "auditor_comment": "Staff member was not friendly at all, not happy with overall behaviour during interaction.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.526Z",
             "modified_at": "2018-03-10T08:43:07.526Z"
         }
@@ -25410,6 +25586,7 @@
             "auditor_comment": "Did not put much effort to close the deal with me",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.549Z",
             "modified_at": "2018-03-10T08:43:07.549Z"
         }
@@ -25424,6 +25601,7 @@
             "auditor_comment": "Parking space a problem at outlet",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.550Z",
             "modified_at": "2018-03-10T08:43:07.550Z"
         }
@@ -25438,6 +25616,7 @@
             "auditor_comment": "Staff was not suggestive regarding products",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.551Z",
             "modified_at": "2018-03-10T08:43:07.551Z"
         }
@@ -25452,6 +25631,7 @@
             "auditor_comment": "The staff did not address me by Sir.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.551Z",
             "modified_at": "2018-03-10T08:43:07.551Z"
         }
@@ -25466,6 +25646,7 @@
             "auditor_comment": "Dirt lying on the floor, as it had just rained outside.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.552Z",
             "modified_at": "2018-03-10T08:43:07.552Z"
         }
@@ -25480,6 +25661,7 @@
             "auditor_comment": "Good outlet with proper cleanliness",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.581Z",
             "modified_at": "2018-03-10T08:43:07.581Z"
         }
@@ -25494,6 +25676,7 @@
             "auditor_comment": "Nice visibility and ample parking space available",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.581Z",
             "modified_at": "2018-03-10T08:43:07.581Z"
         }
@@ -25508,6 +25691,7 @@
             "auditor_comment": "No recommendation from the staff, very less interactive from their part.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.582Z",
             "modified_at": "2018-03-10T08:43:07.582Z"
         }
@@ -25522,6 +25706,7 @@
             "auditor_comment": "Good behaviour and professional approach towards customers",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.583Z",
             "modified_at": "2018-03-10T08:43:07.583Z"
         }
@@ -25536,6 +25721,7 @@
             "auditor_comment": "Nice selling skills and good approach for pitching products",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.583Z",
             "modified_at": "2018-03-10T08:43:07.583Z"
         }
@@ -25550,6 +25736,7 @@
             "auditor_comment": "The door mat was very dirty, also no security guard present at the main door.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.617Z",
             "modified_at": "2018-03-10T08:43:07.617Z"
         }
@@ -25564,6 +25751,7 @@
             "auditor_comment": "The staff was very professional in addressing me and also thoroughly enquired about my needs.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.618Z",
             "modified_at": "2018-03-10T08:43:07.618Z"
         }
@@ -25578,6 +25766,7 @@
             "auditor_comment": "The staff member was no wearing proper uniform his uniform was not ironed neither he was wearing a name badge.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.619Z",
             "modified_at": "2018-03-10T08:43:07.619Z"
         }
@@ -25592,6 +25781,7 @@
             "auditor_comment": "The staff member did not seemed interested at all in presenting the products, he looked very tired and low on energy.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.620Z",
             "modified_at": "2018-03-10T08:43:07.620Z"
         }
@@ -25606,6 +25796,7 @@
             "auditor_comment": "The outlet was well maintained and very clean. Washroom was also tidy.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.620Z",
             "modified_at": "2018-03-10T08:43:07.620Z"
         }
@@ -25620,6 +25811,7 @@
             "auditor_comment": "Parking my car was a problem. Had to park car far away from showroom.",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.642Z",
             "modified_at": "2018-03-10T08:43:07.642Z"
         }
@@ -25634,6 +25826,7 @@
             "auditor_comment": "All my queries were sorted",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.643Z",
             "modified_at": "2018-03-10T08:43:07.643Z"
         }
@@ -25648,6 +25841,7 @@
             "auditor_comment": "Staff was cordial",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.644Z",
             "modified_at": "2018-03-10T08:43:07.644Z"
         }
@@ -25662,6 +25856,7 @@
             "auditor_comment": "Did not ask for my budget",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.645Z",
             "modified_at": "2018-03-10T08:43:07.645Z"
         }
@@ -25676,6 +25871,7 @@
             "auditor_comment": "AC was too cold",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.645Z",
             "modified_at": "2018-03-10T08:43:07.645Z"
         }
@@ -25690,6 +25886,7 @@
             "auditor_comment": "outlet not visible",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.659Z",
             "modified_at": "2018-03-10T08:43:07.659Z"
         }
@@ -25704,6 +25901,7 @@
             "auditor_comment": "staff was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.660Z",
             "modified_at": "2018-03-10T08:43:07.660Z"
         }
@@ -25718,6 +25916,7 @@
             "auditor_comment": "no mane badge",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.660Z",
             "modified_at": "2018-03-10T08:43:07.660Z"
         }
@@ -25732,6 +25931,7 @@
             "auditor_comment": "the staff was less interactive",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.661Z",
             "modified_at": "2018-03-10T08:43:07.661Z"
         }
@@ -25746,6 +25946,7 @@
             "auditor_comment": "washroom was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.661Z",
             "modified_at": "2018-03-10T08:43:07.661Z"
         }
@@ -25760,6 +25961,7 @@
             "auditor_comment": "everything was good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.676Z",
             "modified_at": "2018-03-10T08:43:07.676Z"
         }
@@ -25774,6 +25976,7 @@
             "auditor_comment": "staff was fine here",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.676Z",
             "modified_at": "2018-03-10T08:43:07.676Z"
         }
@@ -25788,6 +25991,7 @@
             "auditor_comment": "no mane badge on staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.676Z",
             "modified_at": "2018-03-10T08:43:07.676Z"
         }
@@ -25802,6 +26006,7 @@
             "auditor_comment": "staff less attentive",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.677Z",
             "modified_at": "2018-03-10T08:43:07.677Z"
         }
@@ -25816,6 +26021,7 @@
             "auditor_comment": "washroom was fine showroom was bad",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.678Z",
             "modified_at": "2018-03-10T08:43:07.678Z"
         }
@@ -25830,6 +26036,7 @@
             "auditor_comment": "everything was good at outlet",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.699Z",
             "modified_at": "2018-03-10T08:43:07.699Z"
         }
@@ -25844,6 +26051,7 @@
             "auditor_comment": "staff was fine here overall",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.700Z",
             "modified_at": "2018-03-10T08:43:07.700Z"
         }
@@ -25858,6 +26066,7 @@
             "auditor_comment": "staff was good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.701Z",
             "modified_at": "2018-03-10T08:43:07.701Z"
         }
@@ -25872,6 +26081,7 @@
             "auditor_comment": "staff less attentive but good enough",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.702Z",
             "modified_at": "2018-03-10T08:43:07.702Z"
         }
@@ -25886,6 +26096,7 @@
             "auditor_comment": "all good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.702Z",
             "modified_at": "2018-03-10T08:43:07.702Z"
         }
@@ -25900,6 +26111,7 @@
             "auditor_comment": "not much effort put in by staff",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.717Z",
             "modified_at": "2018-03-10T08:43:07.717Z"
         }
@@ -25914,6 +26126,7 @@
             "auditor_comment": "washroom was fine",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.717Z",
             "modified_at": "2018-03-10T08:43:07.717Z"
         }
@@ -25928,6 +26141,7 @@
             "auditor_comment": "no place for helmet",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.718Z",
             "modified_at": "2018-03-10T08:43:07.718Z"
         }
@@ -25942,6 +26156,7 @@
             "auditor_comment": "average experience",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.718Z",
             "modified_at": "2018-03-10T08:43:07.718Z"
         }
@@ -25956,6 +26171,7 @@
             "auditor_comment": "staff was good",
             "auditor_comment_original": "",
             "not_applicable": false,
+            "report_section_percentage": 75,
             "created_at": "2018-03-10T08:43:07.719Z",
             "modified_at": "2018-03-10T08:43:07.719Z"
         }

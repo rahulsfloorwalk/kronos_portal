@@ -127,7 +127,8 @@ class AuditStoreSerializer(ModelSerializer):
             'audit',
             'color',
             'attribute_data',
-            'percentage'
+            # 'percentage',
+            'audit_store_percentage'
         )
         read_only_fields = fields
 
