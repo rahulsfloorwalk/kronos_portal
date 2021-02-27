@@ -206,7 +206,7 @@ class AuditStore(Model):
         self.save()
 
     def color(self):
-        return get_color_code_by_percentage(self.percentage())
+        return get_color_code_by_percentage(self.audit_store_percentage)
 
     def is_withdrawable(self):
         return self.status in self._WITHDRAWABLE_STATUSES

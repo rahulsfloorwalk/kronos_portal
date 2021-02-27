@@ -218,8 +218,8 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 # prefetch report_sections, questions and answers for the given sections
                 'report_sections',
                 'report_sections__section',
-                'report_sections__section__questions',
-                'report_sections__section__questions__answers',
+                # 'report_sections__section__questions',
+                # 'report_sections__section__questions__answers',
             )
     else:
         non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(client_user.id)
@@ -244,12 +244,13 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
                 # prefetch report_sections, questions and answers for the given sections
                 'report_sections',
                 'report_sections__section',
-                'report_sections__section__questions',
-                'report_sections__section__questions__answers',
+                # 'report_sections__section__questions',
+                # 'report_sections__section__questions__answers',
             )
 
     for audit_store in qs:
-        total_pct = audit_store.percentage()
+        # total_pct = audit_store.percentage()
+        total_pct = audit_store.audit_store_percentage
         audit_stores.append({
             'audit_store_id': audit_store.id,
             'audit_date': audit_store.audit_date,
@@ -292,7 +293,8 @@ def __get_mean_for_sections(sections, audit_stores):
                 if rs.section_id == section.id:
                     report_section = rs
             if not report_section.not_applicable:
-                total_percentage += report_section.marks_percentage()
+                # total_percentage += report_section.marks_percentage()
+                total_percentage += report_section.report_section_percentage
                 count += 1
 
         if count > 0:

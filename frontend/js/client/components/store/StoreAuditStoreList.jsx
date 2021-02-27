@@ -48,7 +48,7 @@ export default class StoreAuditStoreList extends Component{
 					<td><big><b>{ac_name}</b></big></td>
 					<td>{q_type}</td>
 					<td className={"text-right "+getColor(as.color)}>{moment(as.audit_date).format(momentDateFormat)}</td>
-					<td className={"text-right "+getColor(as.color)}>{as.percentage}%</td>
+					<td className={"text-right "+getColor(as.color)}>{as.audit_store_percentage}%</td>
 					<td className={"text-right "+getColor(as.color)}><Link to={`/audit_store/${as.id}`} className="btn btn-sm btn-default">View</Link></td>
 				</tr>);
 		});

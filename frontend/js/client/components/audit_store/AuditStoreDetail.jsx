@@ -241,7 +241,7 @@ export default class AuditStoreDetail extends React.Component {
 						<AuditStoreDetailsBox auditStore={this.state.auditStore}/>
 					</div>
 					<div className="col-md-6">
-						<OverallExperienceGauge colorCode={this.state.auditStore.color} value={this.state.auditStore.percentage}/>
+						<OverallExperienceGauge colorCode={this.state.auditStore.color} value={this.state.auditStore.audit_store_percentage}/>
 					</div>
 				</div>
 				{ this.state.impactFactors && this.state.impactFactors.length > 0 ?

@@ -53,7 +53,7 @@ const AuditStoreDetailsBox = (props) => {
 				</tr>
 				<tr>
 					<td className="text-right">Overall Experience:</td>
-					<th>{props.auditStore.percentage}%</th>
+					<th>{props.auditStore.audit_store_percentage}%</th>
 				</tr>
 			</tbody>
 		</table>
@@ -63,7 +63,7 @@ const AuditStoreDetailsBox = (props) => {
 AuditStoreDetailsBox.propTypes = {
 	auditStore: PropTypes.shape({
 		audit_date: PropTypes.string.isRequired,
-		percentage: PropTypes.number,
+		audit_store_percentage: PropTypes.number,
 		audit: PropTypes.shape({
 			audit_cycle: PropTypes.shape({
 				type: PropTypes.string,

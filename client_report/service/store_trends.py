@@ -65,8 +65,8 @@ def get_performing_stores_by_audit_cycle_id(audit_cycle, user_id):
             'audit__store__city',
             'report_sections',
             'report_sections__section',
-            'report_sections__section__questions',
-            'report_sections__section__questions__answers',
+            # 'report_sections__section__questions',
+            # 'report_sections__section__questions__answers',
         )
     else:
         non_admin_user_store = client_user_service.find_non_client_admin_user_store_by_client_user_id(client_user.id)
@@ -79,8 +79,8 @@ def get_performing_stores_by_audit_cycle_id(audit_cycle, user_id):
             'audit__store__city',
             'report_sections',
             'report_sections__section',
-            'report_sections__section__questions',
-            'report_sections__section__questions__answers',
+            # 'report_sections__section__questions',
+            # 'report_sections__section__questions__answers',
         )
     stores = []
     store_dict = {}
@@ -93,7 +93,8 @@ def get_performing_stores_by_audit_cycle_id(audit_cycle, user_id):
         obtained = 0
         count = 0
         for i in store_dict[store]:
-            obtained += i.percentage()
+            # obtained += i.percentage()
+            obtained += i.audit_store_percentage
             count += 1
         k = Store.objects.get(id=store)
         stores.append(({
@@ -206,8 +207,8 @@ def get_performing_stores_by_type_by_audit_cycle_id_for_clientuser(questionnaire
         Prefetch('audits__audit_stores', queryset=AuditStore.objects.presentable()),
         'audits__audit_stores__report_sections',
         'audits__audit_stores__report_sections__section',
-        'audits__audit_stores__report_sections__section__questions',
-        'audits__audit_stores__report_sections__section__questions__answers',
+        # 'audits__audit_stores__report_sections__section__questions',
+        # 'audits__audit_stores__report_sections__section__questions__answers',
     )
 
     audit_cycle_names = []

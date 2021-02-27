@@ -70,7 +70,7 @@ const sampleAuditStore = {
 		}
 	},
 	"color": 4,
-	"percentage": 81,
+	"audit_store_percentage": 81,
 };
 
 const sampleSections = [
