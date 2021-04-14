@@ -11,13 +11,13 @@ workflows:
       - pytest
       - jstest
       - jslint
-      - pylint
+#      - pylint
       - package:
           requires:
             - pytest
             - jstest
             - jslint
-            - pylint
+#            - pylint
           filters:
             branches:
               only:
@@ -172,19 +172,19 @@ jobs:
       - store_test_results:
           path: test-results
 
-  pylint:
-    docker:
-      - image: circleci/python:3.5.4-node
-
-    steps:
-      - checkout
-      - py-restore-cache
-
-      - run:
-          name: run the linter
-          command: |
-            . venv/bin/activate
-            flake8 --config=.flake8rc
+#  pylint:
+#    docker:
+#      - image: circleci/python:3.5.4-node
+#
+#    steps:
+#      - checkout
+#      - py-restore-cache
+#
+#      - run:
+#          name: run the linter
+#          command: |
+#            . venv/bin/activate
+#            flake8 --config=.flake8rc
 
   jstest:
     docker:
