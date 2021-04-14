@@ -217,7 +217,7 @@ class AttachmentUploadBox extends React.Component {
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} key={a.id} user="auditor" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} deletable={deletable} onDelete={() => this.attachmentDeleteClicked(a)} onSelect={() => this.attachmentSelected(a)} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} key={a.id} user="auditor" editable={this.props.editable} faulty_report_id="" proof_tags={this.state.proof_tags} section_id={0} onChange={this.saveAttachmentTag}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -237,6 +237,7 @@ class AttachmentUploadBox extends React.Component {
 			proof_tags={this.state.proof_tags}
 			// onRename={this.attachmentRenamed}
 			onDelete={() => this.attachmentDeleteClicked(this.state.selectedAttachment)}
+			section_id={0}
 			onChange={this.saveAttachmentTag}/>;
 
 		// var selectSection = null;

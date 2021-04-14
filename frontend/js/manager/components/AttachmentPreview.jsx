@@ -260,7 +260,7 @@ export default class AttachmentPreview extends React.Component {
 		let option_tag_list = [];
 
 		for(let p of this.props.proof_tags){
-			option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag.name}</option>);
+			option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
 		}
 
 		let proof_tag_select_box_value;

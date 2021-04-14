@@ -488,7 +488,7 @@ class SectionAttachmentBox extends React.Component{
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
 			attachmentRows.push(
-				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.props.proof_tags} onChange={this.saveAttachmentTag}/>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.props.proof_tags} section_id={this.props.sectionId} onChange={this.saveAttachmentTag}/>
 			);
 		}
 		for(let id in this.state.inProgress){
@@ -567,6 +567,7 @@ class SectionAttachmentBox extends React.Component{
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
 						onChange={this.saveAttachmentTag}
 						rotateImage={this.rotateImage}
+						section_id={this.props.sectionId}
 						disableRotateButton={this.state.disableRotateButton}/>
 				</div>
 			</div>

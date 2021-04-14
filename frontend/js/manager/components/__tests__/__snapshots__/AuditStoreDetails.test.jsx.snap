@@ -74,7 +74,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
         </button>
         <DropDown>
           <li>
-            <ThumbsDown />
             <Link
               onlyActiveOnIndex={false}
               style={Object {}}
@@ -626,7 +625,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
         </button>
         <DropDown>
           <li>
-            <ThumbsDown />
             <Link
               onlyActiveOnIndex={false}
               style={Object {}}
@@ -1668,7 +1666,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
         </button>
         <DropDown>
           <li>
-            <ThumbsDown />
             <Link
               onlyActiveOnIndex={false}
               style={Object {}}
@@ -2227,7 +2224,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
         </button>
         <DropDown>
           <li>
-            <ThumbsDown />
             <Link
               onlyActiveOnIndex={false}
               style={Object {}}
@@ -3278,6 +3274,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
          Excel Report
       </a>
        
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+        <DropDown>
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Revoke Report
+            </a>
+          </li>
+        </DropDown>
+      </div>
     </div>
   </h2>
   <div
@@ -3780,7 +3796,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
         </button>
         <DropDown>
           <li>
-            <ThumbsDown />
             <Link
               onlyActiveOnIndex={false}
               style={Object {}}
@@ -4834,7 +4849,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
         </button>
         <DropDown>
           <li>
-            <ThumbsDown />
             <Link
               onlyActiveOnIndex={false}
               style={Object {}}
@@ -5386,6 +5400,26 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
          Excel Report
       </a>
        
+      <div
+        className="btn-group"
+      >
+        <button
+          className="btn btn-default"
+          onClick={[Function]}
+          type="button"
+        >
+          More Options
+        </button>
+        <DropDown>
+          <li>
+            <a
+              onClick={[Function]}
+            >
+              Revoke Report
+            </a>
+          </li>
+        </DropDown>
+      </div>
     </div>
   </h2>
   <div

@@ -5,7 +5,8 @@ from rest_framework.serializers import Serializer, CharField, BooleanField
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
-from ..serializers import ProofTagSerializer, AuditCycleSerializer, AuditCycleProofTagListSerializer
+# from ..serializers import ProofTagSerializer, AuditCycleSerializer, AuditCycleProofTagListSerializer
+from ..serializers import ProofTagSerializer, AuditCycleSerializer
 from ..service import proof_tag as proof_tag_service
 from audit.service import audit_cycle_proof_tag as audit_cycle_proof_tag_service
 
@@ -79,4 +80,5 @@ class AttachmentAuditCycleProofTagList(APIView):
     }
     def get(self,request, audit_cycle_id):
         proof_tags = audit_cycle_proof_tag_service.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
-        return Response(AuditCycleProofTagListSerializer(proof_tags, many=True).data)
+        # return Response(AuditCycleProofTagListSerializer(proof_tags, many=True).data)
+        return Response(proof_tags)

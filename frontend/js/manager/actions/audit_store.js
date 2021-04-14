@@ -291,3 +291,30 @@ export function setReportSummary(auditStoreId, reportSummary){
 		});
 	};
 }
+
+export function revertAuditStore(auditStoreId){
+	return function(dispatch){
+		dispatch({
+			type: types.AUDIT_STORE_ID_REVERT,
+			status: "request",
+			auditStoreId
+		});
+
+		let promise = $.post(url.api_base_path + `manager/audit_store/${auditStoreId}/revert_report`);
+		promise.then(function(auditStore){
+			dispatch({
+				type: types.AUDIT_STORE_ID_REVERT,
+				status: "success",
+				auditStore
+			});
+		}, function(err){
+			dispatch({
+				type: types.AUDIT_STORE_ID_REVERT,
+				status: "error",
+				errors: err.responseJSON || {}
+			});
+		});
+
+		return promise;
+	};
+}

@@ -475,6 +475,7 @@ class SectionAttachmentBox extends React.Component{
 				faulty_report_id={a.faulty_report_id}
 				faulty_attachment_url={a.faulty_attachment_url}
 				proof_tags={this.props.proof_tags}
+				section_id={this.props.sectionId}
 				onChange={this.saveAttachmentTag}
 			/>);
 		}
@@ -542,6 +543,7 @@ class SectionAttachmentBox extends React.Component{
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
 						onChange={this.saveAttachmentTag}
 						rotateImage={this.rotateImage}
+						section_id={this.props.sectionId}
 						disableRotateButton={this.state.disableRotateButton}/>
 				</div>
 			</div>

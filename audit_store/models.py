@@ -387,6 +387,10 @@ class AuditStore(Model):
         self._change_status(AuditStore.ACKNOWLEDGED, by, message)
 
     @atomic
+    def revert_report(self, *args, by, status):
+        self._change_status(status, by)
+
+    @atomic
     def qa_ok(self, *args, by):
         if not self.is_completable():
             raise AppLogicError("Report is not complete.")

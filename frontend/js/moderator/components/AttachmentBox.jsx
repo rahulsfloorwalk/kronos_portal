@@ -239,7 +239,7 @@ export default class AttachmentBox extends React.Component {
 
 		var attachmentRows = [];
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="moderator" editable={this.props.editable} deletable={this.props.editable} faulty_report_id={a.faulty_report_id} faulty_attachment_url={a.faulty_attachment_url} proof_tags={this.state.proof_tags} onChange={this.saveAttachmentTag}/>);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="moderator" editable={this.props.editable} deletable={this.props.editable} faulty_report_id={a.faulty_report_id} faulty_attachment_url={a.faulty_attachment_url} proof_tags={this.state.proof_tags} section_id={0} onChange={this.saveAttachmentTag}/>);
 		}
 
 		for(let id in this.state.inProgress){
@@ -262,6 +262,7 @@ export default class AttachmentBox extends React.Component {
 			onDelete={this.deleteButtonClicked}
 			onChange={this.saveAttachmentTag}
 			rotateImage={this.rotateImage}
+			section_id={0}
 			disableRotateButton={this.state.disableRotateButton}/>;
 
 		let uploadButton;

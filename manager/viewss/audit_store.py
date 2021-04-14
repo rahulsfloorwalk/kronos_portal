@@ -289,6 +289,17 @@ class AuditStoreIdFailView(APIView):
         audit_store = service_manager.fail_report(audit_store_id, request.user.id, ds.validated_data['message'])
         return Response(AuditStoreSerializer(audit_store).data)
 
+
+class AuditStoreIdRevertReportView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_store_id):
+        audit_store = service_manager.revert_report(audit_store_id, request.user.id)
+        return Response(AuditStoreSerializer(audit_store).data)
+
+
 class AuditStoreIdSubmitView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -216,6 +216,7 @@ export default class SectionAttachmentBox extends React.Component{
 				editable = {this.props.editable}
 				faulty_report_id=""
 				proof_tags= {this.props.proof_tags}
+				section_id= {this.props.sectionId}
 				onChange= {this.saveAttachmentTag}
 			/>);
 		}
@@ -313,6 +314,7 @@ export default class SectionAttachmentBox extends React.Component{
 						proof_tags={this.props.proof_tags}
 						// onRename={this.selectedAttachmentRenamed}
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
+						section_id={this.props.sectionId}
 						onChange={this.saveAttachmentTag}/>
 				</div>
 			</div>

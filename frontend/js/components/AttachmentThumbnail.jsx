@@ -36,7 +36,8 @@ export default class AttachmentThumbnail extends Component{
 
 		proof_tags: PropTypes.array,
 		onChange: PropTypes.func,
-		faulty_attachment_url : PropTypes.string
+		faulty_attachment_url : PropTypes.string,
+		section_id: PropTypes.oneOfType([PropTypes.string,PropTypes.number])
 	};
 
 	constructor(props){
@@ -166,9 +167,17 @@ export default class AttachmentThumbnail extends Component{
 		let deleteButton;
 		let proof_tag_select_box;
 		let option_tag_list = [];
-
-		for(let p of this.props.proof_tags){
-			option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag.name}</option>);
+		if(this.props.user == "auditor"){
+			for(let p of this.props.proof_tags){
+				if(p.section_id === this.props.section_id){
+					option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
+				}
+			}
+		}
+		else{
+			for(let p of this.props.proof_tags){
+				option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
+			}
 		}
 
 		if( this.props.deletable && this.props.onDelete){
