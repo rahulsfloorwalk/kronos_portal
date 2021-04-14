@@ -40,7 +40,8 @@ from auditor.service import profile_info_service
 from auditor.service import additional_info_service
 from auditor.service import bank_info_service
 from audit.service import audit_cycle_proof_tag
-from .serializers import AuditCycleProoftagListSerializer
+# from .serializers import AuditCycleProoftagListSerializer
+
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -688,7 +689,8 @@ class AttachmentProofTagList(APIView):
     }
     def get(self, request, audit_cycle_id):
         proof_tag = audit_cycle_proof_tag.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
-        return Response(AuditCycleProoftagListSerializer(proof_tag, many=True).data)
+        # return Response(AuditCycleProoftagListSerializer(proof_tag, many=True).data)
+        return Response(proof_tag)
 
 
 class AttachmentIdProofTagView(APIView):

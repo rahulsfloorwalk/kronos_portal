@@ -27,7 +27,7 @@ from .serializers import AttachmentSerializer
 from .serializers import SectionSerializer
 from .serializers import ReportSectionSerializer
 from .serializers import AnswerSerializer
-from .serializers import AuditCycleProoftagListSerializer
+# from .serializers import AuditCycleProoftagListSerializer
 
 
 class AuditCycleView(APIView):
@@ -402,7 +402,8 @@ class AttachmentProofTagList(APIView):
     }
     def get(self, request, audit_cycle_id):
         proof_tag = audit_cycle_proof_tag_service.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
-        return Response(AuditCycleProoftagListSerializer(proof_tag, many=True).data)
+        # return Response(AuditCycleProoftagListSerializer(proof_tag, many=True).data)
+        return Response(proof_tag)
 
 
 class AttachmentIdProofTagView(APIView):

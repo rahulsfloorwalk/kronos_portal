@@ -26,6 +26,7 @@ export default (state={}, action) => {
 	case types.AUDIT_STORE_ID_PAY:
 	case types.AUDIT_STORE_ID_UNPAY:
 	case types.AUDIT_STORE_UPDATED:
+	case types.AUDIT_STORE_ID_REVERT:
 		return Object.assign({}, state, {
 			[action.auditStore.id]: action.auditStore,
 		});

@@ -54,6 +54,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/submit$', audit_store_views.AuditStoreIdSubmitView.as_view(), name='audit_store_id_submit_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/withdraw$', audit_store_views.AuditStoreIdWithdrawView.as_view(), name='audit_store_id_withdraw_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/fail$', audit_store_views.AuditStoreIdFailView.as_view(), name='audit_store_id_fail_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/revert_report$', audit_store_views.AuditStoreIdRevertReportView.as_view(), name='audit_store_id_revert_report_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/qa_ok$', audit_store_views.AuditStoreIdQAOKView.as_view(), name='audit_store_id_qa_ok_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/pm_revert$', audit_store_views.AuditStoreIdPMRevertView.as_view(), name='audit_store_id_pm_revert_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/complete$', audit_store_views.AuditStoreIdCompleteView.as_view(), name='audit_store_id_complete_view'),

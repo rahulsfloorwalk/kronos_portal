@@ -144,7 +144,9 @@ export default class AttachmentPreview extends React.Component {
 		onDelete: PropTypes.func,
 		// onRename: PropTypes.func,
 		proof_tags: PropTypes.array,
-		onChange: PropTypes.func
+		onChange: PropTypes.func,
+		section_id: PropTypes.oneOfType([PropTypes.string,PropTypes.number]),
+		user: PropTypes.string
 	};
 
 	state = {
@@ -175,8 +177,17 @@ export default class AttachmentPreview extends React.Component {
 		let proof_tag_select_box;
 		let option_tag_list = [];
 
-		for(let p of this.props.proof_tags){
-			option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag.name}</option>);
+		if(this.props.user == "auditor"){
+			for(let p of this.props.proof_tags){
+				if(p.section_id === this.props.section_id){
+					option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
+				}
+			}
+		}
+		else{
+			for(let p of this.props.proof_tags){
+				option_tag_list.push(<option key={p.id} value={p.id}>{p.proof_tag}</option>);
+			}
 		}
 
 		let proof_tag_select_box_value;

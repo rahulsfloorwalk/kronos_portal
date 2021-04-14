@@ -5,7 +5,7 @@ from registration.service import manager as manager_service
 from answer.models import ReportSection
 from auditor.service.application_service import change_application_status_to_withdrawn
 from registration.service.moderator import find_moderator_by_user_id
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore, ReportStatusLog
 from audit.models import AuditCycle
 from attachment.service import set_attachment_by_proof_tag
 
@@ -141,3 +141,19 @@ def find_qa_pending_audit_stores_of_moderator_for_manager(user_id):
     ).order_by('audit_date')
 
     return get_objects_for_user(user, 'moderator_manage', klass=query_set)
+
+
+def revert_report(audit_store_id, user_id):
+    audit_store = audit_store_service.find_by_id(audit_store_id)
+    user = manager_service.find_manager_by_user_id(user_id)
+    report_status = ReportStatusLog.objects.filter(audit_store_id=audit_store_id)\
+        .exclude(status__in=[AuditStore.FAILED, AuditStore.WITHDRAWN]).order_by('-id')[0].status
+    if report_status == AuditStore.ASSIGNED or report_status == AuditStore.ACKNOWLEDGED:
+        audit_store.revert_report(by=user, status=AuditStore.ACKNOWLEDGED)
+    elif report_status == AuditStore.SUBMITTED:
+        audit_store.revert_report(by=user, status=AuditStore.SUBMITTED)
+    elif report_status == AuditStore.PM_REVIEW:
+        audit_store.revert_report(by=user, status=AuditStore.PM_REVIEW)
+    else:
+        audit_store.revert_report(by=user, status=AuditStore.COMPLETED)
+    return audit_store

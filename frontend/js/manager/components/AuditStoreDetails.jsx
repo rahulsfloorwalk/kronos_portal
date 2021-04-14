@@ -25,10 +25,11 @@ import { fetchAuditStore,
 	acceptAuditStore,
 	rejectAuditStore,
 	pmRevertAuditStore,
+	revertAuditStore
 } from "../actions/audit_store.js";
 import { setAuditDate, setAuditModeratorStatus, setAuditModeratorComment, saveCheckList, arrangeAttachment, unSubmitAuditStore } from "../service/audit_store.js";
 
-import { Calendar, Retweet, King, File, Download, ThumbsDown } from "../../components/Icons.jsx";
+import { Calendar, Retweet, King, File, Download } from "../../components/Icons.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
@@ -101,6 +102,11 @@ export class AuditStoreDetails extends React.Component{
 	withdrawButtonClicked = () => {
 		this.props.dispatch(withdrawAuditStore(this.props.params.auditStoreId)).then(()=>{
 			Alert.success("REPORT WITHDRAWN");
+		});
+	};
+	revertButtonClicked = () => {
+		this.props.dispatch(revertAuditStore(this.props.params.auditStoreId)).then(()=>{
+			Alert.success("REPORT REVERTED");
 		});
 	};
 	qaOkButtonClicked = () => {
@@ -272,12 +278,28 @@ export class AuditStoreDetails extends React.Component{
 				</button>
 				<DropDown ref={(d) => this.moreOptionsDropdown=d}>
 					<li>
-						<ThumbsDown/><Link to={`/audit_store/${this.props.auditStore.id}/fail_report_message`}>Fail Report</Link>
+						<Link to={`/audit_store/${this.props.auditStore.id}/fail_report_message`}>Fail Report</Link>
 					</li>
 					<DropDownDivider/>
 					<li>
 						<a onClick={this.withdrawButtonClicked}>
 							Withdraw Report
+						</a>
+					</li>
+				</DropDown>
+			</div>);
+		}
+		if(this.props.auditStore.status === "FAILED" ||
+			this.props.auditStore.status === "WITHDRAWN"){
+			moreOptionsDropdown = (<div className="btn-group">
+				<button type="button" className="btn btn-default"
+					onClick={(e)=>{e.stopPropagation(); this.moreOptionsDropdown && this.moreOptionsDropdown.toggle();}}>
+					More Options
+				</button>
+				<DropDown ref={(d) => this.moreOptionsDropdown=d}>
+					<li>
+						<a onClick={this.revertButtonClicked}>
+							Revoke Report
 						</a>
 					</li>
 				</DropDown>
