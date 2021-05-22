@@ -17,6 +17,8 @@ from audit.service import audit_cycle as audit_cycle_service
 from auditor.service import profile_info_service
 from auditor.service import bank_info_service
 from auditor.service import preferences_service
+from kronos.utils import today_ist
+from datetime import timedelta
 
 
 def get_applications(profileinfo_id):
@@ -281,3 +283,15 @@ def change_application_status_to_withdrawn(audit_store_id):
         audit_application_obj.status = AuditApplication.WITHDRAWN
         return audit_application_obj
     return None
+
+
+def find_15_days_applied_audit_applications():
+    return AuditApplication.objects.filter(
+        created_at__date__lte=today_ist() - timedelta(days=15),
+        status=AuditApplication.APPLIED)
+
+
+def find_20_days_waitlist_audit_applications():
+    return AuditApplication.objects.filter(
+        created_at__date__lte=today_ist() - timedelta(days=20),
+        status=AuditApplication.WAITLISTED)

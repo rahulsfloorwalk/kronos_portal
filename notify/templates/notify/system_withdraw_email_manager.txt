@@ -1,0 +1,4 @@
+Hello,
+Audit withdraw by system of {{ client_name }} of {{ store_name }}.
+--
+Thanks and regards

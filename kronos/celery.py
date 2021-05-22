@@ -22,6 +22,8 @@ def setup_periodic_tasks(sender, **kwargs):
     # from notify.service.mail_reminders import send_pre_audit_reminders, send_on_audit_reminders, send_post_audit_reminders
     from notify.service.alert_faulty_report import find_faulty_report
     # from attachment.save_audio_transcription import save_audio_transcription
+    from notify.service.reject_audit_application import reject_audit_application
+    from notify.service.system_fail_withdraw_audit_store import fail_withdraw_audit_stores
 
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
@@ -32,12 +34,13 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(queue_at, send_mail_to_client.s())
     # setup schedules for sending reporting stats
     sender.add_periodic_task(queue_at, reporting_stats_send_mail.s())
+    sender.add_periodic_task(queue_at, fail_withdraw_audit_stores.s())
 
     # Executes every day at 0330 UTC == 0900 IST
     queue_at_9 = crontab(hour=3, minute=30)
     # This cron will send mail next day of audit date at 9 am
     sender.add_periodic_task(queue_at_9, send_on_audit_reminders.s())
-
+    sender.add_periodic_task(queue_at_9, reject_audit_application.s())
 
     # schedules for find repeated image attachment
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.

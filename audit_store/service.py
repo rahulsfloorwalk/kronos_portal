@@ -181,12 +181,14 @@ def find_for_pre_reminder():
         status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
 
+
 def find_for_on_reminder():
     return AuditStore.objects.filter(
         # audit_date=today_ist(),
         audit_date=today_ist() - timedelta(days=1),
         status__in=(AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED),
     )
+
 
 def find_for_post_reminder():
     return AuditStore.objects.filter(
@@ -383,3 +385,15 @@ def set_check_points(audit_store_id, check_points):
             db_check_points[i]['value'] = False
     audit_store.set_check_points(db_check_points)
     return audit_store
+
+
+def find_7_days_assigned_reports():
+    return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=7),
+                                     audit__audit_cycle__status=AuditCycle.ACTIVE,
+                                     status=AuditStore.ASSIGNED)
+
+
+def find_10_days_in_progress_reports():
+    return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=10),
+                                     audit__audit_cycle__status=AuditCycle.ACTIVE,
+                                     status=AuditStore.ACKNOWLEDGED)
