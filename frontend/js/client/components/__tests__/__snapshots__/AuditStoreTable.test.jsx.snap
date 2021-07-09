@@ -55,6 +55,11 @@ exports[`AuditStoreTable renders the reports 1`] = `
       <th
         className="text-right"
       >
+        Audit Details
+      </th>
+      <th
+        className="text-right"
+      >
         Brand Pitch
       </th>
       <th
@@ -115,6 +120,16 @@ exports[`AuditStoreTable renders the reports 1`] = `
         }
       >
         73%
+      </td>
+      <td
+        className="rating-bad text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
+          }
+        }
+      >
+        0%
       </td>
       <td
         className="rating-poor text-right"
@@ -192,6 +207,16 @@ exports[`AuditStoreTable renders the reports 1`] = `
         }
       >
         73%
+      </td>
+      <td
+        className="rating-bad text-right"
+        style={
+          Object {
+            "borderTop": "solid lightgray 2px",
+          }
+        }
+      >
+        0%
       </td>
       <td
         className="rating-poor text-right"

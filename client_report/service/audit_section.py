@@ -167,9 +167,10 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
 
     sections = Section.objects.filter(audit_cycle=audit_cycle).order_by('sequence')
-    # prefetch questions once and then later again with audit_stores so that query count does not blow up
-    sections = sections.prefetch_related('questions')
+    section_id_list = (s.id for s in sections if s.max_marks() > 0)
 
+    # prefetch questions once and then later again with audit_stores so that query count does not blow up
+    sections = sections.filter(id__in = section_id_list).prefetch_related('questions')
     audit_stores = []
     """
         Normal client user can't access dashboard and report browser that's why need to
@@ -264,10 +265,9 @@ def get_audit_store_aggregation_for_client(audit_cycle_id, user_id):
             'store_type': audit_store.audit.store.type,
             'store_priority': audit_store.audit.store.priority,
             'attribute_data': audit_store.attribute_data,
-            'sections': __get_mean_for_sections(sections, (audit_store,)),
+            'sections': __get_mean_for_report_browser(sections, (audit_store,)),
             'total_score': {
                 'percentage': total_pct,
-                'max_marks': audit_store.max_marks(),  # this call is inefficient right now
                 'color': get_color_code_by_percentage(total_pct),
             },
         })
@@ -309,6 +309,43 @@ def __get_mean_for_sections(sections, audit_stores):
             'section': section.name,
             'percentage': avg_percentage,
             'max_marks': section.max_marks(),  # this call is inefficient right now
+            'color': color
+        })
+    return mean
+
+
+def __get_mean_for_report_browser(sections, audit_stores):
+    mean = []
+
+    if len(audit_stores) is 0:
+        return mean
+
+    for section in sections:
+        total_percentage = 0
+        count = 0
+
+        for audit_store in audit_stores:
+            # run the find by section and audit_store in python because we have already prefetched report_sections for the audit_store
+            report_section = None
+            for rs in audit_store.report_sections.all():
+                if rs.section_id == section.id:
+                    report_section = rs
+            if not report_section.not_applicable:
+                # total_percentage += report_section.marks_percentage()
+                total_percentage += report_section.report_section_percentage
+                count += 1
+
+        if count > 0:
+            avg_percentage = int(total_percentage / count)
+        else:
+            avg_percentage = None
+
+        color = get_color_code_by_percentage(avg_percentage)
+
+        mean.append({
+            'sequence': section.sequence,
+            'section': section.name,
+            'percentage': avg_percentage,
             'color': color
         })
     return mean
