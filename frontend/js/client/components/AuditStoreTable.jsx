@@ -43,7 +43,7 @@ export class AuditStoreTable extends Component {
 		headers.push(<th key="store_name">Name</th>);
 		headers.push(<th key="date" className="text-right">Date</th>);
 		headers.push(<th key="total_score">Total Score</th>);
-		headers = headers.concat(this.props.reports[0].sections.filter(s => s.max_marks > 0).map(s => <th key={s.sequence} className="text-right">{s.section}</th>));
+		headers = headers.concat(this.props.reports[0].sections.map(s => <th key={s.sequence} className="text-right">{s.section}</th>));
 
 		const trs = [];
 		let previousStore;
@@ -62,9 +62,7 @@ export class AuditStoreTable extends Component {
 				tdStyle.borderTop = "solid lightgray 2px";
 			}
 			for(let s of r.sections){
-				if(s.max_marks > 0){
-					tds.push(<td key={s.sequence} className={getColor(s.color) + " text-right"} style={tdStyle}>{s.percentage === null ? "N/A" : s.percentage+"%" }</td>);
-				}
+				tds.push(<td key={s.sequence} className={getColor(s.color) + " text-right"} style={tdStyle}>{s.percentage === null ? "N/A" : s.percentage+"%" }</td>);
 			}
 			trs.push(
 				<tr key={r.audit_store_id} style={pointerStyle} onClick={()=> hashHistory.push(`/audit_store/${r.audit_store_id}`)}>
