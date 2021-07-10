@@ -13,3 +13,4 @@ def reject_audit_application():
     for audit_application in waitlist_audit_applications:
         audit_application.status = AuditApplication.REJECTED
         audit_application.save()
+    return len(applied_audit_applications)

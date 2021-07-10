@@ -288,10 +288,12 @@ def change_application_status_to_withdrawn(audit_store_id):
 def find_15_days_applied_audit_applications():
     return AuditApplication.objects.filter(
         created_at__date__lte=today_ist() - timedelta(days=15),
-        status=AuditApplication.APPLIED)
+        status=AuditApplication.APPLIED,
+        audit__audit_cycle__status=AuditCycle.ACTIVE)
 
 
 def find_20_days_waitlist_audit_applications():
     return AuditApplication.objects.filter(
         created_at__date__lte=today_ist() - timedelta(days=20),
-        status=AuditApplication.WAITLISTED)
+        status=AuditApplication.WAITLISTED,
+        audit__audit_cycle__status=AuditCycle.ACTIVE)

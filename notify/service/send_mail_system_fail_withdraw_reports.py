@@ -2,7 +2,7 @@ import logging
 
 from django.template.loader import get_template
 
-from celery import shared_task
+from kronos.celery import app
 
 from .mail import send_email
 
@@ -13,7 +13,7 @@ from audit_store.models import AuditStore
 _logger = logging.getLogger(__name__)
 
 
-@shared_task(ignore_result=True)
+@app.task(ignore_result=True)
 def send_audit_report_failed_withdraw_email(email_address, audit_store_id, status_type, user_type):
     audit_store = AuditStore.objects.get(id=audit_store_id)
     client_name = audit_store.audit.audit_cycle.client.brand_name
