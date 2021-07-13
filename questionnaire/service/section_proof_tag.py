@@ -27,7 +27,8 @@ def get_section_proof_tag(section_id):
             section_proof_tag_dict['name'] = tag.name
             section_proof_tag_dict['is_present_in_section'] = is_present_in_section
             section_proof_tag_list.append(section_proof_tag_dict)
-    return sorted(section_proof_tag_list, key=lambda j: j['name'])
+    section_proof_tag_list = sorted(section_proof_tag_list, key=lambda j: j['name'])
+    return sorted(section_proof_tag_list, key=lambda j: j['is_present_in_section'], reverse=True)
 
 
 @atomic
