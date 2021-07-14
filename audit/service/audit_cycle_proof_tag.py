@@ -31,7 +31,8 @@ def get_audit_cycle_proof_tag(audit_cycle_id):
         proof_tag_dict['name'] = proof_tag_name
         proof_tag_dict['is_present_in_audit_cycle'] = is_present_in_audit_cycle
         proof_tag_list.append(proof_tag_dict)
-    return sorted(proof_tag_list, key=lambda j: j['name'])
+        proof_tag_list = sorted(proof_tag_list, key=lambda j: j['name'])
+    return sorted(proof_tag_list, key=lambda j: j['is_present_in_audit_cycle'], reverse=True)
 
 
 @atomic
