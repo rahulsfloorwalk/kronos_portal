@@ -77,7 +77,7 @@ class DetailsPage extends React.Component {
 						{/*<ProfilePercentage/>*/}
 						<ProfileInfoPanel/>
 						<BankInfoPanel/>
-						<SocialInfoPanel/>
+						{/* <SocialInfoPanel/> */}
 						<IdProofPanel/>
 						<AdditionalInfoPanel/>
 					</div>
