@@ -7,7 +7,7 @@ import { fetchUser } from "../actions/user.js";
 import { fetchPreferences } from "../service/preferences.js";
 
 import ProfileInfoPanel from "./ProfileInfoPanel.jsx";
-import SocialInfoPanel from "./SocialInfoPanel.jsx";
+// import SocialInfoPanel from "./SocialInfoPanel.jsx";
 import BankInfoPanel from "./BankInfoPanel.jsx";
 import AdditionalInfoPanel from "./AdditionalInfoPanel.jsx";
 import IdProofPanel from "./IdProofPanel.jsx";
@@ -77,7 +77,7 @@ class DetailsPage extends React.Component {
 						{/*<ProfilePercentage/>*/}
 						<ProfileInfoPanel/>
 						<BankInfoPanel/>
-						<SocialInfoPanel/>
+						{/* <SocialInfoPanel/> */}
 						<IdProofPanel/>
 						<AdditionalInfoPanel/>
 					</div>
