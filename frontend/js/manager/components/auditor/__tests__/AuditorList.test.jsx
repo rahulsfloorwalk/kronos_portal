@@ -180,7 +180,7 @@ describe("<AuditorList />", () => {
 		r.find("form").simulate("submit", {
 			preventDefault
 		});
-		expect(searchAuditors).toBeCalledWith("a");
+		expect(searchAuditors).toBeCalledWith("a","","");
 	});
 
 	it("renders rows based on search result", (done) => {

@@ -15,17 +15,83 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
     onSubmit={[Function]}
   >
     <div
-      className="input-group"
+      className="row"
     >
-      <input
-        className="form-control"
-        name="search"
-        onChange={[Function]}
-        placeholder="name, email, city, pincode or mobile number"
-        required={true}
-      />
-      <span
-        className="input-group-btn"
+      <div
+        className="col-md-6"
+      >
+        <input
+          className="form-control"
+          name="search"
+          onChange={[Function]}
+          placeholder="name, email, city, pincode or mobile number"
+          required={true}
+        />
+      </div>
+      <div
+        className="col-md-2"
+      >
+        <select
+          className="form-control"
+          name="gender"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select gender
+          </option>
+          <option
+            value="M"
+          >
+            Male
+          </option>
+          <option
+            value="F"
+          >
+            Female
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2"
+      >
+        <select
+          className="form-control"
+          name="rating"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select rating
+          </option>
+          <option
+            value="E"
+          >
+            Excellent
+          </option>
+          <option
+            value="G"
+          >
+            Good
+          </option>
+          <option
+            value="A"
+          >
+            Average
+          </option>
+          <option
+            value="W"
+          >
+            Wrost
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2"
       >
         <button
           className="btn btn-primary"
@@ -36,7 +102,7 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
           />
            Search
         </button>
-      </span>
+      </div>
     </div>
   </form>
   <div

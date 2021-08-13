@@ -2,7 +2,7 @@ from django.http import HttpResponse
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ReadOnlyField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -14,6 +14,7 @@ from manager.serializers import UserSerializer
 
 class PaymentUserSerializer(ModelSerializer):
     user = UserSerializer()
+    audit_date = ReadOnlyField(source='audit_store.audit_date')
     class Meta:
         model = Payment
         fields = (
@@ -25,6 +26,7 @@ class PaymentUserSerializer(ModelSerializer):
             'audit_store_id',
             'added_on',
             'paid_on',
+            'audit_date',
         )
         read_only_fields = fields
 
@@ -32,9 +34,16 @@ class PaymentView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
         payments = payment_service.find_by_audit_cycle(audit_cycle_id)
+        return Response(PaymentUserSerializer(payments, many=True).data)
+
+    def post(self, request, audit_cycle_id, format=None):
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+        payments = payment_service.find_by_audit_cycle_and_date(audit_cycle_id, start_date, end_date)
         return Response(PaymentUserSerializer(payments, many=True).data)
 
 class PendingPaymentView(APIView):

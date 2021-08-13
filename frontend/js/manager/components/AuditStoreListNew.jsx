@@ -5,6 +5,8 @@ import { Link } from "react-router";
 
 import Alert from "react-s-alert";
 
+import Datetime from "react-datetime";
+
 import moment from "moment";
 import { momentDateFormat}  from "../../../config.js";
 
@@ -133,7 +135,9 @@ class AuditStoreList extends Component{
 		filterStatus: "",
 		userId: "",
 		totalAuditStoreCount: 0,
-		loadMoreLoader: false
+		loadMoreLoader: false,
+		start_date: "",
+		end_date: ""
 	};
 
 	setLoading = (loading) => {
@@ -144,7 +148,9 @@ class AuditStoreList extends Component{
 		let lastAuditId="";
 		let status="";
 		let userId= "";
-		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId}).then((response) => {
+		let start_date = "";
+		let end_date = "";
+		findAuditStoresByAuditCycleNew(auditCycleId, {lastAuditId, status, userId, start_date, end_date}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -170,12 +176,14 @@ class AuditStoreList extends Component{
 		let status = e.target.value;
 		let lastAuditId = "";
 		let userId = this.state.userId;
+		let start_date = this.state.start_date;
+		let end_date = this.state.end_date;
 		this.setState({
 			filterStatus: status,
 			auditStores: []
 		});
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId}).then((response) => {
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId, start_date, end_date}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -187,12 +195,14 @@ class AuditStoreList extends Component{
 		let userId = e.target.value;
 		let lastAuditId = "";
 		let status = this.state.filterStatus;
+		let start_date = this.state.start_date;
+		let end_date = this.state.end_date;
 		this.setState({
 			userId: userId,
 			auditStores: []
 		});
 		this.setLoading(true);
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId}).then((response) => {
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId, start_date, end_date}).then((response) => {
 			this.setState({
 				auditStores: response.audit_store_list,
 				totalAuditStoreCount: response.total_audit_count
@@ -244,7 +254,9 @@ class AuditStoreList extends Component{
 		let lastAuditId= this.state.auditStores[this.state.auditStores.length-1].id;
 		let status = this.state.filterStatus;
 		let userId = this.state.userId;
-		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId}).then((response) => {
+		let start_date = this.state.start_date;
+		let end_date = this.state.end_date;
+		findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId, start_date, end_date}).then((response) => {
 			let newAuditStores = this.state.auditStores;
 			for(let reports of response.audit_store_list){
 				newAuditStores.push(reports);
@@ -255,6 +267,57 @@ class AuditStoreList extends Component{
 			});
 		});
 	};
+
+	startDateChanged = (date) => {
+		if( typeof date !== "string"){
+			this.setState({
+				start_date: date.format("YYYY-MM-DD"),
+			});
+		}
+	};
+
+	endDateChanged = (date) => {
+		if( typeof date !== "string"){
+			this.setState({
+				end_date: date.format("YYYY-MM-DD"),
+			});
+		}
+	};
+
+	findFilter = () => {
+		if(this.state.start_date === "" || this.state.end_date === ""){
+			alert("Please select valid dates");
+		}
+		else{
+			let userId = this.state.userId;
+			let status = this.state.filterStatus;
+			let start_date = this.state.start_date;
+			let end_date = this.state.end_date;
+			let lastAuditId = "";
+			this.setState({
+				auditStores: []
+			});
+			this.setLoading(true);
+			findAuditStoresByAuditCycleNew(this.props.params.auditCycleId, {lastAuditId, status, userId, start_date, end_date}).then((response) => {
+				this.setState({
+					auditStores: response.audit_store_list,
+					totalAuditStoreCount: response.total_audit_count
+				});
+				this.setLoading(false);
+			});
+		}
+	};
+
+	clearFilter = () => {
+		this.setState({
+			start_date:"",
+			end_date:"",
+			filterStatus:"",
+			userId:"",
+		});
+		this.reloadReports(this.props.params.auditCycleId);
+	};
+
 	render(){
 		let rows = [];
 		let loadMoreButton;
@@ -309,7 +372,7 @@ class AuditStoreList extends Component{
 				<br/>
 				<AuditStoreStatusSummary auditCycleId={this.props.params.auditCycleId}/>
 				<div className="form-group">
-					<select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.statusChanged}>
+					<select className="form-control" style={{display:"inline-block",width:"200px"}} value={this.state.filterStatus} onChange={this.statusChanged}>
 						<option value="">All Status</option>
 						<option value="ASSIGNED">{getAuditStoreStatus("ASSIGNED")}</option>
 						<option value="ACKNOWLEDGED">{getAuditStoreStatus("ACKNOWLEDGED")}</option>
@@ -323,15 +386,33 @@ class AuditStoreList extends Component{
 						<option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
 					</select>
 					&nbsp;
-					<select className="form-control" style={{display:"inline-block",width:"200px"}} onChange={this.userChanged}>
+					<select className="form-control" style={{display:"inline-block",width:"200px"}}  value={this.state.userId} onChange={this.userChanged}>
 						<option value="">All User</option>
 						{user_option_list}
 					</select>
-					<span className="pull-right">
+					&nbsp;
+					<div style={{width: "150px",display: "inline-block"}}>
+						<label className="control-label" style={{fontSize: "14px"}}>&nbsp;Start Date:</label>
+						<Datetime name="start_date" value={this.state.start_date} onChange={this.startDateChanged} timeFormat={false} dateFormat="YYYY-MM-DD" closeOnSelect={true} placeholder="Select start date"/>
+					</div>
+					&nbsp;
+					<div style={{width: "150px",display: "inline-block"}}>
+						<label className="control-label" style={{fontSize: "14px"}}>&nbsp;End Date:</label>
+						<Datetime name="end_date" value={this.state.end_date} onChange={this.endDateChanged} timeFormat={false} dateFormat="YYYY-MM-DD" closeOnSelect={true}/>
+					</div>
+					&nbsp;
+					<div style={{width: "53px",display: "inline-block"}}>
+						<button className="btn btn-primary" onClick={this.findFilter}>Find</button>
+					</div>
+					&nbsp;
+					<div style={{width: "53px",display: "inline-block"}}>
+						<button className="btn btn-primary" onClick={this.clearFilter}>Clear</button>
+					</div>
+					<div className="pull-right" style={{paddingTop:"25px"}}>
 						<button className="btn btn-default" onClick={this.acceptAllClicked}>
 							Accept All
 						</button>
-					</span>
+					</div>
 				</div>
 				{rows}
 				<div className="text-center">
