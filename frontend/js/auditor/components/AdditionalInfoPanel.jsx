@@ -47,19 +47,19 @@ class AdditionalInfoPanelBase extends React.Component {
 							<col style={{width:"40%"}}/>
 						</colgroup>
 						<tbody>
-							<tr><td className="text-right text-muted">Referral Code:</td><th>{ this.props.additionalInfo.referral_code }</th></tr>
-							<tr><td className="text-right text-muted">Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
-							<tr><td className="text-right text-muted">Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
-							<tr><td className="text-right text-muted">Industry:</td><th>{ this.props.additionalInfo.industry }</th></tr>
-							<tr><td className="text-right text-muted">Company:</td><th>{ this.props.additionalInfo.company }</th></tr>
-							<tr><td className="text-right text-muted">Car Owned?:</td><th>{ has_car }</th></tr>
+							<tr><td className="text-right text-muted">*Referral Code:</td><th>{ this.props.additionalInfo.referral_code }</th></tr>
+							<tr><td className="text-right text-muted">*Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
+							<tr><td className="text-right text-muted">*Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
+							<tr><td className="text-right text-muted">*Industry:</td><th>{ this.props.additionalInfo.industry }</th></tr>
+							<tr><td className="text-right text-muted">*Company:</td><th>{ this.props.additionalInfo.company }</th></tr>
+							<tr><td className="text-right text-muted">*Car Owned?:</td><th>{ has_car }</th></tr>
 							{ this.props.additionalInfo.has_car ?  <tr><td className="text-right text-muted">Car Model:</td><th>{ this.props.additionalInfo.car_model }</th></tr> : null}
 							{ this.props.additionalInfo.has_car ?  <tr><td className="text-right text-muted">Cost of Car:</td><th>{ this.props.additionalInfo.car_cost }</th></tr> : null}
-							<tr><td className="text-right text-muted">Laptop Owned?:</td><th>{ laptop_owned }</th></tr>
+							<tr><td className="text-right text-muted">*Laptop Owned?:</td><th>{ laptop_owned }</th></tr>
 							{ this.props.additionalInfo.laptop_owned ? <tr><td className="text-right text-muted">Laptop Model:</td><th>{ this.props.additionalInfo.laptop_model }</th></tr> : null }
-							<tr><td className="text-right text-muted">Mobile Model:</td><th>{ this.props.additionalInfo.mobile_model }</th></tr>
-							<tr><td className="text-right text-muted">Camera Resolution:</td><th>{ getCameraResolution(this.props.additionalInfo.camera_resoulution) }</th></tr>
-							<tr><td className="text-right text-muted">MSPA Certification code:</td><th>{ this.props.additionalInfo.mspa_code }</th></tr>
+							<tr><td className="text-right text-muted">*Mobile Model:</td><th>{ this.props.additionalInfo.mobile_model }</th></tr>
+							<tr><td className="text-right text-muted">*Camera Resolution:</td><th>{ getCameraResolution(this.props.additionalInfo.camera_resoulution) }</th></tr>
+							<tr><td className="text-right text-muted">*MSPA Certification code:</td><th>{ this.props.additionalInfo.mspa_code }</th></tr>
 						</tbody>
 					</table>
 					: null }

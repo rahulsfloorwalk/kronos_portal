@@ -2,6 +2,7 @@ import io
 import csv
 import xlsxwriter
 import itertools
+import datetime
 from kronos import utils
 from django.utils import timezone
 from django.db.transaction import atomic
@@ -222,6 +223,15 @@ def find_by_audit_cycle(audit_cycle_id):
         'user__profileinfo',
     )
 
+def find_by_audit_cycle_and_date(audit_cycle_id, start_date, end_date):
+    if start_date == '' or end_date == '':
+        raise AppLogicError('Payment dates is not valid')
+    start_date = datetime.datetime.strptime(start_date, '%Y-%m-%d')
+    end_date = datetime.datetime.strptime(end_date, '%Y-%m-%d')
+    return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id, audit_store__audit_date__range=(start_date, end_date)).prefetch_related(
+        'user',
+        'user__profileinfo',
+    )
 
 def find_pending_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)

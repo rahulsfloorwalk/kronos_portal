@@ -3,6 +3,8 @@ import PropTypes from "prop-types";
 
 import Alert from "react-s-alert";
 
+import Datetime from "react-datetime";
+
 import moment from "moment";
 import { momentDateFormat, url}  from "../../../config.js";
 
@@ -77,6 +79,7 @@ export class PaymentRow extends React.Component{
 			<tr>
 				<td><AuditorNameDisplay user={this.props.payment.user} /></td>
 				<td>{moment(this.props.payment.added_on).format(momentDateFormat)}</td>
+				<td>{moment(this.props.payment.audit_date).format(momentDateFormat)}</td>
 				<td>{moment(this.props.payment.paid_on).format(momentDateFormat)}</td>
 				<td className="text-right"><big>₹ {this.props.payment.amount}</big></td>
 				<td><PaymentStatusLabel status={paymentStatus}/></td>
@@ -98,7 +101,10 @@ export default class AuditCyclePaymentList extends React.Component{
 		super(props);
 		this.state = {
 			loading: false,
-			payments: []
+			payments: [],
+			start_date: "",
+			end_date: "",
+			filter_error: ""
 		};
 	}
 
@@ -106,9 +112,9 @@ export default class AuditCyclePaymentList extends React.Component{
 		this.setState((oldState) => Object.assign({}, oldState, { loading }));
 	};
 
-	reloadData = () => {
+	reloadData = (start_date = "", end_date = "") => {
 		this.setLoading(true);
-		findPaymentsByAuditCycleId(this.props.params.auditCycleId).then( payments => {
+		findPaymentsByAuditCycleId(this.props.params.auditCycleId, start_date, end_date).then( payments => {
 			this.setState({
 				payments
 			});
@@ -153,6 +159,43 @@ export default class AuditCyclePaymentList extends React.Component{
 		});
 	};
 
+	startDateChanged = (date) => {
+		if( typeof date !== "string"){
+			this.setState({
+				start_date: date.format("YYYY-MM-DD"),
+				filter_error:""
+			});
+		}
+	};
+
+	endDateChanged = (date) => {
+		if( typeof date !== "string"){
+			this.setState({
+				end_date: date.format("YYYY-MM-DD"),
+				filter_error:""
+			});
+		}
+	};
+
+	findFilter = () => {
+		if(this.state.start_date === "" || this.state.end_date === ""){
+			this.setState({
+				filter_error: "Please select valid date"
+			});
+		}
+		else{
+			this.reloadData(this.state.start_date, this.state.end_date);
+		}
+	};
+
+	clearFilter = () => {
+		this.setState({
+			start_date:"",
+			end_date:"",
+		});
+		this.reloadData();
+	};
+
 	render(){
 
 		let rows = this.state.payments.map( p => (<PaymentRow payment={p} key={p.id} onChange={this.paymentChanged} onFail={this.paymentFailed}/>));
@@ -165,6 +208,7 @@ export default class AuditCyclePaymentList extends React.Component{
 					<tr>
 						<th>Auditor Name</th>
 						<th>Added Date</th>
+						<th>Audit Date</th>
 						<th>Paid Date</th>
 						<th className="text-right">Amount</th>
 						<th>Payment Status</th>
@@ -188,6 +232,26 @@ export default class AuditCyclePaymentList extends React.Component{
 						<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>
 					</span>
 				</h3>
+				<div style={{marginBottom:"15px"}}>
+					<div style={{width: "150px",display: "inline-block"}}>
+						<label className="control-label" style={{fontSize: "14px"}}>&nbsp;Start Date:</label>
+						<Datetime name="start_date" value={this.state.start_date} onChange={this.startDateChanged} timeFormat={false} dateFormat="YYYY-MM-DD" closeOnSelect={true}/>
+					</div>
+					&nbsp;
+					<div style={{width: "150px",display: "inline-block"}}>
+						<label className="control-label" style={{fontSize: "14px"}}>&nbsp;End Date:</label>
+						<Datetime name="end_date" value={this.state.end_date} onChange={this.endDateChanged} timeFormat={false} dateFormat="YYYY-MM-DD" closeOnSelect={true}/>
+					</div>
+					&nbsp;
+					<div style={{width: "53px",display: "inline-block"}}>
+						<button className="btn btn-primary" onClick={this.findFilter}>Find</button>
+					</div>
+					&nbsp;
+					<div style={{width: "53px",display: "inline-block"}}>
+						<button className="btn btn-primary" onClick={this.clearFilter}>Clear</button>
+					</div>
+					<p>{this.state.filter_error}</p>
+				</div>
 				{table}
 				{this.props.children}
 			</div>

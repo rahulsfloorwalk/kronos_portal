@@ -6,6 +6,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.serializers import BooleanField, Serializer, ModelSerializer, ChoiceField
 
+from django_filters import rest_framework as filters
+
 import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
 import registration.service.auditor as auditor_service
@@ -84,14 +86,23 @@ class AuditorView(generics.ListAPIView):
         page_size_query_param = 'page_size'
         max_page_size = 1000
 
+    class AuditorFilterSet(filters.FilterSet):
+        gender = filters.CharFilter(field_name = 'profileinfo__gender', label = 'gender')
+        rating = filters.CharFilter(field_name = 'profileinfo__auditor_rating', label = 'rating')
+
+        class Meta:
+            model = User
+            fields = ('gender', 'rating',)
+
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER]
     }
-    queryset = User.objects.filter(groups__name=GROUP_NAME_AUDITOR).order_by('-date_joined')
+    queryset = User.objects.filter(groups__name=GROUP_NAME_AUDITOR).order_by('-last_login')
     serializer_class = AuditorSerializer
-    filter_backends = (SearchFilter,)
+    filter_backends = (SearchFilter,filters.DjangoFilterBackend,)
+    filter_class = AuditorFilterSet
     pagination_class = AuditorViewPaginationClass
     search_fields = ('email','profileinfo__first_name','profileinfo__last_name','profileinfo__mobile_number','profileinfo__city__name','profileinfo__pincode')
 

@@ -1,10 +1,12 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function searchAuditors(search){
+export function searchAuditors(search, gender, rating){
 	return $.ajax( url.api_base_path + "manager/auditor",{
 		data: {
-			search
+			search,
+			gender,
+			rating,
 		},
 	});
 }

@@ -58,7 +58,7 @@ def find_by_audit_cycle_distinct_user(audit_cycle_id):
         .order_by('user__email').prefetch_related('user')
 
 
-def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id):
+def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, start_date, end_date):
     total_audit_count = 0
     if status != "" and last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
@@ -93,11 +93,13 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id):
     if audit_list_obj.filter(count__gte=2):
         audit_list = audit_list_obj[0:50]
     audit_id_list = [audit['id'] for audit in audit_list]
-    audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
-        .values('id', 'status', 'audit_date', 'audit__id', 'user__groups__name', 'user__email', 'user__id',
-                'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number',
-                'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number',
-                'user__mobile_numbers__is_verified')
+
+    if start_date !="" and end_date !="":
+        audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list, audit_date__range=[start_date, end_date]) \
+            .values('id', 'status', 'audit_date', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+    else:
+        audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
+            .values('id', 'status', 'audit_date', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
     audit_store_list = []
     for audit in audit_list:
         audit_store_dict = {}

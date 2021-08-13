@@ -54,7 +54,9 @@ class AuditStoreByAuditCycleNew(APIView):
         audit_stores = audit_store_service.find_by_audit_cycle_new(audit_cycle_id,
                                                                    request.GET.get('lastAuditId'),
                                                                    request.GET.get('status'),
-                                                                   request.GET.get('userId'))
+                                                                   request.GET.get('userId'),
+                                                                   request.GET.get('start_date'),
+                                                                   request.GET.get('end_date'),)
         return Response(audit_stores)
 
 

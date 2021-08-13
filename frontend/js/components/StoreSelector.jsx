@@ -19,9 +19,17 @@ class StoreSelector extends React.Component {
 
 	render() {
 		let storeOptions = [];
+		let optionss = [];
 		for( let s in this.props.stores){
-			storeOptions.push(<option key={s} value={s}>{this.props.stores[s].city.name} -- {this.props.stores[s].name}({this.props.stores[s].code})</option>);
+			optionss.push({
+				"value": s,
+				"city": this.props.stores[s].city.name,
+				"store": this.props.stores[s].name,
+				"code": this.props.stores[s].code
+			});
 		}
+		optionss.sort((a,b) => (a.city > b.city) ? 1 : ((b.city > a.city) ? -1 : 0));
+		storeOptions = optionss.map(element=><option key={element.value} value={element.value}>{element.city} -- {element.store}({element.code})</option>);
 		return (
 			<FormSelect label="Store" name="store" {...this.props}>
 				<option value=""></option>

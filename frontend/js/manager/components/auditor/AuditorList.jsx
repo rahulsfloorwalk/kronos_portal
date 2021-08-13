@@ -13,8 +13,6 @@ import {Search, Check, Cross, Pawn} from "../../../components/Icons.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
 import AuditorRating from "../../../components/AuditorRating.jsx";
 import {momentDateFormat} from "../../../../config.js";
-import InputGroup from "../../../components/InputGroup.jsx";
-import {InputGroupBtn} from "../../../components/InputGroup.jsx";
 import Loading from "../../../components/Loading.jsx";
 import PropTypes from "prop-types";
 
@@ -66,16 +64,18 @@ export class AuditorList extends React.Component {
 	state = {
 		auditors: [],
 		loading: false,
-		search: ""
+		search: "",
+		gender: "",
+		rating: ""
 	};
 
 	setLoading = (loading) => {
 		this.setState(prevState => Object.assign({}, prevState, {loading}));
 	};
 
-	searchAuditors = (search) => {
+	searchAuditors = (search, gender, rating) => {
 		this.setLoading(true);
-		searchAuditors(search).done((page) => {
+		searchAuditors(search, gender, rating).done((page) => {
 			this.setState({
 				auditors: page.results,
 			});
@@ -94,7 +94,7 @@ export class AuditorList extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.props.dispatch(setAuditorSearch(this.state.search));
-		this.searchAuditors(this.state.search);
+		this.searchAuditors(this.state.search, this.state.gender,this.state.rating);
 	};
 
 	inputChanged = (e) => {
@@ -150,12 +150,30 @@ export class AuditorList extends React.Component {
 					<Pawn/> Auditors
 				</h2>
 				<form className="form-group" onSubmit={this.onSubmit}>
-					<InputGroup>
-						<input className="form-control" placeholder="name, email, city, pincode or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
-						<InputGroupBtn>
+					<div className="row">
+						<div className="col-md-6">
+							<input className="form-control" placeholder="name, email, city, pincode or mobile number" name="search" value={this.state.search} onChange={this.inputChanged} required/>
+						</div>
+						<div className="col-md-2">
+							<select name="gender" className="form-control" value={this.state.gender} onChange={this.inputChanged}>
+								<option value="">Select gender</option>
+								<option value="M">Male</option>
+								<option value="F">Female</option>
+							</select>
+						</div>
+						<div className="col-md-2">
+							<select name="rating" className="form-control" value={this.state.rating} onChange={this.inputChanged}>
+								<option value="">Select rating</option>
+								<option value="E">Excellent</option>
+								<option value="G">Good</option>
+								<option value="A">Average</option>
+								<option value="W">Wrost</option>
+							</select>
+						</div>
+						<div className="col-md-2">
 							<button type="submit" className="btn btn-primary"><Search/> Search</button>
-						</InputGroupBtn>
-					</InputGroup>
+						</div>
+					</div>
 				</form>
 				{table}
 				{this.props.children}
