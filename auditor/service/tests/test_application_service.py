@@ -64,7 +64,7 @@ class AuditApplicationTestCase(TestCase):
 
     def test_apply_report_exists(self):
         audit = self.audit_recipe.make(audit_cycle__status=AuditCycle.ACTIVE)
-        mommy.make(AuditStore, user=self.auditor_user, audit=audit, audit_date=date(2015, 6, 5))
+        mommy.make(AuditStore, user=self.auditor_user, audit=audit, audit_date=date(2017, 1, 15), status = AuditStore.ACCEPTED)
         application = application_service.apply(audit.id, self.auditor_user.id, date(2017, 6, 5))
         self.assertTrue(application.report_exists)
 

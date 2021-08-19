@@ -59,7 +59,7 @@ class AdditionalInfoPanelBase extends React.Component {
 							{ this.props.additionalInfo.laptop_owned ? <tr><td className="text-right text-muted">Laptop Model:</td><th>{ this.props.additionalInfo.laptop_model }</th></tr> : null }
 							<tr><td className="text-right text-muted">*Mobile Model:</td><th>{ this.props.additionalInfo.mobile_model }</th></tr>
 							<tr><td className="text-right text-muted">*Camera Resolution:</td><th>{ getCameraResolution(this.props.additionalInfo.camera_resoulution) }</th></tr>
-							<tr><td className="text-right text-muted">*MSPA Certification code:</td><th>{ this.props.additionalInfo.mspa_code }</th></tr>
+							<tr><td className="text-right text-muted">MSPA Certification code:</td><th>{ this.props.additionalInfo.mspa_code }</th></tr>
 						</tbody>
 					</table>
 					: null }

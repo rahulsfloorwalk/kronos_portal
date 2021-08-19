@@ -235,8 +235,12 @@ def find_by_audit_cycle_and_date(audit_cycle_id, start_date, end_date):
 
 def find_pending_by_audit_cycle(audit_cycle_id):
     return Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle_id).filter(status=Payment.PENDING)
-def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id):
-    pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+
+def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date="", end_date=""):
+    if start_date != "" and end_date != "":
+        pending_payments = find_pending_by_audit_cycle(audit_cycle_id).filter(audit_store__audit_date__range=(start_date, end_date))
+    else:
+        pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     consilidated_payments = consolidate_by_user(pending_payments)
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
     client = audit_cycle.client.name
@@ -358,8 +362,11 @@ def consolidate_by_user(payments):
     return consolidated_payments
 
 
-def pay_all_pending_for_audit_cycle(audit_cycle_id, user_actor):
-    pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
+def pay_all_pending_for_audit_cycle(audit_cycle_id, user_actor, start_date, end_date):
+    if start_date != "" and end_date != "":
+        pending_payments = find_pending_by_audit_cycle(audit_cycle_id).filter(audit_store__audit_date__range = [start_date, end_date])
+    else:
+        pending_payments = find_pending_by_audit_cycle(audit_cycle_id)
     for payment in pending_payments:
         pay(payment.id, user_actor)
     return len(pending_payments)

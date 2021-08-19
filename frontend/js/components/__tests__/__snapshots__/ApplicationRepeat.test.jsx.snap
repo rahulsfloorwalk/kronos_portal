@@ -1,6 +1,19 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<ApplicationRepeat/> renders correctly when report_exists is: false 1`] = `
+exports[`<ApplicationRepeat/> renders correctly when report_exists is: [object Object] 1`] = `
+<strong
+  className="text-danger"
+  data-html="true"
+  data-toggle="tooltip"
+  title="Audit cycle: FloorWalk Demo - March 2021
+
+Audit date: 28th Jun 2021"
+>
+  Repeat
+</strong>
+`;
+
+exports[`<ApplicationRepeat/> renders correctly when report_exists is: [object Object] 2`] = `
 <strong
   className="text-success"
 >
@@ -8,15 +21,7 @@ exports[`<ApplicationRepeat/> renders correctly when report_exists is: false 1`]
 </strong>
 `;
 
-exports[`<ApplicationRepeat/> renders correctly when report_exists is: true 1`] = `
-<strong
-  className="text-danger"
->
-  Repeat
-</strong>
-`;
-
-exports[`<ApplicationRepeat/> renders correctly when report_exists is: undefined 1`] = `
+exports[`<ApplicationRepeat/> renders correctly when report_exists is: [object Object] 3`] = `
 <strong>
   unknown
 </strong>

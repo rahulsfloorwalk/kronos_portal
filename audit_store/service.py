@@ -354,8 +354,11 @@ def get_audit_store_stats(audit_cycle_id):
     return AuditStore.objects.filter(audit__audit_cycle__id=audit_cycle_id).values('status').annotate(count=Count('status'))
 
 
-def accept_all_audit_stores(audit_cycle_id, user_actor):
-    completed_audit_stores = find_by_audit_cycle(audit_cycle_id).filter(status=AuditStore.COMPLETED)
+def accept_all_audit_stores(audit_cycle_id, user_actor, start_date, end_date):
+    if start_date != "" and end_date != "":
+        completed_audit_stores = find_by_audit_cycle(audit_cycle_id).filter(status=AuditStore.COMPLETED, audit_date__range = [start_date, end_date])
+    else:
+        completed_audit_stores = find_by_audit_cycle(audit_cycle_id).filter(status=AuditStore.COMPLETED)
 
     for audit_store in completed_audit_stores:
         accept(audit_store.id, user_actor)
