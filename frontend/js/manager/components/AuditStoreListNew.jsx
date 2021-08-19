@@ -241,7 +241,11 @@ class AuditStoreList extends Component{
 	};
 	acceptAllClicked = () => {
 		if(confirm("Accept all reports with default Audit Fees and Reimbursement?")){
-			acceptAllReports(this.props.params.auditCycleId).then((count) => {
+			let filters = {
+				start_date: this.state.start_date,
+				end_date: this.state.end_date,
+			};
+			acceptAllReports(this.props.params.auditCycleId, filters).then((count) => {
 				Alert.success(`${count} REPORTS ACCEPTED`);
 				this.reloadReports(this.props.params.auditCycleId);
 			});

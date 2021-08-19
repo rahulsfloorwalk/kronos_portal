@@ -227,7 +227,7 @@ class AuditStoreServiceTestCase(TestCase):
         audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
         audit_stores = mommy.make(AuditStore, user=self.auditor_user, audit=audit, status=AuditStore.COMPLETED, _quantity=5)
 
-        count = service.accept_all_audit_stores(audit.audit_cycle_id, self.manager_user)
+        count = service.accept_all_audit_stores(audit.audit_cycle_id, self.manager_user, start_date="", end_date="")
         expect(count).to(equal(len(audit_stores)))
         for audit_store in audit_stores:
             audit_store.refresh_from_db()

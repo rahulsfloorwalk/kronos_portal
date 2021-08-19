@@ -427,5 +427,7 @@ class AcceptAllCompletedForAuditCycle(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_cycle_id, format=None):
-        count = audit_store_service.accept_all_audit_stores(audit_cycle_id, request.user)
+        start_date = request.POST.get('start_date', '')
+        end_date = request.POST.get('end_date', '')
+        count = audit_store_service.accept_all_audit_stores(audit_cycle_id, request.user, start_date, end_date)
         return Response(count)

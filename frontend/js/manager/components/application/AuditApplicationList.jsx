@@ -91,7 +91,7 @@ class AuditApplicationList extends Component{
 					<td>{app.profileinfo.pincode}</td>
 					<td>{app.distance !== null? (app.distance).toString() + " km" : "--" }</td>
 					<td>{app.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(app.avg_qa_rating)}/> : null}</td>
-					<td>{app.report_exists ?<ApplicationRepeat report_exists={app.report_exists}/>: null}</td>
+					<td>{app.report_exists ?<ApplicationRepeat report_exists={app.report_exists} report_data={app.report_exists_data}/>: null}</td>
 					<td>
 						{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
 						{statusLabel}

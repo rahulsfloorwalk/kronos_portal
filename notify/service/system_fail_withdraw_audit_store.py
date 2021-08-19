@@ -14,7 +14,7 @@ def fail_withdraw_audit_stores():
         if email_list:
             emails = email_list
         else:
-            emails = ["ankush.take@floorwalk.in"]
+            emails = ["shubham.mohod@floorwalk.in"]
         for email in emails:
             send_audit_report_failed_withdraw_email.delay(email, assign_report.id, "withdraw", "manager")
         send_audit_report_failed_withdraw_email.delay(assign_report.user.email, assign_report.id, "withdraw", "auditor")
@@ -25,7 +25,7 @@ def fail_withdraw_audit_stores():
         if email_list:
             emails = email_list
         else:
-            emails = ["ankush.take@floorwalk.in"]
+            emails = ["shubham.mohod@floorwalk.in"]
         for email in emails:
             send_audit_report_failed_withdraw_email.delay(email, in_progress_report.id, "fail", "manager")
         send_audit_report_failed_withdraw_email.delay(in_progress_report.user.email, in_progress_report.id, "fail",

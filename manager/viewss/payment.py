@@ -61,7 +61,9 @@ class PayAllPendingPaymentsForAuditCycle(APIView):
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, audit_cycle_id, format=None):
-        count = payment_service.pay_all_pending_for_audit_cycle(audit_cycle_id, request.user)
+        start_date = request.POST.get('start_date','')
+        end_date = request.POST.get('end_date', '')
+        count = payment_service.pay_all_pending_for_audit_cycle(audit_cycle_id, request.user, start_date, end_date)
         return Response(count)
 
 class PendingPaymentCsvView(APIView):
@@ -82,7 +84,9 @@ class PendingPaymentXlsxView(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, audit_cycle_id, format=None):
-        report, name = payment_service.find_new_pending_xlsx_for_audit_cycle(audit_cycle_id)
+        start_date = request.GET.get('start_date', '')
+        end_date = request.GET.get('end_date', '')
+        report, name = payment_service.find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date, end_date)
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response

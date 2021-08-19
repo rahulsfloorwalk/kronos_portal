@@ -5,6 +5,8 @@ from django.db.models import PROTECT
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
     PositiveSmallIntegerField, PositiveIntegerField, DateTimeField, BooleanField
 
+from django.contrib.postgres.fields import JSONField
+
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
 from kronos.utils import validate_ifsc, validate_pan, get_bank_name_from_ifsc
@@ -323,6 +325,7 @@ class AuditApplication(Model):
     audit = ForeignKey('audit.Audit', db_column='audit_id', related_name='applications', on_delete=PROTECT)
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications', on_delete=PROTECT)
     report_exists = BooleanField(db_column='report_exists', default=False)
+    report_exists_data = JSONField(db_column='report_exists_data', default=dict)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)

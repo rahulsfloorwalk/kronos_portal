@@ -126,7 +126,11 @@ export default class AuditCyclePaymentList extends React.Component{
 	}
 
 	payAllPendingPayments = () => {
-		payAllPendingPaymentsForAuditCycle(this.props.params.auditCycleId).then(count => {
+		let filters = {
+			start_date: this.state.start_date,
+			end_date: this.state.end_date,
+		};
+		payAllPendingPaymentsForAuditCycle(this.props.params.auditCycleId, filters).then(count => {
 			this.reloadData();
 			Alert.success(`${count} PAYMENTS MARKED AS PAID`);
 		});
@@ -226,7 +230,7 @@ export default class AuditCyclePaymentList extends React.Component{
 				<h3 className="page-header">
 					<b>₹</b> Payments
 					<span className="pull-right">
-						<a className="btn btn-default" href={url.api_base_path + `manager/audit_cycle/${this.props.params.auditCycleId}/payment/pending/xlsx`}>
+						<a className="btn btn-default" href={url.api_base_path + `manager/audit_cycle/${this.props.params.auditCycleId}/payment/pending/xlsx?start_date=${this.state.start_date}&end_date=${this.state.end_date}`}>
 							<Download/> Pending Payment List
 						</a>
 						<button className="btn btn-default" onClick={this.payAllPendingPayments}>Pay All Pending</button>

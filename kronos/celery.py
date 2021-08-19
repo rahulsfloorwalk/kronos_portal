@@ -24,6 +24,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # from attachment.save_audio_transcription import save_audio_transcription
     from notify.service.reject_audit_application import reject_audit_application
     from notify.service.system_fail_withdraw_audit_store import fail_withdraw_audit_stores
+    from notify.service.waitlist_audit_application import waitlist_audit_application
 
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
@@ -51,3 +52,6 @@ def setup_periodic_tasks(sender, **kwargs):
     # Execute cron every midnight at 11:40
     # queue_at_midnight = crontab(hour=18, minute=20)
     # sender.add_periodic_task(queue_at_midnight, save_audio_transcription.s())
+
+    # Schedule for change all application status in each store to waitlisted
+    sender.add_periodic_task(queue_at, waitlist_audit_application.s())
