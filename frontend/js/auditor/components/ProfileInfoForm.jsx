@@ -30,7 +30,7 @@ class __CountrySelector extends React.Component {
 			countryOptions.push(<option key={c} value={c}>{this.props.countries[c]}</option>);
 		}
 		return (
-			<FormSelect label="Country (✳)" name="country" {...this.props}>
+			<FormSelect label="Country" required_mark={true} name="country" {...this.props}>
 				<option value=""></option>
 				{countryOptions}
 			</FormSelect>
@@ -61,7 +61,7 @@ class __StateSelector extends React.Component {
 			stateOptions.push(<option key={s} value={s}>{this.props.states[s]}</option>);
 		}
 		return (
-			<FormSelect label="State (✳)" name="state" {...this.props}>
+			<FormSelect label="State" required_mark={true} name="state" {...this.props}>
 				<option value=""></option>
 				{stateOptions}
 			</FormSelect>
@@ -102,7 +102,7 @@ class __CitySelector extends React.Component {
 			}
 		}
 		return (
-			<FormSelect label="City (✳)" name="city_id" {...this.props}>
+			<FormSelect label="City" required_mark={true} name="city_id" {...this.props}>
 				<option value=""></option>
 				{cityOptions}
 			</FormSelect>
@@ -222,33 +222,45 @@ class ProfileInfoForm extends React.Component {
 	render() {
 		return (
 			<Modal modalTitle="Edit Personal Information" onClose={hashHistory.goBack}>
-				<div className="form-group"><big><i>fields marked <b>✳</b> must be filled to view available audits</i></big></div>
+				<div className="form-group"><big><i>fields marked <b className="text-danger">✳</b> must be filled to view available audits</i></big></div>
 				{ this.state.loading ? <Loading/> :
 					<form onSubmit={this.onSubmit}>
 						<div className="row">
-							<div className="col-md-6">
-								<FormInput label="First Name (✳)" maxLength="20" type="text" value={this.state.first_name} name="first_name" onChange={this.inputChanged} errors={this.props.errors.first_name} disabled={this.state.submitting}/>
+							<div className="col-md-4">
+								<FormSelect label="Pronouns" required_mark={true} name="pronouns" value={this.state.pronouns} onChange={this.inputChanged} >
+									<option value=""></option>
+									<option value="hh">He/Him</option>
+									<option value="sh">She/Her</option>
+									<option value="tt">They/Them</option>
+									<option value="ht">He/They</option>
+									<option value="st">She/They</option>
+								</FormSelect>
 							</div>
-							<div className="col-md-6">
-								<FormInput label="Last Name (✳)" maxLength="20" type="text" value={this.state.last_name} name="last_name" onChange={this.inputChanged} errors={this.props.errors.last_name} disabled={this.state.submitting}/>
+							<div className="col-md-4">
+								<FormInput label="First Name" required_mark={true} maxLength="20" type="text" value={this.state.first_name} name="first_name" onChange={this.inputChanged} errors={this.props.errors.first_name} disabled={this.state.submitting}/>
+							</div>
+							<div className="col-md-4">
+								<FormInput label="Last Name" required_mark={true} maxLength="20" type="text" value={this.state.last_name} name="last_name" onChange={this.inputChanged} errors={this.props.errors.last_name} disabled={this.state.submitting}/>
 							</div>
 						</div>
 						<div className="row">
 							<div className="col-md-6">
-								<label className="control-label">Date of Birth (✳)</label>
+								<label className="control-label">Date of Birth <span className="text-danger">(✳)</span></label>
 								<DOBPicker initialDate={moment(this.state.date_of_birth).isValid() ? moment(this.state.date_of_birth).toDate() : null} onChange={this.dateChanged} disabled={this.state.submitting} ref={(r)=>this._dobPicker=r} errors={this.state.errors.date_of_birth}/>
 							</div>
 							<div className="col-md-6">
-								<FormSelect label="Gender (✳)" name="gender" value={this.state.gender} onChange={this.inputChanged} disabled={this.state.submitting}>
+								<FormSelect label="Gender" required_mark={true} name="gender" value={this.state.gender} onChange={this.inputChanged} disabled={this.state.submitting}>
 									<option value=""></option>
 									<option value="M">Male</option>
 									<option value="F">Female</option>
+									<option value="N">Trans person</option>
+									<option value="N">Non-binary</option>
 								</FormSelect>
 							</div>
 						</div>
 						<div className="row">
 							<div className="col-md-6">
-								<FormSelect label="Marital Status (✳)" name="marital_status" value={this.state.marital_status} onChange={this.inputChanged} errors={this.props.errors.marital_status} disabled={this.state.submitting}>
+								<FormSelect label="Marital Status" required_mark={true} name="marital_status" value={this.state.marital_status} onChange={this.inputChanged} errors={this.props.errors.marital_status} disabled={this.state.submitting}>
 									<option value=""></option>
 									<option value="S">Single</option>
 									<option value="M">Married</option>
@@ -257,7 +269,7 @@ class ProfileInfoForm extends React.Component {
 								</FormSelect>
 							</div>
 							<div className="col-md-6">
-								<FormSelect label="Education (✳)" name="education" value={this.state.education} onChange={this.inputChanged} errors={this.props.errors.education} disabled={this.state.submitting}>
+								<FormSelect label="Education" required_mark={true} name="education" value={this.state.education} onChange={this.inputChanged} errors={this.props.errors.education} disabled={this.state.submitting}>
 									<option value=""></option>
 									<option value="TE">10th (Middle School)</option>
 									<option value="TW">12th (High School)</option>
@@ -269,10 +281,10 @@ class ProfileInfoForm extends React.Component {
 						</div>
 						<div className="row">
 							<div className="col-md-6">
-								<FormInput label="Address (✳)" maxLength="100" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address} disabled={this.state.submitting}/>
+								<FormInput label="Address" required_mark={true} maxLength="100" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address} disabled={this.state.submitting}/>
 							</div>
 							<div className="col-md-6">
-								<FormInput label="Pincode (✳)" maxLength="8" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode} disabled={this.state.submitting}/>
+								<FormInput label="Pincode" required_mark={true} maxLength="8" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode} disabled={this.state.submitting}/>
 							</div>
 						</div>
 						<div className="row">

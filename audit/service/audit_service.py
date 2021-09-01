@@ -6,6 +6,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
+from client.models import Store
 from manager.models import City
 from manager.service import geo
 from registration.service import auditor as auditor_service
@@ -148,3 +149,34 @@ def copy_audits_from_to(from_audit_cycle_id, to_audit_cycle_id):
         return to_audit_cycle.audits.all()
     except IntegrityError as e:
         raise AppLogicError("a store with audit already exists in this audit cycle")
+
+
+def create_audit_by_state(data):
+    state = data.get('state','')
+    audit_cycle_id = data.get('audit_cycle', '')
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+
+    store_exists = Store.objects.filter(client = audit_cycle.client.id, city__state= state).exists()
+    if not store_exists:
+        raise AppLogicError("Stores are not found for the state")
+
+    audit_store_list = Audit.objects.filter(audit_cycle = audit_cycle_id, store__city__state= state).values_list('store', flat=True)
+
+    client_store_list = Store.objects.filter(client = audit_cycle.client,city__state= state).exclude(id__in = audit_store_list)
+
+    if not client_store_list:
+        raise AppLogicError("Audits are already created for this state")
+
+    audit_list = []
+    for store in client_store_list:
+        audit = {
+            'count': data.get('count', 1),
+            'earnings_per_audit': data.get('earnings_per_audit',audit_cycle.earnings_per_audit),
+            'reimbursement': data.get('earnings_per_audit',audit_cycle.reimbursement),
+            'store': store,
+            'audit_cycle': audit_cycle,
+            'post_approval_description': data.get('post_approval_description','')
+        }
+        audit_list.append(Audit(**audit))
+    audits = Audit.objects.bulk_create(audit_list)
+    return audits

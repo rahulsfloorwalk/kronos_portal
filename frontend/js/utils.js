@@ -81,6 +81,10 @@ export function getGender(value){
 		return "male";
 	case "F":
 		return "female";
+	case "T":
+		return "trans person";
+	case "N":
+		return "non-binary";
 	case "":
 	case null:
 	case undefined:
@@ -403,5 +407,200 @@ export function getColorForActionPlanStatus(value){
 	}
 	else{
 		return "#688833";
+	}
+}
+
+
+export function getIncomeText(income){
+	switch(income){
+	case "0":
+	case 0:
+		return "Not answered";
+	case "1":
+	case 1:
+		return "Less than 1 LPA";
+	case "2":
+	case 2:
+		return "1 to 3 LPA";
+	case "3":
+	case 3:
+		return "3 to 8 LPA";
+	case "4":
+	case 4:
+		return "8 to 15 LPA";
+	case "5":
+	case 5:
+		return "15+ LPA";
+	case "":
+	case null:
+	case undefined:
+		return "";
+	default:
+		return "";
+	}
+}
+
+export function getCarCost(cost){
+	switch(cost){
+	case "1":
+	case 1:
+		return "Less than 3 lacs";
+	case "2":
+	case 2:
+		return "3 lacs – 5 lacs";
+	case "3":
+	case 3:
+		return "5 lacs – 10 lacs";
+	case "4":
+	case 4:
+		return "10 lacs – 15 lacs";
+	case "5":
+	case 5:
+		return "15 lacs and above";
+	case "":
+	case null:
+	case undefined:
+		return "";
+	default:
+		return "";
+	}
+}
+
+export function getIndustry(industry){
+	switch(industry){
+	case "1":
+	case 1:
+		return "Advertising and Marketing";
+	case "2":
+	case 2:
+		return "Agriculture";
+	case "3":
+	case 3:
+		return "Arts";
+	case "4":
+	case 4:
+		return "Architecture";
+	case "5":
+	case 5:
+		return "Advisory";
+	case "6":
+	case 6:
+		return "Accounting";
+	case "7":
+	case 7:
+		return "Aviation";
+	case "8":
+	case 8:
+		return "Apprael";
+	case "9":
+	case 9:
+		return "Automotive";
+	case "10":
+	case 10:
+		return "Banking";
+	case "11":
+	case 11:
+		return "Biotechnology";
+	case "12":
+	case 12:
+		return "Civil Engineering";
+	case "13":
+	case 13:
+		return "Civic-Social organization";
+	case "14":
+	case 14:
+		return "Consumer Goods and Services";
+	case "15":
+	case 15:
+		return "Cosmetics";
+	case "16":
+	case 16:
+		return "Entertainment";
+	case "17":
+	case 17:
+		return "Event Management";
+	case "18":
+	case 18:
+		return "Financial Services";
+	case "19":
+	case 19:
+		return "Food and Beverage";
+	case "20":
+	case 20:
+		return "Graphic Designing";
+	case "21":
+	case 21:
+		return "Health and Fitnes";
+	case "22":
+	case 22:
+		return "Hospitality";
+	case "23":
+	case 23:
+		return "Import-Export Industry";
+	case "24":
+	case 24:
+		return "Information Technology";
+	case "25":
+	case 25:
+		return "Insurance";
+	case "26":
+	case 26:
+		return "Luxury Goods";
+	case "27":
+	case 27:
+		return "Management Consulting";
+	case "28":
+	case 28:
+		return "Market Research";
+	case "29":
+	case 29:
+		return "Medical";
+	case "30":
+	case 30:
+		return "Music";
+	case "31":
+	case 31:
+		return "Not for Profit";
+	case "32":
+	case 32:
+		return "Oil and Energy";
+	case "33":
+	case 33:
+		return "Pharmaceuticals";
+	case "34":
+	case 34:
+		return "Photography";
+	case "35":
+	case 35:
+		return "Real-Estate";
+	case "36":
+	case 36:
+		return "Retail Industry";
+	case "37":
+	case 37:
+		return "Sales";
+	case "38":
+	case 38:
+		return "Sports";
+	case "39":
+	case 39:
+		return "Supply Chain and Logistics";
+	case "40":
+	case 40:
+		return "Telecommunications";
+	case "41":
+	case 41:
+		return "Transportation";
+	case "42":
+	case 42:
+		return "Veterinary";
+	case "43":
+	case 43:
+		return "Other";
+	case null:
+	case undefined:
+		return "";
+	default:
+		return "";
 	}
 }

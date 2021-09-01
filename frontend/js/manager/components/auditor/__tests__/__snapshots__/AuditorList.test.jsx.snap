@@ -18,18 +18,47 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
       className="row"
     >
       <div
-        className="col-md-6"
+        className="col-md-4 form-group"
       >
         <input
           className="form-control"
           name="search"
           onChange={[Function]}
           placeholder="name, email, city, pincode or mobile number"
-          required={true}
         />
       </div>
       <div
-        className="col-md-2"
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-control"
+          name="state"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select state
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-control"
+          name="city"
+          onChange={[Function]}
+          value=""
+        >
+          <option>
+            Select city
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2 form-group"
       >
         <select
           className="form-control"
@@ -55,7 +84,7 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
         </select>
       </div>
       <div
-        className="col-md-2"
+        className="col-md-2 form-group"
       >
         <select
           className="form-control"
@@ -91,7 +120,371 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
         </select>
       </div>
       <div
-        className="col-md-2"
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-control"
+          name="occupation"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select occupation
+          </option>
+          <option
+            value="STUDENT"
+          >
+            Student
+          </option>
+          <option
+            value="SERVICE"
+          >
+            Service
+          </option>
+          <option
+            value="SELF_EMPLOYED"
+          >
+            Self Employed
+          </option>
+          <option
+            value="BUSINESS"
+          >
+            Business
+          </option>
+          <option
+            value="UNEMPLOYED"
+          >
+            Unemployed
+          </option>
+          <option
+            value="RETIRED"
+          >
+            Retired
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-control"
+          name="income"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select income
+          </option>
+          <option
+            value="0"
+          >
+            Not answered
+          </option>
+          <option
+            value="1"
+          >
+            Less than 1 LPA
+          </option>
+          <option
+            value="2"
+          >
+            1 to 3 LPA
+          </option>
+          <option
+            value="3"
+          >
+            3 to 8 LPA
+          </option>
+          <option
+            value="4"
+          >
+            8 to 15 LPA
+          </option>
+          <option
+            value="5"
+          >
+            15+ LPA
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-control"
+          name="industry"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select Industry
+          </option>
+          <option
+            value="1"
+          >
+            Advertising and Marketing
+          </option>
+          <option
+            value="2"
+          >
+            Agriculture
+          </option>
+          <option
+            value="3"
+          >
+            Arts
+          </option>
+          <option
+            value="4"
+          >
+            Architecture
+          </option>
+          <option
+            value="5"
+          >
+            Advisory
+          </option>
+          <option
+            value="6"
+          >
+            Accounting
+          </option>
+          <option
+            value="7"
+          >
+            Aviation
+          </option>
+          <option
+            value="8"
+          >
+            Apprael
+          </option>
+          <option
+            value="9"
+          >
+            Automotive
+          </option>
+          <option
+            value="10"
+          >
+            Banking
+          </option>
+          <option
+            value="11"
+          >
+            Biotechnology
+          </option>
+          <option
+            value="12"
+          >
+            Civil Engineering
+          </option>
+          <option
+            value="13"
+          >
+            Civic-Social organization
+          </option>
+          <option
+            value="14"
+          >
+            Consumer Goods and Services
+          </option>
+          <option
+            value="15"
+          >
+            Cosmetics
+          </option>
+          <option
+            value="16"
+          >
+            Entertainment
+          </option>
+          <option
+            value="17"
+          >
+            Event Management
+          </option>
+          <option
+            value="18"
+          >
+            Financial Services
+          </option>
+          <option
+            value="19"
+          >
+            Food and Beverage
+          </option>
+          <option
+            value="20"
+          >
+            Graphic Designing
+          </option>
+          <option
+            value="21"
+          >
+            Health and Fitnes
+          </option>
+          <option
+            value="22"
+          >
+            Hospitality
+          </option>
+          <option
+            value="23"
+          >
+            Import-Export Industry
+          </option>
+          <option
+            value="24"
+          >
+            Information Technology
+          </option>
+          <option
+            value="25"
+          >
+            Insurance
+          </option>
+          <option
+            value="26"
+          >
+            Luxury Goods
+          </option>
+          <option
+            value="27"
+          >
+            Management Consulting
+          </option>
+          <option
+            value="28"
+          >
+            Market Research
+          </option>
+          <option
+            value="29"
+          >
+            Medical
+          </option>
+          <option
+            value="30"
+          >
+            Music
+          </option>
+          <option
+            value="31"
+          >
+            Not for Profit
+          </option>
+          <option
+            value="32"
+          >
+            Oil and Energy
+          </option>
+          <option
+            value="33"
+          >
+            Pharmaceuticals
+          </option>
+          <option
+            value="34"
+          >
+            Photography
+          </option>
+          <option
+            value="35"
+          >
+            Real-Estate
+          </option>
+          <option
+            value="36"
+          >
+            Retail Industry
+          </option>
+          <option
+            value="37"
+          >
+            Sales
+          </option>
+          <option
+            value="38"
+          >
+            Sports
+          </option>
+          <option
+            value="39"
+          >
+            Supply Chain and Logistics
+          </option>
+          <option
+            value="40"
+          >
+            Telecommunications
+          </option>
+          <option
+            value="41"
+          >
+            Transportation
+          </option>
+          <option
+            value="42"
+          >
+            Veterinary
+          </option>
+          <option
+            value="43"
+          >
+            Other
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-2 form-group"
+      >
+        <select
+          className="form-control"
+          name="car_cost"
+          onChange={[Function]}
+          value=""
+        >
+          <option
+            value=""
+          >
+            Select car price
+          </option>
+          <option
+            value="1"
+          >
+            Less than 3 lacs
+          </option>
+          <option
+            value="2"
+          >
+            3 lacs – 5 lacs
+          </option>
+          <option
+            value="3"
+          >
+            5 lacs – 10 lacs
+          </option>
+          <option
+            value="4"
+          >
+            10 lacs – 15 lacs
+          </option>
+          <option
+            value="5"
+          >
+            15 lacs and above
+          </option>
+        </select>
+      </div>
+      <div
+        className="col-md-12"
       >
         <button
           className="btn btn-primary"
@@ -119,61 +512,71 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
 `;
 
 exports[`<AuditorRow/> renders the list of auditors correctly 1`] = `
-<tr>
-  <td>
-    Asdfgh
-     
-    Hgfdsa
-  </td>
-  <td>
-    abcdef@gmail.com
-  </td>
-  <td>
-    female
-  </td>
-  <td>
-    0987654321
-  </td>
-  <td>
-    Nagpur
-    , 
-    Maharashtra
-  </td>
-  <td>
-    440012
-  </td>
-  <td>
-    <center>
-      <strong
-        className="text-success"
+<tbody>
+  <tr
+    className=""
+    onClick={[Function]}
+    style={
+      Object {
+        "backgroundColor": "",
+        "cursor": "pointer",
+      }
+    }
+    title="Click to Expand"
+  >
+    <td>
+      Asdfgh
+       
+      Hgfdsa
+    </td>
+    <td>
+      abcdef@gmail.com
+    </td>
+    <td>
+      Service
+    </td>
+    <td>
+      1 to 3 LPA
+    </td>
+    <td>
+      
+    </td>
+    <td>
+      
+    </td>
+    <td>
+      <center>
+        <strong
+          className="text-success"
+        >
+          Good
+        </strong>
+      </center>
+    </td>
+    <td>
+      14th Jul 2018
+    </td>
+    <td>
+      <span
+        className="glyphicon glyphicon-ok"
+      />
+    </td>
+    <td>
+      <a
+        className="btn btn-default pull-right"
+        onClick={[Function]}
+        style={Object {}}
       >
-        Good
-      </strong>
-    </center>
-  </td>
-  <td>
-    <center>
-      <strong>
-        unknown rating
-      </strong>
-    </center>
-  </td>
-  <td>
-    14th Jul 2018
-  </td>
-  <td>
-    <span
-      className="glyphicon glyphicon-ok"
-    />
-  </td>
-  <td>
-    <a
-      className="btn btn-default pull-right"
-      onClick={[Function]}
-      style={Object {}}
-    >
-      View
-    </a>
-  </td>
-</tr>
+        View
+      </a>
+    </td>
+  </tr>
+  <tr
+    style={
+      Object {
+        "borderLeft": "solid #337ab7 5px",
+      }
+    }
+  />
+</tbody>
 `;

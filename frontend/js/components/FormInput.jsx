@@ -25,19 +25,26 @@ export default class FormInput extends React.Component{
 		label: PropTypes.string,
 		errors: PropTypes.array,
 		checked: PropTypes.bool,
+		required_mark: PropTypes.bool,
 	};
 
 	focus(){
 		this._input && this._input.focus();
 	}
 	render(){
-		let { placeholder, onChange, maxLength, type, value, name, disabled, label, checked } = this.props;
+		let { placeholder, onChange, maxLength, type, value, name, disabled, label, checked, required_mark } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
 		value = value ? value : "";
 		return (
 			<FormGroup>
-				<label>{label}</label>
+				{required_mark ?
+					<label>
+						{label} <span className="text-danger">(✳)</span>
+					</label>
+					:
+					<label>{label}</label>
+				}
 				<input className="form-control"
 					ref={r => this._input = r}
 					placeholder={placeholder}
@@ -60,12 +67,19 @@ export class FormDateInput extends React.Component{
 	static propTypes = {
 		label: PropTypes.string,
 		errors: PropTypes.array,
+		required_mark: PropTypes.bool,
 	};
 
 	render(){
 		return (
 			<FormGroup>
-				<label>{this.props.label}</label>
+				{this.props.required_mark ?
+					<label>
+						{this.props.label} <span className="text-danger">(✳)</span>
+					</label>
+					:
+					<label>{this.props.label}</label>
+				}
 				<Datetime
 					timeFormat={false}
 					dateFormat="YYYY-MM-DD"

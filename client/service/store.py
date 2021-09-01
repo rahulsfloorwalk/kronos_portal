@@ -6,6 +6,7 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from ..models import Store
 from manager.models import City
 from client.service import client_user as client_user_service
+from client.service import client_service
 
 
 def save(store):
@@ -106,4 +107,27 @@ def find_filter_stores_by_clientuser(user_id, store_code, selected_city, percent
                 if (store_total_percentage >= int(percent_from)) and (store_total_percentage <= int(percent_to)):
                     store_list.append(store)
         stores = store_list
+    return stores
+
+
+def create_store_by_state(data):
+    client = client_service.find_client_by_id(data['client'])
+    client_city_list = Store.objects.filter(client = client.id, city__state = data['state']).values_list('city', flat=True)
+    city_list = City.objects.filter(state=data['state']).exclude(id__in = client_city_list)
+    if not city_list:
+        raise AppLogicError("Stores are already created for this state")
+    store_list = []
+    for ind, city in enumerate(city_list):
+        store = {
+            'client': client,
+            'city': city,
+            'name': data.get('name', ''),
+            'address': data.get('address', ''),
+            'code': data.get('code', '') + str(city.id),
+            'type': data.get('type', ''),
+            'priority': ind + int(data['priority']) if data.get('priority', '') else '',
+            'phone': data.get('phone', '')
+        }
+        store_list.append(Store(**store))
+    stores = Store.objects.bulk_create(store_list)
     return stores

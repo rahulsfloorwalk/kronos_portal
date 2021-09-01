@@ -90,10 +90,14 @@ class AuditView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request):
-        audit_ds = AuditDeSerializer(data=request.data)
-        audit_ds.is_valid(raise_exception=True)
-        audit = audit_ds.deserialize()
-        audit_service.save(audit)
+        if request.data['audit_region'] == 'state':
+            audit = audit_service.create_audit_by_state(request.data)
+            audit = audit[0] if audit else audit
+        elif request.data['audit_region'] == 'city':
+            audit_ds = AuditDeSerializer(data=request.data)
+            audit_ds.is_valid(raise_exception=True)
+            audit = audit_ds.deserialize()
+            audit = audit_service.save(audit)
         return Response(AuditSerializer(audit).data)
 
 

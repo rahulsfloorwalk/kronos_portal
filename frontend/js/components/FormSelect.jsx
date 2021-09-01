@@ -18,6 +18,7 @@ export default class FormSelect extends React.Component{
 		label: PropTypes.string,
 		errors: PropTypes.array,
 		children: PropTypes.array,
+		required_mark: PropTypes.bool,
 	};
 
 	render(){
@@ -27,7 +28,13 @@ export default class FormSelect extends React.Component{
 		const value = (this.props.value === null || this.props.value === undefined) ? "" : this.props.value;
 		return (
 			<FormGroup>
-				<label>{this.props.label}</label>
+				{this.props.required_mark ?
+					<label>
+						{this.props.label} <span className="text-danger">(✳)</span>
+					</label>
+					:
+					<label>{this.props.label}</label>
+				}
 				<select className="form-control"
 					placeholder={placeholder}
 					onChange={onChange}

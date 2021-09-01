@@ -57,7 +57,9 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is loading 1`] = `
           <big>
             <i>
               fields marked 
-              <b>
+              <b
+                className="text-danger"
+              >
                 ✳
               </b>
                must be filled to apply to audits
@@ -139,7 +141,9 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
           <big>
             <i>
               fields marked 
-              <b>
+              <b
+                className="text-danger"
+              >
                 ✳
               </b>
                must be filled to apply to audits
@@ -153,11 +157,17 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
             className="form-group"
           >
             <label>
-              Account Holder Name (✳)
+              Account Holder Name
+               
+              <span
+                className="text-danger"
+              >
+                (✳)
+              </span>
             </label>
             <input
               className="form-control"
-              label="Account Holder Name (✳)"
+              label="Account Holder Name"
               maxLength="40"
               name="account_holder_name"
               onChange={[Function]}
@@ -170,11 +180,17 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
             className="form-group"
           >
             <label>
-              Account Number (✳)
+              Account Number
+               
+              <span
+                className="text-danger"
+              >
+                (✳)
+              </span>
             </label>
             <input
               className="form-control"
-              label="Account Number (✳)"
+              label="Account Number"
               maxLength="20"
               name="account_number"
               onChange={[Function]}
@@ -187,11 +203,17 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
             className="form-group"
           >
             <label>
-              IFSC Code (✳)
+              IFSC Code
+               
+              <span
+                className="text-danger"
+              >
+                (✳)
+              </span>
             </label>
             <input
               className="form-control"
-              label="IFSC Code (✳)"
+              label="IFSC Code"
               maxLength="11"
               name="ifsc_code"
               onChange={[Function]}
@@ -204,11 +226,17 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
             className="form-group"
           >
             <label>
-              Pan Number (✳)
+              Pan Number
+               
+              <span
+                className="text-danger"
+              >
+                (✳)
+              </span>
             </label>
             <input
               className="form-control"
-              label="Pan Number (✳)"
+              label="Pan Number"
               maxLength="10"
               name="pan_number"
               onChange={[Function]}

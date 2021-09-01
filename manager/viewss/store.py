@@ -85,6 +85,10 @@ class StoreView(APIView):
         store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
-        savedStore = store_service.save(store)
+        if request.data['store_region'] == 'state':
+            savedStore = store_service.create_store_by_state(request.data)
+            savedStore = savedStore[0] if savedStore else savedStore
+        elif request.data['store_region'] == 'city':
+            savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
 

@@ -7,7 +7,7 @@ import Alert from "react-s-alert";
 
 // import { fetchCountry, fetchStates, fetchStatesByCountry, fetchCities } from "../../actions/location.js";
 import { fetchCountry, fetchStatesByCountry, fetchCities } from "../../actions/location.js";
-import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm } from "../../actions/store.js";
+import { loadStoreAddForm, loadStoreEditForm, saveStoreAddForm, saveStoreEditForm, fetchStores } from "../../actions/store.js";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
 import FormInput from "../../../components/FormInput.jsx";
@@ -40,7 +40,12 @@ class StoreForm extends React.Component {
 		}),
 	};
 	state = {
-		city_error: ""
+		country: "",
+		state: "",
+		city: "",
+		city_error: "",
+		state_error: [],
+		store_region: "city"
 	};
 
 	componentDidMount() {
@@ -103,46 +108,77 @@ class StoreForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		if(typeof this.state.city === "undefined" || this.state.city === ""){
-			this.setState({
-				city_error: "Please select city"
-			});
-		}
-		else{
-			var submitPromise;
-			if(this.props.params.storeId){
-				submitPromise = this.props.dispatch(saveStoreEditForm({
-					id: this.props.params.storeId,
-
-					client: this.state.client.id,
-					city: this.state.city,
-
-					name: this.state.name,
-					address: this.state.address,
-
-					code: this.state.code,
-					type: this.state.type,
-					priority: this.state.priority,
-					phone: this.state.phone,
-				}));
-			} else {
-				submitPromise = this.props.dispatch(saveStoreAddForm({
-					client: this.props.params.clientId,
-					city: this.state.city,
-
-					name: this.state.name,
-					address: this.state.address,
-
-					code: this.state.code,
-					type: this.state.type,
-					priority: this.state.priority,
-					phone: this.state.phone,
-				}));
+		if(this.state.store_region == "city"){
+			if(typeof this.state.city === "undefined" || this.state.city === ""){
+				this.setState({
+					city_error: "Please select city",
+					state_error: []
+				});
+				return false;
 			}
-			submitPromise.then(function(savedStore){
-				hashHistory.push(`/client/${savedStore.client.id}/store`);
-				Alert.success("STORE SAVED");
-			});
+		}
+		if(this.state.store_region == "state"){
+			if(typeof this.state.state == undefined || this.state.state == ""){
+				this.setState({
+					city_error: "",
+					state_error: ["Please select state"]
+				});
+				return false;
+			}
+		}
+		var submitPromise;
+		if(this.props.params.storeId){
+			submitPromise = this.props.dispatch(saveStoreEditForm({
+				id: this.props.params.storeId,
+
+				client: this.state.client.id,
+				city: this.state.city,
+
+				name: this.state.name,
+				address: this.state.address,
+
+				code: this.state.code,
+				type: this.state.type,
+				priority: this.state.priority,
+				phone: this.state.phone,
+			}));
+		} else {
+			submitPromise = this.props.dispatch(saveStoreAddForm({
+				client: this.props.params.clientId,
+				country: this.state.country,
+				state: this.state.state,
+				city: this.state.city,
+
+				name: this.state.name,
+				address: this.state.address,
+
+				code: this.state.code,
+				type: this.state.type,
+				priority: this.state.priority,
+				phone: this.state.phone,
+				store_region: this.state.store_region,
+			}));
+		}
+		submitPromise.then(() => {
+			if(this.state.store_region == "state" || this.state.store_region == "country"){
+				this.props.dispatch(fetchStores(this.props.params.clientId));
+			}
+			hashHistory.push(`/client/${this.props.params.clientId}/store`);
+			Alert.success("STORE SAVED");
+		});
+	};
+
+	setStoreRegion = (e) => {
+		this.inputChanged(e);
+		let value = e.target.value;
+		if(value == "country"){
+			this.setState({state: "", city: ""});
+		}
+		else if(value == "state"){
+			this.setState({city: ""});
+		}
+		else if(value == "city"){
+			this.setState({country: "", state: ""});
 		}
 	};
 
@@ -154,39 +190,54 @@ class StoreForm extends React.Component {
 				<form onSubmit={this.onSubmit}>
 					{city_error_span}
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
+					{ typeof this.props.params.storeId == "undefined" ?
+						<div className="form-group">
+							<label>Select store region</label>
+							<br />
+							{/* <label htmlFor="id_country">
+								<input type="radio" value="country" name="store_region" id="id_country" onClick={this.setStoreRegion}/>&nbsp;Country
+							</label>
+							&nbsp;&nbsp; */}
+							<label htmlFor="id_state">
+								<input type="radio" value="state" name="store_region" id="id_state" onClick={this.setStoreRegion} />&nbsp;State
+							</label>
+							&nbsp;&nbsp;
+							<label htmlFor="id_city">
+								<input type="radio" value="city" name="store_region" defaultChecked="true" id="id_city" onClick={this.setStoreRegion} />&nbsp;City
+							</label>
+						</div>
+						: null }
 					<div className="row">
-						<div className="col-sm-6">
-							<CountrySelector value={this.state.country} onChange={this.myCountryChanged}/>
-						</div>
-						<div className="col-sm-6">
-							<StateSelector value={this.state.state} onChange={this.myStateChanged}/>
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-sm-6">
-							<CitySelector value={this.state.city} onChange={this.myCityChanged}/>
-						</div>
+						{this.state.store_region == "country" || this.state.store_region == "state" || this.state.store_region == "city" ?
+							<div className="col-sm-6">
+								<CountrySelector value={this.state.country} onChange={this.myCountryChanged}/>
+							</div>
+							: null }
+						{this.state.store_region == "state" || this.state.store_region == "city" ?
+							<div className="col-sm-6">
+								<StateSelector value={this.state.state} onChange={this.myStateChanged} errors={this.state.state_error}/>
+							</div>
+							: null }
+						{this.state.store_region == "city" ?
+							<div className="col-sm-6">
+								<CitySelector value={this.state.city} onChange={this.myCityChanged}/>
+							</div>
+							: null }
 						<div className="col-sm-6">
 							<FormInput label="Name" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
 						</div>
-					</div>
-					<div className="row">
 						<div className="col-sm-6">
 							<FormInput label="Code" type="text" value={this.state.code} name="code" onChange={this.inputChanged} errors={this.props.errors.code}/>
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Type" type="text" value={this.state.type} name="type" onChange={this.inputChanged} errors={this.props.errors.type}/>
 						</div>
-					</div>
-					<div className="row">
 						<div className="col-sm-6">
 							<FormInput label="Address" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address}/>
 						</div>
 						<div className="col-sm-6">
-							<FormInput label="Priority" type="text" value={this.state.priority} name="priority" onChange={this.inputChanged} errors={this.props.errors.priority}/>
+							<FormInput label="Priority" type="number" value={this.state.priority} name="priority" onChange={this.inputChanged} errors={this.props.errors.priority}/>
 						</div>
-					</div>
-					<div className="row">
 						<div className="col-sm-6">
 							<FormInput label="Phone Number" type="text" value={this.state.phone} name="phone" onChange={this.inputChanged} errors={this.props.errors.phone}/>
 						</div>

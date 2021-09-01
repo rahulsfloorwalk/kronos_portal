@@ -66,15 +66,15 @@ export class BankInfoForm extends React.Component {
 	render(){
 		return (
 			<Modal modalTitle="Edit Bank Info" onClose={hashHistory.goBack}>
-				<div className="form-group"><big><i>fields marked <b>✳</b> must be filled to apply to audits</i></big></div>
+				<div className="form-group"><big><i>fields marked <b className="text-danger">✳</b> must be filled to apply to audits</i></big></div>
 				{ this.state.loading ?
 					<Loading/>
 					:
 					<form onSubmit={this.onSubmit}>
-						<FormInput label="Account Holder Name (✳)" maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
-						<FormInput label="Account Number (✳)" maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
-						<FormInput label="IFSC Code (✳)" maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>
-						<FormInput label="Pan Number (✳)" maxLength="10" type="text" value={this.state.form.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.state.errors.pan_number} readOnly={this.state.saving}/>
+						<FormInput label="Account Holder Name" required_mark={true} maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
+						<FormInput label="Account Number" required_mark={true} maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
+						<FormInput label="IFSC Code" required_mark={true} maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>
+						<FormInput label="Pan Number" required_mark={true} maxLength="10" type="text" value={this.state.form.pan_number} name="pan_number" onChange={this.inputChanged} errors={this.state.errors.pan_number} readOnly={this.state.saving}/>
 						<SaveButton/>
 					</form>
 				}

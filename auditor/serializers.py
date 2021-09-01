@@ -41,6 +41,7 @@ class ProfileInfoSerializer(ModelSerializer):
         model = ProfileInfo
         fields = (
             'id',
+            'pronouns',
             'first_name',
             'last_name',
             'gender',
@@ -64,6 +65,7 @@ class ProfileInfoDeSerializer(ModelSerializer):
         model = ProfileInfo
         fields = (
             'id',
+            'pronouns',
             'first_name',
             'last_name',
             'gender',
@@ -87,6 +89,7 @@ class ProfileInfoDeSerializer(ModelSerializer):
             profile_info = ProfileInfo()
             profile_info.user_id = self.context['current_user'].id
 
+        profile_info.pronouns = self.validated_data.get('pronouns', profile_info.pronouns)
         profile_info.first_name = self.validated_data.get('first_name', profile_info.first_name)
         profile_info.last_name = self.validated_data.get('last_name', profile_info.last_name)
         profile_info.gender = self.validated_data.get('gender', profile_info.gender)
@@ -127,7 +130,8 @@ class AdditionalInfoSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'referral_code',
-            'is_complete'
+            'is_complete',
+            'income'
         )
         read_only_fields = fields
 
@@ -156,6 +160,7 @@ class AdditionalInfoDeSerializer(ModelSerializer):
             'car_model',
             'laptop_model',
             'mobile_model',
+            'income'
         )
         read_only_fields = ('id', 'user_id', )
 
@@ -187,6 +192,7 @@ class AdditionalInfoDeSerializer(ModelSerializer):
         additional_info.car_model = self.validated_data.get('car_model', additional_info.car_model)
         additional_info.laptop_model = self.validated_data.get('laptop_model', additional_info.laptop_model)
         additional_info.mobile_model = self.validated_data.get('mobile_model', additional_info.mobile_model)
+        additional_info.income = self.validated_data.get('income', additional_info.income)
 
         return additional_info
 
