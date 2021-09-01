@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.models import PROTECT
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
-    PositiveSmallIntegerField, PositiveIntegerField, DateTimeField, BooleanField
+    PositiveSmallIntegerField, DateTimeField, BooleanField
 
 from django.contrib.postgres.fields import JSONField
 
@@ -38,12 +38,17 @@ class CompletableMixin:
         return len(self.is_complete_attrs)
 
 
+
 class ProfileInfo(Model, CompletableMixin):
     MALE = 'M'
     FEMALE = 'F'
+    TRANS = 'T'
+    NON_BINARY = 'N'
     GENDER = (
         (MALE, 'Male'),
         (FEMALE, 'Female'),
+        (TRANS, 'Trans person'),
+        (NON_BINARY, 'Non-binary')
     )
 
     SINGLE = 'S'
@@ -96,7 +101,21 @@ class ProfileInfo(Model, CompletableMixin):
         (WORSE, "Worse"),
     )
 
+    HE_HIM = "hh"
+    SHE_HER = "sh"
+    THEY_THEM = "tt"
+    HE_THEY = "ht"
+    SHE_THEY = "st"
+    PRONOUNS = (
+        (HE_HIM, "He/Him"),
+        (SHE_HER, "She/Her"),
+        (THEY_THEM, "They/Them"),
+        (HE_THEY, "He/They"),
+        (SHE_THEY, "She/They")
+    )
+
     id = AutoField(db_column='id', primary_key=True)
+    pronouns = CharField(db_column='pronouns', max_length=40, blank=True)
     first_name = CharField(db_column='first_name', max_length=40, blank=True)
     last_name = CharField(db_column='last_name', max_length=40, blank=True)
     gender = CharField(db_column='gender', max_length=1, choices=GENDER, blank=True)
@@ -208,6 +227,76 @@ class AdditionalInfo(Model, CompletableMixin):
         (RETIRED, 'retired'),
     )
 
+    INDUSTRY = (
+        ("1", "Advertising and Marketing"),
+        ("2", "Agriculture"),
+        ("3", "Arts"),
+        ("4", "Architecture"),
+        ("5", "Advisory"),
+        ("6", "Accounting"),
+        ("7", "Aviation"),
+        ("8", "Apprael"),
+        ("9", "Automotive"),
+        ("10", "Banking"),
+        ("11", "Biotechnology"),
+        ("12", "Civil Engineering"),
+        ("13", "Civic-Social organization"),
+        ("14", "Consumer Goods and Services"),
+        ("15", "Cosmetics"),
+        ("16", "Entertainment"),
+        ("17", "Event Management"),
+        ("18", "Financial Services"),
+        ("19", "Food and Beverage"),
+        ("20", "Graphic Designing"),
+        ("21", "Health and Fitnes"),
+        ("22", "Hospitality"),
+        ("23", "Import-Export Industry"),
+        ("24", "Information Technology"),
+        ("25", "Insurance"),
+        ("26", "Luxury Goods"),
+        ("27", "Management Consulting"),
+        ("28", "Market Research"),
+        ("29", "Medical"),
+        ("30", "Music"),
+        ("31", "Not for Profit"),
+        ("32", "Oil and Energy"),
+        ("33", "Pharmaceuticals"),
+        ("34", "Photography"),
+        ("35", "Real-Estate"),
+        ("36", "Retail Industry"),
+        ("37", "Sales"),
+        ("38", "Sports"),
+        ("39", "Supply Chain and Logistics"),
+        ("40", "Telecommunications"),
+        ("41", "Transportation"),
+        ("42", "Veterinary"),
+        ("43", "Other"),
+    )
+
+    CAR_COST = (
+        ("", ""),
+        (1, "<3 lacs"),
+        (2, "3 lacs – 5 lacs"),
+        (3, "5 lacs – 10 lacs"),
+        (4, "10 lacs – 15 lacs"),
+        (5, "15 lacs and above"),
+    )
+
+    NOT_ANSWERED = 0
+    ONE = 1
+    ONE_THREE = 2
+    THREE_EIGHT = 3
+    EIGHT_FIFTEEN = 4
+    FIFTEEN_PLUS = 5
+    INCOME = (
+        (NOT_ANSWERED, "not answered"),
+        (ONE, "less than 1		 lpa"),
+        (ONE_THREE, "1 to 3 lpa"),
+        (THREE_EIGHT, "3 to 8 lpa"),
+        (EIGHT_FIFTEEN, "8 to 15 lpa"),
+        (FIFTEEN_PLUS, "15+ lpa"),
+    )
+
     id = AutoField(db_column='id', primary_key=True)
     ethnicity = PositiveSmallIntegerField(db_column='ethnicity', choices=ETHNICITY, blank=True, null=True)
     hair_color = PositiveSmallIntegerField(db_column='hair_color', choices=HAIR_COLOR, blank=True, null=True)
@@ -225,10 +314,11 @@ class AdditionalInfo(Model, CompletableMixin):
     scanner_access = NullBooleanField(db_column='scanner_access', blank=True, null=True)
     weekend_audit = NullBooleanField(db_column='weekend_audit', blank=True, null=True)
     occupation = CharField(db_column='occupation', choices=OCCUPATION, max_length=20, blank=True, null=True)
+    income = PositiveSmallIntegerField(db_column='income', choices=INCOME, blank=True, null=True)
     mspa_code = CharField(db_column='mspa_code', max_length=10, blank=True, null=True)
     company = CharField(db_column='company', max_length=50, blank=True, null=True)
-    industry = CharField(db_column='industry', max_length=50, blank=True, null=True)
-    car_cost = PositiveIntegerField(db_column='car_cost', blank=True, null=True)
+    industry = CharField(db_column='industry', choices=INDUSTRY, max_length=50, blank=True, null=True)
+    car_cost = CharField(db_column='car_cost', choices=CAR_COST, max_length=50, blank=True, null=True)
     car_model = CharField(db_column='car_model', max_length=50, blank=True, null=True)
     laptop_model = CharField(db_column='laptop_model', max_length=50, blank=True, null=True)
     mobile_model = CharField(db_column='mobile_model', max_length=50, blank=True, null=True)

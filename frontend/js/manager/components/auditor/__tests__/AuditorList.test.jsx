@@ -11,6 +11,31 @@ jest.mock("../../../service/auditor.js");
 const sampleResults = {
 	"results": [
 		{
+			"additionalinfo":{
+				"camera_owned": null,
+				"camera_resoulution": 4,
+				"car_cost": 500000,
+				"car_model": "Maruti",
+				"company": "ABC",
+				"distance": 10,
+				"hair_color": null,
+				"has_car": true,
+				"height": null,
+				"id": 1,
+				"industry": "It",
+				"is_complete": true,
+				"laptop_model": "DELL",
+				"laptop_owned": true,
+				"mobile_model": "Iphone",
+				"occupation": "SERVICE",
+				"income": "2",
+				"referral_code": "john7890",
+				"referred_by": "",
+				"smart_phone_owned": null,
+				"user_id": 4,
+				"weekend_audit": null,
+				"weight": null
+			},
 			"id": 7552,
 			"username": "abcdef@gmail.com",
 			"email": "abcdef@gmail.com",
@@ -49,6 +74,31 @@ const sampleResults = {
 			}
 		},
 		{
+			"additionalinfo":{
+				"camera_owned": null,
+				"camera_resoulution": null,
+				"car_cost": null,
+				"car_model": null,
+				"company": null,
+				"distance": null,
+				"hair_color": null,
+				"has_car": true,
+				"height": null,
+				"id": 1,
+				"industry": null,
+				"is_complete": false,
+				"laptop_model": null,
+				"laptop_owned": true,
+				"mobile_model": null,
+				"occupation": null,
+				"income": null,
+				"referral_code": null,
+				"referred_by": "",
+				"smart_phone_owned": null,
+				"user_id": 4,
+				"weekend_audit": null,
+				"weight": null
+			},
 			"id": 1709,
 			"username": "abc@gmail.com",
 			"email": "abc@gmail.com",
@@ -87,6 +137,31 @@ const sampleResults = {
 			}
 		},
 		{
+			"additionalinfo":{
+				"camera_owned": null,
+				"camera_resoulution": null,
+				"car_cost": null,
+				"car_model": null,
+				"company": null,
+				"distance": null,
+				"hair_color": null,
+				"has_car": true,
+				"height": null,
+				"id": 1,
+				"industry": null,
+				"is_complete": false,
+				"laptop_model": null,
+				"laptop_owned": true,
+				"mobile_model": null,
+				"occupation": null,
+				"income": null,
+				"referral_code": null,
+				"referred_by": "",
+				"smart_phone_owned": null,
+				"user_id": 4,
+				"weekend_audit": null,
+				"weight": null
+			},
 			"id": 1710,
 			"username": "abdc@gmail.com",
 			"email": "abcd@gmail.com",
@@ -180,7 +255,7 @@ describe("<AuditorList />", () => {
 		r.find("form").simulate("submit", {
 			preventDefault
 		});
-		expect(searchAuditors).toBeCalledWith("a","","");
+		expect(searchAuditors).toBeCalledWith("a","","","","","","","","");
 	});
 
 	it("renders rows based on search result", (done) => {

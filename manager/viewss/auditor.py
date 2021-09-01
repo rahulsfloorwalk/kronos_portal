@@ -63,9 +63,44 @@ class VerificationSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AdditionalInfoSerializer(ModelSerializer):
+    class Meta:
+        model = AdditionalInfo
+        fields = (
+            'id',
+            'has_car',
+            'car_cost',
+            'car_model',
+            'has_car',
+            'weekend_audit',
+            'hair_color',
+            'industry',
+            'company',
+            'height',
+            'weight',
+            'distance',
+            'camera_owned',
+            'camera_resoulution',
+            'laptop_owned',
+            'smart_phone_owned',
+            'weekend_audit',
+            'user_id',
+            'occupation',
+            'income',
+            'referral_code',
+            'referred_by',
+            'laptop_model',
+            'mobile_model',
+            'is_complete',
+        )
+        read_only_fields = fields
+
+
 class AuditorSerializer(ModelSerializer):
     profileinfo = ProfileInfoSerializer()
     verification = VerificationSerializer()
+    additionalinfo = AdditionalInfoSerializer()
+
     class Meta:
         model = User
         fields = (
@@ -77,6 +112,7 @@ class AuditorSerializer(ModelSerializer):
             'last_login',
             'profileinfo',
             'verification',
+            'additionalinfo',
         )
         read_only_fields = fields
 
@@ -87,8 +123,14 @@ class AuditorView(generics.ListAPIView):
         max_page_size = 1000
 
     class AuditorFilterSet(filters.FilterSet):
+        state = filters.CharFilter(field_name = "profileinfo__city__state", label = 'state')
+        city = filters.CharFilter(field_name = "profileinfo__city", label = 'city')
         gender = filters.CharFilter(field_name = 'profileinfo__gender', label = 'gender')
         rating = filters.CharFilter(field_name = 'profileinfo__auditor_rating', label = 'rating')
+        occupation = filters.CharFilter(field_name = 'additionalinfo__occupation', label = 'occupation')
+        income = filters.CharFilter(field_name = 'additionalinfo__income', label = 'income')
+        industry = filters.CharFilter(field_name = 'additionalinfo__industry', label = 'industry')
+        car_cost = filters.CharFilter(field_name = 'additionalinfo__car_cost', label = 'car_cost')
 
         class Meta:
             model = User
@@ -159,38 +201,6 @@ class BankInfoSerializer(ModelSerializer):
             'user_id',
             'is_complete',
             'is_valid',
-        )
-        read_only_fields = fields
-
-
-class AdditionalInfoSerializer(ModelSerializer):
-    class Meta:
-        model = AdditionalInfo
-        fields = (
-            'id',
-            'has_car',
-            'car_cost',
-            'car_model',
-            'has_car',
-            'weekend_audit',
-            'hair_color',
-            'industry',
-            'company',
-            'height',
-            'weight',
-            'distance',
-            'camera_owned',
-            'camera_resoulution',
-            'laptop_owned',
-            'smart_phone_owned',
-            'weekend_audit',
-            'user_id',
-            'occupation',
-            'referral_code',
-            'referred_by',
-            'laptop_model',
-            'mobile_model',
-            'is_complete',
         )
         read_only_fields = fields
 
