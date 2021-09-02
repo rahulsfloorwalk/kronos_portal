@@ -91,6 +91,9 @@ def apply(audit_id, user_id, audit_date):
                 action_object=application,
                 target=audit
             )
+            if audit.audit_cycle.audit_auto_approve:
+                audit_count = 1
+                application = approve(application.id, audit_date, audit.reimbursement, audit.earnings_per_audit, audit_count, profile_info.user)
             # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         else:
             raise AppLogicError("you cannot apply to this audit")
