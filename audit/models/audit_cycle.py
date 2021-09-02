@@ -1,5 +1,6 @@
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey
 from django.db.models import PROTECT, F, Sum
+from django.db.models.fields import BooleanField
 
 import audit_store
 
@@ -85,6 +86,7 @@ class AuditCycle(Model):
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
     revenue_per_audit = IntegerField(db_column='revenue_per_audit', blank=True, null=True)
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
+    audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
     description = CharField(db_column='description', max_length=16384, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=16384, blank=True)
