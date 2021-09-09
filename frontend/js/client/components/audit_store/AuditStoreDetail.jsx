@@ -12,7 +12,7 @@ import { fetchSections } from "../../service/section.js";
 import { fetchReportSections } from "../../service/report_section.js";
 import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 
-import { File, Print, Download, Comment, Plus, Cross } from "../../../components/Icons.jsx";
+import { File, Print, Download, Comment, Plus, Cross, Envelope } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 import Alert from "react-s-alert";
@@ -290,7 +290,7 @@ export default class AuditStoreDetail extends React.Component {
 						</a>
 					}
 					{ ! printMode ? <button className="btn btn-default pull-right hidden-print" onClick={this.showReportModal}>
-						<Print/> Send PDF Report
+						<Envelope/> Send PDF Report
 					</button> : "" }
 					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/ears_report"}>
 						<Download/> E.A.R.S Report

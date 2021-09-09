@@ -262,7 +262,7 @@ export class AuditorList extends React.Component {
 								<option value="E">Excellent</option>
 								<option value="G">Good</option>
 								<option value="A">Average</option>
-								<option value="W">Wrost</option>
+								<option value="W">Worse</option>
 							</select>
 						</div>
 						<div className="col-md-2 form-group">
