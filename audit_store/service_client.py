@@ -1,6 +1,7 @@
 import xlsxwriter
 import io
 from django.conf import settings
+from django.template.loader import render_to_string
 
 from kronos.utils import today_ist, get_color_code_by_percentage, get_color_code, get_color_hex_from_code
 from kronos.exceptions import ObjectNotFound
@@ -9,6 +10,7 @@ from answer.service import answer as answer_service
 from questionnaire.service import question as question_service
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 from audit.service.audit_cycle import find_by_id
+from notify.service.mail_audit_report import audit_feedback_report_mail_task
 
 
 def find_upcoming_for_client(client_id):
@@ -298,3 +300,22 @@ def write_data(data):
     workbook.close()
     output.seek(0)
     return output
+
+
+def audit_feedback_report_mail(email_list, audit_store_id, audit_report, user):
+    context = {
+        'audit_report': audit_report
+    }
+    rendered_report_data = render_to_string('notify/audit_feedback_report.html', context)
+    audit_store = find_by_id_for_clientuser(audit_store_id, user)
+    data = {
+        "brand_name": user.clientuser.client.brand_name,
+        "audit_cycle_name": audit_store.audit.audit_cycle.name,
+        "audit_cycle_month": audit_store.audit_date.strftime("%B"),
+        "store_name": audit_store.audit.store.name,
+        "city": audit_store.audit.store.city.name,
+        "audit_date": audit_store.audit_date.strftime("%d %b %Y"),
+    }
+
+    audit_feedback_report_mail_task.delay(email_list, rendered_report_data, data)
+    return audit_store

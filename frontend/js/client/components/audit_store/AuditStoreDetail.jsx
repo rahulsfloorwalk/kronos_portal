@@ -7,12 +7,12 @@ import moment from "moment";
 
 import { url }  from "../../../../config.js";
 
-import { fetchAuditStore, submitReportActionPlan, getReportActionPlan } from "../../service/audit_store.js";
+import { fetchAuditStore, submitReportActionPlan, getReportActionPlan, submitAuditStorePDFReport } from "../../service/audit_store.js";
 import { fetchSections } from "../../service/section.js";
 import { fetchReportSections } from "../../service/report_section.js";
 import { findImpactFactorsByAuditStore } from "../../service/impact_factor";
 
-import { File, Print, Download, Comment } from "../../../components/Icons.jsx";
+import { File, Print, Download, Comment, Plus, Cross } from "../../../components/Icons.jsx";
 import Loading from "../../../components/Loading.jsx";
 
 import Alert from "react-s-alert";
@@ -57,7 +57,10 @@ export default class AuditStoreDetail extends React.Component {
 		action_plan: "",
 		target_date: "",
 		person: "",
-		loading_modal: false
+		loading_modal: false,
+		emailInputList: [""],
+		report_display: "none",
+		reportErrMsg: "",
 	};
 
 	componentDidMount() {
@@ -175,6 +178,69 @@ export default class AuditStoreDetail extends React.Component {
 		});
 	};
 
+	showReportModal = () => {
+		this.setState({
+			report_display:"block"
+		});
+	};
+
+	hideReportModal = () => {
+		this.setState({ report_display:"none", reportErrMsg: "" });
+	};
+
+	// handle click event of the Remove button
+	handleRemoveClick = index => {
+		this.setState({
+			emailInputList: this.state.emailInputList.filter((val,ind) => ind !== index)
+		});
+	};
+
+	// handle click event of the Add button
+	handleAddClick = () => {
+		this.setState(prevState => ({ emailInputList: [...prevState.emailInputList, ""]}));
+	};
+
+	// handle input change
+	handleInputChange = (e, index) => {
+		let emaillist = this.state.emailInputList;
+		emaillist[index] = e.target.value;
+		this.setState({
+			emailInputList: emaillist,
+		});
+	};
+
+	submit_Send_Mail_Modal = (e) =>{
+		e.preventDefault();
+		let email_receiver_list = [];
+		for(let email of this.state.emailInputList){
+			if(email != "" && typeof email !== "undefined" && email !== null){
+				email_receiver_list.push(email);
+			}
+		}
+		if(email_receiver_list.length == 0){
+			this.setState({
+				reportErrMsg: "Please enter a email",
+			});
+		}
+		else{
+			this.hideReportModal();
+
+			this.setState({
+				report_display: "none",
+				loading_modal: true
+			});
+
+			// Generate audit report html from queryselector
+			let audit_report = document.querySelector(".audit_report");
+			if(audit_report != ""){
+				audit_report = audit_report.innerHTML;
+				submitAuditStorePDFReport(email_receiver_list, this.props.params.auditStoreId, audit_report).then(()=>{
+					Alert.success("Report is mailed");
+				});
+			}
+		}
+	};
+
 	render() {
 		if(! this.state.auditStore){
 			return <Loading/>;
@@ -182,6 +248,11 @@ export default class AuditStoreDetail extends React.Component {
 		const printMode = this.props.printMode || this.props.route.printMode || false;
 
 		let imgUrl = this.state.clientUser && this.state.clientUser.client && this.state.clientUser.client.logo_url ?  this.state.clientUser.client.logo_url : floorwalkLogoUrl;
+
+		const reportmodalStyle = {
+			display: this.state.report_display,
+			overflow: "scroll"
+		};
 
 		const modalStyle = {
 			display: this.state.display,
@@ -207,7 +278,7 @@ export default class AuditStoreDetail extends React.Component {
 			submit_button_html = (<Loading/>);
 		}
 		return (
-			<div>
+			<div className="audit_report">
 				<h2 className="page-header">
 					{ printMode ?
 						<button className="btn btn-default pull-right hidden-print" onClick={window.print}>
@@ -218,6 +289,9 @@ export default class AuditStoreDetail extends React.Component {
 							<Print/> Print Report
 						</a>
 					}
+					{ ! printMode ? <button className="btn btn-default pull-right hidden-print" onClick={this.showReportModal}>
+						<Print/> Send PDF Report
+					</button> : "" }
 					{ ! printMode ? <a className="btn btn-default pull-right hidden-print" href={url.api_base_path + "client/audit_store/" + this.state.auditStore.id + "/ears_report"}>
 						<Download/> E.A.R.S Report
 					</a> : ""}
@@ -231,7 +305,7 @@ export default class AuditStoreDetail extends React.Component {
 				</h2>
 				<div className="row">
 					<div className="col-md-6">
-						{ printMode ?
+						{ printMode || this.state.report_display == "block" ?
 							<div className="watermark">
 								<img src={imgUrl} height="250" width="300" />
 							</div>
@@ -250,10 +324,14 @@ export default class AuditStoreDetail extends React.Component {
 				<ActionReportBox actionPlan={this.state.actionPlan}/>
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
 				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
-				{ printMode ?
+				{ printMode || this.state.report_display == "block" ?
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
 					: null }
-
+				{ this.state.report_display == "block" ?
+					<div className="text-center" style={{marginTop:"2%"}}>
+						<img src={imgUrl} height="60" width="120" />
+					</div>
+					: null }
 				<div className="modal" tabIndex="-1" style={modalStyle}>
 					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideModal}/>
 					<div className="modal-dialog" style={modalDialogStyle}>
@@ -280,6 +358,42 @@ export default class AuditStoreDetail extends React.Component {
 								<input type="text" className="form-control" value={this.state.person} onChange={this.personChanged} />
 							</div>
 							{submit_button_html}
+						</div>
+					</div>
+				</div>
+
+				<div className="modal" id="audit_report_model" tabIndex="-1" style={reportmodalStyle}>
+					<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.hideReportModal}/>
+					<div className="modal-dialog" style={modalDialogStyle}>
+						<div className="modal-content">
+							<div className="modal-header">
+								<button type="button" className="close" onClick={this.hideReportModal}>&times;</button>
+								<h4 className="modal-title">Send Audit Report</h4>
+							</div>
+							<div className="modal-body">
+								<form method="POST">
+									<p className="text-danger">{this.state.reportErrMsg}</p>
+									{this.state.emailInputList.map((x, i) => {
+										return (
+											<div className="form-inline" style={{marginBottom:"2%"}} key={i}>
+												<input
+													type="email"
+													name="email"
+													key={i}
+													value={x}
+													placeholder="Enter email"
+													onChange={e=> this.handleInputChange(e, i)}
+													className="form-control"
+													style={{marginRight:"2%"}}
+												/>
+												{this.state.emailInputList.length-1 !== i && this.state.emailInputList.length !== 1 && <button type="button" className="btn btn-sm btn-default" onClick={() => this.handleRemoveClick(i)}><Cross /></button>}
+												{this.state.emailInputList.length - 1 === i && <button type="button" className="btn btn-sm btn-default" onClick={this.handleAddClick}><Plus /></button>}
+											</div>
+										);
+									})}
+									<button type="submit" className="btn btn-primary" onClick={this.submit_Send_Mail_Modal}>Submit</button>
+								</form>
+							</div>
 						</div>
 					</div>
 				</div>

@@ -52,7 +52,7 @@ export default class AttachmentPrintRenderer extends React.Component {
 				<div className="row">
 					<div className="col-xs-offset-1 col-xs-10">
 						{/* {this.state.attachments.filter(a=>a.proof_type==="PHOTO").map( a => <AttachmentPreview key={a.id} attachment={a} editable={false}/>)} */}
-						{this.state.attachments.map( a => <PrintAttachmentPreview key={a.id} attachment={a} editable={false}/>)}
+						{this.state.attachments.map( (a, i) => <PrintAttachmentPreview key={i} attachment={a} editable={false}/>)}
 					</div>
 				</div>
 			</div>);

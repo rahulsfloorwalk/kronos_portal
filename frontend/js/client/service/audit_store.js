@@ -42,3 +42,15 @@ export function submitReportActionPlan(auditStoreId, action_plan, target_date, p
 	});
 }
 
+export function submitAuditStorePDFReport(email_receiver_list, audit_store_id, audit_report){
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + "client/audit_feedback_report_mail",
+		data: JSON.stringify({
+			email_receiver_list: email_receiver_list,
+			audit_report: audit_report,
+			audit_store_id: audit_store_id
+		}),
+		contentType: "application/json"
+	});
+}
