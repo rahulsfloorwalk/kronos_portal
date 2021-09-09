@@ -83,4 +83,6 @@ urlpatterns = ([
     url(r'config$', views.ConfigView.as_view(), name='config_view'),
     url(r'twitter/handles/(?P<twitter_handle_id>[0-9]+)/feed$', views.TwitterFeedView.as_view(), name='twitter_feed_view'),
     url(r'twitter/handles', views.TwitterHandlesView.as_view(), name='twitter_handles_view'),
+
+    url(r'audit_feedback_report_mail$', views.AuditFeedbackReportMail.as_view(), name="audit_feedback_report_mail"),
 ], 'client_rest')

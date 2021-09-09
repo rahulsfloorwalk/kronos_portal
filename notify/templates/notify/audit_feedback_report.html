@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+      {% load static %}
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+      <style>
+        .hidden-print{
+          display: none;
+        }
+        #audit_report_model{
+          display: none !important;
+        }
+        
+        .table > thead > tr.rating-na, .table > thead > tr > td.rating-na, .table > thead > tr > th.rating-na, .table > tbody > tr.rating-na, .table > tbody > tr > td.rating-na, .table > tbody > tr > th.rating-na, .table > tfoot > tr.rating-na, .table > tfoot > tr > td.rating-na, .table > tfoot > tr > th.rating-na {
+          background-color: #F1F1F1; }
+
+        .table > thead > tr.rating-bad, .table > thead > tr > td.rating-bad, .table > thead > tr > th.rating-bad, .table > tbody > tr.rating-bad, .table > tbody > tr > td.rating-bad, .table > tbody > tr > th.rating-bad, .table > tfoot > tr.rating-bad, .table > tfoot > tr > td.rating-bad, .table > tfoot > tr > th.rating-bad {
+          background-color: #ffc299; }
+
+        .table > thead > tr.rating-poor, .table > thead > tr > td.rating-poor, .table > thead > tr > th.rating-poor, .table > tbody > tr.rating-poor, .table > tbody > tr > td.rating-poor, .table > tbody > tr > th.rating-poor, .table > tfoot > tr.rating-poor, .table > tfoot > tr > td.rating-poor, .table > tfoot > tr > th.rating-poor {
+          background-color: #ffeb99; }
+
+        .table > thead > tr.rating-average, .table > thead > tr > td.rating-average, .table > thead > tr > th.rating-average, .table > tbody > tr.rating-average, .table > tbody > tr > td.rating-average, .table > tbody > tr > th.rating-average, .table > tfoot > tr.rating-average, .table > tfoot > tr > td.rating-average, .table > tfoot > tr > th.rating-average {
+          background-color: #ffff99; }
+
+        .table > thead > tr.rating-good, .table > thead > tr > td.rating-good, .table > thead > tr > th.rating-good, .table > tbody > tr.rating-good, .table > tbody > tr > td.rating-good, .table > tbody > tr > th.rating-good, .table > tfoot > tr.rating-good, .table > tfoot > tr > td.rating-good, .table > tfoot > tr > th.rating-good {
+          background-color: #eaff99;
+          }
+
+        .table > thead > tr.rating-excellent, .table > thead > tr > td.rating-excellent, .table > thead > tr > th.rating-excellent, .table > tbody > tr.rating-excellent, .table > tbody > tr > td.rating-excellent, .table > tbody > tr > th.rating-excellent, .table > tfoot > tr.rating-excellent, .table > tfoot > tr > td.rating-excellent, .table > tfoot > tr > th.rating-excellent {
+          background-color: #c1ff99; }
+
+        .panel-rating-bad {
+          border-color: #ffa366; }
+          .panel-rating-bad > .panel-heading {
+            color: #993d00;
+            background-color: #ffe0cc;
+            border-color: #ffa366; }
+
+        .panel-rating-poor {
+          border-color: #ffe066; }
+          .panel-rating-poor > .panel-heading {
+            color: #997a00;
+            background-color: #fff5cc;
+            border-color: #ffe066; }
+
+        .panel-rating-average {
+          border-color: #feff66; }
+          .panel-rating-average > .panel-heading {
+            color: #989900;
+            background-color: #ffffcc;
+            border-color: #feff66; }
+
+        .panel-rating-good {
+          border-color: #e0ff66; }
+          .panel-rating-good > .panel-heading {
+            color: #7a9900;
+            background-color: #f5ffcc;
+            border-color: #e0ff66; }
+
+        .panel-rating-excellent {
+          border-color: #a3ff66; }
+          .panel-rating-excellent > .panel-heading {
+            color: #3d9900;
+            background-color: #e0ffcc;
+            border-color: #a3ff66; }
+
+        .progress-bar-rating-bad {
+          background-color: #e65c00; }
+
+        .progress-bar-rating-poor {
+          background-color: #e6b800; }
+
+        .progress-bar-rating-average {
+          background-color: #e5e600; }
+
+        .progress-bar-rating-good {
+          background-color: #b7e600; }
+
+        .progress-bar-rating-excellent {
+          background-color: #5be600; }
+
+        .watermark {
+          position: fixed;
+          bottom: 50%;
+          left: 36%;
+          opacity: 0.2;
+          z-index: 99;
+          color: #000; }
+      </style>
+    </head>
+    <body>
+        <div class="container-fluid">
+          {{ audit_report|safe }}
+      </div>
+    </body>
+</html>

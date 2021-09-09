@@ -783,3 +783,13 @@ class EmailNotification(APIView):
         client_user = client_service.update_receive_email_notification(request.user.clientuser.client.id,
                                                                        request.data['receive_email_notification'])
         return Response(ClientSerializer(client_user).data)
+
+
+class AuditFeedbackReportMail(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST':[GROUP_NAME_CLIENT],
+    }
+    def post(self, request):
+        audit_store = audit_store_client_service.audit_feedback_report_mail(request.data['email_receiver_list'], request.data['audit_store_id'], request.data['audit_report'], request.user)
+        return Response(AuditStoreSerializer(audit_store).data)

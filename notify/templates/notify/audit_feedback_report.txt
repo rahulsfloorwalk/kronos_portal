@@ -1,0 +1,8 @@
+Dear Receiver,
+
+Greetings from FloorWalk!
+
+We would like to inform you that your {{brand_name}} audit report of {{audit_cycle_name}} is ready. Please find the {{store_name}}, {{city}} dated {{audit_date}} feedback report attached to this email for your perusal.
+
+With Kind Regards,
+Team FloorWalk

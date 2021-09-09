@@ -118,7 +118,7 @@ class QuestionForm extends React.Component {
 		let optionBuilder;
 		if(this.state.form.question_type === "MUTEX" || this.state.form.question_type === "MULTISELECT"){
 			optionBuilder = <OptionBuilder
-				options={this.state.form.question_data ? this.state.form.question_data.options : []}
+				options={Object.keys(this.state.form.question_data) > 0 && this.state.form.question_data.constructor === Object ? this.state.form.question_data.options : []}
 				onChange={this.optionsChanged}
 			/>;
 		}
