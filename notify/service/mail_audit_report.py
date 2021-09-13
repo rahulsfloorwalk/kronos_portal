@@ -24,9 +24,10 @@ def audit_feedback_report_mail_task(email_list, rendered_report_data, data):
         params = {"File": upload_io, "StoreFile": False}
         pdf_file = convertapi.convert('pdf', params).save_files(tempfile.gettempdir())
 
-        subject = "{} | Feedback Report {} <Floorwalk>".format(data['brand_name'], data['audit_cycle_month'])
-        body = get_template("notify/audit_feedback_report.txt").render(data)
-        email = EmailMessage(subject, body, settings.EMAIL_HOST_USER, email_list)
+        subject = "{} | Feedback Report: ({}) <> FloorWalk".format(data['brand_name'], data['audit_cycle_month'])
+        body = get_template("notify/audit_feedback_report_email.html").render(data)
+        email = EmailMessage(subject, body, to = email_list)
+        email.content_subtype = "html"
         email.attach_file(pdf_file[0], "application/pdf")
         email.send()
         _logger.info("Audit report mail sent")

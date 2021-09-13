@@ -7,6 +7,8 @@ import { findAnswer } from "../../reducers/answer.js";
 
 import { questionPropType } from "../../prop_types.js";
 
+import MarkdownViewer from "../../../../js/components/MarkdownViewer.jsx";
+
 export class __QuestionRow extends React.Component{
 	static propTypes = {
 		auditStoreId: PropTypes.number.isRequired,
@@ -50,7 +52,7 @@ export class __QuestionRow extends React.Component{
 							{this.props.question.sequence}
 						</div>
 						<div className="col-xs-10 col-md-5">
-							<p><b>{this.props.question.question_txt}</b>{savingMessage}</p>
+							<b><MarkdownViewer markdown={this.props.question.question_txt || ""}/>{savingMessage}</b>
 						</div>
 						<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
 							<AnswerElement

@@ -8,6 +8,7 @@ import { getQuestionType } from "../../../utils.js";
 import { questionPropType } from "./prop_types";
 
 import ImpactFactorTags from "../../../components/ImpactFactorTags.jsx";
+import MarkdownViewer from "../../../../js/components/MarkdownViewer.jsx";
 
 export default class QuestionRow extends React.Component {
 	static propTypes = {
@@ -23,7 +24,7 @@ export default class QuestionRow extends React.Component {
 					<div className="pull-right">
 						<ImpactFactorTags impactFactors={this.props.q.question_data && this.props.q.question_data.impact_factors}/>
 					</div>
-					{this.props.q.question_txt}<br/>
+					<MarkdownViewer markdown={this.props.q.question_txt || ""}/>
 					<span className="text-muted">{
 						this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
 							? this.props.q.question_data.options.map(o => o.value).join(" / ")

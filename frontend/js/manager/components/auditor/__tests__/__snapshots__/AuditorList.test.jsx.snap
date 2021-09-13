@@ -115,7 +115,7 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
           <option
             value="W"
           >
-            Wrost
+            Worse
           </option>
         </select>
       </div>
