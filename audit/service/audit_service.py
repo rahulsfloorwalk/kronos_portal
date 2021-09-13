@@ -172,7 +172,7 @@ def create_audit_by_state(data):
         audit = {
             'count': data.get('count', 1),
             'earnings_per_audit': data.get('earnings_per_audit',audit_cycle.earnings_per_audit),
-            'reimbursement': data.get('earnings_per_audit',audit_cycle.reimbursement),
+            'reimbursement': data.get('reimbursement',audit_cycle.reimbursement),
             'store': store,
             'audit_cycle': audit_cycle,
             'post_approval_description': data.get('post_approval_description','')

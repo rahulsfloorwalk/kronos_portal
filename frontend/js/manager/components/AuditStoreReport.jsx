@@ -19,6 +19,7 @@ import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
+import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 import { auditStorePropType, sectionPropType } from "../prop_types";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
@@ -274,7 +275,7 @@ class __QuestionRow extends React.Component {
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td>{this.props.q.question_txt}</td>
+				<td><MarkdownViewer markdown={this.props.q.question_txt || ""}/></td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
 				<td className="">{notApplicableElement}</td>

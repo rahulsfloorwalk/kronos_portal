@@ -323,8 +323,8 @@ export default class AuditStoreDetail extends React.Component {
 				}
 				<ActionReportBox actionPlan={this.state.actionPlan}/>
 				<SectionTotalsBox sections={this.state.sections} reportSections={this.state.reportSections}/>
-				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode}/>
-				{ printMode || this.state.report_display == "block" ?
+				<SectionList auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections} reportSections={this.state.reportSections} printMode={printMode || this.state.report_display == "block"}/>
+				{ printMode ?
 					<AttachmentPrintRenderer auditStoreId={parseInt(this.props.params.auditStoreId)} sections={this.state.sections}/>
 					: null }
 				{ this.state.report_display == "block" ?

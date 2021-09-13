@@ -26,7 +26,7 @@ def audit_feedback_report_mail_task(email_list, rendered_report_data, data):
 
         subject = "{} | Feedback Report: ({}) <> FloorWalk".format(data['brand_name'], data['audit_cycle_month'])
         body = get_template("notify/audit_feedback_report_email.html").render(data)
-        email = EmailMessage(subject, body, settings.EMAIL_HOST_USER, email_list)
+        email = EmailMessage(subject, body, to = email_list)
         email.content_subtype = "html"
         email.attach_file(pdf_file[0], "application/pdf")
         email.send()

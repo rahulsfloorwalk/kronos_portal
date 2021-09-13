@@ -6,6 +6,7 @@ import { } from "react-router";
 import Alert from "react-s-alert";
 
 import { } from "../../../components/Icons.jsx";
+import MarkdownViewer from "../../../../js/components/MarkdownViewer.jsx";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
 
@@ -201,7 +202,7 @@ class QuestionRow extends React.Component{
 							{this.props.q.sequence}
 						</div>
 						<div className="col-xs-10 col-md-5">
-							<p><b>{this.props.q.question_txt}</b>{savingMessage}</p>
+							<b><MarkdownViewer markdown={this.props.q.question_txt || ""}/>{savingMessage}</b>
 						</div>
 						<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
 							{answerElement}

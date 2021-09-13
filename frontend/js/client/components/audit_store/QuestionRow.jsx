@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 import ImpactFactorTags from "../../../components/ImpactFactorTags.jsx";
+import MarkdownViewer from "../../../components/MarkdownViewer.jsx";
 
 export default class QuestionRow extends React.Component{
 	static propTypes = {
@@ -55,7 +56,7 @@ export default class QuestionRow extends React.Component{
 					<div className="pull-right">
 						<ImpactFactorTags impactFactors={this.props.q.question_data && this.props.q.question_data.impact_factors}/>
 					</div>
-					{this.props.q.question_txt}
+					<MarkdownViewer markdown={this.props.q.question_txt || ""}/>
 				</td>
 				<td>
 					{answerText}
