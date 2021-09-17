@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField, ModelSerializer
+from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -125,6 +125,36 @@ class AuditCycleIdCheckPointsView(APIView):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_cycle = audit_cycle_service.set_checkpoints(audit_cycle_id, ds.validated_data['checkpoints'])
+        return Response(AuditCycleSerializer(audit_cycle).data)
+
+class AuditCycleIdChargePerAuditView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        charge_per_audit = IntegerField(min_value = 0)
+
+    def post(self, request, audit_cycle_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_cycle = audit_cycle_service.set_charge_per_audit(audit_cycle_id, ds.validated_data['charge_per_audit'])
+        return Response(AuditCycleSerializer(audit_cycle).data)
+
+class AuditCycleIdSystemCostView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+
+    class DeSerializer(Serializer):
+        system_cost = IntegerField(min_value = 0)
+
+    def post(self, request, audit_cycle_id):
+        ds = self.DeSerializer(data=request.data)
+        ds.is_valid(raise_exception=True)
+        audit_cycle = audit_cycle_service.set_system_cost(audit_cycle_id, ds.validated_data['system_cost'])
         return Response(AuditCycleSerializer(audit_cycle).data)
 
 class ExportQuestionnaire(APIView):

@@ -116,7 +116,6 @@ class QuestionForm extends React.Component {
 		var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
 
 		let optionBuilder;
-		console.log(typeof(this.state.form.question_data));
 		if(this.state.form.question_type === "MUTEX" || this.state.form.question_type === "MULTISELECT"){
 			optionBuilder = <OptionBuilder
 				options={typeof(this.state.form.question_data) != "undefined" && Object.keys(this.state.form.question_data) > 0 ? this.state.form.question_data.options : []}

@@ -127,6 +127,25 @@ exports[`<Header/> is rendered correctly 1`] = `
           </span>
         </a>
       </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
+            className="glyphicon glyphicon-stats"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Reports
+          </span>
+        </a>
+      </li>
     </ul>
     <ul
       className="nav navbar-nav navbar-right"

@@ -195,6 +195,48 @@ export function setCheckPoints(auditCycleId, checkpoints){
 }
 
 
+export function setChargePerAudit(auditCycleId, charge_per_audit){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/charge_per_audit`,
+			data: JSON.stringify({
+				charge_per_audit: charge_per_audit
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(AuditCycle){
+			dispatch({
+				type: types.AUDIT_CYCLE_ID_POST,
+				status: "success",
+				auditCycle: AuditCycle
+			});
+		});
+		return req;
+	};
+}
+
+export function setSystemCost(auditCycleId, system_cost){
+	return function(dispatch){
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/system_cost`,
+			data: JSON.stringify({
+				system_cost: system_cost
+			}),
+			contentType: "application/json"
+		});
+		req.done(function(AuditCycle){
+			dispatch({
+				type: types.AUDIT_CYCLE_ID_POST,
+				status: "success",
+				auditCycle: AuditCycle
+			});
+		});
+		return req;
+	};
+}
+
 
 //code for audits here
 

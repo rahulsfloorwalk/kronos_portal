@@ -96,6 +96,15 @@ import ManagerList from "./manager/ManagerList.jsx";
 import ProofTagList from "./proof_tag/ProofTagList.jsx";
 import ProofTagForm from "./proof_tag/ProofTagForm.jsx";
 
+import ReportList from "./reports/ReportList.jsx";
+import AuditorPaymentReport from "./reports/AuditorPaymentReport.jsx";
+import BillingReport from "./reports/BillingReport.jsx";
+import ProfitablityReport from "./reports/ProfitablityReport.jsx";
+import ProjectCostReport from "./reports/ProjectCostReport.jsx";
+
+import ChargePerAuditForm from "./ChargePerAuditForm.jsx";
+import SystemCostForm from "./SystemCostForm.jsx";
+
 import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingForm.jsx";
 
 const Routes = () => (
@@ -141,6 +150,8 @@ const Routes = () => (
 				<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
 				<Route path="checkpoints" component={CheckPoints}/>
 				<Route path="proofs_tag" component={ProofsTag}/>
+				<Route path="audit_charge" component={ChargePerAuditForm}/>
+				<Route path="system_cost" component={SystemCostForm}/>
 				<Route path="questionnaire" component={SectionList}>
 					<Route path="section/copy" component={SectionCopyForm}/>
 					<Route path="section/add" component={SectionAddForm}/>
@@ -214,6 +225,12 @@ const Routes = () => (
 			<Route path="manager" component={ManagerList}>
 				<Route path="add" component={ManagerForm}/>
 				<Route path=":userId/edit" component={ManagerForm}/>
+			</Route>
+			<Route path="reports" component={ReportList}>
+				<Route path="auditor_payment" component={AuditorPaymentReport}></Route>
+				<Route path="billing" component={BillingReport}></Route>
+				<Route path="profitablity" component={ProfitablityReport}></Route>
+				<Route path="project_cost" component={ProjectCostReport}></Route>
 			</Route>
 			<Route path="proof_tag" component={ProofTagList}>
 				<Route path="add" component={ProofTagForm}/>
