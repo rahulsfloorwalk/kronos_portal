@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router";
 
 import { pointerStyle } from "../../styles.js";
@@ -11,6 +12,14 @@ import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn
 import floorwalkHeaderLogoUrl from "../../../img/logo_500x268.png";
 
 export default class Header extends Component{
+	static propTypes = {
+		reportTab: PropTypes.bool.isRequired
+	};
+
+	static defaultProps = {
+		reportTab: false,
+	};
+
 	state = {};
 
 	render(){
@@ -32,7 +41,7 @@ export default class Header extends Component{
 						<NavLink to="/agency_user"><Rook/> <span className="hidden-xs">Agency</span></NavLink>
 						<NavLink to="/moderator/summary"><Knight/> <span className="hidden-xs">Moderators</span></NavLink>
 						<NavLink to="/manager"><Queen/> <span className="hidden-xs">Managers</span></NavLink>
-						<NavLink to="/reports/auditor_payment"><Stats/> <span className="hidden-xs">Reports</span></NavLink>
+						{this.props.reportTab ? <NavLink to="/reports/auditor_payment"><Stats/> <span className="hidden-xs">Reports</span></NavLink> : null}
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

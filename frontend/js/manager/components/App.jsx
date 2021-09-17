@@ -41,7 +41,7 @@ export default class App extends Component{
 					<title>{_.get(this.state.config, "BRAND_SHORTNAME", "")} Manager Portal</title>
 				</Helmet>
 				<DevelopmentMarker/>
-				<Header/>
+				<Header reportTab={_.get(this.state.config, "SHOW_REPORT_TAB", false)}/>
 				<div className="container-fluid" style={contentStyle}>
 					{this.props.children}
 				</div>
