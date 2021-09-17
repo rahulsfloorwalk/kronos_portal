@@ -2,8 +2,13 @@ from payment.models import Payment
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from django.db.models import Sum, F
+from django.conf import settings
+from kronos.exceptions import AppLogicError
 
-def get_auditor_payment_report(month, year, payment_type):
+def get_auditor_payment_report(month, year, payment_type, user):
+    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
+        raise AppLogicError("Permission denied")
+
     if month and year:
         audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
@@ -55,7 +60,10 @@ def get_auditor_payment_report(month, year, payment_type):
     return response
 
 
-def get_billing_report(month, year):
+def get_billing_report(month, year, user):
+    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
+        raise AppLogicError("Permission denied")
+
     if month and year:
         audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
@@ -86,7 +94,10 @@ def get_billing_report(month, year):
     return response
 
 
-def get_profitability_report(month, year):
+def get_profitability_report(month, year, user):
+    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
+        raise AppLogicError("Permission denied")
+
     if month and year:
         audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
@@ -121,7 +132,10 @@ def get_profitability_report(month, year):
     return response
 
 
-def get_project_cost_report(month, year):
+def get_project_cost_report(month, year, user):
+    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
+        raise AppLogicError("Permission denied")
+
     if month and year:
         audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:

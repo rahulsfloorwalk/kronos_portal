@@ -12,7 +12,7 @@ class AuditPaymentReportView(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        report = get_auditor_payment_report(request.GET.get('month',''), request.GET.get('year',''), request.GET.get('payment',''))
+        report = get_auditor_payment_report(request.GET.get('month',''), request.GET.get('year',''), request.GET.get('payment',''), request.user)
         return Response(report)
 
 
@@ -22,7 +22,7 @@ class BilingReportView(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        billing_report = get_billing_report(request.GET.get('month',''), request.GET.get('year'))
+        billing_report = get_billing_report(request.GET.get('month',''), request.GET.get('year'), request.user)
         return Response(billing_report)
 
 
@@ -32,7 +32,7 @@ class ProfitablityReportView(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        profitability_report = get_profitability_report(request.GET.get('month',''), request.GET.get('year'))
+        profitability_report = get_profitability_report(request.GET.get('month',''), request.GET.get('year'), request.user)
         return Response(profitability_report)
 
 
@@ -42,5 +42,5 @@ class ProjectCostReportView(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        project_cost_report = get_project_cost_report(request.GET.get('month',''), request.GET.get('year'))
+        project_cost_report = get_project_cost_report(request.GET.get('month',''), request.GET.get('year'), request.user)
         return Response(project_cost_report)
