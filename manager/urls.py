@@ -28,6 +28,7 @@ from .viewss import config as config_views
 from .viewss import questionnaire_type as questionnaire_type_views
 from .viewss import agency_user as agency_user_views
 from .viewss import report_attribute as report_attribute_views
+from .viewss import reports as report_views
 
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
@@ -101,6 +102,8 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/post_approval_description$', audit_cycle_views.AuditCycleIdPostApprovalDescriptionView.as_view(), name='audit_cycle_id_post_approval_description_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/checkpoints$', audit_cycle_views.AuditCycleIdCheckPointsView.as_view(), name='audit_cycle_id_checkpoints'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/charge_per_audit$', audit_cycle_views.AuditCycleIdChargePerAuditView.as_view(), name='audit_cycle_id_charge_per_audit'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/system_cost$', audit_cycle_views.AuditCycleIdSystemCostView.as_view(), name='audit_cycle_id_system_cost'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/csv$', payment_views.PendingPaymentCsvView.as_view(), name='audit_cycle_pending_payment_csv_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/xlsx', payment_views.PendingPaymentXlsxView.as_view(), name='audit_cycle_pending_payment_xlsx_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/pay$', payment_views.PayAllPendingPaymentsForAuditCycle.as_view(), name='audit_cycle_pay_all_pending_payment_view'),
@@ -207,4 +210,8 @@ urlpatterns = ([
     url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)$', questionnaire_type_views.QuestionnaireTypeIdView.as_view(), name='questionnaire_type_id_view'),
     url(r'questionnaire_type$', questionnaire_type_views.QuestionnaireTypeView.as_view(), name='questionnaire_type_view'),
 
+    url(r'reports/auditor_payment/', report_views.AuditPaymentReportView.as_view(), name="auditor_payment_report"),
+    url(r'reports/billing/', report_views.BilingReportView.as_view(), name="billing_report"),
+    url(r'reports/profitability/', report_views.ProfitablityReportView.as_view(), name="profitability_report"),
+    url(r'reports/project_cost/', report_views.ProjectCostReportView.as_view(), name="project_cost_report"),
 ], 'manager')

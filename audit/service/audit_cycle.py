@@ -144,6 +144,17 @@ def set_checkpoints(audit_cycle_id, checkpoints):
         audit_cycle.check_points = checkpoints
         return save(audit_cycle)
 
+def set_charge_per_audit(audit_cycle_id, charge_per_audit):
+    audit_cycle = find_by_id(audit_cycle_id)
+
+    audit_cycle.charge_per_audit = charge_per_audit
+    return save(audit_cycle)
+
+def set_system_cost(audit_cycle_id, system_cost):
+    audit_cycle = find_by_id(audit_cycle_id)
+
+    audit_cycle.system_cost = system_cost
+    return save(audit_cycle)
 
 def find_audit_cycles_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')

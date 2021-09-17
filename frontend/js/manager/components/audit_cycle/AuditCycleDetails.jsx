@@ -69,7 +69,7 @@ export class AuditCycleDetails extends React.Component{
 							<Pencil/>
 						</Link>
 					</span>
-					<Retweet/> { this.props.auditCycle.client.name } - { this.props.auditCycle.name } <small>( { detailsElement }) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>Post Approval Desc.</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/checkpoints`}>Checkpoints</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/proofs_tag`}>Proofs Tag</Link>)</small>
+					<Retweet/> { this.props.auditCycle.client.name } - { this.props.auditCycle.name } <small>( { detailsElement }) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>Post Approval Desc.</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/checkpoints`}>Checkpoints</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/proofs_tag`}>Proofs Tag</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/audit_charge`}>Charge per audit</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/system_cost`}>System Cost</Link>)</small>
 				</h3>
 				<div className="row" style={{fontSize:"110%"}}>
 					<div className="col-xs-6 col-md-2">

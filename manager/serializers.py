@@ -70,6 +70,8 @@ class AuditCycleSerializer(ModelSerializer):
             'end_date',
             'earnings_per_audit',
             'reimbursement',
+            'charge_per_audit',
+            'system_cost',
             'description',
             'post_approval_description',
             'check_points',
