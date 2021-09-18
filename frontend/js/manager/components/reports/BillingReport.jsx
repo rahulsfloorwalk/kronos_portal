@@ -10,7 +10,7 @@ export default class BillingReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			month: "",
+			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
 		};
 	}
@@ -68,12 +68,14 @@ export default class BillingReport extends Component{
 		let total_price_per_audit = 0;
 		let total_system_cost = 0;
 		let total_revenue = 0;
+		let total_est_billing = 0;
 		let total_gst = 0;
 		let audit_cycle_blocks = this.state.active_cycles.map((value, index) => {
 			total_audits_conducted += value.audit_conducted;
 			total_price_per_audit += value.charge_per_audit;
 			total_system_cost += value.system_cost;
 			total_revenue += value.revenue;
+			total_est_billing += value.est_billing;
 			total_gst += value.gst;
 			return (
 				<tr key={index}>
@@ -85,6 +87,7 @@ export default class BillingReport extends Component{
 					<td className="text-center">{value.charge_per_audit}</td>
 					<td className="text-center">{value.system_cost}</td>
 					<td className="text-center">{value.revenue}</td>
+					<td className="text-center">{value.est_billing}</td>
 					<td className="text-center">{value.gst}</td>
 				</tr>
 			);
@@ -99,7 +102,6 @@ export default class BillingReport extends Component{
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
-										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
@@ -123,6 +125,7 @@ export default class BillingReport extends Component{
 								<th className="text-center">Price Per Audit</th>
 								<th className="text-center">System Cost</th>
 								<th className="text-center">Total Billing</th>
+								<th className="text-center">Total Est. Billing</th>
 								<th className="text-center">GST</th>
 							</tr>
 						</thead>
@@ -136,6 +139,7 @@ export default class BillingReport extends Component{
 								<td className="text-center"><b>{total_price_per_audit}</b></td>
 								<td className="text-center"><b>{total_system_cost}</b></td>
 								<td className="text-center"><b>{total_revenue}</b></td>
+								<td className="text-center"><b>{total_est_billing}</b></td>
 								<td className="text-center"><b>{total_gst}</b></td>
 							</tr>
 						</tbody>

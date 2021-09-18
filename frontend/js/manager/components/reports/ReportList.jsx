@@ -16,9 +16,9 @@ class ReportList extends React.Component {
 					<Stats/> Reports
 				</h2>
 				<ul className="nav nav-tabs">
+					<NavLink to="/reports/profitablity">PNL</NavLink>
 					<NavLink to="/reports/auditor_payment">Auditor Payments</NavLink>
 					<NavLink to="/reports/billing">Billing</NavLink>
-					<NavLink to="/reports/profitablity">Profitability</NavLink>
 					<NavLink to="/reports/project_cost">Project Cost</NavLink>
 				</ul>
 				<br/>

@@ -10,9 +10,9 @@ def get_auditor_payment_report(month, year, payment_type, user):
         raise AppLogicError("Permission denied")
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -43,6 +43,12 @@ def get_auditor_payment_report(month, year, payment_type, user):
         reimbursement = audit_price['reim_sum'] if audit_price['reim_sum'] else 0
         earnings_per_audit = audit_price['ear_sum'] if audit_price['ear_sum'] else 0
 
+        planned_audit = audit_cycle.audit_count()
+        planned_audit = planned_audit if planned_audit else 0
+
+        cycle_earnings_per_audit = audit_cycle.earnings_per_audit if audit_cycle.earnings_per_audit else 0
+        cycle_reimbursement = audit_cycle.reimbursement if audit_cycle.reimbursement else 0
+
         if (reimbursement + earnings_per_audit) < 1:
             payment_status = ""
 
@@ -56,6 +62,7 @@ def get_auditor_payment_report(month, year, payment_type, user):
         obj['reimbursement'] = reimbursement
         obj['earnings_per_audit'] = earnings_per_audit
         obj['auditor_payment'] = reimbursement + earnings_per_audit
+        obj['est_auditor_payment'] = planned_audit * (cycle_earnings_per_audit + cycle_reimbursement)
         response.append(obj)
     return response
 
@@ -65,9 +72,9 @@ def get_billing_report(month, year, user):
         raise AppLogicError("Permission denied")
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -77,6 +84,9 @@ def get_billing_report(month, year, user):
 
         audit_conducted = audit_stores.count()
         revenue = audit_conducted * audit_cycle.charge_per_audit + audit_cycle.system_cost
+
+        planned_audit = audit_cycle.audit_count()
+        planned_audit = planned_audit if planned_audit else 0
 
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
@@ -89,6 +99,7 @@ def get_billing_report(month, year, user):
         obj['audit_conducted'] = audit_conducted
         obj['revenue'] = revenue
         obj['gst'] = revenue * 0.18
+        obj['est_billing'] = (planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost
         response.append(obj)
 
     return response
@@ -99,9 +110,9 @@ def get_profitability_report(month, year, user):
         raise AppLogicError("Permission denied")
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -111,9 +122,12 @@ def get_profitability_report(month, year, user):
 
         audit_conducted = audit_stores.count()
         revenue = audit_conducted * audit_cycle.charge_per_audit + audit_cycle.system_cost
-        auditor_cost = audit_stores.aggregate(cost = Sum(F('reimbursement')+ F('earnings_per_audit')))
+        auditor_cost = audit_stores.aggregate(cost = Sum(F('earnings_per_audit')))
         auditor_cost = auditor_cost['cost'] if auditor_cost['cost'] else 0
         ops_profitability = revenue - auditor_cost
+
+        planned_audit = audit_cycle.audit_count()
+        planned_audit = planned_audit if planned_audit else 0
 
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
@@ -127,6 +141,7 @@ def get_profitability_report(month, year, user):
         obj['revenue'] = revenue
         obj['auditor_cost'] = auditor_cost
         obj['ops_profitability'] = ops_profitability
+        obj['est_profitability'] = ((planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost) - (planned_audit * auditor_cost)
         response.append(obj)
 
     return response
@@ -137,9 +152,9 @@ def get_project_cost_report(month, year, user):
         raise AppLogicError("Permission denied")
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(status=AuditCycle.ACTIVE, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -147,9 +162,12 @@ def get_project_cost_report(month, year, user):
 
         audit_stores = AuditStore.objects.filter(audit__audit_cycle__id = audit_cycle.id, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED])
         audit_conducted = audit_stores.count()
-        auditor_cost = audit_stores.aggregate(cost = Sum(F('reimbursement') + F('earnings_per_audit')))
+        planned_audit = audit_cycle.audit_count()
+        planned_audit = planned_audit if planned_audit else 0
+        auditor_cost = audit_stores.aggregate(cost = Sum(F('earnings_per_audit')))
         auditor_cost = auditor_cost['cost'] if auditor_cost['cost'] else 0
-        estimated_cost = (audit_cycle.earnings_per_audit + audit_cycle.reimbursement) * audit_cycle.audit_count()
+        cycle_earnings_per_audit = audit_cycle.earnings_per_audit if audit_cycle.earnings_per_audit else 0
+        estimated_cost = cycle_earnings_per_audit * planned_audit
 
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
@@ -157,12 +175,12 @@ def get_project_cost_report(month, year, user):
         obj['client'] = audit_cycle.client.name
         obj['month'] = audit_cycle.start_date.month
         obj['year'] = audit_cycle.start_date.year
-        obj['planned_audit'] = audit_cycle.audit_count()
+        obj['planned_audit'] = planned_audit
         obj['conducted_audit'] = audit_conducted
-        obj['audit_complete_per'] = round((audit_conducted / audit_cycle.audit_count()) * 100, 1)
+        obj['audit_complete_per'] = round((audit_conducted / planned_audit) * 100, 1) if planned_audit > 0 else 0
         obj['estimated_cost'] = estimated_cost
-        obj['actual_cost'] = auditor_cost * audit_conducted
-        obj['variation'] = estimated_cost - (auditor_cost * audit_conducted)
+        obj['actual_cost'] = auditor_cost
+        obj['variation'] = estimated_cost - auditor_cost
         response.append(obj)
 
     return response

@@ -10,7 +10,7 @@ export default class ProfitabilityReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			month: "",
+			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
 		};
 	}
@@ -70,6 +70,7 @@ export default class ProfitabilityReport extends Component{
 		let total_revenue = 0;
 		let total_auditor_cost = 0;
 		let total_ops_profitability = 0;
+		let total_est_profitability = 0;
 
 		let audit_cycle_blocks = this.state.active_cycles.map((value, index) => {
 
@@ -79,6 +80,7 @@ export default class ProfitabilityReport extends Component{
 			total_revenue += value.revenue;
 			total_auditor_cost += value.auditor_cost;
 			total_ops_profitability += value.ops_profitability;
+			total_est_profitability += value.est_profitability;
 			return (
 				<tr key={index}>
 					<td className="text-center"><small>{value.client}</small></td>
@@ -91,6 +93,7 @@ export default class ProfitabilityReport extends Component{
 					<td className="text-center">{value.revenue}</td>
 					<td className="text-center">{value.auditor_cost}</td>
 					<td className="text-center">{value.ops_profitability}</td>
+					<td className="text-center">{value.est_profitability}</td>
 				</tr>
 			);
 		});
@@ -104,7 +107,6 @@ export default class ProfitabilityReport extends Component{
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
-										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
@@ -130,6 +132,7 @@ export default class ProfitabilityReport extends Component{
 								<th className="text-center">Total Revenue</th>
 								<th className="text-center">Total Cost</th>
 								<th className="text-center">Ops Profitability</th>
+								<th className="text-center">Est. Profitability</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -142,6 +145,7 @@ export default class ProfitabilityReport extends Component{
 								<td className="text-center"><b>{total_revenue}</b></td>
 								<td className="text-center"><b>{total_auditor_cost}</b></td>
 								<td className="text-center"><b>{total_ops_profitability}</b></td>
+								<td className="text-center"><b>{total_est_profitability}</b></td>
 							</tr>
 						</tbody>
 					</table>

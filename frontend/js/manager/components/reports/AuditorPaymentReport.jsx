@@ -12,7 +12,7 @@ export default class AuditorPaymentReport extends Component{
 		super(props);
 		this.state = {
 			payment: "",
-			month: "",
+			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
 		};
 	}
@@ -76,11 +76,13 @@ export default class AuditorPaymentReport extends Component{
 		let total_reimbursement = 0;
 		let total_earning = 0;
 		let total_auditor_payment = 0;
+		let total_est_auditor_payment = 0;
 		const audit_cycle_blocks = this.state.active_cycles.map((value, index) => {
 			let linkTo = `audit_cycle/${value.id}/questionnaire`;
 			total_reimbursement += value.reimbursement;
 			total_earning += value.earnings_per_audit;
 			total_auditor_payment += value.auditor_payment;
+			total_est_auditor_payment += value.est_auditor_payment;
 			return (
 				<tr key={index}>
 					<td className="text-center">
@@ -94,6 +96,7 @@ export default class AuditorPaymentReport extends Component{
 					<td className="text-center">{value.reimbursement}</td>
 					<td className="text-center">{value.earnings_per_audit}</td>
 					<td className="text-center">{value.auditor_payment}</td>
+					<td className="text-center">{value.est_auditor_payment}</td>
 					<td className="text-center">{value.payment_status}</td>
 					<td className="text-center">
 						<Link to={linkTo} className="btn btn-default pull-center" target="_blank">View</Link>
@@ -111,7 +114,6 @@ export default class AuditorPaymentReport extends Component{
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
-										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
@@ -134,6 +136,7 @@ export default class AuditorPaymentReport extends Component{
 								<th className="text-center">Total Audit Reimbursement</th>
 								<th className="text-center">Total audit fees</th>
 								<th className="text-center">Total Auditor Payment</th>
+								<th className="text-center">Total Est. Auditor Payment</th>
 								<th className="text-center">
 									<select name="payment" className="form-control" value={this.state.payment} onChange={this.payment_changed}>
 										<option value="">Select payment status</option>
@@ -151,6 +154,7 @@ export default class AuditorPaymentReport extends Component{
 								<td className="text-center"><b>{total_reimbursement}</b></td>
 								<td className="text-center"><b>{total_earning}</b></td>
 								<td className="text-center"><b>{total_auditor_payment}</b></td>
+								<td className="text-center"><b>{total_est_auditor_payment}</b></td>
 								<td></td>
 								<td></td>
 							</tr>

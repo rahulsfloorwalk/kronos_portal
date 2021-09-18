@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router";
 
 import { getProjectCostReports } from "../../service/reports.js";
 
@@ -10,7 +11,7 @@ export default class ProfitabilityReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			month: "",
+			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
 		};
 	}
@@ -70,13 +71,16 @@ export default class ProfitabilityReport extends Component{
 		let total_estimated_cost = 0;
 		let total_actual_cost = 0;
 		let total_variation = 0;
+		let row_count = 0;
 		let audit_cycle_blocks = this.state.active_cycles.map((value,index) => {
+			let linkTo = `audit_cycle/${value.id}/questionnaire`;
 			total_planned_audits += value.planned_audit;
 			total_conducted_audit += value.conducted_audit;
 			total_audit_complete_per += value.audit_complete_per;
 			total_estimated_cost += value.estimated_cost;
 			total_actual_cost += value.actual_cost;
 			total_variation += value.variation;
+			row_count += 1;
 			return (
 				<tr key={index}>
 					<td className="text-center"><small>{value.client}</small></td>
@@ -89,9 +93,13 @@ export default class ProfitabilityReport extends Component{
 					<td className="text-center">{value.estimated_cost}</td>
 					<td className="text-center">{value.actual_cost}</td>
 					<td className="text-center">{value.variation}</td>
+					<td className="text-center">
+						<Link to={linkTo} className="btn btn-default pull-center" target="_blank">View</Link>
+					</td>
 				</tr>
 			);
 		});
+		let total_audit_complete_per_avg = row_count > 0 ? total_audit_complete_per / row_count : 0;
 		return (
 			<div>
 				<div className="table-responsive">
@@ -102,7 +110,6 @@ export default class ProfitabilityReport extends Component{
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
-										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
@@ -128,6 +135,7 @@ export default class ProfitabilityReport extends Component{
 								<th className="text-center">Estimated Cost</th>
 								<th className="text-center">Actual Cost</th>
 								<th className="text-center">Variation</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -138,7 +146,7 @@ export default class ProfitabilityReport extends Component{
 								</td>
 								<td className="text-center"><b>{total_planned_audits}</b></td>
 								<td className="text-center"><b>{total_conducted_audit}</b></td>
-								<td className="text-center"><b>{total_audit_complete_per}</b></td>
+								<td className="text-center"><b>{total_audit_complete_per_avg.toFixed(1)}</b></td>
 								<td className="text-center"><b>{total_estimated_cost}</b></td>
 								<td className="text-center"><b>{total_actual_cost}</b></td>
 								<td className="text-center"><b>{total_variation}</b></td>
