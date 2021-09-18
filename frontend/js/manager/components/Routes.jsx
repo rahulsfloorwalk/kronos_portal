@@ -227,9 +227,9 @@ const Routes = () => (
 				<Route path=":userId/edit" component={ManagerForm}/>
 			</Route>
 			<Route path="reports" component={ReportList}>
+				<Route path="profitablity" component={ProfitablityReport}></Route>
 				<Route path="auditor_payment" component={AuditorPaymentReport}></Route>
 				<Route path="billing" component={BillingReport}></Route>
-				<Route path="profitablity" component={ProfitablityReport}></Route>
 				<Route path="project_cost" component={ProjectCostReport}></Route>
 			</Route>
 			<Route path="proof_tag" component={ProofTagList}>
