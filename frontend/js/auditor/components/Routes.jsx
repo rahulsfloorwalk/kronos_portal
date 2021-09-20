@@ -30,12 +30,13 @@ import MobileNumberForm from "./MobileNumberForm.jsx";
 import ToSAcceptForm from "./ToSAcceptForm.jsx";
 
 import PaymentList from "./PaymentList.jsx";
-import ReferralList from "./ReferralList.jsx";
+// import ReferralList from "./ReferralList.jsx";
 import ShopperGuide from "./ShopperGuide.jsx";
 import ShopperGuideVideos from "./ShopperGuideVideos.jsx";
 import ShopperGuideBlogs from "./ShopperGuideBlogs.jsx";
 import ShopperGuidePodcasts from "./ShopperGuidePodcasts.jsx";
 import ShopperGuideSocialSnippets from "./ShopperGuideSocialSnippets.jsx";
+import FullTimeOpportunity from "./FullTimeOpportunity.jsx";
 
 function logPageView() {
 	//console.log(window.location.pathname, window.location.hash);
@@ -72,7 +73,8 @@ const Routes = ({store}) => (
 				</Route>
 				<Route path="payment" component={PaymentList}/>
 				<Route path="payment/:paymentId/payment_concern" component={PaymentConcern}/>
-				<Route path="referral" component={ReferralList}/>
+				{/* <Route path="referral" component={ReferralList}/> */}
+				<Route path="full_time_opportunity" component={FullTimeOpportunity} />
 				<Route path="tos_accept" component={ToSAcceptForm}/>
 				<Route path="shopper_guide" component={ShopperGuide}>
 					<Route path="videos" component={ShopperGuideVideos}/>

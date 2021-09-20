@@ -129,6 +129,8 @@ def get_profitability_report(month, year, user):
         planned_audit = audit_cycle.audit_count()
         planned_audit = planned_audit if planned_audit else 0
 
+        cycle_earnings_per_audit = audit_cycle.earnings_per_audit if audit_cycle.earnings_per_audit else 0
+
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
         obj['status'] = audit_cycle.status
@@ -141,7 +143,7 @@ def get_profitability_report(month, year, user):
         obj['revenue'] = revenue
         obj['auditor_cost'] = auditor_cost
         obj['ops_profitability'] = ops_profitability
-        obj['est_profitability'] = ((planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost) - (planned_audit * auditor_cost)
+        obj['est_profitability'] = ((planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost) - (planned_audit * cycle_earnings_per_audit)
         response.append(obj)
 
     return response
