@@ -101,6 +101,7 @@ import AuditorPaymentReport from "./reports/AuditorPaymentReport.jsx";
 import BillingReport from "./reports/BillingReport.jsx";
 import ProfitablityReport from "./reports/ProfitablityReport.jsx";
 import ProjectCostReport from "./reports/ProjectCostReport.jsx";
+import MonthOnMonthPNL from "./reports/MonthOnMonthPNL.jsx";
 
 import ChargePerAuditForm from "./ChargePerAuditForm.jsx";
 import SystemCostForm from "./SystemCostForm.jsx";
@@ -231,6 +232,7 @@ const Routes = () => (
 				<Route path="auditor_payment" component={AuditorPaymentReport}></Route>
 				<Route path="billing" component={BillingReport}></Route>
 				<Route path="project_cost" component={ProjectCostReport}></Route>
+				<Route path="monthly_pnl" component={MonthOnMonthPNL}></Route>
 			</Route>
 			<Route path="proof_tag" component={ProofTagList}>
 				<Route path="add" component={ProofTagForm}/>

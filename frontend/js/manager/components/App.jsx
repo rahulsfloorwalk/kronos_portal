@@ -2,10 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Helmet } from "react-helmet";
 import _ from "lodash";
+import { connect } from "react-redux";
 
 import Header from "./Header.jsx";
 import Footer from "../../components/Footer.jsx";
 import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
+import types from "../action_types";
 
 import Alert from "react-s-alert";
 import "react-s-alert/dist/s-alert-default.css";
@@ -15,23 +17,29 @@ import { fetchConfig } from "../service/config.js";
 
 import favicon from "../../../img/favicon.png";
 
-export default class App extends Component{
+class App extends Component{
 	static propTypes = {
+		dispatch: PropTypes.func.isRequired,
 		children: PropTypes.node,
 	};
 
 	state = {
+		PERMISSIONS: [],
 		config: {},
 	};
 
 	componentDidMount(){
-		fetchConfig().then((config) => this.setState({config}));
+		fetchConfig().then((config) => {
+			this.props.dispatch({type: types.PERMISSIONS_GET, payload: config.PERMISSIONS});
+			this.setState({config: config, PERMISSIONS: config.PERMISSIONS});
+		});
 	}
 
 	render(){
 		const contentStyle = {
 			"minHeight": "600px"
 		};
+		let reportTab = this.state.PERMISSIONS.includes("can_view_reports");
 		return (
 			<div>
 				<Helmet>
@@ -41,7 +49,7 @@ export default class App extends Component{
 					<title>{_.get(this.state.config, "BRAND_SHORTNAME", "")} Manager Portal</title>
 				</Helmet>
 				<DevelopmentMarker/>
-				<Header reportTab={_.get(this.state.config, "SHOW_REPORT_TAB", false)}/>
+				<Header reportTab={reportTab}/>
 				<div className="container-fluid" style={contentStyle}>
 					{this.props.children}
 				</div>
@@ -52,3 +60,4 @@ export default class App extends Component{
 	}
 }
 
+export default connect()(App);

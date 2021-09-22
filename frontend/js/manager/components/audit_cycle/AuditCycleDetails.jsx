@@ -25,6 +25,9 @@ export class AuditCycleDetails extends React.Component{
 
 		auditCycle: PropTypes.object,
 
+		can_change_system_cost: PropTypes.bool,
+		can_change_price_per_audit: PropTypes.bool,
+
 		children: PropTypes.node,
 
 		dispatch: PropTypes.func.isRequired,
@@ -69,7 +72,7 @@ export class AuditCycleDetails extends React.Component{
 							<Pencil/>
 						</Link>
 					</span>
-					<Retweet/> { this.props.auditCycle.client.name } - { this.props.auditCycle.name } <small>( { detailsElement }) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>Post Approval Desc.</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/checkpoints`}>Checkpoints</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/proofs_tag`}>Proofs Tag</Link>)</small>
+					<Retweet/> { this.props.auditCycle.client.name } - { this.props.auditCycle.name } <small>( { detailsElement }) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/post_approval_description`}>Post Approval Desc.</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/checkpoints`}>Checkpoints</Link>) (<Link to={`/audit_cycle/${this.props.params.auditCycleId}/proofs_tag`}>Proofs Tag</Link>) {this.props.can_change_system_cost ? <Link to={`/audit_cycle/${this.props.params.auditCycleId}/system_cost`}>(System cost)</Link> : null} {this.props.can_change_price_per_audit ? <Link to={`/audit_cycle/${this.props.params.auditCycleId}/audit_charge`}>(Price per audit)</Link> : null}</small>
 				</h3>
 				<div className="row" style={{fontSize:"110%"}}>
 					<div className="col-xs-6 col-md-2">
@@ -153,6 +156,8 @@ export class AuditCycleDetails extends React.Component{
 var mapStoreToProps = function(store, ownProps){
 	return {
 		auditCycle: store.auditCycles[ownProps.params.auditCycleId],
+		can_change_system_cost: store.permissions.includes("can_change_system_cost"),
+		can_change_price_per_audit: store.permissions.includes("can_change_price_per_audit"),
 	};
 };
 

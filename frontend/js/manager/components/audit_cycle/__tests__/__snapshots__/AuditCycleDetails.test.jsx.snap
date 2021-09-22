@@ -105,7 +105,8 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       >
         Proofs Tag
       </a>
-      )
+      ) 
+       
     </small>
   </h3>
   <div
