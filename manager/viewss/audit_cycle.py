@@ -12,6 +12,7 @@ from auditor.service import application_service
 from questionnaire.service import questionnaire as questionnaire_service
 from manager.serializers import AuditCycleSerializer
 from audit.models import AuditCycle
+from kronos.exceptions import AppLogicError
 
 class AuditCycleDeSerializer(ModelSerializer):
     class Meta:
@@ -137,6 +138,8 @@ class AuditCycleIdChargePerAuditView(APIView):
         charge_per_audit = IntegerField(min_value = 0)
 
     def post(self, request, audit_cycle_id):
+        if not request.user.has_perm('manager.can_change_price_per_audit'):
+            raise AppLogicError('Permission denied')
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_cycle = audit_cycle_service.set_charge_per_audit(audit_cycle_id, ds.validated_data['charge_per_audit'])
@@ -152,6 +155,8 @@ class AuditCycleIdSystemCostView(APIView):
         system_cost = IntegerField(min_value = 0)
 
     def post(self, request, audit_cycle_id):
+        if not request.user.has_perm('manager.can_change_system_cost'):
+            raise AppLogicError('Permission denied')
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_cycle = audit_cycle_service.set_system_cost(audit_cycle_id, ds.validated_data['system_cost'])

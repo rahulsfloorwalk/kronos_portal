@@ -110,7 +110,7 @@ export default class AuditorPaymentReport extends Component{
 					<table className="table table-hover table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th className="text-center">Client{}</th>
+								<th className="text-center">Client</th>
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>

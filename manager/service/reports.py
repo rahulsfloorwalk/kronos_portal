@@ -2,12 +2,8 @@ from payment.models import Payment
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from django.db.models import Sum, F
-from django.conf import settings
-from kronos.exceptions import AppLogicError
 
-def get_auditor_payment_report(month, year, payment_type, user):
-    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
-        raise AppLogicError("Permission denied")
+def get_auditor_payment_report(month, year, payment_type):
 
     if month and year:
         audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
@@ -67,9 +63,7 @@ def get_auditor_payment_report(month, year, payment_type, user):
     return response
 
 
-def get_billing_report(month, year, user):
-    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
-        raise AppLogicError("Permission denied")
+def get_billing_report(month, year):
 
     if month and year:
         audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
@@ -105,9 +99,7 @@ def get_billing_report(month, year, user):
     return response
 
 
-def get_profitability_report(month, year, user):
-    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
-        raise AppLogicError("Permission denied")
+def get_profitability_report(month, year):
 
     if month and year:
         audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
@@ -149,9 +141,7 @@ def get_profitability_report(month, year, user):
     return response
 
 
-def get_project_cost_report(month, year, user):
-    if user.email not in settings.REPORT_PERMISSION_EMAIL_LIST:
-        raise AppLogicError("Permission denied")
+def get_project_cost_report(month, year):
 
     if month and year:
         audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
@@ -183,6 +173,42 @@ def get_project_cost_report(month, year, user):
         obj['estimated_cost'] = estimated_cost
         obj['actual_cost'] = auditor_cost
         obj['variation'] = estimated_cost - auditor_cost
+        response.append(obj)
+
+    return response
+
+
+def get_monthly_pnl_report(year):
+
+    audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date')
+    audit_stores = AuditStore.objects.filter(audit__audit_cycle__id__in = audit_cycles, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED])
+
+    response = []
+    month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
+    for i in month_list:
+        obj = {}
+        filtered_audit_cycle = audit_cycles.filter(start_date__month = i)
+
+        revenue, total_reimbursement, total_earnings_per_audit = 0, 0, 0
+
+        for j in filtered_audit_cycle:
+            filtered_audit_stores = audit_stores.filter(audit__audit_cycle__id = j.id)
+            audit_conducted = filtered_audit_stores.count()
+            audit_conducted_count = audit_conducted if audit_conducted else 0
+            revenue += ((audit_conducted_count * j.charge_per_audit) + j.system_cost)
+
+            audit_price = filtered_audit_stores.aggregate(reim_sum = Sum('reimbursement'), ear_sum = Sum('earnings_per_audit'))
+            total_reimbursement = audit_price['reim_sum'] if audit_price['reim_sum'] else 0
+            total_earnings_per_audit = audit_price['ear_sum'] if audit_price['ear_sum'] else 0
+
+        auditor_payment = total_reimbursement + total_earnings_per_audit
+        gross_margin = revenue - auditor_payment
+        obj['month'] = i
+        obj['year'] = year
+        obj['sales'] = revenue
+        obj['auditor_payment'] = auditor_payment
+        obj['gross_margin'] = gross_margin
+        obj['gross_margin_per'] = round((revenue - gross_margin) / revenue, 1) if revenue > 1 else 0
         response.append(obj)
 
     return response

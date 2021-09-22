@@ -136,6 +136,8 @@ var types = {
 	//Reset All Errors
 	RESET_FORM_ERRORS: "RESET_FORM_ERRORS",
 	SET_FORM_ERRORS: "SET_FORM_ERRORS",
+
+	PERMISSIONS_GET: "PERMISSIONS_GET",
 };
 
 export default types;

@@ -20,6 +20,7 @@ import formReducer from "./reducers/forms";
 import errorsReducer from "./reducers/errors";
 import moderatorReducer from "./reducers/moderator";
 import moderatorSummaryReducer from "./reducers/moderator_summary";
+import permissionReducer from "./reducers/permission";
 
 export default combineReducers({
 	applications: applicationReducer,
@@ -42,5 +43,6 @@ export default combineReducers({
 	errors: errorsReducer,
 	moderator: moderatorReducer,
 	moderatorSummary: moderatorSummaryReducer,
+	permissions: permissionReducer,
 });
 

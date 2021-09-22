@@ -52,3 +52,15 @@ class ProofTag(Model):
             self.created_at = timezone.now()
         self.modified_at = timezone.now()
         return super(ProofTag, self).save(*args, **kwargs)
+
+
+class ManagerPermissions(Model):
+
+    class Meta:
+        managed = False
+        default_permissions = ()
+        permissions = (
+            ('can_view_reports', 'Can view reports'),
+            ('can_change_system_cost', 'Can change system cost'),
+            ('can_change_price_per_audit', 'Can change price per audit'),
+        )

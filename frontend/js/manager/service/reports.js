@@ -16,3 +16,7 @@ export function getProfitabilityReports(month, year){
 export function getProjectCostReports(month, year){
 	return $.get( url.api_base_path + `manager/reports/project_cost/?month=${month}&year=${year}`);
 }
+
+export function getMonthlyPNLReports(year){
+	return $.get( url.api_base_path + `manager/reports/monthly_pnl/?year=${year}`);
+}
