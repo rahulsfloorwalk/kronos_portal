@@ -388,6 +388,7 @@ class Preferences(Model):
     receive_transactional_sms = BooleanField(db_column='receive_transactional_sms', default=True)
     agreement_accepted = BooleanField(db_column='agreement_accepted', default=False)
     pp_accepted = BooleanField(db_column='pp_accepted', default=False)
+    full_time_opportunity_email_status = BooleanField(db_column='full_time_opportunity_email_status', default=False)
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 

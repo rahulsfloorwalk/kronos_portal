@@ -26,6 +26,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.system_fail_withdraw_audit_store import fail_withdraw_audit_stores
     from notify.service.waitlist_audit_application import waitlist_audit_application
     from notify.service.hide_audit_store_section import hide_audit_store_section
+    from notify.service.mail_full_time_opportunity import send_full_time_opportunity_emails
 
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
@@ -59,3 +60,8 @@ def setup_periodic_tasks(sender, **kwargs):
 
     # Hide audit section when audits are completed
     sender.add_periodic_task(queue_at, hide_audit_store_section.s())
+
+    # set up schedules for Full time opportunity
+    # Executes every day at 0430 UTC == 1000 IST
+    queue_at_10 = crontab(hour=4, minute=30)
+    sender.add_periodic_task(queue_at_10, send_full_time_opportunity_emails.s())

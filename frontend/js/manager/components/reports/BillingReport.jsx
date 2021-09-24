@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router";
 
 import { getBillingReports } from "../../service/reports.js";
 
@@ -10,6 +11,7 @@ export default class BillingReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			client: "",
 			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
 		};
@@ -31,11 +33,11 @@ export default class BillingReport extends Component{
 	};
 
 	componentDidMount(){
-		this.reload_data(this.state.month, this.state.year);
+		this.reload_data(this.state.month, this.state.year, this.state.client);
 	}
 
-	reload_data = (month, year) => {
-		getBillingReports(month, year).then((active_cycles)=> this.setState({
+	reload_data = (month, year, client) => {
+		getBillingReports(month, year, client).then((active_cycles)=> this.setState({
 			active_cycles
 		}));
 	};
@@ -44,14 +46,21 @@ export default class BillingReport extends Component{
 		this.setState({
 			"month": e.target.value
 		});
-		this.reload_data(e.target.value, this.state.year);
+		this.reload_data(e.target.value, this.state.year, this.state.client);
 	};
 
 	year_changed = (e) => {
 		this.setState({
 			"year": e.target.value
 		});
-		this.reload_data(this.state.month, e.target.value);
+		this.reload_data(this.state.month, e.target.value, this.state.client);
+	};
+
+	client_changed = (e) => {
+		this.setState({
+			"client": e.target.value
+		});
+		this.reload_data(this.state.month, this.state.year, e.target.value);
 	};
 
 	render(){
@@ -70,13 +79,23 @@ export default class BillingReport extends Component{
 		let total_revenue = 0;
 		let total_est_billing = 0;
 		let total_gst = 0;
+		const client_option_list = [];
+		const map = new Map();
+
 		let audit_cycle_blocks = this.state.active_cycles.map((value, index) => {
+			let linkTo = `audit_cycle/${value.id}/questionnaire`;
 			total_audits_conducted += value.audit_conducted;
 			total_price_per_audit += value.charge_per_audit;
 			total_system_cost += value.system_cost;
 			total_revenue += value.revenue;
 			total_est_billing += value.est_billing;
 			total_gst += value.gst;
+
+			if(!map.has(value.client_id)){
+				map.set(value.client_id, true);
+				client_option_list.push(<option value={value.client_id} key={index}>{value.client}</option>);
+			}
+
 			return (
 				<tr key={index}>
 					<td className="text-center"><small>{value.client}</small></td>
@@ -89,6 +108,9 @@ export default class BillingReport extends Component{
 					<td className="text-center">{value.revenue}</td>
 					<td className="text-center">{value.est_billing}</td>
 					<td className="text-center">{value.gst}</td>
+					<td className="text-center">
+						<Link to={linkTo} className="btn btn-default pull-center" target="_blank">View</Link>
+					</td>
 				</tr>
 			);
 		});
@@ -98,10 +120,16 @@ export default class BillingReport extends Component{
 					<table className="table table-hover table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th className="text-center">Client</th>
+								<th className="text-center">
+									<select name="client" className="form-control" value={this.state.client} onChange={this.client_changed}>
+										<option value="">Select client</option>
+										{client_option_list}
+									</select>
+								</th>
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
+										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
@@ -127,6 +155,7 @@ export default class BillingReport extends Component{
 								<th className="text-center">Total Billing</th>
 								<th className="text-center">Total Est. Billing</th>
 								<th className="text-center">GST</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
@@ -141,6 +170,7 @@ export default class BillingReport extends Component{
 								<td className="text-center"><b>{total_revenue}</b></td>
 								<td className="text-center"><b>{total_est_billing}</b></td>
 								<td className="text-center"><b>{total_gst}</b></td>
+								<th></th>
 							</tr>
 						</tbody>
 					</table>

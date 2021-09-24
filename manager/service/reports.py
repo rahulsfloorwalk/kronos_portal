@@ -1,14 +1,17 @@
 from payment.models import Payment
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
-from django.db.models import Sum, F
+from django.db.models import Sum, F, Q
 
-def get_auditor_payment_report(month, year, payment_type):
-
-    if month and year:
-        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+def get_auditor_payment_report(month, year, payment_type, client):
+    if client:
+        query = Q(client = client)
     else:
-        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
+        query = Q()
+    if month and year:
+        audit_cycles = AuditCycle.objects.filter(query, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+    else:
+        audit_cycles = AuditCycle.objects.filter(query, start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -51,6 +54,7 @@ def get_auditor_payment_report(month, year, payment_type):
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
         obj['status'] = audit_cycle.status
+        obj['client_id'] = audit_cycle.client.id
         obj['client'] = audit_cycle.client.name
         obj['month'] = audit_cycle.start_date.month
         obj['year'] = audit_cycle.start_date.year
@@ -63,12 +67,16 @@ def get_auditor_payment_report(month, year, payment_type):
     return response
 
 
-def get_billing_report(month, year):
+def get_billing_report(month, year, client):
+    if client:
+        query = Q(client = client)
+    else:
+        query = Q()
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(query, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(query, start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -85,6 +93,7 @@ def get_billing_report(month, year):
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
         obj['status'] = audit_cycle.status
+        obj['client_id'] = audit_cycle.client.id
         obj['client'] = audit_cycle.client.name
         obj['month'] = audit_cycle.start_date.month
         obj['year'] = audit_cycle.start_date.year
@@ -99,12 +108,16 @@ def get_billing_report(month, year):
     return response
 
 
-def get_profitability_report(month, year):
+def get_profitability_report(month, year, client):
+    if client:
+        query = Q(client = client)
+    else:
+        query = Q()
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(query, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(query, start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -126,6 +139,7 @@ def get_profitability_report(month, year):
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
         obj['status'] = audit_cycle.status
+        obj['client_id'] = audit_cycle.client.id
         obj['client'] = audit_cycle.client.name
         obj['month'] = audit_cycle.start_date.month
         obj['year'] = audit_cycle.start_date.year
@@ -141,12 +155,16 @@ def get_profitability_report(month, year):
     return response
 
 
-def get_project_cost_report(month, year):
+def get_project_cost_report(month, year, client):
+    if client:
+        query = Q(client = client)
+    else:
+        query = Q()
 
     if month and year:
-        audit_cycles = AuditCycle.objects.filter(start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(query, start_date__month = month, start_date__year = year).order_by('end_date').select_related('client')
     else:
-        audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date').select_related('client')
+        audit_cycles = AuditCycle.objects.filter(query, start_date__year = year).order_by('end_date').select_related('client')
 
     response = []
     for audit_cycle in audit_cycles:
@@ -164,6 +182,7 @@ def get_project_cost_report(month, year):
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
         obj['status'] = audit_cycle.status
+        obj['client_id'] = audit_cycle.client.id
         obj['client'] = audit_cycle.client.name
         obj['month'] = audit_cycle.start_date.month
         obj['year'] = audit_cycle.start_date.year
@@ -198,8 +217,8 @@ def get_monthly_pnl_report(year):
             revenue += ((audit_conducted_count * j.charge_per_audit) + j.system_cost)
 
             audit_price = filtered_audit_stores.aggregate(reim_sum = Sum('reimbursement'), ear_sum = Sum('earnings_per_audit'))
-            total_reimbursement = audit_price['reim_sum'] if audit_price['reim_sum'] else 0
-            total_earnings_per_audit = audit_price['ear_sum'] if audit_price['ear_sum'] else 0
+            total_reimbursement += audit_price['reim_sum'] if audit_price['reim_sum'] else 0
+            total_earnings_per_audit += audit_price['ear_sum'] if audit_price['ear_sum'] else 0
 
         auditor_payment = total_reimbursement + total_earnings_per_audit
         gross_margin = revenue - auditor_payment
@@ -208,7 +227,7 @@ def get_monthly_pnl_report(year):
         obj['sales'] = revenue
         obj['auditor_payment'] = auditor_payment
         obj['gross_margin'] = gross_margin
-        obj['gross_margin_per'] = round((revenue - gross_margin) / revenue, 1) if revenue > 1 else 0
+        obj['gross_margin_per'] = round(((revenue - auditor_payment) / revenue) * 100, 1) if revenue > 1 else 0
         response.append(obj)
 
     return response

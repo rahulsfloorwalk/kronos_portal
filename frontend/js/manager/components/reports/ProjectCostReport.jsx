@@ -11,6 +11,7 @@ export default class ProfitabilityReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			client: "",
 			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
 		};
@@ -32,11 +33,11 @@ export default class ProfitabilityReport extends Component{
 	};
 
 	componentDidMount(){
-		this.reload_data(this.state.month, this.state.year);
+		this.reload_data(this.state.month, this.state.year, this.state.client);
 	}
 
-	reload_data = (month, year) => {
-		getProjectCostReports(month, year).then((active_cycles)=> this.setState({
+	reload_data = (month, year, client) => {
+		getProjectCostReports(month, year, client).then((active_cycles)=> this.setState({
 			active_cycles
 		}));
 	};
@@ -45,14 +46,21 @@ export default class ProfitabilityReport extends Component{
 		this.setState({
 			"month": e.target.value
 		});
-		this.reload_data(e.target.value, this.state.year);
+		this.reload_data(e.target.value, this.state.year, this.state.client);
 	};
 
 	year_changed = (e) => {
 		this.setState({
 			"year": e.target.value
 		});
-		this.reload_data(this.state.month, e.target.value);
+		this.reload_data(this.state.month, e.target.value, this.state.client);
+	};
+
+	client_changed = (e) => {
+		this.setState({
+			"client": e.target.value
+		});
+		this.reload_data(this.state.month, this.state.year, e.target.value);
 	};
 
 	render(){
@@ -72,6 +80,9 @@ export default class ProfitabilityReport extends Component{
 		let total_actual_cost = 0;
 		let total_variation = 0;
 		let row_count = 0;
+		const client_option_list = [];
+		const map = new Map();
+
 		let audit_cycle_blocks = this.state.active_cycles.map((value,index) => {
 			let linkTo = `audit_cycle/${value.id}/questionnaire`;
 			total_planned_audits += value.planned_audit;
@@ -81,6 +92,12 @@ export default class ProfitabilityReport extends Component{
 			total_actual_cost += value.actual_cost;
 			total_variation += value.variation;
 			row_count += 1;
+
+			if(!map.has(value.client_id)){
+				map.set(value.client_id, true);
+				client_option_list.push(<option value={value.client_id} key={index}>{value.client}</option>);
+			}
+
 			return (
 				<tr key={index}>
 					<td className="text-center"><small>{value.client}</small></td>
@@ -106,10 +123,16 @@ export default class ProfitabilityReport extends Component{
 					<table className="table table-hover table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th className="text-center">Client</th>
+								<th className="text-center">
+									<select name="client" className="form-control" value={this.state.client} onChange={this.client_changed}>
+										<option value="">Select client</option>
+										{client_option_list}
+									</select>
+								</th>
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
+										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
