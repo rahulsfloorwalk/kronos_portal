@@ -15,7 +15,7 @@ class AuditPaymentReportView(APIView):
     def get(self, request, format=None):
         if not request.user.has_perm('manager.can_view_reports'):
             raise AppLogicError('Permission denied')
-        report = get_auditor_payment_report(request.GET.get('month',''), request.GET.get('year',''), request.GET.get('payment',''))
+        report = get_auditor_payment_report(request.GET.get('month',''), request.GET.get('year',''), request.GET.get('payment',''), request.GET.get('client'))
         return Response(report)
 
 
@@ -27,7 +27,7 @@ class BilingReportView(APIView):
     def get(self, request, format=None):
         if not request.user.has_perm('manager.can_view_reports'):
             raise AppLogicError('Permission denied')
-        billing_report = get_billing_report(request.GET.get('month',''), request.GET.get('year'))
+        billing_report = get_billing_report(request.GET.get('month',''), request.GET.get('year'), request.GET.get('client'))
         return Response(billing_report)
 
 
@@ -39,7 +39,7 @@ class ProfitablityReportView(APIView):
     def get(self, request, format=None):
         if not request.user.has_perm('manager.can_view_reports'):
             raise AppLogicError('Permission denied')
-        profitability_report = get_profitability_report(request.GET.get('month',''), request.GET.get('year'))
+        profitability_report = get_profitability_report(request.GET.get('month',''), request.GET.get('year'), request.GET.get('client'))
         return Response(profitability_report)
 
 
@@ -51,7 +51,7 @@ class ProjectCostReportView(APIView):
     def get(self, request, format=None):
         if not request.user.has_perm('manager.can_view_reports'):
             raise AppLogicError('Permission denied')
-        project_cost_report = get_project_cost_report(request.GET.get('month',''), request.GET.get('year'))
+        project_cost_report = get_project_cost_report(request.GET.get('month',''), request.GET.get('year'), request.GET.get('client'))
         return Response(project_cost_report)
 
 

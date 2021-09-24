@@ -61,7 +61,7 @@ export default class MonthOnMonthPNL extends Component {
 					<td className="text-center">{value.sales}</td>
 					<td className="text-center">{value.auditor_payment}</td>
 					<td className="text-center">{value.gross_margin}</td>
-					<td className="text-center">{value.gross_margin_per}</td>
+					<td className="text-center">{value.gross_margin_per}%</td>
 				</tr>
 			);
 		});
@@ -95,7 +95,7 @@ export default class MonthOnMonthPNL extends Component {
 								<td className="text-center"><b>{total_sales}</b></td>
 								<td className="text-center"><b>{total_auditor_payment}</b></td>
 								<td className="text-center"><b>{total_gross_margin}</b></td>
-								<td className="text-center"><b>{gross_margin_per.toFixed(1)}</b></td>
+								<td className="text-center"><b>{gross_margin_per.toFixed(1)}%</b></td>
 							</tr>
 						</tbody>
 					</table>

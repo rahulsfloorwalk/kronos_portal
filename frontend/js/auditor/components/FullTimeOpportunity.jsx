@@ -25,7 +25,7 @@ class FullTimeOpportunity extends React.Component{
 					<li style={{padding: "5px 0px"}}>Please note that your information will be shared with InsuranceDekho for Training and Communication Purposes. Only submit your information if you agree to the aforementioned criteria.</li>
 				</ol>
 				<br/><br/>
-				<p><b>APPLY BUTTON LINK </b>- <a href="https://forms.gle/Rnd9J65iHkpGdtwr5" target="_blank" rel="noopener noreferrer" className="btn btn-primary">Apply</a></p>
+				<p><a href="https://forms.gle/Rnd9J65iHkpGdtwr5" target="_blank" rel="noopener noreferrer" className="btn btn-primary">Apply</a></p>
 			</div>
 		);
 	}

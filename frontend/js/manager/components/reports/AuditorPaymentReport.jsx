@@ -11,6 +11,7 @@ export default class AuditorPaymentReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			client: "",
 			payment: "",
 			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear()
@@ -33,11 +34,11 @@ export default class AuditorPaymentReport extends Component{
 	};
 
 	componentDidMount(){
-		this.reload_data(this.state.month, this.state.year, this.state.payment);
+		this.reload_data(this.state.month, this.state.year, this.state.payment, this.state.client);
 	}
 
-	reload_data = (month, year, payment) => {
-		getAuditorPaymentReports(month, year, payment).then((active_cycles)=> this.setState({
+	reload_data = (month, year, payment, client) => {
+		getAuditorPaymentReports(month, year, payment, client).then((active_cycles)=> this.setState({
 			active_cycles
 		}));
 	};
@@ -46,21 +47,28 @@ export default class AuditorPaymentReport extends Component{
 		this.setState({
 			"month": e.target.value
 		});
-		this.reload_data(e.target.value, this.state.year, this.state.payment);
+		this.reload_data(e.target.value, this.state.year, this.state.payment, this.state.client);
 	};
 
 	year_changed = (e) => {
 		this.setState({
 			"year": e.target.value
 		});
-		this.reload_data(this.state.month, e.target.value, this.state.payment);
+		this.reload_data(this.state.month, e.target.value, this.state.payment, this.state.client);
 	};
 
 	payment_changed = (e) => {
 		this.setState({
 			"payment": e.target.value
 		});
-		this.reload_data(this.state.month, this.state.year, e.target.value);
+		this.reload_data(this.state.month, this.state.year, e.target.value, this.state.client);
+	};
+
+	client_changed = (e) => {
+		this.setState({
+			"client": e.target.value
+		});
+		this.reload_data(this.state.month, this.state.year, this.state.payment, e.target.value);
 	};
 
 	render(){
@@ -77,12 +85,21 @@ export default class AuditorPaymentReport extends Component{
 		let total_earning = 0;
 		let total_auditor_payment = 0;
 		let total_est_auditor_payment = 0;
+		const client_option_list = [];
+		const map = new Map();
+
 		const audit_cycle_blocks = this.state.active_cycles.map((value, index) => {
 			let linkTo = `audit_cycle/${value.id}/questionnaire`;
 			total_reimbursement += value.reimbursement;
 			total_earning += value.earnings_per_audit;
 			total_auditor_payment += value.auditor_payment;
 			total_est_auditor_payment += value.est_auditor_payment;
+
+			if(!map.has(value.client_id)){
+				map.set(value.client_id, true);
+				client_option_list.push(<option value={value.client_id} key={index}>{value.client}</option>);
+			}
+
 			return (
 				<tr key={index}>
 					<td className="text-center">
@@ -110,10 +127,16 @@ export default class AuditorPaymentReport extends Component{
 					<table className="table table-hover table-striped table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th className="text-center">Client</th>
+								<th className="text-center">
+									<select name="client" className="form-control" value={this.state.client} onChange={this.client_changed}>
+										<option value="">Select client</option>
+										{client_option_list}
+									</select>
+								</th>
 								<th className="text-center">Cycle</th>
 								<th className="text-center">
 									<select name="month" className="form-control" value={this.state.month} onChange={this.month_changed}>
+										<option value="">Select month</option>
 										<option value="01">January</option>
 										<option value="02">February</option>
 										<option value="03">March</option>
