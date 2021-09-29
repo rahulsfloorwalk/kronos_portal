@@ -212,7 +212,9 @@ class BankInfoSerializer(ModelSerializer):
             'is_valid',
             'is_pan_card_valid',
             'is_ifsc_code_valid',
-            'is_complete'
+            'is_complete',
+            'beneficiary_id',
+            'beneficiary_checked'
         )
         read_only_fields = ('id', 'user_id')
 
@@ -251,6 +253,8 @@ class BankInfoSerializer(ModelSerializer):
         bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
         bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
         bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
+        bank_info.beneficiary_id = self.validated_data.get('beneficiary_id', bank_info.beneficiary_id)
+        bank_info.beneficiary_checked = self.validated_data.get('beneficiary_checked', bank_info.beneficiary_checked)
 
         return bank_info
 

@@ -108,3 +108,16 @@ class BankInfoAPITestCase(APITestCase):
         self.assertEqual(response.status_code, 200)
         for k,v in input_data.items():
             self.assertEqual(v.upper(), response.data.get(k))
+
+    def test_beneficiary_id(self):
+        # login first
+        self.client.login(username=self.email, password=self.password)
+        input_data = {
+            'account_holder_name': fake.name(),
+            'account_number': fake.numerify(text="###############"),
+            'ifsc_code': "SBIN0008238",
+            'pan_number': "HUYPR2313U",
+        }
+        response = self.client.post(reverse('auditor:bank_info_view'), input_data, format="json")
+        user_id = self.auditor_user.id
+        self.assertEqual(response.data.get('beneficiary_id'), "BEN0{}".format(user_id))
