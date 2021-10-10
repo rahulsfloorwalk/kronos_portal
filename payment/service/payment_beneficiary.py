@@ -33,7 +33,7 @@ def create_beneficiary_id_for_user(user):
 
 
 def get_bank_details_for_beneficiary(user):
-    default_address = 'Nagpur'
+    default_address = settings.PAYOUT_DEFAULT_ADDRESS
     bene_details = get_beneficiary_id_for_user(user.id)
     if user.groups.filter(name=GROUP_NAME_AUDITOR).exists():
         bank = bank_service.find_bank_info_by_user_id(user.id)

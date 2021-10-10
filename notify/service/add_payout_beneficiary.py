@@ -23,15 +23,17 @@ def add_beneficiary():
 
     async_results = ResultSet([])
     for user in user_list:
-        if user.groups.filter(name = GROUP_NAME_AUDITOR).exists():
-            if not user.bankinfo.is_payable():
-                continue
-        elif user.groups.filter(name = GROUP_NAME_AGENCY).exists():
-            if not user.agencyuser.agency.is_bank_details_complete():
-                continue
+        try:
+            if user.groups.filter(name = GROUP_NAME_AUDITOR).exists():
+                if not user.bankinfo.is_payable():
+                    continue
+            elif user.groups.filter(name = GROUP_NAME_AGENCY).exists():
+                if not user.agencyuser.agency.is_bank_details_complete():
+                    continue
+        except:
+            continue
         data = get_bank_details_for_beneficiary(user)
-        add_beneficiary_task(data)
-        # async_results.add(add_beneficiary_task.delay(data))
+        async_results.add(add_beneficiary_task.delay(data))
 
     _logger.info("Today Beneficiary count is %s", len(async_results))
     return True
@@ -41,7 +43,7 @@ def add_beneficiary():
 def add_beneficiary_task(user):
     email = user.get('email', None)
     phone = user.get('phone', None)
-    address1 = user.get('address1') if user.get('address1') else 'Nagpur'
+    address1 = user.get('address1') if user.get('address1') else settings.PAYOUT_DEFAULT_ADDRESS
     name = user.get('name', None)
     bankAccount = user.get('bankAccount', None)
     ifsc = user.get('ifsc', None)

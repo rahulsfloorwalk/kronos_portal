@@ -69,5 +69,5 @@ def setup_periodic_tasks(sender, **kwargs):
 
     # set up schedules for generate beneficiary ids
     # Executes every day at 0330 UTC == 2100 IST
-    queue_at_9 = crontab(hour=3, minute=30)
-    sender.add_periodic_task(queue_at_9, add_beneficiary.s())
+    # queue_at_9 = crontab(hour=3, minute=30)
+    # sender.add_periodic_task(queue_at_9, add_beneficiary.s())
