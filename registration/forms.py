@@ -24,6 +24,7 @@ from auditor.validators import numericValidator
 from registration.context import registration_context
 from auditor.models import Preferences
 from registration.service import mobile_number_service
+from payment.service.payment_beneficiary import create_beneficiary_id_for_user
 
 _logger = logging.getLogger(__name__)
 
@@ -78,6 +79,8 @@ class SignUpForm(UserCreationForm):
         additional_info = AdditionalInfo(user_id=user.id)
         additional_info.referred_by = self.cleaned_data["referred_by"]
         additional_info.save()
+
+        create_beneficiary_id_for_user(user)
 
         prefs = Preferences(user_id=user.id)
         prefs.agreement_accepted = True

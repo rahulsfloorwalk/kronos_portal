@@ -207,10 +207,10 @@ class __QuestionRow extends React.Component {
 			if(this.props.q.question_type === "PLAIN"){
 				answerElement = (
 					<div className={hasAnswerError + hasAnswerSuccess}>
-						<input className="form-control"
+						<textarea className="form-control"
 							onChange={this.answerChanged}
 							onBlur={this.saveAnswer}
-							value={this.state.answer.answer_text}/>
+							value={this.state.answer.answer_text}></textarea>
 					</div>
 				);
 			} else if(this.props.q.question_type === "MUTEX") {

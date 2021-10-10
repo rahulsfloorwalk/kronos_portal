@@ -52,6 +52,7 @@ export class BankInfoForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
+		this.setLoading(true);
 		this.setSaving(true);
 		this.props.dispatch(saveBankInfo(this.state.form)).then(() => {
 			this.props.router.push("/details");
@@ -60,6 +61,7 @@ export class BankInfoForm extends React.Component {
 				errors: errors.responseJSON || {},
 			});
 			this.setSaving(false);
+			this.setLoading(false);
 		});
 	};
 
@@ -71,6 +73,9 @@ export class BankInfoForm extends React.Component {
 					<Loading/>
 					:
 					<form onSubmit={this.onSubmit}>
+						{ typeof(this.state.errors.non_field_errors) != "undefined" ?
+							<p className="text-danger">{this.state.errors.non_field_errors}</p>
+							: null}
 						<FormInput label="Account Holder Name" required_mark={true} maxLength="40" type="text" value={this.state.form.account_holder_name} name="account_holder_name" onChange={this.inputChanged} errors={this.state.errors.account_holder_name} readOnly={this.state.saving}/>
 						<FormInput label="Account Number" required_mark={true} maxLength="20" type="text" value={this.state.form.account_number} name="account_number" onChange={this.inputChanged} errors={this.state.errors.account_number} readOnly={this.state.saving}/>
 						<FormInput label="IFSC Code" required_mark={true} maxLength="11" type="text" value={this.state.form.ifsc_code} name="ifsc_code" onChange={this.inputChanged} errors={this.state.errors.ifsc_code} readOnly={this.state.saving}/>

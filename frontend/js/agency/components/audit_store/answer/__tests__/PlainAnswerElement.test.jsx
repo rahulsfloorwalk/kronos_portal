@@ -71,7 +71,7 @@ describe("<PlainAnswerElement/>", () => {
 			};
 
 			const r = shallow(<PlainAnswerElement {...props}/>);
-			r.find("input").simulate("focus");
+			r.find("textarea").simulate("focus");
 			expect(props.onFocus).toBeCalled();
 		});
 	});
@@ -87,7 +87,7 @@ describe("<PlainAnswerElement/>", () => {
 			};
 
 			const r = shallow(<PlainAnswerElement {...props}/>);
-			r.find("input").simulate("blur");
+			r.find("textarea").simulate("blur");
 			expect(props.onBlur).toBeCalled();
 		});
 	});
@@ -123,7 +123,7 @@ describe("<PlainAnswerElement/>", () => {
 			const onChangeEvent = { target: { value: "Hello World" } };
 
 			const r = shallow(<PlainAnswerElement {...props}/>);
-			r.find("input").simulate("change", onChangeEvent);
+			r.find("textarea").simulate("change", onChangeEvent);
 
 			expect(props.onChange).toBeCalledWith(onChangeEvent);
 		});

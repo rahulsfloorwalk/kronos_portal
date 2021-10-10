@@ -27,10 +27,4 @@ class Migration(migrations.Migration):
             name='beneficiary_id',
             field=models.CharField(db_column='beneficiary_id', max_length=100, null=True),
         ),
-        migrations.RunPython(gen_beneficiary_id),
-        migrations.AlterField(
-            model_name='bankinfo',
-            name='beneficiary_id',
-            field=models.CharField(db_column='beneficiary_id', editable=False, max_length=100, null=False, unique=True),
-        ),
     ]

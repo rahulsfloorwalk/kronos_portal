@@ -13,6 +13,7 @@ from rest_framework.test import APITestCase
 from audit.models import AuditCycle, Audit
 from auditor.models import ProfileInfo, BankInfo, AdditionalInfo, Preferences
 from manager.models import City
+from payment.service.payment_beneficiary import create_beneficiary_id_for_user
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
 fake = Faker()
@@ -48,6 +49,7 @@ class AuditApplicationAPITestCase(APITestCase):
 
         self.bank = mommy.make(BankInfo, account_number=''.join(random.choice(string.digits) for i in range(10)),
                                user=self.auditor_user)
+        self.beneficiary = create_beneficiary_id_for_user(self.auditor_user)
         self.additional = mommy.make(AdditionalInfo, user=self.auditor_user)
 
         self.manager_user = mommy.make(User, username="manager@foobar.com", email="manager@foobar.com",

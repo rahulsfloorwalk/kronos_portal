@@ -128,7 +128,7 @@ class QuestionRow extends React.Component{
 			if(this.props.q.question_type === "PLAIN"){
 				answerElement = (
 					<form className="" onSubmit={this.submitAnswer}>
-						<input
+						<textarea
 							className="form-control"
 							placeholder="type your answer here"
 							name="answer_text"
@@ -137,7 +137,7 @@ class QuestionRow extends React.Component{
 							onBlur={this.submitAnswer}
 							onChange={this.inputChanged}
 							ref={(input) => this.answerInput = input}
-						/>
+						></textarea>
 					</form>
 				);
 			} else if(this.props.q.question_type === "MUTEX") {

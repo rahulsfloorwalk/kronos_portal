@@ -48,6 +48,8 @@ export default class AgencyDetailsForm extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.setSaving(true);
+		this.setLoading(true);
+
 		saveAgency(this.state.form).then(() => {
 			this.props.router.push("/");
 		}, (errors) => {
@@ -55,6 +57,7 @@ export default class AgencyDetailsForm extends React.Component {
 				errors: errors.responseJSON || {},
 			});
 			this.setSaving(false);
+			this.setLoading(false);
 		});
 	};
 
@@ -98,6 +101,7 @@ export default class AgencyDetailsForm extends React.Component {
 							</div>
 						</div>
 						<h4 className="">Financial Details</h4>
+						<p className="text-danger">{typeof(this.state.errors.non_field_errors) != "undefined" ? this.state.errors.non_field_errors : null}</p>
 						<div className="row">
 							<div className="col-md-6">
 								<FormInput label="GSTIN" maxLength="15" type="text"

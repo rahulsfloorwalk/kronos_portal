@@ -5,7 +5,7 @@ exports[`<PlainAnswerElement/> when answer is editable renders a blank answer te
   className=""
   onSubmit={[Function]}
 >
-  <input
+  <textarea
     className="form-control"
     name="answerText"
     onBlur={[MockFunction]}
@@ -22,7 +22,7 @@ exports[`<PlainAnswerElement/> when answer is editable renders a prefilled answe
   className=""
   onSubmit={[Function]}
 >
-  <input
+  <textarea
     className="form-control"
     name="answerText"
     onBlur={[MockFunction]}

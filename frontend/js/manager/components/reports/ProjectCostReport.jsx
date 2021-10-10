@@ -76,6 +76,7 @@ export default class ProfitabilityReport extends Component{
 		let total_planned_audits = 0;
 		let total_conducted_audit = 0;
 		let total_audit_complete_per = 0;
+		let total_budget_utilized = 0;
 		let total_estimated_cost = 0;
 		let total_actual_cost = 0;
 		let total_variation = 0;
@@ -90,6 +91,7 @@ export default class ProfitabilityReport extends Component{
 			total_audit_complete_per += value.audit_complete_per;
 			total_estimated_cost += value.estimated_cost;
 			total_actual_cost += value.actual_cost;
+			total_budget_utilized += value.budget_utilized;
 			total_variation += value.variation;
 			row_count += 1;
 
@@ -107,6 +109,7 @@ export default class ProfitabilityReport extends Component{
 					<td className="text-center">{value.planned_audit}</td>
 					<td className="text-center">{value.conducted_audit}</td>
 					<td className="text-center">{value.audit_complete_per}</td>
+					<td className="text-center">{value.budget_utilized}</td>
 					<td className="text-center">{value.estimated_cost}</td>
 					<td className="text-center">{value.actual_cost}</td>
 					<td className="text-center">{value.variation}</td>
@@ -155,6 +158,7 @@ export default class ProfitabilityReport extends Component{
 								<th className="text-center">Planned Audits</th>
 								<th className="text-center">Conducted Audits</th>
 								<th className="text-center">% Completion</th>
+								<th className="text-center">Budget Utilized</th>
 								<th className="text-center">Estimated Cost</th>
 								<th className="text-center">Actual Cost</th>
 								<th className="text-center">Variation</th>
@@ -170,6 +174,7 @@ export default class ProfitabilityReport extends Component{
 								<td className="text-center"><b>{total_planned_audits}</b></td>
 								<td className="text-center"><b>{total_conducted_audit}</b></td>
 								<td className="text-center"><b>{total_audit_complete_per_avg.toFixed(1)}</b></td>
+								<td className="text-center"><b>{total_budget_utilized}</b></td>
 								<td className="text-center"><b>{total_estimated_cost}</b></td>
 								<td className="text-center"><b>{total_actual_cost}</b></td>
 								<td className="text-center"><b>{total_variation}</b></td>

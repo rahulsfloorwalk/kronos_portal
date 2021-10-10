@@ -351,8 +351,6 @@ class BankInfo(Model, CompletableMixin):
     ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
     pan_number = CharField(db_column='pan_number', max_length=10, blank=True)
 
-    beneficiary_id = CharField(db_column="beneficiary_id", max_length=100, unique = True, editable=False, null = False)
-    beneficiary_checked = BooleanField(db_column="beneficiary_checked", default=False)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     is_complete_attrs = [
@@ -362,12 +360,6 @@ class BankInfo(Model, CompletableMixin):
         "ifsc_code",
         "pan_number",
     ]
-
-    def save(self, *args, **kwargs):
-        ''' On save, create beneficiary id '''
-        if not self.id:
-            self.beneficiary_id = "BEN0{}".format(self.user.id)
-        return super(BankInfo, self).save(*args, **kwargs)
 
     def is_payable(self):
         invalid_fields = ["", None]

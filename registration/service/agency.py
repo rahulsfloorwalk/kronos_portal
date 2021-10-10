@@ -14,6 +14,7 @@ from registration.service import verification_service
 from registration.service import mobile_number_service
 from registration.context import registration_context
 from registration.models import GROUP_NAME_AGENCY
+from payment.service.payment_beneficiary import create_beneficiary_id_for_user
 
 _logger = logging.getLogger(__name__)
 
@@ -25,6 +26,8 @@ def agency_signup(email, password, agency_name, full_name, mobile_number, agreem
     mobile_number_service.save_mobile_number_for_user(agency_user.user, mobile_number)
 
     verification_service.create_verification_for_user(agency_user.user)
+
+    create_beneficiary_id_for_user(agency_user.user)
 
     send_agency_verification_email(agency_user.user.id)
     return agency_user.user
