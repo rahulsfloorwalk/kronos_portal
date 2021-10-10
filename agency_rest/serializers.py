@@ -1,7 +1,7 @@
 
 from django.contrib.auth.models import User
 
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, ValidationError
 
 from manager.models import City, ProofTag
 from registration.models import MobileNumber
@@ -16,6 +16,7 @@ from audit.models import AuditCycle, Audit, AuditCycleProofTagList
 from attachment.models import Attachment
 from client.models import Client, Store
 from questionnaire.models import Question, Section
+from auditor.models import BankInfo
 
 
 class AgencySerializer(ModelSerializer):
@@ -35,6 +36,19 @@ class AgencySerializer(ModelSerializer):
             'is_ifsc_code_valid',
         )
         read_only_fields = ('id',)
+
+    def validate(self, data):
+        account_number = data.get('account_number', None)
+        ifsc_code = data.get('ifsc_code', None)
+
+        if account_number and ifsc_code:
+            agency_id = self.instance.id
+
+            exists = BankInfo.objects.filter(account_number = account_number, ifsc_code = ifsc_code).exists()
+            exists1 = Agency.objects.filter(account_number = account_number, ifsc_code = ifsc_code).exclude(id = agency_id).exists()
+            if exists or exists1:
+                raise ValidationError('Bank account details already exists')
+        return data
 
 class AgencyUserSerializer(ModelSerializer):
     agency = AgencySerializer()

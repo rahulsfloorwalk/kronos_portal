@@ -25,6 +25,8 @@ class ReportList extends React.Component {
 						<NavLink to="/reports/billing">Billing</NavLink>
 						<NavLink to="/reports/project_cost">Project Cost</NavLink>
 						<NavLink to="/reports/monthly_pnl">Month on month PNL</NavLink>
+						<NavLink to="/reports/manager_profit">Project manager</NavLink>
+						<NavLink to="/reports/client_profitability">Client Profitability</NavLink>
 					</ul>
 					: null}
 				<br/>

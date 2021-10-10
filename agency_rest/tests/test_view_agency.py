@@ -7,6 +7,7 @@ from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from faker import Faker
+from payment.service.payment_beneficiary import create_beneficiary_id_for_user
 
 from registration.models import GROUP_NAME_AGENCY
 
@@ -32,6 +33,8 @@ class AgencyViewTestCase(APITestCase):
         self.agency_user = AgencyUser.objects.create(agency=self.agency, user=self.user, full_name=fake.name())
         self.user.groups.add(Group.objects.get(name=GROUP_NAME_AGENCY))
         self.user.save()
+
+        self.beneficiary = create_beneficiary_id_for_user(self.user)
 
     def login(self):
         # login first

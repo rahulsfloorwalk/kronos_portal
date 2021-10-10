@@ -20,3 +20,11 @@ export function getProjectCostReports(month, year, client){
 export function getMonthlyPNLReports(year){
 	return $.get( url.api_base_path + `manager/reports/monthly_pnl/?year=${year}`);
 }
+
+export function getProjectManagerReports(month, year, manager){
+	return $.get( url.api_base_path + `manager/reports/manager_wise_profitability/?month=${month}&year=${year}&manager=${manager}`);
+}
+
+export function getClientProfitabilityReports(year, client){
+	return $.get( url.api_base_path + `manager/reports/client_wise_profitability/?client=${client}&year=${year}`);
+}

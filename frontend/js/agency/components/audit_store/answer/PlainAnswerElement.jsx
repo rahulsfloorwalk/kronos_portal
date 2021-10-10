@@ -20,7 +20,7 @@ export default class PlainAnswerElement extends React.Component {
 	render(){
 		if(this.props.editable){
 			return <form className="" onSubmit={this.submitAnswer}>
-				<input
+				<textarea
 					className="form-control"
 					placeholder="type your answer here"
 					name="answerText"
@@ -29,7 +29,7 @@ export default class PlainAnswerElement extends React.Component {
 					onBlur={this.props.onBlur}
 					onChange={this.props.onChange}
 					ref={(input) => this.answerInput = input}
-				/>
+				></textarea>
 			</form>;
 		} else {
 			return <p>{this.props.answerText}</p>;

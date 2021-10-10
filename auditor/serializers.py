@@ -19,6 +19,7 @@ from payment.models import Payment
 from referral.models import AuditorReferral
 from social.models import Facebook
 from auditor.models import Preferences
+from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
 from kronos.utils import get_difference_between_date
 
@@ -213,8 +214,6 @@ class BankInfoSerializer(ModelSerializer):
             'is_pan_card_valid',
             'is_ifsc_code_valid',
             'is_complete',
-            'beneficiary_id',
-            'beneficiary_checked'
         )
         read_only_fields = ('id', 'user_id')
 
@@ -238,6 +237,20 @@ class BankInfoSerializer(ModelSerializer):
         # for now we're just converting the given string to uppercase
         return str.upper(value)
 
+    def validate(self, data):
+        account_number = data.get('account_number', None)
+        ifsc_code = data.get('ifsc_code', None)
+        if account_number and ifsc_code:
+            if self.context.get('current_user') is None:
+                raise TypeError("missing keyword argument 'current_user'")
+
+            user_id = self.context.get('current_user').id
+            exists = BankInfo.objects.filter(account_number = account_number, ifsc_code = ifsc_code).exclude(user_id = user_id).exists()
+            exists1 = Agency.objects.filter(account_number = account_number, ifsc_code = ifsc_code).exists()
+            if exists or exists1:
+                raise ValidationError('Bank account details already exists')
+        return data
+
     def deserialize(self):
         if self.context.get('current_user') is None:
             raise TypeError("missing keyword argument 'current_user'")
@@ -253,8 +266,6 @@ class BankInfoSerializer(ModelSerializer):
         bank_info.account_number = self.validated_data.get('account_number', bank_info.account_number)
         bank_info.ifsc_code = self.validated_data.get('ifsc_code', bank_info.ifsc_code)
         bank_info.pan_number = self.validated_data.get('pan_number', bank_info.pan_number)
-        bank_info.beneficiary_id = self.validated_data.get('beneficiary_id', bank_info.beneficiary_id)
-        bank_info.beneficiary_checked = self.validated_data.get('beneficiary_checked', bank_info.beneficiary_checked)
 
         return bank_info
 

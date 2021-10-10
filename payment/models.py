@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.db.models import Model, AutoField, CharField, IntegerField, ForeignKey, DateTimeField, PROTECT
+from django.db.models import Model, AutoField, CharField, IntegerField, ForeignKey, DateTimeField, PROTECT, OneToOneField, BooleanField
 from audit_store.models import AuditStore
 
 class Payment(Model):
@@ -26,3 +26,10 @@ class Payment(Model):
     def get_audit_details(self):
         return {'audit_date': self.audit_store.audit_date,
                 'client_name': self.audit_store.audit.audit_cycle.client.brand_name}
+
+
+class Beneficiary(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    user = OneToOneField(settings.AUTH_USER_MODEL, related_name='beneficiary', on_delete=PROTECT)
+    beneficiary_id = CharField(db_column='beneficiary_id', max_length=100, unique=True, editable=False)
+    beneficiary_checked = BooleanField(db_column='beneficiary_checked', default=False)

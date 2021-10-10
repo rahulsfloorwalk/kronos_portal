@@ -10,10 +10,11 @@ from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from faker import Faker
+from payment.service.payment_beneficiary import create_beneficiary_id_for_user, get_beneficiary_id_for_user
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 
-from ..models import ProfileInfo
+from ..models import ProfileInfo, BankInfo
 
 fake = Faker()
 
@@ -30,6 +31,8 @@ class BankInfoAPITestCase(APITestCase):
         self.auditor_user = mommy.make(User, username=self.email, email=self.email, groups=[self.auditor_group])
         self.auditor_user.set_password(self.password)
         self.auditor_user.save()
+
+        self.beneficiary = create_beneficiary_id_for_user(self.auditor_user)
         self.profile = mommy.make(ProfileInfo, mobile_number=''.join(random.choice(string.digits) for i in range(10)), user=self.auditor_user)
 
     def test_bank_info_flow(self):
@@ -110,14 +113,30 @@ class BankInfoAPITestCase(APITestCase):
             self.assertEqual(v.upper(), response.data.get(k))
 
     def test_beneficiary_id(self):
-        # login first
+        user_id = self.auditor_user.id
+        response = get_beneficiary_id_for_user(user_id)
+        self.assertEqual(response.beneficiary_id, "FLOORWALKBEN00{}".format(user_id))
+
+    def test_unique_account_no_and_ifsc(self):
+        email = fake.email()
+        password = fake.password()
+
+        auditor_group = Group.objects.get(name=GROUP_NAME_AUDITOR)
+
+        auditor_user = mommy.make(User, username=email, email=email, groups=[auditor_group])
+        auditor_user.set_password(password)
+        auditor_user.save()
+
+        mommy.make(BankInfo, user=auditor_user, account_holder_name="foobar", account_number="123454321",
+                   ifsc_code="SBIN0001", bank_name='SBI', pan_number = "ADSFB780Y")
+
         self.client.login(username=self.email, password=self.password)
         input_data = {
             'account_holder_name': fake.name(),
-            'account_number': fake.numerify(text="###############"),
-            'ifsc_code': "SBIN0008238",
+            'account_number': "123454321",
+            'ifsc_code': "SBIN0001",
             'pan_number': "HUYPR2313U",
         }
         response = self.client.post(reverse('auditor:bank_info_view'), input_data, format="json")
-        user_id = self.auditor_user.id
-        self.assertEqual(response.data.get('beneficiary_id'), "BEN0{}".format(user_id))
+        self.assertEqual(response.status_code, 400)
+        self.assertContains(response, "Bank account details already exists", status_code=400)

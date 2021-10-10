@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.shortcuts import get_object_or_404
+from django.db import transaction
 
 from rest_framework.response import Response
 from rest_framework.serializers import Serializer, CharField, IntegerField, BooleanField
@@ -33,6 +34,7 @@ from attachment import service_agency as attachment_agency_service
 
 from questionnaire.service import section as section_service
 from audit.service import audit_cycle_proof_tag
+from payment.service.payment_beneficiary import get_beneficiary_id_for_user, validate_beneficiary
 
 class StateView(APIView):
     permission_classes = [HasGroupPermission]
@@ -74,7 +76,16 @@ class AgencyView(APIView):
         agency = request.user.agencyuser.agency
         agency_ds = AgencySerializer(agency, data=request.data)
         agency_ds.is_valid(raise_exception=True)
-        agency_ds.save()
+        with transaction.atomic():
+            agency_ds.save()
+
+            bene_info = get_beneficiary_id_for_user(request.user.id)
+            bene_info.beneficiary_checked = False
+            bene_info.save()
+
+        agency = request.user.agencyuser.agency
+        if agency.is_bank_details_complete():
+            validate_beneficiary(request.user)
         return Response(agency_ds.data)
 
 class AgencyPresencePresentView(APIView):
