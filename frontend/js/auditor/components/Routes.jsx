@@ -37,6 +37,7 @@ import ShopperGuideBlogs from "./ShopperGuideBlogs.jsx";
 import ShopperGuidePodcasts from "./ShopperGuidePodcasts.jsx";
 import ShopperGuideSocialSnippets from "./ShopperGuideSocialSnippets.jsx";
 import FullTimeOpportunity from "./FullTimeOpportunity.jsx";
+import ContentNinja from "./ContentNinja.jsx";
 
 function logPageView() {
 	//console.log(window.location.pathname, window.location.hash);
@@ -75,6 +76,7 @@ const Routes = ({store}) => (
 				<Route path="payment/:paymentId/payment_concern" component={PaymentConcern}/>
 				{/* <Route path="referral" component={ReferralList}/> */}
 				<Route path="full_time_opportunity" component={FullTimeOpportunity} />
+				<Route path="content_ninja" component={ContentNinja} />
 				<Route path="tos_accept" component={ToSAcceptForm}/>
 				<Route path="shopper_guide" component={ShopperGuide}>
 					<Route path="videos" component={ShopperGuideVideos}/>

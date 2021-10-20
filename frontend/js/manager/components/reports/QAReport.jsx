@@ -1,40 +1,40 @@
 import React, { Component } from "react";
 
-import { getProjectManagerReports } from "../../service/reports.js";
-import { findManagers } from "../../service/manager.js";
+import { getQAReports } from "../../service/reports.js";
+import { findModerators } from "../../service/moderator.js";
 
 import { getMonthName } from "../../../utils.js";
 
 import Loading from "../../../components/Loading.jsx";
 
-export default class ManagerWiseProfitibilityReport extends Component{
+export default class QAReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			manager: "",
+			qa: "",
 			month: ("0" + (new Date().getMonth() + 1)).slice(-2),
 			year: new Date().getFullYear(),
 			loading: false,
-			managers: [],
+			qas: [],
 			reports: []
 		};
 	}
 
 	componentDidMount(){
-		findManagers().then((managers) => {
-			if(managers){
-				let manager_list = managers.filter(manager => manager.is_active === true);
+		findModerators().then((qas) => {
+			if(qas){
+				let qa_list = qas.filter(qa => qa.is_active === true);
 				this.setState({
-					managers: manager_list
+					qas: qa_list
 				});
 			}
 		});
 		this.setLoading(true);
-		this.reload_data(this.state.month, this.state.year, this.state.manager);
+		this.reload_data(this.state.month, this.state.year, this.state.qa);
 	}
 
-	reload_data = (month, year, manager) => {
-		getProjectManagerReports(month, year, manager).then((reports)=> this.setState({
+	reload_data = (month, year, qa) => {
+		getQAReports(month, year, qa).then((reports)=> this.setState({
 			reports: reports,
 			loading: false
 		}));
@@ -49,7 +49,7 @@ export default class ManagerWiseProfitibilityReport extends Component{
 			"month": e.target.value
 		});
 		this.setLoading(true);
-		this.reload_data(e.target.value, this.state.year, this.state.manager);
+		this.reload_data(e.target.value, this.state.year, this.state.qa);
 	};
 
 	year_changed = (e) => {
@@ -57,12 +57,12 @@ export default class ManagerWiseProfitibilityReport extends Component{
 			"year": e.target.value
 		});
 		this.setLoading(true);
-		this.reload_data(this.state.month, e.target.value, this.state.manager);
+		this.reload_data(this.state.month, e.target.value, this.state.qa);
 	};
 
-	manager_changed = (e) => {
+	qa_changed = (e) => {
 		this.setState({
-			"manager": e.target.value
+			"qa": e.target.value
 		});
 		this.setLoading(true);
 		this.reload_data(this.state.month, this.state.year, e.target.value);
@@ -79,30 +79,25 @@ export default class ManagerWiseProfitibilityReport extends Component{
 		}
 
 		let total_audit_count = 0;
-		let total_revenue = 0;
-		let total_profitability = 0;
-		let total_profitability_per = 0;
 		let total_audit_count_per = 0;
+		let total_audit_count_per_day = 0;
 
-		const manager_option_list = this.state.managers.map((m,i) => <option key={i} value={m.id}>{m.email}</option>);
+		const qa_option_list = this.state.qas.map((m,i) => <option key={i} value={m.id}>{m.email}</option>);
 
 		let report_blocks = this.state.reports.map((value,index) => {
 			total_audit_count += value.audit_count;
-			total_revenue += value.revenue;
-			total_profitability += value.profitability;
-			total_profitability_per += value.profitability_per;
-			total_audit_count_per += value.audit_count_per;
+			total_audit_count_per += value.report_per;
+			total_audit_count_per_day += value.report_per_day;
+
 
 			return (
 				<tr key={index}>
-					<td className="text-center"><small>{value.manager_email}</small></td>
+					<td className="text-center"><small>{value.qa_email}</small></td>
 					<td className="text-center">{getMonthName(value.month)}</td>
 					<td className="text-center">{value.year}</td>
 					<td className="text-center">{value.audit_count}</td>
-					<td className="text-center">{value.revenue}</td>
-					<td className="text-center">{value.profitability}</td>
-					<td className="text-center">{value.profitability_per}%</td>
-					<td className="text-center">{value.audit_count_per}%</td>
+					<td className="text-center">{value.report_per}%</td>
+					<td className="text-center">{value.report_per_day}</td>
 				</tr>
 			);
 		});
@@ -113,9 +108,9 @@ export default class ManagerWiseProfitibilityReport extends Component{
 						<thead>
 							<tr>
 								<th className="text-center">
-									<select name="manager" className="form-control" value={this.state.manager} onChange={this.manager_changed}>
-										<option value="">Select manager</option>
-										{manager_option_list}
+									<select name="qa" className="form-control" value={this.state.qa} onChange={this.qa_changed}>
+										<option value="">Select QA</option>
+										{qa_option_list}
 									</select>
 								</th>
 								<th className="text-center">
@@ -140,11 +135,9 @@ export default class ManagerWiseProfitibilityReport extends Component{
 										{year_option_list}
 									</select>
 								</th>
-								<th className="text-center">Audits Count</th>
-								<th className="text-center">Revenue</th>
-								<th className="text-center">Profitability</th>
-								<th className="text-center">% Profitability</th>
-								<th className="text-center">% Audits Count</th>
+								<th className="text-center">Report Count</th>
+								<th className="text-center">% Report Count</th>
+								<th className="text-center">Avg. Reports/Day</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -154,10 +147,8 @@ export default class ManagerWiseProfitibilityReport extends Component{
 									<b>Total</b>
 								</td>
 								<td className="text-center"><b>{total_audit_count}</b></td>
-								<td className="text-center"><b>{total_revenue}</b></td>
-								<td className="text-center"><b>{total_profitability}</b></td>
-								<td className="text-center"><b>{total_profitability_per.toFixed(1)}%</b></td>
-								<td className="text-center"><b>{total_audit_count_per.toFixed(1)}%</b></td>
+								<td className="text-center"><b>{total_audit_count_per}%</b></td>
+								<td className="text-center"><b>{total_audit_count_per_day.toFixed(1)}</b></td>
 							</tr>
 						</tbody>
 					</table>

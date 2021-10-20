@@ -1,8 +1,14 @@
+from django.contrib.auth.models import Group
+from registration.models import GROUP_NAME_MANAGER
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.auth.models import Permission
+from guardian.models import UserObjectPermission
+
 from payment.models import Payment
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
 from django.db.models import Sum, F, Q
-from client.models import Client, ClientManager
+from client.models import Client
 
 def get_auditor_payment_report(month, year, payment_type, client):
     if client:
@@ -249,11 +255,14 @@ def get_manager_wise_profitability_report(month, year, manager):
     else:
         month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
     if manager:
-        manager_list = ClientManager.objects.select_related('user').filter(user = manager, is_active = True)
+        manager_list = Group.objects.get(name=GROUP_NAME_MANAGER).user_set.filter(pk=manager, is_active = True).only('id', 'email')
     else:
-        manager_list = ClientManager.objects.select_related('user').filter(is_active = True)
-    audit_cycles = AuditCycle.objects.filter(start_date__year = year).order_by('end_date')
-    audit_stores = AuditStore.objects.filter(status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED], audit_date__year = year)
+        manager_list = Group.objects.get(name=GROUP_NAME_MANAGER).user_set.filter(is_active = True).only('id', 'email')
+
+    active_managers = [manager.id for manager in manager_list]
+    audit_cycles = AuditCycle.objects.filter(client__managers__user__id__in = active_managers, start_date__year = year).order_by('id').distinct('id')
+    audit_cycle_list = audit_cycles.values_list('id', flat=True)
+    audit_stores = AuditStore.objects.filter(audit__audit_cycle__in = audit_cycle_list, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED], audit_date__year = year)
 
     for month in month_list:
 
@@ -279,14 +288,14 @@ def get_manager_wise_profitability_report(month, year, manager):
             total_revenue = 0
             total_audit_count = 0
 
-            filtered_audit_cycle = audit_cycles.filter(client__managers__id = manager.id)
+            filtered_audit_cycle = audit_cycles.filter(client__managers__user__id = manager.id)
 
             for cycle in filtered_audit_cycle:
                 audit_count = audit_stores.filter(audit__audit_cycle = cycle.id, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED], audit_date__month = month).count()
                 total_audit_count += audit_count
                 total_revenue += ((cycle.charge_per_audit * audit_count) + cycle.system_cost)
 
-            filtered_audit_store = audit_stores.filter(audit__audit_cycle__client__managers__id = manager.id, audit_date__month = month, audit_date__year = year)
+            filtered_audit_store = audit_stores.filter(audit__audit_cycle__client__managers__user__id = manager.id, audit__audit_cycle__in = filtered_audit_cycle, audit_date__month = month)
 
             for store in filtered_audit_store:
                 auditor_cost += store.earnings_per_audit if store.earnings_per_audit else 0
@@ -305,7 +314,7 @@ def get_manager_wise_profitability_report(month, year, manager):
 
             response.append({
                 "manager_id": manager.id,
-                "manager_email": manager.user.email,
+                "manager_email": manager.email,
                 "month": month,
                 "year": year,
                 "audit_count": total_audit_count,
@@ -317,11 +326,19 @@ def get_manager_wise_profitability_report(month, year, manager):
     return response
 
 
-def get_client_wise_profitability_report(client, year):
+def get_client_wise_profitability_report(client, year, last_client_id):
+    total_client_count = 0
     if client:
         client_list = Client.objects.filter(id = client)
     else:
         client_list = Client.objects.all()
+
+    total_client_count = client_list.count()
+
+    if last_client_id !="":
+        client_list = client_list.filter(id__gt = last_client_id)
+
+    client_list = client_list[:1]
     response = []
     month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
     audit_cycles = AuditCycle.objects.filter(client__in = client_list, start_date__year = year).order_by('end_date')
@@ -334,6 +351,7 @@ def get_client_wise_profitability_report(client, year):
         for month in month_list:
             auditor_cost = 0
             revenue = 0
+            ops_profitability = 0
 
             for cycle in filtered_audit_cycle:
                 audit_count = audit_stores.filter(audit__audit_cycle = cycle.id, audit_date__month = month).count()
@@ -358,4 +376,50 @@ def get_client_wise_profitability_report(client, year):
                 "month_list": client_data,
                 "total_profit": total_ops_profitability
             })
+    return {'client_list': response, 'total_client_count': total_client_count}
+
+
+def get_qa_wise_report(month, year, qa):
+    response = []
+    if month:
+        month_list = [month]
+    else:
+        month_list = ["01","02","03","04","05","06","07","08","09","10","11","12"]
+
+    audit_stores = AuditStore.objects.filter(status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED])
+
+    content_type = ContentType.objects.get_for_model(AuditStore)
+    permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
+
+    if qa:
+        perms = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True, user_id = qa)
+    else:
+        perms = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
+    user_list = perms.order_by('user_id').distinct('user_id').values('user_id', 'user__email')
+    for month in month_list:
+
+        reports = audit_stores.filter(audit_date__month=month).values_list("id", flat=True)
+        if reports.exists():
+            report_ids = [str(report) for report in reports]
+
+            filtered_perms = perms.filter(object_pk__in=report_ids)
+            monthly_count = filtered_perms.count()
+
+            for user in user_list:
+
+                audit_count = filtered_perms.filter(user_id = user['user_id']).count()
+                if monthly_count == 0:
+                    report_per = 0
+                else:
+                    report_per = round((audit_count / monthly_count) * 100, 1)
+                report_per_day = round((audit_count / 30) * 100, 1)
+                data = {
+                    'month': month,
+                    'qa_email': user['user__email'],
+                    'year': year,
+                    'audit_count': audit_count,
+                    'report_per': report_per,
+                    'report_per_day': report_per_day
+                }
+                response.append(data)
     return response

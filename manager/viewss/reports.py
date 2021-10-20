@@ -5,7 +5,7 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from kronos.exceptions import AppLogicError
 
-from manager.service.reports import get_auditor_payment_report, get_billing_report, get_profitability_report, get_project_cost_report, get_monthly_pnl_report, get_manager_wise_profitability_report, get_client_wise_profitability_report
+from manager.service.reports import get_auditor_payment_report, get_billing_report, get_profitability_report, get_project_cost_report, get_monthly_pnl_report, get_manager_wise_profitability_report, get_client_wise_profitability_report, get_qa_wise_report
 
 class AuditPaymentReportView(APIView):
     permission_classes = [HasGroupPermission]
@@ -87,5 +87,16 @@ class ClientWiseProfitabilityView(APIView):
     def get(self, request, format=None):
         if not request.user.has_perm('manager.can_view_reports'):
             raise AppLogicError('Permission denied')
-        client_report = get_client_wise_profitability_report(request.GET.get('client'), request.GET.get('year'))
+        client_report = get_client_wise_profitability_report(request.GET.get('client'), request.GET.get('year'), request.GET.get('last_client_id'))
         return Response(client_report)
+
+class QAWiseReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        if not request.user.has_perm('manager.can_view_reports'):
+            raise AppLogicError('Permission denied')
+        qa_report = get_qa_wise_report(request.GET.get('month'), request.GET.get('year'), request.GET.get('qa'))
+        return Response(qa_report)
