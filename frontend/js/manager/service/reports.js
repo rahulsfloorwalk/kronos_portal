@@ -25,6 +25,10 @@ export function getProjectManagerReports(month, year, manager){
 	return $.get( url.api_base_path + `manager/reports/manager_wise_profitability/?month=${month}&year=${year}&manager=${manager}`);
 }
 
-export function getClientProfitabilityReports(year, client){
-	return $.get( url.api_base_path + `manager/reports/client_wise_profitability/?client=${client}&year=${year}`);
+export function getClientProfitabilityReports(year, client, lastClientId){
+	return $.get( url.api_base_path + `manager/reports/client_wise_profitability/?client=${client}&year=${year}&last_client_id=${lastClientId}`);
+}
+
+export function getQAReports(month, year, qa){
+	return $.get( url.api_base_path + `manager/reports/qa_report/?month=${month}&year=${year}&qa=${qa}`);
 }

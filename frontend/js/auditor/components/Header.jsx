@@ -31,6 +31,7 @@ class Header extends React.Component {
 						<NavLink to="/payment"><big><b>₹</b></big> Payments</NavLink>
 						{/* <NavLink to="/referral"><big><b>₹</b></big> Referrals</NavLink> */}
 						<NavLink to="/full_time_opportunity"><Star /> Full Time Opportunity</NavLink>
+						<NavLink to="/content_ninja"><Star /> Content Ninja</NavLink>
 						<NavLink to="/shopper_guide/videos"><Tasks/> Shopper Guide</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">

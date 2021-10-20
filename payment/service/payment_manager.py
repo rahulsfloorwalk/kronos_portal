@@ -11,7 +11,7 @@ from auditor.models import BankInfo
 from notifications.signals import notify
 from notifications.models import Notification
 from audit_store import service as audit_store_service
-from payment.models import Payment
+from payment.models import Beneficiary, Payment
 from notify import verbs
 
 from django.conf import settings
@@ -83,6 +83,10 @@ def get_user_details_for_payment(payment):
         user_details['account_number'] = payment.user.agencyuser.agency.account_number
     else:
         raise AppLogicError('Payment user is not auditor or agency')
+    try:
+        user_details['beneficiary_id'] = user.beneficiary.beneficiary_id
+    except Beneficiary.DoesNotExist:
+        user_details['beneficiary_id'] = ''
     return user_details
 
 
@@ -300,44 +304,23 @@ def get_datarow_for_payment(payment):
         utils.today_ist().strftime("%d/%m/%Y"),
         payment.amount,
         "'" + settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Account_No'],
-        "",
-        "",
-        settings.PAYMENT_NEW_CSV_SETTINGS['Payment_Product_Code'],
-        "",
         user_details['name'],
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
         settings.PAYMENT_NEW_CSV_SETTINGS['ReasonForPayment'],
         "'" + user_details['account_number'],
         user_details['ifsc'],
         payment.user.email,
-        "",
-        settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Narration'],
-        "",
-        "",
-        "",
+        user_details['beneficiary_id'],
+        "FWTRANSFER00" + str(payment.id),
     ]
     return datarow
 
 
 def get_fieldnames():
     fieldnames = ['Record_Identifier', 'Payment_Value_Date', 'Payment_Amount', 'Debit_Account_No',
-                  'Customer_Reference_No',
-                  'Customer_Instrument_No', 'Payment_Product_Code', 'Beneficiary_Code', 'Beneficiary_Name',
-                  'Beneficiary_Address1', 'Beneficiary_Address2', 'Beneficiary_Address3', 'Beneficiary_Address4',
-                  'Payable_Loc_Code', 'Print_Branch_Code', 'Dispatch_Address1', 'Dispatch_Address2', 'Dispatch_Mode',
-                  'Dispatch_To', 'Payment_Remarks', 'ReasonForPayment', 'Credit_Account_No', 'IFSC_Code',
+                  'Beneficiary_Name',
+                  'ReasonForPayment', 'Credit_Account_No', 'IFSC_Code',
                   'Notification_Emails',
-                  'Enrichment1', 'Debit_Narration', 'Enrichment3', 'Enrichment4', 'Enrichment5']
+                  'Bene_Id', 'Transfer_Id']
     return fieldnames
 
 

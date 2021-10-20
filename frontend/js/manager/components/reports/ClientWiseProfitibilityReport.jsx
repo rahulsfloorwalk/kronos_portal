@@ -11,6 +11,11 @@ export default class ClientWiseProfitibilityReport extends Component{
 		this.state = {
 			year: new Date().getFullYear(),
 			client: "",
+			loading: false,
+			total_client_count: 0,
+			loadMoreLoader: false,
+			reports: [],
+			clients: []
 		};
 	}
 
@@ -20,15 +25,24 @@ export default class ClientWiseProfitibilityReport extends Component{
 	}
 
 	reload_data = (year, client) => {
-		getClientProfitabilityReports(year, client).then((reports)=> this.setState({
-			reports
+		let last_client_id = "";
+		this.setLoading(true);
+		getClientProfitabilityReports(year, client, last_client_id).then((reports)=> this.setState({
+			reports: reports.client_list,
+			total_client_count: reports.total_client_count,
+			loading: false,
 		}));
+	};
+
+	setLoading = (loading) => {
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
 	};
 
 	year_changed = (e) => {
 		this.setState({
 			"year": e.target.value
 		});
+		this.setLoading(true);
 		this.reload_data(e.target.value, this.state.client);
 	};
 
@@ -36,11 +50,44 @@ export default class ClientWiseProfitibilityReport extends Component{
 		this.setState({
 			"client": e.target.value
 		});
+		this.setLoading(true);
 		this.reload_data(this.state.year, e.target.value);
 	};
 
+	loadMoreReports = () => {
+		this.setState({
+			loadMoreLoader: true
+		});
+		let lastClientId= this.state.reports[this.state.reports.length-1].client.id;
+		let year = this.state.year;
+		let client = this.state.client;
+		getClientProfitabilityReports(year, client, lastClientId).then((reports)=> {
+			let newReports = this.state.reports;
+			for(let client_report of reports.client_list){
+				newReports.push(client_report);
+			}
+			this.setState({
+				reports: newReports,
+				loadMoreLoader: false
+			});
+		});
+	};
+
 	render(){
-		if(! this.state.reports){
+		let loadMoreButton;
+		let loadMoreLoading;
+		if(this.state.loadMoreLoader){
+			loadMoreLoading = (<Loading/>);
+		}
+		if(this.state.reports){
+			if(this.state.reports.length !== this.state.total_client_count){
+				loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
+					Load More
+				</button>);
+			}
+		}
+
+		if(this.state.loading){
 			return <Loading/>;
 		}
 		var year = new Date().getFullYear();
@@ -130,6 +177,10 @@ export default class ClientWiseProfitibilityReport extends Component{
 							</tr>
 						</tbody>
 					</table>
+				</div>
+				<div className="text-center">
+					{loadMoreLoading}
+					{ this.state.loadMoreLoader ? null : loadMoreButton }
 				</div>
 			</div>
 		);

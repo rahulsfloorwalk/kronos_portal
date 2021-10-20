@@ -104,6 +104,7 @@ import ProjectCostReport from "./reports/ProjectCostReport.jsx";
 import MonthOnMonthPNL from "./reports/MonthOnMonthPNL.jsx";
 import ManagerWiseProfitibilityReport from "./reports/ManagerWiseProfitibilityReport.jsx";
 import ClientWiseProfitibilityReport from "./reports/ClientWiseProfitibilityReport.jsx";
+import QAReport from "./reports/QAReport.jsx";
 import ChargePerAuditForm from "./ChargePerAuditForm.jsx";
 import SystemCostForm from "./SystemCostForm.jsx";
 
@@ -236,6 +237,7 @@ const Routes = () => (
 				<Route path="monthly_pnl" component={MonthOnMonthPNL}></Route>
 				<Route path="manager_profit" component={ManagerWiseProfitibilityReport}></Route>
 				<Route path="client_profitability" component={ClientWiseProfitibilityReport}></Route>
+				<Route path="qa_report" component={QAReport}></Route>
 			</Route>
 			<Route path="proof_tag" component={ProofTagList}>
 				<Route path="add" component={ProofTagForm}/>

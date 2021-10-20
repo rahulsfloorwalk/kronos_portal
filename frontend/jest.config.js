@@ -21,8 +21,8 @@ module.exports = {
 		global: {
 			branches: 26,
 			functions: 23,
-			lines: 27,
-			statements: 27,
+			lines: 26,
+			statements: 26,
 		}
 	},
 	reporters: [

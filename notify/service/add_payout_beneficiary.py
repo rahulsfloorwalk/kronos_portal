@@ -30,7 +30,7 @@ def add_beneficiary():
             elif user.groups.filter(name = GROUP_NAME_AGENCY).exists():
                 if not user.agencyuser.agency.is_bank_details_complete():
                     continue
-        except:
+        except Exception as e:
             continue
         data = get_bank_details_for_beneficiary(user)
         async_results.add(add_beneficiary_task.delay(data))
