@@ -147,7 +147,7 @@ export default class QAReport extends Component{
 									<b>Total</b>
 								</td>
 								<td className="text-center"><b>{total_audit_count}</b></td>
-								<td className="text-center"><b>{total_audit_count_per}%</b></td>
+								<td className="text-center"><b>{total_audit_count_per.toFixed(1)}%</b></td>
 								<td className="text-center"><b>{total_audit_count_per_day.toFixed(1)}</b></td>
 							</tr>
 						</tbody>

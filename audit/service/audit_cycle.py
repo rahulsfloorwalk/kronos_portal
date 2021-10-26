@@ -176,3 +176,10 @@ def copy_audit_details_from_to(from_audit_cycle_id, to_audit_cycle_id, checkpoin
 
     to_audit_cycle.save()
     return to_audit_cycle
+
+
+def find_audit_cycles_by_manager(manager_id):
+    return AuditCycle.objects.filter(client__managers__user__id=manager_id).order_by('-end_date')
+
+def filter_audit_cycle_by_manager(manager_id, month, year):
+    return AuditCycle.objects.filter(start_date__month=month, start_date__year=year, client__managers__user__id=manager_id).order_by('-end_date')

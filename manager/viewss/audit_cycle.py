@@ -224,3 +224,15 @@ class AuditDetailsCopyByAuditCycle(APIView):
                                                                      request.data.get("post_approval_desc"),
                                                                      request.data.get("proof_tags"))
         return Response(AuditCycleSerializer(audit_cycle).data)
+
+
+class AuditCycleViewByManager(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, manager_id, format=None):
+        month = request.data.get("month", '')
+        year = request.data.get("year", '')
+        audit_cycles = audit_cycle_service.filter_audit_cycle_by_manager(manager_id, month, year)
+        return Response(AuditCycleSerializer(audit_cycles, many=True).data)

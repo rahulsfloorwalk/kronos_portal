@@ -18,3 +18,16 @@ export function copyAuditDetailsFromTo(state_data, toauditCycleId){
 		contentType: "application/json"
 	});
 }
+
+export function filterAuditCycleByManager(managerId, month, year){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${managerId}/manager`,
+		method: "POST",
+		data: JSON.stringify({
+			"manager_id": managerId,
+			"month": month,
+			"year": year
+		}),
+		contentType: "application/json"
+	});
+}
