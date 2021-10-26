@@ -1,6 +1,9 @@
 from django.urls import reverse
+from django.contrib.auth.models import User, Group
+from registration.models import GROUP_NAME_MANAGER
 
 from model_mommy import mommy
+from model_mommy.recipe import Recipe
 
 from faker import Faker
 
@@ -89,3 +92,29 @@ class AuditCycleIdViewTestCase(ManagerAPITestCase):
 
         response = self.client.delete(reverse('manager:audit_cycle_id_view', kwargs={"audit_cycle_id": audit_cycle.id}))
         self.assertEqual(response.status_code, 204)
+
+
+class AuditCycleServiceTestCase(ManagerAPITestCase):
+
+    def setUp(self):
+        super(AuditCycleServiceTestCase, self).setUp()
+        self.login()
+
+    def login(self):
+        self.client.login(username=self.email, password=self.password)
+
+    def test_get_audit_cycle_by_manager(self):
+        manager_group = Group.objects.get(name=GROUP_NAME_MANAGER)
+        manager = mommy.make(User, email="john123@gmail.com", username="john123@gmail.com", groups=[manager_group])
+
+        audit_cycle = Recipe(AuditCycle, start_date = "2021-06-04")
+        audit_cycle.make(_quantity=6)
+        audit_cycle.make(_quantity=4, client__managers__user=manager)
+
+        post_data = {
+            "month": "06",
+            "year": "2021"
+        }
+        response = self.client.post(reverse('manager:audit_cycle_by_manager', kwargs={"manager_id": manager.id}), post_data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 4)

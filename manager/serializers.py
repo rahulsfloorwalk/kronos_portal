@@ -77,6 +77,7 @@ class AuditCycleSerializer(ModelSerializer):
             'check_points',
             'client',
             'audit_count',
+            'completed_audit_count',
             'questionnaire_type',
         )
         read_only_fields = fields
