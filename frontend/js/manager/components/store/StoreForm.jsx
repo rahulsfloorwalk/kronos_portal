@@ -189,7 +189,7 @@ class StoreForm extends React.Component {
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					{city_error_span}
-					<FormErrorList errors={this.props.errors.non_field_errors}/>
+					{this.props.errors.non_field_errors != undefined ? <FormErrorList errors={this.props.errors.non_field_errors}/> : null}
 					{ typeof this.props.params.storeId == "undefined" ?
 						<div className="form-group">
 							<label>Select store region</label>

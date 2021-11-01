@@ -86,6 +86,7 @@ export default class ManagerWiseProfitibilityReport extends Component{
 			year_option_list.push(<option key={i} value={year-i}>{year-i}</option>);
 		}
 
+		let total_planned_audit = 0;
 		let total_audit_count = 0;
 		let total_revenue = 0;
 		let total_profitability = 0;
@@ -103,6 +104,7 @@ export default class ManagerWiseProfitibilityReport extends Component{
 			total_profitability += value.profitability;
 			total_profitability_per += value.profitability_per;
 			total_audit_count_per += value.audit_count_per;
+			total_planned_audit += value.planned_audit;
 
 			profitability_rows += value.profitability_per ? 1 : 0;
 			audit_count_rows += value.audit_count_per ? 1 : 0;
@@ -112,6 +114,7 @@ export default class ManagerWiseProfitibilityReport extends Component{
 					<td className="text-center"><small>{value.manager_email}</small></td>
 					<td className="text-center">{getMonthName(value.month)}</td>
 					<td className="text-center">{value.year}</td>
+					<td className="text-center">{value.planned_audit}</td>
 					<td className="text-center">{value.audit_count}</td>
 					<td className="text-center">{value.revenue}</td>
 					<td className="text-center">{value.profitability}</td>
@@ -160,6 +163,7 @@ export default class ManagerWiseProfitibilityReport extends Component{
 										{year_option_list}
 									</select>
 								</th>
+								<th className="text-center">Planned Audits</th>
 								<th className="text-center">Audits Count</th>
 								<th className="text-center">Revenue</th>
 								<th className="text-center">Profitability</th>
@@ -174,6 +178,7 @@ export default class ManagerWiseProfitibilityReport extends Component{
 								<td className="text-center" colSpan="3">
 									<b>Total</b>
 								</td>
+								<td className="text-center"><b>{total_planned_audit}</b></td>
 								<td className="text-center"><b>{total_audit_count}</b></td>
 								<td className="text-center"><b>{total_revenue}</b></td>
 								<td className="text-center"><b>{total_profitability}</b></td>
