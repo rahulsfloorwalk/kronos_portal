@@ -240,9 +240,7 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
           Planned Audits
         </span>
         <br />
-        <b>
-          310
-        </b>
+        <b />
       </p>
     </div>
   </div>

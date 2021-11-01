@@ -24,6 +24,7 @@ class AuditCycleDeSerializer(ModelSerializer):
             'status',
             'start_date',
             'end_date',
+            'planned_audit',
             'earnings_per_audit',
             'reimbursement',
             'description',
@@ -42,6 +43,7 @@ class AuditCycleDeSerializer(ModelSerializer):
         audit_cycle.status = self.validated_data.get('status', audit_cycle.status)
         audit_cycle.start_date = self.validated_data.get('start_date', audit_cycle.start_date)
         audit_cycle.end_date = self.validated_data.get('end_date', audit_cycle.end_date)
+        audit_cycle.planned_audit = self.validated_data.get('planned_audit', audit_cycle.planned_audit)
         audit_cycle.earnings_per_audit = self.validated_data.get('earnings_per_audit', audit_cycle.earnings_per_audit)
         audit_cycle.reimbursement = self.validated_data.get('reimbursement', audit_cycle.reimbursement)
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)

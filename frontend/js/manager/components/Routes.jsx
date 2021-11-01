@@ -109,6 +109,7 @@ import ChargePerAuditForm from "./ChargePerAuditForm.jsx";
 import SystemCostForm from "./SystemCostForm.jsx";
 
 import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingForm.jsx";
+import AuditorAnalytics from "./auditor/AuditorAnalytics.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -194,6 +195,7 @@ const Routes = () => (
 			</Route>
 
 			<Route path="auditor" component={AuditorList}/>
+			<Route path="/auditor/summary" component={AuditorAnalytics} />
 			<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
 				<Route path="details" component={AuditorDetails}>
 					<Route path="preferences/edit" component={PreferencesForm}/>

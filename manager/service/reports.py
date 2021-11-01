@@ -48,9 +48,6 @@ def get_auditor_payment_report(month, year, payment_type, client):
         reimbursement = audit_price['reim_sum'] if audit_price['reim_sum'] else 0
         earnings_per_audit = audit_price['ear_sum'] if audit_price['ear_sum'] else 0
 
-        planned_audit = audit_cycle.audit_count()
-        planned_audit = planned_audit if planned_audit else 0
-
         cycle_earnings_per_audit = audit_cycle.earnings_per_audit if audit_cycle.earnings_per_audit else 0
         cycle_reimbursement = audit_cycle.reimbursement if audit_cycle.reimbursement else 0
 
@@ -68,7 +65,7 @@ def get_auditor_payment_report(month, year, payment_type, client):
         obj['reimbursement'] = reimbursement
         obj['earnings_per_audit'] = earnings_per_audit
         obj['auditor_payment'] = reimbursement + earnings_per_audit
-        obj['est_auditor_payment'] = planned_audit * (cycle_earnings_per_audit + cycle_reimbursement)
+        obj['est_auditor_payment'] = audit_cycle.planned_audit * (cycle_earnings_per_audit + cycle_reimbursement)
         response.append(obj)
     return response
 
@@ -93,9 +90,6 @@ def get_billing_report(month, year, client):
         audit_conducted = audit_stores.count()
         revenue = audit_conducted * audit_cycle.charge_per_audit + audit_cycle.system_cost
 
-        planned_audit = audit_cycle.audit_count()
-        planned_audit = planned_audit if planned_audit else 0
-
         obj['id'] = audit_cycle.id
         obj['name'] = audit_cycle.name
         obj['status'] = audit_cycle.status
@@ -108,7 +102,7 @@ def get_billing_report(month, year, client):
         obj['audit_conducted'] = audit_conducted
         obj['revenue'] = revenue
         obj['gst'] = revenue * 0.18
-        obj['est_billing'] = (planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost
+        obj['est_billing'] = (audit_cycle.planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost
         response.append(obj)
 
     return response
@@ -137,9 +131,6 @@ def get_profitability_report(month, year, client):
         auditor_cost = auditor_cost['cost'] if auditor_cost['cost'] else 0
         ops_profitability = revenue - auditor_cost
 
-        planned_audit = audit_cycle.audit_count()
-        planned_audit = planned_audit if planned_audit else 0
-
         cycle_earnings_per_audit = audit_cycle.earnings_per_audit if audit_cycle.earnings_per_audit else 0
 
         obj['id'] = audit_cycle.id
@@ -155,7 +146,7 @@ def get_profitability_report(month, year, client):
         obj['revenue'] = revenue
         obj['auditor_cost'] = auditor_cost
         obj['ops_profitability'] = ops_profitability
-        obj['est_profitability'] = ((planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost) - (planned_audit * cycle_earnings_per_audit)
+        obj['est_profitability'] = ((audit_cycle.planned_audit * audit_cycle.charge_per_audit) + audit_cycle.system_cost) - (audit_cycle.planned_audit * cycle_earnings_per_audit)
         response.append(obj)
 
     return response
@@ -180,8 +171,7 @@ def get_project_cost_report(month, year, client):
 
         audit_stores1 = audit_stores.filter(audit__audit_cycle__id = audit_cycle.id, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED])
         audit_conducted = audit_stores1.count()
-        planned_audit = audit_cycle.audit_count()
-        planned_audit = planned_audit if planned_audit else 0
+        planned_audit = audit_cycle.planned_audit
         auditor_cost = audit_stores1.aggregate(cost = Sum(F('earnings_per_audit')))
         auditor_cost = auditor_cost['cost'] if auditor_cost['cost'] else 0
 
@@ -291,14 +281,18 @@ def get_manager_wise_profitability_report(month, year, manager):
             auditor_cost = 0
             total_revenue = 0
             total_audit_count = 0
+            total_planned_audit = 0
 
             filtered_audit_cycle = audit_cycles.filter(client__managers__user__id = manager.id, client__managers__is_active = True, start_date__month = month)
 
             for cycle in filtered_audit_cycle:
                 audit_count = audit_stores.filter(audit__audit_cycle = cycle.id).count()
+                planned_audit = cycle.planned_audit
                 manager_count = cycles_with_manager_count.filter(id = cycle.id, manager_count__gt = 0).first()
                 if manager_count:
+                    planned_audit = round(planned_audit / manager_count['manager_count'], 1)
                     audit_count = round(audit_count / manager_count['manager_count'],1)
+                total_planned_audit += planned_audit
                 total_audit_count += audit_count
                 total_revenue += (cycle.charge_per_audit * audit_count) + cycle.system_cost
 
@@ -324,6 +318,7 @@ def get_manager_wise_profitability_report(month, year, manager):
                 "manager_email": manager.email,
                 "month": month,
                 "year": year,
+                "planned_audit": total_planned_audit,
                 "audit_count": round(total_audit_count,1),
                 "revenue": total_revenue,
                 "profitability": ops_profitability,

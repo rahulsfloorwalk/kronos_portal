@@ -68,6 +68,7 @@ class AuditCycleSerializer(ModelSerializer):
             'status',
             'start_date',
             'end_date',
+            'planned_audit',
             'earnings_per_audit',
             'reimbursement',
             'charge_per_audit',

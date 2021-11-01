@@ -27,6 +27,7 @@ from referral.models import AuditorReferral
 from social.models import Facebook
 from registration.models import Verification
 from manager.serializers import CitySerializer
+from manager.service import auditor_summary as auditor_summery_service
 
 class ProfileInfoSerializer(ModelSerializer):
     city = CitySerializer()
@@ -402,3 +403,13 @@ class AuditorRatingView(APIView):
         profile_info_service.save_auditor_rating(user, ds.validated_data['auditor_rating'])
         auditor_profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
         return Response({"auditor_rating": auditor_profile_info.auditor_rating})
+
+class AuditorSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request):
+        auditor_summary= auditor_summery_service.get_auditor_summary()
+        return Response(auditor_summary)

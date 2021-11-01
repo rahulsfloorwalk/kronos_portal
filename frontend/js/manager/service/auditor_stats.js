@@ -8,3 +8,7 @@ export function getAuditorApplications(audit_id){
 export function getAuditorReports(audit_id){
 	return $.get( url.api_base_path + `manager/auditor/${audit_id}/reports`);
 }
+
+export function getAuditorSummary(){
+	return $.get( url.api_base_path + "manager/auditor/summary");
+}

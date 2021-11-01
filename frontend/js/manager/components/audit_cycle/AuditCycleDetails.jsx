@@ -131,7 +131,7 @@ export class AuditCycleDetails extends React.Component{
 					<div className="col-xs-6 col-md-2">
 						<p>
 							<span className="text-muted">Planned Audits</span><br/>
-							<b>{ this.props.auditCycle.audit_count }</b>
+							<b>{ this.props.auditCycle.planned_audit }</b>
 						</p>
 					</div>
 				</div>

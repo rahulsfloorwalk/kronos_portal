@@ -33,6 +33,7 @@ export class AuditCycleForm extends Component{
 			end_date: PropTypes.string,
 			type: PropTypes.string,
 			status: PropTypes.string,
+			planned_audit: PropTypes.number,
 			earnings_per_audit: PropTypes.number,
 			reimbursement: PropTypes.number,
 			description: PropTypes.string,
@@ -53,6 +54,7 @@ export class AuditCycleForm extends Component{
 			end_date: FieldErrors,
 			type: FieldErrors,
 			status: FieldErrors,
+			planned_audit: FieldErrors,
 			reimbursement: FieldErrors,
 			earnings_per_audit: FieldErrors,
 			description: FieldErrors,
@@ -208,6 +210,9 @@ export class AuditCycleForm extends Component{
 						</div>
 						<div className="col-md-6">
 							<FormInput label="Reimbursement upto (₹)" type="number" value={this.state.reimbursement} name="reimbursement" onChange={this.fieldChanged} errors={this.props.errors.reimbursement}/>
+						</div>
+						<div className="col-md-6">
+							<FormInput label="Planned audit" type="number" value={this.state.planned_audit} name="planned_audit" onChange={this.fieldChanged} errors={this.props.errors.planned_audit}/>
 						</div>
 					</div>
 					<FormTextarea label="Description (markdown)" name="description" value={this.state.description} onChange={this.fieldChanged} errors={this.props.errors.description}/>

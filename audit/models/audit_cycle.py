@@ -1,6 +1,7 @@
 from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey
 from django.db.models import PROTECT, F, Sum
 from django.db.models.fields import BooleanField
+from django.core.validators import MinValueValidator
 
 import audit_store
 
@@ -83,6 +84,7 @@ class AuditCycle(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     start_date = DateField(db_column='start_date')
     end_date = DateField(db_column='end_date')
+    planned_audit = IntegerField(db_column='planned_audit', blank=False, default=0, validators=[MinValueValidator(0)])
     earnings_per_audit = IntegerField(db_column='earnings_per_audit', blank=True, null=True)
     revenue_per_audit = IntegerField(db_column='revenue_per_audit', blank=True, null=True)
     charge_per_audit = IntegerField(db_column='charge_per_audit', blank=False, default=0)
