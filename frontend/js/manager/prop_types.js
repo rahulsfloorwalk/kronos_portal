@@ -50,6 +50,7 @@ export const auditStorePropType = PropTypes.shape({
 	earnings_per_audit: PropTypes.number,
 	reimbursement: PropTypes.number,
 	audit_date: PropTypes.string.isRequired,
+	audit_store_percentage: PropTypes.number,
 	audit: auditPropType.isRequired,
 	user: userPropType,
 });
