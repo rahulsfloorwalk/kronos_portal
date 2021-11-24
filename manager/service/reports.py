@@ -393,6 +393,7 @@ def get_qa_wise_report(month, year, qa):
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
+    perms_for_month = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
     if qa:
         perms = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True, user_id = qa)
     else:
@@ -405,7 +406,7 @@ def get_qa_wise_report(month, year, qa):
             report_ids = [str(report) for report in reports]
 
             filtered_perms = perms.filter(object_pk__in=report_ids)
-            monthly_count = filtered_perms.count()
+            monthly_count = perms_for_month.filter(object_pk__in=report_ids).count()
 
             for user in user_list:
 

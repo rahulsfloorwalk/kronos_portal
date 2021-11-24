@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+        <p>Dear QA,</p>
+        <p>Below is your daily work report:</p>
+        <br />
+        <table border="1" cellpadding="8" cellspacing="0" width="700">
+            <tbody>
+                <tr>
+                    <th style="font-size: 14px;">Number of Reports Pending from {{ yesterday_date }}</th>
+                    <td style="font-size: 13px;">{{ yesterday_pending }}</td>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px;">Previous Reports Pending</th>
+                    <td style="font-size: 13px;">{{ previous_pending }}</td>
+                </tr>
+                <tr>
+                    <th style="font-size: 14px;">Total number of reports pending ({% now "N d, Y" %})</th>
+                    <td style="font-size: 13px;">{{ total_pending_reports }}</td>
+                </tr>
+            </tbody>
+        </table>
+		<p>--</p>
+		<p>Thanks and regards,</p>
+		<p>FloorWalk Team</p>
+		<br>
+		<br>
+	    <h6>Please note that this is system generated email. Do not reply to this email. For any queries, write to us at contactus@floorwalk.in</h6>
+	</body>
+</html>

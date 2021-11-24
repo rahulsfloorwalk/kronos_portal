@@ -2,6 +2,7 @@ from datetime import timedelta
 from django.contrib.auth.models import Group
 from audit_store.models import AuditStore
 from auditor.models import ProfileInfo
+from audit.models.audit_cycle import AuditCycle
 from registration.models import GROUP_NAME_AUDITOR, Verification
 from django.db.models import F, Count, Case, When, IntegerField
 from django.db.models.functions import ExtractYear
@@ -9,6 +10,7 @@ from django.utils import timezone
 
 
 def get_auditor_summary():
+    now = timezone.now()
     month_list = ['01','02','03','04','05','06','07','08','09','10','11','12']
     auditor_list = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.all()
     count = auditor_list.aggregate(
@@ -22,7 +24,7 @@ def get_auditor_summary():
             output_field=IntegerField(),
         )),
         today_new_reg=Count(Case(
-            When(date_joined = timezone.now(), then = 1),
+            When(date_joined__date = now.date(), then = 1),
             output_field=IntegerField(),
         )))
 
@@ -57,3 +59,41 @@ def get_auditor_summary():
         'monthly_auditors': month_count_list
     }
     return data
+
+
+def get_project_analytics_report(month, year, manager, cycle, client):
+    result = []
+    now = timezone.now()
+    now = now.date()
+    if month:
+        month_list = [month]
+    else:
+        month_list = ['01','02','03','04','05','06','07','08','09','10','11','12']
+    audit_cycle = AuditCycle.objects.select_related('client').prefetch_related('audits').filter(start_date__month__in=month_list, start_date__year=year).order_by('-end_date')
+    if cycle:
+        audit_cycle = audit_cycle.filter(id = cycle)
+    if client:
+        audit_cycle = audit_cycle.filter(client__id = client)
+    if manager:
+        audit_cycle = audit_cycle.filter(client__managers__user__id = manager)
+
+    audit_stores = AuditStore.objects.filter(audit__audit_cycle__in = audit_cycle)
+    for cycle in audit_cycle:
+        filtered_audit_stores = audit_stores.filter(audit__audit_cycle = cycle)
+        unique_auditors = filtered_audit_stores.filter(status = AuditStore.ASSIGNED).values('user').distinct().count()
+        last_year_new_auditor = filtered_audit_stores.filter(user__date_joined__date__gte = now - timedelta(days=365)).values('user').distinct().count()
+        last_quarterly_auditor = filtered_audit_stores.filter(user__date_joined__date__gte = now - timedelta(days=90)).values('user').distinct().count()
+        managers = cycle.client.managers.values_list('user__email', flat = True)
+        application = sum([i.application_count() for i in cycle.audits.all()])
+        result.append({
+            'client': cycle.client.name,
+            'cycle': cycle.name,
+            'manager': list(managers),
+            'month': cycle.start_date.month,
+            'year': year,
+            'application_count': application,
+            'unique_auditors': unique_auditors,
+            'last_year_new_auditor': last_year_new_auditor,
+            'last_quarterly_auditor': last_quarterly_auditor,
+        })
+    return result

@@ -4,6 +4,7 @@ import { getAuditorSummary } from "../../service/auditor_stats";
 // import Loading from "../../../components/Loading.jsx";
 import { ResponsiveContainer, PieChart, BarChart, CartesianGrid, XAxis, YAxis, Bar, Pie, Cell, Tooltip, Legend, LabelList } from "recharts";
 import { getMonthName } from "../../../utils";
+import ProjectAnalytics from "../reports/ProjectAnalytics.jsx";
 
 export default class AuditorAnalytics extends React.Component {
 	state = {
@@ -163,6 +164,11 @@ export default class AuditorAnalytics extends React.Component {
 							</tbody>
 						</table>
 					</div>
+				</div>
+				<div className="col-md-12">
+					<h3 className="font-weight-bold">Project analytics</h3>
+					<hr/>
+					<ProjectAnalytics />
 				</div>
 			</div>
 		);

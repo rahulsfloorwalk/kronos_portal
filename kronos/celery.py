@@ -27,6 +27,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.waitlist_audit_application import waitlist_audit_application
     from notify.service.hide_audit_store_section import hide_audit_store_section
     from notify.service.mail_full_time_opportunity import send_full_time_opportunity_emails
+    from notify.service.mail_qa_performance import qa_performance_report
     # from notify.service.add_payout_beneficiary import add_beneficiary
 
     # set up schedules for audit reminders
@@ -45,6 +46,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # This cron will send mail next day of audit date at 9 am
     sender.add_periodic_task(queue_at_9, send_on_audit_reminders.s())
     sender.add_periodic_task(queue_at_9, reject_audit_application.s())
+    sender.add_periodic_task(queue_at_9, qa_performance_report.s())
 
     # schedules for find repeated image attachment
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.

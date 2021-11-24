@@ -55,7 +55,7 @@ def submit_report(audit_store_id, user_id):
             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "
                                 "drop-down present below the attachment.")
     set_attachment_by_proof_tag(audit_store_id)
-    audit_store.submit(by=user)
+    audit_store.submit_auditor(by=user)
     add_multiselect_answer_questions(audit_store_id, user_id)
     return audit_store
 
@@ -80,16 +80,16 @@ def fail_report(audit_store_id, user_id, message):
     report_status_log.save()
     # End of Save Data in Report Status Log
 
-    # Send Mail to manager or "ankush.take@floorwalk.in"
+    # Send Mail to manager or "shubham.mohod@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_FAILED_BY_AUDITOR_EMAIL']:
         email_list = get_manager_email_list_by_audit_store_obj(audit_store)
         if email_list:
             emails = email_list
         else:
-            emails = ["ankush.take@floorwalk.in"]
+            emails = ["shubham.mohod@floorwalk.in"]
         for email in emails:
             send_audit_report_failed_email.delay(email, audit_store_id, message)
-    # End of Send Mail to manager or "ankush.take@floorwalk.in"
+    # End of Send Mail to manager or "shubham.mohod@floorwalk.in"
     return audit_store
 
 
@@ -119,16 +119,16 @@ def withdraw_report(audit_store_id, user_id, message):
         application_obj.save()
     # End of Change Audit Application Status to WITHDRAWN
 
-    # Send Mail to manager or "ankush.take@floorwalk.in"
+    # Send Mail to manager or "shubham.mohod@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_WITHDRAW_BY_AUDITOR_EMAIL']:
         email_list = get_manager_email_list_by_audit_store_obj(audit_store)
         if email_list:
             emails = email_list
         else:
-            emails = ["ankush.take@floorwalk.in"]
+            emails = ["shubham.mohod@floorwalk.in"]
         for email in emails:
             send_audit_report_withdraw_email.delay(email, audit_store_id, message)
-    # End of Send Mail to manager or "ankush.take@floorwalk.in"
+    # End of Send Mail to manager or "shubham.mohod@floorwalk.in"
     return audit_store
 
 
@@ -141,7 +141,7 @@ def concern_report(audit_store_id, user_id, message):
     if audit_store.status not in [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED]:
         raise AppLogicError("Concern not accepted by user")
 
-    # Send Mail to manager or "ankush.take@floorwalk.in"
+    # Send Mail to manager or "shubham.mohod@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_CONCERN_BY_AUDITOR_EMAIL']:
         email_list = get_manager_email_list_by_audit_store_obj(audit_store)
         moderator_email = get_moderator_email_by_audit_store_obj(audit_store)
@@ -150,8 +150,8 @@ def concern_report(audit_store_id, user_id, message):
         if email_list:
             emails = email_list
         else:
-            emails = ["ankush.take@floorwalk.in"]
+            emails = ["shubham.mohod@floorwalk.in"]
         for email in emails:
             send_audit_report_concern_email.delay(email, audit_store_id, user_id, message)
-    # End of Send Mail to manager or "ankush.take@floorwalk.in"
+    # End of Send Mail to manager or "shubham.mohod@floorwalk.in"
     return audit_store

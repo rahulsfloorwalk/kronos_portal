@@ -1,0 +1,15 @@
+Dear QA,
+
+Below is your daily work report:
+
+Number of Reports Pending from {{ yesterday_date }}: {{ yesterday_pending }}
+
+Previous Reports Pending: {{ previous_pending }}
+
+Total number of reports pending  ({% now "N d, Y" %}): {{ total_pending_reports }}
+
+----
+Thanks and regards,
+FloorWalk Team
+
+Please note that this is system generated email. Do not reply to this email. For any queries, write to us at contactus@floorwalk.in
