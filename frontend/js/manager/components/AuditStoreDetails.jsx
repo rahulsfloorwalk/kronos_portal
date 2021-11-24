@@ -460,12 +460,14 @@ export class AuditStoreDetails extends React.Component{
 										<td className="text-right">Audit Date:</td>
 										<th>{auditDateElement}</th>
 									</tr>
-									<tr>
-										<td className="text-right">Overall Experience:</td>
-										<th>
-											{this.props.auditStore.audit_store_percentage}%
-										</th>
-									</tr>
+									{this.props.auditStore.audit_store_percentage ?
+										<tr>
+											<td className="text-right">Overall Experience:</td>
+											<th>
+												{this.props.auditStore.audit_store_percentage}%
+											</th>
+										</tr>
+										: null }
 									<tr>
 										<td className="text-right">Status:</td>
 										<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>

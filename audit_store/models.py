@@ -157,6 +157,7 @@ class AuditStore(Model):
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
+    submit_at = DateTimeField(db_column="submit_at", null=True)
 
     attachments = GenericRelation('attachment.Attachment', related_query_name='audit_stores')
 
@@ -369,6 +370,13 @@ class AuditStore(Model):
         if self.status != AuditStore.ACKNOWLEDGED:
             raise AppLogicError("Report cannot be submitted now")
 
+        self._change_status(AuditStore.SUBMITTED, by)
+
+    @atomic
+    def submit_auditor(self, *args, by):
+        if self.status != AuditStore.ACKNOWLEDGED:
+            raise AppLogicError("Report cannot be submitted now")
+        self.submit_at = timezone.now()
         self._change_status(AuditStore.SUBMITTED, by)
 
     @atomic

@@ -260,16 +260,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
               <td
                 className="text-right"
               >
-                Overall Experience:
-              </td>
-              <th>
-                %
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
                 Status:
               </td>
               <th>
@@ -821,16 +811,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
               <td
                 className="text-right"
               >
-                Overall Experience:
-              </td>
-              <th>
-                %
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
                 Status:
               </td>
               <th>
@@ -1315,16 +1295,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
               </td>
               <th>
                 2nd Sep 2018
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
-                Overall Experience:
-              </td>
-              <th>
-                %
               </th>
             </tr>
             <tr>
@@ -1876,16 +1846,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                     value="2018-09-02"
                   />
                 </div>
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
-                Overall Experience:
-              </td>
-              <th>
-                %
               </th>
             </tr>
             <tr>
@@ -2450,16 +2410,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
               <td
                 className="text-right"
               >
-                Overall Experience:
-              </td>
-              <th>
-                %
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
                 Status:
               </td>
               <th>
@@ -2944,16 +2894,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
               </td>
               <th>
                 2nd Sep 2018
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
-                Overall Experience:
-              </td>
-              <th>
-                %
               </th>
             </tr>
             <tr>
@@ -3485,16 +3425,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
               </td>
               <th>
                 2nd Sep 2018
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
-                Overall Experience:
-              </td>
-              <th>
-                %
               </th>
             </tr>
             <tr>
@@ -4052,16 +3982,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
               <td
                 className="text-right"
               >
-                Overall Experience:
-              </td>
-              <th>
-                %
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
                 Status:
               </td>
               <th>
@@ -4558,16 +4478,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
               </td>
               <th>
                 2nd Sep 2018
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
-                Overall Experience:
-              </td>
-              <th>
-                %
               </th>
             </tr>
             <tr>
@@ -5125,16 +5035,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
               <td
                 className="text-right"
               >
-                Overall Experience:
-              </td>
-              <th>
-                %
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
                 Status:
               </td>
               <th>
@@ -5651,16 +5551,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
               </td>
               <th>
                 2nd Sep 2018
-              </th>
-            </tr>
-            <tr>
-              <td
-                className="text-right"
-              >
-                Overall Experience:
-              </td>
-              <th>
-                %
               </th>
             </tr>
             <tr>
