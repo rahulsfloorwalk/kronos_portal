@@ -4,15 +4,14 @@ from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q
 from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
+from django.utils import timezone
 
 from monitoring.service import email_log_service
 
 from audit_store.models import AuditStore
 from manager.service.moderator import find_all, find_by_id
-from kronos.utils import today_ist
 from registration.context import registration_context
 
 from guardian.models import UserObjectPermission
@@ -22,19 +21,20 @@ _logger = logging.getLogger(__name__)
 
 @app.task(ignore_result=True)
 def qa_performance_report():
-    yesterday = today_ist() - timedelta(days=1)
+    today = timezone.now()
+    yesterday = today.date() - timedelta(days=1)
 
-    audit_reports = AuditStore.objects.filter(status = AuditStore.SUBMITTED).distinct('id')
+    audit_reports = AuditStore.objects.filter(status__in = [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED]).distinct('id')
 
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")
 
     perms = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
 
-    moderator_list = find_all().all()
+    moderator_list = find_all().filter(is_active = True)
     for moderator in moderator_list:
-        yesterday_pending_reports = audit_reports.filter(Q(audit_date = yesterday) | Q(submit_at = yesterday)).values('id')
-        previous_pending_reports = audit_reports.filter(Q(audit_date__lt = yesterday) | Q(submit_at__lt = yesterday)).values('id')
+        yesterday_pending_reports = audit_reports.filter(audit_date = yesterday).values('id')
+        previous_pending_reports = audit_reports.filter(audit_date__lt = yesterday).values('id')
 
         yesterday_pending_reports = [str(report["id"]) for report in yesterday_pending_reports]
         previous_pending_reports = [str(report["id"]) for report in previous_pending_reports]
@@ -47,11 +47,12 @@ def qa_performance_report():
             'yesterday_pending': yesterday_pending,
             'previous_pending': previous_pending,
             'total_pending_reports': total_pending_reports,
-            'yesterday_date': yesterday,
+            'yesterday_date': yesterday.strftime("%b %d, %Y"),
             'user_id': moderator.id
         }
 
         if settings.EMAIL_SWITCH['QA_PENDING_NOTIFICATION_EMAIL']:
+            _logger.info("QA pending notification email sending for %s", moderator.email)
             qa_notification_email_task.delay(data)
         else:
             _logger.info("QA pending notification message disabled. skipping message for qa id %s", moderator.id)

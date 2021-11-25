@@ -112,10 +112,10 @@ export default class ProjectAnalytics extends React.Component {
 					<td>{manager_user}</td>
 					<td className="text-center">{getMonthName(value.month)}</td>
 					<td className="text-center">{value.year}</td>
+					<td className="text-center">{value.total_audits}</td>
 					<td className="text-center">{value.application_count}</td>
 					<td className="text-center">{value.unique_auditors}</td>
 					<td className="text-center">{value.last_year_new_auditor}</td>
-					<td className="text-center">{value.last_quarterly_auditor}</td>
 				</tr>
 			);
 		});
@@ -158,10 +158,10 @@ export default class ProjectAnalytics extends React.Component {
 								{year_option_list}
 							</select>
 						</th>
+						<th className="text-center">Total audits</th>
 						<th className="text-center">Applications</th>
 						<th className="text-center">Unique auditors</th>
 						<th className="text-center">New Auditors <br/><small>(In recent year)</small></th>
-						<th className="text-center">New Auditors <br/><small>(In recent 3 month)</small></th>
 					</tr>
 				</thead>
 				<tbody>
