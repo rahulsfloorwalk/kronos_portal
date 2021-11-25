@@ -77,14 +77,20 @@ def get_project_analytics_report(month, year, manager, cycle, client):
     if manager:
         audit_cycle = audit_cycle.filter(client__managers__user__id = manager)
 
-    audit_stores = AuditStore.objects.filter(audit__audit_cycle__in = audit_cycle)
+    audit_stores = AuditStore.objects.all()
+    auditor_list = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.filter(is_active = True)
     for cycle in audit_cycle:
         filtered_audit_stores = audit_stores.filter(audit__audit_cycle = cycle)
-        unique_auditors = filtered_audit_stores.filter(status = AuditStore.ASSIGNED).values('user').distinct().count()
-        last_year_new_auditor = filtered_audit_stores.filter(user__date_joined__date__gte = now - timedelta(days=365)).values('user').distinct().count()
-        last_quarterly_auditor = filtered_audit_stores.filter(user__date_joined__date__gte = now - timedelta(days=90)).values('user').distinct().count()
+        unique_auditors = filtered_audit_stores.filter(status__in = [AuditStore.ACCEPTED, AuditStore.COMPLETED]).values('user').distinct('user').count()
         managers = cycle.client.managers.values_list('user__email', flat = True)
         application = sum([i.application_count() for i in cycle.audits.all()])
+
+        audit_store_auditor_list = filtered_audit_stores.values_list('user', flat=True).distinct('user')
+        auditor_obj_list = auditor_list.filter(id__in = audit_store_auditor_list).values_list('id', flat=True)
+        new_auditor_count = 0
+        for user in auditor_obj_list:
+            recent_audit_exists = audit_stores.filter(audit_date__lt = cycle.start_date, user = user).exists()
+            new_auditor_count += 0 if recent_audit_exists else 1
         result.append({
             'client': cycle.client.name,
             'cycle': cycle.name,
@@ -92,8 +98,8 @@ def get_project_analytics_report(month, year, manager, cycle, client):
             'month': cycle.start_date.month,
             'year': year,
             'application_count': application,
+            'total_audits': cycle.planned_audit,
             'unique_auditors': unique_auditors,
-            'last_year_new_auditor': last_year_new_auditor,
-            'last_quarterly_auditor': last_quarterly_auditor,
+            'last_year_new_auditor': new_auditor_count,
         })
     return result
