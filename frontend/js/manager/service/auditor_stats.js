@@ -12,7 +12,3 @@ export function getAuditorReports(audit_id){
 export function getAuditorSummary(){
 	return $.get( url.api_base_path + "manager/auditor/summary");
 }
-
-export function getProjectAnalytic(month, year, manager, cycle, client){
-	return $.get( url.api_base_path + `manager/auditor/project_analytic?month=${month}&year=${year}&manager=${manager}&cycle=${cycle}&client=${client}`);
-}

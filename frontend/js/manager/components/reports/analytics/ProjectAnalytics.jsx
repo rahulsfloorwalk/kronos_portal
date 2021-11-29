@@ -1,12 +1,12 @@
 import React from "react";
-import { getProjectAnalytic } from "../../service/auditor_stats";
-import { fetchClients } from "../../service/client.js";
-import { findManagers } from "../../service/manager.js";
+import { getProjectAnalytic, getProjectAnalyticYearly } from "../../../service/reports.js";
+import { fetchClients } from "../../../service/client.js";
+import { findManagers } from "../../../service/manager.js";
 
-import Loading from "../../../components/Loading.jsx";
-import { getMonthName } from "../../../utils";
+import Loading from "../../../../components/Loading.jsx";
+import { getMonthName } from "../../../../utils.js";
 
-export default class ProjectAnalytics extends React.Component {
+export class ProjectAnalyticsCycleWise extends React.Component {
 	constructor(props){
 		super(props);
 		this.state = {
@@ -23,7 +23,7 @@ export default class ProjectAnalytics extends React.Component {
 	}
 
 	componentDidMount() {
-		fetchClients().done((clients)=>this.setState({clients}));
+		fetchClients().then((clients)=>this.setState({clients}));
 		findManagers().then((managers) => {
 			if(managers){
 				let manager_list = managers.filter(manager => manager.is_active === true);
@@ -36,7 +36,7 @@ export default class ProjectAnalytics extends React.Component {
 	}
 
 	reload_data = (month, year, manager, cycle, client) => {
-		getProjectAnalytic(month, year, manager, cycle, client).done((cycles)=>{
+		getProjectAnalytic(month, year, manager, cycle, client).then((cycles)=>{
 			this.setState({
 				"cycles":cycles,
 				"loading": false
@@ -96,7 +96,11 @@ export default class ProjectAnalytics extends React.Component {
 		for(let c of this.state.clients) {
 			client_option_list.push(<option value={c.id} key={c.id}>{c.name}</option>);
 		}
-
+		let total_audits = 0;
+		let application_count = 0;
+		let unique_auditors = 0;
+		let new_auditor = 0;
+		let row_count = this.state.cycles.length;
 		let project_list = this.state.cycles.map((value, index) => {
 			let manager_user = value.manager.map((val, ind) => {
 				return(
@@ -105,6 +109,10 @@ export default class ProjectAnalytics extends React.Component {
 					</ul>
 				);
 			});
+			total_audits += value.total_audits;
+			application_count += value.application_count;
+			unique_auditors += value.unique_auditors;
+			new_auditor += value.new_auditor;
 			return(
 				<tr key={index}>
 					<td className="text-center">{value.client}</td>
@@ -115,10 +123,19 @@ export default class ProjectAnalytics extends React.Component {
 					<td className="text-center">{value.total_audits}</td>
 					<td className="text-center">{value.application_count}</td>
 					<td className="text-center">{value.unique_auditors}</td>
-					<td className="text-center">{value.last_year_new_auditor}</td>
+					<td className="text-center">{value.new_auditor}</td>
 				</tr>
 			);
 		});
+		project_list.push(
+			<tr key={row_count+1} style={{borderTop: "1px solid gray", borderBottom: "1px solid gray"}}>
+				<th colSpan="5" className="text-center">Total</th>
+				<th className="text-center">{total_audits}</th>
+				<th className="text-center">{application_count}</th>
+				<th className="text-center">{unique_auditors}</th>
+				<th className="text-center">{new_auditor}</th>
+			</tr>
+		);
 		return (
 			<table className="table table-striped table-hover">
 				<thead>
@@ -161,7 +178,112 @@ export default class ProjectAnalytics extends React.Component {
 						<th className="text-center">Total audits</th>
 						<th className="text-center">Applications</th>
 						<th className="text-center">Unique auditors</th>
-						<th className="text-center">New Auditors <br/><small>(In recent year)</small></th>
+						<th className="text-center">New Auditors</th>
+					</tr>
+				</thead>
+				<tbody>
+					{project_list}
+				</tbody>
+			</table>
+		);
+	}
+}
+
+
+
+
+export class ProjectAnalyticsMonthWise extends React.Component {
+	constructor(props){
+		super(props);
+		this.state = {
+			year: new Date().getFullYear(),
+			loading: false,
+			cycles: [],
+		};
+	}
+
+	componentDidMount() {
+		this.reload_data(this.state.year);
+	}
+
+	reload_data = (year) => {
+		getProjectAnalyticYearly(year).then((cycles)=>{
+			this.setState({
+				"cycles":cycles,
+				"loading": false
+			});
+		});
+	};
+
+	setLoading = (loading) => {
+		this.setState(prevState => Object.assign({}, prevState, {loading}));
+	};
+
+	year_changed = (e) => {
+		this.setState({
+			"year": e.target.value
+		});
+		this.setLoading(true);
+		this.reload_data(e.target.value);
+	};
+
+	render() {
+		if(this.state.loading){
+			return <Loading/>;
+		}
+		var year = new Date().getFullYear();
+		let year_option_list = [];
+		for (var i = 0; i < 10; i++) {
+			year_option_list.push(<option key={i} value={year-i}>{year-i}</option>);
+		}
+
+		let total_audits = 0;
+		let application_count = 0;
+		let unique_auditors = 0;
+		let new_auditor_count = 0;
+		let row_count = this.state.cycles.length;
+
+		let project_list = this.state.cycles.map((value, index) => {
+			total_audits += value.total_audits;
+			application_count += value.application_count;
+			unique_auditors += value.unique_auditors;
+			new_auditor_count += value.new_auditor_count;
+			return(
+				<tr key={index}>
+					<td className="text-center">{getMonthName(value.month)}</td>
+					<td className="text-center">{value.year}</td>
+					<td className="text-center">{value.total_audits}</td>
+					<td className="text-center">{value.application_count}</td>
+					<td className="text-center">{value.unique_auditors}</td>
+					<td className="text-center">{value.new_auditor_count}</td>
+				</tr>
+			);
+		});
+		project_list.push(
+			<tr key={row_count+1} style={{borderTop: "1px solid gray", borderBottom: "1px solid gray"}}>
+				<th colSpan="2" className="text-center">Total</th>
+				<th className="text-center">{total_audits}</th>
+				<th className="text-center">{application_count}</th>
+				<th className="text-center">{unique_auditors}</th>
+				<th className="text-center">{new_auditor_count}</th>
+			</tr>
+		);
+		return (
+			<table className="table table-striped table-hover">
+				<thead>
+					<tr>
+						<th className="text-center">
+							Month
+						</th>
+						<th className="text-center">
+							<select name="year" className="form-control" value={this.state.year} onChange={this.year_changed}>
+								{year_option_list}
+							</select>
+						</th>
+						<th className="text-center">Total audits</th>
+						<th className="text-center">Applications</th>
+						<th className="text-center">Unique auditors</th>
+						<th className="text-center">New Auditors</th>
 					</tr>
 				</thead>
 				<tbody>

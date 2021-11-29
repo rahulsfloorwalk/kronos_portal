@@ -109,7 +109,8 @@ import ChargePerAuditForm from "./ChargePerAuditForm.jsx";
 import SystemCostForm from "./SystemCostForm.jsx";
 
 import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingForm.jsx";
-import AuditorAnalytics from "./auditor/AuditorAnalytics.jsx";
+import { ProjectAnalyticsCycleWise, ProjectAnalyticsMonthWise } from "./reports/analytics/ProjectAnalytics.jsx";
+import AnalyticDetails from "./reports/analytics/AnalyticDetails.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -195,7 +196,6 @@ const Routes = () => (
 			</Route>
 
 			<Route path="auditor" component={AuditorList}/>
-			<Route path="/auditor/summary" component={AuditorAnalytics} />
 			<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
 				<Route path="details" component={AuditorDetails}>
 					<Route path="preferences/edit" component={PreferencesForm}/>
@@ -242,6 +242,10 @@ const Routes = () => (
 				</Route>
 				<Route path="client_profitability" component={ClientWiseProfitibilityReport}></Route>
 				<Route path="qa_report" component={QAReport}></Route>
+			</Route>
+			<Route path="analytics" component={AnalyticDetails}>
+				<Route path="project_cycle_wise" component={ProjectAnalyticsCycleWise} />
+				<Route path="project_month_wise" component={ProjectAnalyticsMonthWise} />
 			</Route>
 			<Route path="proof_tag" component={ProofTagList}>
 				<Route path="add" component={ProofTagForm}/>

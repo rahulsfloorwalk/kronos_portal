@@ -1,12 +1,17 @@
 import React from "react";
-import { getAuditorSummary } from "../../service/auditor_stats";
+import { getAuditorSummary } from "../../../service/auditor_stats.js";
+import PropTypes from "prop-types";
+import NavLink from "../../../../components/NavLink.jsx";
 
 // import Loading from "../../../components/Loading.jsx";
 import { ResponsiveContainer, PieChart, BarChart, CartesianGrid, XAxis, YAxis, Bar, Pie, Cell, Tooltip, Legend, LabelList } from "recharts";
-import { getMonthName } from "../../../utils";
-import ProjectAnalytics from "../reports/ProjectAnalytics.jsx";
+import { getMonthName } from "../../../../utils";
 
-export default class AuditorAnalytics extends React.Component {
+export default class AnalyticDetails extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	};
+
 	state = {
 		state_data: [],
 		gender_data: [],
@@ -166,9 +171,14 @@ export default class AuditorAnalytics extends React.Component {
 					</div>
 				</div>
 				<div className="col-md-12">
-					<h3 className="font-weight-bold">Project analytics</h3>
-					<hr/>
-					<ProjectAnalytics />
+					<h2 className="page-header">
+						Project Analytics
+					</h2>
+					<ul className="nav nav-tabs">
+						<NavLink to="/analytics/project_cycle_wise">Cycle Wise</NavLink>
+						<NavLink to="/analytics/project_month_wise">Month Wise</NavLink>
+					</ul>
+					{this.props.children}
 				</div>
 			</div>
 		);
