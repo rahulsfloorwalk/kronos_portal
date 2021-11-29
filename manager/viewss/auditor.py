@@ -414,7 +414,7 @@ class AuditorSummaryView(APIView):
         auditor_summary= auditor_summery_service.get_auditor_summary()
         return Response(auditor_summary)
 
-class ProjectAnalyticView(APIView):
+class ProjectAnalyticCycleWiseView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
@@ -426,5 +426,17 @@ class ProjectAnalyticView(APIView):
         manager =request.GET.get('manager','')
         cycle =request.GET.get('cycle','')
         client =request.GET.get('client','')
-        report= auditor_summery_service.get_project_analytics_report(month, year, manager, cycle, client)
+        report= auditor_summery_service.get_project_analytics_cycle_wise(month, year, manager, cycle, client)
+        return Response(report)
+
+
+class ProjectAnalyticMonthWiseView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request):
+        year =request.GET.get('year','')
+        report= auditor_summery_service.get_project_analytics_month_wise(year)
         return Response(report)
