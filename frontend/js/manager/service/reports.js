@@ -33,8 +33,8 @@ export function getQAReports(month, year, qa){
 	return $.get( url.api_base_path + `manager/reports/qa_report/?month=${month}&year=${year}&qa=${qa}`);
 }
 
-export function getProjectAnalytic(month, year, manager, cycle, client){
-	return $.get( url.api_base_path + `manager/analytics/project_analytic_cycle_wise?month=${month}&year=${year}&manager=${manager}&cycle=${cycle}&client=${client}`);
+export function getProjectAnalytic(month, year, cycle, client){
+	return $.get( url.api_base_path + `manager/analytics/project_analytic_cycle_wise?month=${month}&year=${year}&cycle=${cycle}&client=${client}`);
 }
 
 export function getProjectAnalyticYearly(year){
