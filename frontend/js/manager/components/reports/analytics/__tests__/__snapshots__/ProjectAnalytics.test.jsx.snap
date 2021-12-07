@@ -32,25 +32,9 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data are l
       >
         <select
           className="form-control"
-          name="manager"
-          onChange={[Function]}
-          value=""
-        >
-          <option
-            value=""
-          >
-            Select manager
-          </option>
-        </select>
-      </th>
-      <th
-        className="text-center"
-      >
-        <select
-          className="form-control"
           name="month"
           onChange={[Function]}
-          value="11"
+          value="12"
         >
           <option
             value=""
@@ -213,7 +197,7 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data are l
     >
       <th
         className="text-center"
-        colSpan="5"
+        colSpan="4"
       >
         Total
       </th>
@@ -274,25 +258,9 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
       >
         <select
           className="form-control"
-          name="manager"
-          onChange={[Function]}
-          value=""
-        >
-          <option
-            value=""
-          >
-            Select manager
-          </option>
-        </select>
-      </th>
-      <th
-        className="text-center"
-      >
-        <select
-          className="form-control"
           name="month"
           onChange={[Function]}
-          value="11"
+          value="12"
         >
           <option
             value=""
@@ -456,13 +424,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
       >
         September 2021
       </td>
-      <td>
-        <ul>
-          <li>
-            test.manager@floorwalk.in
-          </li>
-        </ul>
-      </td>
       <td
         className="text-center"
       >
@@ -504,18 +465,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
         className="text-center"
       >
         FloorWalk Demo - March 2021
-      </td>
-      <td>
-        <ul>
-          <li>
-            test1.manager@floorwalk.in
-          </li>
-        </ul>
-        <ul>
-          <li>
-            test.manager@floorwalk.in
-          </li>
-        </ul>
       </td>
       <td
         className="text-center"
@@ -559,18 +508,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
       >
         September 2021
       </td>
-      <td>
-        <ul>
-          <li>
-            test1.manager@floorwalk.in
-          </li>
-        </ul>
-        <ul>
-          <li>
-            test.manager@floorwalk.in
-          </li>
-        </ul>
-      </td>
       <td
         className="text-center"
       >
@@ -612,18 +549,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
         className="text-center"
       >
         PLL Follow Up
-      </td>
-      <td>
-        <ul>
-          <li>
-            test1.manager@floorwalk.in
-          </li>
-        </ul>
-        <ul>
-          <li>
-            test.manager@floorwalk.in
-          </li>
-        </ul>
       </td>
       <td
         className="text-center"
@@ -667,13 +592,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
       >
         November 2021
       </td>
-      <td>
-        <ul>
-          <li>
-            test.manager@floorwalk.in
-          </li>
-        </ul>
-      </td>
       <td
         className="text-center"
       >
@@ -715,7 +633,7 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
     >
       <th
         className="text-center"
-        colSpan="5"
+        colSpan="4"
       >
         Total
       </th>

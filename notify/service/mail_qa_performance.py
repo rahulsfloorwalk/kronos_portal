@@ -24,7 +24,7 @@ def qa_performance_report():
     today = timezone.now()
     yesterday = today.date() - timedelta(days=1)
 
-    audit_reports = AuditStore.objects.filter(status__in = [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED]).distinct('id')
+    audit_reports = AuditStore.objects.filter(status__in = [AuditStore.SUBMITTED]).distinct('id')
 
     content_type = ContentType.objects.get_for_model(AuditStore)
     permission = Permission.objects.get(content_type=content_type, codename="moderator_manage")

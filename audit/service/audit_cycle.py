@@ -88,7 +88,7 @@ def get_audit_cycle_dashboard():
         obj['client'] = audit_cycle.client.name
         obj['start_date'] = audit_cycle.start_date
         obj['end_date'] = audit_cycle.end_date
-        obj['audit_count'] = audit_cycle.audit_count()
+        obj['audit_count'] = audit_cycle.planned_audit
         obj['stats'] = get_audit_cycle_stats(audit_cycle)
         response.append(obj)
 
