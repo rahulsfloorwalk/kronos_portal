@@ -159,10 +159,12 @@ class AuditList extends Component{
 		//let flexLeft = {display: "flex", justifyContent: "left", alignItems: "center"};
 		let labelStyle = {fontSize: "1.2em"};
 		let valueStyle = {fontSize: "1.5em"};
+		const support_button = this.props.auditCycle.support_page_link ? <a href={this.props.auditCycle.support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary">Need a support ?</a> : null;
 		return (
 			<div>
-				<div className="row">
-					<button className="btn btn-default pull-right assignment_process_button" onClick={this.open_div}>Read audit assignment process</button>
+				<div className="row pull-right">
+					{support_button}&nbsp;&nbsp;
+					<button className="btn btn-default assignment_process_button" onClick={this.open_div}>Read audit assignment process</button>
 				</div>
 				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px",display:"none"}}>
 					<button className="btn pull-right" onClick={this.close_div}><u>Close(x)</u></button>

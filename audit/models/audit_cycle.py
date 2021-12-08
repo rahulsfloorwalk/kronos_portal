@@ -96,6 +96,7 @@ class AuditCycle(Model):
     post_approval_description = CharField(db_column='post_approval_description', max_length=16384, blank=True)
     check_points = CharField(db_column='check_points', max_length=16384, blank=True)
     questionnaire_type = ForeignKey('questionnaire.QuestionnaireType', db_column='questionnaire_type_id', null=True, on_delete=PROTECT)
+    support_page_link = CharField(db_column='support_page_link', max_length=200, blank=True)
 
     class Meta:
         permissions = (
