@@ -123,12 +123,12 @@ class AuditStoreDetails extends React.Component {
 			</div>);
 
 		const support_page_link = this.props.auditStore.audit.audit_cycle.support_page_link;
-		const support_button = support_page_link ? <a href={support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary pull-right">Need a support ?</a> : null;
+		const support_button = support_page_link ? <a href={support_page_link} target="_blank" rel="noopener noreferrer" style={{marginRight: "1%"}} className="btn btn-primary btn-lg pull-right">Need support for {this.props.auditStore.audit.audit_cycle.client.auditor_display_name}?</a> : null;
 
 		return (
 			<div>
 				<div className="row">
-					{support_button}&nbsp;&nbsp;{performAuditButton}{concernButton}
+					{performAuditButton}{concernButton}{support_button}
 				</div>
 				<h2 className="page-header">Audit Report - <b>{this.props.auditStore.audit.audit_cycle.client.auditor_display_name}</b></h2>
 				<div className="row">
