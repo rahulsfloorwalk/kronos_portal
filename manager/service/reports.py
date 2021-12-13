@@ -27,14 +27,17 @@ def get_auditor_payment_report(month, year, payment_type, client):
 
         audit_stores = AuditStore.objects.filter(audit__audit_cycle__id = audit_cycle.id, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED])
 
-        payment_count = Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle.id).filter(status=Payment.PENDING).exists()
+        payment_count = Payment.objects.filter(audit_store__audit__audit_cycle_id=audit_cycle.id)
+        payment_paid_count = payment_count.filter(audit_store__audit__audit_cycle_id=audit_cycle.id).filter(status=Payment.PAID).count()
 
         audit_price = audit_stores.aggregate(reim_sum = Sum('reimbursement'), ear_sum = Sum('earnings_per_audit'))
 
-        if payment_count:
-            payment_status = 'Pending'
-        else:
+        if audit_stores.count() == 0 and payment_count.count() == 0:
+            payment_status = ''
+        elif audit_stores.count() == payment_paid_count:
             payment_status = 'Paid'
+        else:
+            payment_status = 'Pending'
 
         if payment_type == "":
             pass
