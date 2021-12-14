@@ -95,19 +95,19 @@ class AuditStoreDetails extends React.Component {
 				</span>);
 			if(this.props.auditStore.get_date_diff > 0){
 				performAuditButton = (
-					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
+					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
 				);
 			}
-			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary btn-lg pull-right">Any Concern?</Link>);
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Any Concern?</Link>);
 		}
 		if(this.props.auditStore.status === "ACKNOWLEDGED"){
 			submitAuditButton = (<button onClick={this.submitButtonClicked} type="button" className="btn btn-primary btn-lg">Submit Report</button>);
 			if(this.props.auditStore.get_date_diff > 0){
 				performAuditButton = (
-					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary btn-lg pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
+					<Link to={`audit_store/${this.props.params.auditStoreId}/section/perform_audit`}><button className="btn btn-primary pull-right" style={{marginLeft: "1%"}} type="button">Performed the Audit?</button></Link>
 				);
 			}
-			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary btn-lg pull-right">Any Concern?</Link>);
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Any Concern?</Link>);
 		}
 
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
@@ -123,7 +123,7 @@ class AuditStoreDetails extends React.Component {
 			</div>);
 
 		const support_page_link = this.props.auditStore.audit.audit_cycle.support_page_link;
-		const support_button = support_page_link ? <a href={support_page_link} target="_blank" rel="noopener noreferrer" style={{marginRight: "1%"}} className="btn btn-primary btn-lg pull-right">Need support for {this.props.auditStore.audit.audit_cycle.client.auditor_display_name}?</a> : null;
+		const support_button = support_page_link ? <a href={support_page_link} target="_blank" rel="noopener noreferrer" style={{marginRight: "1%"}} className="btn btn-primary pull-right">Need support for {this.props.auditStore.audit.audit_cycle.client.auditor_display_name}?</a> : null;
 
 		return (
 			<div>

@@ -184,8 +184,8 @@ export default class SectionAttachmentBox extends React.Component{
 		});
 	};*/
 
-	saveAttachmentTag = (e) => {
-		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then(()=>{
+	saveAttachmentTag = (attachmentId, e) => {
+		saveAttachmentTag(attachmentId, e.target.value).then(()=>{
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
 	};
@@ -217,7 +217,7 @@ export default class SectionAttachmentBox extends React.Component{
 				faulty_report_id=""
 				proof_tags= {this.props.proof_tags}
 				section_id= {this.props.sectionId}
-				onChange= {this.saveAttachmentTag}
+				onChange= {(e) => this.saveAttachmentTag(a.id, e)}
 			/>);
 		}
 		for(let id in this.state.inProgress){
@@ -290,12 +290,19 @@ export default class SectionAttachmentBox extends React.Component{
 		let borderStyle = {
 			borderTop: "1px solid #eee"
 		};
+		const setion_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
+
+		const proof_tag_list = [];
+		for(let tag of setion_proof_tags){
+			proof_tag_list.push(<span key={tag.id}><span className="label label-primary">{tag.proof_tag}</span> &nbsp;</span>);
+		}
 
 		return (
 			<div style={borderStyle}>
 				<div className="panel-body" style={panelStyle}>
-					<div className="col-md-8">
+					<div className="col-md-12">
 						<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>
+						<p>{proof_tag_list}</p>
 						{submitMessageElement}
 					</div>
 					{/* {sectionSelect} */}
@@ -315,7 +322,7 @@ export default class SectionAttachmentBox extends React.Component{
 						// onRename={this.selectedAttachmentRenamed}
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
 						section_id={this.props.sectionId}
-						onChange={this.saveAttachmentTag}/>
+						onChange= {(e) => this.saveAttachmentTag(selectedAttachment.id, e)}/>
 				</div>
 			</div>
 		);

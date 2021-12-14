@@ -293,7 +293,7 @@ export default class AttachmentThumbnail extends Component{
 						</div>
 					</div>
 				</div>
-				<div style={{marginLeft: "5px", marginBottom: "10px"}} onClick={onSelect}>
+				<div style={{marginLeft: "5px", marginBottom: "10px"}}>
 					{proof_tag_select_box}
 				</div>
 			</div>
