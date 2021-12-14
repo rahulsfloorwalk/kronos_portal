@@ -426,8 +426,8 @@ class SectionAttachmentBox extends React.Component{
 		});
 	};
 
-	saveAttachmentTag = (e) => {
-		saveAttachmentTag(this.state.selectedAttachmentId, e.target.value).then(()=>{
+	saveAttachmentTag = (attachmentId, e) => {
+		saveAttachmentTag(attachmentId, e.target.value).then(()=>{
 			Alert.success("PROOF TAG SAVED");
 			this.reloadAttachments(this.props.auditStoreId, this.props.sectionId);
 		});
@@ -489,7 +489,7 @@ class SectionAttachmentBox extends React.Component{
 		let attachmentRows = [];
 		for(let a of this.state.attachments){
 			attachmentRows.push(
-				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.props.proof_tags} section_id={this.props.sectionId} onChange={this.saveAttachmentTag}/>
+				<AttachmentThumbnail key={a.id} attachment={a} deletable={this.props.editable} onSelect={() => this.selectAttachment(a.id)} onDelete={() => this.attachmentDeleteClicked(a)} selected={a.id === this.state.selectedAttachmentId} user="manager" editable={this.props.editable} faulty_report_id={a.faulty_report_id} proof_tags={this.props.proof_tags} section_id={this.props.sectionId} onChange={(e) => this.saveAttachmentTag(a.id, e)}/>
 			);
 		}
 		for(let id in this.state.inProgress){
@@ -544,11 +544,19 @@ class SectionAttachmentBox extends React.Component{
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
 
+		const setion_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
+
+		const proof_tag_list = [];
+		for(let tag of setion_proof_tags){
+			proof_tag_list.push(<span key={tag.id}><span className="label label-primary">{tag.proof_tag}</span> &nbsp;</span>);
+		}
+
 		return (
 			<div>
 				<div className="panel-body">
 					<div className="col-md-8">
 						<h4>Attachments {uploadButton}</h4>
+						<p>{proof_tag_list}</p>
 						{submitMessageElement}
 					</div>
 					{/* {sectionSelect} */}
@@ -566,7 +574,7 @@ class SectionAttachmentBox extends React.Component{
 						proof_tags={this.props.proof_tags}
 						onRename={this.selectedAttachmentRenamed}
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
-						onChange={this.saveAttachmentTag}
+						onChange={(e) => this.saveAttachmentTag(selectedAttachment.id, e)}
 						rotateImage={this.rotateImage}
 						section_id={this.props.sectionId}
 						disableRotateButton={this.state.disableRotateButton}/>
