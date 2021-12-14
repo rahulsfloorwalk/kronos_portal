@@ -322,7 +322,7 @@ export default class SectionAttachmentBox extends React.Component{
 						// onRename={this.selectedAttachmentRenamed}
 						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
 						section_id={this.props.sectionId}
-						onChange= {(e) => this.saveAttachmentTag(a.id, e)}/>
+						onChange= {(e) => this.saveAttachmentTag(selectedAttachment.id, e)}/>
 				</div>
 			</div>
 		);
