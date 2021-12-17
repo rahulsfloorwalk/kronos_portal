@@ -1,6 +1,8 @@
 import re
 import json
 import logging
+from dateutil.relativedelta import relativedelta
+from datetime import datetime
 
 from django.utils import timezone
 
@@ -68,6 +70,10 @@ def now_ist():
 def today_ist():
     return timezone.localtime(timezone.now(), IST).date()
 
+
+def find_payment_due_date(date):
+    future_date = date + relativedelta(months=2)
+    return datetime(future_date.year, future_date.month, 15)
 
 def get_difference_between_date(date_val):
     today = today_ist()

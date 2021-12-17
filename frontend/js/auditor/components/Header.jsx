@@ -25,14 +25,14 @@ class Header extends React.Component {
 						</Link>
 					</div>
 					<ul className="nav navbar-nav">
-						<NavLink to="/details"><User/> My Profile</NavLink>
-						<NavLink to="/audit"><Inbox/> Audits</NavLink>
-						<NavLink to="/audit_store"><File/> Reports</NavLink>
-						<NavLink to="/payment"><big><b>₹</b></big> Payments</NavLink>
+						<NavLink to="/details" className="profiletourclass"><User/> My Profile</NavLink>
+						<NavLink to="/audit" className="audittourclass"><Inbox/> Audits</NavLink>
+						<NavLink to="/audit_store" className="reporttourclass"><File/> Reports</NavLink>
+						<NavLink to="/payment" className="paymenttourclass"><big><b>₹</b></big> Payments</NavLink>
 						{/* <NavLink to="/referral"><big><b>₹</b></big> Referrals</NavLink> */}
 						<NavLink to="/full_time_opportunity"><Star /> Full Time Opportunity</NavLink>
 						{/* <NavLink to="/content_ninja"><Star /> Content Ninja</NavLink> */}
-						<NavLink to="/shopper_guide/videos"><Tasks/> Shopper Guide</NavLink>
+						<NavLink to="/shopper_guide/videos" className="guidetourclass"><Tasks/> Shopper Guide</NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

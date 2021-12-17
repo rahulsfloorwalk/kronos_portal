@@ -18,65 +18,31 @@ class PaymentRow extends React.Component{
 	};
 
 	render(){
-		return (<div className="panel panel-default">
-			<div className="panel-body">
-				<div className="row hidden-md hidden-sm hidden-lg">
-					<div className="col-xs-4">
-						<p><big style={{fontSize: "170%"}}><b>₹ {this.props.payment.amount}</b></big></p>
-						<p><PaymentStatusLabel status={this.props.payment.status}/></p>
-					</div>
-					<div className="col-xs-8">
-						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
-						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
-						<p>{this.props.payment.comment}</p>
-						<p>Audit Date: <b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b></p>
-						<p>Client: <b>{this.props.payment.get_audit_details.client_name}</b></p>
-						{/* <button className="btn btn-primary btn-xs pull-right">Any Concern?</button> */}
-						<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-primary btn-xs pull-right">Any Concern?</Link>
-					</div>
-				</div>
-				<div className="row hidden-xs hidden-md hidden-lg">
-					<div className="col-sm-3">
-						<p><big style={{fontSize: "170%"}}><b>₹ {this.props.payment.amount}</b></big></p>
-						<p><PaymentStatusLabel status={this.props.payment.status}/></p>
-					</div>
-					<div className="col-sm-3">
-						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
-						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
-					</div>
-					<div className="col-sm-4">
-						<p>{this.props.payment.comment}</p>
-						<p>Audit Date: <b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b></p>
-						<p>Client: <b>{this.props.payment.get_audit_details.client_name}</b></p>
-					</div>
-					<div className="col-sm-2">
-						{/* <button className="btn btn-primary btn-sm pull-right">Any Concern?</button> */}
-						<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-primary btn-sm pull-right">Any Concern?</Link>
-					</div>
-				</div>
-				<div className="row hidden-xs hidden-sm">
-					<div className="col-md-2 text-right">
-						<big style={{fontSize: "170%"}}><b>₹ {this.props.payment.amount}</b></big>
-					</div>
-					<div className="col-md-1">
-						<p><PaymentStatusLabel status={this.props.payment.status}/></p>
-					</div>
-					<div className="col-md-2 text-right">
-						<p>Added on: <b>{moment(this.props.payment.added_on).format(momentDateFormat)}</b></p>
-						{ this.props.payment.paid_on ? <p>Paid on: <b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
-					</div>
-					<div className="col-md-5">
-						<p>{this.props.payment.comment}</p>
-						<p>Audit Date: <b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b></p>
-						<p>Client: <b>{this.props.payment.get_audit_details.client_name}</b></p>
-					</div>
-					<div className="col-md-2">
-						{/* <button className="btn btn-primary btn-lg">Any Concern?</button> */}
-						<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-primary btn-lg">Any Concern?</Link>
-					</div>
-				</div>
-			</div>
-		</div>);
+		return (
+			<tr>
+				<th>
+					<b>{this.props.payment.get_audit_details.client_name}</b>
+				</th>
+				<th>
+					<b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b>
+				</th>
+				<th>
+					<PaymentStatusLabel status={this.props.payment.status}/>
+				</th>
+				<th>
+					<big><b>₹ {this.props.payment.amount}</b></big>
+				</th>
+				<th>
+					{ this.props.payment.status == "PENDING" ? <p><b>{moment(this.props.payment.payment_due_date).format(momentDateFormat)}</b></p> : null }
+				</th>
+				<th>
+					{ this.props.payment.paid_on ? <p><b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
+				</th>
+				<th>
+					<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-primary">Any Concern?</Link>
+				</th>
+			</tr>
+		);
 	}
 }
 
@@ -126,7 +92,22 @@ export default class PaymentList extends React.Component{
 							Once the payment done from FloorWalk it might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays.
 							For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a> or you can click <b>Any Concern?</b> button.
 						</p>
-						{rows}
+						<table className="table table-responsive">
+							<thead>
+								<tr>
+									<th>Client</th>
+									<th>Audit Date</th>
+									<th>Payment Status</th>
+									<th>Payment</th>
+									<th>Payment Due date</th>
+									<th>Paid on</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								{rows}
+							</tbody>
+						</table>
 					</div>
 				);
 			} else {

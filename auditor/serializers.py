@@ -21,7 +21,7 @@ from social.models import Facebook
 from auditor.models import Preferences
 from agency.models import Agency
 # from kronos.utils import validate_ifsc, validate_pan
-from kronos.utils import get_difference_between_date
+from kronos.utils import find_payment_due_date, get_difference_between_date
 
 class CitySerializer(ModelSerializer):
     class Meta:
@@ -132,7 +132,8 @@ class AdditionalInfoSerializer(ModelSerializer):
             'mobile_model',
             'referral_code',
             'is_complete',
-            'income'
+            'income',
+            'is_tour_complete'
         )
         read_only_fields = fields
 
@@ -161,7 +162,8 @@ class AdditionalInfoDeSerializer(ModelSerializer):
             'car_model',
             'laptop_model',
             'mobile_model',
-            'income'
+            'income',
+            'is_tour_complete'
         )
         read_only_fields = ('id', 'user_id', )
 
@@ -194,6 +196,7 @@ class AdditionalInfoDeSerializer(ModelSerializer):
         additional_info.laptop_model = self.validated_data.get('laptop_model', additional_info.laptop_model)
         additional_info.mobile_model = self.validated_data.get('mobile_model', additional_info.mobile_model)
         additional_info.income = self.validated_data.get('income', additional_info.income)
+        additional_info.is_tour_complete = self.validated_data.get('is_tour_complete', additional_info.is_tour_complete)
 
         return additional_info
 
@@ -581,6 +584,11 @@ class NotificationSerializer(ModelSerializer):
         read_only_fields = fields
 
 class PaymentSerializer(ModelSerializer):
+    payment_due_date = SerializerMethodField()
+
+    def get_payment_due_date(self, payment_obj):
+        return find_payment_due_date(payment_obj.audit_store.audit_date)
+
     class Meta:
         model = Payment
         fields = (
@@ -592,7 +600,8 @@ class PaymentSerializer(ModelSerializer):
             'audit_store_id',
             'added_on',
             'paid_on',
-            'get_audit_details'
+            'get_audit_details',
+            'payment_due_date'
         )
         read_only_fields = fields
 
