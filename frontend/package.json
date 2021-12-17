@@ -45,11 +45,13 @@
     "react-transition-group": "^1.2.1",
     "react-twitter-widgets": "^1.4.1",
     "react-youtube": "^7.9.0",
+    "reactour": "^1.9.0",
     "recharts": "^1.8.5",
     "redux": "^3.3.1",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.2",
     "reselect": "^2.2.1",
+    "styled-components": "^3.0.2",
     "video-react": "^0.14.1"
   },
   "devDependencies": {

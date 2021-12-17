@@ -11,6 +11,7 @@ import Header from "./Header.jsx";
 import CollectBot from "./CollectBot.jsx";
 import Footer from "../../components/Footer.jsx";
 import DevelopmentMarker from "../../components/DevelopmentMarker.jsx";
+import SiteTourBox from "./SiteTourBox.jsx";
 
 import { fetchConfig } from "../service/config.js";
 
@@ -47,6 +48,7 @@ class App extends React.Component {
 				</div>
 				<Footer config={this.state.config}/>
 				<Alert stack={{limit: 1}} effect="slide" timeout={2000} />
+				<SiteTourBox />
 			</div>
 		);
 	}

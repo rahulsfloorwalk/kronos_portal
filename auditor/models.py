@@ -324,6 +324,7 @@ class AdditionalInfo(Model, CompletableMixin):
     mobile_model = CharField(db_column='mobile_model', max_length=50, blank=True, null=True)
     referral_code = CharField(db_column='referral_code', max_length=10, blank=True, null=True, unique=True)
     referred_by = CharField(db_column='referred_by', max_length=10, blank=True, null=True)
+    is_tour_complete = BooleanField(db_column='is_tour_complete', default=False)
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 

@@ -7,7 +7,7 @@ import { pointerStyle } from "../../styles.js";
 
 import { Check, Warning, Pencil, Cross } from "../../components/Icons.jsx";
 
-import { getCameraResolution, getOccupation } from "../../utils.js";
+import { getCameraResolution, getCarCost, getIndustry, getOccupation } from "../../utils.js";
 import { fetchAdditionalInfo } from "../actions/additional_info.js";
 
 import { additionalInfoPropType } from "../prop_types";
@@ -50,11 +50,11 @@ class AdditionalInfoPanelBase extends React.Component {
 							<tr><td className="text-right text-muted">*Referral Code:</td><th>{ this.props.additionalInfo.referral_code }</th></tr>
 							<tr><td className="text-right text-muted">*Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
 							<tr><td className="text-right text-muted">*Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
-							<tr><td className="text-right text-muted">*Industry:</td><th>{ this.props.additionalInfo.industry }</th></tr>
+							<tr><td className="text-right text-muted">*Industry:</td><th>{ getIndustry(this.props.additionalInfo.industry) }</th></tr>
 							<tr><td className="text-right text-muted">*Company:</td><th>{ this.props.additionalInfo.company }</th></tr>
 							<tr><td className="text-right text-muted">*Car Owned?:</td><th>{ has_car }</th></tr>
 							{ this.props.additionalInfo.has_car ?  <tr><td className="text-right text-muted">Car Model:</td><th>{ this.props.additionalInfo.car_model }</th></tr> : null}
-							{ this.props.additionalInfo.has_car ?  <tr><td className="text-right text-muted">Cost of Car:</td><th>{ this.props.additionalInfo.car_cost }</th></tr> : null}
+							{ this.props.additionalInfo.has_car ?  <tr><td className="text-right text-muted">Cost of Car:</td><th>{ getCarCost(this.props.additionalInfo.car_cost) }</th></tr> : null}
 							<tr><td className="text-right text-muted">*Laptop Owned?:</td><th>{ laptop_owned }</th></tr>
 							{ this.props.additionalInfo.laptop_owned ? <tr><td className="text-right text-muted">Laptop Model:</td><th>{ this.props.additionalInfo.laptop_model }</th></tr> : null }
 							<tr><td className="text-right text-muted">*Mobile Model:</td><th>{ this.props.additionalInfo.mobile_model }</th></tr>

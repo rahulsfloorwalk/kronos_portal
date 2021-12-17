@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
+import $ from "jquery";
 
 import moment from "moment";
 import { affectInputEventToComponent } from "../../react_utils.js";
@@ -120,6 +121,14 @@ class ClientList extends Component{
 		affectInputEventToComponent(e, this);
 		this.reloadAudits(e.target.value);
 	};
+	open_div = () =>{
+		$(".assignment_process_button").hide();
+		$(".assignment_info").show();
+	};
+	close_div = () => {
+		$(".assignment_info").hide();
+		$(".assignment_process_button").show();
+	};
 	render(){
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
 			if( this.props.profileInfo.mobile_number){
@@ -186,6 +195,19 @@ class ClientList extends Component{
 		}
 		return (
 			<div>
+				<button className="btn btn-default assignment_process_button pull-right" onClick={this.open_div}>Read audit assignment process</button>
+				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px",display:"none"}}>
+					<button className="btn pull-right" onClick={this.close_div}><u>Close(x)</u></button>
+					<br/>
+					<h3 style={{textAlign:"center"}}>About audit assignment process</h3>
+					<p style={{fontSize:"16px"}}>The audits are assigned basis on right auditor profile match and time of audit application. It is an automated process and happens via system. Only applications applied from the portal are considered for assignment.</p>
+					<p style={{fontSize:"16px"}}><b>Tips for getting audit approved:</b></p>
+					<p style={{fontSize:"14px"}}>
+						1. Kindly <b>complete your detailed profile</b> with ID proofs to increase chances of audit assignment<br/>
+						2. Keep <b>checking the portal</b> for new opportunities<br/>
+						3. <b>Apply for the opportunities</b> as soon as they are live on the portal
+					</p>
+				</div>
 				<h2 className="page-header">
 					Available Audits within &nbsp;
 					<div style={{width: "100px", display: "inline-block"}}>
