@@ -25,6 +25,7 @@ urlpatterns = ([
     url(r'bank_info$', views.BankInfoView.as_view(), name="bank_info_view"),
     url(r'facebook_info$', views.FacebookInfoView.as_view(), name="facebook_info_view"),
     url(r'payment$', views.PaymentView.as_view(), name="payment_view"),
+    url(r'payment/summary$', views.PaymentSummaryView.as_view(), name="payment_summary"),
 
     url(r'payment/(?P<payment_id>[0-9]+)/payment_concern$', views.PaymentConcernView.as_view(), name="payment_concern_view"),
 

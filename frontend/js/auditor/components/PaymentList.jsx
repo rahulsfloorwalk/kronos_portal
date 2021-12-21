@@ -7,7 +7,7 @@ import Loading from "../../components/Loading.jsx";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { findPayments } from "../service/payment.js";
+import { findPayments, findPaymentSummary } from "../service/payment.js";
 import { fetchConfig } from "../service/config.js";
 
 import PaymentStatusLabel from "../../components/PaymentStatusLabel.jsx";
@@ -20,26 +20,26 @@ class PaymentRow extends React.Component{
 	render(){
 		return (
 			<tr>
-				<th>
+				<th className="text-center">
 					<b>{this.props.payment.get_audit_details.client_name}</b>
 				</th>
-				<th>
+				<th className="text-center">
 					<b>{moment(this.props.payment.get_audit_details.audit_date).format(momentDateFormat)}</b>
 				</th>
-				<th>
+				<th className="text-center">
 					<PaymentStatusLabel status={this.props.payment.status}/>
 				</th>
-				<th>
+				<th className="text-center">
 					<big><b>₹ {this.props.payment.amount}</b></big>
 				</th>
-				<th>
+				<th className="text-center">
 					{ this.props.payment.status == "PENDING" ? <p><b>{moment(this.props.payment.payment_due_date).format(momentDateFormat)}</b></p> : null }
 				</th>
-				<th>
+				<th className="text-center">
 					{ this.props.payment.paid_on ? <p><b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
 				</th>
-				<th>
-					<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-primary">Any Concern?</Link>
+				<th className="text-center">
+					<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-sm btn-primary">Any Concern?</Link>
 				</th>
 			</tr>
 		);
@@ -51,7 +51,11 @@ export default class PaymentList extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			summary: {},
+			loadMoreLoader: false,
 			loading: false,
+			total_count: 0,
+			payment_list_count: 0,
 			payments: [],
 			config: {},
 		};
@@ -63,9 +67,14 @@ export default class PaymentList extends React.Component{
 
 	componentDidMount() {
 		this.setLoading(true);
-		findPayments().then(payments => {
+		findPaymentSummary().then(summary => this.setState({summary}));
+
+		findPayments(false, this.state.payment_list_count).then(result => {
+			let {payments, total_count} = result;
 			this.setState({
-				payments
+				payments: payments,
+				total_count: total_count,
+				payment_list_count: payments.length
 			});
 		}).always(() =>{
 			this.setLoading(false);
@@ -74,13 +83,41 @@ export default class PaymentList extends React.Component{
 		fetchConfig().then((config) => this.setState({config}));
 	}
 
+	loadMoreReports = () => {
+		this.setState({
+			loadMoreLoader: true
+		});
+		let is_load_more = true;
+		findPayments(is_load_more, this.state.payment_list_count).then(result => {
+			let {payments} = result;
+			let new_payments = this.state.payments;
+			for(let payment of payments){
+				new_payments.push(payment);
+			}
+			this.setState({
+				payments: new_payments,
+				payment_list_count: new_payments.length,
+				loadMoreLoader: false
+			});
+		});
+	};
 	render(){
-		let rows = this.state.payments.map(p => <PaymentRow payment={p} key={p.id}/>);
 		if(this.state.loading){
 			return <Loading/>;
 		}
 		else{
+			let rows = this.state.payments.map(p => <PaymentRow payment={p} key={p.id}/>);
 			if(rows.length > 0){
+				let loadMoreLoading;
+				if(this.state.loadMoreLoader){
+					loadMoreLoading = (<Loading/>);
+				}
+				let loadMoreButton;
+				if(this.state.total_count > this.state.payment_list_count){
+					loadMoreButton = (<button className="btn btn-default" onClick={this.loadMoreReports}>
+						Load More
+					</button>);
+				}
 				return (
 					<div>
 						<h2 className="page-header">
@@ -92,22 +129,56 @@ export default class PaymentList extends React.Component{
 							Once the payment done from FloorWalk it might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays.
 							For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a> or you can click <b>Any Concern?</b> button.
 						</p>
-						<table className="table table-responsive">
+						<hr/>
+						<table className="table table-bordered table-responsive">
 							<thead>
+								<tr className="bg-primary">
+									<th className="text-center">
+										Total Audits Conducted
+									</th>
+									<th className="text-center">
+										Total Payments Transferred
+									</th>
+									<th className="text-center">
+										Total Payments Pending
+									</th>
+								</tr>
+							</thead>
+							<tbody>
 								<tr>
-									<th>Client</th>
-									<th>Audit Date</th>
-									<th>Payment Status</th>
-									<th>Payment</th>
-									<th>Payment Due date</th>
-									<th>Paid on</th>
-									<th>Action</th>
+									<th className="text-center">
+										{this.state.summary.total_audits}
+									</th>
+									<th className="text-center">
+										Rs. {this.state.summary.total_transfered}
+									</th>
+									<th className="text-center">
+										Rs. {this.state.summary.total_pending}
+									</th>
+								</tr>
+							</tbody>
+						</table>
+						<hr />
+						<table className="table table-bordered table-responsive">
+							<thead>
+								<tr className="bg-primary">
+									<th className="text-center">Client</th>
+									<th className="text-center">Audit Date</th>
+									<th className="text-center">Payment Status</th>
+									<th className="text-center">Payment</th>
+									<th className="text-center">Payment Due date</th>
+									<th className="text-center">Paid on</th>
+									<th className="text-center">Action</th>
 								</tr>
 							</thead>
 							<tbody>
 								{rows}
 							</tbody>
 						</table>
+						<div className="text-center">
+							{loadMoreLoading}
+							{loadMoreButton}
+						</div>
 					</div>
 				);
 			} else {
