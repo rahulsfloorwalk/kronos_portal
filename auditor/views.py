@@ -576,8 +576,18 @@ class PaymentView(APIView):
         'GET': [GROUP_NAME_AUDITOR],
     }
     def get(self, request, format=None):
-        payments = payment_service.find_by_user(request.user.id)
-        return Response(PaymentSerializer(payments, many=True).data)
+        payments, total_count = payment_service.get_payment_list_by_user(request.user.id, request.GET.get('is_load_more'), request.GET.get('last_total_count'))
+        return Response({'payments': PaymentSerializer(payments, many=True).data, 'total_count': total_count})
+
+
+class PaymentSummaryView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        payments = payment_service.get_payment_summary_by_user(request.user.id)
+        return Response(payments)
 
 class PaymentConcernView(APIView):
     permission_classes = [HasGroupPermission]
