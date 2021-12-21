@@ -2,8 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
+import Select from "react-select";
 
-import { getCameraResolution, getOccupation, getIncomeText, getCarCost, getIndustry } from "../../utils.js";
+import { getCameraResolution, getOccupation, getIncomeText, getCarCost, getIndustry, getInterestArea } from "../../utils.js";
 import { fetchAdditionalInfo, saveAdditionalInfo } from "../actions/additional_info.js";
 
 import FormInput from "../../components/FormInput.jsx";
@@ -12,6 +13,7 @@ import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
 
 import { additionalInfoPropType } from "../prop_types";
+import { InterestAreaList } from "../../constants.js";
 
 const errorList = PropTypes.arrayOf(PropTypes.string);
 
@@ -35,7 +37,10 @@ class AdditionalInfoForm extends React.Component {
 		additionalInfo: additionalInfoPropType,
 		dispatch: PropTypes.func.isRequired,
 	};
-	state = {};
+	state = {
+		interest_area: [],
+		interestArea: null,
+	};
 
 	componentWillMount() {
 		this.setState(this.props.additionalInfo);
@@ -82,9 +87,25 @@ class AdditionalInfoForm extends React.Component {
 		this.props.dispatch(saveAdditionalInfo(this.state));
 	};
 
+	handleChange = (interestArea) => {
+		let interest_list = interestArea.map(value=>value.value);
+		this.setState({
+			interestArea: interestArea,
+			interest_area: interest_list
+		});
+	};
+
 	render() {
 		var laptop_option = {};
 		var car_option = {};
+		const options = [];
+
+		for(let option of InterestAreaList){
+			options.push({
+				label: getInterestArea(option),
+				value: option
+			});
+		}
 		return (
 			<Modal modalTitle="Edit Additional Info" onClose={hashHistory.goBack}>
 				{/*<div className="form-group"><big><i>fields marked <b>✳</b> must be filled to apply to audits</i></big></div>*/}
@@ -175,6 +196,16 @@ class AdditionalInfoForm extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Company" required_mark={true} type="text" value={this.state.company} name="company" onChange={this.inputChanged} errors={this.props.errors.company}/>
+						</div>
+						<div className="col-sm-6">
+							<label>Interest area <span className="text-danger">(✳)</span></label>
+							<Select
+								name="interest_area"
+								value={this.state.interest_area ? options.filter(obj => this.state.interest_area.includes(obj.value) === true) : null}
+								onChange={this.handleChange}
+								options={options}
+								isMulti={true}
+								closeMenuOnSelect={false}/>
 						</div>
 					</div>
 					<div className="row">

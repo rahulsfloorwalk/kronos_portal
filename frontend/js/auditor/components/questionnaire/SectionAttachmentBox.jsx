@@ -3,7 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { } from "react-router";
 
-import { Paperclip } from "../../../components/Icons.jsx";
+import { Paperclip, Checked, Cross } from "../../../components/Icons.jsx";
 // import { orderKeys } from "../../../react_utils.js";
 
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
@@ -291,10 +291,13 @@ export default class SectionAttachmentBox extends React.Component{
 			borderTop: "1px solid #eee"
 		};
 		const setion_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
+		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
 
 		const proof_tag_list = [];
 		for(let tag of setion_proof_tags){
-			proof_tag_list.push(<span key={tag.id}><span className="label label-primary">{tag.proof_tag}</span> &nbsp;</span>);
+			const attach = attachment_tags.includes(tag.id);
+			const proof_label = attach ? <span className="label label-primary" key={tag.id} style={{ marginRight: "10px" }}><Checked /> {tag.proof_tag}</span> : <span className="label label-danger" style={{ marginRight: "10px" }} key={tag.id}><Cross /> {tag.proof_tag}</span>;
+			proof_tag_list.push(proof_label);
 		}
 
 		return (
@@ -302,7 +305,7 @@ export default class SectionAttachmentBox extends React.Component{
 				<div className="panel-body" style={panelStyle}>
 					<div className="col-md-12">
 						<h4>Attachments {uploadButton} {minimumAttachmentCount}</h4>
-						<p>{proof_tag_list}</p>
+						<p>{proof_tag_list.length == 0 ? null : "Mandatory proofs: "} <br/>{proof_tag_list}</p>
 						{submitMessageElement}
 					</div>
 					{/* {sectionSelect} */}

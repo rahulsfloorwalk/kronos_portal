@@ -351,3 +351,10 @@ $progress_bar_bg_lighten_pct : 5%;
   }
 
 // Rating Gauge Styles
+
+
+@keyframes blink{
+	0%{opacity: 0;}
+	50%{opacity: .5;}
+	100%{opacity: 1;}
+}

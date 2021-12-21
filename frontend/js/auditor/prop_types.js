@@ -39,6 +39,7 @@ export const additionalInfoPropType = PropTypes.shape({
 	smart_phone_owned: PropTypes.bool,
 	laptop_owned: PropTypes.bool,
 	is_complete: PropTypes.bool,
+	interest_area: PropTypes.array,
 
 	referral_code: PropTypes.string,
 	occupation: PropTypes.string,

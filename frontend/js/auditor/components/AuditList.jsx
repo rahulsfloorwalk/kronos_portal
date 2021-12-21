@@ -159,7 +159,7 @@ class AuditList extends Component{
 		//let flexLeft = {display: "flex", justifyContent: "left", alignItems: "center"};
 		let labelStyle = {fontSize: "1.2em"};
 		let valueStyle = {fontSize: "1.5em"};
-		const support_button = this.props.auditCycle.support_page_link ? <a href={this.props.auditCycle.support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary">Need support for {this.props.auditCycle.client.auditor_display_name}?</a> : null;
+		const support_button = this.props.auditCycle.support_page_link ? <a href={this.props.auditCycle.support_page_link} target="_blank" rel="noopener noreferrer" className="btn btn-primary"><span style={{animation: "blink 1s linear infinite",fontWeight:"bold"}}>Need support for {this.props.auditCycle.client.auditor_display_name}?</span></a> : null;
 		return (
 			<div>
 				<div className="row pull-right">

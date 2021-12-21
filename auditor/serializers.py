@@ -133,7 +133,8 @@ class AdditionalInfoSerializer(ModelSerializer):
             'referral_code',
             'is_complete',
             'income',
-            'is_tour_complete'
+            'is_tour_complete',
+            'interest_area'
         )
         read_only_fields = fields
 
@@ -163,7 +164,8 @@ class AdditionalInfoDeSerializer(ModelSerializer):
             'laptop_model',
             'mobile_model',
             'income',
-            'is_tour_complete'
+            'is_tour_complete',
+            'interest_area'
         )
         read_only_fields = ('id', 'user_id', )
 
@@ -197,6 +199,7 @@ class AdditionalInfoDeSerializer(ModelSerializer):
         additional_info.mobile_model = self.validated_data.get('mobile_model', additional_info.mobile_model)
         additional_info.income = self.validated_data.get('income', additional_info.income)
         additional_info.is_tour_complete = self.validated_data.get('is_tour_complete', additional_info.is_tour_complete)
+        additional_info.interest_area = self.validated_data.get('interest_area', additional_info.interest_area)
 
         return additional_info
 

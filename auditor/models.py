@@ -5,7 +5,7 @@ from django.db.models import PROTECT
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, NullBooleanField, OneToOneField, \
     PositiveSmallIntegerField, DateTimeField, BooleanField
 
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import JSONField, ArrayField
 
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
@@ -325,6 +325,7 @@ class AdditionalInfo(Model, CompletableMixin):
     referral_code = CharField(db_column='referral_code', max_length=10, blank=True, null=True, unique=True)
     referred_by = CharField(db_column='referred_by', max_length=10, blank=True, null=True)
     is_tour_complete = BooleanField(db_column='is_tour_complete', default=False)
+    interest_area = ArrayField(CharField(max_length=50), db_column='interest_area', blank=True, null = True)
 
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
