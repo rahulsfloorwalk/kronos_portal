@@ -91,3 +91,33 @@ export const IndicatorScoreColorsList = [
 	"#3da940", // Green
 	"#3da940", // Green
 ];
+
+
+export const InterestAreaList = [
+	"ADVERTISING",
+	"AGRICULTURE",
+	"ARCHITECTURE",
+	"AVIATION",
+	"BANKING",
+	"BUSINESS",
+	"REAL_ESTATE",
+	"DESIGN",
+	"SCIENCE",
+	"HEALTH_CARE",
+	"HIGHER_EDUCATION",
+	"FINANCE",
+	"RETAIL",
+	"GAMES",
+	"MUSIC",
+	"READING",
+	"FITNESS",
+	"FOOD_AND_DRINK",
+	"ARTS_AND_MUSIC",
+	"TRAVEL",
+	"VEHICLES",
+	"BEAUTY",
+	"FASHION_AND_ACCESSORIES",
+	"SPORTS",
+	"TECHNOLOGY",
+	"OTHERS",
+];

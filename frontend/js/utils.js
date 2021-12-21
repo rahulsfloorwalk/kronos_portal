@@ -661,3 +661,66 @@ export function getMonthName(value){
 		return "Unknown month";
 	}
 }
+
+export function getInterestArea(value){
+	switch(value){
+	case "ADVERTISING":
+		return "Advertising";
+	case "AGRICULTURE":
+		return "Agriculture";
+	case "ARCHITECTURE":
+		return "Architecture";
+	case "AVIATION":
+		return "Aviation";
+	case "BANKING":
+		return "Banking";
+	case "BUSINESS":
+		return "Business";
+	case "REAL_ESTATE":
+		return "Real Estate";
+	case "DESIGN":
+		return "Design";
+	case "SCIENCE":
+		return "Science";
+	case "HEALTH_CARE":
+		return "Health Care";
+	case "HIGHER_EDUCATION":
+		return "Higher Education";
+	case "FINANCE":
+		return "Finance";
+	case "RETAIL":
+		return "Retail";
+	case "GAMES":
+		return "Games";
+	case "MUSIC":
+		return "Music";
+	case "READING":
+		return "Reading";
+	case "FITNESS":
+		return "Fitness";
+	case "FOOD_AND_DRINK":
+		return "Food And Drink";
+	case "ARTS_AND_MUSIC":
+		return "Arts and Music";
+	case "TRAVEL":
+		return "Travel";
+	case "VEHICLES":
+		return "Vehicles";
+	case "BEAUTY":
+		return "Beauty";
+	case "FASHION_AND_ACCESSORIES":
+		return "Fashion and Accessories";
+	case "SPORTS":
+		return "Sports";
+	case "TECHNOLOGY":
+		return "Technology";
+	case "OTHERS":
+		return "Others";
+	case "":
+	case null:
+	case undefined:
+		return "";
+	default:
+		return `unknown marital status ${value} - ${typeof value}`;
+	}
+}
