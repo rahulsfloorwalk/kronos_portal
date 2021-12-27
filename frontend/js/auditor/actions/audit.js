@@ -38,3 +38,22 @@ export function fetchAudit(auditId){
 		//TODO: Handle error
 	};
 }
+
+
+export function fetchTravelAudits(data){
+	return function(dispatch){
+		// dispatch({
+		// 	type: types.TRAVEL_AUDIT_GET,
+		// 	status: "request",
+		// });
+
+		return $.get( url.api_base_path + "auditor/audit_by_city", data, function(travel_audits){
+			dispatch({
+				type: types.TRAVEL_AUDIT_GET,
+				status: "success",
+				travel_audits
+			});
+		});
+		//TODO: Handle error
+	};
+}

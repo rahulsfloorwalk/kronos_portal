@@ -137,6 +137,17 @@ class AvailableAuditsView(APIView):
         available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
         return Response(AuditSerializer(available_audits, many=True).data)
 
+class AvailableAuditsByCityView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+    }
+    def get(self, request, format=None):
+        kms = request.GET.get('kms')
+        city_id = request.GET.get('city_id')
+        available_audits = audit_service.find_audits_by_city(request.user.id, city_id, kms)
+        return Response(AuditSerializer(available_audits, many=True).data)
+
 class AuditView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

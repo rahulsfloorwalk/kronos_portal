@@ -10,9 +10,10 @@ import { affectInputEventToComponent } from "../../react_utils.js";
 import { truncateStyle } from "../../styles.js";
 
 import { fetchApplications } from "../actions/application.js";
-import { fetchAudits } from "../actions/audit.js";
+import { fetchAudits, fetchTravelAudits } from "../actions/audit.js";
 import { fetchProfileInfo } from "../actions/profile_info.js";
 
+import MoreAuditBox from "./MoreAuditBox.jsx";
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import FormSelect from "../../components/FormSelect.jsx";
 import Loading from "../../components/Loading.jsx";
@@ -92,13 +93,16 @@ class ClientList extends Component{
 			mobile_number: PropTypes.string,
 		}),
 		audits: PropTypes.object,
+		travel_audits: PropTypes.object,
 	};
 
 	constructor(props){
 		super(props);
 		this.state =  {
 			kms: 100,
-			loading: false
+			loading: false,
+			more_audit_loading: false,
+			message: ""
 		};
 	}
 	setLoading = (loading) => {
@@ -128,6 +132,29 @@ class ClientList extends Component{
 	close_div = () => {
 		$(".assignment_info").hide();
 		$(".assignment_process_button").show();
+	};
+	onSearch = (city_id) => {
+		this.setLoading(true);
+		let kms = this.state.kms;
+		this.props.dispatch(fetchTravelAudits({
+			city_id,
+			kms
+		})).then((travel_audits)=>{
+			this.setLoading(false);
+			let message;
+			if(travel_audits.length > 1){
+				message = `Congrats! ${travel_audits.length} audits are found in this location`;
+			}
+			else if(travel_audits.length == 1){
+				message = `Congrats! ${travel_audits.length} audit is found in this location`;
+			}
+			else{
+				message = "No audits are found in this location";
+			}
+			this.setState({
+				message
+			});
+		});
 	};
 	render(){
 		if( this.props.profileInfo && ! this.props.profileInfo.is_complete){
@@ -167,6 +194,26 @@ class ClientList extends Component{
 				}
 				if(auditCycleExtra[this.props.audits[id].audit_cycle.id].reimbursement < this.props.audits[id].reimbursement){
 					auditCycleExtra[this.props.audits[id].audit_cycle.id].reimbursement = this.props.audits[id].reimbursement;
+				}
+			}
+		}
+
+		for(let id in this.props.travel_audits) {
+			let ac = auditCycles.filter(ac => ac.id === this.props.travel_audits[id].audit_cycle.id);
+			if(ac.length === 0){
+				auditCycleExtra[this.props.travel_audits[id].audit_cycle.id] = {
+					count: 1,
+					fees: this.props.travel_audits[id].earnings_per_audit,
+					reimbursement: this.props.travel_audits[id].reimbursement,
+				};
+				auditCycles.push(this.props.travel_audits[id].audit_cycle);
+			} else {
+				auditCycleExtra[this.props.travel_audits[id].audit_cycle.id].count++;
+				if(auditCycleExtra[this.props.travel_audits[id].audit_cycle.id].fees < this.props.travel_audits[id].earnings_per_audit){
+					auditCycleExtra[this.props.travel_audits[id].audit_cycle.id].fees = this.props.travel_audits[id].earnings_per_audit;
+				}
+				if(auditCycleExtra[this.props.travel_audits[id].audit_cycle.id].reimbursement < this.props.travel_audits[id].reimbursement){
+					auditCycleExtra[this.props.travel_audits[id].audit_cycle.id].reimbursement = this.props.travel_audits[id].reimbursement;
 				}
 			}
 		}
@@ -221,6 +268,9 @@ class ClientList extends Component{
 						</FormSelect>
 					</div>
 				</h2>
+				<div className="row col-md-12" style={{marginBottom:"10px"}}>
+					<MoreAuditBox onSearch={this.onSearch} loading={this.state.more_audit_loading} message={this.state.message}/>
+				</div>
 				{auditCycleRows}
 				{this.props.children}
 			</div>
@@ -232,7 +282,8 @@ var mapStoreToProps = function(store){
 	return {
 		profileInfo: store.profileInfo,
 		audits: store.audits,
-		applications: store.applications
+		applications: store.applications,
+		travel_audits: store.travel_audits,
 	};
 };
 

@@ -105,6 +105,7 @@ class AuditList extends Component{
 		dispatch: PropTypes.func.isRequired,
 		auditCycle: auditCyclePropType,
 		audits: PropTypes.object,
+		travel_audits: PropTypes.object,
 		applications: PropTypes.object,
 	};
 
@@ -144,7 +145,8 @@ class AuditList extends Component{
 		}
 
 		let rows = [];
-		for(var id in this.props.audits) {
+		let audit_list = Object.assign({}, this.props.audits, this.props.travel_audits);
+		for(var id in audit_list) {
 			let application;
 			for( let appId in this.props.applications){
 				if( this.props.applications[appId].audit === Number(id)){
@@ -152,7 +154,7 @@ class AuditList extends Component{
 					break;
 				}
 			}
-			rows.push(<AuditRow audit={this.props.audits[id]} application={application} key={id}/>);
+			rows.push(<AuditRow audit={audit_list[id]} application={application} key={id}/>);
 		}
 
 		let flexCenter = {display: "flex", justifyContent: "center", alignItems: "center", height:"170px"};
@@ -270,7 +272,16 @@ var mapStoreToProps = function(store, ownProps){
 			}
 			return null;
 		})(store.audits),
-		applications: store.applications
+		applications: store.applications,
+		travel_audits: (function(travel_audits){
+			let filteredAudits = {};
+			for(let id in travel_audits){
+				if(travel_audits[id].audit_cycle.id === parseInt(ownProps.params.auditCycleId)){
+					filteredAudits[id] = travel_audits[id];
+				}
+			}
+			return filteredAudits;
+		})(store.travel_audits),
 	};
 };
 
