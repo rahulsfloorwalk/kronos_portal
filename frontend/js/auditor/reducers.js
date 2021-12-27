@@ -7,6 +7,7 @@ var initialStore = {
 	additionalInfo: {},
 	socialInfo: {},
 	audits: {},
+	travel_audits: {},
 	auditStores: {},
 	states: {},
 	cities: [],
@@ -263,6 +264,20 @@ export function rootReducer(store = initialStore, action) {
 					}
 					return obj;
 				}(action.audits))
+			});
+		}
+		break;
+	case types.TRAVEL_AUDIT_GET:
+		switch(action.status){
+		case "success":
+			return Object.assign({}, store, {
+				travel_audits: (function(travel_audits){
+					var obj = {};
+					for( var a of travel_audits){
+						obj[a.id] = a;
+					}
+					return obj;
+				}(action.travel_audits))
 			});
 		}
 		break;

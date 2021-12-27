@@ -122,12 +122,30 @@ def find_audits_for_auditor(user_id, kms):
     if not auditor.profileinfo.is_complete():
         raise AppLogicError("please complete your personal information to view audits")
 
-    if kms is None and hasattr(auditor, 'additionalinfo') and auditor.additionalinfo.distance:
+    if kms and int(kms) in [1,5,10,20,50,100]:
+        pass
+    elif kms is None and hasattr(auditor, 'additionalinfo') and auditor.additionalinfo.distance:
         kms = auditor.additionalinfo.distance
     else:
         kms = 50
 
     return find_audits_around_city(auditor.profileinfo.city_id, int(kms))
+
+
+def find_audits_by_city(user_id, city_id, kms):
+    auditor = auditor_service.find_auditor_by_id(user_id)
+
+    if not auditor.profileinfo.is_complete():
+        raise AppLogicError("please complete your personal information to view audits")
+
+    if kms and int(kms) in [1,5,10,20,50,100]:
+        pass
+    elif kms is None and hasattr(auditor, 'additionalinfo') and auditor.additionalinfo.distance:
+        kms = auditor.additionalinfo.distance
+    else:
+        kms = 50
+
+    return find_audits_around_city(city_id, int(kms))
 
 
 @atomic
