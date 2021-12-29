@@ -15,8 +15,10 @@ import applicationImgUrl from "../../../img/application_100.png";
 import thumbsUpImgUrl from "../../../img/thumbsup_100.png";
 import checkmarkImgUrl from "../../../img/checkmark_100.png";
 import moneyImgUrl from "../../../img/money_100.png";
+import UserImgUrl from "../../../img/user_100.png";
 
 import { fetchProfileInfo, fetchAuditorStats, fetchAuditorScore } from "../actions/dashboard.js";
+import { getProfileCompletionPercentage } from "../service/dashboard.js";
 
 class Dashboard extends React.Component {
 	static propTypes = {
@@ -45,6 +47,9 @@ class Dashboard extends React.Component {
 			this.props.dispatch(fetchProfileInfo()),
 			this.props.dispatch(fetchAuditorStats()),
 			this.props.dispatch(fetchAuditorScore()),
+			getProfileCompletionPercentage().then((percentage) => {
+				this.setState({percentage});
+			})
 		]).then(()=>this.setLoading(false));
 	}
 
@@ -93,6 +98,11 @@ class Dashboard extends React.Component {
 										<StatCard
 											title="Payments Pending "
 											image={moneyImgUrl} count={stats.pending_payment}/>
+									</div>
+									<div className="col-md-6">
+										<StatCard
+											title="Profile Completion %"
+											image={UserImgUrl} count={this.state.percentage}/>
 									</div>
 								</div>
 							</div>

@@ -89,17 +89,17 @@ class ProfileInfoPanelBase extends React.Component {
 							<col style={{width:"40%"}}/>
 						</colgroup>
 						<tbody>
-							<tr><td className="text-muted text-right" style={{"width":"40%"}}>*First Name:</td><th>{this.props.profileInfo.first_name}</th></tr>
-							<tr><td className="text-muted text-right">*Last Name:</td><th>{this.props.profileInfo.last_name}</th></tr>
-							<tr><td className="text-muted text-right">*Gender:</td><th>{getGender(this.props.profileInfo.gender)}</th></tr>
-							<tr><td className="text-muted text-right">*Education:</td><th>{getEducationStatus(this.props.profileInfo.education)}</th></tr>
-							<tr><td className="text-muted text-right">*Date of Birth:</td><th>{dateOfBirth}</th></tr>
-							<tr><td className="text-muted text-right">*Marital Status:</td><th>{getMaritalStatus(this.props.profileInfo.marital_status)}</th></tr>
-							<tr><td className="text-muted text-right">*Address:</td><th>{this.props.profileInfo.address}</th></tr>
-							<tr><td className="text-muted text-right">*City:</td><th>{auditorCity.name}</th></tr>
-							<tr><td className="text-muted text-right">*State:</td><th>{auditorCity.state}</th></tr>
-							<tr><td className="text-muted text-right">*Country:</td><th>{auditorCity.country}</th></tr>
-							<tr><td className="text-muted text-right">*Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>
+							<tr><td className="text-muted text-right" style={{"width":"40%"}}><span className="text-danger"><b>*</b></span>First Name:</td><th>{this.props.profileInfo.first_name}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Last Name:</td><th>{this.props.profileInfo.last_name}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Gender:</td><th>{getGender(this.props.profileInfo.gender)}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Education:</td><th>{getEducationStatus(this.props.profileInfo.education)}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Date of Birth:</td><th>{dateOfBirth}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Marital Status:</td><th>{getMaritalStatus(this.props.profileInfo.marital_status)}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Address:</td><th>{this.props.profileInfo.address}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>City:</td><th>{auditorCity.name}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>State:</td><th>{auditorCity.state}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Country:</td><th>{auditorCity.country}</th></tr>
+							<tr><td className="text-muted text-right"><span className="text-danger"><b>*</b></span>Pincode:</td><th>{this.props.profileInfo.pincode}</th></tr>
 						</tbody>
 					</table>
 					: null }

@@ -69,7 +69,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is loading 1`]
         <td
           className="text-right text-muted"
         >
-          *Account Holder Name:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          Account Holder Name:
         </td>
         <th />
       </tr>
@@ -77,7 +84,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is loading 1`]
         <td
           className="text-right text-muted"
         >
-          *Account Number:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          Account Number:
         </td>
         <th />
       </tr>
@@ -87,7 +101,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is loading 1`]
         <td
           className="text-right text-muted"
         >
-          *IFSC Code:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          IFSC Code:
         </td>
         <th />
       </tr>
@@ -97,7 +118,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is loading 1`]
         <td
           className="text-right text-muted"
         >
-          *Pan Number:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          Pan Number:
         </td>
         <th />
       </tr>
@@ -188,7 +216,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is successfull
         <td
           className="text-right text-muted"
         >
-          *Account Holder Name:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          Account Holder Name:
         </td>
         <th>
           John Doe
@@ -198,7 +233,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is successfull
         <td
           className="text-right text-muted"
         >
-          *Account Number:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          Account Number:
         </td>
         <th>
           1234567890
@@ -210,7 +252,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is successfull
         <td
           className="text-right text-muted"
         >
-          *IFSC Code:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          IFSC Code:
         </td>
         <th>
           1234567890
@@ -222,7 +271,14 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is successfull
         <td
           className="text-right text-muted"
         >
-          *Pan Number:
+          <span
+            className="text-danger"
+          >
+            <b>
+              *
+            </b>
+          </span>
+          Pan Number:
         </td>
         <th>
           1234567890

@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.serializers import Serializer, BooleanField, CharField
+from attachment.service import set_attachment_by_proof_tag
 
 import attachment.service_auditor as attachment_auditor_service
 from answer.service import answer as answer_service
@@ -107,6 +108,17 @@ class MobileNumberView(APIView):
 
     def post(self, request):
         profile_info = profile_info_service.set_mobile_number_for_auditor(request.user.id, request.data.get('mobile_number'))
+        return Response(ProfileInfoSerializer(profile_info).data)
+
+class WhatsappNumberView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+
+    def post(self, request):
+        profile_info = profile_info_service.set_whatsapp_number_for_auditor(request.user.id, request.data.get('whatsapp_number'))
         return Response(ProfileInfoSerializer(profile_info).data)
 
 class FacebookInfoView(APIView):
@@ -561,7 +573,16 @@ class MoveAttachmentToSection(APIView):
         attachment = attachment_auditor_service.move_to_section(audit_store_id,request.data['section_id'],request.data['attachment_list'])
         return Response(AttachmentSerializer(attachment).data)
 
+class AuditStoreIdArrangeAttachment(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR]
+    }
 
+    def post(self, request, audit_store_id):
+        audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, request.user.id)
+        set_attachment_by_proof_tag(audit_store_id)
+        return Response(AuditStoreSerializer(audit_store).data)
 
 class NotificationsView(APIView):
     permission_classes = [HasGroupPermission]

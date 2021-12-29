@@ -35,9 +35,14 @@ export default class ProfilePercentage extends React.Component{
 			message = <h3>You can now <Link to="/audit">view audits.</Link></h3>;
 		}*/
 
-		return (<div>
+		return (<div style={{ display: "flex"}}>
 			{message}
-			<ProgressBar type="success" striped={true} percentage={this.state.percentage}/>
+			<div style={{width:"40px", fontWeight:"bold"}}>
+				<span>{this.state.percentage}%</span>
+			</div>
+			<div style={{ width: "100%" }}>
+				<ProgressBar type="success" striped={true} percentage={this.state.percentage}/>
+			</div>
 		</div>);
 	}
 }

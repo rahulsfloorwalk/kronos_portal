@@ -204,7 +204,7 @@ class IdProofAttachmentUploadBox extends React.Component {
 						style={{"display":"none"}}/>
 					{uploadButton}
 					<h4>
-						{panelIcon} ID Proofs(*)
+						{panelIcon} ID Proofs(<span className="text-danger"><b>*</b></span>)
 					</h4>
 				</div>
 				{ toShow ?

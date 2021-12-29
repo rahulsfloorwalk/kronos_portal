@@ -49,6 +49,7 @@ class ProfileInfoSerializer(ModelSerializer):
             'marital_status',
             'education',
             'mobile_number',
+            'whatsapp_number',
             'date_of_birth',
             'address',
             'pincode',
@@ -671,6 +672,7 @@ class PreferencesSerializer(ModelSerializer):
             'id',
             'receive_new_opportunities_email',
             'receive_new_opportunities_sms',
+            'receive_transactional_whatsapp_message',
             'user_id',
             'pp_accepted',
             'agreement_accepted',
@@ -689,6 +691,7 @@ class PreferencesSerializer(ModelSerializer):
 
         preferences.receive_new_opportunities_email = self.validated_data.get('receive_new_opportunities_email', preferences.receive_new_opportunities_email)
         preferences.receive_new_opportunities_sms = self.validated_data.get('receive_new_opportunities_sms', preferences.receive_new_opportunities_sms)
+        preferences.receive_transactional_whatsapp_message = self.validated_data.get('receive_transactional_whatsapp_message', preferences.receive_transactional_whatsapp_message)
 
         return preferences
 

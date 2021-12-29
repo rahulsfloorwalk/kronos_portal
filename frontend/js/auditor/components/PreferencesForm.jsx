@@ -70,6 +70,15 @@ export default class PreferencesForm extends React.Component{
 							</label>
 						</div>
 						<div className="form-group">
+							<label className="control-label" style={{"display":"flex", "alignItems":"center"}}>
+								<input type="checkbox" name="receive_transactional_whatsapp_message"
+									style={{"width": "30px", "height": "30px"}}
+									onChange={this.inputChanged}
+									checked={this.state.preferences.receive_transactional_whatsapp_message} />
+								&nbsp;On Whatsapp?
+							</label>
+						</div>
+						<div className="form-group">
 							<button className="btn btn-primary btn-lg">
 								<Save/> Save
 							</button>
