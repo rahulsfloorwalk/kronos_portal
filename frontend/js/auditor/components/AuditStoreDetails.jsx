@@ -6,7 +6,7 @@ import { Link } from "react-router";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
-import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore } from "../actions/audit_store.js";
+import { fetchAuditStore, acknowledgeAuditStore, submitAuditStore, arrangeAttachment } from "../actions/audit_store.js";
 
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
@@ -77,12 +77,18 @@ class AuditStoreDetails extends React.Component {
 		return this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED";
 	};
 
+	arrangeAttachmentByProofTag = () => {
+		arrangeAttachment(this.props.params.auditStoreId).then(() => {
+			location.reload();
+		});
+	};
+
 	render() {
 		if(! this.props.auditStore){
 			return <Loading/>;
 		}
 
-		let submitAuditButton, acknowledgeButton, performAuditButton, concernButton;
+		let submitAuditButton, acknowledgeButton, performAuditButton, concernButton, attachmentArrangeButton;
 		if(this.props.auditStore.status === "ASSIGNED"){
 			acknowledgeButton = (
 				<span>
@@ -108,6 +114,7 @@ class AuditStoreDetails extends React.Component {
 				);
 			}
 			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Any Concern?</Link>);
+			attachmentArrangeButton = <button className="btn btn-lg btn-primary" style={{marginLeft:"10px"}} onClick={this.arrangeAttachmentByProofTag}>Send proofs to relevant sections</button>;
 		}
 
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;
@@ -119,7 +126,7 @@ class AuditStoreDetails extends React.Component {
 
 		let buttonPanel = (
 			<div className="form-group">
-				{acknowledgeButton}{submitAuditButton}&nbsp;&nbsp;{submitMessageElement}
+				{acknowledgeButton}{submitAuditButton}{attachmentArrangeButton}&nbsp;&nbsp;{submitMessageElement}
 			</div>);
 
 		const support_page_link = this.props.auditStore.audit.audit_cycle.support_page_link;

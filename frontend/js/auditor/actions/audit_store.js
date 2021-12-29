@@ -164,3 +164,7 @@ export function submitConcern(auditStoreId, message){
 		return req;
 	};
 }
+
+export function arrangeAttachment(auditStoreId){
+	return $.post(url.api_base_path + `auditor/attachment/${auditStoreId}/arrange_attachment`);
+}

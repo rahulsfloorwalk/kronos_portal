@@ -101,3 +101,22 @@ export function setMobileNumber(mobile_number){
 		return req;
 	};
 }
+
+export function setWhatsappNumber(whatsapp_number){
+	return function(dispatch){
+
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "auditor/whatsapp_number",
+			data: JSON.stringify({whatsapp_number}),
+			contentType: "application/json"
+		});
+		req.then((profileInfo) => {
+			dispatch(profileInfoPostSuccess(profileInfo));
+		}, (error) => {
+			dispatch(profileInfoPostError(error.responseJSON));
+		});
+
+		return req;
+	};
+}

@@ -124,6 +124,7 @@ class ProfileInfo(Model, CompletableMixin):
     household_income = PositiveSmallIntegerField(db_column='household_income', choices=INCOME, blank=True, null=True)
     mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, null=True,
                               validators=[numericValidator, minLengthValidator], unique=True)
+    whatsapp_number = CharField(db_column='whatsapp_number', max_length=10, blank=True, null=True, validators=[numericValidator, minLengthValidator], unique=True)
     date_of_birth = DateField(db_column='dob', blank=True, null=True)
     address = CharField(db_column='address', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
@@ -388,6 +389,7 @@ class Preferences(Model):
     receive_transactional_email = BooleanField(db_column='receive_transactional_email', default=True)
     receive_new_opportunities_sms = BooleanField(db_column='receive_new_opportunities_sms', default=True)
     receive_transactional_sms = BooleanField(db_column='receive_transactional_sms', default=True)
+    receive_transactional_whatsapp_message = BooleanField(db_column='receive_transactional_whatsapp_message', default=True)
     agreement_accepted = BooleanField(db_column='agreement_accepted', default=False)
     pp_accepted = BooleanField(db_column='pp_accepted', default=False)
     full_time_opportunity_email_status = BooleanField(db_column='full_time_opportunity_email_status', default=False)

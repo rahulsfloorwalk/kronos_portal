@@ -57,14 +57,14 @@ class BankInfoPanelBase extends React.Component{
 						<tbody>
 							<tr><td colSpan={2}>All audit fees and reimbursements will be transferred to this account. Please ensure these details are accurate and up to date.</td></tr>
 							<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
-							<tr><td className="text-right text-muted">*Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
-							<tr><td className="text-right text-muted">*Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
+							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
+							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
 							<tr className={this.props.bankInfo.ifsc_code && !this.props.bankInfo.is_ifsc_code_valid ? "danger" : "" }>
-								<td className="text-right text-muted">*IFSC Code:</td>
+								<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>IFSC Code:</td>
 								<th>{ this.props.bankInfo.ifsc_code }</th>
 							</tr>
 							<tr className={this.props.bankInfo.pan_number && !this.props.bankInfo.is_pan_card_valid ? "danger" : "" }>
-								<td className="text-right text-muted">*Pan Number:</td>
+								<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Pan Number:</td>
 								<th>{ this.props.bankInfo.pan_number }</th>
 							</tr>
 						</tbody>

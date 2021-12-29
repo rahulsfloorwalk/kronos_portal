@@ -47,7 +47,7 @@ export const additionalInfoPropType = PropTypes.shape({
 	industry: PropTypes.string,
 	company: PropTypes.string,
 	car_model: PropTypes.string,
-	car_cost: PropTypes.number,
+	car_cost: PropTypes.string,
 	laptop_model: PropTypes.string,
 	mobile_model: PropTypes.string,
 	camera_resoulution: PropTypes.number,

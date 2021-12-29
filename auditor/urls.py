@@ -19,6 +19,7 @@ urlpatterns = ([
     url(r'profile_completion_percentage$', views.ProfilePercentageView.as_view(), name="auditor_profile_percentage_view"),
     url(r'profile_info$', views.ProfileInfoView.as_view(), name="profile_info_view"),
     url(r'mobile_number$', views.MobileNumberView.as_view(), name="mobile_number_view"),
+    url(r'whatsapp_number$', views.WhatsappNumberView.as_view(), name="whatsapp_number_view"),
     url(r'tos_accept$', views.TosAcceptView.as_view(), name="tos_accept_view"),
     url(r'preferences$', views.PreferencesView.as_view(), name="preferences_view"),
     url(r'additional_info$', views.AdditionalInfoView.as_view(), name="additional_info_view"),
@@ -60,6 +61,7 @@ urlpatterns = ([
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', views.AttachmentCompleteView.as_view(), name="attachment_complete_view"),
     url(r'attachment/(?P<attachment_id>[0-9]+)$', views.AttachmentIdView.as_view(), name="attachment_id_view"),
     url(r'attachment/(?P<audit_store_id>[0-9]+)/movetosection_auditor$', views.MoveAttachmentToSection.as_view(), name='move_attachment_to_section_auditor'),
+    url(r'attachment/(?P<audit_store_id>[0-9]+)/arrange_attachment$', views.AuditStoreIdArrangeAttachment.as_view(), name='arrange_attachment_by_proof_tags'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag$', views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', views.AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
