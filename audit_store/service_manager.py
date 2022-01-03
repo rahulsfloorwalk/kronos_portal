@@ -7,7 +7,7 @@ from auditor.service.application_service import change_application_status_to_wit
 from registration.service.moderator import find_moderator_by_user_id
 from audit_store.models import AuditStore, ReportStatusLog
 from audit.models import AuditCycle
-from attachment.service import set_attachment_by_proof_tag
+from attachment.service import set_attachment_by_audit_store, set_attachment_by_proof_tag
 
 
 def set_report_attribute_value(audit_store_id, json_id, option_id, user_id):
@@ -63,6 +63,7 @@ def revert_submit_report(audit_store_id, user_id, message):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     user = manager_service.find_manager_by_user_id(user_id)
     audit_store.revert_submit(by=user, message=message)
+    set_attachment_by_audit_store(audit_store_id)
     return audit_store
 
 
@@ -150,6 +151,7 @@ def revert_report(audit_store_id, user_id):
         .exclude(status__in=[AuditStore.FAILED, AuditStore.WITHDRAWN]).order_by('-id')[0].status
     if report_status == AuditStore.ASSIGNED or report_status == AuditStore.ACKNOWLEDGED:
         audit_store.revert_report(by=user, status=AuditStore.ACKNOWLEDGED)
+        set_attachment_by_audit_store(audit_store_id)
     elif report_status == AuditStore.SUBMITTED:
         audit_store.revert_report(by=user, status=AuditStore.SUBMITTED)
     elif report_status == AuditStore.PM_REVIEW:

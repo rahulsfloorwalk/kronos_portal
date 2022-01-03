@@ -26,6 +26,11 @@ exports[`<DOBPicker/> renders a date correctly 1`] = `
               Year
             </option>
             <option
+              value={2007}
+            >
+              2007
+            </option>
+            <option
               value={2006}
             >
               2006
@@ -349,11 +354,6 @@ exports[`<DOBPicker/> renders a date correctly 1`] = `
               value={1942}
             >
               1942
-            </option>
-            <option
-              value={1941}
-            >
-              1941
             </option>
           </select>
         </td>
@@ -645,6 +645,11 @@ exports[`<DOBPicker/> renders a date in a leap year correctly 1`] = `
               Year
             </option>
             <option
+              value={2007}
+            >
+              2007
+            </option>
+            <option
               value={2006}
             >
               2006
@@ -968,11 +973,6 @@ exports[`<DOBPicker/> renders a date in a leap year correctly 1`] = `
               value={1942}
             >
               1942
-            </option>
-            <option
-              value={1941}
-            >
-              1941
             </option>
           </select>
         </td>
@@ -1254,6 +1254,11 @@ exports[`<DOBPicker/> renders correctly when no date is given 1`] = `
               Year
             </option>
             <option
+              value={2007}
+            >
+              2007
+            </option>
+            <option
               value={2006}
             >
               2006
@@ -1577,11 +1582,6 @@ exports[`<DOBPicker/> renders correctly when no date is given 1`] = `
               value={1942}
             >
               1942
-            </option>
-            <option
-              value={1941}
-            >
-              1941
             </option>
           </select>
         </td>
@@ -1718,6 +1718,11 @@ exports[`<DOBPicker/> when it is disabled renders a date correctly 1`] = `
               Year
             </option>
             <option
+              value={2007}
+            >
+              2007
+            </option>
+            <option
               value={2006}
             >
               2006
@@ -2041,11 +2046,6 @@ exports[`<DOBPicker/> when it is disabled renders a date correctly 1`] = `
               value={1942}
             >
               1942
-            </option>
-            <option
-              value={1941}
-            >
-              1941
             </option>
           </select>
         </td>
@@ -2337,6 +2337,11 @@ exports[`<DOBPicker/> when it is disabled renders correctly when no date is give
               Year
             </option>
             <option
+              value={2007}
+            >
+              2007
+            </option>
+            <option
               value={2006}
             >
               2006
@@ -2660,11 +2665,6 @@ exports[`<DOBPicker/> when it is disabled renders correctly when no date is give
               value={1942}
             >
               1942
-            </option>
-            <option
-              value={1941}
-            >
-              1941
             </option>
           </select>
         </td>

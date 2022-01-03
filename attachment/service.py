@@ -4,6 +4,7 @@ import string
 from datetime import date
 import os
 from typing import Tuple, Dict
+from django.db.transaction import atomic
 
 from django.utils import timezone
 from django.conf import settings
@@ -323,3 +324,11 @@ def set_attachment_by_proof_tag(audit_store_id):
     update_attachment_by_proof_tag(audit_store_id, audit_store_attachment)
     update_attachment_by_proof_tag(audit_store_id, report_section_attachment)
     return True
+
+@atomic
+def set_attachment_by_audit_store(audit_store_id):
+    report_section_obj = answer_service_report_section.find_by_audit_store(audit_store_id)
+    content_type_obj = ContentType.objects.get(app_label='audit_store', model='auditstore')
+
+    for report_section in report_section_obj:
+        report_section.attachments.filter(status=Attachment.ATTACHED).update(content_type = content_type_obj, object_id = audit_store_id)

@@ -87,22 +87,6 @@ exports[`SectionAddForm renders an empty form 1`] = `
             />
             <ul />
           </div>
-          <div
-            className="form-group"
-          >
-            <label>
-              Minimum Attachments
-            </label>
-            <input
-              className="form-control"
-              label="Minimum Attachments"
-              name="minimum_attachment_count"
-              onChange={[Function]}
-              type="number"
-              value=""
-            />
-            <ul />
-          </div>
           <button
             className="btn btn-primary"
             type="submit"

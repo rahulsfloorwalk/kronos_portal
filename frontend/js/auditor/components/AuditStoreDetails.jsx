@@ -114,7 +114,7 @@ class AuditStoreDetails extends React.Component {
 				);
 			}
 			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/section/report_concern`} className="btn btn-primary pull-right">Any Concern?</Link>);
-			attachmentArrangeButton = <button className="btn btn-lg btn-primary" style={{marginLeft:"10px"}} onClick={this.arrangeAttachmentByProofTag}>Send proofs to relevant sections</button>;
+			// attachmentArrangeButton = <button className="btn btn-lg btn-primary" style={{marginLeft:"10px"}} onClick={this.arrangeAttachmentByProofTag}>Send proofs to relevant sections</button>;
 		}
 
 		const earnings_per_audit = this.props.auditStore.earnings_per_audit || this.props.auditStore.audit.earnings_per_audit;

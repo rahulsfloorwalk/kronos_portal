@@ -34,7 +34,7 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data are l
           className="form-control"
           name="month"
           onChange={[Function]}
-          value="12"
+          value="01"
         >
           <option
             value=""
@@ -110,8 +110,13 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data are l
           className="form-control"
           name="year"
           onChange={[Function]}
-          value={2021}
+          value={2022}
         >
+          <option
+            value={2022}
+          >
+            2022
+          </option>
           <option
             value={2021}
           >
@@ -156,11 +161,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data are l
             value={2013}
           >
             2013
-          </option>
-          <option
-            value={2012}
-          >
-            2012
           </option>
         </select>
       </th>
@@ -260,7 +260,7 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
           className="form-control"
           name="month"
           onChange={[Function]}
-          value="12"
+          value="01"
         >
           <option
             value=""
@@ -336,8 +336,13 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
           className="form-control"
           name="year"
           onChange={[Function]}
-          value={2021}
+          value={2022}
         >
+          <option
+            value={2022}
+          >
+            2022
+          </option>
           <option
             value={2021}
           >
@@ -382,11 +387,6 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
             value={2013}
           >
             2013
-          </option>
-          <option
-            value={2012}
-          >
-            2012
           </option>
         </select>
       </th>
@@ -680,8 +680,13 @@ exports[`<ProjectAnalyticsMonthWise /> is rendered correctly when the data are l
           className="form-control"
           name="year"
           onChange={[Function]}
-          value={2021}
+          value={2022}
         >
+          <option
+            value={2022}
+          >
+            2022
+          </option>
           <option
             value={2021}
           >
@@ -726,11 +731,6 @@ exports[`<ProjectAnalyticsMonthWise /> is rendered correctly when the data are l
             value={2013}
           >
             2013
-          </option>
-          <option
-            value={2012}
-          >
-            2012
           </option>
         </select>
       </th>
@@ -814,8 +814,13 @@ exports[`<ProjectAnalyticsMonthWise /> is rendered correctly when the data is su
           className="form-control"
           name="year"
           onChange={[Function]}
-          value={2021}
+          value={2022}
         >
+          <option
+            value={2022}
+          >
+            2022
+          </option>
           <option
             value={2021}
           >
@@ -860,11 +865,6 @@ exports[`<ProjectAnalyticsMonthWise /> is rendered correctly when the data is su
             value={2013}
           >
             2013
-          </option>
-          <option
-            value={2012}
-          >
-            2012
           </option>
         </select>
       </th>
