@@ -99,6 +99,7 @@ class __Section extends React.Component{
 		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">-</span>);
 
 		let commentElement = (<p>{auditor_comment}</p>);
+		let section_attachment_box_element;
 		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
 			commentElement = (
 				<form onSubmit={this.submitComment}>
@@ -116,6 +117,18 @@ class __Section extends React.Component{
 					/>
 				</form>
 			);
+		}
+		else{
+			section_attachment_box_element = <SectionAttachmentBox
+				auditStoreId={this.props.auditStoreId}
+				auditStore={this.props.auditStore}
+				sectionId={this.props.section.id}
+				minimumAttachmentCount={this.props.section.minimum_attachment_count}
+				showErrors={this.props.showErrors}
+				// sections={this.props.sections}
+				editable={this.props.editable}
+				proof_tags={this.props.proof_tags}
+			/>;
 		}
 
 		if(this.state.saving){
@@ -158,16 +171,7 @@ class __Section extends React.Component{
 						</tr>
 					</tbody>
 				</table>
-				<SectionAttachmentBox
-					auditStoreId={this.props.auditStoreId}
-					auditStore={this.props.auditStore}
-					sectionId={this.props.section.id}
-					minimumAttachmentCount={this.props.section.minimum_attachment_count}
-					showErrors={this.props.showErrors}
-					// sections={this.props.sections}
-					editable={this.props.editable}
-					proof_tags={this.props.proof_tags}
-				/>
+				{section_attachment_box_element}
 			</div>
 		);
 	}

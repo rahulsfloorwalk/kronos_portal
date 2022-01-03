@@ -813,7 +813,7 @@ class __Section extends React.Component{
 					<div><b>PM Comment:</b> {pmCommentElement}</div> */}
 					{pmCommentElement}
 				</div>
-				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} proof_tags={this.props.proof_tags}/>
+				{this.props.auditStore.status == "ACKNOWLEDGED" ? null : <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={this.props.editable} proof_tags={this.props.proof_tags}/>}
 			</div>);
 		}
 

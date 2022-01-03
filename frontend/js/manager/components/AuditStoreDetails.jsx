@@ -106,7 +106,8 @@ export class AuditStoreDetails extends React.Component{
 	};
 	revertButtonClicked = () => {
 		this.props.dispatch(revertAuditStore(this.props.params.auditStoreId)).then(()=>{
-			Alert.success("REPORT REVERTED");
+			// Alert.success("REPORT REVERTED");
+			location.reload();
 		});
 	};
 	qaOkButtonClicked = () => {
@@ -130,10 +131,11 @@ export class AuditStoreDetails extends React.Component{
 		});
 	};
 	unSubmitButtonClicked = () => {
-		unSubmitAuditStore(this.props.params.auditStoreId, this.state.reason).then((auditStore)=>{
-			this.props.dispatch(updateAuditStore(auditStore));
-			this.setState({reason: ""});
-			Alert.success("REPORT Un SUBMITTED");
+		unSubmitAuditStore(this.props.params.auditStoreId, this.state.reason).then(()=>{
+			// this.props.dispatch(updateAuditStore(auditStore));
+			// this.setState({reason: ""});
+			// Alert.success("REPORT Un SUBMITTED");
+			location.reload();
 		});
 	};
 	uncompleteButtonClicked = () => {

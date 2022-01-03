@@ -25,6 +25,7 @@ class DetailsPage extends React.Component {
 		}),
 		profileInfo: PropTypes.shape({
 			mobile_number: PropTypes.string,
+			whatsapp_number: PropTypes.string,
 		}),
 	};
 

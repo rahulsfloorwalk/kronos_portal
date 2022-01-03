@@ -1,4 +1,5 @@
 import logging
+from django.db.models.aggregates import Sum
 
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -266,6 +267,41 @@ class AuditStore(Model):
                             return False
         return True
 
+    def is_submittable_for_auditor(self):
+
+        if self.status != AuditStore.ACKNOWLEDGED:
+            _logger.debug("Report not acknowledged")
+            return False
+
+        sections = self.audit.audit_cycle.sections.all()
+        report_sections = self.report_sections.all()
+        if len(sections) != len(report_sections):
+            _logger.debug("Report not submittable, section length does not match report section length")
+            return False
+
+        for report_section in report_sections:
+            if not report_section.not_applicable:
+                if report_section.auditor_comment in (None, ''):
+                    _logger.debug("Report not submittable, some auditor comment is incomplete")
+                    return False
+
+                questions = Question.objects.filter(section_id=report_section.section_id)\
+                    .exclude(question_type=Question.MULTISELECT).all()
+                answers = Answer.objects.filter(
+                    audit_store__id=self.id,
+                    question__section_id=report_section.section_id
+                ).exclude(question__question_type=Question.MULTISELECT).all()
+                if len(questions) != len(answers):
+                    _logger.debug("Report not submittable, question length does not match answer length")
+                    return False
+
+                for answer in answers:
+                    if not answer.question.question_type == Question.MULTISELECT:
+                        if not answer.not_applicable and answer.answer_text in (None, ''):
+                            _logger.debug("Report not submittable, some answer is incomplete")
+                            return False
+        return True
+
     def check_auditor_comment_len(self):
         report_sections = self.report_sections.all()
         for report_section in report_sections:
@@ -273,6 +309,11 @@ class AuditStore(Model):
             if len(auditor_comment) < 30:
                 return False
         return True
+
+    def check_all_proof_attached(self):
+        total_proof_count = self.audit.audit_cycle.sections.all().aggregate(count = Sum('minimum_attachment_count', default = 0))
+        attached_proof_count = self.attachments.filter(proof_tag__isnull = False, status = Attachment.ATTACHED).values("proof_tag__proof_tag").order_by("proof_tag__proof_tag").distinct("proof_tag__proof_tag").count()
+        return attached_proof_count == total_proof_count['count']
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()

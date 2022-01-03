@@ -36,7 +36,7 @@ class AdditionalInfoPanelBase extends React.Component {
 		let panelClass = this.props.additionalInfo.is_complete ? "panel-success-hoverable" : "panel-default";
 		let panelIcon = this.props.additionalInfo.is_complete ? <Check/> : <Warning/>;
 		let interest_area_list = "";
-		
+
 		if(this.props.additionalInfo.interest_area){
 			for(let i of this.props.additionalInfo.interest_area){
 				interest_area_list += getInterestArea(i) + ", ";

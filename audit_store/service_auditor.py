@@ -46,10 +46,12 @@ def submit_report(audit_store_id, user_id):
     user = auditor_service.find_auditor_by_id(user_id)
     if user != audit_store.user:
         raise AppLogicError("Report cannot be submitted by user")
-    if not audit_store.is_submittable():
+    if not audit_store.is_submittable_for_auditor():
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
     if not audit_store.check_auditor_comment_len():
         raise AppLogicError("Section summary should be greater than 30 characters")
+    if not audit_store.check_all_proof_attached():
+        raise AppLogicError("Please attach all proof tags before submitting")
     if audit_cycle_proof_tag:
         if audit_store.is_proof_tag_not_given_for_attachments():
             raise AppLogicError("Please select a tag for all attachments. You can select a tag by clicking on the "

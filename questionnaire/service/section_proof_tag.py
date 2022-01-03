@@ -38,6 +38,7 @@ def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):
         raise AppLogicError('you cannot change proof tag')
     section_obj = Section.objects.get(pk=section_id)
     SectionProofTag.objects.filter(section_id=section_id).delete()
+    proof_count = 0
     for i in proof_tag_list:
         if AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=i).exists():
             AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=i).update(is_active=True)
@@ -48,11 +49,15 @@ def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):
             audit_cycle_proof_tag_obj.audit_cycle = audit_cycle_obj
             audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
             audit_cycle_proof_tag_obj.save()
+        proof_count += 1
         if not SectionProofTag.objects.filter(audit_cycle_proof_tag_id=audit_cycle_proof_tag_obj.id, section_id=section_id).exists():
             section_proof_tag_obj = SectionProofTag()
             section_proof_tag_obj.audit_cycle_proof_tag = audit_cycle_proof_tag_obj
             section_proof_tag_obj.section = section_obj
             section_proof_tag_obj.save()
+    # Update minimum attachment count for section
+    section_obj.minimum_attachment_count = proof_count
+    section_obj.save()
     return {"message": "section proof tag added"}
 
 

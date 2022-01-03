@@ -60,7 +60,7 @@ describe(SectionAddForm, () => {
 
 		const sequence = 1;
 		const name = "Kalimba de Luna";
-		const minimumAttachmentCount = 1;
+		const minimumAttachmentCount = 0;
 
 		beforeEach(() => {
 			r = shallow(<SectionAddForm
@@ -76,13 +76,13 @@ describe(SectionAddForm, () => {
 			/>);
 			r.find("FormInput").at(0).simulate("change", { target: { name: "sequence", value: sequence}});
 			r.find("FormInput").at(1).simulate("change", { target: { name: "name", value: name}});
-			r.find("FormInput").at(2).simulate("change", { target: { name: "minimum_attachment_count", value: minimumAttachmentCount}});
+			// r.find("FormInput").at(2).simulate("change", { target: { name: "minimum_attachment_count", value: minimumAttachmentCount}});
 
 			saveSectionAddForm.mockResolvedValue({
 				id: 1,
 				sequence: 1,
 				name: "",
-				minimum_attachment_count: 0,
+				// minimum_attachment_count: 0,
 				audit_cycle: auditCycleId,
 			});
 
