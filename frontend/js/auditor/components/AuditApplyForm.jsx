@@ -96,7 +96,7 @@ class AuditApplyForm extends React.Component {
 
 var mapStoreToProps = function(store, ownProps){
 	return {
-		audit: store.audits[ownProps.params.auditId],
+		audit: store.audits[ownProps.params.auditId] || store.travel_audits[ownProps.params.auditId],
 		errors: store.forms.auditApply.errors || {},
 	};
 };
