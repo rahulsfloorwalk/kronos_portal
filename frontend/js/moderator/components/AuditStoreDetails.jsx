@@ -229,6 +229,7 @@ export default class AuditStoreDetails extends React.Component{
 		var textareaElement = null;
 		var checkpointButton = null;
 		var sidebarElement = null;
+		let refresh_report_button;
 
 		var check_points = this.state.auditStore.check_points;
 		if(editable){
@@ -277,6 +278,7 @@ export default class AuditStoreDetails extends React.Component{
 			textareaElement = (
 				<textarea className="form-control" onBlur={this.setModeratorComment} defaultValue={this.state.auditStore.moderator_comment}></textarea>
 			);
+			refresh_report_button = <button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>;
 		}
 		else{
 			selectElement = (
@@ -412,7 +414,7 @@ export default class AuditStoreDetails extends React.Component{
 						</div>
 					</div>
 				</div>
-				<button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>
+				{refresh_report_button}
 				<AttachmentBox auditStoreId={this.props.params.auditStoreId} auditStore={this.state.auditStore} editable={editable}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={editable} reportSummary={this.state.auditStore.report_summary}/>
 				<AuditStoreSections auditStoreId={parseInt(this.props.params.auditStoreId)} auditStore={this.state.auditStore}/>

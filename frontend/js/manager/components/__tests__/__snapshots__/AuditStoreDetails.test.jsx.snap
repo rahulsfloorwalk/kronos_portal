@@ -425,12 +425,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -976,12 +970,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -1466,12 +1454,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -2024,12 +2006,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -2575,12 +2551,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -3086,12 +3056,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -3596,12 +3560,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -4649,12 +4607,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />
@@ -5722,12 +5674,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <Connect(AttachmentDisplayBox)
     auditStoreId="5"
   />

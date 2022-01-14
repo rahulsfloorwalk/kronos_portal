@@ -131,6 +131,10 @@ with open("./datasets/pincode.json") as pincode_file:
     pincode_list = json.load(pincode_file)
     __logger.info("loaded %d pincodes", len(pincode_list))
 
+with open("./datasets/dialcode.json") as dialcode_file:
+    dialcode_list = json.load(dialcode_file)
+    __logger.info("loaded %d dialcodes", len(dialcode_list))
+
 with open("./datasets/audio_transcription_language_code.json") as language_code_file:
     language_code_list = json.load(language_code_file)
     __logger.info("loaded %d langugae_code", len(language_code_list))
@@ -158,5 +162,11 @@ def validate_pan(pan_number):
 def get_language_code_by_country_code(country_code):
     if country_code in language_code_list:
         return language_code_list[country_code]
+    else:
+        return None
+
+def get_dialcode(country_code):
+    if country_code in dialcode_list:
+        return dialcode_list[country_code]
     else:
         return None

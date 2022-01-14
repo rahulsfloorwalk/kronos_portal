@@ -20,3 +20,13 @@ class MessageLog(Model):
 
     class Meta:
         ordering = ['-sent_at']
+
+class WhatsappLog(Model):
+    sent_to = CharField(db_column='whatsapp_number', max_length=20)
+    communication_id = CharField(db_column='communication_id', max_length = 200)
+    message_id = CharField(db_column='message_id', max_length = 200)
+
+    sent_at = DateTimeField(db_column='sent_at')
+
+    class Meta:
+        ordering = ['-sent_at']

@@ -68,3 +68,4 @@ def send_notification(user_actor, recipient, verb, action_object, target, messag
     notif_id = Notification.objects.filter(verb=verb).order_by('-id')[0].id
     connection.on_commit(lambda: mail_notify.send_notification_mail(notif_id, message))
     connection.on_commit(lambda: message_notify.send_notification_message(notif_id))
+    connection.on_commit(lambda: message_notify.send_whatsapp_notification(notif_id))

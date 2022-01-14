@@ -21,6 +21,8 @@ def set_preferences(user_id, prefs_dict):
         prefs.receive_new_opportunities_email = bool(prefs_dict["receive_new_opportunities_email"])
     if "receive_new_opportunities_sms" in prefs_dict:
         prefs.receive_new_opportunities_sms = bool(prefs_dict["receive_new_opportunities_sms"])
+    if "receive_transactional_whatsapp_message" in prefs_dict:
+        prefs.receive_transactional_whatsapp_message = bool(prefs_dict["receive_transactional_whatsapp_message"])
 
     prefs.save()
     return prefs

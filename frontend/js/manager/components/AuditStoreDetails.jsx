@@ -335,7 +335,9 @@ export class AuditStoreDetails extends React.Component{
 
 		var selectElement = null;
 		var textareaElement = null;
+		let refresh_report_button;
 		if (this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW"){
+			refresh_report_button = <button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>;
 			selectElement = (
 				<select className="form-control" onChange={this.setModeratorStatus} value={this.props.auditStore.moderator_status}>
 					<option value="">Select Status</option>
@@ -504,7 +506,7 @@ export class AuditStoreDetails extends React.Component{
 						{detailsElement}
 					</div>
 				</div>
-				<button className="btn btn-primary pull-right" onClick={this.arrangeAttachmentByProofTag}>Refresh Report</button>
+				{refresh_report_button}
 				<AttachmentDisplayBox auditStoreId={this.props.params.auditStoreId}/>
 				<ReportSummary auditStoreId={parseInt(this.props.params.auditStoreId)} editable={this.isSummaryEditable()}/>
 				{this.props.children}
