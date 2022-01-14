@@ -7,7 +7,7 @@ from django.db.transaction import atomic
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from ..validators import numericValidator, minLengthValidator, maxLengthValidator
-from ..models import ProfileInfo, MobileNumberHistoryLog
+from ..models import ProfileInfo, MobileNumberHistoryLog, WhatsappNumberHistoryLog
 from registration.models import GROUP_NAME_AUDITOR
 
 mobile_number_regex = "^[6-9]\d{9}$"
@@ -32,6 +32,15 @@ def save_old_mobile_number(profile_info, old_mobile_number):
     mobile_history_log_obj = MobileNumberHistoryLog()
     mobile_history_log_obj.user = profile_info.user
     mobile_history_log_obj.mobile_number = old_mobile_number
+    mobile_history_log_obj.created_at = timezone.now()
+    mobile_history_log_obj.save()
+
+
+def save_old_whatsapp_number(profile_info, old_whatsapp_number):
+    """Saving Old Mobile Number in MobileNumberHistoryLog Table"""
+    mobile_history_log_obj = WhatsappNumberHistoryLog()
+    mobile_history_log_obj.user = profile_info.user
+    mobile_history_log_obj.whatsapp_number = old_whatsapp_number
     mobile_history_log_obj.created_at = timezone.now()
     mobile_history_log_obj.save()
 
@@ -107,12 +116,12 @@ def set_mobile_number_for_auditor(user_id, mobile_number):
 
 def set_whatsapp_number_for_auditor(user_id, whatsapp_number):
     profile_info = find_profile_info_by_user_id(user_id)
-    # old_whatsapp_number = profile_info.whatsapp_number
+    old_whatsapp_number = profile_info.whatsapp_number
     set_whatsapp_number(profile_info, whatsapp_number)
 
-    """Saving Old Mobile Number in MobileNumberHistoryLog Table"""
-    # save_old_mobile_number(profile_info, whatsapp_number)
-    """End of Saving Old Mobile Number in MobileNumberHistoryLog Table"""
+    """Saving Old Whatsapp Number in WhatsappNumberHistoryLog Table"""
+    save_old_whatsapp_number(profile_info, old_whatsapp_number)
+    """End of Saving Old Whatsapp Number in WhatsappNumberHistoryLog Table"""
 
     return profile_info
 

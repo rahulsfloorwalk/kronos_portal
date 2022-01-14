@@ -453,3 +453,9 @@ class MobileNumberHistoryLog(Model):
     mobile_number = CharField(db_column='mobile_number', max_length=10, blank=True, null=True,
                               validators=[numericValidator, minLengthValidator])
     created_at = DateTimeField(db_column="created_at")
+
+
+class WhatsappNumberHistoryLog(Model):
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    whatsapp_number = CharField(db_column='whatsapp_number', max_length=10, blank=True, null=True, validators=[numericValidator, minLengthValidator])
+    created_at = DateTimeField(db_column="created_at")

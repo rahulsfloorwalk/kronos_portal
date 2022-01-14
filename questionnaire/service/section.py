@@ -86,11 +86,14 @@ def copy_sections_from_to(from_audit_cycle_id, to_audit_cycle_id):
             new_section = Section()
             new_section.name = section.name
             new_section.sequence = section.sequence
-            new_section.minimum_attachment_count = section.minimum_attachment_count
+            # new_section.minimum_attachment_count = section.minimum_attachment_count
             new_section.audit_cycle = to_audit_cycle
             new_section.save()
             question_service.copy_questions_from_to(section.id, new_section.id)
             proof_tag_service.copy_proof_tag_from_to(section.id, new_section.id, to_audit_cycle_id)
+            proof_tags = proof_tag_service.get_section_proof_tag(new_section.id)
+            new_section.minimum_attachment_count = sum(tag['is_present_in_section'] is True for tag in proof_tags)
+            new_section.save()
         return to_audit_cycle.sections.all()
 
     except (AuditCycle.DoesNotExist) as e:

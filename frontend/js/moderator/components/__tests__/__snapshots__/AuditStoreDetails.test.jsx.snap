@@ -324,12 +324,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -828,12 +822,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -1332,12 +1320,6 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -1836,12 +1818,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -2340,12 +2316,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -2852,12 +2822,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -3363,12 +3327,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -3867,12 +3825,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -4364,12 +4316,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -4861,12 +4807,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -5358,12 +5298,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -5855,12 +5789,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {
@@ -6899,12 +6827,6 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
       </div>
     </div>
   </div>
-  <button
-    className="btn btn-primary pull-right"
-    onClick={[Function]}
-  >
-    Refresh Report
-  </button>
   <AttachmentBox
     auditStore={
       Object {

@@ -5,6 +5,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User, Group
 
 from kronos.exceptions import AppLogicError
+from manager.models import ProofTag
+from questionnaire.service.section_proof_tag import save_section_proof_tag
 from registration.models import GROUP_NAME_AGENCY
 from registration.models import GROUP_NAME_MANAGER
 from questionnaire.service import section as section_service
@@ -46,7 +48,7 @@ class SectionTestCase(TestCase):
 
         expect(list(map(lambda s: s.name, copied_sections))).to(contain_only(*map(lambda s: s.name, sections)))
         expect(list(map(lambda s: s.sequence, copied_sections))).to(contain_only(*map(lambda s: s.sequence, sections)))
-        expect(list(map(lambda s: s.minimum_attachment_count, copied_sections))).to(contain_only(*map(lambda s: s.minimum_attachment_count, sections)))
+        # expect(list(map(lambda s: s.minimum_attachment_count, copied_sections))).to(contain_only(*map(lambda s: s.minimum_attachment_count, sections)))
 
     def test_copy_sections_from_to_raises_if_destination_already_has_sections(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
@@ -57,3 +59,16 @@ class SectionTestCase(TestCase):
 
         with self.assertRaisesRegex(AppLogicError, "audit cycle already has sections"):
             section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id)
+
+    def test_copy_sections_from_to_check_prrof_tag_count(self):
+        audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+        sections = mommy.make(Section, audit_cycle=audit_cycle, minimum_attachment_count=1, _quantity=4)
+        proof_tag_obj = mommy.make(ProofTag, _quantity=4)
+
+        for index, tag in enumerate(proof_tag_obj):
+            save_section_proof_tag(sections[index].id, audit_cycle.id, [tag.id])
+
+        another_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
+
+        copied_sections = section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id)
+        expect(list(map(lambda s: s.minimum_attachment_count, copied_sections))).to(contain_only(*map(lambda s: s.minimum_attachment_count, sections)))
