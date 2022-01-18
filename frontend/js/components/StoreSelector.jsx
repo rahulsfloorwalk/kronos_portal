@@ -2,7 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 
-import FormSelect from "./FormSelect.jsx";
+import Select from "react-select";
+import {errorList} from "../manager/prop_types.js";
+import FormGroup from "./FormGroup.jsx";
+import FormErrorList from "./FormErrorList.jsx";
 
 /* Store Selector Starts */
 
@@ -15,6 +18,9 @@ class StoreSelector extends React.Component {
 				name: PropTypes.string,
 			}),
 		})),
+		value: PropTypes.string,
+		onChange: PropTypes.func,
+		errors: errorList
 	};
 
 	render() {
@@ -29,12 +35,24 @@ class StoreSelector extends React.Component {
 			});
 		}
 		optionss.sort((a,b) => (a.city > b.city) ? 1 : ((b.city > a.city) ? -1 : 0));
-		storeOptions = optionss.map(element=><option key={element.value} value={element.value}>{element.city} -- {element.store}({element.code})</option>);
+
+		for(let option of optionss){
+			storeOptions.push({
+				label: `${option.city} -- ${option.store}(${option.code})`,
+				value: option.value
+			});
+		}
 		return (
-			<FormSelect label="Store" name="store" {...this.props}>
-				<option value=""></option>
-				{storeOptions}
-			</FormSelect>
+			<FormGroup>
+				<label>Select store</label>
+				<Select
+					name="store"
+					value={this.props.value ? storeOptions.filter(obj => this.props.value === obj.value) : null}
+					onChange={this.props.onChange}
+					isClearable={true}
+					options={storeOptions}/>
+				<FormErrorList errors={this.props.errors}/>
+			</FormGroup>
 		);
 	}
 }

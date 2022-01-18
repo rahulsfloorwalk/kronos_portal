@@ -313,7 +313,7 @@ class AuditStore(Model):
     def check_all_proof_attached(self):
         total_proof_count = self.audit.audit_cycle.sections.all().aggregate(count = Sum('minimum_attachment_count', default = 0))
         attached_proof_count = self.attachments.filter(proof_tag__isnull = False, status = Attachment.ATTACHED).values("proof_tag__proof_tag").order_by("proof_tag__proof_tag").distinct("proof_tag__proof_tag").count()
-        return attached_proof_count == total_proof_count['count']
+        return attached_proof_count >= total_proof_count['count']
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()
@@ -584,6 +584,14 @@ class ReportStatusLog(Model):
     user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
     audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
     status = CharField(db_column='status', max_length=20, choices=AuditStore.STATUS, blank=False)
+    message = CharField(db_column='message', max_length=4096, blank=True, null=True)
+    created_at = DateTimeField(db_column="created_at")
+
+
+class ReportConcernLog(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
     message = CharField(db_column='message', max_length=4096, blank=True, null=True)
     created_at = DateTimeField(db_column="created_at")
 

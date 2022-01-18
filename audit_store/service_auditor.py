@@ -3,7 +3,7 @@ from kronos.exceptions import AppLogicError
 from audit_store import service as audit_store_service
 from registration.service import auditor as auditor_service
 from django.utils import timezone
-from audit_store.models import AuditStore, ReportStatusLog
+from audit_store.models import AuditStore, ReportStatusLog, ReportConcernLog
 from django.conf import settings
 from notify.service.mail_fail_audit_report import send_audit_report_failed_email
 from notify.service.mail_withdraw_audit_report import send_audit_report_withdraw_email
@@ -142,6 +142,15 @@ def concern_report(audit_store_id, user_id, message):
         raise AppLogicError("Concern not accepted by user")
     if audit_store.status not in [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED]:
         raise AppLogicError("Concern not accepted by user")
+
+    # Save Data in Report Concern Log
+    report_status_log = ReportConcernLog()
+    report_status_log.user_actor = user
+    report_status_log.message = message
+    report_status_log.audit_store = audit_store
+    report_status_log.created_at = timezone.now()
+    report_status_log.save()
+    # End of Save Data in Report Concern Log
 
     # Send Mail to manager or "shubham.mohod@floorwalk.in"
     if settings.EMAIL_SWITCH['AUDIT_REPORT_CONCERN_BY_AUDITOR_EMAIL']:

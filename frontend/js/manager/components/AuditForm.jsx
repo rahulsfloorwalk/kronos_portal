@@ -85,6 +85,12 @@ class AuditForm extends React.Component {
 		affectInputEventToComponent(e, this);
 	};
 
+	handleChange = (e) => {
+		this.setState({
+			store: e == null ? "" : e.value,
+		});
+	};
+
 	onSubmit = (e) => {
 		e.preventDefault();
 		if(this.state.audit_region == "state"){
@@ -166,7 +172,7 @@ class AuditForm extends React.Component {
 						<StateSelector value={this.state.state} onChange={this.inputChanged} errors={this.state.state_error}/>
 						: null }
 					{this.state.audit_region == "city" ?
-						<StoreSelector value={this.state.store} onChange={this.inputChanged} errors={this.props.errors.store}/>
+						<StoreSelector value={this.state.store} onChange={this.handleChange} errors={this.props.errors.store}/>
 						: null }
 					<div className="row">
 						<div className="col-sm-6">

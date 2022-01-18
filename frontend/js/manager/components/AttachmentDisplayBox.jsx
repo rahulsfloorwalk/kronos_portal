@@ -9,7 +9,7 @@ import Alert from "react-s-alert";
 
 // import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment, renameAttachment, rotateImageAngle } from "../service/attachment.js";
-import { Paperclip, Plus } from "../../components/Icons.jsx";
+import { Paperclip, Plus, Checked, Cross } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
@@ -280,6 +280,14 @@ export class AttachmentDisplayBox extends Component{
 			);
 		}
 
+		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
+
+		const proof_tag_list = [];
+		for(let tag of this.state.proof_tags){
+			const attach = attachment_tags.includes(tag.id);
+			const proof_label = attach ? <span className="label label-primary" key={tag.id} style={{ marginRight: "10px" }}><Checked /> {tag.proof_tag}</span> : <span className="label label-danger" key={tag.id} style={{ marginRight: "10px" }}><Cross /> {tag.proof_tag}</span>;
+			proof_tag_list.push(proof_label);
+		}
 		// var selectSection = null;
 		if( attachmentRows.length === 0){
 			attachmentRows.push(<Jumbotron key="empty" heading="no attachments here" para="none uploaded"/>);
@@ -314,6 +322,7 @@ export class AttachmentDisplayBox extends Component{
 				<div className="row page-header">
 					<div className="col-md-8">
 						<h3><Paperclip/> Attachments {uploadButton}</h3>
+						{proof_tag_list.length == 0 ? null : "Mandatory proofs "}<br/>{proof_tag_list}
 						{submitMessageElement}
 					</div>
 					{/* {selectSection} */}

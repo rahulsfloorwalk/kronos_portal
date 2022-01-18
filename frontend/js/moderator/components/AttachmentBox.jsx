@@ -7,7 +7,7 @@ import { uploadFileForAuditStore, findAttachmentsByAuditStore, deleteAttachment,
 // import { fetchSections } from "../service/section.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
-import { Paperclip, Plus } from "../../components/Icons.jsx";
+import { Paperclip, Plus, Checked, Cross } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
 
@@ -274,6 +274,15 @@ export default class AttachmentBox extends React.Component {
 			uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default btn-sm"><Plus/> Upload Attachment</button>);
 		}
 
+		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
+
+		const proof_tag_list = [];
+		for(let tag of this.state.proof_tags){
+			const attach = attachment_tags.includes(tag.id);
+			const proof_label = attach ? <span className="label label-primary" key={tag.id} style={{ marginRight: "10px" }}><Checked /> {tag.proof_tag}</span> : <span className="label label-danger" key={tag.id} style={{ marginRight: "10px" }}><Cross /> {tag.proof_tag}</span>;
+			proof_tag_list.push(proof_label);
+		}
+
 		// var selectSection = null;
 
 		if( attachmentRows.length === 0){
@@ -299,6 +308,7 @@ export default class AttachmentBox extends React.Component {
 					<div className="row page-header">
 						<div className="col-md-8">
 							<h3><Paperclip/> Attachments {uploadButton}</h3>
+							{proof_tag_list.length == 0 ? null : "Mandatory proofs "}<br/>{proof_tag_list}
 							{submitMessageElement}
 						</div>
 						{/* {selectSection} */}
