@@ -14,8 +14,6 @@ from audit_store import service as audit_store_service
 from payment.models import Beneficiary, Payment
 from notify import verbs
 
-from django.conf import settings
-
 from notify.service import mail_notify
 from audit.service import audit_cycle as audit_cycle_service
 from kronos.exceptions import ObjectNotFound, AppLogicError
@@ -250,10 +248,12 @@ def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date="", end_dat
     client = audit_cycle.client.name
     name = audit_cycle.name
     audit = client + "_" + name
+    payment_reason = "{} - {}".format(client, name)
     filename = audit.replace(" ", "-") + "_payments.xlsx"
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output, {'in_memory': True})
     worksheet = workbook.add_worksheet()
+    text_format = workbook.add_format({'num_format': '@'})
     worksheet.set_column('A:AZ', 20)
 
     fieldnames = get_fieldnames()
@@ -265,9 +265,9 @@ def find_new_pending_xlsx_for_audit_cycle(audit_cycle_id, start_date="", end_dat
     for payment in consilidated_payments:
         row += 1
         col = 0
-        row_content = get_datarow_for_payment(payment)
+        row_content = get_datarow_for_payment(payment, payment_reason)
         for cell in row_content:
-            worksheet.write(row, col, cell)
+            worksheet.write(row, col, cell, text_format)
             col += 1
 
     workbook.close()
@@ -285,11 +285,12 @@ def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
     client = audit_cycle.client.name
     name = audit_cycle.name
     audit = client + "_" + name
+    payment_reason = "{} - {}".format(client, name)
 
     fieldnames = get_fieldnames()
     writer.writerow(fieldnames)
     for payment in consolidated_payments:
-        datarow = get_datarow_for_payment(payment)
+        datarow = get_datarow_for_payment(payment, payment_reason)
         writer.writerow(datarow)
 
     output.seek(0)
@@ -297,16 +298,14 @@ def find_new_pending_csv_for_audit_cycle(audit_cycle_id):
     return output, audit.replace(" ", "-") + "_payments.csv"
 
 
-def get_datarow_for_payment(payment):
+def get_datarow_for_payment(payment, payment_reason):
     user_details = get_user_details_for_payment(payment)
     datarow = [
-        settings.PAYMENT_NEW_CSV_SETTINGS['Record_Identifier'],
         utils.today_ist().strftime("%d/%m/%Y"),
         payment.amount,
-        "'" + settings.PAYMENT_NEW_CSV_SETTINGS['Debit_Account_No'],
         user_details['name'],
-        settings.PAYMENT_NEW_CSV_SETTINGS['ReasonForPayment'],
-        "'" + user_details['account_number'],
+        payment_reason,
+        "" + user_details['account_number'],
         user_details['ifsc'],
         payment.user.email,
         user_details['beneficiary_id'],
@@ -316,7 +315,7 @@ def get_datarow_for_payment(payment):
 
 
 def get_fieldnames():
-    fieldnames = ['Record_Identifier', 'Payment_Value_Date', 'Payment_Amount', 'Debit_Account_No',
+    fieldnames = ['Payment_Value_Date', 'Payment_Amount',
                   'Beneficiary_Name',
                   'ReasonForPayment', 'Credit_Account_No', 'IFSC_Code',
                   'Notification_Emails',
