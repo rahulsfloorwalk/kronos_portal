@@ -95,8 +95,8 @@ export class AttachmentDisplayBox extends Component{
 			Alert.warning("INVALIED FILE NAME");
 		});
 	};
-	saveAttachmentTag = (e) => {
-		saveAttachmentTag(this.state.selectedAttachment.id, e.target.value).then((a)=>{
+	saveAttachmentTag = (attachment_id, e) => {
+		saveAttachmentTag(attachment_id, e.target.value).then((a)=>{
 			Alert.success("PROOF TAG SAVED");
 			this.setState({
 				selectedAttachment: a
@@ -243,7 +243,7 @@ export class AttachmentDisplayBox extends Component{
 		var attachmentRows = [];
 
 		for(let a of this.state.attachments){
-			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager" editable={editable} deletable={editable} faulty_report_id={a.faulty_report_id} proof_tags={this.state.proof_tags} section_id={0} onChange={this.saveAttachmentTag} />);
+			attachmentRows.push(<AttachmentThumbnail attachment={a} key={a.id} onSelect={() => this.attachmentSelected(a)} onDelete={this.deleteButtonClicked} selected={a.id === (this.state.selectedAttachment && this.state.selectedAttachment.id)} user="manager" editable={editable} deletable={editable} faulty_report_id={a.faulty_report_id} proof_tags={this.state.proof_tags} section_id={0} onChange={(e)=>this.saveAttachmentTag(a.id, e)} />);
 		}
 		for(let id in this.state.inProgress){
 			if(this.state.inProgress[id].uploading || this.state.inProgress[id].error){
@@ -262,7 +262,7 @@ export class AttachmentDisplayBox extends Component{
 			proof_tags={this.state.proof_tags}
 			onRename={this.attachmentRenamed}
 			onDelete={this.deleteButtonClicked}
-			onChange={this.saveAttachmentTag}
+			onChange={(e)=>this.saveAttachmentTag(this.state.selectedAttachment.id, e)}
 			rotateImage={this.rotateImage}
 			section_id={0}
 			disableRotateButton={this.state.disableRotateButton}/>;
