@@ -7,7 +7,7 @@ import * as ReactRedux from "react-redux";
 import { findAttachmentsByAuditStore, uploadFileForAuditStore, deleteAttachment } from "../service/attachment.js";
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
-import { Paperclip, Checked, Cross } from "../../components/Icons.jsx";
+import { Paperclip } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
@@ -15,6 +15,8 @@ import AttachmentInProgressThumbnail from "../../components/AttachmentInProgress
 import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import { auditStorePropType } from "../prop_types";
+import AttachmentLegend from "../../components/AttachmentLegend.jsx";
+import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 
 // import { fetchSections } from "../actions/section.js";
 
@@ -219,8 +221,7 @@ class AttachmentUploadBox extends React.Component {
 		const proof_tag_list = [];
 		for(let tag of this.state.proof_tags){
 			const attach = attachment_tags.includes(tag.id);
-			const proof_label = attach ? <span className="label label-primary" key={tag.id} style={{ marginRight: "10px" }}><Checked /> {tag.proof_tag}</span> : <span className="label label-danger" key={tag.id} style={{ marginRight: "10px" }}><Cross /> {tag.proof_tag}</span>;
-			proof_tag_list.push(proof_label);
+			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
 		}
 
 		var attachmentRows = [];
@@ -291,7 +292,10 @@ class AttachmentUploadBox extends React.Component {
 						<h3>
 							<Paperclip/> Attachments {uploadButton}
 						</h3>
-						{proof_tag_list.length == 0 ? null : "Mandatory proofs "}<br/>{proof_tag_list}
+						<p>Proof list</p>
+						<AttachmentLegend />
+						<br/>
+						{proof_tag_list}
 						{submitMessageElement}
 					</div>
 					{/* {selectSection} */}

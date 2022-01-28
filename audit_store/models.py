@@ -1,5 +1,4 @@
 import logging
-from django.db.models.aggregates import Sum
 
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -310,10 +309,10 @@ class AuditStore(Model):
                 return False
         return True
 
-    def check_all_proof_attached(self):
-        total_proof_count = self.audit.audit_cycle.sections.all().aggregate(count = Sum('minimum_attachment_count', default = 0))
-        attached_proof_count = self.attachments.filter(proof_tag__isnull = False, status = Attachment.ATTACHED).values("proof_tag__proof_tag").order_by("proof_tag__proof_tag").distinct("proof_tag__proof_tag").count()
-        return attached_proof_count >= total_proof_count['count']
+    def check_required_proof_attached(self):
+        required_proof_tag_list = self.audit.audit_cycle.proof_tags_list.filter(section_proof_tag__is_required = True).values_list('section_proof_tag__audit_cycle_proof_tag__proof_tag', flat = True).distinct('proof_tag')
+        proof_attached = self.attachments.filter(proof_tag__isnull = False, proof_tag__proof_tag__in = required_proof_tag_list, status = Attachment.ATTACHED).values_list('proof_tag__proof_tag', flat = True).distinct('proof_tag__proof_tag')
+        return len(proof_attached) >= len(required_proof_tag_list)
 
     def is_completable(self):
         sections = self.audit.audit_cycle.sections.all()

@@ -92,7 +92,7 @@ def copy_sections_from_to(from_audit_cycle_id, to_audit_cycle_id):
             question_service.copy_questions_from_to(section.id, new_section.id)
             proof_tag_service.copy_proof_tag_from_to(section.id, new_section.id, to_audit_cycle_id)
             proof_tags = proof_tag_service.get_section_proof_tag(new_section.id)
-            new_section.minimum_attachment_count = sum(tag['is_present_in_section'] is True for tag in proof_tags)
+            new_section.minimum_attachment_count = sum(tag['is_required'] is True for tag in proof_tags)
             new_section.save()
         return to_audit_cycle.sections.all()
 
