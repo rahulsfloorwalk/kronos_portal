@@ -16,13 +16,15 @@ def get_audit_cycle_proof_tag(audit_cycle_id):
     for i in proof_tag_obj:
         proof_tag_name = i.name
         proof_tag_dict = {}
+        is_required_proof = False
         if AuditCycleProofTagList.objects.filter(proof_tag_id=i.id, audit_cycle_id=audit_cycle_id, is_active=True).exists():
             audit_cycle_proof_tag_obj = AuditCycleProofTagList.objects.get(proof_tag_id=i.id,
                                                                            audit_cycle_id=audit_cycle_id,
                                                                            is_active=True)
             if SectionProofTag.objects.filter(audit_cycle_proof_tag=audit_cycle_proof_tag_obj).exists():
-                section_obj = SectionProofTag.objects.get(audit_cycle_proof_tag=audit_cycle_proof_tag_obj).section
-                proof_tag_name = "{} ({})".format(i.name, section_obj.name)
+                section_obj = SectionProofTag.objects.get(audit_cycle_proof_tag=audit_cycle_proof_tag_obj)
+                proof_tag_name = "{} ({})".format(i.name, section_obj.section.name)
+                is_required_proof = section_obj.is_required
             is_present_in_audit_cycle = True
         else:
             is_present_in_audit_cycle = False
@@ -30,6 +32,7 @@ def get_audit_cycle_proof_tag(audit_cycle_id):
         proof_tag_dict['id'] = i.id
         proof_tag_dict['name'] = proof_tag_name
         proof_tag_dict['is_present_in_audit_cycle'] = is_present_in_audit_cycle
+        proof_tag_dict['is_required'] = is_required_proof
         proof_tag_list.append(proof_tag_dict)
         proof_tag_list = sorted(proof_tag_list, key=lambda j: j['name'])
     return sorted(proof_tag_list, key=lambda j: j['is_present_in_audit_cycle'], reverse=True)
@@ -63,13 +66,16 @@ def get_audit_cycle_proof_tag_for_attachment(audit_cycle_id):
             section_proof_tag_obj = SectionProofTag.objects.get(audit_cycle_proof_tag=audit_cycle_proof_tag)
             proof_tag_name = "{}".format(section_proof_tag_obj.audit_cycle_proof_tag.proof_tag.name)
             section_id = section_proof_tag_obj.section.id
+            is_required = section_proof_tag_obj.is_required
         else:
             proof_tag_name = "{}".format(audit_cycle_proof_tag.proof_tag.name)
             section_id = 0
+            is_required = False
 
         proof_tag_dict['id'] = audit_cycle_proof_tag.id
         proof_tag_dict['proof_tag'] = proof_tag_name
         proof_tag_dict['section_id'] = section_id
+        proof_tag_dict['is_required'] = is_required
         proof_tag_list.append(proof_tag_dict)
     return sorted(proof_tag_list, key=lambda j: j['proof_tag'])
 

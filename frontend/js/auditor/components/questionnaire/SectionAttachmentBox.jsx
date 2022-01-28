@@ -3,12 +3,13 @@ import React from "react";
 import PropTypes from "prop-types";
 import { } from "react-router";
 
-import { Paperclip, Checked, Cross } from "../../../components/Icons.jsx";
+import { Paperclip } from "../../../components/Icons.jsx";
 // import { orderKeys } from "../../../react_utils.js";
 
 import AttachmentThumbnail from "../../../components/AttachmentThumbnail.jsx";
 import AttachmentInProgressThumbnail from "../../../components/AttachmentInProgressThumbnail.jsx";
 import AttachmentPreview from "../../components/AttachmentPreview.jsx";
+import ProofTagLabel from "../../../components/ProofTagLabel.jsx";
 
 // import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment, moveAttachmentToSection } from "../../../auditor/service/attachment.js";
 import { findAttachmentsByAuditStoreAndSection, uploadFileForReportSection, deleteAttachment } from "../../../auditor/service/attachment.js";
@@ -290,14 +291,13 @@ export default class SectionAttachmentBox extends React.Component{
 		let borderStyle = {
 			borderTop: "1px solid #eee"
 		};
-		const setion_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
+		const section_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
 		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
 
 		const proof_tag_list = [];
-		for(let tag of setion_proof_tags){
+		for(let tag of section_proof_tags){
 			const attach = attachment_tags.includes(tag.id);
-			const proof_label = attach ? <span className="label label-primary" key={tag.id} style={{ marginRight: "10px" }}><Checked /> {tag.proof_tag}</span> : <span className="label label-danger" style={{ marginRight: "10px" }} key={tag.id}><Cross /> {tag.proof_tag}</span>;
-			proof_tag_list.push(proof_label);
+			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
 		}
 
 		return (

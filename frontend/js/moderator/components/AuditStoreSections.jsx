@@ -19,6 +19,7 @@ import { fetchSections, fetchReportSections, submitAuditorComment, setNotApplica
 import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection, rotateImageAngle } from "../service/attachment.js";
 
 import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
+import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
 
@@ -519,11 +520,13 @@ class SectionAttachmentBox extends React.Component{
 
 		let selectedAttachment = this.state.attachments.filter( a => a.id === this.state.selectedAttachmentId)[0];
 
-		const setion_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
+		const section_proof_tags = this.props.proof_tags.filter((val) => val.section_id == this.props.sectionId);
+		const attachment_tags = this.state.attachments.map((value)=> value.proof_tag);
 
 		const proof_tag_list = [];
-		for(let tag of setion_proof_tags){
-			proof_tag_list.push(<span key={tag.id} className="label label-primary" style={{marginRight:"5px"}}>{tag.proof_tag}</span>);
+		for(let tag of section_proof_tags){
+			const attach = attachment_tags.includes(tag.id);
+			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
 		}
 
 		return (

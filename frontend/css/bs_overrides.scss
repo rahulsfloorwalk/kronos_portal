@@ -358,3 +358,24 @@ $progress_bar_bg_lighten_pct : 5%;
 	50%{opacity: .5;}
 	100%{opacity: 1;}
 }
+
+
+.checkbox-bg-danger{
+	width: 20px !important;
+	height: 20px !important;
+	margin: 0px 7px !important;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-o-appearance: none;
+	appearance: none;
+	box-shadow: none;
+	font-size: 1.5em;
+	text-align: center;
+	background: #d9534f;
+	border-radius: 0.2rem;
+  }
+   
+  .checkbox-bg-danger:checked:after {
+	content: '✔';
+	color: white;
+  }

@@ -60,13 +60,14 @@ class SectionTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "audit cycle already has sections"):
             section_service.copy_sections_from_to(audit_cycle.id, another_audit_cycle.id)
 
-    def test_copy_sections_from_to_check_prrof_tag_count(self):
+    def test_copy_sections_from_to_check_proof_tag_count(self):
         audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
-        sections = mommy.make(Section, audit_cycle=audit_cycle, minimum_attachment_count=1, _quantity=4)
+        sections = mommy.make(Section, audit_cycle=audit_cycle, _quantity=4)
         proof_tag_obj = mommy.make(ProofTag, _quantity=4)
 
         for index, tag in enumerate(proof_tag_obj):
-            save_section_proof_tag(sections[index].id, audit_cycle.id, [tag.id])
+            save_section_proof_tag(sections[index].id, audit_cycle.id, [tag.id], [tag.id])
+            sections[index].refresh_from_db()
 
         another_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)
 

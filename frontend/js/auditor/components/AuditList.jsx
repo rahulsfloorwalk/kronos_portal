@@ -264,14 +264,19 @@ var mapStoreToProps = function(store, ownProps){
 			}
 			return filteredAudits;
 		})(store.audits),
-		auditCycle: (function(audits){
+		auditCycle: (function(audits, travel_audits){
 			for(let id in audits){
 				if(audits[id].audit_cycle.id === parseInt(ownProps.params.auditCycleId)){
 					return audits[id].audit_cycle;
 				}
 			}
+			for(let id in travel_audits){
+				if(travel_audits[id].audit_cycle.id === parseInt(ownProps.params.auditCycleId)){
+					return travel_audits[id].audit_cycle;
+				}
+			}
 			return null;
-		})(store.audits),
+		})(store.audits, store.travel_audits),
 		applications: store.applications,
 		travel_audits: (function(travel_audits){
 			let filteredAudits = {};
