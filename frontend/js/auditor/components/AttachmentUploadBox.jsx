@@ -15,7 +15,7 @@ import AttachmentInProgressThumbnail from "../../components/AttachmentInProgress
 import AttachmentPreview from "./AttachmentPreview.jsx";
 
 import { auditStorePropType } from "../prop_types";
-import AttachmentLegend from "../../components/AttachmentLegend.jsx";
+// import AttachmentLegend from "../../components/AttachmentLegend.jsx";
 import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 
 // import { fetchSections } from "../actions/section.js";
@@ -221,7 +221,7 @@ class AttachmentUploadBox extends React.Component {
 		const proof_tag_list = [];
 		for(let tag of this.state.proof_tags){
 			const attach = attachment_tags.includes(tag.id);
-			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
+			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={true} />);
 		}
 
 		var attachmentRows = [];
@@ -293,8 +293,8 @@ class AttachmentUploadBox extends React.Component {
 							<Paperclip/> Attachments {uploadButton}
 						</h3>
 						<p>Proof list</p>
-						<AttachmentLegend />
-						<br/>
+						{/* <AttachmentLegend />
+						<br/> */}
 						{proof_tag_list}
 						{submitMessageElement}
 					</div>

@@ -297,7 +297,7 @@ export default class SectionAttachmentBox extends React.Component{
 		const proof_tag_list = [];
 		for(let tag of section_proof_tags){
 			const attach = attachment_tags.includes(tag.id);
-			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={tag.is_required} />);
+			proof_tag_list.push(<ProofTagLabel key={tag.id} proof_tag={tag} attached={attach} is_required={true} />);
 		}
 
 		return (
