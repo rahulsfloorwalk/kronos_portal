@@ -8,6 +8,7 @@ from registration.context import registration_context
 from audit_store.service_client import find_today_client_review_status_reports, find_audit_store_exclude_today
 from audit.service.audit_cycle_client_service import find_all_client_with_active_report_and_clearing_audit_cycle_status
 from client.service.client_service import find_client_by_id
+from client.service.client_user import find_client_admin_users_by_client_id
 _logger = logging.getLogger(__name__)
 
 
@@ -42,7 +43,10 @@ def send_live_report_mail(client_id, report_list):
         **registration_context(),
     }
     client_obj = find_client_by_id(client_id)
-    to_email = client_obj.email
+    client_users_email = find_client_admin_users_by_client_id(client_id).filter(receive_email_notification=True).values_list('user__email', flat=True)
+    to_email = list(client_users_email)
+    to_email.append(client_obj.email)
+
     subject = "{} report is live today".format(str(len(report_list)))
     if len(report_list) > 1:
         subject = "{} reports are live today".format(str(len(report_list)))

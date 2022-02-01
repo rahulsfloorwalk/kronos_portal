@@ -36,7 +36,7 @@ import ShopperGuideVideos from "./ShopperGuideVideos.jsx";
 import ShopperGuideBlogs from "./ShopperGuideBlogs.jsx";
 import ShopperGuidePodcasts from "./ShopperGuidePodcasts.jsx";
 import ShopperGuideSocialSnippets from "./ShopperGuideSocialSnippets.jsx";
-import FullTimeOpportunity from "./FullTimeOpportunity.jsx";
+// import FullTimeOpportunity from "./FullTimeOpportunity.jsx";
 import ContentNinja from "./ContentNinja.jsx";
 import WhatsappNumberForm from "./WhatsappNumberForm.jsx";
 
@@ -77,7 +77,7 @@ const Routes = ({store}) => (
 				<Route path="payment" component={PaymentList}/>
 				<Route path="payment/:paymentId/payment_concern" component={PaymentConcern}/>
 				{/* <Route path="referral" component={ReferralList}/> */}
-				<Route path="full_time_opportunity" component={FullTimeOpportunity} />
+				{/* <Route path="full_time_opportunity" component={FullTimeOpportunity} /> */}
 				<Route path="content_ninja" component={ContentNinja} />
 				<Route path="tos_accept" component={ToSAcceptForm}/>
 				<Route path="shopper_guide" component={ShopperGuide}>

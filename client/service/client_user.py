@@ -38,8 +38,13 @@ def find_non_client_admin_user_store_by_client_user_id(client_user_id):
     except NonClientAdminUserStore.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_client_admin_users_by_client_id(client_id):
+    users = client_service.find_client_by_id(client_id).users.all()
+    admin_users = [user.id for user in users if user.is_client_admin()]
+    return users.filter(id__in = admin_users)
+
 @atomic
-def insert(client, full_name, email, is_client_admin, password, is_active=True):
+def insert(client, full_name, email, is_client_admin, password, is_active=True, receive_email_notification = True):
     try:
         if password == "":
             raise AppLogicError("password cannot be blank")
@@ -60,6 +65,7 @@ def insert(client, full_name, email, is_client_admin, password, is_active=True):
         client_user.client = client
         client_user.full_name = full_name
         client_user.user = user
+        client_user.receive_email_notification = receive_email_notification
         client_user.save()
 
         return client_user
@@ -68,7 +74,7 @@ def insert(client, full_name, email, is_client_admin, password, is_active=True):
 
 
 @atomic
-def update(client_user_id, client, full_name, email, is_client_admin, password="", is_active=True):
+def update(client_user_id, client, full_name, email, is_client_admin, password="", is_active=True, receive_email_notification=True):
     try:
         client_user = ClientUser.objects.get(pk=client_user_id)
 
@@ -77,6 +83,7 @@ def update(client_user_id, client, full_name, email, is_client_admin, password="
         client_user.user.email = email
         client_user.user.username = email
         client_user.user.is_active = is_active
+        client_user.receive_email_notification = receive_email_notification
 
         if password != "":
             client_user.user.set_password(password)

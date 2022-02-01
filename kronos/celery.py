@@ -26,7 +26,7 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.system_fail_withdraw_audit_store import fail_withdraw_audit_stores
     from notify.service.waitlist_audit_application import waitlist_audit_application
     from notify.service.hide_audit_store_section import hide_audit_store_section
-    from notify.service.mail_full_time_opportunity import send_full_time_opportunity_emails
+    # from notify.service.mail_full_time_opportunity import send_full_time_opportunity_emails
     from notify.service.mail_qa_performance import qa_performance_report
     # from notify.service.add_payout_beneficiary import add_beneficiary
 
@@ -66,8 +66,8 @@ def setup_periodic_tasks(sender, **kwargs):
 
     # set up schedules for Full time opportunity
     # Executes every day at 0430 UTC == 1000 IST
-    queue_at_10 = crontab(hour=4, minute=30)
-    sender.add_periodic_task(queue_at_10, send_full_time_opportunity_emails.s())
+    # queue_at_10 = crontab(hour=4, minute=30)
+    # sender.add_periodic_task(queue_at_10, send_full_time_opportunity_emails.s())
 
     # set up schedules for generate beneficiary ids
     # Executes every day at 0330 UTC == 2100 IST
