@@ -35,6 +35,7 @@ class ClientUser(Model):
     full_name = CharField(db_column='full_name', max_length=50, blank=False)
     client = ForeignKey(Client, related_name='users', db_column='client_id', blank=False, on_delete=PROTECT)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    receive_email_notification = BooleanField(db_column='receive_email_notification', default=True)
 
     def __str__(self):
         return 'ClientUser({}): {}, client: {}'.format(self.id, self.full_name, self.client)

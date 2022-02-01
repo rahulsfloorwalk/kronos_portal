@@ -21,6 +21,7 @@ class ClientUserSerializer(ModelSerializer):
             'client',
             'user',
             'is_client_admin',
+            'receive_email_notification',
         )
         read_only_fields = fields
 
@@ -31,6 +32,7 @@ class ClientUserDeSerializer(Serializer):
     password = CharField(min_length=8, max_length=128, allow_blank=True)
     is_active = BooleanField()
     is_client_admin = BooleanField()
+    receive_email_notification = BooleanField()
 
 
 class ClientUserByClientView(APIView):
@@ -56,7 +58,8 @@ class ClientUserView(APIView):
             client_user_ds.validated_data["email"],
             client_user_ds.validated_data["is_client_admin"],
             client_user_ds.validated_data["password"],
-            client_user_ds.validated_data["is_active"]
+            client_user_ds.validated_data["is_active"],
+            client_user_ds.validated_data["receive_email_notification"]
         )
         return Response(ClientUserSerializer(saved_client_user).data)
 
@@ -80,7 +83,8 @@ class ClientUserIdView(APIView):
             client_user_ds.validated_data["email"],
             client_user_ds.validated_data["is_client_admin"],
             client_user_ds.validated_data["password"],
-            client_user_ds.validated_data["is_active"]
+            client_user_ds.validated_data["is_active"],
+            client_user_ds.validated_data["receive_email_notification"]
         )
         return Response(ClientUserSerializer(saved_client_user).data)
 

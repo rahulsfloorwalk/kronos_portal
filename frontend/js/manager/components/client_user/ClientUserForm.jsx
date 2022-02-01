@@ -38,6 +38,7 @@ export default class ClientUserForm extends React.Component{
 						full_name : clientUser.full_name,
 						email : clientUser.user.email,
 						is_active : clientUser.user.is_active,
+						receive_email_notification: clientUser.receive_email_notification,
 						is_client_admin : clientUser.is_client_admin,
 						password : "",
 					},
@@ -62,6 +63,7 @@ export default class ClientUserForm extends React.Component{
 				full_name : this.state.form.full_name,
 				email : this.state.form.email,
 				is_active : this.state.form.is_active,
+				receive_email_notification : this.state.form.receive_email_notification,
 				is_client_admin : this.state.form.is_client_admin,
 				password : this.state.form.password,
 			});
@@ -71,6 +73,7 @@ export default class ClientUserForm extends React.Component{
 				full_name : this.state.form.full_name,
 				email : this.state.form.email,
 				is_active : this.state.form.is_active,
+				receive_email_notification : this.state.form.receive_email_notification,
 				is_client_admin : this.state.form.is_client_admin,
 				password : this.state.form.password,
 			});
@@ -95,6 +98,7 @@ export default class ClientUserForm extends React.Component{
 					<FormInput label="Password" type="text" value={this.state.form.password} name="password" onChange={this.fieldChanged} errors={this.state.errors.password} placeholder="leave blank to keep password unchanged"/>
 					<FormInput label="Admin?" type="checkbox" checked={this.state.form.is_client_admin} name="is_client_admin" onChange={this.fieldChanged} errors={this.state.errors.is_client_admin}/>
 					<FormInput label="Active?" type="checkbox" checked={this.state.form.is_active} name="is_active" onChange={this.fieldChanged} errors={this.state.errors.is_active}/>
+					<FormInput label="Receive Email Notification?" type="checkbox" checked={this.state.form.receive_email_notification} name="receive_email_notification" onChange={this.fieldChanged} errors={this.state.errors.receive_email_notification}/>
 					<SaveButton/>
 				</form>
 			</Modal>
