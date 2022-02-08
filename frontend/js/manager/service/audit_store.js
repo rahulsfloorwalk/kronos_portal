@@ -99,6 +99,18 @@ export function setReimbursement(audit_store_id, reimbursement){
 	});
 }
 
+export function setFollowUpByAuditStore(audit_store_id, comment, next_follow_up_date){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_store/${audit_store_id}/follow_up`,
+		method: "POST",
+		data: JSON.stringify({
+			comment,
+			next_follow_up_date
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function setReportAttributeValue(audit_store_id, attribute_json_id, attribute_option_id){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_store/${audit_store_id}/report_attribute`,

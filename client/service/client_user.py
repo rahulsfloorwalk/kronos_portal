@@ -39,7 +39,7 @@ def find_non_client_admin_user_store_by_client_user_id(client_user_id):
         raise ObjectNotFound from e
 
 def find_client_admin_users_by_client_id(client_id):
-    users = client_service.find_client_by_id(client_id).users.all()
+    users = client_service.find_client_by_id(client_id).users.filter(user__is_active = True)
     admin_users = [user.id for user in users if user.is_client_admin()]
     return users.filter(id__in = admin_users)
 

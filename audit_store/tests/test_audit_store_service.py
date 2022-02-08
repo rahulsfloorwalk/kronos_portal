@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import date, datetime
+from pytz import timezone
 
 from model_mommy import mommy
 from model_mommy.recipe import Recipe
@@ -301,3 +302,36 @@ class AuditStoreServiceTestCase(TestCase):
         with self.assertRaisesRegex(AppLogicError, "invalid report_attribute option id"):
             service.set_report_attribute_value(audit_store.id, report_attribute.json_id, "foobar")
 
+
+    def test_set_follow_up_for_audit_store(self):
+        audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
+        audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
+        next_follow_up_date = datetime(2018, 5, 1, 11, 00, tzinfo=timezone('UTC'))
+        comment = "This is a test comment for report"
+
+        follow_up = service.set_follow_up_by_audit_store(audit_store.id, comment, next_follow_up_date, self.manager_user.id)
+        expect(follow_up.comment).to(equal(comment))
+        expect(follow_up.next_follow_up_date).to(equal(next_follow_up_date))
+        expect(follow_up.user_actor.id).to(equal(self.manager_user.id))
+
+    def test_find_follow_up_count_for_audit_store(self):
+        audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
+        audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
+        next_follow_up_date = datetime(2022, 1, 1, 11, 00, tzinfo=timezone('UTC'))
+        comment = "This is a test comment for report"
+        service.set_follow_up_by_audit_store(audit_store.id, comment, next_follow_up_date, self.manager_user.id)
+
+        next_follow_up_date = datetime(2022, 2, 1, 11, 00, tzinfo=timezone('UTC'))
+        comment = "This is a second comment for report"
+        service.set_follow_up_by_audit_store(audit_store.id, comment, next_follow_up_date, self.manager_user.id)
+
+        expect(audit_store.follow_up.count()).to(equal(1))
+
+    def test_set_follow_up_without_comment_for_audit_store(self):
+        audit = mommy.make(Audit, earnings_per_audit=2000, reimbursement=5000)
+        audit_store = mommy.make(AuditStore, earnings_per_audit=None, reimbursement=None, user=self.auditor_user, audit=audit, status=AuditStore.ASSIGNED)
+        next_follow_up_date = datetime(2018, 5, 1, 11, 00, tzinfo=timezone('UTC'))
+        comment = ""
+
+        with self.assertRaises(AppLogicError, msg="Please enter a comment"):
+            service.set_follow_up_by_audit_store(audit_store.id, comment, next_follow_up_date, self.manager_user.id)

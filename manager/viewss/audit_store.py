@@ -20,7 +20,7 @@ from attachment.service import set_attachment_by_proof_tag
 
 from client_report.service import xlsx_report as xlsx_report_service
 
-from ..serializers import AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser
+from ..serializers import AuditStoreFollowUpSerializer, AuditStoreSerializer, AuditStoreSerializerWithoutAudit, AuditStoreSerializerWithUser
 
 class AuditStoreByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
@@ -125,6 +125,22 @@ class AuditStoreIdCheckPoints(APIView):
     def post(self, request, audit_store_id):
         audit_store = audit_store_service.set_check_points(audit_store_id, request.data['check_points'])
         return Response(AuditStoreSerializer(audit_store).data)
+
+
+class AuditStoreIdFollowUp(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    def get(self, request, audit_store_id):
+        follow_up = audit_store_service.get_follow_up_by_audit_store(audit_store_id)
+        return Response(AuditStoreFollowUpSerializer(follow_up).data)
+
+    def post(self, request, audit_store_id):
+        follow_up = audit_store_service.set_follow_up_by_audit_store(audit_store_id, request.data.get('comment'), request.data.get('next_follow_up_date'), request.user.id)
+        return Response(AuditStoreFollowUpSerializer(follow_up).data)
 
 
 class AuditStoreIdReportSummaryView(APIView):

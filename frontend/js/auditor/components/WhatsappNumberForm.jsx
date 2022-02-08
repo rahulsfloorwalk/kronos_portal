@@ -53,7 +53,7 @@ class WhatsappNumberForm extends Component{
 		return (
 			<Modal modalTitle="Update Whatsapp Number" onClose={this.props.router.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					{typeof(this.state.errors.non_field_errors) != "undefined" ? <FormErrorList errors={this.state.errors.non_field_errors}/> : null }
 					<FormInput label="Whatsapp Number (10-digit)" placeholder="__________"
 						maxLength="10" type="text" required={true}
 						value={this.state.whatsapp_number}

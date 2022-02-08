@@ -1,4 +1,5 @@
 from datetime import timedelta
+from typing import Optional
 
 from django.db.transaction import atomic
 from django.db.models import Count, Avg
@@ -7,12 +8,13 @@ from guardian.shortcuts import assign_perm, remove_perm, get_users_with_perms
 
 from kronos.utils import today_ist
 
-from .models import AuditStore
+from .models import AuditStore, ReportFollowUpLog
 from auditor.models import ProfileInfo
 from audit.models import AuditCycle, Audit
 from kronos.exceptions import ObjectNotFound, AppLogicError
 import payment.service.payment_manager as payment_manager_service
 import client.service.client_user as client_user_service
+from manager.service import manager as manager_service
 from audit.service import report_attribute_service
 from registration.models import GROUP_NAME_AUDITOR
 
@@ -406,3 +408,40 @@ def find_10_days_in_progress_reports():
     return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=10),
                                      audit__audit_cycle__status=AuditCycle.ACTIVE,
                                      status=AuditStore.ACKNOWLEDGED)
+
+
+def get_follow_up_by_audit_store(audit_store_id: int):
+    follow_up = ReportFollowUpLog.objects.filter(audit_store_id = audit_store_id).first()
+
+    if follow_up:
+        return follow_up
+    else:
+        raise AppLogicError("Follow up not found")
+
+
+@atomic
+def set_follow_up_by_audit_store(audit_store_id: int, comment: str, next_follow_up_date: Optional[str], user_id: int):
+    if not comment:
+        raise AppLogicError("Please enter a comment")
+
+    audit_store = find_by_id(audit_store_id)
+    manager = manager_service.find_by_id(user_id)
+    try:
+        follow_up = get_follow_up_by_audit_store(audit_store.id)
+    except Exception as e:
+        follow_up = None
+
+    if follow_up:
+        follow_up.comment = comment
+        follow_up.next_follow_up_date = next_follow_up_date if next_follow_up_date else follow_up.next_follow_up_date
+        follow_up.user_actor = manager
+        follow_up.save()
+        return follow_up
+    else:
+        follow_up = ReportFollowUpLog()
+        follow_up.user_actor = manager
+        follow_up.audit_store = audit_store
+        follow_up.comment = comment
+        follow_up.next_follow_up_date=next_follow_up_date if next_follow_up_date else None
+        follow_up.save()
+        return follow_up

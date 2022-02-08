@@ -10,7 +10,8 @@ export const url = {
 };
 
 export const momentDateFormat = "Do MMM YYYY";
-export const momentDateTimeFormat = "HH:mm Do MMM YYYY";
+export const momentDateTimeFormat = "hh:mm Do MMM YYYY";
+export const momentDateTimeFormat1 = "hh:mm A Do MMM YYYY";
 
 export const demo = false;
 

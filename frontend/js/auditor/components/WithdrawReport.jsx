@@ -4,7 +4,7 @@ import { hashHistory } from "react-router";
 import * as ReactRedux from "react-redux";
 
 import Modal from "../../components/Modal.jsx";
-
+import Loading from "../../components/Loading.jsx";
 import FormInput from "../../components/FormInput.jsx";
 
 import { affectInputEventToComponent } from "../../react_utils.js";
@@ -30,10 +30,11 @@ class WithdrawReport extends React.Component{
 	}
 
 	componentDidMount() {
-		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId));
-		if(this.props.auditStore.status === "FAILED" || this.props.auditStore.status === "SUBMITTED" || this.props.auditStore.status === "PM_REVIEW" || this.props.auditStore.status === "WITHDRAWN" || this.props.auditStore.status === "AUDITOR_WITHDRAWN" || this.props.auditStore.status === "COMPLETED" || this.props.auditStore.status === "ACCEPTED" || this.props.auditStore.status === "REJECTED"){
-			hashHistory.push("audit_store");
-		}
+		this.props.dispatch(fetchAuditStore(this.props.params.auditStoreId)).then((auditStore)=>{
+			if(auditStore.status === "FAILED" || auditStore.status === "SUBMITTED" || auditStore.status === "PM_REVIEW" || auditStore.status === "WITHDRAWN" || auditStore.status === "AUDITOR_WITHDRAWN" || auditStore.status === "COMPLETED" || auditStore.status === "ACCEPTED" || auditStore.status === "REJECTED"){
+				hashHistory.push("audit_store");
+			}
+		});
 	}
 
 	fieldChanged = (e) => {
@@ -52,6 +53,9 @@ class WithdrawReport extends React.Component{
 	};
 
 	render(){
+		if(this.props.auditStore == null){
+			return <Loading />;
+		}
 		return (
 			<Modal modalTitle="Withdraw the Audit?" onClose={this.closeModal}>
 				<form onSubmit={this.onSubmit}>
@@ -70,7 +74,7 @@ class WithdrawReport extends React.Component{
 
 const mapStoreToProps = (store, ownProps) => {
 	return {
-		auditStore: store.auditStores[ownProps.params.auditStoreId],
+		auditStore: store.auditStores[ownProps.params.auditStoreId] || null,
 	};
 };
 export default ReactRedux.connect( mapStoreToProps)(WithdrawReport);

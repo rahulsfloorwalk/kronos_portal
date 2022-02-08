@@ -373,9 +373,13 @@ $progress_bar_bg_lighten_pct : 5%;
 	text-align: center;
 	background: #d9534f;
 	border-radius: 0.2rem;
-  }
+}
    
-  .checkbox-bg-danger:checked:after {
+.checkbox-bg-danger:checked:after {
 	content: '✔';
 	color: white;
-  }
+}
+
+.rdt{
+	position: inherit !important;
+}
