@@ -429,3 +429,66 @@ def get_qa_wise_report(month, year, qa):
                 }
                 response.append(data)
     return response
+
+
+def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str, followup_date: str):
+
+    audit_stores = AuditStore.objects.select_related('audit__audit_cycle__client', 'audit__audit_cycle', 'audit__store', 'user').prefetch_related('user__profileinfo').filter(audit__audit_cycle__status = AuditCycle.ACTIVE).order_by('audit__store__name')
+
+    if client:
+        audit_stores = audit_stores.filter(audit__audit_cycle__client = client)
+    if cycle:
+        audit_stores = audit_stores.filter(audit__audit_cycle = cycle)
+    if store:
+        audit_stores = audit_stores.filter(audit = store)
+    if audit_status:
+        audit_stores = audit_stores.filter(status = audit_status)
+    if followup_date:
+        audit_stores = audit_stores.filter(follow_up__next_follow_up_date__date = followup_date)
+
+    result = []
+    for store in audit_stores:
+        try:
+            full_name = store.user.profileinfo.first_name +' '+ store.user.profileinfo.last_name
+        except Exception as e:
+            full_name = ""
+        follow_up = store.follow_up.first()
+        if follow_up:
+            follow_up_dict = {
+                'id': follow_up.id,
+                'comment': follow_up.comment,
+                'user': follow_up.user_actor.email,
+                'next_follow_up_date': follow_up.next_follow_up_date
+            }
+        else:
+            follow_up_dict = {
+                'id': '',
+                'comment': '',
+                'user': '',
+                'next_follow_up_date': ''
+            }
+        result.append({
+            'client':{
+                'id': store.audit.audit_cycle.client.id,
+                'name': store.audit.audit_cycle.client.name
+            },
+            'audit_cycle':{
+                'id': store.audit.audit_cycle.id,
+                'name': store.audit.audit_cycle.name,
+            },
+            'store':{
+                'id': store.audit.store.id,
+                'name': store.audit.store.name
+            },
+            'auditStore':{
+                'id': store.id,
+                'audit_date': store.audit_date,
+                'status': store.status
+            },
+            'user':{
+                'id': store.user.id,
+                'name': full_name
+            },
+            'follow_up': follow_up_dict
+        })
+    return result

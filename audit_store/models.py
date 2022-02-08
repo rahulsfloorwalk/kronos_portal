@@ -626,3 +626,20 @@ class ReportActionPlan(Model):
     def store_details(self):
         store = self.audit_store.audit.store
         return store.name + ", " + store.city.name
+
+
+class ReportFollowUpLog(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT, related_name='follow_up')
+    comment = CharField(db_column='comment', max_length=4096)
+    next_follow_up_date = DateTimeField(db_column='next_follow_up_date', null=True)
+    created_at = DateTimeField(db_column="created_at")
+    modified_at = DateTimeField(db_column="modified_at")
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(ReportFollowUpLog, self).save(*args, **kwargs)

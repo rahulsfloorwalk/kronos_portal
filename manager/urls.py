@@ -87,6 +87,7 @@ urlpatterns = ([
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/moderator$', audit_store_views.AuditStoreModeratorAssign.as_view(), name='audit_store_moderator_assign_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/report_summary$', audit_store_views.AuditStoreIdReportSummaryView.as_view(), name='audit_store_id_report_summary_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/check_points$', audit_store_views.AuditStoreIdCheckPoints.as_view(), name='audit_store_id_check_points'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/follow_up$', audit_store_views.AuditStoreIdFollowUp.as_view(), name='audit_store_id_follow_up'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)$', audit_store_views.AuditStoreIdView.as_view(), name='audit_store_id_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/moderator_summary$', moderator_views.ModeratorSummaryByAuditCycle.as_view(), name='moderator_summary_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/moderator$', moderator_views.ModeratorByAuditCycle.as_view(), name='moderator_by_audit_cycle'),
@@ -222,6 +223,7 @@ urlpatterns = ([
     url(r'reports/manager_wise_profitability/', report_views.ManagerWiseProfitabilityView.as_view(), name="manager_wise_profitability_report"),
     url(r'reports/client_wise_profitability/', report_views.ClientWiseProfitabilityView.as_view(), name="client_wise_profitability_report"),
     url(r'reports/qa_report/', report_views.QAWiseReport.as_view(), name="qa_report"),
+    url(r'reports/follow_up_report/', report_views.FollowUpReport.as_view(), name="follow_up_report"),
 
     url(r'analytics/project_analytic_cycle_wise$', auditor_views.ProjectAnalyticCycleWiseView.as_view(), name='project_analytic_cycle_wise'),
     url(r'analytics/project_analytic_month_wise$', auditor_views.ProjectAnalyticMonthWiseView.as_view(), name='project_analytic_month_wise'),

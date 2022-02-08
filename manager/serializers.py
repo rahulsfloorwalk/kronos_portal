@@ -3,7 +3,7 @@ from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 
 from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore, ReportFollowUpLog
 from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store
 from payment.models import Payment
@@ -359,4 +359,12 @@ class AuditStoreSerializerWithUser(ModelSerializer):
     class Meta:
         model = AuditStore
         fields = ['user']
+        read_only_fields = fields
+
+
+class AuditStoreFollowUpSerializer(ModelSerializer):
+    user_actor = UserSerializerWithUserDetails()
+    class Meta:
+        model = ReportFollowUpLog
+        fields = ['id', 'audit_store', 'user_actor', 'comment', 'next_follow_up_date']
         read_only_fields = fields

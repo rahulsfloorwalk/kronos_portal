@@ -12,3 +12,8 @@ export function copyAuditsFromTo(fromAuditCycleId, toAuditCycleId){
 	});
 }
 
+
+export function fetchAudits(auditCycleId){
+	return $.get( url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit` );
+	//TODO: Handle error
+}

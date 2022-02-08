@@ -5,7 +5,7 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from kronos.exceptions import AppLogicError
 
-from manager.service.reports import get_auditor_payment_report, get_billing_report, get_profitability_report, get_project_cost_report, get_monthly_pnl_report, get_manager_wise_profitability_report, get_client_wise_profitability_report, get_qa_wise_report
+from manager.service.reports import get_auditor_payment_report, get_billing_report, get_profitability_report, get_project_cost_report, get_monthly_pnl_report, get_manager_wise_profitability_report, get_client_wise_profitability_report, get_qa_wise_report, get_follow_up_report
 
 class AuditPaymentReportView(APIView):
     permission_classes = [HasGroupPermission]
@@ -100,3 +100,13 @@ class QAWiseReport(APIView):
             raise AppLogicError('Permission denied')
         qa_report = get_qa_wise_report(request.GET.get('month'), request.GET.get('year'), request.GET.get('qa'))
         return Response(qa_report)
+
+
+class FollowUpReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        report = get_follow_up_report(request.GET.get('client'), request.GET.get('cycle'), request.GET.get('store'), request.GET.get('audit_status'), request.GET.get('followup_date'))
+        return Response(report)
