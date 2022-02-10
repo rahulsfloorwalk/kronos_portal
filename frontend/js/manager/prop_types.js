@@ -97,3 +97,28 @@ export const attachmentPropType = PropTypes.shape({
 		preview_url: PropTypes.string,
 	}),
 });
+
+export const auditApplicationPropType = PropTypes.shape({
+	audit: PropTypes.number,
+	audit_date: PropTypes.string,
+	avg_qa_rating: PropTypes.number,
+	distance: PropTypes.string,
+	id: PropTypes.number,
+	status: PropTypes.string,
+	report_exists: PropTypes.bool,
+	report_exists_data: PropTypes.shape({
+		audit_cycle_id: PropTypes.number,
+		audit_cycle_name: PropTypes.string,
+		audit_date: PropTypes.string
+	}),
+	profileinfo: PropTypes.shape({
+		id: PropTypes.number,
+		first_name: PropTypes.string,
+		last_name: PropTypes.string,
+		auditor_rating: PropTypes.string,
+		mobile_number: PropTypes.string,
+		pincode: PropTypes.string,
+		city: PropTypes.number,
+		user_id: PropTypes.number
+	}),
+});

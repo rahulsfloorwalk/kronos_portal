@@ -94,6 +94,9 @@ def get_audit_cycle_dashboard():
 
     return response
 
+def find_audit_cycles_with_dashboard_status_by_client(client_id):
+    return AuditCycle.objects.filter(client_id=client_id, status__in = AuditCycle.MANAGER_DASHBOARD_STATUSES).order_by('-end_date')
+
 def find_for_moderator(user_id):
     try:
         user = find_moderator_by_user_id(user_id)

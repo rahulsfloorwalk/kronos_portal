@@ -183,6 +183,14 @@ class AuditCycleDashboard(APIView):
     def get(self, request, format=None):
         return Response(audit_cycle_service.get_audit_cycle_dashboard())
 
+class AuditCycleDashboardStatusViewByClient(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, client_id, format=None):
+        audit_cycles = audit_cycle_service.find_audit_cycles_with_dashboard_status_by_client(client_id)
+        return Response(AuditCycleSerializer(audit_cycles, many=True).data)
 
 class AuditCycleRejectAllApplicationsView(APIView):
     permission_classes = [HasGroupPermission]

@@ -260,6 +260,13 @@ def find_application_by_id(application_id):
     except AuditApplication.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def set_application_comment(application_id: int, comment: str):
+    if not comment:
+        raise AppLogicError('Please enter a comment')
+    application = find_application_by_id(application_id)
+    application.comment = comment
+    application.save()
+    return application
 
 @atomic
 def reject_all_applications_for_audit(audit_id, user_actor):

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router";
 import PropTypes from "prop-types";
 import moment from "moment";
 
@@ -14,9 +15,9 @@ import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 
 import { setFollowUpByAuditStore } from "../../service/audit_store.js";
-import { fetchAuditCyclesByClient } from "../../service/audit_cycle.js";
+import { fetchDashboardAuditCyclesByClient } from "../../service/audit_cycle.js";
 import { getFollowUpReport } from "../../service/reports.js";
-import { fetchClients } from "../../service/client.js";
+import { fetchClientsWithDashboardCycleStatus } from "../../service/client.js";
 import { fetchAudits } from "../../service/audit.js";
 
 export class TrainingReportRow extends Component{
@@ -33,6 +34,7 @@ export class TrainingReportRow extends Component{
 		auditor: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
+			mobile_number: PropTypes.string.isRequired,
 		}),
 		follow_up: PropTypes.shape({
 			comment: PropTypes.string,
@@ -84,9 +86,9 @@ export class TrainingReportRow extends Component{
 		let {store, auditStore, auditor} = this.props;
 		return(
 			<tr key={auditStore.id}>
-				<td className="text-center">{store.name}</td>
+				<td className="text-center"><Link to={`/audit_store/${auditStore.id}/report`} target="_blank">{store.name}</Link></td>
 				<td className="text-center"><AuditStoreStatusLabel status={auditStore.status}/></td>
-				<td className="text-center">{auditor.name}</td>
+				<td className="text-center"><Link to={`/auditor/${auditor.id}/details`} target="_blank">{auditor.name}<br/>{auditor.mobile_number}</Link></td>
 				<td className="text-center">{moment(auditStore.audit_date).format(momentDateFormat)}</td>
 				<td className="text-center">{this.state.manager}</td>
 				<td>
@@ -127,7 +129,7 @@ export default class TrainingReport extends Component{
 	}
 
 	componentDidMount(){
-		fetchClients().done((clients)=>this.setState({clients}));
+		fetchClientsWithDashboardCycleStatus().done((clients)=>this.setState({clients}));
 	}
 
 	reload_data = (client, cycle, store, audit_status, followup_date) => {
@@ -149,7 +151,7 @@ export default class TrainingReport extends Component{
 	client_changed = (e) => {
 		this.inputChanged(e);
 		if(e.target.value != ""){
-			fetchAuditCyclesByClient(e.target.value).then((audit_cycles)=>this.setState({audit_cycles}));
+			fetchDashboardAuditCyclesByClient(e.target.value).then((audit_cycles)=>this.setState({audit_cycles}));
 		}
 	};
 
@@ -283,7 +285,7 @@ export default class TrainingReport extends Component{
 										<th className="text-center">Audit Date</th>
 										<th className="text-center">Edited by</th>
 										<th className="text-center">Comment</th>
-										<th className="text-center">Next Follow-up time</th>
+										<th className="text-center">Follow-up</th>
 										<th className="text-center">Action</th>
 									</tr>
 								</thead>

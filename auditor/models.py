@@ -421,6 +421,7 @@ class AuditApplication(Model):
     profileinfo = ForeignKey(ProfileInfo, db_column='profileinfo_id', related_name='applications', on_delete=PROTECT)
     report_exists = BooleanField(db_column='report_exists', default=False)
     report_exists_data = JSONField(db_column='report_exists_data', default=dict)
+    comment = CharField(db_column='comment', max_length=1000, blank=True, null=True)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)

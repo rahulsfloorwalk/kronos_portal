@@ -44,9 +44,11 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)/questionnaire_type$', questionnaire_type_views.QuestionnaireTypeByClientView.as_view(), name='questionnaire_type_by_client_view'),
     url(r'client/(?P<client_id>[0-9]+)/client_user$', client_user_views.ClientUserByClientView.as_view(), name='client_user_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/audit_cycle$', audit_cycle_views.AuditCycleViewByClient.as_view(), name='audit_cycle_view_by_client'),
+    url(r'client/(?P<client_id>[0-9]+)/audit_cycle_dashboard$', audit_cycle_views.AuditCycleDashboardStatusViewByClient.as_view(), name='audit_cycle_with_dashboard_status_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)/store$', store_views.StoreViewByClient.as_view(), name='store_view_by_client'),
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),
     url(r'client/(?P<client_id>[0-9]+)/audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', audit_store_views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
+    url(r'client/dashboard_cycle_status$', client_views.ClientViewByDashboardCyleStatus.as_view(), name='client_view_by_dashboard_cycle_status'),
     url(r'client$', client_views.ClientView.as_view(), name='client_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/client_user$', audit_store_views.AuditStoreIdClientUserView.as_view(), name='audit_store_id_client_user_view'),
@@ -120,6 +122,7 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)/client_user$', client_user_views.ClientUserByStoreIdView.as_view(), name='client_user_by_store_id_view'),
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
 
+    url(r'application/(?P<application_id>[0-9]+)/comment$', application_views.AuditApplicationCommentView.as_view(), name='audit_application_comment_view'),
     url(r'application/(?P<application_id>[0-9]+)/approve$', application_views.AuditApplicationApproveView.as_view(), name='audit_application_approve_view'),
     url(r'application/(?P<application_id>[0-9]+)/waitlist$', application_views.AuditApplicationWaitListView.as_view(), name='audit_application_waitlist_view'),
     url(r'application/(?P<application_id>[0-9]+)/reject$', application_views.AuditApplicationRejectView.as_view(), name='audit_application_reject_view'),

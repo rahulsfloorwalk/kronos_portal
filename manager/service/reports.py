@@ -1,5 +1,6 @@
 from calendar import monthrange
 from django.contrib.auth.models import Group
+from auditor.models import ProfileInfo
 from registration.models import GROUP_NAME_MANAGER
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
@@ -433,7 +434,7 @@ def get_qa_wise_report(month, year, qa):
 
 def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str, followup_date: str):
 
-    audit_stores = AuditStore.objects.select_related('audit__audit_cycle__client', 'audit__audit_cycle', 'audit__store', 'user').prefetch_related('user__profileinfo').filter(audit__audit_cycle__status = AuditCycle.ACTIVE).order_by('audit__store__name')
+    audit_stores = AuditStore.objects.select_related('audit__audit_cycle__client', 'audit__audit_cycle', 'audit__store', 'user').prefetch_related('user__profileinfo').order_by('audit__store__name')
 
     if client:
         audit_stores = audit_stores.filter(audit__audit_cycle__client = client)
@@ -449,9 +450,17 @@ def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str,
     result = []
     for store in audit_stores:
         try:
-            full_name = store.user.profileinfo.first_name +' '+ store.user.profileinfo.last_name
-        except Exception as e:
-            full_name = ""
+            profile_info = store.user.profileinfo
+        except ProfileInfo.DoesNotExist as e:
+            profile_info = None
+
+        if profile_info:
+            full_name = '{} {}'.format(profile_info.first_name, profile_info.last_name)
+            mobile_number = profile_info.mobile_number
+        else:
+            full_name = ''
+            mobile_number = ''
+
         follow_up = store.follow_up.first()
         if follow_up:
             follow_up_dict = {
@@ -487,7 +496,8 @@ def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str,
             },
             'user':{
                 'id': store.user.id,
-                'name': full_name
+                'name': full_name,
+                'mobile_number': mobile_number
             },
             'follow_up': follow_up_dict
         })

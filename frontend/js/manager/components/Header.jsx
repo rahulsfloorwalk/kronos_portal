@@ -7,7 +7,7 @@ import { pointerStyle } from "../../styles.js";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Heartbeat from "../../components/Heartbeat.jsx";
 import NavLink from "../../components/NavLink.jsx";
-import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook, File } from "../../components/Icons.jsx";
+import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook, File, Pencil } from "../../components/Icons.jsx";
 
 import floorwalkHeaderLogoUrl from "../../../img/logo_500x268.png";
 
@@ -43,7 +43,7 @@ export default class Header extends Component{
 						<NavLink to="/manager"><Queen/> <span className="hidden-xs">Managers</span></NavLink>
 						{this.props.reportTab ? <NavLink to="/reports/profitablity"><Stats/> <span className="hidden-xs">Reports</span></NavLink> : null}
 						<NavLink to="/analytics/project_cycle_wise"><Queen/> <span className="hidden-xs">Auditor Analytics</span></NavLink>
-						<NavLink to="/training"><Stats/> <span className="hidden-xs">Training</span></NavLink>
+						<NavLink to="/training"><Pencil/> <span className="hidden-xs">Auditor Notes</span></NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>
