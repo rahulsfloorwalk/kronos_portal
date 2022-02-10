@@ -72,3 +72,13 @@ class AuditApplicationWaitListView(APIView):
     def post(self, request, application_id, format=None):
         application = application_service.waitlist(application_id, request.user)
         return Response(AuditApplicationSerializer(application).data)
+
+
+class AuditApplicationCommentView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def post(self, request, application_id, format=None):
+        application = application_service.set_application_comment(application_id, request.data.get('comment'))
+        return Response(AuditApplicationSerializer(application).data)

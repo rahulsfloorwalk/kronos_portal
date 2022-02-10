@@ -155,13 +155,13 @@ exports[`<Header/> is rendered correctly 1`] = `
           style={Object {}}
         >
           <span
-            className="glyphicon glyphicon-stats"
+            className="glyphicon glyphicon-pencil"
           />
            
           <span
             className="hidden-xs"
           >
-            Training
+            Auditor Notes
           </span>
         </a>
       </li>

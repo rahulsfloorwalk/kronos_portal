@@ -1,6 +1,7 @@
 from kronos.exceptions import ObjectNotFound
 
 from ..models import Client
+from audit.models.audit_cycle import AuditCycle
 
 def find_client_by_id(client_id):
     try:
@@ -23,3 +24,6 @@ def update_receive_email_notification(client_id, receive_email_notification):
     client.receive_email_notification = receive_email_notification
     client.save()
     return client
+
+def find_client_by_dashboard_cycle_status():
+    return Client.objects.filter(audits__status__in = AuditCycle.MANAGER_DASHBOARD_STATUSES).distinct('id').order_by('id')

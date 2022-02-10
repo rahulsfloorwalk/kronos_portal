@@ -48,3 +48,14 @@ export function waitListApplication(application_id){
 		contentType: "application/json"
 	});
 }
+
+export function setAuditApplicationComment(application_id, comment){
+	return $.ajax({
+		url: url.api_base_path + `manager/application/${application_id}/comment`,
+		method: "POST",
+		data: JSON.stringify({
+			comment
+		}),
+		contentType: "application/json"
+	});
+}

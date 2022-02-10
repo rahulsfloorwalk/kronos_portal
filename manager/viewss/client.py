@@ -40,3 +40,13 @@ class ClientIdView(APIView):
         client = client_s.deserialize()
         savedClient = client_service.save(client)
         return Response(ClientSerializer(savedClient).data)
+
+
+class ClientViewByDashboardCyleStatus(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        clients = client_service.find_client_by_dashboard_cycle_status()
+        return Response(ClientSerializer(clients, many=True).data)

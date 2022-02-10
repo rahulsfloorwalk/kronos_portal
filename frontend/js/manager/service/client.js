@@ -26,3 +26,7 @@ export function addClient(client){
 		contentType: "application/json"
 	});
 }
+
+export function fetchClientsWithDashboardCycleStatus(){
+	return $.get( url.api_base_path + "manager/client/dashboard_cycle_status");
+}

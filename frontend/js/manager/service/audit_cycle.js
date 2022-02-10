@@ -31,3 +31,7 @@ export function filterAuditCycleByManager(managerId, month, year){
 		contentType: "application/json"
 	});
 }
+
+export function fetchDashboardAuditCyclesByClient(clientId){
+	return $.get( url.api_base_path + `manager/client/${clientId}/audit_cycle_dashboard`);
+}
