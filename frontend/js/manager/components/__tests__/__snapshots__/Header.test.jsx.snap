@@ -136,6 +136,25 @@ exports[`<Header/> is rendered correctly 1`] = `
           style={Object {}}
         >
           <span
+            className="glyphicon glyphicon-education"
+          />
+           
+          <span
+            className="hidden-xs"
+          >
+            Trainers
+          </span>
+        </a>
+      </li>
+      <li
+        className=""
+        role="presentation"
+      >
+        <a
+          onClick={[Function]}
+          style={Object {}}
+        >
+          <span
             className="glyphicon glyphicon-queen"
           />
            
@@ -171,25 +190,6 @@ exports[`<Header/> is rendered correctly 1`] = `
     >
       <li>
         <a />
-      </li>
-      <li
-        className=""
-        role="presentation"
-      >
-        <a
-          onClick={[Function]}
-          style={Object {}}
-        >
-          <span
-            className="glyphicon glyphicon-map-marker"
-          />
-           
-          <span
-            className="hidden-xs"
-          >
-            Cities
-          </span>
-        </a>
       </li>
       <li
         className=""

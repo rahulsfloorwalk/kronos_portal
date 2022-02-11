@@ -91,6 +91,28 @@ class ClientManager(Model):
         ordering = ['id']
 
 
+class ClientTrainer(Model):
+
+    id = AutoField(db_column='id', primary_key=True)
+    client = ForeignKey(Client, related_name='trainers', db_column='client_id', blank=False, on_delete=PROTECT)
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    receive_email_notification = BooleanField(db_column='receive_email_notification', default=True)
+    is_active = BooleanField(db_column='is_active', default=True)
+
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(ClientTrainer, self).save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['id']
+
+
 class Store(Model):
 
     id = AutoField(db_column = 'id', primary_key=True)

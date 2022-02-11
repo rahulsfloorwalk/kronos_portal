@@ -93,6 +93,12 @@ import AuditCycleModeratorAssignForm from "./AuditCycleModeratorAssignForm.jsx";
 import ManagerForm from "./manager/ManagerForm.jsx";
 import ManagerList from "./manager/ManagerList.jsx";
 
+import TrainerForm from "./trainer/TrainerForm.jsx";
+import TrainerList from "./trainer/TrainerList.jsx";
+
+import ClientTrainerList from "./client_trainer/ClientTrainerList.jsx";
+import ClientTrainerForm from "./client_trainer/ClientTrainerForm.jsx";
+
 import ProofTagList from "./proof_tag/ProofTagList.jsx";
 import ProofTagForm from "./proof_tag/ProofTagForm.jsx";
 
@@ -141,6 +147,10 @@ const Routes = () => (
 					<Route path="add" component={ClientManagerForm}/>
 					<Route path=":clientManagerId/edit" component={ClientManagerForm}/>
 					<Route path=":clientUserId/delete" component={ClientManagerDelete}/>
+				</Route>
+				<Route path="client_trainer" component={ClientTrainerList}>
+					<Route path="add" component={ClientTrainerForm}/>
+					<Route path=":clientTrainerId/edit" component={ClientTrainerForm}/>
 				</Route>
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm}/>
@@ -231,6 +241,10 @@ const Routes = () => (
 			<Route path="manager" component={ManagerList}>
 				<Route path="add" component={ManagerForm}/>
 				<Route path=":userId/edit" component={ManagerForm}/>
+			</Route>
+			<Route path="trainer" component={TrainerList}>
+				<Route path="add" component={TrainerForm}/>
+				<Route path=":userId/edit" component={TrainerForm}/>
 			</Route>
 			<Route path="reports" component={ReportList}>
 				<Route path="profitablity" component={ProfitablityReport}></Route>
