@@ -12,12 +12,14 @@ from .viewss import question as question_views
 from .viewss import answer as answer_views
 from .viewss import client_user as client_user_views
 from .viewss import client_manager as client_manager_views
+from .viewss import client_trainer as client_trainer_views
 from .viewss import report_section as report_section_views
 from .viewss import attachment as attachment_views
 from .viewss import notifications as notification_views
 from .viewss import report_stats as report_stats_views
 from .viewss import moderator as moderator_views
 from .viewss import manager as manager_views
+from .viewss import trainer as trainer_views
 from .viewss import proof_tag as proof_tag_views
 from .viewss import email_log as email_log_views
 from .viewss import opportunity_email as opportunity_email_views
@@ -191,6 +193,10 @@ urlpatterns = ([
     url(r'client_manager$', client_manager_views.ClientManagerView.as_view(), name='client_manager_view'),
     url(r'client_manager/(?P<client_manager_id>[0-9]+)$', client_manager_views.ClientManagerIdView.as_view(), name='client_manager_id_view'),
 
+    url(r'client/(?P<client_id>[0-9]+)/client_trainer$', client_trainer_views.ClientTrainerByClientView.as_view(), name='client_trainer_view_by_client'),
+    url(r'client_trainer$', client_trainer_views.ClientTrainerView.as_view(), name='client_trainer_view'),
+    url(r'client_trainer/(?P<client_trainer_id>[0-9]+)$', client_trainer_views.ClientTrainerIdView.as_view(), name='client_trainer_id_view'),
+
     url(r'attachment/(?P<attachment_id>[0-9]+)/complete$', attachment_views.AttachmentCompleteView.as_view(), name='attachment_id_complete_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/rename$', attachment_views.AttachmentIdRenameView.as_view(), name='attachment_id_rename_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/proof_tag', attachment_views.AttachmentIdProofTagView.as_view(), name='attachment_id_proof_tag_view'),
@@ -205,6 +211,9 @@ urlpatterns = ([
     url(r'moderator$', moderator_views.ModeratorView.as_view(), name='moderator_view'),
     url(r'manager/(?P<user_id>[0-9]+)$', manager_views.ManagerIdView.as_view(), name='manager_id_view'),
     url(r'manager$', manager_views.ManagerView.as_view(), name='manager_view'),
+
+    url(r'trainer/(?P<user_id>[0-9]+)$', trainer_views.TrainerIdView.as_view(), name='trainer_id_view'),
+    url(r'trainer$', trainer_views.TrainerView.as_view(), name='trainer_view'),
 
     url(r'proof_tag$', proof_tag_views.ProofTagView.as_view(), name='proof_tag_views'),
     url(r'proof_tag/(?P<proof_tag_id>[0-9]+)$', proof_tag_views.ProofTagIdView.as_view(), name='proof_tag_id_view'),

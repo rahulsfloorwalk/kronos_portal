@@ -7,7 +7,7 @@ import { pointerStyle } from "../../styles.js";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Heartbeat from "../../components/Heartbeat.jsx";
 import NavLink from "../../components/NavLink.jsx";
-import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook, File, Pencil } from "../../components/Icons.jsx";
+import { OptionVertical, NewWindow, MapMarker, King, LogOut, Knight, Queen, Pawn, Wrench, Stats, Rook, File, Pencil, Education } from "../../components/Icons.jsx";
 
 import floorwalkHeaderLogoUrl from "../../../img/logo_500x268.png";
 
@@ -41,6 +41,7 @@ export default class Header extends Component{
 						<NavLink to="/agency_user"><Rook/> <span className="hidden-xs">Agency</span></NavLink>
 						<NavLink to="/moderator/summary"><Knight/> <span className="hidden-xs">Moderators</span></NavLink>
 						<NavLink to="/manager"><Queen/> <span className="hidden-xs">Managers</span></NavLink>
+						<NavLink to="/trainer"><Education/> <span className="hidden-xs">Trainers</span></NavLink>
 						{this.props.reportTab ? <NavLink to="/reports/profitablity"><Stats/> <span className="hidden-xs">Reports</span></NavLink> : null}
 						<NavLink to="/analytics/project_cycle_wise"><Queen/> <span className="hidden-xs">Auditor Analytics</span></NavLink>
 						<NavLink to="/training"><Pencil/> <span className="hidden-xs">Auditor Notes</span></NavLink>
@@ -51,7 +52,6 @@ export default class Header extends Component{
 								<Heartbeat/>
 							</a>
 						</li>
-						<NavLink to="/country"><MapMarker/> <span className="hidden-xs">Cities</span></NavLink>
 						<NavLink to="/proof_tag"><File/> <span className="hidden-xs">Proofs Tag</span></NavLink>
 						<li>
 							<a style={pointerStyle}
@@ -72,6 +72,11 @@ export default class Header extends Component{
 								<li>
 									<a href="http://mbase.floorwalk.in:3000" target="_blank" rel="noopener noreferrer">
 										<Stats/> Metabase
+									</a>
+								</li>
+								<li>
+									<a href="/country" target="_blank" rel="noopener noreferrer">
+										<MapMarker/> Cities
 									</a>
 								</li>
 								<DropDownDivider/>

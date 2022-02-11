@@ -38,6 +38,15 @@ export class AuditApplicationRow extends Component{
 		});
 	};
 
+	waitListButtonClicked(application_id){
+		waitListApplication(application_id).then(() => {
+			this.componentDidMount();
+			Alert.success("APPLICATION WAIT LISTED");
+		}, () => {
+			Alert.warning("THERE WAS AN ERROR");
+		});
+	}
+
 	onBlur = () => {
 		if(this.state.comment != null && this.state.comment != ""){
 			setAuditApplicationComment(this.props.application.id, this.state.comment).then(()=>{
@@ -120,14 +129,6 @@ class AuditApplicationList extends Component{
 			this.setState({lastReloadAt: t});
 			this.reloadApplications(nextProps.auditId);
 		}
-	}
-	waitListButtonClicked(application_id){
-		waitListApplication(application_id).then(() => {
-			this.componentDidMount();
-			Alert.success("APPLICATION WAIT LISTED");
-		}, () => {
-			Alert.warning("THERE WAS AN ERROR");
-		});
 	}
 	render(){
 		if(this.props.loading){

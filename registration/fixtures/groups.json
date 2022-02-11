@@ -42,5 +42,14 @@
 			"name": "Agency",
 			"permissions": []
 		}
+	},
+	{
+		"model": "auth.group",
+		"pk": 6,
+		"fields":
+		{
+			"name": "Trainer",
+			"permissions": []
+		}
 	}
 ]
