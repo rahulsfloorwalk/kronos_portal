@@ -34,7 +34,23 @@ class StoreSelector extends React.Component {
 				"code": this.props.stores[s].code
 			});
 		}
-		optionss.sort((a,b) => (a.city > b.city) ? 1 : ((b.city > a.city) ? -1 : 0));
+
+		let sortBy = [{
+			prop:"city",
+			direction: 1
+		},{
+			prop:"store",
+			direction: 1
+		}];
+
+		optionss.sort(function(a,b){
+			let i = 0, result = 0;
+			while(i < sortBy.length && result === 0) {
+				result = sortBy[i].direction*(a[ sortBy[i].prop ].toString() < b[ sortBy[i].prop ].toString() ? -1 : (a[ sortBy[i].prop ].toString() > b[ sortBy[i].prop ].toString() ? 1 : 0));
+				i++;
+			}
+			return result;
+		});
 
 		for(let option of optionss){
 			storeOptions.push({

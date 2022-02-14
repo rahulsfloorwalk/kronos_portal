@@ -55,14 +55,14 @@ class AuditStoreModeratorServiceTestCase(TestCase):
         self.create_reports()
         reports = service_moderator.find_qa_pending_audit_stores_for_moderator(self.moderator_user.id,
                                                                                self.lastAuditStoreId,
-                                                                               self.filterStatus)
+                                                                               self.filterStatus, client_id='')
         self.assertEqual(reports[0].count(), 2)
 
     def test_find_qa_completed_audit_stores_for_moderator(self):
         self.create_reports()
         reports = service_moderator.find_qa_completed_audit_stores_for_moderator(self.moderator_user.id,
                                                                                  self.lastAuditStoreId,
-                                                                                 self.filterStatus)
+                                                                                 self.filterStatus, client_id='')
         self.assertEqual(reports[0].count(), 2)
 
     def test_find_by_id_for_moderator_returns_audit_store(self):

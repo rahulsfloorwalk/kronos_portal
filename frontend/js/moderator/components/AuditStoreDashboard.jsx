@@ -16,6 +16,7 @@ import Loading from "../../components/Loading.jsx";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
 
+import { findActiveClients } from "../service/client.js";
 import { findPending, findCompleted } from "../service/audit_store.js";
 
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
@@ -122,8 +123,10 @@ export default class AuditStoreDashboard extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
+			clients: [],
 			qa_pending: [],
 			qa_done: [],
+			client: "",
 			totalAuditStoreCount: 0,
 			loading: false,
 			loadMoreLoader: false,
@@ -138,10 +141,11 @@ export default class AuditStoreDashboard extends Component {
 	componentDidMount(){
 		this.setLoading(true);
 		let lastAuditStoreDate = "";
+		findActiveClients().then((clients)=>this.setState({clients}));
 		if(this.props.location.query.type === "qa_done"){
-			findCompleted(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		} else {
-			findPending(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
 
@@ -150,9 +154,9 @@ export default class AuditStoreDashboard extends Component {
 			this.setLoading(true);
 			let lastAuditStoreDate = "";
 			if( nextProps.location.query.type === "qa_done"){
-				findCompleted(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			} else {
-				findPending(lastAuditStoreDate, this.state.filterStatus).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+				findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 			}
 		}
 	}
@@ -164,12 +168,34 @@ export default class AuditStoreDashboard extends Component {
 		this.setLoading(true);
 		let lastAuditStoreDate = "";
 		if(qa_type === "qa_done"){
-			findCompleted(lastAuditStoreDate, e.target.value).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findCompleted(lastAuditStoreDate, e.target.value, this.state.client).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 		else{
-			findPending(lastAuditStoreDate, e.target.value).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+			findPending(lastAuditStoreDate, e.target.value, this.state.client).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
 		}
 	}
+
+	clientChanged = (e, qa_type) =>{
+		let client_id = e.target.value;
+		if(client_id){
+			this.setState({
+				client: client_id
+			});
+		}
+		else{
+			this.setState({
+				client: ""
+			});
+		}
+		this.setLoading(true);
+		let lastAuditStoreDate = "";
+		if(qa_type === "qa_done"){
+			findCompleted(lastAuditStoreDate, this.state.filterStatus, e.target.value).then(auditStores => this.setState({qa_done: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+		}
+		else{
+			findPending(lastAuditStoreDate, this.state.filterStatus, e.target.value).then(auditStores => this.setState({qa_pending: auditStores["auditStores"], totalAuditStoreCount: auditStores["count"]})).always(() => this.setLoading(false));
+		}
+	};
 
 	loadMore(qa_type){
 		this.setState({
@@ -177,7 +203,7 @@ export default class AuditStoreDashboard extends Component {
 		});
 		if(qa_type === "qa_done"){
 			let lastAuditStoreDate = this.state.qa_done[this.state.qa_done.length-1].audit_date;
-			findCompleted(lastAuditStoreDate, this.state.filterStatus).then((auditStores) => {
+			findCompleted(lastAuditStoreDate, this.state.filterStatus, this.state.client).then((auditStores) => {
 				let newAuditStores = this.state.qa_done;
 				for(let reports of auditStores.auditStores){
 					let check_report = this.state.qa_done.filter(function(report){ return (report.id === reports.id); });
@@ -193,7 +219,7 @@ export default class AuditStoreDashboard extends Component {
 		}
 		else{
 			let lastAuditStoreDate = this.state.qa_pending[this.state.qa_pending.length-1].audit_date;
-			findPending(lastAuditStoreDate, this.state.filterStatus).then((auditStores) => {
+			findPending(lastAuditStoreDate, this.state.filterStatus, this.state.client).then((auditStores) => {
 				let newAuditStores = this.state.qa_pending;
 				for(let reports of auditStores.auditStores){
 					let check_report = this.state.qa_pending.filter(function(report){ return (report.id === reports.id); });
@@ -217,7 +243,10 @@ export default class AuditStoreDashboard extends Component {
 		if(this.state.loadMoreLoader){
 			loadMoreLoading = (<Loading/>);
 		}
+		const client_option_list = this.state.clients.map((value, index)=><option key={index} value={value.id}>{value.name}</option>);
+
 		let statusFilter;
+		let clientFilter;
 		if(this.props.location.query.type === "qa_done"){
 			let loadMoreButton;
 			if(this.state.qa_done.length !== this.state.totalAuditStoreCount){
@@ -233,14 +262,20 @@ export default class AuditStoreDashboard extends Component {
 					<option value="REJECTED">{getAuditStoreStatus("REJECTED")}</option>
 				</select>
 			);
+			clientFilter = (
+				<select className="form-control" style={{display:"inline-block", width:"200px"}} value={this.state.client} onChange={(e) => this.clientChanged(e, "qa_done")}>
+					<option value="">Select client</option>
+					{client_option_list}
+				</select>
+			);
 			return (
 				<div>
 					<div className="container">
 						<label>Status Filter : </label> &nbsp;
-						{statusFilter}
+						{statusFilter} &nbsp;
+						<label>Client Filter : </label> &nbsp;
+						{clientFilter}
 					</div>
-					{loadMoreButton}
-					{loadMoreLoading}
 					<AuditStoreTables auditStores={this.state.qa_done}/>
 					{loadMoreButton}
 					{loadMoreLoading}
@@ -259,14 +294,20 @@ export default class AuditStoreDashboard extends Component {
 					<option value="SUBMITTED">{getAuditStoreStatus("SUBMITTED")}</option>
 				</select>
 			);
+			clientFilter = (
+				<select className="form-control" style={{display:"inline-block", width:"200px"}} value={this.state.client} onChange={(e) => this.clientChanged(e, "qa_pending")}>
+					<option value="">Select client</option>
+					{client_option_list}
+				</select>
+			);
 			return (
 				<div>
 					<div className="container">
 						<label>Status Filter : </label> &nbsp;
-						{statusFilter}
+						{statusFilter} &nbsp;
+						<label>Client Filter : </label> &nbsp;
+						{clientFilter}
 					</div>
-					{loadMoreButton}
-					{loadMoreLoading}
 					<AuditStoreTables auditStores={this.state.qa_pending}/>
 					{loadMoreButton}
 					{loadMoreLoading}
