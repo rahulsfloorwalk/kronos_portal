@@ -5,6 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.serializers import Serializer, DateField, CharField, IntegerField, BooleanField, ChoiceField
+from client.service import client_service
 
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_MODERATOR
@@ -21,7 +22,7 @@ import answer.service.answer_moderator as answer_moderator_service
 from auditor.service import profile_info_service
 from attachment.service import set_attachment_by_proof_tag
 
-from .serializers import AuditCycleSerializer
+from .serializers import AuditCycleSerializer, ClientSerializer
 from .serializers import AuditStoreSerializer, AuditStoreSerializerForList
 from .serializers import AttachmentSerializer
 from .serializers import SectionSerializer
@@ -67,7 +68,7 @@ class AuditStoreCompletedView(APIView):
     def post(self, request):
         audit_stores, count = audit_store_service\
             .find_qa_completed_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
-                                                          request.data['filterStatus'])
+                                                          request.data['filterStatus'], request.data.get('client_id'))
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
 
@@ -79,7 +80,7 @@ class AuditStorePendingView(APIView):
     def post(self, request):
         audit_stores, count = audit_store_service\
             .find_qa_pending_audit_stores_for_moderator(request.user.id, request.data['lastAuditStoreDate'],
-                                                        request.data['filterStatus'])
+                                                        request.data['filterStatus'], request.data.get('client_id'))
         return Response({"auditStores": AuditStoreSerializerForList(audit_stores, many=True).data, "count": count})
 
 
@@ -555,6 +556,14 @@ class AnswerCommentView(APIView):
                 e.args[0]: "{} is required".format(e.args[0])
             })
 
+class ClientView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MODERATOR]
+    }
+    def get(self, request):
+        client = client_service.find_client_by_active_cycle_status()
+        return Response(ClientSerializer(client, many=True).data)
 
 class ConfigView(APIView):
     permission_classes = [HasGroupPermission]

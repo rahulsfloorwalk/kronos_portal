@@ -27,3 +27,6 @@ def update_receive_email_notification(client_id, receive_email_notification):
 
 def find_client_by_dashboard_cycle_status():
     return Client.objects.filter(audits__status__in = AuditCycle.MANAGER_DASHBOARD_STATUSES).distinct('id').order_by('id')
+
+def find_client_by_active_cycle_status():
+    return Client.objects.filter(audits__status = AuditCycle.ACTIVE).distinct('id').order_by('id')

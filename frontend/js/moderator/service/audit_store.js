@@ -1,27 +1,29 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 
-export function findPending(lastAuditStoreDate, filterStatus){
+export function findPending(lastAuditStoreDate, filterStatus, client){
 	// return $.get(url.api_base_path + "moderator/audit_store/pending");
 	return $.ajax({
 		url: url.api_base_path + "moderator/audit_store/pending",
 		method: "POST",
 		data: JSON.stringify({
 			lastAuditStoreDate: lastAuditStoreDate,
-			filterStatus: filterStatus
+			filterStatus: filterStatus,
+			client_id: client
 		}),
 		contentType: "application/json"
 	});
 }
 
-export function findCompleted(lastAuditStoreDate, filterStatus){
+export function findCompleted(lastAuditStoreDate, filterStatus, client){
 	// return $.get(url.api_base_path + "moderator/audit_store/completed");
 	return $.ajax({
 		url: url.api_base_path + "moderator/audit_store/completed",
 		method: "POST",
 		data: JSON.stringify({
 			lastAuditStoreDate: lastAuditStoreDate,
-			filterStatus: filterStatus
+			filterStatus: filterStatus,
+			client_id: client
 		}),
 		contentType: "application/json"
 	});

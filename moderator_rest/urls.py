@@ -10,6 +10,7 @@ from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorComment
 from .views import AttachmentProofTagList, AttachmentIdProofTagView
 from .views import AttachmentIdRotateView
 from .views import AuditStoreIdArrangeAttachment
+from .views import ClientView
 from .views import ConfigView
 from .views import AuditorRatingView
 
@@ -62,6 +63,7 @@ urlpatterns = ([
     url(r'audit_cycle$', AuditCycleView.as_view(), name='audit_cycle_view'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/attachment_proof_tag_list$', AttachmentProofTagList.as_view(), name='attachment_proof_tag_list'),
+    url(r'client$', ClientView.as_view(), name='client_view'),
 
     url(r'config$', ConfigView.as_view(), name='config_view'),
 ], 'moderator')
