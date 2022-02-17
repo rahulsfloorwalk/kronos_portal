@@ -5,6 +5,7 @@ from rest_framework.serializers import ModelSerializer
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from manager.service import opportunity_email as opportunity_email_service
 from manager.serializers import CitySerializer
 from notify.models import OpportunityEmailRecord
 from notify.service import mail_opportunity as mail_opportunity_service
@@ -35,6 +36,17 @@ class OpportunityEmailRecordView(APIView):
         return Response(OpportunityEmailRecordSerializer(opps, many=True).data)
 
     def post(self, request, audit_cycle_id):
-        opp = mail_opportunity_service.schedule_opportunity_emails_for_audit_cycle_and_city(audit_cycle_id, request.data.get('city_id', None))
+        opp = mail_opportunity_service.schedule_opportunity_emails_for_audit_cycle_with_filters(audit_cycle_id, request.data)
         return Response(OpportunityEmailRecordSerializer(opp).data)
 
+
+class AuditorCountByFilterView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+
+    def post(self, request):
+        print(request.data)
+        count = opportunity_email_service.get_auditor_count_by_filter(request.data)
+        return Response({'count': count})

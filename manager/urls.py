@@ -164,6 +164,7 @@ urlpatterns = ([
     url(r'auditor/(?P<auditor_id>[0-9]+)/referral$', auditor_views.ReferralView.as_view(), name='auditor_id_referral_view'),
     url(r'auditor$', auditor_views.AuditorView.as_view(), name='auditor_view'),
     url(r'auditor/summary$', auditor_views.AuditorSummaryView.as_view(), name='auditor_summary_view'),
+    url(r'auditor/filter_count$', opportunity_email_views.AuditorCountByFilterView.as_view(), name='auditor_count_filter_view'),
 
     url(r'agency_user/city_id/(?P<city_id>[0-9]+)$', agency_user_views.AgencyUserByPresenceInCityIdView.as_view(), name='agency_user_by_presence_in_city_id_view'),
     url(r'agency_user/(?P<user_id>[0-9]+)$', agency_user_views.AgencyUserIdView.as_view(), name='agency_user_id_view'),

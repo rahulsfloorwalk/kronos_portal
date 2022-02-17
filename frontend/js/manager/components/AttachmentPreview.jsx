@@ -1,5 +1,6 @@
 import React from "react";
 // import ReactDOM from 'react-dom';
+import $ from "jquery";
 import PropTypes from "prop-types";
 
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
@@ -79,6 +80,47 @@ class AttachmentRenderer extends React.Component {
 	}
 
 	render(){
+		$.fn.imgMagnifier = function() {
+			return this.each(function() {
+				var th = $(this);
+				var dataSize = 150;
+				th.hover(function() {
+					th.find(".magnifier-loupe").stop().fadeIn();
+				}, function() {
+					th.find(".magnifier-loupe").stop().fadeOut();
+				}).parent().find(".magnifier-loupe").css({
+					"width" : dataSize,
+					"height" : dataSize
+				}).find("img").css({
+					"position" : "absolute",
+					"width" : th.width()
+				});
+				th.mousemove(function(e) {
+					var elemPos = {}, offset = th.offset();
+
+					elemPos = {
+						left : e.pageX - offset.left - dataSize/2,
+						top : e.pageY - offset.top - dataSize/2
+					};
+
+					th.find(".magnifier-loupe").css({
+						"top" : elemPos["top"],
+						"left" : elemPos["left"]
+					}).find("img").css({
+						"top" : -elemPos["top"],
+						"left" : -elemPos["left"],
+						"width" : th.width()
+					});
+				});
+
+				$(window).resize(function() {
+					$(".img-magnifier").resize();
+				});
+			});
+		};
+
+		$(".img-magnifier").imgMagnifier();
+
 		let file_extension_arr = (this.props.attachment.file_slug).split(".");
 		let file_extension = file_extension_arr[file_extension_arr.length - 1];
 		switch(this.props.attachment.proof_type){
@@ -148,7 +190,12 @@ class AttachmentRenderer extends React.Component {
 			return (<div style={{"textAlign": "center"}}>
 				{loading}
 				{error}
-				<img src={this.props.attachment.extra.preview_url} style={imageStyle} onLoad={this.onLoad} onError={this.onError}/>
+				<div className="img-magnifier">
+					<img style={imageStyle} src={this.props.attachment.extra.preview_url} onLoad={this.onLoad} onError={this.onError}/>
+					<div className="magnifier-loupe">
+						<img src={this.props.attachment.extra.preview_url}/>
+					</div>
+				</div>
 			</div>
 			);
 		}
