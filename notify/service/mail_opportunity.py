@@ -12,7 +12,8 @@ from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from auditor.models import Preferences
-from auditor.service.profile_info_service import count_profileinfo_in_city, find_profileinfo_by_city
+from auditor.service.profile_info_service import count_profileinfo_in_city
+from manager.service.opportunity_email import get_auditor_count_by_filter, get_auditor_list_by_filter
 from registration.service.auditor import find_auditor_by_id
 from registration.context import registration_context
 from manager.models import City
@@ -48,6 +49,32 @@ def schedule_opportunity_emails_for_audit_cycle_and_city(audit_cycle_id, city_id
 
     return opp
 
+@atomic
+def schedule_opportunity_emails_for_audit_cycle_with_filters(audit_cycle_id: int, filters: dict):
+    try:
+        city = City.objects.get(pk=filters.get('city', ''))
+    except City.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+
+    if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
+        raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity email")
+
+    opp = OpportunityEmailRecord()
+    opp.city = city
+    opp.audit_cycle = audit_cycle
+    opp.total_count = get_auditor_count_by_filter(filters)
+    opp.record_data = {
+        'user_list': get_auditor_list_by_filter(filters)
+    }
+    opp.progress_count = 0
+    opp.save()
+
+    # start the task to send the emails
+    send_opportunity_emails_for_record.delay(opp.id)
+
+    return opp
 
 @shared_task(ignore_result=True)
 def send_opportunity_emails_for_record(opportunity_email_record_id):
@@ -58,11 +85,11 @@ def send_opportunity_emails_for_record(opportunity_email_record_id):
         return
 
     async_results = ResultSet([])
-    for profile in find_profileinfo_by_city(opp.city_id):
+    for user_id in opp.record_data['user_list']:
         if settings.EMAIL_SWITCH['OPPORTUNITY_EMAIL']:
-            async_results.add(opportunity_email_task.delay(opp.id, opp.audit_cycle_id, profile.user_id))
+            async_results.add(opportunity_email_task.delay(opp.id, opp.audit_cycle_id, user_id))
         else:
-            _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, profile.user_id)
+            _logger.info("opportunity email disabled. skipping opportunity email for audit_cycle(%s) and user(%s)", opp.audit_cycle_id, user_id)
 
     _logger.info("scheduled %s emails for audit cycle: %s", len(async_results), opp.audit_cycle_id)
 

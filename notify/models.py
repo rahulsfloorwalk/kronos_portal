@@ -1,3 +1,4 @@
+from django.contrib.postgres.fields import JSONField
 from django.utils import timezone
 from django.db.models import Model, AutoField, DateTimeField, ForeignKey, PositiveIntegerField
 from django.db.models import PROTECT
@@ -12,6 +13,7 @@ class OpportunityEmailRecord(Model):
     city = ForeignKey(City, db_column='city_id', on_delete=PROTECT)
     total_count = PositiveIntegerField(db_column='total_count', blank=False)
     progress_count = PositiveIntegerField(db_column='progress_count', blank=False, default=0)
+    record_data = JSONField(db_column='record_data', default=dict, blank=False)
 
     created_at = DateTimeField(db_column="created_at")
     modified_at = DateTimeField(db_column="modified_at")

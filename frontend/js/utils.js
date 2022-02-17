@@ -721,6 +721,6 @@ export function getInterestArea(value){
 	case undefined:
 		return "";
 	default:
-		return `unknown marital status ${value} - ${typeof value}`;
+		return `unknown interest area ${value} - ${typeof value}`;
 	}
 }
