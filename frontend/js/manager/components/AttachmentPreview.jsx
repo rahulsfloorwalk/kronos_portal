@@ -1,13 +1,12 @@
 import React from "react";
 // import ReactDOM from 'react-dom';
-import $ from "jquery";
 import PropTypes from "prop-types";
 
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";
 import Loading from "../../components/Loading.jsx";
 import InPlaceEditable from "../../components/InPlaceEditable.jsx";
 
-import { DownloadAlt,  Cross, Repeat } from "../../components/Icons.jsx";
+import { DownloadAlt,  Cross, Repeat, Plus, Minus } from "../../components/Icons.jsx";
 import { attachmentPropType } from "../prop_types";
 
 import Jumbotron from "../../components/Jumbotron.jsx";
@@ -79,47 +78,29 @@ class AttachmentRenderer extends React.Component {
 		}
 	}
 
+	zoomIn = () => {
+		var imgProof = this.zoomImg;
+		var currWidth = imgProof.clientWidth;
+		if (currWidth == 2500){
+			return false;
+		}
+		else {
+			imgProof.style.width = (currWidth + 100) + "px";
+		}
+	};
+
+	zoomOut = () => {
+		var imgProof = this.zoomImg;
+		var currWidth = imgProof.clientWidth;
+		if (currWidth == 100){
+			return false;
+		}
+		else {
+			imgProof.style.width = (currWidth - 100) + "px";
+		}
+	};
+
 	render(){
-		$.fn.imgMagnifier = function() {
-			return this.each(function() {
-				var th = $(this);
-				var dataSize = 150;
-				th.hover(function() {
-					th.find(".magnifier-loupe").stop().fadeIn();
-				}, function() {
-					th.find(".magnifier-loupe").stop().fadeOut();
-				}).parent().find(".magnifier-loupe").css({
-					"width" : dataSize,
-					"height" : dataSize
-				}).find("img").css({
-					"position" : "absolute",
-					"width" : th.width()
-				});
-				th.mousemove(function(e) {
-					var elemPos = {}, offset = th.offset();
-
-					elemPos = {
-						left : e.pageX - offset.left - dataSize/2,
-						top : e.pageY - offset.top - dataSize/2
-					};
-
-					th.find(".magnifier-loupe").css({
-						"top" : elemPos["top"],
-						"left" : elemPos["left"]
-					}).find("img").css({
-						"top" : -elemPos["top"],
-						"left" : -elemPos["left"],
-						"width" : th.width()
-					});
-				});
-
-				$(window).resize(function() {
-					$(".img-magnifier").resize();
-				});
-			});
-		};
-
-		$(".img-magnifier").imgMagnifier();
 
 		let file_extension_arr = (this.props.attachment.file_slug).split(".");
 		let file_extension = file_extension_arr[file_extension_arr.length - 1];
@@ -183,18 +164,16 @@ class AttachmentRenderer extends React.Component {
 
 			let imageStyle = {
 				"display": this.state.loading ? "none" : "block",
-				"maxWidth": "100%",
-				"maxHeight": "500px",
 				"margin": "auto",
 			};
-			return (<div style={{"textAlign": "center"}}>
+			return (<div>
 				{loading}
 				{error}
-				<div className="img-magnifier">
-					<img style={imageStyle} src={this.props.attachment.extra.preview_url} onLoad={this.onLoad} onError={this.onError}/>
-					<div className="magnifier-loupe">
-						<img src={this.props.attachment.extra.preview_url}/>
-					</div>
+				<button type="button" className="btn btn-sm btn-default" onClick={this.zoomIn}><Plus/> Zoom In</button>
+				&nbsp;&nbsp;&nbsp;
+				<button type="button" className="btn btn-sm btn-default" onClick={this.zoomOut}><Minus/> Zoom Out</button>
+				<div className="zoom-div">
+					<img ref={node => this.zoomImg = node} style={imageStyle} className="zoom-img" src={this.props.attachment.extra.preview_url} onLoad={this.onLoad} onError={this.onError} />
 				</div>
 			</div>
 			);
