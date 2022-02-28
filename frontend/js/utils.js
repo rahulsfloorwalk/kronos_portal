@@ -410,6 +410,40 @@ export function getColorForActionPlanStatus(value){
 	}
 }
 
+export function getAuditorRating(rating){
+	switch(rating){
+	case "W":
+		return "Worse";
+	case "A":
+		return "Average";
+	case "G":
+		return "Good";
+	case "E":
+		return "Excellent";
+	case null:
+		return "Not rated";
+	default:
+		return "Unknown rating";
+	}
+}
+
+export function getReportRating(rating){
+	switch(rating){
+	case "0":
+	case 0:
+		return "Bad";
+	case "1":
+	case 1:
+		return "Average";
+	case "2":
+	case 2:
+		return "Good";
+	case null:
+		return "Not rated";
+	default:
+		return "Unknown rating";
+	}
+}
 
 export function getIncomeText(income){
 	switch(income){

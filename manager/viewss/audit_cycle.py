@@ -246,3 +246,13 @@ class AuditCycleViewByManager(APIView):
         year = request.data.get("year", '')
         audit_cycles = audit_cycle_service.filter_audit_cycle_by_manager(manager_id, month, year)
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+
+
+class AuditAlignmentFactors(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER],
+    }
+    def post(self, request, audit_cycle_id, format=None):
+        audit_cycles = audit_cycle_service.set_audit_alignment_factor_by_audit_cycle(audit_cycle_id, request.data)
+        return Response(AuditCycleSerializer(audit_cycles).data)

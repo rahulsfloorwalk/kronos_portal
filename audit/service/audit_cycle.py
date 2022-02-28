@@ -159,6 +159,24 @@ def set_system_cost(audit_cycle_id, system_cost):
     audit_cycle.system_cost = system_cost
     return save(audit_cycle)
 
+def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict) -> AuditCycle:
+    audit_cycle = find_by_id(audit_cycle_id)
+
+    audit_cycle.audit_alignment_factors = {
+        'gender': factors.get('gender',''),
+        'education': factors.get('education',''),
+        'income': factors.get('income',''),
+        'car_cost': factors.get('car_cost',''),
+        'occupation': factors.get('occupation',''),
+        'interest_area': factors.get('interest_area',''),
+        'marital_status': factors.get('marital_status',''),
+        'report_rating': factors.get('report_rating',''),
+        'auditor_rating': factors.get('auditor_rating',''),
+        'from_available_date': factors.get('from_available_date',''),
+        'to_available_date': factors.get('to_available_date',''),
+    }
+    return save(audit_cycle)
+
 def find_audit_cycles_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')
 

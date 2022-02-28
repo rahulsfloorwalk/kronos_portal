@@ -47,6 +47,7 @@ import AuditCycleList from "./audit_cycle/AuditCycleList.jsx";
 import AuditCycleForm from "./audit_cycle/AuditCycleForm.jsx";
 import AuditCycleCopyForm from "./audit_cycle/AuditCycleCopyForm.jsx";
 import AuditCycleDetails from "./audit_cycle/AuditCycleDetails.jsx";
+import AuditAlignmentFactors from "./audit_cycle/AuditAlignmentFactors.jsx";
 import AuditCyclePaymentList from "./AuditCyclePaymentList.jsx";
 import AuditCycleModeratorSummary from "./audit_cycle/AuditCycleModeratorSummary.jsx";
 import PostApprovalDescriptionForm from "./PostApprovalDescriptionForm.jsx";
@@ -168,6 +169,7 @@ const Routes = () => (
 				<Route path="proofs_tag" component={ProofsTag}/>
 				<Route path="audit_charge" component={ChargePerAuditForm}/>
 				<Route path="system_cost" component={SystemCostForm}/>
+				<Route path="audit_alignment_factors" component={AuditAlignmentFactors} />
 				<Route path="questionnaire" component={SectionList}>
 					<Route path="section/copy" component={SectionCopyForm}/>
 					<Route path="section/add" component={SectionAddForm}/>

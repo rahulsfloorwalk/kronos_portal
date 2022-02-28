@@ -80,6 +80,7 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_count',
             'completed_audit_count',
             'questionnaire_type',
+            'audit_alignment_factors'
         )
         read_only_fields = fields
 
@@ -192,7 +193,8 @@ class AuditApplicationSerializer(ModelSerializer):
             'report_exists',
             'report_exists_data',
             'distance',
-            'comment'
+            'comment',
+            'profile_match_percentage'
         )
         read_only_fields = fields
 
