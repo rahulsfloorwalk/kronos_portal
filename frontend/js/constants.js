@@ -184,3 +184,40 @@ export const EducationList = [
 	"GR",
 	"PG",
 ];
+
+export const GenderList = [
+	"M",
+	"F",
+	"T",
+	"N",
+];
+
+export const IncomeList = [
+	"0",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5"
+];
+
+export const CarCostList = [
+	"1",
+	"2",
+	"3",
+	"4",
+	"5"
+];
+
+export const MaritalStatusList = [
+	"S",
+	"M",
+	"D",
+	"W"
+];
+
+export const ReportRatingList = [
+	"0",
+	"1",
+	"2",
+];

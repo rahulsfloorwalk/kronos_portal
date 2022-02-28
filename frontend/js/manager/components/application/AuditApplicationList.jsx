@@ -75,7 +75,7 @@ export class AuditApplicationRow extends Component{
 		}
 		return(
 			<tr key={application.id} className="">
-				<td><User/>&nbsp;{auditorLink}<br/>&nbsp;&nbsp;&nbsp;&nbsp;(<AuditorRating rating={application.profileinfo.auditor_rating}/>)</td>
+				<td><User/>&nbsp;{auditorLink}<br/>&nbsp;&nbsp;&nbsp;&nbsp;(<AuditorRating rating={application.profileinfo.auditor_rating}/>)<br/>(<b>Profile match: {application.profile_match_percentage}%</b>)</td>
 				<td><Earphone/>&nbsp;<a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a></td>
 				<td><Calendar/>&nbsp;{moment(application.audit_date).format(momentDateFormat)}</td>
 				<td>{application.profileinfo.pincode}</td>

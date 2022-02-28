@@ -109,6 +109,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/checkpoints$', audit_cycle_views.AuditCycleIdCheckPointsView.as_view(), name='audit_cycle_id_checkpoints'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/charge_per_audit$', audit_cycle_views.AuditCycleIdChargePerAuditView.as_view(), name='audit_cycle_id_charge_per_audit'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/system_cost$', audit_cycle_views.AuditCycleIdSystemCostView.as_view(), name='audit_cycle_id_system_cost'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_alignment_factors', audit_cycle_views.AuditAlignmentFactors.as_view(), name='audit_alignment_factor'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/csv$', payment_views.PendingPaymentCsvView.as_view(), name='audit_cycle_pending_payment_csv_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/xlsx', payment_views.PendingPaymentXlsxView.as_view(), name='audit_cycle_pending_payment_xlsx_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending/pay$', payment_views.PayAllPendingPaymentsForAuditCycle.as_view(), name='audit_cycle_pay_all_pending_payment_view'),

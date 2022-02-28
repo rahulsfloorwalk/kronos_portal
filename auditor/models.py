@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
@@ -435,6 +436,46 @@ class AuditApplication(Model):
 
     def avg_qa_rating(self):
         return self.profileinfo.average_rating()
+
+    def profile_match_percentage(self):
+        alignment_factors = self.audit.audit_cycle.audit_alignment_factors
+        if not alignment_factors:
+            return 0
+
+        try:
+            additional_info = self.profileinfo.user.additionalinfo
+            profile_info = self.profileinfo
+        except (AdditionalInfo.DoesNotExist, ProfileInfo.DoesNotExist) as e:
+            return 0
+
+        count = 0
+        for attr in alignment_factors.keys():
+            user_value = None
+            if alignment_factors[attr] not in ['', []]:
+                if getattr(profile_info, attr, '') not in [None, '']:
+                    user_value = getattr(profile_info, attr)
+                elif getattr(additional_info, attr, '') not in [None, '']:
+                    user_value = getattr(additional_info, attr)
+
+                alignment_factor_value = alignment_factors[attr] if type(alignment_factors[attr]) in [list, set] else [alignment_factors[attr]]
+
+                if type(user_value) in [list, set]:
+                    user_value = [str(x) for x in user_value]
+                    if any(item in user_value for item in alignment_factor_value):
+                        count += 1
+                else:
+                    if str(user_value) in alignment_factor_value:
+                        count += 1
+
+        if alignment_factors.get('report_rating', '') not in ['', []]:
+            if str(round(self.avg_qa_rating())) in alignment_factors['report_rating']:
+                count += 1
+        if alignment_factors.get('from_available_date', '') and alignment_factors.get('to_available_date', ''):
+            from_available_date = datetime.strptime(alignment_factors.get('from_available_date'), '%Y-%m-%d').date()
+            to_available_date = datetime.strptime(alignment_factors.get('to_available_date'), '%Y-%m-%d').date()
+            if from_available_date <= self.audit_date <= to_available_date:
+                count += 1
+        return round(count / len(alignment_factors.keys()) * 100)
 
     def distance(self):
         audit_store_pincode = self.audit.get_pincode_audit()

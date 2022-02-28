@@ -35,3 +35,24 @@ export function filterAuditCycleByManager(managerId, month, year){
 export function fetchDashboardAuditCyclesByClient(clientId){
 	return $.get( url.api_base_path + `manager/client/${clientId}/audit_cycle_dashboard`);
 }
+
+export function setAuditAlignmentFactors(state_data, auditCycleId){
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/audit_alignment_factors`,
+		data: JSON.stringify({
+			gender: state_data["gender"],
+			education: state_data["education"],
+			income: state_data["income"],
+			car_cost: state_data["car_cost"],
+			occupation: state_data["occupation"],
+			interest_area: state_data["interest_area"],
+			marital_status: state_data["marital_status"],
+			report_rating: state_data["report_rating"],
+			auditor_rating: state_data["auditor_rating"],
+			from_available_date: state_data["from_available_date"],
+			to_available_date: state_data["to_available_date"],
+		}),
+		contentType: "application/json"
+	});
+}
