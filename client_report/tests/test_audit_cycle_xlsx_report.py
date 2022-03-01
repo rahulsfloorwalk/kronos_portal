@@ -1,9 +1,8 @@
 from django.test import TestCase
 
 from faker import Faker
-
-from audit_store.models import AuditStore
-from audit_store.service import assign_audit_store_to_client_user
+from guardian.shortcuts import assign_perm
+from client.service.client_user import find_clientuser_by_user_id
 from client_report.service import audit_cycle_xlsx_report as xlsx_report_service
 
 fake = Faker()
@@ -13,12 +12,12 @@ class AuditCycleXlsxReportTestCase(TestCase):
 
     def setUp(self):
         self.audit_cycle_id = 1
+        self.client_id = 1
         self.city_filter = {'city': 650}
         self.date_filter = {'start_date': '2017-01-15', 'end_date': '2017-01-31'}
         self.client_admin_id = 5
-        audit_reports = AuditStore.objects.filter(audit__audit_cycle_id=self.audit_cycle_id)
-        for report in audit_reports:
-            assign_audit_store_to_client_user(report.id, self.client_admin_id)
+        user = find_clientuser_by_user_id(self.client_admin_id)
+        assign_perm('client.clientuser_admin', user)
 
     def test_get_aggregate_data_with_date_filter(self):
         audit_cycle_name, sections, questions, filtered_audit_stores, city_name, state, country, date_name, month_name\
