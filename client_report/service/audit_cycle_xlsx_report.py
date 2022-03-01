@@ -6,7 +6,7 @@ import xlsxwriter
 from django.db.models import Prefetch
 
 import audit.service.audit_cycle as audit_cycle_service
-from client.service.client_user import find_clientuser_by_user_id
+from client.service.client_user import find_clientuser_by_user_id, find_non_client_admin_user_store_by_client_user_id
 from kronos.utils import get_color_code, get_color_hex_from_code
 from manager.models import City
 from audit_store.models import AuditStore
@@ -43,7 +43,8 @@ def get_aggregate_report_with_filters(audit_cycle_id, user_id, filters):
 
 def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audit_date'):
     audit_cycle = audit_cycle_service.find_by_id_for_clientuser(audit_cycle_id, user_id)
-    clientuser = find_clientuser_by_user_id(user_id)
+    user = find_clientuser_by_user_id(user_id)
+    clientuser = user.clientuser
 
     sections = audit_cycle.sections.order_by('sequence').prefetch_related(
         Prefetch('questions', queryset=Question.objects.order_by('section__sequence','sequence')),
@@ -59,18 +60,32 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
     for section in sections:
         questions.extend(section.questions.all())
 
-    audit_stores = AuditStore.objects \
-        .filter(audit__audit_cycle=audit_cycle) \
-        .presentable() \
-        .visible_to(clientuser) \
-        .order_by('audit_date') \
-        .prefetch_related(
-            'audit',
-            'audit__store',
-            'audit__store__city',
-            'answers',
-            'report_sections',
-        ).order_by(sort)
+    if clientuser.is_client_admin():
+        audit_stores = AuditStore.objects \
+            .filter(audit__audit_cycle=audit_cycle) \
+            .presentable() \
+            .order_by('audit_date') \
+            .prefetch_related(
+                'audit',
+                'audit__store',
+                'audit__store__city',
+                'answers',
+                'report_sections',
+            ).order_by(sort)
+    else:
+        non_admin_user_store = find_non_client_admin_user_store_by_client_user_id(clientuser.id)
+        non_admin_user_store_list = non_admin_user_store.get_store_list()
+        audit_stores = AuditStore.objects \
+            .filter(audit__audit_cycle=audit_cycle, audit__store__id__in=non_admin_user_store_list) \
+            .presentable() \
+            .order_by('audit_date') \
+            .prefetch_related(
+                'audit',
+                'audit__store',
+                'audit__store__city',
+                'answers',
+                'report_sections',
+            ).order_by(sort)
 
     filtered_audit_stores = audit_stores
     ignored_filters = ['', 'undefined', None, [], ['']]
@@ -106,7 +121,6 @@ def get_aggregate_data_with_filters(audit_cycle_id, user_id, filters, sort='audi
             key = pair[0]
             value = pair[1]
             filtered_audit_stores = [x for x in filtered_audit_stores if x.attribute_data.get(key, "") == value]
-    create_text_structure(audit_cycle.name, sections, questions, filtered_audit_stores)
     date_name = "{}{}{}".format(
         (filters.get('start_date') if filters.get('start_date') not in ignored_filters else "").replace("-", "_"),
         "_",
