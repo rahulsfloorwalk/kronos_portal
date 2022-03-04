@@ -40,6 +40,7 @@ class AuditCycleCopyForm extends Component{
 		selectedAuditCycleId : "",
 		checkpoints: true,
 		post_approval_desc: true,
+		audit_alignment_factors: true,
 		proof_tags: true,
 		submitting: false,
 		errors: {},
@@ -84,6 +85,7 @@ class AuditCycleCopyForm extends Component{
 					<FormInput label="Check Point" type="checkbox" checked={this.state.checkpoints} name="checkpoints" onChange={this.fieldChanged}/>
 					<FormInput label="Post Approval Description" type="checkbox" checked={this.state.post_approval_desc} name="post_approval_desc" onChange={this.fieldChanged}/>
 					<FormInput label="Proof Tags" type="checkbox" checked={this.state.proof_tags} name="proof_tags" onChange={this.fieldChanged}/>
+					<FormInput label="Audit alignment factors" type="checkbox" checked={this.state.audit_alignment_factors} name="audit_alignment_factors" onChange={this.fieldChanged}/>
 					<button className="btn btn-primary btn-lg" disabled={this.state.submitting}>
 						<Duplicate/> Copy
 					</button>

@@ -13,7 +13,8 @@ export function copyAuditDetailsFromTo(state_data, toauditCycleId){
 			from_audit_cycle_id: state_data["selectedAuditCycleId"],
 			checkpoints: state_data["checkpoints"],
 			post_approval_desc: state_data["post_approval_desc"],
-			proof_tags: state_data["proof_tags"]
+			proof_tags: state_data["proof_tags"],
+			audit_alignment_factors: state_data["audit_alignment_factors"],
 		}),
 		contentType: "application/json"
 	});

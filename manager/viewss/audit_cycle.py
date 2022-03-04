@@ -232,7 +232,8 @@ class AuditDetailsCopyByAuditCycle(APIView):
                                                                      to_audit_cycle_id,
                                                                      request.data.get("checkpoints"),
                                                                      request.data.get("post_approval_desc"),
-                                                                     request.data.get("proof_tags"))
+                                                                     request.data.get("proof_tags"),
+                                                                     request.data.get("audit_alignment_factors"))
         return Response(AuditCycleSerializer(audit_cycle).data)
 
 

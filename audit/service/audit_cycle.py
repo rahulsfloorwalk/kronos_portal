@@ -181,13 +181,15 @@ def find_audit_cycles_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id).order_by('-end_date')
 
 
-def copy_audit_details_from_to(from_audit_cycle_id, to_audit_cycle_id, checkpoints, post_approval_desc, proof_tags):
+def copy_audit_details_from_to(from_audit_cycle_id, to_audit_cycle_id, checkpoints, post_approval_desc, proof_tags, audit_alignment_factors):
     if not from_audit_cycle_id:
         raise AppLogicError("Please Select Audit Cycle")
 
     from_audit_cycle = find_by_id(from_audit_cycle_id)
     to_audit_cycle = find_by_id(to_audit_cycle_id)
 
+    if audit_alignment_factors:
+        to_audit_cycle.audit_alignment_factors = from_audit_cycle.audit_alignment_factors
     if checkpoints:
         to_audit_cycle.check_points = from_audit_cycle.check_points
     if post_approval_desc:

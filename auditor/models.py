@@ -440,18 +440,21 @@ class AuditApplication(Model):
     def profile_match_percentage(self):
         alignment_factors = self.audit.audit_cycle.audit_alignment_factors
         if not alignment_factors:
-            return 0
+            return 100
 
         try:
             additional_info = self.profileinfo.user.additionalinfo
             profile_info = self.profileinfo
         except (AdditionalInfo.DoesNotExist, ProfileInfo.DoesNotExist) as e:
-            return 0
+            return 100
 
         count = 0
+        total_factors = 0
         for attr in alignment_factors.keys():
             user_value = None
             if alignment_factors[attr] not in ['', []]:
+                if attr not in ['report_rating', 'from_available_date', 'to_available_date']:
+                    total_factors += 1
                 if getattr(profile_info, attr, '') not in [None, '']:
                     user_value = getattr(profile_info, attr)
                 elif getattr(additional_info, attr, '') not in [None, '']:
@@ -468,14 +471,19 @@ class AuditApplication(Model):
                         count += 1
 
         if alignment_factors.get('report_rating', '') not in ['', []]:
-            if str(round(self.avg_qa_rating())) in alignment_factors['report_rating']:
-                count += 1
+            total_factors += 1
+            if self.avg_qa_rating():
+                if str(round(self.avg_qa_rating())) in alignment_factors['report_rating']:
+                    count += 1
         if alignment_factors.get('from_available_date', '') and alignment_factors.get('to_available_date', ''):
+            total_factors += 1
             from_available_date = datetime.strptime(alignment_factors.get('from_available_date'), '%Y-%m-%d').date()
             to_available_date = datetime.strptime(alignment_factors.get('to_available_date'), '%Y-%m-%d').date()
             if from_available_date <= self.audit_date <= to_available_date:
                 count += 1
-        return round(count / len(alignment_factors.keys()) * 100)
+        if total_factors == 0:
+            return 0
+        return round((count / total_factors) * 100)
 
     def distance(self):
         audit_store_pincode = self.audit.get_pincode_audit()
