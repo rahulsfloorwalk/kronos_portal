@@ -77,7 +77,7 @@ def getAuditStores(user_id):
         if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
             audit_stores = AuditStore.objects.filter(user=auditor).order_by('-audit_date')  \
                 .values('id', 'audit__store__name', 'audit__audit_cycle__id', 'audit__audit_cycle__name',
-                        'audit__audit_cycle__client__name', 'audit_date', 'status', 'qa_rating').all()
+                        'audit__audit_cycle__client__name', 'audit_date', 'status', 'qa_rating').all().order_by('audit__audit_cycle__client__name')
             return audit_stores
     except User.DoesNotExist:
         raise ObjectNotFound
