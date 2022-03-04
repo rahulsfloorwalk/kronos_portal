@@ -1,5 +1,6 @@
 from django.db.transaction import atomic
 from guardian.shortcuts import get_objects_for_user, get_users_with_perms
+from audit.service.audit_cycle_proof_tag import get_audit_cycle_proof_tag_for_attachment
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -164,10 +165,18 @@ def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
     return audit_store_service.set_audit_date(audit_store.id, audit_date)
 
 @atomic
-def unsubmit_for_moderator(audit_store_id, user_id, message):
+def unsubmit_for_moderator(audit_store_id, user_id, message, missing_proofs=[]):
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
-    audit_store.revert_submit(by=user, message=message)
+
+    missing_proof_names = []
+    if missing_proofs:
+        proof_tag_list = get_audit_cycle_proof_tag_for_attachment(audit_store.audit.audit_cycle.id)
+        for proof in proof_tag_list:
+            if proof['id'] in missing_proofs:
+                missing_proof_names.append(proof['proof_tag'])
+
+    audit_store.revert_submit(by=user, message=message, proof_tags=missing_proof_names)
     set_attachment_by_audit_store(audit_store_id)
     return audit_store
 

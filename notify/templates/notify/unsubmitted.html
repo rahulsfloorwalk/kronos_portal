@@ -8,6 +8,14 @@
 		<p>Your audit report for <b>{{ client }}</b> on <b>{{ audit_date }}</b> needs some rectifications and improvements.</p>
 		<p>We have reverted your report so that you can make the necessary modifications and submit again.</p>
 		<p>Reason: {{message}}</p>
+		{% if proof_tags %}
+		<p>Missing proof tags:</p>
+		<ul>
+			{% for proof in proof_tags %}
+			<li><b>{{ proof }}</b></li>
+			{% endfor %}
+		</ul>
+		{% endif %}
 		<p>--</p>
 		<p>Thanks and regards,</p>
 		<p>FloorWalk Team</p>

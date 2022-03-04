@@ -57,6 +57,7 @@ class AuditStoreTestCase(TestCase):
                     user_actor=self.manager_user,
                     message="",
                     audit_store=audit_store,
+                    proof_tags=[]
                 )
 
     def test_not_withdrawable_status_raises_exception(self):
@@ -88,6 +89,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.auditor_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_raises_when_audit_store_is_not_in_assigned_state(self):
@@ -133,6 +135,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.auditor_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_submit_manager_chanages_status_from_acknowledged_to_submitted(self):
@@ -154,6 +157,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_submit_manager_raises_when_status_is_not_acknowledged(self):
@@ -184,6 +188,25 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message=message,
                 audit_store=audit_store,
+                proof_tags=[]
+            )
+
+    def test_revert_submit_with_proof_tags_sends_status_change_signal_for_manager(self):
+        audit_store = mommy.make(AuditStore, status=AuditStore.SUBMITTED, user=self.auditor_user)
+        message = "reason for revert the audit"
+        proof_tags=['Cash Counter Image', 'Entrance Image', 'Staff Member Image']
+        with catch_signal(audit_store_status_change) as mock:
+            audit_store.revert_submit(by=self.manager_user, message=message, proof_tags=proof_tags)
+
+            mock.assert_called_once_with(
+                signal=audit_store_status_change,
+                sender=AuditStore,
+                status=AuditStore.ACKNOWLEDGED,
+                old_status=AuditStore.SUBMITTED,
+                user_actor=self.manager_user,
+                message=message,
+                audit_store=audit_store,
+                proof_tags=proof_tags
             )
 
     def test_revert_submit_raises_when_status_is_not_submitted(self):
@@ -214,6 +237,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_qa_ok_raises_when_report_is_not_rated(self):
@@ -250,6 +274,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_pm_revert_raises_when_status_is_not_pm_review(self):
@@ -326,6 +351,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_complete_raises_when_report_is_not_completable(self):
@@ -372,6 +398,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_revert_complete_raises_when_status_is_not_pm_review(self):
@@ -401,6 +428,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[],
             )
 
     def test_accept_raises_when_status_is_not_completed(self):
@@ -436,6 +464,7 @@ class AuditStoreTestCase(TestCase):
                 user_actor=self.manager_user,
                 message="",
                 audit_store=audit_store,
+                proof_tags=[]
             )
 
     def test_reject_raises_when_status_is_not_completed(self):
@@ -473,6 +502,7 @@ class AuditStoreTestCase(TestCase):
                     user_actor=self.manager_user,
                     message="Failed due to non compliance",
                     audit_store=audit_store,
+                    proof_tags=[]
                 )
 
     def test_fail_raises_when_status_is_not_failable(self):

@@ -41,12 +41,13 @@ export function submit(auditStoreId){
 	return $.post(url.api_base_path + `moderator/audit_store/${auditStoreId}/submit`);
 }
 
-export function unsubmit(auditStoreId, reason){
+export function unsubmit(auditStoreId, reason, missing_proofs){
 	return $.ajax({
 		url: url.api_base_path + `moderator/audit_store/${auditStoreId}/unsubmit`,
 		method: "POST",
 		data: JSON.stringify({
-			reason: reason
+			reason: reason,
+			missing_proofs: missing_proofs
 		}),
 		contentType: "application/json"
 	});

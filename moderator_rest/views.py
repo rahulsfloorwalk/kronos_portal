@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import Serializer, DateField, CharField, IntegerField, BooleanField, ChoiceField
+from rest_framework.serializers import Serializer, DateField, CharField, IntegerField, BooleanField, ChoiceField, ListField
 from client.service import client_service
 
 from registration.mixins import HasGroupPermission
@@ -234,12 +234,13 @@ class AuditStoreIdUnSubmitView(APIView):
 
     class DeSerializer(Serializer):
         reason = CharField(allow_blank=True)
+        missing_proofs = ListField(required = False, child = IntegerField())
 
     def post(self, request, audit_store_id):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         audit_store = audit_store_service.unsubmit_for_moderator(audit_store_id, request.user.id,
-                                                                 ds.validated_data['reason'])
+                                                                 ds.validated_data['reason'], ds.validated_data.get('missing_proofs'))
         return Response(AuditStoreSerializer(audit_store).data)
 
 class AuditStoreIdFailView(APIView):

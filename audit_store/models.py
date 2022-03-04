@@ -427,12 +427,12 @@ class AuditStore(Model):
         self._change_status(AuditStore.SUBMITTED, by)
 
     @atomic
-    def revert_submit(self, *args, by, message):
+    def revert_submit(self, *args, by, message, proof_tags=[]):
 
         if self.status != AuditStore.SUBMITTED:
             raise AppLogicError("Report cannot be unsubmitted now")
 
-        self._change_status(AuditStore.ACKNOWLEDGED, by, message)
+        self._change_status(AuditStore.ACKNOWLEDGED, by, message, proof_tags)
 
     @atomic
     def revert_report(self, *args, by, status):
@@ -524,14 +524,15 @@ class AuditStore(Model):
         self.qa_rating = rating
         self.save()
 
-    def _change_status(self, new_status, user_actor, message=""):
+    def _change_status(self, new_status, user_actor, message="", proof_tags=[]):
         audit_store_status_change.send(
             sender=self.__class__,
             status=new_status,
             old_status=self.status,
             user_actor=user_actor,
             message=message,
-            audit_store=self
+            audit_store=self,
+            proof_tags=proof_tags
         )
         self.status = new_status
         self.save()
@@ -581,11 +582,14 @@ class AuditStore(Model):
 class ReportStatusLog(Model):
     id = AutoField(db_column='id', primary_key=True)
     user_actor = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_actor_id', on_delete=PROTECT)
-    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT)
+    audit_store = ForeignKey(AuditStore, db_column='audit_store_id', on_delete=PROTECT, related_name='audit_store_status_log')
     status = CharField(db_column='status', max_length=20, choices=AuditStore.STATUS, blank=False)
     message = CharField(db_column='message', max_length=4096, blank=True, null=True)
+    report_data = JSONField(db_column='report_data', default=dict, blank=False)
     created_at = DateTimeField(db_column="created_at")
 
+    class Meta:
+        get_latest_by = 'id'
 
 class ReportConcernLog(Model):
     id = AutoField(db_column='id', primary_key=True)
