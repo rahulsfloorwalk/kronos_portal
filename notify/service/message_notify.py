@@ -39,15 +39,15 @@ def notification_message_task(notif_id):
             return True
 
 
-def send_whatsapp_notification(notif_id):
+def send_whatsapp_notification(notif_id, message=""):
     if settings.MESSAGEBIRD_SWITCH:
-        notification_whatsapp_task.delay(notif_id)
+        notification_whatsapp_task.delay(notif_id, message)
     else:
         _logger.info("notification whatsapp message disabled. skipping whatsapp message for notification id : %s", notif_id)
 
 
 @shared_task(ignore_result=True)
-def notification_whatsapp_task(notif_id):
+def notification_whatsapp_task(notif_id, message=""):
     notif = Notification.objects.get(pk=notif_id)
     if notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
         try:
@@ -63,19 +63,19 @@ def notification_whatsapp_task(notif_id):
             _logger.info("Profileinfo is not complete. skipping whatsapp message for notification id : %s", notif_id)
 
         if notif.verb == verbs.AUDIT_STORE_ASSIGNED:
-            params, template_name = get_params_from_audit_store(notif)
+            params, template_name = get_params_from_audit_store(notif, message)
             send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
             return True
 
         elif notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
-            params, template_name = get_params_from_audit_store(notif)
+            params, template_name = get_params_from_audit_store(notif, message)
             if params and template_name:
                 send_whatsapp_message(whatsapp_number, dial_code, template_name, params)
                 return True
 
     return False
 
-def get_params_from_audit_store(notif_id):
+def get_params_from_audit_store(notif_id, message):
     audit_store = notif_id.action_object
     first_name = audit_store.user.profileinfo.first_name
     client = audit_store.audit.audit_cycle.client.auditor_display_name()
@@ -93,11 +93,11 @@ def get_params_from_audit_store(notif_id):
         if report_log:
             if 'proof_tags' in report_log.report_data:
                 if report_log.report_data['proof_tags']:
-                    template_name = 'audit_revert_with_proof'
+                    template_name = 'audit_revert_with_proof_2'
                     proof_tag_str = ', '.join(report_log.report_data['proof_tags'])
 
                     # Make field sequence as per api documentation/message template
-                    params = [{'default':first_name}, {'default':client}, {'default':audit_date}, {'default':proof_tag_str}]
+                    params = [{'default':first_name}, {'default':client}, {'default':audit_date}, {'default':message}, {'default':proof_tag_str}]
                     return params, template_name
         else:
             _logger.info('report status log not found. skipping whatsapp message for notification id : %s', notif_id)
