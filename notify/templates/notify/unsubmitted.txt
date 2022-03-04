@@ -2,6 +2,15 @@ Hello {{ name }},
 Your audit report for <b>{{ client }}</b> on <b>{{ audit_date }}</b> needs some rectifications and improvments.
 We have reverted your report so that you can make the necessary modifications and submit again.
 Reason: {{message}}
+{% if proof_tags %}
+
+Missing proof tags:
+
+{% for proof in proof_tags %}
+   <b>{{ proof }}</b>
+
+{% endfor %}
+{% endif %}
 --
 Thanks and regards,
 FloorWalk Team

@@ -23,6 +23,7 @@ import AttachmentBox from "./AttachmentBox.jsx";
 import AuditStoreSections from "./AuditStoreSections.jsx";
 import AuditorNameDisplay from "./AuditorNameDisplay.jsx";
 import ReportSummary from "./ReportSummary.jsx";
+import { fetchproofTags } from "../service/proof_tag.js";
 
 export default class AuditStoreDetails extends React.Component{
 	static propTypes = {
@@ -45,7 +46,8 @@ export default class AuditStoreDetails extends React.Component{
 			errorMessage: "",
 			display:"none",
 			reason: "",
-			errMsg: ""
+			errMsg: "",
+			proof_tags: []
 		};
 	}
 	setAuditStore = (auditStore) => {
@@ -75,7 +77,12 @@ export default class AuditStoreDetails extends React.Component{
 		submit(this.props.params.auditStoreId).then(this.setAuditStore);
 	};
 	showModal = () => {
-		this.setState({ display:"block" });
+		fetchproofTags(this.state.auditStore.audit.audit_cycle.id).then((proof_tags)=>{
+			this.setState({
+				proof_tags:proof_tags,
+				display:"block"
+			});
+		});
 	};
 
 	hideModal = () => {
@@ -103,7 +110,12 @@ export default class AuditStoreDetails extends React.Component{
 	};
 
 	unSubmitButtonClicked = () => {
-		unsubmit(this.props.params.auditStoreId, this.state.reason).then(this.setAuditStore);
+		let missing_proofs = [];
+		$(".revert_tags input:checked").each(function() {
+			let val = $(this).attr("value");
+			missing_proofs.push(val);
+		});
+		unsubmit(this.props.params.auditStoreId, this.state.reason, missing_proofs).then(this.setAuditStore);
 	};
 	auditDateChanged = (momentDate) => {
 		this.setState({auditDateLoading: true});
@@ -309,6 +321,16 @@ export default class AuditStoreDetails extends React.Component{
 				</th>
 			</tr>);
 		}
+
+		var proof_tag_rows = [];
+		for (let i of this.state.proof_tags){
+			proof_tag_rows.push(
+				<div className="col-sm-6 col-md-4" key={i.id}>
+					<label style={{fontSize:"14px",marginBottom:"10px"}}><input type="checkbox" className="revert_proof" value={i.id} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {i.proof_tag}</span></label>
+				</div>
+			);
+		}
+
 		return (
 			<div className="main">
 				{/*
@@ -434,6 +456,15 @@ export default class AuditStoreDetails extends React.Component{
 								Please Enter reason for reverting the audit to auditor
 								<textarea rows="5" className="form-control" value={this.state.reason} onChange={this.reasonChanged} onBlur={this.onBlur} />
 								<span style={{color:"red"}}>{this.state.errMsg}</span>
+								{proof_tag_rows.length > 0 ?
+									<div>
+										<br/>
+										<p><b>Select missing proofs</b></p><hr/>
+										<div className="row revert_tags">
+											{proof_tag_rows}
+										</div>
+									</div>
+									: null}
 							</div>
 							<div className="modal-footer">
 								<button type="button" className="btn btn-primary" onClick={this.submit_hideModal}>Submit</button>
