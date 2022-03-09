@@ -80,7 +80,8 @@ class AuditCycleSerializer(ModelSerializer):
             'audit_count',
             'completed_audit_count',
             'questionnaire_type',
-            'audit_alignment_factors'
+            'audit_alignment_factors',
+            'audit_auto_approve',
         )
         read_only_fields = fields
 

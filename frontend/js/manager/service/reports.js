@@ -41,6 +41,6 @@ export function getProjectAnalyticYearly(year){
 	return $.get( url.api_base_path + `manager/analytics/project_analytic_month_wise?year=${year}`);
 }
 
-export function getFollowUpReport(client, cycle, store, audit_status, followup_date){
-	return $.get( url.api_base_path + `manager/reports/follow_up_report/?client=${client}&cycle=${cycle}&store=${store}&audit_status=${audit_status}&followup_date=${followup_date}`);
+export function getFollowUpReport(client, cycle, store, audit_status, followup_date, auto_assigned){
+	return $.get( url.api_base_path + `manager/reports/follow_up_report/?client=${client}&cycle=${cycle}&store=${store}&audit_status=${audit_status}&followup_date=${followup_date}&auto_assigned=${auto_assigned}`);
 }

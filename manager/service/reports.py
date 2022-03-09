@@ -432,7 +432,7 @@ def get_qa_wise_report(month, year, qa):
     return response
 
 
-def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str, followup_date: str):
+def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str, followup_date: str, auto_assigned: str):
 
     audit_stores = AuditStore.objects.select_related('audit__audit_cycle__client', 'audit__audit_cycle', 'audit__store', 'user').prefetch_related('user__profileinfo').order_by('audit__store__name')
 
@@ -446,6 +446,10 @@ def get_follow_up_report(client: int, cycle: int, store: int, audit_status: str,
         audit_stores = audit_stores.filter(status = audit_status)
     if followup_date:
         audit_stores = audit_stores.filter(follow_up__next_follow_up_date__date = followup_date)
+    if auto_assigned == 'yes':
+        audit_stores = audit_stores.filter(auto_assigned = True)
+    elif auto_assigned == 'no':
+        audit_stores = audit_stores.filter(auto_assigned = False)
 
     result = []
     for store in audit_stores:

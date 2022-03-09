@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
 from django.db.models import QuerySet, Q
-from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField
+from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField, BooleanField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
 
@@ -57,7 +57,7 @@ class AuditStoreQuerySet(QuerySet):
         query_set = self.filter(audit__audit_cycle__status__in=AuditCycle.MODERATOR_MODIFIABLE_STATUSES)
         return get_objects_for_user(user, 'moderator_manage', klass=query_set)
 
-    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, checkpoints, by):
+    def assign_audit_store(self, audit, audit_date, auditor, reimbursement, earnings_per_audit, checkpoints, by, auto_assigned = False):
         audit_store = AuditStore()
         audit_store.audit = audit
         audit_store.audit_date = audit_date
@@ -66,6 +66,7 @@ class AuditStoreQuerySet(QuerySet):
         audit_store.reimbursement = reimbursement
         audit_store.earnings_per_audit = earnings_per_audit
         audit_store.check_points = checkpoints
+        audit_store.auto_assigned = auto_assigned
         audit_store.save()
         audit_store_status_change.send(
             sender=self.__class__,
@@ -172,6 +173,7 @@ class AuditStore(Model):
     check_points = JSONField(db_column='check_points', default=dict, blank=False)
 
     audit_store_percentage = IntegerField(db_column='percentage', null=True, blank=True)
+    auto_assigned = BooleanField(db_column='auto_assigned', default=False)
 
     objects = AuditStoreQuerySet.as_manager()
 
