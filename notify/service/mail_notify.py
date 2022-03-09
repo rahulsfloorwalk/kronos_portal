@@ -5,7 +5,7 @@ from django.conf import settings
 from django.template.loader import get_template
 
 from notifications.models import Notification
-from audit_store.models import AuditStore
+from audit_store.models import AuditStore, ReportStatusLog
 from payment.models import Payment
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
@@ -33,9 +33,14 @@ def get_params_from_audit_store(audit_store, params):
     params['store_phone'] = audit_store.audit.store.phone
     params['store_address'] = audit_store.audit.store.address
     params['audit_date'] = audit_store.audit_date
-    report_log = audit_store.audit_store_status_log.filter(status = AuditStore.ACKNOWLEDGED).latest()
+    try:
+        report_log = audit_store.audit_store_status_log.filter(status = AuditStore.ACKNOWLEDGED).latest()
+    except ReportStatusLog.DoesNotExist:
+        report_log = None
     if report_log:
         params['proof_tags'] = report_log.report_data['proof_tags'] if 'proof_tags' in report_log.report_data else []
+    else:
+        params['proof_tags'] = []
 
 
 def get_params_from_application(application, params):

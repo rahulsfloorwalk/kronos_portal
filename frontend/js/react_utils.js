@@ -32,3 +32,12 @@ export function orderKeys(o, f) {
 	}
 	return ks;
 }
+
+export function splitDateRange(date_range){
+	if(date_range == ""){
+		return ["", ""];
+	}
+	else{
+		return date_range.split(" - ");
+	}
+}
