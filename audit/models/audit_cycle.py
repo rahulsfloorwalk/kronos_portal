@@ -98,7 +98,7 @@ class AuditCycle(Model):
     check_points = CharField(db_column='check_points', max_length=16384, blank=True)
     questionnaire_type = ForeignKey('questionnaire.QuestionnaireType', db_column='questionnaire_type_id', null=True, on_delete=PROTECT)
     support_page_link = CharField(db_column='support_page_link', max_length=200, blank=True)
-    audit_alignment_factors = JSONField(db_column='audit_alignment_factors', default=dict, blank=False)
+    audit_alignment_factors = JSONField(db_column='audit_alignment_factors', default=list, blank=False)
 
     class Meta:
         permissions = (

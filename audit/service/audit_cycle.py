@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from guardian.shortcuts import get_objects_for_user
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
+from kronos.utils import validate_date_range_from_string
 
 from registration.service.moderator import find_moderator_by_user_id
 from client.service.client_user import find_clientuser_by_user_id
@@ -161,20 +162,64 @@ def set_system_cost(audit_cycle_id, system_cost):
 
 def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict) -> AuditCycle:
     audit_cycle = find_by_id(audit_cycle_id)
+    is_valid_date_availability = False
+    if factors.get('date_availability',''):
+        is_valid_date_availability = validate_date_range_from_string(factors.get('date_availability',''))
+        if not is_valid_date_availability:
+            raise AppLogicError("Please enter valid dates")
 
-    audit_cycle.audit_alignment_factors = {
-        'gender': factors.get('gender',''),
-        'education': factors.get('education',''),
-        'income': factors.get('income',''),
-        'car_cost': factors.get('car_cost',''),
-        'occupation': factors.get('occupation',''),
-        'interest_area': factors.get('interest_area',''),
-        'marital_status': factors.get('marital_status',''),
-        'report_rating': factors.get('report_rating',''),
-        'auditor_rating': factors.get('auditor_rating',''),
-        'from_available_date': factors.get('from_available_date',''),
-        'to_available_date': factors.get('to_available_date',''),
-    }
+    audit_cycle.audit_alignment_factors = [
+        {
+            'key': 'gender',
+            'value': factors.get('gender',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'income',
+            'value': factors.get('income',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'education',
+            'value': factors.get('education',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'car_cost',
+            'value': factors.get('car_cost',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'occupation',
+            'value': factors.get('occupation',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'interest_area',
+            'value': factors.get('interest_area',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'marital_status',
+            'value': factors.get('marital_status',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'auditor_rating',
+            'value': factors.get('auditor_rating',[]),
+            'type': 'str'
+        },
+        {
+            'key': 'report_rating',
+            'value': factors.get('report_rating',[]),
+            'type': 'func'
+        },
+        {
+            'key': 'date_availability',
+            'value': factors.get('date_availability','') if is_valid_date_availability else '',
+            'type': 'func'
+        },
+    ]
     return save(audit_cycle)
 
 def find_audit_cycles_by_client(client_id):

@@ -51,8 +51,7 @@ export function setAuditAlignmentFactors(state_data, auditCycleId){
 			marital_status: state_data["marital_status"],
 			report_rating: state_data["report_rating"],
 			auditor_rating: state_data["auditor_rating"],
-			from_available_date: state_data["from_available_date"],
-			to_available_date: state_data["to_available_date"],
+			date_availability: state_data["date_availability"],
 		}),
 		contentType: "application/json"
 	});

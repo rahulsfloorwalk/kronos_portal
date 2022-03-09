@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.utils import timezone
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
@@ -10,7 +9,7 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
-from kronos.utils import validate_ifsc, validate_pan, get_bank_name_from_ifsc
+from kronos.utils import split_date_range_from_string, validate_ifsc, validate_pan, get_bank_name_from_ifsc
 from manager.service import geo
 
 class CompletableMixin:
@@ -438,52 +437,65 @@ class AuditApplication(Model):
         return self.profileinfo.average_rating()
 
     def profile_match_percentage(self):
-        alignment_factors = self.audit.audit_cycle.audit_alignment_factors
-        if not alignment_factors:
-            return 100
+        total_factors_count, valid_factors_count, match_percent = self.validate_alignment_factors()
+        return match_percent
+
+    def validate_alignment_factors(self) -> list:
+        factors = self.audit.audit_cycle.audit_alignment_factors
+        valid_factors_count = 0
+        total_factors_count = 0
+        match_percent = 100
+        blank_values = ['', None, []]
+
+        if not factors:
+            return total_factors_count, valid_factors_count, match_percent
 
         try:
             additional_info = self.profileinfo.user.additionalinfo
             profile_info = self.profileinfo
+            validator_objects = [additional_info, profile_info]
         except (AdditionalInfo.DoesNotExist, ProfileInfo.DoesNotExist) as e:
-            return 100
+            return total_factors_count, valid_factors_count, match_percent
 
-        count = 0
-        total_factors = 0
-        for attr in alignment_factors.keys():
-            user_value = None
-            if alignment_factors[attr] not in ['', []]:
-                if attr not in ['report_rating', 'from_available_date', 'to_available_date']:
-                    total_factors += 1
-                if getattr(profile_info, attr, '') not in [None, '']:
-                    user_value = getattr(profile_info, attr)
-                elif getattr(additional_info, attr, '') not in [None, '']:
-                    user_value = getattr(additional_info, attr)
+        for factor in factors:
+            if factor['value'] in blank_values:
+                continue
 
-                alignment_factor_value = alignment_factors[attr] if type(alignment_factors[attr]) in [list, set] else [alignment_factors[attr]]
+            total_factors_count += 1
+
+            if factor['type'] == 'str':
+                for obj in validator_objects:
+                    if getattr(obj, factor['key'], '') not in blank_values:
+                        user_value = getattr(obj, factor['key'])
+                        if user_value:
+                            break
+
+                alignment_factor_value = factor['value'] if type(factor['value']) in [list, set] else [factor['value']]
 
                 if type(user_value) in [list, set]:
                     user_value = [str(x) for x in user_value]
                     if any(item in user_value for item in alignment_factor_value):
-                        count += 1
+                        valid_factors_count += 1
                 else:
                     if str(user_value) in alignment_factor_value:
-                        count += 1
+                        valid_factors_count += 1
 
-        if alignment_factors.get('report_rating', '') not in ['', []]:
-            total_factors += 1
-            if self.avg_qa_rating():
-                if str(round(self.avg_qa_rating())) in alignment_factors['report_rating']:
-                    count += 1
-        if alignment_factors.get('from_available_date', '') and alignment_factors.get('to_available_date', ''):
-            total_factors += 1
-            from_available_date = datetime.strptime(alignment_factors.get('from_available_date'), '%Y-%m-%d').date()
-            to_available_date = datetime.strptime(alignment_factors.get('to_available_date'), '%Y-%m-%d').date()
-            if from_available_date <= self.audit_date <= to_available_date:
-                count += 1
-        if total_factors == 0:
-            return 0
-        return round((count / total_factors) * 100)
+            if factor['type'] == 'func':
+                if factor['key'] == 'report_rating':
+                    if self.avg_qa_rating():
+                        if str(round(self.avg_qa_rating())) in factor['value']:
+                            valid_factors_count += 1
+
+                if factor['key'] == 'date_availability':
+                    date_availability = split_date_range_from_string(factor['value'])
+                    if date_availability[0] <= self.audit_date <= date_availability[1]:
+                        valid_factors_count += 1
+
+        if total_factors_count == 0:
+            pass
+        else:
+            match_percent = round((valid_factors_count / total_factors_count) * 100)
+        return total_factors_count, valid_factors_count, match_percent
 
     def distance(self):
         audit_store_pincode = self.audit.get_pincode_audit()

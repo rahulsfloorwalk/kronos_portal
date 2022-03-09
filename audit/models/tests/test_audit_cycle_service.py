@@ -27,18 +27,69 @@ class AuditCycleServiceTestCase(TestCase):
 
     def test_set_audit_alignment_factors(self):
         audit_alignment_factors = {
-            'gender': 'M',
-            'education': 'GR',
-            'income': '0',
-            'car_cost': '1',
-            'occupation': 'BUSINESS',
-            'interest_area': 'ARCHITECTURE',
-            'marital_status': '2',
-            'report_rating': 'G',
-            'auditor_rating': 'S',
-            'from_available_date': '2022-02-01',
-            'to_available_date': '2022-02-05',
+            'gender': ['M'],
+            'education': ['GR'],
+            'income': ['0'],
+            'car_cost': ['1'],
+            'occupation': ['BUSINESS'],
+            'interest_area': ['ARCHITECTURE'],
+            'marital_status': ['2'],
+            'report_rating': ['G'],
+            'auditor_rating': ['S'],
+            'date_availability': '2022-03-02 - 2022-03-14',
         }
+        response = [
+            {
+                "key": "gender",
+                "type": "str",
+                "value": ["M"]
+            },
+            {
+                "key": "income",
+                "type": "str",
+                "value": ["0"]
+            },
+            {
+                "key": "education",
+                "type": "str",
+                "value": ["GR"]
+            },
+            {
+                "key": "car_cost",
+                "type": "str",
+                "value": ["1"]
+            },
+            {
+                "key": "occupation",
+                "type": "str",
+                "value": ["BUSINESS"]
+            },
+            {
+                "key": "interest_area",
+                "type": "str",
+                "value": ["ARCHITECTURE"]
+            },
+            {
+                "key": "marital_status",
+                "type": "str",
+                "value": ["2"]
+            },
+            {
+                "key": "auditor_rating",
+                "type": "str",
+                "value": ["S"]
+            },
+            {
+                "key": "report_rating",
+                "type": "func",
+                "value": ["G"]
+            },
+            {
+                "key": "date_availability",
+                "type": "func",
+                "value": "2022-03-02 - 2022-03-14"
+            }
+        ]
         audit_cycle = set_audit_alignment_factor_by_audit_cycle(self.audit_cycle_id, audit_alignment_factors)
-        self.assertDictEqual(audit_cycle.audit_alignment_factors, audit_alignment_factors)
-        self.assertEqual(len(audit_cycle.audit_alignment_factors.keys()), len(audit_alignment_factors.keys()))
+        self.assertListEqual(audit_cycle.audit_alignment_factors, response)
+        self.assertEqual(len(audit_cycle.audit_alignment_factors), len(response))

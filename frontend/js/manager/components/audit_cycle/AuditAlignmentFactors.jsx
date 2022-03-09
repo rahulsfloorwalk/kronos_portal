@@ -14,6 +14,7 @@ import { AuditorRatings, CarCostList, EducationList, GenderList, IncomeList, Int
 import Modal from "../../../components/Modal.jsx";
 import Loading from "../../../components/Loading.jsx";
 import { FormDateInput } from "../../../components/FormInput.jsx";
+import { splitDateRange } from "../../../react_utils.js";
 
 const auditCycleProp = PropTypes.shape({
 	id: PropTypes.number.isRequired,
@@ -51,7 +52,9 @@ class AuditAlignmentFactors extends Component{
 		auditor_rating: [],
 		auditor_age: 0,
 		from_available_date: "",
-		to_available_dates: ""
+		to_available_date: "",
+		date_availability: "",
+		errors: {}
 	};
 
 	componentDidMount() {
@@ -61,8 +64,19 @@ class AuditAlignmentFactors extends Component{
 	}
 
 	componentWillReceiveProps(nextProps){
-		let factors_obj = nextProps.auditCycle.audit_alignment_factors;
-		if(factors_obj){
+		let factors_obj_list = nextProps.auditCycle.audit_alignment_factors;
+		if(factors_obj_list.length > 0){
+			let factors_obj = {};
+			for(let factor of factors_obj_list){
+				factors_obj[factor["key"]] = factor["value"];
+			}
+			if("date_availability" in factors_obj){
+				if(factors_obj["date_availability"] != ""){
+					let date_availability = splitDateRange(factors_obj["date_availability"]);
+					factors_obj["from_available_date"] = date_availability[0];
+					factors_obj["to_available_date"] = date_availability[1];
+				}
+			}
 			this.setState((prevState) => Object.assign({}, prevState, factors_obj));
 		}
 	}
@@ -73,6 +87,14 @@ class AuditAlignmentFactors extends Component{
 		if( typeof date !== "string"){
 			this.setState({
 				[field_name]: date.format("YYYY-MM-DD")
+			}, () => {
+				let date_availability = "";
+				if(this.state.from_available_date != "" && this.state.to_available_date != ""){
+					date_availability = this.state.from_available_date + " - " + this.state.to_available_date;
+				}
+				this.setState({
+					date_availability: date_availability,
+				});
 			});
 		}
 	};
@@ -184,6 +206,7 @@ class AuditAlignmentFactors extends Component{
 			<Modal size="modal-lg" modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				{loading ? loading :
 					<form onSubmit={this.onSubmit}>
+						<p className="text-danger" style={{fontWeight:"bold"}}>{this.state.errors.non_field_errors != "undefined" ? this.state.errors.non_field_errors : null}</p>
 						<div className="row">
 							<div className="col-md-6" style={{marginBottom:"10px"}}>
 								<label>Gender</label>

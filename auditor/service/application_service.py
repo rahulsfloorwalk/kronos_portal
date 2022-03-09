@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group
 from django.db.transaction import atomic
-from django.db.models import Count
+from django.db.models import Count, F
 from notifications.models import Notification
 from notifications.signals import notify
 
@@ -91,9 +91,10 @@ def apply(audit_id, user_id, audit_date):
                 action_object=application,
                 target=audit
             )
-            if audit.audit_cycle.audit_auto_approve:
-                audit_count = 1
-                application = approve(application.id, audit_date, audit.reimbursement, audit.earnings_per_audit, audit_count, profile_info.user)
+            # if audit.audit_cycle.audit_auto_approve:
+            #     audit_count = 1
+            #     auto_approve = False
+            #     application = approve(application.id, audit_date, audit.reimbursement, audit.earnings_per_audit, audit_count, profile_info.user, auto_approve)
             # auditor_notif_id = Notification.objects.filter(verb=verbs.AUDIT_APPLICATION_APPLIED).order_by('-id')[0].id
         else:
             raise AppLogicError("you cannot apply to this audit")
@@ -137,7 +138,7 @@ def cancel(audit_id, user_id):
     return application
 
 
-def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit_count, user_actor):
+def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit_count, user_actor, auto_approve=False):
     with atomic():
         try:
             application = AuditApplication.objects.get(id=application_id)
@@ -183,7 +184,7 @@ def approve(application_id, audit_date, reimbursement, earnings_per_audit, audit
             else:
                 checkpoints_dict = {}
 
-            AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor)
+            AuditStore.objects.assign_audit_store(audit, application.audit_date, application.profileinfo.user, reimbursement, earnings_per_audit, checkpoints_dict, user_actor, auto_assigned=auto_approve)
     return application
 
 def reject(application_id, user_actor):
@@ -315,3 +316,25 @@ def find_20_days_waitlist_audit_applications():
         created_at__date__lte=today_ist() - timedelta(days=20),
         status=AuditApplication.WAITLISTED,
         audit__audit_cycle__status=AuditCycle.ACTIVE)
+
+
+def find_audit_applications_for_auto_approve():
+
+    audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').filter(
+        audit_date__gte=today_ist() + timedelta(days=2),
+        report_exists=False,
+        status=AuditApplication.APPLIED,
+        audit_date__gt=F('audit__audit_cycle__start_date'),
+        audit_date__lt=F('audit__audit_cycle__end_date'),
+        audit__audit_cycle__audit_auto_approve = True,
+        audit__audit_cycle__status=AuditCycle.ACTIVE)
+
+    application_id_list = []
+    for application in audit_application:
+        total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
+
+        # required minimum 3 alignment factors in audit cycle
+        if total_factors_count > 2 and match_percent == 100 and (application.audit.count > application.audit.valid_report_count()):
+            application_id_list.append(application.id)
+
+    return audit_application.filter(id__in = application_id_list)

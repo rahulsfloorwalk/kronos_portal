@@ -29,6 +29,7 @@ def setup_periodic_tasks(sender, **kwargs):
     # from notify.service.mail_full_time_opportunity import send_full_time_opportunity_emails
     from notify.service.mail_qa_performance import qa_performance_report
     # from notify.service.add_payout_beneficiary import add_beneficiary
+    from notify.service.auto_audit_alignment import auto_approve_audit_application
 
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
@@ -52,6 +53,11 @@ def setup_periodic_tasks(sender, **kwargs):
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.
     queue_at_attachment = crontab(hour='*/5', minute=0)
     sender.add_periodic_task(queue_at_attachment, find_faulty_report.s())
+
+    # Executes every day at 0230 UTC == 0800 IST
+    queue_at_8 = crontab(hour=2, minute=30)
+    # This cron will auto approve audit applications everyday at 8 am
+    sender.add_periodic_task(queue_at_8, auto_approve_audit_application.s())
 
     # schedule for save audio transcription
     # Execute cron every midnight at 11:40

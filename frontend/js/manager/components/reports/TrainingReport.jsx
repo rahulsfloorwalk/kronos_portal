@@ -124,6 +124,7 @@ export default class TrainingReport extends Component{
 			audit_status: "",
 			followup_date: "",
 			filter_error: "",
+			auto_assigned: "",
 			loading: false
 		};
 	}
@@ -132,9 +133,9 @@ export default class TrainingReport extends Component{
 		fetchClientsWithDashboardCycleStatus().done((clients)=>this.setState({clients}));
 	}
 
-	reload_data = (client, cycle, store, audit_status, followup_date) => {
+	reload_data = (client, cycle, store, audit_status, followup_date, auto_assigned) => {
 		this.setLoading(true);
-		getFollowUpReport(client, cycle, store, audit_status, followup_date).then((reports)=> this.setState({
+		getFollowUpReport(client, cycle, store, audit_status, followup_date, auto_assigned).then((reports)=> this.setState({
 			reports: reports,
 			loading: false
 		}));
@@ -181,7 +182,7 @@ export default class TrainingReport extends Component{
 		}
 		else{
 			this.setState({filter_error: ""});
-			this.reload_data(this.state.client, this.state.cycle, this.state.store, this.state.audit_status, this.state.followup_date);
+			this.reload_data(this.state.client, this.state.cycle, this.state.store, this.state.audit_status, this.state.followup_date, this.state.auto_assigned);
 		}
 	};
 
@@ -192,6 +193,7 @@ export default class TrainingReport extends Component{
 			store: "",
 			audit_status: "",
 			followup_date: "",
+			auto_assigned: "",
 		});
 	};
 
@@ -218,7 +220,7 @@ export default class TrainingReport extends Component{
 		return (
 			<div>
 				<h2>Follow-up report</h2><br/>
-				<div className="row">
+				<div className="row col-md-12">
 					<div className="col-md-2" style={{marginBottom: "10px"}}>
 						<select className="form-control" value={this.state.client} name="client" onChange={this.client_changed}>
 							<option value="">Select Client</option>
@@ -253,6 +255,13 @@ export default class TrainingReport extends Component{
 						</select>
 					</div>
 					<div className="col-md-2" style={{marginBottom: "10px"}}>
+						<select className="form-control" value={this.state.auto_assigned} name="auto_assigned" onChange={this.inputChanged}>
+							<option value="">Auto assigned?</option>
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>
+					</div>
+					<div className="col-md-2" style={{marginBottom: "10px"}}>
 						<Datetime
 							inputProps={{placeholder:"Select follow up date"}}
 							name="followup_date"
@@ -262,7 +271,7 @@ export default class TrainingReport extends Component{
 							onChange={this.dateChanged}
 						/>
 					</div>
-					<div className="col-md-2">
+					<div className="col-md-2" style={{marginBottom: "10px"}}>
 						<button className="btn btn-primary" onClick={this.findFilter}>Search</button>&nbsp;&nbsp;
 						<button className="btn btn-primary" onClick={this.resetFilter}>Reset</button>
 					</div>

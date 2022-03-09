@@ -108,5 +108,5 @@ class FollowUpReport(APIView):
         'GET': [GROUP_NAME_MANAGER],
     }
     def get(self, request, format=None):
-        report = get_follow_up_report(request.GET.get('client'), request.GET.get('cycle'), request.GET.get('store'), request.GET.get('audit_status'), request.GET.get('followup_date'))
+        report = get_follow_up_report(request.GET.get('client'), request.GET.get('cycle'), request.GET.get('store'), request.GET.get('audit_status'), request.GET.get('followup_date'), request.GET.get('auto_assigned'))
         return Response(report)

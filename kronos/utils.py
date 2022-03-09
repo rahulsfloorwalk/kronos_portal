@@ -6,6 +6,8 @@ from datetime import datetime
 
 from django.utils import timezone
 
+from kronos.exceptions import AppLogicError
+
 __logger = logging.getLogger(__name__)
 
 def get_color_code_by_percentage(percentage):
@@ -170,3 +172,35 @@ def get_dialcode(country_code):
         return dialcode_list[country_code]
     else:
         return None
+
+def split_date_range_from_string(date_range: str) -> list:
+    msg = 'Incorrect date range format'
+
+    if not date_range or ' - ' not in date_range:
+        raise AppLogicError(msg)
+
+    split_str = date_range.split(' - ')
+    if ' - ' not in date_range or len(split_str) != 2 or not split_str[0] or not split_str[1]:
+        raise AppLogicError(msg)
+
+    try:
+        start_date = datetime.strptime(split_str[0], '%Y-%m-%d').date()
+        end_date = datetime.strptime(split_str[1], '%Y-%m-%d').date()
+    except ValueError as e:
+        raise AppLogicError(e)
+
+    return [start_date, end_date]
+
+
+def validate_date_range_from_string(date_range: str) -> bool:
+    if date_range == '':
+        return True
+
+    date_range_list = split_date_range_from_string(date_range)
+    if date_range_list:
+        if date_range_list[0] > date_range_list[1] or date_range_list[1] < date_range_list[0]:
+            return False
+        else:
+            return True
+    else:
+        return False
