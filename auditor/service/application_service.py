@@ -327,14 +327,21 @@ def find_audit_applications_for_auto_approve():
         audit_date__gt=F('audit__audit_cycle__start_date'),
         audit_date__lt=F('audit__audit_cycle__end_date'),
         audit__audit_cycle__audit_auto_approve = True,
-        audit__audit_cycle__status=AuditCycle.ACTIVE)
+        audit__audit_cycle__status=AuditCycle.ACTIVE).order_by('id')
+
+    audit_obj_list = Audit.objects.filter(audit_cycle__status=AuditCycle.ACTIVE, audit_cycle__audit_auto_approve = True)
 
     application_id_list = []
-    for application in audit_application:
-        total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
+    for audit in audit_obj_list:
+        if audit.valid_report_count() < audit.count:
+            range = audit.count - audit.valid_report_count()
+            audit_application_filtered = audit_application.filter(audit=audit.id)[:range]
 
-        # required minimum 3 alignment factors in audit cycle
-        if total_factors_count > 2 and match_percent == 100 and (application.audit.count > application.audit.valid_report_count()):
-            application_id_list.append(application.id)
+            for application in audit_application_filtered:
+                total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
+
+                # required minimum 3 alignment factors in audit cycle
+                if total_factors_count > 2 and match_percent == 100:
+                    application_id_list.append(application.id)
 
     return audit_application.filter(id__in = application_id_list)

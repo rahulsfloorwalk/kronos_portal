@@ -464,11 +464,14 @@ class AuditApplication(Model):
             total_factors_count += 1
 
             if factor['type'] == 'str':
+                user_value = None
                 for obj in validator_objects:
                     if getattr(obj, factor['key'], '') not in blank_values:
                         user_value = getattr(obj, factor['key'])
                         if user_value:
                             break
+                if not user_value:
+                    continue
 
                 alignment_factor_value = factor['value'] if type(factor['value']) in [list, set] else [factor['value']]
 
