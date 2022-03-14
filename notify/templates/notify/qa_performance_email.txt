@@ -2,11 +2,7 @@ Dear QA,
 
 Below is your daily work report:
 
-Number of Reports Pending from {{ yesterday_date }}: {{ yesterday_pending }}
 
-Previous Reports Pending: {{ previous_pending }}
-
-Total number of reports pending  ({% now "N d, Y" %}): {{ total_pending_reports }}
 
 ----
 Thanks and regards,

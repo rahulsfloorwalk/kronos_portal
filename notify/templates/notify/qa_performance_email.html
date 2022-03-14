@@ -9,17 +9,21 @@
         <table border="1" cellpadding="8" cellspacing="0" width="700">
             <tbody>
                 <tr>
-                    <th style="font-size: 14px;">Number of Reports Pending from {{ yesterday_date }}</th>
-                    <td style="font-size: 13px;">{{ yesterday_pending }}</td>
+                    <th>
+                        QA email
+                    </th>
+                    <th style="font-size: 14px;text-align: center;">Number of Reports Pending from {{ yesterday_date }}</th>
+                    <th style="font-size: 14px;text-align: center;">Previous Reports Pending</th>
+                    <th style="font-size: 14px;text-align: center;">Total number of reports pending ({% now "N d, Y" %})</th>
                 </tr>
+                {% for report in pending_reports %}
                 <tr>
-                    <th style="font-size: 14px;">Previous Reports Pending</th>
-                    <td style="font-size: 13px;">{{ previous_pending }}</td>
+                    <td style="font-size: 13px;text-align: center;">{{ report.user_email }}</td>
+                    <td style="font-size: 13px;text-align: center;">{{ report.yesterday_pending }}</td>
+                    <td style="font-size: 13px;text-align: center;">{{ report.previous_pending }}</td>
+                    <td style="font-size: 13px;text-align: center;">{{ report.total_pending_reports }}</td>
                 </tr>
-                <tr>
-                    <th style="font-size: 14px;">Total number of reports pending ({% now "N d, Y" %})</th>
-                    <td style="font-size: 13px;">{{ total_pending_reports }}</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
 		<p>--</p>

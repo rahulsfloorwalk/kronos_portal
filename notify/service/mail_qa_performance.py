@@ -1,5 +1,5 @@
 import logging
-
+from functools import reduce
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import Permission
@@ -8,6 +8,7 @@ from django.template.loader import get_template
 from django.core.mail import EmailMultiAlternatives
 from django.utils import timezone
 
+from kronos.utils import today_ist
 from monitoring.service import email_log_service
 
 from audit_store.models import AuditStore
@@ -32,9 +33,10 @@ def qa_performance_report():
     perms = UserObjectPermission.objects.filter(content_type=content_type, permission=permission, user__is_active=True)
 
     moderator_list = find_all().filter(is_active = True)
+    pending_report_list = []
     for moderator in moderator_list:
-        yesterday_pending_reports = audit_reports.filter(audit_date = yesterday).values('id')
-        previous_pending_reports = audit_reports.filter(audit_date__lt = yesterday).values('id')
+        yesterday_pending_reports = audit_reports.filter(submit_at__date = yesterday).values('id')
+        previous_pending_reports = audit_reports.filter(submit_at__date__lt = yesterday).values('id')
 
         yesterday_pending_reports = [str(report["id"]) for report in yesterday_pending_reports]
         previous_pending_reports = [str(report["id"]) for report in previous_pending_reports]
@@ -43,20 +45,43 @@ def qa_performance_report():
         previous_pending = perms.filter(object_pk__in=previous_pending_reports, user = moderator.id).count()
         total_pending_reports = yesterday_pending + previous_pending
 
-        data = {
+        report = {
             'yesterday_pending': yesterday_pending,
             'previous_pending': previous_pending,
             'total_pending_reports': total_pending_reports,
             'yesterday_date': yesterday.strftime("%b %d, %Y"),
-            'user_id': moderator.id
+            'user_id': moderator.id,
+            'user_email': moderator.email
         }
+        pending_report_list.append(report)
 
-        if settings.EMAIL_SWITCH['QA_PENDING_NOTIFICATION_EMAIL']:
-            _logger.info("QA pending notification email sending for %s", moderator.email)
-            qa_notification_email_task.delay(data)
-        else:
-            _logger.info("QA pending notification message disabled. skipping message for qa id %s", moderator.id)
+    if settings.EMAIL_SWITCH['QA_PENDING_NOTIFICATION_EMAIL']:
+        consolidate_qa_notification_email_task.delay(pending_report_list)
+        # qa_notification_email_task.delay(report)
+    else:
+        _logger.info("QA pending notification message disabled. skipping message for qa")
+    return True
 
+
+@app.task(ignore_result=True)
+def consolidate_qa_notification_email_task(pending_reports):
+    params = {
+        **registration_context(),
+    }
+    yesterday_date = today_ist() - timedelta(days=1)
+
+    to_email_list = [report['user_email'] for report in pending_reports]
+    total_pending_reports = reduce(lambda a, b: a['total_pending_reports'] + b['total_pending_reports'], pending_reports)
+
+    subject = "{} report is pending today".format(str(total_pending_reports))
+    if total_pending_reports > 1:
+        subject = "{} reports are pending today".format(str(total_pending_reports))
+
+    params['yesterday_date'] = yesterday_date
+    params['pending_reports'] = pending_reports
+    html_message = get_template("notify/qa_performance_email.html").render(params)
+    txt_message = get_template("notify/qa_performance_email.txt").render(params)
+    send_email(to_email_list, subject, html_message, txt_message)
     return True
 
 
@@ -95,7 +120,7 @@ def send_email(to_email, subject, html_message, txt_message):
 
     cc_emails = ('sourabh@floorwalk.in', 'tiyasha.roy@floorwalk.in', 'renuka.phatak@floorwalk.in',)
     subject = "{} {}".format(SUBJECT_PREFIX, subject)
-    msg = EmailMultiAlternatives(subject, txt_message, to=(to_email,), cc=cc_emails)
+    msg = EmailMultiAlternatives(subject, txt_message, to=to_email, cc=cc_emails)
     msg.attach_alternative(html_message, "text/html")
     msg.send()
 
