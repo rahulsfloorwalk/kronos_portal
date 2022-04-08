@@ -10,8 +10,13 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from django.contrib import messages
 from .models import GROUP_NAME_CLIENT
-
+from django.db.transaction import atomic
+from django.urls import reverse
+from registration.formss.ClientSignUpForm import ClientSignUpForm
 from registration.forms import GroupAuthenticationForm
+from registration.service import verification_service
+
+from kronos.exceptions import ObjectNotFound
 
 _logger = logging.getLogger(__name__)
 
@@ -63,3 +68,36 @@ class Logout(View):
         messages.add_message(request, messages.SUCCESS, 'Logged out successfully.')
         _logger.info("client_user successfully logged out")
         return redirect('registration:client_login')
+
+
+class SignUp(View):
+    __template = 'registration/client/signup.html'
+
+    def get(self, request):
+        _logger.debug("client signup form requested")
+        form = ClientSignUpForm()
+        return render(request, self.__template, {'form': form})
+
+    @atomic
+    def post(self, request):
+        _logger.debug("client signup form submitted with username: >%s<", request.POST.get('username','<blank>'))
+        form = ClientSignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            if user is not None:
+                _logger.debug("user %s signed up successfully", user)
+                return redirect(reverse('registration:client_signup_success'))
+        _logger.debug("client signup form invalid")
+        return render(request, self.__template, {'form': form})
+
+@atomic
+def verify_email(request, key):
+    try:
+        verification = verification_service.verify_by_activation_key(key)
+        login(request, verification.user, backend='registration.backends.CaseInsensitiveModelBackend')
+    except ObjectNotFound as e:
+        _logger.debug("verification failed for key: %s", key)
+    return redirect('registration:client_login')
+
+def signup_success(request):
+    return render(request, 'registration/signup_success.html')

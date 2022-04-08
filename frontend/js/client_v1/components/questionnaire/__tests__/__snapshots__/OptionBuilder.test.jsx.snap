@@ -1,0 +1,295 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OptionBuilder when there are no options specified renders default options 1`] = `
+<div
+  className="form-group"
+>
+  <table
+    className="table"
+  >
+    <colgroup>
+      <col
+        style={
+          Object {
+            "width": "20%",
+          }
+        }
+      />
+      <col
+        style={
+          Object {
+            "width": "50%",
+          }
+        }
+      />
+      <col
+        style={
+          Object {
+            "width": "20%",
+          }
+        }
+      />
+      <col
+        style={
+          Object {
+            "width": "10%",
+          }
+        }
+      />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>
+          Sequence
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Marks
+        </th>
+        <th>
+          <button
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input
+            className="form-control"
+            name="sequence"
+            onChange={[Function]}
+            type="number"
+            value={1}
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="value"
+            onChange={[Function]}
+            type="text"
+            value="Yes"
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="marks"
+            onChange={[Function]}
+            type="number"
+            value={1}
+          />
+        </td>
+        <td>
+          <button
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            className="form-control"
+            name="sequence"
+            onChange={[Function]}
+            type="number"
+            value={2}
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="value"
+            onChange={[Function]}
+            type="text"
+            value="No"
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="marks"
+            onChange={[Function]}
+            type="number"
+            value={0}
+          />
+        </td>
+        <td>
+          <button
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`OptionBuilder when there are options specified renders given options 1`] = `
+<div
+  className="form-group"
+>
+  <table
+    className="table"
+  >
+    <colgroup>
+      <col
+        style={
+          Object {
+            "width": "20%",
+          }
+        }
+      />
+      <col
+        style={
+          Object {
+            "width": "50%",
+          }
+        }
+      />
+      <col
+        style={
+          Object {
+            "width": "20%",
+          }
+        }
+      />
+      <col
+        style={
+          Object {
+            "width": "10%",
+          }
+        }
+      />
+    </colgroup>
+    <thead>
+      <tr>
+        <th>
+          Sequence
+        </th>
+        <th>
+          Value
+        </th>
+        <th>
+          Marks
+        </th>
+        <th>
+          <button
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <input
+            className="form-control"
+            name="sequence"
+            onChange={[Function]}
+            type="number"
+            value={1}
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="value"
+            onChange={[Function]}
+            type="text"
+            value="Good"
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="marks"
+            onChange={[Function]}
+            type="number"
+            value={2}
+          />
+        </td>
+        <td>
+          <button
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input
+            className="form-control"
+            name="sequence"
+            onChange={[Function]}
+            type="number"
+            value={2}
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="value"
+            onChange={[Function]}
+            type="text"
+            value="Bad"
+          />
+        </td>
+        <td>
+          <input
+            className="form-control"
+            name="marks"
+            onChange={[Function]}
+            type="number"
+            value={1}
+          />
+        </td>
+        <td>
+          <button
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            type="button"
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

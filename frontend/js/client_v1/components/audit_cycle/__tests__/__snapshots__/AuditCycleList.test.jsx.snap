@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<AuditCycleList/> renders a list of audit cycles 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-plus"
+      />
+       Add Audit Cycle
+    </a>
+    <span
+      className="glyphicon glyphicon-retweet"
+    />
+     Audit Cycles
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Cycle Name
+        </th>
+        <th>
+          Start Date
+        </th>
+        <th>
+          End Date
+        </th>
+        <th>
+          Audit Type
+        </th>
+        <th>
+          Questionnaire Type
+        </th>
+        <th>
+          Audit Status
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          Telephonic February 2018
+        </td>
+        <td>
+          23rd Feb 2018
+        </td>
+        <td>
+          1st Mar 2018
+        </td>
+        <td>
+          <span>
+            <span
+              className="glyphicon glyphicon-phone-alt"
+            />
+             
+            Phone
+          </span>
+        </td>
+        <td>
+          Phone
+        </td>
+        <td>
+          Archived
+        </td>
+        <td>
+          <a
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            View
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          February 2018
+        </td>
+        <td>
+          23rd Feb 2018
+        </td>
+        <td>
+          28th Feb 2018
+        </td>
+        <td>
+          <span>
+            <span
+              className="glyphicon glyphicon-road"
+            />
+             
+            Walk In
+          </span>
+        </td>
+        <td />
+        <td>
+          Archived
+        </td>
+        <td>
+          <a
+            className="btn btn-default pull-right"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            View
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

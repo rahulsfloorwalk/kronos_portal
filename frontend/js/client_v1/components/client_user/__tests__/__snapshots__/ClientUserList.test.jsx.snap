@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ClientUserList/> renders a list of client users 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-plus"
+      />
+       Add User
+    </a>
+    <span
+      className="glyphicon glyphicon-bishop"
+    />
+     Client Users
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Full Name
+        </th>
+        <th>
+          Email Address
+        </th>
+        <th>
+          Client Admin
+        </th>
+        <th>
+          Active
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          Client User1
+        </td>
+        <td>
+          client_user1@example.in
+        </td>
+        <td>
+          <span
+            className="glyphicon glyphicon-ok"
+          />
+        </td>
+        <td>
+          <span
+            className="glyphicon glyphicon-ok"
+          />
+        </td>
+        <td>
+          <a
+            className="btn btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span
+              className="glyphicon glyphicon-pencil"
+            />
+          </a>
+           
+        </td>
+      </tr>
+      <tr>
+        <td>
+          client user2
+        </td>
+        <td>
+          client_user2@example.in
+        </td>
+        <td>
+          <span
+            className="glyphicon glyphicon-remove"
+          />
+        </td>
+        <td>
+          <span
+            className="glyphicon glyphicon-ok"
+          />
+        </td>
+        <td>
+          <a
+            className="btn btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span
+              className="glyphicon glyphicon-pencil"
+            />
+          </a>
+           
+          <a
+            className="btn btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span
+              className="glyphicon glyphicon-map-marker"
+            />
+          </a>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;

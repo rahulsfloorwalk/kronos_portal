@@ -1,11 +1,30 @@
 from django.utils import timezone
-from django.db.models import Model, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField, BooleanField
+from django.contrib.auth.models import User, Group
+from django.contrib.contenttypes.fields import GenericRelation
+from django.db.transaction import atomic
+from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField, BooleanField
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT
 from django.conf import settings
-from kronos.utils import get_color_code_by_percentage, get_rank_by_percentage
+from kronos.utils import get_color_code_by_percentage, get_rank_by_percentage, validate_pan
+from guardian.shortcuts import assign_perm
+
+from registration.models import GROUP_NAME_CLIENT
+
+
+class ClientQuerySet(QuerySet):
+    def create_client(self, email, client_name, mobile_number, is_auto_signup):
+        obj = Client()
+        obj.email = email
+        obj.name = client_name
+        obj.phone = mobile_number
+        obj.is_auto_signup = is_auto_signup
+        obj.save()
+        return obj
+
 
 class Client(Model):
+    objects = ClientQuerySet.as_manager()
 
     id = AutoField(db_column = 'id', primary_key=True)
     name = CharField(db_column='name', max_length=50, blank=False)
@@ -15,6 +34,10 @@ class Client(Model):
     logo_url = CharField(db_column='logo_url', max_length=512, blank=True)
     brand_logo_url = CharField(db_column='brand_logo_url', max_length=512, blank=True)
     receive_email_notification = BooleanField(db_column='receive_email_notification', default=True)
+    address = CharField(db_column='address', max_length=300, blank=True)
+    company_website_url = CharField(db_column='company_website_url', max_length=200, blank=True)
+    is_auto_signup = BooleanField(db_column='is_auto_signup', default=False)
+    payments = GenericRelation('billing.payment', related_query_name='clients')
 
     def auditor_logo_url(self):
         return self.brand_logo_url or self.logo_url
@@ -29,7 +52,30 @@ class Client(Model):
         ordering = ['name']
 
 
+class ClientUserQuerySet(QuerySet):
+    def find_by_user_id(self, user_id):
+        return self.get(user_id=user_id)
+
+    @atomic
+    def create_client_user(self, email, password, client, full_name, is_client_admin = False):
+        user = User.objects.create_user(email, email=email, password=password)
+        user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
+        user.save()
+
+        if is_client_admin:
+            assign_perm('client.clientuser_admin', user)
+
+        client_user = ClientUser()
+        client_user.user = user
+        client_user.full_name = full_name
+        client_user.client = client
+        client_user.save()
+
+        return client_user
+
+
 class ClientUser(Model):
+    objects = ClientUserQuerySet.as_manager()
 
     id = AutoField(db_column = 'id', primary_key=True)
     full_name = CharField(db_column='full_name', max_length=50, blank=False)
@@ -167,3 +213,23 @@ class Store(Model):
         permissions = (
             ('clientuser_store_visible', 'ClientUser can view all AuditStore instances for this Store'),
         )
+
+
+class BankInfo(Model):
+    id = AutoField(db_column= 'id', primary_key=True)
+    gstin = CharField(db_column='gstin', max_length=20, blank=True)
+    pan_number = CharField(db_column='pan_number', max_length=10, blank=True)
+
+    client = OneToOneField(Client, related_name='client_bank_info', db_column='client_id', on_delete=PROTECT)
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(BankInfo, self).save(*args, **kwargs)
+
+    def is_pan_card_valid(self):
+        return bool(validate_pan(self.pan_number))

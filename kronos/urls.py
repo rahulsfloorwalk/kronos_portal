@@ -22,6 +22,7 @@ import registration.urls as registration_urls
 import auditor.urls as auditor_urls
 import manager.urls as manager_urls
 import client_rest.urls as client_urls
+import client_rest_v1.urls as client_v1_urls
 import moderator_rest.urls as moderator_urls
 import agency_rest.urls as agency_urls
 
@@ -33,6 +34,7 @@ urlpatterns = [
     url(r'^auth/', include(registration_urls.urlpatterns)),
     url(r'^auditor/', include(auditor_urls.urlpatterns)),
     url(r'^manager/', include(manager_urls.urlpatterns)),
+    url(r'^client_v1/', include(client_v1_urls.urlpatterns)),
     url(r'^client/', include(client_urls.urlpatterns)),
     url(r'^moderator/', include(moderator_urls.urlpatterns)),
     url(r'^agency/', include(agency_urls.urlpatterns)),

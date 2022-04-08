@@ -114,9 +114,10 @@ def get_average_for_report_sections(report_sections):
     total = 0
     for report_section in report_sections:
         if not report_section.not_applicable:
-            counter += 1
-            # total += report_section.marks_percentage()
-            total += report_section.report_section_percentage
+            if report_section.report_section_percentage:
+                counter += 1
+                # total += report_section.marks_percentage()
+                total += report_section.report_section_percentage
     if counter > 0:
         return {
             # 'color_code': get_color_code_by_percentage(int(total / counter)),

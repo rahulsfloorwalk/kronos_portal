@@ -1,0 +1,166 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ClientUserForm> renders an empty form correctly 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Add Client User
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <label>
+              Full Name
+            </label>
+            <input
+              className="form-control"
+              label="Full Name"
+              name="full_name"
+              onChange={[Function]}
+              type="text"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Email Address
+            </label>
+            <input
+              className="form-control"
+              label="Email Address"
+              name="email"
+              onChange={[Function]}
+              type="email"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Password
+            </label>
+            <input
+              className="form-control"
+              label="Password"
+              name="password"
+              onChange={[Function]}
+              placeholder="leave blank to keep password unchanged"
+              type="password"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Admin?
+            </label>
+            <input
+              className="form-control"
+              label="Admin?"
+              name="is_client_admin"
+              onChange={[Function]}
+              type="checkbox"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Active?
+            </label>
+            <input
+              className="form-control"
+              label="Active?"
+              name="is_active"
+              onChange={[Function]}
+              type="checkbox"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Receive Email Notification?
+            </label>
+            <input
+              className="form-control"
+              label="Receive Email Notification?"
+              name="receive_email_notification"
+              onChange={[Function]}
+              type="checkbox"
+              value=""
+            />
+            <ul />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

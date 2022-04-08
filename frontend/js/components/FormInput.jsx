@@ -26,13 +26,14 @@ export default class FormInput extends React.Component{
 		errors: PropTypes.array,
 		checked: PropTypes.bool,
 		required_mark: PropTypes.bool,
+		required: PropTypes.bool,
 	};
 
 	focus(){
 		this._input && this._input.focus();
 	}
 	render(){
-		let { placeholder, onChange, maxLength, type, value, name, disabled, label, checked, required_mark } = this.props;
+		let { placeholder, onChange, maxLength, type, value, name, disabled, label, checked, required_mark, required } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
 		value = value ? value : "";
@@ -56,6 +57,7 @@ export default class FormInput extends React.Component{
 					disabled={disabled}
 					label={label}
 					checked={checked}
+					required={required}
 				/>
 				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>

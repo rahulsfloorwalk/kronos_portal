@@ -63,7 +63,7 @@ class StoreSelector extends React.Component {
 				<label>Select store</label>
 				<Select
 					name="store"
-					value={this.props.value ? storeOptions.filter(obj => this.props.value === obj.value) : null}
+					value={this.props.value ? storeOptions.filter(obj => this.props.value == obj.value) : null}
 					onChange={this.props.onChange}
 					isClearable={true}
 					options={storeOptions}/>

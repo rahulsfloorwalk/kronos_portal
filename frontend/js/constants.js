@@ -1,3 +1,6 @@
+export const MinimumPayableAmount = 5000;
+
+export const PaymentGSTAmount = 18;
 
 export const ApplicationStatus = [
 	"APPLIED",
