@@ -44,9 +44,7 @@ class CheckoutForm extends React.Component{
 				},
 				loading: false
 			});
-		}).finally(()=>this.setState({
-			loading: false
-		}));
+		});
 
 		this.loadScript();
 	}
