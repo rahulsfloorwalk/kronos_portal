@@ -90,7 +90,7 @@ class AuditCycle(Model):
     revenue_per_audit = IntegerField(db_column='revenue_per_audit', blank=True, null=True)
     charge_per_audit = IntegerField(db_column='charge_per_audit', blank=False, default=0)
     system_cost = IntegerField(db_column='system_cost', blank=False, default=0)
-    reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True)
+    reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True, validators=[MinValueValidator(0)])
     audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
     description = CharField(db_column='description', max_length=16384, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)
@@ -99,6 +99,7 @@ class AuditCycle(Model):
     questionnaire_type = ForeignKey('questionnaire.QuestionnaireType', db_column='questionnaire_type_id', null=True, on_delete=PROTECT)
     support_page_link = CharField(db_column='support_page_link', max_length=200, blank=True)
     audit_alignment_factors = JSONField(db_column='audit_alignment_factors', default=list, blank=False)
+    created_by_client = BooleanField(db_column="created_by_client", default=False)
 
     class Meta:
         permissions = (

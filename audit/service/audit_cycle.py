@@ -95,6 +95,57 @@ def get_audit_cycle_dashboard():
 
     return response
 
+
+def get_audit_cycle_dashboard_by_client(client_id):
+    audit_cycles = AuditCycle.objects.filter(
+        client=client_id
+    ).order_by('end_date') \
+        .select_related('client') \
+        .prefetch_related(
+            'audits',
+            'audits__applications',
+            'audits__audit_stores',
+    )
+
+    response = []
+    for audit_cycle in audit_cycles:
+        obj = {}
+        obj['id'] = audit_cycle.id
+        obj['name'] = audit_cycle.name
+        obj['status'] = audit_cycle.status
+        obj['client'] = audit_cycle.client.name
+        obj['start_date'] = audit_cycle.start_date
+        obj['end_date'] = audit_cycle.end_date
+        obj['audit_count'] = audit_cycle.planned_audit
+        obj['stats'] = get_audit_cycle_stats(audit_cycle)
+        response.append(obj)
+
+    return response
+
+
+def get_audit_cycle_dashboard_summary_by_client(client_id):
+    summary = {
+        'completed': 0,
+        'acknowledge': 0,
+        'submitted': 0,
+        'assigned': 0,
+    }
+    reports = AuditStore.objects.filter(
+        audit__audit_cycle__client=client_id,
+        status__in=[AuditStore.COMPLETED, AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED, AuditStore.SUBMITTED]
+    ).only('id', 'status')
+    for report in reports:
+        if report.status == AuditStore.COMPLETED:
+            summary['completed'] = summary['completed'] + 1
+        elif report.status == AuditStore.ACKNOWLEDGED:
+            summary['acknowledge'] = summary['acknowledge'] + 1
+        elif report.status == AuditStore.SUBMITTED:
+            summary['submitted'] = summary['submitted'] + 1
+        elif report.status == AuditStore.ASSIGNED:
+            summary['assigned'] = summary['assigned'] + 1
+    return summary
+
+
 def find_audit_cycles_with_dashboard_status_by_client(client_id):
     return AuditCycle.objects.filter(client_id=client_id, status__in = AuditCycle.MANAGER_DASHBOARD_STATUSES).order_by('-end_date')
 

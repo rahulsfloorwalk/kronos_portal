@@ -1,0 +1,183 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types are empty 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-plus"
+      />
+       New
+    </a>
+    Questionnaire Types
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Questionnaire Type
+        </th>
+        <th>
+          Default
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody />
+  </table>
+</div>
+`;
+
+exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types are loaded 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <a
+      className="btn btn-default pull-right"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      <span
+        className="glyphicon glyphicon-plus"
+      />
+       New
+    </a>
+    Questionnaire Types
+  </h3>
+  <table
+    className="table table-striped"
+  >
+    <thead>
+      <tr>
+        <th>
+          Questionnaire Type
+        </th>
+        <th>
+          Default
+        </th>
+        <th />
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          Hello
+        </td>
+        <td>
+          <span
+            className="glyphicon glyphicon-ok"
+          />
+        </td>
+        <td
+          className="text-right"
+        >
+          <a
+            className="btn btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span
+              className="glyphicon glyphicon-pencil"
+            />
+             Edit
+          </a>
+           
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+             Delete
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          World
+        </td>
+        <td />
+        <td
+          className="text-right"
+        >
+          <a
+            className="btn btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span
+              className="glyphicon glyphicon-pencil"
+            />
+             Edit
+          </a>
+           
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+             Delete
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Foobar
+        </td>
+        <td />
+        <td
+          className="text-right"
+        >
+          <a
+            className="btn btn-default"
+            onClick={[Function]}
+            style={Object {}}
+          >
+            <span
+              className="glyphicon glyphicon-pencil"
+            />
+             Edit
+          </a>
+           
+          <button
+            className="btn btn-default"
+            onClick={[Function]}
+          >
+            <span
+              className="glyphicon glyphicon-remove"
+            />
+             Delete
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`<__QuestionnaireTypeList/> renders correctly when questionnaire types are loading 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="test-file-stub"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;

@@ -19,10 +19,14 @@ export default class FormSelect extends React.Component{
 		errors: PropTypes.array,
 		children: PropTypes.array,
 		required_mark: PropTypes.bool,
+		required: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.bool,
+		]),
 	};
 
 	render(){
-		const { placeholder, onChange, name, disabled, label } = this.props;
+		const { placeholder, onChange, name, disabled, label, required } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
 		const value = (this.props.value === null || this.props.value === undefined) ? "" : this.props.value;
@@ -42,6 +46,7 @@ export default class FormSelect extends React.Component{
 					name={name}
 					disabled={disabled}
 					label={label}
+					required={required}
 				>
 					{this.props.children}
 				</select>

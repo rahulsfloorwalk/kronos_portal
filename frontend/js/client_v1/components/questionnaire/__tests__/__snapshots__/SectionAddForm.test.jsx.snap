@@ -1,0 +1,109 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SectionAddForm renders an empty form 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[MockFunction]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[MockFunction]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Add Section
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <div
+            className="form-group"
+          >
+            <label>
+              Sequence
+            </label>
+            <input
+              className="form-control"
+              label="Sequence"
+              name="sequence"
+              onChange={[Function]}
+              type="number"
+              value=""
+            />
+            <ul />
+          </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Section Name
+            </label>
+            <input
+              className="form-control"
+              label="Section Name"
+              maxLength="100"
+              name="name"
+              onChange={[Function]}
+              type="text"
+              value=""
+            />
+            <ul />
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save
+          </button>
+           
+          <button
+            className="btn btn-primary"
+            onClick={[Function]}
+            type="button"
+          >
+            Save and Next
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

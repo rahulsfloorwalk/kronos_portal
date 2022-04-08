@@ -1,0 +1,104 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<PaymentList> renders an empty list correctly 1`] = `
+<div
+  className="container"
+>
+  <h1>
+    Invoice List
+  </h1>
+  <br />
+  <div
+    className="form-group"
+  >
+    <div
+      className="jumbotron text-center"
+    >
+      <h3>
+        Invoices not found
+      </h3>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<PaymentList> renders an payment list correctly 1`] = `
+<div
+  className="container"
+>
+  <h1>
+    Invoice List
+  </h1>
+  <br />
+  <div
+    className="row col-md-12"
+  >
+    <table
+      className="table table-striped"
+    >
+      <thead>
+        <tr>
+          <th>
+            Invoice Number
+          </th>
+          <th>
+            Payment Date
+          </th>
+          <th>
+            Amount
+          </th>
+          <th>
+            Payment Status
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td />
+          <td>
+            31st Mar 2022
+          </td>
+          <td>
+            ₹ 
+            5000
+          </td>
+          <td>
+            <span
+              className="label label-success"
+              style={
+                Object {
+                  "fontSize": "100%",
+                }
+              }
+            >
+              Paid
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <td />
+          <td>
+            4th Apr 2022
+          </td>
+          <td>
+            ₹ 
+            7000
+          </td>
+          <td>
+            <span
+              className="label label-success"
+              style={
+                Object {
+                  "fontSize": "100%",
+                }
+              }
+            >
+              Paid
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

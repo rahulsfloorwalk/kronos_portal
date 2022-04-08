@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CheckoutForm> renders an empty form correctly 1`] = `
+<div
+  className="text-center text-muted"
+>
+  <img
+    alt="loading..."
+    src="test-file-stub"
+    title="Please Wait"
+  />
+  <p>
+    LOADING
+  </p>
+</div>
+`;

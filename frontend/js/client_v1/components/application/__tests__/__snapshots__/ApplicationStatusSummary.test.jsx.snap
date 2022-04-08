@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ApplicationStatusSummary/> renders the application status summary correctly 1`] = `
+<table
+  className="table table-bordered"
+>
+  <thead>
+    <tr>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-primary"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Pending for Approval
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-warning"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Wait Listed
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-success"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Approved
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-default"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Withdrawn
+        </span>
+      </td>
+      <td
+        className="text-center"
+      >
+        <span
+          className="label label-danger"
+          style={
+            Object {
+              "fontSize": "100%",
+            }
+          }
+        >
+          Denied
+        </span>
+      </td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td
+        className="text-center"
+      >
+        <b>
+          5
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          7
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          53
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          8
+        </b>
+      </td>
+      <td
+        className="text-center"
+      >
+        <b>
+          2
+        </b>
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

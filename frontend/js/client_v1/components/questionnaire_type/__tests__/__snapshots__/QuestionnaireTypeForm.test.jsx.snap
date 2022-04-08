@@ -1,0 +1,213 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<__QuestionnaireTypeForm/> renders correctly 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Add Questionnaire Type
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <div
+              className="form-group"
+            >
+              <label>
+                Name
+              </label>
+              <input
+                className="form-control"
+                label="Name"
+                name="name"
+                onChange={[Function]}
+                type="text"
+                value=""
+              />
+              <ul />
+            </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <button
+              className="btn btn-default"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="glyphicon glyphicon-unchecked"
+              />
+            </button>
+             
+            <label>
+              Default
+            </label>
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<__QuestionnaireTypeForm/> renders initial values correctly 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Add Questionnaire Type
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+      >
+        <form
+          onSubmit={[Function]}
+        >
+          <ul />
+          <div
+            className="form-group"
+          >
+            <div
+              className="form-group"
+            >
+              <label>
+                Name
+              </label>
+              <input
+                className="form-control"
+                label="Name"
+                name="name"
+                onChange={[Function]}
+                type="text"
+                value="Foobar"
+              />
+              <ul />
+            </div>
+          </div>
+          <div
+            className="form-group"
+          >
+            <button
+              className="btn btn-primary"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="glyphicon glyphicon-ok"
+              />
+            </button>
+             
+            <label>
+              Default
+            </label>
+          </div>
+          <button
+            className="btn btn-primary"
+            type="submit"
+          >
+            Save
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+`;

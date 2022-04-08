@@ -1,0 +1,263 @@
+{% extends "registration/base.html" %}
+{% load widget_tweaks %}
+{% load static %}
+{% block title %}Client Sign Up |{% endblock %}
+{% block content %}
+
+<div class="row">
+	<div class="col-md-5">
+		<h1 class="page-header">
+			<a href="{{rhea_base_url}}">
+				<img class="img-responsive" src="{% static 'registration/logo_3_500x100.png' %}"/>
+			</a>
+		</h1>
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Register as an <b>Client</b> with FloorWalk</h3>
+			</div>
+			<div class="panel-body">
+				{% if x.non_field_errors %}
+				<div class="alert alert-warning">
+					{{ form.non_field_errors }}
+				</div>
+				{% endif %}
+				<form action="{% url 'registration:client_signup' %}" method="POST" id="signup_form">
+					{% csrf_token %}
+					<div class="form-group">
+						<label>Company Name</label>
+						{{ form.client_name | add_class:"form-control input-lg" | attr:"placeholder:ABC Company"}}
+						<p class="help-block">
+						{{ form.client_name.errors }}
+						</p>
+					</div>
+					<div class="form-group">
+						<label>Company Email</label>
+						{{ form.username | add_class:"form-control input-lg" | attr:"placeholder:name@example.com" | attr:"type:email"}}
+						<p class="help-block">
+						{{ form.username.errors }}
+						</p>
+					</div>
+					<div class="form-group">
+						<label>Full Name</label>
+						{{ form.full_name | add_class:"form-control input-lg" | attr:"placeholder:John Doe" }}
+						<p class="help-block">
+						{{ form.full_name.errors }}
+						</p>
+					</div>
+					<div class="form-group">
+						<label class="control-label" for="{{form.mobile_number.auto_id}}">10-digit Mobile Number:</label>
+						<div class="input-group">
+							<span class="input-group-addon">+91-</span>
+						{{ form.mobile_number | add_class:"form-control input-lg" | attr:"placeholder:your primary contact number" | attr:"type:tel"}}
+						</div>
+						<p class="help-block">
+						{{ form.mobile_number.errors }}
+						</p>
+					</div>
+					<div class="form-group has-feedback">
+						<label class="control-label" for="{{form.password1.auto_id}}">{{form.password1.label}}:</label>
+						{{ form.password1 | add_class:"form-control input-lg" | attr:"placeholder:a secret password"}}
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="p1-icon" style="display:none"></span>
+						<p class="help-block">
+						{{ form.password1.errors }}
+						{{ form.password2.errors }}
+						</p>
+					</div>
+					<div class="form-group has-feedback" style="display:none">
+						<label class="control-label" for="{{form.password2.auto_id}}">{{form.password2.label}}:</label>
+						{{ form.password2 | add_class:"form-control input-lg" | attr:"placeholder:please repeat your password"}}
+						<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" id="p2-icon" style="display:none"></span>
+						<p class="help-block">
+						</p>
+					</div>
+					<div id="tos_block" class="form-group" style="display:none;">
+						<table>
+							<tr>
+							<td style="padding:5px;">
+						<input type="checkbox" name="{{ form.tos_accept.name }}" checked
+							id="{{form.tos_accept.auto_id}}" required
+							style="width:30px;height:30px;"/>
+							</td>
+							<td style="padding:5px;">
+						<label for="{{form.tos_accept.auto_id}}">
+							I accept FloorWalk's <a href="{{ rhea_base_url }}/client_agreement" target="_blank">Client Contractor Agreement</a>.
+						</label>
+							</td>
+						</tr>
+						</table>
+					</div>
+					<div class="form-group">
+						<button class="btn btn-primary btn-lg" type="submit">Register</button>
+					</div>
+				</form>
+			</div>
+			<div class="panel-footer">
+				<p>Already have an <b>client</b> account? <a href="{% url 'registration:client_login' %} ">Login here</a></p>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-7">
+		<br/>
+		<br/>
+		<br/>
+		<h1 class="page-header">Register as a client</h1>
+		<h4 class="">Register with us to conduct audits for your store.</h4>
+		<div class="row">
+			<div class="col-md-12">
+				<h3 class="text-left">1. Register with us a client and setup your requirements</h3>
+				<p class="text-left">Setup your store locations, customize your questionnaire and align auditor</p>
+			</div>
+			<div class="col-md-12">
+				<h3 class="text-left">2. Audits will be assigned to the auditor matching the demographics</h3>
+				<p class="text-left">Auditors will be selected by the team from a large pool with good ratings</p>
+			</div>
+			<div class="col-md-12">
+				<h3 class="text-left">3. Auditor conducts audits and all the data is verified by FloorWalk team</h3>
+				<p class="text-left">Experts on our panel will extract the data and produce reports</p>
+			</div>
+			<div class="col-md-12">
+				<h3 class="text-left">4. View actionable insights</h3>
+				<p class="text-left">Get analytics on your store audits and take actions to improve your store experience</p>
+			</div>
+		</div>
+	</div>
+</div>
+{% include "registration/tawk.html" %}
+	<script>
+		var isValidPassword = function(password){
+			if(!password){
+				return [false, "password cannot be blank", 0];
+			}
+			if(password.length < 8){
+				return [false, "password must be atleast 8 characters", 0];
+			}
+			if(password.length > 12){
+				return [true, null, 3];
+			}
+			if(password.length > 8){
+				return [true, null, 2];
+			}
+			if(password.length === 8){
+				return [true, null, 1];
+			}
+		};
+		var checkPasswords = function(password1, password2){
+			return isValidPassword(password1)[0] && password1 && password2 && password1 === password2;
+		};
+		var checkPhone = function(mobile_number){
+			return /[0-9]{10}/.test(mobile_number);
+		};
+	(function(){
+
+		var resetPasswordValidationState = function(){
+			var p1 = document.querySelector("#id_password1");
+			var p1_icon = document.querySelector("#p1-icon");
+			p1.parentNode.classList.remove("has-error");
+			p1.parentNode.classList.remove("has-success");
+			p1_icon.style.display = "none";
+			p1_icon.classList.remove("glyphicon-ok");
+			p1_icon.classList.remove("glyphicon-remove");
+		};
+
+		var setPasswordInvalidState = function(v){
+			resetPasswordValidationState();
+			var p1 = document.querySelector("#id_password1");
+			var p1_icon = document.querySelector("#p1-icon");
+
+			p1.parentNode.classList.add("has-error");
+			p1.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>" + v[1] + "</span>";
+		};
+
+		var setPasswordValidState = function(){
+			resetPasswordValidationState();
+			var p1 = document.querySelector("#id_password1");
+			var p1_icon = document.querySelector("#p1-icon");
+
+			p1.parentNode.classList.add("has-success");
+			p1_icon.style.display = "block";
+			p1_icon.classList.add("glyphicon-ok");
+			p1.parentNode.querySelector("p").innerHTML = "";
+		};
+
+		var resetPasswordConfirmationState = function(){
+			var p2 = document.querySelector("#id_password2");
+			var p2_icon = document.querySelector("#p2-icon");
+			p2.parentNode.classList.remove("has-error");
+			p2.parentNode.classList.remove("has-success");
+			p2_icon.style.display = "none";
+			p2_icon.classList.remove("glyphicon-ok");
+			p2_icon.classList.remove("glyphicon-remove");
+		};
+
+		var setPasswordConfirmationError = function(){
+			resetPasswordConfirmationState();
+			var p2 = document.querySelector("#id_password2");
+			var p2_icon = document.querySelector("#p2-icon");
+			p2.parentNode.classList.add("has-error");
+			p2.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>passwords do not match</span>";
+		};
+
+		var setPasswordConfirmationSuccess = function(){
+			resetPasswordConfirmationState();
+			var p2 = document.querySelector("#id_password2");
+			var p2_icon = document.querySelector("#p2-icon");
+			p2.parentNode.classList.add("has-success");
+			p2_icon.style.display = "block";
+			p2_icon.classList.add("glyphicon-ok");
+			p2.parentNode.querySelector("p").innerHTML = "";
+		};
+
+		var confirmPasswordEquals = function(){
+			resetPasswordConfirmationState();
+			var p1 = document.querySelector("#id_password1");
+			var p2 = document.querySelector("#id_password2");
+			if(checkPasswords(p1.value, p2.value)){
+				setPasswordConfirmationSuccess();
+			} else {
+				setPasswordConfirmationError();
+			}
+		};
+
+		document.querySelector("#id_password1").addEventListener("focus", function(e){
+			document.querySelector("#id_password2").parentNode.style.display = "block";
+			document.querySelector("#tos_block").style.display = "block";
+		});
+
+		document.querySelector("#id_password1").addEventListener("keyup", function(e){
+			var p1 = e.target;
+
+			var v = isValidPassword(p1.value);
+
+			if( ! v[0]){
+				setPasswordInvalidState(v);
+			} else {
+				setPasswordValidState();
+			}
+		});
+
+		document.querySelector("#id_password2").addEventListener("keyup", confirmPasswordEquals);
+
+		document.querySelector("#id_mobile_number").addEventListener("keyup", function(e){
+			if( ! checkPhone(e.target.value)){
+				e.target.parentNode.classList.add("has-error");
+				e.target.parentNode.parentNode.querySelector("p").innerHTML = "<span class='text-danger'>invalid mobile number</span>";
+			} else {
+				e.target.parentNode.classList.remove("has-error");
+				e.target.parentNode.parentNode.querySelector("p").innerHTML = "";
+			}
+		});
+
+		document.querySelector("#signup_form").addEventListener("submit", function(e){
+			var p1 = document.querySelector("#id_password1");
+			var p2 = document.querySelector("#id_password2");
+			var mobile_number = document.querySelector("#id_mobile_number");
+
+			if( ! checkPasswords(p1.value, p2.value) || ! checkPhone(mobile_number.value)){
+				e.preventDefault();
+			}
+		});
+
+		resetPasswordConfirmationState();
+	})();
+	</script>
+{% endblock %}

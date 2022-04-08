@@ -29,6 +29,9 @@ urlpatterns = ([
     # Client Portal Login Logout Views
     url(r'client/login$', client_views.Login.as_view(), name="client_login"),
     url(r'client/logout$', client_views.Logout.as_view(), name="client_logout"),
+    url(r'client/verify_email/(?P<key>.+)$', client_views.verify_email, name="client_verify_email"),
+    url(r'client/signup/success$', client_views.signup_success, name="client_signup_success"),
+    url(r'client/signup$', client_views.SignUp.as_view(), name="client_signup"),
 
     url(r'login$', views.Login.as_view(), name="login"),
     url(r'logout$', views.Logout.as_view(), name="logout"),

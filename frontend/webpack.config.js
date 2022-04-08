@@ -14,6 +14,7 @@ module.exports = {
 		"manager/manager": path.resolve(__dirname, "./js/manager/index.jsx"),
 		"client/client": path.resolve(__dirname, "./js/client/index.jsx"),
 		"client/report_print": path.resolve(__dirname, "./js/client/report_print.jsx"),
+		"clientv1/clientv1": path.resolve(__dirname, "./js/client_v1/index.jsx"),
 		"moderator/moderator": path.resolve(__dirname, "./js/moderator/index.jsx"),
 	},
 	output: {
@@ -84,6 +85,11 @@ module.exports = {
 			filename: "client/index.html",
 			chunks: [ "client/client"],
 			template: path.resolve(__dirname, "./js/client/index.ejs"),
+		}),
+		new HtmlWebpackPlugin({
+			filename: "clientv1/index.html",
+			chunks: [ "clientv1/clientv1"],
+			template: path.resolve(__dirname, "./js/client_v1/index.ejs"),
 		}),
 		new HtmlWebpackPlugin({
 			filename: "client/report_print.html",

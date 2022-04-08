@@ -1,0 +1,121 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Header> renders an header correctly 1`] = `
+<nav
+  className="navbar navbar-default navbar-static-top hidden-print"
+>
+  <div
+    className="navbar-header"
+  />
+  <ul
+    className="nav navbar-nav"
+  >
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-dashboard"
+        />
+         Dashboard
+      </a>
+    </li>
+    <li
+      className=""
+      role="presentation"
+    >
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        <span
+          className="glyphicon glyphicon-file"
+        />
+         Projects
+      </a>
+    </li>
+    <li
+      role="presentation"
+    >
+      <a
+        href="/static/client/index.html"
+        target="_blank"
+      >
+        <span
+          className="glyphicon glyphicon-file"
+        />
+         Reports
+      </a>
+    </li>
+  </ul>
+  <ul
+    className="nav navbar-nav navbar-right"
+    style={
+      Object {
+        "marginRight": "0px",
+      }
+    }
+  >
+    <li
+      style={
+        Object {
+          "alignItems": "center",
+          "border": "solid 1px lightgrey",
+          "display": "flex",
+          "padding": "0px 5px",
+        }
+      }
+    >
+      <b
+        title="Remaining balance"
+      >
+        ₹ 
+        500
+      </b>
+        
+      <a
+        className="btn btn-sm btn-default"
+        onClick={[Function]}
+        style={
+          Object {
+            "margin": "9px 0px",
+            "padding": "5px",
+          }
+        }
+      >
+        Top Up
+      </a>
+    </li>
+    <li>
+      <a
+        onClick={[Function]}
+        style={
+          Object {
+            "cursor": "pointer",
+          }
+        }
+      >
+        <span>
+          <span
+            className="glyphicon glyphicon-stats"
+          />
+           My Account  
+        </span>
+      </a>
+    </li>
+  </ul>
+  <form
+    action="/auth/client/logout"
+    method="POST"
+    style={
+      Object {
+        "display": "none",
+      }
+    }
+  />
+</nav>
+`;

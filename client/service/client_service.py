@@ -1,6 +1,6 @@
 from kronos.exceptions import ObjectNotFound
 
-from ..models import Client
+from ..models import BankInfo, Client, ClientUser
 from audit.models.audit_cycle import AuditCycle
 
 def find_client_by_id(client_id):
@@ -8,6 +8,20 @@ def find_client_by_id(client_id):
         return Client.objects.get(id=client_id)
     except Client.DoesNotExist as e:
         raise ObjectNotFound from e
+
+
+def find_client_by_user_id(user_id):
+    try:
+        return ClientUser.objects.get(user_id=user_id).client
+    except Client.DoesNotExist as e:
+        raise ObjectNotFound from e
+
+
+def find_bank_info_by_id(client_id):
+    try:
+        return BankInfo.objects.get(client_id=client_id)
+    except BankInfo.DoesNotExist as e:
+        return BankInfo(client_id=client_id)
 
 
 def find_all_clients():

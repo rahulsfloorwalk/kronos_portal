@@ -292,10 +292,12 @@ def __get_mean_for_sections(sections, audit_stores):
             for rs in audit_store.report_sections.all():
                 if rs.section_id == section.id:
                     report_section = rs
-            if not report_section.not_applicable:
-                # total_percentage += report_section.marks_percentage()
-                total_percentage += report_section.report_section_percentage
-                count += 1
+            if report_section:
+                if not report_section.not_applicable:
+                    # total_percentage += report_section.marks_percentage()
+                    if report_section.report_section_percentage:
+                        total_percentage += report_section.report_section_percentage
+                        count += 1
 
         if count > 0:
             avg_percentage = int(total_percentage / count)
@@ -330,10 +332,12 @@ def __get_mean_for_report_browser(sections, audit_stores):
             for rs in audit_store.report_sections.all():
                 if rs.section_id == section.id:
                     report_section = rs
-            if not report_section.not_applicable:
-                # total_percentage += report_section.marks_percentage()
-                total_percentage += report_section.report_section_percentage
-                count += 1
+            if report_section:
+                if not report_section.not_applicable:
+                    # total_percentage += report_section.marks_percentage()
+                    if report_section.report_section_percentage:
+                        total_percentage += report_section.report_section_percentage
+                        count += 1
 
         if count > 0:
             avg_percentage = int(total_percentage / count)

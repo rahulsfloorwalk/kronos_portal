@@ -204,3 +204,21 @@ def validate_date_range_from_string(date_range: str) -> bool:
             return True
     else:
         return False
+
+
+def validate_url(url_string: str) -> bool:
+    regex = ("((http|https)://)(www.)?" +
+             "[a-zA-Z0-9@:%._\\+~#?&//=]" +
+             "{2,256}\\.[a-z]" +
+             "{2,6}\\b([-a-zA-Z0-9@:%" +
+             "._\\+~#?&//=]*)")
+
+    p = re.compile(regex)
+
+    if url_string is None:
+        return False
+
+    if(re.search(p, url_string)):
+        return True
+    else:
+        return False
