@@ -50,6 +50,7 @@ exports[`<PaymentList> renders an payment list correctly 1`] = `
           <th>
             Payment Status
           </th>
+          <th />
         </tr>
       </thead>
       <tbody>
@@ -74,6 +75,15 @@ exports[`<PaymentList> renders an payment list correctly 1`] = `
               Paid
             </span>
           </td>
+          <td>
+            <a
+              href="/client_v1/payment/6/1/invoice"
+            >
+              <span
+                className="glyphicon glyphicon-download-alt"
+              />
+            </a>
+          </td>
         </tr>
         <tr>
           <td />
@@ -95,6 +105,15 @@ exports[`<PaymentList> renders an payment list correctly 1`] = `
             >
               Paid
             </span>
+          </td>
+          <td>
+            <a
+              href="/client_v1/payment/6/2/invoice"
+            >
+              <span
+                className="glyphicon glyphicon-download-alt"
+              />
+            </a>
           </td>
         </tr>
       </tbody>

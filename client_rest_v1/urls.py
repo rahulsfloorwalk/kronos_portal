@@ -25,11 +25,11 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/application_stats$', audit_cycle_views.AuditCycleApplicationStats.as_view(), name='audit_cycle_application_stats'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/post_approval_description$', audit_cycle_views.AuditCycleIdPostApprovalDescriptionView.as_view(), name='audit_cycle_id_post_approval_description_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/checkpoints$', audit_cycle_views.AuditCycleIdCheckPointsView.as_view(), name='audit_cycle_id_checkpoints'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_alignment_factors', audit_cycle_views.AuditAlignmentFactors.as_view(), name='audit_alignment_factor'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit_alignment_factors$', audit_cycle_views.AuditAlignmentFactors.as_view(), name='audit_alignment_factor'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/copy_audit_details$', audit_cycle_views.AuditDetailsCopyByAuditCycle.as_view(), name='audit_details_copy_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/section$', section_views.SectionViewByAuditCycle.as_view(), name='section_by_audit_cycle'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/section/copy$', section_views.SectionCopyByAuditCycle.as_view(), name='section_copy_by_audit_cycle'),
-    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/export_questionnaire$', audit_cycle_views.ExportQuestionnaire.as_view(), name='export_questionnaire'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)$', audit_cycle_views.AuditCycleIdView.as_view(), name='audit_cycle_id_view'),
     url(r'audit_cycle$', audit_cycle_views.AuditCycleView.as_view(), name='audit_cycle_view'),
 
@@ -54,10 +54,12 @@ urlpatterns = ([
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
 
-    url(r'client/(?P<client_id>[0-9]+)/payment_resp', payment_views.PaymentResponseView.as_view(), name='payment_response_view'),
-    url(r'client/(?P<client_id>[0-9]+)/payment', payment_views.PaymentView.as_view(), name='payment_view'),
-    url(r'client/payment_failed', payment_views.PaymentFailedView.as_view(), name='payment_failed_view'),
-    url(r'client/account_balance', payment_views.AccountBalancView.as_view(), name='account_balance_view'),
+    url(r'client/(?P<client_id>[0-9]+)/payment_resp$', payment_views.PaymentResponseView.as_view(), name='payment_response_view'),
+    url(r'client/(?P<client_id>[0-9]+)/payment$', payment_views.PaymentView.as_view(), name='payment_view'),
+    url(r'client/payment_failed$', payment_views.PaymentFailedView.as_view(), name='payment_failed_view'),
+    url(r'client/account_balance$', payment_views.AccountBalancView.as_view(), name='account_balance_view'),
+
+    url(r'payment/(?P<client_id>[0-9]+)/(?P<payment_id>[0-9]+)/invoice$', payment_views.PaymentInvoiceView.as_view(), name="payment_invoice_view"),
 
     url(r'client/(?P<client_id>[0-9]+)/bank_info$', client_views.ClientBankInfoView.as_view(), name='client_bank_info_view'),
     url(r'client/(?P<client_id>[0-9]+)$', client_views.ClientIdView.as_view(), name='client_id_view'),

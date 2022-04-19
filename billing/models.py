@@ -2,6 +2,9 @@ from django.db.models import Model, AutoField, CharField, DecimalField, ForeignK
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.postgres.fields import JSONField
+from django.conf import settings
+from django.utils import timezone
+from kronos.utils import IST
 
 class Payment(Model):
 
@@ -29,3 +32,21 @@ class Payment(Model):
     added_on = DateTimeField(db_column='added_on', auto_now_add=True, null=False)
     paid_on = DateTimeField(db_column='paid_on', null=True)
     payment_data = JSONField(db_column='payment_data', default=dict)
+
+    @property
+    def invoice_number(self):
+        date = timezone.localtime(self.added_on, IST).date()
+        invoice = '#FW{}-00{}'.format(date.year, self.id)
+        return invoice
+
+    @property
+    def invoice_date(self):
+        return self.added_on.strftime("%d %b %Y")
+
+    def get_gst_amount(self, gst = settings.RAZORPAY_PAYMENT_GST):
+        if gst == '0' or gst == '':
+            return self.amount
+        return round(float(self.amount) * (float(gst) / 100))
+
+    def get_amount_without_gst(self, gst):
+        return self.amount - self.get_gst_amount(gst)

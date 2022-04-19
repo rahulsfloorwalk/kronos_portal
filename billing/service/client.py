@@ -2,13 +2,16 @@ from django.conf import settings
 from django.utils import timezone
 from django.db.transaction import atomic
 from django.db.models import Sum
+from django.template.loader import render_to_string
 
 from audit_store.models import AuditStore
 from billing.models import Payment
+from client.models import BankInfo
 
 from client.service.client_service import find_client_by_id
+from billing.service import payment as payment_service
 from kronos.exceptions import AppLogicError
-from kronos.utils import today_ist
+from kronos.utils import generate_pdf_from_api
 
 import razorpay
 from razorpay.errors import SignatureVerificationError
@@ -29,7 +32,7 @@ def create_payment_order(client_id: int, data: dict) -> dict:
     data = {
         'amount': payable_amount * 100,
         'currency': 'INR',
-        'receipt': generate_invoice_number(payment.id),
+        'receipt': payment.invoice_number,
     }
 
     razorpay_resp = create_razorpay_order(data)
@@ -46,12 +49,6 @@ def create_payment_order(client_id: int, data: dict) -> dict:
     payment.save()
     return result
 
-def generate_invoice_number(payment_id: int) -> str:
-    """Generate invoice number from payment id
-    Ex: #FW2022-0012"""
-
-    invoice_number = '#FW{}-00{}'.format(today_ist().year, payment_id)
-    return invoice_number
 
 def get_payable_amount_with_gst(payable_amount: int) -> int:
     """ Function to get payment amount with GST """
@@ -172,3 +169,50 @@ def get_account_balance_by_client_id(client_id: int):
     used_balance = get_used_account_balance_by_client(client_id)
     remain_balance = total - used_balance
     return remain_balance
+
+
+def get_payment_invoice(payment_id: int, client_id: int):
+    invoice_data = get_invoice_data_from_payment_id(payment_id, client_id)
+    html_data = render_to_string("notify/recharge_payment_invoice.html", context = invoice_data)
+    pdf = generate_pdf_from_api(html_data)
+    return pdf
+
+
+def get_invoice_data_from_payment_id(payment_id: int, client_id: int) -> dict:
+    """Get invoice data from checkout details and payment object"""
+
+    client = find_client_by_id(client_id)
+    payment = payment_service.get_by_id(payment_id)
+
+    try:
+        gstin = client.client_bank_info.gstin
+    except BankInfo.DoesNotExist as e:
+        gstin = ''
+
+    checkout_data = payment.payment_data['checkout'] if 'checkout' in payment.payment_data else {}
+
+    data = {
+        'invoice_no': payment.invoice_number,
+        'invoice_date': payment.invoice_date,
+        'payment': {
+            'amount': payment.get_amount_without_gst(payment.gst),
+            'gst': payment.gst,
+            'gst_amount': payment.get_gst_amount(),
+            'total': payment.amount
+        },
+        'to': {
+            'company_name': checkout_data.get('billing_name', client.name),
+            'address': checkout_data.get('address', client.address),
+            'gstin': checkout_data.get('gstin', gstin),
+            'email': client.email,
+            'phone_no': checkout_data.get('po_number', client.phone),
+        },
+        'from': {
+            'company_name': settings.BRAND_NAME,
+            'address': settings.BRAND_ADDRESS,
+            'gstin': settings.BRAND_GSTIN,
+            'email': settings.ACCOUNTS_EMAIL,
+            'logo': settings.BRAND_LOGO,
+        }
+    }
+    return data

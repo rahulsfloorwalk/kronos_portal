@@ -62,16 +62,32 @@ exports[`<__QuestionnaireTypeForm/> renders correctly 1`] = `
               className="form-group"
             >
               <label>
-                Name
+                Select type
               </label>
-              <input
+              <select
                 className="form-control"
-                label="Name"
+                label="Select type"
                 name="name"
                 onChange={[Function]}
-                type="text"
                 value=""
-              />
+              >
+                <option />
+                <option
+                  value="Walkin"
+                >
+                  Walkin
+                </option>
+                <option
+                  value="Telephonic"
+                >
+                  Telephonic
+                </option>
+                <option
+                  value="Web Audit"
+                >
+                  Web Audit
+                </option>
+              </select>
               <ul />
             </div>
           </div>
@@ -168,16 +184,32 @@ exports[`<__QuestionnaireTypeForm/> renders initial values correctly 1`] = `
               className="form-group"
             >
               <label>
-                Name
+                Select type
               </label>
-              <input
+              <select
                 className="form-control"
-                label="Name"
+                label="Select type"
                 name="name"
                 onChange={[Function]}
-                type="text"
                 value="Foobar"
-              />
+              >
+                <option />
+                <option
+                  value="Walkin"
+                >
+                  Walkin
+                </option>
+                <option
+                  value="Telephonic"
+                >
+                  Telephonic
+                </option>
+                <option
+                  value="Web Audit"
+                >
+                  Web Audit
+                </option>
+              </select>
               <ul />
             </div>
           </div>

@@ -8,21 +8,28 @@ import { momentDateFormat }  from "../../../../config.js";
 import { getClientPayments } from "../../service/payment.js";
 import { fetchAccountBalance } from "../../actions/client.js";
 import PaymentStatusLabel from "../../../components/PaymentStatusLabel.jsx";
+import { DownloadAlt } from "../../../components/Icons.jsx";
+import { url } from "../../../../config.js";
 
 
 class PaymentRow extends React.Component{
 	static propTypes = {
 		payment: PropTypes.object,
+		client_id: PropTypes.number
 	};
 
 	render(){
-		let {added_on, amount, status, invoice_id} = this.props.payment;
+		let {added_on, amount, status, invoice_number, id} = this.props.payment;
+		let base = url.api_base_path + `client_v1/payment/${this.props.client_id}/${id}/invoice`;
 		return (
 			<tr>
-				<td>{invoice_id}</td>
+				<td>{invoice_number}</td>
 				<td>{moment(added_on).format(momentDateFormat)}</td>
 				<td>&#8377; {amount}</td>
 				<td><PaymentStatusLabel status={status} /></td>
+				<td>
+					<a href={base}><DownloadAlt/></a>
+				</td>
 			</tr>
 		);
 	}
@@ -62,7 +69,7 @@ class PaymentList extends React.Component {
 
 		let rows = [];
 		for(let row of this.state.payments){
-			rows.push(<PaymentRow payment={row} key={row.id} />);
+			rows.push(<PaymentRow payment={row} key={row.id} client_id={this.props.client.id} />);
 		}
 		if(rows.length == 0){
 			return(
@@ -87,6 +94,7 @@ class PaymentList extends React.Component {
 								<th>Payment Date</th>
 								<th>Amount</th>
 								<th>Payment Status</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>

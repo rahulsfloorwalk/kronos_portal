@@ -35,6 +35,7 @@ class StoreForm extends React.Component {
 			address: errorList,
 			priority: errorList,
 			phone: errorList,
+			map_location_link: errorList,
 			non_field_errors: errorList,
 		}),
 	};
@@ -43,6 +44,7 @@ class StoreForm extends React.Component {
 		state: "",
 		city: "",
 		city_error: "",
+		map_location_link: "",
 		state_error: [],
 		store_region: "city"
 	};
@@ -139,6 +141,7 @@ class StoreForm extends React.Component {
 				type: this.state.type,
 				priority: this.state.priority,
 				phone: this.state.phone,
+				map_location_link: this.state.map_location_link
 			}));
 		} else {
 			submitPromise = this.props.dispatch(saveStoreAddForm({
@@ -155,6 +158,7 @@ class StoreForm extends React.Component {
 				priority: this.state.priority,
 				phone: this.state.phone,
 				store_region: this.state.store_region,
+				map_location_link: this.state.map_location_link
 			}));
 		}
 		submitPromise.then(() => {
@@ -235,6 +239,9 @@ class StoreForm extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Priority" type="number" value={this.state.priority} name="priority" onChange={this.inputChanged} errors={this.props.errors.priority}/>
+						</div>
+						<div className="col-sm-6">
+							<FormInput label="Location Link" type="text" value={this.state.map_location_link} name="map_location_link" onChange={this.inputChanged} errors={this.props.errors.map_location_link}/>
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Phone Number" type="text" value={this.state.phone} name="phone" onChange={this.inputChanged} errors={this.props.errors.phone}/>

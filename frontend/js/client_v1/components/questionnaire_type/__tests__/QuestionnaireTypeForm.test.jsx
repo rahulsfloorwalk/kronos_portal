@@ -61,7 +61,7 @@ describe("<__QuestionnaireTypeForm/>", () => {
 
 		const onSubmitCallback = jest.fn();
 		const r = shallow(<__QuestionnaireTypeForm onSubmit={onSubmitCallback}/>);
-		r.find("FormInput").simulate("change", inputChangeEvent);
+		r.find("QuestionnaireTypeFormSelect").simulate("change", inputChangeEvent);
 		r.find("Checkbox").simulate("change", checkboxChangeEvent);
 		r.find("form").simulate("submit", formSubmitEvent);
 
