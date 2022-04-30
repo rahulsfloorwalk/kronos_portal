@@ -50,6 +50,12 @@ exports[`<AuditCycleForm/> renders an empty form correctly 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}
@@ -1285,6 +1291,12 @@ exports[`<AuditCycleForm/> renders the loaded values correctly 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

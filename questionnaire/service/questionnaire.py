@@ -1,6 +1,16 @@
 import xlsxwriter
 import io
+from typing import Iterable
+from django.db.transaction import atomic
+
 from audit.service import audit_cycle as audit_cycle_service
+from questionnaire.service import section as section_service
+
+from questionnaire.models.question import Question
+from questionnaire.models.section import Section
+from questionnaire.models.questionnaire import Industry, ProblemStatement, SampleQuestionnaire, SampleQuestionnaireType
+
+from kronos.exceptions import AppLogicError
 
 
 def export_questionnaire(audit_cycle_id):
@@ -137,3 +147,73 @@ def write_data(data):
     workbook.close()
     output.seek(0)
     return output
+
+
+def get_industry_list() -> Iterable[Industry]:
+    """Get industry lists (Industry)"""
+    return Industry.objects.all()
+
+
+def get_problem_statement_by_industry(industry_id: int) -> Iterable[ProblemStatement]:
+    """ Get problem statements by industry """
+
+    return ProblemStatement.objects.filter(industry_id = industry_id)
+
+
+def find_sample_questionnaire_type_by_problem_statement(problem_statement_id: int) -> Iterable[SampleQuestionnaireType]:
+    """Get sample questionnaire types by problem statement"""
+
+    return SampleQuestionnaireType.objects.filter(problem_statement_id = problem_statement_id)
+
+
+def find_sample_questionnaire_by_questionnaire_type(questionnnaire_type_id: int) -> SampleQuestionnaire:
+    """Get sample questionnaire by questionnaire type"""
+    try:
+        questionnaire = SampleQuestionnaire.objects.get(sample_questionnaire_type_id = questionnnaire_type_id)
+    except SampleQuestionnaire.DoesNotExist as e:
+        raise AppLogicError('Sample questionnaire not found')
+
+    return questionnaire
+
+
+def find_sample_questionnaire_by_id(sample_questionnaire_id):
+    try:
+        questionnaire = SampleQuestionnaire.objects.get(id = sample_questionnaire_id)
+    except SampleQuestionnaire.DoesNotExist as e:
+        raise AppLogicError('Sample questionnaire not found')
+
+    return questionnaire
+
+
+@atomic
+def insert_sample_questionnaire_to_audit_cycle(audit_cycle_id, sample_questionnaire_id):
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    sample_questionnaire = find_sample_questionnaire_by_id(sample_questionnaire_id)
+
+    is_created = section_service.find_by_audit_cycle(audit_cycle_id).exists()
+    if is_created:
+        raise AppLogicError("Questionnaire is already created")
+
+    if not sample_questionnaire.questionnaire_data:
+        raise AppLogicError("Invalid sample questionnaire")
+
+    if 'questionnaire' not in sample_questionnaire.questionnaire_data:
+        raise AppLogicError("Sample questionnaire not found")
+
+    questionnaire = sample_questionnaire.questionnaire_data['questionnaire']
+    for section in questionnaire:
+        section_obj = Section()
+        section_obj.name = section['name']
+        section_obj.sequence = section['sequence']
+        section_obj.audit_cycle = audit_cycle
+        section_obj.save()
+
+        for question in section['questions']:
+            question_obj = Question()
+            question_obj.question_txt = question['question_txt']
+            question_obj.max_marks = question['max_marks']
+            question_obj.question_type = question['question_type']
+            question_obj.question_data = question['question_data']
+            question_obj.sequence = question['sequence']
+            question_obj.section = section_obj
+            question_obj.save()

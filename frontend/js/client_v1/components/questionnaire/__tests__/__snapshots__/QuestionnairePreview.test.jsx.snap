@@ -1,0 +1,1045 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`QuestionnairePreview renders an sample questionnaire preview 1`] = `
+<div>
+  <h3
+    className="page-header"
+  >
+    <span
+      className="glyphicon glyphicon-eye-open"
+    />
+     Preview
+  </h3>
+  <div
+    className="panel panel-default"
+  >
+    <span
+      className="pull-right"
+    >
+      <b>
+        N/A:
+      </b>
+       
+      <span
+        className=""
+      >
+        <span
+          className="glyphicon glyphicon-unchecked"
+        />
+      </span>
+    </span>
+    <div
+      className="panel-heading"
+    >
+      <h4
+        className="panel-title"
+      >
+        1
+         - 
+        Entrance
+      </h4>
+    </div>
+    <div>
+      <table
+        className="table table-striped"
+      >
+        <thead>
+          <tr>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              #
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Question
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Answer
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "15%",
+                }
+              }
+            >
+              Marks
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              N/A
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1
+            </td>
+            <td>
+              Please Rate Overall Experience. (1 to 5)
+            </td>
+            <td>
+              <div
+                className="row"
+              >
+                <div
+                  className="col-xs-5"
+                >
+                  <div>
+                    <select
+                      className="form-control"
+                      value=""
+                    >
+                      <option
+                        value=""
+                      />
+                      <option
+                        value="1"
+                      >
+                        1
+                      </option>
+                      <option
+                        value="2"
+                      >
+                        2
+                      </option>
+                      <option
+                        value="3"
+                      >
+                        3
+                      </option>
+                      <option
+                        value="4"
+                      >
+                        4
+                      </option>
+                      <option
+                        value="5"
+                      >
+                        5
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="col-xs-7"
+                >
+                  <div>
+                    <textarea
+                      className="form-control"
+                      placeholder="optional comment"
+                      rows="1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  5
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              2
+            </td>
+            <td>
+              Enter name https://www.google.com
+            </td>
+            <td>
+              <div>
+                <input
+                  className="form-control"
+                  value=""
+                />
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  0
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        className="panel-footer"
+      >
+        <div>
+          <b>
+            Total Marks:
+          </b>
+           
+          0
+           out of 
+          5
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <span
+      className="pull-right"
+    >
+      <b>
+        N/A:
+      </b>
+       
+      <span
+        className=""
+      >
+        <span
+          className="glyphicon glyphicon-unchecked"
+        />
+      </span>
+    </span>
+    <div
+      className="panel-heading"
+    >
+      <h4
+        className="panel-title"
+      >
+        2
+         - 
+        Need Analysis
+      </h4>
+    </div>
+    <div>
+      <table
+        className="table table-striped"
+      >
+        <thead>
+          <tr>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              #
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Question
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Answer
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "15%",
+                }
+              }
+            >
+              Marks
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              N/A
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1
+            </td>
+            <td>
+              Did the staff greet you upon arrival?
+            </td>
+            <td>
+              <div
+                className="row"
+              >
+                <div
+                  className="col-xs-5"
+                >
+                  <label
+                    style={
+                      Object {
+                        "fontSize": "14px",
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <input
+                      name="answer_text"
+                      style={
+                        Object {
+                          "height": "20px",
+                          "verticalAlign": "bottom",
+                          "width": "20px",
+                        }
+                      }
+                      type="checkbox"
+                      value="Yes"
+                    />
+                    <span>
+                       
+                      Yes
+                    </span>
+                     
+                  </label>
+                  <label
+                    style={
+                      Object {
+                        "fontSize": "14px",
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <input
+                      name="answer_text"
+                      style={
+                        Object {
+                          "height": "20px",
+                          "verticalAlign": "bottom",
+                          "width": "20px",
+                        }
+                      }
+                      type="checkbox"
+                      value="No"
+                    />
+                    <span>
+                       
+                      No
+                    </span>
+                     
+                  </label>
+                </div>
+                <div
+                  className="col-xs-7"
+                >
+                  <div>
+                    <textarea
+                      className="form-control"
+                      placeholder="optional comment"
+                      rows="1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  1
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              2
+            </td>
+            <td>
+              Did the staff enquire about your purpose of visit?
+            </td>
+            <td>
+              <div
+                className="row"
+              >
+                <div
+                  className="col-xs-5"
+                >
+                  <div>
+                    <select
+                      className="form-control"
+                      value=""
+                    >
+                      <option
+                        value=""
+                      />
+                      <option
+                        value="Yes"
+                      >
+                        Yes
+                      </option>
+                      <option
+                        value="No"
+                      >
+                        No
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="col-xs-7"
+                >
+                  <div>
+                    <textarea
+                      className="form-control"
+                      placeholder="optional comment"
+                      rows="1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  1
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        className="panel-footer"
+      >
+        <div>
+          <b>
+            Total Marks:
+          </b>
+           
+          0
+           out of 
+          3
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <span
+      className="pull-right"
+    >
+      <b>
+        N/A:
+      </b>
+       
+      <span
+        className=""
+      >
+        <span
+          className="glyphicon glyphicon-unchecked"
+        />
+      </span>
+    </span>
+    <div
+      className="panel-heading"
+    >
+      <h4
+        className="panel-title"
+      >
+        3
+         - 
+        Staff Analysis
+      </h4>
+    </div>
+    <div>
+      <table
+        className="table table-striped"
+      >
+        <thead>
+          <tr>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              #
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Question
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Answer
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "15%",
+                }
+              }
+            >
+              Marks
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              N/A
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1
+            </td>
+            <td>
+              Did the staff member address you by saying 'Sir' or 'Madam'?
+            </td>
+            <td>
+              <div
+                className="row"
+              >
+                <div
+                  className="col-xs-5"
+                >
+                  <div>
+                    <select
+                      className="form-control"
+                      value=""
+                    >
+                      <option
+                        value=""
+                      />
+                      <option
+                        value="Yes"
+                      >
+                        Yes
+                      </option>
+                      <option
+                        value="No"
+                      >
+                        No
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="col-xs-7"
+                >
+                  <div>
+                    <textarea
+                      className="form-control"
+                      placeholder="optional comment"
+                      rows="1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  1
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        className="panel-footer"
+      >
+        <div>
+          <b>
+            Total Marks:
+          </b>
+           
+          0
+           out of 
+          1
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <span
+      className="pull-right"
+    >
+      <b>
+        N/A:
+      </b>
+       
+      <span
+        className=""
+      >
+        <span
+          className="glyphicon glyphicon-unchecked"
+        />
+      </span>
+    </span>
+    <div
+      className="panel-heading"
+    >
+      <h4
+        className="panel-title"
+      >
+        4
+         - 
+        Selling and Recommendation skills
+      </h4>
+    </div>
+    <div>
+      <table
+        className="table table-striped"
+      >
+        <thead>
+          <tr>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              #
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Question
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Answer
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "15%",
+                }
+              }
+            >
+              Marks
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              N/A
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1
+            </td>
+            <td>
+              Did the staff ask for your budget before starting to show products?
+            </td>
+            <td>
+              <div
+                className="row"
+              >
+                <div
+                  className="col-xs-5"
+                >
+                  <div>
+                    <select
+                      className="form-control"
+                      value=""
+                    >
+                      <option
+                        value=""
+                      />
+                      <option
+                        value="Yes"
+                      >
+                        Yes
+                      </option>
+                      <option
+                        value="No"
+                      >
+                        No
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="col-xs-7"
+                >
+                  <div>
+                    <textarea
+                      className="form-control"
+                      placeholder="optional comment"
+                      rows="1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  1
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        className="panel-footer"
+      >
+        <div>
+          <b>
+            Total Marks:
+          </b>
+           
+          0
+           out of 
+          1
+        </div>
+      </div>
+    </div>
+  </div>
+  <div
+    className="panel panel-default"
+  >
+    <span
+      className="pull-right"
+    >
+      <b>
+        N/A:
+      </b>
+       
+      <span
+        className=""
+      >
+        <span
+          className="glyphicon glyphicon-unchecked"
+        />
+      </span>
+    </span>
+    <div
+      className="panel-heading"
+    >
+      <h4
+        className="panel-title"
+      >
+        5
+         - 
+        Outlet analysis
+      </h4>
+    </div>
+    <div>
+      <table
+        className="table table-striped"
+      >
+        <thead>
+          <tr>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              #
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Question
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "40%",
+                }
+              }
+            >
+              Answer
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "15%",
+                }
+              }
+            >
+              Marks
+            </th>
+            <th
+              style={
+                Object {
+                  "width": "2.5%",
+                }
+              }
+            >
+              N/A
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              1
+            </td>
+            <td>
+              Was the outlet neat and clean?
+            </td>
+            <td>
+              <div
+                className="row"
+              >
+                <div
+                  className="col-xs-5"
+                >
+                  <div>
+                    <select
+                      className="form-control"
+                      value=""
+                    >
+                      <option
+                        value=""
+                      />
+                      <option
+                        value="Yes"
+                      >
+                        Yes
+                      </option>
+                      <option
+                        value="No"
+                      >
+                        No
+                      </option>
+                    </select>
+                  </div>
+                </div>
+                <div
+                  className="col-xs-7"
+                >
+                  <div>
+                    <textarea
+                      className="form-control"
+                      placeholder="optional comment"
+                      rows="1"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td
+              className="text-right"
+            >
+              <span>
+                <b>
+                  0
+                </b>
+                 / 
+                <b>
+                  1
+                </b>
+              </span>
+            </td>
+            <td
+              className=""
+            >
+              <button
+                className="btn btn-default"
+              >
+                <span
+                  className="glyphicon glyphicon-unchecked"
+                />
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        className="panel-footer"
+      >
+        <div>
+          <b>
+            Total Marks:
+          </b>
+           
+          0
+           out of 
+          1
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

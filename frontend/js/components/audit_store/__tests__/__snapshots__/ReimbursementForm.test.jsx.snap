@@ -50,6 +50,12 @@ exports[`<ReimbursementForm/> is rendered correctly when the form is loading 1`]
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <div
           className="text-center text-muted"
@@ -119,6 +125,12 @@ exports[`<ReimbursementForm/> renders the earnings per audit pre-filled 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}
@@ -203,6 +215,12 @@ exports[`<ReimbursementForm/> renders the errors correctly 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

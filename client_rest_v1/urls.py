@@ -2,6 +2,7 @@ from django.conf.urls import url
 from .views import city as city_views
 from .views import audit_cycle as audit_cycle_views
 from .views import questionnaire_type as questionnaire_type_views
+from .views import questionnaire as questionnaire_views
 from .views import client as client_views
 from .views import store as store_views
 from .views import client_user as client_user_views
@@ -19,6 +20,7 @@ urlpatterns = ([
     url(r'(?P<country>[\w\-]+)/state_by_country_id$', city_views.StateViewByCountryId.as_view(), name='state_view_by_country_id'),
     url(r'city/(?P<state>[\w\-]+)$', city_views.CityView.as_view(), name='city_view'),
 
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/sample_questionnaire/(?P<sample_questionnaire_id>[0-9]+)/insert$', questionnaire_views.SampleQuestionnaireInsertView.as_view(), name='sample_questionnaire_insert_view'),
     url(r'audit_cycle/(?P<to_audit_cycle_id>[0-9]+)/audit/copy$', audit_views.AuditCopyByAuditCycle.as_view(), name='audit_copy_by_audit_cycle'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', audit_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
 
@@ -46,6 +48,11 @@ urlpatterns = ([
 
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
+
+    url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/questionnaire$', questionnaire_views.QuestionnaireByQuestionnaireTypeView.as_view(), name='questionnaire_view'),
+    url(r'problem_statement/(?P<problem_statement_id>[0-9]+)/questionnaire_type$', questionnaire_views.QuestionnaireTypeByProblemStatementView.as_view(), name='questionnaire_type_view'),
+    url(r'industry/(?P<industry_id>[0-9]+)/problem_statement$', questionnaire_views.ProblemStatementByIndustryView.as_view(), name='problem_statement_view'),
+    url(r'industry$', questionnaire_views.IndustryView.as_view(), name='industry_view'),
 
     url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)$', questionnaire_type_views.QuestionnaireTypeIdView.as_view(), name='questionnaire_type_id_view'),
     url(r'questionnaire_type$', questionnaire_type_views.QuestionnaireTypeByClientView.as_view(), name='questionnaire_types_by_client_view'),

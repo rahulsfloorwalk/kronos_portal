@@ -154,6 +154,12 @@ exports[`<AuditCycleTimeSeries/> renders the data popup correctly when the butto
         </div>
         <div
           className="modal-body"
+          style={
+            Object {
+              "maxHeight": "85vh",
+              "overflowY": "scroll",
+            }
+          }
         >
           <table
             className="table table-striped "

@@ -50,6 +50,12 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is loading 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <div
           className="form-group"
@@ -134,6 +140,12 @@ exports[`<BankInfoForm/> is rendered correctly when BankInfo is successfully ret
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <div
           className="form-group"

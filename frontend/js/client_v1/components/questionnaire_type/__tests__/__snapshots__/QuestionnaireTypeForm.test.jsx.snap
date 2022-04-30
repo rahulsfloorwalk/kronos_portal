@@ -50,6 +50,12 @@ exports[`<__QuestionnaireTypeForm/> renders correctly 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}
@@ -172,6 +178,12 @@ exports[`<__QuestionnaireTypeForm/> renders initial values correctly 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

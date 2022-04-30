@@ -50,6 +50,12 @@ exports[`AuditStoreReportAttributeForm renders the form with an option selected 
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}
@@ -148,6 +154,12 @@ exports[`AuditStoreReportAttributeForm renders the form with no option selected 
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

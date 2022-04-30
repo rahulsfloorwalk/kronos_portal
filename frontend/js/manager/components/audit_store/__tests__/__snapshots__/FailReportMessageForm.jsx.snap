@@ -50,6 +50,12 @@ exports[`<FailReportMessageForm/> is rendered correctly when the AuditStore is l
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <div
           className="text-center text-muted"
@@ -119,6 +125,12 @@ exports[`<FailReportMessageForm/> renders the failure message pre-filled 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

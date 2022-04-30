@@ -47,6 +47,8 @@ import BankInfoForm from "./profile/BankInfoForm.jsx";
 import PaymentForm from "./payment/PaymentForm.jsx";
 import PaymentList from "./payment/PaymentList.jsx";
 
+import QuestionnaireInsertForm from "./questionnaire/QuestionnaireInsertForm.jsx";
+
 const IndexComponent = () => null;
 
 const Routes = () => (<Router history={hashHistory}>
@@ -85,6 +87,7 @@ const Routes = () => (<Router history={hashHistory}>
 			<Route path="audit_alignment_factors" component={AuditAlignmentFactors} />
 
 			<Route path="questionnaire" component={SectionList}>
+				<Route path="insert" component={QuestionnaireInsertForm}/>
 				<Route path="section/copy" component={SectionCopyForm}/>
 				<Route path="section/add" component={SectionAddForm}/>
 				<Route path="section/:sectionId/edit" component={SectionEditForm}/>

@@ -11,6 +11,7 @@ exports[`<__SectionList/> renders correctly when there are no sections 1`] = `
   <Jumbotron
     align="center"
     heading="this questionnaire is empty"
+    node=""
     para="please contact support"
   />
 </div>

@@ -48,6 +48,7 @@ exports[`StorePerformanceCount renders the tab strip and a loading sign when no 
   <Jumbotron
     align="center"
     heading="no results found"
+    node=""
     para="Use this dashboard to get stores which have scored less than optimal value. You can enter the optimal value in the input box above between 1-100"
   />
 </div>
@@ -101,6 +102,7 @@ exports[`StorePerformanceCount renders the tab strip and data with the selected 
   <Jumbotron
     align="center"
     heading="no results found"
+    node=""
     para="Use this dashboard to get stores which have scored less than optimal value. You can enter the optimal value in the input box above between 1-100"
   />
 </div>

@@ -48,6 +48,12 @@ exports[`<Modal/> renders content within a Modal 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <div>
           <h1>
