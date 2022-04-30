@@ -1,5 +1,4 @@
 import logging
-from functools import reduce
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth.models import Permission
@@ -71,7 +70,9 @@ def consolidate_qa_notification_email_task(pending_reports):
     yesterday_date = today_ist() - timedelta(days=1)
 
     to_email_list = [report['user_email'] for report in pending_reports]
-    total_pending_reports = reduce(lambda a, b: a['total_pending_reports'] + b['total_pending_reports'], pending_reports)
+    total_pending_reports = 0
+    for report in pending_reports:
+        total_pending_reports += int(report['total_pending_reports'])
 
     subject = "{} report is pending today".format(str(total_pending_reports))
     if total_pending_reports > 1:

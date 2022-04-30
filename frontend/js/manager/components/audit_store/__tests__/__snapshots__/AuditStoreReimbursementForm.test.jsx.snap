@@ -50,6 +50,12 @@ exports[`<AuditStoreReimbursementForm/> is rendered correctly when the AuditStor
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <div
           className="text-center text-muted"
@@ -119,6 +125,12 @@ exports[`<AuditStoreReimbursementForm/> renders the earnings per audit pre-fille
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

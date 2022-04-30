@@ -14,6 +14,7 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 import attachmentErrorImageUrl from "../../../img/error_100.png";
 
 import { Player, BigPlayButton  } from "video-react";
+import AmrAudioPlayer from "../../components/AmrAudioPlayer.jsx";
 
 class AttachmentRenderer extends React.Component {
 	static propTypes = {
@@ -106,6 +107,7 @@ class AttachmentRenderer extends React.Component {
 		let file_extension = file_extension_arr[file_extension_arr.length - 1];
 		switch(this.props.attachment.proof_type){
 		case "AUDIO": {
+			let audio_player_node;
 			let audio_transcipt_table_data;
 			let audio_transcipt_rows = [];
 			const audio_transcript_data = (this.props.attachment.audio_transcript_data).hasOwnProperty("transcript_list") ? this.props.attachment.audio_transcript_data["transcript_list"] : [];
@@ -137,13 +139,19 @@ class AttachmentRenderer extends React.Component {
 			else{
 				audio_transcipt_table_data = (<Jumbotron heading="Not found" para="Audio transcription not available for this attachment"/>);
 			}
+			if(this.props.attachment.mime_type == "audio/AMR" || this.props.attachment.mime_type == "audio/amr"){
+				audio_player_node = <AmrAudioPlayer audioRef={node => this.audio_tag = node} attachment={this.props.attachment} />;
+			}
+			else{
+				audio_player_node = (<audio ref={node => this.audio_tag = node} controls>
+					<source src={this.props.attachment.direct_url}
+						type={this.props.attachment.mime_type}/>
+				</audio>);
+			}
 			return (
 				<div>
 					<p><b>Please download file if you are not able to play it.</b></p>
-					<audio ref={node => this.audio_tag = node} controls>
-						<source src={this.props.attachment.direct_url}
-							type={this.props.attachment.mime_type}/>
-					</audio>
+					{audio_player_node}
 					<div style={{overflowY:"auto", maxHeight:"400px"}}>
 						{audio_transcipt_table_data}
 					</div>

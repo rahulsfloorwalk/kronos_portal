@@ -5,8 +5,11 @@ from dateutil.relativedelta import relativedelta
 from datetime import datetime
 
 from django.utils import timezone
+from django.conf import settings
 
 from kronos.exceptions import AppLogicError
+
+import convertapi
 
 __logger = logging.getLogger(__name__)
 
@@ -222,3 +225,22 @@ def validate_url(url_string: str) -> bool:
         return True
     else:
         return False
+
+
+def generate_pdf_from_api(html_data: str):
+    """Generate PDF file from convertapi service
+
+    Return a response in pdf format (BytesIo)
+    """
+
+    if settings.RAZORPAY_SWITCH == "False":
+        raise AppLogicError("Invoice is not available")
+
+    try:
+        convertapi.api_secret = settings.CONVERT_API_SECRET
+        upload_io = convertapi.UploadIO(html_data.encode("utf-8"), filename="invoice.html")
+        params = {"File": upload_io, "StoreFile": False}
+        res = convertapi.convert('pdf', params)
+        return res.file.io
+    except Exception as e:
+        raise AppLogicError("Error while creating pdf")

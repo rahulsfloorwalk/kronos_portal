@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Recharge Invoice</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        p{
+            margin-block-start: 0.5em;
+            margin-block-end: 0.5em;
+            font-size: 15px;
+        }
+        td{
+            padding: 10px;
+        }
+        table {
+        border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 70%;">
+                <img src="{{ from.logo }}" style="height: 100px;width: 200px;" />
+            </td>
+            <td style="width: 30%;text-align: right;">
+                <h3>Recharge Invoice</h3>
+                <label>{{ invoice_no }}</label>
+                <p>Invoice Date : {{ invoice_date }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>Bill To</p>
+                <p><b>{{ to.company_name }}</b></p>
+                <p style="width: 50%;">{{ to.address|safe }}</p>
+                {% if to.gstin %}<p>GSTIN : {{ to.gstin }}</p>{% endif %}
+                <p>Email : {{ to.email }}</p>
+                <p>Phone no. : {{ to.phone_no }}</p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <p>Invoice From<br></p>
+                <p><b>{{ from.company_name }}</b></p>
+                <p>{{ from.address }}</p>
+                <p>GSTIN : {{ from.gstin }}</p>
+                <p>Email : {{ from.email }}</p>
+                <br/>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    <table style="width: 100%;">
+        <tr style="background-color: #323639;color: #fff;">
+            <th>Sr.No.</th>
+            <th>Heading</th>
+            <th>Recharge amount</th>
+            <th>GST{% if payment.gst %} ({{ payment.gst }}%){% endif %}</th>
+            <th>Total</th>
+        </tr>
+        <tr style="border-bottom: solid 1px gray;">
+            <td style="text-align: center;">1</td>
+            <td style="text-align: center;">Recharge</td>
+            <td style="text-align: center;">{{ payment.amount }}</td>
+            <td style="text-align: center;">{% if payment.gst_amount %}{{ payment.gst_amount }}{% endif %}</td>
+            <td style="text-align: center;">{{ payment.total }}</td>
+        </tr>
+    </table>
+    <br/>
+    <table style="width: 100%;text-align: right;">
+        <tr>
+            <td style="width: 70%;"></td>
+            <td><b>Total</b></td>
+            <td><b>{{ payment.total }}</b></td>
+        </tr>
+    </table>
+    <p>Note : A formal invoice will be generated and sent on your email within 24 hours.</p>
+</div>
+</body>
+</html>

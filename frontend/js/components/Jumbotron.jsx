@@ -6,12 +6,14 @@ export default class Jumbotron extends React.Component {
 		align: PropTypes.oneOf(["center", "left", "right"]),
 		heading: PropTypes.string,
 		para: PropTypes.string,
+		node: PropTypes.node
 	};
 
 	static defaultProps = {
 		align: "center",
 		heading: "",
-		para: ""
+		para: "",
+		node: ""
 	};
 
 	render() {
@@ -20,6 +22,7 @@ export default class Jumbotron extends React.Component {
 				<div className={`jumbotron text-${this.props.align}`}>
 					<h3>{this.props.heading}</h3>
 					<p>{this.props.para}</p>
+					{this.props.node ? this.props.node : null}
 				</div>
 			</div>
 		);

@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from client.service.client_service import find_client_by_user_id
@@ -69,3 +70,15 @@ class AccountBalancView(APIView):
         client = find_client_by_user_id(request.user.id)
         balance = client_payment_service.get_account_balance_by_client_id(client.id)
         return Response(balance)
+
+class PaymentInvoiceView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request, client_id, payment_id, format=None):
+        invoice = client_payment_service.get_payment_invoice(payment_id, client_id)
+        response = HttpResponse(invoice, content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="invoice.pdf"'
+        return response

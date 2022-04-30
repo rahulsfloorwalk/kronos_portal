@@ -196,6 +196,7 @@ exports[`ReportBrowser3 renders a message when there are no audit cycles 1`] = `
   <Jumbotron
     align="center"
     heading="there are no reports here"
+    node=""
     para="yet"
   />
 </div>

@@ -50,6 +50,12 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is alre
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}
@@ -163,6 +169,12 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when AuditStore is not 
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}
@@ -276,6 +288,12 @@ exports[`<AuditStoreQARatingForm/> is rendered correctly when the AuditStore is 
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

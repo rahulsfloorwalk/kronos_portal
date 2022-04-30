@@ -71,7 +71,7 @@ class SectionList extends React.Component {
 			questionnaireTotal += this.props.sections[sectionId].max_marks;
 		}
 		if( sectionRows.length === 0){
-			sectionRows.push(<Jumbotron key="empty" heading="this questionnaire is empty" para="start by adding a section"/>);
+			sectionRows.push(<Jumbotron key="empty" heading="This questionnaire is empty" node={<Link to={`audit_cycle/${this.props.params.auditCycleId}/questionnaire/insert`} className="btn btn-primary">Insert a sample questionnaire</Link>}/>);
 		}
 		return (
 			<div>

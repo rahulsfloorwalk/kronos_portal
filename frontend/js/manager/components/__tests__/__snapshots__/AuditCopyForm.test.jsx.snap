@@ -50,6 +50,12 @@ exports[`<__AuditCopyForm/> renders the list of audit cycles 1`] = `
       </div>
       <div
         className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
       >
         <form
           onSubmit={[Function]}

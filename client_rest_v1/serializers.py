@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import User
 from billing.models import Payment
-from billing.service.client import generate_invoice_number
 from kronos.utils import validate_url
 from rest_framework import serializers
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, CharField, EmailField, BooleanField
@@ -218,6 +217,7 @@ class StoreSerializer(ModelSerializer):
             'priority',
             'phone',
             'city',
+            'map_location_link',
         )
         read_only_fields = fields
 
@@ -250,6 +250,7 @@ class StoreDeSerializer(ModelSerializer):
             'phone',
             'priority',
             'city',
+            'map_location_link',
         )
         read_only_fields = ('id',)
         validators=[]
@@ -282,6 +283,7 @@ class StoreDeSerializer(ModelSerializer):
         store.type = self.validated_data.get('type', store.type)
         store.priority = self.validated_data.get('priority', store.priority)
         store.phone = self.validated_data.get('phone', store.phone)
+        store.map_location_link = self.validated_data.get('map_location_link', store.map_location_link)
         return store
 
 
@@ -535,8 +537,6 @@ class ClientCheckOutSerializer(Serializer):
 
 
 class ClientPaymentSerializer(ModelSerializer):
-    invoice_id = serializers.SerializerMethodField()
-
     class Meta:
         model = Payment
         fields = (
@@ -545,9 +545,6 @@ class ClientPaymentSerializer(ModelSerializer):
             'status',
             'paid_on',
             'added_on',
-            'invoice_id',
+            'invoice_number',
         )
         read_only_fields = fields
-    
-    def get_invoice_id(self, obj):
-        return generate_invoice_number(obj.id)

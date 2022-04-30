@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import Alert from "react-s-alert";
 
 import { getInputEventChangeValue } from "../../../react_utils.js";
-import FormInput from "../../../components/FormInput.jsx";
 import FormErrorList from "../../../components/FormErrorList.jsx";
 import SaveButton from "../../../components/SaveButton.jsx";
 import Modal from "../../../components/Modal.jsx";
@@ -12,6 +11,7 @@ import Modal from "../../../components/Modal.jsx";
 import Checkbox from "../../../components/Checkbox.jsx";
 
 import { createQuestionnaireType } from "../../service/questionnaire_type.js";
+import QuestionnaireTypeFormSelect from "../../../components/QuestionnaireTypeFormSelect.jsx";
 
 export class __QuestionnaireTypeForm extends Component{
 	static propTypes = {
@@ -70,7 +70,7 @@ export class __QuestionnaireTypeForm extends Component{
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<div className="form-group">
-						<FormInput label="Name" type="text" value={this.state.values.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name}/>
+						<QuestionnaireTypeFormSelect label="Select type" type="text" value={this.state.values.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name} />
 					</div>
 					<div className="form-group">
 						<Checkbox checked={this.state.values.is_default} name="is_default" onChange={this.setIsDefault}/>

@@ -58,3 +58,12 @@ export const auditPropType = PropTypes.shape({
 	audit_cycle: auditCyclePropType.isRequired,
 	store: storePropType.isRequired,
 });
+
+export const sectionPropType =  PropTypes.shape({
+	id: PropTypes.number.isRequired,
+	sequence: PropTypes.number.isRequired,
+	name: PropTypes.string.isRequired,
+	max_marks: PropTypes.number.isRequired,
+	questions: PropTypes.arrayOf(PropTypes.shape({
+	})),
+});

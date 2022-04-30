@@ -12,6 +12,10 @@ const modalBackdropStyle = {
 const modalDialogStyle = {
 	zIndex: "1070",
 };
+const modalBodyStyle = {
+	maxHeight:"85vh",
+	overflowY:"scroll"
+};
 
 export default class Modal extends React.Component {
 	static propTypes = {
@@ -35,7 +39,7 @@ export default class Modal extends React.Component {
 							<button type="button" className="close" onClick={this.props.onClose}>&times;</button>
 							<h4 className="modal-title">{this.props.modalTitle}</h4>
 						</div>
-						<div className="modal-body">
+						<div className="modal-body" style={modalBodyStyle}>
 							{this.props.children}
 						</div>
 					</div>
