@@ -93,6 +93,22 @@ exports[`SectionAddForm renders an empty form 1`] = `
             />
             <ul />
           </div>
+          <div
+            className="form-group"
+          >
+            <label>
+              Hide Section Comment
+            </label>
+            <input
+              className="form-control"
+              label="Hide Section Comment"
+              name="hide_comment"
+              onChange={[Function]}
+              type="checkbox"
+              value=""
+            />
+            <ul />
+          </div>
           <button
             className="btn btn-primary"
             type="submit"

@@ -101,6 +101,7 @@ describe(SectionAddForm, () => {
 					name: name,
 					minimum_attachment_count: minimumAttachmentCount,
 					audit_cycle: auditCycleId,
+					hide_comment: false,
 				});
 			});
 
@@ -126,6 +127,7 @@ describe(SectionAddForm, () => {
 					name: name,
 					minimum_attachment_count: minimumAttachmentCount,
 					audit_cycle: auditCycleId,
+					hide_comment: false,
 				});
 			});
 

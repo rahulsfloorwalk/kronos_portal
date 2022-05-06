@@ -24,7 +24,8 @@ class SectionSerializer(ModelSerializer):
             'sequence',
             'questions',
             'minimum_attachment_count',
-            'max_marks'
+            'max_marks',
+            'hide_comment',
         )
         read_only_fields = fields
 
@@ -38,6 +39,7 @@ class SectionDeSerializer(ModelSerializer):
             'audit_cycle',
             'sequence',
             'minimum_attachment_count',
+            'hide_comment',
         )
         read_only_fields = ('id',)
 
@@ -50,6 +52,7 @@ class SectionDeSerializer(ModelSerializer):
         section.sequence = self.validated_data['sequence']
         section.audit_cycle = self.validated_data['audit_cycle']
         section.minimum_attachment_count = self.validated_data['minimum_attachment_count']
+        section.hide_comment = self.validated_data['hide_comment']
         return section
 
 

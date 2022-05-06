@@ -217,6 +217,8 @@ class ReportSection(Model):
         self.save()
 
     def set_auditor_comment(self, auditor_comment):
+        if self.section.hide_comment:
+            raise AppLogicError("Cannot submit comment to current audit store")
         if auditor_comment in (None, ""):
             raise AppLogicError("auditor comment cannot be blank")
         self.auditor_comment = auditor_comment

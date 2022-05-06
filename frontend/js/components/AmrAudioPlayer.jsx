@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Loading from "./Loading.jsx";
 
 export default class AmrAudioPlayer extends React.Component{
 	static propTypes = {
@@ -44,7 +45,10 @@ export default class AmrAudioPlayer extends React.Component{
 				audio.onloadedmetadata = audio.onerror = function() {
 					URL.revokeObjectURL(url);
 				};
-
+				const amrPlayerLoader = document.getElementById("amr_player_loading");
+				if(amrPlayerLoader){
+					amrPlayerLoader.style.display = "none";
+				}
 				const amrPlayerNode = document.getElementById("audio_player_id");
 				const source = document.createElement("source");
 				source.src = url;
@@ -62,7 +66,12 @@ export default class AmrAudioPlayer extends React.Component{
 
 	render(){
 		return (
-			<audio id="audio_player_id" ref={this.props.audioRef} controls></audio>
+			<div>
+				<audio id="audio_player_id" ref={this.props.audioRef} controls></audio>
+				<div id="amr_player_loading" style={{display:"block"}}>
+					<Loading loading_text="Please wait while loading AMR file"/>
+				</div>
+			</div>
 		);
 	}
 }

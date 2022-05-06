@@ -243,9 +243,10 @@ class AuditStore(Model):
 
         for report_section in report_sections:
             if not report_section.not_applicable:
-                if report_section.auditor_comment in (None, ''):
-                    _logger.debug("Report not submittable, some auditor comment is incomplete")
-                    return False
+                if not report_section.section.hide_comment:
+                    if report_section.auditor_comment in (None, ''):
+                        _logger.debug("Report not submittable, some auditor comment is incomplete")
+                        return False
 
                 if not report_section.has_minimum_attachments():
                     _logger.debug("Report not submittable, not enough attachments uploaded")
@@ -282,9 +283,10 @@ class AuditStore(Model):
 
         for report_section in report_sections:
             if not report_section.not_applicable:
-                if report_section.auditor_comment in (None, ''):
-                    _logger.debug("Report not submittable, some auditor comment is incomplete")
-                    return False
+                if not report_section.section.hide_comment:
+                    if report_section.auditor_comment in (None, ''):
+                        _logger.debug("Report not submittable, some auditor comment is incomplete")
+                        return False
 
                 questions = Question.objects.filter(section_id=report_section.section_id)\
                     .exclude(question_type=Question.MULTISELECT).all()
@@ -306,6 +308,8 @@ class AuditStore(Model):
     def check_auditor_comment_len(self):
         report_sections = self.report_sections.all()
         for report_section in report_sections:
+            if report_section.section.hide_comment:
+                return True
             auditor_comment = report_section.auditor_comment
             if len(auditor_comment) < 30:
                 return False
@@ -326,12 +330,13 @@ class AuditStore(Model):
 
         for report_section in report_sections:
             if not report_section.not_applicable:
-                if report_section.auditor_comment in (None, ''):
-                    _logger.debug("report not completable, some auditor comment is incomplete")
-                    return False
-                if report_section.pm_comment in (None, ''):
-                    _logger.debug("report not completable, some PM comment is incomplete")
-                    return False
+                if not report_section.section.hide_comment:
+                    if report_section.auditor_comment in (None, ''):
+                        _logger.debug("report not completable, some auditor comment is incomplete")
+                        return False
+                    if report_section.pm_comment in (None, ''):
+                        _logger.debug("report not completable, some PM comment is incomplete")
+                        return False
 
                 questions = Question.objects.filter(section_id=report_section.section_id)\
                     .exclude(question_type=Question.MULTISELECT).all()

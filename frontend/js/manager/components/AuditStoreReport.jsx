@@ -810,8 +810,7 @@ class __Section extends React.Component{
 					<div>
 						<b>Total Marks:</b> {marksObtained} out of {maxMarks}
 					</div>
-					<hr/>
-					<div><b>Auditor Comment:</b> {auditorCommentElement}</div>
+					{this.props.section.hide_comment == false ? <div><hr/><b>Auditor Comment:</b> {auditorCommentElement}</div> : null}
 					{/* <hr/>
 					<div><b>PM Comment:</b> {pmCommentElement}</div> */}
 					{pmCommentElement}

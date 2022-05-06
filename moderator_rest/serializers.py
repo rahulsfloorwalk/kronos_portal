@@ -239,7 +239,8 @@ class SectionSerializer(ModelSerializer):
             'audit_cycle',
             'sequence',
             'questions',
-            'max_marks'
+            'max_marks',
+            'hide_comment',
         )
         read_only_fields = fields
 

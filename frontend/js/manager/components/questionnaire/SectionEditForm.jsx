@@ -68,6 +68,7 @@ export class SectionEditForm extends React.Component {
 					<FormInput label="Sequence" min="1" type="number" value={this.state.sequence} name="sequence" onChange={this.inputChanged} errors={this.props.errors.sequence}/>
 					<FormInput label="Section Name" maxLength="50" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name} ref={r => this._nameInput = r}/>
 					{/* <FormInput label="Minimum Attachments" type="number" value={this.state.minimum_attachment_count} name="minimum_attachment_count" onChange={this.inputChanged} errors={this.props.errors.minimum_attachment_count}/> */}
+					<FormInput label="Hide Section Comment" type="checkbox" checked={this.state.hide_comment} name="hide_comment" onChange={this.inputChanged} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} errors={this.props.errors.hide_comment}/>
 					<SaveButton/>&nbsp;
 				</form>
 			</Modal>

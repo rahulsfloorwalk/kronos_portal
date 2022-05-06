@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField, IntegerField
+from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField, IntegerField, BooleanField
 from django.db.models import PROTECT, F, Value, Sum
 from django.db.models.functions import Coalesce
 
@@ -9,6 +9,7 @@ class Section(Model):
     audit_cycle = ForeignKey('audit.AuditCycle', related_name='sections', db_column='audit_cycle_id', blank=False, on_delete=PROTECT)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
     minimum_attachment_count = IntegerField(db_column='minimum_attachment_count', default=0, blank=False)
+    hide_comment = BooleanField(db_column='hide_comment', default=False)
 
     def __str__(self):
         return 'Section({}): {}'.format(self.id, self.name)
