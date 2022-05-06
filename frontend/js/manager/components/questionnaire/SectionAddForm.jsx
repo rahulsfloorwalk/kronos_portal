@@ -39,6 +39,7 @@ export class SectionAddForm extends React.Component {
 			name: "",
 			minimum_attachment_count: 0,
 			audit_cycle: this.props.auditCycleId,
+			hide_comment: false,
 		});
 	}
 
@@ -79,6 +80,7 @@ export class SectionAddForm extends React.Component {
 					<FormInput label="Sequence" min="1" type="number" value={this.state.sequence} name="sequence" onChange={this.inputChanged} errors={this.props.errors.sequence}/>
 					<FormInput label="Section Name" maxLength="100" type="text" value={this.state.name} name="name" onChange={this.inputChanged} errors={this.props.errors.name} ref={r => this._nameInput = r}/>
 					{/* <FormInput label="Minimum Attachments" type="number" value={this.state.minimum_attachment_count} name="minimum_attachment_count" onChange={this.inputChanged} errors={this.props.errors.minimum_attachment_count}/> */}
+					<FormInput label="Hide Section Comment" type="checkbox" name="hide_comment" onChange={this.inputChanged} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} errors={this.props.errors.hide_comment}/>
 					<SaveButton/>&nbsp;
 					<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>
 				</form>

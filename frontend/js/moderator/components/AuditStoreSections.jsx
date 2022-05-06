@@ -580,6 +580,7 @@ class Section extends React.Component{
 			name: PropTypes.string,
 			max_marks: PropTypes.number,
 			questions: PropTypes.array,
+			hide_comment: PropTypes.bool,
 		}),
 		auditStore: PropTypes.shape({
 			status: PropTypes.string,
@@ -791,8 +792,8 @@ class Section extends React.Component{
 				</table>
 				<div className="panel-footer">
 					<p><b>Total Marks:</b> {marksObtained} out of {maxMarks}</p>
-					<hr/>
-					<div><b>Auditor Comment:</b>&nbsp;{ this.state.savingAuditorComment ? "saving..." : ""} {auditorCommentElement}</div>
+					{this.props.section.hide_comment == false ?
+						<div><hr/><b>Auditor Comment:</b>&nbsp;{ this.state.savingAuditorComment ? "saving..." : ""} {auditorCommentElement}</div> : null}
 					{/* <hr/>
 					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div> */}
 				</div>

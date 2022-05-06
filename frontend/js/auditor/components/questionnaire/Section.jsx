@@ -101,22 +101,24 @@ class __Section extends React.Component{
 		let commentElement = (<p>{auditor_comment}</p>);
 		let section_attachment_box_element;
 		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
-			commentElement = (
-				<form onSubmit={this.submitComment}>
-					<textarea
-						rows="3"
-						maxLength="4096"
-						className="form-control"
-						name="auditor_comment"
-						value={this.state.auditor_comment}
-						onFocus={this.onFocus}
-						onBlur={this.submitComment}
-						onChange={this.inputChanged}
-						ref={(input) => this.commentInput = input}
-						placeholder="type out your relevant experience here in a few sentences"
-					/>
-				</form>
-			);
+			if(this.props.section.hide_comment == false){
+				commentElement = (
+					<form onSubmit={this.submitComment}>
+						<textarea
+							rows="3"
+							maxLength="4096"
+							className="form-control"
+							name="auditor_comment"
+							value={this.state.auditor_comment}
+							onFocus={this.onFocus}
+							onBlur={this.submitComment}
+							onChange={this.inputChanged}
+							ref={(input) => this.commentInput = input}
+							placeholder="type out your relevant experience here in a few sentences"
+						/>
+					</form>
+				);
+			}
 		}
 		else{
 			section_attachment_box_element = <SectionAttachmentBox
@@ -159,16 +161,18 @@ class __Section extends React.Component{
 					</thead>
 					<tbody>
 						{questionRows}
-						<tr className={goodClass || badClass}>
-							<td>
-								<div className="row">
-									<div className="col-xs-offset-1 col-md-11">
-										<p><b>Section Summary:</b> {savingMessage}</p>
-										{commentElement}
+						{ this.props.section.hide_comment == false ?
+							<tr className={goodClass || badClass}>
+								<td>
+									<div className="row">
+										<div className="col-xs-offset-1 col-md-11">
+											<p><b>Section Summary:</b> {savingMessage}</p>
+											{commentElement}
+										</div>
 									</div>
-								</div>
-							</td>
-						</tr>
+								</td>
+							</tr>
+							: null}
 					</tbody>
 				</table>
 				{section_attachment_box_element}

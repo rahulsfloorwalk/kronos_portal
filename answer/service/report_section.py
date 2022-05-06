@@ -49,6 +49,8 @@ def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment)
         section = Section.objects.get(pk=section_id)
     except (AuditStore.DoesNotExist, Section.DoesNotExist) as e:
         raise ObjectNotFound() from e
+    if section.hide_comment:
+        raise AppLogicError("Cannot submit comment to current audit store")
     if user_id == audit_store.user_id:
         try:
             report_section = ReportSection.objects.get(audit_store_id=audit_store.id, section_id=section.id)
