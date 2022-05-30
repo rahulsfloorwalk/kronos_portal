@@ -10,7 +10,7 @@ import NavLink from "../../components/NavLink.jsx";
 import { Dashboard, File, LogOut, Bell, Stats } from "../../components/Icons.jsx";
 
 import { fetchUser } from "../service/user.js";
-import { fetchClient, fetchAccountBalance } from "../actions/client.js";
+import { fetchClient } from "../actions/client.js";
 
 class Header extends React.Component {
 	static propTypes = {
@@ -19,8 +19,8 @@ class Header extends React.Component {
 		}).isRequired,
 		clientId: PropTypes.number,
 		fetchClient: PropTypes.func.isRequired,
-		fetchAccountBalance: PropTypes.func.isRequired,
-		accountBalance: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
+		// fetchAccountBalance: PropTypes.func.isRequired,
+		// accountBalance: PropTypes.oneOfType([PropTypes.number, PropTypes.string])
 	};
 
 	state = {
@@ -29,7 +29,7 @@ class Header extends React.Component {
 
 	componentDidMount() {
 		this.props.fetchClient();
-		this.props.fetchAccountBalance();
+		// this.props.fetchAccountBalance();
 		fetchUser().then((clientUser)=>{
 			if(clientUser.is_client_admin == false){
 				window.location.replace("/auth/client/login");
@@ -66,10 +66,10 @@ class Header extends React.Component {
 					</li>
 				</ul>
 				<ul className="nav navbar-nav navbar-right" style={{marginRight:"0px"}}>
-					<li style={{display: "flex", alignItems: "center", border: "solid 1px lightgrey", padding: "0px 5px"}}>
+					{/* <li style={{display: "flex", alignItems: "center", border: "solid 1px lightgrey", padding: "0px 5px"}}>
 						<b title="Remaining balance">&#8377; {this.props.accountBalance}</b>&nbsp;&nbsp;
 						<Link to="/payment" className="btn btn-sm btn-default" style={{padding:"5px", margin:"9px 0px"}}>Top Up</Link>
-					</li>
+					</li> */}
 					<li>
 						<a style={pointerStyle}
 							onClick={(e)=>{e.stopPropagation(); this.logoutDropdown && this.logoutDropdown.toggle();}}>
@@ -125,7 +125,7 @@ class Header extends React.Component {
 var mapStoreToProps = function(store){
 	return {
 		clientId: store.client.id,
-		accountBalance: store.account.balance,
+		// accountBalance: store.account.balance,
 	};
 };
 
@@ -134,9 +134,9 @@ const mapDispatchToProps = dispatch => {
 		fetchClient: () => {
 			dispatch(fetchClient());
 		},
-		fetchAccountBalance: () =>{
-			dispatch(fetchAccountBalance());
-		}
+		// fetchAccountBalance: () =>{
+		// 	dispatch(fetchAccountBalance());
+		// }
 	};
 };
 

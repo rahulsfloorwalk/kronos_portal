@@ -23,6 +23,7 @@ from .viewss import trainer as trainer_views
 from .viewss import proof_tag as proof_tag_views
 from .viewss import email_log as email_log_views
 from .viewss import opportunity_email as opportunity_email_views
+from .viewss import opportunity_notification as opportunity_notification_views
 from .viewss import social as social_views
 from .viewss import payment as payment_views
 from .viewss import application as application_views
@@ -116,6 +117,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment/pending$', payment_views.PendingPaymentView.as_view(), name='audit_cycle_pending_payment_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/payment$', payment_views.PaymentView.as_view(), name='audit_cycle_payment_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_email$', opportunity_email_views.OpportunityEmailRecordView.as_view(), name='audit_cycle_opportunity_email_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_notification$', opportunity_notification_views.OpportunityNotificationView.as_view(), name='audit_cycle_opportunity_notification_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', report_attribute_views.ReportAttributeView.as_view(), name='report_attribute_by_audit_cycle_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 

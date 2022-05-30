@@ -11,6 +11,7 @@ from .views import section_proof_tag as section_proof_tag_views
 from .views import question as question_views
 from .views import audit as audit_views
 from .views import payment as payment_views
+from .views import quotation as quotation_views
 
 
 urlpatterns = ([
@@ -49,6 +50,13 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 
+    url(r'quotation/industry$', quotation_views.QuotationIndustryView.as_view(), name='industry_quotation_view'),
+    url(r'quotation/audit_category$', quotation_views.QuotationAuditCategoryView.as_view(), name='audit_category_quotation_view'),
+    url(r'quotation/audit_type$', quotation_views.QuotationAuditTypeView.as_view(), name='audit_type_quotation_view'),
+    url(r'quotation/preview$', quotation_views.QuotationPreviewView.as_view(), name='quotation_preview_view'),
+    url(r'quotation/(?P<quotation_id>[0-9]+)$', quotation_views.QuotationIdView.as_view(), name='quotation_id_view'),
+    url(r'client/(?P<client_id>[0-9]+)/quotation$', quotation_views.QuotationView.as_view(), name='quotation_view'),
+
     url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/questionnaire$', questionnaire_views.QuestionnaireByQuestionnaireTypeView.as_view(), name='questionnaire_view'),
     url(r'problem_statement/(?P<problem_statement_id>[0-9]+)/questionnaire_type$', questionnaire_views.QuestionnaireTypeByProblemStatementView.as_view(), name='questionnaire_type_view'),
     url(r'industry/(?P<industry_id>[0-9]+)/problem_statement$', questionnaire_views.ProblemStatementByIndustryView.as_view(), name='problem_statement_view'),
@@ -64,7 +72,7 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)/payment_resp$', payment_views.PaymentResponseView.as_view(), name='payment_response_view'),
     url(r'client/(?P<client_id>[0-9]+)/payment$', payment_views.PaymentView.as_view(), name='payment_view'),
     url(r'client/payment_failed$', payment_views.PaymentFailedView.as_view(), name='payment_failed_view'),
-    url(r'client/account_balance$', payment_views.AccountBalancView.as_view(), name='account_balance_view'),
+    # url(r'client/account_balance$', payment_views.AccountBalancView.as_view(), name='account_balance_view'),
 
     url(r'payment/(?P<client_id>[0-9]+)/(?P<payment_id>[0-9]+)/invoice$', payment_views.PaymentInvoiceView.as_view(), name="payment_invoice_view"),
 

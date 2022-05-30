@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib.auth.models import User
 from billing.models import Payment
 from kronos.utils import validate_url
@@ -9,7 +8,7 @@ from agency.models import AgencyUser, Agency
 from registration.models import MobileNumber
 from audit.models import AuditCycle, Audit
 from audit_store.models import AuditStore
-from client.models import BankInfo, Client, ClientUser, Store
+from client.models import BankInfo, Client, ClientUser, Quotation, Store
 from auditor.models import ProfileInfo, AuditApplication
 from manager.models import City
 from questionnaire.models import QuestionnaireType
@@ -197,6 +196,7 @@ class CitySerializer(ModelSerializer):
             'lat',
             'lon',
             'gmaps_url',
+            'tier',
         )
         read_only_fields = fields
 
@@ -531,8 +531,8 @@ class ClientCheckOutSerializer(Serializer):
         payable_amount = attrs.get('payable_amount', '')
         if not payable_amount:
             raise serializers.ValidationError("Please enter payable amount")
-        if int(payable_amount) < int(settings.MINIMUM_PAYMOUNT_AMOUNT):
-            raise serializers.ValidationError("Minimum payable amount should be {}".format(settings.MINIMUM_PAYMOUNT_AMOUNT))
+        # if int(payable_amount) < int(settings.MINIMUM_PAYMOUNT_AMOUNT):
+        #     raise serializers.ValidationError("Minimum payable amount should be {}".format(settings.MINIMUM_PAYMOUNT_AMOUNT))
         return super().validate(attrs)
 
 
@@ -546,5 +546,19 @@ class ClientPaymentSerializer(ModelSerializer):
             'paid_on',
             'added_on',
             'invoice_number',
+        )
+        read_only_fields = fields
+
+
+class QuotationSerializer(ModelSerializer):
+    class Meta:
+        model = Quotation
+        fields = (
+            'id',
+            'quotation_data',
+            'status',
+            'client',
+            'created_at',
+            'modified_at',
         )
         read_only_fields = fields

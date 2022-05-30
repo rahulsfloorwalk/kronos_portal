@@ -1,14 +1,13 @@
 from django.conf import settings
 from django.utils import timezone
 from django.db.transaction import atomic
-from django.db.models import Sum
 from django.template.loader import render_to_string
 
-from audit_store.models import AuditStore
 from billing.models import Payment
-from client.models import BankInfo
+from client.models import BankInfo, Quotation
 
 from client.service.client_service import find_client_by_id
+from client.service import quotation as quotation_service
 from billing.service import payment as payment_service
 from kronos.exceptions import AppLogicError
 from kronos.utils import generate_pdf_from_api
@@ -20,15 +19,21 @@ from razorpay.errors import SignatureVerificationError
 @atomic
 def create_payment_order(client_id: int, data: dict) -> dict:
     """
-    Function to create payment order for client
+    Function to create payment order for client quotation
     """
-    if settings.RAZORPAY_SWITCH == 'False':
+    if not settings.RAZORPAY_SWITCH:
         raise AppLogicError('Currently payment is not accepted')
 
-    client = find_client_by_id(client_id)
+    find_client_by_id(client_id)
     checkout_data = get_checkout_data(data)
-    payable_amount = get_payable_amount_with_gst(int(data['payable_amount']))
-    payment = Payment.objects.create(amount = payable_amount, content_object = client, payment_data = checkout_data, gst = settings.RAZORPAY_PAYMENT_GST)
+    quotation = quotation_service.find_by_id(data['quotation_id'])
+    gst = int(quotation.quotation_data['gst'])
+    payable_amount = int(data['payable_amount'])
+
+    if quotation.status == Quotation.PAID:
+        raise AppLogicError("Quotation is already paid")
+
+    payment = Payment.objects.create(amount = payable_amount, content_object = quotation, payment_data = checkout_data, gst = gst)
     data = {
         'amount': payable_amount * 100,
         'currency': 'INR',
@@ -48,16 +53,6 @@ def create_payment_order(client_id: int, data: dict) -> dict:
     payment.payment_order_id = razorpay_resp['id']
     payment.save()
     return result
-
-
-def get_payable_amount_with_gst(payable_amount: int) -> int:
-    """ Function to get payment amount with GST """
-
-    if settings.RAZORPAY_PAYMENT_GST and payable_amount:
-        amount = round(payable_amount + (payable_amount * (int(settings.RAZORPAY_PAYMENT_GST) / 100)))
-    else:
-        amount = round(payable_amount)
-    return amount
 
 
 def get_checkout_data(data):
@@ -115,6 +110,11 @@ def validate_payment_order_response(client_id, data: dict) -> bool:
     payment.payment_data = payment_data
     payment.save()
 
+    # Change quotation status after payment is complete
+    quotation = payment.quotations.latest('id')
+    quotation.status = Quotation.PAID
+    quotation.save()
+
     return True
 
 def find_by_payment_order_id(payment_order_id: str):
@@ -145,30 +145,30 @@ def failed_payment_order(data: dict) -> bool:
     payment.save()
     return True
 
-def get_payments_by_client_id(client_id: int):
-    payments = Payment.objects.filter(clients__id = client_id, status__in = [Payment.PAID, Payment.FAILED]).order_by('-id')
-    return payments
+# def get_payments_by_client_id(client_id: int):
+#     payments = Payment.objects.filter(clients__id = client_id, status__in = [Payment.PAID, Payment.FAILED]).order_by('-id')
+#     return payments
 
-def get_paid_payments_by_client_id(client_id: int):
-    payments = Payment.objects.filter(clients__id = client_id, status = Payment.PAID).order_by('-id')
-    return payments
+# def get_paid_payments_by_client_id(client_id: int):
+#     payments = Payment.objects.filter(clients__id = client_id, status = Payment.PAID).order_by('-id')
+#     return payments
 
-def get_used_account_balance_by_client(client_id: int):
-    audit_stores = AuditStore.objects.filter(audit__audit_cycle__created_by_client = True, audit__audit_cycle__client_id = client_id)
-    total = 0
-    for store in audit_stores:
-        earnings_per_audit = store.earnings_per_audit if store.earnings_per_audit else 0
-        reimbursement = store.reimbursement if store.reimbursement else 0
-        total += (earnings_per_audit + reimbursement)
-    return total
+# def get_used_account_balance_by_client(client_id: int):
+#     audit_stores = AuditStore.objects.filter(audit__audit_cycle__created_by_client = True, audit__audit_cycle__client_id = client_id)
+#     total = 0
+#     for store in audit_stores:
+#         earnings_per_audit = store.earnings_per_audit if store.earnings_per_audit else 0
+#         reimbursement = store.reimbursement if store.reimbursement else 0
+#         total += (earnings_per_audit + reimbursement)
+#     return total
 
 
-def get_account_balance_by_client_id(client_id: int):
-    total = get_paid_payments_by_client_id(client_id).aggregate(total = Sum('amount'))
-    total = total['total'] if total['total'] else 0
-    used_balance = get_used_account_balance_by_client(client_id)
-    remain_balance = total - used_balance
-    return remain_balance
+# def get_account_balance_by_client_id(client_id: int):
+#     total = get_paid_payments_by_client_id(client_id).aggregate(total = Sum('amount'))
+#     total = total['total'] if total['total'] else 0
+#     used_balance = get_used_account_balance_by_client(client_id)
+#     remain_balance = total - used_balance
+#     return remain_balance
 
 
 def get_payment_invoice(payment_id: int, client_id: int):

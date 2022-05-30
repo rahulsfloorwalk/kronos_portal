@@ -142,7 +142,7 @@ export class AuditCycleDetails extends React.Component{
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/audit_store`}><File/> Reports</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator_summary`}><Knight/> Moderator Summary</NavLink>
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/payment`}><b>₹</b> Payments</NavLink>
-					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`}><Envelope/> Email</NavLink>
+					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification`}><Envelope/> Notification</NavLink>
 					{/*
 					<NavLink to={`/audit_cycle/${this.props.params.auditCycleId}/moderator`}><Knight/> Moderators</NavLink>
 					*/}

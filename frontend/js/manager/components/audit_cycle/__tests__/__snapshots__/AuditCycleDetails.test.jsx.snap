@@ -337,7 +337,7 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
         <span
           className="glyphicon glyphicon-envelope"
         />
-         Email
+         Notification
       </a>
     </li>
   </ul>

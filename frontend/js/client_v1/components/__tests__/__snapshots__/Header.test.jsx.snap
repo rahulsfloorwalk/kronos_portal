@@ -60,36 +60,6 @@ exports[`<Header> renders an header correctly 1`] = `
       }
     }
   >
-    <li
-      style={
-        Object {
-          "alignItems": "center",
-          "border": "solid 1px lightgrey",
-          "display": "flex",
-          "padding": "0px 5px",
-        }
-      }
-    >
-      <b
-        title="Remaining balance"
-      >
-        ₹ 
-        500
-      </b>
-        
-      <a
-        className="btn btn-sm btn-default"
-        onClick={[Function]}
-        style={
-          Object {
-            "margin": "9px 0px",
-            "padding": "5px",
-          }
-        }
-      >
-        Top Up
-      </a>
-    </li>
     <li>
       <a
         onClick={[Function]}

@@ -47,6 +47,5 @@ class AuditorCountByFilterView(APIView):
     }
 
     def post(self, request):
-        print(request.data)
         count = opportunity_email_service.get_auditor_count_by_filter(request.data)
         return Response({'count': count})

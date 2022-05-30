@@ -244,3 +244,51 @@ def generate_pdf_from_api(html_data: str):
         return res.file.io
     except Exception as e:
         raise AppLogicError("Error while creating pdf")
+
+def validate_business_email(email):
+    emails = ["gmail.com", "yahoo.com", "hotmail.com", "yahoo.co.in", "aol.com", "abc.com", "xyz.com", "pqr.com", "rediffmail.com", "live.com", "outlook.com", "me.com", "msn.com", "ymail.com", "example.com"]
+    for i in emails:
+        if email.endswith(i):
+            return False
+    return True
+
+
+with open("./datasets/quotation_data.json") as quotation_data_file:
+    quotation = json.load(quotation_data_file)
+    industry_list = quotation["industry"]
+    audit_category_list = quotation["audit_category"]
+    audit_type_list = quotation["audit_type"]
+    tier_wise_markup = quotation["tier_markup"]
+    audit_volume_discount = quotation["audit_volume_discount"]
+
+    __logger.info("loaded quotation data")
+
+def get_markup_price(base_rate, markup):
+    if markup == 0:
+        return base_rate
+    else:
+        return (markup / 100) * base_rate
+
+def find_audit_volume_discount(audit_volume):
+    if(audit_volume <= 10):
+        return audit_volume_discount["10"]
+    elif(audit_volume <= 50):
+        return audit_volume_discount["50"]
+    elif(audit_volume <= 100):
+        return audit_volume_discount["100"]
+    elif(audit_volume <= 500):
+        return audit_volume_discount["500"]
+    else:
+        return 0
+
+def get_industry_list():
+    return industry_list
+
+def get_audit_category_list():
+    return audit_category_list
+
+def get_audit_type_list():
+    return audit_type_list
+
+def get_tier_markup_list():
+    return tier_wise_markup

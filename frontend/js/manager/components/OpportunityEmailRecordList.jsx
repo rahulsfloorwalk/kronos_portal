@@ -110,7 +110,7 @@ export default class OpportunityEmailRecordList extends React.Component{
 		return(
 			<div>
 				<h3 className="page-header">
-					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email/schedule`} className="btn btn-default pull-right">
+					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification/schedule`} className="btn btn-default pull-right">
 						<Plus/> Add City
 					</Link>
 				Opportunity Emails Scheduled
