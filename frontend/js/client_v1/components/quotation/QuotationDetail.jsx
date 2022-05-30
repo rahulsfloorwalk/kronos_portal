@@ -60,9 +60,10 @@ export class QuotationCategoryForm extends Component{
 			this.setState({
 				industry_list,
 				audit_category_list,
-				audit_type_list
+				audit_type_list,
+				loading: false,
 			});
-		}).catch(()=>null).finally(()=>this.setLoading(false));
+		}).catch(()=>this.setLoading(false));
 	}
 
 	fieldChanged = (e) => {
