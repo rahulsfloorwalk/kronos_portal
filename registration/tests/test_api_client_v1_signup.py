@@ -48,7 +48,7 @@ class ClientSignupAPITestCase(TestCase):
         self.assertEqual(response.status_code, 200)
 
         # post to registration endpoint with correct data
-        company_email = fake.email()
+        company_email = "company_email@floorwalk.in"
         pwd = fake.password()
         mobile_number = fake.numerify("##########")
         client_name = fake.company()
@@ -124,6 +124,26 @@ class ClientSignupAPITestCase(TestCase):
         # check for a 200 on the same page, with errors
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context["form"]["password2"].errors), 1)
+
+    def test_non_business_email(self):
+        # post to registration endpoint
+        company_email = "company_email@gmail.com"
+        pwd1 = fake.password()
+        pwd2 = fake.password()
+        mobile_number = fake.numerify("##########")
+        response = self.client.post(self.__signup_url, {
+            "username": company_email,
+            "mobile_number": mobile_number,
+            "password1": pwd1,
+            "password2": pwd2,
+            "full_name": fake.name(),
+            "client_name": fake.company(),
+            "tos_accept": True,
+        })
+
+        # check for a 200 on the same page, with errors
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context["form"]["username"].errors), 1)
 
     def test_empty_client_name(self):
         # post to registration endpoint

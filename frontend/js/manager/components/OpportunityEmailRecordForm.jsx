@@ -29,7 +29,9 @@ export default class OpportunityEmailRecordForm extends React.Component {
 
 	state = {
 		errors: {},
-		form: {},
+		form: {
+			channel_name: "",
+		},
 		cities: [],
 		states: {},
 		loading: false,
@@ -76,10 +78,15 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			industry: this.state.form.industry,
 			income: this.state.form.income,
 			interest_area: this.state.form.interest_area,
+			channel_name: this.state.form.channel_name,
 		};
 	};
 
 	onCheckCount = () =>{
+		if(this.state.form.channel_name == ""){
+			alert("Please select at least one channel");
+			return false;
+		}
 		if(this.state.form.city == undefined || this.state.form.city == ""){
 			this.setState({filter_error:"Please select a city", filter_count: ""});
 		}
@@ -97,10 +104,22 @@ export default class OpportunityEmailRecordForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
+		if(this.state.form.channel_name){
+			if(this.state.form.channel_name == "sms" || this.state.form.channel_name == "whatsapp"){
+				if(this.state.filter_count > 2){
+					alert("Auditor limit is reached for SMS or Whatsapp");
+					return false;
+				}
+			}
+		}
+		else{
+			alert("Please select at least one channel");
+			return false;
+		}
 		let filters = this.getFilterData();
-		saveOpportunityEmailRecord(this.props.params.auditCycleId, filters).done((opp) => {
-			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_email`);
-			Alert.success(`${opp.total_count} EMAILS SCHEDULED`);
+		saveOpportunityEmailRecord(this.props.params.auditCycleId, filters).done(() => {
+			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification`);
+			Alert.success("NOTIFICATION SCHEDULED");
 		}).fail((err) => {
 			this.setState({
 				errors: err.responseJSON || {},
@@ -147,7 +166,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		}
 
 		return (
-			<Modal size="modal-lg" modalTitle="Schedule Opportunity Email" onClose={hashHistory.goBack}>
+			<Modal size="modal-lg" modalTitle="Schedule Opportunity Notifications" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.state.errors.non_field_errors}/>
 					{this.state.filter_error ? <p className="text-danger"><b>{this.state.filter_error}</b></p> : null}
@@ -216,12 +235,32 @@ export default class OpportunityEmailRecordForm extends React.Component {
 								isMulti={true}/>
 						</div>
 					</div>
+					<div>
+						<p><b>Select Channel</b></p>
+						<label>
+							<input type="radio" name="channel_name" value="email" defaultChecked={false} onChange={this.inputChanged}/>
+							&nbsp;&nbsp;Email
+						</label>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>
+							<input type="radio" name="channel_name" value="sms" defaultChecked={false} onChange={this.inputChanged}/>
+							&nbsp;&nbsp;SMS
+						</label>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>
+							<input type="radio" name="channel_name" value="whatsapp" defaultChecked={false} onChange={this.inputChanged}/>
+							&nbsp;&nbsp;Whatsapp
+						</label>
+						<br/><br/>
+						<p><b>Note: </b>You cannot send a SMS or Whatsapp messages more than 50 people</p>
+						<br/>
+					</div>
 					<div className="row text-center">
 						{this.state.loading ? <Loading/> : <button type="button" className="btn btn-primary" onClick={this.onCheckCount}>Check auditors</button>}
 					</div>
 
 					{!this.state.loading && this.state.filter_count != "" ? <p><b>{this.state.filter_count} auditor{this.state.filter_count > 1 ? "s" : null} found for this filter</b></p> : null}
-					{!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send mail"/> : null}
+					{!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send notification"/> : null}
 				</form>
 			</Modal>
 		);

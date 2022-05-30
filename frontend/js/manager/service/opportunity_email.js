@@ -7,7 +7,7 @@ export function findOpportunityEmailRecordsByAuditCycleId(audit_cycle_id){
 
 export function saveOpportunityEmailRecord(audit_cycle_id, filters){
 	return $.ajax({
-		url: url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/opportunity_email`,
+		url: url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/opportunity_notification`,
 		method: "POST",
 		data: JSON.stringify(filters),
 		contentType: "application/json"

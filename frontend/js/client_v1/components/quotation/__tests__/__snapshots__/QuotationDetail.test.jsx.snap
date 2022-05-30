@@ -1,0 +1,302 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<CustomizeQuotationAlert/> renders the customize quotation alert 1`] = `
+<div
+  className="modal"
+  style={
+    Object {
+      "display": "block",
+      "overflow": "scroll",
+    }
+  }
+  tabIndex="-1"
+>
+  <div
+    className="modal-backdrop fade in"
+    onClick={[Function]}
+    style={
+      Object {
+        "height": "100%",
+        "zIndex": "1060",
+      }
+    }
+  />
+  <div
+    className="modal-dialog "
+    style={
+      Object {
+        "zIndex": "1070",
+      }
+    }
+  >
+    <div
+      className="modal-content"
+    >
+      <div
+        className="modal-header"
+      >
+        <button
+          className="close"
+          onClick={[Function]}
+          type="button"
+        >
+          ×
+        </button>
+        <h4
+          className="modal-title"
+        >
+          Customize Quotation alert
+        </h4>
+      </div>
+      <div
+        className="modal-body"
+        style={
+          Object {
+            "maxHeight": "85vh",
+            "overflowY": "scroll",
+          }
+        }
+      >
+        <div
+          className="row"
+        >
+          <p
+            className="text-center"
+            style={
+              Object {
+                "fontSize": "15px",
+              }
+            }
+          >
+            Hello there! If you'd like for us to customize the audits for you, Please write to us and we will reach out to you in next 24 hours and help you customize this.
+          </p>
+          <br />
+          <div
+            className="text-center"
+          >
+            <button
+              className="btn btn-primary"
+            >
+              Send Enquiry
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<QuotationPreview/> renders the empty quotation 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <b>
+      Quotation preview
+    </b>
+  </div>
+  <div
+    className="panel-body"
+  >
+    <div
+      className="text-center text-muted"
+    >
+      <img
+        alt="loading..."
+        src="test-file-stub"
+        title="Please Wait"
+      />
+      <p>
+        LOADING
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`<QuotationPreview/> renders the quotation 1`] = `
+<div
+  className="panel panel-default"
+>
+  <div
+    className="panel-heading"
+  >
+    <b>
+      Quotation preview
+    </b>
+  </div>
+  <div
+    className="panel-body"
+  >
+    <table
+      className="table table-bordered table-responsive"
+    >
+      <thead>
+        <tr>
+          <th
+            className="text-center"
+          >
+            Industry category
+          </th>
+          <th
+            className="text-center"
+          >
+            Audit category
+          </th>
+          <th
+            className="text-center"
+          >
+            Audit type
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            className="text-center"
+          >
+            Fitness
+          </td>
+          <td
+            className="text-center"
+          >
+            Integrity Study
+          </td>
+          <td
+            className="text-center"
+          >
+            Online Audits
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table
+      className="table table-bordered table-responsive"
+    >
+      <thead>
+        <tr>
+          <th
+            className="text-center"
+          >
+            City
+          </th>
+          <th
+            className="text-center"
+          >
+            Audit Count
+          </th>
+          <th
+            className="text-center"
+          >
+            Audit Fee
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td
+            className="text-center"
+          >
+            Mangolpuri
+          </td>
+          <td
+            className="text-center"
+          >
+            1
+          </td>
+          <td
+            className="text-center"
+          >
+            1900
+          </td>
+        </tr>
+        <tr>
+          <th
+            className="text-right"
+            colSpan={2}
+          >
+            Total
+          </th>
+          <td
+            className="text-center"
+          >
+            1900
+          </td>
+        </tr>
+        <tr>
+          <th
+            className="text-right"
+            colSpan={2}
+          >
+            GST(
+            18
+            %)
+          </th>
+          <td
+            className="text-center"
+          >
+            342
+          </td>
+        </tr>
+        <tr>
+          <th
+            className="text-right"
+            colSpan={2}
+          >
+            Payable amount
+          </th>
+          <td
+            className="text-center"
+          >
+            2242
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div
+      className="col-md-12 text-center"
+    >
+      <p>
+        <input
+          defaultChecked={false}
+          disabled={false}
+          id="t_and_c"
+          type="checkbox"
+        />
+           
+        <a
+          href=""
+          style={
+            Object {
+              "textDecoration": "none",
+            }
+          }
+          target="_blank"
+        >
+          <b>
+            Read terms and conditions
+          </b>
+        </a>
+      </p>
+      <button
+        className="btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Back
+      </button>
+        
+      <button
+        className="btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+      >
+        Make payment
+      </button>
+    </div>
+  </div>
+</div>
+`;

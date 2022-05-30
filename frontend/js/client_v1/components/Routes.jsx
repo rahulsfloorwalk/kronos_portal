@@ -44,10 +44,10 @@ import ClientUserAssignStores from "./client_user/ClientUserAssignStores.jsx";
 import ProfileInfoForm from "./profile/ProfileInfoForm.jsx";
 import BankInfoForm from "./profile/BankInfoForm.jsx";
 
-import PaymentForm from "./payment/PaymentForm.jsx";
 import PaymentList from "./payment/PaymentList.jsx";
 
 import QuestionnaireInsertForm from "./questionnaire/QuestionnaireInsertForm.jsx";
+import QuotationDetail, { CustomizeQuotationAlert } from "./quotation/QuotationDetail.jsx";
 
 const IndexComponent = () => null;
 
@@ -104,8 +104,6 @@ const Routes = () => (<Router history={hashHistory}>
 			</Route>
 		</Route>
 
-		<Route path="/payment" component={PaymentForm}/>
-
 		<Route path="/profile" component={ProfileInfoPanel}>
 			<Route path="edit" component={ProfileInfoForm}/>
 		</Route>
@@ -113,6 +111,10 @@ const Routes = () => (<Router history={hashHistory}>
 		<Route path="/billing" component={PaymentList}/>
 		<Route path="/faq" component={FAQ}/>
 		<Route path="/contact_us" component={ContactUs}/>
+
+		<Route path="/quotation" component={QuotationDetail}>
+			<Route path="customize" component={CustomizeQuotationAlert} />
+		</Route>
 	</Route>
 </Router>);
 

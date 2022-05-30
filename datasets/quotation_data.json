@@ -1,0 +1,213 @@
+{
+    "audit_category": [
+        {
+            "id": 1,
+            "name": "Consumer Experience - Product",
+            "markup": 30
+        },
+        {
+            "id": 2,
+            "name": "Consumer Experience - Service",
+            "markup": 30
+        },
+        {
+            "id": 3,
+            "name": "Consumer insights",
+            "markup": 20
+        },
+        {
+            "id": 4,
+            "name": "Franchisee Performance",
+            "markup": 20
+        },
+        {
+            "id": 5,
+            "name": "Integrity Study",
+            "markup": 25
+        },
+        {
+            "id": 6,
+            "name": "Market Operating Price",
+            "markup": 30
+        },
+        {
+            "id": 7,
+            "name": "Market Research",
+            "markup": 25
+        },
+        {
+            "id": 8,
+            "name": "Operational Audits",
+            "markup": 25
+        },
+        {
+            "id": 9,
+            "name": "Operational Audits",
+            "markup": 15
+        },
+        {
+            "id": 10,
+            "name": "Inventory Audit",
+            "markup": 40
+        },
+        {
+            "id": 11,
+            "name": "Revenue Leakage",
+            "markup": 20
+        },
+        {
+            "id": 12,
+            "name": "Sales Process",
+            "markup": 30
+        },
+        {
+            "id": 13,
+            "name": "Visual Merchandising",
+            "markup": 20
+        },
+        {
+            "id": 14,
+            "name": "Other",
+            "markup": 0
+        }
+    ],
+
+    "audit_type": [
+        {
+            "id": 1,
+            "name": "Mystery Audit - Walk-in",
+            "markup": 40
+        },
+        {
+            "id": 2,
+            "name": "Mystery Audit -Telephonic",
+            "markup": 20
+        },
+        {
+            "id": 3,
+            "name": "Online Audits",
+            "markup": 25
+        },
+        {
+            "id": 4,
+            "name": "Informed Audit - Walk-in",
+            "markup": 30
+        },
+        {
+            "id": 5,
+            "name": "product sample",
+            "markup": 15
+        },
+        {
+            "id": 6,
+            "name": "Other",
+            "markup": 0
+        }
+    ],
+
+    "industry": [
+        {
+            "id": 1,
+            "name": "Ecommerce",
+            "base_rate": 1000
+        },
+        {
+            "id": 2,
+            "name": "Edtech",
+            "base_rate": 1000
+        },
+        {
+            "id": 3,
+            "name": "Fitness",
+            "base_rate": 1000
+        },
+        {
+            "id": 4,
+            "name": "Healthcare",
+            "base_rate": 1000
+        },
+        {
+            "id": 5,
+            "name": "Online Services",
+            "base_rate": 1000
+        },
+        {
+            "id": 6,
+            "name": "Electronics & Appliances",
+            "base_rate": 1000
+        },
+        {
+            "id": 7,
+            "name": "Entertainment",
+            "base_rate": 1000
+        },
+        {
+            "id": 8,
+            "name": "Jewellery",
+            "base_rate": 1000
+        },
+        {
+            "id": 9,
+            "name": "Academics",
+            "base_rate": 1000
+        },
+        {
+            "id": 10,
+            "name": "Banking/Finance",
+            "base_rate": 1000
+        },
+        {
+            "id": 11,
+            "name": "Food and Beverages",
+            "base_rate": 1000
+        },
+        {
+            "id": 12,
+            "name": "Construction/Interior",
+            "base_rate": 1000
+        },
+        {
+            "id": 13,
+            "name": "Real Estate",
+            "base_rate": 1000
+        },
+        {
+            "id": 14,
+            "name": "Salons & Spa",
+            "base_rate": 1000
+        },
+        {
+            "id": 15,
+            "name": "Hospitality",
+            "base_rate": 1000
+        },
+        {
+            "id": 16,
+            "name": "Automobile",
+            "base_rate": 1000
+        },
+        {
+            "id": 17,
+            "name": "Co-Working Spaces",
+            "base_rate": 1000
+        },
+        {
+            "id": 18,
+            "name": "Others",
+            "base_rate": 1000
+        }
+    ],
+
+    "tier_markup": {
+        "1": 15,
+        "2": 30,
+        "3": 40
+    },
+
+    "audit_volume_discount": {
+        "10": 0,
+        "50": 5,
+        "100": 15,
+        "500": 20
+    }
+}

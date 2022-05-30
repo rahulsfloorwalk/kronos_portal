@@ -1,13 +1,13 @@
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from client.service.client_service import find_client_by_user_id
 from kronos.exceptions import AppLogicError
 
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_CLIENT
 
 from billing.service import client as client_payment_service
+from client_rest_v1.services import quotation as quotation_service
 
 from ..serializers import ClientCheckOutSerializer, ClientPaymentSerializer
 
@@ -20,7 +20,7 @@ class PaymentView(APIView):
     }
 
     def get(self, request, client_id):
-        payments = client_payment_service.get_payments_by_client_id(client_id)
+        payments = quotation_service.find_payments_by_client_id(client_id)
         return Response(ClientPaymentSerializer(payments, many=True).data)
 
     def post(self, request, client_id, format=None):
@@ -60,16 +60,16 @@ class PaymentFailedView(APIView):
         payment = client_payment_service.failed_payment_order(data)
         return Response({'failed': payment})
 
-class AccountBalancView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_CLIENT],
-    }
+# class AccountBalancView(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'GET': [GROUP_NAME_CLIENT],
+#     }
 
-    def get(self, request):
-        client = find_client_by_user_id(request.user.id)
-        balance = client_payment_service.get_account_balance_by_client_id(client.id)
-        return Response(balance)
+#     def get(self, request):
+#         client = find_client_by_user_id(request.user.id)
+#         balance = client_payment_service.get_account_balance_by_client_id(client.id)
+#         return Response(balance)
 
 class PaymentInvoiceView(APIView):
     permission_classes = [HasGroupPermission]

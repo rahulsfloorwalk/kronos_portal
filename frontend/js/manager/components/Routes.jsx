@@ -193,7 +193,7 @@ const Routes = () => (
 				<Route path="moderator" components={AuditCycleModeratorList}>
 					<Route path="assign" component={AuditCycleModeratorAssignForm}/>
 				</Route>
-				<Route path="opportunity_email" components={OpportunityEmailRecordList}>
+				<Route path="opportunity_notification" components={OpportunityEmailRecordList}>
 					<Route path="schedule" component={OpportunityEmailRecordForm}/>
 				</Route>
 			</Route>

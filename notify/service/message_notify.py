@@ -10,7 +10,7 @@ from registration.models import GROUP_NAME_AUDITOR
 
 from celery import shared_task
 
-from .message import send_message, send_whatsapp_message
+from .message import send_whatsapp_message
 from .. import verbs
 from auditor.service.profile_info_service import find_profile_info_by_user_id
 
@@ -18,25 +18,25 @@ from auditor.service.profile_info_service import find_profile_info_by_user_id
 _logger = logging.getLogger(__name__)
 
 
-def send_notification_message(notif_id):
-    if settings.MESSAGE_SWITCH['NOTIFICATION_MESSAGE']:
-        notification_message_task.delay(notif_id)
-    else:
-        _logger.info("notification message disabled. skipping message for notification id : %s", notif_id)
+# def send_notification_message(notif_id):
+#     if settings.MESSAGE_SWITCH['NOTIFICATION_MESSAGE']:
+#         notification_message_task.delay(notif_id)
+#     else:
+#         _logger.info("notification message disabled. skipping message for notification id : %s", notif_id)
 
 
-@shared_task(ignore_result=True)
-def notification_message_task(notif_id):
-    notif = Notification.objects.get(pk=notif_id)
+# @shared_task(ignore_result=True)
+# def notification_message_task(notif_id):
+#     notif = Notification.objects.get(pk=notif_id)
 
-    if notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
-        user_id = notif.recipient.id
-        profile_info = find_profile_info_by_user_id(user_id)
-        first_name = profile_info.first_name
-        mobile_number = profile_info.mobile_number
-        if notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
-            send_message(first_name, mobile_number)
-            return True
+#     if notif.recipient.groups.filter(name=GROUP_NAME_AUDITOR).all():
+#         user_id = notif.recipient.id
+#         profile_info = find_profile_info_by_user_id(user_id)
+#         first_name = profile_info.first_name
+#         mobile_number = profile_info.mobile_number
+#         if notif.verb == verbs.AUDIT_STORE_UNSUBMITTED:
+#             send_message(first_name, mobile_number)
+#             return True
 
 
 def send_whatsapp_notification(notif_id, message=""):
@@ -82,7 +82,7 @@ def get_params_from_audit_store(notif_id, message):
     audit_date = audit_store.audit_date.strftime('%m/%d/%Y')
 
     if notif_id.verb == verbs.AUDIT_STORE_ASSIGNED:
-        template_name = "audit_assign"
+        template_name = settings.WHATSAPP_TEMPLATE['AUDIT_ASSIGNED']
 
         # Make field sequence as per api documentation/message template
         params = [{"default":first_name}, {"default":client}, {"default":audit_date}]
@@ -93,7 +93,7 @@ def get_params_from_audit_store(notif_id, message):
         if report_log:
             if 'proof_tags' in report_log.report_data:
                 if report_log.report_data['proof_tags']:
-                    template_name = 'audit_revert_with_proof_2'
+                    template_name = settings.WHATSAPP_TEMPLATE['AUDIT_REVERT_WITH_PROOF']
                     proof_tag_str = ', '.join(report_log.report_data['proof_tags'])
 
                     # Make field sequence as per api documentation/message template

@@ -11,6 +11,11 @@ from guardian.shortcuts import assign_perm
 
 from registration.models import GROUP_NAME_CLIENT
 
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
+
+from kronos.exceptions import AppLogicError
+
 
 class ClientQuerySet(QuerySet):
     def create_client(self, email, client_name, mobile_number, is_auto_signup):
@@ -234,3 +239,118 @@ class BankInfo(Model):
 
     def is_pan_card_valid(self):
         return bool(validate_pan(self.pan_number))
+
+
+class Quotation(Model):
+
+    PAID = 'PAID'
+    PENDING = 'PENDING'
+
+    STATUS_CHOICES = (
+        (PAID, "Paid"),
+        (PENDING, "Pending"),
+    )
+
+    QUOTATION_DATA_SCHEMA = {
+        "type": "object",
+        "required": ["industry", "audit_type", "audit_category", "audit_locations", "quotation_fee", "gst_amount", "gst", "discount", "payable_amount"],
+        "properties": {
+            "industry": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                }
+            },
+            "audit_category": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                }
+            },
+            "audit_type": {
+                "type": "object",
+                "required": ["id", "name"],
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                }
+            },
+            "audit_locations": {
+                "type": "array",
+                "uniqueItems": True,
+                "minItems": 1,
+                "items": {
+                    "type": "object",
+                    "required": ["id", "name", "tier", "audit_count", "audit_fee"],
+                    "properties": {
+                        "id": {
+                            "type": "integer",
+                        },
+                        "name": {
+                            "type": "string",
+                        },
+                        "tier": {
+                            "type": "integer"
+                        },
+                        "audit_count": {
+                            "type": "integer",
+                        },
+                        "audit_fee": {
+                            "type": "integer",
+                        },
+                    },
+                }
+            },
+            "quotation_fee": {
+                "type": "integer",
+            },
+            "gst_amount": {
+                "type": "integer",
+            },
+            "gst": {
+                "type": "string",
+            },
+            "discount": {
+                "type": "integer",
+            },
+            "payable_amount": {
+                "type": "integer",
+            },
+        },
+    }
+
+    id = AutoField(db_column= 'id', primary_key=True)
+    quotation_data = JSONField(db_column='quotation_data', default=dict, blank=False)
+    status = CharField(db_column='status', max_length=10, choices=STATUS_CHOICES)
+    client = ForeignKey(Client, related_name='quotation', db_column='client_id', on_delete=PROTECT)
+    payment = GenericRelation('billing.payment', related_query_name='quotations')
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        self.clean()
+        return super(Quotation, self).save(*args, **kwargs)
+
+    def __validate_data(self):
+        if self.quotation_data:
+            try:
+                validate(self.quotation_data, self.QUOTATION_DATA_SCHEMA)
+            except ValidationError as v:
+                raise AppLogicError(v.message) from v
+        else:
+            raise AppLogicError('Invalid quotation')
+
+    def clean(self):
+        self.__validate_data()
+        return super(Quotation, self).clean()

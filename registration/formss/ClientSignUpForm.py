@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db.models import Q
 
 from auditor.validators import numericValidator
+from kronos.utils import validate_business_email
 from registration.service import mobile_number_service
 from registration.service import client
 
@@ -27,7 +28,8 @@ class ClientSignUpForm(UserCreationForm):
 
         if to_check_email:
             to_check_email = to_check_email.strip().lower()
-
+            if not validate_business_email(to_check_email):
+                raise ValidationError("A user with email %(email)s is not a business type email", params={"email": to_check_email})
         if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email)).exists():
             raise ValidationError("A user with email %(email)s already exists", params={"email": to_check_email})
 

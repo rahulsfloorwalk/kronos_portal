@@ -6,7 +6,7 @@ import moment from "moment";
 import { momentDateFormat }  from "../../../../config.js";
 
 import { getClientPayments } from "../../service/payment.js";
-import { fetchAccountBalance } from "../../actions/client.js";
+// import { fetchAccountBalance } from "../../actions/client.js";
 import PaymentStatusLabel from "../../../components/PaymentStatusLabel.jsx";
 import { DownloadAlt } from "../../../components/Icons.jsx";
 import { url } from "../../../../config.js";
@@ -57,7 +57,7 @@ class PaymentList extends React.Component {
 	}
 
 	componentWillReceiveProps(ownProps){
-		ownProps.dispatch(fetchAccountBalance());
+		// ownProps.dispatch(fetchAccountBalance());
 		getClientPayments(ownProps.client.id).then((payments) => {
 			this.setState({
 				payments,

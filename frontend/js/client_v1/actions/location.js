@@ -33,7 +33,7 @@ export function fetchStates(){
 			dispatch({
 				type: types.STATE_GET,
 				status: "success",
-				country_states: states
+				states: states
 			});
 		});
 		//TODO: Handle error
