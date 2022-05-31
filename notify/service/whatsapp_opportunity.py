@@ -35,6 +35,10 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: i
     if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
         raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity alert")
 
+    auditor_count = get_auditor_count_by_filter(filters)
+    if auditor_count > int(settings.MAX_WHATSAPP_SENT_COUNT):
+        raise AppLogicError('Auditor count must below {}'.format(settings.MAX_SMS_SENT_COUNT))
+
     opp = OpportunityWhatsappRecord()
     opp.city = city
     opp.audit_cycle = audit_cycle

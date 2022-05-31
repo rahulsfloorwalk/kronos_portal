@@ -32,10 +32,14 @@ def schedule_opportunity_sms_for_audit_cycle_with_filters(audit_cycle_id: int, f
     if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
         raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity alert")
 
+    auditor_count = get_auditor_count_by_filter(filters)
+    if auditor_count > int(settings.MSG91['MAX_SMS_SENT_COUNT']):
+        raise AppLogicError('Auditor count must below {}'.format(settings.MSG91['MAX_SMS_SENT_COUNT']))
+
     opp = OpportunitySmsRecord()
     opp.city = city
     opp.audit_cycle = audit_cycle
-    opp.total_count = get_auditor_count_by_filter(filters)
+    opp.total_count = auditor_count
     opp.record_data = {
         'user_list': get_auditor_list_by_filter(filters)
     }

@@ -106,7 +106,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		e.preventDefault();
 		if(this.state.form.channel_name){
 			if(this.state.form.channel_name == "sms" || this.state.form.channel_name == "whatsapp"){
-				if(this.state.filter_count > 2){
+				if(this.state.filter_count > 50){
 					alert("Auditor limit is reached for SMS or Whatsapp");
 					return false;
 				}

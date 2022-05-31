@@ -64,6 +64,7 @@ class Header extends React.Component {
 					<li role="presentation">
 						<a href="/static/client/index.html" target="_blank" ><File/> Reports</a>
 					</li>
+					<NavLink to="/quotation"><File/> Quotation</NavLink>
 				</ul>
 				<ul className="nav navbar-nav navbar-right" style={{marginRight:"0px"}}>
 					{/* <li style={{display: "flex", alignItems: "center", border: "solid 1px lightgrey", padding: "0px 5px"}}>
