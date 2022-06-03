@@ -17,6 +17,7 @@ describe("<__AnswerElement/>", () => {
 			question_txt: "How are you feeling today?",
 			question_type: "PLAIN",
 			question_data: {},
+			hide_question: false,
 		};
 
 		it("sets the answerText prop for the inner element when it calls onChange", () => {
@@ -97,6 +98,7 @@ describe("<__AnswerElement/>", () => {
 			question_txt: "How are you feeling today?",
 			question_type: "PLAIN",
 			question_data: {},
+			hide_question: false,
 		};
 
 		it("renders a Plain Answer Element", () => {
@@ -137,6 +139,7 @@ describe("<__AnswerElement/>", () => {
 					},
 				],
 			},
+			hide_question: false,
 		};
 
 		it("renders a Mutex Answer Element", () => {

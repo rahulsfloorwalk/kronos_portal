@@ -30,4 +30,5 @@ export const questionPropType = PropTypes.shape({
 	question_txt: PropTypes.string.isRequired,
 	question_type: PropTypes.oneOf(QuestionType).isRequired,
 	question_data: PropTypes.object.isRequired,
+	hide_question: PropTypes.bool.isRequired,
 });

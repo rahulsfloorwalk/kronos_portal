@@ -39,6 +39,7 @@ describe("<__Section/>", () => {
 				question_txt: "How are you feeling today?",
 				question_type: "PLAIN",
 				question_data: {},
+				hide_question: false,
 			},
 		],
 	};

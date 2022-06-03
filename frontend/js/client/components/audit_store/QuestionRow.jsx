@@ -20,11 +20,15 @@ export default class QuestionRow extends React.Component{
 			sequence: PropTypes.number,
 			question_type: PropTypes.string,
 			question_data: PropTypes.object,
+			hide_question: PropTypes.bool
 		}),
 		showMarks: PropTypes.bool,
 	};
 
 	render(){
+		if(this.props.q.hide_question && ! this.props.answer){
+			return null;
+		}
 		let maxMarks, answerMarks, answerText;
 		if(this.props.showMarks){
 			maxMarks = this.props.q.max_marks;

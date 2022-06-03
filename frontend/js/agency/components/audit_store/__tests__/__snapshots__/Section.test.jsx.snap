@@ -153,6 +153,7 @@ exports[`<__Section/> when showErrors is false and auditorComment is '': 1`] = `
         auditStoreId={2}
         question={
           Object {
+            "hide_question": false,
             "id": 1,
             "question_data": Object {},
             "question_txt": "How are you feeling today?",
@@ -262,6 +263,7 @@ exports[`<__Section/> when showErrors is false and auditorComment is 'Hello Worl
         auditStoreId={2}
         question={
           Object {
+            "hide_question": false,
             "id": 1,
             "question_data": Object {},
             "question_txt": "How are you feeling today?",
@@ -371,6 +373,7 @@ exports[`<__Section/> when showErrors is true and auditorComment is '': 1`] = `
         auditStoreId={2}
         question={
           Object {
+            "hide_question": false,
             "id": 1,
             "question_data": Object {},
             "question_txt": "How are you feeling today?",
@@ -480,6 +483,7 @@ exports[`<__Section/> when showErrors is true and auditorComment is 'Hello World
         auditStoreId={2}
         question={
           Object {
+            "hide_question": false,
             "id": 1,
             "question_data": Object {},
             "question_txt": "How are you feeling today?",

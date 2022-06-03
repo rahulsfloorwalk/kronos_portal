@@ -195,6 +195,7 @@ class QuestionSerializer(ModelSerializer):
             'question_type',
             'question_data',
             'section',
+            'hide_question',
         )
         read_only_fields = fields
 

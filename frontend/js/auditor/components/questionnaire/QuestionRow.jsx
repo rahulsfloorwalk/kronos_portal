@@ -97,6 +97,9 @@ class QuestionRow extends React.Component{
 	};
 
 	render(){
+		if(this.props.q.hide_question && (this.state.answer_text === "" || this.state.answer_text === undefined)){
+			return null;
+		}
 		let noAnswerText = "-";
 		let answer;
 

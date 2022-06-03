@@ -89,6 +89,7 @@ export class QuestionRow extends React.Component{
 			question_type: PropTypes.string,
 			question_txt: PropTypes.string,
 			sequence: PropTypes.number,
+			hide_question: PropTypes.bool,
 			question_data: PropTypes.shape({
 				options: PropTypes.arrayOf(PropTypes.shape({
 					sequence: PropTypes.number,
@@ -169,6 +170,9 @@ export class QuestionRow extends React.Component{
 		});
 	};
 	render(){
+		if(this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)){
+			return null;
+		}
 		let notApplicableIcon = this.state.answer.not_applicable ? <Checked/> : <Unchecked/>;
 
 		let notApplicableElement = (notApplicableIcon);

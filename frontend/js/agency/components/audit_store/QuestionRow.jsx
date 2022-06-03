@@ -38,6 +38,9 @@ export class __QuestionRow extends React.Component{
 	};
 
 	render(){
+		if(this.props.question.hide_question && (this.props.answerText === "" || this.props.answerText === undefined)){
+			return null;
+		}
 		if(this.state.saving){
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}

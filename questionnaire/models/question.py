@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField
+from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField, BooleanField
 from django.db.models import PROTECT
 from django.contrib.postgres.fields import JSONField
 
@@ -84,6 +84,7 @@ class Question(Model):
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
     question_type = CharField(db_column='question_type', max_length=20, choices=QUESTION_TYPE, default=PLAIN, blank=False)
     question_data = JSONField(db_column='question_data', default=dict, blank=False)
+    hide_question = BooleanField(db_column='hide_question', default=False, blank=False, null=False)
 
     def __has_unique_key(self, a_list_of_dicts, unique_key):
         values = [d[unique_key] for d in a_list_of_dicts]
