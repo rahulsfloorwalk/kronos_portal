@@ -14,6 +14,8 @@ from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_
 from attachment.service import set_attachment_by_proof_tag
 from audit_store.service_moderator import get_moderator_email_by_audit_store_obj
 from answer.service.answer_auditor import add_multiselect_answer_questions
+from answer.models import Answer
+from questionnaire.models.question import Question
 
 
 @atomic
@@ -24,6 +26,7 @@ def acknowledge_report(audit_store_id, user_id):
         raise AppLogicError("Report cannot be acknowledged by user")
 
     audit_store.acknowledge(by=user)
+    set_not_applicable_for_hide_questions(audit_store)
     return audit_store
 
 
@@ -166,3 +169,14 @@ def concern_report(audit_store_id, user_id, message):
             send_audit_report_concern_email.delay(email, audit_store_id, user_id, message)
     # End of Send Mail to manager or "shubham.mohod@floorwalk.in"
     return audit_store
+
+def set_not_applicable_for_hide_questions(audit_store: AuditStore):
+    question_list = Question.objects.filter(section__audit_cycle_id=audit_store.audit.audit_cycle.id,
+                                            hide_question=True)
+    for question in question_list:
+        if not Answer.objects.filter(question=question, audit_store=audit_store).exists():
+            answer_obj = Answer()
+            answer_obj.question = question
+            answer_obj.audit_store = audit_store
+            answer_obj.not_applicable = True
+            answer_obj.save()

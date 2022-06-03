@@ -2,6 +2,7 @@ from django.db.transaction import atomic
 
 from audit.models import AuditCycle
 from audit_store.models import AuditStore
+from audit_store.service_auditor import set_not_applicable_for_hide_questions
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 
@@ -29,6 +30,7 @@ def find_by_id_for_agency_user(audit_store_id, user_id):
 def acknowledge_report(audit_store_id, user_id):
     audit_store = find_by_id_for_agency_user(audit_store_id, user_id)
     audit_store.acknowledge(by=audit_store.user)
+    set_not_applicable_for_hide_questions(audit_store)
     return audit_store
 
 

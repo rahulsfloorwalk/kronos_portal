@@ -37,7 +37,8 @@ class QuestionForm extends React.Component {
 		}
 		this.setState({
 			form: Object.assign({}, this.state.form, {
-				section: this.props.params.sectionId
+				section: this.props.params.sectionId,
+				hide_question: false
 			})
 		});
 	}
@@ -74,6 +75,7 @@ class QuestionForm extends React.Component {
 						max_marks: "",
 						question_type: "",
 						question_txt: "",
+						hide_question: false
 					})
 				});
 				hashHistory.push(this.props.location.pathname);
@@ -123,6 +125,11 @@ class QuestionForm extends React.Component {
 			/>;
 		}
 
+		let hide_question_div = (
+			<div className="col-md-12">
+				<FormInput label="Hide Question" type="checkbox" checked={this.state.form.hide_question} name="hide_question" onChange={this.inputChanged} errors={this.state.errors.hide_question}/>
+			</div>
+		);
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit} className="row">
@@ -156,6 +163,7 @@ class QuestionForm extends React.Component {
 							/>
 						</div>
 					</div>
+					{hide_question_div}
 					<div className="col-md-12">
 						<SaveButton/>&nbsp;
 						{ ! this.props.params.questionId ?

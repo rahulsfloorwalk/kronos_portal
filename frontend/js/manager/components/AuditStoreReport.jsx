@@ -94,6 +94,7 @@ class __QuestionRow extends React.Component {
 			max_marks: PropTypes.number.isRequired,
 			question_type: PropTypes.string.isRequired,
 			question_txt: PropTypes.string.isRequired,
+			hide_question: PropTypes.bool,
 			question_data: PropTypes.shape({
 				options: PropTypes.arrayOf(PropTypes.shape({
 				})),
@@ -175,6 +176,9 @@ class __QuestionRow extends React.Component {
 	};
 
 	render() {
+		if(this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)){
+			return null;
+		}
 		let markElement = (<span><b>{this.state.answer.marks_obtained}</b>&nbsp;/&nbsp;<b>{this.props.q.max_marks}</b></span>);
 		let answerElement = (
 			<span>

@@ -31,6 +31,7 @@ exports[`<__QuestionRow/> when showErrors is false and answerText is '': 1`] = `
           onFocus={[Function]}
           question={
             Object {
+              "hide_question": false,
               "id": 1,
               "question_data": Object {},
               "question_txt": "How are you feeling today?",
@@ -76,6 +77,7 @@ exports[`<__QuestionRow/> when showErrors is false and answerText is 'Hello Worl
           onFocus={[Function]}
           question={
             Object {
+              "hide_question": false,
               "id": 1,
               "question_data": Object {},
               "question_txt": "How are you feeling today?",
@@ -121,6 +123,7 @@ exports[`<__QuestionRow/> when showErrors is true and answerText is '': 1`] = `
           onFocus={[Function]}
           question={
             Object {
+              "hide_question": false,
               "id": 1,
               "question_data": Object {},
               "question_txt": "How are you feeling today?",
@@ -166,6 +169,7 @@ exports[`<__QuestionRow/> when showErrors is true and answerText is 'Hello World
           onFocus={[Function]}
           question={
             Object {
+              "hide_question": false,
               "id": 1,
               "question_data": Object {},
               "question_txt": "How are you feeling today?",
