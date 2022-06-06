@@ -2,9 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import Select from "react-select";
-import { hashHistory } from "react-router";
 
-import { Cross } from "../../../components/Icons.jsx";
+import { Cross, Envelope, Earphone } from "../../../components/Icons.jsx";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
 import { fetchCities, fetchStates } from "../../actions/location.js";
@@ -19,15 +18,36 @@ import Modal from "../../../components/Modal.jsx";
 
 
 export class CustomizeQuotationAlert extends Component{
+	static propTypes = {
+		onClose: PropTypes.func,
+	};
 	render(){
 		return(
-			<Modal onClose={()=>hashHistory.push("/quotation")} modalTitle="Customize Quotation alert">
+			<Modal onClose={this.props.onClose} modalTitle="Customize Quotation alert">
 				<div className="row">
 					<p className="text-center" style={{fontSize: "15px"}}>Hello there&#33; If you&#39;d like for us to customize the audits for you, Please write to us and we will reach out to you in next 24 hours and help you customize this.</p>
 					<br/>
 					<div className="text-center">
 						<button className="btn btn-primary">Send Enquiry</button>
 					</div>
+				</div>
+			</Modal>
+		);
+	}
+}
+
+export class BulkQuotationAlert extends Component{
+	static propTypes = {
+		onClose: PropTypes.func,
+	};
+
+	render(){
+		return(
+			<Modal onClose={this.props.onClose} modalTitle="Need more audits?">
+				<div className="row">
+					<p className="text-center" style={{fontSize: "15px"}}>Talk to us for custom, high volume pricing.</p>
+					<p className="text-center" style={{fontSize: "15px"}}><Envelope/> <a href="mailto:sourabh@floorwalk.in">sourabh@floorwalk.in</a></p>
+					<p className="text-center" style={{fontSize: "15px"}}><Earphone/> <a href="tel:+917836066777">+917836066777</a></p>
 				</div>
 			</Modal>
 		);
@@ -48,6 +68,7 @@ export class QuotationCategoryForm extends Component{
 		audit_type: "",
 		audit_category: "",
 		loading: false,
+		customize_alert: false,
 	};
 
 	componentDidMount(){
@@ -66,6 +87,15 @@ export class QuotationCategoryForm extends Component{
 		}).catch(()=>this.setLoading(false));
 	}
 
+	onModalClose = () => {
+		this.setState((prevState)=>{
+			return {
+				...prevState,
+				customize_alert: !prevState.customize_alert,
+			};
+		});
+	};
+
 	fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
 	};
@@ -76,7 +106,12 @@ export class QuotationCategoryForm extends Component{
 			return false;
 		}
 		if(this.state.industry_category == "18" || this.state.audit_type == "6" || this.state.audit_category == "14"){
-			hashHistory.push("quotation/customize");
+			this.setState((prevState)=>{
+				return {
+					...prevState,
+					customize_alert: !prevState.customize_alert,
+				};
+			});
 			return false;
 		}
 		let quotation = {
@@ -135,6 +170,9 @@ export class QuotationCategoryForm extends Component{
 							<button className="btn btn-primary" onClick={this.onSubmit}>Next</button>
 						</div>
 						: null}
+					{this.state.customize_alert == true ?
+						<CustomizeQuotationAlert onClose={this.onModalClose} />
+						: null}
 				</div>
 			</div>
 		);
@@ -155,7 +193,8 @@ class QuotationCitySelectForm extends Component{
 		state: "",
 		cities: [],
 		selectedCities: [],
-		error: ""
+		error: "",
+		show_bulk_alert: false,
 	};
 
 	componentDidMount(){
@@ -209,8 +248,10 @@ class QuotationCitySelectForm extends Component{
 				totalAuditCount += Number(selectedCities[i].value);
 			}
 		}
-		if(totalAuditCount >= 500){
-			alert("Please contact to administrator for bulk audits.");
+		if(totalAuditCount.toFixed(0) >= 100){
+			this.setState({
+				show_bulk_alert: true,
+			});
 			return false;
 		}
 		let quotation = {
@@ -224,7 +265,7 @@ class QuotationCitySelectForm extends Component{
 			let selectedCities = this.state.selectedCities;
 			for(let city of selectedCities){
 				if(city.id == city_id){
-					city.audit_count = Number(audit_count);
+					city.audit_count = Number(audit_count).toFixed(0);
 					break;
 				}
 			}
@@ -243,6 +284,15 @@ class QuotationCitySelectForm extends Component{
 				};
 			});
 		}
+	};
+
+	onModalClose = () => {
+		this.setState((prevState) => {
+			return {
+				...prevState,
+				show_bulk_alert: !prevState.show_bulk_alert,
+			};
+		});
 	};
 
 	render(){
@@ -309,6 +359,9 @@ class QuotationCitySelectForm extends Component{
 								<button className="btn btn-primary" onClick={this.onSubmit} disabled={this.state.selectedCities.length == 0}>Next</button>
 							</div>
 						</div>
+						: null}
+					{this.state.show_bulk_alert == true ?
+						<BulkQuotationAlert onClose={this.onModalClose}/>
 						: null}
 				</div>
 			</div>

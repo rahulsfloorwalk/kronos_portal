@@ -13,7 +13,6 @@ exports[`<CustomizeQuotationAlert/> renders the customize quotation alert 1`] = 
 >
   <div
     className="modal-backdrop fade in"
-    onClick={[Function]}
     style={
       Object {
         "height": "100%",
@@ -37,7 +36,6 @@ exports[`<CustomizeQuotationAlert/> renders the customize quotation alert 1`] = 
       >
         <button
           className="close"
-          onClick={[Function]}
           type="button"
         >
           ×

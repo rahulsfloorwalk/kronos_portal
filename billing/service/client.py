@@ -173,13 +173,13 @@ def failed_payment_order(data: dict) -> bool:
 
 def get_payment_invoice(payment_id: int, client_id: int):
     invoice_data = get_invoice_data_from_payment_id(payment_id, client_id)
-    html_data = render_to_string("notify/recharge_payment_invoice.html", context = invoice_data)
+    html_data = render_to_string("notify/quotation_payment_invoice.html", context = invoice_data)
     pdf = generate_pdf_from_api(html_data)
     return pdf
 
 
 def get_invoice_data_from_payment_id(payment_id: int, client_id: int) -> dict:
-    """Get invoice data from checkout details and payment object"""
+    """Get quotation invoice data from checkout details and payment object"""
 
     client = find_client_by_id(client_id)
     payment = payment_service.get_by_id(payment_id)
@@ -189,16 +189,30 @@ def get_invoice_data_from_payment_id(payment_id: int, client_id: int) -> dict:
     except BankInfo.DoesNotExist as e:
         gstin = ''
 
+    try:
+        quotation = Quotation.objects.get(pk=payment.object_id)
+    except Quotation.DoesNotExist as e:
+        raise AppLogicError("Quotation not found")
+
+    if not quotation.quotation_data:
+        raise AppLogicError("Invalid quotation")
+
     checkout_data = payment.payment_data['checkout'] if 'checkout' in payment.payment_data else {}
+    quotation_data = quotation.quotation_data
 
     data = {
         'invoice_no': payment.invoice_number,
         'invoice_date': payment.invoice_date,
-        'payment': {
-            'amount': payment.get_amount_without_gst(payment.gst),
-            'gst': payment.gst,
-            'gst_amount': payment.get_gst_amount(),
-            'total': payment.amount
+        'quotation': {
+            'industry': quotation_data['industry'],
+            'audit_type': quotation_data['audit_type'],
+            'audit_category': quotation_data['audit_category'],
+            'audit_locations': quotation_data['audit_locations'],
+            'payable_amount': quotation_data['payable_amount'],
+            'gst': quotation_data['gst'],
+            'gst_amount': quotation_data['gst_amount'],
+            'discount': quotation_data['discount'],
+            'quotation_fee': quotation_data['quotation_fee'],
         },
         'to': {
             'company_name': checkout_data.get('billing_name', client.name),
