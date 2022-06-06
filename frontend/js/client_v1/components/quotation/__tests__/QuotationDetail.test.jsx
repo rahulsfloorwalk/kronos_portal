@@ -1,5 +1,4 @@
 import React from "react";
-import { hashHistory } from "react-router";
 import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
 
@@ -231,27 +230,33 @@ describe("<QuotationCategoryForm/>", () => {
 			industry_category: "18",
 			audit_type: "5",
 			audit_category: "2",
+			customize_alert: false,
 		});
 		wrapper.find("button").simulate("click");
-		expect(hashHistory.push).toBeCalledWith("quotation/customize");
+		wrapper.update();
+		expect(wrapper.state("customize_alert")).toEqual(true);
 
 		wrapper.setState({
 			loading: false,
 			industry_category: "1",
 			audit_type: "6",
 			audit_category: "4",
+			customize_alert: false,
 		});
 		wrapper.find("button").simulate("click");
-		expect(hashHistory.push).toBeCalledWith("quotation/customize");
+		wrapper.update();
+		expect(wrapper.state("customize_alert")).toEqual(true);
 
 		wrapper.setState({
 			loading: false,
 			industry_category: "8",
 			audit_type: "3",
 			audit_category: "14",
+			customize_alert: false,
 		});
 		wrapper.find("button").simulate("click");
-		expect(hashHistory.push).toBeCalledWith("quotation/customize");
+		wrapper.update();
+		expect(wrapper.state("customize_alert")).toEqual(true);
 	});
 });
 

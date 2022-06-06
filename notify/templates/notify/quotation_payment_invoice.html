@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Quotation Invoice</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <style>
+        p{
+            margin-block-start: 0.5em;
+            margin-block-end: 0.5em;
+            font-size: 15px;
+        }
+        table{
+            border-collapse: collapse;
+        }
+        .quotation th{
+            border: 1px solid #7e7e7e;
+            background-color: #7e7e7e !important;
+            padding: 7px !important;
+        }
+        .quotation td {
+            border: 1px solid #9e9e9ed1;
+            padding: 7px !important;
+        }
+    </style>
+</head>
+<body>
+    <div style="padding-right: 15px; padding-left: 15px; margin-right: auto; margin-left: auto;">
+    <table style="width: 100%;">
+        <tr>
+            <td style="width: 70%;">
+                <img src="{{ from.logo }}" style="height: 100px;width: 200px;" />
+            </td>
+            <td style="width: 30%;text-align: right;">
+                <h3>Quotation Invoice</h3>
+                <label>{{ invoice_no }}</label>
+                <p>Invoice Date : {{ invoice_date }}</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p>Bill To</p>
+                <p><b>{{ to.company_name }}</b></p>
+                <p style="width: 50%;">{{ to.address|safe }}</p>
+                {% if to.gstin %}<p>GSTIN : {{ to.gstin }}</p>{% endif %}
+                <p>Email : {{ to.email }}</p>
+                <p>Phone no. : {{ to.phone_no }}</p>
+            </td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>
+                <p>Invoice From<br></p>
+                <p><b>{{ from.company_name }}</b></p>
+                <p>{{ from.address }}</p>
+                <p>GSTIN : {{ from.gstin }}</p>
+                <p>Email : {{ from.email }}</p>
+                <br/>
+            </td>
+            <td></td>
+        </tr>
+    </table>
+    <br/>
+    <table style="width: 100%;" class="quotation">
+        <thead>
+            <tr style="background-color: #323639;color: #fff;">
+                <th style="text-align: center;">Industry Category</th>
+                <th style="text-align: center;">Audit Category</th>
+                <th style="text-align: center;">Audit Type</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td style="text-align: center;">{{ quotation.industry.name }}</td>
+                <td style="text-align: center;">{{ quotation.audit_category.name }}</td>
+                <td style="text-align: center;">{{ quotation.audit_type.name }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <table style="width: 100%;" class="quotation">
+        <thead>
+            <tr style="background-color: #323639;color: #fff;">
+                <th style="text-align: center;">City</th>
+                <th style="text-align: center;">Audit Count</th>
+                <th style="text-align: center;">Audit Fee</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for loc in quotation.audit_locations %}
+            <tr>
+                <td style="text-align: center;">{{ loc.name }}</td>
+                <td style="text-align: center;">{{ loc.audit_count }}</td>
+                <td style="text-align: center;">{{ loc.audit_fee }}</td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td colspan="2" style="text-align: right;"><b>Total</b></td>
+                <td style="text-align: center;">{{ quotation.quotation_fee }}</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: right;"><b>GST({{ quotation.gst }}%)</b></td>
+                <td style="text-align: center;">{{ quotation.gst_amount }}</td>
+            </tr>
+            {% if discount %}
+            <tr>
+                <td colspan="2" style="text-align: right;"><b>Discount</b></td>
+                <td style="text-align: center;">{{ quotation.discount }}</td>
+            </tr>
+            {% endif %}
+            <tr>
+                <td colspan="2" style="text-align: right;"><b>Payable amount</b></td>
+                <td style="text-align: center;">{{ quotation.payable_amount }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+    <p>Note : A formal invoice will be generated and sent on your email within 24 hours.</p>
+</div>
+</body>
+</html>

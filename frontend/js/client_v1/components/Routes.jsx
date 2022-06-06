@@ -47,7 +47,7 @@ import BankInfoForm from "./profile/BankInfoForm.jsx";
 import PaymentList from "./payment/PaymentList.jsx";
 
 import QuestionnaireInsertForm from "./questionnaire/QuestionnaireInsertForm.jsx";
-import QuotationDetail, { CustomizeQuotationAlert } from "./quotation/QuotationDetail.jsx";
+import QuotationDetail from "./quotation/QuotationDetail.jsx";
 
 const IndexComponent = () => null;
 
@@ -112,9 +112,7 @@ const Routes = () => (<Router history={hashHistory}>
 		<Route path="/faq" component={FAQ}/>
 		<Route path="/contact_us" component={ContactUs}/>
 
-		<Route path="/quotation" component={QuotationDetail}>
-			<Route path="customize" component={CustomizeQuotationAlert} />
-		</Route>
+		<Route path="/quotation" component={QuotationDetail} />
 	</Route>
 </Router>);
 
