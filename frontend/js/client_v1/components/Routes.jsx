@@ -37,6 +37,7 @@ import AuditCopyForm from "./audit/AuditCopyForm.jsx";
 
 import StoreList from "./store/StoreList.jsx";
 import StoreForm from "./store/StoreForm.jsx";
+import StoreImportForm from "./store/StoreImportForm.jsx";
 import StoreAssignForm from "./store/StoreAssignForm.jsx";
 import ClientUserList from "./client_user/ClientUserList.jsx";
 import ClientUserForm from "./client_user/ClientUserForm.jsx";
@@ -69,6 +70,7 @@ const Routes = () => (<Router history={hashHistory}>
 			</Route>
 			<Route path=":clientId/store" component={StoreList}>
 				<Route path="add" component={StoreForm}/>
+				<Route path="import" component={StoreImportForm}/>
 				<Route path=":storeId/edit" component={StoreForm}/>
 				<Route path=":storeId/assign" component={StoreAssignForm}/>
 			</Route>

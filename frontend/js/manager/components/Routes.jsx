@@ -22,6 +22,7 @@ import QuestionnaireTypeEditForm from "./questionnaire_type/QuestionnaireTypeEdi
 
 import StoreList from "./store/StoreList.jsx";
 import StoreForm from "./store/StoreForm.jsx";
+import StoreImportForm from "./store/StoreImportForm.jsx";
 import StoreAssignForm from "./store/StoreAssignForm.jsx";
 
 import AuditorList from "./auditor/AuditorList.jsx";
@@ -133,6 +134,7 @@ const Routes = () => (
 				<Route path="edit" component={ClientForm}/>
 				<Route path="store" component={StoreList}>
 					<Route path="add" component={StoreForm}/>
+					<Route path="import" component={StoreImportForm}/>
 					<Route path=":storeId/edit" component={StoreForm}/>
 					<Route path=":storeId/assign" component={StoreAssignForm}/>
 				</Route>

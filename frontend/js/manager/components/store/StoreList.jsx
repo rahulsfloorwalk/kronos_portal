@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
 
-import { Cross, Plus, Home, Pencil, HandRight } from "../../../components/Icons.jsx";
+import { Cross, Plus, Home, Pencil, HandRight, DownloadAlt } from "../../../components/Icons.jsx";
 import { fetchStores, deleteStore } from "../../actions/store.js";
 
 import { storePropType } from "../../prop_types";
@@ -64,10 +64,12 @@ class StoreList extends React.Component {
 			rows.push(<StoreRow serial={serial++} store={this.props.stores[id]} key={id} onDelete={this.onDelete}/>);
 		}
 		var addStoreLink = `/client/${this.props.params.clientId}/store/add`;
+		var importStoreLink = `/client/${this.props.params.clientId}/store/import`;
 		return (
 			<div>
 				<h3 className="page-header">
 					<Link to={addStoreLink} className="btn btn-default pull-right"><Plus/> Add Store</Link>
+					<Link to={importStoreLink} className="btn btn-default pull-right" style={{marginRight:"10px"}}><DownloadAlt/> Import Store</Link>
 					<Home/> Store List
 				</h3>
 				<table className="table table-striped">
