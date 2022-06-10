@@ -7,10 +7,11 @@ from rest_framework.serializers import ModelSerializer
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
+from client.service.store_import_xlsx import find_sample_xlsx_for_store_insert, import_store_by_xlsx_sheet
 from client.service import store as store_service
 from client.models import Store
 
-from manager.serializers import StoreSerializer
+from manager.serializers import StoreSerializer, StoreImportDeSerializer
 
 class StoreDeSerializer(ModelSerializer):
     class Meta:
@@ -92,3 +93,25 @@ class StoreView(APIView):
             savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
 
+class ImportStoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def post(self, request, client_id):
+        form = StoreImportDeSerializer(request.data, request.FILES)
+        if form.is_valid():
+            import_store_by_xlsx_sheet(client_id, request.FILES['file_uploaded'])
+        return Response(status=200)
+
+
+class StoreSampleXlsxView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request, client_id):
+        report, name = find_sample_xlsx_for_store_insert()
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response

@@ -10,7 +10,7 @@ export function uploadFileForImportStore(clientId, file){
 
 	return $.ajax({
 		type: "POST",
-		url: url.api_base_path + `manager/client/${clientId}/store/import`,
+		url: url.api_base_path + "client_v1/store/import",
 		processData: false,
 		contentType: false,
 		data: formData,

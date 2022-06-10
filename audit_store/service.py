@@ -64,21 +64,21 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
     total_audit_count = 0
     if status != "" and last_audit_id != "":
         audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id, audit_stores__status=status) \
-            .order_by('store__city__name', 'store__name') \
+            .order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name')
     elif status != "":
-        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('store__city__name', 'store__name') \
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, audit_stores__status=status).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name') \
             .distinct('id')
         total_audit_count = audit_list_obj.count()
     elif last_audit_id != "":
-        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('store__city__name', 'store__name') \
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id, id__gt=last_audit_id).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name')
     else:
-        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('store__city__name', 'store__name') \
+        audit_list_obj = Audit.objects.filter(audit_cycle__id=audit_cycle_id).order_by('id', 'store__city__name', 'store__name') \
             .select_related('store__name', 'store__address', 'store__city__name') \
             .values('id', 'store__name', 'store__address', 'store__city__name')
         total_audit_count = audit_list_obj.count()

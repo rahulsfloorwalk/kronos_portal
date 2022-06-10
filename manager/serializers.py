@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
-
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField
+from kronos.exceptions import AppLogicError
 from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from audit_store.models import AuditStore, ReportFollowUpLog
@@ -372,3 +372,18 @@ class AuditStoreFollowUpSerializer(ModelSerializer):
         model = ReportFollowUpLog
         fields = ['id', 'audit_store', 'user_actor', 'comment', 'next_follow_up_date']
         read_only_fields = fields
+
+
+class StoreImportDeSerializer(Serializer):
+    file_uploaded = FileField()
+
+    class Meta:
+        fields = ['file_uploaded']
+
+    def validate(self, attrs):
+        file_uploaded = attrs.get('file_uploaded', '')
+        if not file_uploaded:
+            raise AppLogicError('Please upload the attachment')
+        if file_uploaded.name.split('.')[-1] not in ['xls','xlsx']:
+            raise AppLogicError('Invalid File Type')
+        return super().validate(attrs)

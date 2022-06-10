@@ -1,8 +1,9 @@
 from django.contrib.auth.models import User
 from billing.models import Payment
+from kronos.exceptions import AppLogicError
 from kronos.utils import validate_url
 from rest_framework import serializers
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, CharField, EmailField, BooleanField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, CharField, EmailField, BooleanField, FileField
 
 from agency.models import AgencyUser, Agency
 from registration.models import MobileNumber
@@ -562,3 +563,18 @@ class QuotationSerializer(ModelSerializer):
             'modified_at',
         )
         read_only_fields = fields
+
+
+class StoreImportDeSerializer(Serializer):
+    file_uploaded = FileField()
+
+    class Meta:
+        fields = ['file_uploaded']
+
+    def validate(self, attrs):
+        file_uploaded = attrs.get('file_uploaded', '')
+        if not file_uploaded:
+            raise AppLogicError('Please upload the attachment')
+        if file_uploaded.name.split('.')[-1] not in ['xls','xlsx']:
+            raise AppLogicError('Invalid File Type')
+        return super().validate(attrs)

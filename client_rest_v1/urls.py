@@ -67,6 +67,8 @@ urlpatterns = ([
 
     url(r'store/(?P<store_id>[0-9]+)/client_user$', client_user_views.ClientUserByStoreIdView.as_view(), name='client_user_by_store_id_view'),
     url(r'store/(?P<store_id>[0-9]+)$', store_views.StoreIdView.as_view(), name='store_id_view'),
+    url(r'store/import$', store_views.ImportStoreView.as_view(), name='import_store_view'),
+    url(r'store/import/sample$', store_views.StoreSampleXlsxView.as_view(), name='sample_import_store_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
 
     url(r'client/(?P<client_id>[0-9]+)/payment_resp$', payment_views.PaymentResponseView.as_view(), name='payment_response_view'),
