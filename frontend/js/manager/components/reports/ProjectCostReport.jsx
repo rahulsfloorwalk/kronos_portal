@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router";
+import {url}  from "../../../../config.js";
 
 import { getProjectCostReports } from "../../service/reports.js";
 
@@ -7,7 +8,7 @@ import { getMonthName } from "../../../utils.js";
 
 import Loading from "../../../components/Loading.jsx";
 
-export default class ProfitabilityReport extends Component{
+export default class ProjectCostReport extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
@@ -120,9 +121,14 @@ export default class ProfitabilityReport extends Component{
 			);
 		});
 		let total_audit_complete_per_avg = row_count > 0 ? total_audit_complete_per / row_count : 0;
+		let export_button = <a href={url.api_base_path + `manager/reports/project_cost/export?month=${this.state.month}&year=${this.state.year}&client=${this.state.client}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary btn-sm pull-right">Export Report</a>;
 		return (
-			<div>
-				<div className="table-responsive">
+			<div className="row">
+				<div className="col-md-12">
+					{export_button}
+					<br/><br/>
+				</div>
+				<div className="col-md-12 table-responsive">
 					<table className="table table-hover table-striped table-bordered table-condensed">
 						<thead>
 							<tr>

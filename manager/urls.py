@@ -236,6 +236,7 @@ urlpatterns = ([
     url(r'reports/auditor_payment/', report_views.AuditPaymentReportView.as_view(), name="auditor_payment_report"),
     url(r'reports/billing/', report_views.BilingReportView.as_view(), name="billing_report"),
     url(r'reports/profitability/', report_views.ProfitablityReportView.as_view(), name="profitability_report"),
+    url(r'reports/project_cost/export', report_views.ProjectCostXlsxReport.as_view(), name="project_cost_report_export"),
     url(r'reports/project_cost/', report_views.ProjectCostReportView.as_view(), name="project_cost_report"),
     url(r'reports/monthly_pnl/', report_views.MonthlyPNLReportView.as_view(), name="monthly_pnl_report"),
     url(r'reports/manager_wise_profitability/', report_views.ManagerWiseProfitabilityView.as_view(), name="manager_wise_profitability_report"),

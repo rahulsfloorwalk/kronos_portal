@@ -341,7 +341,7 @@ def find_audit_applications_for_auto_approve():
                 total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
 
                 # required minimum 3 alignment factors in audit cycle
-                if total_factors_count > 2 and match_percent == 100:
+                if total_factors_count > 2 and (match_percent <= 100 and match_percent > 60):
                     application_id_list.append(application.id)
 
     return audit_application.filter(id__in = application_id_list)
