@@ -446,6 +446,7 @@ class AuditApplication(Model):
         total_factors_count = 0
         match_percent = 100
         blank_values = ['', None, []]
+        null_blank_factor_keys = ['auditor_rating']
 
         if not factors:
             return total_factors_count, valid_factors_count, match_percent
@@ -470,7 +471,7 @@ class AuditApplication(Model):
                         user_value = getattr(obj, factor['key'])
                         if user_value:
                             break
-                if not user_value:
+                if not user_value and factor['key'] not in null_blank_factor_keys:
                     continue
 
                 alignment_factor_value = factor['value'] if type(factor['value']) in [list, set] else [factor['value']]
@@ -482,6 +483,9 @@ class AuditApplication(Model):
                 else:
                     if str(user_value) in alignment_factor_value:
                         valid_factors_count += 1
+                    elif factor['key'] in null_blank_factor_keys:
+                        if user_value in alignment_factor_value:
+                            valid_factors_count += 1
 
             if factor['type'] == 'func':
                 if factor['key'] == 'report_rating':

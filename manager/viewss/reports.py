@@ -1,5 +1,7 @@
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from manager.service.report_xlsx import generate_project_cost_report_xlsx
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -110,3 +112,20 @@ class FollowUpReport(APIView):
     def get(self, request, format=None):
         report = get_follow_up_report(request.GET.get('client'), request.GET.get('cycle'), request.GET.get('store'), request.GET.get('audit_status'), request.GET.get('followup_date'), request.GET.get('auto_assigned'))
         return Response(report)
+
+
+class ProjectCostXlsxReport(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request):
+        if not request.user.has_perm('manager.can_view_reports'):
+            raise AppLogicError('Permission denied')
+        month = request.GET.get('month','')
+        year = request.GET.get('year','')
+        client = request.GET.get('client','')
+        report, name = generate_project_cost_report_xlsx(month, year, client)
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response

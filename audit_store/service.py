@@ -410,6 +410,11 @@ def find_10_days_in_progress_reports():
                                      status=AuditStore.ACKNOWLEDGED)
 
 
+def find_2_days_not_submitted_reports():
+    return AuditStore.objects.filter(audit_date__lte=today_ist() - timedelta(days=2),
+                                     audit__audit_cycle__status=AuditCycle.ACTIVE,
+                                     status__in = [AuditStore.ASSIGNED, AuditStore.ACKNOWLEDGED])
+
 def get_follow_up_by_audit_store(audit_store_id: int):
     follow_up = ReportFollowUpLog.objects.filter(audit_store_id = audit_store_id).first()
 
