@@ -104,15 +104,15 @@ export default class OpportunityEmailRecordForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		if(this.state.form.channel_name){
-			if(this.state.form.channel_name == "sms" || this.state.form.channel_name == "whatsapp"){
-				if(this.state.filter_count > 20){
-					alert("Auditor limit is reached for SMS or Whatsapp");
-					return false;
-				}
-			}
-		}
-		else{
+		// if(this.state.form.channel_name){
+		// 	if(this.state.form.channel_name == "sms" || this.state.form.channel_name == "whatsapp"){
+		// 		if(this.state.filter_count > 20){
+		// 			alert("Auditor limit is reached for SMS or Whatsapp");
+		// 			return false;
+		// 		}
+		// 	}
+		// }
+		if(this.state.form.channel_name == ""){
 			alert("Please select at least one channel");
 			return false;
 		}
@@ -252,7 +252,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 							&nbsp;&nbsp;Whatsapp
 						</label>
 						<br/><br/>
-						<p><b>Note: </b>You cannot send a SMS or Whatsapp messages more than 20 people</p>
+						<p><b>Note: </b>You can only send SMS or Whatsapp messages to 20 people at a time.</p>
 						<br/>
 					</div>
 					<div className="row text-center">

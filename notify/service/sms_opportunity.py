@@ -6,9 +6,10 @@ from django.db.transaction import atomic
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
 from manager.models import City
+from notify.service import opportunity_notification as opp_notification_service
 from ..models import OpportunitySmsRecord
 
-from manager.service.opportunity_email import get_auditor_count_by_filter, get_auditor_list_by_filter
+from manager.service.opportunity_email import get_auditor_list_by_filter
 from notify.service.message import send_message
 from registration.service.auditor import find_auditor_by_id
 
@@ -32,16 +33,24 @@ def schedule_opportunity_sms_for_audit_cycle_with_filters(audit_cycle_id: int, f
     if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
         raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity alert")
 
-    auditor_count = get_auditor_count_by_filter(filters)
-    if auditor_count > int(settings.MSG91['MAX_SMS_SENT_COUNT']):
-        raise AppLogicError('Auditor count must below {}'.format(settings.MSG91['MAX_SMS_SENT_COUNT']))
+    filtered_users_in_city = get_auditor_list_by_filter(filters)
+    MAX_SMS_COUNT = int(settings.MSG91['MAX_SMS_SENT_COUNT'])
+    CHANNEL = 'sms'
+    next_user_list = opp_notification_service.find_next_users_for_notification(city.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
+    next_user_list = next_user_list[:MAX_SMS_COUNT]
+
+    if len(next_user_list) == 0:
+        raise AppLogicError("Auditors are not remaining in this city")
+
+    # if auditor_count > int(settings.MSG91['MAX_SMS_SENT_COUNT']):
+    #     raise AppLogicError('Auditor count must below {}'.format(settings.MSG91['MAX_SMS_SENT_COUNT']))
 
     opp = OpportunitySmsRecord()
     opp.city = city
     opp.audit_cycle = audit_cycle
-    opp.total_count = auditor_count
+    opp.total_count = len(next_user_list)
     opp.record_data = {
-        'user_list': get_auditor_list_by_filter(filters)
+        'user_list': next_user_list
     }
     opp.progress_count = 0
     opp.save()
