@@ -177,6 +177,7 @@ class Store(Model):
     client = ForeignKey(Client, related_name='stores', db_column='client_id', on_delete=PROTECT)
     phone = CharField(db_column='phone', max_length=100, blank=True)
     map_location_link = CharField(db_column='map_location_link', max_length=1024, blank=True, default='')
+    pincode = CharField(db_column='pincode', max_length=20, blank=True, null=True, default=None)
     extra_data = JSONField(db_column='extra_data', default=dict, blank=False)
 
     created_at = DateTimeField(db_column="created_at", null=True)

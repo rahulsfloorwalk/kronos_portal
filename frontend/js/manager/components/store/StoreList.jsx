@@ -24,7 +24,7 @@ class StoreRow extends React.Component {
 				<td className="text-right">{this.props.serial}</td>
 				<td>{this.props.store.code}</td>
 				<td>{this.props.store.name} {this.props.store.priority ? "("+this.props.store.priority+")" : null}</td>
-				<td>{this.props.store.type}</td>
+				<td>{this.props.store.pincode}</td>
 				<td>{this.props.store.phone}</td>
 				<td>{this.props.store.address}</td>
 				<td>
@@ -72,30 +72,32 @@ class StoreList extends React.Component {
 					<Link to={importStoreLink} className="btn btn-default pull-right" style={{marginRight:"10px"}}><DownloadAlt/> Import Store</Link>
 					<Home/> Store List
 				</h3>
-				<table className="table table-striped">
-					<colgroup>
-						<col style={{width: "5%"}}/>
-						<col style={{width: "20%"}}/>
-						<col style={{width: "50%"}}/>
-						<col style={{width: "20%"}}/>
-						<col style={{width: "5%"}}/>
-					</colgroup>
-					<thead>
-						<tr>
-							<th className="text-right">#</th>
-							<th>Code</th>
-							<th>Name</th>
-							<th>Type</th>
-							<th>Phone</th>
-							<th>Address</th>
-							<th>City</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{rows}
-					</tbody>
-				</table>
+				<div className="table-responsive">
+					<table className="table table-striped">
+						<colgroup>
+							<col/>
+							<col/>
+							<col/>
+							<col/>
+							<col style={{width: "5%"}}/>
+						</colgroup>
+						<thead>
+							<tr>
+								<th className="text-right">#</th>
+								<th>Code</th>
+								<th>Name</th>
+								<th>Pincode</th>
+								<th>Phone</th>
+								<th>Address</th>
+								<th>City</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{rows}
+						</tbody>
+					</table>
+				</div>
 				{this.props.children}
 			</div>
 		);

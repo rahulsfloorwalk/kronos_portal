@@ -214,6 +214,7 @@ class StoreSerializer(ModelSerializer):
             'client',
             'client_id',
             'code',
+            'pincode',
             'type',
             'priority',
             'phone',
@@ -247,6 +248,7 @@ class StoreDeSerializer(ModelSerializer):
             'address',
             'client',
             'code',
+            'pincode',
             'type',
             'phone',
             'priority',
@@ -281,6 +283,7 @@ class StoreDeSerializer(ModelSerializer):
         store.city = self.validated_data.get('city', store.city_id)
         store.client = self.validated_data.get('client', store.client_id)
         store.code = self.validated_data.get('code', store.code)
+        store.pincode = self.validated_data.get('pincode', store.pincode)
         store.type = self.validated_data.get('type', store.type)
         store.priority = self.validated_data.get('priority', store.priority)
         store.phone = self.validated_data.get('phone', store.phone)

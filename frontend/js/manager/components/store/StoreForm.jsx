@@ -32,6 +32,8 @@ class StoreForm extends React.Component {
 		errors: PropTypes.shape({
 			name: errorList,
 			code: errorList,
+			pincode: errorList,
+			map_location_link: errorList,
 			type: errorList,
 			address: errorList,
 			priority: errorList,
@@ -138,6 +140,8 @@ class StoreForm extends React.Component {
 				address: this.state.address,
 
 				code: this.state.code,
+				pincode: this.state.pincode,
+				map_location_link: this.state.map_location_link,
 				type: this.state.type,
 				priority: this.state.priority,
 				phone: this.state.phone,
@@ -153,6 +157,8 @@ class StoreForm extends React.Component {
 				address: this.state.address,
 
 				code: this.state.code,
+				pincode: this.state.pincode,
+				map_location_link: this.state.map_location_link,
 				type: this.state.type,
 				priority: this.state.priority,
 				phone: this.state.phone,
@@ -230,10 +236,16 @@ class StoreForm extends React.Component {
 							<FormInput label="Code" type="text" value={this.state.code} name="code" onChange={this.inputChanged} errors={this.props.errors.code}/>
 						</div>
 						<div className="col-sm-6">
+							<FormInput label="Pincode" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode}/>
+						</div>
+						<div className="col-sm-6">
 							<FormInput label="Type" type="text" value={this.state.type} name="type" onChange={this.inputChanged} errors={this.props.errors.type}/>
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Address" type="text" value={this.state.address} name="address" onChange={this.inputChanged} errors={this.props.errors.address}/>
+						</div>
+						<div className="col-sm-6">
+							<FormInput label="Location link" type="text" value={this.state.map_location_link} name="map_location_link" onChange={this.inputChanged} errors={this.props.errors.map_location_link}/>
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Priority" type="number" value={this.state.priority} name="priority" onChange={this.inputChanged} errors={this.props.errors.priority}/>
