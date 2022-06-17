@@ -80,7 +80,10 @@ def send_opportunity_sms_for_record(opportunity_record_id):
             user = find_auditor_by_id(user_id)
         except ObjectNotFound as e:
             _logger.warn("auditor with user_id: %s NOT FOUND", user_id)
-            return False
+            continue
+        if not user.is_active or not user.preferences.receive_new_opportunities_sms:
+            _logger.warn("skip auditor with user_id: %s", user_id)
+            continue
 
         mobile_number = user.profileinfo.mobile_number
         params.append({

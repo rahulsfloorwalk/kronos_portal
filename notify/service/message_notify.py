@@ -54,7 +54,7 @@ def notification_whatsapp_task(notif_id, message=""):
             user_id = notif.recipient.id
             profile_info = find_profile_info_by_user_id(user_id)
             preferences = preferences_service.find_preferences_by_user_id(user_id)
-            if not profile_info.whatsapp_number or not preferences.receive_transactional_whatsapp_message:
+            if not profile_info.user.is_active or not profile_info.whatsapp_number or not preferences.receive_transactional_whatsapp_message:
                 return False
             country_code = profile_info.city.country
             dial_code = get_dialcode(country_code)
