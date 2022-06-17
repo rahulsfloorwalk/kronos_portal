@@ -31,6 +31,7 @@ class StoreForm extends React.Component {
 		errors: PropTypes.shape({
 			name: errorList,
 			code: errorList,
+			pincode: errorList,
 			type: errorList,
 			address: errorList,
 			priority: errorList,
@@ -138,6 +139,7 @@ class StoreForm extends React.Component {
 				address: this.state.address,
 
 				code: this.state.code,
+				pincode: this.state.pincode,
 				type: this.state.type,
 				priority: this.state.priority,
 				phone: this.state.phone,
@@ -154,6 +156,7 @@ class StoreForm extends React.Component {
 				address: this.state.address,
 
 				code: this.state.code,
+				pincode: this.state.pincode,
 				type: this.state.type,
 				priority: this.state.priority,
 				phone: this.state.phone,
@@ -230,6 +233,9 @@ class StoreForm extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Code" type="text" value={this.state.code} name="code" onChange={this.inputChanged} errors={this.props.errors.code}/>
+						</div>
+						<div className="col-sm-6">
+							<FormInput label="Pincode" type="text" value={this.state.pincode} name="pincode" onChange={this.inputChanged} errors={this.props.errors.pincode}/>
 						</div>
 						<div className="col-sm-6">
 							<FormInput label="Type" type="text" value={this.state.type} name="type" onChange={this.inputChanged} errors={this.props.errors.type}/>

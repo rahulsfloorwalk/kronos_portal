@@ -13,9 +13,12 @@ def import_store_by_xlsx_sheet(client_id, xlsx_sheet)-> bool:
     store_data = get_store_data_from_xlsx_sheet(xlsx_sheet)
     client = client_service.find_client_by_id(client_id)
 
-    city_list = {store['city'] for store in store_data if store['city'] is not None}
-    city_exists_list = City.objects.filter(name__in = city_list).values_list('name', flat=True)
-    city_not_exists_list = city_list.difference(set(city_exists_list))
+    city_list = [store['city'] for store in store_data if store['city'] is not None]
+    state_list = [store['state'] for store in store_data if store['state'] is not None]
+
+    city_exists_list = City.objects.filter(name__in = city_list, state__in = state_list).values_list('name', flat=True)
+    unique_city_list = set(city_list)
+    city_not_exists_list = unique_city_list.difference(set(city_exists_list))
 
     if city_not_exists_list:
         raise AppLogicError('{} cities are not found'.format(', '.join(city_not_exists_list)))
@@ -28,19 +31,20 @@ def import_store_by_xlsx_sheet(client_id, xlsx_sheet)-> bool:
 
     store_list = []
     for store in store_data:
-        city_obj = City.objects.filter(name = store['city']).first()
+        city_obj = City.objects.filter(name = store['city'], state = store['state']).first()
         if not city_obj:
             raise AppLogicError('\"{}\" city is not found'.format(store['city']))
         obj_dict = {
-            'code': store['code'],
-            'type': store['store_type'],
+            'code': store['code'] if store['code'] else '',
             'name': store['name'],
             'address': store['address'],
-            'priority': store['priority'] if store['priority'] else '',
-            'phone': store['phone'] if store['phone'] else '',
             'city': city_obj,
+            'pincode': store['pincode'] if store['pincode'] else '',
+            'phone': store['phone'] if store['phone'] else '',
+            'map_location_link': store['map_location_link'] if store['map_location_link'] else '',
+            'type': store['store_type'] if store['store_type'] else '',
+            'priority': store['priority'] if store['priority'] else '',
             'client': client,
-
         }
         store_list.append(
             Store(**obj_dict)
@@ -59,13 +63,13 @@ def get_store_data_from_xlsx_sheet(xlsx_sheet):
     row_count = worksheet.max_row
     column_count = worksheet.max_column
 
-    if not column_count == 7:
+    headers = ['code', 'name', 'address', 'city', 'pincode', 'state', 'phone', 'map_location_link', 'store_type', 'priority']
+    if not column_count == len(headers):
         raise AppLogicError('Invalid sheet data format')
 
     if row_count > 100:
         raise AppLogicError('Store count must be less than 100')
 
-    headers = ['city', 'code', 'name', 'address', 'store_type', 'priority', 'phone']
     for ind, head in enumerate(next(worksheet.iter_rows(min_row=1, max_row=1))):
         if not head.value == headers[ind]:
             raise AppLogicError('Invalid sheet header format')
@@ -88,8 +92,8 @@ def find_sample_xlsx_for_store_insert():
     worksheet = workbook.add_worksheet()
 
     sample = (
-        ['city', 'code', 'name', 'address', 'store_type', 'priority', 'phone'],
-        ['Nagpur', 'NGP0012', 'Sample store', 'Nagpur', 'Example', '1', '1234567890']
+        ['code', 'name', 'address', 'city', 'pincode', 'state', 'phone', 'map_location_link', 'store_type', 'priority'],
+        ['Store001', 'Sample store', 'Nagpur', 'Nagpur', '4400001', 'IN-MH', '1234567890', 'google map link', 'Example', '1'],
     )
 
     row = 0
