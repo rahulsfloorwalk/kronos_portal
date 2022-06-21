@@ -1,9 +1,12 @@
 from django.contrib.auth.models import Group
+from auditor.models import ProfileInfo
 from registration.models import GROUP_NAME_AUDITOR
 
 
 def get_auditor_list_by_filter(filters: dict) -> list:
-    query = {}
+    query = {
+        'is_active': True,
+    }
     if filters.get('city',None):
         query['profileinfo__city'] = filters.get('city','')
 
@@ -25,8 +28,16 @@ def get_auditor_list_by_filter(filters: dict) -> list:
     if filters.get('interest_area',[]):
         query['additionalinfo__interest_area__in'] = filters.get('interest_area',[])
 
-    user_list = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.filter(**query).values_list('id', flat=True)
-    return list(user_list)
+    user_list = Group.objects.get(name=GROUP_NAME_AUDITOR).user_set.filter(**query).values_list('id', 'profileinfo__auditor_rating')
+
+    # Sort user list based on auditor rating
+    ordered_user_list = []
+    for val in ProfileInfo.AUDITOR_RATING:
+        filtered_ids = [x[0] for x in user_list if x[1] == val[0]]
+        if filtered_ids:
+            ordered_user_list.extend(filtered_ids)
+
+    return ordered_user_list
 
 
 def get_auditor_count_by_filter(filters: dict) -> int:

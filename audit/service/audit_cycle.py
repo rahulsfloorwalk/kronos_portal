@@ -270,6 +270,11 @@ def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict
             'value': factors.get('date_availability','') if is_valid_date_availability else '',
             'type': 'func'
         },
+        {
+            'key': 'auditor_age_range',
+            'value': factors.get('auditor_age_range', ''),
+            'type': 'func'
+        },
     ]
     return save(audit_cycle)
 
