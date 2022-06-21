@@ -20,6 +20,7 @@ export function setAuditAlignmentFactors(state_data, auditCycleId){
 			report_rating: state_data["report_rating"],
 			auditor_rating: state_data["auditor_rating"],
 			date_availability: state_data["date_availability"],
+			auditor_age_range: state_data["auditor_age_range"],
 		}),
 		contentType: "application/json"
 	});

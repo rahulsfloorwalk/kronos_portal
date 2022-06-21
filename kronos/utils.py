@@ -86,6 +86,19 @@ def get_difference_between_date(date_val):
     return diff.days
 
 
+def calculate_age(birthdate):
+    today = datetime.date.today()
+    try:
+        birthday = birthdate.replace(year = today.year)
+    except ValueError:
+        birthday = birthdate.replace(year = today.year, month = birthdate.month + 1, day = 1)
+
+    if birthday > today:
+        return today.year - birthdate.year - 1
+    else:
+        return today.year - birthdate.year
+
+
 def view_log(func, method=None, *outerargs):
     _logger = logging.getLogger("function:view_log")
 

@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import JSONField, ArrayField
 
 from manager.models import City
 from .validators import numericValidator, minLengthValidator
-from kronos.utils import split_date_range_from_string, validate_ifsc, validate_pan, get_bank_name_from_ifsc
+from kronos.utils import calculate_age, split_date_range_from_string, validate_ifsc, validate_pan, get_bank_name_from_ifsc
 from manager.service import geo
 
 class CompletableMixin:
@@ -488,6 +488,13 @@ class AuditApplication(Model):
                             valid_factors_count += 1
 
             if factor['type'] == 'func':
+                if factor['key'] == 'auditor_age':
+                    if profile_info.date_of_birth:
+                        age = calculate_age(profile_info.date_of_birth)
+                        start_age, end_age = factor['value'].split('-')
+                        if int(start_age) <= age >= int(end_age):
+                            valid_factors_count += 1
+
                 if factor['key'] == 'report_rating':
                     if self.avg_qa_rating():
                         if str(round(self.avg_qa_rating())) in factor['value']:

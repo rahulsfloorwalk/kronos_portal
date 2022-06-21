@@ -26,6 +26,7 @@ class AuditCycleServiceTestCase(TestCase):
         self.assertEqual(set(result['application'].keys()), set([i[0] for i in AuditApplication.STATUS]))
 
     def test_set_audit_alignment_factors(self):
+        self.maxDiff = None
         audit_alignment_factors = {
             'gender': ['M'],
             'education': ['GR'],
@@ -37,6 +38,7 @@ class AuditCycleServiceTestCase(TestCase):
             'report_rating': ['G'],
             'auditor_rating': ['S'],
             'date_availability': '2022-03-02 - 2022-03-14',
+            'auditor_age_range': '20-40',
         }
         response = [
             {
@@ -88,6 +90,11 @@ class AuditCycleServiceTestCase(TestCase):
                 "key": "date_availability",
                 "type": "func",
                 "value": "2022-03-02 - 2022-03-14"
+            },
+            {
+                "key": "auditor_age_range",
+                "type": "func",
+                "value": "20-40"
             }
         ]
         audit_cycle = set_audit_alignment_factor_by_audit_cycle(self.audit_cycle_id, audit_alignment_factors)

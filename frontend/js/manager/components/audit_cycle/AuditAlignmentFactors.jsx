@@ -50,7 +50,7 @@ class AuditAlignmentFactors extends Component{
 		marital_status: [],
 		report_rating: [],
 		auditor_rating: [],
-		auditor_age: 0,
+		auditor_age_range: "",
 		from_available_date: "",
 		to_available_date: "",
 		date_availability: "",
@@ -112,6 +112,11 @@ class AuditAlignmentFactors extends Component{
 	onSubmit = (e) => {
 		e.preventDefault();
 		this.setSubmitting(true);
+		if(this.isAgeRangeValid(this.state.auditor_age_range) == false){
+			this.setSubmitting(false);
+			alert("Please enter valid auditor age range");
+			return false;
+		}
 		setAuditAlignmentFactors(this.state, this.props.auditCycle.id).then(() => {
 			this.setSubmitting(false);
 			hashHistory.push(`/audit_cycle/${this.props.auditCycle.id}/questionnaire`);
@@ -119,6 +124,35 @@ class AuditAlignmentFactors extends Component{
 		}, (err) => {
 			this.setSubmitting(false);
 			err.responseJSON && this.setState({ errors: err.responseJSON });
+		});
+	};
+
+	isAgeRangeValid = (value) => {
+		if(value == ""){
+			return true;
+		}
+		let patterns = /\d.-\d/;
+		if (patterns.test(value) == false) {
+			return false;
+		}
+		let [min, max] = value.split("-");
+		if(min == "" || max == ""){
+			return false;
+		}
+		if(Number(min) < 0 || Number(max) > 100){
+			return false;
+		}
+		if(Number(min) > Number(max) || Number(max) < Number(min)){
+			return false;
+		}
+		else{
+			return true;
+		}
+	};
+
+	onAgeRangeChanged = (e) => {
+		this.setState({
+			auditor_age_range: e.target.value,
 		});
 	};
 
@@ -297,6 +331,12 @@ class AuditAlignmentFactors extends Component{
 									options={auditorRatingOptions}
 									isMulti={true}/>
 							</div>
+							<div className="col-md-6" style={{marginBottom:"10px"}}>
+								<label>Auditor age range</label>
+								<input type="text" className="form-control" name="auditor_age_range" placeholder="Example: 20-50" value={this.state.auditor_age_range} onChange={this.onAgeRangeChanged}/>
+							</div>
+						</div>
+						<div className="row">
 							<div className="col-md-6" style={{marginBottom:"10px"}}>
 								<div style={{display: "flex", justifyContent: "space-between", flexDirection: "row"}}>
 									<FormDateInput label="Date Availability" value={this.state.from_available_date} name="from_available_date" onChange={(e) => this.dateChanged(e, "from_available_date")}/>
