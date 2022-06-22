@@ -32,7 +32,8 @@ def get_auditor_list_by_filter(filters: dict) -> list:
 
     # Sort user list based on auditor rating
     ordered_user_list = []
-    for val in ProfileInfo.AUDITOR_RATING:
+    auditor_rating_list = ProfileInfo.AUDITOR_RATING + ((None, ''), )
+    for val in auditor_rating_list:
         filtered_ids = [x[0] for x in user_list if x[1] == val[0]]
         if filtered_ids:
             ordered_user_list.extend(filtered_ids)
