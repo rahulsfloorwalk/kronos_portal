@@ -35,7 +35,7 @@ export class Dashboard extends React.Component{
 		selectedQuestionnaireType: questionnaireTypePropType,
 		selectedAuditCycle:auditCyclePropType,
 		isClientAdmin: PropTypes.bool.isRequired,
-		user: PropTypes.object.isRequired,
+		user: PropTypes.object,
 
 		fetchUser: PropTypes.func.isRequired,
 	};
@@ -64,14 +64,14 @@ export class Dashboard extends React.Component{
 					<hr/>
 					<DashboardCityPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
 					<hr/>
-					</div>
+				</div>
 					: null }
-				 { this.props.selectedQuestionnaireType && this.props.selectedAuditCycle && Object.keys(this.props.user).length !== 0 && this.props.user.user.client.id == 152 ? <div>
-						<DashboardRegionPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
-						<hr/>
-						<DashboardClusterPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
-						<hr/>
-						</div>
+				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle && Object.keys(this.props.user).length !== 0 && this.props.user.client.id == 152 ? <div>
+					<DashboardRegionPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+					<hr/>
+					<DashboardClusterPerformanceChart questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
+					<hr/>
+				</div>
 					: null }
 				{ this.props.selectedQuestionnaireType && this.props.selectedAuditCycle ? <div>
 					<QuestionnaireSurvey questionnaireType={this.props.selectedQuestionnaireType} auditCycle={this.props.selectedAuditCycle}/>
@@ -86,7 +86,7 @@ const mapStateToProps = (state) => {
 		selectedQuestionnaireType: questionnaireTypeSelectors.findSelectedQuestionnaireType(state),
 		selectedAuditCycle: auditCycleSelectors.findSelectedAuditCycleBySelectedQuestionnaireType(state),
 		isClientAdmin: userSelectors.isClientAdmin(state),
-		user: state.user || {},
+		user: userSelectors.findCurrentUser(state),
 	};
 };
 
