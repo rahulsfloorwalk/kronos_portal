@@ -17,6 +17,14 @@ export function fetchCityWisePerformanceByAuditCycleId(questionnaire_type_id, au
 	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle/${audit_cycle_id}/city_trends`);
 }
 
+export function fetchRegionWisePerformanceByAuditCycleId(questionnaire_type_id, audit_cycle_id){
+	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle/${audit_cycle_id}/region_trends`);
+}
+
+export function fetchClusterWisePerformanceByAuditCycleId(questionnaire_type_id, audit_cycle_id){
+	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/audit_cycle/${audit_cycle_id}/cluster_trends`);
+}
+
 export function fetchStoreWisePerformance(questionnaire_type_id){
 	return $.get( url.api_base_path + `client/dashboard/questionnaire_type/${questionnaire_type_id}/store_trends`);
 }
