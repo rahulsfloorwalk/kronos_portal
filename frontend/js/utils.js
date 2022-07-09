@@ -383,17 +383,17 @@ export function getReferralType(value){
 
 
 export function getColorbyValue(value){
-	if (value >= 90){
+	if (value >= 95){
 		return "#688833"; // Green
 	}
-	else if (value >=85){
+	else if (value >=80){
 		return "#4ca9d7"; // Blue
 	}
-	else if (value >= 75){
+	else if (value >= 70){
 		// return "#808080"; // Grey
 		return "#dbb001"; //Yellow
 	}
-	else if (value >= 66){
+	else if (value >= 50){
 		return "#FF7F50"; // Orange
 	}
 	else{
