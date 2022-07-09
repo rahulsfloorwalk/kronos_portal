@@ -38,4 +38,4 @@ class StoreMarkingTestCase(TestCase):
         question = Question.objects.get(pk=self.question_id)
         score = get_average_score_for_question_in_audit_cycle(question, self.store_id)
         self.assertAlmostEqual(score.get('marks'), 0.636, 3)
-        self.assertAlmostEqual(score.get('color'), 1)
+        self.assertAlmostEqual(score.get('color'), 2)

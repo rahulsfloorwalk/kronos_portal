@@ -17,13 +17,13 @@ def get_color_code_by_percentage(percentage):
     if percentage is None:
         return 0
 
-    if percentage > 89:
+    if percentage > 94:
         return 5
-    elif percentage > 84:
+    elif percentage > 79:
         return 4
-    elif percentage > 74:
+    elif percentage > 69:
         return 3
-    elif percentage > 65:
+    elif percentage > 49:
         return 2
     elif percentage >= 0:
         return 1
@@ -35,13 +35,13 @@ def get_rank_by_percentage(percentage):
     if percentage is None:
         return None
 
-    if percentage > 89:
+    if percentage > 94:
         return 1
-    elif percentage > 84:
+    elif percentage > 79:
         return 2
-    elif percentage > 74:
+    elif percentage > 69:
         return 3
-    elif percentage > 65:
+    elif percentage > 49:
         return 4
     elif percentage >= 0:
         return 5

@@ -9,7 +9,8 @@ import { ResponsiveContainer, LineChart, Line, CartesianGrid, XAxis, YAxis, Tool
 
 import {demo} from "../../../config.js";
 
-import { ThList, Download } from "../../components/Icons.jsx";
+import DropDown from "../../components/DropDown.jsx";
+import { ThList, Download, MenuDown } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import Modal from "../../components/Modal.jsx";
 // import { getColor, getColorbyValue  } from "../../utils.js";
@@ -39,6 +40,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 		dataPopup: false,
 		labels: [],
 		data: [],
+		filtered_data: [],
 		title: ""
 	};
 
@@ -68,6 +70,8 @@ export default class AuditCycleTimeSeries extends React.Component{
 		for(let i=0; i < ts.section_master.length; i++){
 			let obj = {};
 			obj["name"] = ts.section_master[i];
+			obj["key"] = i;
+			obj["visible"] = true;
 			// obj["Section Score"] = ts.values[0][i].value;
 			obj["Section Score"] = ts.values[0][i] ? ts.values[0][i].value : "NA";
 			data.push(obj);
@@ -82,6 +86,7 @@ export default class AuditCycleTimeSeries extends React.Component{
 				let ts_structure = this.create_structure(reportData);
 				this.setState({
 					reportData,
+					"filtered_data": ts_structure,
 					"data": ts_structure,
 					"labels": reportData.audit_cycle_master,
 					"title": reportData.title
@@ -119,9 +124,23 @@ export default class AuditCycleTimeSeries extends React.Component{
 			});
 	};
 
+	hideSectionFromChart = (e, name) => {
+		let data = this.state.filtered_data;
+		for(const obj of data){
+			if(obj.name == name){
+				obj.visible = e.target.checked;
+				break;
+			}
+		}
+		this.setState({
+			data: data.filter((obj) => obj.visible == true),
+		});
+	};
+
 	render(){
 		// let chart;
 		let line_chart;
+		let filter_list = [];
 		if(this.state.loading){
 			line_chart = <Loading/>;
 		} else {
@@ -148,6 +167,15 @@ export default class AuditCycleTimeSeries extends React.Component{
 			lines = (
 				<Line type="monotone" dataKey="Section Score" stroke="#2387ea" label={v => <Text {...v}>{v.value === "NA" ? "NA" : v.value+"%"}</Text>} isAnimationActive={false} />
 			);
+			for(let i of this.state.filtered_data){
+				filter_list.push(<li className="list-group-item" key={i.key} style={{border: "none"}}>
+					<div className="checkbox" style={{marginTop: "0px", marginBottom: "0px"}}>
+						<label>
+							<input type="checkbox" name="section_check" checked={i.visible} onChange={(e) => this.hideSectionFromChart(e, i.name)}/> {i.name}
+						</label>
+					</div>
+				</li>);
+			}
 
 			if (this.state.data.length <=7){
 				// chart = (
@@ -229,6 +257,15 @@ export default class AuditCycleTimeSeries extends React.Component{
 			<div>
 				{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.downloadFile} title="Download">Download <Download/></button> : null }
 				{ ! this.state.loading ? <button className="btn btn-default pull-right" onClick={this.toggleModal} title="View Data"><ThList/></button> : null }
+				<div className="btn-group pull-right">
+					{ ! this.state.loading ? <button type="button" className="btn btn-default"
+						onClick={(e)=>{e.stopPropagation(); this.sectionRowDropDown && this.sectionRowDropDown.toggle();}}>
+						<MenuDown/>
+					</button> : null}
+					<DropDown ref={(d) => this.sectionRowDropDown=d}>
+						{filter_list}
+					</DropDown>
+				</div>
 				<h3 className="text-center">{this.state.title}</h3>
 				{/* {chart} */}
 				{line_chart}

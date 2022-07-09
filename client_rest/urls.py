@@ -14,6 +14,8 @@ urlpatterns = ([
 
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle_scores$', views.AuditCycleScore.as_view(), name='audit_cycle_score'),
 
+    url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/cluster_trends$', views.DashboardClusterWiseTrendsByAuditCycleId.as_view(), name='dashboard_cluster_trends_by_audit_cycle_id'),
+    url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/region_trends$', views.DashboardRegionWiseTrendsByAuditCycleId.as_view(), name='dashboard_region_trends_by_audit_cycle_id'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store_trends$', views.DashboardStoreTrendsByAuditCycleId.as_view(), name='dashboard_store_trends_by_audit_cycle_id'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/store_trends_xlsx$', views.DashboardStoreTrendsXlsx.as_view(), name='dashboard_store_trends_xlsx'),
     url(r'dashboard/questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/city_trends$', views.DashboardCityWiseTrends.as_view(), name='dashboard_city_trends'),

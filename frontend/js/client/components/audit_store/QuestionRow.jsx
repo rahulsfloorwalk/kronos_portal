@@ -29,7 +29,7 @@ export default class QuestionRow extends React.Component{
 		if(this.props.q.hide_question && ! this.props.answer){
 			return null;
 		}
-		let maxMarks, answerMarks, answerText;
+		let maxMarks, answerMarks, answerText, answerMarksBg;
 		if(this.props.showMarks){
 			maxMarks = this.props.q.max_marks;
 		}
@@ -50,6 +50,7 @@ export default class QuestionRow extends React.Component{
 				}
 				if( this.props.showMarks){
 					answerMarks = this.props.answer.marks_obtained;
+					answerMarksBg = maxMarks && answerMarks == 0 ? {backgroundColor: "#ffc299"} : {};
 				}
 			}
 		}
@@ -69,8 +70,8 @@ export default class QuestionRow extends React.Component{
 						: null
 					}
 				</td>
-				<td>{answerMarks}</td>
-				<td>{maxMarks}</td>
+				<td className="text-center" style={answerMarksBg}>{answerMarks}</td>
+				<td className="text-center">{maxMarks}</td>
 				<td>
 				</td>
 			</tr>
