@@ -9,9 +9,9 @@ import Jumbotron from "../../components/Jumbotron.jsx";
 import { Plus } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 
-import { findOpportunityEmailRecordsByAuditCycleId } from "../service/opportunity_email.js";
+import { findOpportunityEmailRecordsByAuditCycleId, findOpportunitySMSRecordsByAuditCycleId, findOpportunityWhatsappRecordsByAuditCycleId } from "../service/opportunity_email.js";
 
-class OpportunityEmailRecordRow extends React.Component{
+class OpportunityRecordRow extends React.Component{
 	static propTypes = {
 		record: PropTypes.shape({
 			progress_count: PropTypes.number,
@@ -45,7 +45,7 @@ class OpportunityEmailRecordRow extends React.Component{
 	}
 }
 
-export default class OpportunityEmailRecordList extends React.Component{
+export default class OpportunityRecordList extends React.Component{
 	static propTypes = {
 		params: PropTypes.shape({
 			auditCycleId: PropTypes.number.isRequired,
@@ -57,6 +57,7 @@ export default class OpportunityEmailRecordList extends React.Component{
 		this.state = {
 			loading: false,
 			records: [],
+			type: "email",
 		};
 	}
 
@@ -65,12 +66,31 @@ export default class OpportunityEmailRecordList extends React.Component{
 	};
 
 	reloadData = (auditCycleId) => {
-		this.setLoading(true);
-		findOpportunityEmailRecordsByAuditCycleId(auditCycleId).then( records => {
-			this.setState({
-				records
-			});
-		}).always(() => this.setLoading(false));
+		this.setState({
+			records: [],
+			loading: true,
+		});
+		if(this.state.type === "email"){
+			findOpportunityEmailRecordsByAuditCycleId(auditCycleId).then( records => {
+				this.setState({
+					records
+				});
+			}).always(() => this.setLoading(false));
+		}
+		else if(this.state.type === "sms"){
+			findOpportunitySMSRecordsByAuditCycleId(auditCycleId).then( records => {
+				this.setState({
+					records
+				});
+			}).always(() => this.setLoading(false));
+		}
+		else if(this.state.type === "whatsapp"){
+			findOpportunityWhatsappRecordsByAuditCycleId(auditCycleId).then( records => {
+				this.setState({
+					records
+				});
+			}).always(() => this.setLoading(false));
+		}
 	};
 
 	componentDidMount(){
@@ -86,12 +106,42 @@ export default class OpportunityEmailRecordList extends React.Component{
 		window.clearInterval(this.state.intervalId);
 	}
 
-	render(){
+	onChangeHandler = (e) => {
+		if(e.target.value){
+			this.setState({
+				type: e.target.value
+			}, ()=>{
+				this.reloadData(this.props.params.auditCycleId);
+			});
+		}
+	};
 
-		let rows = this.state.records.map( r => (<OpportunityEmailRecordRow record={r} key={r.id}/>));
+	render(){
+		let rows = [];
+		let para = "";
+		let heading = "";
+		let header = "";
+		if(this.state.type === "email"){
+			rows = this.state.records.map( r => (<OpportunityRecordRow record={r} key={r.id}/>));
+			para = "scheduled emails for cities will appear here";
+			heading = "No emails scheduled";
+			header = "Opportunity Emails Scheduled";
+		}
+		else if(this.state.type === "sms"){
+			rows = this.state.records.map( r => (<OpportunityRecordRow record={r} key={r.id}/>));
+			para = "Scheduled SMS for cities will appear here";
+			heading = "No SMS scheduled";
+			header = "Opportunity SMS Scheduled";
+		}
+		else if(this.state.type === "whatsapp"){
+			rows = this.state.records.map( r => (<OpportunityRecordRow record={r} key={r.id}/>));
+			para = "Scheduled Whatsapp message for cities will appear here";
+			heading = "No whatsapp message scheduled";
+			header = "Opportunity Whatsapp Messages Scheduled";
+		}
 
 		let table = rows.length === 0 ? (
-			<Jumbotron key="empty" heading="no emails scheduled" para="scheduled emails for cities will appear here"/>
+			<Jumbotron key="empty" heading={heading} para={para}/>
 		) : (
 			<table className="table table-striped">
 				<thead>
@@ -113,7 +163,14 @@ export default class OpportunityEmailRecordList extends React.Component{
 					<Link to={`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification/schedule`} className="btn btn-default pull-right">
 						<Plus/> Add City
 					</Link>
-				Opportunity Emails Scheduled
+					<div className="col-md-2 pull-right">
+						<select className="form-control" onChange={this.onChangeHandler}>
+							<option value="email">Email</option>
+							<option value="sms">SMS</option>
+							<option value="whatsapp">Whatsapp</option>
+						</select>
+					</div>
+					{header}
 				</h3>
 				{ this.state.loading && this.state.records.length === 0 ?  <Loading/> : table }
 				{this.props.children}

@@ -17,7 +17,7 @@ from manager.service.opportunity_email import get_auditor_count_by_filter, get_a
 from registration.service.auditor import find_auditor_by_id
 from registration.context import registration_context
 from manager.models import City
-from ..models import OpportunityEmailRecord
+from ..models import OpportunityEmailRecord, OpportunitySmsRecord, OpportunityWhatsappRecord
 
 from celery import shared_task
 
@@ -139,3 +139,9 @@ def opportunity_email_task(opp_id, audit_cycle_id, user_id):
 
 def find_opportunity_email_records_by_audit_cycle(audit_cycle_id):
     return OpportunityEmailRecord.objects.filter(audit_cycle_id=audit_cycle_id)
+
+def find_opportunity_sms_records_by_audit_cycle(audit_cycle_id: int):
+    return OpportunitySmsRecord.objects.filter(audit_cycle_id=audit_cycle_id)
+
+def find_opportunity_whatsapp_records_by_audit_cycle(audit_cycle_id: int):
+    return OpportunityWhatsappRecord.objects.filter(audit_cycle_id=audit_cycle_id)
