@@ -105,7 +105,7 @@ export default class AuditCycleImprovableQuestions extends React.Component{
 		return (
 			<div>
 				{download_button}
-				<h3 className="text-center">Improvable Questions</h3>
+				<h3 className="text-center">Improvement areas based on observation</h3>
 				<div style={{overflowY:"auto", maxHeight:"400px"}}>
 					{improvable_question}
 				</div>

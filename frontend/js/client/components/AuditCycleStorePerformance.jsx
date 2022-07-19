@@ -88,7 +88,7 @@ class AuditCycleStorePerformance extends React.Component{
 		let audit_cycle_name = this.props.auditCycle.name;
 		domtoimage.toBlob(document.getElementById(`store_performance_${this.props.type}`), {bgcolor: "white"})
 			.then(function (blob) {
-				fileDownload(blob,  audit_cycle_name + " Business Unit Performance.jpg");
+				fileDownload(blob,  audit_cycle_name + " Branch Performance.jpg");
 			});
 	};
 
@@ -125,7 +125,7 @@ class AuditCycleStorePerformance extends React.Component{
 				<BarChart width={700} height={370} data={data} margin={{top: 25, right: 10, left: 10, bottom: 20}} onClick={(active)=>active&&this.toggleModal()}>
 					<CartesianGrid strokeDasharray="3 3" />
 					<XAxis dataKey="name" tick={this.tickFunction} interval={0}>
-						<Label value="Store List" offset={0} position="insideBottomRight" />
+						<Label value="Branch List" offset={0} position="insideBottomRight" />
 					</XAxis>
 					<YAxis domain={[0,100]} tickFormatter={f => f + "%"}>
 						<Label value="Score" angle={-90} offset={0} position="left" />
@@ -147,8 +147,8 @@ class AuditCycleStorePerformance extends React.Component{
 						<table className="table table-striped ">
 							<thead>
 								<tr>
-									<th>Store Code</th>
-									<th>Store Name</th>
+									<th>Branch Code</th>
+									<th>Branch Name</th>
 									{this.props.reportData.columns.map((l) => <th key={l} className="text-right">{l}</th>)}
 								</tr>
 							</thead>
@@ -245,7 +245,7 @@ class AuditCycleStorePerformanceWrapper extends React.Component{
 		} else if(this.state.reportData.data.length === 0 ){
 			return (
 				<div>
-					<h3 className="text-center">Business Unit Performance</h3>
+					<h3 className="text-center">Branch Performance</h3>
 					<Jumbotron heading="" para="chart will be visible once reports are completed"/>
 				</div>
 			);
@@ -253,16 +253,16 @@ class AuditCycleStorePerformanceWrapper extends React.Component{
 			return (
 				<div className="row">
 					<div className="col-md-6">
-						<AuditCycleStorePerformance title="Best Performing Business Units" type="best" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
+						<AuditCycleStorePerformance title="Best Performing Branches" type="best" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 					</div>
 					<div className="col-md-6">
-						<AuditCycleStorePerformance title="Worst Performing Business Units" type="worst" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
+						<AuditCycleStorePerformance title="Worst Performing Branches" type="worst" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 					</div>
 				</div>
 			);
 		} else {
 			return (
-				<AuditCycleStorePerformance title="Business Unit Performance" type="all" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
+				<AuditCycleStorePerformance title="Branch Performance" type="all" reportData={this.state.reportData} auditCycle={this.props.auditCycle}/>
 			);
 		}
 	}
