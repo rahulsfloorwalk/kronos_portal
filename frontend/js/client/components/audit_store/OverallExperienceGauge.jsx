@@ -71,23 +71,23 @@ export default class OverallExperienceGauge extends React.Component {
 								}}>{getRatingText(this.props.colorCode)}</span>
 							</td>
 							<td className="text-right rating-excellent" style={tableCellStyle}><b>Excellent</b></td>
-							<td className="rating-excellent" style={tableCellStyle}>90% and above</td>
+							<td className="rating-excellent" style={tableCellStyle}>95% and above</td>
 						</tr>
 						<tr className="rating-good">
 							<td className="text-right" style={tableCellStyle}><b>Good</b></td>
-							<td style={tableCellStyle}>85% - 89%</td>
+							<td style={tableCellStyle}>80% - 94%</td>
 						</tr>
 						<tr className="rating-average">
 							<td className="text-right" style={tableCellStyle}><b>Average</b></td>
-							<td style={tableCellStyle}>75% - 84%</td>
+							<td style={tableCellStyle}>70% - 80%</td>
 						</tr>
 						<tr className="rating-poor">
 							<td className="text-right" style={tableCellStyle}><b>Poor</b></td>
-							<td style={tableCellStyle}>66% - 74% </td>
+							<td style={tableCellStyle}>50% - 70% </td>
 						</tr>
 						<tr className="rating-bad">
 							<td className="text-right" style={tableCellStyle}><b>Bad</b></td>
-							<td style={tableCellStyle}>0% - 65%</td>
+							<td style={tableCellStyle}>0% - 50%</td>
 						</tr>
 					</tbody>
 				</table>

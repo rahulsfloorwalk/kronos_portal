@@ -33,6 +33,8 @@ from client_report.service import all_stores_xlsx as all_stores_xlsx_report_serv
 from client_report.service import audit_cycle_xlsx_report as cycle_xlsx_report_service
 from client_report.service import report_browser_xlsx as report_browser_xlsx_service
 from client_report.service import audit_section
+from client_report.service import cluster_trends
+from client_report.service import region_trends
 from client_report.service import city_trends
 from client_report.service import store_trends
 from client_report.service import audit_cycle
@@ -500,6 +502,27 @@ class DashboardCityWiseTrendsByAuditCycleId(APIView):
     def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
         data = city_trends.get_performing_cities_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
         return Response(data)
+
+
+class DashboardRegionWiseTrendsByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
+        data = region_trends.get_performing_regions_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
+        return Response(data)
+
+
+class DashboardClusterWiseTrendsByAuditCycleId(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, questionnaire_type_id, audit_cycle_id, format=None):
+        data = cluster_trends.get_performing_clusters_by_type_by_audit_cycle_id_for_clientuser(questionnaire_type_id, audit_cycle_id, request.user.id)
+        return Response(data)
+
 
 
 class DashboardStoreTrendsXlsx(APIView):

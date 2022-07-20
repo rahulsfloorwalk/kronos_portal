@@ -81,7 +81,11 @@ def send_opportunity_sms_for_record(opportunity_record_id):
         except ObjectNotFound as e:
             _logger.warn("auditor with user_id: %s NOT FOUND", user_id)
             continue
-        if not user.is_active or not user.preferences.receive_new_opportunities_sms:
+        try:
+            if not user.is_active or not user.preferences.receive_new_opportunities_sms:
+                _logger.warn("skip auditor with user_id: %s", user_id)
+                continue
+        except OpportunitySmsRecord.DoesNotExist as e:
             _logger.warn("skip auditor with user_id: %s", user_id)
             continue
 
