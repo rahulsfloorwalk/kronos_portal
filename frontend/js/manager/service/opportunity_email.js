@@ -5,6 +5,14 @@ export function findOpportunityEmailRecordsByAuditCycleId(audit_cycle_id){
 	return $.get( url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/opportunity_email`);
 }
 
+export function findOpportunitySMSRecordsByAuditCycleId(audit_cycle_id){
+	return $.get( url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/opportunity_sms`);
+}
+
+export function findOpportunityWhatsappRecordsByAuditCycleId(audit_cycle_id){
+	return $.get( url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/opportunity_whatsapp`);
+}
+
 export function saveOpportunityEmailRecord(audit_cycle_id, filters){
 	return $.ajax({
 		url: url.api_base_path + `manager/audit_cycle/${audit_cycle_id}/opportunity_notification`,

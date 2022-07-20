@@ -30,7 +30,7 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
       <h3
         className="text-center"
       >
-        Best Performing Business Units
+        Best Performing Branches
       </h3>
       <div
         className="recharts-responsive-container"
@@ -85,7 +85,7 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
       <h3
         className="text-center"
       >
-        Worst Performing Business Units
+        Worst Performing Branches
       </h3>
       <div
         className="recharts-responsive-container"
