@@ -23131,5 +23131,16 @@
          "lon":"-76.6958",
          "country":"US"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":2134,
+      "fields":{
+         "name":"Rishikesh",
+         "state":"IN-UT",
+         "lat":"30.085094",
+         "lon":"78.267134",
+         "country":"IN"
+      }
    }
 ]
