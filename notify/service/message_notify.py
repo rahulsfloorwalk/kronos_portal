@@ -91,14 +91,17 @@ def get_params_from_audit_store(notif_id, message):
     elif notif_id.verb == verbs.AUDIT_STORE_UNSUBMITTED:
         report_log = audit_store.audit_store_status_log.filter(status = AuditStore.ACKNOWLEDGED).latest()
         if report_log:
+            proof_tag_str = ''
+            template_name = settings.WHATSAPP_TEMPLATE['AUDIT_REVERT_WITHOUT_PROOF']
+            # Make field sequence as per api documentation/message template
+            params = [{'default':first_name}, {'default':client}, {'default':audit_date}, {'default':message}]
             if 'proof_tags' in report_log.report_data:
                 if report_log.report_data['proof_tags']:
                     template_name = settings.WHATSAPP_TEMPLATE['AUDIT_REVERT_WITH_PROOF']
                     proof_tag_str = ', '.join(report_log.report_data['proof_tags'])
-
                     # Make field sequence as per api documentation/message template
                     params = [{'default':first_name}, {'default':client}, {'default':audit_date}, {'default':message}, {'default':proof_tag_str}]
-                    return params, template_name
+            return params, template_name
         else:
             _logger.info('report status log not found. skipping whatsapp message for notification id : %s', notif_id)
     return [False, False]

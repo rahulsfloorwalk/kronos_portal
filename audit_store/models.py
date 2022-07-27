@@ -311,7 +311,7 @@ class AuditStore(Model):
             if report_section.section.hide_comment:
                 return True
             auditor_comment = report_section.auditor_comment
-            if len(auditor_comment) < 30:
+            if len(auditor_comment) < ReportSection.MIN_AUDITOR_COMMENT_LEN:
                 return False
         return True
 

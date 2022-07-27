@@ -32,6 +32,15 @@ def set_answer_comment_for_moderator(audit_store_id, question_id, answer_comment
         raise AppLogicError("Answer comment cannot be set now")
 
 
+def set_answer_revert_message_for_moderator(audit_store_id, question_id, answer_revert_message, user_id):
+    answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
+    if answer.audit_store.is_editable_by_moderator():
+        answer.set_answer_revert_message(answer_revert_message)
+        return answer
+    else:
+        raise AppLogicError("Answer revert message cannot be set now")
+
+
 def set_marks_obtained_for_moderator(audit_store_id, question_id, marks_obtained, user_id):
     answer = find_by_audit_store_and_question_for_moderator(audit_store_id, question_id, user_id)
     if answer.audit_store.is_editable_by_moderator():

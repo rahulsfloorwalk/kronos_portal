@@ -11,6 +11,13 @@ Missing proof tags:
 
 {% endfor %}
 {% endif %}
+
+{% if proof_tags %}
+Please attach the missing proofs and resubmit the report within 8 hours to avoid report failure.
+{% else %}
+Please click on the link, add required information and resubmit the report within <b>8 hours</b> to avoid report failure.
+{% endif %}
+
 --
 Thanks and regards,
 FloorWalk Team

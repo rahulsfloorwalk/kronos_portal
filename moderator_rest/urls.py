@@ -4,7 +4,7 @@ from .views import AuditStoreIdAuditDateView, AuditStoreIdQAOKView, AuditStoreId
 from .views import AuditStoreAttachmentView, ReportSectionAttachmentView, AttachmentIdView, AttachmentIdRenameView, AttachmentIdCompleteView, MoveAttachmentToSection
 from .views import AuditStorePendingView, AuditStoreCompletedView
 from .views import SectionView, ReportSectionView, AnswerView
-from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView
+from .views import PMCommentView, AuditorCommentView, AnswerTextView, MarksObtainedView, NotApplicableView, AnswerNotApplicableView, AnswerCommentView, AnswerRevertMessageView, SectionRevertMessageView
 from .views import AuditStoreIdReimbursementView, AuditStoreIdEarningsPerAuditView, AuditStoreIdReportSummaryView
 from .views import AuditStoreIdModeratorStatusView, AuditStoreIdModeratorCommentView, AuditStoreIdCheckPoints
 from .views import AttachmentProofTagList, AttachmentIdProofTagView
@@ -27,12 +27,14 @@ urlpatterns = ([
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/not_applicable$', NotApplicableView.as_view(), name='not_applicable_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/auditor_comment$', AuditorCommentView.as_view(), name='auditor_comment_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/section_revert_message$', SectionRevertMessageView.as_view(), name='section_revert_message_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/pm_comment$', PMCommentView.as_view(), name='pm_comment_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section/(?P<section_id>[0-9]+)/attachment$', ReportSectionAttachmentView.as_view(), name='report_section_attachment_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/marks_obtained$', MarksObtainedView.as_view(), name='marks_obtained_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_text$', AnswerTextView.as_view(), name='answer_text_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_comment$', AnswerCommentView.as_view(), name='answer_comment_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/answer_revert_message$', AnswerRevertMessageView.as_view(), name='answer_revert_message_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/question/(?P<question_id>[0-9]+)/not_applicable$', AnswerNotApplicableView.as_view(), name='answer_not_applicable_view'),
 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/section$', SectionView.as_view(), name='section_view'),

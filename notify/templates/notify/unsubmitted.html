@@ -16,6 +16,12 @@
 			{% endfor %}
 		</ul>
 		{% endif %}
+		<br>
+		{% if proof_tags %}
+		<p>Please attach the missing proofs and resubmit the report within 8 hours to avoid report failure.</p>
+		{% else %}
+		<p>Please click on the link, add required information and resubmit the report within 8 hours to avoid report failure.</p>
+		{% endif %}
 		<p>--</p>
 		<p>Thanks and regards,</p>
 		<p>FloorWalk Team</p>

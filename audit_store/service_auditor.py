@@ -13,8 +13,9 @@ from client.service.client_manager import get_manager_email_list_by_audit_store_
 from audit.service.audit_cycle_proof_tag import get_status_of_audit_cycle_proof_tag_by_audit_cycle_id
 from attachment.service import set_attachment_by_proof_tag
 from audit_store.service_moderator import get_moderator_email_by_audit_store_obj
-from answer.service.answer_auditor import add_multiselect_answer_questions
-from answer.models import Answer
+from answer.service import report_section_auditor
+from answer.service.answer_auditor import add_multiselect_answer_questions, remove_answer_revert_message_for_auditor
+from answer.models import Answer, ReportSection
 from questionnaire.models.question import Question
 
 
@@ -52,7 +53,7 @@ def submit_report(audit_store_id, user_id):
     if not audit_store.is_submittable_for_auditor():
         raise AppLogicError("Please complete all answers and all section summaries before submitting")
     if not audit_store.check_auditor_comment_len():
-        raise AppLogicError("Section summary should be greater than 30 characters")
+        raise AppLogicError("Section summary should be greater than {} characters".format(ReportSection.MIN_AUDITOR_COMMENT_LEN))
     if not audit_store.check_required_proof_attached():
         raise AppLogicError("Please attach mandatory proof tags before submitting")
     if audit_cycle_proof_tag:
@@ -62,6 +63,8 @@ def submit_report(audit_store_id, user_id):
     set_attachment_by_proof_tag(audit_store_id)
     audit_store.submit_auditor(by=user)
     add_multiselect_answer_questions(audit_store_id, user_id)
+    remove_answer_revert_message_for_auditor(audit_store_id, user_id)
+    report_section_auditor.remove_section_revert_message_for_auditor(audit_store_id, user_id)
     return audit_store
 
 @atomic

@@ -448,6 +448,7 @@ class AnswerSerializer(ModelSerializer):
             'id',
             'question_id',
             'audit_store_id',
+            'revert_message',
             'answer_text',
             'answer_comment',
             'get_answer_text_list'
@@ -461,6 +462,7 @@ class ReportSectionSerializer(ModelSerializer):
             'id',
             'audit_store',
             'section',
+            'revert_message',
             'auditor_comment'
         )
         read_only_fields = fields

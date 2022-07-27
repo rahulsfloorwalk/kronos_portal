@@ -6,15 +6,16 @@ import { } from "react-router";
 import { } from "../../styles.js";
 
 import Loading from "../../components/Loading.jsx";
+import Modal from "../../components/Modal.jsx";
 
 import AttachmentInProgressThumbnail from "../../components/AttachmentInProgressThumbnail.jsx";
 import AttachmentThumbnail from "../../components/AttachmentThumbnail.jsx";
 import Jumbotron from "../../components/Jumbotron.jsx";
-import { Tasks, Checked, Unchecked, Paperclip } from "../../components/Icons.jsx";
+import { Tasks, Checked, Unchecked, Paperclip, Pencil } from "../../components/Icons.jsx";
 
 import { affectInputEventToComponent } from "../../react_utils.js";
-import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment } from "../service/answer.js";
-import { fetchSections, fetchReportSections, submitAuditorComment, setNotApplicable } from "../service/section.js";
+import { fetchAnswers, setAnswerText, setMarks, setAnswerNotApplicable, setAnswerComment, setAnswerRevertMessage } from "../service/answer.js";
+import { fetchSections, fetchReportSections, submitAuditorComment, setNotApplicable, setSectionRevertMessage } from "../service/section.js";
 // import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection ,moveAttachmentToSection, rotateImageAngle } from "../service/attachment.js";
 import { findAttachmentsByAuditStoreAndSection, renameAttachment, deleteAttachment, uploadFileForReportSection, rotateImageAngle } from "../service/attachment.js";
 
@@ -99,6 +100,7 @@ export class QuestionRow extends React.Component{
 		}),
 		answer: PropTypes.shape({
 			answer_comment: PropTypes.string,
+			revert_message: PropTypes.string,
 			get_answer_text_list: PropTypes.oneOf[PropTypes.array, PropTypes.string]
 		}),
 		marking: PropTypes.bool,
@@ -118,7 +120,8 @@ export class QuestionRow extends React.Component{
 		error: false,
 		marksObtainedSuccess: false,
 		answerError: false,
-		answerSuccess: false
+		answerSuccess: false,
+		show_revert_form: false,
 	};
 
 	componentDidMount(){
@@ -168,6 +171,25 @@ export class QuestionRow extends React.Component{
 				answer
 			});
 		});
+	};
+	toggleRevertForm = () => {
+		this.setState((prevState)=>({
+			answer: Object.assign({}, this.state.answer, {
+				show_revert_form: !prevState.answer.show_revert_form,
+			})
+		}));
+	};
+	revertMessageChanged = (e) => {
+		this.setState({
+			answer: Object.assign({}, this.state.answer, {
+				revert_message: e.target.value,
+			})
+		});
+	};
+	revertMessageSubmit = () => {
+		if(this.state.answer.revert_message != ""){
+			setAnswerRevertMessage(this.props.auditStoreId, this.props.q.id, this.state.answer.revert_message).then(()=>this.toggleRevertForm());
+		}
 	};
 	render(){
 		if(this.props.q.hide_question && (this.state.answer.answer_text === "" || this.state.answer.answer_text === undefined)){
@@ -272,10 +294,43 @@ export class QuestionRow extends React.Component{
 		return (
 			<tr>
 				<td>{this.props.q.sequence}</td>
-				<td>{this.props.q.question_txt}</td>
+				<td>{this.props.q.question_txt}<br/>{this.state.answer.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.answer.revert_message}</p> : null}</td>
 				<td>{answerElement}</td>
 				<td className="text-right">{markElement}</td>
 				<td className="">{notApplicableElement}</td>
+				<td>
+					{this.props.marking ? <button className={`btn btn-${this.state.answer.revert_message ? "primary" : "warning"}`} onClick={this.toggleRevertForm} title="Revert message"><Pencil/></button> : null }
+					{this.state.answer.show_revert_form ? <Modal modalTitle="Enter revert message" onClose={this.toggleRevertForm}>
+						<div className="table-responsive">
+							<table className="table table-striped">
+								<tbody>
+									<tr>
+										<th>Question</th>
+										<td>{this.props.q.question_txt}</td>
+									</tr>
+									<tr>
+										<th>Answer</th>
+										<td>{this.state.answer.answer_text}</td>
+									</tr>
+									<tr>
+										<th>Answer comment</th>
+										<td>{this.state.answer.answer_comment}</td>
+									</tr>
+									<tr>
+										<td colSpan={2}>
+											<textarea className="form-control" name="revert_message" value={this.state.answer.revert_message} onChange={this.revertMessageChanged} placeholder="Enter revert message"/>
+										</td>
+									</tr>
+									<tr>
+										<td colSpan={2}>
+											<button className="btn btn-primary" onClick={this.revertMessageSubmit} disabled={this.state.answer.revert_message == ""}>Submit</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</Modal> : null }
+				</td>
 			</tr>
 		);
 	}
@@ -572,6 +627,7 @@ class Section extends React.Component{
 	static propTypes = {
 		reportSection: PropTypes.shape({
 			auditor_comment: PropTypes.string,
+			revert_message: PropTypes.string,
 			pm_comment: PropTypes.string,
 			not_applicable: PropTypes.bool,
 			marks_obtained: PropTypes.number,
@@ -606,6 +662,8 @@ class Section extends React.Component{
 
 		auditor_comment: "",
 		pm_comment: "",
+		revert_message: "",
+		show_revert_form: false,
 
 		//set initial state to true so that you don't get setState() calls
 		// on an unmounted component
@@ -616,6 +674,7 @@ class Section extends React.Component{
 	componentDidMount(){
 		if(this.props.reportSection){
 			this.setState({
+				revert_message: this.props.reportSection.revert_message,
 				auditor_comment: this.props.reportSection.auditor_comment,
 				pm_comment: this.props.reportSection.pm_comment,
 				not_applicable: this.props.reportSection.not_applicable,
@@ -631,6 +690,7 @@ class Section extends React.Component{
 	componentWillReceiveProps(nextProps){
 		if(nextProps.reportSection){
 			this.setState({
+				revert_message: nextProps.reportSection.revert_message,
 				auditor_comment: nextProps.reportSection.auditor_comment,
 				pm_comment: nextProps.reportSection.pm_comment,
 				not_applicable: nextProps.reportSection.not_applicable
@@ -694,6 +754,21 @@ class Section extends React.Component{
 		});
 		setNotApplicable(this.props.auditStoreId, this.props.section.id, !this.state.not_applicable);
 	};
+	toggleRevertForm = () => {
+		this.setState((prevState)=>({
+			show_revert_form: !prevState.show_revert_form,
+		}));
+	};
+	revertMessageChanged = (e) => {
+		this.setState({
+			revert_message: e.target.value,
+		});
+	};
+	revertMessageSubmit = () => {
+		if(this.state.revert_message != ""){
+			setSectionRevertMessage(this.props.auditStoreId, this.props.section.id, this.state.revert_message).then(()=>this.openRevertForm());
+		}
+	};
 	render(){
 
 		let editable = this.props.auditStore && this.props.auditStore.status === "SUBMITTED";
@@ -749,7 +824,7 @@ class Section extends React.Component{
 			let hasAuditorCommentError = this.state.auditorCommentError ? "has-error" : "";
 			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
 			auditorCommentElement = (
-				<div className={hasAuditorCommentError + hasAuditorCommentSuccess}>
+				<div className={hasAuditorCommentError + hasAuditorCommentSuccess} style={{display: "flex", alignItems:"center"}}>
 					<textarea
 						maxLength="4096"
 						disabled={this.state.savingAuditorComment}
@@ -760,7 +835,8 @@ class Section extends React.Component{
 						value={this.state.auditor_comment}
 						onBlur={this.saveAuditorComment}
 						onChange={this.inputChanged}
-					/>
+					/>&nbsp;&nbsp;
+					<button className={`btn btn-${this.state.revert_message ? "primary" : "warning"}`} onClick={this.toggleRevertForm} title="Revert message"><Pencil/></button>
 				</div>
 			);
 
@@ -797,9 +873,38 @@ class Section extends React.Component{
 				<div className="panel-footer">
 					<p><b>Total Marks:</b> {marksObtained} out of {maxMarks}</p>
 					{this.props.section.hide_comment == false ?
-						<div><hr/><b>Auditor Comment:</b>&nbsp;{ this.state.savingAuditorComment ? "saving..." : ""} {auditorCommentElement}</div> : null}
+						<div>
+							<hr/>
+							<b>Auditor Comment:</b>&nbsp;
+							{ this.state.savingAuditorComment ? "saving..." : ""}
+							{auditorCommentElement}
+							<br/><br/>
+							{this.state.revert_message || this.props.reportSection.revert_message ? <p className="text-danger"><b>Revert message: </b>{this.state.revert_message || this.props.reportSection.revert_message}</p> : null}
+						</div> : null}
 					{/* <hr/>
 					<div><b>PM Comment:</b>&nbsp;{ this.state.savingPMComment ? "saving..." : ""} {pmCommentElement}</div> */}
+					{this.props.section.hide_comment == false && this.state.show_revert_form ? <Modal modalTitle="Enter revert message" onClose={this.toggleRevertForm}>
+						<div className="table-responsive">
+							<table className="table table-striped">
+								<tbody>
+									<tr>
+										<th>Section summary</th>
+										<td>{this.state.auditor_comment}</td>
+									</tr>
+									<tr>
+										<td colSpan={2}>
+											<textarea className="form-control" name="revert_message" value={this.state.revert_message} onChange={this.revertMessageChanged} placeholder="Enter revert message"/>
+										</td>
+									</tr>
+									<tr>
+										<td colSpan={2}>
+											<button className="btn btn-primary" onClick={this.revertMessageSubmit} disabled={this.state.revert_message == ""}>Submit</button>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</Modal> : null }
 				</div>
 				{/* <SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} sections={this.props.sections} editable={editable} proof_tags={this.props.proof_tags}/> */}
 				<SectionAttachmentBox auditStoreId={this.props.auditStoreId} sectionId={this.props.section.id} auditStore={this.props.auditStore} editable={editable} proof_tags={this.props.proof_tags}/>

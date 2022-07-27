@@ -34,6 +34,7 @@ class __Section extends React.Component{
 		super(props);
 		this.state = {
 			auditor_comment: "",
+			auditor_comment_error: "",
 			focused: false,
 		};
 	}
@@ -69,19 +70,24 @@ class __Section extends React.Component{
 		if(this.props.reportSection && this.props.reportSection.auditor_comment === this.state.auditor_comment){
 			this.setState({
 				focused: false,
+				auditor_comment_error: "",
 			});
 			return;
 		}
 		this.setState({
 			saving: true,
 			focused: false,
+			auditor_comment_error: "",
 		});
 		var payload = {
 			sectionId: this.props.section.id,
 			auditor_comment: this.state.auditor_comment,
 			audit_store: this.props.auditStoreId,
 		};
-		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false}));
+		this.props.dispatch(submitAuditorComment(payload)).then(() => this.setState({saving: false})).fail((err) => {
+			let error = err.responseJSON.non_field_errors;
+			this.setState({saving: false, auditor_comment_error: error ? error : ""});
+		});
 		Alert.success("Data Saved");
 	};
 
@@ -137,8 +143,8 @@ class __Section extends React.Component{
 			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
-		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 30 ? "" : "success";
-		let badClass = this.props.showErrors && (this.state.auditor_comment).length < 30 ? "danger" : "";
+		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 150 ? "" : "success";
+		let badClass = (this.props.showErrors || this.state.auditor_comment_error) && (this.state.auditor_comment).length < 150 ? "danger" : "";
 
 		return (
 			<div className="panel panel-default">
@@ -166,9 +172,12 @@ class __Section extends React.Component{
 								<td>
 									<div className="row">
 										<div className="col-xs-offset-1 col-md-11">
-											<p><b>Section Summary:</b> {savingMessage}</p>
+											<p><b>Section Summary:</b> <small className="text-danger"> {this.state.auditor_comment_error ? this.state.auditor_comment_error : "(Min 150 characters in length)"}</small> {savingMessage}</p>
 											{commentElement}
 										</div>
+										{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.props.reportSection.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
+											<p className="text-danger"><b>Revert message: </b>{this.props.reportSection.revert_message}</p>
+										</div> : null}
 									</div>
 								</td>
 							</tr>
