@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Datetime from "react-datetime";
 
 import Jumbotron from "../../../components/Jumbotron.jsx";
-import { EyeOpen, Unchecked } from "../../../components/Icons.jsx";
+import { Unchecked } from "../../../components/Icons.jsx";
 import { sectionPropType } from "../../prop_types";
 
 import { orderKeys } from "../../../react_utils.js";
@@ -258,7 +258,6 @@ export class QuestionnairePreview extends React.Component{
 		}
 		return (
 			<div>
-				<h3 className="page-header"><EyeOpen/> Preview</h3>
 				{sectionRows}
 			</div>
 		);

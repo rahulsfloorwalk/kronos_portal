@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
 import { Link } from "react-router";
-
+import Alert from "react-s-alert";
 import moment from "moment";
 import { momentDateFormat }  from "../../../config.js";
 
@@ -45,15 +45,17 @@ class AuditStoreDetails extends React.Component {
 		var promise = this.props.dispatch(submitAuditStore(this.props.params.auditStoreId));
 		promise.then(() => {
 			this.setState({
-				submitMessage : "submitted successfully",
+				submitMessage : "Report submitted successfully",
 				submitStatus: "success",
 			});
+			Alert.success("Report submitted successfully");
 		},(err) => {
 			this.setState({
 				submitMessage : err.responseJSON.non_field_errors[0],
 				submitStatus: "danger",
 				showErrors: true,
 			});
+			Alert.error(err.responseJSON.non_field_errors[0], {timeout:7000});
 		});
 	};
 

@@ -21,6 +21,8 @@ class __AnswerComment extends Component {
 		]).isRequired,
 		dispatch: PropTypes.func.isRequired,
 		editable: PropTypes.bool.isRequired,
+		required: PropTypes.bool.isRequired,
+		showErrors: PropTypes.bool.isRequired,
 	};
 
 	static defaultProps = {
@@ -31,6 +33,7 @@ class __AnswerComment extends Component {
 		super(props);
 		this.state = {
 			answer_comment: this.props.answer_comment || "",
+			error: false,
 		};
 	}
 
@@ -49,15 +52,26 @@ class __AnswerComment extends Component {
 	};
 
 	onBlur = (e) => {
-		this.commentChanged(e);
-		this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value));
-		Alert.success("Data Saved");
+		if(this.props.required && e.target.value == ""){
+			this.setState({
+				error: true,
+			});
+			Alert.error("Comment is required");
+		}
+		else{
+			this.commentChanged(e);
+			this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value));
+			Alert.success("Data Saved");
+			this.setState({
+				error: false,
+			});
+		}
 	};
 
 	render(){
-		if(this.props.editable){
+		if(this.props.editable && this.props.required){
 			return (
-				<input className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+				<input className="form-control" style={(this.props.showErrors && this.props.required && !this.state.answer_comment) || this.state.error ? {border: "solid 1px #a94442"} : null} value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="Comment required"/>
 			);
 		} else {
 			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;

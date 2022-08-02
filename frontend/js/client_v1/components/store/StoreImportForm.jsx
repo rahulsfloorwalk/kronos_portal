@@ -56,7 +56,7 @@ class StoreImportForm extends React.Component {
 			promise.then(()=>{
 
 				this.props.dispatch(fetchStores(this.props.params.clientId));
-				hashHistory.push(`/projects/${this.props.params.clientId}/store`);
+				// hashHistory.push(`/projects/${this.props.params.clientId}/store`);
 				Alert.success("STORE SAVED");
 
 			}, (errorMessage) => {

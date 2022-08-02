@@ -12,6 +12,7 @@ import Loading from "../../../components/Loading.jsx";
 import FormInput from "../../../components/FormInput.jsx";
 import CountrySelector from "../../../components/CountrySelector.jsx";
 import { createPaymentOrder, validatePaymentOrder, failedPaymentOrder } from "../../service/payment.js";
+import { get_uncomplete_quotation_by_client } from "../../actions/quotation.js";
 
 
 class QuotationPaymentForm extends React.Component{
@@ -76,6 +77,7 @@ class QuotationPaymentForm extends React.Component{
 			errors: {}
 		});
 		const clientId = this.props.client.id;
+		const dispatch = this.props.dispatch;
 		let promise = createPaymentOrder(clientId, this.state.form);
 		promise.done((res)=>{
 			const { amount, currency, key, name, order_id, merchant_logo } = res;
@@ -91,7 +93,8 @@ class QuotationPaymentForm extends React.Component{
 				handler: function (response) {
 					validatePaymentOrder(clientId, response).then(() => {
 						Alert.success("Payment successful");
-						hashHistory.push("/billing");
+						dispatch(get_uncomplete_quotation_by_client(clientId));
+						hashHistory.replace("/project_setup/quotation_preview");
 					});
 				},
 				prefill: {
@@ -114,8 +117,8 @@ class QuotationPaymentForm extends React.Component{
 			paymentObject.open();
 			paymentObject.on("payment.failed", function (response){
 				failedPaymentOrder(response.error).then(() => {
-					Alert.warning("Payment is not successfull");
-					hashHistory.push("/billing");
+					Alert.warning("Payment is not successful");
+					hashHistory.replace("/project_setup/quotation");
 				});
 			});
 

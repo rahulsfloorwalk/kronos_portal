@@ -67,15 +67,18 @@ def get_audit_cycle_proof_tag_for_attachment(audit_cycle_id):
             proof_tag_name = "{}".format(section_proof_tag_obj.audit_cycle_proof_tag.proof_tag.name)
             section_id = section_proof_tag_obj.section.id
             is_required = section_proof_tag_obj.is_required
+            max_attachment_count = section_proof_tag_obj.max_attachment_count
         else:
             proof_tag_name = "{}".format(audit_cycle_proof_tag.proof_tag.name)
             section_id = 0
             is_required = False
+            max_attachment_count = audit_cycle_proof_tag.max_attachment_count
 
         proof_tag_dict['id'] = audit_cycle_proof_tag.id
         proof_tag_dict['proof_tag'] = proof_tag_name
         proof_tag_dict['section_id'] = section_id
         proof_tag_dict['is_required'] = is_required
+        proof_tag_dict['max_attachment_count'] = max_attachment_count
         proof_tag_list.append(proof_tag_dict)
     return sorted(proof_tag_list, key=lambda j: j['proof_tag'])
 

@@ -73,8 +73,8 @@
         <tbody>
             <tr>
                 <td style="text-align: center;">{{ quotation.industry.name }}</td>
-                <td style="text-align: center;">{{ quotation.audit_category.name }}</td>
-                <td style="text-align: center;">{{ quotation.audit_type.name }}</td>
+                <td style="text-align: center;">{{ quotation.problem_statement.name }}</td>
+                <td style="text-align: center;">{{ quotation.sample_questionnaire_type.name }}</td>
             </tr>
         </tbody>
     </table>
@@ -97,7 +97,7 @@
             {% endfor %}
             <tr>
                 <td colspan="2" style="text-align: right;"><b>Total</b></td>
-                <td style="text-align: center;">{{ quotation.quotation_fee }}</td>
+                <td style="text-align: center;">{{ quotation.amount }}</td>
             </tr>
             <tr>
                 <td colspan="2" style="text-align: right;"><b>GST({{ quotation.gst }}%)</b></td>

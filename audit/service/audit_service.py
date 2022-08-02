@@ -1,6 +1,7 @@
 from django.db.transaction import atomic
 from django.db.utils import IntegrityError
 from django.db.models import Q
+from client.service import store as store_service
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -198,3 +199,19 @@ def create_audit_by_state(data):
         audit_list.append(Audit(**audit))
     audits = Audit.objects.bulk_create(audit_list)
     return audits
+
+@atomic
+def add_bulk_audit(client_id: int, audit_cycle_id: int, audit_data: list):
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    if audit_cycle.client.id == client_id:
+        for audit in audit_data:
+            store = store_service.find_store_by_id(audit['store'])
+            try:
+                audit_obj = Audit()
+                audit_obj.count = audit['count']
+                audit_obj.store = store
+                audit_obj.audit_cycle = audit_cycle
+                audit_obj.client = audit_cycle.client
+                audit_obj.save()
+            except IntegrityError:
+                raise AppLogicError("Audit is already created for {} store and {} cycle".format(store.name, audit_cycle.name))

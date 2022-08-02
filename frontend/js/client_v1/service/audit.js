@@ -11,3 +11,14 @@ export function copyAuditsFromTo(fromAuditCycleId, toAuditCycleId){
 		contentType: "application/json"
 	});
 }
+
+export function addAuditForm(auditCycleId, audit_data){
+	return $.ajax({
+		type: "POST",
+		url: url.api_base_path + `client_v1/audit_cycle/${auditCycleId}/audit`,
+		data: JSON.stringify({
+			audit_data: audit_data
+		}),
+		contentType: "application/json"
+	});
+}

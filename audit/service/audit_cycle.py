@@ -307,3 +307,10 @@ def find_audit_cycles_by_manager(manager_id):
 
 def filter_audit_cycle_by_manager(manager_id, month, year):
     return AuditCycle.objects.filter(start_date__month=month, start_date__year=year, client__managers__user__id=manager_id).order_by('-end_date')
+
+def find_by_quotation_id(quotation_id: int) -> AuditCycle:
+    try:
+        audit_cycle = AuditCycle.objects.get(quotation_id = quotation_id)
+    except AuditCycle.DoesNotExist as e:
+        raise AppLogicError("Audit cycle not found")
+    return audit_cycle

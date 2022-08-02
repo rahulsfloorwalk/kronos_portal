@@ -23,6 +23,7 @@ class Answer(Model):
     marks_obtained = IntegerField(db_column='marks_obtained', blank=True, null=True)
     not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
     answer_comment = CharField(db_column='answer_comment', max_length=2048, blank=True)
+    revert_message = CharField(db_column='revert_message', max_length=2048, blank=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='answers')
 
     created_at = DateTimeField(db_column="created_at", null=True)
@@ -37,6 +38,10 @@ class Answer(Model):
 
     def set_not_applicable(self, not_applicable):
         self.not_applicable = not_applicable
+        self.save()
+
+    def set_answer_revert_message(self, answer_revert_message):
+        self.revert_message = answer_revert_message
         self.save()
 
     def set_answer_comment(self, answer_comment):
@@ -115,6 +120,7 @@ class Answer(Model):
         unique_together = (('question', 'audit_store',))
 
 class ReportSection(Model):
+    MIN_AUDITOR_COMMENT_LEN = 150
 
     id = AutoField(db_column = 'id', primary_key=True)
     audit_store = ForeignKey('audit_store.AuditStore', related_name='report_sections', db_column='audit_store_id', blank=False, on_delete=PROTECT)
@@ -124,6 +130,7 @@ class ReportSection(Model):
     auditor_comment_original = CharField(db_column='auditor_comment_original', max_length=4096, blank=True)
     not_applicable = BooleanField(db_column='not_applicable', default=False, blank=False, null=False)
     report_section_percentage = IntegerField(db_column='percentage', blank=True, null=True)
+    revert_message = CharField(db_column='revert_message', max_length=2048, blank=True)
 
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
@@ -210,6 +217,10 @@ class ReportSection(Model):
 
     def set_not_applicable(self, not_applicable):
         self.not_applicable = not_applicable
+        self.save()
+
+    def set_revert_message(self, revert_message):
+        self.revert_message = revert_message
         self.save()
 
     def copy_auditor_comment_original(self):

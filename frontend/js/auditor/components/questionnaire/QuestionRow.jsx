@@ -5,7 +5,7 @@ import { } from "react-router";
 
 import Alert from "react-s-alert";
 
-import { } from "../../../components/Icons.jsx";
+import { Cross } from "../../../components/Icons.jsx";
 import MarkdownViewer from "../../../../js/components/MarkdownViewer.jsx";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
@@ -31,6 +31,7 @@ class QuestionRow extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
+			revert_message: "",
 			answer_text: "",
 			touched: false,
 			focused: false,
@@ -40,7 +41,8 @@ class QuestionRow extends React.Component{
 	componentDidMount(){
 		if(this.props.answer){
 			this.setState({
-				answer_text: this.props.answer.answer_text
+				answer_text: this.props.answer.answer_text,
+				revert_message: this.props.answer.revert_message,
 			});
 		}
 	}
@@ -48,7 +50,8 @@ class QuestionRow extends React.Component{
 	componentWillReceiveProps(nextProps){
 		if(nextProps.answer){
 			this.setState({
-				answer_text: nextProps.answer.answer_text
+				answer_text: nextProps.answer.answer_text,
+				revert_message: nextProps.answer.revert_message,
 			});
 		}
 	}
@@ -122,6 +125,8 @@ class QuestionRow extends React.Component{
 				? <AnswerComment editable={false}
 					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id}
 					answer_comment={this.props.answer && this.props.answer.answer_comment }
+					required={this.props.q.optional_comment_required}
+					showErrors={this.props.showErrors}
 				/>
 				: ""
 			}
@@ -158,7 +163,7 @@ class QuestionRow extends React.Component{
 							</select>
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors}/>
 						</div>
 					</div>
 				);
@@ -183,7 +188,7 @@ class QuestionRow extends React.Component{
 							{checkbox_list}
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors}/>
 						</div>
 					</div>
 				);
@@ -201,7 +206,8 @@ class QuestionRow extends React.Component{
 			<tr className={goodClass || badClass}>
 				<td>
 					<div className="row">
-						<div className="col-xs-1 text-right">
+						<div className="col-xs-1" style={{display: "flex", justifyContent: "space-between"}}>
+							{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="text-danger" ><Cross/></div> : <div /> }
 							{this.props.q.sequence}
 						</div>
 						<div className="col-xs-10 col-md-5">
@@ -210,6 +216,9 @@ class QuestionRow extends React.Component{
 						<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
 							{answerElement}
 						</div>
+						{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
+							<p className="text-danger"><b>Revert message: </b>{this.state.revert_message}</p>
+						</div> : null}
 					</div>
 				</td>
 			</tr>

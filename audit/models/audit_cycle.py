@@ -94,6 +94,7 @@ class AuditCycle(Model):
     audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
     description = CharField(db_column='description', max_length=16384, blank=False)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)
+    quotation = ForeignKey('client.Quotation', related_name='audit_cycles', db_column='quotation_id', null=True, on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=16384, blank=True)
     check_points = CharField(db_column='check_points', max_length=16384, blank=True)
     questionnaire_type = ForeignKey('questionnaire.QuestionnaireType', db_column='questionnaire_type_id', null=True, on_delete=PROTECT)

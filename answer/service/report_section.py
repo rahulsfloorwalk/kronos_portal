@@ -42,6 +42,8 @@ def find_by_audit_store_and_section(audit_store_id, section_id):
 
 
 def submit_auditor_comment(audit_store_id, section_id, user_id, auditor_comment):
+    if len(auditor_comment) < ReportSection.MIN_AUDITOR_COMMENT_LEN:
+        raise AppLogicError("Section summary must be {} characters in length".format(ReportSection.MIN_AUDITOR_COMMENT_LEN))
     try:
         audit_store = AuditStore.objects.get(pk=audit_store_id)
         if(audit_store.status != AuditStore.ACKNOWLEDGED):

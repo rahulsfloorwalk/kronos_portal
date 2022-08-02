@@ -206,9 +206,9 @@ describe("<QuotationCategoryForm/>", () => {
 		);
 		wrapper.setState({
 			loading: false,
-			industry_category: "1",
-			audit_category: "1",
-			audit_type: "1"
+			industry: "1",
+			problemStatement: "1",
+			sampleQuestionnaireType: "1",
 		});
 		wrapper.find("button").simulate("click");
 		setTimeout(() => {
@@ -227,9 +227,9 @@ describe("<QuotationCategoryForm/>", () => {
 		);
 		wrapper.setState({
 			loading: false,
-			industry_category: "18",
-			audit_type: "5",
-			audit_category: "2",
+			industry: "18",
+			problemStatement: "5",
+			sampleQuestionnaireType: "2",
 			customize_alert: false,
 		});
 		wrapper.find("button").simulate("click");
@@ -238,9 +238,9 @@ describe("<QuotationCategoryForm/>", () => {
 
 		wrapper.setState({
 			loading: false,
-			industry_category: "1",
-			audit_type: "6",
-			audit_category: "4",
+			industry: "1",
+			problemStatement: "6",
+			sampleQuestionnaireType: "4",
 			customize_alert: false,
 		});
 		wrapper.find("button").simulate("click");
@@ -249,9 +249,9 @@ describe("<QuotationCategoryForm/>", () => {
 
 		wrapper.setState({
 			loading: false,
-			industry_category: "8",
-			audit_type: "3",
-			audit_category: "14",
+			industry: "8",
+			problemStatement: "3",
+			sampleQuestionnaireType: "14",
 			customize_alert: false,
 		});
 		wrapper.find("button").simulate("click");
@@ -271,9 +271,9 @@ describe("<QuotationPreview/>", ()=>{
 
 	it("renders the empty quotation", ()=>{
 		const quotation = {
-			industry_category: "3",
-			audit_type: "3",
-			audit_category: "5",
+			industry: "3",
+			problemStatement: "3",
+			sampleQuestionnaireType: "5",
 			profile: {
 				gender: [],
 				education: [],
@@ -291,7 +291,7 @@ describe("<QuotationPreview/>", ()=>{
 					id: 685,
 					name: "Mangolpuri",
 					tier: 3,
-					audit_count: 1
+					audit_count: "1"
 				}
 			]
 		};
@@ -300,16 +300,16 @@ describe("<QuotationPreview/>", ()=>{
 				id: 3,
 				name: "Fitness"
 			},
-			audit_type: {
+			problem_statement: {
 				id: 3,
 				name: "Online Audits"
 			},
-			audit_category: {
+			sample_questionnaire_type: {
 				id: 5,
 				name: "Integrity Study"
 			},
 			audit_locations: [{
-				audit_count: 1,
+				audit_count: "1",
 				audit_fee: 1900,
 				id: 685,
 				name: "Mangolpuri",
@@ -335,9 +335,9 @@ describe("<QuotationPreview/>", ()=>{
 
 	it("renders the quotation", (done)=>{
 		const quotation = {
-			industry_category: "3",
-			audit_type: "3",
-			audit_category: "5",
+			industry: "3",
+			problemStatement: "3",
+			sampleQuestionnaireType: "5",
 			profile: {
 				gender: [],
 				education: [],
@@ -355,7 +355,7 @@ describe("<QuotationPreview/>", ()=>{
 					id: 685,
 					name: "Mangolpuri",
 					tier: 3,
-					audit_count: 1
+					audit_count: "1"
 				}
 			]
 		};
@@ -365,16 +365,16 @@ describe("<QuotationPreview/>", ()=>{
 				id: 3,
 				name: "Fitness"
 			},
-			audit_type: {
+			problem_statement: {
 				id: 3,
 				name: "Online Audits"
 			},
-			audit_category: {
+			sample_questionnaire_type: {
 				id: 5,
 				name: "Integrity Study"
 			},
 			audit_locations: [{
-				audit_count: 1,
+				audit_count: "1",
 				audit_fee: 1900,
 				id: 685,
 				name: "Mangolpuri",

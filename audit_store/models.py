@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from django.conf import settings
-from django.db.models import QuerySet, Q
+from django.db.models import QuerySet, Q, Sum
 from django.db.models import Model, CharField, AutoField, DateField, ForeignKey, DateTimeField, IntegerField, BooleanField
 from django.db.models import PROTECT
 from django.db.transaction import atomic
@@ -190,6 +190,16 @@ class AuditStore(Model):
         self.modified_at = timezone.now()
         return super(AuditStore, self).save(*args, **kwargs)
 
+    def max_attachment_limit(self):
+        obj = self.audit.audit_cycle.proof_tags_list.aggregate(count = Sum("section_proof_tag__max_attachment_count"))
+        return obj['count'] if obj['count'] else 1
+
+    def attached_proof_count(self):
+        return self.attachments.filter(status = Attachment.ATTACHED).count()
+
+    def is_attachment_limit_exceed(self):
+        return True if self.attached_proof_count() > self.max_attachment_limit() else False
+
     def marks_obtained(self):
         return sum(rs.marks_obtained() for rs in self.report_sections.all())
 
@@ -299,10 +309,15 @@ class AuditStore(Model):
                     return False
 
                 for answer in answers:
+                    if answer.question.optional_comment_required and answer.answer_comment in (None, ''):
+                        raise AppLogicError("Report not submittable, some required answer comment is incomplete")
                     if not answer.question.question_type == Question.MULTISELECT:
                         if not answer.not_applicable and answer.answer_text in (None, ''):
                             _logger.debug("Report not submittable, some answer is incomplete")
                             return False
+
+        if self.is_attachment_limit_exceed():
+            raise AppLogicError("Attached proof limit exceed. Please remove unnecessary proofs.")
         return True
 
     def check_auditor_comment_len(self):
@@ -311,7 +326,7 @@ class AuditStore(Model):
             if report_section.section.hide_comment:
                 return True
             auditor_comment = report_section.auditor_comment
-            if len(auditor_comment) < 30:
+            if len(auditor_comment) < ReportSection.MIN_AUDITOR_COMMENT_LEN:
                 return False
         return True
 

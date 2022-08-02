@@ -7,6 +7,7 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
   </td>
   <td>
     Visit Time in
+    <br />
   </td>
   <td>
     <div
@@ -52,6 +53,17 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
       />
     </button>
   </td>
+  <td>
+    <button
+      className="btn btn-warning"
+      onClick={[Function]}
+      title="Revert message"
+    >
+      <span
+        className="glyphicon glyphicon-pencil"
+      />
+    </button>
+  </td>
 </tr>
 `;
 
@@ -62,6 +74,7 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
   </td>
   <td>
     Visit Time in
+    <br />
   </td>
   <td>
     <div
@@ -104,6 +117,17 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
     >
       <span
         className="glyphicon glyphicon-unchecked"
+      />
+    </button>
+  </td>
+  <td>
+    <button
+      className="btn btn-warning"
+      onClick={[Function]}
+      title="Revert message"
+    >
+      <span
+        className="glyphicon glyphicon-pencil"
       />
     </button>
   </td>

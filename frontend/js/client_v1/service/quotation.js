@@ -34,3 +34,11 @@ export function addQuotation(client_id, quotation){
 export function findQuotationById(quotation_id){
 	return $.get( url.api_base_path + `client_v1/quotation/${quotation_id}`);
 }
+
+export function get_uncomplete_quotation_by_client(client_id){
+	return $.get( url.api_base_path + `client_v1/client/${client_id}/quotation/uncomplete`);
+}
+
+export function find_audit_cycle_for_quotation(quotation_id){
+	return $.get( url.api_base_path + `client_v1/quotation/${quotation_id}/audit_cycle_preview`);
+}

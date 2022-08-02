@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.transaction import atomic
-from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField, BooleanField
+from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField, BooleanField, DecimalField
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT
 from django.conf import settings
@@ -11,10 +11,10 @@ from guardian.shortcuts import assign_perm
 
 from registration.models import GROUP_NAME_CLIENT
 
-from jsonschema import validate
-from jsonschema.exceptions import ValidationError
+# from jsonschema import validate
+# from jsonschema.exceptions import ValidationError
 
-from kronos.exceptions import AppLogicError
+# from kronos.exceptions import AppLogicError
 
 
 class ClientQuerySet(QuerySet):
@@ -246,112 +246,129 @@ class Quotation(Model):
 
     PAID = 'PAID'
     PENDING = 'PENDING'
+    COMPLETED = 'COMPLETED'
 
     STATUS_CHOICES = (
         (PAID, "Paid"),
         (PENDING, "Pending"),
+        (COMPLETED, "Completed"),
     )
 
-    QUOTATION_DATA_SCHEMA = {
-        "type": "object",
-        "required": ["industry", "audit_type", "audit_category", "audit_locations", "quotation_fee", "gst_amount", "gst", "discount", "payable_amount"],
-        "properties": {
-            "industry": {
-                "type": "object",
-                "required": ["id", "name"],
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                }
-            },
-            "audit_category": {
-                "type": "object",
-                "required": ["id", "name"],
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                }
-            },
-            "audit_type": {
-                "type": "object",
-                "required": ["id", "name"],
-                "properties": {
-                    "id": {
-                        "type": "integer"
-                    },
-                }
-            },
-            "audit_locations": {
-                "type": "array",
-                "uniqueItems": True,
-                "minItems": 1,
-                "items": {
-                    "type": "object",
-                    "required": ["id", "name", "tier", "audit_count", "audit_fee"],
-                    "properties": {
-                        "id": {
-                            "type": "integer",
-                        },
-                        "name": {
-                            "type": "string",
-                        },
-                        "tier": {
-                            "type": "integer"
-                        },
-                        "audit_count": {
-                            "type": "integer",
-                        },
-                        "audit_fee": {
-                            "type": "integer",
-                        },
-                    },
-                }
-            },
-            "quotation_fee": {
-                "type": "integer",
-            },
-            "gst_amount": {
-                "type": "integer",
-            },
-            "gst": {
-                "type": "string",
-            },
-            "discount": {
-                "type": "integer",
-            },
-            "payable_amount": {
-                "type": "integer",
-            },
-        },
-    }
+    _UNCOMPLETE_STATUS = (PENDING, PAID)
+
+    # QUOTATION_DATA_SCHEMA = {
+    #     "type": "object",
+    #     "required": ["industry", "audit_type", "audit_category", "audit_locations", "quotation_fee", "gst_amount", "gst", "discount", "payable_amount"],
+    #     "properties": {
+    #         "industry": {
+    #             "type": "object",
+    #             "required": ["id", "name"],
+    #             "properties": {
+    #                 "id": {
+    #                     "type": "integer"
+    #                 },
+    #             }
+    #         },
+    #         "audit_category": {
+    #             "type": "object",
+    #             "required": ["id", "name"],
+    #             "properties": {
+    #                 "id": {
+    #                     "type": "integer"
+    #                 },
+    #             }
+    #         },
+    #         "audit_type": {
+    #             "type": "object",
+    #             "required": ["id", "name"],
+    #             "properties": {
+    #                 "id": {
+    #                     "type": "integer"
+    #                 },
+    #             }
+    #         },
+    #         "audit_locations": {
+    #             "type": "array",
+    #             "uniqueItems": True,
+    #             "minItems": 1,
+    #             "items": {
+    #                 "type": "object",
+    #                 "required": ["id", "name", "tier", "audit_count", "audit_fee"],
+    #                 "properties": {
+    #                     "id": {
+    #                         "type": "integer",
+    #                     },
+    #                     "name": {
+    #                         "type": "string",
+    #                     },
+    #                     "tier": {
+    #                         "type": "integer"
+    #                     },
+    #                     "audit_count": {
+    #                         "type": "integer",
+    #                     },
+    #                     "audit_fee": {
+    #                         "type": "integer",
+    #                     },
+    #                 },
+    #             }
+    #         },
+    #         "quotation_fee": {
+    #             "type": "integer",
+    #         },
+    #         "gst_amount": {
+    #             "type": "integer",
+    #         },
+    #         "gst": {
+    #             "type": "string",
+    #         },
+    #         "discount": {
+    #             "type": "integer",
+    #         },
+    #         "payable_amount": {
+    #             "type": "integer",
+    #         },
+    #     },
+    # }
 
     id = AutoField(db_column= 'id', primary_key=True)
     quotation_data = JSONField(db_column='quotation_data', default=dict, blank=False)
     status = CharField(db_column='status', max_length=10, choices=STATUS_CHOICES)
+    industry = ForeignKey('questionnaire.Industry', related_name='quotation', db_column='industry_id', on_delete=PROTECT)
+    problem_statement = ForeignKey('questionnaire.ProblemStatement', related_name='quotation', db_column='problem_statement_id', on_delete=PROTECT)
+    sample_questionnaire_type = ForeignKey('questionnaire.SampleQuestionnaireType', related_name='quotation', db_column='sample_questionnaire_type_id', on_delete=PROTECT)
+    amount = DecimalField(db_column='amount', max_digits=10, decimal_places=2)
+    payable_amount = DecimalField(db_column='payable_amount', max_digits=10, decimal_places=2)
+    gst = DecimalField(db_column='gst', max_digits=3, decimal_places=1)
+    discount = DecimalField(db_column='discount', max_digits=3, decimal_places=1)
     client = ForeignKey(Client, related_name='quotation', db_column='client_id', on_delete=PROTECT)
     payment = GenericRelation('billing.payment', related_query_name='quotations')
     created_at = DateTimeField(db_column="created_at", null=True)
     modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    @property
+    def gst_amount(self):
+        gst = int(settings.CLIENT_QUOTATION_GST) if settings.CLIENT_QUOTATION_GST else 0
+        return (self.amount * gst) / 100
+
 
     def save(self, *args, **kwargs):
         ''' On save, update timestamps '''
         if not self.id:
             self.created_at = timezone.now()
         self.modified_at = timezone.now()
-        self.clean()
+        # self.clean()
         return super(Quotation, self).save(*args, **kwargs)
 
-    def __validate_data(self):
-        if self.quotation_data:
-            try:
-                validate(self.quotation_data, self.QUOTATION_DATA_SCHEMA)
-            except ValidationError as v:
-                raise AppLogicError(v.message) from v
-        else:
-            raise AppLogicError('Invalid quotation')
+    # def __validate_data(self):
+    #     if self.quotation_data:
+    #         try:
+    #             validate(self.quotation_data, self.QUOTATION_DATA_SCHEMA)
+    #         except ValidationError as v:
+    #             raise AppLogicError(v.message) from v
+    #     else:
+    #         raise AppLogicError('Invalid quotation')
 
-    def clean(self):
-        self.__validate_data()
-        return super(Quotation, self).clean()
+    # def clean(self):
+    #     self.__validate_data()
+    #     return super(Quotation, self).clean()

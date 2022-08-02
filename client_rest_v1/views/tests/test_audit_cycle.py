@@ -42,8 +42,6 @@ class AuditCycleViewTestCase(ClientAPITestCase):
             "end_date": "2018-09-29",
             "type": "GENERAL",
             "status": "ACTIVE",
-            "earnings_per_audit": 200,
-            "reimbursement": 300,
             "description": "This is a sample description",
             "created_by_client": True
         }

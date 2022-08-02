@@ -282,6 +282,9 @@ def get_markup_price(base_rate, markup):
     else:
         return (markup / 100) * base_rate
 
+def get_gst_amount(amount, gst=0):
+    return round((amount * gst) / 100)
+
 def find_audit_volume_discount(audit_volume):
     if(audit_volume <= 10):
         return audit_volume_discount["10"]

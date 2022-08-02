@@ -47,8 +47,16 @@ import BankInfoForm from "./profile/BankInfoForm.jsx";
 
 import PaymentList from "./payment/PaymentList.jsx";
 
-import QuestionnaireInsertForm from "./questionnaire/QuestionnaireInsertForm.jsx";
 import QuotationDetail from "./quotation/QuotationDetail.jsx";
+
+import ProjectSetupDetail from "./project_setup/ProjectSetupDetail.jsx";
+import QuotationPreview from "./project_setup/QuotationPreview.jsx";
+import _AuditCycleForm from "./project_setup/AuditCycleForm.jsx";
+import AuditCyclePreview from "./project_setup/AuditCyclePreview.jsx";
+import StoreDetail from "./project_setup/store/StoreDetail.jsx";
+import QuestionnaireInsertForm from "./project_setup/QuestionnaireInsertForm.jsx";
+import AuditAddForm from "./project_setup/AuditAddForm.jsx";
+
 
 const IndexComponent = () => null;
 
@@ -89,7 +97,6 @@ const Routes = () => (<Router history={hashHistory}>
 			<Route path="audit_alignment_factors" component={AuditAlignmentFactors} />
 
 			<Route path="questionnaire" component={SectionList}>
-				<Route path="insert" component={QuestionnaireInsertForm}/>
 				<Route path="section/copy" component={SectionCopyForm}/>
 				<Route path="section/add" component={SectionAddForm}/>
 				<Route path="section/:sectionId/edit" component={SectionEditForm}/>
@@ -114,7 +121,17 @@ const Routes = () => (<Router history={hashHistory}>
 		<Route path="/faq" component={FAQ}/>
 		<Route path="/contact_us" component={ContactUs}/>
 
-		<Route path="/quotation" component={QuotationDetail} />
+		<Route path="/project_setup" component={ProjectSetupDetail} >
+			<Route path="quotation" component={QuotationDetail} />
+			<Route path="quotation_preview" component={QuotationPreview} />
+			<Route path="audit_cycle" component={_AuditCycleForm} />
+			<Route path="audit_cycle_preview" component={AuditCyclePreview} />
+			<Route path="store" component={StoreDetail}>
+				<Route path="import" component={StoreImportForm} />
+			</Route>
+			<Route path=":auditCycleId/audit" component={AuditAddForm} />
+			<Route path=":auditCycleId/questionnaire" component={QuestionnaireInsertForm} />
+		</Route>
 	</Route>
 </Router>);
 

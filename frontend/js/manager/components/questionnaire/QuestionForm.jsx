@@ -38,7 +38,8 @@ class QuestionForm extends React.Component {
 		this.setState({
 			form: Object.assign({}, this.state.form, {
 				section: this.props.params.sectionId,
-				hide_question: false
+				hide_question: false,
+				optional_comment_required: false,
 			})
 		});
 	}
@@ -75,7 +76,8 @@ class QuestionForm extends React.Component {
 						max_marks: "",
 						question_type: "",
 						question_txt: "",
-						hide_question: false
+						hide_question: false,
+						optional_comment_required: false,
 					})
 				});
 				hashHistory.push(this.props.location.pathname);
@@ -130,6 +132,12 @@ class QuestionForm extends React.Component {
 				<FormInput label="Hide Question" type="checkbox" checked={this.state.form.hide_question} name="hide_question" onChange={this.inputChanged} errors={this.state.errors.hide_question}/>
 			</div>
 		);
+
+		let optional_comment_required_div = (
+			<div className="col-md-12">
+				<FormInput label="Optional comment required ?" type="checkbox" checked={this.state.form.optional_comment_required} name="optional_comment_required" onChange={this.inputChanged} errors={this.state.errors.optional_comment_required}/>
+			</div>
+		);
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit} className="row">
@@ -164,6 +172,7 @@ class QuestionForm extends React.Component {
 						</div>
 					</div>
 					{hide_question_div}
+					{optional_comment_required_div}
 					<div className="col-md-12">
 						<SaveButton/>&nbsp;
 						{ ! this.props.params.questionId ?

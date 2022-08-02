@@ -2,6 +2,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.db.transaction import atomic
 from django.template.loader import render_to_string
+from audit.models.audit import AuditLocation
 
 from billing.models import Payment
 from client.models import BankInfo, Quotation
@@ -27,8 +28,8 @@ def create_payment_order(client_id: int, data: dict) -> dict:
     find_client_by_id(client_id)
     checkout_data = get_checkout_data(data)
     quotation = quotation_service.find_by_id(data['quotation_id'])
-    gst = int(quotation.quotation_data['gst'])
-    payable_amount = int(data['payable_amount'])
+    gst = int(quotation.gst)
+    payable_amount = int(quotation.payable_amount)
 
     if quotation.status == Quotation.PAID:
         raise AppLogicError("Quotation is already paid")
@@ -194,25 +195,29 @@ def get_invoice_data_from_payment_id(payment_id: int, client_id: int) -> dict:
     except Quotation.DoesNotExist as e:
         raise AppLogicError("Quotation not found")
 
-    if not quotation.quotation_data:
-        raise AppLogicError("Invalid quotation")
-
     checkout_data = payment.payment_data['checkout'] if 'checkout' in payment.payment_data else {}
-    quotation_data = quotation.quotation_data
+    audit_locations = AuditLocation.objects.filter(quotation = quotation.id)
+    location_list = []
+    for loc in audit_locations:
+        location_list.append({
+            'name': loc.city.name,
+            'audit_count': loc.count,
+            'audit_fee': loc.audit_fee
+        })
 
     data = {
         'invoice_no': payment.invoice_number,
         'invoice_date': payment.invoice_date,
         'quotation': {
-            'industry': quotation_data['industry'],
-            'audit_type': quotation_data['audit_type'],
-            'audit_category': quotation_data['audit_category'],
-            'audit_locations': quotation_data['audit_locations'],
-            'payable_amount': quotation_data['payable_amount'],
-            'gst': quotation_data['gst'],
-            'gst_amount': quotation_data['gst_amount'],
-            'discount': quotation_data['discount'],
-            'quotation_fee': quotation_data['quotation_fee'],
+            'industry': quotation.industry,
+            'problem_statement': quotation.problem_statement,
+            'sample_questionnaire_type': quotation.sample_questionnaire_type,
+            'audit_locations': location_list,
+            'payable_amount': quotation.payable_amount,
+            'gst': quotation.gst,
+            'gst_amount': quotation.gst_amount,
+            'discount': quotation.discount,
+            'amount': quotation.amount,
         },
         'to': {
             'company_name': checkout_data.get('billing_name', client.name),

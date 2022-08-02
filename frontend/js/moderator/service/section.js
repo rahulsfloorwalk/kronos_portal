@@ -31,6 +31,17 @@ export function submitAuditorComment(auditStoreId, sectionId, auditorComment){
 	});
 }
 
+export function setSectionRevertMessage(audit_store_id, sectionId, revert_message){
+	return $.ajax({
+		url: url.api_base_path + `moderator/audit_store/${audit_store_id}/section/${sectionId}/section_revert_message`,
+		method: "POST",
+		data: JSON.stringify({
+			revert_message
+		}),
+		contentType: "application/json"
+	});
+}
+
 export function setNotApplicable(auditStoreId, sectionId, notApplicable){
 	return $.ajax({
 		type: "POST",

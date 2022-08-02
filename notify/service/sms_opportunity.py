@@ -5,6 +5,7 @@ from django.db.transaction import atomic
 
 from audit.models import AuditCycle
 from audit.service import audit_cycle as audit_cycle_service
+from auditor.models import Preferences
 from manager.models import City
 from notify.service import opportunity_notification as opp_notification_service
 from ..models import OpportunitySmsRecord
@@ -85,7 +86,7 @@ def send_opportunity_sms_for_record(opportunity_record_id):
             if not user.is_active or not user.preferences.receive_new_opportunities_sms:
                 _logger.warn("skip auditor with user_id: %s", user_id)
                 continue
-        except OpportunitySmsRecord.DoesNotExist as e:
+        except Preferences.DoesNotExist as e:
             _logger.warn("skip auditor with user_id: %s", user_id)
             continue
 

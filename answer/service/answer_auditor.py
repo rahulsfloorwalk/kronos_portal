@@ -21,3 +21,7 @@ def add_multiselect_answer_questions(audit_store_id, user_id):
             answer.answer_text_original = ""
             answer.marks_obtained = 0
             answer.save()
+
+def remove_answer_revert_message_for_auditor(audit_store_id, user_id):
+    audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)
+    Answer.objects.filter(audit_store__id=audit_store.id).update(revert_message="")

@@ -10,6 +10,7 @@ from audit.models import Audit
 
 from ..serializers import AuditSerializer
 from audit.service import audit_service
+from kronos.exceptions import AppLogicError
 
 class AuditDeSerializer(ModelSerializer):
     class Meta:
@@ -46,11 +47,20 @@ class AuditByAuditCycle(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
+        'POST': [GROUP_NAME_CLIENT],
     }
     def get(self, request, audit_cycle_id, format=None):
         audits = audit_service.find_audits_by_audit_cycle_id(audit_cycle_id)
         serial_audits = AuditSerializer(audits, many=True).data
         return Response(serial_audits)
+
+    def post(self, request, audit_cycle_id):
+        audit_data = request.data.get('audit_data', '')
+        if audit_data:
+            audit_service.add_bulk_audit(audit_data['client_id'], audit_cycle_id, audit_data['audits'])
+        else:
+            raise AppLogicError("Please select data")
+        return Response(status=201)
 
 class AuditIdView(APIView):
     permission_classes = [HasGroupPermission]

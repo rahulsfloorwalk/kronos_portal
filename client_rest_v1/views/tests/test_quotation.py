@@ -1,8 +1,11 @@
 from django.urls import reverse
 from faker import Faker
+from model_mommy import mommy
 
 from expects import expect, equal
 from .utils import ClientAPITestCase
+
+from questionnaire.models.questionnaire import Industry, ProblemStatement, SampleQuestionnaireType
 
 fake = Faker()
 
@@ -29,10 +32,13 @@ class QuotationTestCase(ClientAPITestCase):
 
     def test_get_retrieves_quotation_preview(self):
         self.maxDiff = None
+        industry = mommy.make(Industry, id=10, name="Banking/Finance", base_rate=1000)
+        problem_statement = mommy.make(ProblemStatement, id=2, industry=industry, name="Mystery Audit -Telephonic", markup=20)
+        mommy.make(SampleQuestionnaireType, id=3, problem_statement=problem_statement, name="Consumer insights", markup=20)
         quotation_data = {
             "industry": "10",
-            "audit_type": "2",
-            "audit_category": "3",
+            "problem_statement": "2",
+            "sample_questionnaire_type": "3",
             "audit_locations": [
                 {
                     "id": 138,
@@ -58,18 +64,23 @@ class QuotationTestCase(ClientAPITestCase):
                 'marital_status': [],
                 'occupation': [],
                 'report_rating': []
-            }
+            },
+            "quotation_fee": 5400,
+            "discount": 0,
+            "gst": "18",
+            "gst_amount": 972,
+            "payable_amount": 6372
         }
         response_data = {
             "industry": {
                 "id": 10,
                 "name": "Banking/Finance"
             },
-            "audit_type": {
+            "problem_statement": {
                 "id": 2,
                 "name": "Mystery Audit -Telephonic"
             },
-            "audit_category": {
+            "sample_questionnaire_type": {
                 "id": 3,
                 "name": "Consumer insights"
             },

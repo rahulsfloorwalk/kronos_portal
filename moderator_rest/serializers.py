@@ -277,6 +277,7 @@ class AnswerSerializer(ModelSerializer):
             'audit_store',
             'answer_text',
             'answer_comment',
+            'revert_message',
             'marks_obtained',
             'not_applicable',
             'get_answer_text_list'
@@ -301,6 +302,7 @@ class ReportSectionSerializer(ModelSerializer):
             'id',
             'audit_store',
             'section',
+            'revert_message',
             'auditor_comment',
             'pm_comment',
             'not_applicable',

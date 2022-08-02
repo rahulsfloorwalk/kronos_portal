@@ -16,6 +16,7 @@ class IndustrySerializer(ModelSerializer):
         fields = (
             'id',
             'name',
+            'base_rate',
         )
         read_only_fields = fields
 
@@ -27,6 +28,7 @@ class ProblemStatementSerializer(ModelSerializer):
             'id',
             'name',
             'industry',
+            'markup',
         )
         read_only_fields = fields
 
@@ -37,7 +39,8 @@ class QuestionnaireTypeSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
-            'problem_statement'
+            'problem_statement',
+            'markup',
         )
         read_only_fields = fields
 
