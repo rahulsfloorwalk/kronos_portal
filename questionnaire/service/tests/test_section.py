@@ -66,7 +66,7 @@ class SectionTestCase(TestCase):
         proof_tag_obj = mommy.make(ProofTag, _quantity=4)
 
         for index, tag in enumerate(proof_tag_obj):
-            save_section_proof_tag(sections[index].id, audit_cycle.id, [tag.id], [tag.id])
+            save_section_proof_tag(sections[index].id, audit_cycle.id, [{"id":tag.id, "max_attachment_count": 2, "is_required": True}])
             sections[index].refresh_from_db()
 
         another_audit_cycle = mommy.make(AuditCycle, status=AuditCycle.ACTIVE)

@@ -19,5 +19,5 @@ class SectionProofTag(APIView):
 
     def post(self, request, section_id):
         section_proof_tags = section_proof_tag.save_section_proof_tag(section_id, request.data['audit_cycle_id'],
-                                                                      request.data['proof_tag_list'], request.data['required_proof_tag_list'])
+                                                                      request.data['proof_tag_list'])
         return Response(section_proof_tags)

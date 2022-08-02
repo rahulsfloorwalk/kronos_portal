@@ -398,7 +398,8 @@ class AuditStoreSerializer(ModelSerializer):
             'audit',
             'report_summary',
             'user',
-            'get_date_diff'
+            'get_date_diff',
+            'max_attachment_limit',
         )
         read_only_fields = fields
 
@@ -413,6 +414,7 @@ class QuestionSerializer(ModelSerializer):
             'question_data',
             'section',
             'hide_question',
+            'optional_comment_required'
         )
         read_only_fields = fields
 

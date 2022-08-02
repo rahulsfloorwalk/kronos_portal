@@ -1,5 +1,5 @@
 from django.utils import timezone
-from django.db.models import Model, AutoField, ForeignKey, OneToOneField, DateTimeField, BooleanField
+from django.db.models import Model, AutoField, ForeignKey, OneToOneField, DateTimeField, BooleanField, IntegerField
 from django.db.models import PROTECT
 from audit.models.proof_tag import AuditCycleProofTagList
 from .section import Section
@@ -11,6 +11,7 @@ class SectionProofTag(Model):
                                           db_column='audit_cycle_proof_tag_id', on_delete=PROTECT)
     section = ForeignKey(Section, related_name='section_proof_tag', db_column='section_id', on_delete=PROTECT)
     is_required = BooleanField(default=False, blank=False)
+    max_attachment_count = IntegerField(db_column='max_attachment_count', default=2)
     created_at = DateTimeField(db_column='created_at', null=True)
 
     def save(self, *args, **kwargs):

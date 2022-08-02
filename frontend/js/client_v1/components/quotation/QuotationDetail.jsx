@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { hashHistory } from "react-router";
 import PropTypes from "prop-types";
 import Select from "react-select";
 
@@ -7,7 +8,8 @@ import { Cross, Envelope, Earphone } from "../../../components/Icons.jsx";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
 import { fetchCities, fetchStates } from "../../actions/location.js";
-import { fetchAuditCategory, fetchAuditType, fetchIndustry, fetchQuotationPreview, addQuotation } from "../../service/quotation.js";
+import { fetchQuotationPreview, addQuotation } from "../../service/quotation.js";
+import { fetchIndustry, fetchProblemStatements, fetchSampleQuestionnaireType } from "../../service/questionnaire.js";
 import Loading from "../../../components/Loading.jsx";
 import AuditorProfileForm from "./AuditorProfileForm.jsx";
 import QuotationPaymentForm from "./QuotationPaymentForm.jsx";
@@ -58,33 +60,52 @@ export class QuotationCategoryForm extends Component{
 	static propTypes = {
 		stepComplete: PropTypes.bool,
 		onQuotationChange: PropTypes.func,
+		industry: PropTypes.string,
+		problemStatement: PropTypes.string,
+		sampleQuestionnaireType: PropTypes.string,
 	};
 
 	state = {
-		industry_list: [],
-		audit_category_list: [],
-		audit_type_list: [],
-		industry_category: "",
-		audit_type: "",
-		audit_category: "",
+		industryList: [],
+		problemStatementList: [],
+		sampleQuestionnaireTypeList: [],
+		industry: "",
+		problemStatement: "",
+		sampleQuestionnaireType: "",
 		loading: false,
 		customize_alert: false,
 	};
 
 	componentDidMount(){
 		this.setLoading(true);
-		Promise.all([
-			fetchIndustry(),
-			fetchAuditCategory(),
-			fetchAuditType(),
-		]).then(([industry_list=[], audit_category_list=[], audit_type_list=[]]) => {
+		fetchIndustry().then((industryList) => {
 			this.setState({
-				industry_list,
-				audit_category_list,
-				audit_type_list,
+				industryList,
 				loading: false,
 			});
 		}).catch(()=>this.setLoading(false));
+	}
+
+	componentWillReceiveProps(ownProps){
+		if(ownProps.industry && ownProps.problemStatement && ownProps.sampleQuestionnaireType){
+			this.setState({
+				industry: ownProps.industry,
+				problemStatement: ownProps.problemStatement,
+				sampleQuestionnaireType: ownProps.sampleQuestionnaireType,
+				loading: false,
+			});
+			fetchProblemStatements(ownProps.industry).then((problemStatementList) => {
+				this.setState({
+					problemStatementList
+				});
+			});
+
+			fetchSampleQuestionnaireType(ownProps.problemStatement).then((sampleQuestionnaireTypeList) => {
+				this.setState({
+					sampleQuestionnaireTypeList
+				});
+			});
+		}
 	}
 
 	onModalClose = () => {
@@ -101,11 +122,11 @@ export class QuotationCategoryForm extends Component{
 	};
 
 	onSubmit = () => {
-		if(this.state.industry_category == "" || this.state.audit_type == "" || this.state.audit_category == ""){
+		if(this.state.industry == "" || this.state.problemStatement == "" || this.state.sampleQuestionnaireType == ""){
 			alert("Please select all fields");
 			return false;
 		}
-		if(this.state.industry_category == "18" || this.state.audit_type == "6" || this.state.audit_category == "14"){
+		if(this.state.industry == "18" || this.state.problemStatement == "6" || this.state.sampleQuestionnaireType == "14"){
 			this.setState((prevState)=>{
 				return {
 					...prevState,
@@ -115,11 +136,33 @@ export class QuotationCategoryForm extends Component{
 			return false;
 		}
 		let quotation = {
-			industry_category: this.state.industry_category,
-			audit_type: this.state.audit_type,
-			audit_category: this.state.audit_category,
+			industry: this.state.industry,
+			problemStatement: this.state.problemStatement,
+			sampleQuestionnaireType: this.state.sampleQuestionnaireType,
 		};
 		this.props.onQuotationChange(quotation);
+	};
+
+	onIndustryChanged = (e) => {
+		this.fieldChanged(e);
+		if(e.target.value){
+			fetchProblemStatements(e.target.value).then((problemStatementList) => {
+				this.setState({
+					problemStatementList
+				});
+			});
+		}
+	};
+
+	onProblemStatementChanged = (e) => {
+		this.fieldChanged(e);
+		if(e.target.value){
+			fetchSampleQuestionnaireType(e.target.value).then((sampleQuestionnaireTypeList) => {
+				this.setState({
+					sampleQuestionnaireTypeList
+				});
+			});
+		}
 	};
 
 	setLoading = (loading) => this.setState(prevState => Object.assign({}, prevState, { loading }));
@@ -129,40 +172,40 @@ export class QuotationCategoryForm extends Component{
 			return <Loading />;
 		}
 		let industryOptions = [];
-		let auditTypeOptions = [];
-		let auditCategoryOptions = [];
+		let problemStatementOptions = [];
+		let sampleQuestionnaireTypeOptions = [];
 
-		for(let i of this.state.industry_list){
+		for(let i of this.state.industryList){
 			industryOptions.push(<option key={i.id} value={i.id}>{i.name}</option>);
 		}
 
-		for(let i of this.state.audit_category_list){
-			auditCategoryOptions.push(<option key={i.id} value={i.id}>{i.name}</option>);
+		for(let i of this.state.problemStatementList){
+			problemStatementOptions.push(<option key={i.id} value={i.id}>{i.name}</option>);
 		}
 
-		for(let i of this.state.audit_type_list){
-			auditTypeOptions.push(<option key={i.id} value={i.id}>{i.name}</option>);
+		for(let i of this.state.sampleQuestionnaireTypeList){
+			sampleQuestionnaireTypeOptions.push(<option key={i.id} value={i.id}>{i.name}</option>);
 		}
 		return (
 			<div className="panel panel-default">
 				<div className="panel-heading"><b>Build your audit program</b></div>
 				<div className="panel-body">
 					<div className="col-md-4">
-						<FormSelect label="Select Industry Category" value={this.state.industry_category} name="industry_category" onChange={this.fieldChanged} disabled={this.props.stepComplete}>
+						<FormSelect label="Select Industry" value={this.state.industry} name="industry" onChange={this.onIndustryChanged} disabled={this.props.stepComplete}>
 							<option value="">----</option>
 							{industryOptions}
 						</FormSelect>
 					</div>
 					<div className="col-md-4">
-						<FormSelect label="Select Audit Category" value={this.state.audit_category} name="audit_category" onChange={this.fieldChanged} disabled={this.props.stepComplete}>
+						<FormSelect label="Select Audit Category" value={this.state.problemStatement} name="problemStatement" onChange={this.onProblemStatementChanged} disabled={this.props.stepComplete}>
 							<option value="">----</option>
-							{auditCategoryOptions}
+							{problemStatementOptions}
 						</FormSelect>
 					</div>
 					<div className="col-md-4">
-						<FormSelect label="Select Audit Type" value={this.state.audit_type} name="audit_type" onChange={this.fieldChanged} disabled={this.props.stepComplete}>
+						<FormSelect label="Select Audit Type" value={this.state.sampleQuestionnaireType} name="sampleQuestionnaireType" onChange={this.fieldChanged} disabled={this.props.stepComplete}>
 							<option value="">----</option>
-							{auditTypeOptions}
+							{sampleQuestionnaireTypeOptions}
 						</FormSelect>
 					</div>
 					{this.props.stepComplete == false ?
@@ -187,6 +230,7 @@ class QuotationCitySelectForm extends Component{
 		cities: PropTypes.array,
 		onQuotationChange: PropTypes.func,
 		prevStep: PropTypes.func,
+		selectedCities: PropTypes.array,
 	};
 
 	state = {
@@ -199,6 +243,12 @@ class QuotationCitySelectForm extends Component{
 
 	componentDidMount(){
 		this.props.dispatch(fetchStates());
+	}
+
+	componentWillReceiveProps(ownProps){
+		if(ownProps.selectedCities){
+			this.setState({selectedCities: ownProps.selectedCities});
+		}
 	}
 
 	onStateChanged = (e) => {
@@ -372,14 +422,14 @@ class QuotationCitySelectForm extends Component{
 export class QuotationPreview extends Component{
 	static propTypes = {
 		quotation: PropTypes.shape({
-			industry_category: PropTypes.string.isRequired,
-			audit_type: PropTypes.string.isRequired,
-			audit_category: PropTypes.string.isRequired,
+			industry: PropTypes.string.isRequired,
+			problemStatement: PropTypes.string.isRequired,
+			sampleQuestionnaireType: PropTypes.string.isRequired,
 			profile: PropTypes.object.isRequired,
 			selectedCities: PropTypes.arrayOf(PropTypes.shape({
 				id: PropTypes.number.isRequired,
 				name: PropTypes.string.isRequired,
-				audit_count: PropTypes.number.isRequired,
+				audit_count: PropTypes.string.isRequired,
 			})).isRequired,
 		}).isRequired,
 		stepComplete: PropTypes.bool.isRequired,
@@ -393,40 +443,44 @@ export class QuotationPreview extends Component{
 		loading: false,
 		quotation: {
 			industry: "",
-			audit_type: "",
-			audit_category: "",
+			problem_statement: "",
+			sample_questionnaire_type: "",
 			audit_locations: "",
 			quotation_fee: "",
 			gst_amount: "",
 			gst: "",
-			discount: ""
+			discount: "",
+			payable_amount: "",
 		},
+		auditor_profile: {}
 	};
 
 	componentDidMount(){
 		this.setLoading(true);
 		if(this.props.quotation){
 			let payload = {
-				industry: this.props.quotation.industry_category,
-				audit_type: this.props.quotation.audit_type,
-				audit_category: this.props.quotation.audit_category,
+				industry: this.props.quotation.industry,
+				problem_statement: this.props.quotation.problemStatement,
+				sample_questionnaire_type: this.props.quotation.sampleQuestionnaireType,
 				audit_locations: this.props.quotation.selectedCities,
 				auditor_profile: this.props.quotation.profile,
 			};
-			fetchQuotationPreview(payload).then((quotation) => this.setState({quotation, loading: false}));
+			fetchQuotationPreview(payload).then((quotation) => this.setState({quotation, auditor_profile: this.props.quotation.profile, loading: false}));
 		}
 	}
 
 	componentWillReceiveProps(ownProps){
-		this.setLoading(true);
-		let payload = {
-			industry: ownProps.quotation.industry_category,
-			audit_type: ownProps.quotation.audit_type,
-			audit_category: ownProps.quotation.audit_category,
-			audit_locations: ownProps.quotation.selectedCities,
-			auditor_profile: ownProps.quotation.profile,
-		};
-		fetchQuotationPreview(payload).then((quotation) => this.setState({quotation, loading: false}));
+		if(ownProps.quotation){
+			this.setLoading(true);
+			let payload = {
+				industry: ownProps.quotation.industry,
+				problem_statement: ownProps.quotation.problemStatement,
+				sample_questionnaire_type: ownProps.quotation.sampleQuestionnaireType,
+				audit_locations: ownProps.quotation.selectedCities,
+				auditor_profile: ownProps.quotation.profile,
+			};
+			fetchQuotationPreview(payload).then((quotation) => this.setState({quotation, auditor_profile:ownProps.quotation.profile, loading: false}));
+		}
 	}
 
 	setLoading = (loading) => this.setState(prevState => Object.assign({}, prevState, { loading }));
@@ -442,7 +496,23 @@ export class QuotationPreview extends Component{
 			return false;
 		}
 		else{
-			addQuotation(this.props.clientId,this.state).then((quotation) => this.props.openPaymentForm(quotation.id, quotation.quotation_data.payable_amount));
+			const {industry, problem_statement, sample_questionnaire_type, audit_locations, quotation_fee, gst, discount, payable_amount} = this.state.quotation;
+			let payload = {
+				industry: industry.id,
+				problem_statement: problem_statement.id,
+				sample_questionnaire_type: sample_questionnaire_type.id,
+				audit_locations: audit_locations.map((obj)=> ({
+					id: obj.id,
+					audit_count: obj.audit_count,
+					audit_fee: obj.audit_fee,
+				})),
+				payable_amount: payable_amount,
+				quotation_fee: quotation_fee,
+				gst: gst,
+				discount: discount,
+				auditor_profile: this.state.auditor_profile,
+			};
+			addQuotation(this.props.clientId, payload).then((quotation) => this.props.openPaymentForm(quotation.id, quotation.payable_amount));
 		}
 	};
 
@@ -457,7 +527,7 @@ export class QuotationPreview extends Component{
 				</div>
 			);
 		}
-		let {industry, audit_type, audit_category, audit_locations, quotation_fee, gst_amount, gst, discount, payable_amount} = this.state.quotation;
+		let {industry, problem_statement, sample_questionnaire_type, audit_locations, quotation_fee, gst_amount, gst, discount, payable_amount} = this.state.quotation;
 
 		let audit_location_options = [];
 		if(audit_locations){
@@ -500,10 +570,10 @@ export class QuotationPreview extends Component{
 									{industry.name}
 								</td>
 								<td className="text-center">
-									{audit_category.name}
+									{problem_statement.name}
 								</td>
 								<td className="text-center">
-									{audit_type.name}
+									{sample_questionnaire_type.name}
 								</td>
 							</tr>
 						</tbody>
@@ -579,6 +649,7 @@ export class QuotationPreview extends Component{
 class QuotationDetail extends Component {
 	static propTypes = {
 		clientId: PropTypes.number,
+		quotation: PropTypes.object,
 		client: PropTypes.object,
 		states: PropTypes.object,
 		cities: PropTypes.array,
@@ -589,6 +660,55 @@ class QuotationDetail extends Component {
 		quotation: {},
 		step: 1,
 	};
+
+	componentDidMount(){
+		if(this.props.clientId && Object.keys(this.props.quotation).length > 0){
+			let quotation = this.props.quotation;
+			if(quotation.status == "PAID"){
+				hashHistory.replace("/project_setup/quotation_preview");
+			}
+			let quotation_payload = {
+				industry: quotation.industry.id,
+				problemStatement: quotation.problem_statement.id,
+				sampleQuestionnaireType: quotation.sample_questionnaire_type.id,
+				selectedCities: quotation.audit_locations.map((obj)=>({
+					id: obj.city.id,
+					name: obj.city.name,
+					audit_count: obj.count,
+					tier: obj.city.tier,
+				})),
+				payable_amount: quotation.payable_amount,
+				auditor_profile: quotation.quotation_data.auditor_profile,
+				quotationId: quotation.id
+			};
+			this.setState({loading: false, quotation: quotation_payload, step: 5});
+		}
+	}
+
+	componentWillReceiveProps(ownProps){
+		if(Object.keys(ownProps.quotation).length > 0){
+			let quotation = ownProps.quotation;
+			if(quotation.status == "PAID"){
+				hashHistory.replace("/project_setup/quotation_preview");
+			}
+
+			let quotation_payload = {
+				industry: quotation.industry.id,
+				problemStatement: quotation.problem_statement.id,
+				sampleQuestionnaireType: quotation.sample_questionnaire_type.id,
+				selectedCities: quotation.audit_locations.map((obj)=>({
+					id: obj.city.id,
+					name: obj.city.name,
+					audit_count: obj.count,
+					tier: obj.city.tier,
+				})),
+				payable_amount: quotation.payable_amount,
+				auditor_profile: quotation.quotation_data.auditor_profile,
+				quotationId: quotation.id
+			};
+			this.setState({loading: false, quotation: quotation_payload, step: 5});
+		}
+	}
 
 	onQuotationChange = (quotation) => {
 		this.setState((prevState) => {
@@ -618,15 +738,13 @@ class QuotationDetail extends Component {
 	render(){
 		return (
 			<div className="col-md-12">
-				<h2>Create quotation</h2>
-				<hr />
-				<QuotationCategoryForm stepComplete={this.state.step != 1} onQuotationChange={this.onQuotationChange} />
-				<AuditorProfileForm isFormDisabled={this.state.step != 2} prevStep={this.prevStep} onSubmit={this.onQuotationChange} />
-				<QuotationCitySelectForm stepComplete={this.state.step != 3} prevStep={this.prevStep} dispatch={this.props.dispatch} states={this.props.states} cities={this.props.cities} onQuotationChange={this.onQuotationChange} />
-				{this.state.step == 4 || this.state.step == 5 ?
+				<QuotationCategoryForm stepComplete={this.state.step != 1} onQuotationChange={this.onQuotationChange} industry={this.state.quotation.industry} problemStatement={this.state.quotation.problemStatement} sampleQuestionnaireType={this.state.quotation.sampleQuestionnaireType} />
+				<AuditorProfileForm isFormDisabled={this.state.step != 2} prevStep={this.prevStep} onSubmit={this.onQuotationChange} auditorProfile={this.state.quotation.auditor_profile}/>
+				<QuotationCitySelectForm stepComplete={this.state.step != 3} prevStep={this.prevStep} dispatch={this.props.dispatch} states={this.props.states} cities={this.props.cities} onQuotationChange={this.onQuotationChange} selectedCities={this.state.quotation.selectedCities} />
+				{(this.state.step == 4 || this.state.step == 5) && this.state.quotation ?
 					<QuotationPreview clientId={this.props.clientId} stepComplete={this.state.step != 4} prevStep={this.prevStep} nextStep={this.nextStep} quotation={this.state.quotation} onQuotationChange={this.onQuotationChange} openPaymentForm={this.openPaymentForm}/>
 					: null}
-				{this.state.step == 5 && this.state.quotation.quotationId ?
+				{this.state.step == 5 && this.state.quotation && this.state.quotation.quotationId ?
 					<QuotationPaymentForm client={this.props.client} quotationId={this.state.quotation.quotationId} payable_amount={this.state.quotation.payable_amount}/>
 					: null}
 			</div>
@@ -637,6 +755,7 @@ class QuotationDetail extends Component {
 var mapStoreToProps = function(store){
 	return {
 		clientId: store.client.id,
+		quotation: store.quotation,
 		client: store.client,
 		states: store.states,
 		cities: store.cities,

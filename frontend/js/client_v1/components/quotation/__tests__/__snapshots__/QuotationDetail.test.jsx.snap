@@ -161,12 +161,12 @@ exports[`<QuotationPreview/> renders the quotation 1`] = `
           <td
             className="text-center"
           >
-            Integrity Study
+            Online Audits
           </td>
           <td
             className="text-center"
           >
-            Online Audits
+            Integrity Study
           </td>
         </tr>
       </tbody>

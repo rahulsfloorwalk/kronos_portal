@@ -1,7 +1,9 @@
 from django.utils import timezone
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField, DateTimeField
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey, PositiveIntegerField, BooleanField, DateTimeField, DecimalField
 from django.db.models import PROTECT
 from auditor.models import AuditApplication
+from client.models import Quotation
+from manager.models import City
 import re
 import audit_store
 
@@ -75,3 +77,10 @@ class Audit(Model):
 
     class Meta:
         unique_together = (("store", "audit_cycle"))
+
+
+class AuditLocation(Model):
+    quotation = ForeignKey(Quotation, related_name='audit_locations', db_column='quotation_id', on_delete=PROTECT)
+    city = ForeignKey(City, db_column='city_id', on_delete=PROTECT)
+    count = PositiveIntegerField(db_column='count')
+    audit_fee = DecimalField(db_column='audit_fee', max_digits=6, decimal_places=1)

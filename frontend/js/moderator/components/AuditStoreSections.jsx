@@ -766,7 +766,7 @@ class Section extends React.Component{
 	};
 	revertMessageSubmit = () => {
 		if(this.state.revert_message != ""){
-			setSectionRevertMessage(this.props.auditStoreId, this.props.section.id, this.state.revert_message).then(()=>this.openRevertForm());
+			setSectionRevertMessage(this.props.auditStoreId, this.props.section.id, this.state.revert_message).then(()=>this.toggleRevertForm());
 		}
 	};
 	render(){

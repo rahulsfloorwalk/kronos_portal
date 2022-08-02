@@ -9,6 +9,7 @@ import { AuditorRatings, CarCostList, EducationList, GenderList, IncomeList, Int
 export default class AuditorProfileForm extends Component{
 
 	static propTypes = {
+		auditorProfile: PropTypes.object,
 		isFormDisabled: PropTypes.bool,
 		onSubmit: PropTypes.func,
 		prevStep: PropTypes.func
@@ -46,6 +47,12 @@ export default class AuditorProfileForm extends Component{
 	// 		});
 	// 	}
 	// };
+
+	componentWillReceiveProps(ownProps){
+		if(ownProps.auditorProfile){
+			this.setState((prevState) => Object.assign({}, prevState, ownProps.auditorProfile));
+		}
+	}
 
 	selectHandleChange = (selected_value, field_name) => {
 		let selected_list = selected_value.map(val=>val.value);

@@ -19,24 +19,27 @@ def get_section_proof_tag(section_id):
                 .filter(audit_cycle_proof_tag__proof_tag_id=tag.id, audit_cycle_proof_tag__audit_cycle=audit_cycle_obj)\
                 .exclude(section_id=section_id)\
                 .exists():
-            if SectionProofTag.objects.filter(audit_cycle_proof_tag__proof_tag_id=tag.id,
-                                              section_id=section_id).exists():
+            section_proof_tag = SectionProofTag.objects.filter(audit_cycle_proof_tag__proof_tag_id=tag.id, section_id=section_id).first()
+            if section_proof_tag:
+                max_attachment_count = section_proof_tag.max_attachment_count
                 is_present_in_section = True
                 if SectionProofTag.objects.filter(audit_cycle_proof_tag__proof_tag_id=tag.id, section_id=section_id, is_required = True).exists():
                     is_required = True
             else:
+                max_attachment_count = ""
                 is_present_in_section = False
             section_proof_tag_dict['id'] = tag.id
             section_proof_tag_dict['name'] = tag.name
             section_proof_tag_dict['is_present_in_section'] = is_present_in_section
             section_proof_tag_dict['is_required'] = is_required
+            section_proof_tag_dict['max_attachment_count'] = max_attachment_count
             section_proof_tag_list.append(section_proof_tag_dict)
     section_proof_tag_list = sorted(section_proof_tag_list, key=lambda j: j['name'])
     return sorted(section_proof_tag_list, key=lambda j: j['is_present_in_section'], reverse=True)
 
 
 @atomic
-def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list, mandatory_proof_tag_list):
+def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list):
     audit_cycle_obj = audit_cycle.find_by_id(audit_cycle_id)
     if audit_cycle_obj.status in [AuditCycle.CLEARING, AuditCycle.ARCHIVED, AuditCycle.REPORT]:
         raise AppLogicError('you cannot change proof tag')
@@ -48,26 +51,30 @@ def save_section_proof_tag(section_id, audit_cycle_id, proof_tag_list, mandatory
     section_proof_tag_list.delete()
 
     proof_count = 0
-    for i in proof_tag_list:
-        is_proof_mandatory = True if i in mandatory_proof_tag_list else False
-        if AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=i).exists():
-            AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=i).update(is_active=True)
-            audit_cycle_proof_tag_obj = AuditCycleProofTagList.objects.get(audit_cycle_id=audit_cycle_id, proof_tag_id=i)
+    for proof in proof_tag_list:
+        proof_id = proof['id']
+        is_required = proof['is_required']
+        max_attachment_count = proof['max_attachment_count']
+
+        if AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id).exists():
+            AuditCycleProofTagList.objects.filter(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id).update(is_active=True, max_attachment_count=max_attachment_count)
+            audit_cycle_proof_tag_obj = AuditCycleProofTagList.objects.get(audit_cycle_id=audit_cycle_id, proof_tag_id=proof_id)
         else:
-            proof_tag_obj = ProofTag.objects.get(pk=i)
+            proof_tag_obj = ProofTag.objects.get(pk=proof_id)
             audit_cycle_proof_tag_obj = AuditCycleProofTagList()
             audit_cycle_proof_tag_obj.audit_cycle = audit_cycle_obj
             audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
             audit_cycle_proof_tag_obj.save()
-        proof_count += 1 if is_proof_mandatory else 0
+        proof_count += 1 if is_required else 0
         if not SectionProofTag.objects.filter(audit_cycle_proof_tag_id=audit_cycle_proof_tag_obj.id, section_id=section_id).exists():
             section_proof_tag_obj = SectionProofTag()
             section_proof_tag_obj.audit_cycle_proof_tag = audit_cycle_proof_tag_obj
             section_proof_tag_obj.section = section_obj
-            section_proof_tag_obj.is_required = is_proof_mandatory
+            section_proof_tag_obj.is_required = is_required
+            section_proof_tag_obj.max_attachment_count = max_attachment_count
             section_proof_tag_obj.save()
         else:
-            SectionProofTag.objects.filter(audit_cycle_proof_tag_id=audit_cycle_proof_tag_obj.id, section_id=section_id).update(is_required = is_proof_mandatory)
+            SectionProofTag.objects.filter(audit_cycle_proof_tag_id=audit_cycle_proof_tag_obj.id, section_id=section_id).update(is_required = is_required, max_attachment_count = max_attachment_count)
     # Update minimum attachment count for section
     section_obj.minimum_attachment_count = proof_count
     section_obj.save()

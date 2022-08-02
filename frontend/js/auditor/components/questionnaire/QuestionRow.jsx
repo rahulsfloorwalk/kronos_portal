@@ -125,6 +125,8 @@ class QuestionRow extends React.Component{
 				? <AnswerComment editable={false}
 					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id}
 					answer_comment={this.props.answer && this.props.answer.answer_comment }
+					required={this.props.q.optional_comment_required}
+					showErrors={this.props.showErrors}
 				/>
 				: ""
 			}
@@ -161,7 +163,7 @@ class QuestionRow extends React.Component{
 							</select>
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors}/>
 						</div>
 					</div>
 				);
@@ -186,7 +188,7 @@ class QuestionRow extends React.Component{
 							{checkbox_list}
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors}/>
 						</div>
 					</div>
 				);

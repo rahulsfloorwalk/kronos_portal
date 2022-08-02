@@ -21,7 +21,8 @@ class QuestionSerializer(ModelSerializer):
             'section',
             'question_type',
             'question_data',
-            'hide_question'
+            'hide_question',
+            'optional_comment_required',
         )
         read_only_fields = fields
 
@@ -37,7 +38,8 @@ class QuestionDeSerializer(ModelSerializer):
             'section',
             'question_type',
             'question_data',
-            'hide_question'
+            'hide_question',
+            'optional_comment_required',
         )
         read_only_fields = ('id',)
 
@@ -53,6 +55,7 @@ class QuestionDeSerializer(ModelSerializer):
         question.question_type = self.validated_data.get('question_type', question.question_type)
         question.question_data = self.validated_data.get('question_data', question.question_data)
         question.hide_question = self.validated_data.get('hide_question', question.hide_question)
+        question.optional_comment_required = self.validated_data.get('optional_comment_required', question.optional_comment_required)
         return question
 
 

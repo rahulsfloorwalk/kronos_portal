@@ -6,8 +6,9 @@ from rest_framework import serializers
 from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, CharField, EmailField, BooleanField, FileField
 
 from agency.models import AgencyUser, Agency
+from questionnaire.models.questionnaire import Industry, ProblemStatement, SampleQuestionnaireType
 from registration.models import MobileNumber
-from audit.models import AuditCycle, Audit
+from audit.models import AuditCycle, Audit, AuditLocation
 from audit_store.models import AuditStore
 from client.models import BankInfo, Client, ClientUser, Quotation, Store
 from auditor.models import ProfileInfo, AuditApplication
@@ -553,12 +554,68 @@ class ClientPaymentSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AuditLocationSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = AuditLocation
+        fields = '__all__'
+
+class IndustrySerializer(ModelSerializer):
+    class Meta:
+        model = Industry
+        fields = '__all__'
+
+class ProblemStatementSerializer(ModelSerializer):
+    class Meta:
+        model = ProblemStatement
+        fields = '__all__'
+
+class SampleQuestionnaireTypeSerializer(ModelSerializer):
+    class Meta:
+        model = SampleQuestionnaireType
+        fields = '__all__'
 
 class QuotationSerializer(ModelSerializer):
+    audit_locations = AuditLocationSerializer(many=True)
+    industry = IndustrySerializer()
+    problem_statement = ProblemStatementSerializer()
+    sample_questionnaire_type = SampleQuestionnaireTypeSerializer()
+
     class Meta:
         model = Quotation
         fields = (
             'id',
+            'industry',
+            'problem_statement',
+            'sample_questionnaire_type',
+            'amount',
+            'payable_amount',
+            'gst',
+            'gst_amount',
+            'discount',
+            'audit_locations',
+            'quotation_data',
+            'status',
+            'client',
+            'created_at',
+            'modified_at',
+        )
+        read_only_fields = fields
+
+
+class QuotationPlainSerializer(ModelSerializer):
+    class Meta:
+        model = Quotation
+        fields = (
+            'id',
+            'industry',
+            'problem_statement',
+            'sample_questionnaire_type',
+            'amount',
+            'payable_amount',
+            'gst',
+            'gst_amount',
+            'discount',
             'quotation_data',
             'status',
             'client',
@@ -581,3 +638,41 @@ class StoreImportDeSerializer(Serializer):
         if file_uploaded.name.split('.')[-1] not in ['xls','xlsx']:
             raise AppLogicError('Invalid File Type')
         return super().validate(attrs)
+
+
+class AuditCycleWithQuotationSerializer(ModelSerializer):
+    class Meta:
+        model = AuditCycle
+        fields = (
+            'id',
+            'name',
+            'start_date',
+            'end_date',
+            'planned_audit',
+            'description',
+            'created_by_client',
+            'client',
+            'questionnaire_type',
+            'type',
+            'status',
+            'quotation',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            audit_cycle = AuditCycle.objects.get(id=self.context.get('id'))
+        else:
+            audit_cycle = AuditCycle()
+        audit_cycle.name = self.validated_data.get('name', audit_cycle.name)
+        audit_cycle.start_date = self.validated_data.get('start_date', audit_cycle.start_date)
+        audit_cycle.end_date = self.validated_data.get('end_date', audit_cycle.end_date)
+        audit_cycle.planned_audit = self.validated_data.get('planned_audit', audit_cycle.planned_audit)
+        audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
+        audit_cycle.created_by_client = self.validated_data.get('created_by_client', audit_cycle.created_by_client)
+        audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
+        audit_cycle.status = self.validated_data.get('status', audit_cycle.status)
+        audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
+        audit_cycle.type = self.validated_data.get('type', audit_cycle.type)
+        audit_cycle.quotation = self.validated_data.get('quotation', audit_cycle.quotation)
+        return audit_cycle

@@ -34,7 +34,7 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data are l
           className="form-control"
           name="month"
           onChange={[Function]}
-          value="07"
+          value="08"
         >
           <option
             value=""
@@ -260,7 +260,7 @@ exports[`<ProjectAnalyticsCycleWise /> is rendered correctly when the data is su
           className="form-control"
           name="month"
           onChange={[Function]}
-          value="07"
+          value="08"
         >
           <option
             value=""

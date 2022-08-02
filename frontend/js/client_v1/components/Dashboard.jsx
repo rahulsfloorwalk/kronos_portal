@@ -88,7 +88,7 @@ class Dashboard extends React.Component {
 					<hr/>
 				</div>
 				<div className="row col-md-12 text-right">
-					<Link to={`projects/${this.props.clientId}/audit_cycle`} className="btn btn-sm btn-primary">Want to conduct audits? Setup your project</Link>
+					<Link to={"/project_setup/quotation"} className="btn btn-sm btn-primary">Want to conduct audits? Setup your project</Link>
 				</div>
 				<div className="row col-md-12">
 					<AuditCycleDashBoard/>

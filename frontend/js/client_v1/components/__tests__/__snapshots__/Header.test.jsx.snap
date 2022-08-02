@@ -51,20 +51,6 @@ exports[`<Header> renders an header correctly 1`] = `
          Reports
       </a>
     </li>
-    <li
-      className=""
-      role="presentation"
-    >
-      <a
-        onClick={[Function]}
-        style={Object {}}
-      >
-        <span
-          className="glyphicon glyphicon-file"
-        />
-         Quotation
-      </a>
-    </li>
   </ul>
   <ul
     className="nav navbar-nav navbar-right"

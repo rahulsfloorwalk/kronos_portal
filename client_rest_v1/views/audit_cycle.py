@@ -12,7 +12,7 @@ from questionnaire.service import questionnaire as questionnaire_service
 from audit.service import audit_cycle as audit_cycle_service
 from client.service import client_service
 
-from ..serializers import AuditCycleSerializer, AuditCycleDeSerializer
+from ..serializers import AuditCycleSerializer, AuditCycleDeSerializer, AuditCycleWithQuotationSerializer
 
 # Create your views here.
 
@@ -29,7 +29,7 @@ class AuditCycleView(APIView):
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
 
     def post(self, request):
-        audit_cycle_ds = AuditCycleDeSerializer(data=request.data)
+        audit_cycle_ds = AuditCycleWithQuotationSerializer(data=request.data)
         audit_cycle_ds.is_valid(raise_exception=True)
         audit_cycle = audit_cycle_ds.deserialize()
         saved_audit_cycle = audit_cycle_service.save(audit_cycle)

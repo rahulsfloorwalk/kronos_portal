@@ -292,7 +292,7 @@ class AttachmentUploadBox extends React.Component {
 						<h3>
 							<Paperclip/> Attachments {uploadButton}
 						</h3>
-						<p>Proof list</p>
+						<p className="text-danger"><b>You can only add up to {this.props.auditStore.max_attachment_limit} attachments for this report.</b></p>
 						{/* <AttachmentLegend />
 						<br/> */}
 						{proof_tag_list}

@@ -2,14 +2,6 @@
 
 exports[`QuestionnairePreview renders an sample questionnaire preview 1`] = `
 <div>
-  <h3
-    className="page-header"
-  >
-    <span
-      className="glyphicon glyphicon-eye-open"
-    />
-     Preview
-  </h3>
   <div
     className="panel panel-default"
   >

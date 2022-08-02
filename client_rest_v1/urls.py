@@ -54,7 +54,9 @@ urlpatterns = ([
     url(r'quotation/audit_category$', quotation_views.QuotationAuditCategoryView.as_view(), name='audit_category_quotation_view'),
     url(r'quotation/audit_type$', quotation_views.QuotationAuditTypeView.as_view(), name='audit_type_quotation_view'),
     url(r'quotation/preview$', quotation_views.QuotationPreviewView.as_view(), name='quotation_preview_view'),
-    url(r'quotation/(?P<quotation_id>[0-9]+)$', quotation_views.QuotationIdView.as_view(), name='quotation_id_view'),
+    url(r'quotation/(?P<quotation_id>[0-9]+)/audit_cycle_preview$', quotation_views.AuditCycleByQuotationIdView.as_view(), name='audit_cycle_by_quotation_view'),
+    url(r'quotation/(?P<quotation_id>[0-9]+)/$', quotation_views.QuotationIdView.as_view(), name='quotation_id_view'),
+    url(r'client/(?P<client_id>[0-9]+)/quotation/uncomplete$', quotation_views.QuotationUncompleteView.as_view(), name='quotation_uncomplete_view'),
     url(r'client/(?P<client_id>[0-9]+)/quotation$', quotation_views.QuotationView.as_view(), name='quotation_view'),
 
     url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)/questionnaire$', questionnaire_views.QuestionnaireByQuestionnaireTypeView.as_view(), name='questionnaire_view'),

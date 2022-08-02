@@ -153,6 +153,13 @@ def get_industry_list() -> Iterable[Industry]:
     """Get industry lists (Industry)"""
     return Industry.objects.all()
 
+def get_industry_by_id(industry_id: int) -> Industry:
+    try:
+        industry = Industry.objects.get(id = industry_id)
+    except Industry.DoesNotExist:
+        raise AppLogicError("Industry not found")
+    return industry
+
 
 def get_problem_statement_by_industry(industry_id: int) -> Iterable[ProblemStatement]:
     """ Get problem statements by industry """
@@ -160,10 +167,26 @@ def get_problem_statement_by_industry(industry_id: int) -> Iterable[ProblemState
     return ProblemStatement.objects.filter(industry_id = industry_id)
 
 
+def get_problem_statement_by_id(problem_statement_id: int) -> ProblemStatement:
+    try:
+        problem_statement = ProblemStatement.objects.get(id = problem_statement_id)
+    except ProblemStatement.DoesNotExist:
+        raise AppLogicError("Problem statement not found")
+    return problem_statement
+
+
 def find_sample_questionnaire_type_by_problem_statement(problem_statement_id: int) -> Iterable[SampleQuestionnaireType]:
     """Get sample questionnaire types by problem statement"""
 
     return SampleQuestionnaireType.objects.filter(problem_statement_id = problem_statement_id)
+
+
+def get_sample_questionnaire_type_by_id(sample_questionnaire_type_id: int) -> SampleQuestionnaireType:
+    try:
+        sample_questionnaire_type = SampleQuestionnaireType.objects.get(id = sample_questionnaire_type_id)
+    except SampleQuestionnaireType.DoesNotExist:
+        raise AppLogicError("Sample questionnaire type not found")
+    return sample_questionnaire_type
 
 
 def find_sample_questionnaire_by_questionnaire_type(questionnnaire_type_id: int) -> SampleQuestionnaire:

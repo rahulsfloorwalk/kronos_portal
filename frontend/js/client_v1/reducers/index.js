@@ -12,6 +12,7 @@ import clientUserStoreVisibilityReducer from "./client_user_visibility.js";
 import sectionReducer from "./section.js";
 import AuditReduer from "./audit.js";
 import AccountReducer from "./account.js";
+import QuotationReducer from "./quotation.js";
 
 export default combineReducers({
 	auditCycles: auditCycleReducer,
@@ -26,5 +27,6 @@ export default combineReducers({
 	sections: sectionReducer,
 	audits: AuditReduer,
 	account: AccountReducer,
+	quotation: QuotationReducer,
 });
 
