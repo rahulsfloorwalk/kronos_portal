@@ -175,7 +175,7 @@ class __Section extends React.Component{
 											<p><b>Section Summary:</b> <small className="text-danger"> {this.state.auditor_comment_error ? this.state.auditor_comment_error : "(Min 150 characters in length)"}</small> {savingMessage}</p>
 											{commentElement}
 										</div>
-										{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.props.reportSection.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
+										{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.props.reportSection && this.props.reportSection.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
 											<p className="text-danger"><b>Revert message: </b>{this.props.reportSection.revert_message}</p>
 										</div> : null}
 									</div>
