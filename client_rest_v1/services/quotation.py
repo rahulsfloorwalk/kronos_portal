@@ -66,7 +66,7 @@ def get_quotation_preview_data(quotation_data: dict) -> dict:
         'audit_locations':audit_locations,
         'quotation_fee': total_audit_fee,
         'gst_amount': gst_amount,
-        'gst': settings.CLIENT_QUOTATION_GST,
+        'gst': int(settings.CLIENT_QUOTATION_GST),
         'discount': audit_volume_discount_amount,
         'payable_amount': payable_amount
     }
@@ -105,10 +105,13 @@ def insert_quotation_data(client_id: int, quotation: dict) -> Quotation:
     problem_statement_id = quotation['problem_statement']
     sample_questionnaire_type_id = quotation['sample_questionnaire_type']
     audit_locations = quotation['audit_locations']
-    amount = quotation['quotation_fee']
-    payable_amount = quotation['payable_amount']
-    discount = quotation['discount']
-    gst = quotation['gst']
+    try:
+        amount = round(quotation['quotation_fee'], 2)
+        payable_amount = round(quotation['payable_amount'], 2)
+        discount = round(quotation['discount'], 1)
+        gst = round(quotation['gst'], 1)
+    except ValueError:
+        raise AppLogicError("Something went wrong")
     quotation_data = {'auditor_profile': quotation['auditor_profile']}
 
     industry = questionnaire_service.get_industry_by_id(industry_id)

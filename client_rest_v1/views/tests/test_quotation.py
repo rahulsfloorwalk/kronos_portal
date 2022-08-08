@@ -102,8 +102,8 @@ class QuotationTestCase(ClientAPITestCase):
             ],
             "quotation_fee": 5400,
             "discount": 0,
-            "gst": "18",
-            "gst_amount": 972.0,
+            "gst": 18,
+            "gst_amount": 972,
             "payable_amount": 6372
         }
         response = self.client.post(reverse('client_rest_v1:quotation_preview_view'), quotation_data, format="json")
