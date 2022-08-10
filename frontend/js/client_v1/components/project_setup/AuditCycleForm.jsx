@@ -51,7 +51,7 @@ class AuditCycleForm extends Component{
 	}
 
 	componentWillReceiveProps(nextProps) {
-		if(Object.keys(nextProps.quotation).length > 0){
+		if(this.props.quotation != nextProps.quotation ){
 			let quotation = nextProps.quotation;
 			this.find_audit_cycle_for_quotation_id(quotation.id);
 			this.loadQuestionnaireTypes(quotation);

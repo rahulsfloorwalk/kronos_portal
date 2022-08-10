@@ -160,6 +160,7 @@ urlpatterns = ([
     url(r'auditor/(?P<user_id>[0-9]+)/verify$', auditor_views.AuditorVerifyView.as_view(), name="auditor_id_verify_view"),
     url(r'auditor/(?P<user_id>[0-9]+)/password_reset$', auditor_views.AuditorPasswordResetEmailView.as_view(), name="auditor_id_send_password_reset_email"),
     url(r'auditor/(?P<auditor_id>[0-9]+)/applications$', auditor_views.AuditorApplicationView.as_view(), name='auditor_application_view'),
+    url(r'auditor/(?P<auditor_id>[0-9]+)/completed_accepted_reports$', auditor_views.AuditorCompletedAcceptedAuditStoreView.as_view(), name='auditor_completed_accepted_audit_store_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/reports$', auditor_views.AuditorAuditStoreView.as_view(), name='auditor_audit_store_view'),
     url(r'auditor/(?P<user_id>[0-9]+)/deactivate$', auditor_views.AuditorDeactivateView.as_view(), name="auditor_id_deactivate_view"),
     url(r'auditor/(?P<user_id>[0-9]+)/activate$', auditor_views.AuditorActivateView.as_view(), name="auditor_id_activate_view"),

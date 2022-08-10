@@ -252,7 +252,7 @@ export class __AuditRow extends Component{
 						transitionEnterTimeout={300}
 						transitionLeaveTimeout={300}>
 						{ this.state.expanded ?
-							<td colSpan="9" style={{backgroundColor: "White"}}>
+							<td colSpan="11" style={{backgroundColor: "White"}}>
 								<MarkdownViewer markdown={this.props.audit.post_approval_description}/>
 							</td>
 							: null }
@@ -265,7 +265,7 @@ export class __AuditRow extends Component{
 					transitionEnterTimeout={300}
 					transitionLeaveTimeout={300}>
 					{ this.state.expanded ?
-						<td colSpan="9" style={{backgroundColor: "White"}}>
+						<td colSpan="11" style={{backgroundColor: "White"}}>
 							<ul className="nav nav-tabs">
 								<li className={this.state.selectedTab === "applications" ? "active" : ""} style={pointerStyle} role="presentation">
 									<a onClick={() => this.setState({selectedTab:"applications"})}><Inbox/> Applications</a>

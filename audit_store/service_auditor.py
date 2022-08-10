@@ -183,3 +183,6 @@ def set_not_applicable_for_hide_questions(audit_store: AuditStore):
             answer_obj.audit_store = audit_store
             answer_obj.not_applicable = True
             answer_obj.save()
+
+def find_completed_audit_store_count_by_user_id(user_id):
+    return AuditStore.objects.filter(user = user_id, status__in = [AuditStore.COMPLETED, AuditStore.ACCEPTED]).count()

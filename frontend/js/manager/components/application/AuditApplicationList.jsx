@@ -8,9 +8,10 @@ import { momentDateFormat }  from "../../../../config.js";
 
 import { Link, withRouter } from "react-router";
 
-import { Time, ThumbsUp, ThumbsDown, User, Earphone, Calendar } from "../../../components/Icons.jsx";
+import { Time, ThumbsUp, ThumbsDown, Pencil } from "../../../components/Icons.jsx";
 
 import { findByAudit, waitListApplication, setAuditApplicationComment } from "../../service/application.js";
+import { find_recent_audit_store_by_user_id } from "../../service/audit_store.js";
 
 import ApplicationStatusLabel from "../../../components/ApplicationStatusLabel.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
@@ -18,6 +19,22 @@ import AuditorRating from "../../../components/AuditorRating.jsx";
 import ApplicationRepeat from "../../../components/ApplicationRepeat.jsx";
 import Loading from "../../../components/Loading.jsx";
 import { auditApplicationPropType } from "../../prop_types.js";
+
+const modalStyle = {
+	display: "block",
+	overflow: "scroll"
+};
+const modalBackdropStyle = {
+	zIndex: "1060",
+	height: "100%"
+};
+const modalDialogStyle = {
+	zIndex: "1070",
+};
+const modalBodyStyle = {
+	maxHeight:"85vh",
+	overflowY:"scroll"
+};
 
 export class AuditApplicationRow extends Component{
 	static propTypes = {
@@ -28,7 +45,10 @@ export class AuditApplicationRow extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			comment: this.props.application.comment
+			comment: this.props.application.comment,
+			recent_audit_reports: [],
+			is_recent_audits_visible: false,
+			comment_editable: false,
 		};
 	}
 
@@ -55,6 +75,27 @@ export class AuditApplicationRow extends Component{
 				Alert.warning("THERE WAS AN ERROR");
 			});
 		}
+		this.setCommentEditable();
+	};
+
+	setCommentEditable = () => {
+		this.setState((prevState) => ({
+			comment_editable: !prevState.comment_editable,
+		}));
+	};
+
+	showRecentAudits = () => {
+		if(!this.state.is_recent_audits_visible && this.state.recent_audit_reports.length == 0){
+			find_recent_audit_store_by_user_id(this.props.application.profileinfo.user_id).then((audit_reports) => this.setState((prevState) => ({
+				recent_audit_reports: audit_reports,
+				is_recent_audits_visible: !prevState.is_recent_audits_visible,
+			})));
+		}
+		else{
+			this.setState((prevState) => ({
+				is_recent_audits_visible: !prevState.is_recent_audits_visible,
+			}));
+		}
 	};
 
 	render(){
@@ -73,21 +114,91 @@ export class AuditApplicationRow extends Component{
 		} else {
 			statusLabel = <ApplicationStatusLabel status={application.status}/>;
 		}
+		let reports = [];
+		for(let report of this.state.recent_audit_reports){
+			reports.push(<tr key={report.id}>
+				<td>{report.audit__audit_cycle__name}</td>
+				<td>{report.audit_date}</td>
+				<td><AuditStoreRating rating={Math.round(report.qa_rating)}/></td>
+			</tr>);
+		}
 		return(
 			<tr key={application.id} className="">
-				<td><User/>&nbsp;{auditorLink}<br/>&nbsp;&nbsp;&nbsp;&nbsp;(<AuditorRating rating={application.profileinfo.auditor_rating}/>)<br/>(<b>Profile match: {application.profile_match_percentage}%</b>)</td>
-				<td><Earphone/>&nbsp;<a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a></td>
-				<td><Calendar/>&nbsp;{moment(application.audit_date).format(momentDateFormat)}</td>
-				<td>{application.profileinfo.pincode}</td>
-				<td>{application.distance !== null? (application.distance).toString() + " km" : "--" }</td>
-				<td>{application.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(application.avg_qa_rating)}/> : null}</td>
-				<td>{application.report_exists ?<ApplicationRepeat report_exists={application.report_exists} report_data={application.report_exists_data}/>: null}</td>
 				<td>
-					{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-					{statusLabel}
-				</td>
-				<td>
-					<textarea className="form-control" placeholder="Enter a comment" value={this.state.comment ? this.state.comment : ""} onChange={this.commentChanged} onBlur={this.onBlur} />
+					<div className="table-responsive">
+						<table className="table">
+							<tbody>
+								<tr>
+									<th style={{width: "15%", border: "none"}}>Auditor</th>
+									<th style={{width: "10%", border: "none"}}>Audit Date</th>
+									<th style={{width: "10%", border: "none"}}>Auditor Rating</th>
+									<th style={{width: "10%", border: "none"}}>Report Rating</th>
+									<th style={{width: "10%", border: "none"}}>Profile match</th>
+									<th style={{width: "10%", border: "none"}}>Total Auditor Audits</th>
+									<th style={{width: "20%", border: "none"}}>Status</th>
+								</tr>
+								<tr>
+									<td style={{border: "none"}}>{auditorLink}</td>
+									<td style={{border: "none"}}>{moment(application.audit_date).format(momentDateFormat)}</td>
+									<td style={{border: "none"}}><AuditorRating rating={application.profileinfo.auditor_rating}/></td>
+									<td style={{border: "none"}}>{application.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(application.avg_qa_rating)}/> : "---"}</td>
+									<td style={{border: "none"}}>{application.profile_match_percentage}%</td>
+									<td style={{border: "none"}}>{application.auditor_audit_count > 0 ? <button className="btn btn-sm btn-primary" onClick={this.showRecentAudits}>View {application.auditor_audit_count} reports</button> : 0}</td>
+									<td style={{border: "none"}}>
+										{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
+										{statusLabel}
+									</td>
+								</tr>
+								<tr>
+									<th style={{border: "none"}}>Mobile No.</th>
+									<th style={{border: "none"}}>Pincode</th>
+									<th style={{border: "none"}}>Distance</th>
+									<th style={{border: "none"}}>Previous Report</th>
+									<th style={{border: "none"}}>Comment</th>
+								</tr>
+								<tr>
+									<td style={{border: "none"}}>
+										<a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a>
+									</td>
+									<td style={{border: "none"}}>{application.profileinfo.pincode}</td>
+									<td style={{border: "none"}}>{application.distance !== null? (application.distance).toString() + " km" : "--" }</td>
+									<td style={{border: "none"}}>{application.report_exists ?<ApplicationRepeat report_exists={application.report_exists} report_data={application.report_exists_data}/>: "----"}</td>
+									<td style={{border: "none"}} colSpan={3}>
+										{this.state.comment_editable ? <textarea className="form-control" placeholder="Enter a comment" value={this.state.comment ? this.state.comment : ""} onChange={this.commentChanged} onBlur={this.onBlur} /> : this.state.comment}
+										{this.state.comment_editable == false ? <a href="javascript:void(0);" onClick={this.setCommentEditable}>&nbsp;<Pencil/>&nbsp;</a> : null}
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					{this.state.is_recent_audits_visible ? <div className="modal left" tabIndex="-1" style={modalStyle}>
+						<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.showRecentAudits}/>
+						<div className="modal-dialog" style={modalDialogStyle}>
+							<div className="modal-content">
+								<div className="modal-header">
+									<button type="button" className="close" onClick={this.showRecentAudits}>&times;</button>
+									<h4 className="modal-title">Audit Reports</h4>
+								</div>
+								<div className="modal-body" style={modalBodyStyle}>
+									<div className="table-responsive">
+										<table className="table">
+											<thead>
+												<tr>
+													<th>Audit Cycle</th>
+													<th>Audit Date</th>
+													<th>Rating</th>
+												</tr>
+											</thead>
+											<tbody>
+												{reports}
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+						: null}
 				</td>
 			</tr>
 		);

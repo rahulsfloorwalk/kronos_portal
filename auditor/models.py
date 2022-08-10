@@ -440,6 +440,10 @@ class AuditApplication(Model):
         total_factors_count, valid_factors_count, match_percent = self.validate_alignment_factors()
         return match_percent
 
+    def auditor_audit_count(self):
+        from audit_store.service_auditor import find_completed_audit_store_count_by_user_id
+        return find_completed_audit_store_count_by_user_id(self.profileinfo.user.id)
+
     def validate_alignment_factors(self) -> list:
         factors = self.audit.audit_cycle.audit_alignment_factors
         valid_factors_count = 0

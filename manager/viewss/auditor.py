@@ -266,6 +266,15 @@ class AuditorAuditStoreView(APIView):
         auditor_audit_stores = auditor_stats_service.getAuditStores(auditor_id)
         return Response(auditor_audit_stores)
 
+class AuditorCompletedAcceptedAuditStoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER]
+    }
+    def get(self, request, auditor_id, format=None):
+        auditor_audit_stores = auditor_stats_service.getCompletedAcceptedAuditStores(auditor_id)
+        return Response(auditor_audit_stores)
+
 class AuditorDeactivateView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

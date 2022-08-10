@@ -23,7 +23,7 @@ class ProjectSetupDetail extends Component {
 	}
 
 	componentWillReceiveProps(ownProps){
-		if(this.props.clientId == "" || this.props.clientId != ownProps.clientId || Object.keys(ownProps.quotation).length == 0){
+		if(this.props.clientId != ownProps.clientId){
 			ownProps.dispatch(get_uncomplete_quotation_by_client(ownProps.clientId)).fail(() => {
 				Alert.warning("Please setup your project");
 				hashHistory.replace("project_setup/quotation");
