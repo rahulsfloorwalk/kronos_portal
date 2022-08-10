@@ -219,6 +219,12 @@ class ReportSection(Model):
         self.not_applicable = not_applicable
         self.save()
 
+    def set_all_question_not_applicable(self, not_applicable):
+        questions = self.section.questions.all()
+        for question in questions:
+            for answer in question.answers.all():
+                answer.set_not_applicable(not_applicable)
+
     def set_revert_message(self, revert_message):
         self.revert_message = revert_message
         self.save()

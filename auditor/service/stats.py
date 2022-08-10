@@ -83,6 +83,18 @@ def getAuditStores(user_id):
         raise ObjectNotFound
 
 
+def getCompletedAcceptedAuditStores(user_id):
+    try:
+        auditor = User.objects.get(pk=user_id)
+        if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
+            audit_stores = AuditStore.objects.filter(user=auditor, status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]).order_by('-audit_date')  \
+                .values('id', 'audit__audit_cycle__name',
+                        'audit_date', 'qa_rating').all().order_by('-id')
+            return audit_stores
+    except User.DoesNotExist:
+        raise ObjectNotFound
+
+
 def getAuditorStats(user_id):
     try:
         auditor = User.objects.get(pk=user_id)

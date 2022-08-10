@@ -199,7 +199,8 @@ class AuditApplicationSerializer(ModelSerializer):
             'report_exists_data',
             'distance',
             'comment',
-            'profile_match_percentage'
+            'profile_match_percentage',
+            'auditor_audit_count',
         )
         read_only_fields = fields
 

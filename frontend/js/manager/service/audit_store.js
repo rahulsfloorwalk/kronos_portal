@@ -208,3 +208,7 @@ export function acceptAllReports(audit_cycle_id, filters = {}){
 export function arrangeAttachment(auditStoreId){
 	return $.post(url.api_base_path + `manager/audit_store/${auditStoreId}/arrange_attachment`);
 }
+
+export function find_recent_audit_store_by_user_id(user_id){
+	return $.get(url.api_base_path + `manager/auditor/${user_id}/completed_accepted_reports`);
+}
