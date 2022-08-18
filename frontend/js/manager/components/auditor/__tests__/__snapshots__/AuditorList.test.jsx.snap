@@ -95,25 +95,25 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
           <option
             value=""
           >
-            Select rating
+            Select auditor rating
           </option>
           <option
-            value="E"
+            value="4"
           >
             Excellent
           </option>
           <option
-            value="G"
+            value="3"
           >
             Good
           </option>
           <option
-            value="A"
+            value="2"
           >
             Average
           </option>
           <option
-            value="W"
+            value="1"
           >
             Worse
           </option>

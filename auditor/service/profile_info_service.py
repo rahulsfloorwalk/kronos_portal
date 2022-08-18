@@ -2,12 +2,13 @@ from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils import timezone
 import re
+from django.db.models import Avg
 from django.db.transaction import atomic
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
 
 from ..validators import numericValidator, minLengthValidator, maxLengthValidator
-from ..models import ProfileInfo, MobileNumberHistoryLog, WhatsappNumberHistoryLog
+from ..models import AuditorRating, ProfileInfo, MobileNumberHistoryLog, WhatsappNumberHistoryLog
 from registration.models import GROUP_NAME_AUDITOR
 
 mobile_number_regex = "^[6-9]\d{9}$"
@@ -136,9 +137,11 @@ def find_profileinfo_by_city(city_id):
 
 @atomic
 def save_auditor_rating(user, rating):
-    profile_info = ProfileInfo.objects.get(user=user)
-    profile_info.auditor_rating = rating
-    profile_info.save()
+    # profile_info = ProfileInfo.objects.get(user=user)
+    # profile_info.auditor_rating = rating
+    # profile_info.save()
+    rating_obj = AuditorRating(user=user, rating=rating)
+    rating_obj.save()
 
 
 def get_auditor_rating_by_user(user):
@@ -148,3 +151,12 @@ def get_auditor_rating_by_user(user):
         return profile_info.auditor_rating is not None
     else:
         return True
+
+
+def get_avg_auditor_rating_by_user(user):
+    group = user.groups.all()[0]
+    if group.name == GROUP_NAME_AUDITOR:
+        rating = AuditorRating.objects.filter(user=user).aggregate(avg=Avg('rating'))
+        return int(rating['avg']) if rating['avg'] else None
+    else:
+        return None

@@ -258,7 +258,7 @@ def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict
         {
             'key': 'auditor_rating',
             'value': factors.get('auditor_rating',[]),
-            'type': 'str'
+            'type': 'func'
         },
         {
             'key': 'report_rating',

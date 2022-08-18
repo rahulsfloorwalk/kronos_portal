@@ -412,13 +412,13 @@ export function getColorForActionPlanStatus(value){
 
 export function getAuditorRating(rating){
 	switch(rating){
-	case "W":
+	case 1:
 		return "Worse";
-	case "A":
+	case 2:
 		return "Average";
-	case "G":
+	case 3:
 		return "Good";
-	case "E":
+	case 4:
 		return "Excellent";
 	case null:
 		return "Not rated";

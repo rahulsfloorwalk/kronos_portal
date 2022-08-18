@@ -10,13 +10,13 @@ export default class AuditorRating extends React.Component {
 
 	render() {
 		switch(this.props.rating){
-		case "W":
+		case 1:
 			return <strong className="text-danger">Worse</strong>;
-		case "A":
+		case 2:
 			return <strong className="text-warning">Average</strong>;
-		case "G":
+		case 3:
 			return <strong className="text-info">Good</strong>;
-		case "E":
+		case 4:
 			return <strong className="text-success">Excellent</strong>;
 		case null:
 			return <span>not rated</span>;

@@ -92,7 +92,7 @@ export class AuditorRow extends React.Component {
 						<td colSpan="10" style={{backgroundColor: "White"}}>
 							<div className="col-md-2"><b>Gender:</b><br/>{getGender(prof.gender)}</div>
 							<div className="col-md-2"><b>Mobile No.:</b><br/>{prof.mobile_number}</div>
-							<div className="col-md-2"><b>Rating:</b><br/><AuditorRating rating={prof.auditor_rating} /></div>
+							<div className="col-md-2"><b>Rating:</b><br/><AuditorRating rating={prof.avg_auditor_rating} /></div>
 							<div className="col-md-2"><b>Pincode:</b><br/>{prof.pincode}</div>
 							<div className="col-md-2"><b>City:</b><br/>{prof.city.name}</div>
 							<div className="col-md-2"><b>State:</b><br/>{prof.city.state_name}</div>
@@ -258,11 +258,11 @@ export class AuditorList extends React.Component {
 						</div>
 						<div className="col-md-2 form-group">
 							<select name="rating" className="form-control" value={this.state.rating} onChange={this.inputChanged}>
-								<option value="">Select rating</option>
-								<option value="E">Excellent</option>
-								<option value="G">Good</option>
-								<option value="A">Average</option>
-								<option value="W">Worse</option>
+								<option value="">Select auditor rating</option>
+								<option value="4">Excellent</option>
+								<option value="3">Good</option>
+								<option value="2">Average</option>
+								<option value="1">Worse</option>
 							</select>
 						</div>
 						<div className="col-md-2 form-group">

@@ -53,7 +53,7 @@ export default class ProfileInfoPanel extends React.Component {
 					<p>Pincode: {this.state.profileInfo.pincode}</p>
 					<p>Report Rating: {this.state.profileInfo.average_rating !== null ?
 						<AuditStoreRating rating={Math.round(this.state.profileInfo.average_rating)}/> : null}</p>
-					<p>Auditor Rating: <AuditorRating rating={this.state.profileInfo.auditor_rating}/> (<Link to={`/auditor/${this.props.auditorId}/details/auditor_rating/edit`}>change</Link>)</p>
+					<p>Auditor Rating: <AuditorRating rating={this.state.profileInfo.avg_auditor_rating}/> (<Link to={`/auditor/${this.props.auditorId}/details/auditor_rating/edit`}>change</Link>)</p>
 				</div>
 			</div>
 		);

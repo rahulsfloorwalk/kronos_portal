@@ -52,10 +52,10 @@ export const AuditStoreRatings = [
 ];
 
 export const AuditorRatings = [
-	"E",
-	"G",
-	"A",
-	"W",
+	4,
+	3,
+	2,
+	1,
 	null,
 ];
 

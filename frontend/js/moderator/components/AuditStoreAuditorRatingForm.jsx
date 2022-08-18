@@ -26,7 +26,7 @@ export default class AuditStoreAuditorRatingForm extends Component{
 		findById(this.props.params.auditStoreId).then(auditStore => {
 			this.setState({
 				auditStore,
-				rating: auditStore && auditStore.user.profileinfo.auditor_rating,
+				rating: auditStore && auditStore.user.profileinfo.avg_auditor_rating,
 			});
 		});
 	}
@@ -55,16 +55,16 @@ export default class AuditStoreAuditorRatingForm extends Component{
 					<label className="control-label">Auditor Rating:</label>
 					<div className="btn-group btn-group-justified">
 						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === "W" ? "active" : "")} onClick={() => this.ratingSelected("W")}>Worse</button>
+							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 1 ? "active" : "")} onClick={() => this.ratingSelected(1)}>Worse</button>
 						</div>
 						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === "A" ? "active" : "")} onClick={() => this.ratingSelected("A")}>Average</button>
+							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 2 ? "active" : "")} onClick={() => this.ratingSelected(2)}>Average</button>
 						</div>
 						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === "G" ? "active" : "")} onClick={() => this.ratingSelected("G")}>Good</button>
+							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 3 ? "active" : "")} onClick={() => this.ratingSelected(3)}>Good</button>
 						</div>
 						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === "E" ? "active" : "")} onClick={() => this.ratingSelected("E")}>Excellent</button>
+							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 4 ? "active" : "")} onClick={() => this.ratingSelected(4)}>Excellent</button>
 						</div>
 					</div>
 				</div>
