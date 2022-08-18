@@ -499,6 +499,11 @@ class AuditApplication(Model):
                         if int(start_age) <= age >= int(end_age):
                             valid_factors_count += 1
 
+                if factor['key'] == 'auditor_rating':
+                    from .service.profile_info_service import get_avg_auditor_rating_by_user
+                    if get_avg_auditor_rating_by_user(self.profileinfo.user) in factor['value']:
+                        valid_factors_count += 1
+
                 if factor['key'] == 'report_rating':
                     if self.avg_qa_rating():
                         if str(round(self.avg_qa_rating())) in factor['value']:
@@ -539,3 +544,29 @@ class WhatsappNumberHistoryLog(Model):
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
     whatsapp_number = CharField(db_column='whatsapp_number', max_length=10, blank=True, null=True, validators=[numericValidator, minLengthValidator])
     created_at = DateTimeField(db_column="created_at")
+
+
+class AuditorRating(Model):
+    FIVE = 5
+    FOUR = 4
+    THREE = 3
+    TWO = 2
+    ONE = 1
+
+    RATING = (
+        (FIVE, 5),
+        (FOUR, 4),
+        (THREE, 3),
+        (TWO, 2),
+        (ONE, 1),
+    )
+
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    rating = PositiveSmallIntegerField(db_column='rating', choices=RATING)
+    created_at = DateTimeField(db_column="created_at")
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        return super(AuditorRating, self).save(*args, **kwargs)

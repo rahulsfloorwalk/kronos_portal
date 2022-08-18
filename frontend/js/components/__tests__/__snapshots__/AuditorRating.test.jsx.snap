@@ -1,6 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AuditorRating/> renders correctly for rating: A 1`] = `
+exports[`<AuditorRating/> renders correctly for rating: 1 1`] = `
+<strong
+  className="text-danger"
+>
+  Worse
+</strong>
+`;
+
+exports[`<AuditorRating/> renders correctly for rating: 2 1`] = `
 <strong
   className="text-warning"
 >
@@ -8,15 +16,7 @@ exports[`<AuditorRating/> renders correctly for rating: A 1`] = `
 </strong>
 `;
 
-exports[`<AuditorRating/> renders correctly for rating: E 1`] = `
-<strong
-  className="text-success"
->
-  Excellent
-</strong>
-`;
-
-exports[`<AuditorRating/> renders correctly for rating: G 1`] = `
+exports[`<AuditorRating/> renders correctly for rating: 3 1`] = `
 <strong
   className="text-info"
 >
@@ -24,11 +24,11 @@ exports[`<AuditorRating/> renders correctly for rating: G 1`] = `
 </strong>
 `;
 
-exports[`<AuditorRating/> renders correctly for rating: W 1`] = `
+exports[`<AuditorRating/> renders correctly for rating: 4 1`] = `
 <strong
-  className="text-danger"
+  className="text-success"
 >
-  Worse
+  Excellent
 </strong>
 `;
 

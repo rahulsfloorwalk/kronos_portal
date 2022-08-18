@@ -4,9 +4,10 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.serializers import BooleanField, Serializer, ModelSerializer, ChoiceField
+from rest_framework.serializers import BooleanField, Serializer, ModelSerializer, ChoiceField, SerializerMethodField
 
 from django_filters import rest_framework as filters
+from django.db.models import Avg
 
 import attachment.service_auditor as attachment_auditor_service
 import auditor.service.stats as auditor_stats_service
@@ -15,7 +16,7 @@ from auditor.service import profile_info_service, bank_info_service, additional_
 from auditor.service import preferences_service
 from manager.serializers import PaymentSerializer
 from manager.viewss.attachment import AttachmentSerializer
-from auditor.models import AdditionalInfo, BankInfo
+from auditor.models import AdditionalInfo, AuditorRating, BankInfo
 from payment.service import payment_manager as payment_service
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
@@ -30,6 +31,7 @@ from manager.serializers import CitySerializer
 from manager.service import auditor_summary as auditor_summery_service
 
 class ProfileInfoSerializer(ModelSerializer):
+    avg_auditor_rating = SerializerMethodField()
     city = CitySerializer()
     class Meta:
         model = ProfileInfo
@@ -48,9 +50,12 @@ class ProfileInfoSerializer(ModelSerializer):
             'user_id',
             'is_complete',
             'average_rating',
-            'auditor_rating'
+            'avg_auditor_rating',
         )
         read_only_fields = fields
+
+    def get_avg_auditor_rating(self, obj):
+        return profile_info_service.get_avg_auditor_rating_by_user(obj.user)
 
 
 class VerificationSerializer(ModelSerializer):
@@ -127,11 +132,16 @@ class AuditorView(generics.ListAPIView):
         state = filters.CharFilter(field_name = "profileinfo__city__state", label = 'state')
         city = filters.CharFilter(field_name = "profileinfo__city", label = 'city')
         gender = filters.CharFilter(field_name = 'profileinfo__gender', label = 'gender')
-        rating = filters.CharFilter(field_name = 'profileinfo__auditor_rating', label = 'rating')
+        rating = filters.CharFilter(field_name = 'auditorrating__rating', method = 'avg_auditor_rating')
         occupation = filters.CharFilter(field_name = 'additionalinfo__occupation', label = 'occupation')
         income = filters.CharFilter(field_name = 'additionalinfo__income', label = 'income')
         industry = filters.CharFilter(field_name = 'additionalinfo__industry', label = 'industry')
         car_cost = filters.CharFilter(field_name = 'additionalinfo__car_cost', label = 'car_cost')
+
+        def avg_auditor_rating(self, queryset, name, value):
+            min_rating = int(value)
+            max_rating = int(value) + 0.9
+            return queryset.annotate(rating_avg=Avg(name)).filter(rating_avg__range = [min_rating, max_rating])
 
         class Meta:
             model = User
@@ -399,19 +409,20 @@ class AuditorRatingView(APIView):
     }
 
     class DeSerializer(Serializer):
-        auditor_rating = ChoiceField(ProfileInfo.AUDITOR_RATING)
+        auditor_rating = ChoiceField(AuditorRating.RATING)
 
     def get(self, request, auditor_id):
-        auditor_profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
-        return Response({"auditor_rating": auditor_profile_info.auditor_rating})
+        user = auditor_service.find_auditor_by_id(auditor_id)
+        rating = profile_info_service.get_avg_auditor_rating_by_user(user)
+        return Response({"auditor_rating": rating})
 
     def post(self, request, auditor_id):
         ds = self.DeSerializer(data=request.data)
         ds.is_valid(raise_exception=True)
         user = auditor_service.find_auditor_by_id(auditor_id)
         profile_info_service.save_auditor_rating(user, ds.validated_data['auditor_rating'])
-        auditor_profile_info = profile_info_service.find_profile_info_by_user_id(auditor_id)
-        return Response({"auditor_rating": auditor_profile_info.auditor_rating})
+        rating = profile_info_service.get_avg_auditor_rating_by_user(user)
+        return Response({"auditor_rating": rating})
 
 class AuditorSummaryView(APIView):
     permission_classes = [HasGroupPermission]

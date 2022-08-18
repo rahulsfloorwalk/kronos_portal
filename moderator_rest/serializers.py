@@ -1,6 +1,7 @@
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, SerializerMethodField
 from rest_framework.serializers import CharField
 from django.contrib.auth.models import User
+from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 
 from registration.models import MobileNumber
 from agency.models import Agency, AgencyUser
@@ -71,6 +72,7 @@ class StoreSerializer(ModelSerializer):
 
 
 class ProfileInfoSmallSerializer(ModelSerializer):
+    avg_auditor_rating = SerializerMethodField()
     class Meta:
         model = ProfileInfo
         fields = (
@@ -80,9 +82,13 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'mobile_number',
             'city',
             'user_id',
-            'auditor_rating'
+            'auditor_rating',
+            'avg_auditor_rating',
         )
         read_only_fields = fields
+
+    def get_avg_auditor_rating(self, obj):
+        return get_avg_auditor_rating_by_user(obj.user)
 
 class MobileNumberSerializer(ModelSerializer):
     class Meta:

@@ -117,6 +117,7 @@ export class AuditApplicationRow extends Component{
 		let reports = [];
 		for(let report of this.state.recent_audit_reports){
 			reports.push(<tr key={report.id}>
+				<td>{report.audit__audit_cycle__client__name}</td>
 				<td>{report.audit__audit_cycle__name}</td>
 				<td>{report.audit_date}</td>
 				<td><AuditStoreRating rating={Math.round(report.qa_rating)}/></td>
@@ -140,7 +141,7 @@ export class AuditApplicationRow extends Component{
 								<tr>
 									<td style={{border: "none"}}>{auditorLink}</td>
 									<td style={{border: "none"}}>{moment(application.audit_date).format(momentDateFormat)}</td>
-									<td style={{border: "none"}}><AuditorRating rating={application.profileinfo.auditor_rating}/></td>
+									<td style={{border: "none"}}><AuditorRating rating={application.profileinfo.avg_auditor_rating}/></td>
 									<td style={{border: "none"}}>{application.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(application.avg_qa_rating)}/> : "---"}</td>
 									<td style={{border: "none"}}>{application.profile_match_percentage}%</td>
 									<td style={{border: "none"}}>{application.auditor_audit_count > 0 ? <button className="btn btn-sm btn-primary" onClick={this.showRecentAudits}>View {application.auditor_audit_count} reports</button> : 0}</td>
@@ -184,6 +185,7 @@ export class AuditApplicationRow extends Component{
 										<table className="table">
 											<thead>
 												<tr>
+													<th>Client</th>
 													<th>Audit Cycle</th>
 													<th>Audit Date</th>
 													<th>Rating</th>

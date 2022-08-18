@@ -10,7 +10,7 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 
 from audit_store.models import AuditStore
-from auditor.models import ProfileInfo
+from auditor.models import AuditorRating
 from audit_store import service as audit_store_service
 from audit_store import service_manager
 from ..service import moderator as moderator_service
@@ -214,7 +214,7 @@ class AuditStoreAuditorRatingView(APIView):
     }
 
     class DeSerializer(Serializer):
-        auditor_rating = serializers.ChoiceField(ProfileInfo.AUDITOR_RATING)
+        auditor_rating = serializers.ChoiceField(AuditorRating.RATING)
 
     def post(self, request, audit_store_id):
         ds = self.DeSerializer(data=request.data)

@@ -395,7 +395,7 @@ export class AuditStoreDetails extends React.Component{
 			auditorRatingElement = (<tr>
 				<td className="text-right">Auditor Rating:</td>
 				<th>
-					<AuditorRating rating={this.props.auditStore.user.profileinfo.auditor_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/auditor_rating`}>change</Link>)
+					<AuditorRating rating={this.props.auditStore.user.profileinfo.avg_auditor_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/auditor_rating`}>change</Link>)
 				</th>
 			</tr>);
 		}
@@ -479,7 +479,8 @@ export class AuditStoreDetails extends React.Component{
 									<tr>
 										<td className="text-right">Report Rating:</td>
 										<th>
-											<AuditStoreRating rating={this.props.auditStore.qa_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/qa_rating`}>change</Link>)
+											<AuditStoreRating rating={this.props.auditStore.qa_rating}/>
+											{/* <AuditStoreRating rating={this.props.auditStore.qa_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/qa_rating`}>change</Link>) */}
 										</th>
 									</tr>
 									{auditorRatingElement}

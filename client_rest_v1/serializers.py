@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 from billing.models import Payment
 from kronos.exceptions import AppLogicError
 from kronos.utils import validate_url
@@ -386,9 +387,13 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'city',
             'user_id',
             'pincode',
+            'avg_auditor_rating',
             'auditor_rating'
         )
         read_only_fields = fields
+
+    def get_avg_auditor_rating(self, obj):
+        return get_avg_auditor_rating_by_user(obj.user)
 
 
 class UserSerializer(ModelSerializer):

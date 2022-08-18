@@ -317,7 +317,7 @@ export default class AuditStoreDetails extends React.Component{
 			auditorRatingElement = (<tr>
 				<td className="text-right">Auditor Rating:</td>
 				<th>
-					<AuditorRating rating={this.state.auditStore.user.profileinfo.auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
+					<AuditorRating rating={this.state.auditStore.user.profileinfo.avg_auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
 				</th>
 			</tr>);
 		}

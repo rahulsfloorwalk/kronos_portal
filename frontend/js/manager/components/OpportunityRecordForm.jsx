@@ -252,7 +252,11 @@ export default class OpportunityEmailRecordForm extends React.Component {
 							&nbsp;&nbsp;Whatsapp
 						</label>
 						<br/><br/>
-						<p><b>Note: </b>You can only send SMS or Whatsapp messages to 20 people at a time.</p>
+						<p><b>Note: </b></p>
+						<ul>
+							<li>SMS or Whatsapp notification limit is 20 people at a time.</li>
+							<li>Email notification limit is 50 people at a time.</li>
+						</ul>
 						<br/>
 					</div>
 					<div className="row text-center">

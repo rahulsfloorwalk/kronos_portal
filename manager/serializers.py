@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField, SerializerMethodField
+from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 from kronos.exceptions import AppLogicError
 from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
@@ -130,6 +131,7 @@ class StoreSerializerWithoutClientUserAndClient(ModelSerializer):
 
 
 class ProfileInfoSmallSerializer(ModelSerializer):
+    avg_auditor_rating = SerializerMethodField()
     class Meta:
         model = ProfileInfo
         fields = (
@@ -140,9 +142,13 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'city',
             'user_id',
             'pincode',
-            'auditor_rating'
+            'auditor_rating',
+            'avg_auditor_rating',
         )
         read_only_fields = fields
+
+    def get_avg_auditor_rating(self, obj):
+        return get_avg_auditor_rating_by_user(obj.user)
 
 
 class MobileNumberSerializer(ModelSerializer):

@@ -278,15 +278,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 <AuditStoreRating
                   rating={1}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -823,15 +814,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -1307,15 +1289,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -1852,15 +1825,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -2404,15 +2368,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -2888,15 +2843,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -3413,15 +3359,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -3958,15 +3895,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -4460,15 +4388,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -5005,15 +4924,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>
@@ -5527,15 +5437,6 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                 <AuditStoreRating
                   rating={null}
                 />
-                 (
-                <Link
-                  onlyActiveOnIndex={false}
-                  style={Object {}}
-                  to="/audit_store/5/qa_rating"
-                >
-                  change
-                </Link>
-                )
               </th>
             </tr>
             <tr>

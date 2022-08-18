@@ -88,7 +88,7 @@ def getCompletedAcceptedAuditStores(user_id):
         auditor = User.objects.get(pk=user_id)
         if auditor and auditor.groups.filter(name=GROUP_NAME_AUDITOR).exists():
             audit_stores = AuditStore.objects.filter(user=auditor, status__in=[AuditStore.COMPLETED, AuditStore.ACCEPTED]).order_by('-audit_date')  \
-                .values('id', 'audit__audit_cycle__name',
+                .values('id', 'audit__audit_cycle__client__name', 'audit__audit_cycle__name',
                         'audit_date', 'qa_rating').all().order_by('-id')
             return audit_stores
     except User.DoesNotExist:

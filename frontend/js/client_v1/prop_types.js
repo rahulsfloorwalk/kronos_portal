@@ -43,6 +43,7 @@ export const auditApplicationPropType = PropTypes.shape({
 		first_name: PropTypes.string,
 		last_name: PropTypes.string,
 		auditor_rating: PropTypes.string,
+		avg_auditor_rating: PropTypes.string,
 		mobile_number: PropTypes.string,
 		pincode: PropTypes.string,
 		city: PropTypes.number,

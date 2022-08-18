@@ -36,7 +36,7 @@ class AuditCycleServiceTestCase(TestCase):
             'interest_area': ['ARCHITECTURE'],
             'marital_status': ['2'],
             'report_rating': ['G'],
-            'auditor_rating': ['S'],
+            'auditor_rating': [4, 3],
             'date_availability': '2022-03-02 - 2022-03-14',
             'auditor_age_range': '20-40',
         }
@@ -78,8 +78,8 @@ class AuditCycleServiceTestCase(TestCase):
             },
             {
                 "key": "auditor_rating",
-                "type": "str",
-                "value": ["S"]
+                "type": "func",
+                "value": [4, 3]
             },
             {
                 "key": "report_rating",

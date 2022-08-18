@@ -53,7 +53,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 	});
 
 	it("is rendered correctly when AuditStore is already rated", (done) => {
-		sampleAuditStore.user.profileinfo.auditor_rating = "G";
+		sampleAuditStore.user.profileinfo.avg_auditor_rating = 3;
 		findById.mockResolvedValue(sampleAuditStore);
 		const r = renderer.create(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
 		setTimeout(() => {
@@ -69,7 +69,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 	});
 
 	it("renders existing auditor_rating on mounting", (done) => {
-		sampleAuditStore.user.profileinfo.auditor_rating = "G";
+		sampleAuditStore.user.profileinfo.avg_auditor_rating = 3;
 		findById.mockResolvedValue(sampleAuditStore);
 		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
 		setTimeout(() => {
@@ -87,7 +87,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 			r.find("button").at(0).simulate("click");
 			expect(r.find("button.active").length).toEqual(1);
 			expect(r.find("button.active").text()).toEqual("Worse");
-			expect(r.state().rating).toEqual("W");
+			expect(r.state().rating).toEqual(1);
 			done();
 		});
 	});
@@ -99,7 +99,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 			r.find("button").at(1).simulate("click");
 			expect(r.find("button.active").length).toEqual(1);
 			expect(r.find("button.active").text()).toEqual("Average");
-			expect(r.state().rating).toEqual("A");
+			expect(r.state().rating).toEqual(2);
 			done();
 		});
 	});
@@ -111,7 +111,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 			r.find("button").at(2).simulate("click");
 			expect(r.find("button.active").length).toEqual(1);
 			expect(r.find("button.active").text()).toEqual("Good");
-			expect(r.state().rating).toEqual("G");
+			expect(r.state().rating).toEqual(3);
 			done();
 		});
 	});
@@ -123,7 +123,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 			r.find("button").at(3).simulate("click");
 			expect(r.find("button.active").length).toEqual(1);
 			expect(r.find("button.active").text()).toEqual("Excellent");
-			expect(r.state().rating).toEqual("E");
+			expect(r.state().rating).toEqual(4);
 			done();
 		});
 	});
@@ -137,7 +137,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 		r.find("button").at(2).simulate("click");
 		r.find("form").simulate("submit", formSubmitEvent);
 		expect(formSubmitEvent.preventDefault).toHaveBeenCalled();
-		expect(auditor_rate).lastCalledWith(sampleParams.auditStoreId, "G");
+		expect(auditor_rate).lastCalledWith(sampleParams.auditStoreId, 3);
 		setTimeout(() => {
 			expect(mockRouter.goBack).toHaveBeenCalled();
 			done();
