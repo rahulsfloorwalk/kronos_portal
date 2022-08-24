@@ -31,6 +31,7 @@ export default class QuestionRow extends React.Component {
 							: null
 					}</span>
 				</td>
+				<td>{this.props.q.optional_comment_required ? "Yes" : "No"}</td>
 				<td>{getQuestionType(this.props.q.question_type)}</td>
 				<td>{this.props.q.max_marks}</td>
 				<td>

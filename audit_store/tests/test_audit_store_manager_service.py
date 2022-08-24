@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from audit_store.models import AuditStore
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
-from auditor.models import ProfileInfo
+from auditor.models import AuditorRating, ProfileInfo
 from audit.models import AuditCycle, ReportAttribute
 
 from audit_store import service_manager
@@ -24,6 +24,7 @@ class AuditStoreManagerServiceTestCase(TestCase):
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user, auditor_rating=ProfileInfo.EXCELLENT)
+        mommy.make(AuditorRating, user=self.auditor_user, rating=AuditorRating.FOUR)
         self.audit_cycle = mommy.make(AuditCycle)
 
     def test_submit_report_raises_when_user_is_not_manager(self):

@@ -7,7 +7,7 @@ from django.contrib.auth.models import User, Group
 from django.contrib.auth.hashers import make_password
 
 from registration.models import GROUP_NAME_MANAGER, GROUP_NAME_AUDITOR
-from auditor.models import ProfileInfo
+from auditor.models import AuditorRating, ProfileInfo
 
 fake = Faker()
 
@@ -30,4 +30,5 @@ class ManagerAPITestCase(APITestCase):
         auditor_email = fake.email()
         auditor_user = mommy.make(User, username=auditor_email, email=auditor_email, groups=[auditor_group])
         mommy.make(ProfileInfo, user=auditor_user, auditor_rating=ProfileInfo.EXCELLENT)
+        mommy.make(AuditorRating, user=auditor_user, rating=AuditorRating.FOUR)
         return auditor_user

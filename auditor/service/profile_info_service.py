@@ -147,8 +147,9 @@ def save_auditor_rating(user, rating):
 def get_auditor_rating_by_user(user):
     group = user.groups.all()[0]
     if group.name == GROUP_NAME_AUDITOR:
-        profile_info = ProfileInfo.objects.get(user=user)
-        return profile_info.auditor_rating is not None
+        rating = AuditorRating.objects.filter(user=user).aggregate(avg=Avg('rating'))
+        auditor_rating = int(rating['avg']) if rating['avg'] else None
+        return auditor_rating is not None
     else:
         return True
 

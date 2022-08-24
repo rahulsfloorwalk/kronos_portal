@@ -570,21 +570,25 @@ class SectionAttachmentBox extends React.Component{
 				</div>
 
 				<div className={`panel-body attachment_checkbox_section${this.props.sectionId}`}>
-					<div>
-						{attachmentRows}
-						<input type="file" multiple
-							onChange={this.uploadFile}
-							ref={(input)=>this.uploadInput = input}
-							style={{"display":"none"}}/>
+					<div className="row">
+						<div className={`col-md-${this.state.selectedAttachmentId ? "4" : "12"} attachment_checkbox`} style={{maxHeight:"500px", overflowY: "auto"}}>
+							{attachmentRows}
+							<input type="file" multiple
+								onChange={this.uploadFile}
+								ref={(input)=>this.uploadInput = input}
+								style={{"display":"none"}}/>
+						</div>
+						<div className="col-md-8" style={{display: this.state.selectedAttachmentId ? "block" : "none"}}>
+							<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
+								proof_tags={this.props.proof_tags}
+								onRename={this.selectedAttachmentRenamed}
+								onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
+								onChange={(e) => this.saveAttachmentTag(selectedAttachment.id, e)}
+								rotateImage={this.rotateImage}
+								section_id={this.props.sectionId}
+								disableRotateButton={this.state.disableRotateButton}/>
+						</div>
 					</div>
-					<AttachmentPreview attachment={selectedAttachment} editable={this.props.editable}
-						proof_tags={this.props.proof_tags}
-						onRename={this.selectedAttachmentRenamed}
-						onDelete={() => this.attachmentDeleteClicked(selectedAttachment)}
-						onChange={(e) => this.saveAttachmentTag(selectedAttachment.id, e)}
-						rotateImage={this.rotateImage}
-						section_id={this.props.sectionId}
-						disableRotateButton={this.state.disableRotateButton}/>
 				</div>
 			</div>
 		);

@@ -46,6 +46,9 @@ class AuditCancelForm extends React.Component {
 	};
 
 	render() {
+		if(!this.props.audit){
+			return null;
+		}
 		return (
 			<Modal modalTitle="Cancel Audit" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
