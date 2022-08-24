@@ -71,7 +71,8 @@ export default class Section extends React.Component {
 				<table className="table table-striped">
 					<colgroup>
 						<col style={{width:"5%"}}/>
-						<col style={{width:"70%"}}/>
+						<col style={{width:"65%"}}/>
+						<col style={{width:"5%"}}/>
 						<col style={{width:"10%"}}/>
 						<col style={{width:"5%"}}/>
 						<col style={{width:"10%"}}/>
@@ -80,6 +81,7 @@ export default class Section extends React.Component {
 						<tr>
 							<th>#</th>
 							<th>Question</th>
+							<th>Comment Required</th>
 							<th>Question Type</th>
 							<th>Max. Marks</th>
 							<th>

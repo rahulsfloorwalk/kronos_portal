@@ -11,7 +11,7 @@ from kronos.exceptions import AppLogicError
 
 from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER
 from audit.models import AuditCycle
-from auditor.models import ProfileInfo
+from auditor.models import AuditorRating, ProfileInfo
 from audit_store.models import AuditStore
 from audit_store.signals import audit_store_status_change
 from questionnaire.models import Section, Question
@@ -30,6 +30,7 @@ class AuditStoreTestCase(TestCase):
         self.auditor_user = mommy.make(User, username="auditor@foobar.com", email="auditor@foobar.com",
                                        groups=[self.auditor_group])
         self.auditor_profile = mommy.make(ProfileInfo, user=self.auditor_user, auditor_rating=ProfileInfo.EXCELLENT)
+        mommy.make(AuditorRating, user=self.auditor_user, rating=AuditorRating.FOUR)
         self.audit_cycle = mommy.make(AuditCycle)
 
 

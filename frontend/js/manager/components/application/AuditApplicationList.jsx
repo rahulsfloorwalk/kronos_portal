@@ -104,10 +104,10 @@ export class AuditApplicationRow extends Component{
 		let auditorLink = (<Link to={auditorUrl}>{application.profileinfo.first_name} { application.profileinfo.last_name}</Link>);
 		let approveLink, rejectLink, waitListButton, statusLabel;
 		if( application.status === "APPLIED" || application.status === "WAITLISTED"){
-			approveLink = (<Link to={`${this.props.pathname}/${application.audit}/application/${application.id}/approve`} className="btn btn-primary"><ThumbsUp/> Approve</Link>);
-			rejectLink = (<Link to={`${this.props.pathname}/${application.audit}/application/${application.id}/reject`} className="btn btn-default"><ThumbsDown/> Deny</Link>);
+			approveLink = (<Link to={`${this.props.pathname}/${application.audit}/application/${application.id}/approve`} className="btn btn-sm btn-primary"><ThumbsUp/> Approve</Link>);
+			rejectLink = (<Link to={`${this.props.pathname}/${application.audit}/application/${application.id}/reject`} className="btn btn-sm btn-default"><ThumbsDown/> Deny</Link>);
 			if( application.status !== "WAITLISTED"){
-				waitListButton = (<button className="btn btn-default" onClick={() => this.waitListButtonClicked(application.id)}><Time/> Wait List</button>);
+				waitListButton = (<button className="btn btn-sm btn-default" onClick={() => this.waitListButtonClicked(application.id)}><Time/> Wait List</button>);
 			} else if(application.status === "WAITLISTED") {
 				waitListButton = <ApplicationStatusLabel status={application.status}/>;
 			}
@@ -125,53 +125,21 @@ export class AuditApplicationRow extends Component{
 		}
 		return(
 			<tr key={application.id} className="">
+				<td>{auditorLink}<br/><a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a></td>
+				<td>{moment(application.audit_date).format(momentDateFormat)}</td>
+				<td><AuditorRating rating={application.profileinfo.avg_auditor_rating}/></td>
+				<td>{application.profile_match_percentage}%</td>
+				<td>{application.distance !== null? (application.distance).toString() + " km" : "--" }</td>
+				<td>{application.report_exists ?<ApplicationRepeat report_exists={application.report_exists} report_data={application.report_exists_data}/>: "----"}</td>
+				<td>{application.auditor_audit_count > 0 ? <button className="btn btn-sm btn-primary" onClick={this.showRecentAudits}>View {application.auditor_audit_count} reports</button> : 0}</td>
 				<td>
-					<div className="table-responsive">
-						<table className="table">
-							<tbody>
-								<tr>
-									<th style={{width: "15%", border: "none"}}>Auditor</th>
-									<th style={{width: "10%", border: "none"}}>Audit Date</th>
-									<th style={{width: "10%", border: "none"}}>Auditor Rating</th>
-									<th style={{width: "10%", border: "none"}}>Report Rating</th>
-									<th style={{width: "10%", border: "none"}}>Profile match</th>
-									<th style={{width: "10%", border: "none"}}>Total Auditor Audits</th>
-									<th style={{width: "20%", border: "none"}}>Status</th>
-								</tr>
-								<tr>
-									<td style={{border: "none"}}>{auditorLink}</td>
-									<td style={{border: "none"}}>{moment(application.audit_date).format(momentDateFormat)}</td>
-									<td style={{border: "none"}}><AuditorRating rating={application.profileinfo.avg_auditor_rating}/></td>
-									<td style={{border: "none"}}>{application.avg_qa_rating !== null? <AuditStoreRating rating={Math.round(application.avg_qa_rating)}/> : "---"}</td>
-									<td style={{border: "none"}}>{application.profile_match_percentage}%</td>
-									<td style={{border: "none"}}>{application.auditor_audit_count > 0 ? <button className="btn btn-sm btn-primary" onClick={this.showRecentAudits}>View {application.auditor_audit_count} reports</button> : 0}</td>
-									<td style={{border: "none"}}>
-										{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
-										{statusLabel}
-									</td>
-								</tr>
-								<tr>
-									<th style={{border: "none"}}>Mobile No.</th>
-									<th style={{border: "none"}}>Pincode</th>
-									<th style={{border: "none"}}>Distance</th>
-									<th style={{border: "none"}}>Previous Report</th>
-									<th style={{border: "none"}}>Comment</th>
-								</tr>
-								<tr>
-									<td style={{border: "none"}}>
-										<a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a>
-									</td>
-									<td style={{border: "none"}}>{application.profileinfo.pincode}</td>
-									<td style={{border: "none"}}>{application.distance !== null? (application.distance).toString() + " km" : "--" }</td>
-									<td style={{border: "none"}}>{application.report_exists ?<ApplicationRepeat report_exists={application.report_exists} report_data={application.report_exists_data}/>: "----"}</td>
-									<td style={{border: "none"}} colSpan={3}>
-										{this.state.comment_editable ? <textarea className="form-control" placeholder="Enter a comment" value={this.state.comment ? this.state.comment : ""} onChange={this.commentChanged} onBlur={this.onBlur} /> : this.state.comment}
-										{this.state.comment_editable == false ? <a href="javascript:void(0);" onClick={this.setCommentEditable}>&nbsp;<Pencil/>&nbsp;</a> : null}
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
+					{approveLink}&nbsp;{waitListButton}&nbsp;{rejectLink}
+					{statusLabel}
+				</td>
+				<td>
+					{this.state.comment_editable ? <textarea className="form-control" placeholder="Enter a comment" value={this.state.comment ? this.state.comment : ""} onChange={this.commentChanged} onBlur={this.onBlur} /> : this.state.comment}
+					{this.state.comment_editable == false ? <a href="javascript:void(0);" onClick={this.setCommentEditable}>&nbsp;<Pencil/>&nbsp;</a> : null}
+
 					{this.state.is_recent_audits_visible ? <div className="modal left" tabIndex="-1" style={modalStyle}>
 						<div className="modal-backdrop fade in" style={modalBackdropStyle} onClick={this.showRecentAudits}/>
 						<div className="modal-dialog" style={modalDialogStyle}>
@@ -254,10 +222,23 @@ class AuditApplicationList extends Component{
 			);
 		}
 		if(rows.length === 0){
-			rows = <tr><td className="text-center text-muted">no applications for this audit</td></tr>;
+			rows = <tr><td className="text-center text-muted" colSpan={9}>no applications for this audit</td></tr>;
 		}
 		return (
 			<table className="table">
+				<thead>
+					<tr>
+						<th style={{width: "20%"}}>Auditor</th>
+						<th style={{width: "10%"}}>Audit Date</th>
+						<th style={{width: "5%"}}>Auditor Rating</th>
+						<th style={{width: "5%"}}>Profile match</th>
+						<th style={{width: "5%"}}>Distance</th>
+						<th style={{width: "5%"}}>Previous Report</th>
+						<th style={{width: "10%"}}>Total Auditor Audits</th>
+						<th style={{width: "25%"}}>Status</th>
+						<th style={{width: "15%"}}>Comment</th>
+					</tr>
+				</thead>
 				<tbody>
 					{rows}
 				</tbody>

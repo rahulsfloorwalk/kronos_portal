@@ -17,8 +17,8 @@ import Loading from "../../components/Loading.jsx";
 import { __StateSelector } from "../../components/StateSelector.jsx";
 import { __CitySelector } from "../../components/CitySelector.jsx";
 import FormSelect from "../../components/FormSelect.jsx";
-import { getEducationStatus, getIncomeText, getIndustry, getInterestArea, getOccupation } from "../../utils.js";
-import { EducationList, IndustryList, InterestAreaList, OccupationList } from "../../constants.js";
+import { getAuditorRating, getEducationStatus, getIncomeText, getIndustry, getInterestArea, getOccupation } from "../../utils.js";
+import { AuditorRatings, EducationList, IndustryList, InterestAreaList, OccupationList } from "../../constants.js";
 
 export default class OpportunityEmailRecordForm extends React.Component {
 	static propTypes = {
@@ -78,6 +78,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			industry: this.state.form.industry,
 			income: this.state.form.income,
 			interest_area: this.state.form.interest_area,
+			auditor_rating: this.state.form.auditor_rating,
 			channel_name: this.state.form.channel_name,
 		};
 	};
@@ -136,6 +137,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		const industry_options = [];
 		const occupation_options = [];
 		const education_options = [];
+		const auditor_rating_options = [];
 
 		for(let option of InterestAreaList){
 			interest_area_options.push({
@@ -162,6 +164,13 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			industry_options.push({
 				label: getIndustry(i),
 				value: i
+			});
+		}
+
+		for (let option of AuditorRatings) {
+			auditor_rating_options.push({
+				label: getAuditorRating(option),
+				value: option
 			});
 		}
 
@@ -232,6 +241,16 @@ export default class OpportunityEmailRecordForm extends React.Component {
 								value={this.state.form.interest_area ? interest_area_options.filter(obj => this.state.form.interest_area.includes(obj.value) === true) : null}
 								onChange={(e)=>this.selectHandleChange(e, "interest_area")}
 								options={interest_area_options}
+								isMulti={true}/>
+							<br/>
+						</div>
+						<div className="col-sm-3">
+							<label>Auditor rating</label>
+							<Select
+								name="auditor_rating"
+								value={this.state.form.auditor_rating ? auditor_rating_options.filter(obj => this.state.form.auditor_rating.includes(obj.value) === true) : null}
+								onChange={(e)=>this.selectHandleChange(e, "auditor_rating")}
+								options={auditor_rating_options}
 								isMulti={true}/>
 						</div>
 					</div>

@@ -65,7 +65,7 @@ export default class QuestionRow extends React.Component{
 				</td>
 				<td>
 					{answerText}
-					{ (this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT") && this.props.answer && this.props.answer.answer_comment
+					{ (this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT") && this.props.answer && this.props.answer.answer_comment && this.props.answer.not_applicable == false
 						? " (" + this.props.answer.answer_comment + ")"
 						: null
 					}
