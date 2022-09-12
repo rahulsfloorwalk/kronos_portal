@@ -53,19 +53,17 @@ export default class AuditStoreAuditorRatingForm extends Component{
 				<FormErrorList errors={this.state.errors.non_field_errors}/>
 				<div className="form-group">
 					<label className="control-label">Auditor Rating:</label>
-					<div className="btn-group btn-group-justified">
-						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 1 ? "active" : "")} onClick={() => this.ratingSelected(1)}>Worse</button>
-						</div>
-						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 2 ? "active" : "")} onClick={() => this.ratingSelected(2)}>Average</button>
-						</div>
-						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 3 ? "active" : "")} onClick={() => this.ratingSelected(3)}>Good</button>
-						</div>
-						<div className="btn-group">
-							<button type="button" className={"btn btn-lg btn-default " + (this.state.rating === 4 ? "active" : "")} onClick={() => this.ratingSelected(4)}>Excellent</button>
-						</div>
+					<div className="star-rating star-rating-lg">
+						<input type="radio" id="5-stars" name="rating" onChange={() => this.ratingSelected(5)} checked={this.state.rating === 5}/>
+						<label htmlFor="5-stars" className="star">&#9733;</label>
+						<input type="radio" id="4-stars" name="rating" onChange={() => this.ratingSelected(4)} checked={this.state.rating === 4}/>
+						<label htmlFor="4-stars" className="star">&#9733;</label>
+						<input type="radio" id="3-stars" name="rating" onChange={() => this.ratingSelected(3)} checked={this.state.rating === 3}/>
+						<label htmlFor="3-stars" className="star">&#9733;</label>
+						<input type="radio" id="2-stars" name="rating" onChange={() => this.ratingSelected(2)} checked={this.state.rating === 2}/>
+						<label htmlFor="2-stars" className="star">&#9733;</label>
+						<input type="radio" id="1-star" name="rating" onChange={() => this.ratingSelected(1)} checked={this.state.rating === 1}/>
+						<label htmlFor="1-star" className="star">&#9733;</label>
 					</div>
 				</div>
 				<button className="btn btn-lg btn-primary">Save Rating</button>

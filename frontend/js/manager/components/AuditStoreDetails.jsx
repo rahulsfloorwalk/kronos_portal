@@ -34,7 +34,7 @@ import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 import Loading from "../../components/Loading.jsx";
 import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import AuditStoreRating from "../../components/AuditStoreRating.jsx";
-import AuditorRating from "../../components/AuditorRating.jsx";
+import StarRating from "../../components/StarRating.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 
 import { getAuditType } from "../../utils.js";
@@ -394,8 +394,8 @@ export class AuditStoreDetails extends React.Component{
 		if(this.props.auditStore.user.profileinfo){
 			auditorRatingElement = (<tr>
 				<td className="text-right">Auditor Rating:</td>
-				<th>
-					<AuditorRating rating={this.props.auditStore.user.profileinfo.avg_auditor_rating}/> (<Link to={`/audit_store/${this.props.auditStore.id}/auditor_rating`}>change</Link>)
+				<th style={{display:"flex"}}>
+					<StarRating rating={this.props.auditStore.user.profileinfo.avg_auditor_rating} /> &nbsp;&nbsp;&nbsp;(<Link to={`/audit_store/${this.props.auditStore.id}/auditor_rating`}>change</Link>)
 				</th>
 			</tr>);
 		}

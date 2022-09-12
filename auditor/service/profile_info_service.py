@@ -2,7 +2,7 @@ from django.forms import ValidationError
 from django.db import IntegrityError
 from django.utils import timezone
 import re
-from django.db.models import Avg
+from django.db.models import Avg, Count
 from django.db.transaction import atomic
 
 from kronos.exceptions import AppLogicError, ObjectNotFound
@@ -153,6 +153,23 @@ def get_auditor_rating_by_user(user):
     else:
         return True
 
+def get_grp_auditor_rating_by_user(user):
+    total_rating_rows = AuditorRating.objects.filter(user=user).count()
+    rating_list = AuditorRating.objects.filter(user=user).values('rating').annotate(
+        count = Count('id'),
+    ).values('rating', 'count')
+
+    default_rating = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+    for rating in rating_list:
+        default_rating[rating['rating']] = round(rating['count'] / total_rating_rows * 100)
+
+    result = []
+    for i in default_rating:
+        result.append({
+            'rating': i,
+            'avg': default_rating[i]
+        })
+    return result
 
 def get_avg_auditor_rating_by_user(user):
     group = user.groups.all()[0]

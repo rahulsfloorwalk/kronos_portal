@@ -57,53 +57,50 @@ describe("<AuditStorAuditorRatingForm/>", () => {
 
 	it("renders no auditor_rating on mounting", () => {
 		const r = shallow(<AuditStoreAuditorRatingForm bankInfo={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
-		expect(r.find("button.active").length).toEqual(0);
+		expect(r.find("input[type='radio']").length).toEqual(0);
 	});
 
 	it("renders existing auditor_rating on mounting", () => {
 		sampleAuditStore.user.profileinfo.avg_auditor_rating = 3;
 		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
-		expect(r.find("button.active").length).toEqual(1);
-		expect(r.find("button.active").text()).toEqual("Good");
-	});
-
-	it("selects W rating when the Worse button is clicked", () => {
-		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
-		r.find("button").at(0).simulate("click");
-		expect(r.find("button.active").length).toEqual(1);
-		expect(r.find("button.active").text()).toEqual("Worse");
-		expect(r.state().rating).toEqual(1);
-	});
-
-	it("selects A rating when the Average button is clicked", () => {
-		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
-		r.find("button").at(1).simulate("click");
-		expect(r.find("button.active").length).toEqual(1);
-		expect(r.find("button.active").text()).toEqual("Average");
-		expect(r.state().rating).toEqual(2);
-	});
-
-	it("selects G rating when the Good button is clicked", () => {
-		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
-		r.find("button").at(2).simulate("click");
-		expect(r.find("button.active").length).toEqual(1);
-		expect(r.find("button.active").text()).toEqual("Good");
 		expect(r.state().rating).toEqual(3);
 	});
 
-	it("selects E rating when the Excellent button is clicked", () => {
+	it("selects 1 star rating when the 1 star is clicked", () => {
 		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
-		r.find("button").at(3).simulate("click");
-		expect(r.find("button.active").length).toEqual(1);
-		expect(r.find("button.active").text()).toEqual("Excellent");
+		r.find("input[type='radio']").at(0).simulate("change");
+		expect(r.state().rating).toEqual(5);
+	});
+
+	it("selects 2 star rating when the 2 star is clicked", () => {
+		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
+		r.find("input[type='radio']").at(1).simulate("change");
 		expect(r.state().rating).toEqual(4);
+	});
+
+	it("selects 3 star rating when the 3 star is clicked", () => {
+		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
+		r.find("input[type='radio']").at(2).simulate("change");
+		expect(r.state().rating).toEqual(3);
+	});
+
+	it("selects 4 star rating when the 4 star is clicked", () => {
+		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
+		r.find("input[type='radio']").at(3).simulate("change");
+		expect(r.state().rating).toEqual(2);
+	});
+
+	it("selects 5 star rating when the 5 star is clicked", () => {
+		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} dispatch={dispatch} router={mockRouter}/>);
+		r.find("input[type='radio']").at(4).simulate("change");
+		expect(r.state().rating).toEqual(1);
 	});
 
 	it("calls auditor_rate() with the correct rating and closes modal when save is clicked", (done) => {
 		auditor_rate.mockResolvedValue(sampleAuditStore);
 		const r = shallow(<AuditStoreAuditorRatingForm auditStore={sampleAuditStore} params={sampleParams} dispatch={dispatch} router={mockRouter}/>);
 
-		r.find("button").at(2).simulate("click");
+		r.find("input[type='radio']").at(2).simulate("click");
 		r.find("form").simulate("submit", formSubmitEvent);
 		expect(formSubmitEvent.preventDefault).toHaveBeenCalled();
 		expect(auditor_rate).lastCalledWith(5, 3);

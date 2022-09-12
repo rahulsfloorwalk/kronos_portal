@@ -93,52 +93,73 @@ exports[`<AuditStorAuditorRatingForm/> is rendered correctly when AuditStore is 
               Auditor Rating:
             </label>
             <div
-              className="btn-group btn-group-justified"
+              className="star-rating star-rating-lg"
             >
-              <div
-                className="btn-group"
+              <input
+                checked={false}
+                id="5-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="5-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Worse
-                </button>
-              </div>
-              <div
-                className="btn-group"
+                ★
+              </label>
+              <input
+                checked={true}
+                id="4-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="4-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Average
-                </button>
-              </div>
-              <div
-                className="btn-group"
+                ★
+              </label>
+              <input
+                checked={false}
+                id="3-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="3-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Good
-                </button>
-              </div>
-              <div
-                className="btn-group"
+                ★
+              </label>
+              <input
+                checked={false}
+                id="2-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="2-stars"
               >
-                <button
-                  className="btn btn-lg btn-default active"
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Excellent
-                </button>
-              </div>
+                ★
+              </label>
+              <input
+                checked={false}
+                id="1-star"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="1-star"
+              >
+                ★
+              </label>
             </div>
           </div>
           <button
@@ -246,52 +267,73 @@ exports[`<AuditStorAuditorRatingForm/> is rendered correctly when AuditStore is 
               Auditor Rating:
             </label>
             <div
-              className="btn-group btn-group-justified"
+              className="star-rating star-rating-lg"
             >
-              <div
-                className="btn-group"
+              <input
+                checked={false}
+                id="5-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="5-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Worse
-                </button>
-              </div>
-              <div
-                className="btn-group"
+                ★
+              </label>
+              <input
+                checked={false}
+                id="4-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="4-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Average
-                </button>
-              </div>
-              <div
-                className="btn-group"
+                ★
+              </label>
+              <input
+                checked={false}
+                id="3-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="3-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Good
-                </button>
-              </div>
-              <div
-                className="btn-group"
+                ★
+              </label>
+              <input
+                checked={false}
+                id="2-stars"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="2-stars"
               >
-                <button
-                  className="btn btn-lg btn-default "
-                  onClick={[Function]}
-                  type="button"
-                >
-                  Excellent
-                </button>
-              </div>
+                ★
+              </label>
+              <input
+                checked={false}
+                id="1-star"
+                name="rating"
+                onChange={[Function]}
+                type="radio"
+              />
+              <label
+                className="star"
+                htmlFor="1-star"
+              >
+                ★
+              </label>
             </div>
           </div>
           <button

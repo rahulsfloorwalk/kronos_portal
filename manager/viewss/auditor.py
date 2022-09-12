@@ -401,6 +401,18 @@ class PreferencesView(APIView):
         return Response(PreferencesSerializer(preference).data)
 
 
+class GroupRatingView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+
+    def get(self, request, auditor_id):
+        user = auditor_service.find_auditor_by_id(auditor_id)
+        rating = profile_info_service.get_grp_auditor_rating_by_user(user)
+        return Response({"auditor_rating": rating})
+
+
 class AuditorRatingView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -151,6 +151,7 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 
+    url(r'auditor/(?P<auditor_id>[0-9]+)/group_rating$', auditor_views.GroupRatingView.as_view(), name='auditor_group_rating_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/preferences$', auditor_views.PreferencesView.as_view(), name='auditor_preferences_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/auditor_rating$', auditor_views.AuditorRatingView.as_view(), name='auditor_rating_view'),
     url(r'auditor/(?P<auditor_id>[0-9]+)/profile_info$', auditor_views.AuditorProfileInfoView.as_view(), name='auditor_profile_info_view'),

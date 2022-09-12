@@ -21,6 +21,10 @@ export function fetchAuditor(auditorId){
 	return $.get( url.api_base_path + `manager/auditor/${auditorId}`);
 }
 
+export function fetchRatingForAuditor(auditorId){
+	return $.get( url.api_base_path + `manager/auditor/${auditorId}/group_rating`);
+}
+
 export function fetchProfileInfoForAuditor(auditorId){
 	return $.get( url.api_base_path + `manager/auditor/${auditorId}/profile_info`);
 }

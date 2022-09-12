@@ -321,6 +321,7 @@ def find_20_days_waitlist_audit_applications():
 def find_audit_applications_for_auto_approve():
 
     audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').filter(
+        audit__hidden = False,
         audit_date__gte=today_ist() + timedelta(days=2),
         report_exists=False,
         status__in=[AuditApplication.APPLIED, AuditApplication.WAITLISTED],
@@ -329,7 +330,7 @@ def find_audit_applications_for_auto_approve():
         audit__audit_cycle__audit_auto_approve = True,
         audit__audit_cycle__status=AuditCycle.ACTIVE).order_by('id')
 
-    audit_obj_list = Audit.objects.filter(audit_cycle__status=AuditCycle.ACTIVE, audit_cycle__audit_auto_approve = True)
+    audit_obj_list = Audit.objects.filter(audit_cycle__status=AuditCycle.ACTIVE, audit_cycle__audit_auto_approve = True, hidden = False)
 
     application_id_list = []
     for audit in audit_obj_list:
