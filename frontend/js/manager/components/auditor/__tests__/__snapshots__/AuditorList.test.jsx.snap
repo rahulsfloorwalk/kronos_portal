@@ -98,24 +98,29 @@ exports[`<AuditorList />  renders jumbotron by default 1`] = `
             Select auditor rating
           </option>
           <option
+            value="5"
+          >
+            5 Star
+          </option>
+          <option
             value="4"
           >
-            Excellent
+            4 Star
           </option>
           <option
             value="3"
           >
-            Good
+            3 Star
           </option>
           <option
             value="2"
           >
-            Average
+            2 Star
           </option>
           <option
             value="1"
           >
-            Worse
+            1 Star
           </option>
         </select>
       </div>

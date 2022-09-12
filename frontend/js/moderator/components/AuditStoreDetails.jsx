@@ -17,7 +17,7 @@ import AuditStoreStatusLabel from "../../components/AuditStoreStatusLabel.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
 import AuditTypeLabel from "../../components/AuditTypeLabel.jsx";
 import AuditStoreRating from "../../components/AuditStoreRating.jsx";
-import AuditorRating from "../../components/AuditorRating.jsx";
+import StarRating from "../../components/StarRating.jsx";
 
 import AttachmentBox from "./AttachmentBox.jsx";
 import AuditStoreSections from "./AuditStoreSections.jsx";
@@ -317,7 +317,7 @@ export default class AuditStoreDetails extends React.Component{
 			auditorRatingElement = (<tr>
 				<td className="text-right">Auditor Rating:</td>
 				<th>
-					<AuditorRating rating={this.state.auditStore.user.profileinfo.avg_auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
+					<StarRating rating={this.state.auditStore.user.profileinfo.avg_auditor_rating}/> (<Link to={`${this.props.location.pathname}/auditor_rate`}>change</Link>)
 				</th>
 			</tr>);
 		}

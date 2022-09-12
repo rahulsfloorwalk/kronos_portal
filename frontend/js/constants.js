@@ -52,6 +52,7 @@ export const AuditStoreRatings = [
 ];
 
 export const AuditorRatings = [
+	5,
 	4,
 	3,
 	2,

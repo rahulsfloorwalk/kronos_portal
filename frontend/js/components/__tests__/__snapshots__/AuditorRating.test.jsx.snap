@@ -32,6 +32,12 @@ exports[`<AuditorRating/> renders correctly for rating: 4 1`] = `
 </strong>
 `;
 
+exports[`<AuditorRating/> renders correctly for rating: 5 1`] = `
+<strong>
+  unknown rating
+</strong>
+`;
+
 exports[`<AuditorRating/> renders correctly for rating: null 1`] = `
 <span>
   not rated

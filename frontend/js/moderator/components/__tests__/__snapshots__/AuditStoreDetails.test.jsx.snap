@@ -198,7 +198,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 0 1`] = `
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -696,7 +698,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 1 1`] = `
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -1194,7 +1198,9 @@ exports[`<AuditStoreDetails/> is rendered correctly for QA rating: 2 1`] = `
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -1692,7 +1698,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -2190,7 +2198,9 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -2696,7 +2706,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -3194,7 +3206,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -3699,7 +3713,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -4190,7 +4206,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -4681,7 +4699,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -5172,7 +5192,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -5663,7 +5685,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -6192,7 +6216,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}
@@ -6701,7 +6727,9 @@ exports[`<AuditStoreDetails/> is rendered correctly wwhere AuditStore status is 
                 Auditor Rating:
               </td>
               <th>
-                <AuditorRating />
+                <StarRating
+                  rating={0}
+                />
                  (
                 <Link
                   onlyActiveOnIndex={false}

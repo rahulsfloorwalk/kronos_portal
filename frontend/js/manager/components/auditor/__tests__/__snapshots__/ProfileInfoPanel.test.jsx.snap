@@ -65,11 +65,7 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not 
       </strong>
     </p>
     <p>
-      Auditor Rating: 
-      <strong>
-        unknown rating
-      </strong>
-       (
+      Auditor Rating: (
       <a
         onClick={[Function]}
         style={Object {}}
@@ -77,6 +73,352 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is not 
         change
       </a>
       )
+      <br />
+      <br />
+      <ul
+        style={
+          Object {
+            "listStyleType": "none",
+            "padding": "inherit",
+          }
+        }
+      >
+        <li>
+          <label>
+            <b>
+              Overall
+            </b>
+          </label>
+            
+          <span>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+          </span>
+        </li>
+        <li>
+          <b>
+            1
+             Star    
+            <span>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+            </span>
+              
+            20
+            %
+          </b>
+        </li>
+        <li>
+          <b>
+            2
+             Star    
+            <span>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+            </span>
+              
+            30
+            %
+          </b>
+        </li>
+        <li>
+          <b>
+            3
+             Star    
+            <span>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+            </span>
+              
+            10
+            %
+          </b>
+        </li>
+        <li>
+          <b>
+            4
+             Star    
+            <span>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#ccc",
+                  }
+                }
+              >
+                ★
+              </label>
+            </span>
+              
+            40
+            %
+          </b>
+        </li>
+        <li>
+          <b>
+            5
+             Star    
+            <span>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+              <label
+                style={
+                  Object {
+                    "color": "#f90",
+                  }
+                }
+              >
+                ★
+              </label>
+            </span>
+              
+            0
+            %
+          </b>
+        </li>
+      </ul>
     </p>
   </div>
 </div>
@@ -142,11 +484,7 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null
       Report Rating: 
     </p>
     <p>
-      Auditor Rating: 
-      <strong>
-        unknown rating
-      </strong>
-       (
+      Auditor Rating: (
       <a
         onClick={[Function]}
         style={Object {}}
@@ -154,6 +492,72 @@ exports[`<ProfileInfoPanel /> renders profile info correctly when rating is null
         change
       </a>
       )
+      <br />
+      <br />
+      <ul
+        style={
+          Object {
+            "listStyleType": "none",
+            "padding": "inherit",
+          }
+        }
+      >
+        <li>
+          <label>
+            <b>
+              Overall
+            </b>
+          </label>
+            
+          <span>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+            <label
+              style={
+                Object {
+                  "color": "#ccc",
+                }
+              }
+            >
+              ★
+            </label>
+          </span>
+        </li>
+      </ul>
     </p>
   </div>
 </div>

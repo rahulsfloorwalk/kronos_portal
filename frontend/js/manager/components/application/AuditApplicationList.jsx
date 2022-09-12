@@ -15,7 +15,7 @@ import { find_recent_audit_store_by_user_id } from "../../service/audit_store.js
 
 import ApplicationStatusLabel from "../../../components/ApplicationStatusLabel.jsx";
 import AuditStoreRating from "../../../components/AuditStoreRating.jsx";
-import AuditorRating from "../../../components/AuditorRating.jsx";
+import StarRating from "../../../components/StarRating.jsx";
 import ApplicationRepeat from "../../../components/ApplicationRepeat.jsx";
 import Loading from "../../../components/Loading.jsx";
 import { auditApplicationPropType } from "../../prop_types.js";
@@ -127,7 +127,7 @@ export class AuditApplicationRow extends Component{
 			<tr key={application.id} className="">
 				<td>{auditorLink}<br/><a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a></td>
 				<td>{moment(application.audit_date).format(momentDateFormat)}</td>
-				<td><AuditorRating rating={application.profileinfo.avg_auditor_rating}/></td>
+				<td><StarRating rating={application.profileinfo.avg_auditor_rating}/></td>
 				<td>{application.profile_match_percentage}%</td>
 				<td>{application.distance !== null? (application.distance).toString() + " km" : "--" }</td>
 				<td>{application.report_exists ?<ApplicationRepeat report_exists={application.report_exists} report_data={application.report_exists_data}/>: "----"}</td>
@@ -230,13 +230,13 @@ class AuditApplicationList extends Component{
 					<tr>
 						<th style={{width: "20%"}}>Auditor</th>
 						<th style={{width: "10%"}}>Audit Date</th>
-						<th style={{width: "5%"}}>Auditor Rating</th>
+						<th style={{width: "8%"}}>Auditor Rating</th>
 						<th style={{width: "5%"}}>Profile match</th>
 						<th style={{width: "5%"}}>Distance</th>
 						<th style={{width: "5%"}}>Previous Report</th>
 						<th style={{width: "10%"}}>Total Auditor Audits</th>
 						<th style={{width: "25%"}}>Status</th>
-						<th style={{width: "15%"}}>Comment</th>
+						<th style={{width: "12%"}}>Comment</th>
 					</tr>
 				</thead>
 				<tbody>

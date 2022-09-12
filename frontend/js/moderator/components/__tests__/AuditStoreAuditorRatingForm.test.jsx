@@ -74,56 +74,57 @@ describe("<AuditStoreQARatingForm/>", () => {
 		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
 		setTimeout(() => {
 			r.update();
-			expect(r.find("button.active").length).toEqual(1);
-			expect(r.find("button.active").text()).toEqual("Good");
-			done();
-		});
-	});
-
-	it("selects W rating when the Bad button is clicked", (done) => {
-		findById.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
-		setTimeout(() => {
-			r.find("button").at(0).simulate("click");
-			expect(r.find("button.active").length).toEqual(1);
-			expect(r.find("button.active").text()).toEqual("Worse");
-			expect(r.state().rating).toEqual(1);
-			done();
-		});
-	});
-
-	it("selects A rating when the Average button is clicked", (done) => {
-		findById.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
-		setTimeout(() => {
-			r.find("button").at(1).simulate("click");
-			expect(r.find("button.active").length).toEqual(1);
-			expect(r.find("button.active").text()).toEqual("Average");
-			expect(r.state().rating).toEqual(2);
-			done();
-		});
-	});
-
-	it("selects G rating when the Good button is clicked", (done) => {
-		findById.mockResolvedValue(sampleAuditStore);
-		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
-		setTimeout(() => {
-			r.find("button").at(2).simulate("click");
-			expect(r.find("button.active").length).toEqual(1);
-			expect(r.find("button.active").text()).toEqual("Good");
 			expect(r.state().rating).toEqual(3);
 			done();
 		});
 	});
 
-	it("selects E rating when the Good button is clicked", (done) => {
+	it("selects 1 star rating when the 1st radio is clicked", (done) => {
 		findById.mockResolvedValue(sampleAuditStore);
 		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
 		setTimeout(() => {
-			r.find("button").at(3).simulate("click");
-			expect(r.find("button.active").length).toEqual(1);
-			expect(r.find("button.active").text()).toEqual("Excellent");
+			r.find("input[type='radio']").at(0).simulate("change", { target: { checked: true } });
+			expect(r.state().rating).toEqual(5);
+			done();
+		});
+	});
+
+	it("selects 2 star rating when the 2nd radio is clicked", (done) => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
+		setTimeout(() => {
+			r.find("input[type='radio']").at(1).simulate("change", { target: { checked: true } });
 			expect(r.state().rating).toEqual(4);
+			done();
+		});
+	});
+
+	it("selects 3 star rating when the 3rd radio is clicked", (done) => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
+		setTimeout(() => {
+			r.find("input[type='radio']").at(2).simulate("change", { target: { checked: true } });
+			expect(r.state().rating).toEqual(3);
+			done();
+		});
+	});
+
+	it("selects 4 star rating when the 4th radio is clicked", (done) => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
+		setTimeout(() => {
+			r.find("input[type='radio']").at(3).simulate("change", { target: { checked: true } });
+			expect(r.state().rating).toEqual(2);
+			done();
+		});
+	});
+
+	it("selects 5 star rating when the 5th radio is clicked", (done) => {
+		findById.mockResolvedValue(sampleAuditStore);
+		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
+		setTimeout(() => {
+			r.find("input[type='radio']").at(4).simulate("change", { target: { checked: true } });
+			expect(r.state().rating).toEqual(1);
 			done();
 		});
 	});
@@ -134,7 +135,7 @@ describe("<AuditStoreQARatingForm/>", () => {
 		const r = shallow(<AuditStoreAuditorRatingForm params={sampleParams} router={mockRouter}/>);
 
 		expect(findById).toHaveBeenCalledWith(sampleParams.auditStoreId);
-		r.find("button").at(2).simulate("click");
+		r.find("input[type='radio']").at(2).simulate("change");
 		r.find("form").simulate("submit", formSubmitEvent);
 		expect(formSubmitEvent.preventDefault).toHaveBeenCalled();
 		expect(auditor_rate).lastCalledWith(sampleParams.auditStoreId, 3);
