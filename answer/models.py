@@ -222,7 +222,7 @@ class ReportSection(Model):
     def set_all_question_not_applicable(self, not_applicable):
         questions = self.section.questions.all()
         for question in questions:
-            for answer in question.answers.all():
+            for answer in question.answers.filter(audit_store = self.audit_store):
                 answer.set_not_applicable(not_applicable)
 
     def set_revert_message(self, revert_message):
