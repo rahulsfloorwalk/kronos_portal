@@ -334,9 +334,10 @@ def find_audit_applications_for_auto_approve():
 
     application_id_list = []
     for audit in audit_obj_list:
+        valid_audit_count = 0
         if audit.valid_report_count() < audit.count:
             range = audit.count - audit.valid_report_count()
-            audit_application_filtered = audit_application.filter(audit=audit.id)[:range]
+            audit_application_filtered = audit_application.filter(audit=audit.id)
 
             for application in audit_application_filtered:
                 total_factors_count, valid_factors_count, match_percent = application.validate_alignment_factors()
@@ -344,5 +345,8 @@ def find_audit_applications_for_auto_approve():
                 # required minimum 3 alignment factors in audit cycle
                 if total_factors_count > 2 and (match_percent <= 100 and match_percent > 60):
                     application_id_list.append(application.id)
+                    valid_audit_count += 1
+                    if valid_audit_count == range:
+                        break
 
     return audit_application.filter(id__in = application_id_list)
