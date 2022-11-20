@@ -120,11 +120,18 @@ class QuestionForm extends React.Component {
 		var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
 
 		let optionBuilder;
+		let optional_comment_required_div;
 		if(this.state.form.question_type === "MUTEX" || this.state.form.question_type === "MULTISELECT"){
 			optionBuilder = <OptionBuilder
 				options={typeof(this.state.form.question_data) === "object" && Object.keys(this.state.form.question_data).length > 0 ? this.state.form.question_data.options : []}
 				onChange={this.optionsChanged}
 			/>;
+
+			optional_comment_required_div = (
+				<div className="col-md-12">
+					<FormInput label="Optional comment required ?" type="checkbox" checked={this.state.form.optional_comment_required} name="optional_comment_required" onChange={this.inputChanged} errors={this.state.errors.optional_comment_required}/>
+				</div>
+			);
 		}
 
 		let hide_question_div = (
@@ -133,11 +140,6 @@ class QuestionForm extends React.Component {
 			</div>
 		);
 
-		let optional_comment_required_div = (
-			<div className="col-md-12">
-				<FormInput label="Optional comment required ?" type="checkbox" checked={this.state.form.optional_comment_required} name="optional_comment_required" onChange={this.inputChanged} errors={this.state.errors.optional_comment_required}/>
-			</div>
-		);
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit} className="row">
