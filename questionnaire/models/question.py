@@ -1,3 +1,4 @@
+import re
 from django.db.models import Model, CharField, AutoField, ForeignKey, PositiveIntegerField, BooleanField
 from django.db.models import PROTECT
 from django.contrib.postgres.fields import JSONField
@@ -106,6 +107,11 @@ class Question(Model):
                 validate(self.question_data, self.QUESTION_DATA_MUTEX_SCHEMA_V1)
             except ValidationError as v:
                 raise AppLogicError(v.message) from v
+
+            # check for leading and trailing spaces in options
+            for option in data["options"]:
+                if re.search(r'^\s|\s$', option["value"]):
+                    raise AppLogicError("option value contains leading or trailing spaces")
 
             # check for unique sequences
             for option in data["options"]:
