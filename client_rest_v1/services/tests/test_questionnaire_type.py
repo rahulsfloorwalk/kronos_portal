@@ -29,4 +29,4 @@ class QuestionnaireTypeServiceTestCase(TestCase):
     def test_questionnaire_type_by_id(self):
         mommy.make(QuestionnaireType, 1, client = self.client, pk = 1)
         queryset = find_questionnaire_type_by_id(1)
-        self.assertEqual(queryset.id, 1)    
+        self.assertEqual(queryset.id, 1)
