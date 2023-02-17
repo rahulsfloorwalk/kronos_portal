@@ -143,7 +143,7 @@ def get_profile_percentage(user_id):
 
     bank_info = bank_info_service.find_bank_info_by_user_id(user_id)
     if bank_info.is_complete():
-        profile_percentage += 0.25
+        profile_percentage += 0.35
 
     addl_indo = additional_info_service.find_additional_info_by_user_id(user_id)
     addl_percentage = addl_indo.completed_field_count() / addl_indo.field_count()
@@ -151,10 +151,10 @@ def get_profile_percentage(user_id):
 
     attachments = auditor_attachment_service.find_id_proof_for_auditor(user_id)
     if len(attachments) > 0:
-        profile_percentage += 0.20
+        profile_percentage += 0.30
 
     fb = social_auditor.find_facebook_by_user(user_id)
     if fb.is_verified:
-        profile_percentage += 0.20
+        profile_percentage += 0.00
 
     return math.floor(profile_percentage * 100)

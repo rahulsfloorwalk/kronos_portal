@@ -53,7 +53,7 @@ class StatsTestCase(TestCase):
         self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 25)
 
     def test_profile_percentage_with_profile_and_bank(self):
-        """checks if ProfileInfo, BankInfo is 50%"""
+        """checks if ProfileInfo, BankInfo is 60%"""
 
         self.complete_profile_info()
         self.assertTrue(self.profile.is_complete())
@@ -61,10 +61,10 @@ class StatsTestCase(TestCase):
         self.complete_bank_info()
         self.assertTrue(self.bank_info.is_complete())
 
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 50)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 60)
 
     def test_profile_percentage_with_profile_and_bank_and_additional(self):
-        """checks if ProfileInfo, BankInfo, AdditionalInfo is 60%"""
+        """checks if ProfileInfo, BankInfo, AdditionalInfo is 70%"""
 
         self.complete_profile_info()
         self.assertTrue(self.profile.is_complete())
@@ -75,10 +75,10 @@ class StatsTestCase(TestCase):
         self.complete_additional_info()
         self.assertTrue(self.additional_info.is_complete())
 
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 60)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 70)
 
     def test_profile_percentage_with_profile_and_bank_and_additional_and_id_proof(self):
-        """checks if ProfileInfo, BankInfo, AdditionalInfo, IdProof is 80%"""
+        """checks if ProfileInfo, BankInfo, AdditionalInfo, IdProof is 100%"""
 
         self.complete_profile_info()
         self.assertTrue(self.profile.is_complete())
@@ -90,7 +90,7 @@ class StatsTestCase(TestCase):
         self.assertTrue(self.additional_info.is_complete())
 
         self.complete_id_proof()
-        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 80)
+        self.assertEqual(stats.get_profile_percentage(self.auditor_user.id), 100)
 
     def test_profile_percentage_with_profile_and_bank_and_additional_and_id_proof_and_social(self):
         """checks if ProfileInfo, BankInfo, AdditionalInfo, IdProof, SocialInfo is 100%"""
