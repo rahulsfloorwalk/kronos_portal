@@ -10,7 +10,7 @@ exports[`<ExpandableDetails/> renders a non expanded inner element 1`] = `
       }
     }
   >
-    View Details
+    View Guidelines
   </a>
 </span>
 `;
