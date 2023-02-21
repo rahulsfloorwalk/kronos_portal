@@ -81,7 +81,7 @@ class ReportConcern extends React.Component{
 		}
 		else{
 			return (
-				<Modal modalTitle="Concern About the Audit?" onClose={this.closeModal}>
+				<Modal modalTitle="Query About this Audit?" onClose={this.closeModal}>
 					{
 						this.state.success_message ?
 							<div className="form-group">
@@ -92,7 +92,7 @@ class ReportConcern extends React.Component{
 							</div>
 							:
 							<form onSubmit={this.onSubmit}>
-								<p>If you have any <b>Concern</b> about this audit, you can write here.</p>
+								<p>Please mentioned your query and our team will reach out you as soon as possible.</p>
 								<textarea rows="5" className="form-control" value={this.state.message} maxLength="4096" onChange={this.concernChanged}/>
 								<span style={{color:"red"}}><b>{this.state.error_message}</b></span>
 								<br/>

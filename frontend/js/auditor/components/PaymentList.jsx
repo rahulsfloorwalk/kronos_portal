@@ -39,7 +39,7 @@ class PaymentRow extends React.Component{
 					{ this.props.payment.paid_on ? <p><b>{moment(this.props.payment.paid_on).format(momentDateFormat)}</b></p> : null }
 				</th>
 				<th className="text-center">
-					<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-sm btn-primary">Any Concern?</Link>
+					<Link to={`payment/${this.props.payment.id}/payment_concern`} className="btn btn-sm btn-primary">Any Query?</Link>
 				</th>
 			</tr>
 		);
@@ -123,11 +123,10 @@ export default class PaymentList extends React.Component{
 						<h2 className="page-header">
 							Your Payments
 						</h2>
-						<p style={{fontSize:"150%"}}>
-							<b>Payment terms:</b> Payment will be transferred into your bank account within <b>45 days</b> after the completion of the respective month of your report submission.
+						<p style={{fontSize:"100%"}}>
+							<b>Payment terms:</b> Payment will be transferred into your bank account within<b> 45 days from the month end of your report submission </b> since all the reports are checked usually by the client on the month end.
 							<br/>
-							Once the payment done from FloorWalk it might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays.
-							For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a> or you can click <b>Any Concern?</b> button.
+						Once the payment done from FloorWalk it might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays. For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a> or you can click <b>Any Query?</b> button.
 						</p>
 						<hr/>
 						<table className="table table-bordered table-responsive">
@@ -166,7 +165,7 @@ export default class PaymentList extends React.Component{
 									<th className="text-center">Audit Date</th>
 									<th className="text-center">Payment Status</th>
 									<th className="text-center">Payment</th>
-									<th className="text-center">Payment Due date</th>
+									<th className="text-center">Expected Payment Date</th>
 									<th className="text-center">Paid on</th>
 									<th className="text-center">Action</th>
 								</tr>

@@ -81,7 +81,7 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
             }
           }
         >
-          View Details
+          View Guidelines
         </a>
       </span>
       ) (

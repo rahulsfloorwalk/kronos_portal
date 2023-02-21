@@ -88,7 +88,7 @@ exports[`<__AuditStoreList/> is renders a list of audit stores correctly 1`] = `
                 }
               }
             >
-              View Details
+              View Guidelines
             </a>
           </span>
         </div>
@@ -190,7 +190,7 @@ exports[`<__AuditStoreList/> is renders a list of audit stores correctly 1`] = `
                 }
               }
             >
-              View Details
+              View Guidelines
             </a>
           </span>
         </div>
@@ -306,7 +306,7 @@ exports[`<AuditStoreRow/> renders a single auditStore list item correctly 1`] = 
               }
             }
           >
-            View Details
+            View Guidelines
           </a>
         </span>
       </div>
@@ -411,7 +411,7 @@ exports[`<AuditStoreRow/> renders a single auditStore list item correctly with a
               }
             }
           >
-            View Details
+            View Guidelines
           </a>
         </span>
       </div>

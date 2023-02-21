@@ -26,8 +26,8 @@ class Header extends React.Component {
 					</div>
 					<ul className="nav navbar-nav">
 						<NavLink to="/details" className="profiletourclass"><User/> My Profile</NavLink>
-						<NavLink to="/audit" className="audittourclass"><Inbox/> Audits</NavLink>
-						<NavLink to="/audit_store" className="reporttourclass"><File/> Reports</NavLink>
+						<NavLink to="/audit" className="audittourclass"><Inbox/> View Opportunities</NavLink>
+						<NavLink to="/audit_store" className="reporttourclass"><File/> Fill Reports</NavLink>
 						<NavLink to="/payment" className="paymenttourclass"><big><b>₹</b></big> Payments</NavLink>
 						{/* <NavLink to="/referral"><big><b>₹</b></big> Referrals</NavLink> */}
 						{/* <NavLink to="/full_time_opportunity"><Star /> Full Time Opportunity</NavLink> */}
