@@ -42,7 +42,7 @@ export default class ProfilePercentage extends React.Component{
 			</div>
 			<div style={{ width: "100%" }}>
 				<ProgressBar type="success" striped={true} percentage={this.state.percentage}/>
-			</div>			
+			</div>
 		</div>);
 	}
 }

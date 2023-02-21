@@ -60,7 +60,7 @@ class AuditApplyForm extends React.Component {
 	};
 
 	isValidDate = (currentDate) => {
-		let dateObj=new Date()
+		let dateObj=new Date();
 		let startDate=dateObj.setDate(dateObj.getDate() - 1);
 		let endDate = moment(this.props.audit.audit_cycle.end_date);
 		return currentDate.isBetween(startDate, endDate, null, "[]"); //inclusive

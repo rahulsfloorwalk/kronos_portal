@@ -79,7 +79,7 @@ class DetailsPage extends React.Component {
 								<li>{this.state.preferences.receive_new_opportunities_email ? <Check/> : <Cross/>} on Email</li>
 								<li>{this.state.preferences.receive_new_opportunities_sms ? <Check/> : <Cross/>} on SMS</li>
 								<li>{this.state.preferences.receive_transactional_whatsapp_message ? <Check/> : <Cross/>} on Whatsapp</li>
-							</ul>							
+							</ul>
 							{/* <p className="text-muted"><small>If you want to change your mobile number or email, please contact us.</small></p> */}
 						</Panel>
 					</div>

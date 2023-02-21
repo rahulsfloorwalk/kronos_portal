@@ -171,13 +171,37 @@ class AuditStoreDetails extends React.Component {
 									</tr>
 									<tr>
 										<td className="text-right">Status:</td>
-										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}  {this.props.auditStore.status=="SUBMITTED" ? 
-										<sub><br/><i> It usually takes 7 working days for the Quality check, the team may reach out to you in case of any concerns. </i></sub> : 
-										this.props.auditStore.status=="COMPLETED" ? <sub><br/><i>It may take upto 15 days for the client to review the report. Once, it is reviewed, it will be accepted and payments will be processed.</i></sub> :
-										this.props.auditStore.status=="ACCEPTED" ? <sub><br/><i>Congratulations! Your report has been accepted and the payments for this report will be done in 45 days from the month end in your bank account.</i></sub>:
-										this.props.auditStore.status=="PM_REVIEW" ? <sub><br/><i>It may take upto 3 days for the Project Team to review the report. Once, it is reviewed, it will be shared with the client.</i></sub>:
-										"" }   </th>
-										
+										<th>{<AuditStoreStatusLabel status={this.props.auditStore.status}/>}
+											{this.props.auditStore.status=="SUBMITTED" ?
+												<sub>
+													<br/>
+													<i>
+														It usually takes 7 working days for the Quality check, the team may reach out to you in case of any concerns.
+													</i>
+												</sub>:
+												this.props.auditStore.status=="COMPLETED" ?
+													<sub>
+														<br/>
+														<i>
+															It may take upto 15 days for the client to review the report. Once, it is reviewed, it will be accepted and payments will be processed.
+														</i>
+													</sub> :
+													this.props.auditStore.status=="ACCEPTED" ?
+														<sub>
+															<br/>
+															<i>
+																Congratulations! Your report has been accepted and the payments for this report will be done in 45 days from the month end in your bank account.
+															</i>
+														</sub>:
+														this.props.auditStore.status=="PM_REVIEW" ?
+															<sub>
+																<br/>
+																<i>
+																	It may take upto 3 days for the Project Team to review the report. Once, it is reviewed, it will be shared with the client.
+																</i>
+															</sub>:
+															"" }
+										</th>
 									</tr>
 								</tbody>
 							</table>

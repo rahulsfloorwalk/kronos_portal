@@ -37,8 +37,8 @@ class AuditRow extends React.Component{
 	};
 
 	FillReportClicked=()=>{
-		hashHistory.push(`/audit_store`)
-	}
+		hashHistory.push("/audit_store");
+	};
 	render(){
 		let button, auditDate, textLabel,redirectButton;
 		if( typeof this.props.application === "undefined" || this.props.application.status === "NOT_APPLIED"){
