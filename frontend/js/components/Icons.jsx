@@ -95,4 +95,5 @@ export const Th		= () => <span className="glyphicon glyphicon-th"></span>;
 export const ThLarge	= () => <span className="glyphicon glyphicon-th-large"></span>;
 export const ThList	= () => <span className="glyphicon glyphicon-th-list"></span>;
 export const List	= () => <span className="glyphicon glyphicon-list"></span>;
+export const Info = () => <span className="glyphicon glyphicon-info-sign"></span>;
 

@@ -20,7 +20,7 @@ export default class ExpandableDetails extends React.Component {
 	};
 
 	render() {
-		const buttonText = this.state.expanded ? "Hide Details" : "View Details";
+		const buttonText = this.state.expanded ? "Hide Guidelines" : "View Guidelines";
 		const details = this.state.expanded ?
 			(<Modal size="modal-lg" modalTitle="Details" onClose={this.buttonClicked}>
 				<div>

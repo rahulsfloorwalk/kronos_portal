@@ -80,7 +80,7 @@ class PaymentConcern extends React.Component{
 							</div>
 							:
 							<form onSubmit={this.onSubmit}>
-								<p>If you have any <b>Concern</b> about this payment, you can write here.</p>
+								<p>If you have any <b>queries</b> about this payment, you can write here.</p>
 								<textarea rows="5" className="form-control" value={this.state.message} maxLength="4096" onChange={this.concernChanged}/>
 								<span style={{color:"red"}}><b>{this.state.error_message}</b></span>
 								<br/>

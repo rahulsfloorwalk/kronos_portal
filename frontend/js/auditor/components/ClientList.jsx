@@ -242,7 +242,7 @@ class ClientList extends Component{
 		}
 		return (
 			<div>
-				<button className="btn btn-default assignment_process_button pull-right" onClick={this.open_div}>Read audit assignment process</button>
+				<button className="btn btn-success assignment_process_button pull-right" onClick={this.open_div}>Read audit assignment process</button>
 				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px",display:"none"}}>
 					<button className="btn pull-right" onClick={this.close_div}><u>Close(x)</u></button>
 					<br/>

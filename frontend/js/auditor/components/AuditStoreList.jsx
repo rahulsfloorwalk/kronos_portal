@@ -34,20 +34,20 @@ class AuditStoreRow extends React.Component {
 		};
 
 		if((this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED") && this.props.auditStore.get_date_diff <= -2){
-			withdrawButton = (<Link to={`audit_store/${this.props.auditStore.id}/withdraw`} className="btn btn-primary">Withdraw</Link>);
+			withdrawButton = (<Link to={`audit_store/${this.props.auditStore.id}/withdraw`} className="btn btn-default">Withdraw</Link>);
 		}
 		if(this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED"){
-			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/report_concern`} className="btn btn-primary">Any Concern?</Link>);
+			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/report_concern`} className="btn btn-danger">Any Query?</Link>);
 		}
 
 		if (this.props.auditStore.status === "AUDITOR_WITHDRAWN"){
 			auditStoreStatusLabel = (<AuditStoreStatusLabel status="WITHDRAWN"/>);
 			withdrawMessage = (<span><b>Your Audit has been Withdrawn.</b></span>);
-			viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>View</Link>);
+			viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>Fill Report</Link>);
 		}
 		else{
 			auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
-			viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-default">View</Link>);
+			viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">Fill Report</Link>);
 		}
 
 		return (
@@ -81,10 +81,10 @@ class AuditStoreRow extends React.Component {
 					<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
 					{viewButton}
 					&nbsp;&nbsp;
-					{concernButton}
-					&nbsp;&nbsp;
 					{withdrawButton}
 					{withdrawMessage}
+					&nbsp;&nbsp;
+					{concernButton}
 				</div>
 			</div>
 		);

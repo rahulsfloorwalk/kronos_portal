@@ -36,8 +36,11 @@ class AuditRow extends React.Component{
 		});
 	};
 
+	FillReportClicked=()=>{
+		hashHistory.push(`/audit_store`)
+	}
 	render(){
-		let button, auditDate, textLabel;
+		let button, auditDate, textLabel,redirectButton;
 		if( typeof this.props.application === "undefined" || this.props.application.status === "NOT_APPLIED"){
 			button = <button type="button" className="btn btn-primary" onClick={this.applyButtonClicked}><ShareAlt/> Apply</button>;
 			//<Link to={applyLink} className="btn btn-primary"><ShareAlt/> Apply</Link>;
@@ -59,6 +62,7 @@ class AuditRow extends React.Component{
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
 		else if( this.props.application.status === "APPROVED"){
+			redirectButton = <button type="button" className="btn btn-primary" onClick={this.FillReportClicked} >Fill Report</button>;
 			auditDate =  <span>Your <b className="text-success">approved</b> audit date is <b>{moment(this.props.application.audit_date).format(momentDateFormat)}</b>. Don&#39;t forget to conduct the audit!</span>;
 			textLabel = <ApplicationStatusLabel status={this.props.application.status}/>;
 		}
@@ -85,7 +89,7 @@ class AuditRow extends React.Component{
 				</div>
 				<div className="col-sm-4">
 					<p>
-						{textLabel ? <b>{textLabel}</b> : null}&nbsp;{button}
+						{textLabel ? <b>{textLabel}</b> : null}&nbsp;{button}&nbsp;&nbsp;{redirectButton}
 					</p>
 				</div>
 				{ auditDate ?
@@ -166,7 +170,7 @@ class AuditList extends Component{
 			<div>
 				<div className="row pull-right">
 					{support_button}&nbsp;&nbsp;
-					<button className="btn btn-default assignment_process_button" onClick={this.open_div}>Read audit assignment process</button>
+					<button className="btn btn-success assignment_process_button" onClick={this.open_div}>Read audit assignment process</button>
 				</div>
 				<div className="jumbotron assignment_info" style={{paddingTop:"10px",paddingBottom:"10px",paddingRight:"30px",paddingLeft:"30px",display:"none"}}>
 					<button className="btn pull-right" onClick={this.close_div}><u>Close(x)</u></button>
