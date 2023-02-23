@@ -40,14 +40,16 @@ class AuditStoreRow extends React.Component {
 			concernButton = (<Link to={`audit_store/${this.props.auditStore.id}/report_concern`} className="btn btn-danger">Any Query?</Link>);
 		}
 
-		if (this.props.auditStore.status === "AUDITOR_WITHDRAWN"){
+		if (this.props.auditStore.status === "AUDITOR_WITHDRAWN" ){
 			auditStoreStatusLabel = (<AuditStoreStatusLabel status="WITHDRAWN"/>);
 			withdrawMessage = (<span><b>Your Audit has been Withdrawn.</b></span>);
 			viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>Fill Report</Link>);
 		}
 		else{
-			auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
-			viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">Fill Report</Link>);
+			if (this.props.auditStore.status === "ASSIGNED"){
+				auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
+				viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">Fill Report</Link>);
+			}
 		}
 
 		return (

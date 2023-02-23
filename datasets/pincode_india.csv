@@ -19283,6 +19283,7 @@ pincode,address,address from api,districtname,statename,lat,lon
 431152,"431152,AURANGABAD,Maharashtra,India","Aurangabad, Aurangabad - 431002, Maharashtra, India",AURANGABAD,Maharashtra,19.8739536,75.3277803
 431011,"431011,AURANGABAD,Maharashtra,India","Aurangabad, Aurangabad - 431002, Maharashtra, India",AURANGABAD,Maharashtra,19.8739536,75.3277803
 416138,"416138,Kolhapur,Maharashtra,India","Kolhapur, Kolhapur - 416008, Maharashtra, India",Kolhapur,Maharashtra,16.7028412,74.2405329
+416117,"416117,Kolhapur,Maharashtra,India","Ichalkaranji,Kolhapur - 416117,MAHARASHTRA, India",Kolhapur,Maharashtra,16.709800, 74.446300
 444915,"444915,AMRAVATI,Maharashtra,India","Amrāvati, Amravati Division, India",AMRAVATI,Maharashtra,20.93333,77.75
 441228,"441228,CHANDRAPUR,Maharashtra,India","441228, Mahārāshtra, India",CHANDRAPUR,Maharashtra,19.9333,79.7333
 442919,"442919,GADCHIROLI,Maharashtra,India","Gadchiroli, Chandrapur, India",GADCHIROLI,Maharashtra,20.1853965,80.003509
@@ -19593,3 +19594,6 @@ pincode,address,address from api,districtname,statename,lat,lon
 112001,"112001,Jodhpur,India","Jodhpur, Jodhpur Tehsil, India",,,26.2967719,73.0351433
 140055,"140055,Mohali,India","Sector 73, F-297, Sahibzada Ajit Singh Nagar, Sahibzada Ajit Singh Nagar - 160055, Punjab, India",,,30.7178071,76.6985014
 302008,"302008,Jaipur,India","Bank of India, Agra Jaipur Bikaner Road, Agra, Mahaur -, Uttar Pradesh, India",,,27.1530069,77.8641416
+
+
+

@@ -30,7 +30,7 @@ class SiteTourBox extends React.Component {
 			},
 			{
 				selector: ".audittourclass",
-				content: (<p>Under the audits tab, you see projects that are available for you based on your city, state and pincode entered. Read the audit assignment process to know how the process works. Do not conduct audits if they are not assigned to you.</p>),
+				content: (<p>Under the view opportunities tab, you see projects that are available for you based on your city, state and pincode entered. Read the audit assignment process to know how the process works. Do not conduct audits if they are not assigned to you.</p>),
 			},
 			{
 				selector: ".reporttourclass",
