@@ -23142,5 +23142,16 @@
          "lon":"78.267134",
          "country":"IN"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":2135,
+      "fields":{
+         "name":"Ichalkaranji",
+         "state":"IN-MH",
+         "lat":"16.709800",
+         "lon":"74.446300",
+         "country":"IN"
+      }
    }
 ]
