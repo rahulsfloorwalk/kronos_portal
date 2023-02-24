@@ -46,7 +46,7 @@ class AuditStoreRow extends React.Component {
 			viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>Fill Report</Link>);
 		}
 		else{
-			if (this.props.auditStore.status === "ASSIGNED"){
+			if (this.props.auditStore.status === "ASSIGNED"  || this.props.auditStore.status === "ACKNOWLEDGED" ){
 				auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
 				viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">Fill Report</Link>);
 			}
