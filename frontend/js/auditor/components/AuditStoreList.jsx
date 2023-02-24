@@ -46,8 +46,8 @@ class AuditStoreRow extends React.Component {
 			viewButton = (<Link className="btn btn-default" style={{ pointerEvents: "none" }} disabled>Fill Report</Link>);
 		}
 		else{
-			if (this.props.auditStore.status === "ASSIGNED"  || this.props.auditStore.status === "ACKNOWLEDGED" ){
-				auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
+			auditStoreStatusLabel = (<AuditStoreStatusLabel status={this.props.auditStore.status}/>);
+			if (this.props.auditStore.status === "ASSIGNED" || this.props.auditStore.status === "ACKNOWLEDGED" ){
 				viewButton = (<Link to={`/audit_store/${this.props.auditStore.id}/section`} className="btn btn-success">Fill Report</Link>);
 			}
 		}
@@ -80,6 +80,31 @@ class AuditStoreRow extends React.Component {
 							</div>}/>
 						</div>
 					</div>
+					{this.props.auditStore.status=="SUBMITTED" ?
+						<sup>
+							<i>
+								It usually takes 7 working days for the Quality check, the team may reach out to you in case of any concerns.
+							</i>
+						</sup> :
+						this.props.auditStore.status=="COMPLETED" ?
+							<sup>
+								<i>
+									It may take upto 15 days for the client to review the report. Once, it is reviewed, it will be accepted and payments will be processed.
+								</i>
+							</sup> :
+							this.props.auditStore.status=="ACCEPTED" ?
+								<sup>
+									<i>
+										Congratulations! Your report has been accepted and the payments for this report will be done in 45 days from the month end in your bank account.
+									</i>
+								</sup> :
+								this.props.auditStore.status=="PM_REVIEW" ?
+									<sup>
+										<i>
+											It may take upto 3 days for the Project Team to review the report. Once, it is reviewed, it will be shared with the client.
+										</i>
+									</sup> :
+									"" }
 					<p><b>Address:</b> {this.props.auditStore.audit.store.address}</p>
 					{viewButton}
 					&nbsp;&nbsp;
