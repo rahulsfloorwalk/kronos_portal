@@ -4,7 +4,7 @@ from ..models import ProofTag
 
 
 def find_all():
-    return ProofTag.objects.filter().order_by('name')
+    return ProofTag.objects.filter().order_by('-is_active')
 
 
 def find_by_id(proof_tag_id):
