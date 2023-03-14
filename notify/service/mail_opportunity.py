@@ -10,7 +10,7 @@ from celery.result import ResultSet
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
 from audit.models import AuditCycle
-from audit.service import audit_cycle as audit_cycle_service
+from audit.service import audit_cycle as audit_cycle_service,audit_service
 from auditor.models import Preferences
 from auditor.service.profile_info_service import count_profileinfo_in_city
 from manager.service.opportunity_email import get_auditor_list_by_filter
@@ -52,39 +52,51 @@ def schedule_opportunity_emails_for_audit_cycle_and_city(audit_cycle_id, city_id
 @atomic
 def schedule_opportunity_emails_for_audit_cycle_with_filters(audit_cycle_id: int, filters: dict):
     from notify.service import opportunity_notification as opp_notification_service
-    try:
-        city = City.objects.get(pk=filters.get('city', ''))
-    except City.DoesNotExist as e:
-        raise ObjectNotFound from e
-
     audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
 
     if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
         raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity email")
 
-    filtered_users_in_city = get_auditor_list_by_filter(filters)
     MAX_EMAIL_SENT_COUNT = int(settings.EMAIL_SWITCH['MAX_EMAIL_SENT_COUNT'])
     CHANNEL = 'email'
-    next_user_list = opp_notification_service.find_next_users_for_notification(city.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
-    next_user_list = next_user_list[:MAX_EMAIL_SENT_COUNT]
+    if filters.get('city')=='11132323':
+        city_list=audit_service.find_audit_city_by_audit_cycle_id(audit_cycle_id)
+        for i in city_list:
+            filters['city']=i.id
+            filtered_users_in_city = get_auditor_list_by_filter(filters)
+            next_user_list = opp_notification_service.find_next_users_for_notification(i.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
+            next_user_list = next_user_list[:MAX_EMAIL_SENT_COUNT]
+            if len(next_user_list) == 0:
+                raise AppLogicError("Auditors are not remaining in this city")
+            opp = OpportunityEmailRecord()
+            opp.city = i
+            opp.audit_cycle = audit_cycle
+            opp.total_count = len(next_user_list)
+            opp.record_data = {
+                'user_list': next_user_list
+            }
+            opp.progress_count = 0
+            opp.save()
+            send_opportunity_emails_for_record.delay(opp.id)
+    else:
+        city = City.objects.get(pk=filters.get('city'))
+        filtered_users_in_city = get_auditor_list_by_filter(filters)
+        next_user_list = opp_notification_service.find_next_users_for_notification(city.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
+        next_user_list = next_user_list[:MAX_EMAIL_SENT_COUNT]
 
-    if len(next_user_list) == 0:
-        raise AppLogicError("Auditors are not remaining in this city")
+        if len(next_user_list) == 0:
+            raise AppLogicError("Auditors are not remaining in this city")
 
-    opp = OpportunityEmailRecord()
-    opp.city = city
-    opp.audit_cycle = audit_cycle
-    opp.total_count = len(next_user_list)
-    opp.record_data = {
-        'user_list': next_user_list
-    }
-    opp.progress_count = 0
-    opp.save()
-
-    # start the task to send the emails
-    send_opportunity_emails_for_record.delay(opp.id)
-
-    return opp
+        opp = OpportunityEmailRecord()
+        opp.city = city
+        opp.audit_cycle = audit_cycle
+        opp.total_count = len(next_user_list)
+        opp.record_data = {
+            'user_list': next_user_list
+        }
+        opp.progress_count = 0
+        opp.save()
+        send_opportunity_emails_for_record.delay(opp.id)
 
 @shared_task(ignore_result=True)
 def send_opportunity_emails_for_record(opportunity_email_record_id):
