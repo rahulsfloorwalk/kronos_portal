@@ -14,6 +14,23 @@ from registration.service import auditor as auditor_service
 
 from audit.service import audit_cycle as audit_cycle_service
 
+def find_audit_city_by_audit_cycle_id(audit_cycle_id):
+    a=list(Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related('store',
+        'store__client',
+        'store__city',
+        'audit_stores',
+        'audit_stores__user',
+        'audit_stores__user__profileinfo',
+        'applications',
+        'applications__profileinfo',
+        'applications__profileinfo__user',
+        'audit_cycle__questionnaire_type',
+        'audit_cycle__audits',))
+    city_list=[]    
+    for i in a:
+        city_list.append(i.store.city)
+    return city_list
+
 def find_audit_by_id(audit_id):
     try:
         return Audit.objects.get(pk=audit_id)

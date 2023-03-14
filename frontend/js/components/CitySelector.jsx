@@ -13,6 +13,7 @@ class __CitySelector extends React.Component{
 
 	render(){
 		let cityOptions = [];
+		cityOptions.push(<option key='all' value={11132323}>All</option>);
 		for( let c of this.props.cities){
 			cityOptions.push(<option key={c.id} value={c.id}>{c.name}</option>);
 		}

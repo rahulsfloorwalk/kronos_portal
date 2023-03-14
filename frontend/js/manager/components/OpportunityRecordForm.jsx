@@ -82,7 +82,28 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			channel_name: this.state.form.channel_name,
 		};
 	};
-
+	onSendInvitation=()=>{
+		let filters = this.getFilterData();
+		if(this.state.form.channel_name == ""){
+			alert("Please select at least one channel");
+			return false;
+		}
+		if(this.state.form.city == undefined || this.state.form.city == ""){
+			this.setState({filter_error:"Please select a city", filter_count: ""});
+		}
+		else{
+			this.setState({filter_error:"", loading:true});
+			saveOpportunityEmailRecord(this.props.params.auditCycleId,filters).done(() => {
+				hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification`);
+				Alert.success("NOTIFICATION SCHEDULED");
+			}).fail((err) => {
+				this.setState({
+					errors: err.responseJSON || {},
+					loading:false
+				});
+			});
+		}
+	};
 	onCheckCount = () =>{
 		if(this.state.form.channel_name == ""){
 			alert("Please select at least one channel");
@@ -279,7 +300,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 						<br/>
 					</div>
 					<div className="row text-center">
-						{this.state.loading ? <Loading/> : <button type="button" className="btn btn-primary" onClick={this.onCheckCount}>Check auditors</button>}
+						{this.state.loading ? <Loading/> : this.state.form.city==11132323 ?  <button className="btn btn-success" onClick={this.onSendInvitation}>Send Invitation</button> : this.state.loading ? <Loading/> : <button type="button" className="btn btn-primary" onClick={this.onCheckCount}>Check auditors</button>}
 					</div>
 
 					{!this.state.loading && this.state.filter_count != "" ? <p><b>{this.state.filter_count} auditor{this.state.filter_count > 1 ? "s" : null} found for this filter</b></p> : null}
