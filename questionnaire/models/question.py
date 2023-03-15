@@ -111,7 +111,7 @@ class Question(Model):
             # check for leading and trailing spaces in options
             for option in data["options"]:
                 if re.search(r'^\s|\s$', option["value"]):
-                    raise AppLogicError("option value contains leading or trailing spaces")
+                    raise AppLogicError("option value contains leading or trailing spaces",option["value"])
 
             # check for unique sequences
             for option in data["options"]:
