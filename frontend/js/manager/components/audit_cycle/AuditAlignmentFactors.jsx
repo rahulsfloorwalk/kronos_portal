@@ -131,7 +131,7 @@ class AuditAlignmentFactors extends Component{
 		if(value == ""){
 			return true;
 		}
-		let patterns = /\d.-\d/;
+		let patterns = /\d-\d/;
 		if (patterns.test(value) == false) {
 			return false;
 		}

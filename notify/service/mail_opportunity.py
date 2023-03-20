@@ -61,13 +61,15 @@ def schedule_opportunity_emails_for_audit_cycle_with_filters(audit_cycle_id: int
     CHANNEL = 'email'
     if filters.get('city')=='11132323':
         city_list=audit_service.find_audit_city_by_audit_cycle_id(audit_cycle_id)
+        if city_list==[]:
+            raise AppLogicError("Audits Are Not Available For Any City")
         for i in city_list:
             filters['city']=i.id
             filtered_users_in_city = get_auditor_list_by_filter(filters)
             next_user_list = opp_notification_service.find_next_users_for_notification(i.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
             next_user_list = next_user_list[:MAX_EMAIL_SENT_COUNT]
             if len(next_user_list) == 0:
-                raise AppLogicError("Auditors are not remaining in this city")
+                continue
             opp = OpportunityEmailRecord()
             opp.city = i
             opp.audit_cycle = audit_cycle

@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from django.db.models import Avg
 from auditor.models import AuditorRating
 from registration.models import GROUP_NAME_AUDITOR
-
+import datetime
 
 def get_auditor_list_by_filter(filters: dict) -> list:
     query = {
@@ -30,6 +30,15 @@ def get_auditor_list_by_filter(filters: dict) -> list:
     if filters.get('interest_area',[]):
         query['additionalinfo__interest_area__in'] = filters.get('interest_area',[])
 
+    if filters.get('car',[]):
+        query['additionalinfo__car_cost__in'] = filters.get('car',[])
+    
+    if filters.get('auditor_age_range'):
+        age_range=filters.get('auditor_age_range').split('-')
+        minimum_range=age_range[0]
+        maximum_range=age_range[1]
+        current = datetime.datetime.now()
+        query['profileinfo__date_of_birth__year__range']= [int(current.year)-int(maximum_range),int(current.year)-int(minimum_range)]
     auditor_ratings = AuditorRating.RATING + ((None, ''),)
     if filters.get('auditor_rating', []):
         filtered_auditor_ratings = filters.get('auditor_rating', [])

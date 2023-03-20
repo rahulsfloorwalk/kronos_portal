@@ -17,8 +17,8 @@ import Loading from "../../components/Loading.jsx";
 import { __StateSelector } from "../../components/StateSelector.jsx";
 import { __CitySelector } from "../../components/CitySelector.jsx";
 import FormSelect from "../../components/FormSelect.jsx";
-import { getAuditorRating, getEducationStatus, getIncomeText, getIndustry, getInterestArea, getOccupation } from "../../utils.js";
-import { AuditorRatings, EducationList, IndustryList, InterestAreaList, OccupationList } from "../../constants.js";
+import { getAuditorRating, getEducationStatus, getIncomeText, getIndustry, getInterestArea, getOccupation, getCarCost } from "../../utils.js";
+import { AuditorRatings, EducationList, IndustryList, InterestAreaList, OccupationList, CarCostList } from "../../constants.js";
 
 export default class OpportunityEmailRecordForm extends React.Component {
 	static propTypes = {
@@ -31,6 +31,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		errors: {},
 		form: {
 			channel_name: "",
+			auditor_age_range:"",
 		},
 		cities: [],
 		states: {},
@@ -42,6 +43,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 	componentDidMount() {
 		fetchStates().done((states)=>this.setState({states}));
 	}
+	setSubmitting = (submitting) => this.setState((prevState) => Object.assign({}, prevState, { submitting }));
 
 	inputChanged = (e) => {
 		let change = getInputEventChangeValue(e);
@@ -79,8 +81,33 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			income: this.state.form.income,
 			interest_area: this.state.form.interest_area,
 			auditor_rating: this.state.form.auditor_rating,
+			car:this.state.form.car,
+			auditor_age_range:this.state.form.auditor_age_range,
 			channel_name: this.state.form.channel_name,
 		};
+	};
+
+	isAgeRangeValid = (value) => {
+		if(value == ""){
+			return true;
+		}
+		let patterns = /\d-\d/;
+		if (patterns.test(value) == false) {
+			return false;
+		}
+		let [min, max] = value.split("-");
+		if(min == "" || max == ""){
+			return false;
+		}
+		if(Number(min) < 0 || Number(max) > 100){
+			return false;
+		}
+		if(Number(min) > Number(max) || Number(max) < Number(min)){
+			return false;
+		}
+		else{
+			return true;
+		}
 	};
 	onSendInvitation=()=>{
 		let filters = this.getFilterData();
@@ -88,10 +115,18 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			alert("Please select at least one channel");
 			return false;
 		}
+		this.setSubmitting(true);
+		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+			this.setSubmitting(false);
+			alert("Please enter valid auditor age range");
+			return false;
+		}
 		if(this.state.form.city == undefined || this.state.form.city == ""){
+			this.setSubmitting(false);
 			this.setState({filter_error:"Please select a city", filter_count: ""});
 		}
 		else{
+			this.setSubmitting(false);
 			this.setState({filter_error:"", loading:true});
 			saveOpportunityEmailRecord(this.props.params.auditCycleId,filters).done(() => {
 				hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/opportunity_notification`);
@@ -109,10 +144,22 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			alert("Please select at least one channel");
 			return false;
 		}
+		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+			alert("Please enter valid auditor age range");
+			return false;
+		}
+		this.setSubmitting(true);
+		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+			this.setSubmitting(false);
+			alert("Please enter valid auditor age range");
+			return false;
+		}
 		if(this.state.form.city == undefined || this.state.form.city == ""){
+			this.setSubmitting(false);
 			this.setState({filter_error:"Please select a city", filter_count: ""});
 		}
 		else{
+			this.setSubmitting(false);
 			this.setState({filter_error:"", loading:true});
 			let filters = this.getFilterData();
 			findAuditorCountOpportunityEmail(filters).then((res)=>{
@@ -120,7 +167,11 @@ export default class OpportunityEmailRecordForm extends React.Component {
 					this.setState({filter_error:"Auditors not found for this filter"});
 				}
 				this.setState({filter_count: res.count});
-			}).always(() => this.setState({loading:false}));
+			}).always(() =>
+			{
+				this.setState({loading:false});
+			}
+			);
 		}
 	};
 
@@ -136,6 +187,10 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		// }
 		if(this.state.form.channel_name == ""){
 			alert("Please select at least one channel");
+			return false;
+		}
+		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+			alert("Please enter valid auditor age range");
 			return false;
 		}
 		let filters = this.getFilterData();
@@ -159,7 +214,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		const occupation_options = [];
 		const education_options = [];
 		const auditor_rating_options = [];
-
+		const car_options = [];
 		for(let option of InterestAreaList){
 			interest_area_options.push({
 				label: getInterestArea(option),
@@ -194,7 +249,12 @@ export default class OpportunityEmailRecordForm extends React.Component {
 				value: option
 			});
 		}
-
+		for (let option of CarCostList){
+			car_options.push({
+				label:getCarCost(option),
+				value:option
+			});
+		}
 		return (
 			<Modal size="modal-lg" modalTitle="Schedule Opportunity Notifications" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -205,7 +265,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 							<__StateSelector states={this.state.states} value={this.state.form.state} onChange={this.stateChanged}/>
 						</div>
 						<div className="col-sm-3">
-							<__CitySelector cities={this.state.cities} value={this.state.form.city} onChange={this.inputChanged}/>
+							<__CitySelector use='all' cities={this.state.cities} value={this.state.form.city} onChange={this.inputChanged}/>
 						</div>
 						<div className="col-sm-3">
 							<FormSelect label="Gender" name="gender" value={this.state.form.gender} onChange={this.inputChanged}>
@@ -272,6 +332,20 @@ export default class OpportunityEmailRecordForm extends React.Component {
 								value={this.state.form.auditor_rating ? auditor_rating_options.filter(obj => this.state.form.auditor_rating.includes(obj.value) === true) : null}
 								onChange={(e)=>this.selectHandleChange(e, "auditor_rating")}
 								options={auditor_rating_options}
+								isMulti={true}/>
+							<br/>
+						</div>
+						<div className="col-sm-3">
+							<label>Auditor Age Range</label>
+							<input type="text" className="form-control" name="auditor_age_range" placeholder="Example: 20-50" value={this.state.form.auditor_age_range} onChange={this.inputChanged}/>
+						</div>
+						<div className="col-sm-3">
+							<label>Car Cost</label>
+							<Select
+								name="car"
+								value={this.state.form.car ? car_options.filter(obj => this.state.form.car.includes(obj.value)===true):null}
+								onChange={(e)=>this.selectHandleChange(e, "car")}
+								options={car_options}
 								isMulti={true}/>
 						</div>
 					</div>
