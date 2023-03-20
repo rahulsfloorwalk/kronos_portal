@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
 import types from "../action_types.js";
-
+import Alert from "react-s-alert";
 export function fetchStores(clientId){
 	return function(dispatch){
 		dispatch({
@@ -52,6 +52,7 @@ export function deleteStore(storeId){
 			type: "DELETE"
 		});
 		req.done(function(){
+			Alert.success("STORE DELETED");
 			dispatch({
 				type: types.STORE_ID_DELETE,
 				status: "success",
@@ -59,6 +60,7 @@ export function deleteStore(storeId){
 			});
 		});
 		req.fail(function(){
+			Alert.warning("STORE CANNOT BE DELETED");
 			dispatch({
 				type: types.STORE_ID_DELETE,
 				status: "error",

@@ -134,7 +134,10 @@ class Question(Model):
             # check for max marks and option marks
             option_marks = 0
             for option in data["options"]:
-                option_marks = option_marks + option["marks"]
+                if re.search(r'^\s|\s$', option["value"]):
+                    raise AppLogicError("option value contains leading or trailing spaces",option["value"])
+                else:
+                    option_marks = option_marks + option["marks"]
             if option_marks != self.max_marks:
                 raise AppLogicError("addition of option marks should be equal to max marks")
 

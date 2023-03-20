@@ -9,11 +9,14 @@ import FormSelect from "./FormSelect.jsx";
 class __CitySelector extends React.Component{
 	static propTypes = {
 		cities: PropTypes.object,
+		use: PropTypes.any
 	};
 
 	render(){
 		let cityOptions = [];
-		cityOptions.push(<option key='all' value={11132323}>All</option>);
+		if(this.props.use=="all"){
+			cityOptions.push(<option key='all' value={11132323}>All</option>);
+		}
 		for( let c of this.props.cities){
 			cityOptions.push(<option key={c.id} value={c.id}>{c.name}</option>);
 		}
