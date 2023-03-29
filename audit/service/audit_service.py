@@ -28,7 +28,8 @@ def find_audit_city_by_audit_cycle_id(audit_cycle_id):
         'audit_cycle__audits',))
     city_list=[]    
     for i in a:
-        city_list.append(i.store.city)
+        if i.store.city not in city_list:
+            city_list.append(i.store.city)
     return city_list
 
 def find_audit_by_id(audit_id):

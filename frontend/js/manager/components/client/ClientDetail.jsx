@@ -67,6 +67,7 @@ export default class ClientDetail extends React.Component {
 							<NavLink to={`/client/${this.props.params.clientId}/client_user`}><Bishop/> Client Users</NavLink>
 							<NavLink to={`/client/${this.props.params.clientId}/client_manager`}><Knight/> Managers</NavLink>
 							<NavLink to={`/client/${this.props.params.clientId}/client_trainer`}><Education/> Trainers</NavLink>
+							{/* <NavLink to={`/client/${this.props.params.clientId}/client_requirements`}><Info/> Client Requirements</NavLink>	 */}
 						</ul>
 						{this.props.children}
 					</div>
