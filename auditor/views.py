@@ -42,7 +42,8 @@ from auditor.service import additional_info_service
 from auditor.service import bank_info_service
 from audit.service import audit_cycle_proof_tag
 # from .serializers import AuditCycleProoftagListSerializer
-
+from audit_store.models import AuditStore
+from answer.models import ReportSection
 
 class ProfileInfoView(APIView):
     permission_classes = [HasGroupPermission]
@@ -385,6 +386,32 @@ class AuditStoreIdAcknowledgeView(APIView):
     }
     def post(self, request, audit_store_id):
         audit_store = audit_store_auditor_service.acknowledge_report(audit_store_id, request.user.id)
+        audit_=AuditStore.objects.get(pk=audit_store_id)
+        hide_sections=audit_.audit.audit_cycle.sections.filter(hide_comment=True).all()
+        if len(hide_sections)>1:
+            for i in hide_sections:
+                try:
+                    report=ReportSection.objects.get(audit_store_id=audit_store_id, section_id=i.id)
+                except ReportSection.DoesNotExist:
+                    report=ReportSection()
+                    report.section = i
+                    report.audit_store= audit_
+                    report.pm_comment = "--"
+                    report.save()
+        elif len(hide_sections)==1:
+            section_hide=audit_.audit.audit_cycle.sections.get(hide_comment=True)
+            if section_hide:
+                try:
+                    report=ReportSection.objects.get(audit_store_id=audit_store_id, section_id=section_hide.id)
+                except ReportSection.DoesNotExist:
+                    report=ReportSection()
+                    report.section = section_hide
+                    report.audit_store= audit_
+                    report.pm_comment = "--"
+                    report.save()
+        else:
+            pass
+        # audit_store_auditor_service.add_hide_section_in_report_section(audit_store_id) 
         return Response(AuditStoreSerializer(audit_store).data)
 
 
