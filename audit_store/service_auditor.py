@@ -18,7 +18,30 @@ from answer.service.answer_auditor import add_multiselect_answer_questions, remo
 from answer.models import Answer, ReportSection
 from questionnaire.models.question import Question
 
-
+# def add_hide_section_in_report_section(audit_store_id):
+#     audit=AuditStore.objects.get(id=audit_store_id)
+#     hide_sections=audit.audit.audit_cycle.sections.filter(hide_comment=True).all()
+#     if hide_sections and len(hide_sections)>1:
+#         for i in hide_sections:
+#             try:
+#                 report=ReportSection.objects.get(audit_store_id=audit_store_id, section_id=i.id)
+#             except ReportSection.DoesNotExist:
+#                 report=ReportSection()
+#                 report.section = i
+#                 report.audit_store= audit
+#                 report.pm_comment = "--"
+#                 report.save()
+#     else:
+#         section_hide=audit.audit.audit_cycle.sections.get(hide_comment=True)
+#         if section_hide:
+#             try:
+#                 report=ReportSection.objects.get(audit_store_id=audit_store_id, section_id=section_hide.id)
+#             except ReportSection.DoesNotExist:
+#                 report=ReportSection()
+#                 report.section = section_hide
+#                 report.audit_store= audit
+#                 report.pm_comment = "--"
+#                 report.save()
 @atomic
 def acknowledge_report(audit_store_id, user_id):
     audit_store = audit_store_service.find_by_id_for_auditor(audit_store_id, user_id)

@@ -345,7 +345,7 @@ class AuditStoreList extends Component{
 					rows.push(
 						<div className="panel panel-default" key={report.id}>
 							<div className="panel-heading">
-								<b>{report.store_name}</b>, {report.store_address}, {report.store_city}
+								<b>{report.store_name}</b>, {report.store_address}, {report.store_city} <span className="pull-right"><b>[Audit Count - {report.store_audit_count}]</b></span>
 							</div>
 							{audit_report_rows}
 						</div>

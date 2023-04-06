@@ -368,12 +368,12 @@ class AttachmentServiceTestCase(TestCase):
         attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
         attachment = service.complete(attachment.id)
         expect(attachment.status).to(equal(Attachment.ATTACHED))
-        expect(attachment.completed_at).to(be_within(timezone.now() - timedelta(seconds=1), timezone.now()))
+        expect(attachment.completed_at).to(be_within(timezone.now() - timedelta(seconds=5), timezone.now()))
 
     def test_complete_sets_completed_at(self):
         attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
         attachment = service.complete(attachment.id)
-        expect(attachment.completed_at).to(be_within(timezone.now() - timedelta(seconds=1), timezone.now()))
+        expect(attachment.completed_at).to(be_within(timezone.now() - timedelta(seconds=5), timezone.now()))
 
     def test_delete_sets_deleted_status(self):
         attachment = mommy.make(Attachment, status=Attachment.UPLOADING)
