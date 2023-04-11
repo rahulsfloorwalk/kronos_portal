@@ -411,7 +411,6 @@ class AuditStoreIdAcknowledgeView(APIView):
                     report.save()
         else:
             pass
-        # audit_store_auditor_service.add_hide_section_in_report_section(audit_store_id) 
         return Response(AuditStoreSerializer(audit_store).data)
 
 
