@@ -23153,5 +23153,16 @@
          "lon":"74.446300",
          "country":"IN"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":2136,
+      "fields":{
+         "name":"Zirakpur",
+         "state":"IN-PB",
+         "lat":"30.647413",
+         "lon":"76.808205",
+         "country":"IN"
+      }
    }
 ]
