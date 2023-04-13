@@ -162,10 +162,10 @@
 			if(password.length < 8){
 				return [false, "password must be atleast 8 characters", 0];
 			}
-			if(password.length > 12){
-				return [true, null, 3];
+			if(password.length >= 15){
+				return [false, "password must be atmost 14 characters", 0];
 			}
-			if(password.length > 8){
+			if(password.length > 8 && password.length < 15 ){
 				return [true, null, 2];
 			}
 			if(password.length === 8){
