@@ -192,7 +192,7 @@ class AuditStore(Model):
 
     def max_attachment_limit(self):
         obj = self.audit.audit_cycle.proof_tags_list.aggregate(count = Sum("section_proof_tag__max_attachment_count"))
-        return obj['count'] if obj['count'] else 1
+        return obj['count'] if obj['count'] else 15
 
     def attached_proof_count(self):
         return self.attachments.filter(status = Attachment.ATTACHED).count()
