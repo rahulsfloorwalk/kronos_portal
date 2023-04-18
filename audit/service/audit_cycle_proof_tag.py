@@ -8,7 +8,7 @@ from audit.models.audit_cycle import AuditCycle
 from audit.models.audit import Audit
 from questionnaire.models.proof_tag import SectionProofTag
 from questionnaire.service import questionnaire_type_client_service
-
+from client.models import Client
 
 def get_audit_cycle_proof_tag(audit_cycle_id):
     proof_tag_obj = ProofTag.objects.filter(is_active=True)
@@ -36,6 +36,27 @@ def get_audit_cycle_proof_tag(audit_cycle_id):
         proof_tag_list.append(proof_tag_dict)
         proof_tag_list = sorted(proof_tag_list, key=lambda j: j['name'])
     return sorted(proof_tag_list, key=lambda j: j['is_present_in_audit_cycle'], reverse=True)
+
+def get_client_by_proof_tag_id(proof_tag_id):
+    obj = AuditCycleProofTagList.objects.filter(proof_tag_id=proof_tag_id)
+    res=[]
+    audit_cycle_ids=[]
+    if obj:
+        if obj.count()>1:
+            for i in obj:
+                audit_cycle_ids.append(i.audit_cycle_id)
+        else:
+            ob = AuditCycleProofTagList.objects.get(proof_tag_id=proof_tag_id)
+            audit_cycle_ids.append(ob.audit_cycle_id)
+    client= Client.objects.filter(id__in=audit_cycle_ids)
+    if client:
+        if client.count()>1:
+            for i in client:
+                res.append({'id':i.id,'name':i.name,'brand_name':i.brand_name})
+        else:
+            client= Client.objects.get(id__in=audit_cycle_ids)
+            res.append({'id':client.id,'name':client.name,'brand_name':client.brand_name})
+    return res
 
 
 @atomic

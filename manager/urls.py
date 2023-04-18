@@ -228,7 +228,7 @@ urlpatterns = ([
 
     url(r'proof_tag$', proof_tag_views.ProofTagView.as_view(), name='proof_tag_views'),
     url(r'proof_tag/(?P<proof_tag_id>[0-9]+)$', proof_tag_views.ProofTagIdView.as_view(), name='proof_tag_id_view'),
-
+    url(r'(?P<proof_tag_id>[0-9]+)/clients_list$',proof_tag_views.ProofTagClientsView.as_view(), name='proof_tag_clients_view'),
     url(r'email_log/view/(?P<email_log_id>[0-9]+)/text$', email_log_views.EmailLogTextViewById.as_view(), name='email_log_view_by_id'),
     url(r'email_log/view/(?P<email_log_id>[0-9]+)/html$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),
     url(r'email_log/view/(?P<email_log_id>[0-9]+)$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),

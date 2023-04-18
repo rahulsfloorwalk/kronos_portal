@@ -80,5 +80,13 @@ class AttachmentAuditCycleProofTagList(APIView):
     }
     def get(self,request, audit_cycle_id):
         proof_tags = audit_cycle_proof_tag_service.get_audit_cycle_proof_tag_for_attachment(audit_cycle_id)
-        # return Response(AuditCycleProofTagListSerializer(proof_tags, many=True).data)
         return Response(proof_tags)
+
+class ProofTagClientsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET':[GROUP_NAME_MANAGER]
+    }
+    def get(self,request,proof_tag_id):
+        clients = audit_cycle_proof_tag_service.get_client_by_proof_tag_id(proof_tag_id)
+        return Response(clients)

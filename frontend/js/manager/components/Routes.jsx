@@ -103,6 +103,7 @@ import ClientTrainerForm from "./client_trainer/ClientTrainerForm.jsx";
 
 import ProofTagList from "./proof_tag/ProofTagList.jsx";
 import ProofTagForm from "./proof_tag/ProofTagForm.jsx";
+import ProofClientList from "./proof_tag/ProofClientList.jsx";
 
 import ReportList from "./reports/ReportList.jsx";
 import AuditorPaymentReport from "./reports/AuditorPaymentReport.jsx";
@@ -270,6 +271,7 @@ const Routes = () => (
 			<Route path="proof_tag" component={ProofTagList}>
 				<Route path="add" component={ProofTagForm}/>
 				<Route path=":proof_tag_id/edit" component={ProofTagForm}/>
+				<Route path=":proof_tag_id/client" component={ProofClientList}/>
 			</Route>
 		</Route>
 	</Router>

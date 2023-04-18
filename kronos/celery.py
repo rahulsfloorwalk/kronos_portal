@@ -30,6 +30,8 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.mail_qa_performance import qa_performance_report
     # from notify.service.add_payout_beneficiary import add_beneficiary
     from notify.service.auto_audit_alignment import auto_approve_audit_application
+    
+    from notify.service.auto_super_auditor_assign import auto_approve_for_super_auditor
 
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
@@ -48,6 +50,9 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(queue_at_9, send_on_audit_reminders.s())
     sender.add_periodic_task(queue_at_9, reject_audit_application.s())
     sender.add_periodic_task(queue_at_9, qa_performance_report.s())
+
+    #send super auditor assign
+    sender.add_periodic_task(queue_at_9,auto_approve_for_super_auditor.s())  
 
     # schedules for find repeated image attachment
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.

@@ -207,6 +207,7 @@ class AuditApplicationSerializer(ModelSerializer):
             'comment',
             'profile_match_percentage',
             'auditor_audit_count',
+            'is_super_auditor'
         )
         read_only_fields = fields
 

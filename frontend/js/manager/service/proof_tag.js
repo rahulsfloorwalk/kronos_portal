@@ -47,3 +47,7 @@ export function saveAttachmentTag(attachmentId, proof_tag_id){
 		contentType: "application/json"
 	});
 }
+
+export function getClientsByProofTagId(proof_tag_id){
+	return $.get(url.api_base_path+ `manager/${proof_tag_id}/clients_list`);
+}
