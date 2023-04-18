@@ -23164,5 +23164,16 @@
          "lon":"76.808205",
          "country":"IN"
       }
+   },
+   {
+      "model":"manager.city",
+      "pk":2137,
+      "fields":{
+         "name":"Hathras",
+         "state":"IN-UP",
+         "lat":"27.5954811",
+         "lon":"78.0540352", 
+         "country":"IN"
+      }
    }
 ]

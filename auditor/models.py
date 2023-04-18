@@ -128,7 +128,7 @@ class ProfileInfo(Model, CompletableMixin):
     date_of_birth = DateField(db_column='dob', blank=True, null=True)
     address = CharField(db_column='address', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=8, blank=True, validators=[numericValidator])
-
+    is_super_auditor = BooleanField(db_column='is_super_auditor',blank=False,default=False)
     auditor_rating = CharField(db_column='auditor_rating', max_length=1, choices=AUDITOR_RATING, null=True)
 
     city = ForeignKey(City, db_column='city_id', null=True, blank=True, on_delete=PROTECT)
@@ -525,6 +525,8 @@ class AuditApplication(Model):
         auditor_pincode = self.profileinfo.get_pincode()
         distance = geo.calculate_distance_from_pincode(audit_store_pincode, auditor_pincode)
         return distance
+    def is_super_auditor(self):
+        return self.profileinfo.is_super_auditor
 
     def __str__(self):
         return 'AuditApplication({}): {}, {}'.format(self.id, self.audit, self.profileinfo)

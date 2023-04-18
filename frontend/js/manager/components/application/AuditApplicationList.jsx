@@ -8,7 +8,7 @@ import { momentDateFormat }  from "../../../../config.js";
 
 import { Link, withRouter } from "react-router";
 
-import { Time, ThumbsUp, ThumbsDown, Pencil } from "../../../components/Icons.jsx";
+import { Time, ThumbsUp, ThumbsDown, Pencil,Star } from "../../../components/Icons.jsx";
 
 import { findByAudit, waitListApplication, setAuditApplicationComment } from "../../service/application.js";
 import { find_recent_audit_store_by_user_id } from "../../service/audit_store.js";
@@ -125,7 +125,7 @@ export class AuditApplicationRow extends Component{
 		}
 		return(
 			<tr key={application.id} className="">
-				<td>{auditorLink}<br/><a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a></td>
+				<td>{auditorLink}<br/><a href={`tel:${application.profileinfo.mobile_number}`}>{application.profileinfo.mobile_number}</a> {application.is_super_auditor? <Star/> : null } </td>
 				<td>{moment(application.audit_date).format(momentDateFormat)}</td>
 				<td><StarRating rating={application.profileinfo.avg_auditor_rating}/></td>
 				<td>{application.profile_match_percentage}%</td>
