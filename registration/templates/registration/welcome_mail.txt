@@ -18,7 +18,6 @@ If you have any other doubts or queries feel free to read our FAQs or contact us
 
  * Shopper FAQs
  * Email: {{ AUDITS_EMAIL }}
- * Phone: {{ SUPPORT_PHONE }}
 
 Come take a FloorWalk with us! Let's earn and grow together
 
@@ -27,4 +26,4 @@ This is an auto generated email. You are receiving this email because {{email}} 
 FloorWalk Consultants Pvt. Ltd.
 Gurugram, Bengaluru and Navi Mumbai
 
-{{rhea_base_url}} | Facebook ({{ FB_PAGE_URL }}) | Twitter ({{ TW_PAGE_URL }}) | {{ SUPPORT_PHONE }}
+{{rhea_base_url}} | Facebook ({{ FB_PAGE_URL }}) | Twitter ({{ TW_PAGE_URL }})
