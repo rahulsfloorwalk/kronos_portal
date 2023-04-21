@@ -27,7 +27,6 @@ def fail_percentage(pas,fail):
 
 @app.task(iqnore_result=True)
 def auto_approve_for_super_auditor():
-    # with atomic():
     user=User.objects.filter(groups__name=GROUP_NAME_AUDITOR)
     top_rating_user_id=[]
     for i in user:
