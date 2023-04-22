@@ -249,6 +249,11 @@ if WHITENOISE_ENABLED:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
     WHITENOISE_ADD_HEADERS_FUNCTION = whitenoise_add_header
 
+# recaptcha key
+GOOGLE_RECAPTCHA_SCERET_KEY = properties["FORGOT_RECAPTCHA_SETTINGS"]["SECRET_KEY"]
+
+GOOGLE_RECAPTCHA_SCERET_KEY = properties["LOGIN_RECAPTCHA_SETTINGS"]["SECRET_KEY"]
+
 # email settings
 EMAIL_HOST = properties["EMAIL_SETTINGS"]["HOST"]
 EMAIL_PORT = int(properties["EMAIL_SETTINGS"]["PORT"])

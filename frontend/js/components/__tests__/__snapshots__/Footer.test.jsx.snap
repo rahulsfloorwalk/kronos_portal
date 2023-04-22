@@ -33,12 +33,6 @@ exports[`<Footer/> renders the footer 1`] = `
     </a>
      | 
     <a
-      href="tel:+91-1234567890"
-    >
-      +91-1234567890
-    </a>
-     | 
-    <a
       href="https://twitter.com/kronos"
     >
       @

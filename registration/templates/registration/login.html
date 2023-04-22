@@ -3,7 +3,7 @@
 {% load static %}
 {% block title %}Shopper Login |{% endblock %}
 {% block content %}
-
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <style>
 .page-header{
 	margin: 10px 0 10px !important;
@@ -36,7 +36,7 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				<form action="{% url 'registration:login' %}{% if next %}?next={{next}}{%endif%}" method="POST">
+				<form onsubmit="return setAction()" action="{% url 'registration:login' %}{% if next %}?next={{next}}{%endif%}" method="POST">
 					{% if next %}
 					<input type="hidden" name="next" value="{{next}}"/>
 					{% endif %}
@@ -55,6 +55,9 @@
 						{{ form.password.errors }}
 						</p>
 					</div>
+					<div class="g-recaptcha" data-sitekey="6LfI0qElAAAAAH3B07K-gzlI3pDIl0Ac58mlJLXy">
+					</div>
+					<br/>
 					<div class="form-group">
 						<button class="btn btn-primary btn-lg" type="submit">Login</button>
 						<a class="pull-right" href="{% url 'registration:password_reset' %}">Forgot Password</a>
@@ -96,5 +99,17 @@
 
 	</div>
 </div>
+<script>
+	function setAction() {
+	var cap=grecaptcha.getResponse()
+	if (cap.length>1){
+		return true;
+	}
+	else{
+		alert("Please Enter Captcha");
+		return false;
+	}
+}
+</script>
 {% include "registration/collectcdn.html" %}
 {% endblock %}
