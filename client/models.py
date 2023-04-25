@@ -43,7 +43,12 @@ class Client(Model):
     company_website_url = CharField(db_column='company_website_url', max_length=200, blank=True)
     is_auto_signup = BooleanField(db_column='is_auto_signup', default=False)
     payments = GenericRelation('billing.payment', related_query_name='clients')
-
+    
+    city = CharField(db_column='city', max_length=300, blank=True)
+    state = CharField(db_column='state', max_length=300, blank=True)
+    pincode = CharField(db_column='pincode', max_length=300, blank=True)
+    gst_in = CharField(db_column='gst_in', max_length=300, blank=True)
+    
     def auditor_logo_url(self):
         return self.brand_logo_url or self.logo_url
 
@@ -372,3 +377,25 @@ class Quotation(Model):
     # def clean(self):
     #     self.__validate_data()
     #     return super(Quotation, self).clean()
+
+
+class ClientForEcomm(Model):
+    id = AutoField(db_column = 'id', primary_key=True)
+    first_name = CharField(db_column='first_name', max_length=50, blank=True)
+    last_name = CharField(db_column='last_name', max_length=50, blank=True)
+    email = EmailField(db_column='email', max_length=50, blank=False)
+    phone_number = CharField(db_column='phone_number', max_length=15, blank=True)
+    company = CharField(db_column='company', max_length=50, blank=True)
+    password = CharField(db_column='password', max_length=50, blank=True)
+    encrypt_password = CharField(db_column='encrypt_password',max_length=128, blank=True)
+    address = CharField(db_column='address',max_length=50, blank=True)
+    city = CharField(db_column='city',max_length=50, blank=True)
+    state = CharField(db_column='state',max_length=50, blank=True)
+    pincode = CharField(db_column='pincode',max_length=50, blank=True)
+    gst_in = CharField(db_column='gst_in',max_length=50, blank=True)
+    created_at = DateTimeField(db_column="created_at", null=True)
+    def __str__(self):
+        return 'ClientforEcomm({}): {}'.format(self.id,self.email)
+
+    class Meta:
+        ordering = ['email']

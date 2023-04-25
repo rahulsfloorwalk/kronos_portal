@@ -39,11 +39,9 @@ export default class ProofTagList extends React.Component {
 	static propTypes = {
 		children: PropTypes.node,
 	};
-
 	state = {
 		proof_tags: [],
 	};
-
 	componentDidMount() {
 		findProofTag().then((proof_tags) => {
 			this.setState({

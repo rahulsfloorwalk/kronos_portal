@@ -3,9 +3,9 @@ from rest_framework.response import Response
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-
-from ..serializers import ClientSerializer
-from client.service import client_service
+from rest_framework.permissions import AllowAny
+from ..serializers import ClientSerializer,ClientForEcommSerializer
+from client.service import client_service,client_user_service
 
 class ClientView(APIView):
     permission_classes = [HasGroupPermission]
@@ -50,3 +50,13 @@ class ClientViewByDashboardCyleStatus(APIView):
     def get(self, request, format=None):
         clients = client_service.find_client_by_dashboard_cycle_status()
         return Response(ClientSerializer(clients, many=True).data)
+
+class ClientUserAdd(APIView):
+    permission_classes = [AllowAny]
+    
+    def post(self, request):
+        client_s = ClientForEcommSerializer(data=request.data)
+        client_s.is_valid(raise_exception=True)
+        client = client_s.deserialize()
+        savedClient = client_user_service.save(client)
+        return Response(ClientForEcommSerializer(savedClient).data)
