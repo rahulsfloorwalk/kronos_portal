@@ -6,7 +6,7 @@ from agency.models import AgencyUser, Agency
 from audit.models import Audit, AuditCycle, AuditCycleProofTagList
 from audit_store.models import AuditStore, ReportFollowUpLog
 from auditor.models import ProfileInfo, AuditApplication
-from client.models import Client, Store
+from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
 from .models import City, ProofTag
@@ -24,6 +24,11 @@ class ClientSerializer(ModelSerializer):
             'logo_url',
             'brand_logo_url',
             'receive_email_notification',
+            'address',
+            'city',
+            'state',
+            'pincode',
+            'gst_in'
         )
         read_only_fields = ('id',)
 
@@ -39,6 +44,12 @@ class ClientSerializer(ModelSerializer):
         client.logo_url = self.validated_data.get('logo_url', client.logo_url)
         client.brand_logo_url = self.validated_data.get('brand_logo_url', client.brand_logo_url)
         client.receive_email_notification = self.validated_data.get('receive_email_notification', client.receive_email_notification)
+        client.address= self.validated_data.get('address',client.address)
+        client.city = self.validated_data.get('city',client.city)
+        client.state = self.validated_data.get('state',client.state)
+        client.pincode = self.validated_data.get('pincode',client.pincode)
+        client.gst_in = self.validated_data.get('gst_in',client.gst_in)
+        
         return client
 
 class CitySerializer(ModelSerializer):
@@ -399,3 +410,42 @@ class StoreImportDeSerializer(Serializer):
         if file_uploaded.name.split('.')[-1] not in ['xls','xlsx']:
             raise AppLogicError('Invalid File Type')
         return super().validate(attrs)
+
+
+class ClientForEcommSerializer(ModelSerializer):
+    class Meta:
+        model = ClientForEcomm
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'email',
+            'phone_number',
+            'company',
+            'password',
+            'address',
+            'city',
+            'state',
+            'pincode',
+            'gst_in'
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            client = ClientForEcomm.objects.get(id=self.context.get('id'))
+        else:
+            client = ClientForEcomm()
+        client.first_name = self.validated_data.get('first_name', client.first_name)
+        client.last_name = self.validated_data.get('last_name', client.last_name)
+        client.email = self.validated_data.get('email', client.email)
+        client.phone_number = self.validated_data.get('phone_number', client.phone_number)
+        client.company = self.validated_data.get('company',client.city)
+        client.password = self.validated_data.get('password',client.password)
+        client.address= self.validated_data.get('address',client.address)
+        client.city = self.validated_data.get('city',client.city)
+        client.state = self.validated_data.get('state',client.state)
+        client.pincode = self.validated_data.get('pincode',client.pincode)
+        client.gst_in = self.validated_data.get('gst_in',client.gst_in)
+        
+        return client

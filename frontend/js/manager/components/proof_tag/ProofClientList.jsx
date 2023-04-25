@@ -19,7 +19,7 @@ export default class ProofClientList extends React.Component {
 	};
 	componentDidMount() {
 		if(this.props.params.proof_tag_id){
-			this.setState({laoding:true});
+			this.setState({loading:true});
 			getClientsByProofTagId(this.props.params.proof_tag_id).then( (proof_clients) => {
 				this.setState({
 					proof_clients: proof_clients,
@@ -29,31 +29,32 @@ export default class ProofClientList extends React.Component {
 		}
 	}
 	render() {
-		if(this.state.loading){
-			return (<Loading/>);
-		}
+		let rows= this.state.proof_clients.map((m,index)=>{
+			return(
+				<tr key={index}>
+					<td>{m.id}</td>
+					<td>{m.name}</td>
+				</tr>
+			);
+		});
 		return (
 			<Modal modalTitle='Client List' onClose={hashHistory.goBack}>
-				<table className="table table-striped">
-					<thead>
-						<tr>
-							<th className="text-right">#</th>
-							<th>ID</th>
-							<th>Name</th>
-							<th>Brand Name</th>
-						</tr>
-					</thead>
-					<tbody>
-						{this.state.proof_clients.map((p,i)=>(
-							<tr key={i}>
-								<td>{i+1}</td>
-								<td>{p.id}</td>
-								<td>{p.name}</td>
-								<td>{p.brand_name}</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
+				{this.state.loading ? <Loading/> :
+					rows.length>0 ?
+						(
+							<table className="table table-striped">
+								<thead>
+									<tr>
+										<th>ID</th>
+										<th>Name</th>
+									</tr>
+								</thead>
+								<tbody>
+									{rows}
+								</tbody>
+							</table>
+						)
+						: <div>Proof Tag is Not Assigned For Any Client</div>}
 			</Modal>
 		);
 	}
