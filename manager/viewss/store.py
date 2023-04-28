@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
+from kronos.exceptions import AppLogicError
 
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
@@ -87,6 +88,9 @@ class StoreView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request):
+        if request.data['client'] and request.data.get('code'):
+            if Store.objects.filter(client=request.data['client'],code=request.data.get('code')).exists():
+                raise AppLogicError('The store already exist in the client.')
         store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()

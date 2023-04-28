@@ -166,6 +166,9 @@ def set_audit_date_for_moderator(audit_store_id, audit_date, user_id):
 
 @atomic
 def unsubmit_for_moderator(audit_store_id, user_id, message, missing_proofs=[]):
+    audit_store=AuditStore.objects.get(id=audit_store_id)
+    audit_store.report_revert_count+=1
+    audit_store.save()
     user = find_moderator_by_user_id(user_id)
     audit_store = find_by_id_for_moderator(audit_store_id, user_id)
 

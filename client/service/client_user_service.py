@@ -18,3 +18,6 @@ def save(client):
     data.created_at = timezone.now()
     data.save()
     return data
+
+def find_all_client_users():
+    return ClientForEcomm.objects.all()

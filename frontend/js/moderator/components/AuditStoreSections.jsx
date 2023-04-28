@@ -211,9 +211,12 @@ export class QuestionRow extends React.Component{
 		if( this.props.marking){
 			let hasError = this.state.error ? "has-error" : "";
 			let hasMarksObtainedSuccess = this.state.marksObtainedSuccess ? "has-success" : "";
+			let answerMarksBg = this.props.q.max_marks && this.state.answer.marks_obtained == 0 ? {backgroundColor: "#ffc299"} : {} ;
 			markElement = (
 				<div className={`input-group ${hasError} ${hasMarksObtainedSuccess}`}>
-					<input className="form-control text-right"
+					<input
+						style={answerMarksBg}
+						className="form-control text-right"
 						onChange={this.marksChanged}
 						onBlur={this.saveMarks}
 						value={this.state.answer.marks_obtained}/>

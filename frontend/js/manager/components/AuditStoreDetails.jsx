@@ -476,6 +476,10 @@ export class AuditStoreDetails extends React.Component{
 										<td className="text-right">Status:</td>
 										<th><AuditStoreStatusLabel status={this.props.auditStore.status}/></th>
 									</tr>
+									<tr style={this.props.auditStore.report_revert_count>1 ? {color:"red"}: null}>
+										<td className="text-right">Report Revert Count:</td>
+										<th>{this.props.auditStore.report_revert_count}</th>
+									</tr>
 									<tr>
 										<td className="text-right">Report Rating:</td>
 										<th>
