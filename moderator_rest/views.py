@@ -9,7 +9,7 @@ from client.service import client_service
 
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_MODERATOR
-
+from audit_store import service_manager
 from audit_store.models import AuditStore
 from auditor.models import AuditorRating
 import audit.service.audit_cycle as audit_cycle_service

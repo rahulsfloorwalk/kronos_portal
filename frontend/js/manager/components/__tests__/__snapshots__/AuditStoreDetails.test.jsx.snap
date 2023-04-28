@@ -268,6 +268,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is already r
                 />
               </th>
             </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
+            </tr>
             <tr>
               <td
                 className="text-right"
@@ -812,6 +822,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when AuditStore is not rated
                 />
               </th>
             </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
+            </tr>
             <tr>
               <td
                 className="text-right"
@@ -1294,6 +1314,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACCEPTED 1`] 
                   status="ACCEPTED"
                 />
               </th>
+            </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
             </tr>
             <tr>
               <td
@@ -1838,6 +1868,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ACKNOWLEDGED 
                   status="ACKNOWLEDGED"
                 />
               </th>
+            </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
             </tr>
             <tr>
               <td
@@ -2390,6 +2430,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is ASSIGNED 1`] 
                 />
               </th>
             </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
+            </tr>
             <tr>
               <td
                 className="text-right"
@@ -2872,6 +2922,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is COMPLETED 1`]
                   status="COMPLETED"
                 />
               </th>
+            </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
             </tr>
             <tr>
               <td
@@ -3396,6 +3456,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is FAILED 1`] = 
                   status="FAILED"
                 />
               </th>
+            </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
             </tr>
             <tr>
               <td
@@ -3941,6 +4011,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is PM_REVIEW 1`]
                 />
               </th>
             </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
+            </tr>
             <tr>
               <td
                 className="text-right"
@@ -4441,6 +4521,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is REJECTED 1`] 
                   status="REJECTED"
                 />
               </th>
+            </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
             </tr>
             <tr>
               <td
@@ -4986,6 +5076,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is SUBMITTED 1`]
                 />
               </th>
             </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
+            </tr>
             <tr>
               <td
                 className="text-right"
@@ -5506,6 +5606,16 @@ exports[`<AuditStoreDetails/> is rendered correctly when status is WITHDRAWN 1`]
                   status="WITHDRAWN"
                 />
               </th>
+            </tr>
+            <tr
+              style={null}
+            >
+              <td
+                className="text-right"
+              >
+                Report Revert Count:
+              </td>
+              <th />
             </tr>
             <tr>
               <td

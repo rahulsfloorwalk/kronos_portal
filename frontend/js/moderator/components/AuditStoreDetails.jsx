@@ -115,7 +115,11 @@ export default class AuditStoreDetails extends React.Component{
 			let val = $(this).attr("value");
 			missing_proofs.push(val);
 		});
-		unsubmit(this.props.params.auditStoreId, this.state.reason, missing_proofs).then(this.setAuditStore);
+		unsubmit(this.props.params.auditStoreId, this.state.reason, missing_proofs).
+			then(() => {
+				this.setAuditStore;
+				location.reload();
+			});
 	};
 	auditDateChanged = (momentDate) => {
 		this.setState({auditDateLoading: true});
@@ -400,6 +404,10 @@ export default class AuditStoreDetails extends React.Component{
 									<tr>
 										<td className="text-right">Status:</td>
 										<th><AuditStoreStatusLabel status={this.state.auditStore.status}/></th>
+									</tr>
+									<tr style={this.state.auditStore.report_revert_count>1 ? {color: "red"}: null}>
+										<td className="text-right">Report Revert Count:</td>
+										<th>{this.state.auditStore.report_revert_count}</th>
 									</tr>
 									<tr>
 										<td className="text-right">QA Report Rating:</td>

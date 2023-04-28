@@ -174,7 +174,7 @@ class AuditStore(Model):
 
     audit_store_percentage = IntegerField(db_column='percentage', null=True, blank=True)
     auto_assigned = BooleanField(db_column='auto_assigned', default=False)
-
+    report_revert_count = IntegerField(db_column='report_revert_count',default=0 , blank=True,null=True)
     objects = AuditStoreQuerySet.as_manager()
 
     class Meta:

@@ -31,6 +31,7 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
         className="form-control text-right"
         onBlur={[Function]}
         onChange={[Function]}
+        style={Object {}}
         value={0}
       />
       <span
@@ -98,6 +99,7 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
         className="form-control text-right"
         onBlur={[Function]}
         onChange={[Function]}
+        style={Object {}}
         value={1}
       />
       <span
