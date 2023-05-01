@@ -3,9 +3,9 @@
  */
 
 export const url = {
-	protocol : 'http',
-	hostname : 'localhost',
-	port : '8000',
+	protocol : "http",
+	hostname : "localhost",
+	port : "8000",
 	api_base_path: "/"
 };
 
