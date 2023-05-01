@@ -344,6 +344,7 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
             'qa_rating',
             'assigned_to_moderator',
             'attribute_data',
+            'report_revert_count'
         )
         read_only_fields = fields
 
