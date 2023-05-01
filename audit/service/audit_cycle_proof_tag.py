@@ -42,30 +42,20 @@ def get_client_by_proof_tag_id(proof_tag_id):
     res=[]
     audit_cycle_ids=[]
     if obj:
-        if obj.count()>1:
+        if obj.count()>0:
             for i in obj:
                 audit_cycle_ids.append(i.audit_cycle_id)
         else:
-            ob = AuditCycleProofTagList.objects.get(proof_tag_id=proof_tag_id)
-            audit_cycle_ids.append(ob.audit_cycle_id)
-    if len(audit_cycle_ids)>1:
-        client= Client.objects.filter(id__in=audit_cycle_ids)
-        if client:
-            if client.count()>1:
-                for i in client:
-                    res.append({'id':i.id,'name':i.name,'brand_name':i.brand_name})
-            else:
-                client= Client.objects.get(id__in=audit_cycle_ids)
-                res.append({'id':client.id,'name':client.name,'brand_name':client.brand_name})
+            return res
+    if audit_cycle_ids:
+        ob= AuditCycle.objects.filter(id__in=audit_cycle_ids).select_related('client')
+        if ob.count()>0:
+            for i in ob:
+                res.append({'id':i.client.id,"name":i.client.name})
+        else:
+            return res
     else:
-        client= Client.objects.filter(id = audit_cycle_ids[0])
-        if client:
-            if client.count()>1:
-                for i in client:
-                    res.append({'id':i.id,'name':i.name,'brand_name':i.brand_name})
-            else:
-                client= Client.objects.get(id = audit_cycle_ids[0])
-                res.append({'id':client.id,'name':client.name,'brand_name':client.brand_name})
+        return res
     return res
 
 

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
 
-import { Check, Cross, Pencil, Plus, File } from "../../../components/Icons.jsx";
+import { Check, Cross, Pencil, Plus, File ,King} from "../../../components/Icons.jsx";
 
 import { findProofTag } from "../../service/proof_tag.js";
 
@@ -27,9 +27,9 @@ class ProofTagRow extends React.Component {
 				<td>
 					<Link to={`/proof_tag/${this.props.proof_tag.id}/edit`} className="btn btn-default"><Pencil/></Link>
 				</td>
-				{/* <td>
+				<td>
 					<Link to={`/proof_tag/${this.props.proof_tag.id}/client`} className="btn btn-default" title="Show Clients"><King/></Link>
-				</td> */}
+				</td>
 			</tr>
 		);
 	}

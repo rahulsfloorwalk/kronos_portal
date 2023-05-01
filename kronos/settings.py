@@ -61,7 +61,7 @@ RHEA_BASE_URL = "{}://{}".format(RHEA_PROTOCOL, RHEA_DOMAIN)
 PHOEBE_VERSION = version
 
 # only allow requests with Host: KRONOS_DOMAIN.split(':')[0]
-ALLOWED_HOSTS = ["localhost", KRONOS_DOMAIN.split(':')[0]]
+ALLOWED_HOSTS =['*'] #["localhost", KRONOS_DOMAIN.split(':')[0]]
 
 BRAND_NAME = properties["GENERAL"]["BRAND_NAME"]
 BRAND_SHORTNAME = properties["GENERAL"]["BRAND_SHORTNAME"]
