@@ -88,6 +88,7 @@ DEPENDENCY_APPS = [
     'guardian',
     'markdown_deux',
     'django_nose',
+    'corsheaders',
 ]
 
 if DEBUG and DEBUG_TOOLBAR:
@@ -131,7 +132,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'registration.DisableCSRF',
     'kronos.middlewares.PhoebeVersionHeaderMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+CORS_ORIGIN_ALLOW_ALL = True
 
 if WHITENOISE_ENABLED:
     # insert this just after the SecurityMiddleware
