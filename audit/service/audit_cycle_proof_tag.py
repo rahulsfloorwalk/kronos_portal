@@ -44,14 +44,16 @@ def get_client_by_proof_tag_id(proof_tag_id):
     if obj:
         if obj.count()>0:
             for i in obj:
-                audit_cycle_ids.append(i.audit_cycle_id)
+                if i.audit_cycle_id not in audit_cycle_ids:
+                    audit_cycle_ids.append(i.audit_cycle_id)
         else:
             return res
     if audit_cycle_ids:
         ob= AuditCycle.objects.filter(id__in=audit_cycle_ids).select_related('client')
         if ob.count()>0:
             for i in ob:
-                res.append({'id':i.client.id,"name":i.client.name})
+                if {'id':i.client.id,'name':i.client.name} not in res:
+                    res.append({'id':i.client.id,"name":i.client.name})
         else:
             return res
     else:
