@@ -92,12 +92,12 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
 #             "reimbursement": 400,
 #             "count": 5,
 #             "post_approval_description": "Test post approval description",
-#             'addStore':['2']
+#             'store':['2','3']
 #         }
 #         response = self.client.post(reverse('manager:audit_view'), post_data, format="json")
 #         expect(response.status_code).to(equal(200))
 #         expect(response.data).to(have_key("count", post_data["count"]))
 #         expect(response.data).to(have_key("reimbursement", post_data["reimbursement"]))
 #         expect(response.data).to(have_key("earnings_per_audit", post_data["earnings_per_audit"]))
-#         expect(response.data).to(have_key("store", post_data["addstore"]))
+#         expect(response.data).to(have_key("store", post_data["store"]))
     
