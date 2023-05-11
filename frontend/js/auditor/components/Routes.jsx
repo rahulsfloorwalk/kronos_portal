@@ -39,6 +39,8 @@ import ShopperGuideSocialSnippets from "./ShopperGuideSocialSnippets.jsx";
 // import FullTimeOpportunity from "./FullTimeOpportunity.jsx";
 import ContentNinja from "./ContentNinja.jsx";
 import WhatsappNumberForm from "./WhatsappNumberForm.jsx";
+import CertificateInfoPage from "./CertificateInfoPage.jsx";
+import CertificateQuiz from "./CertificateQuiz.jsx";
 
 function logPageView() {
 	//console.log(window.location.pathname, window.location.hash);
@@ -60,6 +62,8 @@ const Routes = ({store}) => (
 					<Route path="mobile_number/edit" component={MobileNumberForm}/>
 					<Route path="whatsapp_number/edit" component={WhatsappNumberForm}/>
 				</Route>
+				<Route path="certification" component={CertificateInfoPage}/>
+				<Route path="certification/questions" component={CertificateQuiz}/>
 				<Route path="audit" component={ClientList}/>
 				<Route path="audit/cycle/:auditCycleId" component={AuditList}>
 					<Route path="audit/:auditId">

@@ -1,4 +1,5 @@
 from django.http import HttpResponse
+from django.utils import timezone
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -12,6 +13,7 @@ from ..service import audit as manager_audit_service
 from ..serializers import AuditSerializer, AuditStoreSerializer
 from audit.service import audit_service
 from auditor.service import application_service
+from manager.serializers import StoreSerializer
 
 class AuditDeSerializer(ModelSerializer):
     class Meta:
@@ -74,10 +76,13 @@ class AuditIdView(APIView):
         return Response(AuditSerializer(audit).data)
 
     def post(self, request, audit_id):
-        audit_ds = AuditDeSerializer(data=request.data, context={'id':audit_id})
-        audit_ds.is_valid(raise_exception=True)
-        audit = audit_ds.deserialize()
-        audit = audit_service.save(audit)
+        audit = Audit.objects.get(id=audit_id)
+        audit.earnings_per_audit =request.data.get('earnings_per_audit')
+        audit.reimbursement =request.data.get('reimbursement')
+        audit.post_approval_description = request.data.get('post_approval_description')
+        audit.count = request.data.get('count')
+        audit.modified_at = timezone.now()
+        audit.save()
         return Response(AuditSerializer(audit).data)
 
     def delete(self, request, audit_id):
@@ -90,14 +95,8 @@ class AuditView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request):
-        if request.data['audit_region'] == 'state':
-            audit = audit_service.create_audit_by_state(request.data)
-            audit = audit[0] if audit else audit
-        elif request.data['audit_region'] == 'city':
-            audit_ds = AuditDeSerializer(data=request.data)
-            audit_ds.is_valid(raise_exception=True)
-            audit = audit_ds.deserialize()
-            audit = audit_service.save(audit)
+        audit = audit_service.create_audit_by_multiple_store(request.data)
+        audit = audit[0] if audit else audit
         return Response(AuditSerializer(audit).data)
 
 
@@ -154,3 +153,12 @@ class AuditRejectAllApplicationsView(APIView):
     def post(self, request, audit_id):
         rejected_applications = application_service.reject_all_applications_for_audit(audit_id, request.user)
         return Response(len(rejected_applications))
+
+class RemainingAuditStore(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups={
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        audit = audit_service.find_rem_store_by_audit_cycle_id(audit_cycle_id)
+        return Response(StoreSerializer(audit,many=True).data)

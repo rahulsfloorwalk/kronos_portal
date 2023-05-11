@@ -56,7 +56,8 @@ class ProfileInfoSerializer(ModelSerializer):
             'city',
             'city_id',
             'user_id',
-            'is_complete'
+            'is_complete',
+            'certification_score'
         )
         read_only_fields = fields
 

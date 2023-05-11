@@ -29,6 +29,10 @@ class SiteTourBox extends React.Component {
 				content: (<div style={{overflowY:"auto"}}><p>Start by clicking on <b>My Profile</b> to fill your basic information. This helps us to show you relevant projects that are available near you. Try completing 100% of your profile to get maximum audits.</p></div>),
 			},
 			{
+				selector: ".certificationclass",
+				content: (<p>Use this tab to complete auditor certification. It is not a mandate but if you complete this certification, the chances of getting the audit increases.</p>),
+			},
+			{
 				selector: ".audittourclass",
 				content: (<p>Under the view opportunities tab, you see projects that are available for you based on your city, state and pincode entered. Read the audit assignment process to know how the process works. Do not conduct audits if they are not assigned to you.</p>),
 			},

@@ -32,6 +32,39 @@ def find_audit_city_by_audit_cycle_id(audit_cycle_id):
             city_list.append(i.store.city)
     return city_list
 
+def find_rem_store_by_audit_cycle_id(audit_cycle_id):
+    audit=AuditCycle.objects.get(pk=audit_cycle_id)
+    audit_store_list = Audit.objects.filter(audit_cycle = audit_cycle_id).values_list('store', flat=True)
+    return Store.objects.filter(client_id=audit.client_id).order_by('city__name').select_related('client','city').exclude(id__in = audit_store_list)
+
+def create_audit_by_multiple_store(data):
+    if not data.get('addStore'):
+        raise AppLogicError("Please Choose at least One Store")
+    audit_cycle_id = data.get('audit_cycle', '')
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+    store_exists = Store.objects.filter(client = audit_cycle.client.id).exists()
+    if not store_exists:
+        raise AppLogicError("Stores are not found in This Client")
+
+    audit_store_list = Audit.objects.filter(audit_cycle = audit_cycle_id,store_id__in=data['addStore']).values_list('store', flat=True)
+    client_store_list = Store.objects.filter(client = audit_cycle.client,id__in=data['addStore']).exclude(id__in = audit_store_list)
+    if not client_store_list:
+        raise AppLogicError("Audits are already created for this stores")
+
+    audit_list = []
+    for store in client_store_list:
+        audit = {
+            'count': data.get('count', 1),
+            'earnings_per_audit': data.get('earnings_per_audit',audit_cycle.earnings_per_audit),
+            'reimbursement': data.get('reimbursement',audit_cycle.reimbursement),
+            'store': store,
+            'audit_cycle': audit_cycle,
+            'post_approval_description': data.get('post_approval_description','')
+        }
+        audit_list.append(Audit(**audit))
+    audits = Audit.objects.bulk_create(audit_list)
+    return audits
+
 def find_audit_by_id(audit_id):
     try:
         return Audit.objects.get(pk=audit_id)

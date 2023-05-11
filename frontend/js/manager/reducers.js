@@ -21,7 +21,7 @@ import errorsReducer from "./reducers/errors";
 import moderatorReducer from "./reducers/moderator";
 import moderatorSummaryReducer from "./reducers/moderator_summary";
 import permissionReducer from "./reducers/permission";
-
+import remainingStoreReducer from "./reducers/remaining_store";
 export default combineReducers({
 	applications: applicationReducer,
 	audits: auditReducer,
@@ -44,5 +44,6 @@ export default combineReducers({
 	moderator: moderatorReducer,
 	moderatorSummary: moderatorSummaryReducer,
 	permissions: permissionReducer,
+	remainingStore:remainingStoreReducer,
 });
 
