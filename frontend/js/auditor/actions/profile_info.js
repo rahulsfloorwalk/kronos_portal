@@ -120,3 +120,21 @@ export function setWhatsappNumber(whatsapp_number){
 		return req;
 	};
 }
+export function setCertificationMarks(marks){
+	return function(dispatch){
+
+		let req = $.ajax({
+			type: "POST",
+			url: url.api_base_path + "auditor/certification_marks",
+			data: JSON.stringify({marks}),
+			contentType: "application/json"
+		});
+		req.then((profileInfo) => {
+			dispatch(profileInfoPostSuccess(profileInfo));
+		}, (error) => {
+			dispatch(profileInfoPostError(error.responseJSON));
+		});
+
+		return req;
+	};
+}

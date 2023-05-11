@@ -107,6 +107,18 @@ class StoreImportForm extends React.Component {
 								<li>
 									All cities name must be same as per in portal
 								</li>
+								<li>
+									Only 99 stores can be added at a time.
+								</li>
+								<li>
+									Please add the City name in the Excel as per the form it is available on the portal.
+								</li>
+								<li>
+									No spelling mistakes will be accepted in the City name format.
+								</li>
+								<li>
+									No spaces will be allowed in the State name format.
+								</li>
 							</ol>
 						</div>
 					</div>

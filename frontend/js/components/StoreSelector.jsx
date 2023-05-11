@@ -11,14 +11,25 @@ import FormErrorList from "./FormErrorList.jsx";
 
 class StoreSelector extends React.Component {
 	static propTypes = {
-		stores: PropTypes.objectOf(PropTypes.shape({
+		remainingStore: PropTypes.objectOf(PropTypes.shape({
 			name: PropTypes.string,
 			code: PropTypes.oneOf[PropTypes.string, null],
 			city: PropTypes.shape({
 				name: PropTypes.string,
 			}),
-		})),
-		value: PropTypes.string,
+		}
+		)),
+		single_store: PropTypes.objectOf(PropTypes.shape({
+			name: PropTypes.string,
+			code: PropTypes.oneOf[PropTypes.string, null],
+			city: PropTypes.shape({
+				name: PropTypes.string,
+			}),
+		}
+		)),
+		values: PropTypes.array,
+		value:PropTypes.object,
+		auditId:PropTypes.string,
 		onChange: PropTypes.func,
 		errors: errorList
 	};
@@ -26,12 +37,12 @@ class StoreSelector extends React.Component {
 	render() {
 		let storeOptions = [];
 		let optionss = [];
-		for( let s in this.props.stores){
+		for( let s in this.props.remainingStore){
 			optionss.push({
 				"value": s,
-				"city": this.props.stores[s].city.name,
-				"store": this.props.stores[s].name,
-				"code": this.props.stores[s].code
+				"city": this.props.remainingStore[s].city.name,
+				"store": this.props.remainingStore[s].name,
+				"code": this.props.remainingStore[s].code
 			});
 		}
 
@@ -58,24 +69,50 @@ class StoreSelector extends React.Component {
 				value: option.value
 			});
 		}
+		let singleOption=[];
+		let  singleOptions=[];
+		if(this.props.single_store && typeof(this.props.single_store)=="object"){
+			singleOptions.push({
+				"value": this.props.single_store.id,
+				"city":this.props.single_store.city.name,
+				"store":this.props.single_store.name,
+				"code":this.props.single_store.code
+			});
+			for (let option of singleOptions){
+				singleOption.push({
+					label: `${option.city} --${option.store}(${option.code})`,
+					value: option.value
+				});
+			}
+		}
+		let selector=
+		this.props.auditId && this.props.value ?
+			<Select
+				name="store"
+				isDisabled={true}
+				value={this.props.value ? singleOption.filter(obj => this.props.value.id == obj.value) : null }
+			/> :
+			<Select
+				isMulti={true}
+				name="store"
+				value={this.props.values ? storeOptions.filter(obj => this.props.values.includes(obj.value) === true ) : null}
+				onChange={this.props.onChange}
+				isClearable={true}
+				options={storeOptions}/>;
 		return (
 			<FormGroup>
 				<label>Select store</label>
-				<Select
-					name="store"
-					value={this.props.value ? storeOptions.filter(obj => this.props.value == obj.value) : null}
-					onChange={this.props.onChange}
-					isClearable={true}
-					options={storeOptions}/>
+				{selector}
 				<FormErrorList errors={this.props.errors}/>
 			</FormGroup>
 		);
 	}
 }
 
-var mapStoreToPropsForStoreSelector = function(store){
+var mapStoreToPropsForStoreSelector = function(remainingStore,store){
 	return {
-		stores: store.stores,
+		remainingStore: remainingStore.remainingStore,
+		single_store:store.value,
 	};
 };
 

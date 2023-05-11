@@ -26,6 +26,7 @@ class DetailsPage extends React.Component {
 		profileInfo: PropTypes.shape({
 			mobile_number: PropTypes.string,
 			whatsapp_number: PropTypes.string,
+			certification_score: PropTypes.string,
 		}),
 	};
 
@@ -52,7 +53,6 @@ class DetailsPage extends React.Component {
 			this.setState({preferences});
 		}).always(() => this.setLoading(false));
 	}
-
 	render() {
 		return (
 			<div>
@@ -61,6 +61,10 @@ class DetailsPage extends React.Component {
 						<Panel title="Account Details" body={true}>
 							<p>Profile Completion:</p>
 							<ProfilePercentage />
+							<p>Certification Score: &nbsp; {this.props.profileInfo.certification_score ?
+								<b>{this.props.profileInfo.certification_score} %</b>
+								: <b>NA &nbsp;&nbsp;<Link to='/certification'> (View)</Link></b> }
+							</p>
 							<p>Email: <b>{this.props.user.email}</b></p>
 							<p>Mobile Number: &nbsp;
 								{ this.props.profileInfo.mobile_number ?

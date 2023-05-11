@@ -122,6 +122,22 @@ class WhatsappNumberView(APIView):
         profile_info = profile_info_service.set_whatsapp_number_for_auditor(request.user.id, request.data.get('whatsapp_number'))
         return Response(ProfileInfoSerializer(profile_info).data)
 
+class CertificationMarksView(APIView):
+    permission_classes = [HasGroupPermission]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
+    required_groups = {
+        'POST': [GROUP_NAME_AUDITOR],
+        'GET' : [GROUP_NAME_AUDITOR]
+    }
+    def get(self,request):
+        profile_info = profile_info_service.find_profile_info_by_user_id(request.user.id)
+        return Response(ProfileInfoSerializer(profile_info).data)
+    def post(self, request):
+        profile_info = profile_info_service.find_profile_info_by_user_id(request.user.id)
+        profile_info.certification_score = request.data.get('marks')
+        profile_info.save()
+        return Response(ProfileInfoSerializer(profile_info).data)
+    
 class FacebookInfoView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

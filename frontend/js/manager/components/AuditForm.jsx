@@ -5,8 +5,8 @@ import { hashHistory } from "react-router";
 
 import Alert from "react-s-alert";
 
-import { loadAuditAddForm, loadAuditEditForm, saveAuditEditForm, saveAuditAddForm, fetchAuditCycle, fetchAudits } from "../actions/audit.js";
-import {fetchStores} from "../actions/store.js";
+import { loadAuditAddForm, loadAuditEditForm, saveAuditEditForm, saveAuditAddForm, fetchAudits } from "../actions/audit.js";
+import {fetchRemainingStores} from "../actions/remaining_store.js";
 
 import { affectInputEventToComponent } from "../../react_utils.js";
 import FormTextarea from "../../components/FormTextarea.jsx";
@@ -16,10 +16,6 @@ import Modal from "../../components/Modal.jsx";
 import StoreSelector from "../../components/StoreSelector.jsx";
 import FormErrorList from "../../components/FormErrorList.jsx";
 import MarkdownViewer from "../../components/MarkdownViewer.jsx";
-
-import { fetchCountry, fetchStatesByCountry } from "../actions/location.js";
-import CountrySelector from "../../components/CountrySelector.jsx";
-import StateSelector from "../../components/StateSelector.jsx";
 
 import { auditPropType, auditCyclePropType, errorList } from "../prop_types";
 
@@ -34,7 +30,7 @@ class AuditForm extends React.Component {
 		auditCycle: auditCyclePropType,
 		errors: PropTypes.shape({
 			non_field_errors: errorList,
-			store: errorList,
+			addStore: errorList,
 			earnings_per_audit: errorList,
 			reimbursement: errorList,
 			count: errorList,
@@ -42,17 +38,10 @@ class AuditForm extends React.Component {
 		}),
 	};
 	state = {
-		state: "",
-		audit_region: "city",
-		country_error: [],
-		state_error: []
 	};
 
 	componentDidMount() {
-		this.props.dispatch(fetchCountry());
-		this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId)).then( auditCycle => {
-			this.props.dispatch(fetchStores(auditCycle.client.id));
-		});
+		this.props.dispatch(fetchRemainingStores(this.props.params.auditCycleId));
 		if(this.props.params.auditId){
 			this.props.dispatch(loadAuditEditForm(this.props.params.auditId));
 		} else {
@@ -67,7 +56,7 @@ class AuditForm extends React.Component {
 		if( nextProps.audit){
 			this.setState(nextProps.audit);
 			this.setState({
-				store: nextProps.audit.store.id
+				addStore: nextProps.audit.store.id
 			});
 		}
 		this.setState({
@@ -86,94 +75,36 @@ class AuditForm extends React.Component {
 	};
 
 	handleChange = (e) => {
-		this.setState({
-			store: e == null ? "" : e.value,
-		});
+		if (e!=null){
+			this.setState({
+				addStore : e != null ? e.map(val=>val.value) : [],
+			});
+		}
 	};
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		if(this.state.audit_region == "state"){
-			if(typeof this.state.state == undefined || this.state.state == ""){
-				this.setState({state_error: ["Please select state"]});
-				return false;
-			}
-		}
-
-		var submitPromise;
+		let submitPromise;
 		if(this.props.params.auditId){
 			submitPromise = this.props.dispatch(saveAuditEditForm(this.state));
 		} else {
 			submitPromise = this.props.dispatch(saveAuditAddForm(this.state));
 		}
 		submitPromise.then(() => {
-			if(this.state.audit_region == "state" || this.state.audit_region == "country"){
-				this.props.dispatch(fetchAudits(this.props.params.auditCycleId));
-			}
+			this.props.dispatch(fetchAudits(this.props.params.auditCycleId));
 			hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/audit`);
 			Alert.success("AUDIT SAVED");
 		});
 	};
-
-	myCountryChanged = (e) => {
-		this.inputChanged(e);
-		var countryCode = e.target.value;
-		if(countryCode){
-			this.props.dispatch(fetchStatesByCountry(e.target.value));
-			this.setState({
-				"country_error": [],
-				"state": "",
-				"city": ""
-			});
-		}
-	};
-
-	setAuditRegion = (e) => {
-		this.inputChanged(e);
-		let value = e.target.valustoreIde;
-		if(value == "country"){
-			this.setState({state: "", store: ""});
-		}
-		else if(value == "state"){
-			this.setState({store: ""});
-		}
-		else if(value == "city"){
-			this.setState({country: "", state: ""});
-		}
-	};
-
 	render() {
+		let id = this.props.params.auditId;
 		var modalTitle = this.props.params.auditId ? "Edit Audit" : "Add Audit";
+		let selector = this.state.store && this.props.params.auditId  ? <StoreSelector auditId={id}  value={this.state.store}/> : <StoreSelector values={this.state.addStore} onChange={this.handleChange} />;
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
-					{ typeof this.props.params.auditId == "undefined" || this.props.params.auditId == "" ?
-						<div className="form-group">
-							<label>Select audit region</label>
-							<br />
-							{/* <label htmlFor="id_country">
-								<input type="radio" value="country" name="audit_region" defaultChecked={this.state.audit_region == "country"} id="id_country" onClick={this.setAuditRegion}/>&nbsp;Country
-							</label>
-							&nbsp;&nbsp; */}
-							<label htmlFor="id_state">
-								<input type="radio" value="state" name="audit_region" defaultChecked={this.state.audit_region == "state"} id="id_state" onClick={this.setAuditRegion} />&nbsp;State
-							</label>
-							&nbsp;&nbsp;
-							<label htmlFor="id_city">
-								<input type="radio" value="city" name="audit_region" defaultChecked={this.state.audit_region == "city"} id="id_city" onClick={this.setAuditRegion} />&nbsp;City
-							</label>
-						</div>
-						: null }
-					{this.state.audit_region == "country" || this.state.audit_region == "state" ?
-						<CountrySelector value={this.state.country} onChange={this.myCountryChanged} errors={this.state.country_error}/>
-						: null }
-					{this.state.audit_region == "state" ?
-						<StateSelector value={this.state.state} onChange={this.inputChanged} errors={this.state.state_error}/>
-						: null }
-					{this.state.audit_region == "city" ?
-						<StoreSelector value={this.state.store} onChange={this.handleChange} errors={this.props.errors.store}/>
-						: null }
+					{selector}
 					<div className="row">
 						<div className="col-sm-6">
 							<FormInput label="Audit Fees (₹)" type="number" value={this.state.earnings_per_audit} name="earnings_per_audit" onChange={this.inputChanged} errors={this.props.errors.earnings_per_audit}/>
@@ -195,11 +126,11 @@ class AuditForm extends React.Component {
 	}
 }
 
-var mapStoreToProps = function(store, ownProps){
+var mapStoreToProps = function(remainingStore,ownProps){
 	return {
-		auditCycle: store.auditCycles[ownProps.params.auditCycleId],
-		audit: store.audits[ownProps.params.auditId],
-		errors: store.forms.audit.errors,
+		auditCycle: remainingStore.auditCycles[ownProps.params.auditCycleId],
+		audit: remainingStore.audits[ownProps.params.auditId],
+		errors: remainingStore.forms.audit.errors,
 	};
 };
 
