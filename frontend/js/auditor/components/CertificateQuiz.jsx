@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
+import Alert from "react-s-alert";
 
 import { fetchCertificateScore } from "../service/profile.js";
 import { setCertificationMarks } from "../actions/profile_info.js";
@@ -9,7 +10,7 @@ import { allTypeofQuiz } from "../../constants.js";
 
 class CertificateQuiz extends React.Component {
 	static propTypes={
-		dispatch:PropTypes.func.isRequired,
+		dispatch:PropTypes.func,
 	};
 	state = {
 		currentQuestion: 0,
@@ -73,12 +74,11 @@ class CertificateQuiz extends React.Component {
 				score += question.marks;
 			}
 		}
-		this.setState({ score, showScore: true });
+		this.setState({ score });
 		this.setSubmitting(true);
-		this.props.dispatch(setCertificationMarks(this.state.score)).then((score) => {
-			this.setState({
-				score:score
-			});
+		this.props.dispatch(setCertificationMarks(score)).then(() => {
+			Alert.success("Certification Submit Successfully");
+			this.setState({showScore:true});
 		},(err) => {
 			this.setState({
 				errors: err && err.responseJSON,
@@ -126,15 +126,8 @@ class CertificateQuiz extends React.Component {
 				{ loading ? <Loading/> :
 					(
 						<div style={main_div_style}>
-							{this.state.profileInfo.certification_score ?
-								(
-									<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-										<p style={{ fontSize: "2.5rem" }}> <b style={{ fontSize: "2.7rem", color: "rgb(51,122,183)" }}>Congratulations! </b> you have completed the certification and have scored</p>
-										<h1 style={{ color: "rgb(51,122,183)" }}>{this.state.profileInfo.certification_score}%</h1>
-										<p style={{ fontSize: "2.5rem" }}> You can now move ahead and apply for audits in the opportunities tab.</p>
-									</div>
-								) :
-								showScore ?
+							
+							{showScore ?
 									(
 										<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 											<p style={{ fontSize: "2.5rem" }}> <b style={{ fontSize: "2.7rem", color: "rgb(51,122,183)" }}>Congratulations! </b> you have completed the certification and have scored</p>
@@ -142,6 +135,15 @@ class CertificateQuiz extends React.Component {
 											<p style={{ fontSize: "2.5rem" }}> You can now move ahead and apply for audits in the opportunities tab.</p>
 										</div>
 									) :
+								this.state.profileInfo.certification_score ?
+								(
+									<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+										<p style={{ fontSize: "2.5rem" }}> <b style={{ fontSize: "2.7rem", color: "rgb(51,122,183)" }}>Congratulations! </b> you have completed the certification and have scored</p>
+										<h1 style={{ color: "rgb(51,122,183)" }}>{this.state.profileInfo.certification_score}%</h1>
+										<p style={{ fontSize: "2.5rem" }}> You can now move ahead and apply for audits in the opportunities tab.</p>
+									</div>
+								) :
+								
 									(
 										<div>
 											<div style={{ fontSize: "2rem", display: "flex", justifyContent: "center", alignItems: "center" }}>
