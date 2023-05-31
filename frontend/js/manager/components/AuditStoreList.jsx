@@ -65,7 +65,7 @@ class AuditStoreRow extends React.Component {
 				<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 				<td>{moment(this.props.auditStore.audit_date).format(momentDateFormat)}</td>
 				<td className="text-right">{acceptButton}</td>
-				<td><AuditStoreStatusLabel status={this.props.auditStore.status}/></td>
+				<td><AuditStoreStatusLabel status={this.props.auditStore.status}/> {this.props.auditStore.report_revert_count>0 ? <span><i>Reverted({this.props.auditStore.report_revert_count})</i></span>:null}</td>
 				<td><ModeratorAssignDropdown moderators={this.props.moderators} selectedModeratorId={this.props.auditStore.assigned_to_moderator} auditStoreId={this.props.auditStore.id} onUpdate={this.props.onUpdate}/></td>
 				<td>
 					<Link to={`/audit_store/${this.props.auditStore.id}/report`} className="btn btn-default">View</Link>

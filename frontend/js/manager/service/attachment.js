@@ -41,7 +41,10 @@ export function uploadFileForAuditStore(auditStoreId, file){
 	var req_url = url.api_base_path + `manager/audit_store/${auditStoreId}/attachment`;
 	return doAttachmentUpload(req_url, file);
 }
-
+// export function uploadFileForClientRequirements(clientId,file){
+// 	var req_url = url.api_base_path+ `manager/client/${clientId}/client_requirements/attachment`;
+// 	return doAttachmentUpload(req_url,file);
+// }
 export function doAttachmentUpload(url, file){
 	var mainPromise = $.Deferred();
 

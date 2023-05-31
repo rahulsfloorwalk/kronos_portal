@@ -398,6 +398,10 @@ export default class AuditStoreDetails extends React.Component{
 										</td>
 									</tr>
 									<tr>
+										<td className="text-right">Certification Score:</td>
+										<td><b>{this.state.auditStore.user.profileinfo.certification_score ? this.state.auditStore.user.profileinfo.certification_score : "NA" }</b></td>
+									</tr>
+									<tr>
 										<td className="text-right">Audit Date:</td>
 										<th>{auditDateElement}</th>
 									</tr>

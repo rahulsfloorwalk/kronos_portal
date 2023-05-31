@@ -99,6 +99,10 @@ def set_answer_comment_by_auditor(audit_store_id, question_id, answer_comment, u
 
     if audit_store.status != AuditStore.ACKNOWLEDGED:
         raise AppLogicError("Cannot submit answer comment to this audit store")
+    
+    # if len(answer_comment) < Answer.MIN_COMMENT_LEN:
+    #     raise AppLogicError("Answer Comment must be {} characters in length".format(Answer.MIN_COMMENT_LEN))
+    
 
     answer = find_by_audit_store_and_question(audit_store_id, question_id)
     q = question_service.find_question_by_id(question_id)

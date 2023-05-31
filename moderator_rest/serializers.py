@@ -84,6 +84,7 @@ class ProfileInfoSmallSerializer(ModelSerializer):
             'user_id',
             'auditor_rating',
             'avg_auditor_rating',
+            'certification_score'
         )
         read_only_fields = fields
 

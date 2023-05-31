@@ -98,10 +98,10 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
 
     if start_date !="" and end_date !="":
         audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list, audit_date__range=[start_date, end_date]) \
-            .values('id', 'status', 'audit_date','report_revert_count', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+            .values('id', 'status', 'audit_date','report_revert_count', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
     else:
         audit_store_obj = AuditStore.objects.filter(audit__id__in=audit_id_list) \
-            .values('id', 'status', 'audit_date','report_revert_count', 'audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
+            .values('id', 'status', 'audit_date','report_revert_count','audit__id', 'user__groups__name', 'user__email', 'user__id', 'user__profileinfo__first_name', 'user__profileinfo__last_name', 'user__profileinfo__mobile_number','user__profileinfo__certification_score', 'user__agencyuser__full_name', 'user__mobile_numbers__mobile_number', 'user__mobile_numbers__is_verified')
     if user_id != "":
         audit_store_obj = audit_store_obj.filter(user = user_id)
     if status != "":
@@ -127,14 +127,19 @@ def find_by_audit_cycle_new(audit_cycle_id, last_audit_id, status, user_id, star
                 moderator = [user.id for user, perms in users_with_perms.items() if "moderator_manage" in perms]
                 audit_report_dict['assigned_to_moderator'] = moderator
                 if audit_report['user__groups__name'] == GROUP_NAME_AUDITOR:
-                    audit_report_dict['user'] = {'id': audit_report['user__id'],
+                    audit_report_dict['user'] = {
+                                                 'id': audit_report['user__id'],
                                                  'email': audit_report['user__email'],
                                                  'profileinfo':
-                                                     {'first_name': audit_report['user__profileinfo__first_name'],
+                                                     {
+                                                         'first_name': audit_report['user__profileinfo__first_name'],
                                                          'last_name': audit_report['user__profileinfo__last_name'],
-                                                         'mobile_number': audit_report['user__profileinfo__mobile_number']},
-                                                 'agencyuser': None,
-                                                 'mobile_numbers': []}
+                                                         'mobile_number': audit_report['user__profileinfo__mobile_number'],
+                                                         'certification_score': audit_report['user__profileinfo__certification_score']
+                                                      },
+                                                         'agencyuser': None,
+                                                         'mobile_numbers': []
+                                                }
                 else:
                     audit_report_dict['user'] = {'id': audit_report['user__id'],
                                                  'email': audit_report['user__email'],

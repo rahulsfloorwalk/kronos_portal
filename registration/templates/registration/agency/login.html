@@ -3,6 +3,7 @@
 {% load static %}
 {% block title %}Agency Login |{% endblock %}
 {% block content %}
+<script src="https://www.google.com/recaptcha/api.js"></script>
 <div class="row">
 	<div class="col-md-4 col-md-offset-4">
 		<h1 class="page-header text-center">
@@ -27,7 +28,7 @@
 					{{ form.non_field_errors }}
 				</div>
 				{% endif %}
-				<form action="{% url 'registration:agency_login' %}" method="POST">
+				<form onsubmit="return setAction()" action="{% url 'registration:agency_login' %}" method="POST">
 					{% csrf_token %}
 					<div class="form-group">
 						<label>Email Address</label>
@@ -43,6 +44,9 @@
 						{{ form.password.errors }}
 						</p>
 					</div>
+					<div class="g-recaptcha" data-sitekey="6LfI0qElAAAAAH3B07K-gzlI3pDIl0Ac58mlJLXy">
+					</div>
+					<br/>
 					<div class="form-group">
 						<button class="btn btn-primary btn-lg" type="submit">Login</button>
 						<a class="pull-right" href="{% url 'registration:password_reset' %}">Forgot Password</a>
@@ -55,4 +59,16 @@
 		</div>
 	</div>
 </div>
+<script>
+	function setAction() {
+	var cap=grecaptcha.getResponse()
+	if (cap.length>1){
+		return true;
+	}
+	else{
+		alert("Please Enter Captcha");
+		return false;
+	}
+}
+</script>
 {% endblock %}

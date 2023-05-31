@@ -760,3 +760,59 @@ export function getInterestArea(value){
 		return `unknown interest area ${value} - ${typeof value}`;
 	}
 }
+export function getAuditOptions(value) {
+	switch (value) {
+	case "MYSTERY_AUDIT":
+		return "Mystery Audit (Purchase and/or Non-Purchase)";
+	case "REVEALED_AUDIT":
+		return "Revealed Audits";
+	case "MYSTERY_REVEALED":
+		return "Mystery + Revealed Audits (Purchase and/or Non-Purchase)";
+	case "":
+	case null:
+	case undefined:
+	default:
+		return value;
+	}
+}
+
+export function getAuditCategory(value) {
+	switch (value) {
+	case "CONSUMER_EXPERIENCE_JOURNEY":
+		return "Consumer Experience + Journey";
+	case "SALES_PROCESS":
+		return "Sales Process";
+	case "VISUAL_MERCHANDISE":
+		return "Visual Merchandising";
+	case "COMPETITION":
+		return "Competition Benchmarking";
+	case "PROCESS_COMPLIANCE":
+		return "Process Compliance Audits";
+	case "RETAIL_RECOMMENDATION":
+		return "Retailer Recommendation Program";
+	case "INVENTORY_AUDIT":
+		return "Inventory Audits";
+	case "":
+	case null:
+	case undefined:
+	default:
+		return value;
+
+	}
+}
+
+export function getQuestionnaireType(value) {
+	switch (value) {
+	case "WEB":
+		return "Web";
+	case "TELEPHONIC":
+		return "Telephonic";
+	case "VISIT":
+		return "Visit";
+	case "":
+	case null:
+	case undefined:
+	default:
+		return value;
+	}
+}
