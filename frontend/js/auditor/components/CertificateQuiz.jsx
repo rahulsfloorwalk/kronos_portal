@@ -126,24 +126,22 @@ class CertificateQuiz extends React.Component {
 				{ loading ? <Loading/> :
 					(
 						<div style={main_div_style}>
-							
 							{showScore ?
-									(
-										<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-											<p style={{ fontSize: "2.5rem" }}> <b style={{ fontSize: "2.7rem", color: "rgb(51,122,183)" }}>Congratulations! </b> you have completed the certification and have scored</p>
-											<h1 style={{ color: "rgb(51,122,183)" }}>{score}%</h1>
-											<p style={{ fontSize: "2.5rem" }}> You can now move ahead and apply for audits in the opportunities tab.</p>
-										</div>
-									) :
-								this.state.profileInfo.certification_score ?
 								(
 									<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 										<p style={{ fontSize: "2.5rem" }}> <b style={{ fontSize: "2.7rem", color: "rgb(51,122,183)" }}>Congratulations! </b> you have completed the certification and have scored</p>
-										<h1 style={{ color: "rgb(51,122,183)" }}>{this.state.profileInfo.certification_score}%</h1>
+										<h1 style={{ color: "rgb(51,122,183)" }}>{score}%</h1>
 										<p style={{ fontSize: "2.5rem" }}> You can now move ahead and apply for audits in the opportunities tab.</p>
 									</div>
 								) :
-								
+								this.state.profileInfo.certification_score ?
+									(
+										<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+											<p style={{ fontSize: "2.5rem" }}> <b style={{ fontSize: "2.7rem", color: "rgb(51,122,183)" }}>Congratulations! </b> you have completed the certification and have scored</p>
+											<h1 style={{ color: "rgb(51,122,183)" }}>{this.state.profileInfo.certification_score}%</h1>
+											<p style={{ fontSize: "2.5rem" }}> You can now move ahead and apply for audits in the opportunities tab.</p>
+										</div>
+									) :
 									(
 										<div>
 											<div style={{ fontSize: "2rem", display: "flex", justifyContent: "center", alignItems: "center" }}>

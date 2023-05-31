@@ -14,7 +14,7 @@ import { submitAnswer } from "../../actions/answer.js";
 
 import AnswerComment from "./AnswerComment.jsx";
 
-class QuestionRow extends React.Component{
+class QuestionRow extends React.Component {
 	static propTypes = {
 		auditStoreId: PropTypes.oneOfType([
 			PropTypes.number,
@@ -28,7 +28,7 @@ class QuestionRow extends React.Component{
 		auditStore: PropTypes.object,
 	};
 
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			revert_message: "",
@@ -36,10 +36,11 @@ class QuestionRow extends React.Component{
 			touched: false,
 			focused: false,
 		};
+
 	}
 
-	componentDidMount(){
-		if(this.props.answer){
+	componentDidMount() {
+		if (this.props.answer) {
 			this.setState({
 				answer_text: this.props.answer.answer_text,
 				revert_message: this.props.answer.revert_message,
@@ -47,8 +48,8 @@ class QuestionRow extends React.Component{
 		}
 	}
 
-	componentWillReceiveProps(nextProps){
-		if(nextProps.answer){
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.answer) {
 			this.setState({
 				answer_text: nextProps.answer.answer_text,
 				revert_message: nextProps.answer.revert_message,
@@ -65,7 +66,7 @@ class QuestionRow extends React.Component{
 
 	submitAnswer = (e) => {
 		e.preventDefault();
-		if( this.props.answer && this.props.answer.answer_text === this.state.answer_text){
+		if (this.props.answer && this.props.answer.answer_text === this.state.answer_text) {
 			this.setState({
 				focused: false,
 			});
@@ -81,7 +82,7 @@ class QuestionRow extends React.Component{
 			audit_store: this.props.auditStoreId,
 			status: true
 		};
-		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
+		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({ saving: false }));
 		Alert.success("Data Saved");
 	};
 
@@ -96,35 +97,38 @@ class QuestionRow extends React.Component{
 			audit_store: this.props.auditStoreId,
 			status: e.target.checked
 		};
-		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({saving: false}));
+		this.props.dispatch(submitAnswer(payload)).then(() => this.setState({ saving: false }));
 	};
 
-	render(){
-		if(this.props.q.hide_question && (this.state.answer_text === "" || this.state.answer_text === undefined)){
+	render() {
+
+		if (this.props.q.hide_question && (this.state.answer_text === "" || this.state.answer_text === undefined)) {
 			return null;
 		}
 		let noAnswerText = "-";
 		let answer;
 
-		if(this.state.answer_text){
+		if (this.state.answer_text) {
 			answer = this.state.answer_text;
 		} else {
 			answer = (<span className="text-muted">{noAnswerText}</span>);
+		}
+		if(this.state.saving){
+			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
 		}
 
 		// if(this.props.q.question_type === "MULTISELECT"){
 		// 	answer = (this.state.answer_text).replaceAll(";", ", ");
 		// }
-		if(answer === ""){
+		if (answer === "") {
 			answer = "No answer selected";
 		}
-
 		let answerElement = (<p>
 			{answer}
-			{ this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
+			{this.props.q.question_type === "MUTEX" || this.props.q.question_type === "MULTISELECT"
 				? <AnswerComment editable={false}
 					audit_store_id={this.props.auditStoreId} question_id={this.props.q.id}
-					answer_comment={this.props.answer && this.props.answer.answer_comment }
+					answer_comment={this.props.answer && this.props.answer.answer_comment}
 					required={this.props.q.optional_comment_required}
 					showErrors={this.props.showErrors}
 				/>
@@ -132,8 +136,8 @@ class QuestionRow extends React.Component{
 			}
 		</p>);
 
-		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
-			if(this.props.q.question_type === "PLAIN"){
+		if (this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED") {
+			if (this.props.q.question_type === "PLAIN") {
 				answerElement = (
 					<form className="" onSubmit={this.submitAnswer}>
 						<textarea
@@ -148,12 +152,17 @@ class QuestionRow extends React.Component{
 						></textarea>
 					</form>
 				);
-			} else if(this.props.q.question_type === "MUTEX") {
+			} else if (this.props.q.question_type === "MUTEX") {
 				answerElement = (
 					<div className="row">
 						<div className="col-xs-5">
 							<select className="form-control"
 								name="answer_text"
+								style={
+									this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)
+										? { border: "solid 1px #a94442" }
+										: {}
+								}
 								onChange={this.inputChanged}
 								onFocus={this.onFocus}
 								onBlur={this.submitAnswer}
@@ -163,22 +172,30 @@ class QuestionRow extends React.Component{
 							</select>
 						</div>
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors}/>
+							<AnswerComment
+								audit_store_id={this.props.auditStoreId}
+								question_id={this.props.q.id}
+								answer_comment={this.props.answer ? this.props.answer.answer_comment : ""}
+								editable={true}
+								required={this.props.q.optional_comment_required}
+								ans={this.props.q.question_data.options.some((o) => o.value === this.state.answer_text && o.marks === 0)}
+								// required={this.props.q.optional_comment_required? this.props.q.optional_comment_required : true}
+								showErrors={this.props.showErrors} />
 						</div>
 					</div>
 				);
-			} else if(this.props.q.question_type === "MULTISELECT") {
+			} else if (this.props.q.question_type === "MULTISELECT") {
 				let checkbox_list = [];
 				let multiselect_answer_list = [];
-				if(this.props.answer){
+				if (this.props.answer) {
 					multiselect_answer_list = this.props.answer.get_answer_text_list;
 				}
-				for(let o of this.props.q.question_data.options){
-					if(multiselect_answer_list.includes(o.value)){
-						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} defaultChecked style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+				for (let o of this.props.q.question_data.options) {
+					if (multiselect_answer_list.includes(o.value)) {
+						checkbox_list.push(<label style={{ fontSize: "14px", marginBottom: "10px" }} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} defaultChecked style={{ verticalAlign: "bottom", width: "20px", height: "20px" }} /><span> {o.value}</span>&nbsp;</label>);
 					}
-					else{
-						checkbox_list.push(<label style={{fontSize:"14px",marginBottom:"10px"}} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} style={{verticalAlign:"bottom",width:"20px",height:"20px"}} /><span> {o.value}</span>&nbsp;</label>);
+					else {
+						checkbox_list.push(<label style={{ fontSize: "14px", marginBottom: "10px" }} key={o.sequence}><input type="checkbox" value={o.value} name="answer_text" onClick={this.submitMultiSelectAnswer} style={{ verticalAlign: "bottom", width: "20px", height: "20px" }} /><span> {o.value}</span>&nbsp;</label>);
 					}
 				}
 
@@ -187,36 +204,32 @@ class QuestionRow extends React.Component{
 						<div className="col-xs-5">
 							{checkbox_list}
 						</div>
+						{this.props.q.optional_comment_required &&
 						<div className="col-xs-7">
-							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors}/>
+							<AnswerComment audit_store_id={this.props.auditStoreId} question_id={this.props.q.id} answer_comment={this.props.answer ? this.props.answer.answer_comment : ""} editable={true} required={this.props.q.optional_comment_required} showErrors={this.props.showErrors} />
 						</div>
+						}
 					</div>
 				);
 			}
 		}
-
-
-		if(this.state.saving){
-			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
-		}
-
 		let goodClass = this.state.focused || this.state.saving || !this.state.answer_text ? "" : "success";
 		let badClass = this.props.showErrors && !this.state.answer_text ? "danger" : "";
 		return (
 			<tr className={goodClass || badClass}>
 				<td>
 					<div className="row">
-						<div className="col-xs-1" style={{display: "flex", justifyContent: "space-between"}}>
-							{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="text-danger" ><Cross/></div> : <div /> }
+						<div className="col-xs-1" style={{ display: "flex", justifyContent: "space-between" }}>
+							{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="text-danger" ><Cross /></div> : <div />}
 							{this.props.q.sequence}
 						</div>
 						<div className="col-xs-10 col-md-5">
-							<b><MarkdownViewer markdown={this.props.q.question_txt || ""}/>{savingMessage}</b>
+							<b><MarkdownViewer markdown={this.props.q.question_txt || ""} />{savingMessage}</b>
 						</div>
 						<div className="col-xs-offset-1 col-xs-11 col-md-offset-0 col-sm-11 col-md-6">
 							{answerElement}
 						</div>
-						{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>
+						{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.state.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{ marginTop: "9px" }}>
 							<p className="text-danger"><b>Revert message: </b>{this.state.revert_message}</p>
 						</div> : null}
 					</div>
@@ -226,16 +239,16 @@ class QuestionRow extends React.Component{
 	}
 }
 
-var mapStoreToProps = function(store, ownProps){
+var mapStoreToProps = function (store, ownProps) {
 	return {
-		answer: (function(answers){
-			for(let id in answers){
-				if(answers[id].question_id === ownProps.q.id){
+		answer: (function (answers) {
+			for (let id in answers) {
+				if (answers[id].question_id === ownProps.q.id) {
 					return answers[id];
 				}
 			}
 		})(store.answers),
-		auditStore : store.auditStores[ownProps.auditStoreId]
+		auditStore: store.auditStores[ownProps.auditStoreId]
 	};
 };
 

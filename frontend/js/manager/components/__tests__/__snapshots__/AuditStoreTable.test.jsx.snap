@@ -72,6 +72,7 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
         >
           PM Review
         </span>
+         
       </td>
       <td>
         <select
@@ -148,6 +149,7 @@ exports[`<AuditStoreTable/> renders the list of audit stores correctly 1`] = `
         >
           QA Review
         </span>
+         
       </td>
       <td>
         <select

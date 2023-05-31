@@ -461,6 +461,10 @@ export class AuditStoreDetails extends React.Component{
 										<td><AuditorNameDisplay user={this.props.auditStore.user}/></td>
 									</tr>
 									<tr>
+										<td className="text-right">Certification Score:</td>
+										<td><b>{this.props.auditStore.user.profileinfo.certification_score ? this.props.auditStore.user.profileinfo.certification_score : "NA" }</b></td>
+									</tr>
+									<tr>
 										<td className="text-right">Audit Date:</td>
 										<th>{auditDateElement}</th>
 									</tr>

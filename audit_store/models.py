@@ -192,7 +192,7 @@ class AuditStore(Model):
 
     def max_attachment_limit(self):
         obj = self.audit.audit_cycle.proof_tags_list.aggregate(count = Sum("section_proof_tag__max_attachment_count"))
-        return obj['count'] if obj['count'] else 15
+        return obj['count'] if obj['count'] else 20
 
     def attached_proof_count(self):
         return self.attachments.filter(status = Attachment.ATTACHED).count()
@@ -280,7 +280,6 @@ class AuditStore(Model):
         return True
 
     def is_submittable_for_auditor(self):
-
         if self.status != AuditStore.ACKNOWLEDGED:
             _logger.debug("Report not acknowledged")
             return False
@@ -309,8 +308,10 @@ class AuditStore(Model):
                     return False
 
                 for answer in answers:
-                    if answer.question.optional_comment_required and answer.answer_comment in (None, ''):
-                        raise AppLogicError("Report not submittable, some required answer comment is incomplete")
+                    # if answer.question.optional_comment_required is False and answer.marks_obtained==0 and answer.question.question_type == Question.MUTEX and answer.answer_comment in (None, ''):
+                    #     raise AppLogicError("Report not submittable, some required answer comment is incomplete")
+                    # if answer.question.optional_comment_required and answer.answer_comment in (None, ''):
+                    #     raise AppLogicError("Report not submittable, some required answer comment is incomplete")
                     if not answer.question.question_type == Question.MULTISELECT:
                         if not answer.not_applicable and answer.answer_text in (None, ''):
                             _logger.debug("Report not submittable, some answer is incomplete")

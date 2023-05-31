@@ -121,7 +121,8 @@ import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingFo
 import { ProjectAnalyticsCycleWise, ProjectAnalyticsMonthWise } from "./reports/analytics/ProjectAnalytics.jsx";
 import AnalyticDetails from "./reports/analytics/AnalyticDetails.jsx";
 import TrainingReport from "./reports/TrainingReport.jsx";
-
+// import ClientRequirementsForm from "./client_requirements/ClientRequirementsForm.jsx";
+// import ClientRequirementsList from "./client_requirements/ClientRequirementsList.jsx";
 const Routes = () => (
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
@@ -156,6 +157,10 @@ const Routes = () => (
 					<Route path="add" component={ClientTrainerForm}/>
 					<Route path=":clientTrainerId/edit" component={ClientTrainerForm}/>
 				</Route>
+				{/* <Route path="client_requirements" component={ClientRequirementsList}>
+					<Route path="add" component={ClientRequirementsForm}/>
+					<Route path=":clientRequirementId/edit" component={ClientRequirementsForm}/>
+				</Route> */}
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
 					<Route path="add" component={QuestionnaireTypeForm}/>
 					<Route path=":questionnaireTypeId/edit" component={QuestionnaireTypeEditForm}/>

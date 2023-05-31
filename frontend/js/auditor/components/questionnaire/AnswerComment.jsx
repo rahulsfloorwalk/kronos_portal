@@ -22,6 +22,7 @@ class __AnswerComment extends Component {
 		dispatch: PropTypes.func.isRequired,
 		editable: PropTypes.bool.isRequired,
 		required: PropTypes.bool.isRequired,
+		ans: PropTypes.bool.isRequired,
 		showErrors: PropTypes.bool.isRequired,
 	};
 
@@ -34,20 +35,22 @@ class __AnswerComment extends Component {
 		this.state = {
 			answer_comment: this.props.answer_comment || "",
 			error: false,
+			comment_error:""
 		};
 	}
 
 	componentDidMount(){
-		this.setState({ answer_comment: this.props.answer_comment, });
+		this.setState({ answer_comment: this.props.answer_comment,comment_error:"" });
 	}
 
 	componentWillReceiveProps(nextProps){
-		this.setState({ answer_comment: nextProps.answer_comment, });
+		this.setState({ answer_comment: nextProps.answer_comment });
 	}
 
 	commentChanged = (e) => {
 		this.setState({
 			answer_comment: e.target.value,
+			comment_error:""
 		});
 	};
 
@@ -55,12 +58,15 @@ class __AnswerComment extends Component {
 		if(this.props.required && e.target.value == ""){
 			this.setState({
 				error: true,
+				comment_error:""
 			});
-			Alert.error("Comment is required");
 		}
 		else{
 			this.commentChanged(e);
-			this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value));
+			this.props.dispatch(submitAnswerComment(this.props.audit_store_id, this.props.question_id, e.target.value)).fail((err)=>{
+				let error=err.responseJSON.non_field_errors;
+				this.setState({comment_error : error ? error :""});
+			});
 			Alert.success("Data Saved");
 			this.setState({
 				error: false,
@@ -69,9 +75,24 @@ class __AnswerComment extends Component {
 	};
 
 	render(){
-		if(this.props.editable && this.props.required){
+		if(this.props.editable && this.props.required || this.props.ans){
 			return (
-				<input className="form-control" style={(this.props.showErrors && this.props.required && !this.state.answer_comment) || this.state.error ? {border: "solid 1px #a94442"} : null} value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="Comment required"/>
+				<div>
+					<input
+						className="form-control"
+						style={
+							(this.props.showErrors && this.props.required && !this.state.answer_comment) || this.state.comment_error || this.state.error
+								?
+								{border: "solid 1px #a94442"}
+								: null
+						}
+						value={this.state.answer_comment}
+						onChange={this.commentChanged}
+						onBlur={this.onBlur}
+						placeholder="Comment required"
+						minLength="30"/>
+					{/* <small style={{ color: "#a94442" }}>{this.props.required && this.state.comment_error ? this.state.comment_error : "Min 30 characters in length" } </small> */}
+				</div>
 			);
 		} else {
 			return this.props.answer_comment ? <span> ( {this.props.answer_comment})</span> : null;

@@ -190,10 +190,10 @@ def concern_report(audit_store_id, user_id, message):
         if email_list:
             emails = email_list
         else:
-            emails = ["shubham.mohod@floorwalk.in"]
+            emails = ["arpan.patidar@floorwalk.in"]
         for email in emails:
             send_audit_report_concern_email.delay(email, audit_store_id, user_id, message)
-    # End of Send Mail to manager or "shubham.mohod@floorwalk.in"
+    # End of Send Mail to manager or "arpan.patidar@floorwalk.in"
     return audit_store
 
 def set_not_applicable_for_hide_questions(audit_store: AuditStore):

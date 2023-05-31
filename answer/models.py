@@ -12,7 +12,7 @@ from questionnaire.models import Section
 from attachment.models import Attachment
 
 class Answer(Model):
-
+    # MIN_COMMENT_LEN = 30
     id = AutoField(db_column = 'id', primary_key=True)
 
     question = ForeignKey(Question, related_name='answers', db_column='question_id', on_delete=PROTECT)

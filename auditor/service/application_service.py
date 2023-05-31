@@ -322,7 +322,7 @@ def find_audit_applications_for_auto_approve():
 
     audit_application = AuditApplication.objects.select_related('audit', 'audit__audit_cycle', 'profileinfo').filter(
         audit__hidden = False,
-        audit_date__gte=today_ist() + timedelta(days=2),
+        audit_date__gte=today_ist() + timedelta(days=1),
         report_exists=False,
         status__in=[AuditApplication.APPLIED, AuditApplication.WAITLISTED],
         audit_date__gt=F('audit__audit_cycle__start_date'),

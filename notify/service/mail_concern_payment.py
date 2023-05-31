@@ -42,5 +42,5 @@ def send_payment_concern_email(email_address, audit_store_id, user_id, message):
     txt_message = get_template("notify/auditor_payment_concern_email.txt").render(params)
 
     _logger.info("sending payment concern email to : %s", email_address)
-    send_email(email_address, subject, html_message, txt_message)
+    send_email(email_address, subject, html_message, txt_message,auditor_email=params['auditor_email'])
     _logger.info("payment concern email sent successfully to : %s", email_address)
