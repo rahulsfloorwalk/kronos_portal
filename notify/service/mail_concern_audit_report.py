@@ -42,5 +42,5 @@ def send_audit_report_concern_email(email_address, audit_store_id, user_id, mess
     txt_message = get_template("notify/auditor_report_concern_email.txt").render(params)
 
     _logger.info("sending audit report concern email to : %s", email_address)
-    send_email(email_address, subject, html_message, txt_message,auditor_email=params['auditor_email'])
+    send_email(email_address, subject, html_message, txt_message)
     _logger.info("audit report concern email sent successfully to : %s", email_address)
