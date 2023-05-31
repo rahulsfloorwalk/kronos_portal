@@ -89,7 +89,7 @@ class __AnswerComment extends Component {
 						value={this.state.answer_comment}
 						onChange={this.commentChanged}
 						onBlur={this.onBlur}
-						placeholder="Comment required"
+						placeholder="Comment"
 						minLength="30"/>
 					{/* <small style={{ color: "#a94442" }}>{this.props.required && this.state.comment_error ? this.state.comment_error : "Min 30 characters in length" } </small> */}
 				</div>

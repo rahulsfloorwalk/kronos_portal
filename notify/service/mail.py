@@ -4,7 +4,7 @@ from monitoring.service import email_log_service
 
 SUBJECT_PREFIX = "[FloorWalk]"
 
-def send_email(to_email, subject, html_message, txt_message,auditor_email=''):
+def send_email(to_email, subject, html_message, txt_message):
     "prepends a [FloorWalk] to the subject and sends an email containing both the HTML and plain text versions to to_email"
 
     if type(to_email) == str:
@@ -14,7 +14,7 @@ def send_email(to_email, subject, html_message, txt_message,auditor_email=''):
         to_email = to_email
 
     subject = "{} {}".format(SUBJECT_PREFIX, subject)
-    msg = EmailMultiAlternatives(subject, txt_message, to=to_email,reply_to=auditor_email)
+    msg = EmailMultiAlternatives(subject, txt_message, to=to_email)
     msg.attach_alternative(html_message, "text/html")
     msg.send()
 
