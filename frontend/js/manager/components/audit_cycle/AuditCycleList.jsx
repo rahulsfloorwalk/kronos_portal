@@ -68,7 +68,7 @@ export default class AuditCycleList extends React.Component{
 		}
 		let addAuditCycleLink = `/client/${this.props.params.clientId}/audit_cycle/add`;
 		return (
-			<div>
+			<div className="table-responsive">
 				<h3 className="page-header">
 					<Link to={addAuditCycleLink} className="btn btn-default pull-right"><Plus/> Add Audit Cycle</Link>
 					<Retweet/> Audit Cycles

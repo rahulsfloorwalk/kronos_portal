@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-
+import "../../css/bs_overrides.scss";
 export default class DropDown extends React.Component{
 	static propTypes = {
 		children: PropTypes.node,
@@ -31,7 +31,7 @@ export default class DropDown extends React.Component{
 
 	render(){
 		if(this.state.dropdown){
-			return (<ul className="dropdown-menu" style={{display:"block", left: "auto"}}
+			return (<ul className="dropdown-menu dropdown-style"
 				onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
 				{ this.props.children }
 			</ul>);

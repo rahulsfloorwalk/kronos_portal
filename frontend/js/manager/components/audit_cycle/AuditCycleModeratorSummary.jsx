@@ -57,7 +57,7 @@ export class AuditCycleModeratorSummary extends React.Component{
 
 
 		const headings = AuditStoreStatus.map(s => <th style={rightAlign} key={s}><AuditStoreStatusLabel status={s}/></th>);
-		return (<div>
+		return (<div className="table-responsive">
 			&nbsp;
 			<table className="table table-bordered table-striped">
 				<thead>

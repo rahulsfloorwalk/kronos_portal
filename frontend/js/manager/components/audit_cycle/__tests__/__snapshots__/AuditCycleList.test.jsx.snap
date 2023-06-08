@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<AuditCycleList/> renders a list of audit cycles 1`] = `
-<div>
+<div
+  className="table-responsive"
+>
   <h3
     className="page-header"
   >

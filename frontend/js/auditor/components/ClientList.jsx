@@ -7,8 +7,8 @@ import $ from "jquery";
 import moment from "moment";
 import { affectInputEventToComponent } from "../../react_utils.js";
 
-import { truncateStyle } from "../../styles.js";
 
+import "../../../css/bs_overrides.scss";
 import { fetchApplications } from "../actions/application.js";
 import { fetchAudits, fetchTravelAudits } from "../actions/audit.js";
 import { fetchProfileInfo } from "../actions/profile_info.js";
@@ -63,7 +63,7 @@ class AuditCycleRow extends Component{
 						</tr>
 						<tr>
 							<td className="text-right">Earnings:</td>
-							<td style={truncateStyle}>
+							<td className="truncateStyle1">
 								{ this.props.fees ? <span>upto <b>₹ {this.props.fees}</b>, </span> : null }
 								{ this.props.reimbursement ? <span>Reimbursement upto <b>₹ {this.props.reimbursement}</b></span> : null }
 							</td>

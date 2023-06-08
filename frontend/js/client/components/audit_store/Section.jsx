@@ -7,7 +7,7 @@ import { getColor } from "../../../utils.js";
 
 import QuestionRow from "./QuestionRow.jsx";
 import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
-
+import "../../../../css/bs_overrides.scss";
 export default class Section extends React.Component {
 	static propTypes = {
 		auditStoreId: PropTypes.number.isRequired,
@@ -111,7 +111,7 @@ export default class Section extends React.Component {
 				}
 			}
 			panelBody = (
-				<div>
+				<div className="report scroll">
 					<table className="table table-striped">
 						<thead>
 							<tr>

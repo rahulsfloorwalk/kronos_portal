@@ -24,35 +24,37 @@ export default class ApplicationStatusSummary extends React.Component {
 			return <Loading/>;
 		}
 		return (
-			<table className="table table-bordered">
-				<thead>
-					<tr>
-						{
-							["APPLIED", "WAITLISTED", "APPROVED", "WITHDRAWN", "REJECTED"].map((status) => {
-								return (
-									<td key={status} className="text-center">
-										<ApplicationStatusLabel status={status} />
-									</td>
-								);
-							})
-						}
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						{
-							["APPLIED", "WAITLISTED", "APPROVED", "WITHDRAWN", "REJECTED"].map((status) => {
-								let item = this.state.stats.find( s => s.status === status);
-								return (
-									<td key={status} className="text-center">
-										<b>{item ? item.count : null}</b>
-									</td>
-								);
-							})
-						}
-					</tr>
-				</tbody>
-			</table>
+			<div className="table-responsive">
+				<table className="table table-bordered">
+					<thead>
+						<tr>
+							{
+								["APPLIED", "WAITLISTED", "APPROVED", "WITHDRAWN", "REJECTED"].map((status) => {
+									return (
+										<td key={status} className="text-center">
+											<ApplicationStatusLabel status={status} />
+										</td>
+									);
+								})
+							}
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							{
+								["APPLIED", "WAITLISTED", "APPROVED", "WITHDRAWN", "REJECTED"].map((status) => {
+									let item = this.state.stats.find( s => s.status === status);
+									return (
+										<td key={status} className="text-center">
+											<b>{item ? item.count : null}</b>
+										</td>
+									);
+								})
+							}
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		);
 	}
 }

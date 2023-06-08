@@ -63,7 +63,7 @@ export default class ClientTrainerList extends React.Component {
 		}
 		let addClientUserLink = `/client/${this.props.params.clientId}/client_trainer/add`;
 		return (
-			<div>
+			<div className="table-responsive">
 				<h3 className="page-header">
 					<Link to={addClientUserLink} className="btn btn-default pull-right"><Plus/> Add Trainer</Link>
 					<Education/> Trainer

@@ -68,33 +68,35 @@ export default class Section extends React.Component {
 		if(this.state.expanded){
 			expandIcon = (<ChevronDown/>);
 			panelBody = (
-				<table className="table table-striped">
-					<colgroup>
-						<col style={{width:"5%"}}/>
-						<col style={{width:"65%"}}/>
-						<col style={{width:"5%"}}/>
-						<col style={{width:"10%"}}/>
-						<col style={{width:"5%"}}/>
-						<col style={{width:"10%"}}/>
-					</colgroup>
-					<thead>
-						<tr>
-							<th>#</th>
-							<th>Question</th>
-							<th>Comment Required</th>
-							<th>Question Type</th>
-							<th>Max. Marks</th>
-							<th>
-								<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
-									<Plus/>
-								</Link>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						{questionRows}
-					</tbody>
-				</table>
+				<div className="table-responsive">
+					<table className="table table-striped">
+						<colgroup>
+							<col style={{width:"5%"}}/>
+							<col style={{width:"65%"}}/>
+							<col style={{width:"5%"}}/>
+							<col style={{width:"10%"}}/>
+							<col style={{width:"5%"}}/>
+							<col style={{width:"10%"}}/>
+						</colgroup>
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Question</th>
+								<th>Comment Required</th>
+								<th>Question Type</th>
+								<th>Max. Marks</th>
+								<th>
+									<Link to={`/audit_cycle/${this.props.auditCycleId}/questionnaire/section/${this.props.section.id}/question/add`} className="btn btn-default">
+										<Plus/>
+									</Link>
+								</th>
+							</tr>
+						</thead>
+						<tbody>
+							{questionRows}
+						</tbody>
+					</table>
+				</div>
 			);
 		}
 		return (

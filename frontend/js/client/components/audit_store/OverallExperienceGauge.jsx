@@ -42,7 +42,7 @@ export default class OverallExperienceGauge extends React.Component {
 		};
 		const { backgroundColor, foregroudColor } = getGaugeProps(this.props.colorCode);
 		return (
-			<div className={"panel panel-default"}>
+			<div className={"panel panel-default table-responsive"}>
 				<div className="panel-heading">
 					Overall Experience
 				</div>

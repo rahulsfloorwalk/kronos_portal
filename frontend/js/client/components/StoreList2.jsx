@@ -257,7 +257,7 @@ export default class StoreList2 extends Component{
 		const { citiesRows } = this.state;
 		if (storeRows.length > 0){
 			storeTable = (
-				<div>
+				<div className="table-responsive">
 					<div className="form-group" style={{marginTop: "10px", verticalAlign: "middle"}}>
 						<StoreCodeSelector name="storeCode" value={this.state.storeCode} onChange={this.changeValue}/>
 						&nbsp;
