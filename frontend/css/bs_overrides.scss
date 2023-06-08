@@ -454,3 +454,44 @@ $progress_bar_bg_lighten_pct : 5%;
 .star-rating label:hover ~ label {
 	color:#fc0;
 }
+//------------ Auditor -> view opportunity part----------------------
+.truncateStyle1 {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+};
+
+@media screen and (max-width: 393px) {
+	.truncateStyle1 {
+		white-space: normal;
+	}
+}
+
+.summary_text{
+	display: flex;
+	flex-wrap: wrap;
+	overflow: scroll;
+}
+.summary_text::-webkit-scrollbar{
+	display: none;
+}
+.report_scroll{
+	overflow: scroll;
+}
+.report_scroll::-webkit-scrollbar{
+	display: none;
+}
+
+
+//----------------------------------MANAGER LOGOUT DROPDOWN----------------
+
+.dropdown-style{
+	display: block;
+	left: auto;
+}
+@media screen and (max-width: 770px) {
+	.dropdown-style{
+		display: block;
+	    right: 0px;
+	}
+}

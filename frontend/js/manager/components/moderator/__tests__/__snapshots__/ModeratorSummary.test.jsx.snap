@@ -36,7 +36,9 @@ exports[`ModeratorSummary renders the empty message when there are no rows 1`] =
 `;
 
 exports[`ModeratorSummary renders the moderator summary and moderator emails 1`] = `
-<div>
+<div
+  className="table-responsive"
+>
    
   <table
     className="table table-bordered table-striped"

@@ -2,7 +2,7 @@
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 1 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-default table-responsive"
 >
   <div
     className="panel-heading"
@@ -312,7 +312,7 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 2 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-default table-responsive"
 >
   <div
     className="panel-heading"
@@ -622,7 +622,7 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 3 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-default table-responsive"
 >
   <div
     className="panel-heading"
@@ -932,7 +932,7 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 4 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-default table-responsive"
 >
   <div
     className="panel-heading"
@@ -1242,7 +1242,7 @@ exports[`OverallExperienceGauge renders the experience gauge correctly for color
 
 exports[`OverallExperienceGauge renders the experience gauge correctly for colorCode: 5 1`] = `
 <div
-  className="panel panel-default"
+  className="panel panel-default table-responsive"
 >
   <div
     className="panel-heading"

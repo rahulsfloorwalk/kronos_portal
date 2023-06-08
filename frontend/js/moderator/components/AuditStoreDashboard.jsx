@@ -62,7 +62,7 @@ class AuditStoreList2 extends Component{
 			return <Jumbotron key="empty" heading="there are no reports here" para="assigned reports will be visible here"/>;
 		}
 		return(
-			<div className="panel panel-default">
+			<div className="panel panel-default table-responsive">
 				<div className="panel-heading">
 					<h4 className="">{this.props.auditStores[0] && this.props.auditStores[0].audit.audit_cycle.client.name} - {this.props.auditStores.length} Reports</h4>
 				</div>

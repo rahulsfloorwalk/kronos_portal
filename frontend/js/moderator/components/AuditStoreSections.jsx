@@ -4,7 +4,7 @@ import { } from "react-router";
 // import $ from "jquery";
 
 import { } from "../../styles.js";
-
+import "../../../css/bs_overrides.scss";
 import Loading from "../../components/Loading.jsx";
 import Modal from "../../components/Modal.jsx";
 
@@ -862,7 +862,7 @@ class Section extends React.Component{
 		if(this.state.not_applicable){
 			panelBody = (<div className="panel-footer text-center text-muted">section not applicable</div>);
 		} else {
-			panelBody = (<div>
+			panelBody = (<div className="report_scroll">
 				<table className="table table-striped">
 					<thead>
 						<tr>

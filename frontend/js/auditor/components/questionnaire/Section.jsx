@@ -11,7 +11,7 @@ import QuestionRow from "./QuestionRow.jsx";
 import { affectInputEventToComponent } from "../../../react_utils.js";
 
 import { submitAuditorComment } from "../../actions/report_section.js";
-
+import "../../../../css/bs_overrides.scss";
 class __Section extends React.Component{
 
 	static propTypes = {
@@ -104,7 +104,7 @@ class __Section extends React.Component{
 
 		let auditor_comment = this.state.auditor_comment || (<span className="text-muted">-</span>);
 
-		let commentElement = (<p>{auditor_comment}</p>);
+		let commentElement = (<p className="report-scroll">{auditor_comment}</p>);
 		let section_attachment_box_element;
 		if(this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED"){
 			if(this.props.section.hide_comment == false){
@@ -147,7 +147,7 @@ class __Section extends React.Component{
 		let badClass = (this.props.showErrors || this.state.auditor_comment_error) && (this.state.auditor_comment).length < 150 ? "danger" : "";
 
 		return (
-			<div className="panel panel-default">
+			<div className="panel panel-default report-scroll">
 				<div className="panel-heading">
 					<h4 className="panel-title">
 						{this.props.section.sequence} - <b>{this.props.section.name}</b>

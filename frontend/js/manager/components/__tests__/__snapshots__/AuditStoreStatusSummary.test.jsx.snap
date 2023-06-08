@@ -16,218 +16,222 @@ exports[`<AuditStoreStatusSummary/> is rendered correctly when stats are loading
 `;
 
 exports[`<AuditStoreStatusSummary/> is rendered correctly when stats have successfully loaded 1`] = `
-<table
-  className="table table-bordered"
+<div
+  className="table-responsive"
 >
-  <thead>
-    <tr>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-warning"
-          style={
-            Object {
-              "fontSize": "100%",
-            }
-          }
+  <table
+    className="table table-bordered"
+  >
+    <thead>
+      <tr>
+        <td
+          className="text-center"
         >
-          Assigned
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-warning2"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-warning"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            Assigned
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          In Progress
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-default"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-warning2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            In Progress
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          Withdrawn
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-default"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-default"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            Withdrawn
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          Auditor Withdrawn
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-danger"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-default"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            Auditor Withdrawn
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          Failed
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-primary1"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-danger"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            Failed
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          QA Review
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-primary"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-primary1"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            QA Review
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          PM Review
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-success"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-primary"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            PM Review
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          Client Review
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-success2"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-success"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            Client Review
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          Accepted
-        </span>
-      </td>
-      <td
-        className="text-center"
-      >
-        <span
-          className="label label-danger2"
-          style={
-            Object {
-              "fontSize": "100%",
+          <span
+            className="label label-success2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
             }
-          }
+          >
+            Accepted
+          </span>
+        </td>
+        <td
+          className="text-center"
         >
-          Rejected
-        </span>
-      </td>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td
-        className="text-center"
-      >
-        <b>
-          6
-        </b>
-      </td>
-      <td
-        className="text-center"
-      >
-        <b>
-          6
-        </b>
-      </td>
-      <td
-        className="text-center"
-      >
-        <b />
-      </td>
-      <td
-        className="text-center"
-      >
-        <b />
-      </td>
-      <td
-        className="text-center"
-      >
-        <b>
-          4
-        </b>
-      </td>
-      <td
-        className="text-center"
-      >
-        <b>
-          3
-        </b>
-      </td>
-      <td
-        className="text-center"
-      >
-        <b>
-          1
-        </b>
-      </td>
-      <td
-        className="text-center"
-      >
-        <b>
-          3
-        </b>
-      </td>
-      <td
-        className="text-center"
-      >
-        <b />
-      </td>
-      <td
-        className="text-center"
-      >
-        <b />
-      </td>
-    </tr>
-  </tbody>
-</table>
+          <span
+            className="label label-danger2"
+            style={
+              Object {
+                "fontSize": "100%",
+              }
+            }
+          >
+            Rejected
+          </span>
+        </td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td
+          className="text-center"
+        >
+          <b>
+            6
+          </b>
+        </td>
+        <td
+          className="text-center"
+        >
+          <b>
+            6
+          </b>
+        </td>
+        <td
+          className="text-center"
+        >
+          <b />
+        </td>
+        <td
+          className="text-center"
+        >
+          <b />
+        </td>
+        <td
+          className="text-center"
+        >
+          <b>
+            4
+          </b>
+        </td>
+        <td
+          className="text-center"
+        >
+          <b>
+            3
+          </b>
+        </td>
+        <td
+          className="text-center"
+        >
+          <b>
+            1
+          </b>
+        </td>
+        <td
+          className="text-center"
+        >
+          <b>
+            3
+          </b>
+        </td>
+        <td
+          className="text-center"
+        >
+          <b />
+        </td>
+        <td
+          className="text-center"
+        >
+          <b />
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 `;

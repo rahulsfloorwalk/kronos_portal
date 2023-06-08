@@ -6,7 +6,7 @@ import Alert from "react-s-alert";
 import { connect } from "react-redux";
 import { Tasks } from "../../components/Icons.jsx";
 import { submitReportSummary } from "../actions/audit_store.js";
-
+import "../../../css/bs_overrides.scss";
 class __ReportSummary extends Component {
 
 	static propTypes = {
@@ -59,7 +59,7 @@ class __ReportSummary extends Component {
 				</div>
 			);
 		} else {
-			const summaryText = this.props.report_summary ? <span> {this.props.report_summary}</span> : null;
+			const summaryText = this.props.report_summary ? <span className="summary_text"> {this.props.report_summary}</span> : null;
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary</h3>

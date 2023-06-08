@@ -467,46 +467,48 @@ export class AuditList extends Component{
 				<Inbox/> Audits
 			</h3>
 			<ApplicationStatusSummary auditCycleId={this.props.params.auditCycleId}/>
-			<table className="table table-hover">
-				<thead>
-					<tr>
-						<th className="text-right">#</th>
-						<th>Store</th>
-						{ showPriority ? <th>
-							<select value={this.state.selectedPriority} onChange={this.onPriorityFilterChanged} className="form-control">
-								<option value="">Priority</option>
-								{priorities.map((p, i) => <option key={i} value={p}>{p}</option>)}
-							</select>
-						</th> : null }
-						{ showAuditDate ? <th>
-							<select value={this.state.selectedAuditDate} onChange={this.onAuditDateChanged} className="form-control">
-								<option value="">Audit Date</option>
-								{auditDates.map((ad, i) => <option key={i} value={ad === null ? "null" : ad}>{moment(ad).isValid() ? moment(ad).format(momentDateFormat) : "No Date"}</option>)}
-							</select>
-						</th> : null }
-						<th>
-							<select value={this.state.selectedCity} onChange={this.onCityChanged} className="form-control">
-								<option value="">City</option>
-								{cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-							</select>
-						</th>
-						{ showAuditFees ? <th className="text-right">Fees (₹)</th> : null }
-						{ showReimbursement ? <th className="text-right">Reimbursement (₹)</th> : null }
-						<th className="text-right">Audit Count</th>
-						<th className="text-right">Applications</th>
-						<th className="text-right">Reports</th>
-						<th className="text-right">
-							<select onChange={this.onHiddenFilterChanged} className="form-control">
-								<option value="">All</option>
-								<option value="true">Hidden</option>
-								<option value="false">Visible</option>
-							</select>
-						</th>
-						<th>&nbsp;</th>
-					</tr>
-				</thead>
-				{rows}
-			</table>
+			<div className="table-responsive">
+				<table className="table table-hover">
+					<thead>
+						<tr>
+							<th className="text-right">#</th>
+							<th>Store</th>
+							{ showPriority ? <th>
+								<select value={this.state.selectedPriority} onChange={this.onPriorityFilterChanged} className="form-control">
+									<option value="">Priority</option>
+									{priorities.map((p, i) => <option key={i} value={p}>{p}</option>)}
+								</select>
+							</th> : null }
+							{ showAuditDate ? <th>
+								<select value={this.state.selectedAuditDate} onChange={this.onAuditDateChanged} className="form-control">
+									<option value="">Audit Date</option>
+									{auditDates.map((ad, i) => <option key={i} value={ad === null ? "null" : ad}>{moment(ad).isValid() ? moment(ad).format(momentDateFormat) : "No Date"}</option>)}
+								</select>
+							</th> : null }
+							<th>
+								<select value={this.state.selectedCity} onChange={this.onCityChanged} className="form-control">
+									<option value="">City</option>
+									{cities.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+								</select>
+							</th>
+							{ showAuditFees ? <th className="text-right">Fees (₹)</th> : null }
+							{ showReimbursement ? <th className="text-right">Reimbursement (₹)</th> : null }
+							<th className="text-right">Audit Count</th>
+							<th className="text-right">Applications</th>
+							<th className="text-right">Reports</th>
+							<th className="text-right">
+								<select onChange={this.onHiddenFilterChanged} className="form-control">
+									<option value="">All</option>
+									<option value="true">Hidden</option>
+									<option value="false">Visible</option>
+								</select>
+							</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					{rows}
+				</table>
+			</div>
 			{this.props.children}
 		</div>);
 	}

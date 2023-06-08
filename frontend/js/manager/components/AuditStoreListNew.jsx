@@ -343,7 +343,7 @@ class AuditStoreList extends Component{
 				}
 				if(audit_report_rows.length > 0){
 					rows.push(
-						<div className="panel panel-default" key={report.id}>
+						<div className="panel panel-default table-responsive" key={report.id}>
 							<div className="panel-heading">
 								<b>{report.store_name}</b>, {report.store_address}, {report.store_city} <span className="pull-right"><b>[Audit Count - {report.store_audit_count}]</b></span>
 							</div>

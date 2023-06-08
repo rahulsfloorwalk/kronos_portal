@@ -207,22 +207,24 @@ export default class AuditCyclePaymentList extends React.Component{
 		let table = this.state.loading ? <Loading/> : rows.length === 0 ? (
 			<Jumbotron key="empty" heading="no payments here" para="payments for accepted reports will appear here"/>
 		) : (
-			<table className="table table-striped">
-				<thead>
-					<tr>
-						<th>Auditor Name</th>
-						<th>Added Date</th>
-						<th>Audit Date</th>
-						<th>Paid Date</th>
-						<th className="text-right">Amount</th>
-						<th>Payment Status</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{rows}
-				</tbody>
-			</table>
+			<div className="table-responsive">
+				<table className="table table-striped">
+					<thead>
+						<tr>
+							<th>Auditor Name</th>
+							<th>Added Date</th>
+							<th>Audit Date</th>
+							<th>Paid Date</th>
+							<th className="text-right">Amount</th>
+							<th>Payment Status</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{rows}
+					</tbody>
+				</table>
+			</div>
 		);
 
 		return(

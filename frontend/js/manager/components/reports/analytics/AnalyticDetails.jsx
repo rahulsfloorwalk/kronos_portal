@@ -170,7 +170,7 @@ export default class AnalyticDetails extends React.Component {
 						</table>
 					</div>
 				</div>
-				<div className="col-md-12">
+				<div className="col-md-12 table-responsive">
 					<h2 className="page-header">
 						Project Analytics
 					</h2>

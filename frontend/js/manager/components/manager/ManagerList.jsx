@@ -55,7 +55,7 @@ export default class ManagerList extends React.Component {
 		const rows = this.state.managers.map((m,i) => <ManagerRow seq={i+1} manager={m} key={m.id}/>);
 		const addManagerLink = "/manager/add";
 		return (
-			<div>
+			<div className="table-responsive">
 				<h2 className="page-header">
 					<Link to={addManagerLink} className="btn btn-default pull-right"><Plus/> Add Manager</Link>
 					<Queen/> Manager

@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 import { Tasks } from "../../components/Icons.jsx";
 import { setReportSummary } from "../service/audit_store.js";
-
+import "../../../css/bs_overrides.scss";
 export default class ReportSummary extends Component {
 
 	static propTypes = {
@@ -53,7 +53,7 @@ export default class ReportSummary extends Component {
 				</div>
 			);
 		} else {
-			const summaryText = this.state.reportSummary ? <span> {this.state.reportSummary}</span> : null;
+			const summaryText = this.state.reportSummary ? <span className="summary_text"> {this.state.reportSummary}</span> : null;
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary</h3>

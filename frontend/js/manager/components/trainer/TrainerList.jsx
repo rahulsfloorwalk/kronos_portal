@@ -55,7 +55,7 @@ export default class TrainerList extends React.Component {
 		const rows = this.state.trainers.map((m,i) => <TrainerRow seq={i+1} trainer={m} key={m.id}/>);
 		const addTrainerLink = "/trainer/add";
 		return (
-			<div>
+			<div className="table-responsive">
 				<h2 className="page-header">
 					<Link to={addTrainerLink} className="btn btn-default pull-right"><Plus/> Add Trainer</Link>
 					<Education/> Trainer

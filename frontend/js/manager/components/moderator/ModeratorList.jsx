@@ -56,7 +56,7 @@ export default class ModeratorList extends React.Component {
 		const rows = this.state.moderators.map((m, i) => <ModeratorRow seq={i+1} moderator={m} key={m.id}/>);
 		const addModeratorLink = "/moderator/list/add";
 		return (
-			<div>
+			<div className="table-responsive">
 				<table className="table table-striped">
 					<thead>
 						<tr>

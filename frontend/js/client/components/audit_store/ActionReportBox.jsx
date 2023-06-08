@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import moment from "moment";
 import { momentDateFormat }  from "../../../../config.js";
-
+import "../../../../css/bs_overrides.scss";
 import { getColorForActionPlanStatus } from "../../../utils.js";
 
 export default class SectionTotalsBox extends React.Component {
@@ -33,7 +33,7 @@ export default class SectionTotalsBox extends React.Component {
 			}
 			if(rows.length > 0){
 				return(
-					<div className="panel panel-default">
+					<div className="panel panel-default report-scroll">
 						<div className="panel-heading">
 							<h4 className="panel-title">Report Actions</h4>
 						</div>
