@@ -31,7 +31,7 @@ export default class DropDown extends React.Component{
 
 	render(){
 		if(this.state.dropdown){
-			return (<ul className="dropdown-menu dropdown-style"
+			return (<ul className="dropdown-menu" style={{display:"block", left: "auto"}}
 				onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave}>
 				{ this.props.children }
 			</ul>);
