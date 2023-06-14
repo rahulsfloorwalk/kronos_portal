@@ -4,6 +4,9 @@ import PropTypes from "prop-types";
 import { Tasks } from "../../components/Icons.jsx";
 import { setReportSummary } from "../service/audit_store.js";
 import "../../../css/bs_overrides.scss";
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+
+import { ClientID } from "../../constants.js";
 export default class ReportSummary extends Component {
 
 	static propTypes = {
@@ -49,7 +52,9 @@ export default class ReportSummary extends Component {
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary</h3>
-					<textarea rows="5" className="form-control" value={this.state.reportSummary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
+					<GrammarlyEditorPlugin clientId={ClientID}>
+						<textarea rows="5" className="form-control" value={this.state.reportSummary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
+					</GrammarlyEditorPlugin>
 				</div>
 			);
 		} else {

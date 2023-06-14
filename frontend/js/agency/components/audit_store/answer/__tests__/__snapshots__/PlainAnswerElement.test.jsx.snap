@@ -5,15 +5,20 @@ exports[`<PlainAnswerElement/> when answer is editable renders a blank answer te
   className=""
   onSubmit={[Function]}
 >
-  <textarea
-    className="form-control"
-    name="answerText"
-    onBlur={[MockFunction]}
-    onChange={[MockFunction]}
-    onFocus={[MockFunction]}
-    placeholder="type your answer here"
-    value=""
-  />
+  <grammarly-editor-plugin
+    autodetect="on"
+    clientId="client_WpuFqThfMu4rQ4hTvbnDww"
+  >
+    <textarea
+      className="form-control"
+      name="answerText"
+      onBlur={[MockFunction]}
+      onChange={[MockFunction]}
+      onFocus={[MockFunction]}
+      placeholder="type your answer here"
+      value=""
+    />
+  </grammarly-editor-plugin>
 </form>
 `;
 
@@ -22,15 +27,20 @@ exports[`<PlainAnswerElement/> when answer is editable renders a prefilled answe
   className=""
   onSubmit={[Function]}
 >
-  <textarea
-    className="form-control"
-    name="answerText"
-    onBlur={[MockFunction]}
-    onChange={[MockFunction]}
-    onFocus={[MockFunction]}
-    placeholder="type your answer here"
-    value="Hello World"
-  />
+  <grammarly-editor-plugin
+    autodetect="on"
+    clientId="client_WpuFqThfMu4rQ4hTvbnDww"
+  >
+    <textarea
+      className="form-control"
+      name="answerText"
+      onBlur={[MockFunction]}
+      onChange={[MockFunction]}
+      onFocus={[MockFunction]}
+      placeholder="type your answer here"
+      value="Hello World"
+    />
+  </grammarly-editor-plugin>
 </form>
 `;
 

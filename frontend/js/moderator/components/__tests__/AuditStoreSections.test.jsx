@@ -1,6 +1,5 @@
 import React from "react";
 import renderer from "react-test-renderer";
-
 import {QuestionRow} from "../AuditStoreSections";
 
 const sampleQuestion = {

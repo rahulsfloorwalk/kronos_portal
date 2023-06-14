@@ -8,14 +8,19 @@ exports[`<__AuditorComment/> when auditor comment is editable renders a comment 
     </b>
      
   </p>
-  <input
-    className="form-control"
-    name="auditorComment"
-    onBlur={[Function]}
-    onChange={[Function]}
-    placeholder="type out your relevant experience here in a few sentences"
-    value="Hello World"
-  />
+  <grammarly-editor-plugin
+    autodetect="on"
+    clientId="client_WpuFqThfMu4rQ4hTvbnDww"
+  >
+    <input
+      className="form-control"
+      name="auditorComment"
+      onBlur={[Function]}
+      onChange={[Function]}
+      placeholder="type out your relevant experience here in a few sentences"
+      value="Hello World"
+    />
+  </grammarly-editor-plugin>
 </div>
 `;
 

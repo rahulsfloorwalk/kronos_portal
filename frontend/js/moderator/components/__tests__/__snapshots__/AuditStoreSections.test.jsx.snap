@@ -13,12 +13,17 @@ exports[`<QuestionRow/> renders the question row correctly when answer has 0 mar
     <div
       className=""
     >
-      <textarea
-        className="form-control"
-        onBlur={[Function]}
-        onChange={[Function]}
-        value="We were 4; two adults and two kids."
-      />
+      <grammarly-editor-plugin
+        autodetect="on"
+        clientId="client_WpuFqThfMu4rQ4hTvbnDww"
+      >
+        <textarea
+          className="form-control"
+          onBlur={[Function]}
+          onChange={[Function]}
+          value="We were 4; two adults and two kids."
+        />
+      </grammarly-editor-plugin>
     </div>
   </td>
   <td
@@ -81,12 +86,17 @@ exports[`<QuestionRow/> renders the question row correctly when answer has non 0
     <div
       className=""
     >
-      <textarea
-        className="form-control"
-        onBlur={[Function]}
-        onChange={[Function]}
-        value="We were 4; two adults and two kids."
-      />
+      <grammarly-editor-plugin
+        autodetect="on"
+        clientId="client_WpuFqThfMu4rQ4hTvbnDww"
+      >
+        <textarea
+          className="form-control"
+          onBlur={[Function]}
+          onChange={[Function]}
+          value="We were 4; two adults and two kids."
+        />
+      </grammarly-editor-plugin>
     </div>
   </td>
   <td

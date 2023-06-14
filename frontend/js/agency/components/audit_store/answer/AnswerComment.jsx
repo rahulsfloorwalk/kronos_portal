@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import { connect } from "react-redux";
-
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { ClientID } from "../../../../constants.js";
 import { setAnswerComment } from "../../../actions/answer.js";
 import { findAnswer } from "../../../reducers/answer.js";
 import { findAuditStore } from "../../../reducers/audit_store.js";
@@ -48,7 +49,9 @@ export class __AnswerComment extends Component {
 	render(){
 		if(this.props.editable){
 			return (
-				<input className="form-control" value={this.state.answerComment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+				<GrammarlyEditorPlugin clientId={ClientID}>
+					<input className="form-control" value={this.state.answerComment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment"/>
+				</GrammarlyEditorPlugin>
 			);
 		} else {
 			return this.props.answerComment ? <span> ( {this.props.answerComment})</span> : null;
