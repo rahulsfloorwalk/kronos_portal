@@ -26,7 +26,7 @@
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.7",
     "enzyme-to-json": "^3.6.2",
-    "jest": "^24.1.0",
+    "jest": "^24.0.0",
     "jest-environment-jsdom-sixteen": "^2.0.0",
     "jest-junit": "^16.0.0",
     "jest-prop-type-error": "^1.1.0",
