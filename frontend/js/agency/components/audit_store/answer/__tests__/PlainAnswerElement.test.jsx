@@ -1,8 +1,13 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
-
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { ClientID } from "../../../../../constants.js";
 import PlainAnswerElement from "../PlainAnswerElement.jsx";
+
+jest.mock("@grammarly/editor-sdk-react", () => ({
+	GrammarlyEditorPlugin: ({ children }) => children,
+}));
 
 describe("<PlainAnswerElement/>", () => {
 
@@ -17,7 +22,7 @@ describe("<PlainAnswerElement/>", () => {
 				editable,
 				answerText: "",
 			};
-			const tree = renderer.create(<PlainAnswerElement {...props}/>);
+			const tree = renderer.create(<GrammarlyEditorPlugin clientId={ClientID}><PlainAnswerElement {...props}/></GrammarlyEditorPlugin>);
 			expect(tree).toMatchSnapshot();
 		});
 		it("renders a prefilled answer text correctly", () => {
@@ -28,7 +33,7 @@ describe("<PlainAnswerElement/>", () => {
 				editable,
 				answerText: "Hello World",
 			};
-			const tree = renderer.create(<PlainAnswerElement {...props}/>);
+			const tree = renderer.create(<GrammarlyEditorPlugin><PlainAnswerElement {...props}/></GrammarlyEditorPlugin>);
 			expect(tree).toMatchSnapshot();
 		});
 	});

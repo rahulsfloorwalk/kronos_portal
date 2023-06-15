@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { ClientID } from "../../../../constants.js";
 export default class PlainAnswerElement extends React.Component {
 	static propTypes = {
 		editable: PropTypes.bool.isRequired,
@@ -20,16 +21,18 @@ export default class PlainAnswerElement extends React.Component {
 	render(){
 		if(this.props.editable){
 			return <form className="" onSubmit={this.submitAnswer}>
-				<textarea
-					className="form-control"
-					placeholder="type your answer here"
-					name="answerText"
-					value={this.props.answerText}
-					onFocus={this.props.onFocus}
-					onBlur={this.props.onBlur}
-					onChange={this.props.onChange}
-					ref={(input) => this.answerInput = input}
-				></textarea>
+				<GrammarlyEditorPlugin clientId={ClientID}>
+					<textarea
+						className="form-control"
+						placeholder="type your answer here"
+						name="answerText"
+						value={this.props.answerText}
+						onFocus={this.props.onFocus}
+						onBlur={this.props.onBlur}
+						onChange={this.props.onChange}
+						ref={(input) => this.answerInput = input}
+					></textarea>
+				</GrammarlyEditorPlugin>
 			</form>;
 		} else {
 			return <p>{this.props.answerText}</p>;

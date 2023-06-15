@@ -23,6 +23,8 @@ import AttachmentPreview from "../../manager/components/AttachmentPreview.jsx";
 import ProofTagLabel from "../../components/ProofTagLabel.jsx";
 
 import { fetchproofTags, saveAttachmentTag } from "../service/proof_tag.js";
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { ClientID } from "../../constants.js";
 
 class AnswerComment extends Component {
 
@@ -73,7 +75,9 @@ class AnswerComment extends Component {
 			let hasError = this.state.error ? "has-error" : "";
 			return (
 				<div className={`${hasSuccess} ${hasError}`}>
-					<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1"/>
+					<GrammarlyEditorPlugin clientId={ClientID}>
+						<textarea className="form-control" value={this.state.answer_comment} onChange={this.commentChanged} onBlur={this.onBlur} placeholder="optional comment" rows="1"/>
+					</GrammarlyEditorPlugin>
 				</div>
 			);
 		} else {
@@ -101,7 +105,7 @@ export class QuestionRow extends React.Component{
 		answer: PropTypes.shape({
 			answer_comment: PropTypes.string,
 			revert_message: PropTypes.string,
-			get_answer_text_list: PropTypes.oneOf[PropTypes.array, PropTypes.string]
+			get_answer_text_list: PropTypes.oneOfType([PropTypes.array, PropTypes.string,PropTypes.undefined])
 		}),
 		marking: PropTypes.bool,
 
@@ -229,10 +233,12 @@ export class QuestionRow extends React.Component{
 			if(this.props.q.question_type === "PLAIN"){
 				answerElement = (
 					<div className={hasAnswerError + hasAnswerSuccess}>
-						<textarea className="form-control"
-							onChange={this.answerChanged}
-							onBlur={this.saveAnswer}
-							value={this.state.answer.answer_text}></textarea>
+						<GrammarlyEditorPlugin clientId={ClientID}>
+							<textarea className="form-control"
+								onChange={this.answerChanged}
+								onBlur={this.saveAnswer}
+								value={this.state.answer.answer_text}></textarea>
+						</GrammarlyEditorPlugin>
 					</div>
 				);
 			} else if(this.props.q.question_type === "MUTEX") {
@@ -831,19 +837,25 @@ class Section extends React.Component{
 			let hasAuditorCommentError = this.state.auditorCommentError ? "has-error" : "";
 			let hasAuditorCommentSuccess = this.state.auditorCommentSuccess ? "has-success" : "";
 			auditorCommentElement = (
-				<div className={hasAuditorCommentError + hasAuditorCommentSuccess} style={{display: "flex", alignItems:"center"}}>
-					<textarea
-						maxLength="4096"
-						disabled={this.state.savingAuditorComment}
-						placeholder="enter auditor comment here"
-						required="true"
-						className="form-control"
-						name="auditor_comment"
-						value={this.state.auditor_comment}
-						onBlur={this.saveAuditorComment}
-						onChange={this.inputChanged}
-					/>&nbsp;&nbsp;
-					<button className={`btn btn-${this.state.revert_message ? "primary" : "warning"}`} onClick={this.toggleRevertForm} title="Revert message"><Pencil/></button>
+				<div className={hasAuditorCommentError + hasAuditorCommentSuccess} style={{display: "flex",alignItems:"center", overflow:"hidden"}}>
+					<div style={{width: "95%",float:"left"}}>
+						<GrammarlyEditorPlugin clientId={ClientID}>
+							<textarea
+								maxLength="4096"
+								disabled={this.state.savingAuditorComment}
+								placeholder="enter auditor comment here"
+								required="true"
+								className="form-control"
+								name="auditor_comment"
+								value={this.state.auditor_comment}
+								onBlur={this.saveAuditorComment}
+								onChange={this.inputChanged}
+							/>
+						</GrammarlyEditorPlugin>
+					</div>&nbsp;&nbsp;
+					<div style={{width: "5%",float:"right",flex:"none"}}>
+						<button className={`btn btn-${this.state.revert_message ? "primary" : "warning"}`} onClick={this.toggleRevertForm} title="Revert message"><Pencil/></button>
+					</div>
 				</div>
 			);
 

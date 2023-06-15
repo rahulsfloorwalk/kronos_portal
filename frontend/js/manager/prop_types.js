@@ -14,11 +14,12 @@ export const userPropType = PropTypes.shape({
 
 export const auditCyclePropType = PropTypes.shape({
 	type: PropTypes.string.isRequired,
-	client: clientPropType,
+	client: PropTypes.oneOfType([PropTypes.func,PropTypes.undefined]),
 	post_approval_description: PropTypes.string,
 });
 
-export const clientPropType = PropTypes.shape({ });
+// export const clientPropType = PropTypes.shape({
+// 	PropTypes.oneOfType([PropTypes.func,PropTypes.undefined])});
 
 export const storePropType = PropTypes.shape({
 	id: PropTypes.number,

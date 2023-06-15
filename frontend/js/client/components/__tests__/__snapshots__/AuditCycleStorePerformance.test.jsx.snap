@@ -44,19 +44,7 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
             "width": "100%",
           }
         }
-      >
-        <div
-          style={
-            Object {
-              "display": "none",
-              "height": 0,
-              "position": "absolute",
-              "visibility": "hidden",
-              "width": 0,
-            }
-          }
-        />
-      </div>
+      />
     </div>
   </div>
   <div
@@ -99,19 +87,7 @@ exports[`<AuditCycleStorePerformance/> renders the chart correctly 1`] = `
             "width": "100%",
           }
         }
-      >
-        <div
-          style={
-            Object {
-              "display": "none",
-              "height": 0,
-              "position": "absolute",
-              "visibility": "hidden",
-              "width": 0,
-            }
-          }
-        />
-      </div>
+      />
     </div>
   </div>
 </div>
