@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 
 import Alert from "react-s-alert";
-// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
 import { connect } from "react-redux";
 import { Tasks } from "../../components/Icons.jsx";
 import { submitReportSummary } from "../actions/audit_store.js";
 import "../../../css/bs_overrides.scss";
-// import { ClientID } from "../../constants.js";
+import { ClientID } from "../../constants.js";
 class __ReportSummary extends Component {
 
 	static propTypes = {
@@ -56,9 +56,9 @@ class __ReportSummary extends Component {
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary</h3>
-					{/* <GrammarlyEditorPlugin clientId={ClientID}> */}
-					<textarea rows="5" className="form-control" value={this.state.report_summary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
-					{/* </GrammarlyEditorPlugin> */}
+					<GrammarlyEditorPlugin clientId={ClientID}>
+						<textarea rows="5" className="form-control" value={this.state.report_summary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
+					</GrammarlyEditorPlugin>
 				</div>
 			);
 		} else {

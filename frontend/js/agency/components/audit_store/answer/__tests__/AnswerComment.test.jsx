@@ -1,18 +1,23 @@
 import React from "react";
 import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
-
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { ClientID } from "../../../../../constants.js";
 import { __AnswerComment } from "../AnswerComment.jsx";
+
+jest.mock("@grammarly/editor-sdk-react", () => ({
+	GrammarlyEditorPlugin: ({ children }) => children,
+}));
 
 describe("<__AnswerComment/>", () => {
 
 	describe("when answer comment is editable", () => {
 		it("renders a blank answer comment correctly", () => {
-			const tree = renderer.create(<__AnswerComment answerComment="" editable={true} onChange={() => {}}/>).toJSON();
+			const tree = renderer.create(<GrammarlyEditorPlugin clientId={ClientID}><__AnswerComment answerComment="" editable={true} onChange={() => {}}/></GrammarlyEditorPlugin>).toJSON();
 			expect(tree).toMatchSnapshot();
 		});
 		it("renders a prefilled answer comment correctly", () => {
-			const tree = renderer.create(<__AnswerComment answerComment="hello world" editable={true} onChange={() => {}}/>).toJSON();
+			const tree = renderer.create(<GrammarlyEditorPlugin clientId={ClientID}><__AnswerComment answerComment="hello world" editable={true} onChange={() => {}}/></GrammarlyEditorPlugin>).toJSON();
 			expect(tree).toMatchSnapshot();
 		});
 	});

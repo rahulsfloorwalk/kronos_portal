@@ -9,9 +9,9 @@ import { Cross } from "../../../components/Icons.jsx";
 import MarkdownViewer from "../../../../js/components/MarkdownViewer.jsx";
 
 import { affectInputEventToComponent } from "../../../react_utils.js";
-// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
 
-// import { ClientID } from "../../../constants.js";
+import { ClientID } from "../../../constants.js";
 
 import { submitAnswer } from "../../actions/answer.js";
 
@@ -143,18 +143,18 @@ class QuestionRow extends React.Component {
 			if (this.props.q.question_type === "PLAIN") {
 				answerElement = (
 					<form className="" onSubmit={this.submitAnswer}>
-						{/* <GrammarlyEditorPlugin clientId={ClientID}> */}
-						<textarea
-							className="form-control"
-							placeholder="type your answer here"
-							name="answer_text"
-							value={this.state.answer_text}
-							onFocus={this.onFocus}
-							onBlur={this.submitAnswer}
-							onChange={this.inputChanged}
-							ref={(input) => this.answerInput = input}
-						></textarea>
-						{/* </GrammarlyEditorPlugin> */}
+						<GrammarlyEditorPlugin clientId={ClientID}>
+							<textarea
+								className="form-control"
+								placeholder="type your answer here"
+								name="answer_text"
+								value={this.state.answer_text}
+								onFocus={this.onFocus}
+								onBlur={this.submitAnswer}
+								onChange={this.inputChanged}
+								ref={(input) => this.answerInput = input}
+							></textarea>
+						</GrammarlyEditorPlugin>
 					</form>
 				);
 			} else if (this.props.q.question_type === "MUTEX") {

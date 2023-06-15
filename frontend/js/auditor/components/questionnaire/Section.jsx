@@ -7,9 +7,9 @@ import Alert from "react-s-alert";
 
 import SectionAttachmentBox from "./SectionAttachmentBox.jsx";
 import QuestionRow from "./QuestionRow.jsx";
-// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
 
-// import { ClientID } from "../../../constants.js";
+import { ClientID } from "../../../constants.js";
 import { affectInputEventToComponent } from "../../../react_utils.js";
 
 import { submitAuditorComment } from "../../actions/report_section.js";
@@ -112,20 +112,20 @@ class __Section extends React.Component{
 			if(this.props.section.hide_comment == false){
 				commentElement = (
 					<form onSubmit={this.submitComment}>
-						{/* <GrammarlyEditorPlugin clientId={ClientID}> */}
-						<textarea
-							rows="3"
-							maxLength="4096"
-							className="form-control"
-							name="auditor_comment"
-							value={this.state.auditor_comment}
-							onFocus={this.onFocus}
-							onBlur={this.submitComment}
-							onChange={this.inputChanged}
-							ref={(input) => this.commentInput = input}
-							placeholder="type out your relevant experience here in a few sentences"
-						/>
-						{/* </GrammarlyEditorPlugin> */}
+						<GrammarlyEditorPlugin clientId={ClientID}>
+							<textarea
+								rows="3"
+								maxLength="4096"
+								className="form-control"
+								name="auditor_comment"
+								value={this.state.auditor_comment}
+								onFocus={this.onFocus}
+								onBlur={this.submitComment}
+								onChange={this.inputChanged}
+								ref={(input) => this.commentInput = input}
+								placeholder="type out your relevant experience here in a few sentences"
+							/>
+						</GrammarlyEditorPlugin>
 					</form>
 				);
 			}
