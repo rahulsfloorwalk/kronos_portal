@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import { setAuditorComment } from "../../actions/report_section.js";
 import { findAuditStore } from "../../reducers/audit_store.js";
 import { findReportSection } from "../../reducers/report_section.js";
-import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
-import { ClientID } from "../../../constants.js";
+// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+// import { ClientID } from "../../../constants.js";
 export class __AuditorComment extends React.Component {
 	static propTypes = {
 		auditorComment: PropTypes.string,
@@ -57,17 +57,17 @@ export class __AuditorComment extends React.Component {
 	render(){
 		return (<div>
 			<p><b>Section Summary:</b> { this.props.saving ? <span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span> : null}</p>
+			{/* <GrammarlyEditorPlugin clientId={ClientID}> */}
+			{/* </GrammarlyEditorPlugin> */}
 			{this.props.editable ?
-				<GrammarlyEditorPlugin clientId={ClientID}>
-					<input
-						className="form-control"
-						name="auditorComment"
-						value={this.state.auditorComment}
-						onBlur={this.commentChanged}
-						onChange={this.inputChanged}
-						placeholder="type out your relevant experience here in a few sentences"
-					/>
-				</GrammarlyEditorPlugin>
+				<input
+					className="form-control"
+					name="auditorComment"
+					value={this.state.auditorComment}
+					onBlur={this.commentChanged}
+					onChange={this.inputChanged}
+					placeholder="type out your relevant experience here in a few sentences"
+				/>
 				:
 				<p>{this.state.auditorComment}</p>
 			}

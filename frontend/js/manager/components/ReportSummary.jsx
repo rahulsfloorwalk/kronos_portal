@@ -5,9 +5,9 @@ import { connect } from "react-redux";
 import { Tasks } from "../../components/Icons.jsx";
 import { setReportSummary } from "../actions/audit_store.js";
 import { findSummaryByAuditStoreId } from "../selectors/audit_store";
-import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
+// import { GrammarlyEditorPlugin} from "@grammarly/editor-sdk-react";
 
-import { ClientID } from "../../constants.js";
+// import { ClientID } from "../../constants.js";
 
 class __ReportSummary extends Component {
 
@@ -55,9 +55,9 @@ class __ReportSummary extends Component {
 			return (
 				<div>
 					<h3 className="page-header"><Tasks/> Report Summary111</h3>
-					<GrammarlyEditorPlugin clientId={ClientID}>
-						<textarea rows="5" className="form-control" value={this.state.reportSummary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
-					</GrammarlyEditorPlugin>
+					{/* <GrammarlyEditorPlugin clientId={ClientID}> */}
+					<textarea rows="5" className="form-control" value={this.state.reportSummary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
+					{/* </GrammarlyEditorPlugin> */}
 				</div>
 			);
 		} else {

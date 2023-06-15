@@ -1,33 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<__AnswerComment/> when answer comment is editable renders a blank answer comment correctly 1`] = `
-<grammarly-editor-plugin
-  autodetect="on"
-  clientId="client_WpuFqThfMu4rQ4hTvbnDww"
->
-  <input
-    className="form-control"
-    onBlur={[Function]}
-    onChange={[Function]}
-    placeholder="optional comment"
-    value=""
-  />
-</grammarly-editor-plugin>
+<input
+  className="form-control"
+  onBlur={[Function]}
+  onChange={[Function]}
+  placeholder="optional comment"
+  value=""
+/>
 `;
 
 exports[`<__AnswerComment/> when answer comment is editable renders a prefilled answer comment correctly 1`] = `
-<grammarly-editor-plugin
-  autodetect="on"
-  clientId="client_WpuFqThfMu4rQ4hTvbnDww"
->
-  <input
-    className="form-control"
-    onBlur={[Function]}
-    onChange={[Function]}
-    placeholder="optional comment"
-    value="hello world"
-  />
-</grammarly-editor-plugin>
+<input
+  className="form-control"
+  onBlur={[Function]}
+  onChange={[Function]}
+  placeholder="optional comment"
+  value="hello world"
+/>
 `;
 
 exports[`<__AnswerComment/> when answer comment is not editable renders a blank answer comment correctly 1`] = `null`;

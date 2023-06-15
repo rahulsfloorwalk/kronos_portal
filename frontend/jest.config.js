@@ -35,5 +35,4 @@ module.exports = {
 		"\\.(css|less|scss)$": "<rootDir>/js/__mocks__/styleMock.js"
 	},
 	"snapshotSerializers": ["enzyme-to-json/serializer"],
-	testEnvironment: "jest-environment-jsdom-sixteen",
 };
