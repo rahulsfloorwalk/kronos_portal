@@ -32,7 +32,12 @@ from .viewss import questionnaire_type as questionnaire_type_views
 from .viewss import agency_user as agency_user_views
 from .viewss import report_attribute as report_attribute_views
 from .viewss import reports as report_views
-
+from .viewss import tax as tax_views
+from .viewss import category as category_views
+from .viewss import industry as industry_views
+from .viewss import interested_area as interested_area_views
+from .viewss import subcategory as subcategory_views
+from .viewss import solution as solution_views
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
     url(r'notifications/actors$', notification_views.NotificationActorsView.as_view(), name='notification_actors_view'),
@@ -55,6 +60,20 @@ urlpatterns = ([
     url(r'client/(?P<client_id>[0-9]+)/audit_store/(?P<audit_store_id>[0-9]+)/xlsx_report$', audit_store_views.AuditStoreXlsxReport.as_view(), name='audit_store_xlsx_report'),
     url(r'client/dashboard_cycle_status$', client_views.ClientViewByDashboardCyleStatus.as_view(), name='client_view_by_dashboard_cycle_status'),
     url(r'client$', client_views.ClientView.as_view(), name='client_view'),
+    
+    url(r'tax$', tax_views.TaxView.as_view(), name='tax_view'),
+    url(r'tax/(?P<tax_id>[0-9]+)$', tax_views.TaxIdView.as_view(), name='tax_id_view'),
+    url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
+    url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
+    url(r'interested_area$', interested_area_views.InterestedAreaView.as_view(), name='interested_area_view'),
+    url(r'interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.InterestedAreaIdView.as_view(), name='interested_area_id_view'),
+    url(r'industry$', industry_views.IndustryView.as_view(), name='industry_view'),
+    url(r'industry/(?P<industry_id>[0-9]+)$', industry_views.IndustryIdView.as_view(), name='industry_id_view'),
+    url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
+    url(r'subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.SubcategoryIdView.as_view(), name='subcategory_id_view'),
+    # url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
+    # url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
+    
     # url(r'client/(?P<client_id>[0-9]+)/client_requirements/attachment$',client_views.ClienRequirementsAttachments.as_view(), name='client_requirements_attachments'),
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/client_user$', audit_store_views.AuditStoreIdClientUserView.as_view(), name='audit_store_id_client_user_view'),

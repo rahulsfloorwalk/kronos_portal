@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, AutoField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
+from django.db.models import Model,CASCADE,ManyToManyField,ImageField, CharField,FloatField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.utils import timezone
 
@@ -75,3 +75,51 @@ class ManagerPermissions(Model):
             ('can_change_system_cost', 'Can change system cost'),
             ('can_change_price_per_audit', 'Can change price per audit'),
         )
+        
+        
+class MPTax(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    rate = PositiveIntegerField(db_column='rate', blank=False)
+    def __str__(self):
+        return 'Tax({}): {}, {}'.format(self.id, self.name, self.rate)
+
+class MPCategory(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    def __str__(self):
+        return 'Category({}): {}, {}'.format(self.id, self.name)
+
+class MpInterestArea(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    def __str__(self):
+        return 'InterestArea({}): {}, {}'.format(self.id, self.name)
+class MpIndustry(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    def __str__(self):
+        return 'Industry({}): {}, {}'.format(self.id, self.name)
+
+class MPSubcategory(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    def __str__(self):
+        return 'Subcategory({}): {}, {}'.format(self.id, self.name)
+
+class MPSolutions(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    name = CharField(db_column='name',max_length=150, blank=False)
+    url_structure = CharField(db_column='url-structure',max_length=150, blank=False)
+    price = FloatField(max_length=150, blank=True)
+    category =  ForeignKey(MPCategory, related_name='mp_solutions', db_column='category_id', on_delete=PROTECT)
+    sub_category = ForeignKey(MPSubcategory,related_name='mp_solutions',db_column='subcategory_id', on_delete=PROTECT)
+    tax = ForeignKey(MPTax,related_name='mp_solutions', db_column='tax_id', on_delete=PROTECT)
+    about =CharField(max_length=100000, blank=True)
+    overview = CharField(max_length=100000, blank=True)
+    how_it_work = CharField(max_length=100000, blank=True)
+    execution_time = CharField(max_length=100000, blank=True)
+    short_description = CharField(max_length=100000, blank=True, default='')
+    is_active = BooleanField(default=False)
+    def __str__(self):
+        return 'Solutions({}): {}, {}'.format(self.id, self.name)
