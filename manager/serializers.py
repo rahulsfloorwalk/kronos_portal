@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField, SerializerMethodField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField, SerializerMethodField,ListField,ImageField
 from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 from kronos.exceptions import AppLogicError
 from agency.models import AgencyUser, Agency
@@ -9,7 +9,7 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City, ProofTag,MPSubcategory,MpIndustry,MpInterestArea,MPCategory,MPTax,MPSolutions
+from .models import City, ProofTag,MPSubcategory,MpIndustry,MpInterestArea,MPCategory,MPTax,MPSolutions,MPSolutionImage
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
 class ClientSerializer(ModelSerializer):
@@ -539,10 +539,15 @@ class SubcategorySerializer(ModelSerializer):
             s_cat = MPSubcategory()
         s_cat.name = self.validated_data.get('name', s_cat.name)
         return s_cat
- 
-class SolutionSerializer(ModelSerializer):
+class SolutionImageSerializer(ModelSerializer):
     class Meta:
-        model = MPSolutions
+        model = MPSolutionImage
+        fields = ['id', 'solution', 'image']
+    
+class SolutionSerializer(ModelSerializer):
+    images = SolutionImageSerializer(many=True,read_only=True)
+    class Meta:
+        model=MPSolutions
         fields = (
             'id',
             'name',
@@ -557,24 +562,24 @@ class SolutionSerializer(ModelSerializer):
             'execution_time',
             'short_description',
             'is_active',
+            'images'
         )
-        read_only_fields = ('id',)
-    def deserialize(self):
-        if self.context.get('id') is not None:
-            solution = MPSolutions.objects.get(id=self.context.get('id'))
-        else:
-            solution = MPSolutions()
-        solution.name = self.validated_data.get('name', solution.name)
-        solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
-        solution.price = self.validated_data.get('price', solution.price)
-        solution.category = self.validated_data.get('category', solution.category_id)
-        solution.sub_category = self.validated_data.get('sub_category', solution.sub_category_id)
-        solution.tax = self.validated_data.get('tax', solution.tax_id)
-        solution.about = self.validated_data.get('about', solution.about)
-        solution.overview = self.validated_data.get('overview', solution.overview)
-        solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
-        solution.execution_time = self.validated_data.get('execution_time', solution.execution_time)
-        solution.short_description = self.validated_data.get('short_description', solution.short_description)
-        solution.is_active = self.validated_data.get('is_active', solution.is_active)
-        return solution
+        def deserialize(self):
+            if self.context.get('id') is not None:
+                solution = MPSolutions.objects.get(id=self.context.get('id'))
+            else:
+                solution = MPSolutions()
+            solution.name = self.validated_data.get('name', solution.name)
+            solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
+            solution.price = self.validated_data.get('price', solution.price)
+            solution.category = self.validated_data.get('category', solution.category)
+            solution.sub_category = self.validated_data.get('sub_category', solution.sub_category)
+            solution.tax = self.validated_data.get('tax', solution.tax)
+            solution.about = self.validated_data.get('about', solution.about)
+            solution.overview = self.validated_data.get('overview', solution.overview)
+            solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
+            solution.execution_time = self.validated_data.get('execution_time', solution.execution_time)
+            solution.short_description = self.validated_data.get('short_description', solution.short_description)
+            solution.is_active = self.validated_data.get('is_active', solution.is_active)
+            return solution
         

@@ -1,45 +1,57 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from manager.service import solution as solution_service
+from manager.serializers import SolutionSerializer
+from manager.models import MPSolutions,MPSolutionImage
+from django.http import HttpResponse
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-from manager.serializers import SolutionSerializer
-from manager.models import MPSolutions
-from django.http import HttpResponse
+from kronos.exceptions import ObjectNotFound
+from rest_framework.permissions import AllowAny
 class SolutionView(APIView):
-    def get(self, request, format=None):
-        solutions = solution_service.find_all_solutions()
-        return Response(SolutionSerializer(solutions, many=True).data)
-    
+    permission_classes = [AllowAny]
+    def get(self, request):
+        solutions = MPSolutions.objects.all()
+        serializer = SolutionSerializer(solutions, many=True)
+        return Response(serializer.data)
     def post(self, request):
-        solution_s = SolutionSerializer(data=request.data)
-        solution_s.is_valid(raise_exception=True)
-        solution = solution_s.deserialize()
-        savedSolution = solution_service.save(solution)
-        return Response(SolutionSerializer(savedSolution).data)
-    
+        serializer = SolutionSerializer(data=request.data)
+        if serializer.is_valid():
+            solution = serializer.save()
+            uploaded_images = request.FILES.getlist('images')  # Get multiple images from request.FILES
+            for image in uploaded_images:
+                MPSolutionImage.objects.create(solution=solution, image=image)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
 class SolutionIdView(APIView):
-    def get(self, request, solution_id, format=None):
-        solution = solution_service.find_solution_by_id(solution_id)
-        return Response(SolutionSerializer(solution).data)
-    def post(self, request, solution_id):
-        solution = MPSolutions.objects.get(id=solution_id)
-        solution.name =request.data.get('name')
-        solution.url_structure =request.data.get('url_structure')
-        solution.price =request.data.get('price')
-        solution.category_id =request.data.get('category')
-        solution.sub_category_id =request.data.get('sub_category')
-        solution.tax_id =request.data.get('tax')
-        solution.about =request.data.get('about')
-        solution.overview =request.data.get('overview')
-        solution.how_it_work =request.data.get('how_it_work')
-        solution.execution_time =request.data.get('execution_time')
-        solution.short_description =request.data.get('short_description')
-        solution.is_active =request.data.get('is_active')
-        
-        solution.save()
-        return Response(SolutionSerializer(solution).data)
+    permission_classes = [AllowAny]
+    def get_object(self, solution_id):
+        try:
+            return MPSolutions.objects.get(pk=solution_id)
+        except MPSolutions.DoesNotExist as e:
+            raise ObjectNotFound from e
+
+    def get(self, request, solution_id):
+        solution = self.get_object(solution_id)
+        serializer = SolutionSerializer(solution)
+        return Response(serializer.data)
+
+    def put(self, request, solution_id):
+        solution = self.get_object(solution_id)
+        serializer = SolutionSerializer(solution, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            image_data = request.FILES.getlist('images')
+            MPSolutionImage.objects.filter(solution=solution).delete()
+            for img in image_data:
+                MPSolutionImage.objects.create(solution=solution, image=img)
+
+            return Response(serializer.data)
+        return Response(serializer.errors)
 
     def delete(self, request, solution_id):
-        solution_service.delete(solution_id)
-        return HttpResponse(status=204)
+        solution = self.get_object(solution_id)
+        solution.delete()
+        MPSolutionImage.objects.filter(solution=solution_id).delete()
+        return Response(status=204)

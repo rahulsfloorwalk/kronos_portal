@@ -5,7 +5,6 @@ from django.utils import timezone
 from manager import states
 from manager import country
 
-
 class City(Model):
 
     TIER_1 = '1'
@@ -122,4 +121,9 @@ class MPSolutions(Model):
     short_description = CharField(max_length=100000, blank=True, default='')
     is_active = BooleanField(default=False)
     def __str__(self):
-        return 'Solutions({}): {}, {}'.format(self.id, self.name)
+        return self.id
+    
+class MPSolutionImage(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    solution = ForeignKey(MPSolutions,db_column="solution_id", on_delete=CASCADE, related_name='images')
+    image = ImageField(upload_to='./manager/static/solutions',default="", null=True, blank=True)

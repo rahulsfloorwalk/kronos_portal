@@ -2,6 +2,7 @@ from ..models import MPSolutions
 from django.db.utils import IntegrityError
 
 from kronos.exceptions import ObjectNotFound,AppLogicError
+
 def find_all_solutions():
     return MPSolutions.objects.all()
 

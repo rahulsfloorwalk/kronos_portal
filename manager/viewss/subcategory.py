@@ -7,12 +7,13 @@ from manager.serializers import SubcategorySerializer
 from manager.models import MPSubcategory
 from django.http import HttpResponse
 
+from rest_framework.permissions import AllowAny
 class SubcategoryView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-        'POST': [GROUP_NAME_MANAGER]
-    }
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    #     'POST': [GROUP_NAME_MANAGER]
+    # }
     def get(self, request, format=None):
         cats = subcategory_service.find_all_subcategories()
         return Response(SubcategorySerializer(cats, many=True).data)
@@ -25,12 +26,12 @@ class SubcategoryView(APIView):
         return Response(SubcategorySerializer(savedCategory).data)
 
 class SubcategoryIdView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-        'POST': [GROUP_NAME_MANAGER],
-        'DELETE': [GROUP_NAME_MANAGER]
-    }
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    #     'POST': [GROUP_NAME_MANAGER],
+    #     'DELETE': [GROUP_NAME_MANAGER]
+    # }
     def get(self, request, subcategory_id, format=None):
         category = subcategory_service.find_subcategory_by_id(subcategory_id)
         return Response(SubcategorySerializer(category).data)

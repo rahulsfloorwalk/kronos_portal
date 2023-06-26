@@ -7,12 +7,13 @@ from manager.serializers import InterestedAreaSerializer
 from manager.models import MpInterestArea
 from django.http import HttpResponse
 
+from rest_framework.permissions import AllowAny
 class InterestedAreaView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-        'POST': [GROUP_NAME_MANAGER]
-    }
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    #     'POST': [GROUP_NAME_MANAGER]
+    # }
     def get(self, request, format=None):
         int_area = interest_area_service.find_all_interested_area()
         return Response(InterestedAreaSerializer(int_area, many=True).data)
@@ -25,12 +26,12 @@ class InterestedAreaView(APIView):
         return Response(InterestedAreaSerializer(savedCategory).data)
 
 class InterestedAreaIdView(APIView):
-    permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-        'POST': [GROUP_NAME_MANAGER],
-        'DELETE': [GROUP_NAME_MANAGER]
-    }
+    permission_classes = [AllowAny]
+    # required_groups = {
+    #     'GET': [GROUP_NAME_MANAGER],
+    #     'POST': [GROUP_NAME_MANAGER],
+    #     'DELETE': [GROUP_NAME_MANAGER]
+    # }
     def get(self, request, interested_area_id, format=None):
         int_area = interest_area_service.find_interested_area_by_id(interested_area_id)
         return Response(InterestedAreaSerializer(int_area).data)
