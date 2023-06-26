@@ -567,9 +567,9 @@ class SolutionSerializer(ModelSerializer):
         solution.name = self.validated_data.get('name', solution.name)
         solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
         solution.price = self.validated_data.get('price', solution.price)
-        solution.category = self.validated_data.get('category', solution.category)
-        solution.sub_category = self.validated_data.get('sub_category', solution.sub_category)
-        solution.tax = self.validated_data.get('tax', solution.tax)
+        solution.category = self.validated_data.get('category', solution.category_id)
+        solution.sub_category = self.validated_data.get('sub_category', solution.sub_category_id)
+        solution.tax = self.validated_data.get('tax', solution.tax_id)
         solution.about = self.validated_data.get('about', solution.about)
         solution.overview = self.validated_data.get('overview', solution.overview)
         solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
@@ -577,4 +577,4 @@ class SolutionSerializer(ModelSerializer):
         solution.short_description = self.validated_data.get('short_description', solution.short_description)
         solution.is_active = self.validated_data.get('is_active', solution.is_active)
         return solution
-    
+        

@@ -110,7 +110,7 @@ class MPSubcategory(Model):
 class MPSolutions(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name',max_length=150, blank=False)
-    url_structure = CharField(db_column='url-structure',max_length=150, blank=False)
+    url_structure = CharField(db_column='url_structure',max_length=150, blank=False)
     price = FloatField(max_length=150, blank=True)
     category =  ForeignKey(MPCategory, related_name='mp_solutions', db_column='category_id', on_delete=PROTECT)
     sub_category = ForeignKey(MPSubcategory,related_name='mp_solutions',db_column='subcategory_id', on_delete=PROTECT)
