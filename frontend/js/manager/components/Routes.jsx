@@ -121,6 +121,27 @@ import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingFo
 import { ProjectAnalyticsCycleWise, ProjectAnalyticsMonthWise } from "./reports/analytics/ProjectAnalytics.jsx";
 import AnalyticDetails from "./reports/analytics/AnalyticDetails.jsx";
 import TrainingReport from "./reports/TrainingReport.jsx";
+import AdminDashboard from "./dashboard/AdminDashboard.jsx";
+import SideDashboard from "./dashboard/SideDashboard.jsx";
+import DashboardContainer from "./dashboard/DashboardContainer.jsx";
+import ActiveCustomer from "./dashboard/ActiveCustomer.jsx";
+import DashboardCategory from "./dashboard/DashboardCategory.jsx";
+import DashboardCategoryForm from "./dashboard/DashboardCategoryForm.jsx";
+import SubCategoryList from "./dashboard/subCategory/SubCategoryList.jsx";
+import SubCategoryForm from "./dashboard/subCategory/SubCategoryForm.jsx";
+import TaxList from "./dashboard/tax/TaxList.jsx";
+import TaxForm from "./dashboard/tax/TaxForm.jsx";
+import IndustryForm from "./dashboard/industry/IndustryForm.jsx";
+import IndustryList from "./dashboard/industry/IndustryList.jsx";
+import InterestAreaList from "./dashboard/interestArea/InterestAreaList.jsx";
+import InterestAreaForm from "./dashboard/interestArea/InterestAreaForm.jsx";
+import AllSolutionList from "./dashboard/allSolutions/AllSolutionList.jsx";
+import AllSolutionForm from "./dashboard/allSolutions/AllSolutionForm.jsx";
+import ArchivedSolution from "./dashboard/ArchievedSolution.jsx";
+import AllOrder from "./dashboard/orderes/AllOrder.jsx";
+import ActiveOrders from "./dashboard/orderes/ActiveOrders.jsx";
+import DraftOrder from "./dashboard/orderes/DraftOrder.jsx";
+import CompleteOrder from "./dashboard/orderes/CompleteOrder.jsx";
 // import ClientRequirementsForm from "./client_requirements/ClientRequirementsForm.jsx";
 // import ClientRequirementsList from "./client_requirements/ClientRequirementsList.jsx";
 const Routes = () => (
@@ -128,133 +149,166 @@ const Routes = () => (
 		<Route path="/" component={App}>
 			<IndexRoute component={Dashboard} />
 
+			<Route path="admindashboard" component={AdminDashboard}>
+				<Route path="activecustomer" component={ActiveCustomer} />
+				<Route path="dashboardcategory" component={DashboardCategory}>
+					<Route path="add" component={DashboardCategoryForm} />
+					<Route path=":categoryId/edit" component={DashboardCategoryForm} />
+				</Route>
+				<Route path="subcategory" component={SubCategoryList}>
+					<Route path="add" component={SubCategoryForm} />
+					<Route path=":subcategoryId/edit" component={SubCategoryForm} />
+				</Route>
+				<Route path="tax" component={TaxList}>
+					<Route path="add" component={TaxForm} />
+					<Route path=":taxId/edit" component={TaxForm} />
+				</Route>
+				<Route path="industry" component={IndustryList}>
+					<Route path="add" component={IndustryForm} />
+					<Route path=":industryId/edit" component={IndustryForm} />
+				</Route>
+				<Route path="interested_area" component={InterestAreaList}>
+					<Route path="add" component={InterestAreaForm} />
+					<Route path=":interestareaId/edit" component={InterestAreaForm} />
+				</Route>
+				<Route path="solution" component={AllSolutionList}>
+					<Route path="add" component={AllSolutionForm} />
+					<Route path=":solutionId/edit" component={AllSolutionForm} />
+				</Route>
+				<Route path="archivedsolution" component={ArchivedSolution} />
+				<Route path="allorder" component={AllOrder} />
+				<Route path="activeorder" component={ActiveOrders} />
+				<Route path="draftorder" component={DraftOrder} />
+				<Route path="completeorder" component={CompleteOrder} />
+			</Route>
+
 			<Route path="client" component={ClientList}>
-				<Route path="add" component={ClientForm}/>
+				<Route path="add" component={ClientForm} />
 			</Route>
 
 			<Route path="client/:clientId" component={ClientDetail}>
-				<Route path="edit" component={ClientForm}/>
+				<Route path="edit" component={ClientForm} />
 				<Route path="store" component={StoreList}>
-					<Route path="add" component={StoreForm}/>
-					<Route path="import" component={StoreImportForm}/>
-					<Route path=":storeId/edit" component={StoreForm}/>
-					<Route path=":storeId/assign" component={StoreAssignForm}/>
+					<Route path="add" component={StoreForm} />
+					<Route path="import" component={StoreImportForm} />
+					<Route path=":storeId/edit" component={StoreForm} />
+					<Route path=":storeId/assign" component={StoreAssignForm} />
 				</Route>
 				<Route path="audit_cycle" component={AuditCycleList}>
-					<Route path="add" component={AuditCycleForm}/>
+					<Route path="add" component={AuditCycleForm} />
 				</Route>
 				<Route path="client_user" component={ClientUserList}>
-					<Route path="add" component={ClientUserForm}/>
-					<Route path=":clientUserId/edit" component={ClientUserForm}/>
-					<Route path=":clientUserId/assign_stores" component={ClientUserAssignStores}/>
+					<Route path="add" component={ClientUserForm} />
+					<Route path=":clientUserId/edit" component={ClientUserForm} />
+					<Route path=":clientUserId/assign_stores" component={ClientUserAssignStores} />
 				</Route>
 				<Route path="client_manager" component={ClientManagerList}>
-					<Route path="add" component={ClientManagerForm}/>
-					<Route path=":clientManagerId/edit" component={ClientManagerForm}/>
-					<Route path=":clientUserId/delete" component={ClientManagerDelete}/>
+					<Route path="add" component={ClientManagerForm} />
+					<Route path=":clientManagerId/edit" component={ClientManagerForm} />
+					<Route path=":clientUserId/delete" component={ClientManagerDelete} />
 				</Route>
 				<Route path="client_trainer" component={ClientTrainerList}>
-					<Route path="add" component={ClientTrainerForm}/>
-					<Route path=":clientTrainerId/edit" component={ClientTrainerForm}/>
+					<Route path="add" component={ClientTrainerForm} />
+					<Route path=":clientTrainerId/edit" component={ClientTrainerForm} />
 				</Route>
 				{/* <Route path="client_requirements" component={ClientRequirementsList}>
 					<Route path="add" component={ClientRequirementsForm}/>
 					<Route path=":clientRequirementId/edit" component={ClientRequirementsForm}/>
 				</Route> */}
 				<Route path="questionnaire_type" component={QuestionnaireTypeList}>
-					<Route path="add" component={QuestionnaireTypeForm}/>
-					<Route path=":questionnaireTypeId/edit" component={QuestionnaireTypeEditForm}/>
+					<Route path="add" component={QuestionnaireTypeForm} />
+					<Route path=":questionnaireTypeId/edit" component={QuestionnaireTypeEditForm} />
 				</Route>
 			</Route>
 
 
 
 			<Route path="audit_cycle/:auditCycleId" component={AuditCycleDetails}>
-				<Route path="edit" component={AuditCycleForm}/>
-				<Route path="copy" component={AuditCycleCopyForm}/>
-				<Route path="post_approval_description" component={PostApprovalDescriptionForm}/>
-				<Route path="checkpoints" component={CheckPoints}/>
-				<Route path="proofs_tag" component={ProofsTag}/>
-				<Route path="audit_charge" component={ChargePerAuditForm}/>
-				<Route path="system_cost" component={SystemCostForm}/>
+				<Route path="edit" component={AuditCycleForm} />
+				<Route path="copy" component={AuditCycleCopyForm} />
+				<Route path="post_approval_description" component={PostApprovalDescriptionForm} />
+				<Route path="checkpoints" component={CheckPoints} />
+				<Route path="proofs_tag" component={ProofsTag} />
+				<Route path="audit_charge" component={ChargePerAuditForm} />
+				<Route path="system_cost" component={SystemCostForm} />
 				<Route path="audit_alignment_factors" component={AuditAlignmentFactors} />
 				<Route path="questionnaire" component={SectionList}>
-					<Route path="section/copy" component={SectionCopyForm}/>
-					<Route path="section/add" component={SectionAddForm}/>
-					<Route path="section/:sectionId/edit" component={SectionEditForm}/>
-					<Route path="section/:sectionId/proof_tag" component={SectionProofTag}/>
-					<Route path="section/:sectionId/question/add" component={QuestionForm}/>
-					<Route path="section/:sectionId/question/:questionId/edit" component={QuestionForm}/>
-					<Route path="section/:sectionId/question/:questionId/delete" component={QuestionForm}/>
+					<Route path="section/copy" component={SectionCopyForm} />
+					<Route path="section/add" component={SectionAddForm} />
+					<Route path="section/:sectionId/edit" component={SectionEditForm} />
+					<Route path="section/:sectionId/proof_tag" component={SectionProofTag} />
+					<Route path="section/:sectionId/question/add" component={QuestionForm} />
+					<Route path="section/:sectionId/question/:questionId/edit" component={QuestionForm} />
+					<Route path="section/:sectionId/question/:questionId/delete" component={QuestionForm} />
 				</Route>
 				<Route path="audit" components={AuditList}>
-					<Route path="copy" component={AuditCopyForm}/>
-					<Route path="add" component={AuditForm}/>
-					<Route path=":auditId/edit" component={AuditForm}/>
-					<Route path=":auditId/application/fiat" component={AuditFiatAssignForm}/>
-					<Route path=":auditId/application/:applicationId/approve" component={ApplicationApproveForm}/>
-					<Route path=":auditId/application/:applicationId/reject" component={ApplicationRejectForm}/>
+					<Route path="copy" component={AuditCopyForm} />
+					<Route path="add" component={AuditForm} />
+					<Route path=":auditId/edit" component={AuditForm} />
+					<Route path=":auditId/application/fiat" component={AuditFiatAssignForm} />
+					<Route path=":auditId/application/:applicationId/approve" component={ApplicationApproveForm} />
+					<Route path=":auditId/application/:applicationId/reject" component={ApplicationRejectForm} />
 				</Route>
-				<Route path="audit_store" components={AuditStoreList}/>
-				<Route path="payment" components={AuditCyclePaymentList}/>
-				<Route path="moderator_summary" components={AuditCycleModeratorSummary}/>
+				<Route path="audit_store" components={AuditStoreList} />
+				<Route path="payment" components={AuditCyclePaymentList} />
+				<Route path="moderator_summary" components={AuditCycleModeratorSummary} />
 				<Route path="moderator" components={AuditCycleModeratorList}>
-					<Route path="assign" component={AuditCycleModeratorAssignForm}/>
+					<Route path="assign" component={AuditCycleModeratorAssignForm} />
 				</Route>
 				<Route path="opportunity_notification" components={OpportunityRecordList}>
-					<Route path="schedule" component={OpportunityRecordForm}/>
+					<Route path="schedule" component={OpportunityRecordForm} />
 				</Route>
 			</Route>
 
 			<Route path="audit_store/:auditStoreId" components={AuditStoreDetails}>
-				<Route path="report" components={AuditStoreReport}/>
-				<Route path="qa_rating" components={AuditStoreQARatingForm}/>
-				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm}/>
-				<Route path="reimbursement" component={AuditStoreReimbursementForm}/>
-				<Route path="fail_report_message" component={FailReportMessageForm}/>
-				<Route path="report_attribute/:reportAttributeJsonId" component={AuditStoreReportAttributeForm}/>
-				<Route path="auditor_rating" component={AuditStoreAuditorRatingForm}/>
+				<Route path="report" components={AuditStoreReport} />
+				<Route path="qa_rating" components={AuditStoreQARatingForm} />
+				<Route path="earnings_per_audit" component={AuditStoreEarningsPerAuditForm} />
+				<Route path="reimbursement" component={AuditStoreReimbursementForm} />
+				<Route path="fail_report_message" component={FailReportMessageForm} />
+				<Route path="report_attribute/:reportAttributeJsonId" component={AuditStoreReportAttributeForm} />
+				<Route path="auditor_rating" component={AuditStoreAuditorRatingForm} />
 			</Route>
 
-			<Route path="auditor" component={AuditorList}/>
+			<Route path="auditor" component={AuditorList} />
 			<Route path="auditor/:auditorId" component={AuditorDetailsPage}>
 				<Route path="details" component={AuditorDetails}>
-					<Route path="preferences/edit" component={PreferencesForm}/>
-					<Route path="auditor_rating/edit" component={AuditorRatingForm}/>
+					<Route path="preferences/edit" component={PreferencesForm} />
+					<Route path="auditor_rating/edit" component={AuditorRatingForm} />
 				</Route>
-				<Route path="applications" component={AuditorApplicationList}/>
-				<Route path="reports" component={AuditorReportList}/>
-				<Route path="email_log" component={AuditorEmailLog}/>
-				<Route path="id_proof" component={AuditorIdProof}/>
-				<Route path="payment" component={AuditorPayment}/>
-				<Route path="referral" component={AuditorReferralList}/>
+				<Route path="applications" component={AuditorApplicationList} />
+				<Route path="reports" component={AuditorReportList} />
+				<Route path="email_log" component={AuditorEmailLog} />
+				<Route path="id_proof" component={AuditorIdProof} />
+				<Route path="payment" component={AuditorPayment} />
+				<Route path="referral" component={AuditorReferralList} />
 			</Route>
 
-			<Route path="agency_user" component={AgencyUserSearch}/>
-			<Route path="agency_user/:userId" component={AgencyUserDetails}/>
+			<Route path="agency_user" component={AgencyUserSearch} />
+			<Route path="agency_user/:userId" component={AgencyUserDetails} />
 
 			<Route path="country" component={CountryList}>
 				<Route path=":countryId/state" component={StateList}>
-					<Route path=":stateId/city" component={CityList}/>
+					<Route path=":stateId/city" component={CityList} />
 				</Route>
 			</Route>
 
 			<Route path="moderator" component={ModeratorIndex}>
 				<Route path="summary" component={ModeratorSummary}>
-					<Route path=":userId/reportlist" component={ModeratorReportList}/>
+					<Route path=":userId/reportlist" component={ModeratorReportList} />
 				</Route>
 				<Route path="list" component={ModeratorList}>
-					<Route path="add" component={ModeratorForm}/>
-					<Route path=":userId/edit" component={ModeratorForm}/>
+					<Route path="add" component={ModeratorForm} />
+					<Route path=":userId/edit" component={ModeratorForm} />
 				</Route>
 			</Route>
 			<Route path="manager" component={ManagerList}>
-				<Route path="add" component={ManagerForm}/>
-				<Route path=":userId/edit" component={ManagerForm}/>
+				<Route path="add" component={ManagerForm} />
+				<Route path=":userId/edit" component={ManagerForm} />
 			</Route>
 			<Route path="trainer" component={TrainerList}>
-				<Route path="add" component={TrainerForm}/>
-				<Route path=":userId/edit" component={TrainerForm}/>
+				<Route path="add" component={TrainerForm} />
+				<Route path=":userId/edit" component={TrainerForm} />
 			</Route>
 			<Route path="reports" component={ReportList}>
 				<Route path="profitablity" component={ProfitablityReport}></Route>
@@ -272,13 +326,15 @@ const Routes = () => (
 				<Route path="project_cycle_wise" component={ProjectAnalyticsCycleWise} />
 				<Route path="project_month_wise" component={ProjectAnalyticsMonthWise} />
 			</Route>
-			<Route path="training" components={TrainingReport}/>
+			<Route path="training" components={TrainingReport} />
 			<Route path="proof_tag" component={ProofTagList}>
-				<Route path="add" component={ProofTagForm}/>
-				<Route path=":proof_tag_id/edit" component={ProofTagForm}/>
-				<Route path=":proof_tag_id/client" component={ProofClientList}/>
+				<Route path="add" component={ProofTagForm} />
+				<Route path=":proof_tag_id/edit" component={ProofTagForm} />
+				<Route path=":proof_tag_id/client" component={ProofClientList} />
 			</Route>
+
 		</Route>
+
 	</Router>
 );
 
