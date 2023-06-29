@@ -546,6 +546,9 @@ class SolutionImageSerializer(ModelSerializer):
     
 class SolutionSerializer(ModelSerializer):
     images = SolutionImageSerializer(many=True,read_only=True)
+    category=CategorySerializer()
+    sub_category= SubcategorySerializer()
+    tax=TaxSerializer()
     class Meta:
         model=MPSolutions
         fields = (

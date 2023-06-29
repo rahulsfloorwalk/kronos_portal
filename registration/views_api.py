@@ -1,10 +1,11 @@
 from django.views import View
+from rest_framework.views import APIView
+
 from django.db.transaction import atomic
 from django.http import JsonResponse
 import json
+
 from registration.service import auditor_api as auditor_service_api
-
-
 class SignUpAPI(View):
     @atomic
     def post(self, request):
