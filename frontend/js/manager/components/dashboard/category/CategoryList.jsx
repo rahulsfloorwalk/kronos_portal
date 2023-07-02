@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import { Plus, Pencil, Cross } from "../../../components/Icons.jsx";
-import { findCategories, deleteCategory } from "../../service/admin_dashboard.js";
+import { Plus, Pencil, Cross } from "../../../../components/Icons.jsx";
+import { findCategories, deleteCategory } from "../../../service/admin_dashboard.js";
 import Alert from "react-s-alert";
 
 class CategoryRow extends React.Component {
@@ -21,7 +21,7 @@ class CategoryRow extends React.Component {
                 <td>
                 <span style={{marginRight:"2rem"}}>
                     <Link
-                        to={`/admindashboard/dashboardcategory/${this.props.category_name.id}/edit`}
+                        to={`/admindashboard/category/${this.props.category_name.id}/edit`}
                         className="btn btn-default"><Pencil /></Link>
                </span>
                     <button type="button"
@@ -33,7 +33,7 @@ class CategoryRow extends React.Component {
     }
 }
 
-export default class DashboardCategory extends React.Component {
+export default class CategoryList extends React.Component {
     static propTypes = {
         children: PropTypes.node,
     };
@@ -76,7 +76,7 @@ export default class DashboardCategory extends React.Component {
                 <div className="panel panel-default">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
                         Category Table
-                        <Link to="/admindashboard/dashboardcategory/add" className="btn btn-default pull-right"><Plus /> Add Category</Link>
+                        <Link to="/admindashboard/category/add" className="btn btn-default pull-right"><Plus /> Add Category</Link>
                     </h3>
                     <div style={{ padding: "2rem" }}>
                         <table className="table table-striped">

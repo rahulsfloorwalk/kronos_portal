@@ -1,15 +1,15 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
-import { findById, updateCategory, addCategory } from "../../service/admin_dashboard.js";
-import { getInputEventChangeValue } from "../../../react_utils.js";
-import FormInput from "../../../components/FormInput.jsx";
-import SaveButton from "../../../components/SaveButton.jsx";
-import Modal from "../../../components/Modal.jsx";
-import Loading from "../../../components/Loading.jsx";
-import FormErrorList from "../../../components/FormErrorList.jsx";
+import { findById, updateCategory, addCategory } from "../../../service/admin_dashboard.js";
+import { getInputEventChangeValue } from "../../../../react_utils.js";
+import FormInput from "../../../../components/FormInput.jsx";
+import SaveButton from "../../../../components/SaveButton.jsx";
+import Modal from "../../../../components/Modal.jsx";
+import Loading from "../../../../components/Loading.jsx";
+import FormErrorList from "../../../../components/FormErrorList.jsx";
 
-export default class DashboardCategoryForm extends React.Component {
+export default class CategoryForm extends React.Component {
     static propTypes = {
         params: PropTypes.shape({
             categoryId: PropTypes.string,
@@ -64,7 +64,7 @@ export default class DashboardCategoryForm extends React.Component {
             );
         }
         promise.then(function () {
-            hashHistory.push("/admindashboard/dashboardcategory");
+            hashHistory.push("/admindashboard/category");
         }, (errors) => {
             if (errors.responseJSON) {
                 this.setState({

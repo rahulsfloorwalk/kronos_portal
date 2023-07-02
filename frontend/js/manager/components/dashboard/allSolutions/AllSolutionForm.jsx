@@ -10,7 +10,7 @@ import Modal from "../../../../components/Modal.jsx";
 import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
 import JoditEditor from "jodit-react";
-import { Paperclip,Cross } from "../../../../components/Icons.jsx";
+import { Paperclip, Cross } from "../../../../components/Icons.jsx";
 
 export default class AllSolutionForm extends React.Component {
     static propTypes = {
@@ -144,7 +144,7 @@ export default class AllSolutionForm extends React.Component {
     };
 
 
-    
+
     handleEditorChange = (editorName, newContent) => {
         this.setState({
             solution: {
@@ -153,11 +153,7 @@ export default class AllSolutionForm extends React.Component {
             }
         });
     }
-  
 
-    uploadButtonClicked = () => {
-        this.uploadInput.click();
-    };
     handleFileUpload = (e) => {
         const files = Array.from(e.target.files);
         this.setState({
@@ -165,16 +161,7 @@ export default class AllSolutionForm extends React.Component {
             fileObjects: files,
         });
     };
-    handleFileDelete = (index) => {
-        const updatedFiles = [...this.state.uploadedFiles];
-        const updatedFileObjects = [...this.state.fileObjects];
-        updatedFiles.splice(index, 1);
-        updatedFileObjects.splice(index, 1);
-        this.setState({
-            uploadedFiles: updatedFiles,
-            fileObjects: updatedFileObjects,
-        });
-    };
+    
     render() {
         if (this.state.loading) {
             return (<Loading />);
@@ -196,30 +183,24 @@ export default class AllSolutionForm extends React.Component {
                     <div className="row">
                         <div className="col-md-6">
                             <FormSelect label="Category" name="category"
-                             value={this.state.solution.category} 
-                            // value={this.state.solution.category ? this.state.solution.category.id : ""}
-                            // value={JSON.stringify(solution.category)}
-                             onChange={this.fieldChanged} >
+                                value={this.state.solution.category}
+                                onChange={this.fieldChanged} >
                                 <option value="">----------</option>
                                 {this.state.categories.map(category => (
-                                    <option key={category.id} 
-                                    // value={JSON.stringify(category)}
-                                    value={category}
+                                    <option key={category.id}
+                                        value={category}
                                     >{category.name}</option>
                                 ))}
                             </FormSelect>
                         </div>
                         <div className="col-md-6">
-                            <FormSelect label="Sub Category" name="sub_category" 
-                            value={this.state.solution.sub_category} 
-                            // value={this.state.solution.sub_category ? this.state.solution.sub_category.id : ""}
-                            // value={JSON.stringify(solution.sub_category)}
-                            onChange={this.fieldChanged} >
+                            <FormSelect label="Sub Category" name="sub_category"
+                                value={this.state.solution.sub_category}
+                                onChange={this.fieldChanged} >
                                 <option value="">----------</option>
                                 {this.state.sub_categories.map(sub_category => (
-                                    <option key={sub_category.id} 
-                                    // value={JSON.stringify(sub_category)}
-                                    value={sub_category}
+                                    <option key={sub_category.id}
+                                        value={sub_category}
                                     >{sub_category.name}</option>
                                 ))}
                             </FormSelect>
@@ -230,16 +211,13 @@ export default class AllSolutionForm extends React.Component {
                             <FormInput label="Price" type="text" value={this.state.solution.price} name="price" onChange={this.fieldChanged} errors={this.state.errors.price} placeholder="Price" />
                         </div>
                         <div className="col-md-6">
-                            <FormSelect label="Tax" name="tax" 
-                            value={this.state.solution.tax} 
-                            // value={this.state.solution.tax ? this.state.solution.tax.id : ""}
-                            // value={JSON.stringify(solution.tax)}
-                            onChange={this.fieldChanged} >
+                            <FormSelect label="Tax" name="tax"
+                                value={this.state.solution.tax}
+                                onChange={this.fieldChanged} >
                                 <option value="">----------</option>
                                 {this.state.taxes.map(tax => (
-                                    <option key={tax.id} 
-                                    // value={JSON.stringify(tax)}
-                                    value={tax}
+                                    <option key={tax.id}
+                                        value={tax}
                                     >{tax.name}</option>
                                 ))}
                             </FormSelect>
@@ -302,27 +280,6 @@ export default class AllSolutionForm extends React.Component {
                                 onChange={this.handleFileUpload}
                                 style={{ width: "100%", border: "1px solid #eee", padding: "1rem" }}
                             />
-                            {this.state.uploadedFiles.length > 0 ? (
-                                <ul style={{display:"flex",justifyContent:"flex-start",gap:"1rem",flexWrap:"wrap",}}>
-                                    {this.state.uploadedFiles.map((name, index) => (
-                                        <li key={index} style={{border:"1px solid #eee",listStyle:"none",padding:".5rem"}}>
-                                            {name}
-                                            <button
-                                                onClick={() => this.handleFileDelete(index)}
-                                                type="button"
-                                                style={{ marginLeft: "1rem",background:"transparent",border:"none",outline:"none" }}
-                                            >
-                                               <Cross/>
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p></p>
-                            )}
-                            {/* <button onClick={this.uploadButtonClicked} type="button" className="btn btn-default">
-						<Paperclip/> Upload
-					</button> */}
                         </div>
                     </div>
 

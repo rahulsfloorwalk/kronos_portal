@@ -125,8 +125,6 @@ import AdminDashboard from "./dashboard/AdminDashboard.jsx";
 import SideDashboard from "./dashboard/SideDashboard.jsx";
 import DashboardContainer from "./dashboard/DashboardContainer.jsx";
 import ActiveCustomer from "./dashboard/ActiveCustomer.jsx";
-import DashboardCategory from "./dashboard/DashboardCategory.jsx";
-import DashboardCategoryForm from "./dashboard/DashboardCategoryForm.jsx";
 import SubCategoryList from "./dashboard/subCategory/SubCategoryList.jsx";
 import SubCategoryForm from "./dashboard/subCategory/SubCategoryForm.jsx";
 import TaxList from "./dashboard/tax/TaxList.jsx";
@@ -142,6 +140,8 @@ import AllOrder from "./dashboard/orderes/AllOrder.jsx";
 import ActiveOrders from "./dashboard/orderes/ActiveOrders.jsx";
 import DraftOrder from "./dashboard/orderes/DraftOrder.jsx";
 import CompleteOrder from "./dashboard/orderes/CompleteOrder.jsx";
+import CategoryList from "./dashboard/category/CategoryList.jsx";
+import CategoryForm from "./dashboard/category/CategoryForm.jsx";
 // import ClientRequirementsForm from "./client_requirements/ClientRequirementsForm.jsx";
 // import ClientRequirementsList from "./client_requirements/ClientRequirementsList.jsx";
 const Routes = () => (
@@ -151,9 +151,9 @@ const Routes = () => (
 
 			<Route path="admindashboard" component={AdminDashboard}>
 				<Route path="activecustomer" component={ActiveCustomer} />
-				<Route path="dashboardcategory" component={DashboardCategory}>
-					<Route path="add" component={DashboardCategoryForm} />
-					<Route path=":categoryId/edit" component={DashboardCategoryForm} />
+				<Route path="category" component={CategoryList}>
+					<Route path="add" component={CategoryForm} />
+					<Route path=":categoryId/edit" component={CategoryForm} />
 				</Route>
 				<Route path="subcategory" component={SubCategoryList}>
 					<Route path="add" component={SubCategoryForm} />
