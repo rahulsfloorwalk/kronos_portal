@@ -131,7 +131,7 @@ export class AuditCycleForm extends Component{
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		console.log(this.state.auditCycle)
+		console.log(this.state)
 		var promise;
 		if(this.props.params.auditCycleId){
 			promise = this.props.dispatch(saveAuditCycleEditForm(this.state));

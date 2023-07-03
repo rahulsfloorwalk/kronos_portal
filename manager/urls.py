@@ -71,6 +71,7 @@ urlpatterns = ([
     url(r'industry/(?P<industry_id>[0-9]+)$', industry_views.IndustryIdView.as_view(), name='industry_id_view'),
     url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
     url(r'subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.SubcategoryIdView.as_view(), name='subcategory_id_view'),
+    
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
     

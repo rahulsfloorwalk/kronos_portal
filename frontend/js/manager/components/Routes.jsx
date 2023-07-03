@@ -154,6 +154,7 @@ const Routes = () => (
 				<Route path="category" component={CategoryList}>
 					<Route path="add" component={CategoryForm} />
 					<Route path=":categoryId/edit" component={CategoryForm} />
+
 				</Route>
 				<Route path="subcategory" component={SubCategoryList}>
 					<Route path="add" component={SubCategoryForm} />

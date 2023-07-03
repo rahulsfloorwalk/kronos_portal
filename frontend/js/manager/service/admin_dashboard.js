@@ -200,47 +200,24 @@ export function findSolutionById(solutionId){
 	return $.get( url.api_base_path + `manager/solution/${solutionId}`);
 }
 
-export function addSolution(name,url_structure,price,category,sub_category,tax,about,overview,how_it_work,execution_time,short_description,is_active){
+export function addSolution(solution){
 	return $.ajax({
 		url: url.api_base_path + "manager/solution",
 		method: "POST",
-		data: JSON.stringify({
-			name,
-			url_structure,
-			price,category,
-			sub_category,
-			tax,
-			about,
-			overview,
-			how_it_work,
-			execution_time,
-			short_description,
-			is_active
-		}),
+		data: JSON.stringify(solution),
 		contentType: "application/json"
 	});
 }
 
-export function updateSolution(solutionId,name,url_structure,price,category,sub_category,tax,about,overview,how_it_work,execution_time,short_description,is_active){
+export function updateSolution(solutionId,solution){
 	return $.ajax({
 		url: url.api_base_path + `manager/solution/${solutionId}`,
 		method: "POST",
-		data: JSON.stringify({
-			name,
-			url_structure,
-			price,category,
-			sub_category,
-			tax,
-			about,
-			overview,
-			how_it_work,
-			execution_time,
-			short_description,
-			is_active
-		}),
+		data: JSON.stringify(solution),
 		contentType: "application/json"
 	});
 }
+
 
 export function deleteSolution(solutionId){
 	return $.ajax({

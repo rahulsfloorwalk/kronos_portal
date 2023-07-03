@@ -9,7 +9,7 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City, ProofTag,MPSubcategory,MpIndustry,MpInterestArea,MPCategory,MPTax,MPSolutions,MPSolutionImage
+from .models import City, ProofTag,MPSubcategory,MpIndustry,MpInterestArea,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 
 class ClientSerializer(ModelSerializer):
@@ -539,18 +539,14 @@ class SubcategorySerializer(ModelSerializer):
             s_cat = MPSubcategory()
         s_cat.name = self.validated_data.get('name', s_cat.name)
         return s_cat
-class SolutionImageSerializer(ModelSerializer):
-    class Meta:
-        model = MPSolutionImage
-        fields = ['id', 'solution', 'image']
-    
+
+
 class SolutionSerializer(ModelSerializer):
-    images = SolutionImageSerializer(many=True,read_only=True)
-    category=CategorySerializer()
-    sub_category= SubcategorySerializer()
-    tax=TaxSerializer()
+    category = CategorySerializer()
+    sub_category = SubcategorySerializer()
+    tax= TaxSerializer()
     class Meta:
-        model=MPSolutions
+        model = MPSolution
         fields = (
             'id',
             'name',
@@ -563,26 +559,6 @@ class SolutionSerializer(ModelSerializer):
             'overview',
             'how_it_work',
             'execution_time',
-            'short_description',
-            'is_active',
-            'images'
+            'short_description'
         )
-        def deserialize(self):
-            if self.context.get('id') is not None:
-                solution = MPSolutions.objects.get(id=self.context.get('id'))
-            else:
-                solution = MPSolutions()
-            solution.name = self.validated_data.get('name', solution.name)
-            solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
-            solution.price = self.validated_data.get('price', solution.price)
-            solution.category = self.validated_data.get('category', solution.category)
-            solution.sub_category = self.validated_data.get('sub_category', solution.sub_category)
-            solution.tax = self.validated_data.get('tax', solution.tax)
-            solution.about = self.validated_data.get('about', solution.about)
-            solution.overview = self.validated_data.get('overview', solution.overview)
-            solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
-            solution.execution_time = self.validated_data.get('execution_time', solution.execution_time)
-            solution.short_description = self.validated_data.get('short_description', solution.short_description)
-            solution.is_active = self.validated_data.get('is_active', solution.is_active)
-            return solution
-        
+        read_only_fields = fields
