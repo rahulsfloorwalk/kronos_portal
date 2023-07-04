@@ -540,7 +540,14 @@ class SubcategorySerializer(ModelSerializer):
         s_cat.name = self.validated_data.get('name', s_cat.name)
         return s_cat
 
-
+class SolutionStatusSerializer(ModelSerializer):
+    class Meta:
+        model=MPSolution
+        fields = (
+            'id',
+            'is_active'
+        )
+        read_only_fields = ('id',)
 class SolutionSerializer(ModelSerializer):
     category = CategorySerializer()
     sub_category = SubcategorySerializer()
@@ -559,6 +566,7 @@ class SolutionSerializer(ModelSerializer):
             'overview',
             'how_it_work',
             'execution_time',
-            'short_description'
+            'short_description',
+            'is_active'
         )
         read_only_fields = fields

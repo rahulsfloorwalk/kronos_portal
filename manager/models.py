@@ -119,7 +119,7 @@ class MPSolution(Model):
     how_it_work = CharField(db_column='how_it_work', max_length=200, blank=False)
     execution_time = CharField(db_column='execution_time', max_length=200, blank=False)
     short_description = CharField(db_column='short_description', max_length=200, blank=False)
-    is_active = BooleanField(db_column='is_active',default=True)
+    is_active = BooleanField(db_column='is_active',default=True,blank=False)
     def __str__(self):
         return 'Solution({}): {}'.format(self.id, self.name)
 

@@ -5,7 +5,7 @@ from rest_framework.serializers import Serializer, CharField, ModelSerializer, I
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from manager.models import MPSolution
-from manager.serializers import SolutionSerializer
+from manager.serializers import SolutionSerializer,SolutionStatusSerializer
 from rest_framework.permissions import AllowAny
 from kronos.exceptions import ObjectNotFound
 
@@ -24,7 +24,8 @@ class SolutionDeSerializer(ModelSerializer):
             'overview',
             'how_it_work',
             'execution_time',
-            'short_description'
+            'short_description',
+            'is_active'
             )
         read_only_fields =('id',)
     def deserialize(self):
@@ -43,6 +44,7 @@ class SolutionDeSerializer(ModelSerializer):
         solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
         solution.execution_time = self.validated_data.get('execution_time', solution.execution_time)
         solution.short_description = self.validated_data.get('short_description', solution.short_description)
+        solution.is_active = self.validated_data.get('is_active',solution.is_active)
         
         
 class SolutionView(APIView):
@@ -62,6 +64,14 @@ class SolutionView(APIView):
         solution = serializer.save()  
         serializer = SolutionSerializer(solution)
         return Response(serializer.data)
+    
+class ArchievedSolutionView(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request):
+        solutions = MPSolution.objects.filter(is_active=False)
+        serializer = SolutionSerializer(solutions, many=True)  
+        return Response(serializer.data)
+    
 class SolutionIdView(APIView):
     permission_classes=[AllowAny]
     def get_solution(self, solution_id):
@@ -86,3 +96,35 @@ class SolutionIdView(APIView):
         solution = self.get_solution(solution_id)
         solution.delete()
         return Response()
+class SolutionStatusDeSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolution
+        fields = (
+            'id',
+            'is_active'
+            )
+        read_only_fields =('id',)
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            solution = MPSolution.objects.get(id=self.context.get('id'))
+        else:
+            solution = MPSolution()
+        solution.is_active = self.validated_data.get('is_active',solution.is_active)    
+class SolutionStatusIdView(APIView):
+    permission_classes=[AllowAny]
+    def get_solution(self, solution_id):
+        try:
+            return MPSolution.objects.get(pk=solution_id)
+        except MPSolution.DoesNotExist as e:
+            raise ObjectNotFound from e
+    def get(self, request, solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionStatusSerializer(solution)
+        return Response(serializer.data)
+    def post(self,request,solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionStatusDeSerializer(solution, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+        
