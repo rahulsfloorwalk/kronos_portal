@@ -23,18 +23,6 @@ class AllSolutionRow extends React.Component {
             category : PropTypes.object,
             sub_category : PropTypes.object,
             tax : PropTypes.object,
-            // category: PropTypes.shape({
-			// 	id: PropTypes.number.isRequired,
-			// 	name: PropTypes.string.isRequired,
-			// }),
-            // sub_category: PropTypes.shape({
-			// 	id: PropTypes.number.isRequired,
-			// 	name: PropTypes.string.isRequired,
-			// }),
-            // tax: PropTypes.shape({
-			// 	id: PropTypes.number.isRequired,
-			// 	rate: PropTypes.number.isRequired,
-			// }),
         }),
         errors: PropTypes.shape({
             non_field_errors: PropTypes.arrayOf(PropTypes.string),
@@ -44,35 +32,24 @@ class AllSolutionRow extends React.Component {
 		}).isRequired,
 
     };
-    // state = {
-    //     categories: [],
-    //     sub_categories: [],
-    // }
     render() {
-        // findById(this.props.solution.category).then((categories) => {
-        //     this.setState({ categories });
-        // });
-        // findSubCategoryById(this.props.solution.sub_category).then((sub_categories)=>{
-        //     this.setState({ sub_categories });
-        // })
         return (
             <tr>
                 <td className="text-right">{this.props.seq}</td>
                 <td>{this.props.solution.name}</td>
                 <td>{this.props.solution.category && this.props.solution.category.name}</td>
                 <td>{this.props.solution.sub_category && this.props.solution.sub_category.name}</td>
-                {/* <td>{this.state.categories.name}</td>
-                <td>{this.state.sub_categories.name}</td> */}
                 <td>{this.props.solution.price}</td>
                 <td>
                 <span style={{marginRight:"2rem"}}>
                     <Link
                         to={`/admindashboard/solution/${this.props.solution.id}/edit`}
                         className="btn btn-default"><Pencil /></Link>
-             </span>
+                </span>
                     <button type="button"
                         onClick={() => this.props.onDelete(this.props.solution)}
-                        className="btn btn-default"><Cross /></button>
+                        className="btn btn-default"><Cross />
+                    </button>
                 </td>
             </tr>
         );

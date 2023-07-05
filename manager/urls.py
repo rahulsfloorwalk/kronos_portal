@@ -71,8 +71,11 @@ urlpatterns = ([
     url(r'industry/(?P<industry_id>[0-9]+)$', industry_views.IndustryIdView.as_view(), name='industry_id_view'),
     url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
     url(r'subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.SubcategoryIdView.as_view(), name='subcategory_id_view'),
+    
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
+    url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
+    url(r'solution_archieved$', solution_views.ArchievedSolutionView.as_view(), name='archieved_solution_view'),
     
     # url(r'client/(?P<client_id>[0-9]+)/client_requirements/attachment$',client_views.ClienRequirementsAttachments.as_view(), name='client_requirements_attachments'),
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 

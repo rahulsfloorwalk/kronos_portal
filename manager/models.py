@@ -87,43 +87,40 @@ class MPCategory(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     def __str__(self):
-        return 'Category({}): {}, {}'.format(self.id, self.name)
+        return 'Category({}): {}'.format(self.id, self.name)
 
 class MpInterestArea(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     def __str__(self):
-        return 'InterestArea({}): {}, {}'.format(self.id, self.name)
+        return 'InterestArea({}): {}'.format(self.id, self.name)
 class MpIndustry(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     def __str__(self):
-        return 'Industry({}): {}, {}'.format(self.id, self.name)
+        return 'Industry({}): {}'.format(self.id, self.name)
 
 class MPSubcategory(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     def __str__(self):
-        return 'Subcategory({}): {}, {}'.format(self.id, self.name)
+        return 'Subcategory({}): {}'.format(self.id, self.name)
 
-class MPSolutions(Model):
+class MPSolution(Model):
     id = AutoField(db_column='id', primary_key=True)
-    name = CharField(db_column='name',max_length=150, blank=False)
-    url_structure = CharField(db_column='url_structure',max_length=150, blank=False)
-    price = FloatField(max_length=150, blank=True)
-    category =  ForeignKey(MPCategory, related_name='mp_solutions', db_column='category_id', on_delete=PROTECT)
-    sub_category = ForeignKey(MPSubcategory,related_name='mp_solutions',db_column='subcategory_id', on_delete=PROTECT)
-    tax = ForeignKey(MPTax,related_name='mp_solutions', db_column='tax_id', on_delete=PROTECT)
-    about =CharField(max_length=100000, blank=True)
-    overview = CharField(max_length=100000, blank=True)
-    how_it_work = CharField(max_length=100000, blank=True)
-    execution_time = CharField(max_length=100000, blank=True)
-    short_description = CharField(max_length=100000, blank=True, default='')
-    is_active = BooleanField(default=False)
+    name = CharField(db_column='name', max_length=200, blank=False)
+    url_structure = CharField(db_column='url_strucuture',max_length=200,blank=False)
+    price = PositiveIntegerField(db_column='price',blank=False,default=0)
+    category = ForeignKey(MPCategory, related_name='mpsolutions', db_column='category_id', blank=False, on_delete=PROTECT)
+    sub_category = ForeignKey(MPSubcategory, related_name='mpsolutions', db_column='sub_category_id', blank=False, on_delete=PROTECT)
+    tax = ForeignKey(MPTax, related_name='mpsolutions', db_column='tax_id', blank=False, on_delete=PROTECT)
+    about = CharField(db_column='about', max_length=200, blank=False)
+    overview = CharField(db_column='overview', max_length=200, blank=False)
+    how_it_work = CharField(db_column='how_it_work', max_length=200, blank=False)
+    execution_time = CharField(db_column='execution_time', max_length=200, blank=False)
+    short_description = CharField(db_column='short_description', max_length=200, blank=False)
+    is_active = BooleanField(db_column='is_active',default=True,blank=False)
     def __str__(self):
-        return self.id
+        return 'Solution({}): {}'.format(self.id, self.name)
+
     
-class MPSolutionImage(Model):
-    id = AutoField(db_column='id', primary_key=True)
-    solution = ForeignKey(MPSolutions,db_column="solution_id", on_delete=CASCADE, related_name='images')
-    image = ImageField(upload_to='./manager/static/solutions',default="", null=True, blank=True)

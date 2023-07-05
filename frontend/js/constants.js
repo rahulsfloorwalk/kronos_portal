@@ -526,32 +526,32 @@ export const allTypeofQuiz = [
 ];
 
 export const dataaccordian = [
-    {
-        heading : "Customers",
-        subheading : [
+	{
+		heading : "Customers",
+		subheading : [
 			{name:"Active Customer",link:"/admindashboard/activecustomer"},
 		],
-        id : 1,
-    },
-    {
-        heading : "Master",
-        subheading : [
+		id : 1,
+	},
+	{
+		heading : "Master",
+		subheading : [
 			{name:"Category",link:"/admindashboard/category"},{name:"Sub Category",link:"/admindashboard/subcategory"},{name: "Tax",link:"/admindashboard/tax"},{name: "Industry",link:"/admindashboard/industry"},{name:"Interest Area",link:"/admindashboard/interested_area"}
 		],
-        id : 2,
-    },
-    {
-        heading : "Solutions",
-        subheading : [
+		id : 2,
+	},
+	{
+		heading : "Solutions",
+		subheading : [
 			{name:"All Solutions",link:"/admindashboard/solution"},{name:"Archived Solutions",link:"/admindashboard/archivedsolution"}
 		],
-        id : 3,
-    },
+		id : 3,
+	},
 	{
-        heading : "Orders",
-        subheading : [
+		heading : "Orders",
+		subheading : [
 			{name:"All Orders",link:"/admindashboard/allorder"},{name: "Active Orders",link:"/admindashboard/activeorder"},{name:"Draft Orders",link:"/admindashboard/draftorder"},{name:"Complete Orders",link:"/admindashboard/completeorder"}
 		],
-        id : 4,
-    }
-]
+		id : 4,
+	}
+];

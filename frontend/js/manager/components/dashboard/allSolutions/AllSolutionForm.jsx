@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes, { bool } from "prop-types";
+import PropTypes, { bool, object } from "prop-types";
 import { hashHistory } from "react-router";
 import { findSolutionById, updateSolution, addSolution, findCategories, findSubCategories, findTaxes } from "../../../service/admin_dashboard.js";
 import { getInputEventChangeValue } from "../../../../react_utils.js";
@@ -28,12 +28,9 @@ export default class AllSolutionForm extends React.Component {
         tax: PropTypes.shape({
             id: PropTypes.number.isRequired,
             rate: PropTypes.number.isRequired,
+            name: PropTypes.string.isRequired,
         }),
     };
-    overviewEditor = React.createRef();
-    howItWorkEditor = React.createRef();
-    executionTimeEditor = React.createRef();
-    shortDescEditor = React.createRef();
 
     state = {
         loading: false,
@@ -49,7 +46,6 @@ export default class AllSolutionForm extends React.Component {
             how_it_work: "",
             execution_time: "",
             short_description: "",
-            is_active: true,
         },
         categories: [],
         sub_categories: [],
@@ -72,11 +68,18 @@ export default class AllSolutionForm extends React.Component {
     componentDidMount() {
         if (this.props.params.solutionId) {
             this.setLoading(true);
-            findSolutionById(this.props.params.solutionId).then((solution) => {
-                this.setState({
-                    solution: Object.assign({}, solution)
-                });
-            }).always(() => this.setLoading(false));
+            findSolutionById(this.props.params.solutionId)
+                .then((solution) => {
+                    this.setState({
+                        solution: {
+                            ...solution,
+                            category: solution.category.id, //for pre-filled values
+                            sub_category: solution.sub_category.id,
+                            tax: solution.tax.id,
+                        },
+                    });
+                })
+                .always(() => this.setLoading(false));
         }
 
         findCategories().then((categories) => {
@@ -84,10 +87,10 @@ export default class AllSolutionForm extends React.Component {
         });
         findSubCategories().then((sub_categories) => {
             this.setState({ sub_categories });
-        })
+        });
         findTaxes().then((taxes) => {
             this.setState({ taxes });
-        })
+        });
     }
 
     fieldChanged = (e) => {
@@ -98,38 +101,15 @@ export default class AllSolutionForm extends React.Component {
 
     onSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.solution)
         var promise;
         if (this.props.params.solutionId) {
             promise = updateSolution(
                 this.props.params.solutionId,
-                this.state.solution.name,
-                this.state.solution.url_structure,
-                this.state.solution.price,
-                this.state.solution.category,
-                this.state.solution.sub_category,
-                this.state.solution.tax,
-                this.state.solution.about,
-                this.state.solution.overview,
-                this.state.solution.how_it_work,
-                this.state.solution.execution_time,
-                this.state.solution.short_description,
-                this.state.solution.is_active
+                this.state.solution,
             );
         } else {
             promise = addSolution(
-                this.state.solution.name,
-                this.state.solution.url_structure,
-                this.state.solution.price,
-                this.state.solution.category,
-                this.state.solution.sub_category,
-                this.state.solution.tax,
-                this.state.solution.about,
-                this.state.solution.overview,
-                this.state.solution.how_it_work,
-                this.state.solution.execution_time,
-                this.state.solution.short_description,
-                this.state.solution.is_active
+                this.state.solution,
             );
         }
         promise.then(function () {
@@ -141,9 +121,8 @@ export default class AllSolutionForm extends React.Component {
                 });
             }
         });
+
     };
-
-
 
     handleEditorChange = (editorName, newContent) => {
         this.setState({
@@ -154,20 +133,12 @@ export default class AllSolutionForm extends React.Component {
         });
     }
 
-    handleFileUpload = (e) => {
-        const files = Array.from(e.target.files);
-        this.setState({
-            uploadedFiles: files.map((file) => file.name),
-            fileObjects: files,
-        });
-    };
-    
     render() {
         if (this.state.loading) {
             return (<Loading />);
         }
         var modalTitle = this.props.params.solutionId ? "Edit Solution" : "Add Solution";
-        const { solution, categories, sub_categories, taxes, loading, errors } = this.state;
+
         return (
             <Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
                 <form onSubmit={this.onSubmit}>
@@ -182,43 +153,53 @@ export default class AllSolutionForm extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col-md-6">
-                            <FormSelect label="Category" name="category"
+                            <FormSelect
+                                label="Category"
+                                name="category"
                                 value={this.state.solution.category}
-                                onChange={this.fieldChanged} >
+                                onChange={this.fieldChanged}
+                            >
                                 <option value="">----------</option>
-                                {this.state.categories.map(category => (
-                                    <option key={category.id}
-                                        value={category}
-                                    >{category.name}</option>
+                                {this.state.categories.map((category) => (
+                                    <option key={category.id} value={category.id}>
+                                        {category.name}
+                                    </option>
                                 ))}
                             </FormSelect>
                         </div>
                         <div className="col-md-6">
-                            <FormSelect label="Sub Category" name="sub_category"
+                            <FormSelect
+                                label="Sub Category"
+                                name="sub_category"
                                 value={this.state.solution.sub_category}
-                                onChange={this.fieldChanged} >
+                                onChange={this.fieldChanged}
+                            >
                                 <option value="">----------</option>
-                                {this.state.sub_categories.map(sub_category => (
-                                    <option key={sub_category.id}
-                                        value={sub_category}
-                                    >{sub_category.name}</option>
+                                {this.state.sub_categories.map((sub_category) => (
+                                    <option key={sub_category.id} value={sub_category.id}>
+                                        {sub_category.name}
+                                    </option>
                                 ))}
                             </FormSelect>
                         </div>
+
                     </div>
                     <div className="row">
                         <div className="col-md-6">
                             <FormInput label="Price" type="text" value={this.state.solution.price} name="price" onChange={this.fieldChanged} errors={this.state.errors.price} placeholder="Price" />
                         </div>
                         <div className="col-md-6">
-                            <FormSelect label="Tax" name="tax"
+                            <FormSelect
+                                label="Tax"
+                                name="tax"
                                 value={this.state.solution.tax}
-                                onChange={this.fieldChanged} >
+                                onChange={this.fieldChanged}
+                            >
                                 <option value="">----------</option>
-                                {this.state.taxes.map(tax => (
-                                    <option key={tax.id}
-                                        value={tax}
-                                    >{tax.name}</option>
+                                {this.state.taxes.map((tax) => (
+                                    <option key={tax.id} value={tax.id}>
+                                        {tax.name}
+                                    </option>
                                 ))}
                             </FormSelect>
                         </div>
@@ -227,7 +208,6 @@ export default class AllSolutionForm extends React.Component {
                         <div className="col-md-12">
                             <label>Overview</label>
                             <JoditEditor
-                                ref={this.overviewEditor}
                                 name="overview"
                                 value={this.state.solution.overview}
                                 onChange={(newContent) => this.handleEditorChange('overview', newContent)}
@@ -239,7 +219,6 @@ export default class AllSolutionForm extends React.Component {
                         <div className="col-md-12">
                             <label>How it Works</label>
                             <JoditEditor
-                                ref={this.howItWorkEditor}
                                 name="how_it_work"
                                 value={this.state.solution.how_it_work}
                                 onChange={(newContent) => this.handleEditorChange('how_it_work', newContent)}
@@ -251,7 +230,6 @@ export default class AllSolutionForm extends React.Component {
                         <div className="col-md-12">
                             <label>Execution Time</label>
                             <JoditEditor
-                                ref={this.executionTimeEditor}
                                 name="execution_time"
                                 value={this.state.solution.execution_time}
                                 onChange={(newContent) => this.handleEditorChange('execution_time', newContent)}
@@ -263,7 +241,6 @@ export default class AllSolutionForm extends React.Component {
                         <div className="col-md-12">
                             <label>Short Description</label>
                             <JoditEditor
-                                ref={this.shortDescEditor}
                                 name="short_description"
                                 value={this.state.solution.short_description}
                                 onChange={(newContent) => this.handleEditorChange('short_description', newContent)}
@@ -271,14 +248,14 @@ export default class AllSolutionForm extends React.Component {
                             />
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="col-md-12" style={{ margin: "2rem 0rem" }}>
-                            <label>Featured Image</label>
-                            <input type="file"
-                                multiple
-                                accept="image/*"
-                                onChange={this.handleFileUpload}
-                                style={{ width: "100%", border: "1px solid #eee", padding: "1rem" }}
+                    <div className="row" style={{ marginTop: "2rem" }}>
+                        <div className="col-md-12">
+                            <label>About</label>
+                            <JoditEditor
+                                name="about"
+                                value={this.state.solution.about}
+                                onChange={(newContent) => this.handleEditorChange('about', newContent)}
+                                errors={this.state.errors.about}
                             />
                         </div>
                     </div>
