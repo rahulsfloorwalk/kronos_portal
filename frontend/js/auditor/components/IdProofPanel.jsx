@@ -1,11 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as ReactRedux from "react-redux";
-
 import { pointerStyle } from "../../styles.js";
-
 import { findAttachmentsByUser, uploadFileForUser, deleteAttachment } from "../../auditor/service/attachment.js";
-
 import { Check, Warning, Paperclip, Cross  } from "../../components/Icons.jsx";
 import ProgressBar from "../../components/ProgressBar.jsx";
 import AttachmentProofIcon from "../../components/AttachmentProofIcon.jsx";

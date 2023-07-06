@@ -1,8 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link } from "react-router";
 import { findAttachmentsBySolution, deleteAttachment,uploadFileForSolutions } from "../../../service/admin_dashboard.js";
-
+import { Link } from "react-router";
 import { Check, Warning, Paperclip, Cross  } from "../../../../components/Icons.jsx";
 import ProgressBar from "../../../../components/ProgressBar.jsx";
 import AttachmentProofIcon from "../../../../components/AttachmentProofIcon.jsx";
@@ -44,6 +43,12 @@ class AttachmentItem extends React.Component {
 }
 
 export default class SolutionAttachmentUploadBox extends React.Component {
+	static propTypes = {
+        params: PropTypes.shape({
+			solutionId: PropTypes.string.isRequired,
+		}).isRequired,
+       children: PropTypes.node,
+    };
 	state = {
 		uploadMessage : "",
 		attachments: [],
@@ -143,7 +148,6 @@ export default class SolutionAttachmentUploadBox extends React.Component {
 	};
 
 	render() {
-
 		let uploadButton = (<button onClick={this.uploadButtonClicked} type="button" className="btn btn-default pull-right"><Paperclip/> Upload</button>);
 		let deletable = true;
 

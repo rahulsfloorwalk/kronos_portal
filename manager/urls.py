@@ -77,8 +77,8 @@ urlpatterns = ([
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
     url(r'solution_archieved$', solution_views.ArchievedSolutionView.as_view(), name='archieved_solution_view'),
     
-    url(r'/solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.SolutionAttachmentView.as_view(),name='solution_attachment_view'),
-    url(r'/attachment/(?P<attachment_id>[0-9]+)/delete',solution_views.SolutionDeleteView.as_view(),name='solution_delete_view'),
+    url(r'solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.SolutionAttachmentView.as_view(),name='solution_attachment_view'),
+    url(r'attachment/(?P<attachment_id>[0-9]+)/delete',solution_views.SolutionDeleteView.as_view(),name='solution_delete_view'),
     # url(r'client/(?P<client_id>[0-9]+)/client_requirements/attachment$',client_views.ClienRequirementsAttachments.as_view(), name='client_requirements_attachments'),
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/client_user$', audit_store_views.AuditStoreIdClientUserView.as_view(), name='audit_store_id_client_user_view'),
