@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import { Plus, Pencil, Cross } from "../../../../components/Icons.jsx";
-import { findSolutions,deleteSolution,findSubCategoryById, findById} from "../../../service/admin_dashboard.js";
+import { Plus, Pencil, Cross, Paperclip } from "../../../../components/Icons.jsx";
+import { findSolutions, deleteSolution, findSubCategoryById, findById, updateSolutionIsActive } from "../../../service/admin_dashboard.js";
 import Alert from "react-s-alert";
 
 const FieldErrors = PropTypes.arrayOf(PropTypes.string);
@@ -12,49 +12,70 @@ class AllSolutionRow extends React.Component {
         solution: PropTypes.shape({
             id: PropTypes.number,
             name: PropTypes.string,
-            url_structure : PropTypes.string,
-            price : PropTypes.number,
-            about :PropTypes.string,
-            overview :PropTypes.string,
-            how_it_work :PropTypes.string,
-            execution_time : PropTypes.string,
-            short_description :PropTypes.string,
-            is_active : PropTypes.bool,
-            category : PropTypes.object,
-            sub_category : PropTypes.object,
-            tax : PropTypes.object,
+            url_structure: PropTypes.string,
+            price: PropTypes.number,
+            about: PropTypes.string,
+            overview: PropTypes.string,
+            how_it_work: PropTypes.string,
+            execution_time: PropTypes.string,
+            short_description: PropTypes.string,
+            is_active: PropTypes.bool,
+            category: PropTypes.object,
+            sub_category: PropTypes.object,
+            tax: PropTypes.object,
         }),
         errors: PropTypes.shape({
             non_field_errors: PropTypes.arrayOf(PropTypes.string),
-			category: FieldErrors,
-			sub_category: FieldErrors,
-			tax: FieldErrors,
-		}).isRequired,
-
-    };
-    render() {
-        return (
-            <tr>
-                <td className="text-right">{this.props.seq}</td>
-                <td>{this.props.solution.name}</td>
-                <td>{this.props.solution.category && this.props.solution.category.name}</td>
-                <td>{this.props.solution.sub_category && this.props.solution.sub_category.name}</td>
-                <td>{this.props.solution.price}</td>
-                <td>
-                <span style={{marginRight:"2rem"}}>
-                    <Link
-                        to={`/admindashboard/solution/${this.props.solution.id}/edit`}
-                        className="btn btn-default"><Pencil /></Link>
-                </span>
-                    <button type="button"
-                        onClick={() => this.props.onDelete(this.props.solution)}
-                        className="btn btn-default"><Cross />
-                    </button>
-                </td>
-            </tr>
-        );
+            category: FieldErrors,
+            sub_category: FieldErrors,
+            tax: FieldErrors,
+        }),
     }
-}
+        render() {
+            return (
+                <tr>
+                    <td className="text-right">{this.props.seq}</td>
+                    <td>{this.props.solution.name}</td>
+                    <td>{this.props.solution.category && this.props.solution.category.name}</td>
+                    <td>{this.props.solution.sub_category && this.props.solution.sub_category.name}</td>
+                    <td>{this.props.solution.price}</td>
+                    <td>
+                        <span >
+                            <Link
+                                to={`/admindashboard/solution/${this.props.solution.id}/edit`}
+                                className="btn btn-default"><Pencil /></Link>
+                        </span>
+                        <button type="button"
+                        style={{ marginLeft: "1rem" }}
+                            onClick={() => this.props.onDelete(this.props.solution)}
+                            className="btn btn-default"><Cross />
+                        </button>
+                        </td>
+                        <td>
+                        <button
+                            onClick={() => this.props.toggleIsActive(this.props.solution)}
+                            className="btn btn-default"
+                        >
+                            Archive
+                        </button>
+                       <Link to={`/admindashboard/solution/${this.props.solution.id}/question`}>
+                        <button  className="btn btn-default" style={{marginLeft:"1rem"}}>Question</button>
+                       </Link>
+					   <Link to={`/admindashboard/solution/${this.props.solution.id}/details`}>
+                       <button className="btn btn-default" style={{marginLeft:"1rem"}}>Details</button>
+					   </Link>
+                       <Link to={`/admindashboard/solution/${this.props.solution.id}/prooftags`}>
+						<button className="btn btn-default" style={{marginLeft:"1rem"}}>Proof tag</button>
+						</Link>
+						<Link to={`/admindashboard/solution/${this.props.solution.id}/attachment`}>
+                       <button className="btn btn-default" style={{marginLeft:"1rem"}}><Paperclip/></button>
+					   </Link>
+                    </td>
+                </tr>
+            );
+        }
+    }
+
 
 export default class AllSolutionList extends React.Component {
     static propTypes = {
@@ -70,7 +91,6 @@ export default class AllSolutionList extends React.Component {
             });
         });
     }
-
     componentWillReceiveProps() {
         this.componentDidMount();
     }
@@ -89,19 +109,52 @@ export default class AllSolutionList extends React.Component {
             Alert.warning("SOLUTION CANNOT BE DELETED");
         });
     };
+    toggleIsActive = (solution) => {
+        const updatedSolution = { ...solution, is_active: false }; // Set is_active to false
+        const updatedSolutions = this.state.solutions.map((c) =>
+            c.id === solution.id ? updatedSolution : c
+        );
 
+        this.setState({
+            solutions: updatedSolutions,
+        });
+
+        updateSolutionIsActive(solution.id, updatedSolution)
+            .then(() => {
+                Alert.success("Solution is now Archived");
+            })
+            .catch(() => {
+                Alert.error("Failed to Archive Solution");
+            });
+    };
     render() {
-        const rows = this.state.solutions.map((c, i) => <AllSolutionRow seq={i + 1} solution={c} key={c.id}
-            onDelete={this.onDelete}
-        />);
+        const activeSolutions = this.state.solutions.filter(
+            (solution) => solution.is_active
+        );
+
+        const rows = activeSolutions.map((c, i) => (
+            <AllSolutionRow
+                seq={i + 1}
+                solution={c}
+                key={c.id}
+                onDelete={this.onDelete}
+                toggleIsActive={this.toggleIsActive}
+            />
+        ));
+
         return (
             <div className="container-fluid">
                 <div className="panel panel-default">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
-                       Solution Table
-                        <Link to="/admindashboard/solution/add" className="btn btn-default pull-right"><Plus /> Add Solution</Link>
+                        Solution Table
+                        <Link
+                            to="/admindashboard/solution/add"
+                            className="btn btn-default pull-right"
+                        >
+                            <Plus /> Add Solution
+                        </Link>
                     </h3>
-                   
+
                     <div style={{ padding: "2rem" }}>
                         <table className="table table-striped">
                             <thead>
@@ -112,11 +165,10 @@ export default class AllSolutionList extends React.Component {
                                     <th>Sub Category</th>
                                     <th>Price</th>
                                     <th>Action</th>
+                                    <th>Others</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                {rows}
-                            </tbody>
+                            <tbody>{rows}</tbody>
                         </table>
                         {this.props.children}
                     </div>
@@ -124,4 +176,4 @@ export default class AllSolutionList extends React.Component {
             </div>
         );
     }
-}
+};                        

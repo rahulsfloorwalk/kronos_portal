@@ -1,5 +1,7 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
+import doAttachmentUpload from "../../agency/service/attachment.js";
+
 export function findCategories(){
 	return $.get( url.api_base_path + "manager/category");
 }
@@ -223,4 +225,33 @@ export function deleteSolution(solutionId){
 		url: url.api_base_path + `manager/solution/${solutionId}`,
 		type: "DELETE"
 	});
+}
+export function updateSolutionIsActive(solutionId, solution) {
+	return $.ajax({
+	  url: url.api_base_path + `manager/solution_status/${solutionId}`,
+	  method: "POST",
+	  data: JSON.stringify(solution),
+	  contentType: "application/json",
+	});
+  }
+
+//  *****************************************************************************
+  export function findArchievedSolutions(){
+	return $.get( url.api_base_path + "manager/solution_archieved");
+} 
+// ******************************************************************************
+export function findAttachmentsBySolution(solutionId){
+	return $.get(url.api_base_path + `manager/solution/${solutionId}/attachment`);
+
+}
+export function uploadFileForSolutions(solutionId,file){
+	var req_url = url.api_base_path + `manager/solution/${solutionId}/attachment`;
+	return doAttachmentUpload(req_url, file);
+}
+export function deleteAttachment(attachmentId){
+	return $.ajax({
+		url: url.api_base_path + `manager/attachment/${attachmentId}`,
+		type: "DELETE"
+	})
+
 }

@@ -21,11 +21,11 @@ class TaxRow extends React.Component {
                 <td>{this.props.tax.name}</td>
                 <td>{this.props.tax.rate}</td>
                 <td>
-                <span style={{marginRight:"2rem"}}>
-                    <Link
-                        to={`/admindashboard/tax/${this.props.tax.id}/edit`}
-                        className="btn btn-default"><Pencil /></Link>
-             </span>
+                    <span style={{ marginRight: "2rem" }}>
+                        <Link
+                            to={`/admindashboard/tax/${this.props.tax.id}/edit`}
+                            className="btn btn-default"><Pencil /></Link>
+                    </span>
                     <button type="button"
                         onClick={() => this.props.onDelete(this.props.tax)}
                         className="btn btn-default"><Cross /></button>

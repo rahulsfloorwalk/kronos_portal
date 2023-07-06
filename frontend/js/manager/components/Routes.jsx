@@ -116,7 +116,6 @@ import ClientWiseProfitibilityReport from "./reports/ClientWiseProfitibilityRepo
 import QAReport from "./reports/QAReport.jsx";
 import ChargePerAuditForm from "./ChargePerAuditForm.jsx";
 import SystemCostForm from "./SystemCostForm.jsx";
-
 import AuditStoreAuditorRatingForm from "./audit_store/AuditStoreAuditorRatingForm.jsx";
 import { ProjectAnalyticsCycleWise, ProjectAnalyticsMonthWise } from "./reports/analytics/ProjectAnalytics.jsx";
 import AnalyticDetails from "./reports/analytics/AnalyticDetails.jsx";
@@ -133,13 +132,19 @@ import InterestAreaList from "./dashboard/interestArea/InterestAreaList.jsx";
 import InterestAreaForm from "./dashboard/interestArea/InterestAreaForm.jsx";
 import AllSolutionList from "./dashboard/allSolutions/AllSolutionList.jsx";
 import AllSolutionForm from "./dashboard/allSolutions/AllSolutionForm.jsx";
-import ArchivedSolution from "./dashboard/ArchievedSolution.jsx";
 import AllOrder from "./dashboard/orderes/AllOrder.jsx";
 import ActiveOrders from "./dashboard/orderes/ActiveOrders.jsx";
 import DraftOrder from "./dashboard/orderes/DraftOrder.jsx";
 import CompleteOrder from "./dashboard/orderes/CompleteOrder.jsx";
 import CategoryList from "./dashboard/category/CategoryList.jsx";
 import CategoryForm from "./dashboard/category/CategoryForm.jsx";
+import ArchivedSolution from "./dashboard/archievedsolution/ArchievedSolution.jsx";
+import QuestionList from "./dashboard/questiones/QuestionList.jsx";
+import DashQuestionForm from "./dashboard/questiones/DashQuestionForm.jsx";
+import DashProofsTags from "./dashboard/prooftags/DashProofTags.jsx";
+import DetailsForm from "./dashboard/details/DetailsForm.jsx";
+import SolutionAttachmentUploadBox from "./dashboard/attachments/SolutionAttachmentUploadBox.jsx";
+
 const Routes = () => (
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
@@ -171,6 +176,13 @@ const Routes = () => (
 				<Route path="solution" component={AllSolutionList}>
 					<Route path="add" component={AllSolutionForm} />
 					<Route path=":solutionId/edit" component={AllSolutionForm} />
+					<Route path=":solutionId/question" component={QuestionList}>
+						<Route path="add" component={DashQuestionForm} />
+						<Route path=":questionId/edit" component={DashQuestionForm} />
+					</Route>
+					<Route path=":solutionId/prooftags" component={DashProofsTags}/>
+					<Route path=":solutionId/details" component={DetailsForm}/>
+					<Route path=":solutionId/attachment" component={SolutionAttachmentUploadBox} />
 				</Route>
 				<Route path="archivedsolution" component={ArchivedSolution} />
 				<Route path="allorder" component={AllOrder} />
