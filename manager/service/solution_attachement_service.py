@@ -1,4 +1,5 @@
 from attachment.models import Attachment
+from kronos.exceptions import AppLogicError 
 from manager.service import solution_service
 from attachment import service as attachment_service
 from manager.models import MPSolution
