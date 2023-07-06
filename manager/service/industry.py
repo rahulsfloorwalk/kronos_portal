@@ -1,9 +1,9 @@
-from ..models import MpIndustry
+from ..models import MPIndustry
 from django.db.utils import IntegrityError
 from kronos.exceptions import ObjectNotFound,AppLogicError
 
 def find_all_industries():
-    return MpIndustry.objects.all()
+    return MPIndustry.objects.all()
 
 def save(industry):
     industry.save()
@@ -11,8 +11,8 @@ def save(industry):
         
 def find_industry_by_id(industry_id):
     try:
-        return MpIndustry.objects.get(pk=industry_id)
-    except MpIndustry.DoesNotExist as e:
+        return MPIndustry.objects.get(pk=industry_id)
+    except MPIndustry.DoesNotExist as e:
         raise ObjectNotFound from e
     
 def delete(industry_id):

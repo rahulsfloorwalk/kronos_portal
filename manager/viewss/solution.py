@@ -1,13 +1,14 @@
-from django.http import HttpResponse
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
+from rest_framework.serializers import ModelSerializer
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from manager.models import MPSolution
-from manager.serializers import SolutionSerializer,SolutionStatusSerializer
-from rest_framework.permissions import AllowAny
-from kronos.exceptions import ObjectNotFound
+from manager.serializers import SolutionSerializer,SolutionStatusSerializer,AttachmentSerializer
+from kronos.exceptions import ObjectNotFound,AppLogicError
+from manager.service import solution_attachement_service
+from rest_framework.exceptions import ValidationError
 
 class SolutionDeSerializer(ModelSerializer):
     class Meta:
@@ -48,17 +49,19 @@ class SolutionDeSerializer(ModelSerializer):
         
         
 class SolutionView(APIView):
-    permission_classes=[AllowAny]
-    # permission_classes=[HasGroupPermission]
-    # renderer_groups={
-    #     'GET':[GROUP_NAME_MANAGER],
-    #     'POST':[GROUP_NAME_MANAGER]
-    # }
+    permission_classes=[HasGroupPermission]
+    renderer_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER]
+    }
     def get(self,request):
-        solutions = MPSolution.objects.all()
+        solutions = MPSolution.objects.filter(is_active=True)
         serializer = SolutionSerializer(solutions, many=True)  
         return Response(serializer.data)
     def post(self,request):
+        if request.data.get('name'):
+            if MPSolution.objects.filter(name=request.data.get('name')).exists():
+                raise AppLogicError('Solution is already exists')
         serializer = SolutionDeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         solution = serializer.save()  
@@ -66,14 +69,23 @@ class SolutionView(APIView):
         return Response(serializer.data)
     
 class ArchievedSolutionView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[HasGroupPermission]
+    renderer_groups={
+        'GET':[GROUP_NAME_MANAGER],
+    }
     def get(self,request):
         solutions = MPSolution.objects.filter(is_active=False)
         serializer = SolutionSerializer(solutions, many=True)  
         return Response(serializer.data)
     
 class SolutionIdView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[HasGroupPermission]
+    renderer_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER],
+        'DELETE':[GROUP_NAME_MANAGER]
+    }
+    
     def get_solution(self, solution_id):
         try:
             return MPSolution.objects.get(pk=solution_id)
@@ -86,6 +98,9 @@ class SolutionIdView(APIView):
         return Response(serializer.data)
 
     def post(self, request, solution_id):
+        if request.data.get('name'):
+            if MPSolution.objects.filter(name=request.data.get('name')).exists():
+                raise AppLogicError('Solution is already exists')
         solution = self.get_solution(solution_id)
         serializer = SolutionDeSerializer(solution, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -96,6 +111,7 @@ class SolutionIdView(APIView):
         solution = self.get_solution(solution_id)
         solution.delete()
         return Response()
+    
 class SolutionStatusDeSerializer(ModelSerializer):
     class Meta:
         model = MPSolution
@@ -110,8 +126,13 @@ class SolutionStatusDeSerializer(ModelSerializer):
         else:
             solution = MPSolution()
         solution.is_active = self.validated_data.get('is_active',solution.is_active)    
+
 class SolutionStatusIdView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[HasGroupPermission]
+    renderer_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER],
+    }
     def get_solution(self, solution_id):
         try:
             return MPSolution.objects.get(pk=solution_id)
@@ -128,3 +149,33 @@ class SolutionStatusIdView(APIView):
         serializer.save()
         return Response(serializer.data)
         
+class SolutionAttachmentView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups ={
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def get(self,request,solution_id):
+        attachment = solution_attachement_service.find_attachment_by_solution_id(solution_id)
+        return Response(AttachmentSerializer(attachment,many=True).data)
+    def post(self,request,solution_id):
+        try:
+            post_data, attachment = solution_attachement_service.solution_image_upload_by_solution_id(
+                solution_id,
+                request.data["file_name"],
+                request.data["file_size"],
+                request.data["file_type"])
+            post_data["attachment"] = AttachmentSerializer(attachment).data
+            return Response(post_data)
+        except KeyError as e:
+            raise ValidationError({
+                'file_name': "file name is required"
+            })
+class SolutionDeleteView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups = {
+        'DELETE': [GROUP_NAME_MANAGER],
+    }
+    def delete(self,request,attachment_id):
+        solution_attachement_service.delete_for_solution(attachment_id,request.data.get('solution_id'))
+        return Response()

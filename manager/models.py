@@ -89,12 +89,12 @@ class MPCategory(Model):
     def __str__(self):
         return 'Category({}): {}'.format(self.id, self.name)
 
-class MpInterestArea(Model):
+class MPInterestArea(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     def __str__(self):
         return 'InterestArea({}): {}'.format(self.id, self.name)
-class MpIndustry(Model):
+class MPIndustry(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     def __str__(self):
@@ -122,5 +122,11 @@ class MPSolution(Model):
     is_active = BooleanField(db_column='is_active',default=True,blank=False)
     def __str__(self):
         return 'Solution({}): {}'.format(self.id, self.name)
+
+class MPSolutionQuestionnaire(Model):
+    pass
+
+class MPSolutionAttachement(Model):
+    pass
 
     

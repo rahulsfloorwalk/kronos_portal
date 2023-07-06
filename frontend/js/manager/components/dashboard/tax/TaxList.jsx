@@ -7,12 +7,12 @@ import Alert from "react-s-alert";
 
 class TaxRow extends React.Component {
     static propTypes = {
-        seq: PropTypes.number.isRequired,
-        tax: PropTypes.shape({
-            id: PropTypes.number,
-            name: PropTypes.string,
-            rate: PropTypes.number,
-        }),
+					seq: PropTypes.number.isRequired,
+					tax: PropTypes.shape({
+						name: PropTypes.string,
+						id: PropTypes.number,
+						rate: PropTypes.number,
+					}),
     };
     render() {
         return (

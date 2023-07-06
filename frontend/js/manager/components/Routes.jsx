@@ -122,8 +122,6 @@ import { ProjectAnalyticsCycleWise, ProjectAnalyticsMonthWise } from "./reports/
 import AnalyticDetails from "./reports/analytics/AnalyticDetails.jsx";
 import TrainingReport from "./reports/TrainingReport.jsx";
 import AdminDashboard from "./dashboard/AdminDashboard.jsx";
-import SideDashboard from "./dashboard/SideDashboard.jsx";
-import DashboardContainer from "./dashboard/DashboardContainer.jsx";
 import ActiveCustomer from "./dashboard/ActiveCustomer.jsx";
 import SubCategoryList from "./dashboard/subCategory/SubCategoryList.jsx";
 import SubCategoryForm from "./dashboard/subCategory/SubCategoryForm.jsx";
@@ -142,8 +140,6 @@ import DraftOrder from "./dashboard/orderes/DraftOrder.jsx";
 import CompleteOrder from "./dashboard/orderes/CompleteOrder.jsx";
 import CategoryList from "./dashboard/category/CategoryList.jsx";
 import CategoryForm from "./dashboard/category/CategoryForm.jsx";
-// import ClientRequirementsForm from "./client_requirements/ClientRequirementsForm.jsx";
-// import ClientRequirementsList from "./client_requirements/ClientRequirementsList.jsx";
 const Routes = () => (
 	<Router history={hashHistory}>
 		<Route path="/" component={App}>
