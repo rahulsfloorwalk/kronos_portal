@@ -75,8 +75,7 @@ export default class TaxList extends React.Component {
             onDelete={this.onDelete}
         />);
         return (
-            <div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
                         Tax Table
                         <Link to="/admindashboard/tax/add" className="btn btn-default pull-right"><Plus /> Add Tax</Link>
@@ -98,7 +97,6 @@ export default class TaxList extends React.Component {
                         {this.props.children}
                     </div>
                 </div>
-            </div>
         );
     }
 }

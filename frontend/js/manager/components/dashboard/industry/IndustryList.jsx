@@ -72,8 +72,7 @@ export default class IndustryList extends React.Component {
             onDelete={this.onDelete}
         />);
         return (
-            <div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
                        Industry Table
                         <Link to="/admindashboard/industry/add" className="btn btn-default pull-right"><Plus /> Add Industry</Link>
@@ -94,7 +93,6 @@ export default class IndustryList extends React.Component {
                         {this.props.children}
                     </div>
                 </div>
-            </div>
         );
     }
 }

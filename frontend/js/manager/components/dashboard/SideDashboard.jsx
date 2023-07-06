@@ -54,9 +54,9 @@ export default class SideDashboard extends React.Component {
                       : "answer"
                   }
                 >
-                  {item.subheading.map((subitem) => {
+                  {item.subheading.map((subitem,index) => {
                     return (
-                      <Link to={subitem.link}>{subitem.name}</Link>
+                      <Link to={subitem.link} key={index}>{subitem.name}</Link>
                     )
                   })}
                 </div>

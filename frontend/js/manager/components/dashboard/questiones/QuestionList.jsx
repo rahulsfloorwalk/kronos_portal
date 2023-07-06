@@ -93,16 +93,12 @@ export default class QuestionList extends React.Component {
         //     onDelete={this.onDelete}
         // />);
         return (
-            <div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <div style={{display:"flex",justifyContent:"flex-end",padding:"1rem 1rem 0rem 0rem"}}>
                      <Link to="/admindashboard/solution">   <Cross/></Link>
                     </div>
-                    <div style={{display:"flex",justifyContent:"center",padding:"1rem 1rem 0rem 0rem"}}>
-                    <h3>{this.state.solution.name}</h3>
-                    </div>
                     <h3 style={{ padding: "2rem",paddingTop:"1rem", borderBottom: "1px solid #eee" }}>
-                        Question Table
+                        Question Table for <b>{this.state.solution.name}</b>
                         <Link to={`/admindashboard/solution/${this.props.params.solutionId}/question/add`} className="btn btn-default pull-right"><Plus /> Add Question</Link>
                     </h3>
                     <div style={{ padding: "2rem" }}>
@@ -124,7 +120,6 @@ export default class QuestionList extends React.Component {
                         {this.props.children}
                     </div>
                 </div>
-            </div>
         );
     }
 }

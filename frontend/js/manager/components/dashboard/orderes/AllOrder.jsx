@@ -6,8 +6,7 @@ export default class AllOrder extends React.Component {
 render() {
 
     return (
-        <div className="container-fluid">
-        <div className="panel panel-default">
+        <div className="panel panel-default table-responsive">
             <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee"}}>
              All Order Table
             </h3>
@@ -32,7 +31,6 @@ render() {
                 {this.props.children}
             </div>
         </div>
-    </div>
     );
 }
 }

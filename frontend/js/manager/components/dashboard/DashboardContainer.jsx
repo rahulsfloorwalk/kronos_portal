@@ -59,8 +59,7 @@ export default class DashboardContainer extends React.Component {
 					</div>
 				</div>
 				</div>
-				<div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
                     Active Project
                     </h3>
@@ -86,9 +85,7 @@ export default class DashboardContainer extends React.Component {
                         {this.props.children}
                     </div>
                 </div>
-            </div>
-			<div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee"}}>
                      Draft Project
                     </h3>
@@ -114,9 +111,7 @@ export default class DashboardContainer extends React.Component {
                         {this.props.children}
                     </div>
                 </div>
-            </div>
-			<div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee"}}>
                       Complete Project
                     </h3>
@@ -143,7 +138,6 @@ export default class DashboardContainer extends React.Component {
                     </div>
                 </div>
             </div>
-			</div>
 		);
 	}
 }

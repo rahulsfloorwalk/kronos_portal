@@ -31,13 +31,6 @@ class DetailsForm extends React.Component{
 		};
 	}
 
-	// componentDidMount() {
-	// }
-
-	// fieldChanged = (e) => {
-	// 	affectInputEventToComponent(e, this);
-	// };
-
     fieldChanged = (e) => {
         this.setState({
             details: Object.assign({}, this.state.details, getInputEventChangeValue(e))
@@ -52,8 +45,8 @@ class DetailsForm extends React.Component{
 	render(){
 	
 		return (
-			<Modal modalTitle={"Proofs Tag"} size="modal-md" onClose={hashHistory.goBack}>
-				<form onSubmit={this.onSubmit}>
+			<Modal modalTitle={"Details"} onClose={hashHistory.goBack}>
+				<form onSubmit={this.onSubmit} className="row">
                 <div className="col-md-12">
                 <FormTextarea label="Description" name="description" value={this.state.details.description} onChange={this.fieldChanged} errors={this.state.errors.description}/>
                 </div>

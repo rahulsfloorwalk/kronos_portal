@@ -143,8 +143,7 @@ export default class AllSolutionList extends React.Component {
         ));
 
         return (
-            <div className="container-fluid">
-                <div className="panel panel-default">
+                <div className="panel panel-default table-responsive">
                     <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
                         Solution Table
                         <Link
@@ -156,7 +155,7 @@ export default class AllSolutionList extends React.Component {
                     </h3>
 
                     <div style={{ padding: "2rem" }}>
-                        <table className="table table-striped">
+                        <table className="table table-striped report_scroll">
                             <thead>
                                 <tr>
                                     <th className="text-right">#</th>
@@ -173,7 +172,6 @@ export default class AllSolutionList extends React.Component {
                         {this.props.children}
                     </div>
                 </div>
-            </div>
         );
     }
 };                        

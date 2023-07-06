@@ -24,7 +24,7 @@ export default class DashQuestionForm extends React.Component {
         sequence : "",
         max_marks: 0,
         question_type : "",
-        comment_required : "",
+        optional_comment_required : "",
         },
         errors: {
         }
@@ -116,7 +116,11 @@ render() {
             options={typeof(this.state.question.question_data) === "object" && Object.keys(this.state.question.question_data).length > 0 ? this.state.question.question_data.options : []}
             onChange={this.optionsChanged}
         />;
-
+        optional_comment_required_div = (
+            <div className="col-md-12">
+                <FormInput label="Optional comment required ?" type="checkbox" checked={this.state.question.optional_comment_required} name="optional_comment_required" onChange={this.fieldChanged} errors={this.state.errors.optional_comment_required}/>
+            </div>
+        );
        
     }
 
@@ -149,6 +153,7 @@ render() {
                     <div className="col-md-12">
 						{optionBuilder}
 					</div>
+                    {optional_comment_required_div}
                     <div className="col-md-12"><SaveButton />&nbsp;
 						{/* { ! this.props.params.questionId ?
 							<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>

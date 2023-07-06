@@ -9,6 +9,7 @@ import Alert from "react-s-alert";
 import { affectInputEventToComponent } from "../../../../react_utils.js";
 import SaveButton from "../../../../components/SaveButton.jsx";
 import Modal from "../../../../components/Modal.jsx";
+import { findProofTag } from "../../../service/proof_tag.js";
 
 class DashProofsTags extends React.Component{
 	static propTypes = {
@@ -21,20 +22,26 @@ class DashProofsTags extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			proof_tag: {},
+			// proof_tag: {},
+            proof_tags: [],
 			errMsg: ""
 		};
 	}
 
-	// componentDidMount() {
-	// 	this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId));
+	componentDidMount() {
+		// this.props.dispatch(fetchAuditCycle(this.props.params.auditCycleId));
 
-	// 	fetchproofTag(this.props.params.auditCycleId).then( (proof_tag) => {
-	// 		this.setState({
-	// 			proof_tag: proof_tag
-	// 		});
-	// 	});
-	// }
+		// fetchproofTag(this.props.params.auditCycleId).then( (proof_tag) => {
+		// 	this.setState({
+		// 		proof_tag: proof_tag
+		// 	});
+		// });
+        findProofTag().then((proof_tags) => {
+			this.setState({
+				proof_tags
+			});
+		});
+	}
 
 	fieldChanged = (e) => {
 		affectInputEventToComponent(e, this);
@@ -42,11 +49,12 @@ class DashProofsTags extends React.Component{
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		// let proof_tag_list = [];
-		// $(".row input:checked").each(function() {
-		// 	let val = $(this).attr("value");
-		// 	proof_tag_list.push(val);
-		// });
+        // console.log(this.state)
+		let proof_tag_list = [];
+		$(".row input:checked").each(function() {
+			let val = $(this).attr("value");
+			proof_tag_list.push(val);
+		});
 		// saveproofTag(this.props.params.auditCycleId, proof_tag_list).then((AuditCycle) => {
 		// 	hashHistory.push(`/audit_cycle/${AuditCycle.id}/questionnaire`);
 		// 	Alert.success("Proofs Tag Saved");
@@ -62,7 +70,7 @@ class DashProofsTags extends React.Component{
 			color:"red",
 			padding:"2px"
 		};
-		var proof_tag = this.state.proof_tag;
+		var proof_tag = this.state.proof_tags;
 		var proof_tag_rows = [];
 		for (let i in proof_tag){
 			if(proof_tag[i]["is_present_in_audit_cycle"]){

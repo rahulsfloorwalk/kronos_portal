@@ -6,8 +6,7 @@ export default class ActiveCustomer extends React.Component {
 render() {
 
     return (
-        <div className="container-fluid">
-        <div className="panel panel-default">
+        <div className="panel panel-default table-responsive">
             <h3 style={{ padding: "2rem", borderBottom: "1px solid #eee"}}>
               Active Customer
             </h3>
@@ -37,7 +36,6 @@ render() {
                 {this.props.children}
             </div>
         </div>
-    </div>
     );
 }
 }
