@@ -1,5 +1,5 @@
 from attachment.models import Attachment
-from kronos.exceptions import AppLogicError 
+from kronos.exceptions import AppLogicError ,ObjectNotFound
 from manager.service import solution_service
 from attachment import service as attachment_service
 from manager.models import MPSolution
@@ -16,8 +16,8 @@ def delete_for_solution(attachment_id,solution_id):
     if attachment.content_type.model_class() == MPSolution:
         solution = attachment_service.get_solution_for_attachment(attachment_id)
 
-         # if solution.user.id != user_id:
-            # raise ObjectNotFound
+        if solution.id != solution_id:
+            raise ObjectNotFound
     else:
         raise AppLogicError("Invalid Attachment Content Type detected")
 
