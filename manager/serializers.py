@@ -9,9 +9,9 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City, ProofTag,MPSubcategory,MpIndustry,MpInterestArea,MPCategory,MPTax,MPSolution
+from .models import City, ProofTag,MPSubcategory,MPIndustry,MPInterestArea,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
-
+from attachment.models import Attachment
 class ClientSerializer(ModelSerializer):
     class Meta:
         model = Client
@@ -492,7 +492,7 @@ class CategorySerializer(ModelSerializer):
     
 class InterestedAreaSerializer(ModelSerializer):
     class Meta:
-        model = MpInterestArea
+        model = MPInterestArea
         fields = (
             'id',
             'name',
@@ -501,14 +501,14 @@ class InterestedAreaSerializer(ModelSerializer):
 
     def deserialize(self):
         if self.context.get('id') is not None:
-            int_area = MpInterestArea.objects.get(id=self.context.get('id'))
+            int_area = MPInterestArea.objects.get(id=self.context.get('id'))
         else:
-            int_area = MpInterestArea()
+            int_area = MPInterestArea()
         int_area.name = self.validated_data.get('name', int_area.name)
         return int_area
 class IndustrySerializer(ModelSerializer):
     class Meta:
-        model = MpIndustry
+        model = MPIndustry
         fields = (
             'id',
             'name',
@@ -517,9 +517,9 @@ class IndustrySerializer(ModelSerializer):
 
     def deserialize(self):
         if self.context.get('id') is not None:
-            industry = MpIndustry.objects.get(id=self.context.get('id'))
+            industry = MPIndustry.objects.get(id=self.context.get('id'))
         else:
-            industry = MpIndustry()
+            industry = MPIndustry()
         industry.name = self.validated_data.get('name', industry.name)
         return industry
     
@@ -570,3 +570,22 @@ class SolutionSerializer(ModelSerializer):
             'is_active'
         )
         read_only_fields = fields
+
+class AttachmentSerializer(ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = (
+            'id',
+            'file_slug',
+            'proof_type'
+            'mime_type',
+            'file_name',
+            'status',
+            'content_type',
+            'object_id',
+            'direct_url',
+            'extra',
+            'proof_tag',
+        )
+        read_only_fields = fields
+    

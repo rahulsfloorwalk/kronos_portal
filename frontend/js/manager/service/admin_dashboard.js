@@ -1,6 +1,5 @@
 import $ from "jquery";
 import { url } from "../../../config.js";
-
 export function findCategories(){
 	return $.get( url.api_base_path + "manager/category");
 }

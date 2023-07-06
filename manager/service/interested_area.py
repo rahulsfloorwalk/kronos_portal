@@ -1,9 +1,9 @@
-from ..models import MpInterestArea
+from ..models import MPInterestArea
 from django.db.utils import IntegrityError
 from kronos.exceptions import ObjectNotFound,AppLogicError
 
 def find_all_interested_area():
-    return MpInterestArea.objects.all()
+    return MPInterestArea.objects.all()
 
 def save(int_area):
     int_area.save()
@@ -11,8 +11,8 @@ def save(int_area):
         
 def find_interested_area_by_id(interested_area_id):
     try:
-        return MpInterestArea.objects.get(pk=interested_area_id)
-    except MpInterestArea.DoesNotExist as e:
+        return MPInterestArea.objects.get(pk=interested_area_id)
+    except MPInterestArea.DoesNotExist as e:
         raise ObjectNotFound from e
     
 def delete(interested_area_id):
