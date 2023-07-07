@@ -202,11 +202,11 @@ class MPSolutionQuestion(Model):
     question_txt = CharField(db_column="question_txt", max_length=1024, blank=False)
     max_marks = PositiveIntegerField(db_column='max_marks', blank=False)
     sequence = PositiveIntegerField(db_column='sequence', blank=False)
+    solution = ForeignKey("MPSolution", related_name='solutionquestions', db_column='solution_id', on_delete=PROTECT)
     question_type = CharField(db_column='question_type', max_length=20, choices=QUESTION_TYPE, default=PLAIN, blank=False)
     question_data = JSONField(db_column='question_data', default=dict, blank=False)
     hide_question = BooleanField(db_column='hide_question', default=False, blank=False, null=False)
     optional_comment_required = BooleanField(db_column='optional_comment_required', default=False, blank=False, null=False)
-    solution = ForeignKey(MPSolution, related_name='solutionquestions', db_column='solution_id', blank=False, on_delete=PROTECT)
     def __has_unique_key(self, a_list_of_dicts, unique_key):
         values = [d[unique_key] for d in a_list_of_dicts]
         return len(values) == len(set(values))

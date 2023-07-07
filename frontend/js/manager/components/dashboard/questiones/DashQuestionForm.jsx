@@ -15,6 +15,7 @@ import OptionBuilder from "../../questionnaire/OptionBuilder.jsx";
 export default class DashQuestionForm extends React.Component {
     static propTypes = {
         params: PropTypes.shape({
+            solutoinId: PropTypes.string.isRequired,
             questionId: PropTypes.string,
         }),
     };
@@ -22,11 +23,10 @@ export default class DashQuestionForm extends React.Component {
         loading: false,
         question : {
         question_txt: "",
-        solutionId:this.props.params.solutionId,
+        solution:null,
         sequence : "",
         max_marks: 0,
         question_type : "",
-        optional_comment_required : "",
         },
         errors: {
         }
@@ -38,16 +38,28 @@ export default class DashQuestionForm extends React.Component {
             });
         });
     };
-    // componentDidMount() {
-    //     if (this.props.params.taxId) {
-    //         this.setLoading(true);
-    //         findTaxById(this.props.params.taxId).then((tax) => {
-    //             this.setState({
-    //                 tax: Object.assign({}, tax)
-    //             });
-    //         }).always(() => this.setLoading(false));
-    //     }
-    // }
+    componentDidMount() {
+        console.log(this.props.params.solutionId)
+        if(this.props.params.questionId){
+
+        }
+        else{
+            this.setState((prevState) => ({
+                question: {
+                  ...prevState.question,
+                  solution: this.props.params.solutionId,
+                },
+              }));    
+        }
+        // if (this.props.params.taxId) {
+        //     this.setLoading(true);
+        //     findTaxById(this.props.params.taxId).then((tax) => {
+        //         this.setState({
+        //             tax: Object.assign({}, tax)
+        //         });
+        //     }).always(() => this.setLoading(false));
+        // }
+    }
 
     fieldChanged = (e) => {
         this.setState({
@@ -60,7 +72,7 @@ export default class DashQuestionForm extends React.Component {
         console.log(this.state);
         saveQuestion(this.state.question).then(
 			() => {
-				hashHistory.push(`/solution/${this.props.params.solutionId}/question`);
+				hashHistory.push(`admindashboard/solution/${this.props.params.solutionId}/question`);
 			},
 			err => {
 				if( err.responseJSON){
@@ -112,25 +124,13 @@ render() {
     }
     var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
     let optionBuilder;
-    let optional_comment_required_div;
     if(this.state.question.question_type === "MUTEX" || this.state.question.question_type === "MULTISELECT"){
         optionBuilder = <OptionBuilder
             options={typeof(this.state.question.question_data) === "object" && Object.keys(this.state.question.question_data).length > 0 ? this.state.question.question_data.options : []}
             onChange={this.optionsChanged}
         />;
-        optional_comment_required_div = (
-            <div className="col-md-12">
-                <FormInput label="Optional comment required ?" type="checkbox" checked={this.state.question.optional_comment_required} name="optional_comment_required" onChange={this.fieldChanged} errors={this.state.errors.optional_comment_required}/>
-            </div>
-        );
-       
     }
 
-    // let hide_question_div = (
-    //     <div className="col-md-12">
-    //         <FormInput label="Hide Question" type="checkbox" checked={this.state.form.hide_question} name="hide_question" onChange={this.inputChanged} errors={this.state.errors.hide_question}/>
-    //     </div>
-    // );
     return (
         <Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
         <form onSubmit={this.onSubmit} className="row">
@@ -155,7 +155,6 @@ render() {
                     <div className="col-md-12">
 						{optionBuilder}
 					</div>
-                    {optional_comment_required_div}
                     <div className="col-md-12"><SaveButton />&nbsp;
 						{/* { ! this.props.params.questionId ?
 							<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>

@@ -80,7 +80,7 @@ urlpatterns = ([
     url(r'solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.SolutionAttachmentView.as_view(),name='solution_attachment_view'),
     url(r'attachment/(?P<attachment_id>[0-9]+)/delete$',solution_views.SolutionDeleteView.as_view(),name='solution_delete_view'),
     url(r'solution_attachment/(?P<attachment_id>[0-9]+)/complete$',solution_views.SolutionAttachmentCompleteView.as_view(),name='solution_attachment_complete_view'),
-    # url(r'solution_question_add$',solution_views.SolutionQuestionView.as_view(),name='solution_question_view'),
+    url(r'solution_question_add$',solution_views.SolutionQuestionView.as_view(),name='solution_question_view'),
     
     # url(r'client/(?P<client_id>[0-9]+)/client_requirements/attachment$',client_views.ClienRequirementsAttachments.as_view(), name='client_requirements_attachments'),
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 

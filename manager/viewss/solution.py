@@ -58,7 +58,9 @@ class SolutionQuestionDeSerializer(ModelSerializer):
             'max_marks',
             'solution',
             'question_type',
-            'question_data'
+            'question_data',
+            'hide_question',
+            'optional_comment_required'
         )
         read_only_fields=('id',)
     
@@ -70,9 +72,11 @@ class SolutionQuestionDeSerializer(ModelSerializer):
         question.sequence = self.validated_data.get('sequence', question.sequence)
         question.question_txt = self.validated_data.get('question_txt', question.question_txt)
         question.max_marks = self.validated_data.get('max_marks', question.max_marks)
-        question.solution = self.validated_data.get('solution', question.solutionId)
+        question.solution = self.validated_data.get('solution', question.solution_id)
         question.question_type = self.validated_data.get('question_type', question.question_type)
         question.question_data = self.validated_data.get('question_data', question.question_data)
+        question.hide_question = False
+        question.optional_comment_required = False
         return question
 
 class SolutionQuestionSerializer(ModelSerializer):
@@ -88,6 +92,19 @@ class SolutionQuestionSerializer(ModelSerializer):
             'question_data'
         )
         read_only_fields = fields
+
+class SolutionQuestionView(APIView):
+    permission_classes=[HasGroupPermission]
+    renderer_classes={
+        'POST':[GROUP_NAME_MANAGER]
+    }
+    def post(self,request):
+        q_ds= SolutionQuestionDeSerializer(data=request.data)
+        q_ds.is_valid(raise_exception=True)
+        question = q_ds.deserialize()
+        saved_question = question_service.save(question)
+        return Response(SolutionQuestionSerializer(saved_question).data)
+
 class SolutionView(APIView):
     permission_classes=[HasGroupPermission]
     renderer_groups={
@@ -228,17 +245,3 @@ class SolutionAttachmentCompleteView(APIView):
     def post(self, request, attachment_id):
         attachment = solution_attachement_service.complete_for_solution(attachment_id, request.data)
         return Response(AttachmentSerializer(attachment).data)
-
-class SolutionQuestionView(APIView):
-    permission_classes=[HasGroupPermission]
-    renderer_classes={
-        'POST':[GROUP_NAME_MANAGER]
-    }
-    def post(self,request):
-        print('arpan',request)
-        # q_ds= SolutionQuestionDeSerializer(data=request.data)
-        # q_ds.is_valid(raise_exception=True)
-        # question = q_ds.deserialize()
-        # saved_question = question_service.save(question)
-        # return Response(SolutionQuestionSerializer(saved_question).data)
-        return Response() 
