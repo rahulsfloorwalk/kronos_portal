@@ -37,7 +37,6 @@ export function deleteCategory(categoryId){
 		type: "DELETE"
 	});
 }
-//---------------------------------------------------------------------------------------------
 export function findSubCategories(){
 	return $.get( url.api_base_path + "manager/subcategory_sub");
 }
@@ -75,7 +74,6 @@ export function deleteSubCategory(subcategoryId){
 	});
 }
 
-//---------------------------------------------------------------------------------------------
 export function findTaxes(){
 	return $.get( url.api_base_path + "manager/tax");
 }
@@ -115,7 +113,6 @@ export function deleteTax(taxId){
 	});
 }
 
-//---------------------------------------------------------------------------------------------
 export function findIndustries(){
 	return $.get( url.api_base_path + "manager/industry");
 }
@@ -153,7 +150,6 @@ export function deleteIndustry(industryId){
 	});
 }
 
-//---------------------------------------------------------------------------------------------
 export function findInterestAreas(){
 	return $.get( url.api_base_path + "manager/interested_area");
 }
@@ -191,7 +187,6 @@ export function deleteInterestArea(interestareaId){
 	});
 }
 
-//---------------------------------------------------------------------------------------------
 export function findSolutions(){
 	return $.get( url.api_base_path + "manager/solution");
 }
@@ -227,25 +222,23 @@ export function deleteSolution(solutionId){
 }
 export function updateSolutionIsActive(solutionId, solution) {
 	return $.ajax({
-	  url: url.api_base_path + `manager/solution_status/${solutionId}`,
-	  method: "POST",
-	  data: JSON.stringify(solution),
-	  contentType: "application/json",
+		url: url.api_base_path + `manager/solution_status/${solutionId}`,
+		method: "POST",
+		data: JSON.stringify(solution),
+		contentType: "application/json",
 	});
-  }
+}
 
-//  *****************************************************************************
-  export function findArchievedSolutions(){
+export function findArchievedSolutions(){
 	return $.get( url.api_base_path + "manager/solution_archieved");
-} 
-// ******************************************************************************
+}
 export function findAttachmentsBySolution(solutionId){
 	return $.get(url.api_base_path + `manager/solution/${solutionId}/attachment`);
 
 }
 export function completeAttachment(attachmentId,solutionId){
 	return $.ajax({
-		url: url.api_base_path + `manager/attachment/${attachmentId}/complete`,
+		url: url.api_base_path + `manager/solution_attachment/${attachmentId}/complete`,
 		type: "POST",
 		data: JSON.stringify(solutionId),
 		contentType: "application/json"
@@ -329,10 +322,31 @@ export function uploadFileForSolutions(solutionId,file){
 	return doAttachmentUpload(req_url, file,solutionId);
 }
 
-export function deleteAttachment(attachmentId){
+export function deleteAttachment(attachmentId,solutionId){
 	return $.ajax({
-		url: url.api_base_path + `manager/attachment/${attachmentId}`,
-		type: "DELETE"
-	})
+		url: url.api_base_path + `manager/attachment/${attachmentId}/delete`,
+		type: "DELETE",
+		data: JSON.stringify(solutionId),
+		contentType: "application/json"
+	});
 
+}
+export function saveQuestion(data){
+	// var req_url = url.api_base_path + "manager/solution_question_add";
+	// // if( data.id){
+	// // 	req_url += `/${data.id}`;
+	// // }
+	// var req = $.ajax({
+	// 	type: "POST",
+	// 	url: req_url,
+	// 	data: JSON.stringify(data),
+	// 	contentType: "application/json"
+	// });
+	// return req;
+	return $.ajax({
+		url : url.api_base_path + "manager/solution_question_add",
+		method: "POST",
+		data: JSON.stringify(data),
+		contentType: "application/json"
+	});
 }

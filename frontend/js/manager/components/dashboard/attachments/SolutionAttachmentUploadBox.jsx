@@ -142,7 +142,7 @@ export default class SolutionAttachmentUploadBox extends React.Component {
 	};
 
 	attachmentDeleteClicked = (attachment) => {
-		deleteAttachment(attachment.id).then(()=>{
+		deleteAttachment(attachment.id,this.props.params.solutionId).then(()=>{
 			this.reloadState();
 		});
 	};

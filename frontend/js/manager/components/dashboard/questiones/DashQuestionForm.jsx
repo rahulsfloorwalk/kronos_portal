@@ -1,6 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
+import {saveQuestion} from "../../../service/admin_dashboard.js";
 import { getInputEventChangeValue } from "../../../../react_utils.js";
 import FormInput from "../../../../components/FormInput.jsx";
 import FormSelect from "../../../../components/FormSelect.jsx";
@@ -21,6 +22,7 @@ export default class DashQuestionForm extends React.Component {
         loading: false,
         question : {
         question_txt: "",
+        solutionId:this.props.params.solutionId,
         sequence : "",
         max_marks: 0,
         question_type : "",
@@ -56,18 +58,18 @@ export default class DashQuestionForm extends React.Component {
     onSubmit = (e) => {
 		e.preventDefault();
         console.log(this.state);
-		// saveQuestion(this.state.form).then(
-		// 	() => {
-		// 		hashHistory.push(`/audit_cycle/${this.props.params.auditCycleId}/questionnaire`);
-		// 	},
-		// 	err => {
-		// 		if( err.responseJSON){
-		// 			this.setState({
-		// 				errors: err.responseJSON
-		// 			});
-		// 		}
-		// 	}
-		// );
+        saveQuestion(this.state.question).then(
+			() => {
+				hashHistory.push(`/solution/${this.props.params.solutionId}/question`);
+			},
+			err => {
+				if( err.responseJSON){
+					this.setState({
+						errors: err.responseJSON
+					});
+				}
+			}
+		);
 	};
     // saveAndNext = (e) => {
 	// 	e.preventDefault();

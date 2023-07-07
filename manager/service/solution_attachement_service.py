@@ -15,11 +15,20 @@ def delete_for_solution(attachment_id,solution_id):
     
     if attachment.content_type.model_class() == MPSolution:
         solution = attachment_service.get_solution_for_attachment(attachment_id)
-
-        if solution.id != solution_id:
+        if int(solution.id) != int(solution_id):
             raise ObjectNotFound
     else:
         raise AppLogicError("Invalid Attachment Content Type detected")
 
     return attachment_service.delete(attachment_id)
     
+def complete_for_solution(attachment_id,solution_id):
+    attachment = attachment_service.find_by_id(attachment_id)
+    
+    if attachment.content_type.model_class() == MPSolution:
+        solution = attachment_service.get_solution_for_attachment(attachment_id)
+        if int(solution.id) != int(solution_id):
+            raise ObjectNotFound
+    else:
+        raise AppLogicError("Invalid Attachment Content Type detected")
+    return attachment_service.complete(attachment_id)

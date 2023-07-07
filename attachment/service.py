@@ -208,7 +208,7 @@ def get_audit_store_for_attachment(attachment_id):
         if attachment.content_type.model_class() is ReportSection:
             return ReportSection.objects.get(pk=attachment.object_id).audit_store
 
-        raise AppLogicError("Invalid Attachment Content Type")
+        raise AppLogicError("Invalid Attachment Content Type1")
     except (AuditStore.DoesNotExist, Answer.DoesNotExist, ReportSection.DoesNotExist) as e:
         _logger.warn("found orphan attachment with ID: %s", attachment_id)
         raise ObjectNotFound from e
@@ -218,17 +218,20 @@ def get_auditor_for_attachment(attachment_id: int) -> ProfileInfo:
     if attachment.content_type.model_class() is ProfileInfo:
         return profile_info_service.find_profile_info_by_id(attachment.object_id)
 
-    raise AppLogicError("Invalid Attachment Content Type")
+    raise AppLogicError("Invalid Attachment Content Type2")
+
 def get_solution_for_attachment(attachment_id: int) -> MPSolution:
     attachment = find_by_id(attachment_id)
     if attachment.content_type.model_class() is MPSolution:
         return solution_service.find_by_id(attachment.object_id)
+    raise AppLogicError("Invalid Attachment Content Type3")
 
 def find_by_audit_store(audit_store_id):
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED).order_by('id')
 
-def find_by_solution(solution_id):
+def find_by_solution(solution_id):  
     return Attachment.objects.filter(solutions__id=solution_id,status=Attachment.ATTACHED).order_by('id')
+
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)
     return Attachment.objects.filter(report_sections__id=report_section.id, status=Attachment.ATTACHED).order_by('id')

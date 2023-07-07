@@ -577,7 +577,7 @@ class AttachmentSerializer(ModelSerializer):
         fields = (
             'id',
             'file_slug',
-            'proof_type'
+            'proof_type',
             'mime_type',
             'file_name',
             'status',
