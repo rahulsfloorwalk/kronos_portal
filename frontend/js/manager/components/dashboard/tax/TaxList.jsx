@@ -13,6 +13,7 @@ class TaxRow extends React.Component {
 			id: PropTypes.number,
 			rate: PropTypes.number
 		}),
+		onDelete : PropTypes.func.isRequired,
 	};
 	render() {
 		return (
@@ -39,7 +40,7 @@ export default class TaxList extends React.Component {
 	static propTypes = {
 		children: PropTypes.node,
 		onChange: PropTypes.func.isRequired,
-		onDelete: PropTypes.func.isRequired,	
+		onDelete: PropTypes.func.isRequired,
 	};
 	state = {
 		taxes: [],

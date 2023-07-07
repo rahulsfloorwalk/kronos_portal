@@ -44,11 +44,11 @@ class AttachmentItem extends React.Component {
 
 export default class SolutionAttachmentUploadBox extends React.Component {
 	static propTypes = {
-        params: PropTypes.shape({
+		params: PropTypes.shape({
 			solutionId: PropTypes.string.isRequired,
 		}).isRequired,
-       children: PropTypes.node,
-    };
+		children: PropTypes.node,
+	};
 	state = {
 		uploadMessage : "",
 		attachments: [],
@@ -197,9 +197,9 @@ export default class SolutionAttachmentUploadBox extends React.Component {
 
 		return (
 			<div className={"panel " + panelClass}>
-				 <div style={{display:"flex",justifyContent:"flex-end",padding:"1rem"}}>
-                     <Link to="/admindashboard/solution">   <Cross/></Link>
-                    </div>
+				<div style={{display:"flex",justifyContent:"flex-end",padding:"1rem"}}>
+					<Link to="/admindashboard/solution">   <Cross/></Link>
+				</div>
 				<div className="panel-heading" style={{cursor:"pointer"}} onClick={this.toggleExpand}>
 					<input type="file" multiple
 						onChange={this.uploadFile}

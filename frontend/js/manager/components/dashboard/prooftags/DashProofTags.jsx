@@ -1,11 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
 import $ from "jquery";
-import Alert from "react-s-alert";
-// import { fetchAuditCycle } from "../actions/audit.js";
-// import { fetchproofTag, saveproofTag } from "../actions/proof_tag.js";
 import { affectInputEventToComponent } from "../../../../react_utils.js";
 import SaveButton from "../../../../components/SaveButton.jsx";
 import Modal from "../../../../components/Modal.jsx";
@@ -22,8 +18,7 @@ class DashProofsTags extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			// proof_tag: {},
-            proof_tags: [],
+			proof_tags: [],
 			errMsg: ""
 		};
 	}
@@ -36,7 +31,7 @@ class DashProofsTags extends React.Component{
 		// 		proof_tag: proof_tag
 		// 	});
 		// });
-        findProofTag().then((proof_tags) => {
+		findProofTag().then((proof_tags) => {
 			this.setState({
 				proof_tags
 			});
@@ -49,7 +44,6 @@ class DashProofsTags extends React.Component{
 
 	onSubmit = (e) => {
 		e.preventDefault();
-        // console.log(this.state)
 		let proof_tag_list = [];
 		$(".row input:checked").each(function() {
 			let val = $(this).attr("value");

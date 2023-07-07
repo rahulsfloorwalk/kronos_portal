@@ -13,64 +13,62 @@ import { getQuestionType } from "../../../../utils.js";
 import OptionBuilder from "../../questionnaire/OptionBuilder.jsx";
 
 export default class DashQuestionForm extends React.Component {
-    static propTypes = {
-        params: PropTypes.shape({
-            solutoinId: PropTypes.string.isRequired,
-            questionId: PropTypes.string,
-        }),
-    };
-    state = {
-        loading: false,
-        question : {
-        question_txt: "",
-        solution:null,
-        sequence : "",
-        max_marks: 0,
-        question_type : "",
-        },
-        errors: {
-        }
-    };
-    setLoading = (loadingState) => {
-        this.setState((prevState) => {
-            return Object.assign({}, prevState, {
-                loading: loadingState
-            });
-        });
-    };
-    componentDidMount() {
-        console.log(this.props.params.solutionId)
-        if(this.props.params.questionId){
+	static propTypes = {
+		params: PropTypes.shape({
+			solutionId: PropTypes.string.isRequired,
+			questionId: PropTypes.string,
+		}),
+	};
+	state = {
+		loading: false,
+		question : {
+			question_txt: "",
+			solution:null,
+			sequence : "",
+			max_marks: 0,
+			question_type : "",
+		},
+		errors: {
+		}
+	};
+	setLoading = (loadingState) => {
+		this.setState((prevState) => {
+			return Object.assign({}, prevState, {
+				loading: loadingState
+			});
+		});
+	};
+	componentDidMount() {
+		// console.log(this.props.params.solutionId);
+		if(this.props.params.questionId){
+			// console.log(this.props.params.questionId);
+		}
+		else{
+			this.setState((prevState) => ({
+				question: {
+					...prevState.question,
+					solution: this.props.params.solutionId,
+				},
+			}));
+		}
+		// if (this.props.params.taxId) {
+		//     this.setLoading(true);
+		//     findTaxById(this.props.params.taxId).then((tax) => {
+		//         this.setState({
+		//             tax: Object.assign({}, tax)
+		//         });
+		//     }).always(() => this.setLoading(false));
+		// }
+	}
 
-        }
-        else{
-            this.setState((prevState) => ({
-                question: {
-                  ...prevState.question,
-                  solution: this.props.params.solutionId,
-                },
-              }));    
-        }
-        // if (this.props.params.taxId) {
-        //     this.setLoading(true);
-        //     findTaxById(this.props.params.taxId).then((tax) => {
-        //         this.setState({
-        //             tax: Object.assign({}, tax)
-        //         });
-        //     }).always(() => this.setLoading(false));
-        // }
-    }
-
-    fieldChanged = (e) => {
-        this.setState({
-            question: Object.assign({}, this.state.question, getInputEventChangeValue(e))
-        });
-    };
-   
-    onSubmit = (e) => {
+	fieldChanged = (e) => {
+		this.setState({
+			question: Object.assign({}, this.state.question, getInputEventChangeValue(e))
+		});
+	};
+	onSubmit = (e) => {
 		e.preventDefault();
-        console.log(this.state);
-        saveQuestion(this.state.question).then(
+		saveQuestion(this.state.question).then(
 			() => {
 				hashHistory.push(`admindashboard/solution/${this.props.params.solutionId}/question`);
 			},
@@ -83,32 +81,7 @@ export default class DashQuestionForm extends React.Component {
 			}
 		);
 	};
-    // saveAndNext = (e) => {
-	// 	e.preventDefault();
-	// 	saveQuestion(this.state.form).then(
-	// 		(savedQuestion) => {
-	// 			this.setState({
-	// 				form: Object.assign({}, this.state.form, {
-	// 					sequence: savedQuestion.sequence + 1,
-	// 					max_marks: "",
-	// 					question_type: "",
-	// 					question_txt: "",
-	// 					hide_question: false,
-	// 					optional_comment_required: false,
-	// 				})
-	// 			});
-	// 			hashHistory.push(this.props.location.pathname);
-	// 		},
-	// 		(err) => {
-	// 			if( err.responseJSON){
-	// 				this.setState({
-	// 					errors: err.responseJSON
-	// 				});
-	// 			}
-	// 		}
-	// 	);
-	// };
-    optionsChanged = (options) => {
+	optionsChanged = (options) => {
 		this.setState({
 			question: Object.assign({}, this.state.question, {
 				question_data: Object.assign({}, this.state.question.question_data, {
@@ -118,30 +91,30 @@ export default class DashQuestionForm extends React.Component {
 			})
 		});
 	};
-render() {
-    if (this.state.loading) {
-        return (<Loading />);
-    }
-    var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
-    let optionBuilder;
-    if(this.state.question.question_type === "MUTEX" || this.state.question.question_type === "MULTISELECT"){
-        optionBuilder = <OptionBuilder
-            options={typeof(this.state.question.question_data) === "object" && Object.keys(this.state.question.question_data).length > 0 ? this.state.question.question_data.options : []}
-            onChange={this.optionsChanged}
-        />;
-    }
+	render() {
+		if (this.state.loading) {
+			return (<Loading />);
+		}
+		var modalTitle = this.props.params.questionId ? "Edit Question" : "Add Question";
+		let optionBuilder;
+		if(this.state.question.question_type === "MUTEX" || this.state.question.question_type === "MULTISELECT"){
+			optionBuilder = <OptionBuilder
+				options={typeof(this.state.question.question_data) === "object" && Object.keys(this.state.question.question_data).length > 0 ? this.state.question.question_data.options : []}
+				onChange={this.optionsChanged}
+			/>;
+		}
 
-    return (
-        <Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
-        <form onSubmit={this.onSubmit} className="row">
-            <FormErrorList errors={this.state.errors.non_field_errors} />
-            <div className="col-md-4">
+		return (
+			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
+				<form onSubmit={this.onSubmit} className="row">
+					<FormErrorList errors={this.state.errors.non_field_errors} />
+					<div className="col-md-4">
 						<FormInput label="Sequence" min="1" type="number" value={this.state.question.sequence} name="sequence" onChange={this.fieldChanged} errors={this.state.errors.sequence}/>
 					</div>
-                    <div className="col-md-4">
+					<div className="col-md-4">
 						<FormInput label="Max. Marks" min="0" type="number" value={this.state.question.max_marks} name="max_marks" onChange={this.fieldChanged} errors={this.state.errors.max_marks}/>
 					</div>
-                    <div className="col-md-4">
+					<div className="col-md-4">
 						<FormSelect label="Question Type" value={this.state.question.question_type} name="question_type" onChange={this.fieldChanged} errors={this.state.errors.question_type}>
 							<option value=""></option>
 							<option value="PLAIN">{getQuestionType("PLAIN")}</option>
@@ -149,20 +122,19 @@ render() {
 							<option value="MULTISELECT">{getQuestionType("MULTISELECT")}</option>
 						</FormSelect>
 					</div>
-                    <div className="col-md-12">
+					<div className="col-md-12">
 						<FormInput label="Question" maxLength="1024" type="text" value={this.state.question.question_txt} name="question_txt" onChange={this.fieldChanged} errors={this.state.errors.question_txt}/>
 					</div>
-                    <div className="col-md-12">
+					<div className="col-md-12">
 						{optionBuilder}
 					</div>
-                    <div className="col-md-12"><SaveButton />&nbsp;
+					<div className="col-md-12"><SaveButton />&nbsp;
 						{/* { ! this.props.params.questionId ?
 							<button type="button" className="btn btn-primary" onClick={this.saveAndNext}>Save and Next</button>
 							: null } */}
-                    </div>
-            
-        </form>
-    </Modal>
-    );
-}
+					</div>
+				</form>
+			</Modal>
+		);
+	}
 }
