@@ -293,3 +293,27 @@ class MPSolutionQuestion(Model):
 
     class Meta:
         ordering = ['sequence']
+        
+class MPSolutionProofTagList(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    is_active = BooleanField(db_column='is_active', default=True)
+    solution = ForeignKey(MPSolution, related_name='solution_proof_tags_list', db_column='solution_id', on_delete=PROTECT)
+    proof_tag = ForeignKey(ProofTag, related_name='solution_proof_tags_list', db_column='proof_tag_id', on_delete=PROTECT)
+    max_attachment_count = IntegerField(db_column='max_attachment_count', default=2)
+    created_at = DateTimeField(db_column='created_at', null=True)
+
+    def save(self, *args, **kwargs):
+        ''' On save update timestamp '''
+        if not self.id:
+            self.created_at = timezone.now()
+        return super(MPSolutionProofTagList, self).save(*args, **kwargs)
+
+class MPSolutionOtherDetails(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    solution = ForeignKey(MPSolution, related_name='other_details', db_column='solution_id', on_delete=PROTECT)
+    description = CharField(db_column='description', max_length=4096, blank=False)
+    post_approval_description = CharField(db_column='post_approval_description', max_length=4096, blank=False)
+    check_points = CharField(db_column='check_points', max_length=16384, blank=True)
+    audit_fee = IntegerField(db_column='earnings_per_audit', blank=False, null=False)
+    def __str__(self):
+        return 'MPSolutionOtherDetails({}): {}  {}'.format(self.id, self.audit_fee,self.solution)

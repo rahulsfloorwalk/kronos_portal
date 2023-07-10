@@ -4,12 +4,13 @@ from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-from manager.models import MPSolution,MPSolutionQuestion
+from manager.models import MPSolution,MPSolutionQuestion,MPSolutionOtherDetails
 from manager.serializers import SolutionSerializer,SolutionStatusSerializer,AttachmentSerializer
 from kronos.exceptions import ObjectNotFound,AppLogicError
-from manager.service import solution_attachement_service
 from rest_framework.exceptions import ValidationError
-from manager.service import question_service
+from manager.service import solution_proof_tag,details_service,question_service,solution_attachement_service
+
+# from rest_framework.permissions import AllowAny
 class SolutionDeSerializer(ModelSerializer):
     class Meta:
         model = MPSolution
@@ -282,3 +283,72 @@ class SolutionQuestionIdView(APIView):
         question.delete()
         return Response()
     
+class SolutionProofTag(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'POST': [GROUP_NAME_MANAGER]
+    }
+    def get(self,request,solution_id):
+        proof_tag = solution_proof_tag.get_solution_proof_tag(solution_id)
+        return Response(proof_tag)
+    def post(self,request,solution_id):
+        proof_tag = solution_proof_tag.save_proof_tag(solution_id,request.data['proof_tag_list'])
+        return Response(SolutionSerializer(proof_tag).data)
+  
+class SolutionOtherDetailsDeSerializer(ModelSerializer):
+    class Meta:
+        model=MPSolutionOtherDetails
+        fields=('id',
+                'solution',
+                'description',
+                'post_approval_description',
+                'check_points',
+                'audit_fee'
+        )
+        read_only_fields = ('id',)
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is None:
+            details = MPSolutionOtherDetails.objects.get(id=self.context.get('id'))
+        else:
+            details=MPSolutionOtherDetails()
+        details.solution = self.validated_data.get('solution', details.solution_id)
+        details.description = self.validated_data.get('description',details.description)
+        details.post_approval_description = self.validated_data.get('post_approval_description',details.post_approval_description)
+        details.check_points = self.validated_data.get('check_points', details.check_points)
+        details.audit_fee = self.validated_data.get('audit_fee', details.audit_fee)
+        return details    
+
+class SolutionOtherDetailsSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolutionOtherDetails
+        fields = (
+            'id',
+            'solution',
+            'description',
+            'post_approval_description',
+            'check_points',
+            'audit_fee'
+        )
+        read_only_fields = fields
+            
+class SolutionOtherDetailsAddView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'POST':[GROUP_NAME_MANAGER]
+    }
+    def post(self,request):
+        d_ds = SolutionOtherDetailsDeSerializer(data=request.data)
+        d_ds.is_valid(raise_exception=True)
+        details = d_ds.deserialize()
+        saved_details = details_service.save(details)
+        return Response(SolutionOtherDetailsSerializer(saved_details).data)
+        
+class SolutionOtherDetailsView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER]
+    }
+    def get(self,request,solution_id):
+        details=MPSolutionOtherDetails.objects.get(solution_id=solution_id)
+        return Response(SolutionOtherDetailsSerializer(details).data)
