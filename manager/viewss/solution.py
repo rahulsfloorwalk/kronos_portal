@@ -10,7 +10,6 @@ from kronos.exceptions import ObjectNotFound,AppLogicError
 from manager.service import solution_attachement_service
 from rest_framework.exceptions import ValidationError
 from manager.service import question_service
-from rest_framework.permissions import AllowAny
 class SolutionDeSerializer(ModelSerializer):
     class Meta:
         model = MPSolution
@@ -179,10 +178,107 @@ class SolutionDeleteView(APIView):
         return Response()
 
 class SolutionAttachmentCompleteView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [HasGroupPermission]
     required_groups = {
         'POST': [GROUP_NAME_MANAGER],
     }
     def post(self, request, attachment_id):
         attachment = solution_attachement_service.complete_for_solution(attachment_id, request.data)
         return Response(AttachmentSerializer(attachment).data)
+
+class SolutionQuestionDeSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolutionQuestion
+        fields= (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'solution',
+            'question_type',
+            'question_data',
+            'hide_question',
+            'optional_comment_required'
+        )
+        read_only_fields=('id',)
+    
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is None:
+            question = MPSolutionQuestion.objects.get(id=self.context.get('id'))
+        else:
+            question=MPSolutionQuestion()
+        question.sequence = self.validated_data.get('sequence', question.sequence)
+        question.question_txt = self.validated_data.get('question_txt', question.question_txt)
+        question.max_marks = self.validated_data.get('max_marks', question.max_marks)
+        question.question_type = self.validated_data.get('question_type', question.question_type)
+        question.solution = self.validated_data.get('solution', question.solution_id)
+        question.question_data = self.validated_data.get('question_data', question.question_data)
+        question.hide_question = False
+        question.optional_comment_required = False
+        return question
+
+class SolutionQuestionSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolutionQuestion
+        fields = (
+            'id',
+            'sequence',
+            'question_txt',
+            'max_marks',
+            'solution',
+            'question_type',
+            'question_data'
+        )
+        read_only_fields = fields
+
+class SolutionQuestionAddView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'POST':[GROUP_NAME_MANAGER]
+    }
+    def post(self,request):
+        q_ds= SolutionQuestionDeSerializer(data=request.data)
+        q_ds.is_valid(raise_exception=True)
+        question = q_ds.deserialize()
+        saved_question = question_service.save(question)
+        return Response(SolutionQuestionSerializer(saved_question).data)
+
+class QuestionViewBySolution(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, solution_id, format=None):
+        questions = question_service.find_questions_by_solution_id(solution_id)
+        return Response(SolutionQuestionSerializer(questions, many=True).data)
+
+class SolutionQuestionIdView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER],
+        'DELETE':[GROUP_NAME_MANAGER]
+    }
+    def get_question(self, question_id):
+        try:
+            return MPSolutionQuestion.objects.get(pk=question_id)
+        except MPSolutionQuestion.DoesNotExist as e:
+            raise ObjectNotFound from e
+
+    def get(self, request, question_id):
+        question = self.get_question(question_id)
+        serializer = SolutionQuestionSerializer(question)
+        return Response(serializer.data)
+
+    def post(self, request, question_id):
+        question = self.get_question(question_id)
+        serializer = SolutionQuestionDeSerializer(question, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def delete(self, request, question_id):
+        question = self.get_question(question_id)
+        question.delete()
+        return Response()
+    

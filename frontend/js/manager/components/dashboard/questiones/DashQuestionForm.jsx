@@ -23,8 +23,8 @@ export default class DashQuestionForm extends React.Component {
 		loading: false,
 		question : {
 			question_txt: "",
-			solution:null,
 			sequence : "",
+			solution:null,
 			max_marks: 0,
 			question_type : "",
 		},
@@ -39,26 +39,14 @@ export default class DashQuestionForm extends React.Component {
 		});
 	};
 	componentDidMount() {
-		// console.log(this.props.params.solutionId);
-		if(this.props.params.questionId){
-			// console.log(this.props.params.questionId);
-		}
-		else{
-			this.setState((prevState) => ({
+		if (this.props.params.solutionId) {
+			this.setState(prevState => ({
 				question: {
-					...prevState.question,
-					solution: this.props.params.solutionId,
-				},
-			}));
+				  ...prevState.question,
+				  solution: this.props.params.solutionId 
+				}
+			  }));
 		}
-		// if (this.props.params.taxId) {
-		//     this.setLoading(true);
-		//     findTaxById(this.props.params.taxId).then((tax) => {
-		//         this.setState({
-		//             tax: Object.assign({}, tax)
-		//         });
-		//     }).always(() => this.setLoading(false));
-		// }
 	}
 
 	fieldChanged = (e) => {

@@ -332,17 +332,6 @@ export function deleteAttachment(attachmentId,solutionId){
 
 }
 export function saveQuestion(data){
-	// var req_url = url.api_base_path + "manager/solution_question_add";
-	// // if( data.id){
-	// // 	req_url += `/${data.id}`;
-	// // }
-	// var req = $.ajax({
-	// 	type: "POST",
-	// 	url: req_url,
-	// 	data: JSON.stringify(data),
-	// 	contentType: "application/json"
-	// });
-	// return req;
 	return $.ajax({
 		url : url.api_base_path + "manager/solution_question_add",
 		method: "POST",
