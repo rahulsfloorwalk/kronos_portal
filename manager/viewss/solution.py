@@ -347,8 +347,20 @@ class SolutionOtherDetailsAddView(APIView):
 class SolutionOtherDetailsView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
-        'GET':[GROUP_NAME_MANAGER]
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER]
     }
-    def get(self,request,solution_id):
-        details=MPSolutionOtherDetails.objects.get(solution_id=solution_id)
+    def get_details(self,detail_id):
+        try:
+            return MPSolutionOtherDetails.objects.get(pk=detail_id)
+        except MPSolutionOtherDetails.DoesNotExist as e:
+            raise ObjectNotFound from e
+    def get(self,request,detail_id):
+        details=MPSolutionOtherDetails.objects.get(id=detail_id)
         return Response(SolutionOtherDetailsSerializer(details).data)
+    def post(self,request,detail_id):
+        detail = self.get_details(detail_id)
+        serializer = SolutionOtherDetailsDeSerializer(detail,data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)

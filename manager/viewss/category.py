@@ -39,9 +39,12 @@ class CategoryIdView(APIView):
         return Response(CategorySerializer(category).data)
 
     def post(self, request, category_id):
+        new_name = request.data.get('name')
         cat = MPCategory.objects.get(id=category_id)
-        cat.name =request.data.get('name')
-        
+        if new_name and new_name != cat.name:
+            if MPCategory.objects.filter(name=new_name).exists():
+                raise AppLogicError('Category is already exists')
+        cat.name =new_name
         cat.save()
         return Response(CategorySerializer(cat).data)
 

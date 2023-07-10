@@ -39,8 +39,13 @@ class InterestedAreaIdView(APIView):
         return Response(InterestedAreaSerializer(int_area).data)
 
     def post(self, request, interested_area_id):
+        new_name=request.data.get('name')
         int_area = MPInterestArea.objects.get(id=interested_area_id)
-        int_area.name =request.data.get('name')
+        
+        if new_name and new_name!=int_area.name:
+            if MPInterestArea.objects.filter(name=request.data.get('name')).exists():
+                raise AppLogicError('Interested Area is Already exists')
+        int_area.name =new_name
         int_area.save()
         return Response(InterestedAreaSerializer(int_area).data)
 

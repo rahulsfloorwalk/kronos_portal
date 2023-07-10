@@ -39,8 +39,12 @@ class SubcategoryIdView(APIView):
         return Response(SubcategorySerializer(category).data)
 
     def post(self, request, subcategory_id):
+        new_name=request.data.get('name')
         cat = MPSubcategory.objects.get(pk=subcategory_id)
-        cat.name =request.data.get('name')
+        if new_name and new_name != cat.name:
+            if MPSubcategory.objects.filter(name=new_name).exists():
+                raise AppLogicError('sub category is already exists')
+        cat.name =new_name
         cat.save()
         return Response(SubcategorySerializer(cat).data)
 

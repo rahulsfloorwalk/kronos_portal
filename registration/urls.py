@@ -33,7 +33,6 @@ urlpatterns = ([
     url(r'client/signup/success$', client_views.signup_success, name="client_signup_success"),
     url(r'client/signup$', client_views.SignUp.as_view(), name="client_signup"),
 
-    # url(r'marketplace_signup$', views_api.MarketPlaceSignUp.as_view(), name="market_place_signup"),
     
     url(r'login$', views.Login.as_view(), name="login"),
     url(r'logout$', views.Logout.as_view(), name="logout"),
