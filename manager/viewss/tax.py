@@ -40,9 +40,6 @@ class TaxIdView(APIView):
         return Response(TaxSerializer(audit).data)
 
     def post(self, request, tax_id):
-        if request.data.get('name'):
-            if MPTax.objects.filter(name=request.data.get('name')).exists():
-                raise AppLogicError('Tax is already exists')
         tax = MPTax.objects.get(id=tax_id)
         tax.name =request.data.get('name')
         tax.rate =request.data.get('rate')

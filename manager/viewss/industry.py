@@ -39,9 +39,6 @@ class IndustryIdView(APIView):
         return Response(IndustrySerializer(industry).data)
 
     def post(self, request, industry_id):
-        if request.data.get('name'):
-            if MPIndustry.objects.filter(name=request.data.get('name')).exists():
-                raise AppLogicError('Industry is already exists')
         industry = MPIndustry.objects.get(id=industry_id)
         industry.name =request.data.get('name')
         industry.save()

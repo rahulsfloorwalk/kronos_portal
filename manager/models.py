@@ -1,4 +1,4 @@
-from django.db.models import Model,CASCADE,ManyToManyField,ImageField, CharField,FloatField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
+from django.db.models import Model,CASCADE, CharField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.utils import timezone
 from kronos.exceptions import AppLogicError
@@ -207,6 +207,7 @@ class MPSolutionQuestion(Model):
     question_data = JSONField(db_column='question_data', default=dict, blank=False)
     hide_question = BooleanField(db_column='hide_question', default=False, blank=False, null=False)
     optional_comment_required = BooleanField(db_column='optional_comment_required', default=False, blank=False, null=False)
+    
     def __has_unique_key(self, a_list_of_dicts, unique_key):
         values = [d[unique_key] for d in a_list_of_dicts]
         return len(values) == len(set(values))

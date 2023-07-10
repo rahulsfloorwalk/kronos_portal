@@ -39,9 +39,6 @@ class InterestedAreaIdView(APIView):
         return Response(InterestedAreaSerializer(int_area).data)
 
     def post(self, request, interested_area_id):
-        if request.data.get('name'):
-            if MPInterestArea.objects.filter(name=request.data.get('name')).exists():
-                raise AppLogicError('Industry is already exists')
         int_area = MPInterestArea.objects.get(id=interested_area_id)
         int_area.name =request.data.get('name')
         int_area.save()

@@ -48,62 +48,6 @@ class SolutionDeSerializer(ModelSerializer):
         solution.short_description = self.validated_data.get('short_description', solution.short_description)
         solution.is_active = self.validated_data.get('is_active',solution.is_active)
 
-class SolutionQuestionDeSerializer(ModelSerializer):
-    class Meta:
-        model = MPSolutionQuestion
-        fields= (
-            'id',
-            'sequence',
-            'question_txt',
-            'max_marks',
-            'solution',
-            'question_type',
-            'question_data',
-            'hide_question',
-            'optional_comment_required'
-        )
-        read_only_fields=('id',)
-    
-    def deserialize(self):
-        if 'id' in self.context and self.context.get('id') is None:
-            question = MPSolutionQuestion.objects.get(id=self.context.get('id'))
-        else:
-            question=MPSolutionQuestion()
-        question.sequence = self.validated_data.get('sequence', question.sequence)
-        question.question_txt = self.validated_data.get('question_txt', question.question_txt)
-        question.max_marks = self.validated_data.get('max_marks', question.max_marks)
-        question.solution = self.validated_data.get('solution', question.solution_id)
-        question.question_type = self.validated_data.get('question_type', question.question_type)
-        question.question_data = self.validated_data.get('question_data', question.question_data)
-        question.hide_question = False
-        question.optional_comment_required = False
-        return question
-
-class SolutionQuestionSerializer(ModelSerializer):
-    class Meta:
-        model = MPSolutionQuestion
-        fields = (
-            'id',
-            'sequence',
-            'question_txt',
-            'max_marks',
-            'solution',
-            'question_type',
-            'question_data'
-        )
-        read_only_fields = fields
-
-class SolutionQuestionView(APIView):
-    permission_classes=[HasGroupPermission]
-    renderer_classes={
-        'POST':[GROUP_NAME_MANAGER]
-    }
-    def post(self,request):
-        q_ds= SolutionQuestionDeSerializer(data=request.data)
-        q_ds.is_valid(raise_exception=True)
-        question = q_ds.deserialize()
-        saved_question = question_service.save(question)
-        return Response(SolutionQuestionSerializer(saved_question).data)
 
 class SolutionView(APIView):
     permission_classes=[HasGroupPermission]
@@ -155,9 +99,6 @@ class SolutionIdView(APIView):
         return Response(serializer.data)
 
     def post(self, request, solution_id):
-        if request.data.get('name'):
-            if MPSolution.objects.filter(name=request.data.get('name')).exists():
-                raise AppLogicError('Solution is already exists')
         solution = self.get_solution(solution_id)
         serializer = SolutionDeSerializer(solution, data=request.data)
         serializer.is_valid(raise_exception=True)
