@@ -182,6 +182,7 @@ const Routes = () => (
 					</Route>
 					<Route path=":solutionId/prooftags" component={DashProofsTags}/>
 					<Route path=":solutionId/details" component={DetailsForm}/>
+					<Route path=":solutionId/details/:detailsId/edit" component={DetailsForm}/>
 					<Route path=":solutionId/attachment" component={SolutionAttachmentUploadBox} />
 				</Route>
 				<Route path="archivedsolution" component={ArchivedSolution} />

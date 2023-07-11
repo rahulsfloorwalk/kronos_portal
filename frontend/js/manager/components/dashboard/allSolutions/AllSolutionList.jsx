@@ -82,9 +82,7 @@ class AllSolutionRow extends React.Component {
 export default class AllSolutionList extends React.Component {
 	static propTypes = {
 		children: PropTypes.node,
-		onChange: PropTypes.func.isRequired,
-		onDelete: PropTypes.func.isRequired,
-		toggleIsActive: PropTypes.func.isRequired,
+		onChange: PropTypes.func,
 	};
 	state = {
 		solutions: [],

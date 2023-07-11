@@ -88,7 +88,7 @@ urlpatterns = ([
     url(r'solution/(?P<solution_id>[0-9]+)/solution_proof_tag$', solution_views.SolutionProofTag.as_view(), name='solution_proof_tag'),
     
     url(r'solution/other_details$', solution_views.SolutionOtherDetailsAddView.as_view(), name='solution_other_details_add_view'),
-    url(r'solution/(?P<solution_id>[0-9]+)/other_details$', solution_views.SolutionIdOtherDetailsAddView.as_view(), name='solution_id_other_details_add_view'),
+    url(r'solution/(?P<solution_id>[0-9]+)/other_detail$', solution_views.SolutionIdOtherDetailsAddView.as_view(), name='solution_id_other_details_add_view'),
     
     url(r'solution/(?P<detail_id>[0-9]+)/other_details$', solution_views.SolutionOtherDetailsView.as_view(), name='solution_other_details_view'),
     

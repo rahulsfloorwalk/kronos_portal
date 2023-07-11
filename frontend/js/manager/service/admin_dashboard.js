@@ -232,6 +232,9 @@ export function updateSolutionIsActive(solutionId, solution) {
 export function findArchievedSolutions(){
 	return $.get( url.api_base_path + "manager/solution_archieved");
 }
+
+//--------------------------------------------------------------------------------
+
 export function findAttachmentsBySolution(solutionId){
 	return $.get(url.api_base_path + `manager/solution/${solutionId}/attachment`);
 
@@ -331,11 +334,71 @@ export function deleteAttachment(attachmentId,solutionId){
 	});
 
 }
+
+// ---------------------------------------------------------------------------------------------------
+
+export function findQuestions(solutionId){
+	return $.get( url.api_base_path + `manager/solution/${solutionId}/question`);
+}
 export function saveQuestion(data){
 	return $.ajax({
 		url : url.api_base_path + "manager/solution_question_add",
 		method: "POST",
 		data: JSON.stringify(data),
+		contentType: "application/json"
+	});
+}
+export function deleteQuestion(questionId){
+	return $.ajax({
+		url: url.api_base_path + `manager/solution_question/${questionId}`,
+		type: "DELETE"
+	});
+}
+export function findByQuestionId(questionId){
+	return $.get( url.api_base_path + `manager/solution_question/${questionId}`);
+}
+export function updateQuestion(questionId,question){
+	return $.ajax({
+		url: url.api_base_path + `manager/solution_question/${questionId}`,
+		method: "POST",
+		data: JSON.stringify(question),
+		contentType: "application/json"
+	});
+}
+
+// -------------------------------------------------------------------------------
+
+export function findDetailsbySolutionId(solutionId){
+	return $.get( url.api_base_path + `manager/solution/${solutionId}/other_detail`);
+}
+
+export function saveDetails(details){
+	return $.ajax({
+		url: url.api_base_path + "manager/solution/other_details",
+		method: "POST",
+		data: JSON.stringify(details),
+		contentType: "application/json"
+	});
+}
+export function updateDetails(detailsId,details){
+	return $.ajax({
+		url: url.api_base_path + `manager/solution/${detailsId}/other_details`,
+		method: "POST",
+		data: JSON.stringify(details),
+		contentType: "application/json"
+	});
+}
+// -----------------------------------------------------------------------
+export function findSolutionProofTag(solutionId){
+	return $.get( url.api_base_path + `manager/solution/${solutionId}/solution_proof_tag`);
+}
+export function saveSolutionproofTag(solutionId, proof_tag_list){
+	return $.ajax({
+		url: url.api_base_path + `manager/solution/${solutionId}/solution_proof_tag`,
+		method: "POST",
+		data: JSON.stringify({
+			proof_tag_list
+		}),
 		contentType: "application/json"
 	});
 }

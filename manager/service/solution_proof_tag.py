@@ -19,15 +19,12 @@ def get_solution_proof_tag(solution_id):
 
 @atomic
 def save_proof_tag(solution_id,proof_tag_list):
+    MPSolutionProofTagList.objects.filter(solution_id=solution_id).delete()
     solution=MPSolution.objects.get(id=solution_id)
     for i in proof_tag_list:
-        if MPSolutionProofTagList.objects.filter(solution_id=solution_id,proof_tag_id=i).exists():
-            MPSolutionProofTagList.objects.filter(solution_id=solution_id, proof_tag_id=i).update(is_active=True)
-        
-        else:
-            proof_tag_obj = ProofTag.objects.get(pk=i)
-            solution_proof_tag_obj = MPSolutionProofTagList()
-            solution_proof_tag_obj.solution = solution
-            solution_proof_tag_obj.proof_tag = proof_tag_obj
-            solution_proof_tag_obj.save()
+        proof_tag_obj = ProofTag.objects.get(pk=i)
+        solution_proof_tag_obj = MPSolutionProofTagList()
+        solution_proof_tag_obj.solution = solution
+        solution_proof_tag_obj.proof_tag = proof_tag_obj
+        solution_proof_tag_obj.save()
     return solution

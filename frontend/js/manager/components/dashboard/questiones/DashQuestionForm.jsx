@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
-import {saveQuestion} from "../../../service/admin_dashboard.js";
+import {saveQuestion,findByQuestionId,updateQuestion} from "../../../service/admin_dashboard.js";
 import { getInputEventChangeValue } from "../../../../react_utils.js";
 import FormInput from "../../../../components/FormInput.jsx";
 import FormSelect from "../../../../components/FormSelect.jsx";
@@ -42,10 +42,18 @@ export default class DashQuestionForm extends React.Component {
 		if (this.props.params.solutionId) {
 			this.setState(prevState => ({
 				question: {
-				  ...prevState.question,
-				  solution: this.props.params.solutionId 
+					...prevState.question,
+					solution: this.props.params.solutionId
 				}
-			  }));
+			}));
+		}
+		if (this.props.params.questionId) {
+			this.setLoading(true);
+			findByQuestionId(this.props.params.questionId).then((question) => {
+				this.setState({
+					question: Object.assign({}, question)
+				});
+			}).always(() => this.setLoading(false));
 		}
 	}
 
@@ -54,20 +62,36 @@ export default class DashQuestionForm extends React.Component {
 			question: Object.assign({}, this.state.question, getInputEventChangeValue(e))
 		});
 	};
+
 	onSubmit = (e) => {
 		e.preventDefault();
-		saveQuestion(this.state.question).then(
-			() => {
-				hashHistory.push(`admindashboard/solution/${this.props.params.solutionId}/question`);
-			},
-			err => {
-				if( err.responseJSON){
-					this.setState({
-						errors: err.responseJSON
-					});
+		if (this.props.params.questionId) {
+			updateQuestion(this.props.params.questionId,this.state.question).then(
+				() => {
+					hashHistory.push(`admindashboard/solution/${this.props.params.solutionId}/question`);
+				},
+				err => {
+					if( err.responseJSON){
+						this.setState({
+							errors: err.responseJSON
+						});
+					}
 				}
-			}
-		);
+			);
+		} else {
+			saveQuestion(this.state.question).then(
+				() => {
+					hashHistory.push(`admindashboard/solution/${this.props.params.solutionId}/question`);
+				},
+				err => {
+					if( err.responseJSON){
+						this.setState({
+							errors: err.responseJSON
+						});
+					}
+				}
+			);
+		}
 	};
 	optionsChanged = (options) => {
 		this.setState({
