@@ -11,8 +11,8 @@ from manager.serializers import SolutionSerializer
 from kronos.exceptions import ObjectNotFound,AppLogicError
 from rest_framework.exceptions import ValidationError
 from manager.service import solution_proof_tag,details_service,question_service,solution_attachement_service
-
-# from rest_framework.permissions import AllowAny
+from manager.service import category as category_service
+from rest_framework.permissions import AllowAny
 class SolutionDeSerializer(ModelSerializer):
     class Meta:
         model = MPSolution
@@ -373,4 +373,15 @@ class SolutionOtherDetailsView(APIView):
         serializer = SolutionOtherDetailsDeSerializer(detail,data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data)
+    
+class SolutionViewByCategoryIdView(APIView):
+    permission_classes=[AllowAny]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+    }
+    def get(self,request,category_id,format=None):
+        category = category_service.find_category_by_id(category_id)
+        solutions = MPSolution.objects.filter(category_id=category.id,is_active=True)
+        serializer = SolutionSerializer(solutions, many=True)  
         return Response(serializer.data)
