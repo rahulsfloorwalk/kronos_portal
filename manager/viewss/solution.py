@@ -5,7 +5,9 @@ from rest_framework.serializers import ModelSerializer
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from manager.models import MPSolution,MPSolutionQuestion,MPSolutionOtherDetails
-from manager.serializers import SolutionSerializer,SolutionStatusSerializer,AttachmentSerializer
+from manager.serializers import SolutionStatusSerializer
+from manager.serializers import AttachmentSerializer
+from manager.serializers import SolutionSerializer
 from kronos.exceptions import ObjectNotFound,AppLogicError
 from rest_framework.exceptions import ValidationError
 from manager.service import solution_proof_tag,details_service,question_service,solution_attachement_service
@@ -343,7 +345,15 @@ class SolutionOtherDetailsAddView(APIView):
         details = d_ds.deserialize()
         saved_details = details_service.save(details)
         return Response(SolutionOtherDetailsSerializer(saved_details).data)
-        
+
+class SolutionIdOtherDetailsAddView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER]
+    }
+    def get(self,request,solution_id):
+        data= MPSolutionOtherDetails.objects.get(solution_id=solution_id)
+        return Response(SolutionOtherDetailsSerializer(data).data)
 class SolutionOtherDetailsView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
