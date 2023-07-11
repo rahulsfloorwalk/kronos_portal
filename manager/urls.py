@@ -61,6 +61,8 @@ urlpatterns = ([
     url(r'client/dashboard_cycle_status$', client_views.ClientViewByDashboardCyleStatus.as_view(), name='client_view_by_dashboard_cycle_status'),
     url(r'client$', client_views.ClientView.as_view(), name='client_view'),
     
+    
+    # admin dashboard for marketplace
     url(r'tax$', tax_views.TaxView.as_view(), name='tax_view'),
     url(r'tax/(?P<tax_id>[0-9]+)$', tax_views.TaxIdView.as_view(), name='tax_id_view'),
     url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
