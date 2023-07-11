@@ -26,4 +26,7 @@ class MPSignUpAPI(APIView):
         response,status = market_place_service_api.sign_up_market_place(data=request.data)
         return JsonResponse(response, status=status)
 class MPLogInAPI(View):
-    pass
+    @atomic
+    def post(self,request):
+        response , status = market_place_service_api.log_in_market_place(data=request.data)
+        return JsonResponse(response, status=status)

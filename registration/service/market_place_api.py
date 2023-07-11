@@ -89,4 +89,7 @@ def sign_up_market_place(data):
         status = 400
     return response, status
     
+def log_in_market_place(data):
+    pass
+    
     
