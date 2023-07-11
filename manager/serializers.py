@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField, SerializerMethodField
+from rest_framework.serializers import Serializer, ModelSerializer, PrimaryKeyRelatedField, FileField, SerializerMethodField,ListField,ImageField
 from auditor.service.profile_info_service import get_avg_auditor_rating_by_user
 from kronos.exceptions import AppLogicError
 from agency.models import AgencyUser, Agency
@@ -9,9 +9,9 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City, ProofTag
+from .models import City, ProofTag,MPSubcategory,MPIndustry,MPInterestArea,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
-
+from attachment.models import Attachment
 class ClientSerializer(ModelSerializer):
     class Meta:
         model = Client
@@ -452,3 +452,140 @@ class ClientForEcommSerializer(ModelSerializer):
         client.gst_in = self.validated_data.get('gst_in',client.gst_in)
         
         return client
+    
+class TaxSerializer(ModelSerializer):
+    class Meta:
+        model = MPTax
+        fields = (
+            'id',
+            'name',
+            'rate',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            tax = MPTax.objects.get(id=self.context.get('id'))
+        else:
+            tax = MPTax()
+        tax.name = self.validated_data.get('name', tax.name)
+        tax.rate = self.validated_data.get('rate', tax.rate)
+        
+        return tax
+    
+class CategorySerializer(ModelSerializer):
+    class Meta:
+        model = MPCategory
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            cat = MPCategory.objects.get(id=self.context.get('id'))
+        else:
+            cat = MPCategory()
+        cat.name = self.validated_data.get('name', cat.name)
+        return cat
+    
+class InterestedAreaSerializer(ModelSerializer):
+    class Meta:
+        model = MPInterestArea
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            int_area = MPInterestArea.objects.get(id=self.context.get('id'))
+        else:
+            int_area = MPInterestArea()
+        int_area.name = self.validated_data.get('name', int_area.name)
+        return int_area
+class IndustrySerializer(ModelSerializer):
+    class Meta:
+        model = MPIndustry
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            industry = MPIndustry.objects.get(id=self.context.get('id'))
+        else:
+            industry = MPIndustry()
+        industry.name = self.validated_data.get('name', industry.name)
+        return industry
+    
+class SubcategorySerializer(ModelSerializer):
+    class Meta:
+        model = MPSubcategory
+        fields = (
+            'id',
+            'name',
+        )
+        read_only_fields = ('id',)
+
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            s_cat = MPSubcategory.objects.get(id=self.context.get('id'))
+        else:
+            s_cat = MPSubcategory()
+        s_cat.name = self.validated_data.get('name', s_cat.name)
+        return s_cat
+
+class SolutionStatusSerializer(ModelSerializer):
+    class Meta:
+        model=MPSolution
+        fields = (
+            'id',
+            'is_active'
+        )
+        read_only_fields = ('id',)
+class SolutionSerializer(ModelSerializer):
+    category = CategorySerializer()
+    sub_category = SubcategorySerializer()
+    tax= TaxSerializer()
+    class Meta:
+        model = MPSolution
+        fields = (
+            'id',
+            'name',
+            'url_structure',
+            'price',
+            'category',
+            'sub_category',
+            'tax',
+            'about',
+            'overview',
+            'how_it_work',
+            'execution_time',
+            'short_description',
+            'is_active'
+        )
+        read_only_fields = fields
+
+class AttachmentSerializer(ModelSerializer):
+    class Meta:
+        model = Attachment
+        fields = (
+            'id',
+            'file_slug',
+            'proof_type',
+            'mime_type',
+            'file_name',
+            'status',
+            'content_type',
+            'object_id',
+            'direct_url',
+            'extra',
+            'proof_tag',
+        )
+        read_only_fields = fields
+    

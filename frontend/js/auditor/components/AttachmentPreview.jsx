@@ -174,7 +174,6 @@ export default class AttachmentPreview extends React.Component {
 	};
 	render(){
 		let proof_tag_select_box_style;
-
 		if(!this.props.attachment){
 			return null;
 		}

@@ -45,6 +45,7 @@ export default class Header extends Component{
 						{this.props.reportTab ? <NavLink to="/reports/profitablity"><Stats/> <span className="hidden-xs">Reports</span></NavLink> : null}
 						<NavLink to="/analytics/project_cycle_wise"><Queen/> <span className="hidden-xs">Auditor Analytics</span></NavLink>
 						<NavLink to="/training"><Pencil/> <span className="hidden-xs">Auditor Notes</span></NavLink>
+						<NavLink to="/admindashboard"><File/> <span className="hidden-xs">Dashboard</span></NavLink>
 					</ul>
 					<ul className="nav navbar-nav navbar-right">
 						<li>

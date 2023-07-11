@@ -33,6 +33,7 @@ urlpatterns = ([
     url(r'client/signup/success$', client_views.signup_success, name="client_signup_success"),
     url(r'client/signup$', client_views.SignUp.as_view(), name="client_signup"),
 
+    
     url(r'login$', views.Login.as_view(), name="login"),
     url(r'logout$', views.Logout.as_view(), name="logout"),
     url(r'signup$', views.SignUp.as_view(), name="signup"),
@@ -74,5 +75,10 @@ urlpatterns = ([
     # API for android app
     url(r'api/signup_api$', views_api.SignUpAPI.as_view(), name="signup_api"),
     url(r'api/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
+
+    # API for Market Place App
+    url(r'market_place/signup_api$', views_api.MPSignUpAPI.as_view(), name="mp_signup_api"),
+    url(r'market_place/login_api$', views_api.MPLogInAPI.as_view(), name="mp_login_api"),
+
 
 ], 'registration')

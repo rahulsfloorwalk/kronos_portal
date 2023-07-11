@@ -399,3 +399,11 @@ class ClientForEcomm(Model):
 
     class Meta:
         ordering = ['email']
+        
+class MPClientProfileInfo(Model):
+    id = AutoField(db_column = 'id', primary_key=True)
+    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)
+    def __str__(self):
+        return "ClientProfile: {} {}".format(self.id, self.mobile_number)
+        
