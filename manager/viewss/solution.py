@@ -53,7 +53,7 @@ class SolutionDeSerializer(ModelSerializer):
 
 class SolutionView(APIView):
     permission_classes=[HasGroupPermission]
-    renderer_groups={
+    required_groups={
         'GET':[GROUP_NAME_MANAGER],
         'POST':[GROUP_NAME_MANAGER]
     }
@@ -73,7 +73,7 @@ class SolutionView(APIView):
     
 class ArchievedSolutionView(APIView):
     permission_classes=[HasGroupPermission]
-    renderer_groups={
+    required_groups={
         'GET':[GROUP_NAME_MANAGER],
     }
     def get(self,request):
@@ -83,7 +83,7 @@ class ArchievedSolutionView(APIView):
     
 class SolutionIdView(APIView):
     permission_classes=[HasGroupPermission]
-    renderer_groups={
+    required_groups={
         'GET':[GROUP_NAME_MANAGER],
         'POST':[GROUP_NAME_MANAGER],
         'DELETE':[GROUP_NAME_MANAGER]
@@ -129,7 +129,7 @@ class SolutionStatusDeSerializer(ModelSerializer):
 
 class SolutionStatusIdView(APIView):
     permission_classes=[HasGroupPermission]
-    renderer_groups={
+    required_groups={
         'GET':[GROUP_NAME_MANAGER],
         'POST':[GROUP_NAME_MANAGER],
     }

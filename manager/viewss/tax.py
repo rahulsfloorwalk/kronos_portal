@@ -7,7 +7,16 @@ from manager.serializers import TaxSerializer
 from manager.models import MPTax
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
-
+from rest_framework.permissions import AllowAny
+class PublicTaxView(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        taxs = tax_service.find_all_taxs()
+        return Response(TaxSerializer(taxs, many=True).data)
+    
 class TaxView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -28,6 +37,15 @@ class TaxView(APIView):
         savedTax = tax_service.save(tax)
         return Response(TaxSerializer(savedTax).data)
 
+class PublicTaxIdView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups = {
+        'GET':[GROUP_NAME_MANAGER]
+    }
+    def get(self, request, tax_id, format=None):
+        audit = tax_service.find_tax_by_id(tax_id)
+        return Response(TaxSerializer(audit).data)
+    
 class TaxIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

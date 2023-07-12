@@ -7,6 +7,16 @@ from manager.serializers import CategorySerializer
 from manager.models import MPCategory
 from kronos.exceptions import AppLogicError
 from django.http import HttpResponse
+from rest_framework.permissions import AllowAny
+class PublicCategoryView(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        cats = category_service.find_all_categories()
+        return Response(CategorySerializer(cats, many=True).data)
+     
 class CategoryView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -27,6 +37,15 @@ class CategoryView(APIView):
         savedCategory =category_service.save(cat)
         return Response(CategorySerializer(savedCategory).data)
 
+class PublicCategoryIdView(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, category_id, format=None):
+        category = category_service.find_category_by_id(category_id)
+        return Response(CategorySerializer(category).data)
+    
 class CategoryIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

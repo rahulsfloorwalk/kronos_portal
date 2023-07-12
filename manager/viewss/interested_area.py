@@ -7,6 +7,17 @@ from manager.serializers import InterestedAreaSerializer
 from manager.models import MPInterestArea
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
+from rest_framework.permissions import AllowAny
+class PublicInterestedAreaView(APIView):
+    permission_classes=[AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, format=None):
+        int_area = interest_area_service.find_all_interested_area()
+        return Response(InterestedAreaSerializer(int_area, many=True).data)
+
+    
 class InterestedAreaView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -27,6 +38,15 @@ class InterestedAreaView(APIView):
         savedCategory =interest_area_service.save(int_area)
         return Response(InterestedAreaSerializer(savedCategory).data)
 
+class PublicInterestedAreaIdView(APIView):
+    permission_classes=[AllowAny]
+    required_groups={
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self, request, interested_area_id, format=None):
+        int_area = interest_area_service.find_interested_area_by_id(interested_area_id)
+        return Response(InterestedAreaSerializer(int_area).data)
+    
 class InterestedAreaIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
