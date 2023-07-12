@@ -8,12 +8,10 @@ from manager.models import MPIndustry
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
 from rest_framework.permissions import AllowAny
-
+from manager.decorator import rate_limit
 class PublicIndustryView(APIView):
     permission_classes = [AllowAny]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
+    @rate_limit
     def get(self, request, format=None):
         industry = industry_service.find_all_industries()
         return Response(IndustrySerializer(industry, many=True).data)
@@ -40,9 +38,7 @@ class IndustryView(APIView):
 
 class PublicIndustryIdView(APIView):
     permission_classes = [HasGroupPermission]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
+    @rate_limit
     def get(self, request, industry_id, format=None):
         industry = industry_service.find_industry_by_id(industry_id)
         return Response(IndustrySerializer(industry).data)

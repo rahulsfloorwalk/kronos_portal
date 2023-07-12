@@ -8,11 +8,10 @@ from manager.models import MPTax
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
 from rest_framework.permissions import AllowAny
+from manager.decorator import rate_limit
 class PublicTaxView(APIView):
     permission_classes = [AllowAny]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
+    @rate_limit
     def get(self, request, format=None):
         taxs = tax_service.find_all_taxs()
         return Response(TaxSerializer(taxs, many=True).data)
@@ -39,9 +38,7 @@ class TaxView(APIView):
 
 class PublicTaxIdView(APIView):
     permission_classes=[AllowAny]
-    required_groups = {
-        'GET':[GROUP_NAME_MANAGER]
-    }
+    @rate_limit
     def get(self, request, tax_id, format=None):
         audit = tax_service.find_tax_by_id(tax_id)
         return Response(TaxSerializer(audit).data)

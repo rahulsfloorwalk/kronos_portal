@@ -5,18 +5,17 @@ from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from manager.serializers import CategorySerializer
 from manager.models import MPCategory
-from kronos.exceptions import AppLogicError
+from kronos.exceptions import AppLogicError,ObjectNotFound
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
+from manager.decorator import rate_limit
 class PublicCategoryView(APIView):
     permission_classes = [AllowAny]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
+    @rate_limit
     def get(self, request, format=None):
         cats = category_service.find_all_categories()
-        return Response(CategorySerializer(cats, many=True).data)
-     
+        serializer = CategorySerializer(cats, many=True)
+        return Response(serializer.data)
 class CategoryView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -25,26 +24,31 @@ class CategoryView(APIView):
     }
     def get(self, request, format=None):
         cats = category_service.find_all_categories()
-        return Response(CategorySerializer(cats, many=True).data)
-
+        serializer = CategorySerializer(cats, many=True)
+        return Response(serializer.data)
+        
     def post(self, request):
         if request.data.get('name'):
             if MPCategory.objects.filter(name=request.data.get('name')).exists():
                 raise AppLogicError('Category is already exists')
-        cat_s = CategorySerializer(data=request.data)
-        cat_s.is_valid(raise_exception=True)
-        cat = cat_s.deserialize()
-        savedCategory =category_service.save(cat)
-        return Response(CategorySerializer(savedCategory).data)
-
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+        
 class PublicCategoryIdView(APIView):
     permission_classes = [AllowAny]
-    required_groups = {
-        'GET': [GROUP_NAME_MANAGER],
-    }
-    def get(self, request, category_id, format=None):
-        category = category_service.find_category_by_id(category_id)
-        return Response(CategorySerializer(category).data)
+    def get_object(self, category_id):
+        try:
+            return MPCategory.objects.get(pk=category_id)
+        except MPCategory.DoesNotExist as e:
+            raise ObjectNotFound
+    @rate_limit
+    def get(self, request, category_id):
+        category = self.get_object(category_id)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
     
 class CategoryIdView(APIView):
     permission_classes = [HasGroupPermission]
@@ -53,21 +57,32 @@ class CategoryIdView(APIView):
         'POST': [GROUP_NAME_MANAGER],
         'DELETE': [GROUP_NAME_MANAGER]
     }
-    def get(self, request, category_id, format=None):
-        category = category_service.find_category_by_id(category_id)
-        return Response(CategorySerializer(category).data)
+    def get_object(self, category_id):
+        try:
+            return MPCategory.objects.get(pk=category_id)
+        except MPCategory.DoesNotExist as e:
+            raise ObjectNotFound
+
+    def get(self, request, category_id):
+        category = self.get_object(category_id)
+        serializer = CategorySerializer(category)
+        return Response(serializer.data)
 
     def post(self, request, category_id):
-        new_name = request.data.get('name')
-        cat = MPCategory.objects.get(id=category_id)
+        new_name=request.data.get('name')
+        cat = MPCategory.objects.get(pk=category_id)
         if new_name and new_name != cat.name:
             if MPCategory.objects.filter(name=new_name).exists():
                 raise AppLogicError('Category is already exists')
-        cat.name =new_name
-        cat.save()
-        return Response(CategorySerializer(cat).data)
+        category = self.get_object(category_id)
+        serializer = CategorySerializer(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=400)
 
     def delete(self, request, category_id):
-        category_service.delete(category_id)
-        return HttpResponse(status=204)
+        category = self.get_object(category_id)
+        category.delete()
+        return Response(status=204)
     

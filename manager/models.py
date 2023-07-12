@@ -1,4 +1,4 @@
-from django.db.models import Model,CASCADE, CharField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
+from django.db.models import Model,CASCADE, CharField,ImageField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.utils import timezone
 from kronos.exceptions import AppLogicError
@@ -93,6 +93,10 @@ class MPTax(Model):
 class MPCategory(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
+    url_structure = CharField(db_column='url_structure', max_length=200, blank=False)
+    overview = CharField(db_column='overview', max_length=200, blank=False)
+    short_description = CharField(db_column='short_description', max_length=200, blank=False)
+    image = ImageField(upload_to='manager/static/images/category/',db_column="image",blank=True)
     def __str__(self):
         return 'Category({}): {}'.format(self.id, self.name)
 
