@@ -8,10 +8,10 @@ from manager.models import MPSubcategory
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
 from rest_framework.permissions import AllowAny
-from manager.decorator import rate_limit
+# from manager.decorator import rate_limit
 class PublicSubcategoryView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self, request, format=None):
         cats = subcategory_service.find_all_subcategories()
         return Response(SubcategorySerializer(cats, many=True).data)
@@ -37,7 +37,7 @@ class SubcategoryView(APIView):
 
 class PublicSubcategoryIdView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self, request, subcategory_id, format=None):
         category = subcategory_service.find_subcategory_by_id(subcategory_id)
         return Response(SubcategorySerializer(category).data)

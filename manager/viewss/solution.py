@@ -13,7 +13,7 @@ from rest_framework.exceptions import ValidationError
 from manager.service import solution_proof_tag,details_service,question_service,solution_attachement_service
 from manager.service import category as category_service
 from rest_framework.permissions import AllowAny
-from manager.decorator import rate_limit
+# from manager.decorator import rate_limit
 class SolutionDeSerializer(ModelSerializer):
     class Meta:
         model = MPSolution
@@ -54,7 +54,7 @@ class SolutionDeSerializer(ModelSerializer):
 
 class PublicSolutionView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self,request):
         solutions = MPSolution.objects.filter(is_active=True)
         serializer = SolutionSerializer(solutions, many=True)  
@@ -92,7 +92,7 @@ class ArchievedSolutionView(APIView):
     
 class PublicSolutionIdView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get_solution(self, solution_id):
         try:
             return MPSolution.objects.get(pk=solution_id)
@@ -174,7 +174,7 @@ class SolutionStatusIdView(APIView):
 
 class PublicSolutionAttachmentView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self,request,solution_id):
         attachment = solution_attachement_service.find_attachment_by_solution_id(solution_id)
         return Response(AttachmentSerializer(attachment,many=True).data)

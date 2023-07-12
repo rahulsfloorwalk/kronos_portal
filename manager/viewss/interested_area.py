@@ -8,10 +8,10 @@ from manager.models import MPInterestArea
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
 from rest_framework.permissions import AllowAny
-from manager.decorator import rate_limit
+# from manager.decorator import rate_limit
 class PublicInterestedAreaView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self, request, format=None):
         int_area = interest_area_service.find_all_interested_area()
         return Response(InterestedAreaSerializer(int_area, many=True).data)
@@ -39,7 +39,7 @@ class InterestedAreaView(APIView):
 
 class PublicInterestedAreaIdView(APIView):
     permission_classes=[AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self, request, interested_area_id, format=None):
         int_area = interest_area_service.find_interested_area_by_id(interested_area_id)
         return Response(InterestedAreaSerializer(int_area).data)

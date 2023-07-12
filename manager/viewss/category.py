@@ -8,10 +8,10 @@ from manager.models import MPCategory
 from kronos.exceptions import AppLogicError,ObjectNotFound
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
-from manager.decorator import rate_limit
+# from manager.decorator import rate_limit
 class PublicCategoryView(APIView):
     permission_classes = [AllowAny]
-    @rate_limit
+    # @rate_limit
     def get(self, request, format=None):
         cats = category_service.find_all_categories()
         serializer = CategorySerializer(cats, many=True)
@@ -44,7 +44,7 @@ class PublicCategoryIdView(APIView):
             return MPCategory.objects.get(pk=category_id)
         except MPCategory.DoesNotExist as e:
             raise ObjectNotFound
-    @rate_limit
+    # @rate_limit
     def get(self, request, category_id):
         category = self.get_object(category_id)
         serializer = CategorySerializer(category)
