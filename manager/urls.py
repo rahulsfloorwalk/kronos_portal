@@ -89,15 +89,19 @@ urlpatterns = ([
     url(r'public_subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.PublicSubcategoryIdView.as_view(), name='public_subcategory_id_view'),
     url(r'subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.SubcategoryIdView.as_view(), name='subcategory_id_view'),
     
-    
+    url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
+    
     
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
     
     url(r'solution_archieved$', solution_views.ArchievedSolutionView.as_view(), name='archieved_solution_view'),
     
+    url(r'public_solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.PublicSolutionAttachmentView.as_view(),name='public_solution_attachment_view'),
     url(r'solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.SolutionAttachmentView.as_view(),name='solution_attachment_view'),
+    
     url(r'attachment/(?P<attachment_id>[0-9]+)/delete$',solution_views.SolutionDeleteView.as_view(),name='solution_delete_view'),
     url(r'solution_attachment/(?P<attachment_id>[0-9]+)/complete$',solution_views.SolutionAttachmentCompleteView.as_view(),name='solution_attachment_complete_view'),
     

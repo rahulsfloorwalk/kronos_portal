@@ -38,7 +38,7 @@ class TaxView(APIView):
         return Response(TaxSerializer(savedTax).data)
 
 class PublicTaxIdView(APIView):
-    permission_classes=[HasGroupPermission]
+    permission_classes=[AllowAny]
     required_groups = {
         'GET':[GROUP_NAME_MANAGER]
     }

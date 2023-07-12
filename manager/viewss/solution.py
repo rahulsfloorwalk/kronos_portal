@@ -51,6 +51,16 @@ class SolutionDeSerializer(ModelSerializer):
         solution.is_active = self.validated_data.get('is_active',solution.is_active)
 
 
+class PublicSolutionView(APIView):
+    permission_classes=[AllowAny]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER]
+    }
+    def get(self,request):
+        solutions = MPSolution.objects.filter(is_active=True)
+        serializer = SolutionSerializer(solutions, many=True)  
+        return Response(serializer.data)
+    
 class SolutionView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
@@ -79,6 +89,22 @@ class ArchievedSolutionView(APIView):
     def get(self,request):
         solutions = MPSolution.objects.filter(is_active=False)
         serializer = SolutionSerializer(solutions, many=True)  
+        return Response(serializer.data)
+    
+class PublicSolutionIdView(APIView):
+    permission_classes=[AllowAny]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+    }
+    def get_solution(self, solution_id):
+        try:
+            return MPSolution.objects.get(pk=solution_id)
+        except MPSolution.DoesNotExist as e:
+            raise ObjectNotFound from e
+        
+    def get(self, request, solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionSerializer(solution)
         return Response(serializer.data)
     
 class SolutionIdView(APIView):
@@ -148,6 +174,15 @@ class SolutionStatusIdView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data)
+
+class PublicSolutionAttachmentView(APIView):
+    permission_classes=[AllowAny]
+    required_groups ={
+        'GET': [GROUP_NAME_MANAGER],
+    }
+    def get(self,request,solution_id):
+        attachment = solution_attachement_service.find_attachment_by_solution_id(solution_id)
+        return Response(AttachmentSerializer(attachment,many=True).data)
         
 class SolutionAttachmentView(APIView):
     permission_classes=[HasGroupPermission]
