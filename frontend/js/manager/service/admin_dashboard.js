@@ -19,19 +19,20 @@ export function addCategory(formData){
 	});
 }
 
-export function updateCategory(categoryId,category ){
+export function updateCategory(categoryId,formData ){
 	return $.ajax({
 		url: url.api_base_path + `manager/category/${categoryId}`,
 		method: "POST",
-		data: JSON.stringify(category),
-		contentType: "application/json"
+		data: formData,
+		processData: false,
+		contentType: false,
 	});
 }
 
 export function deleteCategory(categoryId){
 	return $.ajax({
 		url: url.api_base_path + `manager/category/${categoryId}`,
-		type: "DELETE"
+		type: "DELETE",
 	});
 }
 export function findSubCategories(){

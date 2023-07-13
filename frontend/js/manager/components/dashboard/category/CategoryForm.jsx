@@ -9,6 +9,7 @@ import Modal from "../../../../components/Modal.jsx";
 import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
 import JoditEditor from "jodit-react";
+import { url } from "../../../../../config.js";
 
 import Alert from "react-s-alert";
 export default class CategoryForm extends React.Component {
@@ -27,6 +28,7 @@ export default class CategoryForm extends React.Component {
 			short_description: "",
 		},
 		image: null,
+		uploadedImageUrl: "",
 		errors: {
 		}
 	};
@@ -44,7 +46,8 @@ export default class CategoryForm extends React.Component {
 			this.setLoading(true);
 			findCategoryById(this.props.params.categoryId).then((category) => {
 				this.setState({
-					category: Object.assign({}, category)
+					category: Object.assign({}, category),
+					uploadedImageUrl: category.image.split("/").slice(1).join("/")
 				});
 			}).always(() => this.setLoading(false));
 		}
@@ -76,8 +79,8 @@ export default class CategoryForm extends React.Component {
 		formData.append("url_structure", this.state.category.url_structure);
 		formData.append("overview", this.state.category.overview);
 		formData.append("short_description", this.state.category.short_description);
-		formData.append("image", this.state.image);
-		
+		this.state.image && formData.append("image", this.state.image);
+
 		if (this.props.params.categoryId) {
 			promise = updateCategory(
 				this.props.params.categoryId,
@@ -91,9 +94,8 @@ export default class CategoryForm extends React.Component {
 		promise.then(function () {
 			Alert.success('category added');
 			hashHistory.push("/admindashboard/category");
-			
-		}, (errors) => {
 
+		}, (errors) => {
 			if (errors.responseJSON) {
 				this.setState({
 					errors: errors.responseJSON
@@ -141,16 +143,22 @@ export default class CategoryForm extends React.Component {
 							/>
 						</div>
 					</div>
-					<div className="row" style={{ marginTop: "1rem" }}>
+					<div className="row" style={{ marginTop: "1rem",marginBottom: "1rem" }}>
 						<div className="col-md-12">
 							<label>Cover Image</label>
-							<input 
+							<input
 								type="file"
-            					id="image"
+								id="image"
 								accept="image/*"
-								onChange={this.handleImageChange} 
+								onChange={this.handleImageChange}
 							/>
 						</div>
+						{this.props.params.categoryId &&
+							<div className="col-md-12" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+								<h5><b>Check your previously uploaded Image ⬇️ </b></h5>
+								<a href={url.api_base_path + this.state.uploadedImageUrl} target="_blank">Previously Uploaded Image</a>
+							</div>
+						}
 					</div>
 					<SaveButton />
 				</form>
