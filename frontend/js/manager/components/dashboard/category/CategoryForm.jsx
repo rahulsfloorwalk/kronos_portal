@@ -110,7 +110,7 @@ export default class CategoryForm extends React.Component {
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit} >
-					{/* <FormErrorList errors={this.state.errors.non_field_errors} /> */}
+					<FormErrorList errors={this.state.errors.non_field_errors} />
 					<div className="row">
 						<div className="col-md-6">
 							<FormInput label="Category Name" type="text" value={this.state.category.name} name="name" onChange={this.fieldChanged} errors={this.state.errors.name} placeholder="Category Name" />

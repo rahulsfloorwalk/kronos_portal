@@ -9,7 +9,6 @@ from kronos.exceptions import AppLogicError,ObjectNotFound
 from django.http import HttpResponse
 from rest_framework.permissions import AllowAny
 # from manager.decorator import rate_limit
-from rest_framework.parsers import MultiPartParser, FormParser
 class PublicCategoryView(APIView):
     permission_classes = [AllowAny]
     # @rate_limit
@@ -18,12 +17,11 @@ class PublicCategoryView(APIView):
         serializer = CategorySerializer(cats, many=True)
         return Response(serializer.data)
 class CategoryView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER]
     }
-    # parser_classes = (MultiPartParser, FormParser)
     def get(self, request, format=None):
         cats = category_service.find_all_categories()
         serializer = CategorySerializer(cats, many=True)
