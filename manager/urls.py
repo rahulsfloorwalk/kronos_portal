@@ -63,38 +63,62 @@ urlpatterns = ([
     
     
     # admin dashboard for marketplace
+    url(r'public_tax$', tax_views.PublicTaxView.as_view(), name='public_tax_view'),
     url(r'tax$', tax_views.TaxView.as_view(), name='tax_view'),
+    
+    url(r'public_tax/(?P<tax_id>[0-9]+)$', tax_views.PublicTaxIdView.as_view(), name='public_tax_id_view'),
     url(r'tax/(?P<tax_id>[0-9]+)$', tax_views.TaxIdView.as_view(), name='tax_id_view'),
+    
+    url(r'public_category$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
     url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
+    url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
+    
+    url(r'public_interested_area$', interested_area_views.PublicInterestedAreaView.as_view(), name='public_interested_area_view'),
     url(r'interested_area$', interested_area_views.InterestedAreaView.as_view(), name='interested_area_view'),
+    url(r'public_interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.PublicInterestedAreaIdView.as_view(), name='public_interested_area_id_view'),
     url(r'interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.InterestedAreaIdView.as_view(), name='interested_area_id_view'),
+    
+    url(r'public_industry$', industry_views.PublicIndustryView.as_view(), name='public_industry_view'),
     url(r'industry$', industry_views.IndustryView.as_view(), name='industry_view'),
+    url(r'public_industry/(?P<industry_id>[0-9]+)$', industry_views.PublicIndustryIdView.as_view(), name='public_industry_id_view'),
     url(r'industry/(?P<industry_id>[0-9]+)$', industry_views.IndustryIdView.as_view(), name='industry_id_view'),
+    
+    url(r'public_subcategory_sub$', subcategory_views.PublicSubcategoryView.as_view(), name='public_subcategory_view'),
     url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
+    url(r'public_subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.PublicSubcategoryIdView.as_view(), name='public_subcategory_id_view'),
     url(r'subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.SubcategoryIdView.as_view(), name='subcategory_id_view'),
     
+    url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
+    
+    
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
+    
     url(r'solution_archieved$', solution_views.ArchievedSolutionView.as_view(), name='archieved_solution_view'),
     
+    url(r'public_solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.PublicSolutionAttachmentView.as_view(),name='public_solution_attachment_view'),
     url(r'solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.SolutionAttachmentView.as_view(),name='solution_attachment_view'),
+    
     url(r'attachment/(?P<attachment_id>[0-9]+)/delete$',solution_views.SolutionDeleteView.as_view(),name='solution_delete_view'),
     url(r'solution_attachment/(?P<attachment_id>[0-9]+)/complete$',solution_views.SolutionAttachmentCompleteView.as_view(),name='solution_attachment_complete_view'),
     
     url(r'solution_question_add$',solution_views.SolutionQuestionAddView.as_view(),name='solution_question_add_view'),
     url(r'solution/(?P<solution_id>[0-9]+)/question$', solution_views.QuestionViewBySolution.as_view(), name='question_view_by_solution'),
-    
     url(r'solution_question/(?P<question_id>[0-9]+)$', solution_views.SolutionQuestionIdView.as_view(), name='solution_question_id_view'),
+    
     url(r'solution/(?P<solution_id>[0-9]+)/solution_proof_tag$', solution_views.SolutionProofTag.as_view(), name='solution_proof_tag'),
     
     url(r'solution/other_details$', solution_views.SolutionOtherDetailsAddView.as_view(), name='solution_other_details_add_view'),
     url(r'solution/(?P<solution_id>[0-9]+)/other_detail$', solution_views.SolutionIdOtherDetailsAddView.as_view(), name='solution_id_other_details_add_view'),
-    
     url(r'solution/(?P<detail_id>[0-9]+)/other_details$', solution_views.SolutionOtherDetailsView.as_view(), name='solution_other_details_view'),
     
-    # url(r'client/(?P<client_id>[0-9]+)/client_requirements/attachment$',client_views.ClienRequirementsAttachments.as_view(), name='client_requirements_attachments'),
+    url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
+    
+    # -----------------------------------------
+    
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/client_user$', audit_store_views.AuditStoreIdClientUserView.as_view(), name='audit_store_id_client_user_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', attachment_views.AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),

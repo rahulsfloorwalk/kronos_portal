@@ -90,6 +90,18 @@ def sign_up_market_place(data):
     return response, status
     
 def log_in_market_place(data):
-    pass
+    username = data.get("username")
+    password = data.get("password")
+    user = authenticate(username,password)
+    if user:
+        token, created = Token.objects.get_or_create(user=user)
+        
+        result = market_place_api.get_client_dashboard_data(user.id)
+        response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+        status = 200
+    else:
+        response = {'detail': 'Username or Password incorrect'}
+        status = 400
+    return response, status
     
     

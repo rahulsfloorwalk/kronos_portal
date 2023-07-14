@@ -11,6 +11,9 @@ class CategoryRow extends React.Component {
 		category_name: PropTypes.shape({
 			id: PropTypes.number,
 			name: PropTypes.string,
+			overview: PropTypes.string,
+			short_description: PropTypes.string,
+			url_structure: PropTypes.string,
 		}),
 		onDelete: PropTypes.func.isRequired,
 	};
@@ -37,8 +40,8 @@ class CategoryRow extends React.Component {
 export default class CategoryList extends React.Component {
 	static propTypes = {
 		children: PropTypes.node,
-		onChange: PropTypes.func.isRequired,
-		onDelete: PropTypes.func.isRequired,
+		onChange: PropTypes.func,
+		onDelete: PropTypes.func,
 	};
 	state = {
 		category_names: [],
@@ -77,7 +80,7 @@ export default class CategoryList extends React.Component {
 		return (
 			<div className="panel panel-default table-responsive">
 				<h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
-Category Table
+				Category Table
 					<Link to="/admindashboard/category/add" className="btn btn-default pull-right"><Plus /> Add Category</Link>
 				</h3>
 				<div style={{ padding: "2rem" }}>

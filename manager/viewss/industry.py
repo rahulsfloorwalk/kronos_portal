@@ -7,6 +7,15 @@ from manager.serializers import IndustrySerializer
 from manager.models import MPIndustry
 from django.http import HttpResponse
 from kronos.exceptions import AppLogicError
+from rest_framework.permissions import AllowAny
+# from manager.decorator import rate_limit
+class PublicIndustryView(APIView):
+    permission_classes = [AllowAny]
+    # @rate_limit
+    def get(self, request, format=None):
+        industry = industry_service.find_all_industries()
+        return Response(IndustrySerializer(industry, many=True).data)
+
 class IndustryView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -27,6 +36,12 @@ class IndustryView(APIView):
         savedIndustry =industry_service.save(industry)
         return Response(IndustrySerializer(savedIndustry).data)
 
+class PublicIndustryIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    # @rate_limit
+    def get(self, request, industry_id, format=None):
+        industry = industry_service.find_industry_by_id(industry_id)
+        return Response(IndustrySerializer(industry).data)
 class IndustryIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

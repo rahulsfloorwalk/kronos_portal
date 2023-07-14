@@ -5,36 +5,34 @@ export function findCategories(){
 	return $.get( url.api_base_path + "manager/category");
 }
 
-export function findById(categoryId){
+export function findCategoryById(categoryId){
 	return $.get( url.api_base_path + `manager/category/${categoryId}`);
 }
 
-export function addCategory(name){
+export function addCategory(formData){
 	return $.ajax({
 		url: url.api_base_path + "manager/category",
 		method: "POST",
-		data: JSON.stringify({
-			name,
-		}),
-		contentType: "application/json"
+		data: formData,
+		processData: false,
+		contentType: false,
 	});
 }
 
-export function updateCategory(categoryId, name){
+export function updateCategory(categoryId,formData ){
 	return $.ajax({
 		url: url.api_base_path + `manager/category/${categoryId}`,
 		method: "POST",
-		data: JSON.stringify({
-			name,
-		}),
-		contentType: "application/json"
+		data: formData,
+		processData: false,
+		contentType: false,
 	});
 }
 
 export function deleteCategory(categoryId){
 	return $.ajax({
 		url: url.api_base_path + `manager/category/${categoryId}`,
-		type: "DELETE"
+		type: "DELETE",
 	});
 }
 export function findSubCategories(){
