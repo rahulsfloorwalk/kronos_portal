@@ -92,9 +92,9 @@ export default class CategoryForm extends React.Component {
 			);
 		}
 		promise.then(function () {
-			Alert.success('category added');
 			hashHistory.push("/admindashboard/category");
-
+			Alert.success("category added");
+			
 		}, (errors) => {
 			if (errors.responseJSON) {
 				this.setState({
@@ -156,7 +156,7 @@ export default class CategoryForm extends React.Component {
 						{this.props.params.categoryId &&
 							<div className="col-md-12" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
 								<h5><b>Check your previously uploaded Image ⬇️ </b></h5>
-								<a href={url.api_base_path + this.state.uploadedImageUrl} target="_blank">Previously Uploaded Image</a>
+								<a href={url.api_base_path + this.state.uploadedImageUrl} target="_blank" without rel="noopener noreferrer">Previously Uploaded Image</a>
 							</div>
 						}
 					</div>
