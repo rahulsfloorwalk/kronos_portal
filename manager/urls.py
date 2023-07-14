@@ -74,6 +74,12 @@ urlpatterns = ([
     url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
     
+    url(r'public_category/(?P<category_id>[0-9]+)/attachment$',category_views.PublicCategoryAttachmentView.as_view(),name='public_category_attachment_view'),
+    url(r'category/(?P<category_id>[0-9]+)/attachment$',category_views.CategoryAttachmentView.as_view(),name='category_attachment_view'),
+    
+    url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
+    url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
+    
     url(r'public_interested_area$', interested_area_views.PublicInterestedAreaView.as_view(), name='public_interested_area_view'),
     url(r'interested_area$', interested_area_views.InterestedAreaView.as_view(), name='interested_area_view'),
     url(r'public_interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.PublicInterestedAreaIdView.as_view(), name='public_interested_area_id_view'),

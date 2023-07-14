@@ -96,7 +96,7 @@ class MPCategory(Model):
     url_structure = CharField(db_column='url_structure', max_length=200, blank=False)
     overview = CharField(db_column='overview', max_length=200, blank=False)
     short_description = CharField(db_column='short_description', max_length=200, blank=False)
-    image = ImageField(upload_to='manager/static/images/category/',db_column="image",blank=True)
+    attachments = GenericRelation('attachment.Attachment', related_query_name='categories')
     def __str__(self):
         return 'Category({}): {}'.format(self.id, self.name)
 

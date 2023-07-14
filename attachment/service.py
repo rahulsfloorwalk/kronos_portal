@@ -32,7 +32,8 @@ from audit.service import audit_cycle_proof_tag
 from questionnaire.service.section_proof_tag import get_section_id_by_audit_cycle_proof_tag_id
 from answer.service import report_section as answer_service_report_section
 from manager.service import solution_service
-from manager.models import MPSolution
+from manager.service import category as category_service
+from manager.models import MPSolution,MPCategory
 _logger = logging.getLogger(__name__)
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -157,6 +158,16 @@ def upload_for_solution(solution_id, file_name, file_size, mime_type):
     attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], solution)
     return (post_data, attachment)
 
+def upload_for_category(category_id,file_name,file_size,mime_type):
+    category = category_service.find_category_by_id(category_id)
+    check_file_size(file_size)
+    basename, file_extension = parse_file_name(file_name)
+    valid_file_type(mime_type, file_extension)
+    proof_type = get_proof_type(mime_type)
+    post_data = get_signed_post(file_extension)
+    attachment = upload_for_object(proof_type, mime_type, file_name, file_size, post_data["fields"]["key"], category)
+    return (post_data, attachment)
+
 def upload_for_report_section(audit_store_id, section_id, file_name, file_size, mime_type):
     audit_store = audit_store_service.find_by_id(audit_store_id)
     report_section = report_section_service.find_by_audit_store_and_section(audit_store.id, section_id)
@@ -226,11 +237,20 @@ def get_solution_for_attachment(attachment_id: int) -> MPSolution:
         return solution_service.find_by_id(attachment.object_id)
     raise AppLogicError("Invalid Attachment Content Type3")
 
+def get_category_for_attachment(attachment_id: int) -> MPCategory:
+    attachment = find_by_id(attachment_id)
+    if attachment.content_type.model_class() is MPCategory:
+        return category_service.find_category_by_id(attachment.object_id)
+    raise AppLogicError("Invalid Attachment Content Type3")
+
 def find_by_audit_store(audit_store_id):
     return Attachment.objects.filter(audit_stores__id=audit_store_id, status=Attachment.ATTACHED).order_by('id')
 
 def find_by_solution(solution_id):  
     return Attachment.objects.filter(solutions__id=solution_id,status=Attachment.ATTACHED).order_by('id')
+
+def find_by_category(category_id):
+    return Attachment.objects.filter(cateogries__id=category_id,status=Attachment.ATTACHED).order_by('id')
 
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)

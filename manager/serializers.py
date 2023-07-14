@@ -482,20 +482,7 @@ class CategorySerializer(ModelSerializer):
             'url_structure',
             'overview',
             'short_description',
-            'image'
         )
-    
-    # def deserialize(self):
-    #     if self.context.get('id') is not None:
-    #         cat = MPCategory.objects.get(id=self.context.get('id'))
-    #     else:
-    #         cat = MPCategory()
-    #     cat.name = self.validated_data.get('name', cat.name)
-    #     cat.url_structure = self.validated_data.get('url_structure', cat.url_structure)
-    #     cat.overview = self.validated_data.get('overview', cat.overview)
-    #     cat.short_description = self.validated_data.get('short_description', cat.short_description)
-    #     cat.image=self.validated_data.get('image', cat.image)
-    #     return cat
     
 class InterestedAreaSerializer(ModelSerializer):
     class Meta:
