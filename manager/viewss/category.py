@@ -90,8 +90,9 @@ class CategoryIdView(APIView):
 class PublicCategoryAttachmentView(APIView):
     permission_classes=[AllowAny]
     def get(self,request,category_id):
-        attachement = category_attachement_service.find_attachment_by_category_id(category_id)
-        return Response(AttachmentSerializer(attachement,many=True).data)
+        attachment = category_attachement_service.find_attachment_by_category_id(category_id)
+        return Response(AttachmentSerializer(attachment,many=True).data)
+    
 class CategoryAttachmentView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups ={

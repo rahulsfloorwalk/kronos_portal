@@ -40,9 +40,8 @@ export default class CategoryAttachmentUploadBox extends React.Component {
 	};
 
 	componentDidMount() {
-		
 		if (this.props.params.categoryId) {
-				findCategoryById(this.props.params.categoryId).then((category) => {
+			findCategoryById(this.props.params.categoryId).then((category) => {
 				this.setState({
 					category: Object.assign({}, category)
 				});
@@ -53,12 +52,11 @@ export default class CategoryAttachmentUploadBox extends React.Component {
 
 	uploadButtonClicked = () => {
 		if (this.state.attachments.length > 0) {
-		  Alert.warning("You must delete the previously uploaded image before uploading a new one");
-		  return;
+			Alert.warning("You must delete the previously uploaded image before uploading a new one");
+			return;
 		}
 		this.uploadInput.click();
-	  };
-
+	};
 	setProgressState = (tempId, progressState) => {
 		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
@@ -189,7 +187,7 @@ export default class CategoryAttachmentUploadBox extends React.Component {
 					<Link to="/admindashboard/category">   <Cross /></Link>
 				</div>
 				<div className="panel-heading" style={{ cursor: "pointer" }} onClick={this.toggleExpand}>
-					<input type="file" 
+					<input type="file"
 						onChange={this.uploadFile}
 						disabled={this.state.uploading}
 						ref={(input) => this.uploadInput = input}

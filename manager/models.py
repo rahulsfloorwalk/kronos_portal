@@ -1,12 +1,12 @@
-from django.db.models import Model,CASCADE, CharField,ImageField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
+from django.db.models import Model,CASCADE,SET_NULL, CharField, AutoField,PositiveIntegerField, ForeignKey, DecimalField, BooleanField, DateTimeField, IntegerField
 from django.db.models import PROTECT
 from django.utils import timezone
 from kronos.exceptions import AppLogicError
-
+from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
 from manager import states
 from django.contrib.postgres.fields import JSONField
-
+from django.conf import settings
 from manager import country
 from jsonschema import validate
 from jsonschema.exceptions import ValidationError
@@ -321,3 +321,30 @@ class MPSolutionOtherDetails(Model):
     audit_fee = IntegerField(db_column='earnings_per_audit', blank=False, null=False)
     def __str__(self):
         return 'MPSolutionOtherDetails({}): {}  {}'.format(self.id, self.audit_fee,self.solution)
+
+class MPStore(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    code = CharField(db_column='code', max_length=20, blank=True, null=True, default=None)
+    priority = CharField(db_column='priority', max_length=50, blank=True, default='')
+    user = ForeignKey(User, null=True, blank=True, on_delete=SET_NULL)
+    name = CharField(db_column='name', max_length=500, blank=False)
+    address = CharField(db_column='address', max_length=1024, blank=False)
+    location = ForeignKey('manager.Location', db_column='location_id', blank=True, null=True, on_delete=PROTECT)
+    city = ForeignKey('manager.City', db_column='city_id', null=True, on_delete=PROTECT)
+    phone = CharField(db_column='phone', max_length=100, blank=True)
+    map_location_link = CharField(db_column='map_location_link', max_length=1024, blank=True, default='')
+    pincode = CharField(db_column='pincode', max_length=20, blank=True, null=True, default=None)
+    
+    created_at = DateTimeField(db_column="created_at", null=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True)
+
+    def save(self,*args,**kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(MPStore, self).save(*args, **kwargs)
+    
+    def __str__(self):
+        return 'MPStore({}): {} '.format(self.id, self.name)
+    

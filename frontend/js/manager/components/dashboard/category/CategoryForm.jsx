@@ -84,7 +84,6 @@ export default class CategoryForm extends React.Component {
 		promise.then(function () {
 			hashHistory.push("/admindashboard/category");
 			Alert.success("category added");
-			
 		}, (errors) => {
 			if (errors.responseJSON) {
 				this.setState({

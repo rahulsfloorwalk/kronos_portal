@@ -8,7 +8,6 @@ from django.db.models import PROTECT
 from django.conf import settings
 from kronos.utils import get_color_code_by_percentage, get_rank_by_percentage, validate_pan
 from guardian.shortcuts import assign_perm
-
 from registration.models import GROUP_NAME_CLIENT
 
 # from jsonschema import validate
@@ -404,6 +403,7 @@ class MPClientProfileInfo(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
     mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)
+    company_name = CharField(db_column='company_name', max_length=15, blank=False)
     def __str__(self):
         return "ClientProfile: {} {}".format(self.id, self.mobile_number)
         
