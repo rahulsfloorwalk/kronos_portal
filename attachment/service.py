@@ -250,7 +250,7 @@ def find_by_solution(solution_id):
     return Attachment.objects.filter(solutions__id=solution_id,status=Attachment.ATTACHED).order_by('id')
 
 def find_by_category(category_id):
-    return Attachment.objects.filter(cateogries__id=category_id,status=Attachment.ATTACHED).order_by('id')
+    return Attachment.objects.filter(categories__id=category_id,status=Attachment.ATTACHED).order_by('id')
 
 def find_by_audit_store_and_section(audit_store_id, section_id):
     report_section = report_section_service.find_by_audit_store_and_section(audit_store_id, section_id)

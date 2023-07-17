@@ -144,6 +144,7 @@ import DashQuestionForm from "./dashboard/questiones/DashQuestionForm.jsx";
 import DashProofsTags from "./dashboard/prooftags/DashProofTags.jsx";
 import DetailsForm from "./dashboard/details/DetailsForm.jsx";
 import SolutionAttachmentUploadBox from "./dashboard/attachments/SolutionAttachmentUploadBox.jsx";
+import CategoryAttachmentUploadBox from "./dashboard/category/CategoryAttachmentUploadBox.jsx";
 
 const Routes = () => (
 	<Router history={hashHistory}>
@@ -155,7 +156,7 @@ const Routes = () => (
 				<Route path="category" component={CategoryList}>
 					<Route path="add" component={CategoryForm} />
 					<Route path=":categoryId/edit" component={CategoryForm} />
-
+					<Route path=":categoryId/attachment" component={CategoryAttachmentUploadBox} />
 				</Route>
 				<Route path="subcategory" component={SubCategoryList}>
 					<Route path="add" component={SubCategoryForm} />

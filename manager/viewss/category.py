@@ -91,7 +91,7 @@ class PublicCategoryAttachmentView(APIView):
     permission_classes=[AllowAny]
     def get(self,request,category_id):
         attachement = category_attachement_service.find_attachment_by_category_id(category_id)
-        return Response(AttachmentSerializer(attachement).data)
+        return Response(AttachmentSerializer(attachement,many=True).data)
 class CategoryAttachmentView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups ={
@@ -100,7 +100,7 @@ class CategoryAttachmentView(APIView):
     }
     def get(self,request,category_id):
         attachment = category_attachement_service.find_attachment_by_category_id(category_id)
-        return Response(AttachmentSerializer(attachment).data)
+        return Response(AttachmentSerializer(attachment,many=True).data)
     def post(self,request,category_id):
         try:
             post_data, attachment = category_attachement_service.category_image_upload_by_category_id(
