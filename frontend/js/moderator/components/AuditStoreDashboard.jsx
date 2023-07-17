@@ -51,7 +51,7 @@ class AuditStoreList2 extends Component{
 				<td className="text-right">{as.audit.reimbursement}</td>
 				<td>{as.audit.store.city.name}</td>
 				<td>{moment(as.audit_date).format(momentDateFormat)}</td>
-				<td><AuditStoreStatusLabel status={as.status}/></td>
+				<td><AuditStoreStatusLabel status={as.status}/> {as.report_revert_count>0 ? <span><i>Reverted({as.report_revert_count})</i></span>:null}</td>
 				<td>
 					<Link to={`/audit_store/${as.id}/report`} target="_blank" className="btn btn-default">View</Link>
 				</td>

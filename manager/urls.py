@@ -38,6 +38,7 @@ from .viewss import industry as industry_views
 from .viewss import interested_area as interested_area_views
 from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
+from .viewss import mp_store as mp_store_views
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
     url(r'notifications/actors$', notification_views.NotificationActorsView.as_view(), name='notification_actors_view'),
@@ -73,6 +74,12 @@ urlpatterns = ([
     url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
     url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
+    
+    url(r'public_category/(?P<category_id>[0-9]+)/attachment$',category_views.PublicCategoryAttachmentView.as_view(),name='public_category_attachment_view'),
+    url(r'category/(?P<category_id>[0-9]+)/attachment$',category_views.CategoryAttachmentView.as_view(),name='category_attachment_view'),
+    
+    url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
+    url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
     url(r'public_interested_area$', interested_area_views.PublicInterestedAreaView.as_view(), name='public_interested_area_view'),
     url(r'interested_area$', interested_area_views.InterestedAreaView.as_view(), name='interested_area_view'),
@@ -115,8 +122,10 @@ urlpatterns = ([
     url(r'solution/(?P<solution_id>[0-9]+)/other_detail$', solution_views.SolutionIdOtherDetailsAddView.as_view(), name='solution_id_other_details_add_view'),
     url(r'solution/(?P<detail_id>[0-9]+)/other_details$', solution_views.SolutionOtherDetailsView.as_view(), name='solution_other_details_view'),
     
-    url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
     
+    # Market place User Dashboard
+    url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
+    url (r'mp_store$',mp_store_views.MpStoreView.as_view(),name='mp_store_view'),
     # -----------------------------------------
     
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 

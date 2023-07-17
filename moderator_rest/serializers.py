@@ -189,6 +189,7 @@ class AuditStoreSerializerForList(ModelSerializer):
         fields = (
             'id',
             'status',
+            'report_revert_count',
             'audit_date',
             'audit',
             'user',

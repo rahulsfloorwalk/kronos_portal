@@ -151,6 +151,11 @@ export default class AllSolutionForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
+						<div className="col-md-12">
+						<FormInput label="About" type="text" value={this.state.solution.about} name="about" onChange={this.fieldChanged} errors={this.state.errors.about} placeholder="About" />
+						</div>
+					</div>
+					<div className="row">
 						<div className="col-md-6">
 							<FormSelect
 								label="Category"
@@ -247,18 +252,7 @@ export default class AllSolutionForm extends React.Component {
 							/>
 						</div>
 					</div>
-					<div className="row" style={{ marginTop: "2rem" }}>
-						<div className="col-md-12">
-							<label>About</label>
-							<JoditEditor
-								name="about"
-								value={this.state.solution.about}
-								onChange={(newContent) => this.handleEditorChange("about", newContent)}
-								errors={this.state.errors.about}
-							/>
-						</div>
-					</div>
-
+					
 					<SaveButton />
 				</form>
 			</Modal>

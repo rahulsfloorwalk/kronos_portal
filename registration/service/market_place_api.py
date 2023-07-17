@@ -21,6 +21,7 @@ _logger = logging.getLogger(__name__)
 
 
 def authenticate(username=None,password=None):
+    print('24',username,password)
     u = username.strip()
     p = password.strip()
     try:
@@ -67,13 +68,14 @@ def sign_up_market_place(data):
     user=User()
     user.email = data.get("username")
     user.phone = data.get("phone")
+    user.company_name = data.get("company_name")
     user.username = str.lower(data.get("username"))
     user.set_password(data.get("password"))
     user.save()
     user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
     user.save()
     
-    client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
+    client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone,company_name = user.company_name)
     client_profile.save()
     
     login_user = authenticate(data.get("username"),data.get("password"))

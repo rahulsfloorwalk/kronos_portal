@@ -25,8 +25,11 @@ def get_client_dashboard_data(user_id):
     result={
         'client_profile_info' :
             {
+                'id': client_profile.id,
                 'mobile_number': client_profile.mobile_number,
-                'email': client_profile.user.email
+                'email': client_profile.user.email,
+                'company_name': client_profile.company_name,
+                'user_id': user_id
             }
     }
     return result

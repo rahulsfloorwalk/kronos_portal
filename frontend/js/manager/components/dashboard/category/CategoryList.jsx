@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import { Plus, Pencil, Cross } from "../../../../components/Icons.jsx";
+import { Plus, Pencil, Cross, Paperclip } from "../../../../components/Icons.jsx";
 import { findCategories, deleteCategory } from "../../../service/admin_dashboard.js";
 import Alert from "react-s-alert";
 
@@ -23,7 +23,7 @@ class CategoryRow extends React.Component {
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.category_name.name}</td>
 				<td>
-					<span style={{marginRight:"2rem"}}>
+					<span style={{ marginRight: "2rem" }}>
 						<Link
 							to={`/admindashboard/category/${this.props.category_name.id}/edit`}
 							className="btn btn-default"><Pencil /></Link>
@@ -31,6 +31,9 @@ class CategoryRow extends React.Component {
 					<button type="button"
 						onClick={() => this.props.onDelete(this.props.category_name)}
 						className="btn btn-default"><Cross /></button>
+					<Link to={`/admindashboard/category/${this.props.category_name.id}/attachment`}>
+						<button className="btn btn-default" style={{ marginLeft: "1rem" }}><Paperclip /></button>
+					</Link>
 				</td>
 			</tr>
 		);
@@ -80,7 +83,7 @@ export default class CategoryList extends React.Component {
 		return (
 			<div className="panel panel-default table-responsive">
 				<h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
-				Category Table
+					Category Table
 					<Link to="/admindashboard/category/add" className="btn btn-default pull-right"><Plus /> Add Category</Link>
 				</h3>
 				<div style={{ padding: "2rem" }}>

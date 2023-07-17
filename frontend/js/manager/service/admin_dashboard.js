@@ -35,6 +35,110 @@ export function deleteCategory(categoryId){
 		type: "DELETE",
 	});
 }
+//--------------------------------------------------------------------------------
+
+export function findAttachmentsByCategory(categoryId){
+	return $.get(url.api_base_path + `manager/category/${categoryId}/attachment`);
+
+}
+export function completeCategoryAttachment(attachmentId,categoryId){
+	return $.ajax({
+		url: url.api_base_path + `manager/category_attachment/${attachmentId}/complete`,
+		type: "POST",
+		data: JSON.stringify(categoryId),
+		contentType: "application/json"
+	});
+}
+export function doCategoryAttachmentUpload(url, file,categoryId){
+	let mainPromise = $.Deferred();
+
+	let payload = {
+		"file_name": file.name,
+		"file_size": file.size,
+		"file_type": file.type
+	};
+
+	mainPromise.notify("INIT");
+	let req = $.ajax({
+		type: "POST",
+		url: url,
+		data: JSON.stringify(payload),
+		contentType: "application/json"
+	});
+
+	req.done(function(post_data){
+		mainPromise.notify("STARTING_UPLOAD");
+
+		var formData = new FormData();
+		formData.append("x-amz-credential", post_data.fields["x-amz-credential"]);
+		formData.append("x-amz-algorithm", post_data.fields["x-amz-algorithm"]);
+		formData.append("x-amz-date", post_data.fields["x-amz-date"]);
+		formData.append("x-amz-signature", post_data.fields["x-amz-signature"]);
+		formData.append("acl", post_data.fields.acl);
+		formData.append("policy", post_data.fields.policy);
+		formData.append("key", post_data.fields.key);
+		formData.append("success_action_status", "201");
+		formData.append("file", file);
+
+		$.ajax({
+			url: post_data.url,
+			type: "POST",
+			data: formData,
+			processData: false,
+			contentType: false,
+			xhr: function() {
+				let myXhr = $.ajaxSettings.xhr();
+				if(myXhr.upload){
+					myXhr.upload.addEventListener("progress",function(e){
+						if(e.lengthComputable){
+							let max = e.total;
+							let current = e.loaded;
+
+							let percentage = (current * 100)/max;
+							mainPromise.notify("UPLOAD_PROGRESS", percentage);
+						}
+					}, false);
+				}
+				return myXhr;
+			},
+		}).then(function(){
+			completeCategoryAttachment(post_data.attachment.id,categoryId).then(function(){
+				mainPromise.resolve();
+			}, function(){
+				mainPromise.reject("There was an error, please try again.");
+			});
+		}, function(){
+			mainPromise.reject("There was an error, please try again.");
+		});
+	});
+
+	req.fail(function(err){
+		if(err && err.responseJSON && err.responseJSON.non_field_errors){
+			mainPromise.reject(err.responseJSON.non_field_errors[0]);
+		} else {
+			mainPromise.reject("There was an error, please try again.");
+		}
+	});
+
+	return mainPromise;
+}
+export function uploadFileForCategories(categoryId,file){
+	var req_url = url.api_base_path + `manager/category/${categoryId}/attachment`;
+	return doCategoryAttachmentUpload(req_url, file,categoryId);
+}
+
+export function deleteCategoryAttachment(attachmentId,categoryId){
+	return $.ajax({
+		url: url.api_base_path + `manager/category_attachment/${attachmentId}/delete`,
+		type: "DELETE",
+		data: JSON.stringify(categoryId),
+		contentType: "application/json"
+	});
+
+}
+
+// ---------------------------------------------------------------------------------------------------
+
 export function findSubCategories(){
 	return $.get( url.api_base_path + "manager/subcategory_sub");
 }

@@ -9,9 +9,8 @@ import Modal from "../../../../components/Modal.jsx";
 import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
 import JoditEditor from "jodit-react";
-import { url } from "../../../../../config.js";
-
 import Alert from "react-s-alert";
+
 export default class CategoryForm extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
@@ -27,8 +26,6 @@ export default class CategoryForm extends React.Component {
 			overview: "",
 			short_description: "",
 		},
-		image: null,
-		uploadedImageUrl: "",
 		errors: {
 		}
 	};
@@ -47,7 +44,6 @@ export default class CategoryForm extends React.Component {
 			findCategoryById(this.props.params.categoryId).then((category) => {
 				this.setState({
 					category: Object.assign({}, category),
-					uploadedImageUrl: category.image.split("/").slice(1).join("/")
 				});
 			}).always(() => this.setLoading(false));
 		}
@@ -66,11 +62,6 @@ export default class CategoryForm extends React.Component {
 			}
 		});
 	};
-	handleImageChange = (event) => {
-		this.setState({
-			image: event.target.files[0]
-		});
-	};
 	onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
@@ -79,7 +70,6 @@ export default class CategoryForm extends React.Component {
 		formData.append("url_structure", this.state.category.url_structure);
 		formData.append("overview", this.state.category.overview);
 		formData.append("short_description", this.state.category.short_description);
-		this.state.image && formData.append("image", this.state.image);
 
 		if (this.props.params.categoryId) {
 			promise = updateCategory(
@@ -94,7 +84,6 @@ export default class CategoryForm extends React.Component {
 		promise.then(function () {
 			hashHistory.push("/admindashboard/category");
 			Alert.success("category added");
-			
 		}, (errors) => {
 			if (errors.responseJSON) {
 				this.setState({
@@ -132,7 +121,7 @@ export default class CategoryForm extends React.Component {
 							/>
 						</div>
 					</div>
-					<div className="row" style={{ marginTop: "2rem" }}>
+					<div className="row" style={{ marginTop: "2rem", marginBottom: "1rem" }}>
 						<div className="col-md-12">
 							<label>Short Description</label>
 							<JoditEditor
@@ -142,23 +131,6 @@ export default class CategoryForm extends React.Component {
 								errors={this.state.errors.short_description}
 							/>
 						</div>
-					</div>
-					<div className="row" style={{ marginTop: "1rem",marginBottom: "1rem" }}>
-						<div className="col-md-12">
-							<label>Cover Image</label>
-							<input
-								type="file"
-								id="image"
-								accept="image/*"
-								onChange={this.handleImageChange}
-							/>
-						</div>
-						{this.props.params.categoryId &&
-							<div className="col-md-12" style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-								<h5><b>Check your previously uploaded Image ⬇️ </b></h5>
-								<a href={url.api_base_path + this.state.uploadedImageUrl} target="_blank" without rel="noopener noreferrer">Previously Uploaded Image</a>
-							</div>
-						}
 					</div>
 					<SaveButton />
 				</form>
