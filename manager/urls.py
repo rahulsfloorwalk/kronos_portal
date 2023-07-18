@@ -102,6 +102,8 @@ urlpatterns = ([
     url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)/full_details$', solution_views.PublicSolutionIdFullDetailsView.as_view(), name='public_solution_id_full_details_view'),
+    
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
     
     
