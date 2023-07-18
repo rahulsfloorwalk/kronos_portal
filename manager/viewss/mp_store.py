@@ -7,8 +7,7 @@ from manager.models import MPStore
 from django.contrib.auth.models import User
 from manager.serializers import CitySerializer
 from manager.service import mp_store_service
-from client.models import MPClientProfileInfo
-
+from kronos.exceptions import ObjectNotFound
 class UserSerializer(ModelSerializer):
     class Meta:
         model = User
@@ -43,7 +42,7 @@ class MpStoreDeSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
-            'address',
+                'address',
             'user',
             'code',
             'pincode',
@@ -83,6 +82,27 @@ class MpStoreView(APIView):
     def post(self,request):
         mp_store_ds = MpStoreDeSerializer(data=request.data)
         mp_store_ds.is_valid(raise_exception=True)
-        mp_store = mp_store_ds.deserialize()
-        saved_mpStore = mp_store_service.save(mp_store)
-        return Response(MpStoreSerializer(saved_mpStore).data)
+        store= mp_store_ds.save()
+        return Response(MpStoreSerializer(store).data)
+
+class MpStoreIdView(APIView):
+    permission_classes=[AllowAny]
+    def get_store(self,store_id):
+        try:
+            return MPStore.objects.get(pk=store_id)
+        except MPStore.DoesNotExist as e:
+            raise ObjectNotFound from e
+    def get(self,request,store_id):
+        store = self.get_store(store_id)
+        return Response(MpStoreSerializer(store).data)
+    def post(self,request,store_id):
+        store_ds = self.get_store(store_id)
+        serializer = MpStoreDeSerializer(store_ds, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+    def delete(self,request,store_id):
+        store = self.get_store(store_id)
+        store.delete()
+        return Response()
+        

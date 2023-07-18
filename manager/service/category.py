@@ -1,10 +1,46 @@
 from ..models import MPCategory
 from django.db.utils import IntegrityError
 from kronos.exceptions import ObjectNotFound,AppLogicError
-
+from ..service import category_attachement_service
+from attachment.models import Attachment
 def find_all_categories():
     return MPCategory.objects.all()
 
+def find_all_public_categories():
+    cats = MPCategory.objects.all()
+    result = []
+    for category in cats:
+        attachments = Attachment.objects.filter(categories__id=category.id, status=Attachment.ATTACHED).all()
+        attachments_data = []
+        for attachment in attachments:
+            thumbnail_url = attachment.extra()["thumbnail_url"]
+            preview_url = attachment.extra()["preview_url"]
+            attachments_data.append({
+                "id": attachment.id,
+                "file_slug": attachment.file_slug,
+                "proof_type": attachment.proof_type,
+                "mime_type": attachment.mime_type,
+                "file_name": attachment.file_name,
+                "file_size": attachment.file_size,
+                "status": attachment.status,
+                "created_at": attachment.created_at,
+                "modified_at": attachment.modified_at,
+                "completed_at": attachment.completed_at,
+                "attachment_id": attachment.attachment_id,
+                "extra_properties": attachment.extra_properties,
+                "audio_transcript_data": attachment.audio_transcript_data,
+                "thumbnail_url": thumbnail_url,
+                "preview_url": preview_url,
+            })
+        result.append({
+            "id": category.id,
+            "name": category.name,
+            "url_structure": category.url_structure,
+            "overview": category.overview,
+            "short_description": category.short_description,
+            "attachments": attachments_data,
+        })
+    return result
 def save(category):
     category.save()
     return category

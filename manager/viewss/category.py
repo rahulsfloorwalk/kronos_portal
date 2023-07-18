@@ -15,9 +15,9 @@ class PublicCategoryView(APIView):
     permission_classes = [AllowAny]
     # @rate_limit
     def get(self, request, format=None):
-        cats = category_service.find_all_categories()
-        serializer = CategorySerializer(cats, many=True)
-        return Response(serializer.data)
+        cats = category_service.find_all_public_categories()
+        return Response(cats)
+
 class CategoryView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -91,6 +91,7 @@ class PublicCategoryAttachmentView(APIView):
     permission_classes=[AllowAny]
     def get(self,request,category_id):
         attachment = category_attachement_service.find_attachment_by_category_id(category_id)
+        print(attachment,'93')
         return Response(AttachmentSerializer(attachment,many=True).data)
     
 class CategoryAttachmentView(APIView):
