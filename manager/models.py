@@ -348,3 +348,12 @@ class MPStore(Model):
     def __str__(self):
         return 'MPStore({}): {} '.format(self.id, self.name)
     
+class MPOrder(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    no_of_response = IntegerField(db_column='no_of_response',blank=True,default=1)
+    solution = ForeignKey(MPSolution, related_name='mporders', db_column='solution_id', on_delete=PROTECT,blank=False)
+    describe = CharField(db_column='describe',blank=True,max_length=16384)
+    alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True)
+    store = JSONField(db_column='stores', default=list, blank=True)
+    def __str__(self):
+        return 'MPOrder({}): Solution{} '.format(self.id, self.solution)

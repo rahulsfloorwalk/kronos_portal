@@ -39,6 +39,7 @@ from .viewss import interested_area as interested_area_views
 from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
 from .viewss import mp_store as mp_store_views
+from .viewss import mp_order as mp_order_views
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
     url(r'notifications/actors$', notification_views.NotificationActorsView.as_view(), name='notification_actors_view'),
@@ -126,6 +127,11 @@ urlpatterns = ([
     # Market place User Dashboard
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
     url (r'mp_store$',mp_store_views.MpStoreView.as_view(),name='mp_store_view'),
+    url (r'mp_store/(?P<store_id>[0-9]+)$',mp_store_views.MpStoreIdView.as_view(),name='mp_store_id_view'),
+    
+    url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
+    url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
+    
     # -----------------------------------------
     
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 

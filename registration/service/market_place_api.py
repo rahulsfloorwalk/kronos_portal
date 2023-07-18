@@ -67,6 +67,8 @@ def sign_up_market_place(data):
     
     user=User()
     user.email = data.get("username")
+    user.first_name = data.get("first_name")
+    user.last_name = data.get("last_name"," ")
     user.phone = data.get("phone")
     user.company_name = data.get("company_name")
     user.username = str.lower(data.get("username"))
@@ -75,7 +77,7 @@ def sign_up_market_place(data):
     user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
     user.save()
     
-    client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone,company_name = user.company_name)
+    client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone,company_name = user.company_name,first_name = user.first_name,last_name = user.last_name)
     client_profile.save()
     
     login_user = authenticate(data.get("username"),data.get("password"))

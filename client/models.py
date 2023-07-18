@@ -402,8 +402,10 @@ class ClientForEcomm(Model):
 class MPClientProfileInfo(Model):
     id = AutoField(db_column = 'id', primary_key=True)
     user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    first_name = CharField(db_column='first_name', max_length=150, blank=False)
+    last_name = CharField(db_column='last_name', max_length=150, blank=True,default='')
     mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)
     company_name = CharField(db_column='company_name', max_length=15, blank=False)
     def __str__(self):
-        return "ClientProfile: {} {}".format(self.id, self.mobile_number)
+        return "ClientProfileInfo: {} {}".format(self.id, self.first_name)
         
