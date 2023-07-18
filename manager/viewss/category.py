@@ -132,3 +132,9 @@ class CategoryAttachmentCompleteView(APIView):
     def post(self, request, attachment_id):
         attachment = category_attachement_service.complete_for_category(attachment_id, request.data)
         return Response(AttachmentSerializer(attachment).data)
+    
+class PublicCategoryIdBySolutionView(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request,category_id):
+        cats = category_service.find_solution_details_by_category_id(category_id)
+        return Response(cats)

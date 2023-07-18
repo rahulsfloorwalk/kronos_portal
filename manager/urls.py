@@ -72,6 +72,8 @@ urlpatterns = ([
     url(r'tax/(?P<tax_id>[0-9]+)$', tax_views.TaxIdView.as_view(), name='tax_id_view'),
     
     url(r'public_category$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
+    url(r'public_category/(?P<category_id>[0-9]+)/solution_detail$', category_views.PublicCategoryIdBySolutionView.as_view(), name='public_category_id_solution_view'),
+    
     url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
     url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
