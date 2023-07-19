@@ -401,7 +401,7 @@ class ClientForEcomm(Model):
         
 class MPClientProfileInfo(Model):
     id = AutoField(db_column = 'id', primary_key=True)
-    user = ForeignKey(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
+    user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
     first_name = CharField(db_column='first_name', max_length=150, blank=False)
     last_name = CharField(db_column='last_name', max_length=150, blank=True,default='')
     mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)

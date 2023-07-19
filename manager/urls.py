@@ -40,6 +40,7 @@ from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
 from .viewss import mp_store as mp_store_views
 from .viewss import mp_order as mp_order_views
+from .viewss import client_profile as mp_client_profile
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
     url(r'notifications/actors$', notification_views.NotificationActorsView.as_view(), name='notification_actors_view'),
@@ -135,7 +136,7 @@ urlpatterns = ([
     
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    
+    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
     # -----------------------------------------
     
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
