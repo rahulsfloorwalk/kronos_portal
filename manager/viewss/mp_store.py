@@ -42,7 +42,7 @@ class MpStoreDeSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
-                'address',
+            'address',
             'user',
             'code',
             'pincode',

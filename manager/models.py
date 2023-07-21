@@ -326,7 +326,7 @@ class MPStore(Model):
     id = AutoField(db_column='id', primary_key=True)
     code = CharField(db_column='code', max_length=20, blank=True, null=True, default=None)
     priority = CharField(db_column='priority', max_length=50, blank=True, default='')
-    user = ForeignKey(User, null=True, blank=True, on_delete=SET_NULL)
+    user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
     name = CharField(db_column='name', max_length=500, blank=False)
     address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=True, null=True, on_delete=PROTECT)

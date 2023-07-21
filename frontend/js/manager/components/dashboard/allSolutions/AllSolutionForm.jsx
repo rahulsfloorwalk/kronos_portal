@@ -152,7 +152,7 @@ export default class AllSolutionForm extends React.Component {
 					</div>
 					<div className="row">
 						<div className="col-md-12">
-						<FormInput label="About" type="text" value={this.state.solution.about} name="about" onChange={this.fieldChanged} errors={this.state.errors.about} placeholder="About" />
+							<FormInput label="About" type="text" value={this.state.solution.about} name="about" onChange={this.fieldChanged} errors={this.state.errors.about} placeholder="About" />
 						</div>
 					</div>
 					<div className="row">
@@ -252,7 +252,6 @@ export default class AllSolutionForm extends React.Component {
 							/>
 						</div>
 					</div>
-					
 					<SaveButton />
 				</form>
 			</Modal>

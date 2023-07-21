@@ -140,6 +140,7 @@ urlpatterns = ([
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
     url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
     url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
+    url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),
     # -----------------------------------------
   
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
