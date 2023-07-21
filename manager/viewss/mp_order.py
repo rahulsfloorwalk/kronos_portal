@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from manager.service import mp_order_service
-from registration.models import GROUP_NAME_CLIENT
+from registration.models import GROUP_NAME_CLIENT,GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from rest_framework.permissions import AllowAny
 from manager.serializers import SolutionSerializer
@@ -32,14 +32,24 @@ class MpOrderView(APIView):
     }
     def get(self,request):
         if request.user.id:
-            store= MPOrder.objects.filter(user=request.user.id)
+            order= MPOrder.objects.filter(user=request.user.id)
         else:
-            store= MPOrder.objects.all()
-        return Response(OrderSerializer(store,many=True).data)
+            order= MPOrder.objects.all()
+        return Response(OrderSerializer(order,many=True).data)
     def post(self,request):
         response = mp_order_service.add_order(data=request.data)
         order_data = get_order_data(response)
         return JsonResponse(order_data)
 
+
+class MpOrderStatusView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER]
+    }
+    def get(self,request):
+        order=MPOrder.objects.filter(status=request.GET.get('status'))
+        return Response(OrderSerializer(order,many=True).data)
 class MpOrderIdView(APIView):
     pass
