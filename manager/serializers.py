@@ -9,7 +9,7 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City, ProofTag,MPSubcategory,MPIndustry,MPInterestArea,MPCategory,MPTax,MPSolution
+from .models import City, ProofTag,MPSubcategory,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 from attachment.models import Attachment
 class ClientSerializer(ModelSerializer):
@@ -484,39 +484,6 @@ class CategorySerializer(ModelSerializer):
             'short_description',
         )
     
-class InterestedAreaSerializer(ModelSerializer):
-    class Meta:
-        model = MPInterestArea
-        fields = (
-            'id',
-            'name',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if self.context.get('id') is not None:
-            int_area = MPInterestArea.objects.get(id=self.context.get('id'))
-        else:
-            int_area = MPInterestArea()
-        int_area.name = self.validated_data.get('name', int_area.name)
-        return int_area
-class IndustrySerializer(ModelSerializer):
-    class Meta:
-        model = MPIndustry
-        fields = (
-            'id',
-            'name',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if self.context.get('id') is not None:
-            industry = MPIndustry.objects.get(id=self.context.get('id'))
-        else:
-            industry = MPIndustry()
-        industry.name = self.validated_data.get('name', industry.name)
-        return industry
-    
 class SubcategorySerializer(ModelSerializer):
     class Meta:
         model = MPSubcategory
@@ -544,7 +511,6 @@ class SolutionStatusSerializer(ModelSerializer):
         read_only_fields = ('id',)
 class SolutionSerializer(ModelSerializer):
     category = CategorySerializer()
-    sub_category = SubcategorySerializer()
     tax= TaxSerializer()
     class Meta:
         model = MPSolution
@@ -554,7 +520,6 @@ class SolutionSerializer(ModelSerializer):
             'url_structure',
             'price',
             'category',
-            'sub_category',
             'tax',
             'overview',
             'how_it_work',

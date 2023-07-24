@@ -38,30 +38,33 @@ def sign_up_market_place(data):
         response={'detail':'a user with this email already exists'}
         status= 400
         return response,status
-    
-    if not len(data.get('phone')) == 10:
-        response = {'detail': 'Phone number should be 10 digit'}
-        status = 400
-        return response, status
-    if not profile_info_service.mobile_number_pattern.match(data.get('phone')):
-        response = {'detail': 'invalid phone number'}
-        status = 400
-        return response, status
-    if client_mobile_number_service.mobile_number_exists(data.get("phone")):
-        response = {'detail': 'a user with this phone number already exists'}
-        status = 400
-        return response, status
+    if data.get('phone'):
+        if not len(data.get('phone')) == 10:
+            response = {'detail': 'Phone number should be 10 digit'}
+            status = 400
+            return response, status
+        if not profile_info_service.mobile_number_pattern.match(data.get('phone')):
+            response = {'detail': 'invalid phone number'}
+            status = 400
+            return response, status
+        if client_mobile_number_service.mobile_number_exists(data.get("phone")):
+            response = {'detail': 'a user with this phone number already exists'}
+            status = 400
+            return response, status
     
     user=User()
     user.email = data.get("username")
-    user.phone = data.get("phone")
+    if data.get("phone"):
+        user.phone = data.get("phone")
     user.username = str.lower(data.get("username"))
     user.set_password(data.get("password"))
     user.save()
     user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
     user.save()
-    
-    client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
+    if data.get("phone"):
+        client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
+    else:
+        client_profile = MPClientProfileInfo(user_id=user.id)
     client_profile.save()
     
     auth_data = {}
@@ -120,14 +123,29 @@ def log_in_market_place(data):
     password = data.get("password")
     user = authenticate(username,password)
     if user:
-        token, created = Token.objects.get_or_create(user=user)
-        
-        result = market_place_api.get_client_dashboard_data(user.id)
-        response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
-        status = 200
+        if not user.verification.is_verified:
+            response = {'detail': 'Your account is not verified. Please check your email for the verification link.'}
+            status = 400
+        else:
+            token, created = Token.objects.get_or_create(user=user)
+
+            result = market_place_api.get_client_dashboard_data(user.id)
+            response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+            status = 200
     else:
         response = {'detail': 'Username or Password incorrect'}
         status = 400
     return response, status
+        
+        
+    #     token, created = Token.objects.get_or_create(user=user)
+        
+    #     result = market_place_api.get_client_dashboard_data(user.id)
+    #     response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+    #     status = 200
+    # else:
+    #     response = {'detail': 'Username or Password incorrect'}
+    #     status = 400
+    # return response, status
     
     

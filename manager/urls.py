@@ -34,8 +34,6 @@ from .viewss import report_attribute as report_attribute_views
 from .viewss import reports as report_views
 from .viewss import tax as tax_views
 from .viewss import category as category_views
-from .viewss import industry as industry_views
-from .viewss import interested_area as interested_area_views
 from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
 from .viewss import mp_store as mp_store_views
@@ -86,15 +84,6 @@ urlpatterns = ([
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
-    url(r'public_interested_area$', interested_area_views.PublicInterestedAreaView.as_view(), name='public_interested_area_view'),
-    url(r'interested_area$', interested_area_views.InterestedAreaView.as_view(), name='interested_area_view'),
-    url(r'public_interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.PublicInterestedAreaIdView.as_view(), name='public_interested_area_id_view'),
-    url(r'interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.InterestedAreaIdView.as_view(), name='interested_area_id_view'),
-    
-    url(r'public_industry$', industry_views.PublicIndustryView.as_view(), name='public_industry_view'),
-    url(r'industry$', industry_views.IndustryView.as_view(), name='industry_view'),
-    url(r'public_industry/(?P<industry_id>[0-9]+)$', industry_views.PublicIndustryIdView.as_view(), name='public_industry_id_view'),
-    url(r'industry/(?P<industry_id>[0-9]+)$', industry_views.IndustryIdView.as_view(), name='industry_id_view'),
     
     url(r'public_subcategory_sub$', subcategory_views.PublicSubcategoryView.as_view(), name='public_subcategory_view'),
     url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
@@ -137,7 +126,7 @@ urlpatterns = ([
     
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'client_profile/(?P<user_id>[0-9]+)$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
     url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
     url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
     url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),

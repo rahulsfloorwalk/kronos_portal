@@ -100,17 +100,6 @@ class MPCategory(Model):
     def __str__(self):
         return 'Category({}): {}'.format(self.id, self.name)
 
-class MPInterestArea(Model):
-    id = AutoField(db_column='id', primary_key=True)
-    name = CharField(db_column='name', max_length=200, blank=False)
-    def __str__(self):
-        return 'InterestArea({}): {}'.format(self.id, self.name)
-class MPIndustry(Model):
-    id = AutoField(db_column='id', primary_key=True)
-    name = CharField(db_column='name', max_length=200, blank=False)
-    def __str__(self):
-        return 'Industry({}): {}'.format(self.id, self.name)
-
 class MPSubcategory(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
@@ -123,7 +112,6 @@ class MPSolution(Model):
     url_structure = CharField(db_column='url_strucuture',max_length=200,blank=False)
     price = PositiveIntegerField(db_column='price',blank=False,default=0)
     category = ForeignKey(MPCategory, related_name='mpsolutions', db_column='category_id', blank=False, on_delete=PROTECT)
-    sub_category = ForeignKey(MPSubcategory, related_name='mpsolutions', db_column='sub_category_id', blank=True, on_delete=PROTECT)
     tax = ForeignKey(MPTax, related_name='mpsolutions', db_column='tax_id', blank=False, on_delete=PROTECT)
     overview = CharField(db_column='overview', max_length=200, blank=False)
     how_it_work = CharField(db_column='how_it_work', max_length=200, blank=False)

@@ -14,13 +14,14 @@ class ActiveCustomerRow extends React.Component{
 	};
 
 	render (){
+		console.log(this.props)
 		return(
 			<tr>
 				<td>{this.props.seq}</td>
 				<td>{this.props.profile.full_name}</td>
 				<td>{this.props.profile.email}</td>
 				<td>{this.props.profile.phone}</td>
-				<td>DEFAULT</td>
+				<td>{this.props.profile.is_verified ? "Verfied" : "Not Verfied"}</td>
 			</tr>
 		);
 	}
