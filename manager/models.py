@@ -123,7 +123,7 @@ class MPSolution(Model):
     url_structure = CharField(db_column='url_strucuture',max_length=200,blank=False)
     price = PositiveIntegerField(db_column='price',blank=False,default=0)
     category = ForeignKey(MPCategory, related_name='mpsolutions', db_column='category_id', blank=False, on_delete=PROTECT)
-    sub_category = ForeignKey(MPSubcategory, related_name='mpsolutions', db_column='sub_category_id', blank=False, on_delete=PROTECT)
+    sub_category = ForeignKey(MPSubcategory, related_name='mpsolutions', db_column='sub_category_id', blank=True, on_delete=PROTECT)
     tax = ForeignKey(MPTax, related_name='mpsolutions', db_column='tax_id', blank=False, on_delete=PROTECT)
     about = CharField(db_column='about', max_length=200, blank=False)
     overview = CharField(db_column='overview', max_length=200, blank=False)
