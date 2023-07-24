@@ -33,11 +33,11 @@ class CategoryView(APIView):
         if request.data.get('name'):
             if MPCategory.objects.filter(name=request.data.get('name')).exists():
                 raise AppLogicError('Category is already exists')
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        serializer_s = CategorySerializer(data=request.data)
+        serializer_s.is_valid(raise_exception=True)
+        serializer=serializer_s.deserialize()
+        return Response(serializer.data)
+        
 class PublicCategoryIdView(APIView):
     permission_classes = [AllowAny]
     def get_object(self, category_id):

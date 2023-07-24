@@ -483,6 +483,19 @@ class CategorySerializer(ModelSerializer):
             'overview',
             'short_description',
         )
+    def deserialize(self):
+        if self.context.get('id') is not None:
+            category = MPCategory.objects.get(id=self.context.get('id'))
+        else:
+            category = MPCategory()
+        category.name = self.validated_data.get('name', category.name)
+        category.url_structure = self.validated_data.get('url_structure', category.url_structure)
+        category.overview = self.validated_data.get('overview', category.overview)
+        category.short_description = self.validated_data.get('short_description', category.short_description)
+        return category
+        
+        
+        
     
 class SubcategorySerializer(ModelSerializer):
     class Meta:
