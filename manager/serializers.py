@@ -556,7 +556,6 @@ class SolutionSerializer(ModelSerializer):
             'category',
             'sub_category',
             'tax',
-            'about',
             'overview',
             'how_it_work',
             'execution_time',
