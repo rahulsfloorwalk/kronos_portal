@@ -88,7 +88,6 @@ class StoreView(APIView):
         'POST': [GROUP_NAME_MANAGER]
     }
     def post(self, request):
-        print('91',request.data)
         if request.data['client'] and request.data.get('code'):
             if Store.objects.filter(client=request.data['client'],code=request.data.get('code')).exists():
                 raise AppLogicError('The store already exist in the client.')

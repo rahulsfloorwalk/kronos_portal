@@ -32,3 +32,60 @@ def complete_for_solution(attachment_id,solution_id):
     else:
         raise AppLogicError("Invalid Attachment Content Type detected")
     return attachment_service.complete(attachment_id)
+
+def find_solution_details_by_solution_id(solution_id):
+    solution = MPSolution.objects.get(pk=solution_id)
+    result=[]
+    attachments = Attachment.objects.filter(solutions__id=solution.id,status=Attachment.ATTACHED).all()
+    attachments_data=[]
+    for attachment in attachments:
+        thumbnail_url = attachment.extra()["thumbnail_url"]
+        preview_url = attachment.extra()["preview_url"]
+        attachments_data.append({
+            "id": attachment.id,
+            "file_slug": attachment.file_slug,
+            "proof_type": attachment.proof_type,
+            "mime_type": attachment.mime_type,
+            "file_name": attachment.file_name,
+            "file_size": attachment.file_size,
+            "status": attachment.status,
+            "created_at": attachment.created_at,
+            "modified_at": attachment.modified_at,
+            "completed_at": attachment.completed_at,
+            "attachment_id": attachment.attachment_id,
+            "extra_properties": attachment.extra_properties,
+            "audio_transcript_data": attachment.audio_transcript_data,
+            "thumbnail_url": thumbnail_url,
+            "preview_url": preview_url,
+        })
+    result.append({
+        'id':solution.id,
+        'name':solution.name,
+        'url_structure':solution.url_structure,
+        'price':solution.price,
+        'category':{
+            'id':solution.category.id,
+            'name':solution.category.name,
+            'url_structure':solution.category.url_structure,
+            'overview':solution.category.overview,
+            'short_description':solution.category.short_description
+        },
+        'sub_category':{
+            'id':solution.sub_category.id,
+            'name':solution.sub_category.name
+        },
+        'tax':{
+            'id':solution.tax.id,
+            'name':solution.tax.name,
+            'rate':solution.tax.rate
+        },
+        'about':solution.about,
+        'overview':solution.overview,
+        'how_it_work':solution.how_it_work,
+        'execution_time':solution.execution_time,
+        'short_description':solution.short_description,
+        'is_active':solution.is_active,
+        'attachments':attachments_data
+    })
+    return result
+    

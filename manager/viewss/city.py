@@ -11,10 +11,10 @@ from registration.mixins import HasGroupPermission
 
 from .. import states
 from .. import country
-
+from rest_framework.permissions import AllowAny
 
 class CityView(APIView):
-    permission_classes = [HasGroupPermission]
+    permission_classes = [AllowAny]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER]
@@ -26,7 +26,7 @@ class CityView(APIView):
         raise NotFound
 
 class StateView(APIView):
-    permission_classes = [HasGroupPermission]
+    permission_classes = [AllowAny]
     required_groups = {
         'GET': [GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER]

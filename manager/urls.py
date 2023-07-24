@@ -40,6 +40,8 @@ from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
 from .viewss import mp_store as mp_store_views
 from .viewss import mp_order as mp_order_views
+from .viewss import client_profile as mp_client_profile
+from .viewss import mp_customer as mp_customer_views
 urlpatterns = ([
     url(r'notifications$', notification_views.NotificationsView.as_view(), name='notifications_view'),
     url(r'notifications/actors$', notification_views.NotificationActorsView.as_view(), name='notification_actors_view'),
@@ -72,6 +74,8 @@ urlpatterns = ([
     url(r'tax/(?P<tax_id>[0-9]+)$', tax_views.TaxIdView.as_view(), name='tax_id_view'),
     
     url(r'public_category$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
+    url(r'public_category/(?P<category_id>[0-9]+)/solution_detail$', category_views.PublicCategoryIdBySolutionView.as_view(), name='public_category_id_solution_view'),
+    
     url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
     url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
@@ -100,6 +104,8 @@ urlpatterns = ([
     url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)/full_details$', solution_views.PublicSolutionIdFullDetailsView.as_view(), name='public_solution_id_full_details_view'),
+    
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
     
     
@@ -131,9 +137,12 @@ urlpatterns = ([
     
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    
+    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
+    url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
+    url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),
     # -----------------------------------------
-    
+  
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/client_user$', audit_store_views.AuditStoreIdClientUserView.as_view(), name='audit_store_id_client_user_view'),
     url(r'audit_store/(?P<audit_store_id>[0-9]+)/attachment$', attachment_views.AuditStoreAttachmentView.as_view(), name='audit_store_attachment_view'),

@@ -326,7 +326,7 @@ class MPStore(Model):
     id = AutoField(db_column='id', primary_key=True)
     code = CharField(db_column='code', max_length=20, blank=True, null=True, default=None)
     priority = CharField(db_column='priority', max_length=50, blank=True, default='')
-    user = ForeignKey(User, null=True, blank=True, on_delete=SET_NULL)
+    user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
     name = CharField(db_column='name', max_length=500, blank=False)
     address = CharField(db_column='address', max_length=1024, blank=False)
     location = ForeignKey('manager.Location', db_column='location_id', blank=True, null=True, on_delete=PROTECT)
@@ -349,11 +349,22 @@ class MPStore(Model):
         return 'MPStore({}): {} '.format(self.id, self.name)
     
 class MPOrder(Model):
+    COMPLETE = 'COMPLETE'
+    DRAFT = 'DRAFT'
+    ACTIVE = 'ACTIVE'
+    STATUS = (
+        (COMPLETE, "Complete"),
+        (DRAFT, "Draft"),
+        (ACTIVE, "Active"),
+    )
     id = AutoField(db_column='id', primary_key=True)
     no_of_response = IntegerField(db_column='no_of_response',blank=True,default=1)
     solution = ForeignKey(MPSolution, related_name='mporders', db_column='solution_id', on_delete=PROTECT,blank=False)
     describe = CharField(db_column='describe',blank=True,max_length=16384)
+    user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
+    status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True)
     store = JSONField(db_column='stores', default=list, blank=True)
+    
     def __str__(self):
         return 'MPOrder({}): Solution{} '.format(self.id, self.solution)

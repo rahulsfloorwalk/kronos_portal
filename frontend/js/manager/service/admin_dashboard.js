@@ -494,6 +494,7 @@ export function updateDetails(detailsId,details){
 export function findSolutionProofTag(solutionId){
 	return $.get( url.api_base_path + `manager/solution/${solutionId}/solution_proof_tag`);
 }
+
 export function saveSolutionproofTag(solutionId, proof_tag_list){
 	return $.ajax({
 		url: url.api_base_path + `manager/solution/${solutionId}/solution_proof_tag`,
@@ -503,4 +504,10 @@ export function saveSolutionproofTag(solutionId, proof_tag_list){
 		}),
 		contentType: "application/json"
 	});
+}
+export function findActiveCustomer(){
+	return $.get(url.api_base_path+"manager/mp/active_customer");
+}
+export function findAllCount(){
+	return $.get(url.api_base_path+"manager/mp_all_count");
 }

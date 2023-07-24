@@ -3,13 +3,30 @@ import PropTypes from "prop-types";
 import { User, Dashboard, File, Star } from "../../../components/Icons.jsx";
 import "../../../../css/bs_overrides.scss";
 
-
+import {findAllCount} from "../../service/admin_dashboard.js";
 export default class DashboardContainer extends React.Component {
 	static propTypes = {
 		children: PropTypes.node,
 	};
+	state={
+		draft_order_count:0,
+		complete_order_count:0,
+		active_order_count:0,
+		solution_count:0,
+		user_count:0
+	};
+	componentDidMount(){
+		findAllCount().then((all_count)=>{
+			this.setState({
+				draft_order_count:all_count.draft_order_count,
+				complete_order_count:all_count.complete_order_count,
+				active_order_count:all_count.active_order_count,
+				solution_count:all_count.solution_count,
+				user_count:all_count.user_count
+			});
+		});
+	}
 	render() {
-
 		return (
 			<div>
 				<div className="container-fluid">
@@ -18,7 +35,7 @@ export default class DashboardContainer extends React.Component {
 							<div className="panel panel-default">
 								<div className="panel-body default_small_box" style={{ "maxHeight": "200px", "maxWidth": "100%" }}>
 									<div>
-										<h1>35</h1>
+										<h1>{this.state.user_count}</h1>
 										<p>Total register customer</p>
 									</div>
 									<div className="default_small_box_icon"><User /></div>
@@ -29,7 +46,7 @@ export default class DashboardContainer extends React.Component {
 							<div className="panel panel-default">
 								<div className="panel-body default_small_box" style={{ "maxHeight": "200px", "maxWidth": "100%" }}>
 									<div>
-										<h1>10</h1>
+										<h1>{this.state.solution_count}</h1>
 										<p>Total Active Solution</p>
 									</div>
 									<div className="default_small_box_icon"><Star /></div>
@@ -40,7 +57,7 @@ export default class DashboardContainer extends React.Component {
 							<div className="panel panel-default">
 								<div className="panel-body default_small_box" style={{ "maxHeight": "200px", "maxWidth": "100%" }}>
 									<div>
-										<h1>29</h1>
+										<h1>{this.state.active_order_count}</h1>
 										<p>Total Active Order</p>
 									</div>
 									<div className="default_small_box_icon"><Dashboard /></div>
@@ -51,7 +68,7 @@ export default class DashboardContainer extends React.Component {
 							<div className="panel panel-default">
 								<div className="panel-body default_small_box" style={{ "maxHeight": "200px", "maxWidth": "100%" }}>
 									<div>
-										<h1>69</h1>
+										<h1>{this.state.draft_order_count}</h1>
 										<p>Total Draft Order</p>
 									</div>
 									<div className="default_small_box_icon"><File /></div>
