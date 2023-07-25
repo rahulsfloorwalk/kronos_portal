@@ -9,12 +9,12 @@ class ActiveCustomerRow extends React.Component{
 			full_name:PropTypes.string,
 			email:PropTypes.string,
 			phone:PropTypes.string,
+			is_verified:PropTypes.string
 		})
 
 	};
 
 	render (){
-		console.log(this.props)
 		return(
 			<tr>
 				<td>{this.props.seq}</td>

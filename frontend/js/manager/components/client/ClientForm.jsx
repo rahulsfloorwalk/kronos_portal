@@ -85,7 +85,6 @@ export default class extends React.Component {
 	};
 
 	render() {
-		console.log(this.state.errors)
 		var modalTitle = this.props.params.clientId ? "Edit Client" : "Add Client";
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>

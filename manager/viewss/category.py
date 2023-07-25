@@ -36,7 +36,8 @@ class CategoryView(APIView):
         serializer_s = CategorySerializer(data=request.data)
         serializer_s.is_valid(raise_exception=True)
         serializer=serializer_s.deserialize()
-        return Response(serializer.data)
+        saveCategory=serializer.save()
+        return Response(CategorySerializer(saveCategory).data)
         
 class PublicCategoryIdView(APIView):
     permission_classes = [AllowAny]
@@ -91,7 +92,6 @@ class PublicCategoryAttachmentView(APIView):
     permission_classes=[AllowAny]
     def get(self,request,category_id):
         attachment = category_attachement_service.find_attachment_by_category_id(category_id)
-        print(attachment,'93')
         return Response(AttachmentSerializer(attachment,many=True).data)
     
 class CategoryAttachmentView(APIView):

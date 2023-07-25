@@ -36,7 +36,6 @@ from .viewss import tax as tax_views
 from .viewss import category as category_views
 from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
-from .viewss import mp_store as mp_store_views
 from .viewss import mp_order as mp_order_views
 from .viewss import client_profile as mp_client_profile
 from .viewss import mp_customer as mp_customer_views
@@ -121,8 +120,6 @@ urlpatterns = ([
     
     # Market place User Dashboard
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
-    url (r'mp_store$',mp_store_views.MpStoreView.as_view(),name='mp_store_view'),
-    url (r'mp_store/(?P<store_id>[0-9]+)$',mp_store_views.MpStoreIdView.as_view(),name='mp_store_id_view'),
     
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
@@ -227,6 +224,8 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)/application$', application_views.AuditApplicationsByAuditView.as_view(), name='applications_by_audit_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/hidden$', audit_views.AuditHiddenView.as_view(), name='audit_hidden_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
+    url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
+    
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 

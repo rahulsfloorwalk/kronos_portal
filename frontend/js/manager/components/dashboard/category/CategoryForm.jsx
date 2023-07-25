@@ -54,7 +54,6 @@ export default class CategoryForm extends React.Component {
 	}
 
 	fieldChanged = (e) => {
-		const { name, value } = e.target;
 		this.setState({
 			category: Object.assign({}, this.state.category, getInputEventChangeValue(e)),
 		});
@@ -71,7 +70,7 @@ export default class CategoryForm extends React.Component {
 		e.preventDefault();
 		var promise;
 		if (this.state.category.overview === "" || this.state.category.short_description === "") {
-			alert("Fields can not be emty")
+			alert("Fields can not be emty");
 		}
 		if (this.props.params.categoryId) {
 			promise = updateCategory(
@@ -94,7 +93,6 @@ export default class CategoryForm extends React.Component {
 	};
 
 	render() {
-		console.log(this.state.errors)
 		if (this.state.loading) {
 			return (<Loading />);
 		}

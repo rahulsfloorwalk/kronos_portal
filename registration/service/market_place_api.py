@@ -1,18 +1,22 @@
 import logging
+from django.db.transaction import atomic
+
 from django.conf import settings
 from django.core.validators import validate_email
 from registration.service import client_mobile_number_service
 import hashlib
 from os import urandom
+from guardian.shortcuts import assign_perm
 import datetime
 from django.utils import timezone
 from django.core.mail import EmailMessage
 import strings
+from kronos.exceptions import AppLogicError
 from rest_framework.authtoken.models import Token
 from django.forms import ValidationError
 from django.contrib.auth.models import User, Group
 from django.db.models import Q
-from client.models import MPClientProfileInfo
+from client.models import MPClientProfileInfo,ClientManager,ClientTrainer,Client,ClientUser
 from registration.models import GROUP_NAME_CLIENT,Verification
 from django.db import IntegrityError
 from auditor.service import profile_info_service,market_place_api
@@ -58,9 +62,52 @@ def sign_up_market_place(data):
         user.phone = data.get("phone")
     user.username = str.lower(data.get("username"))
     user.set_password(data.get("password"))
+    user.is_active=True
+    
     user.save()
     user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
     user.save()
+    
+    client=Client()
+    client.name=data.get("username")
+    client.email=data.get("username")
+    client.is_active = False 
+    client.save()
+    
+    client_user = ClientUser()
+    client_user.client = client
+    client_user.full_name = " . "
+    client_user.user = user
+    client_user.receive_email_notification = True
+    client_user.save()
+    assign_perm('client.clientuser_admin',user)
+    
+    if ClientManager.objects.filter(client=client,user__email='sourabh@floorwalk.in').exists():
+        raise AppLogicError("a manager is already exists in this client")
+    else:
+        manager = User.objects.get(email='sourabh@floorwalk.in')
+        
+        client_manager = ClientManager()
+        client_manager.client = client
+        client_manager.user = manager
+        client_manager.receive_email_notification = True
+        client_manager.is_active = True
+        client_manager.save()
+    
+    
+    if ClientTrainer.objects.filter(client=client, user__email='bhagyashree.khade@floorwalk.in').exists():
+        raise AppLogicError("a trainer is already exists in this client")
+    else:
+        trainer = User.objects.get(email='bhagyashree.khade@floorwalk.in')
+        
+        client_trainer = ClientTrainer()
+        client_trainer.client = client
+        client_trainer.user = trainer
+        client_trainer.receive_email_notification = True
+        client_trainer.is_active = True
+        client_trainer.save()
+    
+    
     if data.get("phone"):
         client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
     else:
@@ -81,7 +128,7 @@ def sign_up_market_place(data):
     verification.key_expires = timezone.now() + datetime.timedelta(days=2)
     verification.save()
 
-    message = get_template('registration/verification_mail.html').render({
+    message = get_template('registration/client/email_verification.html').render({
         'key': activation_key,
         'email': user.email,
         **registration_context(),

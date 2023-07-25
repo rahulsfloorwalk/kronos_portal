@@ -42,7 +42,7 @@ class Client(Model):
     company_website_url = CharField(db_column='company_website_url', max_length=200, blank=True)
     is_auto_signup = BooleanField(db_column='is_auto_signup', default=False)
     payments = GenericRelation('billing.payment', related_query_name='clients')
-    
+    is_active = BooleanField('is_active',default=True,blank=False) 
     city = CharField(db_column='city', max_length=300, blank=True)
     state = CharField(db_column='state', max_length=300, blank=True)
     pincode = CharField(db_column='pincode', max_length=300, blank=True)
