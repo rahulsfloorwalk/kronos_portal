@@ -16,7 +16,6 @@ class DetailsForm extends React.Component {
 		}),
 	};
 
-
 	state = {
 		loading: false,
 		details: {
@@ -70,37 +69,36 @@ class DetailsForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		// var promise;
-		if (this.state.details.id) {
-			// promise = updateDetails(
-			// 	this.state.details.id,
-			// 	this.state.details,
-			// );
-			updateDetails(this.state.details.id,this.state.details).then(
-				() => {
-					hashHistory.push("admindashboard/solution");
-				},
-				err => {
-					if( err.responseJSON){
-						this.setState({
-							errors: err.responseJSON
-						});
+		if(this.state.details.check_points === ""){
+			alert("Fields can not be empty");
+		}else{
+			if (this.state.details.id) {
+				updateDetails(this.state.details.id,this.state.details).then(
+					() => {
+						hashHistory.push("admindashboard/solution");
+					},
+					err => {
+						if( err.responseJSON){
+							this.setState({
+								errors: err.responseJSON
+							});
+						}
 					}
-				}
-			);
-		} else {
-			saveDetails(this.state.details).then(
-				() => {
-					hashHistory.push("admindashboard/solution");
-				},
-				err => {
-					if (err.responseJSON) {
-						this.setState({
-							errors: err.responseJSON
-						});
+				);
+			} else {
+				saveDetails(this.state.details).then(
+					() => {
+						hashHistory.push("admindashboard/solution");
+					},
+					err => {
+						if (err.responseJSON) {
+							this.setState({
+								errors: err.responseJSON
+							});
+						}
 					}
-				}
-			);
+				);
+			}
 		}
 	};
 	render() {

@@ -61,22 +61,32 @@ export default class TaxForm extends React.Component {
 				this.state.tax.name,
 				this.state.tax.rate,
 			);
+			promise.then(function () {
+				hashHistory.push("/admindashboard/tax");
+				Alert.success("Tax Updated");
+			}, (errors) => {
+				if (errors.responseJSON) {
+					this.setState({
+						errors: errors.responseJSON
+					});
+				}
+			});
 		} else {
 			promise = addTax(
 				this.state.tax.name,
 				this.state.tax.rate,
 			);
+			promise.then(function () {
+				hashHistory.push("/admindashboard/tax");
+				Alert.success("Tax Added");
+			}, (errors) => {
+				if (errors.responseJSON) {
+					this.setState({
+						errors: errors.responseJSON
+					});
+				}
+			});
 		}
-		promise.then(function () {
-			hashHistory.push("/admindashboard/tax");
-			Alert.success("Tax Added");
-		}, (errors) => {
-			if (errors.responseJSON) {
-				this.setState({
-					errors: errors.responseJSON
-				});
-			}
-		});
 	};
 
 	render() {
