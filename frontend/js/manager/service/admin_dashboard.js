@@ -9,23 +9,21 @@ export function findCategoryById(categoryId){
 	return $.get( url.api_base_path + `manager/category/${categoryId}`);
 }
 
-export function addCategory(formData){
+export function addCategory(category){
 	return $.ajax({
 		url: url.api_base_path + "manager/category",
 		method: "POST",
-		data: formData,
-		processData: false,
-		contentType: false,
+		data: JSON.stringify(category),
+		contentType: "application/json"
 	});
 }
 
-export function updateCategory(categoryId,formData ){
+export function updateCategory(categoryId,category ){
 	return $.ajax({
 		url: url.api_base_path + `manager/category/${categoryId}`,
 		method: "POST",
-		data: formData,
-		processData: false,
-		contentType: false,
+		data: JSON.stringify(category),
+		contentType: "application/json"
 	});
 }
 

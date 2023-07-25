@@ -14,14 +14,14 @@ class AllSolutionRow extends React.Component {
 			name: PropTypes.string,
 			url_structure: PropTypes.string,
 			price: PropTypes.number,
-			about: PropTypes.string,
+			// about: PropTypes.string,
 			overview: PropTypes.string,
 			how_it_work: PropTypes.string,
 			execution_time: PropTypes.string,
 			short_description: PropTypes.string,
 			is_active: PropTypes.bool,
 			category: PropTypes.object,
-			sub_category: PropTypes.object,
+			// sub_category: PropTypes.object,
 			tax: PropTypes.object,
 		}),
 		onDelete: PropTypes.func.isRequired,
@@ -29,7 +29,7 @@ class AllSolutionRow extends React.Component {
 		errors: PropTypes.shape({
 			non_field_errors: PropTypes.arrayOf(PropTypes.string),
 			category: FieldErrors,
-			sub_category: FieldErrors,
+			// sub_category: FieldErrors,
 			tax: FieldErrors,
 		}),
 	};
@@ -39,7 +39,7 @@ class AllSolutionRow extends React.Component {
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.solution.name}</td>
 				<td>{this.props.solution.category && this.props.solution.category.name}</td>
-				<td>{this.props.solution.sub_category && this.props.solution.sub_category.name}</td>
+				{/* <td>{this.props.solution.sub_category && this.props.solution.sub_category.name}</td> */}
 				<td>{this.props.solution.price}</td>
 				<td>
 					<span >
@@ -164,7 +164,6 @@ Solution Table
 								<th className="text-right">#</th>
 								<th>Solution Name</th>
 								<th>Category</th>
-								<th>Sub Category</th>
 								<th>Price</th>
 								<th>Action</th>
 								<th>Others</th>

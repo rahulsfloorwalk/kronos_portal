@@ -75,7 +75,6 @@ def find_solution_details_by_solution_id(solution_id):
             'name':solution.tax.name,
             'rate':solution.tax.rate
         },
-        'about':solution.about,
         'overview':solution.overview,
         'how_it_work':solution.how_it_work,
         'execution_time':solution.execution_time,

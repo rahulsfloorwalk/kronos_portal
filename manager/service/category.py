@@ -44,16 +44,11 @@ def find_solution_details_by_category_id(category_id):
                     'overview':i.category.overview,
                     'short_description':i.category.short_description
                 },
-                'sub_category':{
-                    'id':i.sub_category.id,
-                    'name':i.sub_category.name
-                },
                 'tax':{
                     'id':i.tax.id,
                     'name':i.tax.name,
                     'rate':i.tax.rate
                 },
-                'about':i.about,
                 'overview':i.overview,
                 'how_it_work':i.how_it_work,
                 'execution_time':i.execution_time,

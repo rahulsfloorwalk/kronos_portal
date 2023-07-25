@@ -10,6 +10,7 @@ import Modal from "../../../../components/Modal.jsx";
 import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
 import JoditEditor from "jodit-react";
+import Alert from "react-s-alert";
 
 export default class AllSolutionForm extends React.Component {
 	static propTypes = {
@@ -17,10 +18,6 @@ export default class AllSolutionForm extends React.Component {
 			solutionId: PropTypes.string,
 		}),
 		category: PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-		}),
-		sub_category: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
 		}),
@@ -37,10 +34,8 @@ export default class AllSolutionForm extends React.Component {
 			name: "",
 			url_structure: "",
 			price: 0,
-			// category: "",
-			// sub_category: "",
-			// tax: "",
-			about: "",
+			category: "",
+			tax: "",
 			overview: "",
 			how_it_work: "",
 			execution_time: "",
@@ -73,7 +68,6 @@ export default class AllSolutionForm extends React.Component {
 						solution: {
 							...solution,
 							category: solution.category.id, //for pre-filled values
-							sub_category: solution.sub_category.id,
 							tax: solution.tax.id,
 						},
 					});
@@ -100,6 +94,9 @@ export default class AllSolutionForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
+		if(this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === "" || this.state.solution.price === ""){
+			alert("No fields can be empty");
+		}
 		var promise;
 		if (this.props.params.solutionId) {
 			promise = updateSolution(
@@ -113,6 +110,7 @@ export default class AllSolutionForm extends React.Component {
 		}
 		promise.then(function () {
 			hashHistory.push("/admindashboard/solution");
+			Alert.success("Solution Added");
 		}, (errors) => {
 			if (errors.responseJSON) {
 				this.setState({
@@ -152,11 +150,6 @@ export default class AllSolutionForm extends React.Component {
 					</div>
 					<div className="row">
 						<div className="col-md-12">
-							<FormInput label="About" type="text" value={this.state.solution.about} name="about" onChange={this.fieldChanged} errors={this.state.errors.about} placeholder="About" />
-						</div>
-					</div>
-					<div className="row">
-						<div className="col-md-6">
 							<FormSelect
 								label="Category"
 								name="category"
@@ -171,22 +164,6 @@ export default class AllSolutionForm extends React.Component {
 								))}
 							</FormSelect>
 						</div>
-						<div className="col-md-6">
-							<FormSelect
-								label="Sub Category"
-								name="sub_category"
-								value={this.state.solution.sub_category}
-								onChange={this.fieldChanged}
-							>
-								<option value="">----------</option>
-								{this.state.sub_categories.map((sub_category) => (
-									<option key={sub_category.id} value={sub_category.id}>
-										{sub_category.name}
-									</option>
-								))}
-							</FormSelect>
-						</div>
-
 					</div>
 					<div className="row">
 						<div className="col-md-6">
@@ -241,7 +218,7 @@ export default class AllSolutionForm extends React.Component {
 							/>
 						</div>
 					</div>
-					<div className="row" style={{ marginTop: "2rem" }}>
+					<div className="row" style={{ marginTop: "2rem", marginBottom: "2rem" }}>
 						<div className="col-md-12">
 							<label>Short Description</label>
 							<JoditEditor

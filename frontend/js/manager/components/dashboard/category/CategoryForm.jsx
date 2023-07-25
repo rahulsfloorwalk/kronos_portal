@@ -16,6 +16,11 @@ export default class CategoryForm extends React.Component {
 		params: PropTypes.shape({
 			categoryId: PropTypes.string,
 		}),
+		// errors: PropTypes.shape({
+		// 	overview: PropTypes.arrayOf(PropTypes.string),
+		// 	short_description: PropTypes.arrayOf(PropTypes.string),
+		// 	non_field_errors: PropTypes.arrayOf(PropTypes.string),
+		// }),
 	};
 
 	state = {
@@ -26,8 +31,7 @@ export default class CategoryForm extends React.Component {
 			overview: "",
 			short_description: "",
 		},
-		errors: {
-		}
+		errors: {},
 	};
 
 	setLoading = (loadingState) => {
@@ -50,8 +54,9 @@ export default class CategoryForm extends React.Component {
 	}
 
 	fieldChanged = (e) => {
+		const { name, value } = e.target;
 		this.setState({
-			category: Object.assign({}, this.state.category, getInputEventChangeValue(e))
+			category: Object.assign({}, this.state.category, getInputEventChangeValue(e)),
 		});
 	};
 	handleEditorChange = (editorName, newContent) => {
@@ -65,35 +70,31 @@ export default class CategoryForm extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
-		const formData = new FormData();
-		formData.append("name", this.state.category.name);
-		formData.append("url_structure", this.state.category.url_structure);
-		formData.append("overview", this.state.category.overview);
-		formData.append("short_description", this.state.category.short_description);
-
+		if (this.state.category.overview === "" || this.state.category.short_description === "") {
+			alert("Fields can not be emty")
+		}
 		if (this.props.params.categoryId) {
 			promise = updateCategory(
 				this.props.params.categoryId,
-				formData,
+				this.state.category
 			);
 		} else {
 			promise = addCategory(
-				formData
+				this.state.category
 			);
 		}
-		promise.then(function () {
+		promise.done(function () {
 			hashHistory.push("/admindashboard/category");
-			Alert.success("category added");
-		}, (errors) => {
-			if (errors.responseJSON) {
-				this.setState({
-					errors: errors.responseJSON
-				});
-			}
+			Alert.success("Category Added");
+		}).fail((err) => {
+			this.setState({
+				errors: err.responseJSON || {},
+			});
 		});
 	};
 
 	render() {
+		console.log(this.state.errors)
 		if (this.state.loading) {
 			return (<Loading />);
 		}
@@ -120,8 +121,9 @@ export default class CategoryForm extends React.Component {
 								errors={this.state.errors.overview}
 							/>
 						</div>
+						{/* <FormErrorList errors={this.props.errors.overview}/> */}
 					</div>
-					<div className="row" style={{ marginTop: "2rem", marginBottom: "1rem" }}>
+					<div className="row" style={{ marginTop: "2rem", marginBottom: "2rem" }}>
 						<div className="col-md-12">
 							<label>Short Description</label>
 							<JoditEditor
@@ -131,6 +133,7 @@ export default class CategoryForm extends React.Component {
 								errors={this.state.errors.short_description}
 							/>
 						</div>
+						{/* <FormErrorList errors={this.props.errors.short_description}/> */}
 					</div>
 					<SaveButton />
 				</form>
