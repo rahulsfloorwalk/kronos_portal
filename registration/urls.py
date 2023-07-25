@@ -79,6 +79,6 @@ urlpatterns = ([
     # API for Market Place App
     url(r'market_place/signup_api$', views_api.MPSignUpAPI.as_view(), name="mp_signup_api"),
     url(r'market_place/login_api$', views_api.MPLogInAPI.as_view(), name="mp_login_api"),
-    url(r'market_place/verify_email/(?P<otp>.+)/(?P<email>.+)$', views_api.verify_email, name="mp_verify_email"),
+    url(r'market_place/verify_email_by_otp$', views_api.OTPVerify.as_view(), name="mp_verify_email_by_otp"),
 
 ], 'registration')
