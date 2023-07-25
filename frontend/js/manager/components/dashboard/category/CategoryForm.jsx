@@ -70,26 +70,34 @@ export default class CategoryForm extends React.Component {
 		e.preventDefault();
 		var promise;
 		if (this.state.category.overview === "" || this.state.category.short_description === "") {
-			alert("Fields can not be emty");
+			alert("Fields can not be empty");
 		}
 		if (this.props.params.categoryId) {
 			promise = updateCategory(
 				this.props.params.categoryId,
 				this.state.category
 			);
+			promise.done(function () {
+				hashHistory.push("/admindashboard/category");
+				Alert.success("Category Updated");
+			}).fail((err) => {
+				this.setState({
+					errors: err.responseJSON || {},
+				});
+			});
 		} else {
 			promise = addCategory(
 				this.state.category
 			);
-		}
-		promise.done(function () {
-			hashHistory.push("/admindashboard/category");
-			Alert.success("Category Added");
-		}).fail((err) => {
-			this.setState({
-				errors: err.responseJSON || {},
+			promise.done(function () {
+				hashHistory.push("/admindashboard/category");
+				Alert.success("Category Added");
+			}).fail((err) => {
+				this.setState({
+					errors: err.responseJSON || {},
+				});
 			});
-		});
+		}
 	};
 
 	render() {

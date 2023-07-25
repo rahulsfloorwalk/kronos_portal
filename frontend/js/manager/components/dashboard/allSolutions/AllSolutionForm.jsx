@@ -94,31 +94,41 @@ export default class AllSolutionForm extends React.Component {
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		if(this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === "" || this.state.solution.price === ""){
-			alert("No fields can be empty");
-		}
 		var promise;
-		if (this.props.params.solutionId) {
-			promise = updateSolution(
-				this.props.params.solutionId,
-				this.state.solution,
-			);
-		} else {
-			promise = addSolution(
-				this.state.solution,
-			);
-		}
-		promise.then(function () {
-			hashHistory.push("/admindashboard/solution");
-			Alert.success("Solution Added");
-		}, (errors) => {
-			if (errors.responseJSON) {
-				this.setState({
-					errors: errors.responseJSON
+		if(this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === ""){
+			alert("fields can not be empty");
+		}else{
+			if (this.props.params.solutionId) {
+				promise = updateSolution(
+					this.props.params.solutionId,
+					this.state.solution,
+				);
+				promise.then(function () {
+					hashHistory.push("/admindashboard/solution");
+					Alert.success("Solution Updated");
+				}, (errors) => {
+					if (errors.responseJSON) {
+						this.setState({
+							errors: errors.responseJSON
+						});
+					}
+				});
+			} else {
+				promise = addSolution(
+					this.state.solution,
+				);
+				promise.then(function () {
+					hashHistory.push("/admindashboard/solution");
+					Alert.success("Solution Added");
+				}, (errors) => {
+					if (errors.responseJSON) {
+						this.setState({
+							errors: errors.responseJSON
+						});
+					}
 				});
 			}
-		});
-
+		}
 	};
 
 	handleEditorChange = (editorName, newContent) => {

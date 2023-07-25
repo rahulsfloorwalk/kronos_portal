@@ -19,14 +19,12 @@ class ArchievedSolutionRow extends React.Component {
 			short_description: PropTypes.string,
 			is_active: PropTypes.bool,
 			category: PropTypes.object,
-			sub_category: PropTypes.object,
 			tax: PropTypes.object,
 		}),
 		toggleIsActive: PropTypes.func.isRequired,
 		errors: PropTypes.shape({
 			non_field_errors: PropTypes.arrayOf(PropTypes.string),
 			category: FieldErrors,
-			sub_category: FieldErrors,
 			tax: FieldErrors,
 		}),
 
@@ -38,7 +36,6 @@ class ArchievedSolutionRow extends React.Component {
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.solution.name}</td>
 				<td>{this.props.solution.category && this.props.solution.category.name}</td>
-				<td>{this.props.solution.sub_category && this.props.solution.sub_category.name}</td>
 				<td>{this.props.solution.price}</td>
 				<td>
 					<button
@@ -110,7 +107,6 @@ Archived Solution Table
 								<th className="text-right">#</th>
 								<th>Name</th>
 								<th>Category</th>
-								<th>SubCategory</th>
 								<th>Price</th>
 								<th>Action</th>
 							</tr>
