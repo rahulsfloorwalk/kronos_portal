@@ -25,7 +25,7 @@ class MPSignUpAPI(APIView):
     permission_classes=[AllowAny]
     @atomic
     def post(self,request):
-        response,status = market_place_service_api.sign_up_market_place(data=request.data)
+        response,status = market_place_service_api.sign_up_market_place(request)
         return JsonResponse(response, status=status)
 class MPLogInAPI(APIView):
     permission_classes=[AllowAny]
@@ -34,19 +34,9 @@ class MPLogInAPI(APIView):
         response , status = market_place_service_api.log_in_market_place(data=request.data)
         return JsonResponse(response, status=status)
 
-@atomic
-def verify_email(request, otp,email):
-    return request,otp,email
-    # try:
-    #     if market_place_service_api.otp==otp:
-    #         login(request,request.user.id,backend='')
-    # except ObjectNotFound as e:
-    #     pass
-    # return JsonResponse('Valid OTP')
-    
-    # try:
-    #     verification = verification_service.verify_by_activation_key(key)
-    #     login(request, verification.user, backend='registration.backends.CaseInsensitiveModelBackend')
-    # except ObjectNotFound as e:
-    #     _logger.debug("verification failed for key: %s", key)
-    # return redirect('registration:client_login')
+class OTPVerify(APIView):
+    permission_classes=[AllowAny]
+    @atomic
+    def post(self,request):
+        response , status = market_place_service_api.verify_by_otp_and_login(request)
+        return JsonResponse(response,status=status)    

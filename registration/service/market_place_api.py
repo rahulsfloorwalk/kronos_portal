@@ -1,7 +1,7 @@
 import logging
 from django.db.transaction import atomic
 import random
-
+from django.contrib.sessions.backends.db import SessionStore
 from django.conf import settings
 from django.core.validators import validate_email
 from registration.service import client_mobile_number_service
@@ -26,10 +26,11 @@ from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
 
+def generate_otp():
+    return random.randint(1000, 9999)
 
-
-def sign_up_market_place(data):
-    to_check_email = data.get("username")
+def sign_up_market_place(request):
+    to_check_email = request.data.get("username")
     try:
         validate_email(to_check_email)
     except ValidationError:
@@ -43,35 +44,35 @@ def sign_up_market_place(data):
         response={'detail':'a user with this email already exists'}
         status= 400
         return response,status
-    if data.get('phone'):
-        if not len(data.get('phone')) == 10:
+    if request.data.get('phone'):
+        if not len(request.data.get('phone')) == 10:
             response = {'detail': 'Phone number should be 10 digit'}
             status = 400
             return response, status
-        if not profile_info_service.mobile_number_pattern.match(data.get('phone')):
+        if not profile_info_service.mobile_number_pattern.match(request.data.get('phone')):
             response = {'detail': 'invalid phone number'}
             status = 400
             return response, status
-        if client_mobile_number_service.mobile_number_exists(data.get("phone")):
+        if client_mobile_number_service.mobile_number_exists(request.data.get("phone")):
             response = {'detail': 'a user with this phone number already exists'}
             status = 400
             return response, status
     
     user=User()
-    user.email = data.get("username")
-    if data.get("phone"):
-        user.phone = data.get("phone")
-    user.username = str.lower(data.get("username"))
-    user.set_password(data.get("password"))
-    user.is_active=True
+    user.email = request.data.get("username")
+    if request.data.get("phone"):
+        user.phone = request.data.get("phone")
+    user.username = str.lower(request.data.get("username"))
+    user.set_password(request.data.get("password"))
+    user.is_active = False
     
     user.save()
     user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
     user.save()
     
     client=Client()
-    client.name=data.get("username")
-    client.email=data.get("username")
+    client.name=request.data.get("username")
+    client.email=request.data.get("username")
     client.is_active = False 
     client.save()
     
@@ -109,19 +110,18 @@ def sign_up_market_place(data):
         client_trainer.save()
     
     
-    if data.get("phone"):
+    if request.data.get("phone"):
         client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
     else:
         client_profile = MPClientProfileInfo(user_id=user.id)
     client_profile.save()
     
     auth_data = {}
-    auth_data['email'] = data.get("username")
-
-    def generate_otp():
-        return random.randint(1000, 9999)
-    otp = generate_otp()
+    auth_data['email'] = request.data.get("username")
     
+    
+    otp = generate_otp()
+    request.session['otp'] = str(otp)
     message = get_template('registration/market_place/otp_verification.html').render({
         'otp': otp,
         'email': user.email,
@@ -177,16 +177,27 @@ def log_in_market_place(data):
         response = {'detail': 'Username or Password incorrect'}
         status = 400
     return response, status
+
+def verify_by_otp_and_login(request):
+    user_otp = request.data.get('otp')
+    otp = request.session.get('otp')
+    if otp == user_otp:
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username,password)
+        user.is_active=True
+        user.save()
+        client_user = ClientUser.objects.get(user_id=user.id)
+        client_user.user=user
+        client_user.save()
+        if user:
+            token, created = Token.objects.get_or_create(user=user)
+            result = market_place_api.get_client_dashboard_data(user.id)
+            response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+            status = 200
+    else:
+        response = {'detail': 'OTP is incorrect'}
+        status=400
+    return response,status
         
         
-    #     token, created = Token.objects.get_or_create(user=user)
-        
-    #     result = market_place_api.get_client_dashboard_data(user.id)
-    #     response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
-    #     status = 200
-    # else:
-    #     response = {'detail': 'Username or Password incorrect'}
-    #     status = 400
-    # return response, status
-    
-    
