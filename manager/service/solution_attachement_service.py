@@ -70,16 +70,11 @@ def find_solution_details_by_solution_id(solution_id):
             'overview':solution.category.overview,
             'short_description':solution.category.short_description
         },
-        'sub_category':{
-            'id':solution.sub_category.id,
-            'name':solution.sub_category.name
-        },
         'tax':{
             'id':solution.tax.id,
             'name':solution.tax.name,
             'rate':solution.tax.rate
         },
-        'about':solution.about,
         'overview':solution.overview,
         'how_it_work':solution.how_it_work,
         'execution_time':solution.execution_time,

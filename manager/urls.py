@@ -34,11 +34,8 @@ from .viewss import report_attribute as report_attribute_views
 from .viewss import reports as report_views
 from .viewss import tax as tax_views
 from .viewss import category as category_views
-from .viewss import industry as industry_views
-from .viewss import interested_area as interested_area_views
 from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
-from .viewss import mp_store as mp_store_views
 from .viewss import mp_order as mp_order_views
 from .viewss import client_profile as mp_client_profile
 from .viewss import mp_customer as mp_customer_views
@@ -86,15 +83,6 @@ urlpatterns = ([
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
-    url(r'public_interested_area$', interested_area_views.PublicInterestedAreaView.as_view(), name='public_interested_area_view'),
-    url(r'interested_area$', interested_area_views.InterestedAreaView.as_view(), name='interested_area_view'),
-    url(r'public_interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.PublicInterestedAreaIdView.as_view(), name='public_interested_area_id_view'),
-    url(r'interested_area/(?P<interested_area_id>[0-9]+)$', interested_area_views.InterestedAreaIdView.as_view(), name='interested_area_id_view'),
-    
-    url(r'public_industry$', industry_views.PublicIndustryView.as_view(), name='public_industry_view'),
-    url(r'industry$', industry_views.IndustryView.as_view(), name='industry_view'),
-    url(r'public_industry/(?P<industry_id>[0-9]+)$', industry_views.PublicIndustryIdView.as_view(), name='public_industry_id_view'),
-    url(r'industry/(?P<industry_id>[0-9]+)$', industry_views.IndustryIdView.as_view(), name='industry_id_view'),
     
     url(r'public_subcategory_sub$', subcategory_views.PublicSubcategoryView.as_view(), name='public_subcategory_view'),
     url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
@@ -132,15 +120,14 @@ urlpatterns = ([
     
     # Market place User Dashboard
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
-    url (r'mp_store$',mp_store_views.MpStoreView.as_view(),name='mp_store_view'),
-    url (r'mp_store/(?P<store_id>[0-9]+)$',mp_store_views.MpStoreIdView.as_view(),name='mp_store_id_view'),
     
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
     url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
     url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
     url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),
+    url(r'client_profile/(?P<user_id>[0-9]+)$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+
     # -----------------------------------------
   
     url(r'client_user_add$', client_views.ClientUserAdd.as_view(),name='client_user_add'), 
@@ -237,6 +224,8 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)/application$', application_views.AuditApplicationsByAuditView.as_view(), name='applications_by_audit_id_view'),
     url(r'audit/(?P<audit_id>[0-9]+)/hidden$', audit_views.AuditHiddenView.as_view(), name='audit_hidden_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
+    url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
+    
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),
 

@@ -10,11 +10,20 @@ from registration.mixins import HasGroupPermission
 from rest_framework.permissions import AllowAny
 from manager.serializers import SolutionSerializer
 from django.forms.models import model_to_dict
-from manager.viewss.mp_store import UserSerializer
+from django.contrib.auth.models import User
 
 def get_order_data(data):
     order_dict = model_to_dict(data)
     return order_dict
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields=(
+            'id',
+            'email',
+        )
+        read_only_fields = fields
 
 class OrderSerializer(ModelSerializer):
     user= UserSerializer()
@@ -25,7 +34,7 @@ class OrderSerializer(ModelSerializer):
         
 
 class MpOrderView(APIView):
-    permission_classes=[AllowAny]
+    permission_classes=[HasGroupPermission]
     required_groups={
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]

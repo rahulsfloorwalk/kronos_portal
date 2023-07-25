@@ -9,6 +9,7 @@ class ActiveCustomerRow extends React.Component{
 			full_name:PropTypes.string,
 			email:PropTypes.string,
 			phone:PropTypes.string,
+			is_verified:PropTypes.string
 		})
 
 	};
@@ -20,7 +21,7 @@ class ActiveCustomerRow extends React.Component{
 				<td>{this.props.profile.full_name}</td>
 				<td>{this.props.profile.email}</td>
 				<td>{this.props.profile.phone}</td>
-				<td>DEFAULT</td>
+				<td>{this.props.profile.is_verified ? "Verfied" : "Not Verfied"}</td>
 			</tr>
 		);
 	}

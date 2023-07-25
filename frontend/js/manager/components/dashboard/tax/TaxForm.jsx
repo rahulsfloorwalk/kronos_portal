@@ -8,6 +8,7 @@ import SaveButton from "../../../../components/SaveButton.jsx";
 import Modal from "../../../../components/Modal.jsx";
 import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
+import Alert from "react-s-alert";
 
 export default class TaxForm extends React.Component {
 	static propTypes = {
@@ -68,6 +69,7 @@ export default class TaxForm extends React.Component {
 		}
 		promise.then(function () {
 			hashHistory.push("/admindashboard/tax");
+			Alert.success("Tax Added");
 		}, (errors) => {
 			if (errors.responseJSON) {
 				this.setState({

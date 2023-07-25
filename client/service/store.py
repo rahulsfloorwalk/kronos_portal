@@ -1,5 +1,5 @@
 from django.db import IntegrityError
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User,Group
 
 from kronos.exceptions import ObjectNotFound, AppLogicError
 
@@ -7,8 +7,11 @@ from ..models import Store
 from manager.models import City
 from client.service import client_user as client_user_service
 from client.service import client_service
+from registration.models import GROUP_NAME_CLIENT
 
-
+def find_user_by_id(user_id):
+    return User.objects.get(pk=user_id)
+    
 def save(store):
     store.save()
     return store

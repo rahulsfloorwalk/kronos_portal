@@ -100,17 +100,6 @@ class MPCategory(Model):
     def __str__(self):
         return 'Category({}): {}'.format(self.id, self.name)
 
-class MPInterestArea(Model):
-    id = AutoField(db_column='id', primary_key=True)
-    name = CharField(db_column='name', max_length=200, blank=False)
-    def __str__(self):
-        return 'InterestArea({}): {}'.format(self.id, self.name)
-class MPIndustry(Model):
-    id = AutoField(db_column='id', primary_key=True)
-    name = CharField(db_column='name', max_length=200, blank=False)
-    def __str__(self):
-        return 'Industry({}): {}'.format(self.id, self.name)
-
 class MPSubcategory(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
@@ -123,9 +112,7 @@ class MPSolution(Model):
     url_structure = CharField(db_column='url_strucuture',max_length=200,blank=False)
     price = PositiveIntegerField(db_column='price',blank=False,default=0)
     category = ForeignKey(MPCategory, related_name='mpsolutions', db_column='category_id', blank=False, on_delete=PROTECT)
-    sub_category = ForeignKey(MPSubcategory, related_name='mpsolutions', db_column='sub_category_id', blank=False, on_delete=PROTECT)
     tax = ForeignKey(MPTax, related_name='mpsolutions', db_column='tax_id', blank=False, on_delete=PROTECT)
-    about = CharField(db_column='about', max_length=200, blank=False)
     overview = CharField(db_column='overview', max_length=200, blank=False)
     how_it_work = CharField(db_column='how_it_work', max_length=200, blank=False)
     execution_time = CharField(db_column='execution_time', max_length=200, blank=False)
@@ -322,31 +309,6 @@ class MPSolutionOtherDetails(Model):
     def __str__(self):
         return 'MPSolutionOtherDetails({}): {}  {}'.format(self.id, self.audit_fee,self.solution)
 
-class MPStore(Model):
-    id = AutoField(db_column='id', primary_key=True)
-    code = CharField(db_column='code', max_length=20, blank=True, null=True, default=None)
-    priority = CharField(db_column='priority', max_length=50, blank=True, default='')
-    user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
-    name = CharField(db_column='name', max_length=500, blank=False)
-    address = CharField(db_column='address', max_length=1024, blank=False)
-    location = ForeignKey('manager.Location', db_column='location_id', blank=True, null=True, on_delete=PROTECT)
-    city = ForeignKey('manager.City', db_column='city_id', null=True, on_delete=PROTECT)
-    phone = CharField(db_column='phone', max_length=100, blank=True)
-    map_location_link = CharField(db_column='map_location_link', max_length=1024, blank=True, default='')
-    pincode = CharField(db_column='pincode', max_length=20, blank=True, null=True, default=None)
-    
-    created_at = DateTimeField(db_column="created_at", null=True)
-    modified_at = DateTimeField(db_column="modified_at", null=True)
-
-    def save(self,*args,**kwargs):
-        ''' On save, update timestamps '''
-        if not self.id:
-            self.created_at = timezone.now()
-        self.modified_at = timezone.now()
-        return super(MPStore, self).save(*args, **kwargs)
-    
-    def __str__(self):
-        return 'MPStore({}): {} '.format(self.id, self.name)
     
 class MPOrder(Model):
     COMPLETE = 'COMPLETE'

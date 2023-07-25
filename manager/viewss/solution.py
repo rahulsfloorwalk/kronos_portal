@@ -23,9 +23,7 @@ class SolutionDeSerializer(ModelSerializer):
             'name',
             'url_structure',
             'price',
-            'about',
             'category',
-            'sub_category',
             'tax',
             'overview',
             'how_it_work',
@@ -42,9 +40,7 @@ class SolutionDeSerializer(ModelSerializer):
         solution.name = self.validated_data.get('name', solution.name)
         solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
         solution.price = self.validated_data.get('price', solution.price)
-        solution.about = self.validated_data.get('about', solution.about)
         solution.category = self.validated_data.get('category', solution.category_id)
-        solution.sub_category = self.validated_data.get('sub_category', solution.sub_category_id)
         solution.tax = self.validated_data.get('tax', solution.tax_id)
         solution.overview = self.validated_data.get('overview', solution.overview)
         solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
@@ -95,16 +91,11 @@ class PublicSolutionView(APIView):
                         'overview':i.category.overview,
                         'short_description':i.category.short_description
                     },
-                    'sub_category':{
-                        'id':i.sub_category.id,
-                        'name':i.sub_category.name
-                    },
                     'tax':{
                         'id':i.tax.id,
                         'name':i.tax.name,
                         'rate':i.tax.rate
                     },
-                    'about':i.about,
                     'overview':i.overview,
                     'how_it_work':i.how_it_work,
                     'execution_time':i.execution_time,

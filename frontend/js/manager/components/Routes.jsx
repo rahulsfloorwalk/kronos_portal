@@ -126,10 +126,6 @@ import SubCategoryList from "./dashboard/subCategory/SubCategoryList.jsx";
 import SubCategoryForm from "./dashboard/subCategory/SubCategoryForm.jsx";
 import TaxList from "./dashboard/tax/TaxList.jsx";
 import TaxForm from "./dashboard/tax/TaxForm.jsx";
-import IndustryForm from "./dashboard/industry/IndustryForm.jsx";
-import IndustryList from "./dashboard/industry/IndustryList.jsx";
-import InterestAreaList from "./dashboard/interestArea/InterestAreaList.jsx";
-import InterestAreaForm from "./dashboard/interestArea/InterestAreaForm.jsx";
 import AllSolutionList from "./dashboard/allSolutions/AllSolutionList.jsx";
 import AllSolutionForm from "./dashboard/allSolutions/AllSolutionForm.jsx";
 import AllOrder from "./dashboard/orderes/AllOrder.jsx";
@@ -165,14 +161,6 @@ const Routes = () => (
 				<Route path="tax" component={TaxList}>
 					<Route path="add" component={TaxForm} />
 					<Route path=":taxId/edit" component={TaxForm} />
-				</Route>
-				<Route path="industry" component={IndustryList}>
-					<Route path="add" component={IndustryForm} />
-					<Route path=":industryId/edit" component={IndustryForm} />
-				</Route>
-				<Route path="interested_area" component={InterestAreaList}>
-					<Route path="add" component={InterestAreaForm} />
-					<Route path=":interestareaId/edit" component={InterestAreaForm} />
 				</Route>
 				<Route path="solution" component={AllSolutionList}>
 					<Route path="add" component={AllSolutionForm} />

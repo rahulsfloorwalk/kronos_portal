@@ -33,11 +33,12 @@ class CategoryView(APIView):
         if request.data.get('name'):
             if MPCategory.objects.filter(name=request.data.get('name')).exists():
                 raise AppLogicError('Category is already exists')
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors)
+        serializer_s = CategorySerializer(data=request.data)
+        serializer_s.is_valid(raise_exception=True)
+        serializer=serializer_s.deserialize()
+        saveCategory=serializer.save()
+        return Response(CategorySerializer(saveCategory).data)
+        
 class PublicCategoryIdView(APIView):
     permission_classes = [AllowAny]
     def get_object(self, category_id):
@@ -91,7 +92,6 @@ class PublicCategoryAttachmentView(APIView):
     permission_classes=[AllowAny]
     def get(self,request,category_id):
         attachment = category_attachement_service.find_attachment_by_category_id(category_id)
-        print(attachment,'93')
         return Response(AttachmentSerializer(attachment,many=True).data)
     
 class CategoryAttachmentView(APIView):

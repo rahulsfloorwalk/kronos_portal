@@ -42,22 +42,18 @@ class ClientProfileDeSerializer(ModelSerializer):
         return profile_info
     
 class ClientProfileView(APIView):
-    permission_classes = [HasGroupPermission]
+    permission_classes = [AllowAny]
     required_groups = {
     'GET': [GROUP_NAME_CLIENT],
     'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,user_id,format=None):
-        user = User.objects.get(id=user_id).groups.add(name=GROUP_NAME_CLIENT) 
-        if not user:
-            raise AppLogicError('User is not Valid')
-        client_profile=MPClientProfileInfo.objects.get(user_id=user.id)
+
+        client_profile = MPClientProfileInfo.objects.get(user_id=user_id)
         return Response(ClientProfileSerializer(client_profile).data)
     def post(self,request,user_id):
-        user = User.objects.get(id=user_id).groups.add(name=GROUP_NAME_CLIENT) 
-        if not user:
-            raise AppLogicError('User is not Valid')
-        profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': user.id})
+        profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': user_id})
+
         profile_info_ds.is_valid(raise_exception=True)
         profile_info = profile_info_ds.deserialize()
         profile_info.save()

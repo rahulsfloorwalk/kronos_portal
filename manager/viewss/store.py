@@ -4,16 +4,50 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from kronos.exceptions import AppLogicError
-
-from registration.models import GROUP_NAME_MANAGER
+from django.db.transaction import atomic
+from registration.models import GROUP_NAME_MANAGER,GROUP_NAME_CLIENT
 from registration.mixins import HasGroupPermission
 
 from client.service.store_import_xlsx import find_sample_xlsx_for_store_insert, import_store_by_xlsx_sheet
 from client.service import store as store_service
-from client.models import Store
-
+from client.models import Store,Client
+from rest_framework.permissions import AllowAny
 from manager.serializers import StoreSerializer, StoreImportDeSerializer
-
+from django.contrib.auth.models import User
+class MPStoreDeSerializer(ModelSerializer):
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'address',
+            'code',
+            'pincode',
+            'type',
+            'phone',
+            'priority',
+            'city',
+            'map_location_link'
+        )
+        read_only_fields = ('id',)
+        validators=[]
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            store = Store.objects.get(id=self.context.get('id'))
+        else:
+            store = Store()
+            store.client = self.context.get('client')
+        
+        store.name = self.validated_data.get('name', store.name)
+        store.address = self.validated_data.get('address', store.address)
+        store.city = self.validated_data.get('city', store.city_id)
+        store.code = self.validated_data.get('code', store.code)
+        store.pincode = self.validated_data.get('pincode', store.pincode)
+        store.map_location_link = self.validated_data.get('map_location_link', store.map_location_link)
+        store.type = self.validated_data.get('type', store.type)
+        store.priority = self.validated_data.get('priority', store.priority)
+        store.phone = self.validated_data.get('phone', store.phone)
+        return store
 class StoreDeSerializer(ModelSerializer):
     class Meta:
         model = Store
@@ -101,6 +135,29 @@ class StoreView(APIView):
             savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
 
+
+class StoreUserIdView(APIView):
+    permission_classes = [AllowAny]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def get(self,request,user_id):
+        user = User.objects.get(id=user_id)
+        client = Client.objects.get(name=user.email)
+        stores = store_service.find_stores_by_client(client.id)
+        return Response(StoreSerializer(stores, many=True).data)
+    def post(self,request,user_id):
+        user = User.objects.get(id=user_id)
+        client_id = Client.objects.get(name=user.email)
+        if client_id.id and request.data.get('code'):
+            if Store.objects.filter(client=client_id.id,code=request.data.get('code')).exists():
+                raise AppLogicError('The store already exist in the client.')
+        store_ds = MPStoreDeSerializer(data=request.data, context={'client': client_id})
+        store_ds.is_valid(raise_exception=True)
+        store = store_ds.deserialize()
+        savedStore = store.save()
+        return Response(StoreSerializer(store).data)
 class ImportStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
