@@ -16,7 +16,6 @@ class DetailsForm extends React.Component {
 		}),
 	};
 
-
 	state = {
 		loading: false,
 		details: {
@@ -101,7 +100,6 @@ class DetailsForm extends React.Component {
 				);
 			}
 		}
-		
 	};
 	render() {
 

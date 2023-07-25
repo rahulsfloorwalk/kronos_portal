@@ -1,5 +1,6 @@
 import logging
 from django.db.transaction import atomic
+import random
 
 from django.conf import settings
 from django.core.validators import validate_email
@@ -117,24 +118,17 @@ def sign_up_market_place(data):
     auth_data = {}
     auth_data['email'] = data.get("username")
 
-    salt_hash_hexstr = hashlib.sha1(urandom(16)).hexdigest()
-    email_hash_hexstr = hashlib.sha1(auth_data["email"].encode('utf-8')).hexdigest()
-    cat_str = salt_hash_hexstr + email_hash_hexstr
-    activation_key = hashlib.sha1(cat_str.encode('utf-8')).hexdigest()
-
-    verification = Verification()
-    verification.user = user
-    verification.activation_key = activation_key
-    verification.key_expires = timezone.now() + datetime.timedelta(days=2)
-    verification.save()
-
-    message = get_template('registration/client/email_verification.html').render({
-        'key': activation_key,
+    def generate_otp():
+        return random.randint(1000, 9999)
+    otp = generate_otp()
+    
+    message = get_template('registration/market_place/otp_verification.html').render({
+        'otp': otp,
         'email': user.email,
         **registration_context(),
     })
 
-    msg = EmailMessage(strings.SIGN_UP_SUBJECT, message, to=(user.email,))
+    msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
     msg.content_subtype = 'html'
 
     if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
@@ -144,7 +138,7 @@ def sign_up_market_place(data):
         _logger.info("verification email disabled. skipping email for user : %s", user.email)
         _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
 
-    response = {'detail': 'Client Registered Successfully. Please Check Email for verification'}
+    response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification'}
     status = 200
     return response, status
     
