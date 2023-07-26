@@ -51,9 +51,9 @@ def verify_email_by_otp(request,otp):
     return JsonResponse(response,status)
 
 
-# class OTPVerify(APIView):
-#     permission_classes=[AllowAny]
-#     @atomic
-#     def post(self,request):
-#         response , status = market_place_service_api.verify_by_otp_and_login(request)
-#         return JsonResponse(response,status=status)    
+class MPVerfifyEmailByOtp(APIView):
+    permission_classes=[AllowAny]
+    @atomic
+    def post(self,request):
+        response , status = market_place_service_api.verify_by_otp_and_login(request)
+        return JsonResponse(response,status=status)    
