@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db.models import Model, CharField, AutoField, DateTimeField, OneToOneField, BooleanField, ForeignKey, PROTECT
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 # Alters auth_user model. email field is unique
 User._meta.local_fields[4].__dict__['_unique'] = True
 
@@ -15,9 +15,12 @@ class Verification(Model):
 class OTPVerification(Model):
     id = AutoField(db_column='id', primary_key=True)
     otp = CharField(db_column='otp',max_length=4,blank=True)
+    otp_expires = DateTimeField(db_column='otp_expires')
     is_verified = BooleanField(db_column='is_verified', default=False)
     user = OneToOneField(settings.AUTH_USER_MODEL, related_name='otpverification', on_delete=PROTECT)
-
+    def is_expired(self):
+        print('arpadfdfdfn')
+        return self.otp_expires < timezone.now()
 class MobileNumber(Model):
     id = AutoField(db_column='id', primary_key=True)
     mobile_number = CharField(db_column='mobile_number', max_length=10, blank=False, null=False)

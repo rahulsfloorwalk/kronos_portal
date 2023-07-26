@@ -27,8 +27,11 @@ from registration.context import registration_context
 _logger = logging.getLogger(__name__)
 
 def generate_otp():
-    return random.randint(1000, 9999)
+    return str(random.randint(1000, 9999))
 
+def create_client_manager_and_trainer(user):
+    return True
+    
 def sign_up_market_place(request):
     to_check_email = request.data.get("username")
     try:
@@ -36,111 +39,86 @@ def sign_up_market_place(request):
     except ValidationError:
         response = {'detail':'Please enter a valid email'}
         status = 400
-        return response,status
     if to_check_email:
         to_check_email = to_check_email.strip().lower()
     
-    if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email) ).exists():
-        response={'detail':'a user with this email already exists, please check email for otp'}
+    user = User.objects.filter(email__iexact=to_check_email,is_active=False)
+    if user:
+        otp = generate_otp()
+        otp_verification=OTPVerification.objects.get(user_id=user.id)
+        otp_verification.otp = otp
+        otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+        otp_verification.save()
+        message = get_template('registration/market_place/otp_verification.html').render({
+            'otp': otp,
+            'email': user.email,
+            **registration_context(),
+        })
+
+        msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+        msg.content_subtype = 'html'
+
+        if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+            msg.send()
+            _logger.info("verification email sent to user : %s", user.email)
+        else:
+            _logger.info("verification email disabled. skipping email for user : %s", user.email)
+            _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+        
+        response={'details': 'OTP is Shared On Your Email !!','user':user.id }
         status= 200
-        return response,status
-    
-    user=User()
-    user.email = request.data.get("username")
-    if request.data.get("phone"):
-        user.phone = request.data.get("phone")
-    user.username = str.lower(request.data.get("username"))
-    user.set_password(request.data.get("password"))
-    user.is_active = False
-    
-    user.save()
-    user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
-    user.save()
-    
-    client=Client()
-    client.name=request.data.get("username")
-    client.email=request.data.get("username")
-    client.is_active = False 
-    client.save()
-    
-    client_user = ClientUser()
-    client_user.client = client
-    client_user.full_name = " . "
-    client_user.user = user
-    client_user.receive_email_notification = True
-    client_user.save()
-    assign_perm('client.clientuser_admin',user)
-    
-    if ClientManager.objects.filter(client=client,user__email='sourabh@floorwalk.in').exists():
-        raise AppLogicError("a manager is already exists in this client")
     else:
-        manager = User.objects.get(email='sourabh@floorwalk.in')
+        user=User()
+        user.email = request.data.get("username")
+        if request.data.get("phone"):
+            user.phone = request.data.get("phone")
+        user.username = str.lower(request.data.get("username"))
+        user.set_password(request.data.get("password"))
+        user.is_active = False
+        user.save()
+        user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
+        user.save()
         
-        client_manager = ClientManager()
-        client_manager.client = client
-        client_manager.user = manager
-        client_manager.receive_email_notification = True
-        client_manager.is_active = True
-        client_manager.save()
-    
-    
-    if ClientTrainer.objects.filter(client=client, user__email='bhagyashree.khade@floorwalk.in').exists():
-        raise AppLogicError("a trainer is already exists in this client")
-    else:
-        trainer = User.objects.get(email='bhagyashree.khade@floorwalk.in')
+        if request.data.get("phone"):
+            client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
+        else:
+            client_profile = MPClientProfileInfo(user_id=user.id)
+        client_profile.save()
         
-        client_trainer = ClientTrainer()
-        client_trainer.client = client
-        client_trainer.user = trainer
-        client_trainer.receive_email_notification = True
-        client_trainer.is_active = True
-        client_trainer.save()
-    
-    
-    if request.data.get("phone"):
-        client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
-    else:
-        client_profile = MPClientProfileInfo(user_id=user.id)
-    client_profile.save()
-    
-    auth_data = {}
-    auth_data['email'] = request.data.get("username")
-    
-    
-    otp = generate_otp()
-    otp_verification=OTPVerification()
-    otp_verification.user = user
-    otp_verification.otp=otp
-    otp_verification.save()
-    
-    message = get_template('registration/market_place/otp_verification.html').render({
-        'otp': otp,
-        'email': user.email,
-        **registration_context(),
-    })
+        auth_data = {}
+        auth_data['email'] = request.data.get("username")
+        
+        otp = generate_otp()
+        otp_verification=OTPVerification()
+        otp_verification.user = user
+        otp_verification.otp=otp
+        otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+        otp_verification.save()
+        message = get_template('registration/market_place/otp_verification.html').render({
+            'otp': otp,
+            'email': user.email,
+            **registration_context(),
+        })
 
-    msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
-    msg.content_subtype = 'html'
+        msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+        msg.content_subtype = 'html'
 
-    if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
-        msg.send()
-        _logger.info("verification email sent to user : %s", user.email)
-    else:
-        _logger.info("verification email disabled. skipping email for user : %s", user.email)
-        _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+        if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+            msg.send()
+            _logger.info("verification email sent to user : %s", user.email)
+        else:
+            _logger.info("verification email disabled. skipping email for user : %s", user.email)
+            _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
 
-    response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification'}
-    status = 200
+        response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification...','user':user.id}
+        status = 200
     return response, status
     
 def authenticate(username=None,password=None):
     u = username.strip()
     p = password.strip()
-    try:
-        if u.isnumeric() and len(u) is 10:
-            user = MPClientProfileInfo.objects.get(mobile_number__iexact=u).user
-        else:
-            user = User.objects.get(email__iexact=u)
+    try:    
+        user = User.objects.get(email__iexact=u)
         if not user.groups.filter(name=GROUP_NAME_CLIENT).exists():
             return None
     except (MPClientProfileInfo.DoesNotExist,User.DoesNotExist) as e:
@@ -156,13 +134,35 @@ def log_in_market_place(data):
     user = authenticate(username,password)
     if user:
         if not user.otpverification.is_verified:
-            response = {'detail': 'Your account is not verified. Please check your email for the OTP.'}
-            status = 200
+            otp = generate_otp()
+            otp_verification=OTPVerification.objects.get(user_id=user.id)
+            otp_verification.otp = otp
+            otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+            otp_verification.save()
+            message = get_template('registration/market_place/otp_verification.html').render({
+                'otp': otp,
+                'email': user.email,
+                **registration_context(),
+            })
+
+            msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+            msg.content_subtype = 'html'
+
+            if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                msg.send()
+                _logger.info("verification email sent to user : %s", user.email)
+            else:
+                _logger.info("verification email disabled. skipping email for user : %s", user.email)
+                _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+            
+            response={'details': 'OTP is Shared On Your Email !!','user':user.id }
+            status= 200
         else:
-            OTPVerification.objects.filter(user_id=user.id).update(otp="")
+            create_client_manager_and_trainer(user)
             token, created = Token.objects.get_or_create(user=user)
 
             result = market_place_api.get_client_dashboard_data(user.id)
+            
             response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
             status = 200
     else:
@@ -170,26 +170,57 @@ def log_in_market_place(data):
         status = 400
     return response, status
 
-# def verify_by_otp_and_login(request):
-#     user_otp = request.data.get('otp')
-#     otp = request.session.get('otp')
-#     if otp == user_otp:
-#         username = request.data.get('username')
-#         password = request.data.get('password')
-#         user = authenticate(username,password)
-#         user.is_active=True
-#         user.save()
-#         client_user = ClientUser.objects.get(user_id=user.id)
-#         client_user.user=user
-#         client_user.save()
-#         if user:
-#             token, created = Token.objects.get_or_create(user=user)
-#             result = market_place_api.get_client_dashboard_data(user.id)
-#             response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
-#             status = 200
-#     else:
-#         response = {'detail': 'OTP is incorrect'}
-#         status=400
-#     return response,status
+def verify_by_otp_and_login(request):
+    user=request.data.get('user')
+    otp=request.data.get('otp')
+    try:
         
+        user_=User.objects.get(id=user) 
+        otp_verification = OTPVerification.objects.get(user=user_.id)
         
+        if otp_verification.is_expired():
+            otp = generate_otp()
+            otp_verification=OTPVerification.objects.get(user_id=user_.id)
+            otp_verification.otp = otp
+            otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+            otp_verification.save()
+            message = get_template('registration/market_place/otp_verification.html').render({
+                'otp': otp,
+                'email': user_.email,
+                **registration_context(),
+            })
+
+            msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user_.email,))
+            msg.content_subtype = 'html'
+
+            if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                msg.send()
+                _logger.info("verification email sent to user : %s", user_.email)
+            else:
+                _logger.info("verification email disabled. skipping email for user : %s", user_.email)
+                _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+            
+            response={'details': 'Old OTP Has Expired, New OTP is Shared On Your Email !!','user':user }
+            status= 200
+        else:
+            if otp_verification.otp == otp:
+                user_=User.objects.get(id=user)
+                user_.is_active = True
+                user_.save()
+                otp_verification.is_verfied = True
+                otp_verification.save()
+                create_client_manager_and_trainer(user)
+                token, created = Token.objects.get_or_create(user=user_)
+                
+                result = market_place_api.get_client_dashboard_data(user_.id)
+                response = {'detail': 'OTP Verified !! Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+                status = 200
+            
+            else:
+                response = {'detail': 'Invalid OTP.'}
+                status = 400
+    except OTPVerification.DoesNotExist:
+        response = {'detail': 'Record not found.'}
+        status = 404
+    
+    return response,status
