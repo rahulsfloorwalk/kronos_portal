@@ -8,7 +8,7 @@ from django.utils import timezone
 
 from kronos.exceptions import ObjectNotFound
 
-from registration.models import Verification
+from registration.models import Verification,OTPVerification
 
 _logger = logging.getLogger(__name__)
 
@@ -39,7 +39,11 @@ def find_verification_by_activation_key(key):
     except Verification.DoesNotExist as e:
         raise ObjectNotFound from e
 
-
+def find_verification_by_otp(otp):
+    try:
+        return OTPVerification.objects.get(otp=otp)
+    except OTPVerification.DoesNotExist as e:
+        raise ObjectNotFound from e
 @atomic
 def verify_by_user_id(user_id):
     verification = find_verification_by_user_id(user_id)
@@ -58,3 +62,8 @@ def verify_by_user_id(user_id):
 def verify_by_activation_key(activation_key):
     verification = find_verification_by_activation_key(activation_key)
     return verify_by_user_id(verification.user_id)
+
+@atomic
+def verify_by_otp(otp):
+    otp = find_verification_by_otp(otp)
+    return verify_by_user_id(otp.user)

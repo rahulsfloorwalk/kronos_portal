@@ -4,10 +4,12 @@ from rest_framework.permissions import AllowAny
 from django.db.transaction import atomic
 from django.http import JsonResponse
 import json
+
 from registration.service import market_place_api as market_place_service_api
 from kronos.exceptions import ObjectNotFound
-
+from registration.service import verification_service
 from registration.service import auditor_api as auditor_service_api
+
 class SignUpAPI(View):
     @atomic
     def post(self, request):
@@ -34,9 +36,24 @@ class MPLogInAPI(APIView):
         response , status = market_place_service_api.log_in_market_place(data=request.data)
         return JsonResponse(response, status=status)
 
-class OTPVerify(APIView):
-    permission_classes=[AllowAny]
-    @atomic
-    def post(self,request):
-        response , status = market_place_service_api.verify_by_otp_and_login(request)
-        return JsonResponse(response,status=status)    
+@atomic
+def verify_email_by_otp(request,otp):
+    try:
+        otp_verify = verification_service.verify_by_otp(otp)
+        if otp_verify:
+            response, status = market_place_service_api.log_in_market_place(data=request.data) 
+        else:
+            response ={'detail':'otp is incorrect'}
+            status=400    
+    except ObjectNotFound as e:
+        response ={'detail': 'verfication failed for otp: {}'.otp}
+        status=400
+    return JsonResponse(response,status)
+
+
+# class OTPVerify(APIView):
+#     permission_classes=[AllowAny]
+#     @atomic
+#     def post(self,request):
+#         response , status = market_place_service_api.verify_by_otp_and_login(request)
+#         return JsonResponse(response,status=status)    

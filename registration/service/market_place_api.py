@@ -18,7 +18,7 @@ from django.forms import ValidationError
 from django.contrib.auth.models import User, Group
 from django.db.models import Q
 from client.models import MPClientProfileInfo,ClientManager,ClientTrainer,Client,ClientUser
-from registration.models import GROUP_NAME_CLIENT,Verification
+from registration.models import GROUP_NAME_CLIENT,Verification,OTPVerification
 from django.db import IntegrityError
 from auditor.service import profile_info_service,market_place_api
 from django.template.loader import get_template
@@ -41,22 +41,9 @@ def sign_up_market_place(request):
         to_check_email = to_check_email.strip().lower()
     
     if User.objects.filter(Q(email__iexact=to_check_email) | Q(username__iexact=to_check_email) ).exists():
-        response={'detail':'a user with this email already exists'}
-        status= 400
+        response={'detail':'a user with this email already exists, please check email for otp'}
+        status= 200
         return response,status
-    if request.data.get('phone'):
-        if not len(request.data.get('phone')) == 10:
-            response = {'detail': 'Phone number should be 10 digit'}
-            status = 400
-            return response, status
-        if not profile_info_service.mobile_number_pattern.match(request.data.get('phone')):
-            response = {'detail': 'invalid phone number'}
-            status = 400
-            return response, status
-        if client_mobile_number_service.mobile_number_exists(request.data.get("phone")):
-            response = {'detail': 'a user with this phone number already exists'}
-            status = 400
-            return response, status
     
     user=User()
     user.email = request.data.get("username")
@@ -121,7 +108,11 @@ def sign_up_market_place(request):
     
     
     otp = generate_otp()
-    request.session['otp'] = str(otp)
+    otp_verification=OTPVerification()
+    otp_verification.user = user
+    otp_verification.otp=otp
+    otp_verification.save()
+    
     message = get_template('registration/market_place/otp_verification.html').render({
         'otp': otp,
         'email': user.email,
@@ -164,10 +155,11 @@ def log_in_market_place(data):
     password = data.get("password")
     user = authenticate(username,password)
     if user:
-        if not user.verification.is_verified:
-            response = {'detail': 'Your account is not verified. Please check your email for the verification link.'}
-            status = 400
+        if not user.otpverification.is_verified:
+            response = {'detail': 'Your account is not verified. Please check your email for the OTP.'}
+            status = 200
         else:
+            OTPVerification.objects.filter(user_id=user.id).update(otp="")
             token, created = Token.objects.get_or_create(user=user)
 
             result = market_place_api.get_client_dashboard_data(user.id)
@@ -178,26 +170,26 @@ def log_in_market_place(data):
         status = 400
     return response, status
 
-def verify_by_otp_and_login(request):
-    user_otp = request.data.get('otp')
-    otp = request.session.get('otp')
-    if otp == user_otp:
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(username,password)
-        user.is_active=True
-        user.save()
-        client_user = ClientUser.objects.get(user_id=user.id)
-        client_user.user=user
-        client_user.save()
-        if user:
-            token, created = Token.objects.get_or_create(user=user)
-            result = market_place_api.get_client_dashboard_data(user.id)
-            response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
-            status = 200
-    else:
-        response = {'detail': 'OTP is incorrect'}
-        status=400
-    return response,status
+# def verify_by_otp_and_login(request):
+#     user_otp = request.data.get('otp')
+#     otp = request.session.get('otp')
+#     if otp == user_otp:
+#         username = request.data.get('username')
+#         password = request.data.get('password')
+#         user = authenticate(username,password)
+#         user.is_active=True
+#         user.save()
+#         client_user = ClientUser.objects.get(user_id=user.id)
+#         client_user.user=user
+#         client_user.save()
+#         if user:
+#             token, created = Token.objects.get_or_create(user=user)
+#             result = market_place_api.get_client_dashboard_data(user.id)
+#             response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+#             status = 200
+#     else:
+#         response = {'detail': 'OTP is incorrect'}
+#         status=400
+#     return response,status
         
         

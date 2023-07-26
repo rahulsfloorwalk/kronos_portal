@@ -12,6 +12,11 @@ class Verification(Model):
     is_verified = BooleanField(db_column='is_verified', default=False)
     user = OneToOneField(settings.AUTH_USER_MODEL, related_name='verification', on_delete=PROTECT)
 
+class OTPVerification(Model):
+    id = AutoField(db_column='id', primary_key=True)
+    otp = CharField(db_column='otp',max_length=4,blank=True)
+    is_verified = BooleanField(db_column='is_verified', default=False)
+    user = OneToOneField(settings.AUTH_USER_MODEL, related_name='otpverification', on_delete=PROTECT)
 
 class MobileNumber(Model):
     id = AutoField(db_column='id', primary_key=True)
