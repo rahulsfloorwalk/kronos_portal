@@ -12,7 +12,7 @@ import datetime
 from django.utils import timezone
 from django.core.mail import EmailMessage
 import strings
-from kronos.exceptions import AppLogicError
+from kronos.exceptions import AppLogicError,ObjectNotFound
 from rest_framework.authtoken.models import Token
 from django.forms import ValidationError
 from django.contrib.auth.models import User, Group
@@ -29,7 +29,53 @@ _logger = logging.getLogger(__name__)
 def generate_otp():
     return str(random.randint(1000, 9999))
 
-def create_client_manager_and_trainer(user):
+def create_client_manager_and_trainer(user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        email= user.email
+        try:
+            client = Client.objects.get(name=email) 
+        except Client.DoesNotExist as e:
+            client=Client()
+            client.name=email
+            client.email=email
+            client.is_active = False 
+            client.save()
+            
+            client_user = ClientUser()
+            client_user.client = client
+            client_user.full_name = " . "
+            client_user.user = user
+            client_user.receive_email_notification = True
+            client_user.save()
+            assign_perm('client.clientuser_admin',user)
+            
+            if ClientManager.objects.filter(client=client,user__email='sourabh@floorwalk.in').exists():
+                raise AppLogicError("a manager is already exists in this client")
+            else:
+                manager = User.objects.get(email='sourabh@floorwalk.in')
+                
+                client_manager = ClientManager()
+                client_manager.client = client
+                client_manager.user = manager
+                client_manager.receive_email_notification = True
+                client_manager.is_active = True
+                client_manager.save()
+            
+            
+            if ClientTrainer.objects.filter(client=client, user__email='bhagyashree.khade@floorwalk.in').exists():
+                raise AppLogicError("a trainer is already exists in this client")
+            else:
+                trainer = User.objects.get(email='bhagyashree.khade@floorwalk.in')
+                
+                client_trainer = ClientTrainer()
+                client_trainer.client = client
+                client_trainer.user = trainer
+                client_trainer.receive_email_notification = True
+                client_trainer.is_active = True
+                client_trainer.save()
+    except User.DoesNotExist as e:
+        ObjectNotFound()
     return True
     
 def sign_up_market_place(request):
@@ -158,9 +204,7 @@ def log_in_market_place(data):
             response={'details': 'OTP is Shared On Your Email !!','user':user.id }
             status= 200
         else:
-            create_client_manager_and_trainer(user)
             token, created = Token.objects.get_or_create(user=user)
-
             result = market_place_api.get_client_dashboard_data(user.id)
             
             response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
@@ -207,7 +251,7 @@ def verify_by_otp_and_login(request):
                 user_=User.objects.get(id=user)
                 user_.is_active = True
                 user_.save()
-                otp_verification.is_verfied = True
+                otp_verification.is_verified = True
                 otp_verification.save()
                 create_client_manager_and_trainer(user)
                 token, created = Token.objects.get_or_create(user=user_)

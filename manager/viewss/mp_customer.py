@@ -4,12 +4,12 @@ from manager.models import MPSolution,MPOrder
 from rest_framework.response import Response
 from django.http import JsonResponse
 from registration.mixins import HasGroupPermission
-from registration.models import GROUP_NAME_MANAGER,Verification
+from registration.models import GROUP_NAME_MANAGER,OTPVerification
 def profile_info():
     customer = MPClientProfileInfo.objects.all()
     result=[]
     for i in customer:
-        verified=Verification.objects.get(user_id=i.user_id)
+        verified=OTPVerification.objects.get(user_id=i.user_id)
         result.append({'id':i.id,'user_id':i.user_id,'full_name':i.first_name+' '+i.last_name,'phone':i.mobile_number,'email':i.user.email,'is_verified':verified.is_verified})
     return result
 class MpCustomerView(APIView):
