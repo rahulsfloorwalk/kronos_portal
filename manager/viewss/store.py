@@ -7,11 +7,11 @@ from kronos.exceptions import AppLogicError
 from django.db.transaction import atomic
 from registration.models import GROUP_NAME_MANAGER,GROUP_NAME_CLIENT
 from registration.mixins import HasGroupPermission
-
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from client.service.store_import_xlsx import find_sample_xlsx_for_store_insert, import_store_by_xlsx_sheet
 from client.service import store as store_service
 from client.models import Store,Client
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from manager.serializers import StoreSerializer, StoreImportDeSerializer
 from django.contrib.auth.models import User
 class MPStoreDeSerializer(ModelSerializer):
@@ -116,6 +116,27 @@ class StoreIdView(APIView):
         store_service.delete(store_id)
         return HttpResponse(status=204)
 
+# class MPStoreIdView(APIView):
+#     permission_classes=[AllowAny]
+#     # required_groups = {
+#     #     'GET': [GROUP_NAME_CLIENT],
+#     #     'POST': [GROUP_NAME_CLIENT],
+#     #     'DELETE':[GROUP_NAME_CLIENT]
+#     # }
+#     def get(self, request, store_id, format=None):
+#         store = store_service.find_store_by_id(store_id)
+#         return Response(StoreSerializer(store).data)
+
+#     def post(self, request, store_id):
+#         store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})
+#         store_ds.is_valid(raise_exception=True)
+#         store = store_ds.deserialize()
+#         savedStore = store_service.save(store)
+#         return Response(StoreSerializer(savedStore).data)
+
+#     def delete(self, request, store_id):
+#         store_service.delete(store_id)
+#         return HttpResponse(status=204)
 class StoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -138,6 +159,8 @@ class StoreView(APIView):
 
 class StoreUserIdView(APIView):
     permission_classes = [AllowAny]
+    # authentication_classes = [TokenAuthentication, SessionAuthentication]
+    
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
         'POST': [GROUP_NAME_CLIENT]
@@ -158,6 +181,7 @@ class StoreUserIdView(APIView):
         store = store_ds.deserialize()
         savedStore = store.save()
         return Response(StoreSerializer(store).data)
+    
 class ImportStoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

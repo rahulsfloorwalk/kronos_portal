@@ -327,6 +327,7 @@ class MPOrder(Model):
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
     alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True)
     store = JSONField(db_column='stores', default=list, blank=True)
+    attachments = GenericRelation('attachment.Attachment', related_query_name='orders')
     
     def __str__(self):
         return 'MPOrder({}): Solution{} '.format(self.id, self.solution)

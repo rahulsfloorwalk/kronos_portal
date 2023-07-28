@@ -1,7 +1,6 @@
 from ..models import MPCategory,MPSolution
 from django.db.utils import IntegrityError
 from kronos.exceptions import ObjectNotFound,AppLogicError
-from ..service import category_attachement_service
 from attachment.models import Attachment
 def find_solution_details_by_category_id(category_id):
     category= MPCategory.objects.get(pk=category_id)

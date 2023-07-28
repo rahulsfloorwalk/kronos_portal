@@ -90,28 +90,7 @@ def sign_up_market_place(request):
     
     user = User.objects.filter(email__iexact=to_check_email,is_active=False)
     if user:
-        otp = generate_otp()
-        otp_verification=OTPVerification.objects.get(user_id=user.id)
-        otp_verification.otp = otp
-        otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
-        otp_verification.save()
-        message = get_template('registration/market_place/otp_verification.html').render({
-            'otp': otp,
-            'email': user.email,
-            **registration_context(),
-        })
-
-        msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
-        msg.content_subtype = 'html'
-
-        if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
-            msg.send()
-            _logger.info("verification email sent to user : %s", user.email)
-        else:
-            _logger.info("verification email disabled. skipping email for user : %s", user.email)
-            _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
-        
-        response={'details': 'OTP is Shared On Your Email !!','user':user.id }
+        response={'details': 'User is Already Registered!! Please Login'}
         status= 200
     else:
         user=User()
