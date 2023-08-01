@@ -1,6 +1,6 @@
 from django.views import View
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
 from django.db.transaction import atomic
 from django.http import JsonResponse
 import json
@@ -33,22 +33,8 @@ class MPLogInAPI(APIView):
     permission_classes=[AllowAny]
     @atomic
     def post(self,request):
-        response , status = market_place_service_api.log_in_market_place(data=request.data)
+        response , status = market_place_service_api.log_in_market_place(request)
         return JsonResponse(response, status=status)
-
-@atomic
-def verify_email_by_otp(request,otp):
-    try:
-        otp_verify = verification_service.verify_by_otp(otp)
-        if otp_verify:
-            response, status = market_place_service_api.log_in_market_place(data=request.data) 
-        else:
-            response ={'detail':'otp is incorrect'}
-            status=400    
-    except ObjectNotFound as e:
-        response ={'detail': 'verfication failed for otp: {}'.otp}
-        status=400
-    return JsonResponse(response,status)
 
 
 class MPVerfifyEmailByOtp(APIView):
@@ -57,3 +43,11 @@ class MPVerfifyEmailByOtp(APIView):
     def post(self,request):
         response , status = market_place_service_api.verify_by_otp_and_login(request)
         return JsonResponse(response,status=status)    
+
+class MPLogOutAPI(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request):
+        if 'user_id' in request.session:
+            del request.session['user_id']
+        return JsonResponse({'message': 'User logged out successfully'})
+    

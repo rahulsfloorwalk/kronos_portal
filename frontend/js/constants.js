@@ -537,7 +537,6 @@ export const dataaccordian = [
 		heading : "Master",
 		subheading : [
 			{name:"Category",link:"/admindashboard/category"},
-			{name:"Sub Category",link:"/admindashboard/subcategory"},
 			{name: "Tax",link:"/admindashboard/tax"},
 		],
 		id : 2,

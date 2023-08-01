@@ -116,27 +116,7 @@ class StoreIdView(APIView):
         store_service.delete(store_id)
         return HttpResponse(status=204)
 
-# class MPStoreIdView(APIView):
-#     permission_classes=[AllowAny]
-#     # required_groups = {
-#     #     'GET': [GROUP_NAME_CLIENT],
-#     #     'POST': [GROUP_NAME_CLIENT],
-#     #     'DELETE':[GROUP_NAME_CLIENT]
-#     # }
-#     def get(self, request, store_id, format=None):
-#         store = store_service.find_store_by_id(store_id)
-#         return Response(StoreSerializer(store).data)
 
-#     def post(self, request, store_id):
-#         store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})
-#         store_ds.is_valid(raise_exception=True)
-#         store = store_ds.deserialize()
-#         savedStore = store_service.save(store)
-#         return Response(StoreSerializer(savedStore).data)
-
-#     def delete(self, request, store_id):
-#         store_service.delete(store_id)
-#         return HttpResponse(status=204)
 class StoreView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

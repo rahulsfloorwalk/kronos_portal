@@ -6,6 +6,7 @@ from django.conf import settings
 from django.core.validators import validate_email
 from registration.service import client_mobile_number_service
 import hashlib
+from django.contrib.auth import login, logout
 from os import urandom
 from guardian.shortcuts import assign_perm
 import datetime
@@ -63,10 +64,10 @@ def create_client_manager_and_trainer(user_id):
                 client_manager.save()
             
             
-            if ClientTrainer.objects.filter(client=client, user__email='bhagyashree.khade@floorwalk.in').exists():
+            if ClientTrainer.objects.filter(client=client, user__email='mohna.floorwalk@gmail.com').exists():
                 raise AppLogicError("a trainer is already exists in this client")
             else:
-                trainer = User.objects.get(email='bhagyashree.khade@floorwalk.in')
+                trainer = User.objects.get(email='mohna.floorwalk@gmail.com')
                 
                 client_trainer = ClientTrainer()
                 client_trainer.client = client
@@ -153,9 +154,9 @@ def authenticate(username=None,password=None):
     else:
         return None
 
-def log_in_market_place(data):
-    username = data.get("username")
-    password = data.get("password")
+def log_in_market_place(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
     user = authenticate(username,password)
     if user:
         if not user.otpverification.is_verified:
@@ -185,7 +186,7 @@ def log_in_market_place(data):
         else:
             token, created = Token.objects.get_or_create(user=user)
             result = market_place_api.get_client_dashboard_data(user.id)
-            
+            request.session['user_id'] = user.id
             response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
             status = 200
     else:
@@ -233,8 +234,8 @@ def verify_by_otp_and_login(request):
                 otp_verification.is_verified = True
                 otp_verification.save()
                 create_client_manager_and_trainer(user)
+                request.session['user_id'] = user_.id
                 token, created = Token.objects.get_or_create(user=user_)
-                
                 result = market_place_api.get_client_dashboard_data(user_.id)
                 response = {'detail': 'OTP Verified !! Login Successfully', 'token': token.key, 'client_dashboard_data': result}
                 status = 200

@@ -1,15 +1,16 @@
-from ..models import MPCategory,MPSolution
+from ..models import MPCategory,MPSolution,MPSolutionCategoryDetails
 from django.db.utils import IntegrityError
 from kronos.exceptions import ObjectNotFound,AppLogicError
 from attachment.models import Attachment
 def find_solution_details_by_category_id(category_id):
-    category= MPCategory.objects.get(pk=category_id)
+    category = MPCategory.objects.get(pk=category_id)
+    cat_solution = MPSolutionCategoryDetails.objects.filter(category=category_id).all()
     result=[]
     solution_data=[]
-    solutions=MPSolution.objects.filter(category_id=category_id).all()
-    for i in solutions:
-        attachments = Attachment.objects.filter(solutions__id=i.id,status=Attachment.ATTACHED).all()
+    for cat_sol in cat_solution:
+        solution =MPSolution.objects.get(pk=cat_sol.solution_id)
         attachments_data=[]
+        attachments=Attachment.objects.filter(solutions__id=solution.id,status=Attachment.ATTACHED).all()
         for attachment in attachments:
             thumbnail_url = attachment.extra()["thumbnail_url"]
             preview_url = attachment.extra()["preview_url"]
@@ -30,39 +31,30 @@ def find_solution_details_by_category_id(category_id):
                 "thumbnail_url": thumbnail_url,
                 "preview_url": preview_url,
             })
-        solution_data.append(
-            {
-                'id':i.id,
-                'name':i.name,
-                'url_structure':i.url_structure,
-                'price':i.price,
-                'category':{
-                    'id':i.category.id,
-                    'name':i.category.name,
-                    'url_structure':i.category.url_structure,
-                    'overview':i.category.overview,
-                    'short_description':i.category.short_description
-                },
-                'tax':{
-                    'id':i.tax.id,
-                    'name':i.tax.name,
-                    'rate':i.tax.rate
-                },
-                'overview':i.overview,
-                'how_it_work':i.how_it_work,
-                'execution_time':i.execution_time,
-                'short_description':i.short_description,
-                'is_active':i.is_active,
-                'attachments':attachments_data
-           }
-        )
+        solution_data.append({
+            'id':solution.id,
+            'name':solution.name,
+            'url_structure':solution.url_structure,
+            'price':solution.price,
+            'tax':{
+                'id':solution.tax.id,
+                'name':solution.tax.name,
+                'rate':solution.tax.rate
+            },
+            'overview':solution.overview,
+            'how_it_work':solution.how_it_work,
+            'execution_time':solution.execution_time,
+            'short_description':solution.short_description,
+            'is_active':solution.is_active,
+            'attachments':attachments_data  
+        })
     result.append({
-            "id": category.id,
-            "name": category.name,
-            "url_structure": category.url_structure,
-            "overview": category.overview,
-            "short_description": category.short_description,
-            "solutions": solution_data
+        "id": category.id,
+        "name": category.name,
+        "url_structure": category.url_structure,
+        "overview": category.overview,
+        "short_description": category.short_description,
+        "solutions": solution_data
         })
     return result
     

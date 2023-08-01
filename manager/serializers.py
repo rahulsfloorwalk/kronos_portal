@@ -9,7 +9,7 @@ from auditor.models import ProfileInfo, AuditApplication
 from client.models import Client, Store,ClientForEcomm
 from payment.models import Payment
 from registration.models import MobileNumber
-from .models import City, ProofTag,MPSubcategory,MPCategory,MPTax,MPSolution
+from .models import City, ProofTag,MPCategory,MPTax,MPSolution
 from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
 from attachment.models import Attachment
 class ClientSerializer(ModelSerializer):
@@ -497,23 +497,6 @@ class CategorySerializer(ModelSerializer):
         
         
     
-class SubcategorySerializer(ModelSerializer):
-    class Meta:
-        model = MPSubcategory
-        fields = (
-            'id',
-            'name',
-        )
-        read_only_fields = ('id',)
-
-    def deserialize(self):
-        if self.context.get('id') is not None:
-            s_cat = MPSubcategory.objects.get(id=self.context.get('id'))
-        else:
-            s_cat = MPSubcategory()
-        s_cat.name = self.validated_data.get('name', s_cat.name)
-        return s_cat
-
 class SolutionStatusSerializer(ModelSerializer):
     class Meta:
         model=MPSolution
@@ -523,7 +506,6 @@ class SolutionStatusSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
 class SolutionSerializer(ModelSerializer):
-    category = CategorySerializer()
     tax= TaxSerializer()
     class Meta:
         model = MPSolution
@@ -532,7 +514,6 @@ class SolutionSerializer(ModelSerializer):
             'name',
             'url_structure',
             'price',
-            'category',
             'tax',
             'overview',
             'how_it_work',

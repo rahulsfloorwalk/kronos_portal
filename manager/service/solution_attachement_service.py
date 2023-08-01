@@ -2,7 +2,7 @@ from attachment.models import Attachment
 from kronos.exceptions import AppLogicError ,ObjectNotFound
 from manager.service import solution_service
 from attachment import service as attachment_service
-from manager.models import MPSolution
+from manager.models import MPSolution,MPSolutionCategoryDetails,MPCategory
 def find_attachment_by_solution_id(solution_id):
     return attachment_service.find_by_solution(solution_id)
 
@@ -36,6 +36,17 @@ def complete_for_solution(attachment_id,solution_id):
 def find_solution_details_by_solution_id(solution_id):
     solution = MPSolution.objects.get(pk=solution_id)
     result=[]
+    sol_cat=MPSolutionCategoryDetails.objects.filter(solution_id=solution_id).all()
+    category_data=[]
+    for i in sol_cat:
+        category=MPCategory.objects.get(pk=i.category_id)
+        category_data.append({
+            'id':category.id,
+            'name':category.name,
+            'url_structure':category.url_structure,
+            'overview':category.overview,
+            'short_description':category.short_description
+        })
     attachments = Attachment.objects.filter(solutions__id=solution.id,status=Attachment.ATTACHED).all()
     attachments_data=[]
     for attachment in attachments:
@@ -63,13 +74,6 @@ def find_solution_details_by_solution_id(solution_id):
         'name':solution.name,
         'url_structure':solution.url_structure,
         'price':solution.price,
-        'category':{
-            'id':solution.category.id,
-            'name':solution.category.name,
-            'url_structure':solution.category.url_structure,
-            'overview':solution.category.overview,
-            'short_description':solution.category.short_description
-        },
         'tax':{
             'id':solution.tax.id,
             'name':solution.tax.name,
@@ -80,7 +84,8 @@ def find_solution_details_by_solution_id(solution_id):
         'execution_time':solution.execution_time,
         'short_description':solution.short_description,
         'is_active':solution.is_active,
-        'attachments':attachments_data
+        'attachments':attachments_data,
+        'categories': category_data
     })
     return result
     

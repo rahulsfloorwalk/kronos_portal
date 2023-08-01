@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
-from manager.models import MPOrder
+from manager.models import MPOrder,Transaction
 from django.db.transaction import atomic
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from manager.service import mp_order_service
@@ -12,6 +13,7 @@ from manager.serializers import SolutionSerializer
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
 from manager.service import mp_order_service 
+import razorpay
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from kronos.exceptions import ObjectNotFound
 def get_order_data(data):
@@ -35,6 +37,15 @@ class OrderSerializer(ModelSerializer):
         fields=('id','no_of_response','solution','user','status')
         
 
+class AdminOrderView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+    }
+    def get(self,request):
+        order = MPOrder.objects.all()
+        return Response(OrderSerializer(order,many=True).data)
+
 class MpOrderView(APIView):
     permission_classes=[AllowAny]
     # required_groups={
@@ -50,8 +61,6 @@ class MpOrderView(APIView):
     def get(self,request):
         if request.user.id:
             order= MPOrder.objects.filter(user=request.user.id)
-        else:
-            order= MPOrder.objects.all()
         return Response(OrderSerializer(order,many=True).data)
     def post(self,request):
         response = mp_order_service.add_order(data=request.data)
@@ -100,5 +109,45 @@ class MpOrderStatusView(APIView):
         'POST':[GROUP_NAME_MANAGER]
     }
     def get(self,request):
+        print('')
         order=MPOrder.objects.filter(status=request.GET.get('status'))
         return Response(OrderSerializer(order,many=True).data)
+
+class MpPaymentView(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        order_id = request.data.get('order_id')
+        client = razorpay.Client(auth=('rzp_live_WwU8kFv0myNlgB', 'tpOhZHWOc3LBrl2glQzlQJDP'))
+        order = get_object_or_404(MPOrder, id=order_id)
+        order_amount = int(order.price * 100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
+        order_currency = 'INR'
+        order_receipt = f'order_receipt_{order.id}'
+        notes = {'note_key': 'note_value'}
+        response = client.order.create(
+            {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
+        )
+        order.razorpay_payment_id = response['id']
+        order.razorpay_signature = response['razorpay_signature']
+        order.save()
+
+        return JsonResponse(response)
+
+    
+class MpPaymentCompleteView(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request):
+        order_id = request.POST.get('order_id')
+        payment_id = request.POST.get('payment_id')
+        signature = request.POST.get('signature')
+        
+        order = get_object_or_404(MPOrder, id=order_id)
+        order.razorpay_payment_id = payment_id
+        order.razorpay_signature = signature
+        order.status=MPOrder.ACTIVE
+        order.save()
+
+        # Save transaction data to the Transaction table
+        transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
+        transaction.save()
+
+        return JsonResponse({'status': 'success'})    

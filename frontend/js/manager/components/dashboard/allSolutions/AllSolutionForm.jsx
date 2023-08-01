@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
-import { findSolutionById, updateSolution, addSolution, findCategories, findSubCategories, findTaxes } from "../../../service/admin_dashboard.js";
+import { findSolutionById, updateSolution, addSolution, findCategories, findTaxes } from "../../../service/admin_dashboard.js";
 import { getInputEventChangeValue } from "../../../../react_utils.js";
 import FormInput from "../../../../components/FormInput.jsx";
 import FormSelect from "../../../../components/FormSelect.jsx";
@@ -42,7 +42,6 @@ export default class AllSolutionForm extends React.Component {
 			short_description: "",
 		},
 		categories: [],
-		sub_categories: [],
 		taxes: [],
 		uploadedFiles: [],
 		fileObjects: [],
@@ -77,9 +76,6 @@ export default class AllSolutionForm extends React.Component {
 
 		findCategories().then((categories) => {
 			this.setState({ categories });
-		});
-		findSubCategories().then((sub_categories) => {
-			this.setState({ sub_categories });
 		});
 		findTaxes().then((taxes) => {
 			this.setState({ taxes });

@@ -34,7 +34,6 @@ from .viewss import report_attribute as report_attribute_views
 from .viewss import reports as report_views
 from .viewss import tax as tax_views
 from .viewss import category as category_views
-from .viewss import subcategory as subcategory_views
 from .viewss import solution as solution_views
 from .viewss import mp_order as mp_order_views
 from .viewss import client_profile as mp_client_profile
@@ -84,11 +83,6 @@ urlpatterns = ([
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
     
-    url(r'public_subcategory_sub$', subcategory_views.PublicSubcategoryView.as_view(), name='public_subcategory_view'),
-    url(r'subcategory_sub$', subcategory_views.SubcategoryView.as_view(), name='subcategory_view'),
-    url(r'public_subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.PublicSubcategoryIdView.as_view(), name='public_subcategory_id_view'),
-    url(r'subcategory_sub/(?P<subcategory_id>[0-9]+)$', subcategory_views.SubcategoryIdView.as_view(), name='subcategory_id_view'),
-    
     url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
     url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
@@ -116,17 +110,22 @@ urlpatterns = ([
     url(r'solution/other_details$', solution_views.SolutionOtherDetailsAddView.as_view(), name='solution_other_details_add_view'),
     url(r'solution/(?P<solution_id>[0-9]+)/other_detail$', solution_views.SolutionIdOtherDetailsAddView.as_view(), name='solution_id_other_details_add_view'),
     url(r'solution/(?P<detail_id>[0-9]+)/other_details$', solution_views.SolutionOtherDetailsView.as_view(), name='solution_other_details_view'),
+    url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
+    url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),
+    url(r'order$',mp_order_views.AdminOrderView.as_view(),name='admin_order_view'),
     
     
     # Market place User Dashboard
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
     
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
+    
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
+    url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
+    url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+    
     url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
-    url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),
-    url(r'client_profile/(?P<user_id>[0-9]+)$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
 
     # -----------------------------------------
   
