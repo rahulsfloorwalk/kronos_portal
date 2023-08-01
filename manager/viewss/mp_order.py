@@ -113,41 +113,41 @@ class MpOrderStatusView(APIView):
         order=MPOrder.objects.filter(status=request.GET.get('status'))
         return Response(OrderSerializer(order,many=True).data)
 
-class MpPaymentView(APIView):
-    permission_classes=[AllowAny]
-    def post(self,request):
-        order_id = request.data.get('order_id')
-        client = razorpay.Client(auth=('rzp_live_WwU8kFv0myNlgB', 'tpOhZHWOc3LBrl2glQzlQJDP'))
-        order = get_object_or_404(MPOrder, id=order_id)
-        order_amount = int(order.price * 100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
-        order_currency = 'INR'
-        order_receipt = f'order_receipt_{order.id}'
-        notes = {'note_key': 'note_value'}
-        response = client.order.create(
-            {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
-        )
-        order.razorpay_payment_id = response['id']
-        order.razorpay_signature = response['razorpay_signature']
-        order.save()
+# class MpPaymentView(APIView):
+#     permission_classes=[AllowAny]
+#     def post(self,request):
+#         order_id = request.data.get('order_id')
+#         client = razorpay.Client(auth=('rzp_live_WwU8kFv0myNlgB', 'tpOhZHWOc3LBrl2glQzlQJDP'))
+#         order = get_object_or_404(MPOrder, id=order_id)
+#         order_amount = int(order.price * 100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
+#         order_currency = 'INR'
+#         order_receipt = f'order_receipt_{order.id}'
+#         notes = {'note_key': 'note_value'}
+#         response = client.order.create(
+#             {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
+#         )
+#         order.razorpay_payment_id = response['id']
+#         order.razorpay_signature = response['razorpay_signature']
+#         order.save()
 
-        return JsonResponse(response)
+#         return JsonResponse(response)
 
     
-class MpPaymentCompleteView(APIView):
-    permission_classes=[AllowAny]
-    def post(self,request):
-        order_id = request.POST.get('order_id')
-        payment_id = request.POST.get('payment_id')
-        signature = request.POST.get('signature')
+# class MpPaymentCompleteView(APIView):
+#     permission_classes=[AllowAny]
+#     def post(self,request):
+#         order_id = request.POST.get('order_id')
+#         payment_id = request.POST.get('payment_id')
+#         signature = request.POST.get('signature')
         
-        order = get_object_or_404(MPOrder, id=order_id)
-        order.razorpay_payment_id = payment_id
-        order.razorpay_signature = signature
-        order.status=MPOrder.ACTIVE
-        order.save()
+#         order = get_object_or_404(MPOrder, id=order_id)
+#         order.razorpay_payment_id = payment_id
+#         order.razorpay_signature = signature
+#         order.status=MPOrder.ACTIVE
+#         order.save()
 
-        # Save transaction data to the Transaction table
-        transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
-        transaction.save()
+#         # Save transaction data to the Transaction table
+#         transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
+#         transaction.save()
 
-        return JsonResponse({'status': 'success'})    
+#         return JsonResponse({'status': 'success'})    

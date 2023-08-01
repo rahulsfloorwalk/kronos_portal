@@ -92,6 +92,8 @@ urlpatterns = ([
     
     
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
+    url(r'popular_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionPopularStatusIdView.as_view(), name='solution_popular_status_id_view'),
+    
     
     url(r'solution_archieved$', solution_views.ArchievedSolutionView.as_view(), name='archieved_solution_view'),
     
@@ -121,8 +123,9 @@ urlpatterns = ([
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
-    url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+    
+    # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
+    # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
     
     url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),

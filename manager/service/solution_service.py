@@ -61,6 +61,7 @@ def get_solutions():
                 'execution_time':i.execution_time,
                 'short_description':i.short_description,
                 'is_active':i.is_active,
+                'is_popular':i.is_popular,
                 'attachments':attachments_data,
                 'categories': category_data
            }
@@ -96,6 +97,7 @@ def get_solution_by_id(solution_id):
         'execution_time':solution.execution_time,
         'short_description':solution.short_description,
         'is_active':solution.is_active,
+        'is_popular':solution.is_popular,
         'categories':category_data
     })
     return solution_data

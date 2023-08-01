@@ -84,6 +84,7 @@ def find_solution_details_by_solution_id(solution_id):
         'execution_time':solution.execution_time,
         'short_description':solution.short_description,
         'is_active':solution.is_active,
+        'is_popular':solution.is_popular,
         'attachments':attachments_data,
         'categories': category_data
     })

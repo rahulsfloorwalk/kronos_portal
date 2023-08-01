@@ -149,6 +149,42 @@ class SolutionStatusDeSerializer(ModelSerializer):
         else:
             solution = MPSolution()
         solution.is_active = self.validated_data.get('is_active',solution.is_active)    
+class SolutionPopularStatusDeSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolution
+        fields = (
+            'id',
+            'is_popular'
+            )
+        read_only_fields =('id',)
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            solution = MPSolution.objects.get(id=self.context.get('id'))
+        else:
+            solution = MPSolution()
+        solution.is_popular = self.validated_data.get('is_popular',solution.is_popular)
+
+class SolutionPopularStatusIdView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER],
+    }
+    def get_solution(self, solution_id):
+        try:
+            return MPSolution.objects.get(pk=solution_id)
+        except MPSolution.DoesNotExist as e:
+            raise ObjectNotFound from e
+    def get(self, request, solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionPopularStatusSerializer(solution)
+        return Response(serializer.data)
+    def post(self,request,solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionPopularStatusDeSerializer(solution, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 class SolutionStatusIdView(APIView):
     permission_classes=[HasGroupPermission]

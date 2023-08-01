@@ -505,6 +505,15 @@ class SolutionStatusSerializer(ModelSerializer):
             'is_active'
         )
         read_only_fields = ('id',)
+        
+class SolutionPopularStatusSerializer(ModelSerializer):
+    class Meta:
+        model=MPSolution
+        fields = (
+            'id',
+            'is_popular'
+        )
+        read_only_fields = ('id',)
 class SolutionSerializer(ModelSerializer):
     tax= TaxSerializer()
     class Meta:
@@ -519,7 +528,8 @@ class SolutionSerializer(ModelSerializer):
             'how_it_work',
             'execution_time',
             'short_description',
-            'is_active'
+            'is_active',
+            'is_popular'
         )
         read_only_fields = fields
 
