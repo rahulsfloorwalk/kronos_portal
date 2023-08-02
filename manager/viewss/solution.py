@@ -117,12 +117,14 @@ class SolutionIdView(APIView):
         return Response(result)
 
     def post(self, request, solution_id):
+        print(request.data)
         solution = MPSolution.objects.get(pk=solution_id)
         serializer = SolutionDeSerializer(solution, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        for i in request.data.get('category'):
+        if request.data.get('category'):
             MPSolutionCategoryDetails.objects.filter(solution_id=solution_id).delete()
+        for i in request.data.get('category'):
             category= MPCategory.objects.get(pk=i)
             solution_category= MPSolutionCategoryDetails()
             solution_category.category = category

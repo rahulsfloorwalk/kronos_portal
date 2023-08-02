@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import { Plus, Pencil, Cross, Paperclip } from "../../../../components/Icons.jsx";
-import { findSolutions, deleteSolution, updateSolutionIsActive } from "../../../service/admin_dashboard.js";
+import { Plus, Pencil, Cross, Paperclip,Star } from "../../../../components/Icons.jsx";
+import { findSolutions, deleteSolution, updateSolutionIsActive,updateSolutionIsPopular } from "../../../service/admin_dashboard.js";
 import Alert from "react-s-alert";
 
 const FieldErrors = PropTypes.arrayOf(PropTypes.string);
@@ -19,6 +19,7 @@ class AllSolutionRow extends React.Component {
 			execution_time: PropTypes.string,
 			short_description: PropTypes.string,
 			is_active: PropTypes.bool,
+			is_popular: PropTypes.bool,
 			category: PropTypes.arrayOf(
 				PropTypes.shape({
 					value: PropTypes.number,
@@ -29,6 +30,7 @@ class AllSolutionRow extends React.Component {
 		}),
 		onDelete: PropTypes.func.isRequired,
 		toggleIsActive: PropTypes.func.isRequired,
+		toggleIsPopular: PropTypes.func.isRequired,
 		errors: PropTypes.shape({
 			non_field_errors: PropTypes.arrayOf(PropTypes.string),
 			category: FieldErrors,
@@ -39,6 +41,7 @@ class AllSolutionRow extends React.Component {
 		const categoryNames = this.props.solution.categories
 			? this.props.solution.categories.map((category) => category.name).join(", ")
 			: "";
+			const starClass = this.props.solution.is_popular ? "gold" : "black";
 		return (
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
@@ -74,8 +77,16 @@ class AllSolutionRow extends React.Component {
 						<button className="btn btn-default" style={{marginLeft:"1rem"}}>Proof tag</button>
 					</Link>
 					<Link to={`/admindashboard/solution/${this.props.solution.id}/attachment`}>
-						<button className="btn btn-default" style={{marginLeft:"1rem"}}><Paperclip/></button>
+						<button className="btn btn-default" style={{marginLeft:"1rem"}} title="attachment"><Paperclip/></button>
 					</Link>
+					<button
+						onClick={() => this.props.toggleIsPopular(this.props.solution)}
+						className={`btn btn-default ${starClass}`}
+						style={{marginLeft:"1rem",outline:"none"}}
+						title="Popular"
+					>
+							<Star/>
+					</button>
 				</td>
 			</tr>
 		);
@@ -134,6 +145,27 @@ export default class AllSolutionList extends React.Component {
 				Alert.error("Failed to Archive Solution");
 			});
 	};
+	
+	toggleIsPopular = (solution) => {
+		const isPopularValue = !solution.is_popular;
+		const updatedSolution = { ...solution, is_popular: isPopularValue };
+		const updatedSolutions = this.state.solutions.map((c) =>
+		  c.id === solution.id ? updatedSolution : c
+		);
+	  
+		this.setState({
+		  solutions: updatedSolutions,
+		});
+	  
+		updateSolutionIsPopular(solution.id, updatedSolution)
+		  .then(() => {
+			Alert.success("Solution is now " + (isPopularValue ? "Stared" : "Unstared"));
+		  })
+		  .catch(() => {
+			Alert.error("Failed to " + (isPopularValue ? "Star" : "Unstar") + " Solution");
+		  });
+	  };
+	  
 	render() {
 		const activeSolutions = this.state.solutions.filter(
 			(solution) => solution.is_active
@@ -146,6 +178,7 @@ export default class AllSolutionList extends React.Component {
 				key={c.id}
 				onDelete={this.onDelete}
 				toggleIsActive={this.toggleIsActive}
+				toggleIsPopular={this.toggleIsPopular}
 			/>
 		));
 
