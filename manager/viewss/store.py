@@ -139,12 +139,10 @@ class StoreView(APIView):
 
 class StoreUserIdView(APIView):
     permission_classes = [AllowAny]
-    # authentication_classes = [TokenAuthentication, SessionAuthentication]
-    
-    required_groups = {
-        'GET': [GROUP_NAME_CLIENT],
-        'POST': [GROUP_NAME_CLIENT]
-    }
+    # required_groups = {
+    #     'GET': [GROUP_NAME_CLIENT],
+    #     'POST': [GROUP_NAME_CLIENT]
+    # }
     def get(self,request,user_id):
         user = User.objects.get(id=user_id)
         client = Client.objects.get(name=user.email)

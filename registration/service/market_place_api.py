@@ -224,7 +224,7 @@ def verify_by_otp_and_login(request):
                 _logger.info("verification email disabled. skipping email for user : %s", user_.email)
                 _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
             
-            response={'details': 'Old OTP Has Expired, New OTP is Shared On Your Email !!','user':user }
+            response={'detail': 'Old OTP Has Expired, New OTP is Shared On Your Email !!','user':user }
             status= 200
         else:
             if otp_verification.otp == otp:

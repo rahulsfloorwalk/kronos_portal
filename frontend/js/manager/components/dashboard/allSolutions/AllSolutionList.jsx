@@ -19,7 +19,12 @@ class AllSolutionRow extends React.Component {
 			execution_time: PropTypes.string,
 			short_description: PropTypes.string,
 			is_active: PropTypes.bool,
-			category: PropTypes.object,
+			category: PropTypes.arrayOf(
+				PropTypes.shape({
+					value: PropTypes.number,
+					label: PropTypes.string,
+				})
+			),
 			tax: PropTypes.object,
 		}),
 		onDelete: PropTypes.func.isRequired,
@@ -31,11 +36,14 @@ class AllSolutionRow extends React.Component {
 		}),
 	};
 	render() {
+		const categoryNames = this.props.solution.categories
+			? this.props.solution.categories.map((category) => category.name).join(", ")
+			: "";
 		return (
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.solution.name}</td>
-				<td>{this.props.solution.category && this.props.solution.category.name}</td>
+					<td>{categoryNames}</td>
 				<td>{this.props.solution.price}</td>
 				<td>
 					<span >

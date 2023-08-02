@@ -165,6 +165,7 @@ def update_order(data,order):
 
 def add_order(data):
     sum=0
+
     if data.get('store'):
         for i in data.get('store'):
             sum+=i['count']
@@ -172,6 +173,7 @@ def add_order(data):
             raise AppLogicError("No of Response and All Store Count is not Equal")
     user_id = int(data.get('user')) 
     user=User.objects.get(id=user_id)
+
     solution= MPSolution.objects.get(id=data['solution'])
     if not solution:
         raise AppLogicError("Solution is Not Available")
@@ -185,7 +187,7 @@ def add_order(data):
     if data.get('store'):
         for i in data['store']:
             store.append(i)
-    order.store=store
+        order.store=store
     order.save()
     if data.get('alignment_factors'):
         order = alignment_factor(order.id,data.get('alignment_factors'))

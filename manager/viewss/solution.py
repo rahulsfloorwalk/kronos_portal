@@ -132,6 +132,7 @@ class SolutionIdView(APIView):
 
     def delete(self, request, solution_id):
         solution = MPSolution.objects.get(pk=solution_id)
+        MPSolutionCategoryDetails.objects.filter(solution_id=solution_id).delete()
         solution.delete()
         return Response()
     

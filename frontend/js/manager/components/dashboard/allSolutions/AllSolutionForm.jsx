@@ -11,16 +11,23 @@ import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
 import JoditEditor from "jodit-react";
 import Alert from "react-s-alert";
+import Select from "react-select";
 
 export default class AllSolutionForm extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			solutionId: PropTypes.string,
 		}),
-		category: PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-		}),
+		// category: PropTypes.shape({
+		// 	id: PropTypes.number.isRequired,
+		// 	name: PropTypes.string.isRequired,
+		// }),
+		category: PropTypes.arrayOf(
+			PropTypes.shape({
+				value: PropTypes.number,
+				label: PropTypes.string,
+			})
+		),
 		tax: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			rate: PropTypes.number.isRequired,
@@ -34,7 +41,7 @@ export default class AllSolutionForm extends React.Component {
 			name: "",
 			url_structure: "",
 			price: 0,
-			category: "",
+			category: [],
 			tax: "",
 			overview: "",
 			how_it_work: "",
@@ -60,28 +67,31 @@ export default class AllSolutionForm extends React.Component {
 
 	componentDidMount() {
 		if (this.props.params.solutionId) {
-			this.setLoading(true);
-			findSolutionById(this.props.params.solutionId)
-				.then((solution) => {
-					this.setState({
-						solution: {
-							...solution,
-							category: solution.category.id, //for pre-filled values
-							tax: solution.tax.id,
-						},
-					});
-				})
-				.always(() => this.setLoading(false));
+		  this.setLoading(true);
+		  findSolutionById(this.props.params.solutionId)
+			.then((solution) => {
+				console.log("solution from id",solution)
+			  this.setState({
+				solution: {
+				  ...solution,
+				  category: solution.categories.map((categoryId) => categoryId),
+				  tax: solution.tax.id,
+				},
+			  });
+			  console.log("state solution",this.state.solution)
+			})
+			.always(() => this.setLoading(false));
 		}
-
-		findCategories().then((categories) => {
+	  
+			findCategories().then((categories) => {
 			this.setState({ categories });
 		});
 		findTaxes().then((taxes) => {
 			this.setState({ taxes });
 		});
-	}
-
+	  }
+	  
+	  
 	fieldChanged = (e) => {
 		this.setState({
 			solution: Object.assign({}, this.state.solution, getInputEventChangeValue(e))
@@ -91,9 +101,9 @@ export default class AllSolutionForm extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
-		if(this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === ""){
+		if (this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === "") {
 			alert("fields can not be empty");
-		}else{
+		} else {
 			if (this.props.params.solutionId) {
 				promise = updateSolution(
 					this.props.params.solutionId,
@@ -135,7 +145,17 @@ export default class AllSolutionForm extends React.Component {
 			}
 		});
 	};
-
+	selectHandleChange = (selectedValues, field_name) => {
+		let selected_category_ids = selectedValues.map((val) => val.value);
+		this.setState((prevState) => ({
+			solution: {
+				...prevState.solution,
+				[field_name]: selected_category_ids,
+			},
+		}));
+	};
+	
+	  
 	render() {
 		if (this.state.loading) {
 			return (<Loading />);
@@ -155,7 +175,7 @@ export default class AllSolutionForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-12">
+						{/* <div className="col-md-12">
 							<FormSelect
 								label="Category"
 								name="category"
@@ -169,6 +189,23 @@ export default class AllSolutionForm extends React.Component {
 									</option>
 								))}
 							</FormSelect>
+						</div> */}
+						<div className="col-md-12" style={{ marginBottom: "10px" }}>
+							<label>Category</label>
+							<Select
+								name="category"
+								value={this.state.solution.category.map((categoryId) => ({
+									value: categoryId,
+									label: this.state.categories.find((category) => category.id === categoryId).name,
+								}))}
+								onChange={(selectedValues) => this.selectHandleChange(selectedValues, "category")}
+								options={this.state.categories.map((category) => ({
+									value: category.id,
+									label: category.name,
+								}))}
+								isMulti={true}
+							/>
+
 						</div>
 					</div>
 					<div className="row">
