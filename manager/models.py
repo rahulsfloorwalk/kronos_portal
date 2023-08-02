@@ -109,7 +109,7 @@ class MPSolution(Model):
     overview = CharField(db_column='overview', max_length=16384, blank=False)
     how_it_work = CharField(db_column='how_it_work', max_length=16384, blank=False)
     execution_time = CharField(db_column='execution_time', max_length=16384, blank=False)
-    short_description = CharField(db_column='short_description', max_length=200, blank=False)
+    short_description = CharField(db_column='short_description', max_length=16384, blank=False)
     is_active = BooleanField(db_column='is_active',default=True,blank=False)
     is_popular = BooleanField(db_column='is_popular',default=False,blank=False)
     attachments = GenericRelation('attachment.Attachment', related_query_name='solutions')
