@@ -70,8 +70,7 @@ export default class AllSolutionForm extends React.Component {
 		  this.setLoading(true);
 		  findSolutionById(this.props.params.solutionId)
 			.then((solution) => {
-				console.log("solution from id",solution)
-			  this.setState({
+				this.setState({
 				solution: {
 				  ...solution,
 				  category: solution.categories.map((categoryId) => categoryId),
@@ -83,8 +82,8 @@ export default class AllSolutionForm extends React.Component {
 			.always(() => this.setLoading(false));
 		}
 	  
-			findCategories().then((categories) => {
-			this.setState({ categories });
+		findCategories().then((categories) => {
+		this.setState({ categories });
 		});
 		findTaxes().then((taxes) => {
 			this.setState({ taxes });
@@ -146,6 +145,7 @@ export default class AllSolutionForm extends React.Component {
 		});
 	};
 	selectHandleChange = (selectedValues, field_name) => {
+		console.log(selectedValues,field_name)
 		let selected_category_ids = selectedValues.map((val) => val.value);
 		this.setState((prevState) => ({
 			solution: {
@@ -161,7 +161,7 @@ export default class AllSolutionForm extends React.Component {
 			return (<Loading />);
 		}
 		var modalTitle = this.props.params.solutionId ? "Edit Solution" : "Add Solution";
-
+		console.log('163',this.state.solution)
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -175,28 +175,13 @@ export default class AllSolutionForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
-						{/* <div className="col-md-12">
-							<FormSelect
-								label="Category"
-								name="category"
-								value={this.state.solution.category}
-								onChange={this.fieldChanged}
-							>
-								<option value="">----------</option>
-								{this.state.categories.map((category) => (
-									<option key={category.id} value={category.id}>
-										{category.name}
-									</option>
-								))}
-							</FormSelect>
-						</div> */}
 						<div className="col-md-12" style={{ marginBottom: "10px" }}>
 							<label>Category</label>
 							<Select
 								name="category"
-								value={this.state.solution.category.map((categoryId) => ({
-									value: categoryId,
-									label: this.state.categories.find((category) => category.id === categoryId).name,
+								value= {this.state.solution.category.map((cat)=>({
+									value: cat.id,
+									label: this.state.categories.filter((category) => category.id === cat.id ).forEach()
 								}))}
 								onChange={(selectedValues) => this.selectHandleChange(selectedValues, "category")}
 								options={this.state.categories.map((category) => ({

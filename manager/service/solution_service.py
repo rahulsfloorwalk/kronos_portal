@@ -71,7 +71,6 @@ def get_solutions():
 def get_solution_by_id(solution_id):
     solution = MPSolution.objects.get(pk=solution_id)
     cat_sol = MPSolutionCategoryDetails.objects.filter(solution_id=solution.id).all()
-    solution_data=[]
     category_data=[]
     for i in cat_sol:
         cat = MPCategory.objects.get(pk=i.category_id)
@@ -82,7 +81,7 @@ def get_solution_by_id(solution_id):
             'overview':cat.overview,
             'short_description':cat.short_description
         })
-    solution_data.append({
+    solution_data={
         'id':solution.id,
         'name':solution.name,
         'url_structure':solution.url_structure,
@@ -99,5 +98,5 @@ def get_solution_by_id(solution_id):
         'is_active':solution.is_active,
         'is_popular':solution.is_popular,
         'categories':category_data
-    })
+    }
     return solution_data
