@@ -88,7 +88,13 @@ class ArchievedSolutionView(APIView):
         solutions = MPSolution.objects.filter(is_active=False)
         serializer = SolutionSerializer(solutions, many=True)  
         return Response(serializer.data)
-    
+
+class SolutionPopularView(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request):
+        solutions = MPSolution.objects.filter(is_popular=True)
+        serializer = SolutionSerializer(solutions, many=True)  
+        return Response(serializer.data) 
 class PublicSolutionIdView(APIView):
     permission_classes=[AllowAny]
     # @rate_limit
@@ -117,7 +123,6 @@ class SolutionIdView(APIView):
         return Response(result)
 
     def post(self, request, solution_id):
-        print(request.data)
         solution = MPSolution.objects.get(pk=solution_id)
         serializer = SolutionDeSerializer(solution, data=request.data)
         serializer.is_valid(raise_exception=True)

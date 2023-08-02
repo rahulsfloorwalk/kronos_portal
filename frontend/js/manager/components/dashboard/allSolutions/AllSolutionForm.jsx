@@ -71,7 +71,6 @@ export default class AllSolutionForm extends React.Component {
 			this.setLoading(true);
 			findSolutionById(this.props.params.solutionId)
 				.then((solution) => {
-					console.log("api solution",solution)
 					this.setState({
 						solution: {
 							...solution,
@@ -108,7 +107,6 @@ export default class AllSolutionForm extends React.Component {
 			alert("fields can not be empty");
 		} else {
 			if (this.props.params.solutionId) {
-				console.log(this.state.solution)
 				promise = updateSolution(
 					this.props.params.solutionId,
 					this.state.solution,
@@ -124,7 +122,6 @@ export default class AllSolutionForm extends React.Component {
 					}
 				});
 			} else {
-				console.log(this.state.solution)
 				promise = addSolution(
 					this.state.solution,
 				);
@@ -151,7 +148,6 @@ export default class AllSolutionForm extends React.Component {
 		});
 	};
 	selectHandleChange = (selectedValues, field_name) => {
-		console.log(selectedValues,field_name)
 		let selected_category_ids = selectedValues.map((val) => val.value);
 		this.setState((prevState) => ({
 			solution: {

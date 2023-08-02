@@ -20,10 +20,11 @@ class AllSolutionRow extends React.Component {
 			short_description: PropTypes.string,
 			is_active: PropTypes.bool,
 			is_popular: PropTypes.bool,
-			category: PropTypes.arrayOf(
+			categories: PropTypes.arrayOf(
 				PropTypes.shape({
 					value: PropTypes.number,
 					label: PropTypes.string,
+					name: PropTypes.string,
 				})
 			),
 			tax: PropTypes.object,
@@ -38,15 +39,13 @@ class AllSolutionRow extends React.Component {
 		}),
 	};
 	render() {
-		const categoryNames = this.props.solution.categories
-			? this.props.solution.categories.map((category) => category.name).join(", ")
-			: "";
-			const starClass = this.props.solution.is_popular ? "gold" : "black";
+		const categoryNames = this.props.solution.categories ? this.props.solution.categories.map((category) => category.name).join(", ") : "" ;
+		const starClass = this.props.solution.is_popular ? "gold" : "black";
 		return (
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.solution.name}</td>
-					<td>{categoryNames}</td>
+				<td>{categoryNames}</td>
 				<td>{this.props.solution.price}</td>
 				<td>
 					<span >
@@ -85,7 +84,7 @@ class AllSolutionRow extends React.Component {
 						style={{marginLeft:"1rem",outline:"none"}}
 						title="Popular"
 					>
-							<Star/>
+						<Star/>
 					</button>
 				</td>
 			</tr>
@@ -145,27 +144,23 @@ export default class AllSolutionList extends React.Component {
 				Alert.error("Failed to Archive Solution");
 			});
 	};
-	
 	toggleIsPopular = (solution) => {
 		const isPopularValue = !solution.is_popular;
 		const updatedSolution = { ...solution, is_popular: isPopularValue };
 		const updatedSolutions = this.state.solutions.map((c) =>
-		  c.id === solution.id ? updatedSolution : c
+			c.id === solution.id ? updatedSolution : c
 		);
-	  
 		this.setState({
-		  solutions: updatedSolutions,
+			solutions: updatedSolutions,
 		});
-	  
 		updateSolutionIsPopular(solution.id, updatedSolution)
-		  .then(() => {
-			Alert.success("Solution is now " + (isPopularValue ? "Stared" : "Unstared"));
-		  })
-		  .catch(() => {
-			Alert.error("Failed to " + (isPopularValue ? "Star" : "Unstar") + " Solution");
-		  });
-	  };
-	  
+			.then(() => {
+				Alert.success("Solution is now " + (isPopularValue ? "Stared" : "Unstared"));
+			})
+			.catch(() => {
+				Alert.error("Failed to " + (isPopularValue ? "Star" : "Unstar") + " Solution");
+			});
+	};
 	render() {
 		const activeSolutions = this.state.solutions.filter(
 			(solution) => solution.is_active
