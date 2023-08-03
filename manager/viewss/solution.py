@@ -92,9 +92,8 @@ class ArchievedSolutionView(APIView):
 class SolutionPopularView(APIView):
     permission_classes=[AllowAny]
     def get(self,request):
-        solutions = MPSolution.objects.filter(is_popular=True)
-        serializer = SolutionSerializer(solutions, many=True)  
-        return Response(serializer.data) 
+        result= solution_service.get_popular_solutions()
+        return Response(result) 
 class PublicSolutionIdView(APIView):
     permission_classes=[AllowAny]
     # @rate_limit
