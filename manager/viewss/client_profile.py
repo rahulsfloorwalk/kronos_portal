@@ -1,6 +1,8 @@
 from rest_framework.views import APIView
 from client.models import MPClientProfileInfo
 from django.contrib.auth.models import User
+from rest_framework.authentication import SessionAuthentication,TokenAuthentication
+
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_CLIENT
 from rest_framework.serializers import ModelSerializer
@@ -33,7 +35,6 @@ class ClientProfileDeSerializer(ModelSerializer):
             profile_info = MPClientProfileInfo.objects.get(user_id=self.context['current_user'])
         except MPClientProfileInfo.DoesNotExist:
             profile_info=MPClientProfileInfo()
-        profile_info.user_id = self.context['current_user']
         profile_info.company_name = self.validated_data.get('company_name', profile_info.company_name)
         profile_info.first_name = self.validated_data.get('first_name', profile_info.first_name)
         profile_info.last_name = self.validated_data.get('last_name', profile_info.last_name)
@@ -42,18 +43,16 @@ class ClientProfileDeSerializer(ModelSerializer):
         return profile_info
     
 class ClientProfileView(APIView):
-    permission_classes = [AllowAny]
+    permission_classes=[HasGroupPermission]
     required_groups = {
     'GET': [GROUP_NAME_CLIENT],
     'POST': [GROUP_NAME_CLIENT]
     }
-    def get(self,request,user_id,format=None):
-
-        client_profile = MPClientProfileInfo.objects.get(user_id=user_id)
+    def get(self,request,format=None):
+        client_profile = MPClientProfileInfo.objects.get(user_id=request.session.get('user_id'))
         return Response(ClientProfileSerializer(client_profile).data)
-    def post(self,request,user_id):
-        profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': user_id})
-
+    def post(self,request):
+        profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': request.session.get('user_id')})
         profile_info_ds.is_valid(raise_exception=True)
         profile_info = profile_info_ds.deserialize()
         profile_info.save()

@@ -5,20 +5,19 @@ from rest_framework.response import Response
 from django.http import JsonResponse
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_MANAGER,OTPVerification
-def profile_info():
-    customer = MPClientProfileInfo.objects.all()
-    result=[]
-    for i in customer:
-        verified=OTPVerification.objects.get(user_id=i.user_id)
-        result.append({'id':i.id,'user_id':i.user_id,'full_name':i.first_name+' '+i.last_name,'phone':i.mobile_number,'email':i.user.email,'is_verified':verified.is_verified})
-    return result
 class MpCustomerView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={
         'GET':[GROUP_NAME_MANAGER]
     }
     def get(self,request):
-        result = profile_info()
+        customer = MPClientProfileInfo.objects.all()
+        result=[]
+        if customer:
+            for i in customer:
+                verified=OTPVerification.objects.get(user_id=i.user_id)
+                data={'id':i.id,'user_id':i.user.id,'full_name': i.first_name+' '+i.last_name,'phone':i.mobile_number,'email':i.user.email,'is_verified':verified.is_verified}
+                result.append(data)
         return Response(result)
 class MpCountsView(APIView):
     permission_classes=[HasGroupPermission]

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { hashHistory } from "react-router";
-import { findSolutionById, updateSolution, addSolution, findCategories, findSubCategories, findTaxes } from "../../../service/admin_dashboard.js";
+import { findSolutionById, updateSolution, addSolution, findCategories, findTaxes } from "../../../service/admin_dashboard.js";
 import { getInputEventChangeValue } from "../../../../react_utils.js";
 import FormInput from "../../../../components/FormInput.jsx";
 import FormSelect from "../../../../components/FormSelect.jsx";
@@ -11,16 +11,24 @@ import Loading from "../../../../components/Loading.jsx";
 import FormErrorList from "../../../../components/FormErrorList.jsx";
 import JoditEditor from "jodit-react";
 import Alert from "react-s-alert";
+import Select from "react-select";
+import "../../../../../css/bs_overrides.scss";
 
 export default class AllSolutionForm extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			solutionId: PropTypes.string,
 		}),
-		category: PropTypes.shape({
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string.isRequired,
-		}),
+		// category: PropTypes.shape({
+		// 	id: PropTypes.number.isRequired,
+		// 	name: PropTypes.string.isRequired,
+		// }),
+		category: PropTypes.arrayOf(
+			PropTypes.shape({
+				value: PropTypes.number,
+				label: PropTypes.string,
+			})
+		),
 		tax: PropTypes.shape({
 			id: PropTypes.number.isRequired,
 			rate: PropTypes.number.isRequired,
@@ -34,7 +42,7 @@ export default class AllSolutionForm extends React.Component {
 			name: "",
 			url_structure: "",
 			price: 0,
-			category: "",
+			category: [],
 			tax: "",
 			overview: "",
 			how_it_work: "",
@@ -42,7 +50,6 @@ export default class AllSolutionForm extends React.Component {
 			short_description: "",
 		},
 		categories: [],
-		sub_categories: [],
 		taxes: [],
 		uploadedFiles: [],
 		fileObjects: [],
@@ -67,10 +74,12 @@ export default class AllSolutionForm extends React.Component {
 					this.setState({
 						solution: {
 							...solution,
-							category: solution.category.id, //for pre-filled values
+							category: solution.categories.map((category) => category.id),
 							tax: solution.tax.id,
 						},
+						categories:[...solution.categories]
 					});
+					//   console.log("state solution",this.state.categories)
 				})
 				.always(() => this.setLoading(false));
 		}
@@ -78,13 +87,12 @@ export default class AllSolutionForm extends React.Component {
 		findCategories().then((categories) => {
 			this.setState({ categories });
 		});
-		findSubCategories().then((sub_categories) => {
-			this.setState({ sub_categories });
-		});
+		// console.log("mount",this.state.categories)
 		findTaxes().then((taxes) => {
 			this.setState({ taxes });
 		});
 	}
+
 
 	fieldChanged = (e) => {
 		this.setState({
@@ -95,9 +103,9 @@ export default class AllSolutionForm extends React.Component {
 	onSubmit = (e) => {
 		e.preventDefault();
 		var promise;
-		if(this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === ""){
+		if (this.state.solution.overview === "" || this.state.solution.execution_time === "" || this.state.solution.how_it_work === "" || this.state.solution.short_description === "" || this.state.solution.category === "" || this.state.solution.tax === "") {
 			alert("fields can not be empty");
-		}else{
+		} else {
 			if (this.props.params.solutionId) {
 				promise = updateSolution(
 					this.props.params.solutionId,
@@ -139,13 +147,23 @@ export default class AllSolutionForm extends React.Component {
 			}
 		});
 	};
+	selectHandleChange = (selectedValues, field_name) => {
+		let selected_category_ids = selectedValues.map((val) => val.value);
+		this.setState((prevState) => ({
+			solution: {
+				...prevState.solution,
+				[field_name]: selected_category_ids,
+			},
+		}));
+	};
+
 
 	render() {
 		if (this.state.loading) {
 			return (<Loading />);
 		}
 		var modalTitle = this.props.params.solutionId ? "Edit Solution" : "Add Solution";
-
+		// console.log('163', this.state.categories)
 		return (
 			<Modal modalTitle={modalTitle} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
@@ -159,20 +177,21 @@ export default class AllSolutionForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-12">
-							<FormSelect
-								label="Category"
+						<div className="col-md-12" style={{ marginBottom: "10px" }}>
+							<label>Category</label>
+							<Select
 								name="category"
-								value={this.state.solution.category}
-								onChange={this.fieldChanged}
-							>
-								<option value="">----------</option>
-								{this.state.categories.map((category) => (
-									<option key={category.id} value={category.id}>
-										{category.name}
-									</option>
-								))}
-							</FormSelect>
+								value={this.state.solution.category.map((categoryId) => ({
+									value: categoryId,
+									label: this.state.categories.find((category) => category.id === categoryId).name,
+								}))}
+								onChange={(selectedValues) => this.selectHandleChange(selectedValues, "category")}
+								options={this.state.categories.map((category) => ({
+									value: category.id,
+									label: category.name,
+								}))}
+								isMulti={true}
+							/>
 						</div>
 					</div>
 					<div className="row">

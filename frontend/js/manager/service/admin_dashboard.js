@@ -137,43 +137,6 @@ export function deleteCategoryAttachment(attachmentId,categoryId){
 
 // ---------------------------------------------------------------------------------------------------
 
-export function findSubCategories(){
-	return $.get( url.api_base_path + "manager/subcategory_sub");
-}
-
-export function findSubCategoryById(subcategoryId){
-	return $.get( url.api_base_path + `manager/subcategory_sub/${subcategoryId}`);
-}
-
-export function addSubCategory(name){
-	return $.ajax({
-		url: url.api_base_path + "manager/subcategory_sub",
-		method: "POST",
-		data: JSON.stringify({
-			name,
-		}),
-		contentType: "application/json"
-	});
-}
-
-export function updateSubCategory(subcategoryId, name){
-	return $.ajax({
-		url: url.api_base_path + `manager/subcategory_sub/${subcategoryId}`,
-		method: "POST",
-		data: JSON.stringify({
-			name,
-		}),
-		contentType: "application/json"
-	});
-}
-
-export function deleteSubCategory(subcategoryId){
-	return $.ajax({
-		url: url.api_base_path + `manager/subcategory_sub/${subcategoryId}`,
-		type: "DELETE"
-	});
-}
-
 export function findTaxes(){
 	return $.get( url.api_base_path + "manager/tax");
 }
@@ -328,7 +291,14 @@ export function updateSolutionIsActive(solutionId, solution) {
 		contentType: "application/json",
 	});
 }
-
+export function updateSolutionIsPopular(solutionId, solution) {
+	return $.ajax({
+		url: url.api_base_path + `manager/popular_status/${solutionId}`,
+		method: "POST",
+		data: JSON.stringify(solution),
+		contentType: "application/json",
+	});
+}
 export function findArchievedSolutions(){
 	return $.get( url.api_base_path + "manager/solution_archieved");
 }

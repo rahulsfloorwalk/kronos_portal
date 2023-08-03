@@ -4,13 +4,13 @@ from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
 from registration.models import GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-from manager.models import MPSolution,MPSolutionQuestion,MPSolutionOtherDetails
+from manager.models import MPSolution,MPSolutionQuestion,MPCategory,MPSolutionOtherDetails,MPSolutionCategoryDetails
 from manager.serializers import SolutionStatusSerializer
-from manager.serializers import AttachmentSerializer
+from manager.serializers import AttachmentSerializer,CategorySerializer
 from manager.serializers import SolutionSerializer
 from kronos.exceptions import ObjectNotFound,AppLogicError
 from rest_framework.exceptions import ValidationError
-from manager.service import solution_proof_tag,details_service,question_service,solution_attachement_service
+from manager.service import solution_proof_tag,details_service,question_service,solution_attachement_service,solution_service
 from manager.service import category as category_service
 from rest_framework.permissions import AllowAny
 from attachment.models import Attachment
@@ -23,7 +23,6 @@ class SolutionDeSerializer(ModelSerializer):
             'name',
             'url_structure',
             'price',
-            'category',
             'tax',
             'overview',
             'how_it_work',
@@ -40,7 +39,6 @@ class SolutionDeSerializer(ModelSerializer):
         solution.name = self.validated_data.get('name', solution.name)
         solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
         solution.price = self.validated_data.get('price', solution.price)
-        solution.category = self.validated_data.get('category', solution.category_id)
         solution.tax = self.validated_data.get('tax', solution.tax_id)
         solution.overview = self.validated_data.get('overview', solution.overview)
         solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
@@ -53,57 +51,7 @@ class PublicSolutionView(APIView):
     permission_classes=[AllowAny]
     # @rate_limit
     def get(self,request):
-        solutions = MPSolution.objects.filter(is_active=True).all()
-        result =[]
-        for i in solutions:
-            attachments = Attachment.objects.filter(solutions__id=i.id,status=Attachment.ATTACHED).all()
-            attachments_data=[]
-            for attachment in attachments:
-                thumbnail_url = attachment.extra()["thumbnail_url"]
-                preview_url = attachment.extra()["preview_url"]
-                attachments_data.append({
-                    "id": attachment.id,
-                    "file_slug": attachment.file_slug,
-                    "proof_type": attachment.proof_type,
-                    "mime_type": attachment.mime_type,
-                    "file_name": attachment.file_name,
-                    "file_size": attachment.file_size,
-                    "status": attachment.status,
-                    "created_at": attachment.created_at,
-                    "modified_at": attachment.modified_at,
-                    "completed_at": attachment.completed_at,
-                    "attachment_id": attachment.attachment_id,
-                    "extra_properties": attachment.extra_properties,
-                    "audio_transcript_data": attachment.audio_transcript_data,
-                    "thumbnail_url": thumbnail_url,
-                    "preview_url": preview_url,
-                })
-            result.append(
-                {
-                    'id':i.id,
-                    'name':i.name,
-                    'url_structure':i.url_structure,
-                    'price':i.price,
-                    'category':{
-                        'id':i.category.id,
-                        'name':i.category.name,
-                        'url_structure':i.category.url_structure,
-                        'overview':i.category.overview,
-                        'short_description':i.category.short_description
-                    },
-                    'tax':{
-                        'id':i.tax.id,
-                        'name':i.tax.name,
-                        'rate':i.tax.rate
-                    },
-                    'overview':i.overview,
-                    'how_it_work':i.how_it_work,
-                    'execution_time':i.execution_time,
-                    'short_description':i.short_description,
-                    'is_active':i.is_active,
-                    'attachments':attachments_data
-                }
-            )
+        result = solution_service.get_solutions()
         return Response(result)
     
 class SolutionView(APIView):
@@ -113,9 +61,8 @@ class SolutionView(APIView):
         'POST':[GROUP_NAME_MANAGER]
     }
     def get(self,request):
-        solutions = MPSolution.objects.filter(is_active=True)
-        serializer = SolutionSerializer(solutions, many=True)  
-        return Response(serializer.data)
+        result = solution_service.get_solutions()
+        return Response(result)
     def post(self,request):
         if request.data.get('name'):
             if MPSolution.objects.filter(name=request.data.get('name')).exists():
@@ -123,6 +70,12 @@ class SolutionView(APIView):
         serializer = SolutionDeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         solution = serializer.save()  
+        for i in request.data.get('category'):
+            category= MPCategory.objects.get(pk=i)
+            solution_category= MPSolutionCategoryDetails()
+            solution_category.category = category
+            solution_category.solution = solution
+            solution_category.save()
         serializer = SolutionSerializer(solution)
         return Response(serializer.data)
     
@@ -135,7 +88,12 @@ class ArchievedSolutionView(APIView):
         solutions = MPSolution.objects.filter(is_active=False)
         serializer = SolutionSerializer(solutions, many=True)  
         return Response(serializer.data)
-    
+
+class SolutionPopularView(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request):
+        result= solution_service.get_popular_solutions()
+        return Response(result) 
 class PublicSolutionIdView(APIView):
     permission_classes=[AllowAny]
     # @rate_limit
@@ -158,26 +116,29 @@ class SolutionIdView(APIView):
         'DELETE':[GROUP_NAME_MANAGER]
     }
     
-    def get_solution(self, solution_id):
-        try:
-            return MPSolution.objects.get(pk=solution_id)
-        except MPSolution.DoesNotExist as e:
-            raise ObjectNotFound from e
-
+    
     def get(self, request, solution_id):
-        solution = self.get_solution(solution_id)
-        serializer = SolutionSerializer(solution)
-        return Response(serializer.data)
+        result = solution_service.get_solution_by_id(solution_id)
+        return Response(result)
 
     def post(self, request, solution_id):
-        solution = self.get_solution(solution_id)
+        solution = MPSolution.objects.get(pk=solution_id)
         serializer = SolutionDeSerializer(solution, data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        if request.data.get('category'):
+            MPSolutionCategoryDetails.objects.filter(solution_id=solution_id).delete()
+        for i in request.data.get('category'):
+            category= MPCategory.objects.get(pk=i)
+            solution_category= MPSolutionCategoryDetails()
+            solution_category.category = category
+            solution_category.solution = solution
+            solution_category.save()
         return Response(serializer.data)
 
     def delete(self, request, solution_id):
-        solution = self.get_solution(solution_id)
+        solution = MPSolution.objects.get(pk=solution_id)
+        MPSolutionCategoryDetails.objects.filter(solution_id=solution_id).delete()
         solution.delete()
         return Response()
     
@@ -195,6 +156,42 @@ class SolutionStatusDeSerializer(ModelSerializer):
         else:
             solution = MPSolution()
         solution.is_active = self.validated_data.get('is_active',solution.is_active)    
+class SolutionPopularStatusDeSerializer(ModelSerializer):
+    class Meta:
+        model = MPSolution
+        fields = (
+            'id',
+            'is_popular'
+            )
+        read_only_fields =('id',)
+    def deserialize(self):
+        if 'id' in self.context and self.context.get('id') is not None:
+            solution = MPSolution.objects.get(id=self.context.get('id'))
+        else:
+            solution = MPSolution()
+        solution.is_popular = self.validated_data.get('is_popular',solution.is_popular)
+
+class SolutionPopularStatusIdView(APIView):
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_MANAGER],
+        'POST':[GROUP_NAME_MANAGER],
+    }
+    def get_solution(self, solution_id):
+        try:
+            return MPSolution.objects.get(pk=solution_id)
+        except MPSolution.DoesNotExist as e:
+            raise ObjectNotFound from e
+    def get(self, request, solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionPopularStatusSerializer(solution)
+        return Response(serializer.data)
+    def post(self,request,solution_id):
+        solution = self.get_solution(solution_id)
+        serializer = SolutionPopularStatusDeSerializer(solution, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 class SolutionStatusIdView(APIView):
     permission_classes=[HasGroupPermission]
@@ -453,9 +450,6 @@ class SolutionOtherDetailsView(APIView):
     
 class SolutionViewByCategoryIdView(APIView):
     permission_classes=[AllowAny]
-    required_groups={
-        'GET':[GROUP_NAME_MANAGER],
-    }
     def get(self,request,category_id,format=None):
         category = category_service.find_category_by_id(category_id)
         solutions = MPSolution.objects.filter(category_id=category.id,is_active=True)

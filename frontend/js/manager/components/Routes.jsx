@@ -122,8 +122,6 @@ import AnalyticDetails from "./reports/analytics/AnalyticDetails.jsx";
 import TrainingReport from "./reports/TrainingReport.jsx";
 import AdminDashboard from "./dashboard/AdminDashboard.jsx";
 import ActiveCustomer from "./dashboard/ActiveCustomer.jsx";
-import SubCategoryList from "./dashboard/subCategory/SubCategoryList.jsx";
-import SubCategoryForm from "./dashboard/subCategory/SubCategoryForm.jsx";
 import TaxList from "./dashboard/tax/TaxList.jsx";
 import TaxForm from "./dashboard/tax/TaxForm.jsx";
 import AllSolutionList from "./dashboard/allSolutions/AllSolutionList.jsx";
@@ -153,10 +151,6 @@ const Routes = () => (
 					<Route path="add" component={CategoryForm} />
 					<Route path=":categoryId/edit" component={CategoryForm} />
 					<Route path=":categoryId/attachment" component={CategoryAttachmentUploadBox} />
-				</Route>
-				<Route path="subcategory" component={SubCategoryList}>
-					<Route path="add" component={SubCategoryForm} />
-					<Route path=":subcategoryId/edit" component={SubCategoryForm} />
 				</Route>
 				<Route path="tax" component={TaxList}>
 					<Route path="add" component={TaxForm} />

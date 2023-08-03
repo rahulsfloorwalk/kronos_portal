@@ -182,10 +182,20 @@ export default class PaymentList extends React.Component{
 				);
 			} else {
 				return (
-					<div className="jumbotron text-center">
-						<h2>There are no payments here.</h2>
-						<h3>Pending payments will start appearing once your reports have been accepted!</h3>
-						<p>We will keep you informed when payments are approved and processed for you</p>
+					<div className="jumbotron">
+						<div className="text-center">
+							<h2>There are no payments here.</h2>
+							<h3>Pending payments will start appearing once your reports have been accepted!</h3>
+							<p>We will keep you informed when payments are approved and processed for you</p>
+						</div>
+						<hr/>
+						<div className="text-left">
+							<p style={{fontSize:"100%"}}>
+								<b>Payment terms:</b> Payment will be transferred into your bank account within<b> 45 days from the month end of your report submission </b> since all the reports are checked usually by the client on the month end.
+								<br/>
+							Once the payment done from FloorWalk it might take 24-48 hours to transfer amount into your bank account depending on the working day and bank holidays. For any payment related queries, please write us at <a href={"mailto:" + this.state.config.ACCOUNTS_EMAIL}>{this.state.config.ACCOUNTS_EMAIL}</a> or you can click <b>Any Query?</b> button.
+							</p>
+						</div>
 					</div>
 				);
 			}

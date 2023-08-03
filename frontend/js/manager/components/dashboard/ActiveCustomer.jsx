@@ -4,12 +4,12 @@ import {findActiveCustomer} from "../../service/admin_dashboard.js";
 
 class ActiveCustomerRow extends React.Component{
 	static propTypes={
-		seq:PropTypes.number.isRequird,
+		seq:PropTypes.number.isRequired,
 		profile:PropTypes.shape({
 			full_name:PropTypes.string,
 			email:PropTypes.string,
 			phone:PropTypes.string,
-			is_verified:PropTypes.string
+			is_verified:PropTypes.bool
 		})
 
 	};
