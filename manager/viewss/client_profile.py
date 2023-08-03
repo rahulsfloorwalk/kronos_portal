@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from client.models import MPClientProfileInfo
 from django.contrib.auth.models import User
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication,TokenAuthentication
 
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_CLIENT
@@ -43,19 +43,16 @@ class ClientProfileDeSerializer(ModelSerializer):
         return profile_info
     
 class ClientProfileView(APIView):
-    permission_classes=[AllowAny]
-    authentication_classes = [SessionAuthentication]
+    permission_classes=[HasGroupPermission]
     required_groups = {
     'GET': [GROUP_NAME_CLIENT],
     'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,format=None):
-        # print('51',request.session.get('user_id'))
         client_profile = MPClientProfileInfo.objects.get(user_id=request.session.get('user_id'))
         return Response(ClientProfileSerializer(client_profile).data)
     def post(self,request):
         profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': request.session.get('user_id')})
-
         profile_info_ds.is_valid(raise_exception=True)
         profile_info = profile_info_ds.deserialize()
         profile_info.save()

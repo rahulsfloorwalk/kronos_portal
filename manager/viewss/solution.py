@@ -450,9 +450,6 @@ class SolutionOtherDetailsView(APIView):
     
 class SolutionViewByCategoryIdView(APIView):
     permission_classes=[AllowAny]
-    required_groups={
-        'GET':[GROUP_NAME_MANAGER],
-    }
     def get(self,request,category_id,format=None):
         category = category_service.find_category_by_id(category_id)
         solutions = MPSolution.objects.filter(category_id=category.id,is_active=True)

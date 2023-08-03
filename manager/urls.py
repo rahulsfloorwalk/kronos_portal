@@ -63,42 +63,27 @@ urlpatterns = ([
     
     
     # admin dashboard for marketplace
-    url(r'public_tax$', tax_views.PublicTaxView.as_view(), name='public_tax_view'),
     url(r'tax$', tax_views.TaxView.as_view(), name='tax_view'),
-    
-    url(r'public_tax/(?P<tax_id>[0-9]+)$', tax_views.PublicTaxIdView.as_view(), name='public_tax_id_view'),
     url(r'tax/(?P<tax_id>[0-9]+)$', tax_views.TaxIdView.as_view(), name='tax_id_view'),
     
-    url(r'public_category$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
-    url(r'public_category/(?P<category_id>[0-9]+)/solution_detail$', category_views.PublicCategoryIdBySolutionView.as_view(), name='public_category_id_solution_view'),
-    
     url(r'category$', category_views.CategoryView.as_view(), name='category_view'),
-    url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'category/(?P<category_id>[0-9]+)$', category_views.CategoryIdView.as_view(), name='category_id_view'),
-    
-    url(r'public_category/(?P<category_id>[0-9]+)/attachment$',category_views.PublicCategoryAttachmentView.as_view(),name='public_category_attachment_view'),
     url(r'category/(?P<category_id>[0-9]+)/attachment$',category_views.CategoryAttachmentView.as_view(),name='category_attachment_view'),
-    
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/delete$',category_views.CategoryDeleteView.as_view(),name='category_delete_view'),
     url(r'category_attachment/(?P<attachment_id>[0-9]+)/complete$',category_views.CategoryAttachmentCompleteView.as_view(),name='category_attachment_complete_view'),
     
     
-    url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
     url(r'solution$', solution_views.SolutionView.as_view(), name='solution_view'),
-    url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
-    url(r'public_solution/(?P<solution_id>[0-9]+)/full_details$', solution_views.PublicSolutionIdFullDetailsView.as_view(), name='public_solution_id_full_details_view'),
     
     url(r'solution/(?P<solution_id>[0-9]+)$', solution_views.SolutionIdView.as_view(), name='solution_id_view'),
     
     
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
     url(r'popular_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionPopularStatusIdView.as_view(), name='solution_popular_status_id_view'),
-    url(r'solution_popular$', solution_views.SolutionPopularView.as_view(), name='solution_popular_status_id_view'),
     
     
     url(r'solution_archieved$', solution_views.ArchievedSolutionView.as_view(), name='archieved_solution_view'),
     
-    url(r'public_solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.PublicSolutionAttachmentView.as_view(),name='public_solution_attachment_view'),
     url(r'solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.SolutionAttachmentView.as_view(),name='solution_attachment_view'),
     
     url(r'attachment/(?P<attachment_id>[0-9]+)/delete$',solution_views.SolutionDeleteView.as_view(),name='solution_delete_view'),
@@ -116,20 +101,30 @@ urlpatterns = ([
     url(r'mp_order_status/',mp_order_views.MpOrderStatusView.as_view(),name='mp_order_status_view'),
     url(r'mp_all_count$',mp_customer_views.MpCountsView.as_view(),name='mp_counts_view'),
     url(r'order$',mp_order_views.AdminOrderView.as_view(),name='admin_order_view'),
+    url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
     
     
     # Market place User Dashboard
+    url(r'public_tax$', tax_views.PublicTaxView.as_view(), name='public_tax_view'),
+    url(r'public_tax/(?P<tax_id>[0-9]+)$', tax_views.PublicTaxIdView.as_view(), name='public_tax_id_view'),
+    url(r'public_category$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
+    url(r'public_category/(?P<category_id>[0-9]+)/solution_detail$', category_views.PublicCategoryIdBySolutionView.as_view(), name='public_category_id_solution_view'),
+    url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
+    url(r'public_category/(?P<category_id>[0-9]+)/attachment$',category_views.PublicCategoryAttachmentView.as_view(),name='public_category_attachment_view'),
+    url(r'public_solution$', solution_views.PublicSolutionView.as_view(), name='public_solution_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)$', solution_views.PublicSolutionIdView.as_view(), name='public_solution_id_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)/full_details$', solution_views.PublicSolutionIdFullDetailsView.as_view(), name='public_solution_id_full_details_view'),
+    url(r'solution_popular$', solution_views.SolutionPopularView.as_view(), name='solution_popular_status_id_view'),
+    url(r'public_solution/(?P<solution_id>[0-9]+)/attachment$',solution_views.PublicSolutionAttachmentView.as_view(),name='public_solution_attachment_view'),
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
     
+    # For Loggedin User 
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
-    
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
-    
+    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+
     # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
-    
-    url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
-    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
 
     # -----------------------------------------
   
