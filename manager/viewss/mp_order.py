@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from manager.models import MPOrder,Transaction
+from client.models import MPOrder,Transaction
 from django.db.transaction import atomic
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -8,7 +8,8 @@ from rest_framework.serializers import ModelSerializer
 from manager.service import mp_order_service
 from registration.models import GROUP_NAME_CLIENT,GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from manager.serializers import SolutionSerializer
 from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
@@ -113,7 +114,6 @@ class MpOrderStatusView(APIView):
         'POST':[GROUP_NAME_MANAGER]
     }
     def get(self,request):
-        print('')
         order=MPOrder.objects.filter(status=request.GET.get('status'))
         return Response(OrderSerializer(order,many=True).data)
 
