@@ -67,6 +67,9 @@ class SolutionView(APIView):
         if request.data.get('name'):
             if MPSolution.objects.filter(name=request.data.get('name')).exists():
                 raise AppLogicError('Solution is already exists')
+        if request.data.get('category') == []:
+            raise AppLogicError('Please Select Category')
+        
         serializer = SolutionDeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         solution = serializer.save()  
@@ -122,6 +125,10 @@ class SolutionIdView(APIView):
         return Response(result)
 
     def post(self, request, solution_id):
+        if MPSolution.objects.exclude(pk=solution_id).filter(name=request.data.get('name')).exists():
+            raise AppLogicError('solution name already exists')
+        if request.data.get('category') == []:
+            raise AppLogicError('please select category')
         solution = MPSolution.objects.get(pk=solution_id)
         serializer = SolutionDeSerializer(solution, data=request.data)
         serializer.is_valid(raise_exception=True)

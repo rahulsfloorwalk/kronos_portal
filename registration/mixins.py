@@ -14,6 +14,7 @@ class HasGroupPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
+        print('17',self,request.method,request.user,view)
         # Get a mapping of methods -> required group.
         required_groups_mapping = getattr(view, 'required_groups', {})
 

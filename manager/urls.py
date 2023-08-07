@@ -104,10 +104,10 @@ urlpatterns = ([
     url(r'mp/active_customer$',mp_customer_views.MpCustomerView.as_view(),name='mp_customer_view'),
     
     
-    # Market place User Dashboard
+    # Market place User Dashboard WithOut Loggedin
     url(r'public_tax$', tax_views.PublicTaxView.as_view(), name='public_tax_view'),
     url(r'public_tax/(?P<tax_id>[0-9]+)$', tax_views.PublicTaxIdView.as_view(), name='public_tax_id_view'),
-    url(r'public_category$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
+    url(r'category_public$', category_views.PublicCategoryView.as_view(), name='public_category_view'),
     url(r'public_category/(?P<category_id>[0-9]+)/solution_detail$', category_views.PublicCategoryIdBySolutionView.as_view(), name='public_category_id_solution_view'),
     url(r'public_category/(?P<category_id>[0-9]+)$', category_views.PublicCategoryIdView.as_view(), name='public_category_id_view'),
     url(r'public_category/(?P<category_id>[0-9]+)/attachment$',category_views.PublicCategoryAttachmentView.as_view(),name='public_category_attachment_view'),
@@ -122,6 +122,7 @@ urlpatterns = ([
     url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
 
     # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
@@ -223,8 +224,6 @@ urlpatterns = ([
     url(r'audit/(?P<audit_id>[0-9]+)/hidden$', audit_views.AuditHiddenView.as_view(), name='audit_hidden_view'),
     url(r'store$', store_views.StoreView.as_view(), name='store_view'),
     
-    # Changes
-    url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
     
     url(r'audit/(?P<audit_id>[0-9]+)$', audit_views.AuditIdView.as_view(), name='audit_id_view'),
     url(r'audit$', audit_views.AuditView.as_view(), name='audit_view'),

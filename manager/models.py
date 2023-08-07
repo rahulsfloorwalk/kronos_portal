@@ -312,35 +312,3 @@ class MPSolutionOtherDetails(Model):
         return 'MPSolutionOtherDetails({}): {}  {}'.format(self.id, self.audit_fee,self.solution)
 
     
-class MPOrder(Model):
-    COMPLETE = 'COMPLETE'
-    DRAFT = 'DRAFT'
-    ACTIVE = 'ACTIVE'
-    STATUS = (
-        (COMPLETE, "Complete"),
-        (DRAFT, "Draft"),
-        (ACTIVE, "Active"),
-    )
-    id = AutoField(db_column='id', primary_key=True)
-    no_of_response = IntegerField(db_column='no_of_response',blank=True,default=1)
-    solution = ForeignKey(MPSolution, related_name='mporders', db_column='solution_id', on_delete=PROTECT,blank=False)
-    describe = CharField(db_column='describe',blank=True,max_length=16384)
-    user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
-    status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
-    alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True)
-    store = JSONField(db_column='stores', default=list, blank=True)
-    attachments = GenericRelation('attachment.Attachment', related_query_name='orders')
-    razorpay_payment_id = CharField(max_length=100, blank=True, null=True)
-    razorpay_signature = CharField(max_length=100, blank=True, null=True)
-    price = IntegerField(db_column='price',max_length=20,blank=False,null=False)
-    def __str__(self):
-        return 'MPOrder({}): Solution{} '.format(self.id, self.solution)
-
-class Transaction(Model):
-    id = AutoField(primary_key=True)
-    order = ForeignKey(MPOrder, on_delete=CASCADE,db_column='order_id')
-    payment_id = CharField(max_length=100,db_column='payment_id')
-    signature = CharField(max_length=200,db_column='signature')
-    
-    def __str__(self):
-        return 'Transaction({}): orderID{}'.format(self.id,self.order) 

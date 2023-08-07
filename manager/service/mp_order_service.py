@@ -1,7 +1,8 @@
 
 from kronos.exceptions import AppLogicError
 from registration.models import GROUP_NAME_CLIENT
-from manager.models import MPSolution,MPOrder
+from manager.models import MPSolution
+from client.models import MPOrder
 from django.contrib.auth.models import User
 from kronos.exceptions import ObjectNotFound
 from attachment import service as attachment_service

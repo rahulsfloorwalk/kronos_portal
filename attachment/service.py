@@ -32,7 +32,7 @@ from audit.service import audit_cycle_proof_tag
 from questionnaire.service.section_proof_tag import get_section_id_by_audit_cycle_proof_tag_id
 from answer.service import report_section as answer_service_report_section
 from manager.service import solution_service
-from manager.models import MPOrder
+from client.models import MPOrder
 from manager.service import mp_order_service
 from manager.service import category as category_service
 from manager.models import MPSolution,MPCategory
