@@ -199,53 +199,53 @@ def log_in_market_place(request):
         status = 400
     return response, status
 
-def assign_builtin_permissions_to_user(user):
-    g = user.groups.get()
-    # Get the content types for the models you want to assign permissions to
-    content_type_clientprofileinfo = ContentType.objects.get_for_model(MPClientProfileInfo)  # Replace with your model
-    content_type_mporder = ContentType.objects.get_for_model(MPOrder)  # Replace with your model
-    content_type_store = ContentType.objects.get_for_model(Store)  # Replace with your model
+# def assign_builtin_permissions_to_user(user):
+#     g = user.groups.get()
+#     # Get the content types for the models you want to assign permissions to
+#     content_type_clientprofileinfo = ContentType.objects.get_for_model(MPClientProfileInfo)  # Replace with your model
+#     content_type_mporder = ContentType.objects.get_for_model(MPOrder)  # Replace with your model
+#     content_type_store = ContentType.objects.get_for_model(Store)  # Replace with your model
     
-    # Get the specific permissions for each model
-    add_clientprofileinfo_permission = Permission.objects.get(
-        content_type=content_type_clientprofileinfo,
-        codename='add_mpclientprofileinfo'
-    )
-    change_clientprofileinfo_permission = Permission.objects.get(
-        content_type=content_type_clientprofileinfo,
-        codename='change_mpclientprofileinfo'
-    )
-    add_mporder_permission = Permission.objects.get(
-        content_type=content_type_mporder,
-        codename='add_mporder'
-    )
-    change_mporder_permission = Permission.objects.get(
-        content_type=content_type_mporder,
-        codename='change_mporder'
-    )
-    change_store_permission = Permission.objects.get(
-        content_type=content_type_store,
-        codename='change_store'
-    )
-    add_store_permission = Permission.objects.get(
-        content_type=content_type_store,
-        codename='add_store'
-    )
+#     # Get the specific permissions for each model
+#     add_clientprofileinfo_permission = Permission.objects.get(
+#         content_type=content_type_clientprofileinfo,
+#         codename='add_mpclientprofileinfo'
+#     )
+#     change_clientprofileinfo_permission = Permission.objects.get(
+#         content_type=content_type_clientprofileinfo,
+#         codename='change_mpclientprofileinfo'
+#     )
+#     add_mporder_permission = Permission.objects.get(
+#         content_type=content_type_mporder,
+#         codename='add_mporder'
+#     )
+#     change_mporder_permission = Permission.objects.get(
+#         content_type=content_type_mporder,
+#         codename='change_mporder'
+#     )
+#     change_store_permission = Permission.objects.get(
+#         content_type=content_type_store,
+#         codename='change_store'
+#     )
+#     add_store_permission = Permission.objects.get(
+#         content_type=content_type_store,
+#         codename='add_store'
+#     )
 
-    group_name=g.name
+#     group_name=g.name
     
-    try:
-        group = Group.objects.get(name=group_name)
-        group.permissions.add(
-            add_clientprofileinfo_permission,
-            change_clientprofileinfo_permission,
-            add_mporder_permission,
-            change_mporder_permission,
-            change_store_permission,
-            add_store_permission,
-        )
-    except Group.DoesNotExist as e:
-        raise ObjectNotFound from e
+#     try:
+#         group = Group.objects.get(name=group_name)
+#         group.permissions.add(
+#             add_clientprofileinfo_permission,
+#             change_clientprofileinfo_permission,
+#             add_mporder_permission,
+#             change_mporder_permission,
+#             change_store_permission,
+#             add_store_permission,
+#         )
+#     except Group.DoesNotExist as e:
+#         raise ObjectNotFound from e
 
 def verify_by_otp_and_login(request):
     user=request.data.get('user')
@@ -287,7 +287,7 @@ def verify_by_otp_and_login(request):
                 otp_verification.is_verified = True
                 otp_verification.save()
                 create_client_manager_and_trainer(user)
-                assign_builtin_permissions_to_user(user_)
+                # assign_builtin_permissions_to_user(user_)
                 request.session['user_id'] = user_.id
                 token, created = Token.objects.get_or_create(user=user_)
                 result = market_place_api.get_client_dashboard_data(user_.id)
