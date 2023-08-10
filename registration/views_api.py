@@ -29,6 +29,29 @@ class MPSignUpAPI(APIView):
     def post(self,request):
         response,status = market_place_service_api.sign_up_market_place(request)
         return JsonResponse(response, status=status)
+
+# class MPSignUpAPITest(APIView):
+#     permission_classes=[AllowAny]
+#     @atomic
+#     def post(self,request):
+#         response,status = market_place_service_api.check_signup(request)
+#         return JsonResponse(response, status=status)
+
+# class MPLogInAPITest(APIView):
+#     permission_classes=[AllowAny]
+#     @atomic
+#     def post(self,request):
+#         response , status = market_place_service_api.check_log_in(request)
+#         return JsonResponse(response, status=status)
+
+
+# class MPVerfifyEmailByOtpTest(APIView):
+#     permission_classes=[AllowAny]
+#     @atomic
+#     def post(self,request):
+#         response , status = market_place_service_api.check_verify_by_otp_and_login(request)
+#         return JsonResponse(response,status=status)
+
 class MPLogInAPI(APIView):
     permission_classes=[AllowAny]
     @atomic

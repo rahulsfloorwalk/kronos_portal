@@ -2,23 +2,52 @@ from rest_framework.views import APIView
 from client.models import MPClientProfileInfo
 from manager.models import MPSolution
 from client.models import MPOrder
+from django.contrib.auth.models import User
 from rest_framework.response import Response
-from django.http import JsonResponse
+from rest_framework.serializers import ModelSerializer,IntegerField,SerializerMethodField
+from rest_framework.permissions import AllowAny,IsAuthenticated
 from registration.mixins import HasGroupPermission
 from registration.models import GROUP_NAME_MANAGER,OTPVerification
+
+class OTPVerificationSerializer(ModelSerializer):
+    class Meta:
+        model = OTPVerification
+        fields = ['is_verified']  
+
+class UserSerializer(ModelSerializer):
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'email',
+            'is_active',
+        )
+        read_only_fields = fields
+        
+class MPClientProfileSerializer(ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = MPClientProfileInfo
+        fields = ['id', 'first_name','last_name', 'mobile_number', 'user']
+
 class MpCustomerView(APIView):
-    permission_classes=[HasGroupPermission]
+    permission_classes=[IsAuthenticated]
     required_groups={
         'GET':[GROUP_NAME_MANAGER]
     }
     def get(self,request):
-        customer = MPClientProfileInfo.objects.all()
+        customers = MPClientProfileInfo.objects.all()
         result=[]
-        if customer:
-            for i in customer:
-                verified=OTPVerification.objects.get(user_id=i.user_id)
-                data={'id':i.id,'user_id':i.user.id,'full_name': i.first_name+' '+i.last_name,'phone':i.mobile_number,'email':i.user.email,'is_verified':verified.is_verified}
-                result.append(data)
+        for customer in customers:
+            verified = OTPVerification.objects.get(user_id=customer.user_id)
+            profile_serializer = MPClientProfileSerializer(customer)
+            verification_serializer = OTPVerificationSerializer(verified)
+            data = {
+                'profile_data': profile_serializer.data,
+                'is_verified': verification_serializer.data['is_verified']
+            }
+            result.append(data)
+
         return Response(result)
 class MpCountsView(APIView):
     permission_classes=[HasGroupPermission]

@@ -28,6 +28,76 @@ from registration.context import registration_context
 
 _logger = logging.getLogger(__name__)
 
+
+# def check_signup(request):
+#     to_check_email = request.data.get('username')
+#     try:
+#         validate_email(to_check_email)
+#     except ValidationError:
+#         response = {'detail':'Please enter a valid email'}
+#         status = 400
+#     if to_check_email:
+#         to_check_email = to_check_email.strip().lower()
+#     try:
+#         user = User.objects.get(email__iexact=to_check_email)
+#         group_name = user.groups.get()
+#         if group_name.name!="Client":
+#             response={'details': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
+#             status= 200
+#         else:
+#             response={'details': 'User is Already Registered !! Please Login'}
+#             status=200
+#     except:
+#         user=User()
+#         user.email = request.data.get("username")
+#         if request.data.get("phone"):
+#             user.phone = request.data.get("phone")
+#         user.username = str.lower(request.data.get("username"))
+#         user.set_password(request.data.get("password"))
+#         user.is_active = False
+#         user.save()
+#         user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
+#         user.save()
+        
+#         if request.data.get("phone"):
+#             client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
+#         else:
+#             client_profile = MPClientProfileInfo(user_id=user.id)
+#         client_profile.save()
+        
+#         auth_data = {}
+#         auth_data['email'] = request.data.get("username")
+        
+#         otp = generate_otp()
+#         otp_verification=OTPVerification()
+#         otp_verification.user = user
+#         otp_verification.otp=otp
+#         otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+#         otp_verification.save()
+#         message = get_template('registration/market_place/otp_verification.html').render({
+#             'otp': otp,
+#             'email': user.email,
+#             **registration_context(),
+#         })
+
+#         msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+#         msg.content_subtype = 'html'
+
+#         if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+#             msg.send()
+#             _logger.info("verification email sent to user : %s", user.email)
+#         else:
+#             _logger.info("verification email disabled. skipping email for user : %s", user.email)
+#             _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+
+#         response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification...','user':user.id}
+#         status = 200
+#     return response, status
+    
+
+# def verify_by_otp_and_login(request):
+#     user = 
+
 def generate_otp():
     return str(random.randint(1000, 9999))
 
@@ -189,63 +259,15 @@ def log_in_market_place(request):
             response={'details': 'OTP is Shared On Your Email !!','user':user.id }
             status= 200
         else:
+            login(request,user,backend='registration.backend.CaseInsensitiveModelBackend1')
             token, created = Token.objects.get_or_create(user=user)
             result = market_place_api.get_client_dashboard_data(user.id)
-            request.session['user_id'] = user.id
             response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
             status = 200
     else:
         response = {'detail': 'Username or Password incorrect'}
         status = 400
     return response, status
-
-# def assign_builtin_permissions_to_user(user):
-#     g = user.groups.get()
-#     # Get the content types for the models you want to assign permissions to
-#     content_type_clientprofileinfo = ContentType.objects.get_for_model(MPClientProfileInfo)  # Replace with your model
-#     content_type_mporder = ContentType.objects.get_for_model(MPOrder)  # Replace with your model
-#     content_type_store = ContentType.objects.get_for_model(Store)  # Replace with your model
-    
-#     # Get the specific permissions for each model
-#     add_clientprofileinfo_permission = Permission.objects.get(
-#         content_type=content_type_clientprofileinfo,
-#         codename='add_mpclientprofileinfo'
-#     )
-#     change_clientprofileinfo_permission = Permission.objects.get(
-#         content_type=content_type_clientprofileinfo,
-#         codename='change_mpclientprofileinfo'
-#     )
-#     add_mporder_permission = Permission.objects.get(
-#         content_type=content_type_mporder,
-#         codename='add_mporder'
-#     )
-#     change_mporder_permission = Permission.objects.get(
-#         content_type=content_type_mporder,
-#         codename='change_mporder'
-#     )
-#     change_store_permission = Permission.objects.get(
-#         content_type=content_type_store,
-#         codename='change_store'
-#     )
-#     add_store_permission = Permission.objects.get(
-#         content_type=content_type_store,
-#         codename='add_store'
-#     )
-
-#     group_name=g.name
-    
-#     try:
-#         group = Group.objects.get(name=group_name)
-#         group.permissions.add(
-#             add_clientprofileinfo_permission,
-#             change_clientprofileinfo_permission,
-#             add_mporder_permission,
-#             change_mporder_permission,
-#             change_store_permission,
-#             add_store_permission,
-#         )
-#     except Group.DoesNotExist as e:
-#         raise ObjectNotFound from e
 
 def verify_by_otp_and_login(request):
     user=request.data.get('user')
@@ -286,11 +308,12 @@ def verify_by_otp_and_login(request):
                 user_.save()
                 otp_verification.is_verified = True
                 otp_verification.save()
+                login(request,user_,backend='registration.backend.CaseInsensitiveModelBackend1')
                 create_client_manager_and_trainer(user)
                 # assign_builtin_permissions_to_user(user_)
-                request.session['user_id'] = user_.id
                 token, created = Token.objects.get_or_create(user=user_)
                 result = market_place_api.get_client_dashboard_data(user_.id)
+                print(request.session,'293')
                 response = {'detail': 'OTP Verified !! Login Successfully', 'token': token.key, 'client_dashboard_data': result}
                 status = 200
             

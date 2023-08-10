@@ -49,11 +49,11 @@ class AdminOrderView(APIView):
         return Response(OrderSerializer(order,many=True).data)
 
 class MpOrderView(APIView):
-    permission_classes=[HasGroupPermission]
-    required_groups={
-        'GET':[GROUP_NAME_CLIENT],
-        'POST':[GROUP_NAME_CLIENT]
-    }
+    permission_classes=[IsAuthenticated]
+    # required_groups={
+    #     'GET':[GROUP_NAME_CLIENT],
+    #     'POST':[GROUP_NAME_CLIENT]
+    # }
     def extract_data(self,file):
         file_name = file.name
         file_size = file.size

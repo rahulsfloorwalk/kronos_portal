@@ -1,6 +1,8 @@
 from django.conf.urls import url
 from . import views
-
+from manager.viewss import store as store_views
+from manager.viewss import mp_order as mp_order_views
+from manager.viewss import client_profile as mp_client_profile
 urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city/(?P<city_id>[0-9]+)/store$', views.AuditCycleCityStoreAverageReport.as_view(), name='audit_cycle_city_store_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)$', views.AuditCycleStoreSectionAverageReport.as_view(), name='audit_cycle_store_section_average'),
@@ -87,4 +89,15 @@ urlpatterns = ([
     url(r'twitter/handles', views.TwitterHandlesView.as_view(), name='twitter_handles_view'),
 
     url(r'audit_feedback_report_mail$', views.AuditFeedbackReportMail.as_view(), name="audit_feedback_report_mail"),
+
+    # MarketPlace API
+    url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
+    url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
+    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
+
+    # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
+    # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+
+    
 ], 'client_rest')

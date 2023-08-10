@@ -49,7 +49,7 @@ class ClientProfileView(APIView):
     'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,format=None):
-        client_profile = MPClientProfileInfo.objects.get(user_id=request.session.get('user_id'))
+        client_profile = MPClientProfileInfo.objects.get(user_id=request.user.id)
         return Response(ClientProfileSerializer(client_profile).data)
     def post(self,request):
         profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': request.session.get('user_id')})
