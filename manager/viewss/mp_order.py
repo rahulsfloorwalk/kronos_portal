@@ -49,11 +49,11 @@ class AdminOrderView(APIView):
         return Response(OrderSerializer(order,many=True).data)
 
 class MpOrderView(APIView):
-    permission_classes=[IsAuthenticated]
-    # required_groups={
-    #     'GET':[GROUP_NAME_CLIENT],
-    #     'POST':[GROUP_NAME_CLIENT]
-    # }
+    permission_classes=[HasGroupPermission]
+    required_groups={
+        'GET':[GROUP_NAME_CLIENT],
+        'POST':[GROUP_NAME_CLIENT]
+    }
     def extract_data(self,file):
         file_name = file.name
         file_size = file.size
@@ -65,7 +65,7 @@ class MpOrderView(APIView):
             order= MPOrder.objects.filter(user=request.user.id)
         return Response(OrderSerializer(order,many=True).data)
     def post(self,request):
-        response = mp_order_service.add_order(data=request.data)
+        response = mp_order_service.add_order(data=request.data,user_id=request.user.id)
         order_data = get_order_data(response)
         if request.data.get('file'):
             file_name,file_size,mime_type = self.extract_data(request.data.get('file'))

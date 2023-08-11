@@ -1,5 +1,6 @@
 from django.conf.urls import url
 from . import views
+from registration import views_api as viewss_api
 from manager.viewss import store as store_views
 from manager.viewss import mp_order as mp_order_views
 from manager.viewss import client_profile as mp_client_profile
@@ -91,6 +92,10 @@ urlpatterns = ([
     url(r'audit_feedback_report_mail$', views.AuditFeedbackReportMail.as_view(), name="audit_feedback_report_mail"),
 
     # MarketPlace API
+    url(r'market_place/signup_api$', viewss_api.MPSignUpAPI.as_view(), name="mp_signup_api"),
+    url(r'market_place/verify_email_by_otp$', viewss_api.MPVerfifyEmailByOtp.as_view(), name="mp_verify_email_by_otp"),
+    url(r'market_place/login_api$', viewss_api.MPLogInAPI.as_view(), name="mp_login_api"),
+    url(r'market_place/logout_api$', viewss_api.MPLogOutAPI.as_view(), name="mp_logout_api"),
     url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),

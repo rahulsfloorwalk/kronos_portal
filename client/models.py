@@ -435,7 +435,7 @@ class MPOrder(Model):
     attachments = GenericRelation('attachment.Attachment', related_query_name='orders')
     razorpay_payment_id = CharField(max_length=100, blank=True, null=True)
     razorpay_signature = CharField(max_length=100, blank=True, null=True)
-    price = IntegerField(db_column='price',max_length=20,blank=False,null=False)
+    price = IntegerField(db_column='price',default=0,blank=True,null=True)
     def __str__(self):
         return 'MPOrder({}): Solution{} '.format(self.id, self.solution)
 

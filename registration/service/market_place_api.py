@@ -29,74 +29,6 @@ from registration.context import registration_context
 _logger = logging.getLogger(__name__)
 
 
-# def check_signup(request):
-#     to_check_email = request.data.get('username')
-#     try:
-#         validate_email(to_check_email)
-#     except ValidationError:
-#         response = {'detail':'Please enter a valid email'}
-#         status = 400
-#     if to_check_email:
-#         to_check_email = to_check_email.strip().lower()
-#     try:
-#         user = User.objects.get(email__iexact=to_check_email)
-#         group_name = user.groups.get()
-#         if group_name.name!="Client":
-#             response={'details': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
-#             status= 200
-#         else:
-#             response={'details': 'User is Already Registered !! Please Login'}
-#             status=200
-#     except:
-#         user=User()
-#         user.email = request.data.get("username")
-#         if request.data.get("phone"):
-#             user.phone = request.data.get("phone")
-#         user.username = str.lower(request.data.get("username"))
-#         user.set_password(request.data.get("password"))
-#         user.is_active = False
-#         user.save()
-#         user.groups.add(Group.objects.get(name=GROUP_NAME_CLIENT))
-#         user.save()
-        
-#         if request.data.get("phone"):
-#             client_profile = MPClientProfileInfo(user_id=user.id,mobile_number=user.phone)
-#         else:
-#             client_profile = MPClientProfileInfo(user_id=user.id)
-#         client_profile.save()
-        
-#         auth_data = {}
-#         auth_data['email'] = request.data.get("username")
-        
-#         otp = generate_otp()
-#         otp_verification=OTPVerification()
-#         otp_verification.user = user
-#         otp_verification.otp=otp
-#         otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
-#         otp_verification.save()
-#         message = get_template('registration/market_place/otp_verification.html').render({
-#             'otp': otp,
-#             'email': user.email,
-#             **registration_context(),
-#         })
-
-#         msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
-#         msg.content_subtype = 'html'
-
-#         if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
-#             msg.send()
-#             _logger.info("verification email sent to user : %s", user.email)
-#         else:
-#             _logger.info("verification email disabled. skipping email for user : %s", user.email)
-#             _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
-
-#         response = {'detail': 'Client Registered Successfully. Please Check Email for OTP Verification...','user':user.id}
-#         status = 200
-#     return response, status
-    
-
-# def verify_by_otp_and_login(request):
-#     user = 
 
 def generate_otp():
     return str(random.randint(1000, 9999))
@@ -162,6 +94,7 @@ def sign_up_market_place(request):
     try:
         user = User.objects.get(email__iexact=to_check_email)
         group_name = user.groups.get()
+        print('97',group_name.name)
         if group_name.name!="Client":
             response={'details': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
             status= 200
@@ -262,7 +195,7 @@ def log_in_market_place(request):
             login(request,user,backend='registration.backend.CaseInsensitiveModelBackend1')
             token, created = Token.objects.get_or_create(user=user)
             result = market_place_api.get_client_dashboard_data(user.id)
-            response = {'detail': 'Login Successfully', 'token': token.key, 'client_dashboard_data': result}
+            response = {'detail': 'Login Successfully','token':token.key,'client_dashboard_data': result}
             status = 200
     else:
         response = {'detail': 'Username or Password incorrect'}
@@ -310,10 +243,8 @@ def verify_by_otp_and_login(request):
                 otp_verification.save()
                 login(request,user_,backend='registration.backend.CaseInsensitiveModelBackend1')
                 create_client_manager_and_trainer(user)
-                # assign_builtin_permissions_to_user(user_)
                 token, created = Token.objects.get_or_create(user=user_)
                 result = market_place_api.get_client_dashboard_data(user_.id)
-                print(request.session,'293')
                 response = {'detail': 'OTP Verified !! Login Successfully', 'token': token.key, 'client_dashboard_data': result}
                 status = 200
             

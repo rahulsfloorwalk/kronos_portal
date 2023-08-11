@@ -76,10 +76,5 @@ urlpatterns = ([
     url(r'api/signup_api$', views_api.SignUpAPI.as_view(), name="signup_api"),
     url(r'api/login_api$', views_api.LoginAPI.as_view(), name="login_api"),
 
-    # API for Market Place App
-    url(r'market_place/signup_api$', views_api.MPSignUpAPI.as_view(), name="mp_signup_api"),
-    url(r'market_place/verify_email_by_otp$', views_api.MPVerfifyEmailByOtp.as_view(), name="mp_verify_email_by_otp"),
-    url(r'market_place/login_api$', views_api.MPLogInAPI.as_view(), name="mp_login_api"),
-    url(r'market_place/logout_api$', views_api.MPLogOutAPI.as_view(), name="mp_logout_api"),
     
 ], 'registration')

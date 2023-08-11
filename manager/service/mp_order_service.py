@@ -164,26 +164,27 @@ def update_order(data,order):
         order = alignment_factor(order.id,data.get('alignment_factors'))
     return order
 
-def add_order(data):
+def add_order(data,user_id):
+    try:
+        solution= MPSolution.objects.get(id=data['solution'])
+    except MPSolution.DoesNotExist as e:
+        raise ObjectNotFound from e
+    
     sum=0
-
     if data.get('store'):
         for i in data.get('store'):
             sum+=i['count']
         if sum!=data.get('no_of_response'):
             raise AppLogicError("No of Response and All Store Count is not Equal")
-    user_id = int(data.get('user')) 
     user=User.objects.get(id=user_id)
-
-    solution= MPSolution.objects.get(id=data['solution'])
-    if not solution:
-        raise AppLogicError("Solution is Not Available")
     order= MPOrder()
     order.no_of_response=data.get('no_of_response')
     order.describe=data.get('describe')
     order.solution = solution
     order.status=data.get('status')
     order.user=user
+    
+    order.price = solution.price * data.get('no_of_response') 
     store=[]
     if data.get('store'):
         for i in data['store']:
