@@ -29,6 +29,7 @@ class MPSignUpAPI(APIView):
     def post(self,request):
         response,status = market_place_service_api.sign_up_market_place(request)
         return JsonResponse(response, status=status)
+
 class MPLogInAPI(APIView):
     permission_classes=[AllowAny]
     @atomic

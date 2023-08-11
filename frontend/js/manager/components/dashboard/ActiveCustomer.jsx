@@ -6,10 +6,18 @@ class ActiveCustomerRow extends React.Component{
 	static propTypes={
 		seq:PropTypes.number.isRequired,
 		profile:PropTypes.shape({
-			full_name:PropTypes.string,
-			email:PropTypes.string,
-			phone:PropTypes.string,
-			is_verified:PropTypes.bool
+			is_verified:PropTypes.bool,
+			profile_data: PropTypes.shape({
+				id:PropTypes.number,
+				first_name:PropTypes.string,
+				last_name:PropTypes.string,
+				mobile_number:PropTypes.string,
+				user: PropTypes.shape({
+					'id':PropTypes.number,
+					'email':PropTypes.string,
+					'is_active': PropTypes.bool
+				})
+			})
 		})
 
 	};
@@ -18,9 +26,9 @@ class ActiveCustomerRow extends React.Component{
 		return(
 			<tr>
 				<td>{this.props.seq}</td>
-				<td>{this.props.profile.full_name}</td>
-				<td>{this.props.profile.email}</td>
-				<td>{this.props.profile.phone}</td>
+				<td>{this.props.profile.profile_data.first_name && this.props.profile.profile_data.first_name ? `${this.props.profile.profile_data.first_name} ${this.props.profile.profile_data.last_name}` : null} </td>
+				<td>{this.props.profile.profile_data.user.email}</td>
+				<td>{this.props.profile.profile_data.mobile_number}</td>
 				<td>{this.props.profile.is_verified ? "Verfied" : "Not Verfied"}</td>
 			</tr>
 		);
