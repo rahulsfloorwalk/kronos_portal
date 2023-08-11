@@ -37,57 +37,71 @@ def order_file_upload_by_order_id(order_id,file_name,file_size,mime_type):
 def find_order_detail_by_order_id(order_id):
     order= find_order_by_id(order_id)
     result=[]
-    attachment = Attachment.objects.get(orders__id=order.id,status=Attachment.ATTACHED)
-    if 'image' in attachment.mime_type:
-        thumbnail_url = attachment.extra()["thumbnail_url"] 
-        preview_url = attachment.extra()["preview_url"] 
-        attachments_data={
-            "id": attachment.id,
-            "file_slug": attachment.file_slug,
-            "proof_type": attachment.proof_type,
-            "mime_type": attachment.mime_type,
-            "file_name": attachment.file_name,
-            "file_size": attachment.file_size,
-            "status": attachment.status,
-            "created_at": attachment.created_at,
-            "modified_at": attachment.modified_at,
-            "completed_at": attachment.completed_at,
-            "attachment_id": attachment.attachment_id,
-            "extra_properties": attachment.extra_properties,
-            "audio_transcript_data": attachment.audio_transcript_data,
-            "thumbnail_url": thumbnail_url,
-            "preview_url": preview_url,
-        }
-    else:
-        direct_url= attachment.direct_url()
-        attachments_data={
-            "id": attachment.id,
-            "file_slug": attachment.file_slug,
-            "proof_type": attachment.proof_type,
-            "mime_type": attachment.mime_type,
-            "file_name": attachment.file_name,
-            "file_size": attachment.file_size,
-            "status": attachment.status,
-            "created_at": attachment.created_at,
-            "modified_at": attachment.modified_at,
-            "completed_at": attachment.completed_at,
-            "attachment_id": attachment.attachment_id,
-            "extra_properties": attachment.extra_properties,
-            "audio_transcript_data": attachment.audio_transcript_data,
-            "direct_url": direct_url
-        }
-    result.append({
-        'id':order.id,
-        'no_of_response':order.no_of_response,
-        'solution':order.solution.id,
-        'describe':order.describe,
-        'user':order.user.id,
-        'status':order.status,
-        'alignment_factors':'',
-        'store':'',
-        'attachment':attachments_data
-        
-    })
+    try:
+        attachment = Attachment.objects.get(orders__id=order.id, status=Attachment.ATTACHED)
+        if 'image' in attachment.mime_type:
+            thumbnail_url = attachment.extra()["thumbnail_url"] 
+            preview_url = attachment.extra()["preview_url"] 
+            attachments_data = {
+                "id": attachment.id,
+                "file_slug": attachment.file_slug,
+                "proof_type": attachment.proof_type,
+                "mime_type": attachment.mime_type,
+                "file_name": attachment.file_name,
+                "file_size": attachment.file_size,
+                "status": attachment.status,
+                "created_at": attachment.created_at,
+                "modified_at": attachment.modified_at,
+                "completed_at": attachment.completed_at,
+                "attachment_id": attachment.attachment_id,
+                "extra_properties": attachment.extra_properties,
+                "audio_transcript_data": attachment.audio_transcript_data,
+                "thumbnail_url": thumbnail_url,
+                "preview_url": preview_url,
+            }
+        else:
+            direct_url = attachment.direct_url()
+            attachments_data = {
+                "id": attachment.id,
+                "file_slug": attachment.file_slug,
+                "proof_type": attachment.proof_type,
+                "mime_type": attachment.mime_type,
+                "file_name": attachment.file_name,
+                "file_size": attachment.file_size,
+                "status": attachment.status,
+                "created_at": attachment.created_at,
+                "modified_at": attachment.modified_at,
+                "completed_at": attachment.completed_at,
+                "attachment_id": attachment.attachment_id,
+                "extra_properties": attachment.extra_properties,
+                "audio_transcript_data": attachment.audio_transcript_data,
+                "direct_url": direct_url
+            }
+        result.append({
+            'id':order.id,
+            'no_of_response':order.no_of_response,
+            'solution':order.solution.id,
+            'describe':order.describe,
+            'user':order.user.id,
+            'status':order.status,
+            'alignment_factors':'',
+            'store':'',
+            'attachment':attachments_data
+            
+        })
+    except:
+        result.append({
+            'id':order.id,
+            'no_of_response':order.no_of_response,
+            'solution':order.solution.id,
+            'describe':order.describe,
+            'user':order.user.id,
+            'status':order.status,
+            'alignment_factors':'',
+            'store':'',
+            'attachment':''
+        })
+
     return result
     
 def save(order):
@@ -184,7 +198,11 @@ def add_order(data,user_id):
     order.status=data.get('status')
     order.user=user
     
-    order.price = solution.price * data.get('no_of_response') 
+    solution_price = int(solution.price)
+    no_of_response = int(data.get('no_of_response'))
+
+    order.price = solution_price * no_of_response 
+  
     store=[]
     if data.get('store'):
         for i in data['store']:

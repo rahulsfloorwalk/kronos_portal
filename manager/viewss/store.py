@@ -139,17 +139,14 @@ class StoreView(APIView):
 
 class StoreUserIdView(APIView):
     permission_classes = [AllowAny]
-    # required_groups = {
-    #     'GET': [GROUP_NAME_CLIENT],
-    #     'POST': [GROUP_NAME_CLIENT]
-    # }
-    def get(self,request,user_id):
-        user = User.objects.get(id=user_id)
+
+    def get(self,request):
+        user = User.objects.get(id=request.user.id)
         client = Client.objects.get(name=user.email)
         stores = store_service.find_stores_by_client(client.id)
         return Response(StoreSerializer(stores, many=True).data)
-    def post(self,request,user_id):
-        user = User.objects.get(id=user_id)
+    def post(self,request):
+        user = User.objects.get(id=request.user.id)
         client_id = Client.objects.get(name=user.email)
         if client_id.id and request.data.get('code'):
             if Store.objects.filter(client=client_id.id,code=request.data.get('code')).exists():

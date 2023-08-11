@@ -99,7 +99,7 @@ urlpatterns = ([
     url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
-    url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
+    url(r'store_mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
 
     # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
