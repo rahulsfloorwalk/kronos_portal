@@ -95,6 +95,12 @@ urlpatterns = ([
     url(r'market_place/signup_api$', viewss_api.MPSignUpAPI.as_view(), name="mp_signup_api"),
     url(r'market_place/verify_email_by_otp$', viewss_api.MPVerfifyEmailByOtp.as_view(), name="mp_verify_email_by_otp"),
     url(r'market_place/login_api$', viewss_api.MPLogInAPI.as_view(), name="mp_login_api"),
+    url(r'market_place/change_password_api$', viewss_api.MPChangePasswordAPI.as_view(), name="mp_teset_password_api"),
+    
+    url(r'market_place/forgot_password_api$', viewss_api.MPForgotPasswordAPI.as_view(), name="mp_forgot_password_api"),
+    url(r'market_place/verify_and_forgot_password_api$', viewss_api.MPVerifyAndForgotPasswordAPI.as_view(), name="mp_verify_and_forgot_password_api"),
+    url(r'market_place/verify_and_forgot_password_set_api$', viewss_api.MPSetPasswordAPI.as_view(), name="mp_verify_and_forgot_password_set_api"),
+    
     url(r'market_place/logout_api$', viewss_api.MPLogOutAPI.as_view(), name="mp_logout_api"),
     url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),

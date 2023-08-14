@@ -94,7 +94,6 @@ def sign_up_market_place(request):
     try:
         user = User.objects.get(email__iexact=to_check_email)
         group_name = user.groups.get()
-        print('97',group_name.name)
         if group_name.name!="Client":
             response={'details': 'User is Already Registered as a {}!! Please use Alternate Email'.format(group_name.name)}
             status= 200
@@ -206,7 +205,6 @@ def verify_by_otp_and_login(request):
     user=request.data.get('user')
     otp=request.data.get('otp')
     try:
-        
         user_=User.objects.get(id=user) 
         otp_verification = OTPVerification.objects.get(user=user_.id)
         
@@ -255,4 +253,115 @@ def verify_by_otp_and_login(request):
         response = {'detail': 'Record not found.'}
         status = 404
     
+    return response,status
+
+@atomic
+def change_password(user_id,old_password,new_password):
+    user = User.objects.get(pk=user_id)
+    if not user.check_password(old_password):
+        raise AppLogicError("Old password is incorrect")
+    user.set_password(new_password)
+    user.save()
+    return {'detail': 'Password changed'}
+
+@atomic
+def forgot_password(request):
+    to_check_email=request.get('email')
+    try:
+        validate_email(to_check_email)
+    except ValidationError:
+        response = {'detail':'Please enter a valid email'}
+        status = 400
+    if to_check_email:
+         to_check_email = to_check_email.strip().lower()
+    
+    user = User.objects.get(email__iexact=to_check_email)
+    group_name = user.groups.get()
+    if group_name.name=="Client":
+        otp = generate_otp()
+        otp_verification=OTPVerification.objects.get(user=user)
+        otp_verification.otp=otp
+        otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+        otp_verification.save()
+        message = get_template('registration/market_place/forgot_password_otp_verification.html').render({
+            'otp': otp,
+            'email': user.email,
+            **registration_context(),
+        })
+
+        msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user.email,))
+        msg.content_subtype = 'html'
+
+        if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+            msg.send()
+            _logger.info("forgot password email sent to user : %s", user.email)
+        else:
+            _logger.info("forgot password email disabled. skipping email for user : %s", user.email)
+            _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+
+        
+        response={'details': 'OTP is Sent In Your Registered Mail !! ','user':user.id}
+        status=200
+    return response,status
+
+@atomic
+def verify_otp_for_forgot_password(request):
+    otp = request.get('otp') 
+    user = request.get('user')
+    try:
+        user_=User.objects.get(id=user) 
+        otp_verification = OTPVerification.objects.get(user=user_.id)
+        
+        if otp_verification.is_expired():
+            otp = generate_otp()
+            otp_verification=OTPVerification.objects.get(user_id=user_.id)
+            otp_verification.otp = otp
+            otp_verification.otp_expires = timezone.now() + datetime.timedelta(minutes=5)
+            otp_verification.save()
+            message = get_template('registration/market_place/forgot_password_otp_verification.html').render({
+                'otp': otp,
+                'email': user_.email,
+                **registration_context(),
+            })
+
+            msg = EmailMessage(strings.SIGN_UP_CLIENT_SUBJECT, message, to=(user_.email,))
+            msg.content_subtype = 'html'
+
+            if settings.EMAIL_SWITCH['VERIFICATION_EMAIL']:
+                msg.send()
+                _logger.info("forgot password email sent to user : %s", user_.email)
+            else:
+                _logger.info("forgot password email disabled. skipping email for user : %s", user_.email)
+                _logger.debug("DUMPING VERIFICATION EMAIL : %s", message)
+            
+            response={'detail': 'Old OTP Has Expired, New OTP is Shared On Your Email !!','user':user }
+            status= 200
+
+        else:
+            if otp_verification.otp == otp:
+                user_=User.objects.get(id=user)
+                otp_verification.is_verified = True
+                otp_verification.save()
+                token, created = Token.objects.get_or_create(user=user_)
+                response = {'detail': 'OTP Verified !! Please Change Password', 'token': token.key,'user':user_.id}
+                status = 200
+            
+            else:
+                response = {'detail': 'Invalid OTP.'}
+                status = 400
+    except OTPVerification.DoesNotExist:
+        response = {'detail': 'Record not found.'}
+        status = 404
+    
+    return response,status
+
+@atomic
+def set_password(request):
+    user=request.user.id
+    password= request.data.get('password')
+    user = User.objects.get(pk=user)
+    user.set_password(password)
+    user.save()
+    response={'detail': 'Password Changed'}
+    status=200
     return response,status
