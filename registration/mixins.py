@@ -14,13 +14,10 @@ class HasGroupPermission(BasePermission):
     """
 
     def has_permission(self, request, view):
-        print('17',self,request.method,request.user,view)
         # Get a mapping of methods -> required group.
         required_groups_mapping = getattr(view, 'required_groups', {})
-
         # Determine the required groups for this particular request method.
         required_groups = required_groups_mapping.get(request.method, [])
-
         # Return True if the user has all the required groups.
         return all([is_in_group(request.user, group_name) for group_name in required_groups])
 

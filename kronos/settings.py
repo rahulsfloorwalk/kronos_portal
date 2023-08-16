@@ -221,6 +221,7 @@ REST_FRAMEWORK = {
 
 AUTHENTICATION_BACKENDS = (
     'registration.backends.CaseInsensitiveModelBackend',
+    'registration.backends.CaseInsensitiveModelBackend1',
     'guardian.backends.ObjectPermissionBackend',
 )
 

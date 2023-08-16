@@ -425,17 +425,17 @@ class MPOrder(Model):
         (ACTIVE, "Active"),
     )
     id = AutoField(db_column='id', primary_key=True)
-    no_of_response = IntegerField(db_column='no_of_response',blank=True,default=1)
+    no_of_response = IntegerField(db_column='no_of_response',blank=True,default=1,null=True)
     solution = ForeignKey(MPSolution, related_name='mporders', db_column='solution_id', on_delete=PROTECT,blank=False)
-    describe = CharField(db_column='describe',blank=True,max_length=16384)
+    describe = CharField(db_column='describe',blank=True,max_length=16384,null=True)
     user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
-    alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True)
-    store = JSONField(db_column='stores', default=list, blank=True)
+    alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True,null=True)
+    store = JSONField(db_column='stores', default=list, blank=True,null=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='orders')
     razorpay_payment_id = CharField(max_length=100, blank=True, null=True)
     razorpay_signature = CharField(max_length=100, blank=True, null=True)
-    price = IntegerField(db_column='price',max_length=20,blank=False,null=False)
+    price = IntegerField(db_column='price',default=0,blank=True,null=True)
     def __str__(self):
         return 'MPOrder({}): Solution{} '.format(self.id, self.solution)
 

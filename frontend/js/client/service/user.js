@@ -7,6 +7,11 @@ export function fetchUser(){
 	return promise;
 }
 
+export function findAllClientUser(){
+	return $.get( url.api_base_path + "client/admin_and_non_admin_user_for_admin");
+	
+}
+
 export function getEmailNotification(){
 	return $.get(url.api_base_path + "client/email_notification");
 }

@@ -26,7 +26,7 @@ import OverallExperienceGauge from "./OverallExperienceGauge.jsx";
 import ImpactFactorBox from "./ImpactFactorBox.jsx";
 
 import floorwalkLogoUrl from "../../../../img/logo_500x300.png";
-import { fetchUser } from "../../service/user.js";
+import { fetchUser,findAllClientUser } from "../../service/user.js";
 
 export default class AuditStoreDetail extends React.Component {
 	static propTypes = {
@@ -92,7 +92,12 @@ export default class AuditStoreDetail extends React.Component {
 				impactFactors
 			});
 		});
-		this.getReportActionPlanList();
+		findAllClientUser().then((allUser)=>{
+			this.setState({
+				allUser
+			});
+		});
+		this.getReportActionPlanList()
 	}
 
 	getReportActionPlanList = () =>{
@@ -108,6 +113,7 @@ export default class AuditStoreDetail extends React.Component {
 			display:"block",
 			loading_modal: false
 		});
+
 	};
 
 	hideModal = () => {

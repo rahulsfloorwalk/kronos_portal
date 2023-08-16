@@ -1,6 +1,9 @@
 from django.conf.urls import url
 from . import views
-
+from registration import views_api as viewss_api
+from manager.viewss import store as store_views
+from manager.viewss import mp_order as mp_order_views
+from manager.viewss import client_profile as mp_client_profile
 urlpatterns = ([
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/city/(?P<city_id>[0-9]+)/store$', views.AuditCycleCityStoreAverageReport.as_view(), name='audit_cycle_city_store_average'),
     url(r'report/audit_cycle/(?P<audit_cycle_id>[0-9]+)/store/(?P<store_id>[0-9]+)$', views.AuditCycleStoreSectionAverageReport.as_view(), name='audit_cycle_store_section_average'),
@@ -67,6 +70,8 @@ urlpatterns = ([
     url(r'filter_stores$', views.StoreFilter.as_view(), name='filter_stores'),
 
     url(r'user$', views.ClientUserView.as_view(), name='client_user_view'),
+    url(r'admin_and_non_admin_user_for_admin$', views.AdminAndNonAdminClientUserView.as_view(), name='admin_and_non_admin_client_user_view'),
+    
     url(r'audit_cycle$', views.AuditCycleView.as_view(), name='audit_cycle_view'),
     url(r'audit_cycle_for_dashboard$', views.AuditCycleForDashboardView.as_view(), name='audit_cycle_dashboard_view'),
     url(r'audit_cycle/(?P<audit_type>[A-Z_]+)$', views.AuditCycleByTypeView.as_view(), name='audit_cycle_by_type_view'),
@@ -87,4 +92,25 @@ urlpatterns = ([
     url(r'twitter/handles', views.TwitterHandlesView.as_view(), name='twitter_handles_view'),
 
     url(r'audit_feedback_report_mail$', views.AuditFeedbackReportMail.as_view(), name="audit_feedback_report_mail"),
+
+    # MarketPlace API
+    url(r'market_place/signup_api$', viewss_api.MPSignUpAPI.as_view(), name="mp_signup_api"),
+    url(r'market_place/verify_email_by_otp$', viewss_api.MPVerfifyEmailByOtp.as_view(), name="mp_verify_email_by_otp"),
+    url(r'market_place/login_api$', viewss_api.MPLogInAPI.as_view(), name="mp_login_api"),
+    url(r'market_place/change_password_api$', viewss_api.MPChangePasswordAPI.as_view(), name="mp_teset_password_api"),
+    
+    url(r'market_place/forgot_password_api$', viewss_api.MPForgotPasswordAPI.as_view(), name="mp_forgot_password_api"),
+    url(r'market_place/verify_and_forgot_password_api$', viewss_api.MPVerifyAndForgotPasswordAPI.as_view(), name="mp_verify_and_forgot_password_api"),
+    url(r'market_place/verify_and_forgot_password_set_api$', viewss_api.MPSetPasswordAPI.as_view(), name="mp_verify_and_forgot_password_set_api"),
+    
+    url(r'market_place/logout_api$', viewss_api.MPLogOutAPI.as_view(), name="mp_logout_api"),
+    url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
+    url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
+    url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
+    url(r'store_mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
+
+    # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
+    # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+
+    
 ], 'client_rest')
