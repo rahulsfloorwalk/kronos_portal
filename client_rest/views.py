@@ -60,6 +60,15 @@ class ClientUserView(APIView):
     def get(self, request, format=None):
         return Response(ClientUserSerializer(request.user.clientuser).data)
 
+class AdminAndNonAdminClientUserView(APIView):
+    permission_classes = [HasGroupPermission]
+    request_groups={
+        'GET':[GROUP_NAME_CLIENT],
+    }
+    def get(self,request,format=None):
+        client_users = client_service.find_client_by_id(request.user.clientuser.client.id).users
+        return Response(ClientUserSerializer(client_users,many=True).data)
+
 class AuditStoreLatest(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

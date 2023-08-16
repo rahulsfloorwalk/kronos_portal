@@ -48,8 +48,8 @@ class MPVerfifyEmailByOtp(APIView):
         return JsonResponse(response,status=status)    
 
 class ChangePasswordDeSerializer(Serializer):
-    old_password = CharField(min_length=8, max_length=128)
-    new_password = CharField(min_length=8, max_length=128)
+    old_password = CharField()
+    new_password = CharField()
 
 class MPChangePasswordAPI(APIView):
     permission_classes=[HasGroupPermission]

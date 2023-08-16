@@ -24,7 +24,7 @@ export class __AuditStoreReport extends React.Component {
 		fetchSections: PropTypes.func.isRequired,
 		fetchAnswers: PropTypes.func.isRequired,
 		fetchReportSections: PropTypes.func.isRequired,
-
+		fetchAllUser:PropTypes.func.isRequired,
 		auditStore: auditStorePropType,
 	};
 
@@ -39,6 +39,7 @@ export class __AuditStoreReport extends React.Component {
 		this.props.fetchSections();
 		this.props.fetchReportSections();
 		this.props.fetchAnswers();
+		this.props.fetchAllUser();
 	}
 
 	render(){

@@ -17,13 +17,6 @@ def fail_percentage(pas,fail):
         return True
     else:
         return False
-# def auditor_withdraw_percentage(pas,fail):
-#     if fail==0:
-#         return True
-#     elif int((fail/pas)*100)<=30: #30
-#         return True
-#     else:
-#         return False
 
 @app.task(iqnore_result=True)
 def auto_approve_for_super_auditor():
