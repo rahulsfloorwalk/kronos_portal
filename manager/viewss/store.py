@@ -20,6 +20,7 @@ class MPStoreDeSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
+            'client',
             'address',
             'code',
             'pincode',
@@ -41,6 +42,7 @@ class MPStoreDeSerializer(ModelSerializer):
         store.name = self.validated_data.get('name', store.name)
         store.address = self.validated_data.get('address', store.address)
         store.city = self.validated_data.get('city', store.city_id)
+        store.client = self.validated_data.get('client', store.client_id)
         store.code = self.validated_data.get('code', store.code)
         store.pincode = self.validated_data.get('pincode', store.pincode)
         store.map_location_link = self.validated_data.get('map_location_link', store.map_location_link)
@@ -137,25 +139,29 @@ class StoreView(APIView):
         return Response(StoreSerializer(savedStore).data)
 
 
-class StoreClientView(APIView):
+class StoreClientViewGET(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
-        'POST': [GROUP_NAME_CLIENT]
     }
-    def get(self,request,client_id):
+    def get(self, request, client_id, format=None):
         stores = store_service.find_stores_by_client(client_id)
         return Response(StoreSerializer(stores, many=True).data)
-    def post(self,request,client_id):
-        if client_id and request.data.get('code'):
-            if Store.objects.filter(client=client_id,code=request.data.get('code')).exists():
+    
+class StoreClientView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request):
+        if request.data['client'] and request.data.get('code'):
+            if Store.objects.filter(client=request.data['client'],code=request.data.get('code')).exists():
                 raise AppLogicError('The store already exist in the client.')
-        store_ds = MPStoreDeSerializer(data=request.data, context={'client': client_id})
+        store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
         savedStore = store.save()
         return Response(StoreSerializer(store).data)
-    
 
 class StoreClientIdView(APIView):
     permission_classes = [HasGroupPermission]
