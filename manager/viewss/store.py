@@ -20,6 +20,7 @@ class MPStoreDeSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
+            'client',
             'address',
             'code',
             'pincode',
@@ -41,6 +42,7 @@ class MPStoreDeSerializer(ModelSerializer):
         store.name = self.validated_data.get('name', store.name)
         store.address = self.validated_data.get('address', store.address)
         store.city = self.validated_data.get('city', store.city_id)
+        store.client = self.validated_data.get('client', store.client_id)
         store.code = self.validated_data.get('code', store.code)
         store.pincode = self.validated_data.get('pincode', store.pincode)
         store.map_location_link = self.validated_data.get('map_location_link', store.map_location_link)
@@ -137,25 +139,73 @@ class StoreView(APIView):
         return Response(StoreSerializer(savedStore).data)
 
 
-class StoreUserIdView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self,request):
-        user = User.objects.get(id=request.user.id)
-        client = Client.objects.get(name=user.email)
-        stores = store_service.find_stores_by_client(client.id)
+class StoreClientViewGET(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, client_id, format=None):
+        stores = store_service.find_stores_by_client(client_id)
         return Response(StoreSerializer(stores, many=True).data)
-    def post(self,request):
-        user = User.objects.get(id=request.user.id)
-        client_id = Client.objects.get(name=user.email)
-        if client_id.id and request.data.get('code'):
-            if Store.objects.filter(client=client_id.id,code=request.data.get('code')).exists():
+    
+class StoreClientView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request):
+        if request.data['client'] and request.data.get('code'):
+            if Store.objects.filter(client=request.data['client'],code=request.data.get('code')).exists():
                 raise AppLogicError('The store already exist in the client.')
-        store_ds = MPStoreDeSerializer(data=request.data, context={'client': client_id})
+        store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
         savedStore = store.save()
         return Response(StoreSerializer(store).data)
+
+class StoreClientIdView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+        'POST': [GROUP_NAME_CLIENT],
+        'DELETE': [GROUP_NAME_CLIENT]
+    }
+
+    def get(self, request, client_id, store_id, format=None):
+        try:
+            store = Store.objects.get(client=client_id, id=store_id)
+        except Store.DoesNotExist:
+            return Response({"error": "Unauthorized"})
+
+        return Response(StoreSerializer(store).data)
+
+    # def get(self, request, store_id,client_id, format=None):
+    #     user = User.objects.get(id=request.user.id)
+    #     client = Client.objects.get(name=user.email)
+    #     stores = store_service.find_stores_by_client(client.id)
+    #     store = store_service.find_store_by_id(store_id)
+    #     return Response(StoreSerializer(stores).data)
+
+    def post(self, request, client_id, store_id):
+        try :
+           store = Store.objects.get(client=client_id, id=store_id)
+        except Store.DoesNotExist:
+            return Response({"error": "Unauthorized"})
+
+        store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})
+        store_ds.is_valid(raise_exception=True)
+        store = store_ds.deserialize()
+        savedStore = store_service.save(store)
+        return Response(StoreSerializer(savedStore).data)
+
+    def delete(self, request, client_id, store_id):
+        try:
+            store = Store.objects.get(client=client_id, id=store_id)
+        except Store.DoesNotExist:
+            return Response({"error": "Unauthorized"})
+
+        store_service.delete(store_id)
+        return HttpResponse(status=204)
     
 class ImportStoreView(APIView):
     permission_classes = [HasGroupPermission]
