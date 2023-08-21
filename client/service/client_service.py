@@ -1,7 +1,19 @@
 from kronos.exceptions import ObjectNotFound
 
-from ..models import BankInfo, Client, ClientUser
+from ..models import BankInfo, Client, ClientUser,NonClientAdminUserStore
 from audit.models.audit_cycle import AuditCycle
+from audit.models import Audit
+from audit_store.models import AuditStore
+from django.contrib.auth.models import Group,User
+from registration.models import GROUP_NAME_CLIENT
+
+def find_client_user_by_audit_store_id(audit_store_id):
+    audit_store=AuditStore.objects.get(id=audit_store_id)
+    client_users= NonClientAdminUserStore.objects.filter(stores__store_list__contains=audit_store.audit.store_id)
+    result=[]
+    for i in client_users:
+        result.append({'email':i.client_user.user.email,'full_name':i.client_user.full_name})
+    return result
 
 def find_client_by_id(client_id):
     try:
@@ -9,6 +21,11 @@ def find_client_by_id(client_id):
     except Client.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_client_user_by_email_id(email):
+    try:
+        return Group.objects.get(name=GROUP_NAME_CLIENT).user_set.get(email=email)
+    except(Group.DoesNotExist, User.DoesNotExist) as e:
+        raise ObjectNotFound from e
 
 def find_client_by_user_id(user_id):
     try:
@@ -16,6 +33,15 @@ def find_client_by_user_id(user_id):
     except Client.DoesNotExist as e:
         raise ObjectNotFound from e
 
+def find_client_user_full_name_and_email(email):
+    try:
+        user = User.objects.get(email=email)
+        client_user = ClientUser.objects.get(user=user)
+        return client_user
+    except User.DoesNotExist:
+        return None
+    except ClientUser.DoesNotExist:
+        return None
 
 def find_bank_info_by_id(client_id):
     try:

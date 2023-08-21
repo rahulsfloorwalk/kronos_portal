@@ -1,0 +1,10 @@
+Dear Admin,
+{{subject_text}}.
+
+Please Check the User Activity.
+
+--
+Thanks and regards,
+FloorWalk Team
+
+

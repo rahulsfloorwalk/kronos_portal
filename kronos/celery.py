@@ -32,7 +32,9 @@ def setup_periodic_tasks(sender, **kwargs):
     from notify.service.auto_audit_alignment import auto_approve_audit_application
     
     from notify.service.auto_super_auditor_assign import auto_approve_for_super_auditor
-
+    from notify.service.tattva_reporting_to_admin import auto_tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user
+    from notify.service.tattava_target_date_reminder import auto_tattva_report_action_target_date_to_admin
+    from notify.service.tattava_last_day_report_mail import auto_tattava_mail_for_last_day_completed_report
     # set up schedules for audit reminders
     # Executes every day at 1230 UTC == 1800 IST
     queue_at = crontab(hour=12, minute=30)
@@ -53,7 +55,15 @@ def setup_periodic_tasks(sender, **kwargs):
 
     #send super auditor assign
     sender.add_periodic_task(queue_at_9,auto_approve_for_super_auditor.s())  
-
+    
+    # target date reminder to admin (action plan)
+    sender.add_periodic_task(queue_at_9,auto_tattva_report_action_target_date_to_admin.s())
+    
+    # last day complete report send tattava user's
+    sender.add_periodic_task(queue_at_9,auto_tattava_mail_for_last_day_completed_report.s())
+    
+    # send a mail admin for store manager is not active 
+    sender.add_periodic_task(queue_at_9,auto_tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user.s())
     # schedules for find repeated image attachment
     # Execute cron every five hours : midnight, 5am, 10am, 3pm, 8pm.
     queue_at_attachment = crontab(hour='*/5', minute=0)

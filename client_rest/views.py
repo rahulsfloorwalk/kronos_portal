@@ -51,7 +51,7 @@ from .serializers import ClientSerializer
 from .serializers import ReportActionPlanSerializer
 from client_report.service import improvable_questions
 from client_report.service import questionnaire_survey
-
+from django.db.transaction import atomic
 class ClientUserView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -65,9 +65,9 @@ class AdminAndNonAdminClientUserView(APIView):
     request_groups={
         'GET':[GROUP_NAME_CLIENT],
     }
-    def get(self,request,format=None):
-        client_users = client_service.find_client_by_id(request.user.clientuser.client.id).users
-        return Response(ClientUserSerializer(client_users,many=True).data)
+    def get(self,request,audit_store_id,format=None):
+        client_users = client_service.find_client_user_by_audit_store_id(audit_store_id)
+        return Response(client_users)
 
 class AuditStoreLatest(APIView):
     permission_classes = [HasGroupPermission]
@@ -170,10 +170,10 @@ class AuditStoreReportActionView(APIView):
     def get(self, request, audit_store_id):
         audit_report_action = audit_store_client_service.get_audit_store_action_plan(audit_store_id)
         return Response(ReportActionPlanSerializer(audit_report_action, many=True).data)
-
+    @atomic
     def post(self, request, audit_store_id):
         audit_report_action = audit_store_client_service\
-            .submit_audit_store_action_plan(audit_store_id, request.user.clientuser, request.data['action_plan'], request.data['target_date'],
+            .submit_audit_store_action_plan(request.user.clientuser.full_name,audit_store_id, request.user.clientuser, request.data['action_plan'], request.data['target_date'],
                                             request.data['person'])
         return Response(ReportActionPlanSerializer(audit_report_action).data)
 

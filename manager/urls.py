@@ -124,8 +124,8 @@ urlpatterns = ([
     # url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
     # url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
 
-    # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
-    # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+    url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
+    url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
 
     # -----------------------------------------
   
