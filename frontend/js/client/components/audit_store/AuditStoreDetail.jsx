@@ -4,7 +4,7 @@ import { hashHistory } from "react-router";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import moment from "moment";
-
+import Select from 'react-select';
 import { url }  from "../../../../config.js";
 
 import { fetchAuditStore, submitReportActionPlan, getReportActionPlan, submitAuditStorePDFReport } from "../../service/audit_store.js";
@@ -92,9 +92,9 @@ export default class AuditStoreDetail extends React.Component {
 				impactFactors
 			});
 		});
-		findAllClientUser().then((allUser)=>{
+		findAllClientUser(this.props.params.auditStoreId).then((allResponsibleUser)=>{
 			this.setState({
-				allUser
+				allResponsibleUser
 			});
 		});
 		this.getReportActionPlanList()
@@ -122,7 +122,7 @@ export default class AuditStoreDetail extends React.Component {
 	submit_hideModal = () => {
 		let action_plan = this.state.action_plan;
 		let target_date = this.state.target_date;
-		let person = this.state.person;
+		let person = this.state.person.value;
 		if (action_plan === ""){
 			this.setState({errMsg: "Please enter Action Plan"});
 		}
@@ -177,11 +177,8 @@ export default class AuditStoreDetail extends React.Component {
 		});
 	};
 
-	personChanged = (e) =>{
-		this.setState({
-			person: e.target.value,
-			errMsg: ""
-		});
+	personChanged = (person) =>{
+		this.setState({ person });
 	};
 
 	showReportModal = () => {
@@ -248,6 +245,15 @@ export default class AuditStoreDetail extends React.Component {
 	};
 
 	render() {
+		let options=[];
+		if(this.state.allResponsibleUser){
+			for (let s of this.state.allResponsibleUser){
+				options.push({
+					label: `${s.full_name} -- ${s.email}`,
+					value: s.email
+				})
+			}
+		}
 		if(! this.state.auditStore){
 			return <Loading/>;
 		}
@@ -275,7 +281,7 @@ export default class AuditStoreDetail extends React.Component {
 		if(!this.state.loading_modal){
 			submit_button_html = (
 				<div className="modal-footer">
-					<span style={{color:"red"}}>{this.state.errMsg}</span>&nbsp;&nbsp;
+					<span style={{color:"red"}}>{this.state.errMsg}</span>&nbsp;&nbsp;&nbsp;
 					<button type="button" className="btn btn-primary" onClick={this.submit_hideModal}>Submit</button><button type="button" className="btn btn-default" onClick={this.hideModal}>Close</button>
 				</div>
 			);
@@ -347,9 +353,11 @@ export default class AuditStoreDetail extends React.Component {
 								<h4 className="modal-title">Create a Action Plan</h4>
 							</div>
 							<div className="modal-body">
-								<label>Action Plan:</label>
-								<textarea rows="5" className="form-control" value={this.state.action_plan} onChange={this.actionPlanChanged} />
-
+								<div className="col-sm-12">
+									<label>Action Plan:</label>
+									<textarea rows="5" className="form-control" value={this.state.action_plan} onChange={this.actionPlanChanged} />
+								</div>
+								<div className="col-sm-12">
 								<label>Target Date:</label>
 								<Datetime
 									timeFormat={false}
@@ -359,9 +367,16 @@ export default class AuditStoreDetail extends React.Component {
 									onChange={this.dateChanged}
 									isValidDate={this.validation}
 								/>
-
-								<label>Person Responsible:</label>
-								<input type="text" className="form-control" value={this.state.person} onChange={this.personChanged} />
+								</div>
+								<div className="col-sm-12">
+									<label>Person Responsible:</label>
+									<Select
+										value={this.state.person} //selectedOption
+										onChange={this.personChanged}
+										options={options}
+										placeholder="Select Peson"
+									/>
+								</div>
 							</div>
 							{submit_button_html}
 						</div>

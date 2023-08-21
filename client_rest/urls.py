@@ -73,7 +73,7 @@ urlpatterns = ([
     url(r'filter_stores$', views.StoreFilter.as_view(), name='filter_stores'),
 
     url(r'user$', views.ClientUserView.as_view(), name='client_user_view'),
-    url(r'admin_and_non_admin_user_for_admin$', views.AdminAndNonAdminClientUserView.as_view(), name='admin_and_non_admin_client_user_view'),
+    url(r'audit_store/(?P<audit_store_id>[0-9]+)/admin_and_non_admin_user_for_admin$', views.AdminAndNonAdminClientUserView.as_view(), name='admin_and_non_admin_client_user_view'),
     
     url(r'audit_cycle$', views.AuditCycleView.as_view(), name='audit_cycle_view'),
     url(r'audit_cycle_for_dashboard$', views.AuditCycleForDashboardView.as_view(), name='audit_cycle_dashboard_view'),

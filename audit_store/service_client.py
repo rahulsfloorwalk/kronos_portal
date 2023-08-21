@@ -1,8 +1,10 @@
 import xlsxwriter
 import io
+import logging
 from django.conf import settings
 from django.template.loader import render_to_string
-
+from notify.service.mail import send_email
+from django.template.loader import get_template
 from kronos.utils import today_ist, get_color_code_by_percentage, get_color_code, get_color_hex_from_code
 from kronos.exceptions import ObjectNotFound
 from .models import AuditStore, ReportStatusLog, ReportActionPlan
@@ -11,7 +13,10 @@ from questionnaire.service import question as question_service
 from client.service.client_user import find_non_client_admin_user_store_by_client_user_id
 from audit.service.audit_cycle import find_by_id
 from notify.service.mail_audit_report import audit_feedback_report_mail_task
-
+from registration.context import registration_context
+from django.core.mail import EmailMessage
+from datetime import timedelta
+_logger = logging.getLogger(__name__)
 
 def find_upcoming_for_client(client_id):
     return AuditStore.objects.filter(
@@ -96,7 +101,19 @@ def find_today_client_review_status_reports(client_id):
 def find_audit_store_exclude_today(audit_store_id):
     return ReportStatusLog.objects \
         .filter(audit_store_id=audit_store_id, status=AuditStore.COMPLETED) \
-        .exclude(created_at__date=today_ist()) \
+        .exclude(created_at__date= today_ist()) \
+        .exists()
+
+def find_yesterday_client_review_status_reports(client_id):
+    return ReportStatusLog.objects \
+        .filter(audit_store__audit__audit_cycle__client_id=client_id,
+                status=AuditStore.COMPLETED, created_at__date=today_ist()-timedelta(days=1)) \
+        .distinct('audit_store_id')
+
+def find_audit_store_completed_yesterday(audit_store_id):
+    return ReportStatusLog.objects \
+        .filter(audit_store_id=audit_store_id, status=AuditStore.COMPLETED) \
+        .exclude(created_at__date= today_ist()-timedelta(days=1)) \
         .exists()
 
 
@@ -128,8 +145,30 @@ def get_audit_store_action_plan(audit_store_id):
     audit_store_action_plan = ReportActionPlan.objects.filter(audit_store__id=audit_store_id).order_by('status')
     return audit_store_action_plan
 
+def send_mail_for_report_action_plan(person,params,audit_cycle_name):
+    subject = f"Action Plan For {audit_cycle_name} | FloorWalk"  
+    message = get_template('audit_store/report_action_plan.html').render({
+        'audit_store_id':params['audit_store_id'],
+        'email':person,
+        'action_plan':params['action_plan'],
+        'target_date':params['target_date'],
+        'store_name': params['store_name'],
+        'store_address': params['store_address'],
+        'store_city': params['store_city'],
+        'client_name': params['client_name'],
+        'admin_name': params['admin_name'], 
+        **registration_context(),
+    })
+    msg = EmailMessage(subject, message, to=(person,))
+    msg.content_subtype = 'html'
+    if settings.EMAIL_SWITCH['REPORT_ACTION']:
+        msg.send()
+        _logger.info("report action email sent to user : %s", person)
+    else:
+        _logger.info("report action email disabled. skipping email for user : %s", person)
+        _logger.debug("DUMPING REPORT ACTION EMAIL : %s", message)
 
-def submit_audit_store_action_plan(audit_store_id, client_user, action_plan, target_date, person):
+def submit_audit_store_action_plan(admin_name,audit_store_id, client_user, action_plan, target_date, person):
     audit_store = AuditStore.objects.get(pk=audit_store_id)
     report_action_obj = ReportActionPlan()
     report_action_obj.audit_store = audit_store
@@ -139,6 +178,18 @@ def submit_audit_store_action_plan(audit_store_id, client_user, action_plan, tar
     report_action_obj.target_date = target_date
     report_action_obj.status = ReportActionPlan.PENDING
     report_action_obj.save()
+    params= {
+        'audit_store_id':audit_store_id,
+        'email':person,
+        'action_plan':action_plan,
+        'target_date':target_date,
+        'store_name': audit_store.audit.store.name,
+        'store_address': audit_store.audit.store.address,
+        'store_city': audit_store.audit.store.city.name,
+        'client_name': audit_store.audit.audit_cycle.client.name,
+        'admin_name': admin_name
+    }
+    send_mail_for_report_action_plan(person,params,audit_store.audit.audit_cycle.name)
     return report_action_obj
 
 

@@ -1,0 +1,37 @@
+<html>
+    <head>
+    </head>
+    <body>
+        <p>Dear Admin</p>
+        <p>{{subject_text}}</p>
+        <paragraph>
+            I hope this email finds you well. This mail is to bring to your attention regarding login activity of your organization user.
+            Since the report went live on the portal, we have noticed that the assigned client user list is here 
+            who's not logged in or reviewed the report. It has been 48 hours since the report went live and we wanted to bring this to your attention.
+            Could you please look into this situation.
+        </paragraph>
+        <br/>
+        <table border="1" cellpadding="8" cellspacing="0" width="700">
+            <tr>
+                <th style="font-size: 14px;">Audit Cycle Name</th>
+                <th style="font-size: 14px;">Store Manager Name</th>
+                <th style="font-size: 14px;">Store Manager Email</th>
+                <th style="font-size: 14px;">Last Login </th>
+            </tr>
+            {% for i in data %}
+                <tr>
+                    <td style="font-size: 13px;">{{i.cycle_name}}</td>
+                    <td style="font-size: 13px;">{{i.full_name}}</td>
+                    <td style="font-size: 13px;">{{i.email}}</td>
+                    <td style="font-size: 13px;">{{i.last_login}}</td>  
+                </tr>
+            {% endfor %}
+        </table>
+        <p>--</p>
+		<p>Thanks and regards,</p>
+		<p>FloorWalk Team</p>
+		<br>
+		<br>
+		<h6>Please note that this is system generated email. Do not reply to this email. For any queries, write to us at contactus@floorwalk.in</h6>
+    </body>
+</html>

@@ -1,38 +1,67 @@
 import logging
 from django.db.transaction import atomic
-from django.db.models import Count, Avg
-from auditor.models import ProfileInfo,AuditorRating
-from django.contrib.auth.models import User
+from django.conf import settings
+from django.template.loader import get_template
+from .mail import send_email
 from registration.models import GROUP_NAME_AUDITOR
 from kronos.celery import app
+from django.db.models import Subquery,OuterRef
 from celery.result import ResultSet
-from client.service import client_service
-from client.models import Client,Store,ClientUser,NonClientAdminUserStore
-from auditor.service import stats
+from registration.context import registration_context
+from client.models import ClientUser,NonClientAdminUserStore
 from audit_store.models import AuditStore
-from audit.models import AuditCycle,Audit
-from manager.viewss.client_user import ClientUserSerializer
+from celery import shared_task
+from audit.models import AuditCycle
 _logger = logging.getLogger(__name__)
 
-# from notify.service import tattva_reporting_to_admin
-# obj=tattva_reporting_to_admin
-# obj.tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user()
 
 
-# @app.task(iqnore_result=True)
-# def tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user():
-#     client_id = 1 # Hardcoded
-#     client_users = ClientUser.objects.filter(client_id=client_id,receive_email_notification=True)
-#     non_client_users = [user for user in client_users if not user.user.has_perm('client.clientuser_admin')]
-#     non_client_list=[]
-#     for user in non_client_users:
-#         non_client_stores = NonClientAdminUserStore.objects.filter(client_user=user.id)
-#         for store_instance in non_client_stores:
-#             non_client_list.append({'name':user.full_name,'email':user.user.email,'store_list':store_instance.get_store_list()})
-#             audit=Audit.objects.filter(store__in=store_instance.get_store_list())
-#             for i in audit:
-#                 audit_store=AuditStore.objects.filter(audit=i,status=AuditStore.COMPLETED)
-#                 if audit_store:
-#                     print('35',audit_store)
-#                 else:
-#                     continue
+
+@app.task(iqnore_result=True)
+def auto_tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user():
+    client_id = 32  # Hardcoded
+    mail_count=0
+    query_set = AuditStore.objects.filter(
+            audit__audit_cycle__status__in=(AuditCycle.ACTIVE,AuditCycle.REPORT,AuditCycle.CLEARING),
+            audit__audit_cycle__client_id=client_id,
+            status=AuditStore.COMPLETED,
+        ).select_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
+                           'audit__store__city') \
+        .prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
+                           'audit__store__city').values_list('audit__store__id','modified_at','audit__audit_cycle__name')
+    data=[]
+    seen_email=set()
+    if query_set:
+        for i in query_set:
+            store_id, modified_at,cycle_name = i
+            check_users = NonClientAdminUserStore.objects.filter(stores__store_list__contains=store_id).distinct('client_user') \
+            .select_related('client_user__user') \
+            .values('client_user__full_name','client_user__user__email','client_user__user__last_login')
+            if check_users:
+                for j in check_users:
+                    email = j['client_user__user__email']
+                    if j['client_user__user__last_login'] is None or ( (j['client_user__user__last_login'].date() - modified_at.date()).days == 3):
+                        if email not in seen_email:
+                            seen_email.add(email)
+                            data.append({'full_name':j['client_user__full_name'],'last_login':j['client_user__user__last_login'],'email':email,'cycle_name':cycle_name})
+        if data:
+            mail_count+=1
+            _logger.info("sending email for inactive client store manager")
+            send_store_manager_inactive_mail.delay(data,client_id)
+    return mail_count            
+
+
+@shared_task()  
+def send_store_manager_inactive_mail(data,client_id):
+    client_users = ClientUser.objects.filter(client_id=client_id,receive_email_notification=True)
+    admin_client_users = [user.user.email for user in client_users if  user.user.has_perm('client.clientuser_admin')]
+    params={
+        **registration_context(),
+    }
+    subject = "Report Review : No Login Activity | FloorWalk"
+    params['subject_text'] = subject
+    params['data'] = data
+    html_message = get_template("notify/tattava_store_manager_inactive_email.html").render(params)
+    txt_message = get_template("notify/tattava_store_manager_inactive_email.txt").render(params)
+    send_email(admin_client_users, subject, html_message, txt_message)
+    

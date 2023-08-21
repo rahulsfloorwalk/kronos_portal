@@ -117,7 +117,7 @@ def fail_report(audit_store_id, user_id, message):
         if email_list:
             emails = email_list
         else:
-            emails = ["shubham.mohod@floorwalk.in"]
+            emails = ["arpan.patidar@floorwalk.in"]
         for email in emails:
             send_audit_report_failed_email.delay(email, audit_store_id, message)
     # End of Send Mail to manager or "shubham.mohod@floorwalk.in"

@@ -352,6 +352,8 @@ EMAIL_SWITCH = {
     "NOTIFICATION_EMAIL": properties["EMAIL_SWITCH"]["NOTIFICATION"] == "True",
     "VERIFICATION_EMAIL": properties["EMAIL_SWITCH"]["VERIFICATION"] == "True",
     "PRE_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["PRE_REMINDER"] == "True",
+    "REPORT_ACTION": properties['EMAIL_SWITCH']['REPORT_ACTION'] == "True",
+    "INACTIVE_REMINDER": properties['EMAIL_SWITCH']['INACTIVE_REMINDER'] == "True",
     "ON_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["ON_REMINDER"] == "True",
     "POST_REMINDER_EMAIL": properties["EMAIL_SWITCH"]["POST_REMINDER"] == "True",
     "WELCOME_EMAIL": properties["EMAIL_SWITCH"]["WELCOME"] == "True",
