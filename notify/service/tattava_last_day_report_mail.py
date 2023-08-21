@@ -51,16 +51,20 @@ def tattava_send_live_report_mail(report_list):
     params={
         **registration_context(),
     }
+    # to_email=[
+    #     'sumit.kumar@tattvaspa.org',
+    #     'prem.choudhary@tattvaspa.com',
+    #     'karan@tattvaspa.com',
+    #     'vinay.singh@tattvaspa.org',
+    #     'komal@tattvaspa.org',
+    #     'rashmi@tattvaspa.com',
+    #     'praveen.limadiya@tattvaspa.com',
+    #     'naman@tattvaspa.org',
+    #     'shipra@tattvaspa.com'
+    #     ]
     to_email=[
-        'sumit.kumar@tattvaspa.org',
-        'prem.choudhary@tattvaspa.com',
-        'karan@tattvaspa.com',
-        'vinay.singh@tattvaspa.org',
-        'komal@tattvaspa.org',
-        'rashmi@tattvaspa.com',
-        'praveen.limadiya@tattvaspa.com',
-        'naman@tattvaspa.org',
-        'shipra@tattvaspa.com'
+        'arpan.patidar@floorwalk.in',
+        'pooja.satafale@floorwalk.in'
         ]
     subject = "{} report is live".format(str(len(report_list)))
     if len(report_list) > 1:
