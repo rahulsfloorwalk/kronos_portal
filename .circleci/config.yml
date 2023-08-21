@@ -161,7 +161,7 @@ jobs:
             . venv/bin/activate
             coverage run -m pytest
             coverage html
-            coverage report --fail-under=39
+            coverage report --fail-under=49
 
       - store_artifacts:
           path: htmlcov
