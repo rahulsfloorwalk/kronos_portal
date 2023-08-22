@@ -15,10 +15,8 @@ from audit.models import AuditCycle
 _logger = logging.getLogger(__name__)
 
 
-
-
 @app.task(iqnore_result=True)
-def auto_tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user():
+def auto_tattava_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_user():
     client_id = 32  # Hardcoded
     mail_count=0
     query_set = AuditStore.objects.filter(
@@ -28,12 +26,12 @@ def auto_tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_
         ).select_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
                            'audit__store__city') \
         .prefetch_related('audit', 'audit__audit_cycle', 'audit__audit_cycle__client', 'audit__store',
-                           'audit__store__city').values_list('audit__store__id','modified_at','audit__audit_cycle__name')
+                           'audit__store__city').values_list('audit__store__id','modified_at')
     data=[]
     seen_email=set()
     if query_set:
         for i in query_set:
-            store_id, modified_at,cycle_name = i
+            store_id, modified_at = i
             check_users = NonClientAdminUserStore.objects.filter(stores__store_list__contains=store_id).distinct('client_user') \
             .select_related('client_user__user') \
             .values('client_user__full_name','client_user__user__email','client_user__user__last_login')
@@ -43,10 +41,10 @@ def auto_tattva_reporting_to_admin_after_48_hour_not_logged_in_non_admin_client_
                     if j['client_user__user__last_login'] is None or ( (j['client_user__user__last_login'].date() - modified_at.date()).days == 3):
                         if email not in seen_email:
                             seen_email.add(email)
-                            data.append({'full_name':j['client_user__full_name'],'last_login':j['client_user__user__last_login'],'email':email,'cycle_name':cycle_name})
+                            data.append({'full_name':j['client_user__full_name'],'last_login':j['client_user__user__last_login'],'email':email})
         if data:
             mail_count+=1
-            _logger.info("sending email for inactive client store manager")
+            _logger.info("sending email for %s inactive client store manager",len(data))
             send_store_manager_inactive_mail.delay(data,client_id)
     return mail_count            
 

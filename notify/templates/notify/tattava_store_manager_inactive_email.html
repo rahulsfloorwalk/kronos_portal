@@ -13,14 +13,12 @@
         <br/>
         <table border="1" cellpadding="8" cellspacing="0" width="700">
             <tr>
-                <th style="font-size: 14px;">Audit Cycle Name</th>
                 <th style="font-size: 14px;">Store Manager Name</th>
                 <th style="font-size: 14px;">Store Manager Email</th>
                 <th style="font-size: 14px;">Last Login </th>
             </tr>
             {% for i in data %}
                 <tr>
-                    <td style="font-size: 13px;">{{i.cycle_name}}</td>
                     <td style="font-size: 13px;">{{i.full_name}}</td>
                     <td style="font-size: 13px;">{{i.email}}</td>
                     <td style="font-size: 13px;">{{i.last_login}}</td>  
