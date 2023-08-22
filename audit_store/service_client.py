@@ -147,7 +147,6 @@ def get_audit_store_action_plan(audit_store_id):
 
 def send_mail_for_report_action_plan(person,params,audit_cycle_name):
     subject = 'Action Plan For {} | FloorWalk'.format(audit_cycle_name)  
-    print('150',subject)
     message = get_template('audit_store/report_action_plan.html').render({
         'audit_store_id':params['audit_store_id'],
         'email':person,
