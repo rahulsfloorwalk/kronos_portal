@@ -23,6 +23,7 @@ class SolutionDeSerializer(ModelSerializer):
             'name',
             'url_structure',
             'price',
+            'audit_type',
             'tax',
             'overview',
             'how_it_work',
@@ -39,6 +40,7 @@ class SolutionDeSerializer(ModelSerializer):
         solution.name = self.validated_data.get('name', solution.name)
         solution.url_structure = self.validated_data.get('url_structure', solution.url_structure)
         solution.price = self.validated_data.get('price', solution.price)
+        solution.audit_type = self.validated_data.get('audit_type', solution.audit_type)
         solution.tax = self.validated_data.get('tax', solution.tax_id)
         solution.overview = self.validated_data.get('overview', solution.overview)
         solution.how_it_work = self.validated_data.get('how_it_work', solution.how_it_work)
@@ -122,6 +124,7 @@ class SolutionIdView(APIView):
     
     def get(self, request, solution_id):
         result = solution_service.get_solution_by_id(solution_id)
+        print('result',result)
         return Response(result)
 
     def post(self, request, solution_id):

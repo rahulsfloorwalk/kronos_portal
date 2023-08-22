@@ -101,9 +101,56 @@ class MPCategory(Model):
         return 'Category({}): {}'.format(self.id, self.name)
 
 class MPSolution(Model):
+    WALKIN = 'WALKIN'
+    PHONE = 'PHONE'
+    WEB = 'WEB'
+    VISIBILITY = 'VISIBILITY'
+    COMPETITION = 'COMPETITION'
+    SERVICE = 'SERVICE'
+    SALES = 'SALES'
+    FINE_DINE = 'FINE_DINE'
+    SKY_KARTING = 'SKY_KARTING'
+    SMAAASH_ARENA = 'SMAAASH_ARENA'
+    GENERAL = 'GENERAL'
+    SMAAASH = 'SMAAASH'
+    SMAAASH_MEGA = 'SMAAASH_MEGA'
+    SMAAASH_ZONE = 'SMAAASH_ZONE'
+    DDC = 'DDC'
+    HTC = 'HTC'
+    ASCVD = 'ASCVD'
+    SKIN_HYDRATION = 'SKIN_HYDRATION'
+    HYPER_PIGMENTATION = 'HYPER_PIGMENTATION'
+    SKIN_SENSITIVE = 'SKIN_SENSITIVE'
+    RETAIL = 'RETAIL'
+
+    TYPES = (
+        (WALKIN, 'Walkin'),
+        (PHONE, 'Phone'),
+        (WEB, 'Web'),
+        (VISIBILITY, 'Visibility'),
+        (COMPETITION, 'Competition'),
+        (SERVICE, 'Service'),
+        (SALES, 'Sales'),
+        (FINE_DINE, 'Fine Dine'),
+        (SKY_KARTING, 'Sky Karting'),
+        (SMAAASH_ARENA, 'Smaaash Arena'),
+        (GENERAL, 'General'),
+        (SMAAASH, 'Smaaash'),
+        (SMAAASH_MEGA, 'Smaaash Mega'),
+        (SMAAASH_ZONE, 'Smaaash Zone'),
+        (DDC, 'Ddc'),
+        (HTC, 'Htc'),
+        (ASCVD, 'Ascvd'),
+        (SKIN_HYDRATION, 'Skin Hydration'),
+        (HYPER_PIGMENTATION, 'Hyper Pigmentation'),
+        (SKIN_SENSITIVE, 'Skin Sensitive'),
+        (RETAIL, 'Retail')
+    )
+    
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
     url_structure = CharField(db_column='url_strucuture',max_length=200,blank=False)
+    audit_type = CharField(db_column='audit_type', max_length=20, choices=TYPES, blank=False)
     price = PositiveIntegerField(db_column='price',blank=False,default=0)
     tax = ForeignKey(MPTax, related_name='mpsolutions', db_column='tax_id', blank=False, on_delete=PROTECT)
     overview = CharField(db_column='overview', max_length=16384, blank=False)

@@ -13,16 +13,12 @@ import JoditEditor from "jodit-react";
 import Alert from "react-s-alert";
 import Select from "react-select";
 import "../../../../../css/bs_overrides.scss";
-
+import { getAuditType } from "../../../../utils.js";
 export default class AllSolutionForm extends React.Component {
 	static propTypes = {
 		params: PropTypes.shape({
 			solutionId: PropTypes.string,
 		}),
-		// category: PropTypes.shape({
-		// 	id: PropTypes.number.isRequired,
-		// 	name: PropTypes.string.isRequired,
-		// }),
 		category: PropTypes.arrayOf(
 			PropTypes.shape({
 				value: PropTypes.number,
@@ -44,6 +40,7 @@ export default class AllSolutionForm extends React.Component {
 			price: 0,
 			category: [],
 			tax: "",
+			audit_type:"",
 			overview: "",
 			how_it_work: "",
 			execution_time: "",
@@ -177,6 +174,37 @@ export default class AllSolutionForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
+						<div className="col-md-6">
+							<FormInput label="Price" type="text" value={this.state.solution.price} name="price" onChange={this.fieldChanged} errors={this.state.errors.price} placeholder="Price" />
+						</div>
+						<div className="col-md-6">
+							<FormSelect label="Audit Type" value={this.state.solution.audit_type} name="audit_type" onChange={this.fieldChanged} errors={this.state.errors.audit_type}>
+								<option value=""></option>
+								<option value="WALKIN">{getAuditType("WALKIN")}</option>
+								<option value="PHONE">{getAuditType("PHONE")}</option>
+								<option value="WEB">{getAuditType("WEB")}</option>
+								<option value="VISIBILITY">{getAuditType("VISIBILITY")}</option>
+								<option value="COMPETITION">{getAuditType("COMPETITION")}</option>
+								<option value="SERVICE">{getAuditType("SERVICE")}</option>
+								<option value="SALES">{getAuditType("SALES")}</option>
+								<option value="SMAAASH_ARENA">{getAuditType("SMAAASH_ARENA")}</option>
+								<option value="FINE_DINE">{getAuditType("FINE_DINE")}</option>
+								<option value="SKY_KARTING">{getAuditType("SKY_KARTING")}</option>
+								<option value="GENERAL">{getAuditType("GENERAL")}</option>
+								<option value="SMAAASH">{getAuditType("SMAAASH")}</option>
+								<option value="SMAAASH_MEGA">{getAuditType("SMAAASH_MEGA")}</option>
+								<option value="SMAAASH_ZONE">{getAuditType("SMAAASH_ZONE")}</option>
+								<option value="DDC">{getAuditType("DDC")}</option>
+								<option value="HTC">{getAuditType("HTC")}</option>
+								<option value="ASCVD">{getAuditType("ASCVD")}</option>
+								<option value="SKIN_HYDRATION">{getAuditType("SKIN_HYDRATION")}</option>
+								<option value="HYPER_PIGMENTATION">{getAuditType("HYPER_PIGMENTATION")}</option>
+								<option value="SKIN_SENSITIVE">{getAuditType("SKIN_SENSITIVE")}</option>
+								<option value="RETAIL">{getAuditType("RETAIL")}</option>
+							</FormSelect>
+						</div>
+					</div>			
+					<div className="row">
 						<div className="col-md-12" style={{ marginBottom: "10px" }}>
 							<label>Category</label>
 							<Select
@@ -195,23 +223,20 @@ export default class AllSolutionForm extends React.Component {
 						</div>
 					</div>
 					<div className="row">
-						<div className="col-md-6">
-							<FormInput label="Price" type="text" value={this.state.solution.price} name="price" onChange={this.fieldChanged} errors={this.state.errors.price} placeholder="Price" />
-						</div>
-						<div className="col-md-6">
-							<FormSelect
-								label="Tax"
-								name="tax"
-								value={this.state.solution.tax}
-								onChange={this.fieldChanged}
-							>
-								<option value="">----------</option>
-								{this.state.taxes.map((tax) => (
-									<option key={tax.id} value={tax.id}>
-										{tax.name}
-									</option>
-								))}
-							</FormSelect>
+						<div className="col-md-12">
+								<FormSelect
+									label="Tax"
+									name="tax"
+									value={this.state.solution.tax}
+									onChange={this.fieldChanged}
+								>
+									<option value="">----------</option>
+									{this.state.taxes.map((tax) => (
+										<option key={tax.id} value={tax.id}>
+											{tax.name}
+										</option>
+									))}
+								</FormSelect>
 						</div>
 					</div>
 					<div className="row" style={{ marginTop: "1rem" }}>

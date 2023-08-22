@@ -147,6 +147,7 @@ def get_solution_by_id(solution_id):
         'name':solution.name,
         'url_structure':solution.url_structure,
         'price':solution.price,
+        'audit_type':solution.audit_type,
         'tax':{
             'id':solution.tax.id,
             'name':solution.tax.name,
