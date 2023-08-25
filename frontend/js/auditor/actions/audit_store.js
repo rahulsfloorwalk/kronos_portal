@@ -145,7 +145,6 @@ export function submitReportSummary(audit_store_id, report_summary){
 }
 
 export function submitConcern(auditStoreId, message){
-	console.log(message);
 	return function(dispatch){
 		let req = $.ajax({
 			type: "POST",

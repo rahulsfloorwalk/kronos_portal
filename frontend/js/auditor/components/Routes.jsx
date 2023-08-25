@@ -68,7 +68,6 @@ const Routes = ({store}) => (
 				<Route path="certification/questions" component={CertificateQuiz}/>
 				<Route path="audit" component={ClientList}/>
 				<Route path="applied_audits" component={AppliedAuditList}/>
-				
 				<Route path="audit/cycle/:auditCycleId" component={AuditList}>
 					<Route path="audit/:auditId">
 						<Route path="apply" component={AuditApplyForm}/>

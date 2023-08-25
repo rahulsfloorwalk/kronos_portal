@@ -276,7 +276,7 @@ export const languagesKnownList = [
 	"Assamese",
 	"Sanskrit",
 	"Bodo"
-]
+];
 
 export const allTypeofQuiz = [
 	{

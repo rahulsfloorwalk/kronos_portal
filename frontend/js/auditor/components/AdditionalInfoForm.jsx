@@ -113,7 +113,7 @@ class AdditionalInfoForm extends React.Component {
 			langoptions.push({
 				label: getLanguageList(option),
 				value:option
-			})
+			});
 		}
 		for(let option of InterestAreaList){
 			options.push({
@@ -273,13 +273,13 @@ class AdditionalInfoForm extends React.Component {
 						</div>
 						<div className="col-sm-6">
 							<label>Languages Known <span className="text-danger">(✳)</span></label>
-								<Select
-									name="language_known"
-									value={this.state.language_known ? langoptions.filter(obj => this.state.language_known.includes(obj.value) === true) : null}
-									onChange={this.handleLanguageChange}
-									options={langoptions}
-									isMulti={true}
-									closeMenuOnSelect={false}/>
+							<Select
+								name="language_known"
+								value={this.state.language_known ? langoptions.filter(obj => this.state.language_known.includes(obj.value) === true) : null}
+								onChange={this.handleLanguageChange}
+								options={langoptions}
+								isMulti={true}
+								closeMenuOnSelect={false}/>
 						</div>
 					</div>
 					<SaveButton/>

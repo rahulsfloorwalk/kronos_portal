@@ -203,7 +203,7 @@ export default class AllSolutionForm extends React.Component {
 								<option value="RETAIL">{getAuditType("RETAIL")}</option>
 							</FormSelect>
 						</div>
-					</div>			
+					</div>
 					<div className="row">
 						<div className="col-md-12" style={{ marginBottom: "10px" }}>
 							<label>Category</label>
@@ -224,19 +224,19 @@ export default class AllSolutionForm extends React.Component {
 					</div>
 					<div className="row">
 						<div className="col-md-12">
-								<FormSelect
-									label="Tax"
-									name="tax"
-									value={this.state.solution.tax}
-									onChange={this.fieldChanged}
-								>
-									<option value="">----------</option>
-									{this.state.taxes.map((tax) => (
-										<option key={tax.id} value={tax.id}>
-											{tax.name}
-										</option>
-									))}
-								</FormSelect>
+							<FormSelect
+								label="Tax"
+								name="tax"
+								value={this.state.solution.tax}
+								onChange={this.fieldChanged}
+							>
+								<option value="">----------</option>
+								{this.state.taxes.map((tax) => (
+									<option key={tax.id} value={tax.id}>
+										{tax.name}
+									</option>
+								))}
+							</FormSelect>
 						</div>
 					</div>
 					<div className="row" style={{ marginTop: "1rem" }}>
