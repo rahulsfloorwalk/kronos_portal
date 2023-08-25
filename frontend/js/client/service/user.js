@@ -9,7 +9,6 @@ export function fetchUser(){
 
 export function findAllClientUser(auditStoreId){
 	return $.get( url.api_base_path + `client/audit_store/${auditStoreId}/admin_and_non_admin_user_for_admin`);
-	
 }
 
 export function getEmailNotification(){

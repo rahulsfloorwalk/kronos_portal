@@ -13,9 +13,9 @@ class ActiveCustomerRow extends React.Component{
 				last_name:PropTypes.string,
 				mobile_number:PropTypes.string,
 				user: PropTypes.shape({
-					'id':PropTypes.number,
-					'email':PropTypes.string,
-					'is_active': PropTypes.bool
+					"id":PropTypes.number,
+					"email":PropTypes.string,
+					"is_active": PropTypes.bool
 				})
 			})
 		})

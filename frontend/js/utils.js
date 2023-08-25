@@ -698,6 +698,63 @@ export function getMonthName(value){
 	}
 }
 
+export function getLanguageList(value){
+	switch(value){
+	case "Bodo":
+		return "Bodo";
+	case "Sanskrit":
+		return "Sanskrit";
+	case "Kashmiri":
+		return "Kashmiri";
+	case "Dogri":
+		return "Dogri";
+	case "Assamese":
+		return "Assamese";
+	case "Malayalam":
+		return "Malayalam";
+	case "Manipuri":
+		return "Manipuri";
+	case "Urdu":
+		return "Urdu";
+	case "Santali":
+		return "Santali";
+	case "Maithili":
+		return "Maithili";
+	case "Nepali":
+		return "Nepali";
+	case "Oriya":
+		return "Oriya";
+	case "Sindhu":
+		return "Sindhu";
+	case "Bangla":
+		return "Bangla";
+	case "Kannad":
+		return "Kannad";
+	case "English":
+		return "English";
+	case "Hindi":
+		return "Hindi";
+	case "Marathi":
+		return "Marathi";
+	case "Konkani":
+		return "Konkani";
+	case "Gujarati":
+		return "Gujarati";
+	case "Punjabi":
+		return "Punjabi";
+	case "Tamil":
+		return "Tamil";
+	case "Telugu":
+		return "Telugu";
+	case "":
+	case null:
+	case undefined:
+		return "";
+	default:
+		return `unknown Language Known ${value} - ${typeof value}`;
+	}
+}
+
 export function getInterestArea(value){
 	switch(value){
 	case "ADVERTISING":

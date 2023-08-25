@@ -328,7 +328,7 @@ class AdditionalInfo(Model, CompletableMixin):
     referred_by = CharField(db_column='referred_by', max_length=10, blank=True, null=True)
     is_tour_complete = BooleanField(db_column='is_tour_complete', default=False)
     interest_area = ArrayField(CharField(max_length=50), db_column='interest_area', blank=True, null = True)
-
+    language_known = ArrayField(CharField(max_length=50), db_column='language_known', blank=True, null = True)
     user = OneToOneField(settings.AUTH_USER_MODEL, db_column='user_id', on_delete=PROTECT)
 
     is_complete_attrs = [
@@ -445,6 +445,8 @@ class AuditApplication(Model):
         from audit_store.service_auditor import find_completed_audit_store_count_by_user_id
         return find_completed_audit_store_count_by_user_id(self.profileinfo.user.id)
 
+    def get_brand_name(self):
+        return {'client_name':self.audit.audit_cycle.client.brand_name}
     def validate_alignment_factors(self) -> list:
         factors = self.audit.audit_cycle.audit_alignment_factors
         valid_factors_count = 0

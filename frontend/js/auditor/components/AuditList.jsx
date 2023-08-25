@@ -75,19 +75,23 @@ class AuditRow extends React.Component{
 		}
 		let fees = this.props.audit.earnings_per_audit ? <span>Flat: <big><b>₹ {this.props.audit.earnings_per_audit}</b></big>, </span> : "";
 		let reimb = this.props.audit.reimbursement ? <span>Reimbursement upto: <big><b>₹ {this.props.audit.reimbursement}</b></big></span> : "";
-
+		let eligible= this.props.audit.audit_cycle.eligibility ? <b>{this.props.audit.audit_cycle.eligibility}</b>:"";
 		return (
 			<div className="row">
-				<div className="col-sm-4">
+				<div className="col-sm-3">
 					<label className="hidden-sm hidden-md hidden-lg">Store Location</label>
 					<p><b><big>{this.props.audit.store.name}, {this.props.audit.store.city.name}</big></b></p>
 					<p><b>{this.props.audit.store.address}</b></p>
 				</div>
-				<div className="col-sm-4">
+				<div className="col-sm-3">
 					<label className="hidden-sm hidden-md hidden-lg">Earnings</label>
 					<p>{fees}{reimb}</p>
 				</div>
-				<div className="col-sm-4">
+				<div className="col-sm-3">
+					<label className="hidden-sm hidden-md hidden-lg">Eligibilty</label>
+					<p>{eligible}</p>
+				</div>
+				<div className="col-sm-3">
 					<p>
 						{textLabel ? <b>{textLabel}</b> : null}&nbsp;{button}&nbsp;&nbsp;{redirectButton}
 					</p>
@@ -158,7 +162,7 @@ class AuditList extends Component{
 					break;
 				}
 			}
-			rows.push(<AuditRow audit={audit_list[id]} application={application} key={id}/>);
+			rows.push(<AuditRow audit={audit_list[id]}  application={application} key={id}/>);
 		}
 
 		let flexCenter = {display: "flex", justifyContent: "center", alignItems: "center", height:"170px"};
@@ -245,9 +249,10 @@ class AuditList extends Component{
 				</div>
 				<h3 className="page-header hidden-sm hidden-md hidden-lg">Audit Locations</h3>
 				<div className="row hidden-xs">
-					<div className="col-sm-4"><big><b>Store Location</b></big></div>
-					<div className="col-sm-4"><big><b>Earnings</b></big></div>
-					<div className="col-sm-4"><big><b>Status</b></big></div>
+					<div className="col-sm-3"><big><b>Store Location</b></big></div>
+					<div className="col-sm-3"><big><b>Earnings</b></big></div>
+					<div className="col-sm-3"><big><b>Eligibilty</b></big></div>
+					<div className="col-sm-3"><big><b>Status</b></big></div>
 					<div className="col-xs-12"><hr/></div>
 				</div>
 				{rows}

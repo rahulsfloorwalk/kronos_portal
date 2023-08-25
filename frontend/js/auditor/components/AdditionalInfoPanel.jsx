@@ -7,7 +7,7 @@ import { pointerStyle } from "../../styles.js";
 
 import { Check, Warning, Pencil, Cross } from "../../components/Icons.jsx";
 
-import { getCameraResolution, getCarCost, getIndustry, getInterestArea, getOccupation } from "../../utils.js";
+import { getCameraResolution, getCarCost, getIndustry, getInterestArea,getLanguageList, getOccupation } from "../../utils.js";
 import { fetchAdditionalInfo } from "../actions/additional_info.js";
 
 import { additionalInfoPropType } from "../prop_types";
@@ -36,7 +36,12 @@ class AdditionalInfoPanelBase extends React.Component {
 		let panelClass = this.props.additionalInfo.is_complete ? "panel-success-hoverable" : "panel-default";
 		let panelIcon = this.props.additionalInfo.is_complete ? <Check/> : <Warning/>;
 		let interest_area_list = "";
-
+		let language_list = "";
+		if(this.props.additionalInfo.language_known){
+			for(let i of this.props.additionalInfo.language_known){
+				language_list += getLanguageList(i) + ", ";
+			}
+		}
 		if(this.props.additionalInfo.interest_area){
 			for(let i of this.props.additionalInfo.interest_area){
 				interest_area_list += getInterestArea(i) + ", ";
@@ -58,6 +63,7 @@ class AdditionalInfoPanelBase extends React.Component {
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Occupation:</td><th>{ getOccupation(this.props.additionalInfo.occupation) }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Preferred Distance (km):</td><th>{ this.props.additionalInfo.distance }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Interest area:</td><th>{ interest_area_list }</th></tr>
+							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Language Known:</td><th>{ language_list }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Industry:</td><th>{ getIndustry(this.props.additionalInfo.industry) }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Company:</td><th>{ this.props.additionalInfo.company }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Car Owned?:</td><th>{ has_car }</th></tr>

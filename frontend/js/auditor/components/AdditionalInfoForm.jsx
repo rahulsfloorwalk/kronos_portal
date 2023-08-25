@@ -4,7 +4,7 @@ import * as ReactRedux from "react-redux";
 import { hashHistory } from "react-router";
 import Select from "react-select";
 
-import { getCameraResolution, getOccupation, getIncomeText, getCarCost, getIndustry, getInterestArea } from "../../utils.js";
+import { getCameraResolution, getOccupation, getIncomeText, getCarCost, getIndustry, getInterestArea,getLanguageList } from "../../utils.js";
 import { fetchAdditionalInfo, saveAdditionalInfo } from "../actions/additional_info.js";
 
 import FormInput from "../../components/FormInput.jsx";
@@ -13,7 +13,7 @@ import SaveButton from "../../components/SaveButton.jsx";
 import Modal from "../../components/Modal.jsx";
 
 import { additionalInfoPropType } from "../prop_types";
-import { InterestAreaList } from "../../constants.js";
+import { InterestAreaList,languagesKnownList } from "../../constants.js";
 
 const errorList = PropTypes.arrayOf(PropTypes.string);
 
@@ -40,6 +40,9 @@ class AdditionalInfoForm extends React.Component {
 	state = {
 		interest_area: [],
 		interestArea: null,
+		languageList:null,
+		language_known:[]
+
 	};
 
 	componentWillMount() {
@@ -94,12 +97,24 @@ class AdditionalInfoForm extends React.Component {
 			interest_area: interest_list
 		});
 	};
-
+	handleLanguageChange=(languageList)=>{
+		let language = languageList.map(value=>value.value);
+		this.setState({
+			language_known: language,
+			languageList:languageList
+		});
+	};
 	render() {
 		var laptop_option = {};
 		var car_option = {};
 		const options = [];
-
+		const langoptions=[];
+		for (let option of languagesKnownList){
+			langoptions.push({
+				label: getLanguageList(option),
+				value:option
+			});
+		}
 		for(let option of InterestAreaList){
 			options.push({
 				label: getInterestArea(option),
@@ -254,7 +269,17 @@ class AdditionalInfoForm extends React.Component {
 					</div>
 					<div className="row">
 						<div className="col-sm-6">
-							<FormInput label="MSPA certification code" type="text" value={this.state.mspa_code} name="mspa_code" onChange={this.inputChanged} errors={this.props.errors.mspa_code}/>
+							<FormInput label="MSPA certification code" icon_tag={true} type="text" value={this.state.mspa_code} name="mspa_code" onChange={this.inputChanged} errors={this.props.errors.mspa_code}/>
+						</div>
+						<div className="col-sm-6">
+							<label>Languages Known <span className="text-danger">(✳)</span></label>
+							<Select
+								name="language_known"
+								value={this.state.language_known ? langoptions.filter(obj => this.state.language_known.includes(obj.value) === true) : null}
+								onChange={this.handleLanguageChange}
+								options={langoptions}
+								isMulti={true}
+								closeMenuOnSelect={false}/>
 						</div>
 					</div>
 					<SaveButton/>

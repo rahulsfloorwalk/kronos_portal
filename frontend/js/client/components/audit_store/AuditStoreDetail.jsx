@@ -4,7 +4,7 @@ import { hashHistory } from "react-router";
 import Datetime from "react-datetime";
 import "react-datetime/css/react-datetime.css";
 import moment from "moment";
-import Select from 'react-select';
+import Select from "react-select";
 import { url }  from "../../../../config.js";
 
 import { fetchAuditStore, submitReportActionPlan, getReportActionPlan, submitAuditStorePDFReport } from "../../service/audit_store.js";
@@ -97,7 +97,7 @@ export default class AuditStoreDetail extends React.Component {
 				allResponsibleUser
 			});
 		});
-		this.getReportActionPlanList()
+		this.getReportActionPlanList();
 	}
 
 	getReportActionPlanList = () =>{
@@ -251,7 +251,7 @@ export default class AuditStoreDetail extends React.Component {
 				options.push({
 					label: `${s.full_name} -- ${s.email}`,
 					value: s.email
-				})
+				});
 			}
 		}
 		if(! this.state.auditStore){
@@ -358,15 +358,15 @@ export default class AuditStoreDetail extends React.Component {
 									<textarea rows="5" className="form-control" value={this.state.action_plan} onChange={this.actionPlanChanged} />
 								</div>
 								<div className="col-sm-12">
-								<label>Target Date:</label>
-								<Datetime
-									timeFormat={false}
-									dateFormat="YYYY-MM-DD"
-									closeOnSelect={true}
-									value={this.state.target_date}
-									onChange={this.dateChanged}
-									isValidDate={this.validation}
-								/>
+									<label>Target Date:</label>
+									<Datetime
+										timeFormat={false}
+										dateFormat="YYYY-MM-DD"
+										closeOnSelect={true}
+										value={this.state.target_date}
+										onChange={this.dateChanged}
+										isValidDate={this.validation}
+									/>
 								</div>
 								<div className="col-sm-12">
 									<label>Person Responsible:</label>
