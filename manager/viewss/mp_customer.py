@@ -31,24 +31,13 @@ class MPClientProfileSerializer(ModelSerializer):
         fields = ['id', 'first_name','last_name', 'mobile_number', 'user']
 
 class MpCustomerView(APIView):
-    permission_classes=[IsAuthenticated]
+    permission_classes=[HasGroupPermission]
     required_groups={
         'GET':[GROUP_NAME_MANAGER]
     }
     def get(self,request):
         customers = MPClientProfileInfo.objects.all()
-        result=[]
-        for customer in customers:
-            verified = OTPVerification.objects.get(user_id=customer.user_id)
-            profile_serializer = MPClientProfileSerializer(customer)
-            verification_serializer = OTPVerificationSerializer(verified)
-            data = {
-                'profile_data': profile_serializer.data,
-                'is_verified': verification_serializer.data['is_verified']
-            }
-            result.append(data)
-
-        return Response(result)
+        return Response(MPClientProfileSerializer(customers,many=True).data)
 class MpCountsView(APIView):
     permission_classes=[HasGroupPermission]
     required_groups={

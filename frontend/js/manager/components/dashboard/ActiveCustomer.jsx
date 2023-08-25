@@ -26,10 +26,10 @@ class ActiveCustomerRow extends React.Component{
 		return(
 			<tr>
 				<td>{this.props.seq}</td>
-				<td>{this.props.profile.profile_data.first_name && this.props.profile.profile_data.first_name ? `${this.props.profile.profile_data.first_name} ${this.props.profile.profile_data.last_name}` : null} </td>
-				<td>{this.props.profile.profile_data.user.email}</td>
-				<td>{this.props.profile.profile_data.mobile_number}</td>
-				<td>{this.props.profile.is_verified ? "Verfied" : "Not Verfied"}</td>
+				<td>{this.props.profile.first_name && this.props.profile.first_name ? `${this.props.profile.first_name} ${this.props.profile.last_name}` : null} </td>
+				<td>{this.props.profile.user.email}</td>
+				<td>{this.props.profile.mobile_number}</td>
+				<td>{this.props.profile.user.is_verified ? "Verfied" : "Not Verfied"}</td>
 			</tr>
 		);
 	}
