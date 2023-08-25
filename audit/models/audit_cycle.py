@@ -93,6 +93,7 @@ class AuditCycle(Model):
     reimbursement = IntegerField(db_column='reimbursement', blank=True, null=True, validators=[MinValueValidator(0)])
     audit_auto_approve = BooleanField(db_column='audit_auto_approve', default = False)
     description = CharField(db_column='description', max_length=16384, blank=False)
+    eligibility = CharField(db_column='eligibility', max_length=16384, blank=True)
     client = ForeignKey('client.Client', related_name='audits', db_column='client_id', on_delete=PROTECT)
     quotation = ForeignKey('client.Quotation', related_name='audit_cycles', db_column='quotation_id', null=True, on_delete=PROTECT)
     post_approval_description = CharField(db_column='post_approval_description', max_length=16384, blank=True)

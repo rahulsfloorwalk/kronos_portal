@@ -35,6 +35,9 @@ urlpatterns = ([
     url(r'referral$', views.ReferralView.as_view(), name="referral_view"),
 
     url(r'audit$', views.AvailableAuditsView.as_view(), name="available_audits"),
+    
+    url(r'applied_audits$', views.AppliedAuditsView.as_view(), name="applied_audits"),
+    
     url(r'audit_by_city$', views.AvailableAuditsByCityView.as_view(), name="available_audits_by_city"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/cancel$', views.AuditApplicationCancelView.as_view(), name="audit_application_cancel_view"),
     url(r'audit/(?P<audit_id>[0-9]+)/application/apply$', views.AuditApplicationApplyView.as_view(), name="audit_application_apply_view"),

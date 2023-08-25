@@ -11,8 +11,10 @@ from client.models import Store
 from manager.models import City
 from manager.service import geo
 from registration.service import auditor as auditor_service
-
+from auditor.models import AuditApplication
 from audit.service import audit_cycle as audit_cycle_service
+
+
 
 def find_audit_city_by_audit_cycle_id(audit_cycle_id):
     a=list(Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related('store',
@@ -168,9 +170,14 @@ def find_audits_around_city(city_id:int, kms:int=None):
     return available_audits
 
 
+def find_applied_audits_by_auditor_id(user_id):
+    auditor = auditor_service.find_auditor_by_id(user_id)
+    applied_audits = AuditApplication.objects.filter(
+        profileinfo_id=auditor.profileinfo.id,status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED))
+    return applied_audits
+    
 def find_audits_for_auditor(user_id, kms):
     auditor = auditor_service.find_auditor_by_id(user_id)
-
     if not auditor.profileinfo.is_complete():
         raise AppLogicError("please complete your personal information to view audits")
 

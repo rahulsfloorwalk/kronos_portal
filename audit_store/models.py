@@ -218,6 +218,9 @@ class AuditStore(Model):
         self.audit_store_percentage = int(self.percentage())
         self.save()
 
+    def get_brand_name(self):
+        return {'client_name':self.audit.audit_cycle.client.brand_name}
+    
     def color(self):
         return get_color_code_by_percentage(self.audit_store_percentage)
 

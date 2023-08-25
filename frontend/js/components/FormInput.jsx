@@ -5,7 +5,8 @@ import "react-datetime/css/react-datetime.css";
 
 import FormGroup from "./FormGroup.jsx";
 import FormErrorList from "./FormErrorList.jsx";
-
+import { hashHistory } from "react-router";
+import { Link } from "react-router";
 
 export default class FormInput extends React.Component{
 	static propTypes = {
@@ -26,14 +27,18 @@ export default class FormInput extends React.Component{
 		errors: PropTypes.array,
 		checked: PropTypes.bool,
 		required_mark: PropTypes.bool,
+		icon_tag:PropTypes.bool,
 		required: PropTypes.bool,
 	};
 
 	focus(){
 		this._input && this._input.focus();
 	}
+	redirectToWebsite=()=>{
+		hashHistory.push('https://www.mspa-ap.org/')
+	}
 	render(){
-		let { placeholder, onChange, maxLength, type, value, name, disabled, label, checked, required_mark, required } = this.props;
+		let { placeholder, onChange, maxLength, type, value, name, disabled, label, checked, required_mark, required,icon_tag } = this.props;
 
 		// convert all nulls and undefineds to an empty String so the component is always in a controlled state
 		value = value ? value : "";
@@ -43,9 +48,19 @@ export default class FormInput extends React.Component{
 					<label>
 						{label} <span className="text-danger">(✳)</span>
 					</label>
+					: icon_tag ?
+					<label>
+						{label}&nbsp;&nbsp;
+						<span className="text-primary">
+							<a href="https://www.mspa-ap.org/" target="_blank"><b>(i)</b></a>
+						</span>
+					</label>
 					:
 					<label>{label}</label>
 				}
+				{/* {icon_tag?
+					: null
+				} */}
 				<input className="form-control"
 					ref={r => this._input = r}
 					placeholder={placeholder}

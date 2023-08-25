@@ -18,7 +18,7 @@ from auditor.serializers import AttachmentSerializer
 from auditor.serializers import AuditStoreSerializer
 from auditor.serializers import NotificationSerializer
 from auditor.serializers import PaymentSerializer
-from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer, PreferencesSerializer
+from auditor.serializers import ProfileInfoSerializer, AdditionalInfoDeSerializer, AdditionalInfoSerializer, BankInfoSerializer, AuditSerializer,AppliedAuditSerializer, PreferencesSerializer
 from auditor.serializers import ReportSectionSerializer, ReportSectionDeSerializer
 from auditor.serializers import ReferralSerializer
 from auditor.serializers import SectionSerializer
@@ -166,6 +166,16 @@ class AvailableAuditsView(APIView):
         available_audits = audit_service.find_audits_for_auditor(request.user.id, kms)
         return Response(AuditSerializer(available_audits, many=True).data)
 
+class AppliedAuditsView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_AUDITOR],
+        'POST': [GROUP_NAME_AUDITOR]
+    }
+    def get(self, request, format=None):
+        applied_audits = audit_service.find_applied_audits_by_auditor_id(request.user.id)
+        return Response(AppliedAuditSerializer(applied_audits,many=True).data)
+        
 class AvailableAuditsByCityView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
@@ -195,6 +205,7 @@ class AuditApplicationsView(APIView):
     }
     def get(self, request, format=None):
         applications = application_service.get_applications(request.user.profileinfo.id)
+        print('208',applications)
         return Response(AuditApplicationSerializer(applications, many=True).data)
 
 

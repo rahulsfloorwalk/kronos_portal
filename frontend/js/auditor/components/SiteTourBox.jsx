@@ -37,6 +37,10 @@ class SiteTourBox extends React.Component {
 				content: (<p>Under the view opportunities tab, you see projects that are available for you based on your city, state and pincode entered. Read the audit assignment process to know how the process works. Do not conduct audits if they are not assigned to you.</p>),
 			},
 			{
+				selector:".appliedauditsclass",
+				content: (<p>Check statuses of all the audit applications you have applied for.</p>),
+			},
+			{
 				selector: ".reporttourclass",
 				content: (<ul><li>All approved audit applications will be visible over here</li><li>You will use this tab to fill and submit the reports.</li></ul>),
 			},

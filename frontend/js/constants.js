@@ -252,6 +252,32 @@ export const clientRequirementQuestionaryList = [
 	"VISIT",
 ];
 
+export const languagesKnownList = [
+	"English",
+	"Hindi",
+	"Marathi",
+	"Konkani",
+	"Gujarati",
+	"Punjabi",
+	"Tamil",
+	"Telugu",
+	"Kannad",
+	"Bangla",
+	"Maithili",
+	"Nepali",
+	"Oriya",
+	"Sindhu",
+	"Urdu",
+	"Santali",
+	"Manipuri",
+	"Malayalam",
+	"Kashmiri",
+	"Dogri",
+	"Assamese",
+	"Sanskrit",
+	"Bodo"
+]
+
 export const allTypeofQuiz = [
 	{
 		heading: "Comprehension Skill Test:",

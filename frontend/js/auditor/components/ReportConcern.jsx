@@ -49,14 +49,14 @@ class ReportConcern extends React.Component{
 
 	onSubmit = (e) => {
 		e.preventDefault();
-		if(this.state.message === ""){
+		if(this.state.message === "" || (this.state.message.trim()).length==0 ){
 			this.setState({
 				error_message : "Please enter your concern"
 			});
 		}
 		else{
 			this.setLoading(true);
-			this.props.dispatch(submitConcern(this.props.params.auditStoreId, this.state.message)).then(()=>{
+			this.props.dispatch(submitConcern(this.props.params.auditStoreId, this.state.message.trim())).then(()=>{
 				this.setState({
 					message: "",
 					success_message : "Thank you for your concern, We will get back to you soon."

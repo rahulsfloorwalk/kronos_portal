@@ -95,6 +95,7 @@ class AuditCycleSerializer(ModelSerializer):
             'charge_per_audit',
             'system_cost',
             'description',
+            'eligibility',
             'post_approval_description',
             'check_points',
             'client',

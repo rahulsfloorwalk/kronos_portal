@@ -18,6 +18,7 @@ class PaymentRow extends React.Component{
 	};
 
 	render(){
+		console.log(this.props);
 		return (
 			<tr>
 				<th className="text-center">

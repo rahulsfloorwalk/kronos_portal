@@ -136,7 +136,8 @@ class AdditionalInfoSerializer(ModelSerializer):
             'is_complete',
             'income',
             'is_tour_complete',
-            'interest_area'
+            'interest_area',
+            'language_known'
         )
         read_only_fields = fields
 
@@ -167,7 +168,8 @@ class AdditionalInfoDeSerializer(ModelSerializer):
             'mobile_model',
             'income',
             'is_tour_complete',
-            'interest_area'
+            'interest_area',
+            'language_known'
         )
         read_only_fields = ('id', 'user_id', )
 
@@ -202,7 +204,8 @@ class AdditionalInfoDeSerializer(ModelSerializer):
         additional_info.income = self.validated_data.get('income', additional_info.income)
         additional_info.is_tour_complete = self.validated_data.get('is_tour_complete', additional_info.is_tour_complete)
         additional_info.interest_area = self.validated_data.get('interest_area', additional_info.interest_area)
-
+        additional_info.language_known = self.validated_data.get('language_known', additional_info.language_known)
+        
         return additional_info
 
 
@@ -299,6 +302,7 @@ class AuditCycleSerializer(ModelSerializer):
             'start_date',
             'end_date',
             'description',
+            'eligibility',
             'post_approval_description',
             'client',
             'support_page_link'
@@ -318,6 +322,16 @@ class StoreSerializer(ModelSerializer):
         )
         read_only_fields = fields
 
+class AppliedAuditSerializer(ModelSerializer):
+    class Meta:
+        model= AuditApplication
+        fields=(
+            'id',
+            'audit_date',
+            'status',
+            'get_brand_name'
+        )
+        read_only_fields = fields
 
 class AuditSerializer(ModelSerializer):
     store = StoreSerializer()
@@ -351,6 +365,7 @@ class AuditorSerializer(ModelSerializer):
         read_only_fields = fields
 
 class AuditApplicationSerializer(ModelSerializer):
+    
     class Meta:
         model = AuditApplication
         fields = (
@@ -358,7 +373,7 @@ class AuditApplicationSerializer(ModelSerializer):
             'status',
             'audit_date',
             'audit',
-            'profileinfo',
+            'profileinfo'    
         )
         read_only_fields = fields
 
