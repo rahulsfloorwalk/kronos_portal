@@ -172,26 +172,11 @@ class StoreClientIdView(APIView):
     }
 
     def get(self, request, client_id, store_id, format=None):
-        try:
-            store = Store.objects.get(client=client_id, id=store_id)
-        except Store.DoesNotExist:
-            return Response({"error": "Unauthorized"})
-
+        store = Store.objects.get(client=client_id, id=store_id)
         return Response(StoreSerializer(store).data)
-
-    # def get(self, request, store_id,client_id, format=None):
-    #     user = User.objects.get(id=request.user.id)
-    #     client = Client.objects.get(name=user.email)
-    #     stores = store_service.find_stores_by_client(client.id)
-    #     store = store_service.find_store_by_id(store_id)
-    #     return Response(StoreSerializer(stores).data)
-
+    
     def post(self, request, client_id, store_id):
-        try :
-           store = Store.objects.get(client=client_id, id=store_id)
-        except Store.DoesNotExist:
-            return Response({"error": "Unauthorized"})
-
+        store = Store.objects.get(client=client_id, id=store_id)
         store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
@@ -199,11 +184,7 @@ class StoreClientIdView(APIView):
         return Response(StoreSerializer(savedStore).data)
 
     def delete(self, request, client_id, store_id):
-        try:
-            store = Store.objects.get(client=client_id, id=store_id)
-        except Store.DoesNotExist:
-            return Response({"error": "Unauthorized"})
-
+        store = Store.objects.get(client=client_id, id=store_id)
         store_service.delete(store_id)
         return HttpResponse(status=204)
     
