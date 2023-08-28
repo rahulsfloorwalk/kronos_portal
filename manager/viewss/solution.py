@@ -1,4 +1,3 @@
-
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
@@ -471,4 +470,3 @@ class PublicSolutionIdFullDetailsView(APIView):
     def get(self,request,solution_id):
         solution = solution_attachement_service.find_solution_details_by_solution_id(solution_id)
         return Response(solution)
-    

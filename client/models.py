@@ -2,7 +2,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User, Group
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db.transaction import atomic
-from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey, OneToOneField, DateTimeField, BooleanField, DecimalField,IntegerField
+from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, ForeignKey,DateField, OneToOneField, DateTimeField, BooleanField, DecimalField,IntegerField
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT,CASCADE
 from django.conf import settings
@@ -449,6 +449,9 @@ class Transaction(Model):
     order = ForeignKey(MPOrder, on_delete=CASCADE,db_column='order_id')
     payment_id = CharField(max_length=100,db_column='payment_id')
     signature = CharField(max_length=200,db_column='signature')
+    payment_success_date = DateTimeField(null=True, blank=True)
+    payment_success_date = DateField(null=True, blank=True)
+
     
     def __str__(self):
         return 'Transaction({}): orderID{}'.format(self.id,self.order) 

@@ -161,7 +161,7 @@ class StoreClientView(APIView):
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
         savedStore = store.save()
-        return Response(StoreSerializer(store).data)
+        return Response(StoreSerializer(store,savedStore).data)
 
 class StoreClientIdView(APIView):
     permission_classes = [HasGroupPermission]
