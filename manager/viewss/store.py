@@ -159,9 +159,11 @@ class StoreClientView(APIView):
                 raise AppLogicError('The store already exist in the client.')
         store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
-        store = store_ds.deserialize()
-        savedStore = store.save()
-        return Response(StoreSerializer(store,savedStore).data)
+        saved_store = store_ds.save()
+        serializer = StoreSerializer(saved_store)
+        return Response(serializer.data)
+    
+       
 
 class StoreClientIdView(APIView):
     permission_classes = [HasGroupPermission]
