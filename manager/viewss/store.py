@@ -147,6 +147,19 @@ class StoreClientViewGET(APIView):
     def get(self, request, client_id, format=None):
         stores = store_service.find_stores_by_client(client_id)
         return Response(StoreSerializer(stores, many=True).data)
+
+class StoreClientIdViewGET(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, store_id, format=None):
+        stores = find_stores_by_client_and_store_id(store_id)
+        return Response(StoreSerializer(stores, many=True).data)
+    
+    
+def find_stores_by_client_and_store_id(store_id):
+    return Store.objects.filter(id=store_id).order_by('city__name').select_related('client','city')
     
 class StoreClientView(APIView):
     permission_classes = [HasGroupPermission]
