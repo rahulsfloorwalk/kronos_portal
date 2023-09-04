@@ -3,6 +3,7 @@ from django.db.models import PROTECT, F, Sum
 from django.db.models.fields import BooleanField
 from django.core.validators import MinValueValidator
 from django.contrib.postgres.fields import JSONField
+from client.models import MPOrder
 
 import audit_store
 
@@ -102,6 +103,8 @@ class AuditCycle(Model):
     support_page_link = CharField(db_column='support_page_link', max_length=200, blank=True)
     audit_alignment_factors = JSONField(db_column='audit_alignment_factors', default=list, blank=False)
     created_by_client = BooleanField(db_column="created_by_client", default=False)
+    order_id = ForeignKey(MPOrder, db_column='order_id', blank=True,null=True)
+
 
     class Meta:
         permissions = (

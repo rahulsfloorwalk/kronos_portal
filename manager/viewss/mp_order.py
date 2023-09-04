@@ -17,7 +17,7 @@ from kronos.exceptions import ObjectNotFound
 from datetime import datetime, timedelta
 from django.utils.text import slugify
 from audit.service import audit_cycle as audit_cycle_service
-from client.models import Client
+from client.models import Client,Store
 from manager.models import MPSolutionOtherDetails,MPSolutionQuestion,MPSolutionProofTagList,MPSolution
 from django.utils import timezone
 from audit.models import AuditCycle
@@ -32,7 +32,12 @@ from audit.service import audit_service
 from ..serializers import AuditSerializer
 from kronos.exceptions import ObjectNotFound, AppLogicError
 from rest_framework import serializers
-from manager.serializers import AuditCycleSerializer
+from manager.serializers import AuditCycleSerializer,StoreSerializer,CitySerializer
+from audit.service import audit_cycle_client_service
+from client_rest.serializers import AuditCycleScoreSerializer
+from questionnaire.models import QuestionnaireType
+from manager.viewss.questionnaire_type import QuestionnaireTypeSerializer
+
 
 
 
@@ -227,7 +232,14 @@ class MpPaymentCompleteView(APIView):
         client = Client.objects.get(email=user.email)
         solution_details= MPSolutionOtherDetails.objects.get(solution=order.solution)
 
-        audit_cycle_response = create_audit_cycle(client, order, solution_details,transaction)
+        questionnaire_data = {
+            'name': solution_details.solution.audit_type,
+            'client': client.id
+        }
+        add_questionnaire_type_id = create_questionnaire_type(questionnaire_data)
+
+        audit_cycle_response = create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id)
+
 
         add_section = Add_Section(audit_cycle_response)
 
@@ -243,6 +255,21 @@ class MpPaymentCompleteView(APIView):
         
         return JsonResponse({'status': 'success'})       
 
+def create_questionnaire_type(questionnaire_data):
+        questionnaire_name = questionnaire_data['name']
+        client_id = questionnaire_data['client']
+        existing_questionnaire_type = QuestionnaireType.objects.filter(name=questionnaire_name,client=client_id).first()
+
+        if existing_questionnaire_type:
+            return (existing_questionnaire_type.id)
+        
+        add_questionnaire_type = QuestionnaireTypeSerializer(data=questionnaire_data)
+        add_questionnaire_type.is_valid(raise_exception=True)
+        add_questionnaire_type.save()
+        
+        return (add_questionnaire_type.instance.id)
+    
+
 def add_proof_tag_list(proof_tag_id,audit_cycle):
     proof_tag_obj = ProofTag.objects.get(pk=proof_tag_id)
     audit_cycle_proof_tag_obj = AuditCycleProofTagList()
@@ -250,9 +277,10 @@ def add_proof_tag_list(proof_tag_id,audit_cycle):
     audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
     audit_cycle_proof_tag_obj.save()
 
-def create_audit_cycle(client, order, solution_details,transaction):
+def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
+        # orderss = MPOrder.objects.get(id=order_id)
         current_date = datetime.now()
-        base_name = f"{(client.name)} {current_date.strftime('%b %Y')}"
+        base_name = f"{(solution_details.solution.name)} {current_date.strftime('%b %Y')}"
         name = base_name
         counter = 1
         while AuditCycle.objects.filter(name=name).exists():
@@ -276,7 +304,10 @@ def create_audit_cycle(client, order, solution_details,transaction):
             'post_approval_description' : solution_details.post_approval_description,
             'client': client.id,
             'planned_audit': order.no_of_response,
+            'order_id': order.id,
             'audit_alignment_factors':order.alignment_factors,
+            'questionnaire_type':add_questionnaire_type_id,
+            'charge_per_audit':solution_details.solution.price
         }
         
         audit_cycle_ds = MPAuditCycleDeSerializer(data=audit_cycle_data)
@@ -306,7 +337,10 @@ class MPAuditCycleDeSerializer(ModelSerializer):
             'audit_auto_approve',
             'check_points',
             'post_approval_description',
-            'audit_alignment_factors'
+            'audit_alignment_factors',
+            'questionnaire_type',
+            'order_id',
+            'charge_per_audit'
         )
         read_only_fields = ('id',)
 
@@ -326,9 +360,11 @@ class MPAuditCycleDeSerializer(ModelSerializer):
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
         audit_cycle.audit_auto_approve = self.validated_data.get('audit_auto_approve', audit_cycle.audit_auto_approve)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
+        audit_cycle.order_id = self.validated_data.get('order_id', audit_cycle.order_id)
         audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
         audit_cycle.post_approval_description = self.validated_data.get('post_approval_description', audit_cycle.post_approval_description)
         audit_cycle.check_points = self.validated_data.get('check_points', audit_cycle.check_points)
+        audit_cycle.charge_per_audit = self.validated_data.get('charge_per_audit', audit_cycle.charge_per_audit)
         audit_cycle.audit_alignment_factors = self.validated_data.get('audit_alignment_factors', audit_cycle.audit_alignment_factors)
 
         return audit_cycle
@@ -374,16 +410,17 @@ def add_store_to_audit(audit_cycle,order,solution_details):
             for store_data in order.store:
                 store_id = store_data['store_id']
                 count = store_data['count']
-                data = {
-                    'audit_cycle':audit_cycle.id,
-                    'addStore':[store_id],
-                    'earnings_per_audit':audit_cycle.earnings_per_audit,
-                    'reimbursement':audit_cycle.reimbursement,
-                    'count': count,
-                    'post_approval_description':solution_details.post_approval_description
-                }
-                audit = audit_service.create_audit_by_multiple_store(data)
-                audit_responses.append(audit[0] if audit else None)
+                if count >= 1:
+                    data = {
+                        'audit_cycle':audit_cycle.id,
+                        'addStore':[store_id],
+                        'earnings_per_audit':audit_cycle.earnings_per_audit,
+                        'reimbursement':audit_cycle.reimbursement,
+                        'count': count,
+                        'post_approval_description':solution_details.post_approval_description
+                    }
+                    audit = audit_service.create_audit_by_multiple_store(data)
+                    audit_responses.append(audit[0] if audit else None)
             return Response([AuditSerializer(audit).data for audit in audit_responses])
         else:
             raise AppLogicError("Please provide a valid store ID")
@@ -399,13 +436,75 @@ class AuditCycleViewByClient(APIView):
         client = Client.objects.get(email=user.email)
         audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
         return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+    
 
-
-class OrderAnalyticView(APIView):
+class OrderReportsView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET':[GROUP_NAME_CLIENT],
+        'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, client_id, format=None):
-        audit_cycles = audit_cycle_service.find_audit_cycles_by_client(client_id)
-        return Response(AuditCycleSerializer(audit_cycles, many=True).data)
+    
+    def get(self, request):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        
+        audit_cycles = AuditCycle.objects.filter(client=client.id) 
+        audit_cycle_data=[]
+        for audit_cycle in audit_cycles:
+            
+            audit_score_response = audit_cycle.get_total_percentage()
+        
+            if audit_cycle.order_id is not None:
+                order = MPOrder.objects.get(id=audit_cycle.order_id.id)
+                store_info = order.store
+
+                store_count = len(store_info) if store_info else 0
+
+                audit_cycle_data.append({
+                    'audit_cycle': AuditCycleSerializer(audit_cycle).data,
+                    'order': MPOrderSerializer(order).data,
+                    'audit_score': audit_score_response,
+                    'store_info':store_info,
+                    'store_count': store_count,
+                })
+        if audit_cycle_data:
+            return Response({'audit_cycle_data': audit_cycle_data})
+        else:
+            return JsonResponse({'error': 'No audit cycles found for this client.'})
+   
+    
+class MPOrderSerializer(ModelSerializer):
+    user= UserSerializer()
+    solution = SolutionSerializer()
+    class Meta:
+        model=MPOrder
+        fields=('id','solution','user','price')
+
+class CustomStoreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Store
+        fields = ('city', 'address')
+
+class CustomStoreSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'address',
+            'client',
+            'client_id',
+            'code',
+            'pincode',
+            'map_location_link',
+            'type',
+            'priority',
+            'phone',
+            'city',
+        )
+        read_only_fields = fields
+ 
