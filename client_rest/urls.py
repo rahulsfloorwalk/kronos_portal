@@ -110,10 +110,11 @@ urlpatterns = ([
     url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
-    url(r'mp/store_mp$', store_views.StoreClientView.as_view(), name='store_client_view'),
-    url(r'mp/(?P<client_id>[0-9]+)/store_mp_get$', store_views.StoreClientViewGET.as_view(), name='store_client_view_get'),
-    url(r'mp/store_mp_get/(?P<store_id>[0-9]+)$', store_views.StoreClientIdViewGET.as_view(), name='store_clientid_view_get'),
-    url(r'mp/(?P<client_id>[0-9]+)/store_mp/(?P<store_id>[0-9]+)$', store_views.StoreClientIdView.as_view(), name='store_client_id_view'),
+    
+    url(r'mp/store_mp$', store_views.StoreAddClientView.as_view(), name='store_add_client_view'),
+    url(r'mp/(?P<client_id>[0-9]+)/store_mp_get$', store_views.StoreGetClientView.as_view(), name='store_get_client_view'),
+    url(r'mp/(?P<client_id>[0-9]+)/store_mp/(?P<store_id>[0-9]+)$', store_views.StoreIdClientIdView.as_view(), name='store_id_client_id_view'),
+    
     url(r'mp/orderstatus$', mp_order_views.ClientOrderStatusDeatil.as_view(), name='client_order_detail'),
     url(r'mp/amdminorderstatus$', mp_order_views.AdminOrderView.as_view(), name='admin_order_detail'),
     url(r'mp/reports$', mp_order_views.OrderReportsView.as_view(), name='Order_reports_view'),

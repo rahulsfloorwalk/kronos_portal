@@ -197,6 +197,7 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_whatsapp$', opportunity_email_views.OpportunityWhatsappRecordView.as_view(), name='audit_cycle_opportunity_whatsapp_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_notification$', opportunity_notification_views.OpportunityNotificationView.as_view(), name='audit_cycle_opportunity_notification_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', report_attribute_views.ReportAttributeView.as_view(), name='report_attribute_by_audit_cycle_view'),
+    # url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/client_from_details$', audit_cycle_views.AuditCycleDetailsFromClientView.as_view(), name='audit_cycle_id_details_from_client_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/proof_tag', proof_tag_views.AuditCycleProofTag.as_view(), name='audit_cycle_proof_tag'),

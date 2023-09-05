@@ -123,7 +123,6 @@ class SolutionIdView(APIView):
     
     def get(self, request, solution_id):
         result = solution_service.get_solution_by_id(solution_id)
-        print('result',result)
         return Response(result)
 
     def post(self, request, solution_id):

@@ -17,6 +17,9 @@ from django.utils import timezone
 from audit_store.service_client import find_yesterday_client_review_status_reports,find_audit_store_completed_yesterday
 _logger = logging.getLogger(__name__)
 
+# from notify.service import tattava_last_day_report_mail
+# obj=tattava_last_day_report_mail
+# obj.auto_tattava_mail_for_last_day_completed_report()
 
 @app.task(iqnore_result=True)
 def auto_tattava_mail_for_last_day_completed_report():
@@ -67,6 +70,6 @@ def tattava_send_live_report_mail(report_list):
         subject = "{} reports are live".format(str(len(report_list)))
     params['subject_text'] = subject
     params['report_list'] = report_list
-    html_message = get_template("notify/client_notify_report_email.html").render(params)
-    txt_message = get_template("notify/client_notify_report_email.txt").render(params)
+    html_message = get_template("notify/tattava_client_notify_report_email.html").render(params)
+    txt_message = get_template("notify/tattava_client_notify_report_email.txt").render(params)
     send_email(to_email, subject, html_message, txt_message)

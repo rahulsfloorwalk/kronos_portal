@@ -179,6 +179,15 @@ class ExportQuestionnaire(APIView):
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
 
+# class AuditCycleDetailsFromClientView(APIView):
+#     permission_classes=[HasGroupPermission]
+#     required_groups={
+#         'GET':[GROUP_NAME_MANAGER],
+#     }
+#     def get(self,request,audit_cycle_id,format=None):
+#         result = audit_cycle_service.find_order_description_and_files_by_audit_cycle_id(audit_cycle_id)
+#         return Response(result)
+    
 class AuditCycleDashboard(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {

@@ -205,7 +205,6 @@ class AuditApplicationsView(APIView):
     }
     def get(self, request, format=None):
         applications = application_service.get_applications(request.user.profileinfo.id)
-        print('208',applications)
         return Response(AuditApplicationSerializer(applications, many=True).data)
 
 

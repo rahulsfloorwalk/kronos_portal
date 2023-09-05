@@ -173,7 +173,9 @@ def find_audits_around_city(city_id:int, kms:int=None):
 def find_applied_audits_by_auditor_id(user_id):
     auditor = auditor_service.find_auditor_by_id(user_id)
     applied_audits = AuditApplication.objects.filter(
-        profileinfo_id=auditor.profileinfo.id,status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED))
+        profileinfo_id=auditor.profileinfo.id,
+        status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED),
+        audit__audit_cycle__status=AuditCycle.ACTIVE)
     return applied_audits
     
 def find_audits_for_auditor(user_id, kms):

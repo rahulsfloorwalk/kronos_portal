@@ -14,8 +14,9 @@ from celery import shared_task
 
 _logger = logging.getLogger(__name__)
 
-from datetime import datetime, timedelta
-from django.utils import timezone
+# from notify.service import tattava_target_date_reminder
+# obj=tattava_target_date_reminder
+# obj.auto_tattava_report_action_target_date_to_admin()
 
 @app.task(iqnore_result=True)
 def auto_tattava_report_action_target_date_to_admin():

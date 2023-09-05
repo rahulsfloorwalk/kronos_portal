@@ -95,6 +95,7 @@ class __Section extends React.Component{
 
 	render(){
 		let questionRows = [];
+		const remainingCharacters = 150 - this.state.auditor_comment.length;
 		if( this.props.section.questions){
 			for(let q of this.props.section.questions){
 				questionRows.push(<QuestionRow auditStoreId={this.props.auditStoreId} q={q} key={q.id} showErrors={this.props.showErrors}/>);
@@ -143,10 +144,13 @@ class __Section extends React.Component{
 			/>;
 		}
 
-		if(this.state.saving){
-			var savingMessage = (<span className="text-warning">&nbsp;&nbsp;&nbsp;saving...</span>);
+		let characterCountClass = "";
+		if ((this.state.focused || this.state.saving) && remainingCharacters>150 ) {
+			characterCountClass = "success";
 		}
-
+		else {
+			characterCountClass = "danger";
+		}
 		let goodClass = this.state.focused || this.state.saving || !this.state.auditor_comment || (this.state.auditor_comment).length < 150 ? "" : "success";
 		let badClass = (this.props.showErrors || this.state.auditor_comment_error) && (this.state.auditor_comment).length < 150 ? "danger" : "";
 
@@ -176,7 +180,18 @@ class __Section extends React.Component{
 								<td>
 									<div className="row">
 										<div className="col-xs-offset-1 col-md-11">
-											<p><b>Section Summary:</b> <small className="text-danger"> {this.state.auditor_comment_error ? this.state.auditor_comment_error : "(Min 150 characters in length)"}</small> {savingMessage}</p>
+											<b>Section Summary:</b>{" "}
+											<small className={`text-${characterCountClass}`}>
+												{remainingCharacters && remainingCharacters >= 0 && remainingCharacters<=150
+													?
+													`(Min 150 characters in length), [${remainingCharacters} characters remaining.]`
+													:
+													this.state.auditor_comment_error
+														?
+														this.state.auditor_comment_error
+														: null
+												}
+											</small>{" "}
 											{commentElement}
 										</div>
 										{this.props.auditStore && this.props.auditStore.status === "ACKNOWLEDGED" && this.props.reportSection && this.props.reportSection.revert_message ? <div className="col-xs-12 col-xs-offset-1 col-md-12 col-md-offset-1" style={{marginTop:"9px"}}>

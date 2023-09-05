@@ -114,6 +114,13 @@ exports[`<AuditCycleDetails/> renders correctly when audit cycle has loaded corr
       >
         Audit alignment factors
       </a>
+      )(
+      <a
+        onClick={[Function]}
+        style={Object {}}
+      >
+        Details From Client
+      </a>
       )
     </small>
   </h3>

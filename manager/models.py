@@ -95,7 +95,7 @@ class MPCategory(Model):
     name = CharField(db_column='name', max_length=200, blank=False)
     url_structure = CharField(db_column='url_structure', max_length=200, blank=False)
     overview = CharField(db_column='overview', max_length=16384, blank=False)
-    short_description = CharField(db_column='short_description', max_length=200, blank=False)
+    short_description = CharField(db_column='short_description', max_length=250, blank=False)
     attachments = GenericRelation('attachment.Attachment', related_query_name='categories')
     def __str__(self):
         return 'Category({}): {}'.format(self.id, self.name)

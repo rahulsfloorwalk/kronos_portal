@@ -289,7 +289,6 @@ def create_audit_cycle(client, order, solution_details,transaction,add_questionn
 
         start_date = transaction.payment_success_date.date()
         end_date = start_date + timedelta(days=10)
-
         audit_cycle_data = {
             'name': name,
             'status': 'ACTIVE',
@@ -360,7 +359,7 @@ class MPAuditCycleDeSerializer(ModelSerializer):
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
         audit_cycle.audit_auto_approve = self.validated_data.get('audit_auto_approve', audit_cycle.audit_auto_approve)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
-        audit_cycle.order_id = self.validated_data.get('order_id', audit_cycle.order_id)
+        audit_cycle.order = self.validated_data.get('order_id', audit_cycle.order_id)
         audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
         audit_cycle.post_approval_description = self.validated_data.get('post_approval_description', audit_cycle.post_approval_description)
         audit_cycle.check_points = self.validated_data.get('check_points', audit_cycle.check_points)
@@ -371,7 +370,7 @@ class MPAuditCycleDeSerializer(ModelSerializer):
 
 def Add_Section(audit_cycle_response):
     data = {
-        'name' : 'Audit sequence',
+        'name' : 'Audit Details',
         'audit_cycle' : audit_cycle_response.id,
         'sequence' : 1,
         'minimum_attachment_count' : 0,
@@ -457,8 +456,8 @@ class OrderReportsView(APIView):
             
             audit_score_response = audit_cycle.get_total_percentage()
         
-            if audit_cycle.order_id is not None:
-                order = MPOrder.objects.get(id=audit_cycle.order_id.id)
+            if audit_cycle.order is not None:
+                order = MPOrder.objects.get(id=audit_cycle.order.id)
                 store_info = order.store
 
                 store_count = len(store_info) if store_info else 0

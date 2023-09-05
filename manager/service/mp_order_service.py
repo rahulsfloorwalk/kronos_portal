@@ -119,7 +119,7 @@ def alignment_factor(order_id:int, factors:dict) -> MPOrder:
         
         {
             'key': 'auditor_age_range',
-            'value': factors.get('age_range', ''),
+            'value': factors.get('auditor_age_range', ''),
             'type': 'func'
         },
         {
