@@ -183,7 +183,8 @@ class MpPaymentView(APIView):
         tax_amount = (tax_rate/100)*order.price
         order_amount = int((order.price + tax_amount) *100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
         order_currency = 'INR'
-        order_receipt = f'order_receipt_{order.id}'
+        order_id=order.id
+        order_receipt = f'order_receipt_{order_id}'
         notes = {'note_key': 'note_value'}
         response = client.order.create(
             {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
