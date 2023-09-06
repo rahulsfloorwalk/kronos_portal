@@ -106,9 +106,10 @@ class MpOrderView(APIView):
         'POST':[GROUP_NAME_CLIENT]
     }
     def extract_data(self,file):
-        file_name = file.name
-        file_size = file.size
-        mime_type = file.content_type
+        print("109",file)
+        file_name = file.file_name
+        file_size = file.file_size
+        mime_type = file.file_type
         return file_name, file_size, mime_type
     
     def get(self,request):
@@ -119,8 +120,10 @@ class MpOrderView(APIView):
         response = mp_order_service.add_order(data=request.data,user_id=request.user.id)
         order_data = get_order_data(response)
         if request.data.get('file'):
-            file_name,file_size,mime_type = self.extract_data(request.data.get('file'))
-            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_data.get('id'),file_name,file_size,mime_type)
+            print("test",request.data.get('file').get("file_name"))
+            # print("test",request.data.get('file').file_type,request.data.get('file').file_name,request.data.get('file').file_size)
+            # file_name,file_size,mime_type = self.extract_data(request.data.get('file'))
+            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_data.get('id'),request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
         return JsonResponse(order_data)
 
 class MpOrderIdView(APIView):
@@ -464,6 +467,7 @@ class OrderReportsView(APIView):
                 store_count = len(store_info) if store_info else 0
 
                 audit_cycle_data.append({
+                    'id': audit_cycle.id,
                     'audit_cycle': AuditCycleSerializer(audit_cycle).data,
                     'order': MPOrderSerializer(order).data,
                     'audit_score': audit_score_response,

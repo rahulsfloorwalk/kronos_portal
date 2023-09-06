@@ -188,8 +188,8 @@ def add_order(data,user_id):
     if data.get('store'):
         for i in data.get('store'):
             sum+=i['count']
-        if sum!=data.get('no_of_response'):
-            raise AppLogicError("No of Response and All Store Count is not Equal")
+        # if sum!=data.get('no_of_response'):
+        #     raise AppLogicError("No of Response and All Store Count is not Equal")
     user=User.objects.get(id=user_id)
     order= MPOrder()
     order.no_of_response=data.get('no_of_response')

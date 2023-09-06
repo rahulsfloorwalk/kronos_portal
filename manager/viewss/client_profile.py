@@ -49,8 +49,11 @@ class ClientProfileView(APIView):
     'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,format=None):
+        user_email = request.user.email 
         client_profile = MPClientProfileInfo.objects.get(user_id=request.user.id)
-        return Response(ClientProfileSerializer(client_profile).data)
+        client_profile_data = ClientProfileSerializer(client_profile).data
+        client_profile_data['email'] = user_email
+        return Response(client_profile_data)
     def post(self,request):
         profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': request.user.id})
         profile_info_ds.is_valid(raise_exception=True)

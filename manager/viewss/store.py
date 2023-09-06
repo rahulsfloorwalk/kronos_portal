@@ -165,8 +165,6 @@ class StoreAddClientView(APIView):
         saved_store = store_ds.save()
         serializer = StoreSerializer(saved_store)
         return Response(serializer.data)
-    
-       
 
 class StoreIdClientIdView(APIView):
     permission_classes = [HasGroupPermission]
