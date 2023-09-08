@@ -283,12 +283,14 @@ def add_proof_tag_list(proof_tag_id,audit_cycle):
 
 def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
         # orderss = MPOrder.objects.get(id=order_id)
-        current_date = datetime.now()
-        base_name = f"{(solution_details.solution.name)} {current_date.strftime('%b %Y')}"
-        name = base_name
+        solution_name = solution_details.solution.name
+        formatted_date = datetime.now().strftime('%b %Y')
+        result = "{} {}".format(solution_name,formatted_date)
+        # base_name = f"{(solution_details.solution.name)} {current_date.strftime('%b %Y')}"
+        name = result
         counter = 1
         while AuditCycle.objects.filter(name=name).exists():
-            name = f"{base_name} ({counter})"
+            name = "{} ({})".format(result,counter)
             counter += 1
 
         start_date = transaction.payment_success_date.date()
