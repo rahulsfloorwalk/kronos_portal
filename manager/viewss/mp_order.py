@@ -313,7 +313,7 @@ def create_audit_cycle(client, order, solution_details,transaction,add_questionn
             'post_approval_description' : solution_details.post_approval_description,
             'client': client.id,
             'planned_audit': order.no_of_response,
-            'order_id': order.id,
+            'order': order.id,
             'audit_alignment_factors':order.alignment_factors,
             'questionnaire_type':add_questionnaire_type_id,
             'charge_per_audit':solution_details.solution.price
@@ -348,7 +348,7 @@ class MPAuditCycleDeSerializer(ModelSerializer):
             'post_approval_description',
             'audit_alignment_factors',
             'questionnaire_type',
-            'order_id',
+            'order',
             'charge_per_audit'
         )
         read_only_fields = ('id',)
@@ -369,7 +369,7 @@ class MPAuditCycleDeSerializer(ModelSerializer):
         audit_cycle.description = self.validated_data.get('description', audit_cycle.description)
         audit_cycle.audit_auto_approve = self.validated_data.get('audit_auto_approve', audit_cycle.audit_auto_approve)
         audit_cycle.client = self.validated_data.get('client', audit_cycle.client_id)
-        audit_cycle.order = self.validated_data.get('order_id', audit_cycle.order_id)
+        audit_cycle.order = self.validated_data.get('order', audit_cycle.order)
         audit_cycle.questionnaire_type = self.validated_data.get('questionnaire_type', audit_cycle.questionnaire_type)
         audit_cycle.post_approval_description = self.validated_data.get('post_approval_description', audit_cycle.post_approval_description)
         audit_cycle.check_points = self.validated_data.get('check_points', audit_cycle.check_points)
@@ -498,8 +498,8 @@ class OrderReportsView(APIView):
         for audit_cycle in audit_cycles:
             audit_score_response = audit_cycle.get_total_percentage()
            
-            if audit_cycle.order_id is not None:
-                order = MPOrder.objects.get(id=audit_cycle.order_id)
+            if audit_cycle.order is not None:
+                order = MPOrder.objects.get(id=audit_cycle.order.id)
                 store_info = order.store
                 store_count = len(store_info) if store_info else 0
                 audit_cycle_data.append({
@@ -530,7 +530,7 @@ class OrderReportListView(APIView):
             return JsonResponse({'error': 'Client not found for this user.'}, status=404)
         
         audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
-        order = MPOrder.objects.get(id=audit_cycle.order_id.id)
+        order = MPOrder.objects.get(id=audit_cycle.order.id)
 
         audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
         solution_details= MPSolutionOtherDetails.objects.get(solution=order.solution)
@@ -538,7 +538,7 @@ class OrderReportListView(APIView):
         store_data = report_store_to_audit(audit_cycle,order,solution_details)
         report_data = []
         report_data.append({
-                    'audit_cycle': AuditCycleSerializer(audit_cycle).data,
+                    'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
                     'order': MPOrderSerializer(order).data,
                     'store_data':store_data,
                     'audit_stores' : audit_stores,
@@ -586,14 +586,23 @@ class MPOrderSerializer(ModelSerializer):
     class Meta:
         model=MPOrder
         fields=('id','solution','user','price','no_of_response','describe','status','alignment_factors','store')
-
-class CustomStoreSerializer(serializers.ModelSerializer):
+    
+class CustomAuditCycleSerializer(ModelSerializer):
+    questionnaire_type = QuestionnaireTypeSerializer()
     class Meta:
-        model = Store
-        fields = ('city', 'address')
+        model=AuditCycle
+        fields=('id','name','start_date','end_date','planned_audit','earnings_per_audit','reimbursement','charge_per_audit','description','questionnaire_type')
+
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
         model = City
         fields = '__all__' 
+
+
+class AuditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Audit
+        fields = '__all__'
+
 
