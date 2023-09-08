@@ -118,6 +118,10 @@ urlpatterns = ([
     url(r'mp/orderstatus$', mp_order_views.ClientOrderStatusDeatil.as_view(), name='client_order_detail'),
     url(r'mp/amdminorderstatus$', mp_order_views.AdminOrderView.as_view(), name='admin_order_detail'),
     url(r'mp/reports$', mp_order_views.OrderReportsView.as_view(), name='Order_reports_view'),
+    url(r'mp/reportlist/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.OrderReportListView.as_view(), name='Order_reportlist_view'),
+
+    # url(r'mp/(?P<client_id>[0-9]+)/store_audit_data/(?P<store_id>[0-9]+)/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.StoreAuditData.as_view(), name='Order_search_view'),
+
 
     url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
