@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
@@ -144,8 +144,13 @@ class StoreGetClientView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, client_id, format=None):
-        stores = store_service.find_stores_by_client(client_id)
+    def get(self, request, format=None):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        stores = store_service.find_stores_by_client(client.id)
         return Response(StoreSerializer(stores, many=True).data)    
 
 def find_stores_by_client_and_store_id(store_id):
@@ -174,8 +179,13 @@ class StoreIdClientIdView(APIView):
         'DELETE': [GROUP_NAME_CLIENT]
     }
 
-    def get(self, request, client_id, store_id, format=None):
-        store = Store.objects.get(client=client_id, id=store_id)
+    def get(self, request, store_id, format=None):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        store = Store.objects.get(client=client.id, id=store_id)
         return Response(StoreSerializer(store).data)
     
     def post(self, request, client_id, store_id):

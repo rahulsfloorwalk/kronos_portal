@@ -18,7 +18,7 @@ from datetime import datetime, timedelta
 from django.utils.text import slugify
 from audit.service import audit_cycle as audit_cycle_service
 from client.models import Client,Store
-from manager.models import MPSolutionOtherDetails,MPSolutionQuestion,MPSolutionProofTagList,MPSolution,City
+from manager.models import MPSolutionOtherDetails,MPSolutionQuestion,MPSolutionProofTagList,MPSolution,City,MPSolutionCategoryDetails
 from django.utils import timezone
 from audit.models import AuditCycle
 from rest_framework.serializers import Serializer, CharField, ModelSerializer, IntegerField
@@ -41,8 +41,8 @@ from answer.models import Answer,Question
 from audit_store.models import AuditStore
 from audit.models.audit import Audit
 from questionnaire.models.section import Section
-
-
+from answer.service import answer as answer_service
+from manager.viewss.answer import AnswerSerializer
 
 
 
@@ -472,8 +472,13 @@ class OrderReportsView(APIView):
             if status_value == 'DRAFT':
                 mp_order = MPOrder.objects.filter(user=request.user, status=status_value)
                 if mp_order:
+                    try:
+                        category_details = MPSolutionCategoryDetails.objects.get(solution=order.solution)
+                        category = category_details.category.name if category_details.category else None
+                    except MPSolutionCategoryDetails.DoesNotExist:
+                        category = None
                     mp_order_data = [MPOrderSerializer(order).data for order in mp_order]
-                    return Response({'mp_order_data': mp_order_data})
+                    return Response({'mp_order_data': mp_order_data,'category': category,})
                 else:
                     return Response({'message': 'No DRAFT status MPOrder found for this client.'})
             else:
@@ -538,8 +543,8 @@ class OrderReportListView(APIView):
         store_data = report_store_to_audit(audit_cycle,order,solution_details)
         report_data = []
         report_data.append({
-                    'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
-                    'order': MPOrderSerializer(order).data,
+                    # 'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
+                    # 'order': MPOrderSerializer(order).data,
                     'store_data':store_data,
                     'audit_stores' : audit_stores,
                 })
@@ -551,24 +556,22 @@ class OrderReportListView(APIView):
 def report_store_to_audit(audit_cycle, order, solution_details):
     if order.store and isinstance(order.store, list):
         store_responses = [] 
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle.id)
+        order = MPOrder.objects.get(id=order.id)
+
         for store_data in order.store:
             store_id = store_data['store_id']
             count = store_data['count']
 
             stores = Store.objects.get(id=store_id)
-
-            if isinstance(stores.city, int):
-                city_id = stores.city
-            else:
-                city_id = stores.city.id
-
-            city = City.objects.get(id=city_id)
-            city_data = CitySerializer(city).data
+            store_data = StoreDeSerializer(stores).data 
 
             data = {
-                    'id': city.id,
-                    'citys':city_data
-                }
+                'id': stores.id,
+                'store_data': store_data,
+                'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
+                'order': MPOrderRepotsSerializer(order).data,
+            }
             store_responses.append(data)
         
         return (store_responses)
@@ -578,7 +581,22 @@ def report_store_to_audit(audit_cycle, order, solution_details):
 def get(self, request, audit_cycle_id, format=None):
         audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
         return Response(audit_stores)
-   
+
+class StoreDeSerializer(ModelSerializer):
+    city = CitySerializer()
+    class Meta:
+        model = Store
+        fields = (
+            'id',
+            'name',
+            'pincode',
+            'city',
+        )
+        read_only_fields = ('id',)
+
+    def get_city(self, obj):
+        city = obj.city
+        return CitySerializer(city).data
     
 class MPOrderSerializer(ModelSerializer):
     user= UserSerializer()
@@ -587,12 +605,22 @@ class MPOrderSerializer(ModelSerializer):
         model=MPOrder
         fields=('id','solution','user','price','no_of_response','describe','status','alignment_factors','store')
     
+class MPOrderRepotsSerializer(ModelSerializer):
+    user= UserSerializer()
+    solution = SolutionSerializer()
+    class Meta:
+        model=MPOrder
+        fields=('id','solution','user','price','no_of_response','describe','status',)
+    
 class CustomAuditCycleSerializer(ModelSerializer):
     questionnaire_type = QuestionnaireTypeSerializer()
+    # store_data = serializers.SerializerMethodField()
     class Meta:
         model=AuditCycle
         fields=('id','name','start_date','end_date','planned_audit','earnings_per_audit','reimbursement','charge_per_audit','description','questionnaire_type')
 
+    def get_store_data(self, obj):
+        return obj.store_data
 
 class CitySerializer(serializers.ModelSerializer):
     class Meta:
@@ -606,3 +634,46 @@ class AuditSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class MPOrderReportListDetailView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+
+    def get(self, request,audit_cycle_id):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
+        order = MPOrder.objects.get(id=audit_cycle.order.id)
+
+        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
+        
+        for audit_store in audit_stores:
+            answers = answer_service.find_by_audit_store(audit_store['audit_store_id'])
+            answer_data = AnswerSerializer(answers, many=True).data
+
+            report_data = ({
+                'order': MPOrderRepotsSerializer(order).data,
+                'audit_stores': audit_store,
+                'answers': answer_data
+            })
+        if report_data:
+            return Response({'store_audit_data': report_data})
+        else:
+            return JsonResponse({'error': 'No audit cycles found for this client.'})
+
+class QuestionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+class AnswerSerializer(serializers.ModelSerializer):
+    question = QuestionSerializer()  # Use the QuestionSerializer here
+
+    class Meta:
+        model = Answer
+        fields = '__all__'
