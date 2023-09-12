@@ -120,7 +120,7 @@ urlpatterns = ([
     url(r'mp/reports$', mp_order_views.OrderReportsView.as_view(), name='Order_reports_view'),
     url(r'mp/reportlist/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.OrderReportListView.as_view(), name='Order_reportlist_view'),
     url(r'mp/reportlistdetail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.MPOrderReportListDetailView.as_view(), name='Order_reportlistdetail_view'),
-    url(r'mp/invoice/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.OrderInvoicesView.as_view(), name='Order_invoices_view'),
+    url(r'mp/invoice$', mp_order_views.OrderInvoicesView.as_view(), name='Order_invoices_view'),
 
 
     url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),

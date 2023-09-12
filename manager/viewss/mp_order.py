@@ -684,7 +684,7 @@ class OrderInvoicesView(APIView):
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request,audit_cycle_id):
+    def get(self, request):
         user = request.user
         try:
             client = Client.objects.get(email=user.email)
@@ -692,23 +692,25 @@ class OrderInvoicesView(APIView):
             return JsonResponse({'error': 'Client not found for this user.'}, status=404)
         
         client_profile = MPClientProfileInfo.objects.get(user=user.id)
-        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
-        order = MPOrder.objects.get(id=audit_cycle.order.id)
-
-        if client_profile.user == order.user and (order.status == 'ACTIVE' or order.status == 'COMPLETE'):
-            transaction = Transaction.objects.get(order_id=order.id)
-            invoice_data = ({
-                    'client_profile_data' : ClientProfileSerializer(client_profile).data,
-                    'order': MPOrderRepotsSerializer(order).data,
-                    'transaction': TransactionSerializer(transaction).data,
-                })
-            if invoice_data:
-                return Response({'invoice_data': invoice_data})
-            else:
-                return JsonResponse({'error': 'No payment for any audit cycles.'})
-        else :
-            return JsonResponse({'error': 'No payment for any audit cycles.'})
-
+        orders = MPOrder.objects.filter(user=client_profile.user, status__in=['ACTIVE', 'COMPLETE'])
+        
+        invoice_data_list = []
+        
+        for order in orders:
+            order_data = MPOrderRepotsSerializer(order).data
+            transaction = Transaction.objects.filter(order_id=order.id).first()
+            invoice_data = {
+                'client_profile_data': ClientProfileSerializer(client_profile).data,
+                'order': order_data,
+                'transaction': TransactionSerializer(transaction).data,
+            }
+            
+            invoice_data_list.append(invoice_data)
+        
+        if invoice_data_list:
+            return Response({'invoice_data_list': invoice_data_list})
+        else:
+            return JsonResponse({'error': 'No payment for any audit cycles.'})   
 
 class TransactionSerializer(serializers.ModelSerializer):
     class Meta:
