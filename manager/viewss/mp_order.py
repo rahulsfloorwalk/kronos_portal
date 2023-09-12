@@ -43,6 +43,7 @@ from audit.models.audit import Audit
 from questionnaire.models.section import Section
 from answer.service import answer as answer_service
 from manager.viewss.answer import AnswerSerializer
+from manager.viewss.client_profile import ClientProfileSerializer
 
 
 
@@ -64,7 +65,7 @@ class OrderSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','no_of_response','solution','user','status')
+        fields=('id','no_of_response','solution','user','status','category')
 
 class AdminOrderSerializer(ModelSerializer):
     user_email = serializers.CharField(source='user.email')
@@ -72,7 +73,7 @@ class AdminOrderSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','user_email','no_of_response','solution','user','status')
+        fields=('id','user_email','no_of_response','solution','user','status','category')
        
 class AdminOrderView(APIView):
     permission_classes=[HasGroupPermission]
@@ -466,19 +467,18 @@ class OrderReportsView(APIView):
             'COMPLETE': 'COMPLETE',
             'ACTIVE': 'ACTIVE',
         }
-
+        
         if status_param and status_param in status_mapping:
             status_value = status_mapping[status_param]
             if status_value == 'DRAFT':
                 mp_order = MPOrder.objects.filter(user=request.user, status=status_value)
                 if mp_order:
-                    try:
-                        category_details = MPSolutionCategoryDetails.objects.get(solution=order.solution)
-                        category = category_details.category.name if category_details.category else None
-                    except MPSolutionCategoryDetails.DoesNotExist:
-                        category = None
-                    mp_order_data = [MPOrderSerializer(order).data for order in mp_order]
-                    return Response({'mp_order_data': mp_order_data,'category': category,})
+                    mp_order_data = []
+                    for mp_order in mp_order:            
+                        mp_order_data.append({
+                            'mp_order': MPOrderSerializer(mp_order).data,
+                        })
+                    return Response({'mp_order_data': mp_order_data})
                 else:
                     return Response({'message': 'No DRAFT status MPOrder found for this client.'})
             else:
@@ -603,7 +603,7 @@ class MPOrderSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','solution','user','price','no_of_response','describe','status','alignment_factors','store')
+        fields=('id','solution','category','user','price','no_of_response','describe','status','alignment_factors','store')
     
 class MPOrderRepotsSerializer(ModelSerializer):
     user= UserSerializer()
@@ -652,11 +652,13 @@ class MPOrderReportListDetailView(APIView):
 
         audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
         
+        report_data = []
+
         for audit_store in audit_stores:
             answers = answer_service.find_by_audit_store(audit_store['audit_store_id'])
             answer_data = AnswerSerializer(answers, many=True).data
-
-            report_data = ({
+            report_data.append({
+                'audit_cycle_name': audit_cycle.name,
                 'order': MPOrderRepotsSerializer(order).data,
                 'audit_stores': audit_store,
                 'answers': answer_data
@@ -664,7 +666,7 @@ class MPOrderReportListDetailView(APIView):
         if report_data:
             return Response({'store_audit_data': report_data})
         else:
-            return JsonResponse({'error': 'No audit cycles found for this client.'})
+            return JsonResponse({'error': 'No repots found for this audit.'})
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -672,8 +674,45 @@ class QuestionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AnswerSerializer(serializers.ModelSerializer):
-    question = QuestionSerializer()  # Use the QuestionSerializer here
-
+    question = QuestionSerializer() 
     class Meta:
         model = Answer
         fields = '__all__'
+
+class OrderInvoicesView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request,audit_cycle_id):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        
+        client_profile = MPClientProfileInfo.objects.get(user=user.id)
+        audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
+        order = MPOrder.objects.get(id=audit_cycle.order.id)
+
+        if client_profile.user == order.user and (order.status == 'ACTIVE' or order.status == 'COMPLETE'):
+            transaction = Transaction.objects.get(order_id=order.id)
+            invoice_data = ({
+                    'client_profile_data' : ClientProfileSerializer(client_profile).data,
+                    'order': MPOrderRepotsSerializer(order).data,
+                    'transaction': TransactionSerializer(transaction).data,
+                })
+            if invoice_data:
+                return Response({'invoice_data': invoice_data})
+            else:
+                return JsonResponse({'error': 'No payment for any audit cycles.'})
+        else :
+            return JsonResponse({'error': 'No payment for any audit cycles.'})
+
+
+class TransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Transaction
+        fields=('id','payment_success_date')
+
+        

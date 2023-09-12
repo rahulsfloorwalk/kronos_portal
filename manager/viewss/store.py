@@ -188,16 +188,26 @@ class StoreIdClientIdView(APIView):
         store = Store.objects.get(client=client.id, id=store_id)
         return Response(StoreSerializer(store).data)
     
-    def post(self, request, client_id, store_id):
-        store = Store.objects.get(client=client_id, id=store_id)
+    def post(self, request, store_id):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        store = Store.objects.get(client=client.id, id=store_id)
         store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
         savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
 
-    def delete(self, request, client_id, store_id):
-        store = Store.objects.get(client=client_id, id=store_id)
+    def delete(self, request, store_id):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        store = Store.objects.get(client=client.id, id=store_id)
         store_service.delete(store_id)
         return HttpResponse(status=204)
     

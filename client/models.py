@@ -6,7 +6,7 @@ from django.db.models import Model, QuerySet, CharField, AutoField, EmailField, 
 from django.contrib.postgres.fields import JSONField
 from django.db.models import PROTECT,CASCADE
 from django.conf import settings
-from manager.models import MPSolution
+from manager.models import MPSolution ,MPCategory
 from kronos.utils import get_color_code_by_percentage, get_rank_by_percentage, validate_pan
 from guardian.shortcuts import assign_perm
 from registration.models import GROUP_NAME_CLIENT
@@ -436,6 +436,8 @@ class MPOrder(Model):
     razorpay_payment_id = CharField(max_length=100, blank=True, null=True)
     razorpay_signature = CharField(max_length=100, blank=True, null=True)
     price = IntegerField(db_column='price',default=0,blank=True,null=True)
+    category = ForeignKey(MPCategory, related_name='mporders', db_column='category_id', on_delete=PROTECT,blank=False)
+
     def __str__(self):
         return 'MPOrder({}): Solution{} '.format(self.id, self.solution)
 
@@ -450,7 +452,6 @@ class Transaction(Model):
     payment_id = CharField(max_length=100,db_column='payment_id')
     signature = CharField(max_length=200,db_column='signature')
     payment_success_date = DateTimeField(null=True, blank=True)
-    payment_success_date = DateField(null=True, blank=True)
 
     
     def __str__(self):
