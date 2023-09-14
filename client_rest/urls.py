@@ -122,6 +122,11 @@ urlpatterns = ([
     url(r'mp/reportlistdetail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.MPOrderReportListDetailView.as_view(), name='Order_reportlistdetail_view'),
     url(r'mp/invoice$', mp_order_views.OrderInvoicesView.as_view(), name='Order_invoices_view'),
 
+    # url(r'mp/orderlist$', mp_order_views.MPOrderList.as_view(), name='Order_list_view'),
+
+    url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.AuditStoreListByAuditCycle.as_view(), name='audit_store_list_by_audit_cycle_view'),
+
+
 
     url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),

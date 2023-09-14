@@ -44,6 +44,10 @@ from questionnaire.models.section import Section
 from answer.service import answer as answer_service
 from manager.viewss.answer import AnswerSerializer
 from manager.viewss.client_profile import ClientProfileSerializer
+from audit_store import service as audit_store_service
+from manager.serializers import AuditStoreSerializerWithoutAudit
+
+
 
 
 
@@ -124,8 +128,6 @@ class MpOrderView(APIView):
         response = mp_order_service.add_order(data=request.data,user_id=request.user.id)
         order_data = get_order_data(response)
         if request.data.get('file'):
-            # print("test",request.data.get('file').file_type,request.data.get('file').file_name,request.data.get('file').file_size)
-            # file_name,file_size,mime_type = self.extract_data(request.data.get('file'))
             post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_data.get('id'),request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
         return JsonResponse(order_data)
 
@@ -537,47 +539,48 @@ class OrderReportListView(APIView):
         audit_cycle = AuditCycle.objects.get(id=audit_cycle_id) 
         order = MPOrder.objects.get(id=audit_cycle.order.id)
 
-        audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
-        solution_details= MPSolutionOtherDetails.objects.get(solution=order.solution)
-
-        store_data = report_store_to_audit(audit_cycle,order,solution_details)
+        store_data = report_store_to_audit(audit_cycle_id,order,user)
         report_data = []
         report_data.append({
-                    # 'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
-                    # 'order': MPOrderSerializer(order).data,
-                    'store_data':store_data,
-                    'audit_stores' : audit_stores,
+                    'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
+                    'audit_store_data':store_data,
                 })
         if report_data:
-            return Response({'audit_cycle_data': report_data})
+            return Response({'audit_list': report_data})
         else:
             return JsonResponse({'error': 'No audit cycles found for this client.'})
         
-def report_store_to_audit(audit_cycle, order, solution_details):
-    if order.store and isinstance(order.store, list):
-        store_responses = [] 
-        audit_cycle = AuditCycle.objects.get(id=audit_cycle.id)
-        order = MPOrder.objects.get(id=order.id)
+def report_store_to_audit(audit_cycle_id, order,user):
+        audit_stores = Audit.objects.filter(audit_cycle_id=audit_cycle_id)
+        store_responses = []
 
-        for store_data in order.store:
-            store_id = store_data['store_id']
-            count = store_data['count']
-
+        for audit in audit_stores:
+            store_id = audit.store_id
+            count = audit.count
+            
             stores = Store.objects.get(id=store_id)
             store_data = StoreDeSerializer(stores).data 
 
-            data = {
-                'id': stores.id,
-                'store_data': store_data,
-                'audit_cycle': CustomAuditCycleSerializer(audit_cycle).data,
-                'order': MPOrderRepotsSerializer(order).data,
-            }
-            store_responses.append(data)
+            if count > 1:
+                for i in range(count):
+                    data = {
+                        'id': stores.id,
+                        'audit_store': store_data,
+                        # 'audit_score':audit_score if audit_score else None,
+                    }
+                    store_responses.append(data)
+            else:
+                data = {
+                    'id': stores.id,
+                    'audit_store': store_data,
+                    # 'audit_score':audit_score if audit_score else None,
+                }
+                store_responses.append(data)
+        audit_score = audit_section.get_mp_audit_store_aggregation_for_client(audit_cycle_id, user.id)
         
-        return (store_responses)
-    else:
-        raise AppLogicError("Please provide a valid store ID")
+        return ({'store_responses': store_responses, 'audit_score':audit_score if audit_score else None})
     
+
 def get(self, request, audit_cycle_id, format=None):
         audit_stores = audit_section.get_audit_store_aggregation_for_client(audit_cycle_id, request.user.id)
         return Response(audit_stores)
@@ -601,9 +604,10 @@ class StoreDeSerializer(ModelSerializer):
 class MPOrderSerializer(ModelSerializer):
     user= UserSerializer()
     solution = SolutionSerializer()
+    category_name = serializers.CharField(source='category.name', read_only=True)
     class Meta:
         model=MPOrder
-        fields=('id','solution','category','user','price','no_of_response','describe','status','alignment_factors','store')
+        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store')
     
 class MPOrderRepotsSerializer(ModelSerializer):
     user= UserSerializer()
@@ -694,8 +698,24 @@ class OrderInvoicesView(APIView):
         client_profile = MPClientProfileInfo.objects.get(user=user.id)
         orders = MPOrder.objects.filter(user=client_profile.user, status__in=['ACTIVE', 'COMPLETE'])
         
-        invoice_data_list = []
+        status = request.query_params.get('status')
+        if status:
+            orders = orders.filter(status=status)
         
+        invoice_data_list = []
+        product_name = request.query_params.get('product_name')
+        year = request.query_params.get('year')
+        start_date = request.query_params.get('start_date')
+        end_date = request.query_params.get('end_date')
+
+        if product_name:
+            orders = orders.filter(solution__name__icontains=product_name)
+        if year:
+            year = int(year)
+            orders = orders.filter(transaction__payment_success_date__year=year)
+        if start_date and end_date:
+           orders = orders.filter(transaction__payment_success_date__date__range=(start_date,end_date))           
+
         for order in orders:
             order_data = MPOrderRepotsSerializer(order).data
             transaction = Transaction.objects.filter(order_id=order.id).first()
@@ -717,4 +737,81 @@ class TransactionSerializer(serializers.ModelSerializer):
         model = Transaction
         fields=('id','payment_success_date')
 
+class AuditStoreListByAuditCycle(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_cycle_id, format=None):
+        audits = audit_service.find_audits_by_audit_cycle_id(audit_cycle_id)
+        serial_audits = AuditSerializer(audits, many=True).data
+        return Response(serial_audits)
+    
+
+class AuditStoreByAudit(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_MANAGER],
+        'GET': [GROUP_NAME_CLIENT],
+    }
+    def get(self, request, audit_id, format=None):
+        audit_stores = audit_store_service.find_by_audit(audit_id)
+        return Response(AuditStoreSerializerWithoutAudit(audit_stores, many=True).data)
+
+# class MPOrderList(APIView):
+#     permission_classes = [HasGroupPermission]
+#     required_groups = {
+#         'GET' : [GROUP_NAME_CLIENT]
+#     }
+#     def get(self,request):
+#         user = request.user
+#         try:
+#             client = Client.objects.get(email=user.email)
+#         except Client.DoesNotExist:
+#             return JsonResponse({'error':'Client not found for this user.'},status=404)
         
+#         status_param = request.query_params.get('status')
+#         default_status = ['COMPLETE', 'ACTIVE','DRAFT']
+#         status_mapping = {
+#             'DRAFT' : 'DRAFT',
+#             'COMPLETE' : 'COMPLETE',
+#             'ACTIVE' : 'ACTIVE',
+#             'ALL' : 'ALL',
+#         }
+#         if status_param and status_param in status_mapping:
+#             status_value = status_mapping[status_param]
+#             if status_value == 'DERAFT':
+#                 mp_order = MPOrder.objects.filter(user=request.user, status=status_value)
+#                 if mp_order:
+#                     mp_order_data = []
+#                     for mp_order in mp_order:
+#                         mp_order_data.append({'mp_order':MPOrderSerializer(mp_order).data})
+#                     return Response({'mp_order_data':mp_order_data})
+#                 else:
+#                     return Response({'message':'NO DRAFT status MPOrder found for this client.'})
+#             elif status_value == 'ACCTIVE':
+#                 mp_order = MPOrder.objects.filter(user=request.user,status=status_value)
+#                 if mp_order:
+#                     for mp_order in mp_order:
+#                         mp_order_data.append({'mp_order':MPOrderSerializer(mp_order).data})
+#                     return Response({'mp_odrder_data':mp_order_data})
+#                 else:
+#                     return Response({'message':'No ACTIVE status MPOrder found for this client.'})
+#             elif status_value == 'COPMLETE':
+#                 mp_order_data = []
+#                 if mp_order:
+#                     for mp_order in mp_order:
+#                         mp_order_data.append({'mp_order':MPOrderSerializer(mp_order).data})
+#                     return Response({'mp_order_data':mp_order_data})
+#                 else:
+#                     return Response({'message':'No COMPLETE status MPOrder found for this client.'})
+#             else :
+#                 status_value = default_status
+#                 mp_order_data = []
+#                 if mp_order:
+#                     for mp_order in mp_order:
+#                         mp_order_data.append({'mp_order':MPOrderSerializer(mp_order).data})
+#                     return Response({'mp_order_data':mp_order_data})
+#                 else:
+#                         return Response({'message':'No Order found for this client.'})
+ 

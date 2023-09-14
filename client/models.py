@@ -407,6 +407,8 @@ class MPClientProfileInfo(Model):
     last_name = CharField(db_column='last_name', max_length=150, blank=True,default='')
     mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)
     company_name = CharField(db_column='company_name', max_length=15, blank=False)
+    gst = CharField(db_column='gst', max_length=150, blank=True,default='')
+
     def __str__(self):
         return "ClientProfileInfo: {} {}".format(self.id, self.first_name)
        
