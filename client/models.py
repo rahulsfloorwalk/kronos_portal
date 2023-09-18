@@ -426,12 +426,19 @@ class MPOrder(Model):
         (DRAFT, "Draft"),
         (ACTIVE, "Active"),
     )
+    PAYMENT_SUCCESS = 'SUCCESS'
+    PAYMENT_FAILED = 'FAILED'
+    PAYMENT_STATUS_CHOICES = [
+        (PAYMENT_SUCCESS, 'Payment Successful'),
+        (PAYMENT_FAILED, 'Payment Failed'),
+    ]
     id = AutoField(db_column='id', primary_key=True)
     no_of_response = IntegerField(db_column='no_of_response',blank=True,default=1,null=True)
     solution = ForeignKey(MPSolution, related_name='mporders', db_column='solution_id', on_delete=PROTECT,blank=False)
     describe = CharField(db_column='describe',blank=True,max_length=16384,null=True)
     user = ForeignKey(User, on_delete=PROTECT,db_column='user_id')
     status = CharField(db_column='status', max_length=20, choices=STATUS, blank=False)
+    payment_status = CharField(db_column='payment_status', max_length=20, choices=PAYMENT_STATUS_CHOICES, blank=True, null=True)
     alignment_factors = JSONField(db_column='alignment_factors', default=list, blank=True,null=True)
     store = JSONField(db_column='stores', default=list, blank=True,null=True)
     attachments = GenericRelation('attachment.Attachment', related_query_name='orders')

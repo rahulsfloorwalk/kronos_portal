@@ -121,12 +121,12 @@ urlpatterns = ([
     url(r'mp/reportlist/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.OrderReportListView.as_view(), name='Order_reportlist_view'),
     url(r'mp/reportlistdetail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.MPOrderReportListDetailView.as_view(), name='Order_reportlistdetail_view'),
     url(r'mp/invoice$', mp_order_views.OrderInvoicesView.as_view(), name='Order_invoices_view'),
+    url(r'mp/invoice/(?P<order_id>[0-9]+)$', mp_order_views.OrderInvoicesIdView.as_view(), name='Order_invoices_id_view'),
 
-    # url(r'mp/orderlist$', mp_order_views.MPOrderList.as_view(), name='Order_list_view'),
+    url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
+    url(r'mp/audit/(?P<audit_id>[0-9]+)/audit_stores$', mp_order_views.AuditStoreByAuditClient.as_view(), name='audit_store_by_audit_id_view_client'),
 
-    url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.AuditStoreListByAuditCycle.as_view(), name='audit_store_list_by_audit_cycle_view'),
-
-
+    url(r'client/(?P<client_id>[0-9]+)/store/import/sample_client$', store_views.StoreSampleClientXlsxView.as_view(), name='sample_client_import_store_view'),
 
     url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
     url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),

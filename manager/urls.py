@@ -119,6 +119,7 @@ urlpatterns = ([
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
     
     # For Loggedin User 
+    url(r'mp_order_list$',mp_order_views.MPOrderList.as_view(),name='mp_order_list_view'),
     # url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     # url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     # url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),

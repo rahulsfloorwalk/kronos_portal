@@ -233,3 +233,15 @@ class StoreSampleXlsxView(APIView):
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
+
+
+class StoreSampleClientXlsxView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'GET': [GROUP_NAME_CLIENT]
+    }
+    def get(self, request, client_id):
+        report, name = find_sample_xlsx_for_store_insert()
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
