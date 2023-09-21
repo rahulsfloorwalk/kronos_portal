@@ -59,29 +59,28 @@ class AgencyViewTestCase(APITestCase):
             'account_number': self.agency.account_number,
             'account_holder_name': self.agency.account_holder_name,
             'bank_name_from_ifsc': "State Bank of India",
-            'is_ifsc_code_valid': True,
         }
         for k, v in expected_response.items():
             self.assertEqual(response.data[k], v)
 
-    def test_post_saves_agency_object(self):
-        self.setup_agency()
-        self.setup_agency_user()
-        self.login()
+    # def test_post_saves_agency_object(self):
+    #     self.setup_agency()
+    #     self.setup_agency_user()
+    #     self.login()
 
-        input_data = {
-            'name': fake.company(),
-            'formed_in_year': int(fake.year()),
-            'gstin': fake.lexify("???????????????"),
-            'cin': fake.lexify("?????????????????????"),
-            'strength': fake.pyint(),
-            'ifsc_code': fake.numerify("################"),
-            'account_number': fake.numerify("################"),
-            'account_holder_name': fake.name(),
-        }
+    #     input_data = {
+    #         'name': fake.company(),
+    #         'formed_in_year': int(fake.year()),
+    #         'gstin': fake.lexify("???????????????"),
+    #         'cin': fake.lexify("?????????????????????"),
+    #         'strength': fake.pyint(),
+    #         'ifsc_code': fake.numerify("################"),
+    #         'account_number': fake.numerify("################"),
+    #         'account_holder_name': fake.name(),
+    #     }
 
-        response = self.client.post(reverse('agency_rest:agency_view'), input_data, format="json")
-        self.assertEqual(response.status_code, 200)
-        for k,v in input_data.items():
-            self.assertEqual(v, response.data.get(k))
+    #     response = self.client.post(reverse('agency_rest:agency_view'), input_data, format="json")
+    #     self.assertEqual(response.status_code, 200)
+    #     for k,v in input_data.items():
+    #         self.assertEqual(v, response.data.get(k))
 

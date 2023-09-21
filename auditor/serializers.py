@@ -223,7 +223,7 @@ class BankInfoSerializer(ModelSerializer):
             'user_id',
             'is_valid',
             'is_pan_card_valid',
-            'is_ifsc_code_valid',
+          #  'is_ifsc_code_valid',
             'is_complete',
         )
         read_only_fields = ('id', 'user_id')

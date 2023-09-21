@@ -114,11 +114,6 @@ class MpOrderView(APIView):
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }
-    def extract_data(self,file):
-        file_name = file.file_name
-        file_size = file.file_size
-        mime_type = file.file_type
-        return file_name, file_size, mime_type
     
     def get(self,request):
         if request.user.id:

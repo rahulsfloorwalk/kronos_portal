@@ -265,8 +265,12 @@ class AuditCycleViewByManager(APIView):
 class AuditAlignmentFactors(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
+        'GET':[GROUP_NAME_MANAGER],
         'POST': [GROUP_NAME_MANAGER],
     }
+    def get(self,request,audit_cycle_id,format=None):
+        audit_alignment_factors = audit_cycle_service.get_audit_alignment_factor_by_audit_cycle(audit_cycle_id)
+        return Response(audit_alignment_factors)
     def post(self, request, audit_cycle_id, format=None):
         audit_cycles = audit_cycle_service.set_audit_alignment_factor_by_audit_cycle(audit_cycle_id, request.data)
         return Response(AuditCycleSerializer(audit_cycles).data)

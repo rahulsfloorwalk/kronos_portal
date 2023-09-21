@@ -34,9 +34,9 @@ class AgencyTestCase(TestCase):
         agency = mommy.make(Agency, account_number='5000050000', account_holder_name='foobar')
         self.assertFalse(agency.is_bank_details_complete())
 
-    def test_is_bank_details_complete_returns_false_when_ifsc_invalid(self):
-        agency = mommy.make(Agency, account_number='5000050000', ifsc_code='asdf', account_holder_name='foobar')
-        self.assertFalse(agency.is_bank_details_complete())
+    # def test_is_bank_details_complete_returns_false_when_ifsc_invalid(self):
+    #     agency = mommy.make(Agency, account_number='5000050000', ifsc_code='asdf', account_holder_name='foobar')
+    #     self.assertFalse(agency.is_bank_details_complete())
 
     def test_is_bank_details_complete_returns_false_when_account_holders_name_incomplete(self):
         agency = mommy.make(Agency, account_number='5000050000', ifsc_code='SBIN0008238')

@@ -59,3 +59,47 @@ export function setAuditApplicationComment(application_id, comment){
 		contentType: "application/json"
 	});
 }
+export function notificationWhatsappSendForPincode(auditCycleId,auditId,channel_name="whatsapp"){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/opportunity_notification_for_pincode`,
+		method: "POST",
+		data: JSON.stringify({
+			auditId,
+			channel_name
+		}),
+		contentType: "application/json"
+	});
+}
+export function notificationEmailSendForPincode(auditCycleId,auditId,channel_name="email"){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/opportunity_notification_for_pincode`,
+		method: "POST",
+		data: JSON.stringify({
+			auditId,
+			channel_name
+		}),
+		contentType: "application/json"
+	});
+}
+export function notificationAllWhatsappSendForPincode(auditCycleId,channel_name="whatsapp",format="all"){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/opportunity_notification_for_pincode`,
+		method: "POST",
+		data: JSON.stringify({
+			channel_name,
+			format
+		}),
+		contentType: "application/json"
+	});
+}
+export function notificationAllEmailSendForPincode(auditCycleId,channel_name="email",format="all"){
+	return $.ajax({
+		url: url.api_base_path + `manager/audit_cycle/${auditCycleId}/opportunity_notification_for_pincode`,
+		method: "POST",
+		data: JSON.stringify({
+			channel_name,
+			format
+		}),
+		contentType: "application/json"
+	});
+}

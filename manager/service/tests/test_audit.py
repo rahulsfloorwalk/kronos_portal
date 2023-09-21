@@ -11,7 +11,7 @@ from registration.models import GROUP_NAME_AUDITOR, GROUP_NAME_MANAGER, GROUP_NA
 from auditor.models import ProfileInfo
 from agency.models import AgencyUser
 from manager.service.audit import fiat_assign
-
+from datetime import timedelta,date
 
 class FiatAssignTestCase(TestCase):
     fixtures = ['groups']
@@ -34,8 +34,9 @@ class FiatAssignTestCase(TestCase):
     def test_it_assigns_a_report_to_auditor(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
-        sample_date = date(2018, 9, 5)
-        reports = fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=7)
+        reports = fiat_assign(audit.id, self.auditor_user.email, today, 3000, 4000, 2, self.manager_user)
 
         for report in reports:
             expect(report.reimbursement).to(equal(3000))
@@ -45,8 +46,10 @@ class FiatAssignTestCase(TestCase):
     def test_it_assigns_a_report_to_agency(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
-        sample_date = date(2018, 9, 5)
-        reports = fiat_assign(audit.id, self.agency_user.email, sample_date, 3000, 4000, 2, self.manager_user)
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=7)
+        
+        reports = fiat_assign(audit.id, self.agency_user.email, tomorrow, 3000, 4000, 2, self.manager_user)
 
         for report in reports:
             expect(report.reimbursement).to(equal(3000))
@@ -63,9 +66,11 @@ class FiatAssignTestCase(TestCase):
     def test_that_it_raises_when_audit_cycle_is_archived(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ARCHIVED)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
-        sample_date = date(2018, 9, 5)
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=7)
+        
         with self.assertRaisesRegex(AppLogicError, "audit_cycle is archived"):
-            fiat_assign(audit.id, self.auditor_user.email, sample_date, 3000, 4000, 2, self.manager_user)
+            fiat_assign(audit.id, self.auditor_user.email, today, 3000, 4000, 2, self.manager_user)
 
     def test_that_it_raises_when_user_with_email_does_not_exist(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)

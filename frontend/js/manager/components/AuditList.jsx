@@ -12,7 +12,7 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { pointerStyle }  from "../../styles.js";
 
-import { Rook, Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsDown, File, EyeClose, EyeOpen, OptionVertical } from "../../components/Icons.jsx";
+import { Rook, Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsDown, File, EyeClose, EyeOpen, OptionVertical,Envelope,Phone } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 
@@ -24,7 +24,7 @@ import { AuditStoreTable } from "./AuditStoreList.jsx";
 
 import {fetchAudits, deleteAudit, hideAudit, unhideAudit} from "../actions/audit.js";
 
-import { rejectAllForAudit, rejectAllForAuditCycle } from "../service/application.js";
+import { rejectAllForAudit, rejectAllForAuditCycle,notificationEmailSendForPincode,notificationWhatsappSendForPincode ,notificationAllEmailSendForPincode,notificationAllWhatsappSendForPincode} from "../service/application.js";
 import { findAuditStoresByAudit } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 
@@ -136,7 +136,22 @@ export class __AuditRow extends Component{
 		e.stopPropagation();
 		this.props.dispatch(unhideAudit(this.props.audit.id)).then(() => Alert.success("AUDIT VISIBLE"));
 	};
-
+	sendEmailNotification=(auditCycleId,auditId)=>{
+		notificationEmailSendForPincode(auditCycleId, auditId).done(() => {
+			Alert.success("NOTIFICATION SCHEDULED");
+		}).fail((err)=>{
+			let error=err.responseJSON.non_field_errors;
+			Alert.error(error);
+		});
+	};
+	sendWhatsappNotification=(auditCycleId,auditId)=>{
+		notificationWhatsappSendForPincode(auditCycleId, auditId).done(() => {
+			Alert.success("NOTIFICATION SCHEDULED");
+		}).fail((err)=>{
+			let error=err.responseJSON.non_field_errors;
+			Alert.error(error);
+		});
+	};
 	render(){
 		let reportCount = this.props.audit.report_count;
 		let validReportCount = this.props.audit.valid_report_count;
@@ -206,6 +221,17 @@ export class __AuditRow extends Component{
 									<Link to={`/audit_cycle/${this.props.auditCycleId}/audit/${this.props.audit.id}/application/fiat`} title="Fiat Assign">
 										<HandRight/> Fiat Assign
 									</Link>
+								</li>
+								<li>
+									<a href="#" onClick={()=>this.sendEmailNotification(this.props.auditCycleId,this.props.audit.id)}>
+										<Envelope/> Email Notification
+									</a>
+								</li>
+								<li>
+									<a href="#" onClick={()=>this.sendWhatsappNotification(this.props.auditCycleId,this.props.audit.id)}>
+										<Phone/> Whatsapp Notification
+									</a>
+
 								</li>
 								{ this.props.audit.hidden ?
 									<li>
@@ -360,6 +386,23 @@ export class AuditList extends Component{
 		return 0;
 	};
 
+
+	sendAllEmailNotification=(auditCycleId)=>{
+		notificationAllEmailSendForPincode(auditCycleId).done(() => {
+			Alert.success("NOTIFICATION SCHEDULED");
+		}).fail((err)=>{
+			let error=err.responseJSON.non_field_errors;
+			Alert.error(error);
+		});
+	};
+	sendAllWhatsappNotification=(auditCycleId)=>{
+		notificationAllWhatsappSendForPincode(auditCycleId).done(() => {
+			Alert.success("NOTIFICATION SCHEDULED");
+		}).fail((err)=>{
+			let error=err.responseJSON.non_field_errors;
+			Alert.error(error);
+		});
+	};
 	rejectAllForAuditCycleClicked = () => {
 		if(confirm("Are you sure you want to deny all applications for this audit cycle?")){
 			rejectAllForAuditCycle(this.props.params.auditCycleId).done((count)=>{
@@ -447,7 +490,7 @@ export class AuditList extends Component{
 			<h3 className="page-header">
 				<div className="btn-group pull-right">
 					<Link to={addAuditLink} className="btn btn-default"> <Plus/> Add Audit </Link>
-					<button type="button" className="btn btn-default"
+					<button type="button" className="btn btn-default m-2"
 						onClick={(e)=>{e.stopPropagation(); this.auditDropDown && this.auditDropDown.toggle();}}>
 						<span className="caret"></span>
 					</button>
@@ -463,6 +506,8 @@ export class AuditList extends Component{
 							</a>
 						</li>
 					</DropDown>
+					<button type="button" className="btn btn-default m-2" onClick={()=>this.sendAllWhatsappNotification(this.props.params.auditCycleId)} >All Whatsapp Notification</button>
+					<button type="button" className="btn btn-default m-2" onClick={()=>this.sendAllEmailNotification(this.props.params.auditCycleId)}>All Email Notification</button>
 				</div>
 				<Inbox/> Audits
 			</h3>

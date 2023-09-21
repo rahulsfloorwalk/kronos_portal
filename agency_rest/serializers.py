@@ -33,7 +33,7 @@ class AgencySerializer(ModelSerializer):
             'account_number',
             'ifsc_code',
             'bank_name_from_ifsc',
-            'is_ifsc_code_valid',
+           # 'is_ifsc_code_valid',
         )
         read_only_fields = ('id',)
 

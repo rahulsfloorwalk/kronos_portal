@@ -50,6 +50,7 @@ def find_order_description_and_files_by_audit_cycle_id(audit_cycle_id):
     attachments_data = []
     thumbnail_url = attachment.extra()["thumbnail_url"]
     preview_url = attachment.extra()["preview_url"]
+    direct_url = attachment.direct_url()
     attachments_data.append({
         "id": attachment.id,
         "file_slug": attachment.file_slug,
@@ -66,9 +67,10 @@ def find_order_description_and_files_by_audit_cycle_id(audit_cycle_id):
         "audio_transcript_data": attachment.audio_transcript_data,
         "thumbnail_url": thumbnail_url,
         "preview_url": preview_url,
+        "direct_url": direct_url
     })
     result.append({
-        'description':order.describe,
+        'describe':order.describe,
         "attachments":attachments_data
     }) 
     return result
@@ -242,6 +244,16 @@ def set_system_cost(audit_cycle_id, system_cost):
 
     audit_cycle.system_cost = system_cost
     return save(audit_cycle)
+
+def get_audit_alignment_factor_by_audit_cycle(audit_cycle_id):
+    audit_cycle = find_by_id(audit_cycle_id)
+    if audit_cycle is None:
+        raise AppLogicError("Audit cycle not found")
+
+    alignment_factors = {}
+    for factor in audit_cycle.audit_alignment_factors:
+        alignment_factors[factor['key']] = factor['value']
+    return alignment_factors
 
 def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict) -> AuditCycle:
     audit_cycle = find_by_id(audit_cycle_id)

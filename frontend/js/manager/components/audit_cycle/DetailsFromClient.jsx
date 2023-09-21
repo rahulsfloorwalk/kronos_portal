@@ -13,7 +13,7 @@ class DetailsFromClient extends React.Component{
 	render(){
 		return (
 			<Modal modalTitle={"Details From Client"} onClose={hashHistory.goBack}>
-				<p>Arpan</p>
+				<p>Testing</p>
 			</Modal>
 		);
 	}

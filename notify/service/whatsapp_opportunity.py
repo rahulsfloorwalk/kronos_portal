@@ -10,7 +10,7 @@ from auditor.models import Preferences
 from manager.models import City
 from ..models import OpportunityWhatsappRecord
 
-from manager.service.opportunity_email import get_auditor_list_by_filter
+from manager.service.opportunity_email import get_auditor_list_by_filter,get_auditor_list_by_filter_for_pincode
 from notify.service.message import send_whatsapp_message
 from notify.service import opportunity_notification as opp_notification_service
 from registration.service.auditor import find_auditor_by_id
@@ -23,6 +23,56 @@ from celery.result import ResultSet
 
 _logger = logging.getLogger(__name__)
 
+@atomic
+def schedule_opportunity_whatsapp_for_audit_cycle_with_filters_for_pincode(audit_cycle_id: int, filters: dict):
+    from notify.service import opportunity_notification as opp_notification_service
+    audit_cycle = audit_cycle_service.find_by_id(audit_cycle_id)
+
+    if audit_cycle.status not in (AuditCycle.UPCOMING, AuditCycle.ACTIVE):
+        raise AppLogicError("audit cycle must be in UPCOMING or ACTIVE status to send opportunity email")
+    MAX_WHATSAPP_SENT_COUNT = int(settings.MAX_WHATSAPP_SENT_COUNT)
+    CHANNEL = 'whatsapp'
+    if filters.get('format'):
+        audit_pincode_and_city = audit_service.find_pincode_and_city_by_audit_cycle_id(audit_cycle_id)
+        if audit_pincode_and_city ==[]:
+            raise AppLogicError("Audits Are Not Available For Any City")
+        for i in audit_pincode_and_city:
+            filters['pincode'] = i.get('pincode')
+            filtered_users_in_city = get_auditor_list_by_filter_for_pincode(filters)
+            next_user_list = opp_notification_service.find_next_users_for_notification(i.get('city').id, audit_cycle_id, CHANNEL, filtered_users_in_city)
+            next_user_list = next_user_list[:MAX_WHATSAPP_SENT_COUNT]
+
+            if len(next_user_list) == 0:
+                continue
+            opp = OpportunityWhatsappRecord()
+            opp.city = i.get('city')
+            opp.audit_cycle = audit_cycle
+            opp.total_count = len(next_user_list)
+            opp.record_data = {
+                'user_list': next_user_list
+            }
+            opp.progress_count = 0
+            opp.save()
+            send_opportunity_whatsapp_message_for_record.delay(opp.id)
+    else:
+        city = City.objects.get(pk=filters.get('city'))
+        filtered_users_in_city = get_auditor_list_by_filter_for_pincode(filters)
+        next_user_list = opp_notification_service.find_next_users_for_notification(city.id, audit_cycle_id, CHANNEL, filtered_users_in_city)
+        next_user_list = next_user_list[:MAX_WHATSAPP_SENT_COUNT]
+        print(filtered_users_in_city)
+        if len(next_user_list) == 0:
+            raise AppLogicError("Auditors are not remaining in this city")
+
+        opp = OpportunityWhatsappRecord()
+        opp.city = city
+        opp.audit_cycle = audit_cycle
+        opp.total_count = len(next_user_list)
+        opp.record_data = {
+            'user_list': next_user_list
+        }
+        opp.progress_count = 0
+        opp.save()
+        send_opportunity_whatsapp_message_for_record.delay(opp.id)
 
 @atomic
 def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: int, filters: dict):
@@ -74,7 +124,7 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: i
         opp.progress_count = 0
         opp.save()
         send_opportunity_whatsapp_message_for_record.delay(opp.id)
-
+    return opp
 @shared_task(ignore_result=True)
 def send_opportunity_whatsapp_message_for_record(opportunity_record_id):
     try:

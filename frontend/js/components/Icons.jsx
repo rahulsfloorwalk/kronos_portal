@@ -70,6 +70,7 @@ export const LogOut	= () => <span className="glyphicon glyphicon-log-out"></span
 export const File	= () => <span className="glyphicon glyphicon-file"></span>;
 export const Envelope	= () => <span className="glyphicon glyphicon-envelope"></span>;
 export const Flag	= () => <span className="glyphicon glyphicon-flag"></span>;
+export const Phone	= () => <span className="glyphicon glyphicon-phone"></span>;
 export const ThumbsUp	= () => <span className="glyphicon glyphicon-thumbs-up"></span>;
 export const ThumbsDown = () => <span className="glyphicon glyphicon-thumbs-down"></span>;
 export const MenuRight	= () => <span className="glyphicon glyphicon-menu-right"></span>;
