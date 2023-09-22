@@ -91,7 +91,7 @@ class AllSolutionRow extends React.Component {
 					</button>
 					<button
 						onClick={() => this.props.toggleIsShow(this.props.solution)}
-						className={`btn btn-default`}
+						className={"btn btn-default"}
 						style={{marginLeft:"1rem",outline:"none"}}
 						title="market place visibility"
 					>

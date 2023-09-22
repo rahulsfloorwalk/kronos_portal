@@ -10,7 +10,7 @@ class ActiveCustomerRow extends React.Component{
 			last_name: PropTypes.string,
 			user: PropTypes.shape({
 				email: PropTypes.string,
-				is_verified: PropTypes.bool
+				is_active: PropTypes.bool
 			}),
 			mobile_number: PropTypes.string,
 		})
