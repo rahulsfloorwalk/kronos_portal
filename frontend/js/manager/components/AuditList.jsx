@@ -12,7 +12,7 @@ import { momentDateFormat }  from "../../../config.js";
 
 import { pointerStyle }  from "../../styles.js";
 
-import { Rook, Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsDown, File, EyeClose, EyeOpen, OptionVertical,Envelope,Phone } from "../../components/Icons.jsx";
+import { Rook, Duplicate, Cross, HandRight, Pencil, Plus, Inbox, ThumbsDown, File, EyeClose, EyeOpen, OptionVertical } from "../../components/Icons.jsx";
 import Loading from "../../components/Loading.jsx";
 import DropDown, { DropDownDivider } from "../../components/DropDown.jsx";
 
@@ -222,17 +222,17 @@ export class __AuditRow extends Component{
 										<HandRight/> Fiat Assign
 									</Link>
 								</li>
-								<li>
-									<a href="#" onClick={()=>this.sendEmailNotification(this.props.auditCycleId,this.props.audit.id)}>
+								{/* <li>
+									<a onClick={()=>this.sendEmailNotification(this.props.auditCycleId,this.props.audit.id)}>
 										<Envelope/> Email Notification
 									</a>
 								</li>
 								<li>
-									<a href="#" onClick={()=>this.sendWhatsappNotification(this.props.auditCycleId,this.props.audit.id)}>
+									<a onClick={()=>this.sendWhatsappNotification(this.props.auditCycleId,this.props.audit.id)}>
 										<Phone/> Whatsapp Notification
 									</a>
 
-								</li>
+								</li> */}
 								{ this.props.audit.hidden ?
 									<li>
 										<a style={pointerStyle} onClick={this.unhideAuditClicked}>
@@ -506,8 +506,8 @@ export class AuditList extends Component{
 							</a>
 						</li>
 					</DropDown>
-					<button type="button" className="btn btn-default m-2" onClick={()=>this.sendAllWhatsappNotification(this.props.params.auditCycleId)} >All Whatsapp Notification</button>
-					<button type="button" className="btn btn-default m-2" onClick={()=>this.sendAllEmailNotification(this.props.params.auditCycleId)}>All Email Notification</button>
+					{/* <button type="button" className="btn btn-default m-2" onClick={()=>this.sendAllWhatsappNotification(this.props.params.auditCycleId)} >All Whatsapp Notification</button>
+					<button type="button" className="btn btn-default m-2" onClick={()=>this.sendAllEmailNotification(this.props.params.auditCycleId)}>All Email Notification</button> */}
 				</div>
 				<Inbox/> Audits
 			</h3>
