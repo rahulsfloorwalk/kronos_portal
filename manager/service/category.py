@@ -31,23 +31,25 @@ def find_solution_details_by_category_id(category_id):
                 "thumbnail_url": thumbnail_url,
                 "preview_url": preview_url,
             })
-        solution_data.append({
-            'id':solution.id,
-            'name':solution.name,
-            'url_structure':solution.url_structure,
-            'price':solution.price,
-            'tax':{
-                'id':solution.tax.id,
-                'name':solution.tax.name,
-                'rate':solution.tax.rate
-            },
-            'overview':solution.overview,
-            'how_it_work':solution.how_it_work,
-            'execution_time':solution.execution_time,
-            'short_description':solution.short_description,
-            'is_active':solution.is_active,
-            'attachments':attachments_data  
-        })
+        if solution.is_show:
+            solution_data.append({
+                'id':solution.id,
+                'name':solution.name,
+                'url_structure':solution.url_structure,
+                'price':solution.price,
+                'tax':{
+                    'id':solution.tax.id,
+                    'name':solution.tax.name,
+                    'rate':solution.tax.rate
+                },
+                'overview':solution.overview,
+                'how_it_work':solution.how_it_work,
+                'execution_time':solution.execution_time,
+                'short_description':solution.short_description,
+                'is_active':solution.is_active,
+                'is_show':solution.is_show,
+                'attachments':attachments_data  
+            })
     result.append({
         "id": category.id,
         "name": category.name,

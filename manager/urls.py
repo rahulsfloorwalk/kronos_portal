@@ -79,6 +79,7 @@ urlpatterns = ([
     
     
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
+    url(r'solution_show_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusShowView.as_view(), name='solution_status_show_view'),  
     url(r'popular_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionPopularStatusIdView.as_view(), name='solution_popular_status_id_view'),
     
     
@@ -119,13 +120,14 @@ urlpatterns = ([
     url (r'cat/(?P<category_id>[0-9]+)/solution_details',solution_views.SolutionViewByCategoryIdView.as_view(),name='solution_view_by_category_id'),
     
     # For Loggedin User 
+    url(r'mp_order_list$',mp_order_views.MPOrderList.as_view(),name='mp_order_list_view'),
     # url(r'mp_order$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     # url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     # url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
     # url(r'store/(?P<user_id>[0-9]+)/mp$', store_views.StoreUserIdView.as_view(), name='store_user_id_view'),
 
-    url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
-    url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
+    # url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),
+    # url(r'order/complete$',mp_order_views.MpPaymentCompleteView.as_view(),name='mp_order_payment_complete_view'),
 
     # -----------------------------------------
   
@@ -196,7 +198,9 @@ urlpatterns = ([
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_sms$', opportunity_email_views.OpportunitySMSRecordView.as_view(), name='audit_cycle_opportunity_sms_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_whatsapp$', opportunity_email_views.OpportunityWhatsappRecordView.as_view(), name='audit_cycle_opportunity_whatsapp_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_notification$', opportunity_notification_views.OpportunityNotificationView.as_view(), name='audit_cycle_opportunity_notification_view'),
+    url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/opportunity_notification_for_pincode$', opportunity_notification_views.OpportunityNotificationForPincodeView.as_view(), name='audit_cycle_opportunity_notification_for_pincode_view'),
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/report_attribute$', report_attribute_views.ReportAttributeView.as_view(), name='report_attribute_by_audit_cycle_view'),
+    # url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/client_from_details$', audit_cycle_views.AuditCycleDetailsFromClientView.as_view(), name='audit_cycle_id_details_from_client_view'),
     url(r'audit_cycle/dashboard$', audit_cycle_views.AuditCycleDashboard.as_view(), name='audit_cycle_dashboard'),
 
     url(r'audit_cycle/(?P<audit_cycle_id>[0-9]+)/proof_tag', proof_tag_views.AuditCycleProofTag.as_view(), name='audit_cycle_proof_tag'),
@@ -251,7 +255,7 @@ urlpatterns = ([
     url(r'auditor$', auditor_views.AuditorView.as_view(), name='auditor_view'),
     url(r'auditor/summary$', auditor_views.AuditorSummaryView.as_view(), name='auditor_summary_view'),
     url(r'auditor/filter_count$', opportunity_email_views.AuditorCountByFilterView.as_view(), name='auditor_count_filter_view'),
-
+    # url(r'auditor/(?P<audit_cycle_id>[0-9]+)/all_filter_count$',opportunity_email_views.AuditorAllLocationCountByFilterView.as_view(), name='auditor_all_location_count_by_filter_view'),
     url(r'agency_user/city_id/(?P<city_id>[0-9]+)$', agency_user_views.AgencyUserByPresenceInCityIdView.as_view(), name='agency_user_by_presence_in_city_id_view'),
     url(r'agency_user/(?P<user_id>[0-9]+)$', agency_user_views.AgencyUserIdView.as_view(), name='agency_user_id_view'),
     url(r'agency_user$', agency_user_views.AgencyUserSearchView.as_view(), name='agency_user_search_view'),
@@ -310,7 +314,7 @@ urlpatterns = ([
     url(r'email_log/view/(?P<email_log_id>[0-9]+)/html$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),
     url(r'email_log/view/(?P<email_log_id>[0-9]+)$', email_log_views.EmailLogHTMLViewById.as_view(), name='email_log_view_by_id'),
     url(r'email_log/(?P<to_email>[0-9a-zA-Z_@\.]+)$', email_log_views.EmailLogByEmail.as_view(), name='email_log_by_email'),
-    url(r'twitter_feed/fetch', social_views.FetchTwitterFeedView.as_view(), name='fetch_twitter_feed_view'),
+    # url(r'twitter_feed/fetch', social_views.FetchTwitterFeedView.as_view(), name='fetch_twitter_feed_view'),
     url(r'config', config_views.ConfigView.as_view(), name='config_view'),
     url(r'questionnaire_type/(?P<questionnaire_type_id>[0-9]+)$', questionnaire_type_views.QuestionnaireTypeIdView.as_view(), name='questionnaire_type_id_view'),
     url(r'questionnaire_type$', questionnaire_type_views.QuestionnaireTypeView.as_view(), name='questionnaire_type_view'),

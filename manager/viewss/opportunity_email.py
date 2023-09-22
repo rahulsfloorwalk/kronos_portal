@@ -83,6 +83,9 @@ class AuditorCountByFilterView(APIView):
         count = opportunity_email_service.get_auditor_count_by_filter(request.data)
         return Response({'count': count})
 
+# class AuditorAllLocationCountByFilterView(APIView):
+#     permission_classes = [HasGroupPermission]
+    
 
 class OpportunitySMSRecordView(APIView):
     permission_classes = [HasGroupPermission]

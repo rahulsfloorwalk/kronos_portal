@@ -70,6 +70,9 @@ def find_bank_info_by_id(client_id):
 def find_all_clients():
     return Client.objects.all()
 
+def find_all_clients_if_true():
+    return Client.objects.filter(is_active=True)
+
 
 def save(client):
     client.save()

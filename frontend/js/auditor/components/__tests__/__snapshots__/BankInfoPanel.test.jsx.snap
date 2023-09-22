@@ -95,9 +95,7 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is loading 1`]
         </td>
         <th />
       </tr>
-      <tr
-        className=""
-      >
+      <tr>
         <td
           className="text-right text-muted"
         >
@@ -246,9 +244,7 @@ exports[`<BankInfoPanelBase/> is rendered correctly when BankInfo is successfull
           1234567890
         </th>
       </tr>
-      <tr
-        className="danger"
-      >
+      <tr>
         <td
           className="text-right text-muted"
         >

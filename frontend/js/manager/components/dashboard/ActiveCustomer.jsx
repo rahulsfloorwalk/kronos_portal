@@ -3,25 +3,18 @@ import PropTypes from "prop-types";
 import {findActiveCustomer} from "../../service/admin_dashboard.js";
 
 class ActiveCustomerRow extends React.Component{
-	static propTypes={
-		seq:PropTypes.number.isRequired,
-		profile:PropTypes.shape({
-			is_verified:PropTypes.bool,
-			profile_data: PropTypes.shape({
-				id:PropTypes.number,
-				first_name:PropTypes.string,
-				last_name:PropTypes.string,
-				mobile_number:PropTypes.string,
-				user: PropTypes.shape({
-					"id":PropTypes.number,
-					"email":PropTypes.string,
-					"is_active": PropTypes.bool
-				})
-			})
+	static propTypes = {
+		seq: PropTypes.number.isRequired,
+		profile: PropTypes.shape({
+			first_name: PropTypes.string,
+			last_name: PropTypes.string,
+			user: PropTypes.shape({
+				email: PropTypes.string,
+				is_active: PropTypes.bool
+			}),
+			mobile_number: PropTypes.string,
 		})
-
 	};
-
 	render (){
 		return(
 			<tr>
@@ -29,7 +22,7 @@ class ActiveCustomerRow extends React.Component{
 				<td>{this.props.profile.first_name && this.props.profile.first_name ? `${this.props.profile.first_name} ${this.props.profile.last_name}` : null} </td>
 				<td>{this.props.profile.user.email}</td>
 				<td>{this.props.profile.mobile_number}</td>
-				<td>{this.props.profile.user.is_verified ? "Verfied" : "Not Verfied"}</td>
+				<td>{this.props.profile.user.is_active ? "Verfied" : "Not Verfied"}</td>
 			</tr>
 		);
 	}

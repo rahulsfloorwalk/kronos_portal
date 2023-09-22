@@ -361,7 +361,7 @@ class BankInfo(Model, CompletableMixin):
         # "bank_name",
         "account_holder_name",
         "account_number",
-        "ifsc_code",
+        # "ifsc_code",
         "pan_number",
     ]
 
@@ -372,13 +372,13 @@ class BankInfo(Model, CompletableMixin):
             and self.account_number not in invalid_fields
 
     def is_valid(self):
-        return bool(validate_pan(self.pan_number)) and bool(validate_ifsc(self.ifsc_code))
+        return bool(validate_pan(self.pan_number)) # and bool(validate_ifsc(self.ifsc_code))
 
     def is_pan_card_valid(self):
         return bool(validate_pan(self.pan_number))
 
-    def is_ifsc_code_valid(self):
-        return bool(validate_ifsc(self.ifsc_code))
+    # def is_ifsc_code_valid(self):
+    #     return bool(validate_ifsc(self.ifsc_code))
 
     def bank_name_from_ifsc(self):
         return get_bank_name_from_ifsc(self.ifsc_code)

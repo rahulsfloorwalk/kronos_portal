@@ -1,5 +1,5 @@
 from django.http import HttpResponse
-
+from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
@@ -139,16 +139,24 @@ class StoreView(APIView):
         return Response(StoreSerializer(savedStore).data)
 
 
-class StoreClientViewGET(APIView):
+class StoreGetClientView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
     }
-    def get(self, request, client_id, format=None):
-        stores = store_service.find_stores_by_client(client_id)
-        return Response(StoreSerializer(stores, many=True).data)
+    def get(self, request, format=None):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        stores = store_service.find_stores_by_client(client.id)
+        return Response(StoreSerializer(stores, many=True).data)    
+
+def find_stores_by_client_and_store_id(store_id):
+    return Store.objects.filter(id=store_id).order_by('city__name').select_related('client','city')
     
-class StoreClientView(APIView):
+class StoreAddClientView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'POST': [GROUP_NAME_CLIENT]
@@ -159,11 +167,11 @@ class StoreClientView(APIView):
                 raise AppLogicError('The store already exist in the client.')
         store_ds = StoreDeSerializer(data=request.data)
         store_ds.is_valid(raise_exception=True)
-        store = store_ds.deserialize()
-        savedStore = store.save()
-        return Response(StoreSerializer(store).data)
+        saved_store = store_ds.save()
+        serializer = StoreSerializer(saved_store)
+        return Response(serializer.data)
 
-class StoreClientIdView(APIView):
+class StoreIdClientIdView(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
         'GET': [GROUP_NAME_CLIENT],
@@ -171,39 +179,35 @@ class StoreClientIdView(APIView):
         'DELETE': [GROUP_NAME_CLIENT]
     }
 
-    def get(self, request, client_id, store_id, format=None):
+    def get(self, request, store_id, format=None):
+        user = request.user
         try:
-            store = Store.objects.get(client=client_id, id=store_id)
-        except Store.DoesNotExist:
-            return Response({"error": "Unauthorized"})
-
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        store = Store.objects.get(client=client.id, id=store_id)
         return Response(StoreSerializer(store).data)
-
-    # def get(self, request, store_id,client_id, format=None):
-    #     user = User.objects.get(id=request.user.id)
-    #     client = Client.objects.get(name=user.email)
-    #     stores = store_service.find_stores_by_client(client.id)
-    #     store = store_service.find_store_by_id(store_id)
-    #     return Response(StoreSerializer(stores).data)
-
-    def post(self, request, client_id, store_id):
-        try :
-           store = Store.objects.get(client=client_id, id=store_id)
-        except Store.DoesNotExist:
-            return Response({"error": "Unauthorized"})
-
+    
+    def post(self, request, store_id):
+        user = request.user
+        try:
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        store = Store.objects.get(client=client.id, id=store_id)
         store_ds = StoreDeSerializer(data=request.data, context={'id':store_id})
         store_ds.is_valid(raise_exception=True)
         store = store_ds.deserialize()
         savedStore = store_service.save(store)
         return Response(StoreSerializer(savedStore).data)
 
-    def delete(self, request, client_id, store_id):
+    def delete(self, request, store_id):
+        user = request.user
         try:
-            store = Store.objects.get(client=client_id, id=store_id)
-        except Store.DoesNotExist:
-            return Response({"error": "Unauthorized"})
-
+            client = Client.objects.get(email=user.email)
+        except Client.DoesNotExist:
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
+        store = Store.objects.get(client=client.id, id=store_id)
         store_service.delete(store_id)
         return HttpResponse(status=204)
     
@@ -229,3 +233,5 @@ class StoreSampleXlsxView(APIView):
         response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
         response['Content-Disposition'] = 'attachment; filename="' + name + '"'
         return response
+
+

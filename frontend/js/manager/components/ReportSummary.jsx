@@ -54,7 +54,7 @@ class __ReportSummary extends Component {
 		if(this.props.editable){
 			return (
 				<div>
-					<h3 className="page-header"><Tasks/> Report Summary111</h3>
+					<h3 className="page-header"><Tasks/> Report Summary</h3>
 					<GrammarlyEditorPlugin clientId={ClientID}>
 						<textarea rows="5" className="form-control" value={this.state.reportSummary} onChange={this.summaryChanged} onBlur={this.onBlur}/>
 					</GrammarlyEditorPlugin>

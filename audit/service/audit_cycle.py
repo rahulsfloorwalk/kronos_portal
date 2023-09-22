@@ -7,8 +7,9 @@ from kronos.utils import validate_date_range_from_string
 
 from registration.service.moderator import find_moderator_by_user_id
 from client.service.client_user import find_clientuser_by_user_id
-
+from attachment.models import Attachment
 from ..models import AuditCycle
+from client.models import MPOrder
 from auditor.models import AuditApplication
 from audit_store.models import AuditStore
 from . import audit_cycle_proof_tag
@@ -40,6 +41,39 @@ def find_by_audit_type_for_clientuser(audit_type, user_id):
         return AuditCycle.objects.filter(client_id=user.clientuser.client_id, status__in=AuditCycle.LIVE_REPORTING_STATUSES, type=audit_type).order_by('-end_date')
     except AuditCycle.DoesNotExist as e:
         raise ObjectNotFound from e
+
+def find_order_description_and_files_by_audit_cycle_id(audit_cycle_id):
+    audit_cycle=find_by_id(audit_cycle_id)
+    result=[]
+    order= MPOrder.objects.get(id=audit_cycle.order.id)
+    attachment=Attachment.objects.get(orders__id=order.id,status=Attachment.ATTACHED)
+    attachments_data = []
+    thumbnail_url = attachment.extra()["thumbnail_url"]
+    preview_url = attachment.extra()["preview_url"]
+    direct_url = attachment.direct_url()
+    attachments_data.append({
+        "id": attachment.id,
+        "file_slug": attachment.file_slug,
+        "proof_type": attachment.proof_type,
+        "mime_type": attachment.mime_type,
+        "file_name": attachment.file_name,
+        "file_size": attachment.file_size,
+        "status": attachment.status,
+        "created_at": attachment.created_at,
+        "modified_at": attachment.modified_at,
+        "completed_at": attachment.completed_at,
+        "attachment_id": attachment.attachment_id,
+        "extra_properties": attachment.extra_properties,
+        "audio_transcript_data": attachment.audio_transcript_data,
+        "thumbnail_url": thumbnail_url,
+        "preview_url": preview_url,
+        "direct_url": direct_url
+    })
+    result.append({
+        'describe':order.describe,
+        "attachments":attachments_data
+    }) 
+    return result
 
 def get_audit_cycle_stats(audit_cycle):
     applications = []
@@ -210,6 +244,16 @@ def set_system_cost(audit_cycle_id, system_cost):
 
     audit_cycle.system_cost = system_cost
     return save(audit_cycle)
+
+def get_audit_alignment_factor_by_audit_cycle(audit_cycle_id):
+    audit_cycle = find_by_id(audit_cycle_id)
+    if audit_cycle is None:
+        raise AppLogicError("Audit cycle not found")
+
+    alignment_factors = {}
+    for factor in audit_cycle.audit_alignment_factors:
+        alignment_factors[factor['key']] = factor['value']
+    return alignment_factors
 
 def set_audit_alignment_factor_by_audit_cycle(audit_cycle_id: int, factors: dict) -> AuditCycle:
     audit_cycle = find_by_id(audit_cycle_id)

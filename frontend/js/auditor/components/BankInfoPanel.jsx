@@ -36,9 +36,7 @@ class BankInfoPanelBase extends React.Component{
 	render(){
 		let panelClass = this.props.bankInfo.is_complete ? "panel-success-hoverable" : "panel-default";
 		let panelIcon = this.props.bankInfo.is_complete ? <Check/> : <Warning/>;
-
 		if(this.props.bankInfo.is_complete){
-			// is valid?
 			panelClass = this.props.bankInfo.is_valid ? panelClass : "panel-danger";
 			panelIcon = this.props.bankInfo.is_valid ? panelIcon : <Warning/>;
 		}
@@ -59,10 +57,7 @@ class BankInfoPanelBase extends React.Component{
 							<tr><td className="text-right text-muted" style={{"width":"40%"}}>Bank Name:</td><th>{ this.props.bankInfo.bank_name_from_ifsc }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Holder Name:</td><th>{ this.props.bankInfo.account_holder_name }</th></tr>
 							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Account Number:</td><th>{ this.props.bankInfo.account_number }</th></tr>
-							<tr className={this.props.bankInfo.ifsc_code && !this.props.bankInfo.is_ifsc_code_valid ? "danger" : "" }>
-								<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>IFSC Code:</td>
-								<th>{ this.props.bankInfo.ifsc_code }</th>
-							</tr>
+							<tr><td className="text-right text-muted"><span className="text-danger"><b>*</b></span>IFSC Code:</td><th>{ this.props.bankInfo.ifsc_code }</th></tr>
 							<tr className={this.props.bankInfo.pan_number && !this.props.bankInfo.is_pan_card_valid ? "danger" : "" }>
 								<td className="text-right text-muted"><span className="text-danger"><b>*</b></span>Pan Number:</td>
 								<th>{ this.props.bankInfo.pan_number }</th>

@@ -22,6 +22,7 @@ class CategoryRow extends React.Component {
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.category_name.name}</td>
+				<td>{this.props.category_name.url_structure}</td>
 				<td>
 					<span style={{ marginRight: "2rem" }}>
 						<Link
@@ -92,6 +93,7 @@ export default class CategoryList extends React.Component {
 							<tr>
 								<th className="text-right">#</th>
 								<th>Category</th>
+								<th>URL Structure</th>
 								<th>Action</th>
 							</tr>
 						</thead>

@@ -110,9 +110,24 @@ urlpatterns = ([
     url(r'order_mp$',mp_order_views.MpOrderView.as_view(),name='mp_order_view'),
     url(r'mp_order/(?P<order_id>[0-9]+)$',mp_order_views.MpOrderIdView.as_view(),name='mp_order_id_view'),
     url(r'client_profile$',mp_client_profile.ClientProfileView.as_view(),name='client_profile_view'),
-    url(r'mp/store_mp$', store_views.StoreClientView.as_view(), name='store_client_view'),
-    url(r'mp/(?P<client_id>[0-9]+)/store_mp_get$', store_views.StoreClientViewGET.as_view(), name='store_client_view_get'),
-    url(r'mp/(?P<client_id>[0-9]+)/store_mp/(?P<store_id>[0-9]+)$', store_views.StoreClientIdView.as_view(), name='store_client_id_view'),
+    
+    url(r'mp/store_mp$', store_views.StoreAddClientView.as_view(), name='store_add_client_view'),
+    url(r'mp/store_mp_get$', store_views.StoreGetClientView.as_view(), name='store_get_client_view'),
+    url(r'mp/store_mp/(?P<store_id>[0-9]+)$', store_views.StoreIdClientIdView.as_view(), name='store_id_client_id_view'),
+    
+    url(r'mp/orderstatus$', mp_order_views.ClientOrderStatusDeatil.as_view(), name='client_order_detail'),
+    url(r'mp/amdminorderstatus$', mp_order_views.AdminOrderView.as_view(), name='admin_order_detail'),
+    url(r'mp/reports$', mp_order_views.OrderReportsView.as_view(), name='Order_reports_view'),
+    url(r'mp/reportlist/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.OrderReportListView.as_view(), name='Order_reportlist_view'),
+    url(r'mp/reportlistdetail/(?P<audit_cycle_id>[0-9]+)$', mp_order_views.MPOrderReportListDetailView.as_view(), name='Order_reportlistdetail_view'),
+    url(r'mp/invoice$', mp_order_views.OrderInvoicesView.as_view(), name='Order_invoices_view'),
+    url(r'mp/invoice/(?P<order_id>[0-9]+)$', mp_order_views.OrderInvoicesIdView.as_view(), name='Order_invoices_id_view'),
+
+    url(r'mp/audit_cycle/(?P<audit_cycle_id>[0-9]+)/audit$', mp_order_views.AuditByAuditCycle.as_view(), name='audit_by_audit_cycle_view'),
+    url(r'mp/audit/(?P<audit_id>[0-9]+)/audit_stores$', mp_order_views.AuditStoreByAuditClient.as_view(), name='audit_store_by_audit_id_view_client'),
+
+    url(r'mp/store/import/client_sample$', views.StoreSampleClientXlsxView.as_view(), name='sample_client_import_store_view'),
+    url(r'mp/(?P<client_id>[0-9]+)/store/import_list$', views.ImportClientStoreView.as_view(), name='import_client_store_view'),
 
 
     url(r'order/created$',mp_order_views.MpPaymentView.as_view(),name='mp_order_payment_view'),

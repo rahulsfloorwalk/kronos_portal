@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import HttpResponse
+from rest_framework.permissions import AllowAny
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +10,10 @@ from registration.models import GROUP_NAME_CLIENT
 
 from client.service import audit_cycle_aggregation as audit_cycle_aggregation_service
 from client.service import store as store_service
+from client.service import store_import_xlsx
+from manager.serializers import StoreSerializer, StoreImportDeSerializer
+from client.service.store_import_xlsx import find_sample_xlsx_for_store_insert, import_store_by_xlsx_sheet
+
 
 from audit_store import service as audit_store_service
 from audit_store import service_client as audit_store_client_service
@@ -825,3 +830,28 @@ class AuditFeedbackReportMail(APIView):
     def post(self, request):
         audit_store = audit_store_client_service.audit_feedback_report_mail(request.data['email_receiver_list'], request.data['audit_store_id'], request.data['audit_report'], request.user)
         return Response(AuditStoreSerializer(audit_store).data)
+    
+
+class StoreSampleClientXlsxView(APIView):
+    permission_classes = [AllowAny]
+    # permission_classes = [HasGroupPermission]
+
+    # required_groups = {
+    #     'GET': [GROUP_NAME_CLIENT]
+    # }
+    def get(self, request):
+        report, name = store_import_xlsx.find_sample_xlsx_for_store_insert()
+        response = HttpResponse(report.read(), content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="' + name + '"'
+        return response
+    
+class ImportClientStoreView(APIView):
+    permission_classes = [HasGroupPermission]
+    required_groups = {
+        'POST': [GROUP_NAME_CLIENT]
+    }
+    def post(self, request, client_id):
+        form = StoreImportDeSerializer(request.data, request.FILES)
+        if form.is_valid():
+            import_store_by_xlsx_sheet(client_id, request.FILES['file_uploaded'])
+        return Response(status=200)

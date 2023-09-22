@@ -76,13 +76,11 @@ export default class AgencyUserDetailsPanel extends React.Component{
 							<td className="text-right text-muted">GSTIN:</td>
 							<th>{ this.state.user.agencyuser.agency.gstin }</th>
 						</tr>
-						{ this.state.user.is_ifsc_code_valid ?
-							<tr>
-								<td className="text-right text-muted">Bank Name:</td>
-								<th>{ this.state.user.agencyuser.agency.bank_name_from_ifsc }</th>
-							</tr>
-							: null }
-						<tr className={this.state.user.is_ifsc_code_valid ? "" : "danger"}>
+						<tr>
+							<td className="text-right text-muted">Bank Name:</td>
+							<th>{ this.state.user.agencyuser.agency.bank_name_from_ifsc }</th>
+						</tr>
+						<tr>
 							<td className="text-right text-muted">IFSC Code:</td>
 							<th>{ this.state.user.agencyuser.agency.ifsc_code }</th>
 						</tr>

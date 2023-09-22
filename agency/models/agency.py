@@ -25,8 +25,8 @@ class Agency(Model):
     account_number = CharField(db_column='account_number', max_length=20, blank=True)
     ifsc_code = CharField(db_column='ifsc_code', max_length=20, blank=True)
 
-    def is_ifsc_code_valid(self):
-        return bool(validate_ifsc(self.ifsc_code))
+    # def is_ifsc_code_valid(self):
+    #     return bool(validate_ifsc(self.ifsc_code))
 
     def bank_name_from_ifsc(self):
         return get_bank_name_from_ifsc(self.ifsc_code)
@@ -37,7 +37,7 @@ class Agency(Model):
     def is_bank_details_complete(self):
         incomplete_fields = [None, '']
         account_number_valid = self.account_number not in incomplete_fields
-        ifsc_valid = self.ifsc_code not in incomplete_fields and self.is_ifsc_code_valid()
+        ifsc_valid = self.ifsc_code not in incomplete_fields 
         bank_holder_name_valid = self.account_holder_name not in incomplete_fields
         return account_number_valid and ifsc_valid and bank_holder_name_valid
 

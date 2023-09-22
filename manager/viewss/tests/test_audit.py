@@ -8,7 +8,7 @@ from expects import expect, equal, have_key
 from model_mommy import mommy
 
 from faker import Faker
-
+from datetime import date, timedelta
 from .utils import ManagerAPITestCase
 from audit.models import AuditCycle, Audit
 from registration.models import GROUP_NAME_AGENCY
@@ -29,10 +29,11 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
     def test_post_assigns_a_new_report_to_an_auditor(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
-        sample_date = date(2018, 9, 5)
-
+        # sample_date = date(2018, 9, 5)
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=7)
         post_data = {
-            "audit_date": sample_date.strftime("%Y-%m-%d"),
+            "audit_date": today.strftime("%Y-%m-%d"),
             "earnings_per_audit": 3000,
             "reimbursement": 4000,
             "email": self.create_auditor().email,
@@ -45,7 +46,7 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
 
         expect(responses.status_code).to(equal(200))
         for response in responses.data:
-            expect(response).to(have_key("audit_date", post_data["audit_date"]))
+            expect(response).to(have_key("audit_date", today.strftime("%Y-%m-%d") ))
             expect(response).to(have_key("earnings_per_audit", 3000))
             expect(response).to(have_key("reimbursement", 4000))
             expect(response["user"]).to(have_key("email", post_data["email"]))
@@ -53,10 +54,12 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
     def test_post_assigns_a_new_report_to_an_agency(self):
         audit_cycle = mommy.make(AuditCycle, start_date=date(2018, 9, 1), end_date=date(2018, 9, 30), status=AuditCycle.ACTIVE)
         audit = mommy.make(Audit, audit_cycle=audit_cycle)
-        sample_date = date(2018, 9, 5)
-
+        # sample_date = date(2018, 9, 5)
+        today = date.today()
+        tomorrow = date.today() + timedelta(days=7)
+        
         post_data = {
-            "audit_date": sample_date.strftime("%Y-%m-%d"),
+            "audit_date": tomorrow.strftime("%Y-%m-%d"),
             "earnings_per_audit": 3000,
             "reimbursement": 4000,
             "email": self.agency_user.email,
@@ -69,7 +72,7 @@ class AuditFiatAssignViewTestCase(ManagerAPITestCase):
 
         expect(responses.status_code).to(equal(200))
         for response in responses.data:
-            expect(response).to(have_key("audit_date", post_data["audit_date"]))
+            expect(response).to(have_key("audit_date", tomorrow.strftime("%Y-%m-%d")))
             expect(response).to(have_key("earnings_per_audit", 3000))
             expect(response).to(have_key("reimbursement", 4000))
             expect(response["user"]).to(have_key("email", post_data["email"]))

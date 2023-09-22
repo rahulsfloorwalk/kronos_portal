@@ -6,7 +6,7 @@ import Alert from "react-s-alert";
 import Select from "react-select";
 
 import { fetchStates, fetchCities } from "../service/location.js";
-import { findAuditorCountOpportunityEmail, saveOpportunityEmailRecord } from "../service/opportunity_email.js";
+import { findAuditorCountOpportunityEmail, saveOpportunityEmailRecord, fetchAuditAlignmentFactors } from "../service/opportunity_email.js";
 
 import { getInputEventChangeValue } from "../../react_utils.js";
 import SaveButton from "../../components/SaveButton.jsx";
@@ -16,9 +16,8 @@ import Loading from "../../components/Loading.jsx";
 
 import { __StateSelector } from "../../components/StateSelector.jsx";
 import { __CitySelector } from "../../components/CitySelector.jsx";
-import FormSelect from "../../components/FormSelect.jsx";
-import { getAuditorRating, getEducationStatus, getIncomeText, getIndustry, getInterestArea, getOccupation, getCarCost } from "../../utils.js";
-import { AuditorRatings, EducationList, IndustryList, InterestAreaList, OccupationList, CarCostList } from "../../constants.js";
+import { getAuditorRating, getEducationStatus, getIncomeText, getIndustry, getInterestArea, getOccupation, getCarCost, getGender } from "../../utils.js";
+import { AuditorRatings, EducationList, IndustryList, InterestAreaList, OccupationList, CarCostList, GenderList, IncomeList } from "../../constants.js";
 
 export default class OpportunityEmailRecordForm extends React.Component {
 	static propTypes = {
@@ -31,36 +30,47 @@ export default class OpportunityEmailRecordForm extends React.Component {
 		errors: {},
 		form: {
 			channel_name: "",
-			auditor_age_range:"",
 		},
 		cities: [],
 		states: {},
+		audit_alignment_factors: {},
 		loading: false,
+		filter_count_list:[],
 		filter_count: "",
 		filter_error: "",
 	};
 
 	componentDidMount() {
-		fetchStates().done((states)=>this.setState({states}));
+		fetchStates().done((states) => this.setState({ states }));
+		fetchAuditAlignmentFactors(this.props.params.auditCycleId).done((audit_alignment_factors) => this.setState({ audit_alignment_factors }));
+
 	}
 	setSubmitting = (submitting) => this.setState((prevState) => Object.assign({}, prevState, { submitting }));
 
 	inputChanged = (e) => {
 		let change = getInputEventChangeValue(e);
-		this.setState((prevState) => {
-			return Object.assign({}, prevState, {
-				form: Object.assign({}, prevState.form, change),
+		if (e.target.name === "auditor_age_range") {
+			this.setState((prevState) => {
+				return Object.assign({}, prevState, {
+					audit_alignment_factors: Object.assign({}, prevState.audit_alignment_factors, change),
+				});
 			});
-		});
+		} else {
+			this.setState((prevState) => {
+				return Object.assign({}, prevState, {
+					form: Object.assign({}, prevState.form, change),
+				});
+			});
+		}
 	};
 
 	selectHandleChange = (selected_value, field_name) => {
-		let selected_list = selected_value.map(val=>val.value);
+		let selected_list = selected_value.map(val => val.value);
 		this.setState((prevState) => {
 			return Object.assign({}, prevState, {
 				form: Object.assign({}, prevState.form, {
 					[field_name]: selected_list,
-					[field_name + "_list"]:selected_value
+					[field_name + "_list"]: selected_value
 				}),
 			});
 		});
@@ -68,21 +78,21 @@ export default class OpportunityEmailRecordForm extends React.Component {
 
 	stateChanged = (e) => {
 		this.inputChanged(e);
-		fetchCities(e.target.value).done((cities)=>this.setState({cities}));
+		fetchCities(e.target.value).done((cities) => this.setState({ cities }));
 	};
 
-	getFilterData = () =>{
+	getFilterData = () => {
 		return {
 			city: this.state.form.city,
-			gender: this.state.form.gender,
-			education: this.state.form.education,
-			occupation: this.state.form.occupation,
+			gender: this.state.form.gender || this.state.audit_alignment_factors.gender,
+			education: this.state.form.education || this.state.audit_alignment_factors.education,
+			occupation: this.state.form.occupation || this.state.audit_alignment_factors.occupation,
 			industry: this.state.form.industry,
-			income: this.state.form.income,
-			interest_area: this.state.form.interest_area,
-			auditor_rating: this.state.form.auditor_rating,
-			car:this.state.form.car,
-			auditor_age_range:this.state.form.auditor_age_range,
+			income: this.state.form.income || this.state.audit_alignment_factors.income,
+			interest_area: this.state.form.interest_area || this.state.audit_alignment_factors.interest_area,
+			auditor_rating: this.state.form.auditor_rating || this.state.audit_alignment_factors.auditor_rating,
+			car_cost: this.state.form.car_cost || this.state.audit_alignment_factors.car_cost,
+			auditor_age_range: this.state.form.auditor_age_range || this.state.audit_alignment_factors.auditor_age_range,
 			channel_name: this.state.form.channel_name,
 		};
 	};
@@ -116,7 +126,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			return false;
 		}
 		this.setSubmitting(true);
-		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+		if(this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false){
 			this.setSubmitting(false);
 			alert("Please enter valid auditor age range");
 			return false;
@@ -139,57 +149,80 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			});
 		}
 	};
-	onCheckCount = () =>{
-		if(this.state.form.channel_name == ""){
+	// onCheckAllCount=()=>{
+
+	// 	if (this.state.form.channel_name == "") {
+	// 		alert("Please select at least one channel");
+	// 		return false;
+	// 	}
+	// 	if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
+	// 		alert("Please enter valid auditor age range");
+	// 		return false;
+	// 	}
+	// 	this.setSubmitting(true);
+	// 	if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
+	// 		this.setSubmitting(false);
+	// 		alert("Please enter valid auditor age range");
+	// 		return false;
+	// 	}
+	// 	if (this.state.form.city == undefined || this.state.form.city == "") {
+	// 		this.setSubmitting(false);
+	// 		this.setState({ filter_error: "Please select a city", filter_count: "" });
+	// 	}
+	// 	else {
+	// 		this.setSubmitting(false);
+	// 		this.setState({ filter_error: "", loading: true });
+	// 		let filters = this.getFilterData();
+	// 		findAuditorCountOpportunityEmailForAllLocation(filters,this.props.params.auditCycleId).then((res)=>{
+	// 			this.setState({filter_count_list:res.data})
+	// 		}).always(()=>{
+	// 			this.setState({loading:false})
+	// 		})
+	// 	}
+	// };
+	onCheckCount = () => {
+		if (this.state.form.channel_name == "") {
 			alert("Please select at least one channel");
 			return false;
 		}
-		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+		if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
 			alert("Please enter valid auditor age range");
 			return false;
 		}
 		this.setSubmitting(true);
-		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+		if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
 			this.setSubmitting(false);
 			alert("Please enter valid auditor age range");
 			return false;
 		}
-		if(this.state.form.city == undefined || this.state.form.city == ""){
+		if (this.state.form.city == undefined || this.state.form.city == "") {
 			this.setSubmitting(false);
-			this.setState({filter_error:"Please select a city", filter_count: ""});
+			this.setState({ filter_error: "Please select a city", filter_count: "" });
 		}
-		else{
+		else {
 			this.setSubmitting(false);
-			this.setState({filter_error:"", loading:true});
+			this.setState({ filter_error: "", loading: true });
 			let filters = this.getFilterData();
-			findAuditorCountOpportunityEmail(filters).then((res)=>{
-				if(res.count == 0){
-					this.setState({filter_error:"Auditors not found for this filter"});
+			findAuditorCountOpportunityEmail(filters).then((res) => {
+				if (res.count == 0) {
+					this.setState({ filter_error: "Auditors not found for this filter" });
 				}
-				this.setState({filter_count: res.count});
-			}).always(() =>
-			{
-				this.setState({loading:false});
+				this.setState({ filter_count: res.count });
+			}).always(() => {
+				this.setState({ loading: false });
 			}
 			);
 		}
 	};
 
 	onSubmit = (e) => {
+
 		e.preventDefault();
-		// if(this.state.form.channel_name){
-		// 	if(this.state.form.channel_name == "sms" || this.state.form.channel_name == "whatsapp"){
-		// 		if(this.state.filter_count > 20){
-		// 			alert("Auditor limit is reached for SMS or Whatsapp");
-		// 			return false;
-		// 		}
-		// 	}
-		// }
-		if(this.state.form.channel_name == ""){
+		if (this.state.form.channel_name == "") {
 			alert("Please select at least one channel");
 			return false;
 		}
-		if(this.isAgeRangeValid(this.state.form.auditor_age_range) == false){
+		if (this.isAgeRangeValid(this.state.form.auditor_age_range) == false) {
 			alert("Please enter valid auditor age range");
 			return false;
 		}
@@ -205,31 +238,43 @@ export default class OpportunityEmailRecordForm extends React.Component {
 	};
 
 	render() {
-		if( ! (this.state.states)){
+		if(!(this.state.states)){
 			return <Loading/>;
 		}
-
+		const genderOptions = [];
+		const incomeOptions = [];
 		const interest_area_options = [];
 		const industry_options = [];
 		const occupation_options = [];
 		const education_options = [];
 		const auditor_rating_options = [];
 		const car_options = [];
-		for(let option of InterestAreaList){
+		for (let option of InterestAreaList) {
 			interest_area_options.push({
 				label: getInterestArea(option),
 				value: option
 			});
 		}
+		for (let option of GenderList) {
+			genderOptions.push({
+				label: getGender(option),
+				value: option
+			});
+		}
 
-		for(let option of OccupationList){
+		for (let option of OccupationList) {
 			occupation_options.push({
 				label: getOccupation(option),
 				value: option
 			});
 		}
-
-		for(let option of EducationList){
+		for (let option of IncomeList) {
+			incomeOptions.push({
+				label: getIncomeText(option),
+				value: option
+			});
+		}
+		for (let option of EducationList) {
 			education_options.push({
 				label: getEducationStatus(option),
 				value: option
@@ -249,137 +294,218 @@ export default class OpportunityEmailRecordForm extends React.Component {
 				value: option
 			});
 		}
-		for (let option of CarCostList){
+		for (let option of CarCostList) {
 			car_options.push({
-				label:getCarCost(option),
-				value:option
+				label: getCarCost(option),
+				value: option
 			});
 		}
 		return (
 			<Modal size="modal-lg" modalTitle="Schedule Opportunity Notifications" onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
-					<FormErrorList errors={this.state.errors.non_field_errors}/>
+					<FormErrorList errors={this.state.errors.non_field_errors} />
 					{this.state.filter_error ? <p className="text-danger"><b>{this.state.filter_error}</b></p> : null}
-					<div className="row" style={{marginBottom:"2rem"}}>
+					<div className="row" style={{ marginBottom: "2rem" }}>
 						<div className="col-sm-3">
-							<__StateSelector states={this.state.states} value={this.state.form.state} onChange={this.stateChanged}/>
+							<__StateSelector states={this.state.states} value={this.state.form.state} onChange={this.stateChanged} />
 						</div>
 						<div className="col-sm-3">
-							<__CitySelector use='all' cities={this.state.cities} value={this.state.form.city} onChange={this.inputChanged}/>
+							<__CitySelector use='all' cities={this.state.cities} value={this.state.form.city} onChange={this.inputChanged} />
 						</div>
 						<div className="col-sm-3">
-							<FormSelect label="Gender" name="gender" value={this.state.form.gender} onChange={this.inputChanged}>
-								<option value=""></option>
-								<option value="M">Male</option>
-								<option value="F">Female</option>
-								<option value="N">Trans person</option>
-								<option value="N">Non-binary</option>
-							</FormSelect>
+							<label>Gender</label>
+							<Select
+								name="gender"
+								value={
+									this.state.form.gender
+										?
+										genderOptions.filter(obj => this.state.form.gender.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.gender
+											?
+											genderOptions.filter(obj => this.state.audit_alignment_factors.gender.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "gender")}
+								options={genderOptions}
+								isMulti={true} />
 						</div>
 						<div className="col-sm-3">
 							<label>Education</label>
 							<Select
 								name="education"
-								value={this.state.form.education ? education_options.filter(obj => this.state.form.education.includes(obj.value) === true) : null}
-								onChange={(e)=>this.selectHandleChange(e, "education")}
+								value={
+									this.state.form.education
+										?
+										education_options.filter(obj => this.state.form.education.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.education
+											?
+											education_options.filter(obj => this.state.audit_alignment_factors.education.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "education")}
 								options={education_options}
-								isMulti={true}/>
-							<br/>
+								isMulti={true} />
+							<br />
 						</div>
 						<div className="col-sm-3">
 							<label>Occupation</label>
 							<Select
 								name="occupation"
-								value={this.state.form.occupation ? occupation_options.filter(obj => this.state.form.occupation.includes(obj.value) === true) : null}
-								onChange={(e)=>this.selectHandleChange(e, "occupation")}
+								value={
+									this.state.form.occupation
+										?
+										occupation_options.filter(obj => this.state.form.occupation.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.occupation
+											?
+											occupation_options.filter(obj => this.state.audit_alignment_factors.occupation.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "occupation")}
 								options={occupation_options}
-								isMulti={true}/>
+								isMulti={true} />
 						</div>
 						<div className="col-sm-3">
 							<label>Industry</label>
 							<Select
 								name="industry"
 								value={this.state.form.industry ? industry_options.filter(obj => this.state.form.industry.includes(obj.value) === true) : null}
-								onChange={(e)=>this.selectHandleChange(e, "industry")}
+								onChange={(e) => this.selectHandleChange(e, "industry")}
 								options={industry_options}
-								isMulti={true}/>
+								isMulti={true} />
 						</div>
 						<div className="col-sm-3">
-							<FormSelect label="Income" value={this.state.form.income} name="income" onChange={this.inputChanged}>
-								<option value=""></option>
-								<option value="0">{getIncomeText("0")}</option>
-								<option value="1">{getIncomeText("1")}</option>
-								<option value="2">{getIncomeText("2")}</option>
-								<option value="3">{getIncomeText("3")}</option>
-								<option value="4">{getIncomeText("4")}</option>
-								<option value="5">{getIncomeText("5")}</option>
-							</FormSelect>
+							<label>Income</label>
+							<Select
+								name="income"
+								value={
+									this.state.form.income
+										?
+										incomeOptions.filter(obj => this.state.form.income.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.income
+											?
+											incomeOptions.filter(obj => this.state.audit_alignment_factors.income.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "income")}
+								options={incomeOptions}
+								isMulti={true} />
 						</div>
 						<div className="col-sm-3">
 							<label>Interest area</label>
 							<Select
 								name="interest_area"
-								value={this.state.form.interest_area ? interest_area_options.filter(obj => this.state.form.interest_area.includes(obj.value) === true) : null}
-								onChange={(e)=>this.selectHandleChange(e, "interest_area")}
+								value={
+									this.state.form.interest_area
+										?
+										interest_area_options.filter(obj => this.state.form.interest_area.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.interest_area
+											?
+											interest_area_options.filter(obj => this.state.audit_alignment_factors.interest_area.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "interest_area")}
 								options={interest_area_options}
-								isMulti={true}/>
-							<br/>
+								isMulti={true} />
+							<br />
 						</div>
 						<div className="col-sm-3">
 							<label>Auditor rating</label>
 							<Select
 								name="auditor_rating"
-								value={this.state.form.auditor_rating ? auditor_rating_options.filter(obj => this.state.form.auditor_rating.includes(obj.value) === true) : null}
-								onChange={(e)=>this.selectHandleChange(e, "auditor_rating")}
+								value={
+									this.state.form.auditor_rating
+										?
+										auditor_rating_options.filter(obj => this.state.form.auditor_rating.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.auditor_rating
+											?
+											auditor_rating_options.filter(obj => this.state.audit_alignment_factors.auditor_rating.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "auditor_rating")}
 								options={auditor_rating_options}
-								isMulti={true}/>
-							<br/>
+								isMulti={true} />
+							<br />
 						</div>
 						<div className="col-sm-3">
 							<label>Auditor Age Range</label>
-							<input type="text" className="form-control" name="auditor_age_range" placeholder="Example: 20-50" value={this.state.form.auditor_age_range} onChange={this.inputChanged}/>
+							<input type="text" className="form-control" name="auditor_age_range" placeholder="Example: 20-50"
+								value={this.state.audit_alignment_factors.auditor_age_range ? this.state.audit_alignment_factors.auditor_age_range : this.state.form.auditor_age_range}
+								onChange={this.inputChanged} />
 						</div>
 						<div className="col-sm-3">
 							<label>Car Cost</label>
 							<Select
-								name="car"
-								value={this.state.form.car ? car_options.filter(obj => this.state.form.car.includes(obj.value)===true):null}
-								onChange={(e)=>this.selectHandleChange(e, "car")}
+								name="car_cost"
+								value={
+									this.state.form.car_cost
+										?
+										car_options.filter(obj => this.state.form.car_cost.includes(obj.value) === true)
+										:
+										this.state.audit_alignment_factors.car_cost
+											?
+											car_options.filter(obj => this.state.audit_alignment_factors.car_cost.includes(obj.value) === true)
+											:
+											null
+								}
+								onChange={(e) => this.selectHandleChange(e, "car_cost")}
 								options={car_options}
-								isMulti={true}/>
+								isMulti={true} />
 						</div>
 					</div>
 					<div>
 						<p><b>Select Channel</b></p>
 						<label>
-							<input type="radio" name="channel_name" value="email" defaultChecked={false} onChange={this.inputChanged}/>
+							<input type="radio" name="channel_name" value="email" defaultChecked={false} onChange={this.inputChanged} />
 							&nbsp;&nbsp;Email
 						</label>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<label>
-							<input type="radio" name="channel_name" value="sms" defaultChecked={false} onChange={this.inputChanged}/>
+							<input type="radio" name="channel_name" value="sms" defaultChecked={false} onChange={this.inputChanged} />
 							&nbsp;&nbsp;SMS
 						</label>
 						&nbsp;&nbsp;&nbsp;&nbsp;
 						<label>
-							<input type="radio" name="channel_name" value="whatsapp" defaultChecked={false} onChange={this.inputChanged}/>
+							<input type="radio" name="channel_name" value="whatsapp" defaultChecked={false} onChange={this.inputChanged} />
 							&nbsp;&nbsp;Whatsapp
 						</label>
-						<br/><br/>
+						<br /><br />
 						<p><b>Note: </b></p>
 						<ul>
-							<li>Email notification limit is 200 people at a time.</li>
-							<li>SMS notification limit is 50 people at a time.</li>
-							<li>Whatsapp notification limit is 50 people at a time.</li>
+							<li>Email notification limit is 20 people at a time.</li>
+							<li>SMS notification limit is 10 people at a time.</li>
+							<li>Whatsapp notification limit is 20 people at a time.</li>
 						</ul>
-						<br/>
+						<br />
 					</div>
 					<div className="row text-center">
-						{this.state.loading ? <Loading/> : this.state.form.city==11132323 ?  <button className="btn btn-success" onClick={this.onSendInvitation}>Send Invitation</button> : this.state.loading ? <Loading/> : <button type="button" className="btn btn-primary" onClick={this.onCheckCount}>Check auditors</button>}
+						{this.state.loading ? <Loading /> : this.state.form.city == 11132323
+							?
+							<button className="btn btn-primary">Check Auditors For All Locations</button>
+							:
+							this.state.loading
+								?
+								<Loading />
+								:
+								<button type="button" className="btn btn-primary" onClick={this.onCheckCount}>Check auditors</button>
+						}
+						{/* onClick={this.onCheckAllCount} */}
+						{/* <button className="btn btn-success" onClick={this.onSendInvitation}>Send Invitation</button>  */}
 					</div>
 
 					{!this.state.loading && this.state.filter_count != "" ? <p><b>{this.state.filter_count} auditor{this.state.filter_count > 1 ? "s" : null} found for this filter</b></p> : null}
-					{!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send notification"/> : null}
+					{!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send Notification" /> : null}
 				</form>
 			</Modal>
 		);

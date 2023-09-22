@@ -14,8 +14,12 @@ from registration.service import auditor as auditor_service
 from auditor.models import AuditApplication
 from audit.service import audit_cycle as audit_cycle_service
 
-
-
+def find_pincode_and_city_by_audit_cycle_id(audit_cycle_id):
+    audit_list = Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related('store')
+    pincode_and_city = []
+    for i in audit_list:
+        pincode_and_city.append({'city':i.store.city,'pincode':i.get_pincode_audit()})
+    return pincode_and_city
 def find_audit_city_by_audit_cycle_id(audit_cycle_id):
     a=list(Audit.objects.filter(audit_cycle_id=audit_cycle_id).prefetch_related('store',
         'store__client',
@@ -173,7 +177,9 @@ def find_audits_around_city(city_id:int, kms:int=None):
 def find_applied_audits_by_auditor_id(user_id):
     auditor = auditor_service.find_auditor_by_id(user_id)
     applied_audits = AuditApplication.objects.filter(
-        profileinfo_id=auditor.profileinfo.id,status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED))
+        profileinfo_id=auditor.profileinfo.id,
+        status__in=(AuditApplication.APPLIED,AuditApplication.REJECTED,AuditApplication.WAITLISTED,AuditApplication.WAITLISTED,AuditApplication.APPROVED),
+        audit__audit_cycle__status=AuditCycle.ACTIVE)
     return applied_audits
     
 def find_audits_for_auditor(user_id, kms):

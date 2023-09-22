@@ -2,7 +2,7 @@
 from kronos.exceptions import AppLogicError
 from registration.models import GROUP_NAME_CLIENT
 from manager.models import MPSolution
-from client.models import MPOrder
+from client.models import MPOrder,MPCategory
 from django.contrib.auth.models import User
 from kronos.exceptions import ObjectNotFound
 from attachment import service as attachment_service
@@ -119,7 +119,7 @@ def alignment_factor(order_id:int, factors:dict) -> MPOrder:
         
         {
             'key': 'auditor_age_range',
-            'value': factors.get('age_range', ''),
+            'value': factors.get('auditor_age_range', ''),
             'type': 'func'
         },
         {
@@ -162,6 +162,11 @@ def update_order(data,order):
         if not solution:
             raise AppLogicError("Solution is Not Available")
         order.solution = solution
+    if data.get('category'):
+        category= MPCategory.objects.get(id=data['category'])
+        if not category:
+            raise AppLogicError("category is Not Available")
+        order.category = category
     if data.get('no_of_response'):
         order.no_of_response = data.get('no_of_response')
     if data.get('describe'):
@@ -183,18 +188,21 @@ def add_order(data,user_id):
         solution= MPSolution.objects.get(id=data['solution'])
     except MPSolution.DoesNotExist as e:
         raise ObjectNotFound from e
+    try:
+        category= MPCategory.objects.get(id=data['category'])
+    except MPCategory.DoesNotExist as e:
+        raise ObjectNotFound from e
     
     sum=0
     if data.get('store'):
         for i in data.get('store'):
             sum+=i['count']
-        if sum!=data.get('no_of_response'):
-            raise AppLogicError("No of Response and All Store Count is not Equal")
     user=User.objects.get(id=user_id)
     order= MPOrder()
     order.no_of_response=data.get('no_of_response')
     order.describe=data.get('describe')
     order.solution = solution
+    order.category = category
     order.status=data.get('status')
     order.user=user
     

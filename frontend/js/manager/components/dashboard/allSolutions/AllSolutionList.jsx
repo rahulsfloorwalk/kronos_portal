@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router";
-import { Plus, Pencil, Cross, Paperclip,Star } from "../../../../components/Icons.jsx";
-import { findSolutions, deleteSolution, updateSolutionIsActive,updateSolutionIsPopular } from "../../../service/admin_dashboard.js";
+import { Plus, Pencil, Cross, Paperclip,Star, Ok, Remove } from "../../../../components/Icons.jsx";
+import { findSolutions, deleteSolution, updateSolutionIsActive,updateSolutionIsPopular,updateSolutionIsShow } from "../../../service/admin_dashboard.js";
 import Alert from "react-s-alert";
 
 const FieldErrors = PropTypes.arrayOf(PropTypes.string);
@@ -20,6 +20,7 @@ class AllSolutionRow extends React.Component {
 			short_description: PropTypes.string,
 			is_active: PropTypes.bool,
 			is_popular: PropTypes.bool,
+			is_show:PropTypes.bool,
 			categories: PropTypes.arrayOf(
 				PropTypes.shape({
 					value: PropTypes.number,
@@ -32,6 +33,7 @@ class AllSolutionRow extends React.Component {
 		onDelete: PropTypes.func.isRequired,
 		toggleIsActive: PropTypes.func.isRequired,
 		toggleIsPopular: PropTypes.func.isRequired,
+		toggleIsShow: PropTypes.func.isRequired,
 		errors: PropTypes.shape({
 			non_field_errors: PropTypes.arrayOf(PropTypes.string),
 			category: FieldErrors,
@@ -45,6 +47,7 @@ class AllSolutionRow extends React.Component {
 			<tr>
 				<td className="text-right">{this.props.seq}</td>
 				<td>{this.props.solution.name}</td>
+				<td>{this.props.solution.url_structure}</td>
 				<td>{categoryNames}</td>
 				<td>{this.props.solution.price}</td>
 				<td>
@@ -85,6 +88,14 @@ class AllSolutionRow extends React.Component {
 						title="Popular"
 					>
 						<Star/>
+					</button>
+					<button
+						onClick={() => this.props.toggleIsShow(this.props.solution)}
+						className={"btn btn-default"}
+						style={{marginLeft:"1rem",outline:"none"}}
+						title="market place visibility"
+					>
+						{this.props.solution.is_show ? <Ok/> : <Remove/>}
 					</button>
 				</td>
 			</tr>
@@ -161,6 +172,23 @@ export default class AllSolutionList extends React.Component {
 				Alert.error("Failed to " + (isPopularValue ? "Star" : "Unstar") + " Solution");
 			});
 	};
+	toggleIsShow=(solution)=>{
+		const isShowValue = !solution.is_show;
+		const updatedSolution = { ...solution, is_show: isShowValue };
+		const updatedSolutions = this.state.solutions.map((c) =>
+			c.id === solution.id ? updatedSolution : c
+		);
+		this.setState({
+			solutions: updatedSolutions,
+		});
+		updateSolutionIsShow(solution.id, updatedSolution)
+			.then(() => {
+				Alert.success("Solution is now " + (isShowValue ? "Live" : "Remove From Live"));
+			})
+			.catch(() => {
+				Alert.error("Failed to " + (isShowValue ? "Live" : "Remove From Live") + " Solution");
+			});
+	};
 	render() {
 		const activeSolutions = this.state.solutions.filter(
 			(solution) => solution.is_active
@@ -174,13 +202,14 @@ export default class AllSolutionList extends React.Component {
 				onDelete={this.onDelete}
 				toggleIsActive={this.toggleIsActive}
 				toggleIsPopular={this.toggleIsPopular}
+				toggleIsShow={this.toggleIsShow}
 			/>
 		));
 
 		return (
 			<div className="panel panel-default table-responsive">
 				<h3 style={{ padding: "2rem", borderBottom: "1px solid #eee" }}>
-Solution Table
+					Solution Table
 					<Link
 						to="/admindashboard/solution/add"
 						className="btn btn-default pull-right"
@@ -195,6 +224,7 @@ Solution Table
 							<tr>
 								<th className="text-right">#</th>
 								<th>Solution Name</th>
+								<th>URL Structure</th>
 								<th>Category</th>
 								<th>Price</th>
 								<th>Action</th>

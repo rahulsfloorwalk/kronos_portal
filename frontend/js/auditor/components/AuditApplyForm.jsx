@@ -17,6 +17,9 @@ import Modal from "../../components/Modal.jsx";
 
 import { auditPropType } from "../prop_types";
 
+const dateObj=new Date();
+const startDate=dateObj.setDate(dateObj.getDate() - 1);
+const endDate = dateObj.setDate(dateObj.getDate() + 8);
 class AuditApplyForm extends React.Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
@@ -60,19 +63,19 @@ class AuditApplyForm extends React.Component {
 	};
 
 	isValidDate = (currentDate) => {
-		let dateObj=new Date();
-		let startDate=dateObj.setDate(dateObj.getDate() - 1);
-		let endDate = moment(this.props.audit.audit_cycle.end_date);
 		return currentDate.isBetween(startDate, endDate, null, "[]"); //inclusive
 	};
 
 	render() {
+		const sDate= new Date();
+		const eDate = new Date(sDate);
+		eDate.setDate(sDate.getDate() + 7);
 		return (
 			<Modal modalTitle={`Apply for Audit at ${this.props.audit.store.city.name}`} onClose={hashHistory.goBack}>
 				<form onSubmit={this.onSubmit}>
 					<FormErrorList errors={this.props.errors.non_field_errors}/>
 					<p className="text-center">
-						<big>{ moment(this.props.audit.audit_cycle.start_date).format(momentDateFormat) }</big> to <big>{ moment(this.props.audit.audit_cycle.end_date).format(momentDateFormat) }</big>
+						<big>{ moment(sDate).format(momentDateFormat) }</big> to <big>{ moment(eDate).format(momentDateFormat) }</big>
 					</p>
 					<style dangerouslySetInnerHTML={{__html:".rdtPicker{ margin-left:auto; margin-right:auto; }"}}/>
 					<Datetime style={{marginLeft:"auto",marginRight:"auto"}}

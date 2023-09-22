@@ -12,7 +12,7 @@ from kronos.exceptions import AppLogicError
 class ClientProfileSerializer(ModelSerializer):
     class Meta:
         model = MPClientProfileInfo
-        fields=('id','company_name','first_name','last_name','mobile_number','user_id')
+        fields=('id','company_name','first_name','last_name','mobile_number','user_id','gst','address')
         read_only_fields = fields
 
 class ClientProfileDeSerializer(ModelSerializer):
@@ -24,7 +24,9 @@ class ClientProfileDeSerializer(ModelSerializer):
             'last_name',
             'mobile_number',
             'company_name',
-            'user_id'
+            'user_id',
+            'gst',
+            'address',
         )
         read_only_fields=('id','user_id')
     
@@ -39,6 +41,8 @@ class ClientProfileDeSerializer(ModelSerializer):
         profile_info.first_name = self.validated_data.get('first_name', profile_info.first_name)
         profile_info.last_name = self.validated_data.get('last_name', profile_info.last_name)
         profile_info.mobile_number = self.validated_data.get('mobile_number', profile_info.mobile_number)
+        profile_info.gst = self.validated_data.get('gst', profile_info.gst)
+        profile_info.address = self.validated_data.get('address', profile_info.address)
         
         return profile_info
     
@@ -49,11 +53,15 @@ class ClientProfileView(APIView):
     'POST': [GROUP_NAME_CLIENT]
     }
     def get(self,request,format=None):
+        user_email = request.user.email
         client_profile = MPClientProfileInfo.objects.get(user_id=request.user.id)
-        return Response(ClientProfileSerializer(client_profile).data)
+        client_profile_data = ClientProfileSerializer(client_profile).data
+        client_profile_data['email'] = user_email
+        return Response(client_profile_data)
     def post(self,request):
         profile_info_ds = ClientProfileDeSerializer(data=request.data, context={'current_user': request.user.id})
         profile_info_ds.is_valid(raise_exception=True)
         profile_info = profile_info_ds.deserialize()
         profile_info.save()
         return Response(ClientProfileSerializer(profile_info).data)
+        
