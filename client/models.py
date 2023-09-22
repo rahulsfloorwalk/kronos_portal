@@ -408,6 +408,7 @@ class MPClientProfileInfo(Model):
     mobile_number = CharField(db_column='mobile_number', max_length=15, blank=False)
     company_name = CharField(db_column='company_name', max_length=15, blank=False)
     gst = CharField(db_column='gst', max_length=150, blank=True,default='')
+    address = CharField(db_column='address', max_length=150, blank=True,default='')
 
     def __str__(self):
         return "ClientProfileInfo: {} {}".format(self.id, self.first_name)
@@ -446,9 +447,18 @@ class MPOrder(Model):
     razorpay_signature = CharField(max_length=100, blank=True, null=True)
     price = IntegerField(db_column='price',default=0,blank=True,null=True)
     category = ForeignKey(MPCategory, related_name='mporders', db_column='category_id', on_delete=PROTECT,blank=False)
+    created_at = DateTimeField(db_column="created_at", null=True, blank=True)
+    modified_at = DateTimeField(db_column="modified_at", null=True, blank=True)
 
     def __str__(self):
         return 'MPOrder({}): Solution{} '.format(self.id, self.solution)
+    
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created_at = timezone.now()
+        self.modified_at = timezone.now()
+        return super(MPOrder, self).save(*args, **kwargs)
 
     # class Meta: 
     #     permissions = (

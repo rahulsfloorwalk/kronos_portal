@@ -12,7 +12,7 @@ from kronos.exceptions import AppLogicError
 class ClientProfileSerializer(ModelSerializer):
     class Meta:
         model = MPClientProfileInfo
-        fields=('id','company_name','first_name','last_name','mobile_number','user_id','gst')
+        fields=('id','company_name','first_name','last_name','mobile_number','user_id','gst','address')
         read_only_fields = fields
 
 class ClientProfileDeSerializer(ModelSerializer):
@@ -25,7 +25,8 @@ class ClientProfileDeSerializer(ModelSerializer):
             'mobile_number',
             'company_name',
             'user_id',
-            'gst'
+            'gst',
+            'address',
         )
         read_only_fields=('id','user_id')
     
@@ -41,6 +42,7 @@ class ClientProfileDeSerializer(ModelSerializer):
         profile_info.last_name = self.validated_data.get('last_name', profile_info.last_name)
         profile_info.mobile_number = self.validated_data.get('mobile_number', profile_info.mobile_number)
         profile_info.gst = self.validated_data.get('gst', profile_info.gst)
+        profile_info.address = self.validated_data.get('address', profile_info.address)
         
         return profile_info
     

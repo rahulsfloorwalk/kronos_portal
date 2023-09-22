@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from client.models import MPOrder,Transaction,MPClientProfileInfo,Client
+from client.models import MPOrder,Transaction,MPClientProfileInfo,Client,MPCategory
 from django.db.transaction import atomic
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
@@ -69,7 +69,7 @@ class OrderSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','no_of_response','solution','user','status','category')
+        fields=('id','no_of_response','solution','user','status','category','created_at','modified_at')
 
 class AdminOrderSerializer(ModelSerializer):
     user_email = serializers.CharField(source='user.email')
@@ -77,7 +77,7 @@ class AdminOrderSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','user_email','no_of_response','solution','user','status','category')
+        fields=('id','user_email','no_of_response','solution','user','status','category','created_at','modified_at')
        
 class AdminOrderView(APIView):
     permission_classes=[HasGroupPermission]
@@ -177,8 +177,17 @@ class MpPaymentView(APIView):
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }
+
+    def extract_data(self,file):
+        file_name = file.file_name
+        file_size = file.file_size
+        mime_type = file.file_type
+        return file_name, file_size, mime_type
+    
     def post(self,request):
         order_id = request.data.get('mp_order_id')
+        attachments = request.FILES.get('file') 
+
         client = razorpay.Client(auth=('rzp_test_5ws7pWCryHQLI3', 'WHigTD04Xt2JsFPSpgbrj8My'))
         order = get_object_or_404(MPOrder, id=order_id)
 
@@ -194,8 +203,37 @@ class MpPaymentView(APIView):
         )
 
         order.razorpay_payment_id = response['id']
-        order.save()
+        try:
+            solution= MPSolution.objects.get(id=request.data['solution'])
+        except MPSolution.DoesNotExist as e:
+            raise ObjectNotFound from e
+        try:
+            category= MPCategory.objects.get(id=request.data['category'])
+        except MPCategory.DoesNotExist as e:
+            raise ObjectNotFound from e
+        
+        sum=0
+        if request.data.get('store'):
+            for i in request.data.get('store'):
+                sum+=i['count']
+        order.no_of_response=request.data.get('no_of_response')
+        order.describe=request.data.get('describe')
+        order.solution = solution
+        order.category = category
+        order.status=request.data.get('status')
+        solution_price = int(solution.price)
+        no_of_response = int(request.data.get('no_of_response'))
 
+        order.price = solution_price * no_of_response 
+    
+        store=[]
+        if request.data.get('store'):
+            for i in request.data['store']:
+                store.append(i)
+            order.store=store
+        order.save()
+        if attachments:
+            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_id,request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
         return JsonResponse(response)
     
 class MpPaymentCompleteView(APIView):
@@ -204,20 +242,24 @@ class MpPaymentCompleteView(APIView):
         'GET':[GROUP_NAME_CLIENT],
         'POST':[GROUP_NAME_CLIENT]
     }
+
+    def extract_data(self,file):
+        file_name = file.file_name
+        file_size = file.file_size
+        mime_type = file.file_type
+        return file_name, file_size, mime_type
    
     def post(self,request):
         razor_order_id = request.data.get('order_id')
         payment_id = request.data.get('payment_id')
         signature = request.data.get('signature')
         order_id = request.data.get('mp_order_id')  
-        # attechment = request.data.get('attechment')
 
         try:
             order = MPOrder.objects.get(id=order_id)            
             if order.status == MPOrder.DRAFT:
                 order.razorpay_payment_id = payment_id
                 order.razorpay_signature = signature
-                # order.attachments = attechment
                 if payment_is_successful(payment_id, signature):
                     order.status = MPOrder.ACTIVE
                     order.payment_status = MPOrder.PAYMENT_SUCCESS
@@ -270,6 +312,7 @@ class MpPaymentCompleteView(APIView):
         
         return JsonResponse({'status': 'success'})   
 
+
 def payment_is_successful(payment_id, signature):    
     if payment_id and signature:
         return True
@@ -298,17 +341,29 @@ def add_proof_tag_list(proof_tag_id,audit_cycle):
     audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
     audit_cycle_proof_tag_obj.save()
 
+def get_last_audit_cycle_number(client):
+    last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
+
+    if last_audit_cycle:
+        my_list = last_audit_cycle.name.split(' ')
+        
+        if my_list[-1].startswith('(') and my_list[-1].endswith(')'):
+            my_list[-1] = my_list[-1][1:-1]
+        last_number = my_list[3]
+        return last_number
+    else:
+        return 0   
+    
 def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
-        # orderss = MPOrder.objects.get(id=order_id)
+        last_audit_cycle_number = get_last_audit_cycle_number(client)
+        new_audit_cycle_number = int(last_audit_cycle_number) + 1
+
         solution_name = solution_details.solution.name
         formatted_date = datetime.now().strftime('%b %Y')
         result = "{} {}".format(solution_name,formatted_date)
         # base_name = f"{(solution_details.solution.name)} {current_date.strftime('%b %Y')}"
-        name = result
-        counter = 1
-        while AuditCycle.objects.filter(name=name).exists():
-            name = "{} ({})".format(result,counter)
-            counter += 1
+
+        name = "{} ({})".format(result, new_audit_cycle_number)
 
         start_date = transaction.payment_success_date.date()
         end_date = start_date + timedelta(days=10)
@@ -485,6 +540,7 @@ class OrderReportsView(APIView):
             if status_value == 'DRAFT':
                 mp_order = MPOrder.objects.filter(user=request.user, status=status_value)
                 if mp_order:
+                    mp_order = mp_order.order_by('-id')[:3] 
                     mp_order_data = []
                     for mp_order in mp_order:            
                         mp_order_data.append({
@@ -591,6 +647,7 @@ class StoreDeSerializer(ModelSerializer):
         fields = (
             'id',
             'name',
+            'address',
             'pincode',
             'city',
         )
@@ -609,7 +666,7 @@ class MPOrderSerializer(ModelSerializer):
     class Meta:
         model=MPOrder
         # exclude = ('attachments',) 
-        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store','attachments_data')
+        fields=('id','solution','category','category_name','user','price','no_of_response','describe','status','alignment_factors','store','attachments_data','created_at','modified_at')
     def get_attachments_data(self, obj):
         attachments = obj.attachments.all()
         attachments_data = []
@@ -633,7 +690,7 @@ class MPOrderRepotsSerializer(ModelSerializer):
     solution = SolutionSerializer()
     class Meta:
         model=MPOrder
-        fields=('id','solution','user','price','no_of_response','describe','status',)
+        fields=('id','solution','user','price','no_of_response','describe','status','created_at','modified_at')
     
 class CustomAuditCycleSerializer(ModelSerializer):
     questionnaire_type = QuestionnaireTypeSerializer()
@@ -876,42 +933,26 @@ class AuditStoreSerializerWithoutAudit(ModelSerializer):
 class MPOrderList(APIView):
     permission_classes = [HasGroupPermission]
     required_groups = {
-        'GET' : [GROUP_NAME_CLIENT]
+        'GET': [GROUP_NAME_CLIENT]
     }
-    def get(self,request):
+
+    def get(self, request):
         user = request.user
         try:
             client = Client.objects.get(email=user.email)
         except Client.DoesNotExist:
-            return JsonResponse({'error':'Client not found for this user.'},status=404)
-        
-        status_param = request.query_params.get('status')
-        default_status = ['COMPLETE', 'ACTIVE','DRAFT']
+            return JsonResponse({'error': 'Client not found for this user.'}, status=404)
 
-        mp_order_data = []
-        if status_param:
-            status_mapping = {
-                'DRAFT' : 'DRAFT',
-                'COMPLETE' : 'COMPLETE',
-                'ACTIVE' : 'ACTIVE',
-            }
-            status_value = status_mapping.get(status_param)
-            if status_value:
-                mp_order = MPOrder.objects.filter(user=request.user, status=status_value)
-                if mp_order:
-                    for mp_order_item in mp_order:
-                        mp_order_data.append({'mp_order': MPOrderSerializer(mp_order_item).data})
-                    return Response({'mp_order_data': mp_order_data})
-                else:
-                    return Response({'message': f'No {status_value} status MPOrder found for this client.'})
-            else:
-                return Response({'message': 'Invalid status parameter.'})
-        
-        mp_order = MPOrder.objects.filter(user=request.user, status__in=default_status)
-        if mp_order:
-            for mp_order_item in mp_order:
-                mp_order_data.append({'mp_order': MPOrderSerializer(mp_order_item).data})
-            return Response({'mp_order_data': mp_order_data})
+        valid_statuses = ['DRAFT', 'COMPLETE', 'ACTIVE']
+        status = request.query_params.get('status')
+        if status == 'ALL':
+            mp_order = MPOrder.objects.filter(user=request.user, status__in=valid_statuses)
+        elif status and status in valid_statuses:
+            mp_order = MPOrder.objects.filter(user=request.user, status=status)
         else:
-            return Response({'message': 'No Order found for this client.'})
+            return Response({'message': 'Invalid status parameter. Valid values are DRAFT, COMPLETE, ACTIVE, or ALL.'}, status=400)
+
+        mp_order_data = [{'mp_order': MPOrderSerializer(mp_order_item).data} for mp_order_item in mp_order]
+        return Response({'mp_order_data': mp_order_data})
+
  
