@@ -24,7 +24,7 @@ import { AuditStoreTable } from "./AuditStoreList.jsx";
 
 import {fetchAudits, deleteAudit, hideAudit, unhideAudit} from "../actions/audit.js";
 
-import { rejectAllForAudit, rejectAllForAuditCycle,notificationEmailSendForPincode,notificationWhatsappSendForPincode ,notificationAllEmailSendForPincode,notificationAllWhatsappSendForPincode} from "../service/application.js";
+import { rejectAllForAudit, rejectAllForAuditCycle } from "../service/application.js";
 import { findAuditStoresByAudit } from "../service/audit_store.js";
 import { findModerators } from "../service/moderator.js";
 
@@ -136,22 +136,22 @@ export class __AuditRow extends Component{
 		e.stopPropagation();
 		this.props.dispatch(unhideAudit(this.props.audit.id)).then(() => Alert.success("AUDIT VISIBLE"));
 	};
-	sendEmailNotification=(auditCycleId,auditId)=>{
-		notificationEmailSendForPincode(auditCycleId, auditId).done(() => {
-			Alert.success("NOTIFICATION SCHEDULED");
-		}).fail((err)=>{
-			let error=err.responseJSON.non_field_errors;
-			Alert.error(error);
-		});
-	};
-	sendWhatsappNotification=(auditCycleId,auditId)=>{
-		notificationWhatsappSendForPincode(auditCycleId, auditId).done(() => {
-			Alert.success("NOTIFICATION SCHEDULED");
-		}).fail((err)=>{
-			let error=err.responseJSON.non_field_errors;
-			Alert.error(error);
-		});
-	};
+	// sendEmailNotification=(auditCycleId,auditId)=>{
+	// 	notificationEmailSendForPincode(auditCycleId, auditId).done(() => {
+	// 		Alert.success("NOTIFICATION SCHEDULED");
+	// 	}).fail((err)=>{
+	// 		let error=err.responseJSON.non_field_errors;
+	// 		Alert.error(error);
+	// 	});
+	// };
+	// sendWhatsappNotification=(auditCycleId,auditId)=>{
+	// 	notificationWhatsappSendForPincode(auditCycleId, auditId).done(() => {
+	// 		Alert.success("NOTIFICATION SCHEDULED");
+	// 	}).fail((err)=>{
+	// 		let error=err.responseJSON.non_field_errors;
+	// 		Alert.error(error);
+	// 	});
+	// };
 	render(){
 		let reportCount = this.props.audit.report_count;
 		let validReportCount = this.props.audit.valid_report_count;
@@ -387,22 +387,22 @@ export class AuditList extends Component{
 	};
 
 
-	sendAllEmailNotification=(auditCycleId)=>{
-		notificationAllEmailSendForPincode(auditCycleId).done(() => {
-			Alert.success("NOTIFICATION SCHEDULED");
-		}).fail((err)=>{
-			let error=err.responseJSON.non_field_errors;
-			Alert.error(error);
-		});
-	};
-	sendAllWhatsappNotification=(auditCycleId)=>{
-		notificationAllWhatsappSendForPincode(auditCycleId).done(() => {
-			Alert.success("NOTIFICATION SCHEDULED");
-		}).fail((err)=>{
-			let error=err.responseJSON.non_field_errors;
-			Alert.error(error);
-		});
-	};
+	// sendAllEmailNotification=(auditCycleId)=>{
+	// 	notificationAllEmailSendForPincode(auditCycleId).done(() => {
+	// 		Alert.success("NOTIFICATION SCHEDULED");
+	// 	}).fail((err)=>{
+	// 		let error=err.responseJSON.non_field_errors;
+	// 		Alert.error(error);
+	// 	});
+	// };
+	// sendAllWhatsappNotification=(auditCycleId)=>{
+	// 	notificationAllWhatsappSendForPincode(auditCycleId).done(() => {
+	// 		Alert.success("NOTIFICATION SCHEDULED");
+	// 	}).fail((err)=>{
+	// 		let error=err.responseJSON.non_field_errors;
+	// 		Alert.error(error);
+	// 	});
+	// };
 	rejectAllForAuditCycleClicked = () => {
 		if(confirm("Are you sure you want to deny all applications for this audit cycle?")){
 			rejectAllForAuditCycle(this.props.params.auditCycleId).done((count)=>{
