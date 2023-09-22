@@ -172,148 +172,150 @@ class MpOrderStatusView(APIView):
         return Response(OrderSerializer(order,many=True).data)
 
 class MpPaymentView(APIView):
-    permission_classes=[HasGroupPermission]
-    required_groups={
-        'GET':[GROUP_NAME_CLIENT],
-        'POST':[GROUP_NAME_CLIENT]
-    }
+    pass
+    # permission_classes=[HasGroupPermission]
+    # required_groups={
+    #     'GET':[GROUP_NAME_CLIENT],
+    #     'POST':[GROUP_NAME_CLIENT]
+    # }
 
-    def extract_data(self,file):
-        file_name = file.file_name
-        file_size = file.file_size
-        mime_type = file.file_type
-        return file_name, file_size, mime_type
+    # def extract_data(self,file):
+    #     file_name = file.file_name
+    #     file_size = file.file_size
+    #     mime_type = file.file_type
+    #     return file_name, file_size, mime_type
     
-    def post(self,request):
-        order_id = request.data.get('mp_order_id')
-        attachments = request.FILES.get('file') 
+    # def post(self,request):
+    #     order_id = request.data.get('mp_order_id')
+    #     attachments = request.FILES.get('file') 
 
-        client = razorpay.Client(auth=('rzp_test_5ws7pWCryHQLI3', 'WHigTD04Xt2JsFPSpgbrj8My'))
-        order = get_object_or_404(MPOrder, id=order_id)
+    #     client = razorpay.Client(auth=('rzp_test_5ws7pWCryHQLI3', 'WHigTD04Xt2JsFPSpgbrj8My'))
+    #     order = get_object_or_404(MPOrder, id=order_id)
 
-        tax_rate = order.solution.tax.rate
-        tax_amount = (tax_rate/100)*order.price
-        order_amount = int((order.price + tax_amount) *100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
-        order_currency = 'INR'
-        order_id=order.id
-        order_receipt = 'order_receipt_{}'.format(order_id)
-        notes = {'note_key': 'note_value'}
-        response = client.order.create(
-            {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
-        )
+    #     tax_rate = order.solution.tax.rate
+    #     tax_amount = (tax_rate/100)*order.price
+    #     order_amount = int((order.price + tax_amount) *100)  # Amount in paise (e.g., 1000 paise = Rs. 10)
+    #     order_currency = 'INR'
+    #     order_id=order.id
+    #     order_receipt = 'order_receipt_{}'.format(order_id)
+    #     notes = {'note_key': 'note_value'}
+    #     response = client.order.create(
+    #         {'amount': order_amount, 'currency': order_currency, 'receipt': order_receipt, 'notes': notes}
+    #     )
 
-        order.razorpay_payment_id = response['id']
-        try:
-            solution= MPSolution.objects.get(id=request.data['solution'])
-        except MPSolution.DoesNotExist as e:
-            raise ObjectNotFound from e
-        try:
-            category= MPCategory.objects.get(id=request.data['category'])
-        except MPCategory.DoesNotExist as e:
-            raise ObjectNotFound from e
+    #     order.razorpay_payment_id = response['id']
+    #     try:
+    #         solution= MPSolution.objects.get(id=request.data['solution'])
+    #     except MPSolution.DoesNotExist as e:
+    #         raise ObjectNotFound from e
+    #     try:
+    #         category= MPCategory.objects.get(id=request.data['category'])
+    #     except MPCategory.DoesNotExist as e:
+    #         raise ObjectNotFound from e
         
-        sum=0
-        if request.data.get('store'):
-            for i in request.data.get('store'):
-                sum+=i['count']
-        order.no_of_response=request.data.get('no_of_response')
-        order.describe=request.data.get('describe')
-        order.solution = solution
-        order.category = category
-        order.status=request.data.get('status')
-        solution_price = int(solution.price)
-        no_of_response = int(request.data.get('no_of_response'))
+    #     sum=0
+    #     if request.data.get('store'):
+    #         for i in request.data.get('store'):
+    #             sum+=i['count']
+    #     order.no_of_response=request.data.get('no_of_response')
+    #     order.describe=request.data.get('describe')
+    #     order.solution = solution
+    #     order.category = category
+    #     order.status=request.data.get('status')
+    #     solution_price = int(solution.price)
+    #     no_of_response = int(request.data.get('no_of_response'))
 
-        order.price = solution_price * no_of_response 
+    #     order.price = solution_price * no_of_response 
     
-        store=[]
-        if request.data.get('store'):
-            for i in request.data['store']:
-                store.append(i)
-            order.store=store
-        order.save()
-        if attachments:
-            post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_id,request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
-        return JsonResponse(response)
+    #     store=[]
+    #     if request.data.get('store'):
+    #         for i in request.data['store']:
+    #             store.append(i)
+    #         order.store=store
+    #     order.save()
+    #     if attachments:
+    #         post_data,attachment = mp_order_service.order_file_upload_by_order_id(order_id,request.data.get('file').get("file_name"),request.data.get('file').get("file_size"),request.data.get('file').get("file_type"))
+    #     return JsonResponse(response)
     
 class MpPaymentCompleteView(APIView):
-    permission_classes=[HasGroupPermission]
-    required_groups={
-        'GET':[GROUP_NAME_CLIENT],
-        'POST':[GROUP_NAME_CLIENT]
-    }
+    pass
+    # permission_classes=[HasGroupPermission]
+    # required_groups={
+    #     'GET':[GROUP_NAME_CLIENT],
+    #     'POST':[GROUP_NAME_CLIENT]
+    # }
 
-    def extract_data(self,file):
-        file_name = file.file_name
-        file_size = file.file_size
-        mime_type = file.file_type
-        return file_name, file_size, mime_type
+    # def extract_data(self,file):
+    #     file_name = file.file_name
+    #     file_size = file.file_size
+    #     mime_type = file.file_type
+    #     return file_name, file_size, mime_type
    
-    def post(self,request):
-        razor_order_id = request.data.get('order_id')
-        payment_id = request.data.get('payment_id')
-        signature = request.data.get('signature')
-        order_id = request.data.get('mp_order_id')  
+    # def post(self,request):
+    #     razor_order_id = request.data.get('order_id')
+    #     payment_id = request.data.get('payment_id')
+    #     signature = request.data.get('signature')
+    #     order_id = request.data.get('mp_order_id')  
 
-        try:
-            order = MPOrder.objects.get(id=order_id)            
-            if order.status == MPOrder.DRAFT:
-                order.razorpay_payment_id = payment_id
-                order.razorpay_signature = signature
-                if payment_is_successful(payment_id, signature):
-                    order.status = MPOrder.ACTIVE
-                    order.payment_status = MPOrder.PAYMENT_SUCCESS
-                    order.save()
-                else:
-                    order.payment_status = MPOrder.PAYMENT_FAILED
-                    order.save()
-                    return JsonResponse({'error': 'Payment failed for some reason'})
-            else:
-                return JsonResponse({'error': 'Order exists but status is not DRAFT'})
-        except MPOrder.DoesNotExist:
-            order = MPOrder.objects.create(
-                id=razor_order_id,
-                razorpay_payment_id=payment_id,
-                razorpay_signature=signature,
-                status='ACTIVE',
-                payment_status=MPOrder.PAYMENT_SUCCESS
-            )
+    #     try:
+    #         order = MPOrder.objects.get(id=order_id)            
+    #         if order.status == MPOrder.DRAFT:
+    #             order.razorpay_payment_id = payment_id
+    #             order.razorpay_signature = signature
+    #             if payment_is_successful(payment_id, signature):
+    #                 order.status = MPOrder.ACTIVE
+    #                 order.payment_status = MPOrder.PAYMENT_SUCCESS
+    #                 order.save()
+    #             else:
+    #                 order.payment_status = MPOrder.PAYMENT_FAILED
+    #                 order.save()
+    #                 return JsonResponse({'error': 'Payment failed for some reason'})
+    #         else:
+    #             return JsonResponse({'error': 'Order exists but status is not DRAFT'})
+    #     except MPOrder.DoesNotExist:
+    #         order = MPOrder.objects.create(
+    #             id=razor_order_id,
+    #             razorpay_payment_id=payment_id,
+    #             razorpay_signature=signature,
+    #             status='ACTIVE',
+    #             payment_status=MPOrder.PAYMENT_SUCCESS
+    #         )
 
-        transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
-        transaction.payment_success_date = timezone.now()
-        transaction.save()
+    #     transaction = Transaction(order=order, payment_id=payment_id, signature=signature)
+    #     transaction.payment_success_date = timezone.now()
+    #     transaction.save()
         
-        user=User.objects.get(id=request.user.id)
-        client = Client.objects.get(email=user.email)
-        client.is_active = True
-        client.save()
-        solution_details= MPSolutionOtherDetails.objects.get(solution=order.solution)
+    #     user=User.objects.get(id=request.user.id)
+    #     client = Client.objects.get(email=user.email)
+    #     client.is_active = True
+    #     client.save()
+    #     solution_details= MPSolutionOtherDetails.objects.get(solution=order.solution)
 
-        questionnaire_data = {
-            'name': solution_details.solution.audit_type,
-            'client': client.id
-        }
-        add_questionnaire_type_id = create_questionnaire_type(questionnaire_data)
+    #     questionnaire_data = {
+    #         'name': solution_details.solution.audit_type,
+    #         'client': client.id
+    #     }
+    #     add_questionnaire_type_id = create_questionnaire_type(questionnaire_data)
 
-        audit_cycle_response = create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id)
+    #     audit_cycle_response = create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id)
 
 
-        add_section = Add_Section(audit_cycle_response)
+    #     add_section = Add_Section(audit_cycle_response)
 
-        mpsolutionquestions = MPSolutionQuestion.objects.filter(solution=order.solution)
-        for mpsolutionquestion in mpsolutionquestions:
-            add_question = Add_Question(mpsolutionquestion, add_section)
+    #     mpsolutionquestions = MPSolutionQuestion.objects.filter(solution=order.solution)
+    #     for mpsolutionquestion in mpsolutionquestions:
+    #         add_question = Add_Question(mpsolutionquestion, add_section)
 
-        mpsolutionprooftags = MPSolutionProofTagList.objects.filter(solution=order.solution)
-        proof_tag_list=[]
-        for mpsolutionprooftag in mpsolutionprooftags:
-            proof_tag_list.append({'id':mpsolutionprooftag.proof_tag.id,'name':mpsolutionprooftag.proof_tag.name,'is_present_in_section':True,'is_required':True,'max_attachment_count':2})
-        if proof_tag_list:
-            section_proof_tag.save_section_proof_tag(add_section.id,audit_cycle_response.id,proof_tag_list)
+    #     mpsolutionprooftags = MPSolutionProofTagList.objects.filter(solution=order.solution)
+    #     proof_tag_list=[]
+    #     for mpsolutionprooftag in mpsolutionprooftags:
+    #         proof_tag_list.append({'id':mpsolutionprooftag.proof_tag.id,'name':mpsolutionprooftag.proof_tag.name,'is_present_in_section':True,'is_required':True,'max_attachment_count':2})
+    #     if proof_tag_list:
+    #         section_proof_tag.save_section_proof_tag(add_section.id,audit_cycle_response.id,proof_tag_list)
 
-        add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)
+    #     add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)
         
-        return JsonResponse({'status': 'success'})   
+    #     return JsonResponse({'status': 'success'})   
 
 
 def payment_is_successful(payment_id, signature):    
