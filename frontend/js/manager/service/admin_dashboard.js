@@ -299,6 +299,14 @@ export function updateSolutionIsPopular(solutionId, solution) {
 		contentType: "application/json",
 	});
 }
+export function updateSolutionIsShow(solutionId, solution) {
+	return $.ajax({
+		url: url.api_base_path + `manager/solution_show_status/${solutionId}`,
+		method: "POST",
+		data: JSON.stringify(solution),
+		contentType: "application/json",
+	});
+}
 export function findArchievedSolutions(){
 	return $.get( url.api_base_path + "manager/solution_archieved");
 }

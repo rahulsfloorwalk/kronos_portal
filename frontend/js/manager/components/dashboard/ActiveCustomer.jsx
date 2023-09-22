@@ -22,7 +22,7 @@ class ActiveCustomerRow extends React.Component{
 				<td>{this.props.profile.first_name && this.props.profile.first_name ? `${this.props.profile.first_name} ${this.props.profile.last_name}` : null} </td>
 				<td>{this.props.profile.user.email}</td>
 				<td>{this.props.profile.mobile_number}</td>
-				<td>{this.props.profile.user.is_verified ? "Verfied" : "Not Verfied"}</td>
+				<td>{this.props.profile.user.is_active ? "Verfied" : "Not Verfied"}</td>
 			</tr>
 		);
 	}

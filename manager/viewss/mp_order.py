@@ -5,7 +5,6 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.serializers import ModelSerializer
-from manager.service import mp_order_service
 from registration.models import GROUP_NAME_CLIENT,GROUP_NAME_MANAGER
 from registration.mixins import HasGroupPermission
 from manager.serializers import SolutionSerializer
@@ -13,6 +12,7 @@ from django.forms.models import model_to_dict
 from django.contrib.auth.models import User
 from manager.service import mp_order_service 
 import razorpay
+from questionnaire.service import section_proof_tag
 from kronos.exceptions import ObjectNotFound
 from datetime import datetime, timedelta
 from django.utils.text import slugify
@@ -46,7 +46,7 @@ from manager.viewss.answer import AnswerSerializer
 from manager.viewss.client_profile import ClientProfileSerializer
 from audit_store import service as audit_store_service
 from manager.serializers import AuditStoreSerializerWithoutAudit
-
+from questionnaire.models import SectionProofTag
 
 
 
@@ -305,8 +305,11 @@ class MpPaymentCompleteView(APIView):
             add_question = Add_Question(mpsolutionquestion, add_section)
 
         mpsolutionprooftags = MPSolutionProofTagList.objects.filter(solution=order.solution)
+        proof_tag_list=[]
         for mpsolutionprooftag in mpsolutionprooftags:
-            add_proof_tag_list(mpsolutionprooftag.proof_tag_id,audit_cycle_response)
+            proof_tag_list.append({'id':mpsolutionprooftag.proof_tag.id,'name':mpsolutionprooftag.proof_tag.name,'is_present_in_section':True,'is_required':True,'max_attachment_count':2})
+        if proof_tag_list:
+            section_proof_tag.save_section_proof_tag(add_section.id,audit_cycle_response.id,proof_tag_list)
 
         add_store_response = add_store_to_audit(audit_cycle_response,order,solution_details)
         
@@ -334,12 +337,6 @@ def create_questionnaire_type(questionnaire_data):
         return (add_questionnaire_type.instance.id)
     
 
-def add_proof_tag_list(proof_tag_id,audit_cycle):
-    proof_tag_obj = ProofTag.objects.get(pk=proof_tag_id)
-    audit_cycle_proof_tag_obj = AuditCycleProofTagList()
-    audit_cycle_proof_tag_obj.audit_cycle = audit_cycle
-    audit_cycle_proof_tag_obj.proof_tag = proof_tag_obj
-    audit_cycle_proof_tag_obj.save()
 
 def get_last_audit_cycle_number(client):
     last_audit_cycle = AuditCycle.objects.filter(client=client).order_by('-id').first()
@@ -352,8 +349,7 @@ def get_last_audit_cycle_number(client):
         last_number = my_list[3]
         return last_number
     else:
-        return 0   
-    
+        return 0
 def create_audit_cycle(client, order, solution_details,transaction,add_questionnaire_type_id):
         last_audit_cycle_number = get_last_audit_cycle_number(client)
         new_audit_cycle_number = int(last_audit_cycle_number) + 1
@@ -361,8 +357,7 @@ def create_audit_cycle(client, order, solution_details,transaction,add_questionn
         solution_name = solution_details.solution.name
         formatted_date = datetime.now().strftime('%b %Y')
         result = "{} {}".format(solution_name,formatted_date)
-        # base_name = f"{(solution_details.solution.name)} {current_date.strftime('%b %Y')}"
-
+        
         name = "{} ({})".format(result, new_audit_cycle_number)
 
         start_date = transaction.payment_success_date.date()

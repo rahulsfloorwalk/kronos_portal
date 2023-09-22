@@ -8,7 +8,7 @@ def find_by_id(solution_id):
         raise ObjectNotFound from e
 
 def get_popular_solutions():
-    solutions = MPSolution.objects.filter(is_popular=True)
+    solutions = MPSolution.objects.filter(is_popular=True,is_show=True)
     solution_data=[]
     for i in solutions:
         cat_solution= MPSolutionCategoryDetails.objects.filter(solution=i).all()
@@ -62,6 +62,7 @@ def get_popular_solutions():
                 'short_description':i.short_description,
                 'is_active':i.is_active,
                 'is_popular':i.is_popular,
+                'is_show':i.is_show,
                 'attachments':attachments_data,
                 'categories': category_data
            }
@@ -122,6 +123,7 @@ def get_solutions():
                 'execution_time':i.execution_time,
                 'short_description':i.short_description,
                 'is_active':i.is_active,
+                'is_show': i.is_show,
                 'is_popular':i.is_popular,
                 'attachments':attachments_data,
                 'categories': category_data
@@ -158,6 +160,7 @@ def get_solution_by_id(solution_id):
         'execution_time':solution.execution_time,
         'short_description':solution.short_description,
         'is_active':solution.is_active,
+        'is_show':solution.is_show,
         'is_popular':solution.is_popular,
         'categories':category_data
     }

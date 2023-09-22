@@ -39,6 +39,8 @@ export const ShareAlt	= () => <span className="glyphicon glyphicon-share-alt"></
 export const Inbox	= () => <span className="glyphicon glyphicon-inbox"></span>;
 export const Search	= () => <span className="glyphicon glyphicon-search"></span>;
 export const Star	= () => <span className="glyphicon glyphicon-star"></span>;
+export const Ok	= () => <span className="glyphicon glyphicon-ok"></span>;
+export const Remove	= () => <span className="glyphicon glyphicon-remove"></span>;
 export const Alert	= () => <span className="glyphicon glyphicon-alert"></span>;
 export const Paperclip	= () => <span className="glyphicon glyphicon-paperclip"></span>;
 export const Wrench	= () => <span className="glyphicon glyphicon-wrench"></span>;

@@ -507,6 +507,14 @@ class SolutionStatusSerializer(ModelSerializer):
         )
         read_only_fields = ('id',)
         
+class SolutionShowSerializer(ModelSerializer):
+    class Meta:
+        model=MPSolution
+        fields = (
+            'id',
+            'is_show'
+        )
+        read_only_fields = ('id',)
 class SolutionPopularStatusSerializer(ModelSerializer):
     class Meta:
         model=MPSolution

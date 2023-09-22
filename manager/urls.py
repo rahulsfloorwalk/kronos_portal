@@ -79,6 +79,7 @@ urlpatterns = ([
     
     
     url(r'solution_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusIdView.as_view(), name='solution_status_id_view'),
+    url(r'solution_show_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionStatusShowView.as_view(), name='solution_status_show_view'),  
     url(r'popular_status/(?P<solution_id>[0-9]+)$', solution_views.SolutionPopularStatusIdView.as_view(), name='solution_popular_status_id_view'),
     
     

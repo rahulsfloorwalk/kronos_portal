@@ -97,7 +97,7 @@ export default class ArchivedSolution extends React.Component {
 		return (
 			<div className="panel panel-default table-responsive">
 				<h3 style={{ padding: "2rem", borderBottom: "1px solid #eee"}}>
-Archived Solution Table
+					Archived Solution Table
 				</h3>
 
 				<div style={{ padding: "2rem" }}>

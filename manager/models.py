@@ -93,7 +93,7 @@ class MPTax(Model):
 class MPCategory(Model):
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False)
-    url_structure = CharField(db_column='url_structure', max_length=200, blank=False)
+    url_structure = CharField(db_column='url_structure', max_length=200, blank=False,unique=True)
     overview = CharField(db_column='overview', max_length=16384, blank=False)
     short_description = CharField(db_column='short_description', max_length=250, blank=False)
     attachments = GenericRelation('attachment.Attachment', related_query_name='categories')
@@ -149,7 +149,7 @@ class MPSolution(Model):
     
     id = AutoField(db_column='id', primary_key=True)
     name = CharField(db_column='name', max_length=200, blank=False,unique=True)
-    url_structure = CharField(db_column='url_strucuture',max_length=200,blank=False,unique=True)
+    url_structure = CharField(db_column='url_structure',max_length=200,blank=False,unique=True)
     audit_type = CharField(db_column='audit_type', max_length=20, choices=TYPES, blank=False)
     price = PositiveIntegerField(db_column='price',blank=False,default=0)
     tax = ForeignKey(MPTax, related_name='mpsolutions', db_column='tax_id', blank=False, on_delete=PROTECT)
@@ -158,6 +158,7 @@ class MPSolution(Model):
     execution_time = CharField(db_column='execution_time', max_length=16384, blank=False)
     short_description = CharField(db_column='short_description', max_length=250, blank=False)
     is_active = BooleanField(db_column='is_active',default=True,blank=False)
+    is_show = BooleanField(db_column='is_show',default=False,blank=False)
     is_popular = BooleanField(db_column='is_popular',default=False,blank=False)
     attachments = GenericRelation('attachment.Attachment', related_query_name='solutions')
     
