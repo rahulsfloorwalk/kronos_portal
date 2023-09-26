@@ -124,7 +124,7 @@ def schedule_opportunity_whatsapp_for_audit_cycle_with_filters(audit_cycle_id: i
         opp.progress_count = 0
         opp.save()
         send_opportunity_whatsapp_message_for_record.delay(opp.id)
-    return opp
+        
 @shared_task(ignore_result=True)
 def send_opportunity_whatsapp_message_for_record(opportunity_record_id):
     try:
