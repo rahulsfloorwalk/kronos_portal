@@ -222,7 +222,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 			alert("Please select at least one channel");
 			return false;
 		}
-		if (this.isAgeRangeValid(this.state.form.auditor_age_range) == false) {
+		if (this.isAgeRangeValid(this.state.audit_alignment_factors.auditor_age_range) == false) {
 			alert("Please enter valid auditor age range");
 			return false;
 		}
@@ -492,7 +492,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 					<div className="row text-center">
 						{this.state.loading ? <Loading /> : this.state.form.city == 11132323
 							?
-							<button className="btn btn-primary">Check Auditors For All Locations</button>
+							<button className="btn btn-success" onClick={this.onSendInvitation}>Send Invitation</button>
 							:
 							this.state.loading
 								?
@@ -500,10 +500,7 @@ export default class OpportunityEmailRecordForm extends React.Component {
 								:
 								<button type="button" className="btn btn-primary" onClick={this.onCheckCount}>Check auditors</button>
 						}
-						{/* onClick={this.onCheckAllCount} */}
-						{/* <button className="btn btn-success" onClick={this.onSendInvitation}>Send Invitation</button>  */}
 					</div>
-
 					{!this.state.loading && this.state.filter_count != "" ? <p><b>{this.state.filter_count} auditor{this.state.filter_count > 1 ? "s" : null} found for this filter</b></p> : null}
 					{!this.state.loading && this.state.filter_count > 0 ? <SaveButton text="Send Notification" /> : null}
 				</form>

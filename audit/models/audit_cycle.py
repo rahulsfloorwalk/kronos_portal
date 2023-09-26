@@ -1,4 +1,4 @@
-from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey
+from django.db.models import Model, CharField, IntegerField, AutoField, DateField, ForeignKey,SET_NULL
 from django.db.models import PROTECT, F, Sum
 from django.db.models.fields import BooleanField
 from django.core.validators import MinValueValidator
@@ -103,8 +103,8 @@ class AuditCycle(Model):
     support_page_link = CharField(db_column='support_page_link', max_length=200, blank=True)
     audit_alignment_factors = JSONField(db_column='audit_alignment_factors', default=list, blank=False)
     created_by_client = BooleanField(db_column="created_by_client", default=False)
-    order = ForeignKey(MPOrder, db_column='order_id', blank=True,null=True)
-
+    order = ForeignKey('client.MPOrder', db_column='order_id',on_delete=SET_NULL,null=True)
+    # order = models.ForeignKey('Order', on_delete=models.SET_NULL, null=True)
 
     class Meta:
         permissions = (

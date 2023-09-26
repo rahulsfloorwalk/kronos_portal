@@ -467,7 +467,8 @@ class MPOrder(Model):
     #     )
 class Transaction(Model):
     id = AutoField(primary_key=True)
-    order = ForeignKey(MPOrder, on_delete=CASCADE,db_column='order_id')
+    order = ForeignKey('client.MPOrder', on_delete=PROTECT,db_column='order_id')
+    # order = ForeignKey(MPOrder, on_delete=CASCADE,db_column='order_id')
     payment_id = CharField(max_length=100,db_column='payment_id')
     signature = CharField(max_length=200,db_column='signature')
     payment_success_date = DateTimeField(null=True, blank=True)

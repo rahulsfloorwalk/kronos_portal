@@ -76,7 +76,6 @@ def schedule_opportunity_emails_for_audit_cycle_with_filters_for_pincode(audit_c
         opp.progress_count = 0
         opp.save()
         send_opportunity_emails_for_record.delay(opp.id)
-    return opp
 
 
 @atomic
